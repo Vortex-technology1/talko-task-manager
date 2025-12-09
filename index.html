@@ -54,7 +54,7 @@
             gap: 0.5rem;
         }
         
-        .logo { font-size: 1.1rem; font-weight: 700; }
+        .logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
         .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
         
         .header-btn {
@@ -69,6 +69,31 @@
         }
         
         .header-btn:hover { background: rgba(255,255,255,0.3); }
+        
+        .lang-switcher {
+            display: flex;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            padding: 0.3rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .lang-btn.active {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .lang-btn:hover { color: white; }
         
         .user-info {
             display: none;
@@ -568,11 +593,15 @@
                 <span class="company-badge" id="companyBadge" style="display:none;"></span>
             </div>
             <div class="header-actions">
+                <div class="lang-switcher">
+                    <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
+                    <button class="lang-btn" onclick="setLanguage('ru')" id="langRU">RU</button>
+                </div>
                 <div class="user-info" id="currentUserInfo">
                     <span>👤 <span id="currentUserName">...</span></span>
                     <span id="currentUserRole" style="opacity:0.8;font-size:0.8rem;"></span>
                 </div>
-                <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;">🚪 Вийти</button>
+                <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;" data-i18n="logout">🚪 Вийти</button>
             </div>
         </div>
     </header>
@@ -588,47 +617,47 @@
             <div class="auth-card">
                 <div class="auth-header">
                     <h2>🚀 TALKO System</h2>
-                    <p>Управління завданнями для бізнесу</p>
+                    <p data-i18n="authSubtitle">Управління завданнями для бізнесу</p>
                 </div>
                 <div class="auth-body">
                     <div id="authMessage" class="auth-message" style="display:none;"></div>
                     
                     <!-- NO ACCESS -->
                     <div id="noAccessCard" class="no-access-card" style="display:none;">
-                        <h3>🚫 Доступ відсутній</h3>
-                        <p>Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.</p>
-                        <a href="https://alextalko.com" target="_blank" class="btn btn-success">📞 Зв'язатися з підтримкою</a>
-                        <button onclick="logout()" class="btn" style="margin-top:0.5rem;">🔄 Спробувати інший email</button>
+                        <h3 data-i18n="noAccessTitle">🚫 Доступ відсутній</h3>
+                        <p data-i18n="noAccessText">Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.</p>
+                        <a href="https://alextalko.com" target="_blank" class="btn btn-success" data-i18n="contactSupport">📞 Зв'язатися з підтримкою</a>
+                        <button onclick="logout()" class="btn" style="margin-top:0.5rem;" data-i18n="tryAnotherEmail">🔄 Спробувати інший email</button>
                     </div>
                     
                     <!-- LOGIN FORM -->
                     <div id="loginForm">
                         <button onclick="signInWithGoogle()" class="btn btn-google" style="width:100%;">
                             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                            Увійти через Google
+                            <span data-i18n="signInGoogle">Увійти через Google</span>
                         </button>
                         
-                        <div class="auth-divider"><span>або</span></div>
+                        <div class="auth-divider"><span data-i18n="or">або</span></div>
                         
                         <div class="form-group">
                             <label class="form-label">Email:</label>
                             <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com">
                         </div>
                         <div class="form-group" style="margin-top:0.75rem;">
-                            <label class="form-label">Пароль:</label>
+                            <label class="form-label" data-i18n="password">Пароль:</label>
                             <div class="input-wrapper">
                                 <input type="password" id="loginPassword" class="form-input" placeholder="••••••••">
                                 <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
                             </div>
                         </div>
-                        <button onclick="signInWithEmail()" class="btn btn-success" style="width:100%;margin-top:1rem;">
+                        <button onclick="signInWithEmail()" class="btn btn-success" style="width:100%;margin-top:1rem;" data-i18n="signIn">
                             🔐 Увійти
                         </button>
                         <p style="text-align:center;margin-top:0.75rem;font-size:0.85rem;">
-                            <a href="#" onclick="resetPassword()" style="color:var(--info);">Забули пароль?</a>
+                            <a href="#" onclick="resetPassword()" style="color:var(--info);" data-i18n="forgotPassword">Забули пароль?</a>
                         </p>
                         <p style="text-align:center;margin-top:1rem;font-size:0.8rem;color:var(--gray);">
-                            Немає доступу? <a href="https://alextalko.com" target="_blank" style="color:var(--info);">Зв'яжіться з нами</a>
+                            <span data-i18n="noAccess">Немає доступу?</span> <a href="https://alextalko.com" target="_blank" style="color:var(--info);" data-i18n="contactUs">Зв'яжіться з нами</a>
                         </p>
                     </div>
                 </div>
@@ -638,30 +667,30 @@
         <!-- MAIN INTERFACE -->
         <div id="mainInterface" class="main-interface">
             <div class="tab-navigation">
-                <button class="tab-btn active" onclick="switchTab('tasks')">📋 Завдання</button>
-                <button class="tab-btn" onclick="switchTab('control')">📊 Контроль</button>
-                <button class="tab-btn" onclick="switchTab('regular')">🔄 Регулярні</button>
-                <button class="tab-btn" onclick="switchTab('functions')">⚙️ Функції</button>
-                <button class="tab-btn" onclick="switchTab('users')">👥 Команда</button>
-                <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;">🔧 Адмін</button>
+                <button class="tab-btn active" onclick="switchTab('tasks')" data-i18n="tabTasks">📋 Завдання</button>
+                <button class="tab-btn" onclick="switchTab('control')" data-i18n="tabControl">📊 Контроль</button>
+                <button class="tab-btn" onclick="switchTab('regular')" data-i18n="tabRegular">🔄 Регулярні</button>
+                <button class="tab-btn" onclick="switchTab('functions')" data-i18n="tabFunctions">⚙️ Функції</button>
+                <button class="tab-btn" onclick="switchTab('users')" data-i18n="tabTeam">👥 Команда</button>
+                <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;" data-i18n="tabAdmin">🔧 Адмін</button>
             </div>
 
             <!-- TASKS -->
             <div id="tasksTab" class="tab-content active">
                 <div class="controls">
                     <div class="controls-row">
-                        <button class="btn btn-success" onclick="openTaskModal()">+ Завдання</button>
+                        <button class="btn btn-success" onclick="openTaskModal()" data-i18n="addTask">+ Завдання</button>
                     </div>
                     <div class="filters">
                         <select class="filter-select" id="statusFilter" onchange="renderTasks()">
-                            <option value="">Всі статуси</option>
-                            <option value="new">Нові</option>
-                            <option value="progress">В роботі</option>
-                            <option value="review">Перевірка</option>
-                            <option value="done">Готово</option>
+                            <option value="" data-i18n="allStatuses">Всі статуси</option>
+                            <option value="new" data-i18n="statusNew">Нові</option>
+                            <option value="progress" data-i18n="statusProgress">В роботі</option>
+                            <option value="review" data-i18n="statusReview">Перевірка</option>
+                            <option value="done" data-i18n="statusDone">Готово</option>
                         </select>
-                        <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="">Всі функції</option></select>
-                        <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="">Всі</option></select>
+                        <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
+                        <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="" data-i18n="all">Всі</option></select>
                     </div>
                 </div>
                 <div class="tasks-container" id="tasksContainer">
@@ -671,13 +700,13 @@
 
             <!-- CONTROL -->
             <div id="controlTab" class="tab-content">
-                <div class="controls"><h2 style="font-size:1.1rem;">📊 Панель контролю</h2></div>
+                <div class="controls"><h2 style="font-size:1.1rem;" data-i18n="controlPanel">📊 Панель контролю</h2></div>
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
                     <div class="dashboard-cards">
-                        <div class="dashboard-card urgent"><h3>🚨 Критичні</h3><div class="dashboard-number" id="urgentCount">0</div></div>
-                        <div class="dashboard-card warning"><h3>⚠️ Увага</h3><div class="dashboard-number" id="warningCount">0</div></div>
-                        <div class="dashboard-card active"><h3>🔄 Активні</h3><div class="dashboard-number" id="activeCount">0</div></div>
-                        <div class="dashboard-card completed"><h3>✅ Готово</h3><div class="dashboard-number" id="completedCount">0</div></div>
+                        <div class="dashboard-card urgent"><h3 data-i18n="critical">🚨 Критичні</h3><div class="dashboard-number" id="urgentCount">0</div></div>
+                        <div class="dashboard-card warning"><h3 data-i18n="attention">⚠️ Увага</h3><div class="dashboard-number" id="warningCount">0</div></div>
+                        <div class="dashboard-card active"><h3 data-i18n="active">🔄 Активні</h3><div class="dashboard-number" id="activeCount">0</div></div>
+                        <div class="dashboard-card completed"><h3 data-i18n="completed">✅ Готово</h3><div class="dashboard-number" id="completedCount">0</div></div>
                     </div>
                     <div id="controlContent"></div>
                 </div>
@@ -686,7 +715,7 @@
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
                 <div class="controls">
-                    <button class="btn btn-success" onclick="openRegularTaskModal()">+ Регулярне</button>
+                    <button class="btn btn-success" onclick="openRegularTaskModal()" data-i18n="addRegular">+ Регулярне</button>
                 </div>
                 <div id="regularTasksContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
@@ -696,7 +725,7 @@
             <!-- FUNCTIONS -->
             <div id="functionsTab" class="tab-content">
                 <div class="controls">
-                    <button class="btn btn-success" onclick="openFunctionModal()">+ Функція</button>
+                    <button class="btn btn-success" onclick="openFunctionModal()" data-i18n="addFunction">+ Функція</button>
                 </div>
                 <div id="functionsContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
@@ -706,7 +735,7 @@
             <!-- USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="controls">
-                    <button class="btn btn-warning" onclick="openInviteModal()" id="inviteBtn">📤 Запросити</button>
+                    <button class="btn btn-warning" onclick="openInviteModal()" id="inviteBtn" data-i18n="invite">📤 Запросити</button>
                 </div>
                 <div id="usersContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
@@ -716,34 +745,34 @@
             <!-- ADMIN (only for superadmin) -->
             <div id="adminTab" class="tab-content">
                 <div class="controls" style="background:linear-gradient(135deg,#fee2e2,#fecaca);">
-                    <h2 style="font-size:1.1rem;color:#dc2626;">🔧 Адмін-панель TALKO</h2>
+                    <h2 style="font-size:1.1rem;color:#dc2626;" data-i18n="adminPanel">🔧 Адмін-панель TALKO</h2>
                 </div>
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);margin-bottom:1rem;">
-                    <h3 style="margin-bottom:1rem;">➕ Створити нову компанію</h3>
+                    <h3 style="margin-bottom:1rem;" data-i18n="createCompany">➕ Створити нову компанію</h3>
                     <form id="adminCreateForm" onsubmit="adminCreateCompany(event)">
                         <div class="form-grid">
                             <div class="form-group">
-                                <label class="form-label">Email власника *</label>
+                                <label class="form-label" data-i18n="ownerEmail">Email власника *</label>
                                 <input type="email" id="adminOwnerEmail" class="form-input" placeholder="client@email.com" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Пароль *</label>
+                                <label class="form-label" data-i18n="passwordLabel">Пароль *</label>
                                 <input type="text" id="adminOwnerPassword" class="form-input" placeholder="мін. 6 символів" required minlength="6">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Ім'я власника *</label>
+                                <label class="form-label" data-i18n="ownerName">Ім'я власника *</label>
                                 <input type="text" id="adminOwnerName" class="form-input" placeholder="Іван Петренко" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Назва компанії *</label>
+                                <label class="form-label" data-i18n="companyName">Назва компанії *</label>
                                 <input type="text" id="adminCompanyName" class="form-input" placeholder="ТОВ Компанія" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success" style="margin-top:1rem;" id="adminCreateBtn">🚀 Створити компанію та Owner</button>
+                        <button type="submit" class="btn btn-success" style="margin-top:1rem;" id="adminCreateBtn" data-i18n="createCompanyBtn">🚀 Створити компанію та Owner</button>
                     </form>
                 </div>
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
-                    <h3 style="margin-bottom:1rem;">📋 Всі компанії</h3>
+                    <h3 style="margin-bottom:1rem;" data-i18n="allCompanies">📋 Всі компанії</h3>
                     <div id="adminCompaniesContainer">
                         <div class="loading"><div class="spinner"></div></div>
                     </div>
@@ -755,19 +784,19 @@
     <!-- MODALS -->
     <div id="taskModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeModal('taskModal')">&times;</span><h2 id="taskModalTitle">Нове завдання</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('taskModal')">&times;</span><h2 id="taskModalTitle" data-i18n="newTask">Нове завдання</h2></div>
             <div class="modal-body">
                 <form id="taskForm" onsubmit="saveTask(event)">
                     <div class="form-grid">
-                        <div class="form-group full-width"><label class="form-label">Назва *</label><input type="text" id="taskTitle" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Функція</label><select id="taskFunction" class="form-select"><option value="">Без функції</option></select></div>
-                        <div class="form-group"><label class="form-label">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label">Дедлайн *</label><input type="datetime-local" id="taskDeadline" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low">Низький</option><option value="medium" selected>Середній</option><option value="high">Високий</option></select></div>
-                        <div class="form-group"><label class="form-label">Статус</label><select id="taskStatus" class="form-select"><option value="new">Нове</option><option value="progress">В роботі</option><option value="review">Перевірка</option><option value="done">Готово</option></select></div>
-                        <div class="form-group full-width"><label class="form-label">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="taskTitle" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select"><option value="" data-i18n="noFunction">Без функції</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="deadline">Дедлайн *</label><input type="datetime-local" id="taskDeadline" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n="priorityLow">Низький</option><option value="medium" selected data-i18n="priorityMedium">Середній</option><option value="high" data-i18n="priorityHigh">Високий</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="status">Статус</label><select id="taskStatus" class="form-select"><option value="new" data-i18n="statusNew">Нове</option><option value="progress" data-i18n="statusProgress">В роботі</option><option value="review" data-i18n="statusReview">Перевірка</option><option value="done" data-i18n="statusDone">Готово</option></select></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
                 </form>
             </div>
         </div>
@@ -775,16 +804,16 @@
 
     <div id="functionModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeModal('functionModal')">&times;</span><h2 id="functionModalTitle">Нова функція</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('functionModal')">&times;</span><h2 id="functionModalTitle" data-i18n="newFunction">Нова функція</h2></div>
             <div class="modal-body">
                 <form id="functionForm" onsubmit="saveFunction(event)">
                     <div class="form-grid">
-                        <div class="form-group"><label class="form-label">Назва *</label><input type="text" id="functionName" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">👑 Головний *</label><select id="functionHead" class="form-select" required><option value="">Оберіть</option></select></div>
-                        <div class="form-group full-width"><label class="form-label">Опис</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label">👥 Учасники</label><div id="functionAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;"></div></div>
+                        <div class="form-group"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="functionName" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="head">👑 Головний *</label><select id="functionHead" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="members">👥 Учасники</label><div id="functionAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;"></div></div>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('functionModal')">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('functionModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
                 </form>
             </div>
         </div>
@@ -792,16 +821,16 @@
 
     <div id="regularTaskModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeModal('regularTaskModal')">&times;</span><h2>Регулярне завдання</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('regularTaskModal')">&times;</span><h2 data-i18n="regularTask">Регулярне завдання</h2></div>
             <div class="modal-body">
                 <form id="regularTaskForm" onsubmit="saveRegularTask(event)">
                     <div class="form-grid">
-                        <div class="form-group full-width"><label class="form-label">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Функція *</label><select id="regularTaskFunction" class="form-select" required onchange="updateRegularTaskAssignees()"><option value="">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label">Періодичність</label><select id="regularTaskPeriod" class="form-select"><option value="daily">Щодня</option><option value="weekly">Щотижня</option><option value="monthly">Щомісяця</option></select></div>
-                        <div class="form-group full-width"><label class="form-label">👥 Виконавці</label><div id="regularTaskAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"><p style="color:#7f8c8d;">Спочатку оберіть функцію</p></div></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required onchange="updateRegularTaskAssignees()"><option value="" data-i18n="select">Оберіть</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність</label><select id="regularTaskPeriod" class="form-select"><option value="daily" data-i18n="daily">Щодня</option><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option></select></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="assignees">👥 Виконавці</label><div id="regularTaskAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"><p style="color:#7f8c8d;" data-i18n="selectFunctionFirst">Спочатку оберіть функцію</p></div></div>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('regularTaskModal')">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('regularTaskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
                 </form>
             </div>
         </div>
@@ -809,39 +838,336 @@
 
     <div id="inviteModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeModal('inviteModal')">&times;</span><h2>📤 Запрошення</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('inviteModal')">&times;</span><h2 data-i18n="inviteTitle">📤 Запрошення</h2></div>
             <div class="modal-body">
                 <form id="inviteForm" onsubmit="sendInvite(event)">
                     <div class="form-group">
-                        <label class="form-label">Email співробітника *</label>
+                        <label class="form-label" data-i18n="employeeEmail">Email співробітника *</label>
                         <input type="email" id="inviteEmail" class="form-input" required>
                     </div>
                     <div class="form-group" style="margin-top:0.75rem;">
-                        <label class="form-label">Роль</label>
-                        <select id="inviteRole" class="form-select"><option value="employee">Співробітник</option><option value="manager">Менеджер</option></select>
+                        <label class="form-label" data-i18n="role">Роль</label>
+                        <select id="inviteRole" class="form-select"><option value="employee" data-i18n="roleEmployee">Співробітник</option><option value="manager" data-i18n="roleManager">Менеджер</option></select>
                     </div>
                     <div id="inviteLink" style="margin-top:1rem;padding:1rem;background:#e3f2fd;border-radius:8px;display:none;">
-                        <p style="font-size:0.85rem;margin-bottom:0.5rem;"><strong>Посилання для входу:</strong></p>
+                        <p style="font-size:0.85rem;margin-bottom:0.5rem;"><strong data-i18n="inviteLinkLabel">Посилання для входу:</strong></p>
                         <input type="text" id="inviteLinkText" class="form-input" readonly style="font-size:0.8rem;">
-                        <button type="button" onclick="copyInviteLink()" class="btn btn-small" style="margin-top:0.5rem;">📋 Копіювати</button>
+                        <button type="button" onclick="copyInviteLink()" class="btn btn-small" style="margin-top:0.5rem;" data-i18n="copy">📋 Копіювати</button>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('inviteModal')">Закрити</button><button type="submit" class="btn btn-success">📤 Створити запрошення</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('inviteModal')" data-i18n="close">Закрити</button><button type="submit" class="btn btn-success" data-i18n="createInvite">📤 Створити запрошення</button></div>
                 </form>
             </div>
         </div>
     </div>
 
-    <a href="https://alextalko.com" target="_blank" class="support-btn">
+    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="support-btn ai-support">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span data-i18n="aiSupport">🤖 AI Підтримка</span>
+    </a>
+    
+    <a href="https://alextalko.com" target="_blank" class="support-btn" style="bottom: 70px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-        <span>Підтримка</span>
+        <span data-i18n="support">Підтримка</span>
     </a>
 
     <footer class="footer">
         <p>Powered by <strong style="color:#3498db;">TALKO System</strong></p>
-        <div class="footer-links"><a href="https://alextalko.com" target="_blank">🛟 Підтримка</a></div>
+        <div class="footer-links"><a href="https://alextalko.com" target="_blank" data-i18n="footerSupport">🛟 Підтримка</a></div>
     </footer>
 
     <script>
+        // =====================
+        // TRANSLATIONS
+        // =====================
+        const translations = {
+            ua: {
+                // Auth
+                authSubtitle: 'Управління завданнями для бізнесу',
+                signInGoogle: 'Увійти через Google',
+                or: 'або',
+                password: 'Пароль:',
+                signIn: '🔐 Увійти',
+                forgotPassword: 'Забули пароль?',
+                noAccess: 'Немає доступу?',
+                contactUs: "Зв'яжіться з нами",
+                noAccessTitle: '🚫 Доступ відсутній',
+                noAccessText: "Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.",
+                contactSupport: "📞 Зв'язатися з підтримкою",
+                tryAnotherEmail: '🔄 Спробувати інший email',
+                logout: '🚪 Вийти',
+                
+                // Tabs
+                tabTasks: '📋 Завдання',
+                tabControl: '📊 Контроль',
+                tabRegular: '🔄 Регулярні',
+                tabFunctions: '⚙️ Функції',
+                tabTeam: '👥 Команда',
+                tabAdmin: '🔧 Адмін',
+                
+                // Tasks
+                addTask: '+ Завдання',
+                allStatuses: 'Всі статуси',
+                allFunctions: 'Всі функції',
+                all: 'Всі',
+                newTask: 'Нове завдання',
+                editTask: 'Редагувати',
+                title: 'Назва *',
+                function: 'Функція',
+                noFunction: 'Без функції',
+                assignee: 'Виконавець *',
+                select: 'Оберіть',
+                deadline: 'Дедлайн *',
+                priority: 'Пріоритет',
+                status: 'Статус',
+                description: 'Опис',
+                cancel: 'Скасувати',
+                save: 'Зберегти',
+                close: 'Закрити',
+                
+                // Statuses
+                statusNew: 'Нове',
+                statusProgress: 'В роботі',
+                statusReview: 'Перевірка',
+                statusDone: 'Готово',
+                
+                // Priorities
+                priorityLow: 'Низький',
+                priorityMedium: 'Середній',
+                priorityHigh: 'Високий',
+                
+                // Control
+                controlPanel: '📊 Панель контролю',
+                critical: '🚨 Критичні',
+                attention: '⚠️ Увага',
+                active: '🔄 Активні',
+                completed: '✅ Готово',
+                workload: '👥 Навантаження',
+                noActiveTasks: 'Немає активних завдань',
+                
+                // Regular
+                addRegular: '+ Регулярне',
+                regularTask: 'Регулярне завдання',
+                periodicity: 'Періодичність',
+                daily: 'Щодня',
+                weekly: 'Щотижня',
+                monthly: 'Щомісяця',
+                assignees: '👥 Виконавці',
+                selectFunctionFirst: 'Спочатку оберіть функцію',
+                noMembers: 'Немає учасників',
+                create: '⚡ Створити',
+                
+                // Functions
+                addFunction: '+ Функція',
+                newFunction: 'Нова функція',
+                head: '👑 Головний *',
+                members: '👥 Учасники',
+                tasks: 'завдань',
+                
+                // Team
+                invite: '📤 Запросити',
+                inviteTitle: '📤 Запрошення',
+                employeeEmail: 'Email співробітника *',
+                role: 'Роль',
+                roleOwner: 'Власник',
+                roleManager: 'Менеджер',
+                roleEmployee: 'Співробітник',
+                inviteLinkLabel: 'Посилання для входу:',
+                copy: '📋 Копіювати',
+                createInvite: '📤 Створити запрошення',
+                
+                // Admin
+                adminPanel: '🔧 Адмін-панель TALKO',
+                createCompany: '➕ Створити нову компанію',
+                ownerEmail: 'Email власника *',
+                passwordLabel: 'Пароль *',
+                ownerName: "Ім'я власника *",
+                companyName: 'Назва компанії *',
+                createCompanyBtn: '🚀 Створити компанію та Owner',
+                allCompanies: '📋 Всі компанії',
+                users: 'користувачів',
+                
+                // Empty states
+                noTasks: '📋 Завдань немає',
+                createFirstTask: 'Створіть перше завдання',
+                noFunctions: '⚙️ Функцій немає',
+                createFirstFunction: 'Створіть першу функцію',
+                noRegular: '🔄 Регулярних немає',
+                createRegular: 'Створіть регулярне завдання',
+                noUsers: '👥 Немає користувачів',
+                noCompanies: 'Немає компаній',
+                
+                // Other
+                support: 'Підтримка',
+                aiSupport: '🤖 AI Підтримка',
+                footerSupport: '🛟 Підтримка',
+                notAssigned: 'Не призначено',
+                deleteConfirm: 'Видалити?',
+                error: 'Помилка',
+                created: 'створено',
+                copied: '📋 Посилання скопійовано!',
+            },
+            ru: {
+                // Auth
+                authSubtitle: 'Управление задачами для бизнеса',
+                signInGoogle: 'Войти через Google',
+                or: 'или',
+                password: 'Пароль:',
+                signIn: '🔐 Войти',
+                forgotPassword: 'Забыли пароль?',
+                noAccess: 'Нет доступа?',
+                contactUs: 'Свяжитесь с нами',
+                noAccessTitle: '🚫 Доступ отсутствует',
+                noAccessText: 'Ваш email не зарегистрирован в системе.<br>Обратитесь к администратору для получения доступа.',
+                contactSupport: '📞 Связаться с поддержкой',
+                tryAnotherEmail: '🔄 Попробовать другой email',
+                logout: '🚪 Выйти',
+                
+                // Tabs
+                tabTasks: '📋 Задачи',
+                tabControl: '📊 Контроль',
+                tabRegular: '🔄 Регулярные',
+                tabFunctions: '⚙️ Функции',
+                tabTeam: '👥 Команда',
+                tabAdmin: '🔧 Админ',
+                
+                // Tasks
+                addTask: '+ Задача',
+                allStatuses: 'Все статусы',
+                allFunctions: 'Все функции',
+                all: 'Все',
+                newTask: 'Новая задача',
+                editTask: 'Редактировать',
+                title: 'Название *',
+                function: 'Функция',
+                noFunction: 'Без функции',
+                assignee: 'Исполнитель *',
+                select: 'Выберите',
+                deadline: 'Дедлайн *',
+                priority: 'Приоритет',
+                status: 'Статус',
+                description: 'Описание',
+                cancel: 'Отмена',
+                save: 'Сохранить',
+                close: 'Закрыть',
+                
+                // Statuses
+                statusNew: 'Новое',
+                statusProgress: 'В работе',
+                statusReview: 'Проверка',
+                statusDone: 'Готово',
+                
+                // Priorities
+                priorityLow: 'Низкий',
+                priorityMedium: 'Средний',
+                priorityHigh: 'Высокий',
+                
+                // Control
+                controlPanel: '📊 Панель контроля',
+                critical: '🚨 Критические',
+                attention: '⚠️ Внимание',
+                active: '🔄 Активные',
+                completed: '✅ Готово',
+                workload: '👥 Нагрузка',
+                noActiveTasks: 'Нет активных задач',
+                
+                // Regular
+                addRegular: '+ Регулярное',
+                regularTask: 'Регулярная задача',
+                periodicity: 'Периодичность',
+                daily: 'Ежедневно',
+                weekly: 'Еженедельно',
+                monthly: 'Ежемесячно',
+                assignees: '👥 Исполнители',
+                selectFunctionFirst: 'Сначала выберите функцию',
+                noMembers: 'Нет участников',
+                create: '⚡ Создать',
+                
+                // Functions
+                addFunction: '+ Функция',
+                newFunction: 'Новая функция',
+                head: '👑 Главный *',
+                members: '👥 Участники',
+                tasks: 'задач',
+                
+                // Team
+                invite: '📤 Пригласить',
+                inviteTitle: '📤 Приглашение',
+                employeeEmail: 'Email сотрудника *',
+                role: 'Роль',
+                roleOwner: 'Владелец',
+                roleManager: 'Менеджер',
+                roleEmployee: 'Сотрудник',
+                inviteLinkLabel: 'Ссылка для входа:',
+                copy: '📋 Копировать',
+                createInvite: '📤 Создать приглашение',
+                
+                // Admin
+                adminPanel: '🔧 Админ-панель TALKO',
+                createCompany: '➕ Создать новую компанию',
+                ownerEmail: 'Email владельца *',
+                passwordLabel: 'Пароль *',
+                ownerName: 'Имя владельца *',
+                companyName: 'Название компании *',
+                createCompanyBtn: '🚀 Создать компанию и Owner',
+                allCompanies: '📋 Все компании',
+                users: 'пользователей',
+                
+                // Empty states
+                noTasks: '📋 Задач нет',
+                createFirstTask: 'Создайте первую задачу',
+                noFunctions: '⚙️ Функций нет',
+                createFirstFunction: 'Создайте первую функцию',
+                noRegular: '🔄 Регулярных нет',
+                createRegular: 'Создайте регулярную задачу',
+                noUsers: '👥 Нет пользователей',
+                noCompanies: 'Нет компаний',
+                
+                // Other
+                support: 'Поддержка',
+                aiSupport: '🤖 AI Поддержка',
+                footerSupport: '🛟 Поддержка',
+                notAssigned: 'Не назначено',
+                deleteConfirm: 'Удалить?',
+                error: 'Ошибка',
+                created: 'создано',
+                copied: '📋 Ссылка скопирована!',
+            }
+        };
+
+        let currentLang = localStorage.getItem('talko_lang') || 'ua';
+
+        function t(key) {
+            return translations[currentLang][key] || translations['ua'][key] || key;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('talko_lang', lang);
+            
+            document.getElementById('langUA').classList.toggle('active', lang === 'ua');
+            document.getElementById('langRU').classList.toggle('active', lang === 'ru');
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (el.tagName === 'INPUT' && el.type !== 'text' && el.type !== 'email') {
+                        el.value = translations[lang][key];
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Re-render dynamic content
+            if (currentCompany || isSuperAdmin) {
+                const activeTab = document.querySelector('.tab-btn.active');
+                if (activeTab) {
+                    const tabName = activeTab.getAttribute('onclick').match(/switchTab\('(\w+)'\)/)[1];
+                    switchTab(tabName);
+                }
+            }
+        }
+
         // =====================
         // FIREBASE CONFIG
         // =====================
@@ -913,7 +1239,7 @@
             try {
                 await auth.signInWithPopup(googleProvider);
             } catch (e) {
-                showAuthMessage('Помилка: ' + e.message, 'error');
+                showAuthMessage(t('error') + ': ' + e.message, 'error');
             }
         }
 
@@ -923,18 +1249,18 @@
             const password = document.getElementById('loginPassword').value;
             
             if (!email || !password) {
-                showAuthMessage('Введіть email і пароль', 'error');
+                showAuthMessage(currentLang === 'ua' ? 'Введіть email і пароль' : 'Введите email и пароль', 'error');
                 return;
             }
             
             try {
                 await auth.signInWithEmailAndPassword(email, password);
             } catch (e) {
-                let msg = 'Помилка входу';
-                if (e.code === 'auth/user-not-found') msg = 'Користувача не знайдено. Зверніться до адміністратора.';
-                if (e.code === 'auth/wrong-password') msg = 'Невірний пароль';
-                if (e.code === 'auth/invalid-email') msg = 'Невірний формат email';
-                if (e.code === 'auth/invalid-credential') msg = 'Невірний email або пароль';
+                let msg = currentLang === 'ua' ? 'Помилка входу' : 'Ошибка входа';
+                if (e.code === 'auth/user-not-found') msg = currentLang === 'ua' ? 'Користувача не знайдено' : 'Пользователь не найден';
+                if (e.code === 'auth/wrong-password') msg = currentLang === 'ua' ? 'Невірний пароль' : 'Неверный пароль';
+                if (e.code === 'auth/invalid-email') msg = currentLang === 'ua' ? 'Невірний формат email' : 'Неверный формат email';
+                if (e.code === 'auth/invalid-credential') msg = currentLang === 'ua' ? 'Невірний email або пароль' : 'Неверный email или пароль';
                 showAuthMessage(msg, 'error');
             }
         }
@@ -943,26 +1269,24 @@
         async function resetPassword() {
             const email = document.getElementById('loginEmail').value.trim();
             if (!email) {
-                showAuthMessage('Введіть email для відновлення пароля', 'error');
+                showAuthMessage(currentLang === 'ua' ? 'Введіть email для відновлення пароля' : 'Введите email для восстановления пароля', 'error');
                 return;
             }
             
             try {
                 await auth.sendPasswordResetEmail(email);
-                showAuthMessage('📧 Посилання для відновлення надіслано на ' + email, 'success');
+                showAuthMessage(currentLang === 'ua' ? '📧 Посилання надіслано на ' + email : '📧 Ссылка отправлена на ' + email, 'success');
             } catch (e) {
-                showAuthMessage('Помилка: ' + e.message, 'error');
+                showAuthMessage(t('error') + ': ' + e.message, 'error');
             }
         }
 
         async function findUserCompany(userId, email) {
-            // Check global users collection
             const userDoc = await db.collection('users').doc(userId).get();
             if (userDoc.exists) {
                 return userDoc.data().companyId;
             }
             
-            // Search for invites (including owner invites)
             const invitesQuery = await db.collection('invites')
                 .where('email', '==', email.toLowerCase())
                 .where('accepted', '==', false)
@@ -975,7 +1299,6 @@
                 const companyId = inviteData.companyId;
                 const isOwnerInvite = inviteData.role === 'owner';
                 
-                // Accept invite - add user to company
                 await db.collection('companies').doc(companyId).collection('users').doc(userId).set({
                     name: inviteData.ownerName || email.split('@')[0],
                     email: email.toLowerCase(),
@@ -989,7 +1312,6 @@
                     role: inviteData.role || 'employee'
                 });
                 
-                // Update company with ownerId if owner invite
                 if (isOwnerInvite) {
                     await db.collection('companies').doc(companyId).update({
                         ownerId: userId
@@ -1019,7 +1341,6 @@
                 currentUser = user;
                 isSuperAdmin = user.email.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase();
                 
-                // Show admin tab for superadmin
                 if (isSuperAdmin) {
                     document.getElementById('adminTabBtn').style.display = 'block';
                 }
@@ -1027,7 +1348,6 @@
                 const companyId = await findUserCompany(user.uid, user.email);
                 
                 if (!companyId && !isSuperAdmin) {
-                    // No access - show message
                     document.getElementById('loadingPage').style.display = 'none';
                     document.getElementById('authPage').style.display = 'flex';
                     document.getElementById('mainInterface').style.display = 'none';
@@ -1035,12 +1355,11 @@
                     return;
                 }
                 
-                // Superadmin without company - still allow access
                 if (!companyId && isSuperAdmin) {
                     currentCompany = null;
                     currentUserData = { id: user.uid, email: user.email, role: 'superadmin', name: 'Super Admin' };
                     document.getElementById('currentUserName').textContent = 'Super Admin';
-                    document.getElementById('currentUserRole').textContent = '(Адміністратор)';
+                    document.getElementById('currentUserRole').textContent = currentLang === 'ua' ? '(Адміністратор)' : '(Администратор)';
                     document.getElementById('companyBadge').textContent = 'TALKO System';
                     document.getElementById('companyBadge').style.display = 'inline';
                     showMainInterface();
@@ -1060,7 +1379,6 @@
                 document.getElementById('companyBadge').textContent = companyData?.name || '';
                 document.getElementById('companyBadge').style.display = 'inline';
                 
-                // Hide invite button for non-managers
                 if (currentUserData.role === 'employee') {
                     document.getElementById('inviteBtn').style.display = 'none';
                 }
@@ -1086,7 +1404,11 @@
         }
 
         function getRoleText(role) {
-            return { owner: 'Власник', manager: 'Менеджер', employee: 'Співробітник' }[role] || role;
+            if (currentLang === 'ua') {
+                return { owner: 'Власник', manager: 'Менеджер', employee: 'Співробітник', superadmin: 'Адміністратор' }[role] || role;
+            } else {
+                return { owner: 'Владелец', manager: 'Менеджер', employee: 'Сотрудник', superadmin: 'Администратор' }[role] || role;
+            }
         }
 
         // =====================
@@ -1120,20 +1442,20 @@
             
             if (id) {
                 editingId = id;
-                const t = tasks.find(x => x.id === id);
-                if (t) {
-                    document.getElementById('taskModalTitle').textContent = 'Редагувати';
-                    document.getElementById('taskTitle').value = t.title || '';
-                    document.getElementById('taskFunction').value = t.function || '';
-                    document.getElementById('taskAssignee').value = t.assigneeId || '';
-                    document.getElementById('taskDeadline').value = t.deadline || '';
-                    document.getElementById('taskPriority').value = t.priority || 'medium';
-                    document.getElementById('taskStatus').value = t.status || 'new';
-                    document.getElementById('taskDescription').value = t.description || '';
+                const task = tasks.find(x => x.id === id);
+                if (task) {
+                    document.getElementById('taskModalTitle').textContent = t('editTask');
+                    document.getElementById('taskTitle').value = task.title || '';
+                    document.getElementById('taskFunction').value = task.function || '';
+                    document.getElementById('taskAssignee').value = task.assigneeId || '';
+                    document.getElementById('taskDeadline').value = task.deadline || '';
+                    document.getElementById('taskPriority').value = task.priority || 'medium';
+                    document.getElementById('taskStatus').value = task.status || 'new';
+                    document.getElementById('taskDescription').value = task.description || '';
                 }
             } else {
                 editingId = null;
-                document.getElementById('taskModalTitle').textContent = 'Нове завдання';
+                document.getElementById('taskModalTitle').textContent = t('newTask');
                 document.getElementById('taskForm').reset();
             }
         }
@@ -1170,20 +1492,20 @@
                 closeModal('taskModal');
                 loadAllData();
             } catch (e) {
-                alert('Помилка: ' + e.message);
+                alert(t('error') + ': ' + e.message);
             }
         }
 
         async function deleteTask(id) {
-            if (!confirm('Видалити?')) return;
+            if (!confirm(t('deleteConfirm'))) return;
             await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
             loadAllData();
         }
 
         async function togglePin(id) {
-            const t = tasks.find(x => x.id === id);
-            if (t) {
-                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({ pinned: !t.pinned });
+            const task = tasks.find(x => x.id === id);
+            if (task) {
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({ pinned: !task.pinned });
                 loadAllData();
             }
         }
@@ -1194,10 +1516,10 @@
             const ff = document.getElementById('functionFilter')?.value;
             const af = document.getElementById('assigneeFilter')?.value;
             
-            let f = tasks.filter(t => {
-                if (sf && t.status !== sf) return false;
-                if (ff && t.function !== ff) return false;
-                if (af && t.assigneeId !== af) return false;
+            let f = tasks.filter(task => {
+                if (sf && task.status !== sf) return false;
+                if (ff && task.function !== ff) return false;
+                if (af && task.assigneeId !== af) return false;
                 return true;
             });
             
@@ -1208,36 +1530,36 @@
             });
             
             if (f.length === 0) {
-                c.innerHTML = '<div class="empty-state"><h3>📋 Завдань немає</h3><p>Створіть перше завдання</p></div>';
+                c.innerHTML = `<div class="empty-state"><h3>${t('noTasks')}</h3><p>${t('createFirstTask')}</p></div>`;
                 return;
             }
             
-            const st = { new: 'Нове', progress: 'В роботі', review: 'Перевірка', done: 'Готово' };
-            const pt = { low: 'Низький', medium: 'Середній', high: 'Високий' };
+            const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
+            const pt = { low: t('priorityLow'), medium: t('priorityMedium'), high: t('priorityHigh') };
             
-            c.innerHTML = f.map(t => {
-                const od = t.deadline && new Date(t.deadline) < new Date() && t.status !== 'done';
+            c.innerHTML = f.map(task => {
+                const od = task.deadline && new Date(task.deadline) < new Date() && task.status !== 'done';
                 return `
-                    <div class="task-card ${t.pinned ? 'pinned' : ''}">
+                    <div class="task-card ${task.pinned ? 'pinned' : ''}">
                         <div class="task-card-header">
                             <div class="task-title">
-                                <button class="pin-btn ${t.pinned ? 'pinned' : ''}" onclick="togglePin('${t.id}')">📌</button>
-                                ${t.title}
+                                <button class="pin-btn ${task.pinned ? 'pinned' : ''}" onclick="togglePin('${task.id}')">📌</button>
+                                ${task.title}
                             </div>
                         </div>
                         <div class="task-meta">
-                            <span class="task-meta-item">👤 ${t.assigneeName || 'Не призначено'}</span>
-                            <span class="task-meta-item" style="${od ? 'color:#e74c3c;font-weight:600;' : ''}">📅 ${t.deadline ? formatDate(t.deadline) : '-'}</span>
-                            ${t.function ? `<span class="task-meta-item">⚙️ ${t.function}</span>` : ''}
+                            <span class="task-meta-item">👤 ${task.assigneeName || t('notAssigned')}</span>
+                            <span class="task-meta-item" style="${od ? 'color:#e74c3c;font-weight:600;' : ''}">📅 ${task.deadline ? formatDate(task.deadline) : '-'}</span>
+                            ${task.function ? `<span class="task-meta-item">⚙️ ${task.function}</span>` : ''}
                         </div>
                         <div class="task-badges">
-                            <span class="badge badge-${t.status}">${st[t.status] || t.status}</span>
-                            <span class="badge badge-${t.priority}">${pt[t.priority] || t.priority}</span>
+                            <span class="badge badge-${task.status}">${st[task.status] || task.status}</span>
+                            <span class="badge badge-${task.priority}">${pt[task.priority] || task.priority}</span>
                         </div>
-                        ${t.description ? `<div style="font-size:0.8rem;color:#7f8c8d;padding:0.5rem;background:#f8f9fa;border-radius:8px;margin-top:0.5rem;">${t.description}</div>` : ''}
+                        ${task.description ? `<div style="font-size:0.8rem;color:#7f8c8d;padding:0.5rem;background:#f8f9fa;border-radius:8px;margin-top:0.5rem;">${task.description}</div>` : ''}
                         <div class="task-actions">
-                            <button class="btn btn-small" onclick="openTaskModal('${t.id}')">✏️</button>
-                            <button class="btn btn-small btn-danger" onclick="deleteTask('${t.id}')">🗑️</button>
+                            <button class="btn btn-small" onclick="openTaskModal('${task.id}')">✏️</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteTask('${task.id}')">🗑️</button>
                         </div>
                     </div>`;
             }).join('');
@@ -1254,7 +1576,7 @@
                 editingId = id;
                 const f = functions.find(x => x.id === id);
                 if (f) {
-                    document.getElementById('functionModalTitle').textContent = 'Редагувати';
+                    document.getElementById('functionModalTitle').textContent = t('editTask');
                     document.getElementById('functionName').value = f.name || '';
                     document.getElementById('functionHead').value = f.headId || '';
                     document.getElementById('functionDescription').value = f.description || '';
@@ -1266,7 +1588,7 @@
                 }
             } else {
                 editingId = null;
-                document.getElementById('functionModalTitle').textContent = 'Нова функція';
+                document.getElementById('functionModalTitle').textContent = t('newFunction');
                 document.getElementById('functionForm').reset();
             }
         }
@@ -1275,7 +1597,7 @@
             const c = document.getElementById('functionAssignees');
             const h = document.getElementById('functionHead');
             c.innerHTML = users.map(u => `<label class="assignee-checkbox"><input type="checkbox" value="${u.id}">${u.name || u.email}</label>`).join('');
-            h.innerHTML = '<option value="">Оберіть</option>' + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            h.innerHTML = `<option value="">${t('select')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
         }
 
         async function saveFunction(e) {
@@ -1305,12 +1627,12 @@
                 closeModal('functionModal');
                 loadAllData();
             } catch (e) {
-                alert('Помилка: ' + e.message);
+                alert(t('error') + ': ' + e.message);
             }
         }
 
         async function deleteFunction(id) {
-            if (!confirm('Видалити?')) return;
+            if (!confirm(t('deleteConfirm'))) return;
             await db.collection('companies').doc(currentCompany).collection('functions').doc(id).delete();
             loadAllData();
         }
@@ -1318,7 +1640,7 @@
         function renderFunctions() {
             const c = document.getElementById('functionsContainer');
             if (functions.length === 0) {
-                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>⚙️ Функцій немає</h3><p>Створіть першу функцію</p></div>';
+                c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>${t('noFunctions')}</h3><p>${t('createFirstFunction')}</p></div>`;
                 return;
             }
             c.innerHTML = functions.map(f => `
@@ -1332,7 +1654,7 @@
                         ${f.assigneeNames?.filter(n => n !== f.headName).map(n => `<span class="assignee-badge">${n}</span>`).join('') || ''}
                     </div>
                     <div class="function-stats">
-                        <span>📋 ${tasks.filter(t => t.function === f.name).length} завдань</span>
+                        <span>📋 ${tasks.filter(task => task.function === f.name).length} ${t('tasks')}</span>
                         <div>
                             <button class="btn btn-small" onclick="openFunctionModal('${f.id}')">✏️</button>
                             <button class="btn btn-small btn-danger" onclick="deleteFunction('${f.id}')">🗑️</button>
@@ -1365,13 +1687,13 @@
                 }
             } else {
                 document.getElementById('regularTaskForm').reset();
-                document.getElementById('regularTaskAssignees').innerHTML = '<p style="color:#7f8c8d;">Спочатку оберіть функцію</p>';
+                document.getElementById('regularTaskAssignees').innerHTML = `<p style="color:#7f8c8d;">${t('selectFunctionFirst')}</p>`;
             }
         }
 
         function updateRegularTaskFunctions() {
             const s = document.getElementById('regularTaskFunction');
-            s.innerHTML = '<option value="">Оберіть</option>' + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            s.innerHTML = `<option value="">${t('select')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
         }
 
         function updateRegularTaskAssignees() {
@@ -1380,7 +1702,7 @@
             const f = functions.find(x => x.name === fn);
             
             if (!f || !f.assigneeIds?.length) {
-                c.innerHTML = '<p style="color:#7f8c8d;">Немає учасників</p>';
+                c.innerHTML = `<p style="color:#7f8c8d;">${t('noMembers')}</p>`;
                 return;
             }
             
@@ -1394,7 +1716,7 @@
             e.preventDefault();
             
             const assigneeIds = Array.from(document.querySelectorAll('#regularTaskAssignees input:checked')).map(cb => cb.value);
-            if (!assigneeIds.length) { alert('Оберіть виконавців'); return; }
+            if (!assigneeIds.length) { alert(currentLang === 'ua' ? 'Оберіть виконавців' : 'Выберите исполнителей'); return; }
             
             const data = {
                 title: document.getElementById('regularTaskTitle').value.trim(),
@@ -1414,7 +1736,7 @@
                 closeModal('regularTaskModal');
                 loadAllData();
             } catch (e) {
-                alert('Помилка: ' + e.message);
+                alert(t('error') + ': ' + e.message);
             }
         }
 
@@ -1438,27 +1760,27 @@
                     priority: 'medium',
                     pinned: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    creatorName: 'Система'
+                    creatorName: currentLang === 'ua' ? 'Система' : 'Система'
                 });
             });
             
             await batch.commit();
-            alert(`✅ Створено ${rt.assigneeIds.length} завдань`);
+            alert(`✅ ${currentLang === 'ua' ? 'Створено' : 'Создано'} ${rt.assigneeIds.length} ${currentLang === 'ua' ? 'завдань' : 'задач'}`);
             loadAllData();
         }
 
         async function deleteRegularTask(id) {
-            if (!confirm('Видалити?')) return;
+            if (!confirm(t('deleteConfirm'))) return;
             await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(id).delete();
             loadAllData();
         }
 
         function renderRegularTasks() {
             const c = document.getElementById('regularTasksContainer');
-            const pt = { daily: 'Щодня', weekly: 'Щотижня', monthly: 'Щомісяця' };
+            const pt = { daily: t('daily'), weekly: t('weekly'), monthly: t('monthly') };
             
             if (regularTasks.length === 0) {
-                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>🔄 Регулярних немає</h3><p>Створіть регулярне завдання</p></div>';
+                c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>${t('noRegular')}</h3><p>${t('createRegular')}</p></div>`;
                 return;
             }
             
@@ -1468,12 +1790,12 @@
                         <div class="function-title">${rt.title}</div>
                         <span class="badge" style="background:#f3e5f5;color:#7b1fa2;">${pt[rt.period] || rt.period}</span>
                     </div>
-                    <div style="font-size:0.85rem;color:#7f8c8d;margin-bottom:0.5rem;">Функція: ${rt.function}</div>
+                    <div style="font-size:0.85rem;color:#7f8c8d;margin-bottom:0.5rem;">${t('function')}: ${rt.function}</div>
                     <div class="function-assignees">
                         ${rt.assigneeNames?.map(n => `<span class="assignee-badge">${n}</span>`).join('') || ''}
                     </div>
                     <div class="function-stats">
-                        <button class="btn btn-small btn-success" onclick="generateFromRegular('${rt.id}')">⚡ Створити</button>
+                        <button class="btn btn-small btn-success" onclick="generateFromRegular('${rt.id}')">${t('create')}</button>
                         <div>
                             <button class="btn btn-small" onclick="openRegularTaskModal('${rt.id}')">✏️</button>
                             <button class="btn btn-small btn-danger" onclick="deleteRegularTask('${rt.id}')">🗑️</button>
@@ -1511,9 +1833,11 @@
                 document.getElementById('inviteLinkText').value = link;
                 document.getElementById('inviteLink').style.display = 'block';
                 
-                alert(`✅ Запрошення створено!\n\nНадішліть посилання співробітнику.\nВін має увійти з email: ${email}`);
+                alert(currentLang === 'ua' 
+                    ? `✅ Запрошення створено!\n\nНадішліть посилання співробітнику.\nВін має увійти з email: ${email}`
+                    : `✅ Приглашение создано!\n\nОтправьте ссылку сотруднику.\nОн должен войти с email: ${email}`);
             } catch (e) {
-                alert('Помилка: ' + e.message);
+                alert(t('error') + ': ' + e.message);
             }
         }
 
@@ -1521,13 +1845,13 @@
             const input = document.getElementById('inviteLinkText');
             input.select();
             document.execCommand('copy');
-            alert('📋 Посилання скопійовано!');
+            alert(t('copied'));
         }
 
         async function deleteUser(id) {
             const u = users.find(x => x.id === id);
-            if (u?.role === 'owner') { alert('Не можна видалити власника'); return; }
-            if (!confirm('Видалити?')) return;
+            if (u?.role === 'owner') { alert(currentLang === 'ua' ? 'Не можна видалити власника' : 'Нельзя удалить владельца'); return; }
+            if (!confirm(t('deleteConfirm'))) return;
             await db.collection('companies').doc(currentCompany).collection('users').doc(id).delete();
             loadAllData();
         }
@@ -1535,7 +1859,7 @@
         function renderUsers() {
             const c = document.getElementById('usersContainer');
             if (users.length === 0) {
-                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>👥 Немає користувачів</h3></div>';
+                c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>${t('noUsers')}</h3></div>`;
                 return;
             }
             
@@ -1552,7 +1876,7 @@
                         ${u.position ? `<div>💼 ${u.position}</div>` : ''}
                     </div>
                     <div class="user-stats">
-                        <span>📋 ${tasks.filter(t => t.assigneeId === u.id).length} завдань</span>
+                        <span>📋 ${tasks.filter(task => task.assigneeId === u.id).length} ${t('tasks')}</span>
                         <div>
                             ${canDelete && u.role !== 'owner' ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')">🗑️</button>` : ''}
                         </div>
@@ -1568,10 +1892,10 @@
             const now = new Date();
             const tm = new Date(now); tm.setDate(tm.getDate() + 1);
             
-            const urgent = tasks.filter(t => t.deadline && new Date(t.deadline) < now && t.status !== 'done').length;
-            const warning = tasks.filter(t => { const d = new Date(t.deadline); return d >= now && d <= tm && t.status !== 'done'; }).length;
-            const active = tasks.filter(t => t.status === 'progress').length;
-            const completed = tasks.filter(t => t.status === 'done').length;
+            const urgent = tasks.filter(task => task.deadline && new Date(task.deadline) < now && task.status !== 'done').length;
+            const warning = tasks.filter(task => { const d = new Date(task.deadline); return d >= now && d <= tm && task.status !== 'done'; }).length;
+            const active = tasks.filter(task => task.status === 'progress').length;
+            const completed = tasks.filter(task => task.status === 'done').length;
             
             document.getElementById('urgentCount').textContent = urgent;
             document.getElementById('warningCount').textContent = warning;
@@ -1579,48 +1903,12 @@
             document.getElementById('completedCount').textContent = completed;
             
             const wl = {};
-            tasks.filter(t => t.status !== 'done').forEach(t => { wl[t.assigneeName || 'Не призначено'] = (wl[t.assigneeName || 'Не призначено'] || 0) + 1; });
+            tasks.filter(task => task.status !== 'done').forEach(task => { wl[task.assigneeName || t('notAssigned')] = (wl[task.assigneeName || t('notAssigned')] || 0) + 1; });
             
             document.getElementById('controlContent').innerHTML = `
-                <h3 style="margin-bottom:0.8rem;">👥 Навантаження</h3>
-                ${Object.entries(wl).map(([n, c]) => `<div style="display:flex;justify-content:space-between;padding:0.4rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;"><span>${n}</span><span style="font-weight:600;color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c}</span></div>`).join('') || '<p style="color:#7f8c8d;">Немає активних завдань</p>'}
+                <h3 style="margin-bottom:0.8rem;">${t('workload')}</h3>
+                ${Object.entries(wl).map(([n, c]) => `<div style="display:flex;justify-content:space-between;padding:0.4rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;"><span>${n}</span><span style="font-weight:600;color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c}</span></div>`).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
             `;
-        }
-
-        // =====================
-        // HELPERS
-        // =====================
-        function updateSelects() {
-            const tf = document.getElementById('taskFunction');
-            const ta = document.getElementById('taskAssignee');
-            const ff = document.getElementById('functionFilter');
-            const af = document.getElementById('assigneeFilter');
-            
-            if (tf) tf.innerHTML = '<option value="">Без функції</option>' + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
-            if (ta) ta.innerHTML = '<option value="">Оберіть</option>' + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
-            if (ff) ff.innerHTML = '<option value="">Всі функції</option>' + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
-            if (af) af.innerHTML = '<option value="">Всі</option>' + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
-        }
-
-        function formatDate(s) {
-            const d = new Date(s);
-            return d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }
-
-        function switchTab(t) {
-            document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
-            document.getElementById(t + 'Tab').classList.add('active');
-            document.querySelector(`[onclick="switchTab('${t}')"]`).classList.add('active');
-            
-            switch (t) {
-                case 'tasks': renderTasks(); break;
-                case 'control': renderControl(); break;
-                case 'regular': renderRegularTasks(); break;
-                case 'functions': renderFunctions(); break;
-                case 'users': renderUsers(); break;
-                case 'admin': renderAdminPanel(); break;
-            }
         }
 
         // =====================
@@ -1647,16 +1935,16 @@
                 }
                 
                 if (companies.length === 0) {
-                    container.innerHTML = '<p style="color:#7f8c8d;text-align:center;padding:2rem;">Немає компаній</p>';
+                    container.innerHTML = `<p style="color:#7f8c8d;text-align:center;padding:2rem;">${t('noCompanies')}</p>`;
                     return;
                 }
                 
                 container.innerHTML = companies.map(c => `
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.5rem;border-left:4px solid var(--info);">
                         <div>
-                            <strong>${c.name || 'Без назви'}</strong>
+                            <strong>${c.name || (currentLang === 'ua' ? 'Без назви' : 'Без названия')}</strong>
                             <div style="font-size:0.8rem;color:#7f8c8d;">
-                                📧 ${c.ownerEmail || '-'} | 👥 ${c.usersCount} користувачів
+                                📧 ${c.ownerEmail || '-'} | 👥 ${c.usersCount} ${t('users')}
                             </div>
                             <div style="font-size:0.75rem;color:#bdc3c7;">ID: ${c.id}</div>
                         </div>
@@ -1667,7 +1955,7 @@
                     </div>
                 `).join('');
             } catch (e) {
-                container.innerHTML = `<p style="color:#e74c3c;">Помилка: ${e.message}</p>`;
+                container.innerHTML = `<p style="color:#e74c3c;">${t('error')}: ${e.message}</p>`;
             }
         }
 
@@ -1682,13 +1970,9 @@
             
             const btn = document.getElementById('adminCreateBtn');
             btn.disabled = true;
-            btn.textContent = 'Створюємо...';
+            btn.textContent = currentLang === 'ua' ? 'Створюємо...' : 'Создаем...';
             
             try {
-                // Create user in Firebase Auth using REST API (since we can't create users for others directly)
-                // Instead, we'll create an invite and the owner will set their password on first login
-                
-                // Create company document
                 const companyRef = db.collection('companies').doc();
                 const companyId = companyRef.id;
                 
@@ -1699,7 +1983,6 @@
                     createdBy: currentUser.uid
                 });
                 
-                // Create invite for owner
                 await db.collection('invites').add({
                     email: email,
                     companyId: companyId,
@@ -1711,33 +1994,36 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                alert(`✅ Компанія "${companyName}" створена!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\nНадішліть ці дані клієнту.\nВін має зареєструватися на сайті з цим email.`);
+                alert(currentLang === 'ua'
+                    ? `✅ Компанія "${companyName}" створена!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\nНадішліть ці дані клієнту.`
+                    : `✅ Компания "${companyName}" создана!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\nОтправьте эти данные клиенту.`);
                 
                 document.getElementById('adminCreateForm').reset();
                 renderAdminPanel();
             } catch (e) {
-                alert('Помилка: ' + e.message);
+                alert(t('error') + ': ' + e.message);
             }
             
             btn.disabled = false;
-            btn.textContent = '🚀 Створити компанію та Owner';
+            btn.textContent = t('createCompanyBtn');
         }
 
         async function adminViewCompany(companyId) {
-            // Switch to this company view
             currentCompany = companyId;
             await loadAllData();
             switchTab('users');
-            alert('Переключено на компанію. Дивіться вкладку "Команда".');
+            alert(currentLang === 'ua' ? 'Переключено на компанію. Дивіться вкладку "Команда".' : 'Переключено на компанию. Смотрите вкладку "Команда".');
         }
 
         async function adminDeleteCompany(companyId, companyName) {
-            if (!confirm(`⚠️ Видалити компанію "${companyName}"?\n\nЦе видалить ВСІ дані:\n- Завдання\n- Функції\n- Користувачів\n\nЦю дію НЕ МОЖНА скасувати!`)) return;
+            const confirmMsg = currentLang === 'ua'
+                ? `⚠️ Видалити компанію "${companyName}"?\n\nЦе видалить ВСІ дані:\n- Завдання\n- Функції\n- Користувачів\n\nЦю дію НЕ МОЖНА скасувати!`
+                : `⚠️ Удалить компанию "${companyName}"?\n\nЭто удалит ВСЕ данные:\n- Задачи\n- Функции\n- Пользователей\n\nЭто действие НЕЛЬЗЯ отменить!`;
             
-            if (!confirm('Ви ТОЧНО впевнені? Введіть "так" для підтвердження.')) return;
+            if (!confirm(confirmMsg)) return;
+            if (!confirm(currentLang === 'ua' ? 'Ви ТОЧНО впевнені?' : 'Вы ТОЧНО уверены?')) return;
             
             try {
-                // Delete subcollections
                 const subcollections = ['users', 'tasks', 'functions', 'regularTasks'];
                 for (const sub of subcollections) {
                     const snap = await db.collection('companies').doc(companyId).collection(sub).get();
@@ -1746,19 +2032,53 @@
                     await batch.commit();
                 }
                 
-                // Delete company document
                 await db.collection('companies').doc(companyId).delete();
                 
-                // Delete related invites
                 const invitesSnap = await db.collection('invites').where('companyId', '==', companyId).get();
                 const invitesBatch = db.batch();
                 invitesSnap.docs.forEach(doc => invitesBatch.delete(doc.ref));
                 await invitesBatch.commit();
                 
-                alert('✅ Компанію видалено');
+                alert(currentLang === 'ua' ? '✅ Компанію видалено' : '✅ Компания удалена');
                 renderAdminPanel();
             } catch (e) {
-                alert('Помилка: ' + e.message);
+                alert(t('error') + ': ' + e.message);
+            }
+        }
+
+        // =====================
+        // HELPERS
+        // =====================
+        function updateSelects() {
+            const tf = document.getElementById('taskFunction');
+            const ta = document.getElementById('taskAssignee');
+            const ff = document.getElementById('functionFilter');
+            const af = document.getElementById('assigneeFilter');
+            
+            if (tf) tf.innerHTML = `<option value="">${t('noFunction')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            if (ta) ta.innerHTML = `<option value="">${t('select')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            if (af) af.innerHTML = `<option value="">${t('all')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+        }
+
+        function formatDate(s) {
+            const d = new Date(s);
+            return d.toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+            document.getElementById(t + 'Tab').classList.add('active');
+            document.querySelector(`[onclick="switchTab('${t}')"]`).classList.add('active');
+            
+            switch (t) {
+                case 'tasks': renderTasks(); break;
+                case 'control': renderControl(); break;
+                case 'regular': renderRegularTasks(); break;
+                case 'functions': renderFunctions(); break;
+                case 'users': renderUsers(); break;
+                case 'admin': renderAdminPanel(); break;
             }
         }
 
@@ -1772,6 +2092,11 @@
                 if (e.target === document.getElementById(id)) closeModal(id);
             });
         }
+
+        // Init language on load
+        document.addEventListener('DOMContentLoaded', function() {
+            setLanguage(currentLang);
+        });
     </script>
 </body>
 </html>
