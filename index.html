@@ -80,7 +80,6 @@
         
         .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
         
-        /* TABS */
         .tab-navigation { 
             display: flex; 
             background: var(--white); 
@@ -111,7 +110,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* CONTROLS */
         .controls { 
             background: var(--white); 
             padding: 1rem; 
@@ -125,7 +123,6 @@
         
         .controls-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
         
-        /* BUTTONS */
         .btn { 
             background: var(--info); 
             color: white; 
@@ -152,7 +149,23 @@
         .btn-clear { background: var(--gray); }
         .btn-small { padding: 0.4rem 0.6rem; font-size: 0.8rem; min-height: 36px; }
         
-        /* FILTERS */
+        .btn-google {
+            background: white;
+            color: #444;
+            border: 2px solid #ddd;
+            font-weight: 600;
+        }
+        
+        .btn-google:hover {
+            background: #f8f9fa;
+            border-color: #ccc;
+        }
+        
+        .btn-google img {
+            width: 20px;
+            height: 20px;
+        }
+        
         .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; width: 100%; }
         
         .filter-select { 
@@ -168,7 +181,6 @@
         
         .filter-select:focus { outline: none; border-color: var(--info); }
         
-        /* CARDS */
         .tasks-container, .cards-grid {
             background: var(--white);
             border-radius: var(--radius);
@@ -247,9 +259,6 @@
         .badge-progress { background: #fff3e0; color: #f57c00; }
         .badge-review { background: #fce4ec; color: #c2185b; }
         .badge-done { background: #e8f5e8; color: #388e3c; }
-        .badge-single { background: #e3f2fd; color: #1976d2; }
-        .badge-regular { background: #f3e5f5; color: #7b1fa2; }
-        .badge-bottleneck { background: #ffebee; color: #d32f2f; }
         .badge-high { background: #ffebee; color: #d32f2f; }
         .badge-medium { background: #fff3e0; color: #f57c00; }
         .badge-low { background: #e8f5e8; color: #388e3c; }
@@ -278,7 +287,6 @@
         .empty-state { text-align: center; padding: 2.5rem 1.5rem; color: var(--gray); }
         .empty-state h3 { margin-bottom: 0.5rem; color: var(--dark); font-size: 1.1rem; }
         
-        /* MODAL */
         .modal { 
             display: none; 
             position: fixed; 
@@ -325,7 +333,6 @@
         
         .close:hover { color: white; }
         
-        /* FORMS */
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: span 1; }
@@ -343,7 +350,6 @@
         .form-textarea { resize: vertical; min-height: 70px; }
         .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
         
-        /* DASHBOARD */
         .dashboard-cards {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -380,7 +386,7 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow-lg);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             overflow: hidden;
         }
         
@@ -394,8 +400,6 @@
         .auth-header h2 { font-size: 1.4rem; margin-bottom: 0.3rem; }
         .auth-header p { opacity: 0.9; font-size: 0.85rem; }
         .auth-body { padding: 1.25rem; }
-        .auth-form h3 { margin-bottom: 1rem; color: var(--dark); text-align: center; font-size: 1rem; }
-        .main-interface { display: none; }
         
         .auth-tabs { display: flex; margin-bottom: 1rem; }
         .auth-tab {
@@ -421,7 +425,28 @@
         .auth-message.error { background: #ffebee; color: #d32f2f; }
         .auth-message.info { background: #e3f2fd; color: #1976d2; }
         
-        /* LOADING */
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.25rem 0;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+        
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #ecf0f1;
+        }
+        
+        .auth-divider span {
+            padding: 0 1rem;
+        }
+        
+        .main-interface { display: none; }
+        
         .loading {
             display: flex;
             justify-content: center;
@@ -440,7 +465,6 @@
         
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* FOOTER */
         .footer {
             text-align: center;
             padding: 1.25rem;
@@ -453,7 +477,6 @@
         .footer-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
         .footer-links a { color: var(--info); text-decoration: none; font-size: 0.8rem; }
         
-        /* SUPPORT */
         .support-btn {
             position: fixed;
             bottom: 16px;
@@ -477,7 +500,6 @@
         .support-btn:hover { transform: translateY(-2px); }
         .support-btn svg { width: 18px; height: 18px; stroke: #ffffff; }
         
-        /* DESKTOP */
         @media (min-width: 768px) {
             .header { padding: 1rem 2rem; }
             .logo { font-size: 1.4rem; }
@@ -510,7 +532,6 @@
         
         .assignee-checkbox:hover { background: #e0e0e0; }
         .assignee-checkbox input { width: 14px; height: 14px; cursor: pointer; }
-        .assignee-checkbox.checked { background: #e8f5e8; color: var(--success); }
         
         .company-badge {
             background: rgba(255,255,255,0.3);
@@ -518,6 +539,22 @@
             border-radius: 10px;
             font-size: 0.7rem;
             margin-left: 0.5rem;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+        
+        .input-wrapper {
+            position: relative;
         }
     </style>
 </head>
@@ -561,17 +598,41 @@
                     
                     <!-- LOGIN -->
                     <div id="loginTab">
+                        <button onclick="signInWithGoogle()" class="btn btn-google" style="width:100%;">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                            Увійти через Google
+                        </button>
+                        
+                        <div class="auth-divider"><span>або</span></div>
+                        
                         <div class="form-group">
                             <label class="form-label">Email:</label>
                             <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com">
                         </div>
-                        <button onclick="sendSignInLink()" class="btn btn-success" style="width:100%;margin-top:1rem;" id="sendLinkBtn">
-                            📧 Надіслати посилання для входу
+                        <div class="form-group" style="margin-top:0.75rem;">
+                            <label class="form-label">Пароль:</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="loginPassword" class="form-input" placeholder="••••••••">
+                                <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+                            </div>
+                        </div>
+                        <button onclick="signInWithEmail()" class="btn btn-success" style="width:100%;margin-top:1rem;">
+                            🔐 Увійти
                         </button>
+                        <p style="text-align:center;margin-top:0.75rem;font-size:0.85rem;">
+                            <a href="#" onclick="resetPassword()" style="color:var(--info);">Забули пароль?</a>
+                        </p>
                     </div>
                     
                     <!-- REGISTER -->
                     <div id="registerTab" style="display:none;">
+                        <button onclick="signInWithGoogle()" class="btn btn-google" style="width:100%;">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                            Реєстрація через Google
+                        </button>
+                        
+                        <div class="auth-divider"><span>або</span></div>
+                        
                         <div class="form-group">
                             <label class="form-label">Ваше ім'я:</label>
                             <input type="text" id="registerName" class="form-input" placeholder="Олександр">
@@ -581,10 +642,17 @@
                             <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com">
                         </div>
                         <div class="form-group" style="margin-top:0.75rem;">
+                            <label class="form-label">Пароль:</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="registerPassword" class="form-input" placeholder="Мінімум 6 символів">
+                                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)">👁️</button>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top:0.75rem;">
                             <label class="form-label">Назва компанії:</label>
                             <input type="text" id="registerCompany" class="form-input" placeholder="Моя компанія">
                         </div>
-                        <button onclick="registerNewCompany()" class="btn btn-success" style="width:100%;margin-top:1rem;" id="registerBtn">
+                        <button onclick="registerWithEmail()" class="btn btn-success" style="width:100%;margin-top:1rem;">
                             🚀 Створити компанію
                         </button>
                     </div>
@@ -662,7 +730,6 @@
             <!-- USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="controls">
-                    <button class="btn btn-success" onclick="openUserModal()">+ Додати</button>
                     <button class="btn btn-warning" onclick="openInviteModal()">📤 Запросити</button>
                 </div>
                 <div id="usersContainer" class="cards-grid">
@@ -727,23 +794,6 @@
         </div>
     </div>
 
-    <div id="userModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeModal('userModal')">&times;</span><h2 id="userModalTitle">Новий співробітник</h2></div>
-            <div class="modal-body">
-                <form id="userForm" onsubmit="saveUser(event)">
-                    <div class="form-grid">
-                        <div class="form-group"><label class="form-label">Ім'я *</label><input type="text" id="userName" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Email *</label><input type="email" id="userEmail" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Роль *</label><select id="userRole" class="form-select" required><option value="employee">Співробітник</option><option value="manager">Менеджер</option></select></div>
-                        <div class="form-group"><label class="form-label">Посада</label><input type="text" id="userPosition" class="form-input"></div>
-                    </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('userModal')">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div id="inviteModal" class="modal">
         <div class="modal-content">
             <div class="modal-header"><span class="close" onclick="closeModal('inviteModal')">&times;</span><h2>📤 Запрошення</h2></div>
@@ -757,7 +807,12 @@
                         <label class="form-label">Роль</label>
                         <select id="inviteRole" class="form-select"><option value="employee">Співробітник</option><option value="manager">Менеджер</option></select>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('inviteModal')">Скасувати</button><button type="submit" class="btn btn-success">📤 Надіслати</button></div>
+                    <div id="inviteLink" style="margin-top:1rem;padding:1rem;background:#e3f2fd;border-radius:8px;display:none;">
+                        <p style="font-size:0.85rem;margin-bottom:0.5rem;"><strong>Посилання для входу:</strong></p>
+                        <input type="text" id="inviteLinkText" class="form-input" readonly style="font-size:0.8rem;">
+                        <button type="button" onclick="copyInviteLink()" class="btn btn-small" style="margin-top:0.5rem;">📋 Копіювати</button>
+                    </div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('inviteModal')">Закрити</button><button type="submit" class="btn btn-success">📤 Створити запрошення</button></div>
                 </form>
             </div>
         </div>
@@ -789,6 +844,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
 
         // =====================
         // APP STATE
@@ -805,16 +861,12 @@
         // =====================
         // AUTH FUNCTIONS
         // =====================
-        const actionCodeSettings = {
-            url: window.location.href.split('?')[0],
-            handleCodeInApp: true
-        };
-
         function showAuthTab(tab) {
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`[onclick="showAuthTab('${tab}')"]`).classList.add('active');
             document.getElementById('loginTab').style.display = tab === 'login' ? 'block' : 'none';
             document.getElementById('registerTab').style.display = tab === 'register' ? 'block' : 'none';
+            hideAuthMessage();
         }
 
         function showAuthMessage(msg, type = 'info') {
@@ -824,82 +876,116 @@
             el.style.display = 'block';
         }
 
-        async function sendSignInLink() {
-            const email = document.getElementById('loginEmail').value.trim();
-            if (!email) { showAuthMessage('Введіть email', 'error'); return; }
-            
-            const btn = document.getElementById('sendLinkBtn');
-            btn.disabled = true;
-            btn.textContent = 'Надсилаємо...';
-            
+        function hideAuthMessage() {
+            document.getElementById('authMessage').style.display = 'none';
+        }
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
+        // Google Sign-In
+        async function signInWithGoogle() {
             try {
-                await auth.sendSignInLinkToEmail(email, actionCodeSettings);
-                localStorage.setItem('emailForSignIn', email);
-                showAuthMessage('📧 Посилання надіслано! Перевірте пошту.', 'success');
+                const result = await auth.signInWithPopup(googleProvider);
+                // Check if new user needs company
+                await handleNewUser(result.user, result.user.displayName);
             } catch (e) {
                 showAuthMessage('Помилка: ' + e.message, 'error');
             }
-            
-            btn.disabled = false;
-            btn.textContent = '📧 Надіслати посилання для входу';
         }
 
-        async function registerNewCompany() {
+        // Email + Password Sign In
+        async function signInWithEmail() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showAuthMessage('Введіть email і пароль', 'error');
+                return;
+            }
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (e) {
+                let msg = 'Помилка входу';
+                if (e.code === 'auth/user-not-found') msg = 'Користувача не знайдено';
+                if (e.code === 'auth/wrong-password') msg = 'Невірний пароль';
+                if (e.code === 'auth/invalid-email') msg = 'Невірний формат email';
+                showAuthMessage(msg, 'error');
+            }
+        }
+
+        // Email + Password Registration
+        async function registerWithEmail() {
             const name = document.getElementById('registerName').value.trim();
             const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
             const company = document.getElementById('registerCompany').value.trim();
             
-            if (!name || !email || !company) {
+            if (!name || !email || !password || !company) {
                 showAuthMessage('Заповніть всі поля', 'error');
                 return;
             }
             
-            const btn = document.getElementById('registerBtn');
-            btn.disabled = true;
-            btn.textContent = 'Створюємо...';
+            if (password.length < 6) {
+                showAuthMessage('Пароль має бути мінімум 6 символів', 'error');
+                return;
+            }
             
             try {
-                // Store registration data
-                localStorage.setItem('pendingRegistration', JSON.stringify({ name, email, company }));
-                localStorage.setItem('emailForSignIn', email);
+                const result = await auth.createUserWithEmailAndPassword(email, password);
+                await result.user.updateProfile({ displayName: name });
                 
-                await auth.sendSignInLinkToEmail(email, actionCodeSettings);
-                showAuthMessage('📧 Посилання надіслано! Перевірте пошту для завершення реєстрації.', 'success');
+                // Create company
+                await createNewCompany(result.user, { name, email, company });
+                showAuthMessage('✅ Реєстрація успішна!', 'success');
+            } catch (e) {
+                let msg = 'Помилка реєстрації';
+                if (e.code === 'auth/email-already-in-use') msg = 'Цей email вже зареєстровано';
+                if (e.code === 'auth/weak-password') msg = 'Пароль занадто простий';
+                if (e.code === 'auth/invalid-email') msg = 'Невірний формат email';
+                showAuthMessage(msg, 'error');
+            }
+        }
+
+        // Password Reset
+        async function resetPassword() {
+            const email = document.getElementById('loginEmail').value.trim();
+            if (!email) {
+                showAuthMessage('Введіть email для відновлення пароля', 'error');
+                return;
+            }
+            
+            try {
+                await auth.sendPasswordResetEmail(email);
+                showAuthMessage('📧 Посилання для відновлення надіслано на ' + email, 'success');
             } catch (e) {
                 showAuthMessage('Помилка: ' + e.message, 'error');
             }
-            
-            btn.disabled = false;
-            btn.textContent = '🚀 Створити компанію';
         }
 
-        async function handleEmailLink() {
-            if (!auth.isSignInWithEmailLink(window.location.href)) return false;
+        // Handle new user (check for invite or create company prompt)
+        async function handleNewUser(user, displayName) {
+            const companyId = await findUserCompany(user.uid, user.email);
             
-            let email = localStorage.getItem('emailForSignIn');
-            if (!email) {
-                email = prompt('Введіть email для підтвердження:');
-            }
-            
-            try {
-                const result = await auth.signInWithEmailLink(email, window.location.href);
-                localStorage.removeItem('emailForSignIn');
-                
-                // Check for pending registration
-                const pendingReg = localStorage.getItem('pendingRegistration');
-                if (pendingReg) {
-                    const regData = JSON.parse(pendingReg);
-                    await createNewCompany(result.user, regData);
-                    localStorage.removeItem('pendingRegistration');
+            if (!companyId) {
+                // New user without company - check if registering
+                const companyName = document.getElementById('registerCompany')?.value?.trim();
+                if (companyName) {
+                    await createNewCompany(user, {
+                        name: displayName || user.email.split('@')[0],
+                        email: user.email,
+                        company: companyName
+                    });
                 }
-                
-                // Clear URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-                return true;
-            } catch (e) {
-                console.error('Email link error:', e);
-                showAuthMessage('Помилка входу: ' + e.message, 'error');
-                return false;
             }
         }
 
@@ -921,7 +1007,6 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             
-            // Add user to global users collection with company reference
             await db.collection('users').doc(user.uid).set({
                 email: regData.email,
                 companyId: companyId,
@@ -930,13 +1015,13 @@
         }
 
         async function findUserCompany(userId, email) {
-            // Check global users collection first
+            // Check global users collection
             const userDoc = await db.collection('users').doc(userId).get();
             if (userDoc.exists) {
                 return userDoc.data().companyId;
             }
             
-            // Search for invites by email
+            // Search for invites
             const invitesQuery = await db.collection('invites')
                 .where('email', '==', email)
                 .where('accepted', '==', false)
@@ -946,9 +1031,9 @@
             if (!invitesQuery.empty) {
                 const invite = invitesQuery.docs[0];
                 const inviteData = invite.data();
-                
-                // Accept invite - add user to company
                 const companyId = inviteData.companyId;
+                
+                // Accept invite
                 await db.collection('companies').doc(companyId).collection('users').doc(userId).set({
                     name: email.split('@')[0],
                     email: email,
@@ -981,29 +1066,27 @@
             if (user) {
                 currentUser = user;
                 
-                // Find user's company
                 const companyId = await findUserCompany(user.uid, user.email);
                 
                 if (!companyId) {
                     document.getElementById('loadingPage').style.display = 'none';
                     document.getElementById('authPage').style.display = 'flex';
-                    showAuthMessage('Вас не знайдено в жодній компанії. Зареєструйте нову або попросіть запрошення.', 'info');
+                    showAuthMessage('Створіть нову компанію або попросіть запрошення', 'info');
                     showAuthTab('register');
+                    document.getElementById('registerName').value = user.displayName || '';
+                    document.getElementById('registerEmail').value = user.email || '';
                     return;
                 }
                 
                 currentCompany = companyId;
                 
-                // Load user data
                 const userDoc = await db.collection('companies').doc(companyId).collection('users').doc(user.uid).get();
                 currentUserData = userDoc.exists ? { id: user.uid, ...userDoc.data() } : { id: user.uid, email: user.email, role: 'employee' };
                 
-                // Load company data
                 const companyDoc = await db.collection('companies').doc(companyId).get();
                 const companyData = companyDoc.data();
                 
-                // Update UI
-                document.getElementById('currentUserName').textContent = currentUserData.name || user.email;
+                document.getElementById('currentUserName').textContent = currentUserData.name || user.displayName || user.email;
                 document.getElementById('currentUserRole').textContent = `(${getRoleText(currentUserData.role)})`;
                 document.getElementById('companyBadge').textContent = companyData?.name || '';
                 document.getElementById('companyBadge').style.display = 'inline';
@@ -1036,19 +1119,15 @@
         async function loadAllData() {
             if (!currentCompany) return;
             
-            // Load users
             const usersSnap = await db.collection('companies').doc(currentCompany).collection('users').get();
             users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
             
-            // Load functions
             const funcsSnap = await db.collection('companies').doc(currentCompany).collection('functions').get();
             functions = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
             
-            // Load tasks
             const tasksSnap = await db.collection('companies').doc(currentCompany).collection('tasks').orderBy('createdAt', 'desc').get();
             tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
             
-            // Load regular tasks
             const regSnap = await db.collection('companies').doc(currentCompany).collection('regularTasks').get();
             regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
             
@@ -1093,7 +1172,7 @@
                 title: document.getElementById('taskTitle').value.trim(),
                 function: document.getElementById('taskFunction').value,
                 assigneeId: assigneeId,
-                assigneeName: assignee?.name || '',
+                assigneeName: assignee?.name || assignee?.email || '',
                 deadline: document.getElementById('taskDeadline').value,
                 priority: document.getElementById('taskPriority').value,
                 status: document.getElementById('taskStatus').value,
@@ -1179,7 +1258,7 @@
                             <span class="badge badge-${t.status}">${st[t.status] || t.status}</span>
                             <span class="badge badge-${t.priority}">${pt[t.priority] || t.priority}</span>
                         </div>
-                        ${t.description ? `<div style="font-size:0.8rem;color:#7f8c8d;padding:0.5rem;background:#f8f9fa;border-radius:8px;">${t.description}</div>` : ''}
+                        ${t.description ? `<div style="font-size:0.8rem;color:#7f8c8d;padding:0.5rem;background:#f8f9fa;border-radius:8px;margin-top:0.5rem;">${t.description}</div>` : ''}
                         <div class="task-actions">
                             <button class="btn btn-small" onclick="openTaskModal('${t.id}')">✏️</button>
                             <button class="btn btn-small btn-danger" onclick="deleteTask('${t.id}')">🗑️</button>
@@ -1234,10 +1313,10 @@
             const data = {
                 name: document.getElementById('functionName').value.trim(),
                 headId: headId,
-                headName: head?.name || '',
+                headName: head?.name || head?.email || '',
                 description: document.getElementById('functionDescription').value.trim(),
                 assigneeIds: assigneeIds,
-                assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || '').filter(Boolean)
+                assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || users.find(u => u.id === id)?.email || '').filter(Boolean)
             };
             
             try {
@@ -1263,7 +1342,7 @@
         function renderFunctions() {
             const c = document.getElementById('functionsContainer');
             if (functions.length === 0) {
-                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>⚙️ Функцій немає</h3></div>';
+                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>⚙️ Функцій немає</h3><p>Створіть першу функцію</p></div>';
                 return;
             }
             c.innerHTML = functions.map(f => `
@@ -1346,7 +1425,7 @@
                 function: document.getElementById('regularTaskFunction').value,
                 period: document.getElementById('regularTaskPeriod').value,
                 assigneeIds: assigneeIds,
-                assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || '').filter(Boolean)
+                assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || users.find(u => u.id === id)?.email || '').filter(Boolean)
             };
             
             try {
@@ -1381,6 +1460,7 @@
                     deadline: deadline.toISOString().slice(0, 16),
                     status: 'new',
                     priority: 'medium',
+                    pinned: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     creatorName: 'Система'
                 });
@@ -1391,12 +1471,18 @@
             loadAllData();
         }
 
+        async function deleteRegularTask(id) {
+            if (!confirm('Видалити?')) return;
+            await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(id).delete();
+            loadAllData();
+        }
+
         function renderRegularTasks() {
             const c = document.getElementById('regularTasksContainer');
             const pt = { daily: 'Щодня', weekly: 'Щотижня', monthly: 'Щомісяця' };
             
             if (regularTasks.length === 0) {
-                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>🔄 Регулярних немає</h3></div>';
+                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>🔄 Регулярних немає</h3><p>Створіть регулярне завдання</p></div>';
                 return;
             }
             
@@ -1404,7 +1490,7 @@
                 <div class="function-card">
                     <div class="function-header">
                         <div class="function-title">${rt.title}</div>
-                        <span class="badge badge-regular">${pt[rt.period] || rt.period}</span>
+                        <span class="badge" style="background:#f3e5f5;color:#7b1fa2;">${pt[rt.period] || rt.period}</span>
                     </div>
                     <div style="font-size:0.85rem;color:#7f8c8d;margin-bottom:0.5rem;">Функція: ${rt.function}</div>
                     <div class="function-assignees">
@@ -1421,73 +1507,20 @@
             `).join('');
         }
 
-        async function deleteRegularTask(id) {
-            if (!confirm('Видалити?')) return;
-            await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(id).delete();
-            loadAllData();
-        }
-
         // =====================
-        // USERS
+        // USERS & INVITES
         // =====================
-        function openUserModal(id = null) {
-            document.getElementById('userModal').style.display = 'block';
-            editingId = id;
-            
-            if (id) {
-                const u = users.find(x => x.id === id);
-                if (u) {
-                    document.getElementById('userModalTitle').textContent = 'Редагувати';
-                    document.getElementById('userName').value = u.name || '';
-                    document.getElementById('userEmail').value = u.email || '';
-                    document.getElementById('userRole').value = u.role || 'employee';
-                    document.getElementById('userPosition').value = u.position || '';
-                }
-            } else {
-                document.getElementById('userModalTitle').textContent = 'Новий';
-                document.getElementById('userForm').reset();
-            }
-        }
-
-        async function saveUser(e) {
-            e.preventDefault();
-            
-            const data = {
-                name: document.getElementById('userName').value.trim(),
-                email: document.getElementById('userEmail').value.trim(),
-                role: document.getElementById('userRole').value,
-                position: document.getElementById('userPosition').value.trim()
-            };
-            
-            try {
-                if (editingId) {
-                    await db.collection('companies').doc(currentCompany).collection('users').doc(editingId).update(data);
-                } else {
-                    // For new users, create invite instead
-                    await sendInviteToEmail(data.email, data.role);
-                    closeModal('userModal');
-                    return;
-                }
-                closeModal('userModal');
-                loadAllData();
-            } catch (e) {
-                alert('Помилка: ' + e.message);
-            }
-        }
-
         function openInviteModal() {
             document.getElementById('inviteModal').style.display = 'block';
+            document.getElementById('inviteForm').reset();
+            document.getElementById('inviteLink').style.display = 'none';
         }
 
         async function sendInvite(e) {
             e.preventDefault();
             const email = document.getElementById('inviteEmail').value.trim();
             const role = document.getElementById('inviteRole').value;
-            await sendInviteToEmail(email, role);
-            closeModal('inviteModal');
-        }
-
-        async function sendInviteToEmail(email, role) {
+            
             try {
                 await db.collection('invites').add({
                     email: email,
@@ -1497,10 +1530,22 @@
                     accepted: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                alert(`📤 Запрошення створено!\n\nНадішліть співробітнику посилання:\n${window.location.origin}${window.location.pathname}\n\nВін має увійти з email: ${email}`);
+                
+                const link = window.location.origin + window.location.pathname;
+                document.getElementById('inviteLinkText').value = link;
+                document.getElementById('inviteLink').style.display = 'block';
+                
+                alert(`✅ Запрошення створено!\n\nНадішліть посилання співробітнику.\nВін має увійти з email: ${email}`);
             } catch (e) {
                 alert('Помилка: ' + e.message);
             }
+        }
+
+        function copyInviteLink() {
+            const input = document.getElementById('inviteLinkText');
+            input.select();
+            document.execCommand('copy');
+            alert('📋 Посилання скопійовано!');
         }
 
         async function deleteUser(id) {
@@ -1514,7 +1559,7 @@
         function renderUsers() {
             const c = document.getElementById('usersContainer');
             if (users.length === 0) {
-                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>👥 Немає</h3></div>';
+                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>👥 Немає користувачів</h3></div>';
                 return;
             }
             
@@ -1531,7 +1576,6 @@
                     <div class="user-stats">
                         <span>📋 ${tasks.filter(t => t.assigneeId === u.id).length} завдань</span>
                         <div>
-                            <button class="btn btn-small" onclick="openUserModal('${u.id}')">✏️</button>
                             ${u.role !== 'owner' ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')">🗑️</button>` : ''}
                         </div>
                     </div>
@@ -1561,7 +1605,7 @@
             
             document.getElementById('controlContent').innerHTML = `
                 <h3 style="margin-bottom:0.8rem;">👥 Навантаження</h3>
-                ${Object.entries(wl).map(([n, c]) => `<div style="display:flex;justify-content:space-between;padding:0.4rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;"><span>${n}</span><span style="font-weight:600;color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c}</span></div>`).join('') || '<p style="color:#7f8c8d;">Немає активних</p>'}
+                ${Object.entries(wl).map(([n, c]) => `<div style="display:flex;justify-content:space-between;padding:0.4rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;"><span>${n}</span><span style="font-weight:600;color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c}</span></div>`).join('') || '<p style="color:#7f8c8d;">Немає активних завдань</p>'}
             `;
         }
 
@@ -1606,18 +1650,10 @@
         }
 
         window.onclick = function(e) {
-            ['taskModal', 'functionModal', 'regularTaskModal', 'userModal', 'inviteModal'].forEach(id => {
+            ['taskModal', 'functionModal', 'regularTaskModal', 'inviteModal'].forEach(id => {
                 if (e.target === document.getElementById(id)) closeModal(id);
             });
         }
-
-        // =====================
-        // INIT
-        // =====================
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Check for email link sign-in
-            await handleEmailLink();
-        });
     </script>
 </body>
 </html>
