@@ -401,20 +401,6 @@
         .auth-header p { opacity: 0.9; font-size: 0.85rem; }
         .auth-body { padding: 1.25rem; }
         
-        .auth-tabs { display: flex; margin-bottom: 1rem; }
-        .auth-tab {
-            flex: 1;
-            padding: 0.75rem;
-            border: none;
-            background: #f0f0f0;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        .auth-tab:first-child { border-radius: 8px 0 0 8px; }
-        .auth-tab:last-child { border-radius: 0 8px 8px 0; }
-        .auth-tab.active { background: var(--info); color: white; }
-        
         .auth-message {
             padding: 0.75rem;
             border-radius: 8px;
@@ -556,6 +542,22 @@
         .input-wrapper {
             position: relative;
         }
+        
+        .no-access-card {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .no-access-card h3 {
+            color: var(--danger);
+            margin-bottom: 1rem;
+        }
+        
+        .no-access-card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -589,15 +591,18 @@
                     <p>Управління завданнями для бізнесу</p>
                 </div>
                 <div class="auth-body">
-                    <div class="auth-tabs">
-                        <button class="auth-tab active" onclick="showAuthTab('login')">Вхід</button>
-                        <button class="auth-tab" onclick="showAuthTab('register')">Реєстрація</button>
-                    </div>
-                    
                     <div id="authMessage" class="auth-message" style="display:none;"></div>
                     
-                    <!-- LOGIN -->
-                    <div id="loginTab">
+                    <!-- NO ACCESS -->
+                    <div id="noAccessCard" class="no-access-card" style="display:none;">
+                        <h3>🚫 Доступ відсутній</h3>
+                        <p>Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.</p>
+                        <a href="https://alextalko.com" target="_blank" class="btn btn-success">📞 Зв'язатися з підтримкою</a>
+                        <button onclick="logout()" class="btn" style="margin-top:0.5rem;">🔄 Спробувати інший email</button>
+                    </div>
+                    
+                    <!-- LOGIN FORM -->
+                    <div id="loginForm">
                         <button onclick="signInWithGoogle()" class="btn btn-google" style="width:100%;">
                             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                             Увійти через Google
@@ -622,39 +627,9 @@
                         <p style="text-align:center;margin-top:0.75rem;font-size:0.85rem;">
                             <a href="#" onclick="resetPassword()" style="color:var(--info);">Забули пароль?</a>
                         </p>
-                    </div>
-                    
-                    <!-- REGISTER -->
-                    <div id="registerTab" style="display:none;">
-                        <button onclick="signInWithGoogle()" class="btn btn-google" style="width:100%;">
-                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                            Реєстрація через Google
-                        </button>
-                        
-                        <div class="auth-divider"><span>або</span></div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Ваше ім'я:</label>
-                            <input type="text" id="registerName" class="form-input" placeholder="Олександр">
-                        </div>
-                        <div class="form-group" style="margin-top:0.75rem;">
-                            <label class="form-label">Email:</label>
-                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com">
-                        </div>
-                        <div class="form-group" style="margin-top:0.75rem;">
-                            <label class="form-label">Пароль:</label>
-                            <div class="input-wrapper">
-                                <input type="password" id="registerPassword" class="form-input" placeholder="Мінімум 6 символів">
-                                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)">👁️</button>
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin-top:0.75rem;">
-                            <label class="form-label">Назва компанії:</label>
-                            <input type="text" id="registerCompany" class="form-input" placeholder="Моя компанія">
-                        </div>
-                        <button onclick="registerWithEmail()" class="btn btn-success" style="width:100%;margin-top:1rem;">
-                            🚀 Створити компанію
-                        </button>
+                        <p style="text-align:center;margin-top:1rem;font-size:0.8rem;color:var(--gray);">
+                            Немає доступу? <a href="https://alextalko.com" target="_blank" style="color:var(--info);">Зв'яжіться з нами</a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -668,6 +643,7 @@
                 <button class="tab-btn" onclick="switchTab('regular')">🔄 Регулярні</button>
                 <button class="tab-btn" onclick="switchTab('functions')">⚙️ Функції</button>
                 <button class="tab-btn" onclick="switchTab('users')">👥 Команда</button>
+                <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;">🔧 Адмін</button>
             </div>
 
             <!-- TASKS -->
@@ -730,10 +706,47 @@
             <!-- USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="controls">
-                    <button class="btn btn-warning" onclick="openInviteModal()">📤 Запросити</button>
+                    <button class="btn btn-warning" onclick="openInviteModal()" id="inviteBtn">📤 Запросити</button>
                 </div>
                 <div id="usersContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+
+            <!-- ADMIN (only for superadmin) -->
+            <div id="adminTab" class="tab-content">
+                <div class="controls" style="background:linear-gradient(135deg,#fee2e2,#fecaca);">
+                    <h2 style="font-size:1.1rem;color:#dc2626;">🔧 Адмін-панель TALKO</h2>
+                </div>
+                <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);margin-bottom:1rem;">
+                    <h3 style="margin-bottom:1rem;">➕ Створити нову компанію</h3>
+                    <form id="adminCreateForm" onsubmit="adminCreateCompany(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Email власника *</label>
+                                <input type="email" id="adminOwnerEmail" class="form-input" placeholder="client@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Пароль *</label>
+                                <input type="text" id="adminOwnerPassword" class="form-input" placeholder="мін. 6 символів" required minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ім'я власника *</label>
+                                <input type="text" id="adminOwnerName" class="form-input" placeholder="Іван Петренко" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Назва компанії *</label>
+                                <input type="text" id="adminCompanyName" class="form-input" placeholder="ТОВ Компанія" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success" style="margin-top:1rem;" id="adminCreateBtn">🚀 Створити компанію та Owner</button>
+                    </form>
+                </div>
+                <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
+                    <h3 style="margin-bottom:1rem;">📋 Всі компанії</h3>
+                    <div id="adminCompaniesContainer">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -849,9 +862,11 @@
         // =====================
         // APP STATE
         // =====================
+        const SUPERADMIN_EMAIL = 'management.talco@gmail.com';
         let currentUser = null;
         let currentCompany = null;
         let currentUserData = null;
+        let isSuperAdmin = false;
         let tasks = [];
         let users = [];
         let functions = [];
@@ -861,14 +876,6 @@
         // =====================
         // AUTH FUNCTIONS
         // =====================
-        function showAuthTab(tab) {
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`[onclick="showAuthTab('${tab}')"]`).classList.add('active');
-            document.getElementById('loginTab').style.display = tab === 'login' ? 'block' : 'none';
-            document.getElementById('registerTab').style.display = tab === 'register' ? 'block' : 'none';
-            hideAuthMessage();
-        }
-
         function showAuthMessage(msg, type = 'info') {
             const el = document.getElementById('authMessage');
             el.textContent = msg;
@@ -891,12 +898,20 @@
             }
         }
 
+        function showNoAccess() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('noAccessCard').style.display = 'block';
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('noAccessCard').style.display = 'none';
+        }
+
         // Google Sign-In
         async function signInWithGoogle() {
             try {
-                const result = await auth.signInWithPopup(googleProvider);
-                // Check if new user needs company
-                await handleNewUser(result.user, result.user.displayName);
+                await auth.signInWithPopup(googleProvider);
             } catch (e) {
                 showAuthMessage('Помилка: ' + e.message, 'error');
             }
@@ -916,42 +931,10 @@
                 await auth.signInWithEmailAndPassword(email, password);
             } catch (e) {
                 let msg = 'Помилка входу';
-                if (e.code === 'auth/user-not-found') msg = 'Користувача не знайдено';
+                if (e.code === 'auth/user-not-found') msg = 'Користувача не знайдено. Зверніться до адміністратора.';
                 if (e.code === 'auth/wrong-password') msg = 'Невірний пароль';
                 if (e.code === 'auth/invalid-email') msg = 'Невірний формат email';
-                showAuthMessage(msg, 'error');
-            }
-        }
-
-        // Email + Password Registration
-        async function registerWithEmail() {
-            const name = document.getElementById('registerName').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const password = document.getElementById('registerPassword').value;
-            const company = document.getElementById('registerCompany').value.trim();
-            
-            if (!name || !email || !password || !company) {
-                showAuthMessage('Заповніть всі поля', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showAuthMessage('Пароль має бути мінімум 6 символів', 'error');
-                return;
-            }
-            
-            try {
-                const result = await auth.createUserWithEmailAndPassword(email, password);
-                await result.user.updateProfile({ displayName: name });
-                
-                // Create company
-                await createNewCompany(result.user, { name, email, company });
-                showAuthMessage('✅ Реєстрація успішна!', 'success');
-            } catch (e) {
-                let msg = 'Помилка реєстрації';
-                if (e.code === 'auth/email-already-in-use') msg = 'Цей email вже зареєстровано';
-                if (e.code === 'auth/weak-password') msg = 'Пароль занадто простий';
-                if (e.code === 'auth/invalid-email') msg = 'Невірний формат email';
+                if (e.code === 'auth/invalid-credential') msg = 'Невірний email або пароль';
                 showAuthMessage(msg, 'error');
             }
         }
@@ -972,48 +955,6 @@
             }
         }
 
-        // Handle new user (check for invite or create company prompt)
-        async function handleNewUser(user, displayName) {
-            const companyId = await findUserCompany(user.uid, user.email);
-            
-            if (!companyId) {
-                // New user without company - check if registering
-                const companyName = document.getElementById('registerCompany')?.value?.trim();
-                if (companyName) {
-                    await createNewCompany(user, {
-                        name: displayName || user.email.split('@')[0],
-                        email: user.email,
-                        company: companyName
-                    });
-                }
-            }
-        }
-
-        async function createNewCompany(user, regData) {
-            const companyRef = db.collection('companies').doc();
-            const companyId = companyRef.id;
-            
-            await companyRef.set({
-                name: regData.company,
-                ownerId: user.uid,
-                ownerEmail: regData.email,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            await companyRef.collection('users').doc(user.uid).set({
-                name: regData.name,
-                email: regData.email,
-                role: 'owner',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            await db.collection('users').doc(user.uid).set({
-                email: regData.email,
-                companyId: companyId,
-                role: 'owner'
-            });
-        }
-
         async function findUserCompany(userId, email) {
             // Check global users collection
             const userDoc = await db.collection('users').doc(userId).get();
@@ -1021,9 +962,9 @@
                 return userDoc.data().companyId;
             }
             
-            // Search for invites
+            // Search for invites (including owner invites)
             const invitesQuery = await db.collection('invites')
-                .where('email', '==', email)
+                .where('email', '==', email.toLowerCase())
                 .where('accepted', '==', false)
                 .limit(1)
                 .get();
@@ -1032,20 +973,28 @@
                 const invite = invitesQuery.docs[0];
                 const inviteData = invite.data();
                 const companyId = inviteData.companyId;
+                const isOwnerInvite = inviteData.role === 'owner';
                 
-                // Accept invite
+                // Accept invite - add user to company
                 await db.collection('companies').doc(companyId).collection('users').doc(userId).set({
-                    name: email.split('@')[0],
-                    email: email,
+                    name: inviteData.ownerName || email.split('@')[0],
+                    email: email.toLowerCase(),
                     role: inviteData.role || 'employee',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
                 await db.collection('users').doc(userId).set({
-                    email: email,
+                    email: email.toLowerCase(),
                     companyId: companyId,
                     role: inviteData.role || 'employee'
                 });
+                
+                // Update company with ownerId if owner invite
+                if (isOwnerInvite) {
+                    await db.collection('companies').doc(companyId).update({
+                        ownerId: userId
+                    });
+                }
                 
                 await invite.ref.update({ accepted: true, acceptedAt: firebase.firestore.FieldValue.serverTimestamp() });
                 
@@ -1056,7 +1005,10 @@
         }
 
         function logout() {
-            auth.signOut();
+            auth.signOut().then(() => {
+                showLoginForm();
+                hideAuthMessage();
+            });
         }
 
         // =====================
@@ -1065,16 +1017,33 @@
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
+                isSuperAdmin = user.email.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase();
+                
+                // Show admin tab for superadmin
+                if (isSuperAdmin) {
+                    document.getElementById('adminTabBtn').style.display = 'block';
+                }
                 
                 const companyId = await findUserCompany(user.uid, user.email);
                 
-                if (!companyId) {
+                if (!companyId && !isSuperAdmin) {
+                    // No access - show message
                     document.getElementById('loadingPage').style.display = 'none';
                     document.getElementById('authPage').style.display = 'flex';
-                    showAuthMessage('Створіть нову компанію або попросіть запрошення', 'info');
-                    showAuthTab('register');
-                    document.getElementById('registerName').value = user.displayName || '';
-                    document.getElementById('registerEmail').value = user.email || '';
+                    document.getElementById('mainInterface').style.display = 'none';
+                    showNoAccess();
+                    return;
+                }
+                
+                // Superadmin without company - still allow access
+                if (!companyId && isSuperAdmin) {
+                    currentCompany = null;
+                    currentUserData = { id: user.uid, email: user.email, role: 'superadmin', name: 'Super Admin' };
+                    document.getElementById('currentUserName').textContent = 'Super Admin';
+                    document.getElementById('currentUserRole').textContent = '(Адміністратор)';
+                    document.getElementById('companyBadge').textContent = 'TALKO System';
+                    document.getElementById('companyBadge').style.display = 'inline';
+                    showMainInterface();
                     return;
                 }
                 
@@ -1091,6 +1060,11 @@
                 document.getElementById('companyBadge').textContent = companyData?.name || '';
                 document.getElementById('companyBadge').style.display = 'inline';
                 
+                // Hide invite button for non-managers
+                if (currentUserData.role === 'employee') {
+                    document.getElementById('inviteBtn').style.display = 'none';
+                }
+                
                 showMainInterface();
                 loadAllData();
             } else {
@@ -1098,6 +1072,8 @@
                 document.getElementById('authPage').style.display = 'flex';
                 document.getElementById('mainInterface').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('adminTabBtn').style.display = 'none';
+                showLoginForm();
             }
         });
 
@@ -1518,7 +1494,7 @@
 
         async function sendInvite(e) {
             e.preventDefault();
-            const email = document.getElementById('inviteEmail').value.trim();
+            const email = document.getElementById('inviteEmail').value.trim().toLowerCase();
             const role = document.getElementById('inviteRole').value;
             
             try {
@@ -1563,6 +1539,8 @@
                 return;
             }
             
+            const canDelete = currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
+            
             c.innerHTML = users.map(u => `
                 <div class="user-card">
                     <div class="user-header">
@@ -1576,7 +1554,7 @@
                     <div class="user-stats">
                         <span>📋 ${tasks.filter(t => t.assigneeId === u.id).length} завдань</span>
                         <div>
-                            ${u.role !== 'owner' ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')">🗑️</button>` : ''}
+                            ${canDelete && u.role !== 'owner' ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')">🗑️</button>` : ''}
                         </div>
                     </div>
                 </div>
@@ -1641,6 +1619,146 @@
                 case 'regular': renderRegularTasks(); break;
                 case 'functions': renderFunctions(); break;
                 case 'users': renderUsers(); break;
+                case 'admin': renderAdminPanel(); break;
+            }
+        }
+
+        // =====================
+        // ADMIN FUNCTIONS
+        // =====================
+        async function renderAdminPanel() {
+            if (!isSuperAdmin) return;
+            
+            const container = document.getElementById('adminCompaniesContainer');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                const companiesSnap = await db.collection('companies').get();
+                const companies = [];
+                
+                for (const doc of companiesSnap.docs) {
+                    const data = doc.data();
+                    const usersSnap = await db.collection('companies').doc(doc.id).collection('users').get();
+                    companies.push({
+                        id: doc.id,
+                        ...data,
+                        usersCount: usersSnap.size
+                    });
+                }
+                
+                if (companies.length === 0) {
+                    container.innerHTML = '<p style="color:#7f8c8d;text-align:center;padding:2rem;">Немає компаній</p>';
+                    return;
+                }
+                
+                container.innerHTML = companies.map(c => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.5rem;border-left:4px solid var(--info);">
+                        <div>
+                            <strong>${c.name || 'Без назви'}</strong>
+                            <div style="font-size:0.8rem;color:#7f8c8d;">
+                                📧 ${c.ownerEmail || '-'} | 👥 ${c.usersCount} користувачів
+                            </div>
+                            <div style="font-size:0.75rem;color:#bdc3c7;">ID: ${c.id}</div>
+                        </div>
+                        <div style="display:flex;gap:0.25rem;">
+                            <button class="btn btn-small" onclick="adminViewCompany('${c.id}')">👁️</button>
+                            <button class="btn btn-small btn-danger" onclick="adminDeleteCompany('${c.id}', '${c.name}')">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                container.innerHTML = `<p style="color:#e74c3c;">Помилка: ${e.message}</p>`;
+            }
+        }
+
+        async function adminCreateCompany(e) {
+            e.preventDefault();
+            if (!isSuperAdmin) return;
+            
+            const email = document.getElementById('adminOwnerEmail').value.trim().toLowerCase();
+            const password = document.getElementById('adminOwnerPassword').value;
+            const name = document.getElementById('adminOwnerName').value.trim();
+            const companyName = document.getElementById('adminCompanyName').value.trim();
+            
+            const btn = document.getElementById('adminCreateBtn');
+            btn.disabled = true;
+            btn.textContent = 'Створюємо...';
+            
+            try {
+                // Create user in Firebase Auth using REST API (since we can't create users for others directly)
+                // Instead, we'll create an invite and the owner will set their password on first login
+                
+                // Create company document
+                const companyRef = db.collection('companies').doc();
+                const companyId = companyRef.id;
+                
+                await companyRef.set({
+                    name: companyName,
+                    ownerEmail: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: currentUser.uid
+                });
+                
+                // Create invite for owner
+                await db.collection('invites').add({
+                    email: email,
+                    companyId: companyId,
+                    role: 'owner',
+                    ownerName: name,
+                    tempPassword: password,
+                    invitedBy: currentUser.uid,
+                    accepted: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                alert(`✅ Компанія "${companyName}" створена!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\nНадішліть ці дані клієнту.\nВін має зареєструватися на сайті з цим email.`);
+                
+                document.getElementById('adminCreateForm').reset();
+                renderAdminPanel();
+            } catch (e) {
+                alert('Помилка: ' + e.message);
+            }
+            
+            btn.disabled = false;
+            btn.textContent = '🚀 Створити компанію та Owner';
+        }
+
+        async function adminViewCompany(companyId) {
+            // Switch to this company view
+            currentCompany = companyId;
+            await loadAllData();
+            switchTab('users');
+            alert('Переключено на компанію. Дивіться вкладку "Команда".');
+        }
+
+        async function adminDeleteCompany(companyId, companyName) {
+            if (!confirm(`⚠️ Видалити компанію "${companyName}"?\n\nЦе видалить ВСІ дані:\n- Завдання\n- Функції\n- Користувачів\n\nЦю дію НЕ МОЖНА скасувати!`)) return;
+            
+            if (!confirm('Ви ТОЧНО впевнені? Введіть "так" для підтвердження.')) return;
+            
+            try {
+                // Delete subcollections
+                const subcollections = ['users', 'tasks', 'functions', 'regularTasks'];
+                for (const sub of subcollections) {
+                    const snap = await db.collection('companies').doc(companyId).collection(sub).get();
+                    const batch = db.batch();
+                    snap.docs.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+                }
+                
+                // Delete company document
+                await db.collection('companies').doc(companyId).delete();
+                
+                // Delete related invites
+                const invitesSnap = await db.collection('invites').where('companyId', '==', companyId).get();
+                const invitesBatch = db.batch();
+                invitesSnap.docs.forEach(doc => invitesBatch.delete(doc.ref));
+                await invitesBatch.commit();
+                
+                alert('✅ Компанію видалено');
+                renderAdminPanel();
+            } catch (e) {
+                alert('Помилка: ' + e.message);
             }
         }
 
