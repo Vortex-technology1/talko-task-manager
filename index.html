@@ -34,7 +34,6 @@
             min-height: 100vh;
         }
         
-        /* HEADER */
         .header { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); 
             color: white; 
@@ -56,7 +55,6 @@
         }
         
         .logo { font-size: 1.1rem; font-weight: 700; }
-        
         .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
         
         .header-btn {
@@ -80,24 +78,9 @@
             font-size: 0.85rem;
         }
         
-        .lang-switch { display: flex; gap: 0.25rem; }
-        
-        .lang-btn { 
-            background: rgba(255,255,255,0.2); 
-            border: none; 
-            color: white; 
-            padding: 0.4rem 0.5rem; 
-            border-radius: 5px; 
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-        
-        .lang-btn.active { background: rgba(255,255,255,0.4); font-weight: 600; }
-        
-        /* CONTAINER */
         .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
         
-        /* TAB NAVIGATION */
+        /* TABS */
         .tab-navigation { 
             display: flex; 
             background: var(--white); 
@@ -105,7 +88,6 @@
             box-shadow: var(--shadow);
             overflow-x: auto;
             scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
         }
         
         .tab-navigation::-webkit-scrollbar { display: none; }
@@ -163,6 +145,7 @@
         
         .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
         .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         .btn-success { background: var(--success); }
         .btn-danger { background: var(--danger); }
         .btn-warning { background: var(--warning); }
@@ -185,29 +168,42 @@
         
         .filter-select:focus { outline: none; border-color: var(--info); }
         
-        /* TASK CARDS */
-        .tasks-container {
+        /* CARDS */
+        .tasks-container, .cards-grid {
             background: var(--white);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             overflow: hidden;
         }
         
-        .task-card {
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            padding: 1rem;
+        }
+        
+        .task-card, .function-card, .user-card {
             padding: 1rem;
             border-bottom: 1px solid #ecf0f1;
             transition: all 0.2s;
         }
         
+        .function-card, .user-card {
+            background: #f8f9fa;
+            border: 2px solid #ecf0f1;
+            border-radius: var(--radius);
+        }
+        
         .task-card:last-child { border-bottom: none; }
-        .task-card:hover { background: #f8f9fa; }
+        .task-card:hover, .function-card:hover, .user-card:hover { background: #f8f9fa; border-color: var(--info); }
         
         .task-card.pinned {
             background: linear-gradient(90deg, rgba(52, 152, 219, 0.08) 0%, var(--white) 100%);
             border-left: 4px solid var(--info);
         }
         
-        .task-card-header {
+        .task-card-header, .function-header, .user-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -215,15 +211,7 @@
             margin-bottom: 0.5rem;
         }
         
-        .task-title {
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 0.95rem;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
+        .task-title, .function-title, .user-name { font-weight: 600; font-size: 0.95rem; flex: 1; }
         
         .pin-btn {
             background: none;
@@ -236,20 +224,19 @@
         
         .pin-btn:hover, .pin-btn.pinned { color: var(--warning); }
         
-        .task-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+        .task-meta, .function-description, .user-details {
             font-size: 0.8rem;
             color: var(--gray);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
         }
         
+        .task-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
         .task-meta-item { display: flex; align-items: center; gap: 0.2rem; }
         
-        .task-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+        .task-badges, .function-assignees { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
         
-        .badge {
+        .badge, .assignee-badge, .role-badge {
             padding: 0.2rem 0.5rem;
             border-radius: 10px;
             font-size: 0.7rem;
@@ -267,21 +254,29 @@
         .badge-medium { background: #fff3e0; color: #f57c00; }
         .badge-low { background: #e8f5e8; color: #388e3c; }
         
-        .task-actions { display: flex; gap: 0.4rem; justify-content: flex-end; }
+        .assignee-badge { background: var(--success); color: white; }
+        .assignee-badge.head { background: var(--warning); }
         
-        .task-info {
-            font-size: 0.8rem;
-            color: var(--gray);
-            margin-top: 0.5rem;
-            padding: 0.5rem;
-            background: #f8f9fa;
-            border-radius: var(--radius-sm);
+        .role-badge { color: white; }
+        .role-badge.owner { background: var(--danger); }
+        .role-badge.manager { background: var(--warning); }
+        .role-badge.employee { background: var(--info); }
+        
+        .task-actions, .function-stats, .user-stats { 
+            display: flex; 
+            gap: 0.4rem; 
+            justify-content: flex-end;
+            padding-top: 0.5rem;
         }
         
-        /* EMPTY STATE */
+        .function-stats, .user-stats {
+            justify-content: space-between;
+            border-top: 1px solid #ecf0f1;
+            font-size: 0.8rem;
+        }
+        
         .empty-state { text-align: center; padding: 2.5rem 1.5rem; color: var(--gray); }
         .empty-state h3 { margin-bottom: 0.5rem; color: var(--dark); font-size: 1.1rem; }
-        .empty-state p { font-size: 0.85rem; }
         
         /* MODAL */
         .modal { 
@@ -318,7 +313,6 @@
         }
         
         .modal-header h2 { font-size: 1.1rem; padding-right: 2rem; }
-        
         .modal-body { padding: 1rem; }
         
         .close { 
@@ -349,90 +343,6 @@
         .form-textarea { resize: vertical; min-height: 70px; }
         .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
         
-        /* CARDS GRID */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
-            padding: 1rem;
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-        
-        .function-card, .user-card, .regular-task-card {
-            background: #f8f9fa;
-            border: 2px solid #ecf0f1;
-            border-radius: var(--radius);
-            padding: 1rem;
-            transition: all 0.2s;
-        }
-        
-        .function-card:hover, .user-card:hover { border-color: var(--info); box-shadow: var(--shadow); }
-        
-        .function-header, .user-header, .regular-task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
-        }
-        
-        .function-title, .user-name, .regular-task-title { font-size: 1rem; font-weight: 600; }
-        
-        .function-head {
-            background: var(--warning);
-            color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        
-        .function-description, .user-details {
-            color: var(--gray);
-            font-size: 0.85rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-        }
-        
-        .user-details div { margin-bottom: 0.2rem; }
-        
-        .function-assignees { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.5rem; }
-        
-        .assignee-badge {
-            background: var(--success);
-            color: white;
-            padding: 0.15rem 0.5rem;
-            border-radius: 10px;
-            font-size: 0.7rem;
-        }
-        
-        .assignee-badge.head { background: var(--warning); }
-        
-        .function-stats, .user-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 0.5rem;
-            border-top: 1px solid #ecf0f1;
-            margin-bottom: 0.5rem;
-            font-size: 0.8rem;
-        }
-        
-        .function-stat { color: var(--info); font-weight: 600; }
-        
-        .role-badge {
-            padding: 0.2rem 0.5rem;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: white;
-        }
-        
-        .role-badge.owner { background: var(--danger); }
-        .role-badge.manager { background: var(--warning); }
-        .role-badge.employee { background: var(--info); }
-        
         /* DASHBOARD */
         .dashboard-cards {
             display: grid;
@@ -455,67 +365,8 @@
         
         .dashboard-card h3 { font-size: 0.75rem; margin-bottom: 0.2rem; opacity: 0.9; }
         .dashboard-number { font-size: 1.75rem; font-weight: 700; }
-        .dashboard-card p { font-size: 0.65rem; opacity: 0.8; }
         
-        /* ANALYTICS */
-        .analytics-cards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.6rem;
-            margin-bottom: 1rem;
-        }
-        
-        .analytics-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border-radius: var(--radius);
-            padding: 0.8rem;
-            text-align: center;
-        }
-        
-        .analytics-card h3 { font-size: 0.75rem; margin-bottom: 0.2rem; opacity: 0.9; }
-        .analytics-number { font-size: 1.5rem; font-weight: 700; }
-        
-        .chart-container {
-            background: #f8f9fa;
-            border-radius: var(--radius-sm);
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
-        }
-        
-        .chart-container h3 { color: var(--dark); font-size: 0.9rem; margin-bottom: 0.6rem; }
-        
-        /* REGULAR TASKS */
-        .regular-task-info {
-            background: #f0f0f0;
-            border-radius: var(--radius-sm);
-            padding: 0.6rem;
-            font-size: 0.8rem;
-            line-height: 1.4;
-            margin-bottom: 0.5rem;
-        }
-        
-        .regular-task-info div { margin-bottom: 0.2rem; }
-        .regular-task-info strong { color: var(--dark); }
-        
-        .regular-task-assignees-title { font-size: 0.8rem; font-weight: 600; color: var(--dark); margin-bottom: 0.4rem; }
-        
-        .assignee-checkboxes { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-        
-        .assignee-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            background: #e8f5e8;
-            color: var(--success);
-            padding: 0.3rem 0.5rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-        }
-        
-        .assignee-checkbox input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; }
-        
-        /* AUTH PAGE */
+        /* AUTH */
         .auth-container {
             display: flex;
             justify-content: center;
@@ -529,14 +380,14 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow-lg);
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             overflow: hidden;
         }
         
         .auth-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 1.25rem;
+            padding: 1.5rem;
             text-align: center;
         }
         
@@ -545,6 +396,49 @@
         .auth-body { padding: 1.25rem; }
         .auth-form h3 { margin-bottom: 1rem; color: var(--dark); text-align: center; font-size: 1rem; }
         .main-interface { display: none; }
+        
+        .auth-tabs { display: flex; margin-bottom: 1rem; }
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: #f0f0f0;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .auth-tab:first-child { border-radius: 8px 0 0 8px; }
+        .auth-tab:last-child { border-radius: 0 8px 8px 0; }
+        .auth-tab.active { background: var(--info); color: white; }
+        
+        .auth-message {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        .auth-message.success { background: #e8f5e8; color: #388e3c; }
+        .auth-message.error { background: #ffebee; color: #d32f2f; }
+        .auth-message.info { background: #e3f2fd; color: #1976d2; }
+        
+        /* LOADING */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ecf0f1;
+            border-top-color: var(--info);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         /* FOOTER */
         .footer {
@@ -559,7 +453,7 @@
         .footer-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
         .footer-links a { color: var(--info); text-decoration: none; font-size: 0.8rem; }
         
-        /* SUPPORT BUTTON */
+        /* SUPPORT */
         .support-btn {
             position: fixed;
             bottom: 16px;
@@ -580,7 +474,7 @@
             border: none;
         }
         
-        .support-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); }
+        .support-btn:hover { transform: translateY(-2px); }
         .support-btn svg { width: 18px; height: 18px; stroke: #ffffff; }
         
         /* DESKTOP */
@@ -595,9 +489,7 @@
             .form-grid { grid-template-columns: 1fr 1fr; }
             .form-group.full-width { grid-column: span 2; }
             .cards-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-            .dashboard-cards, .analytics-cards { grid-template-columns: repeat(4, 1fr); }
-            .dashboard-number { font-size: 2rem; }
-            .analytics-number { font-size: 1.75rem; }
+            .dashboard-cards { grid-template-columns: repeat(4, 1fr); }
         }
         
         @media (max-width: 400px) {
@@ -605,57 +497,96 @@
             .support-btn { padding: 12px; border-radius: 50%; }
         }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.25s ease-out; }
+        .assignee-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: #f0f0f0;
+            padding: 0.3rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .assignee-checkbox:hover { background: #e0e0e0; }
+        .assignee-checkbox input { width: 14px; height: 14px; cursor: pointer; }
+        .assignee-checkbox.checked { background: #e8f5e8; color: var(--success); }
+        
+        .company-badge {
+            background: rgba(255,255,255,0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-content">
-            <div class="logo">🚀 TALKO System</div>
+            <div class="logo">
+                🚀 TALKO System
+                <span class="company-badge" id="companyBadge" style="display:none;"></span>
+            </div>
             <div class="header-actions">
                 <div class="user-info" id="currentUserInfo">
                     <span>👤 <span id="currentUserName">...</span></span>
-                    <span id="currentUserRole" style="opacity: 0.8; font-size: 0.8rem;"></span>
+                    <span id="currentUserRole" style="opacity:0.8;font-size:0.8rem;"></span>
                 </div>
-                <button class="header-btn" onclick="logout()" id="logoutBtn" style="display: none;">🚪 Вийти</button>
-                <div class="lang-switch">
-                    <button class="lang-btn active" onclick="setLanguage('ua')">UA</button>
-                    <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
-                    <button class="lang-btn" onclick="setLanguage('en')">EN</button>
-                </div>
+                <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;">🚪 Вийти</button>
             </div>
         </div>
     </header>
 
     <div class="container">
+        <!-- LOADING -->
+        <div id="loadingPage" class="loading">
+            <div class="spinner"></div>
+        </div>
+
         <!-- AUTH PAGE -->
-        <div id="authPage" class="auth-container">
+        <div id="authPage" class="auth-container" style="display:none;">
             <div class="auth-card">
                 <div class="auth-header">
                     <h2>🚀 TALKO System</h2>
                     <p>Управління завданнями для бізнесу</p>
                 </div>
                 <div class="auth-body">
-                    <div id="loginForm" class="auth-form">
-                        <h3>Вхід до системи</h3>
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" onclick="showAuthTab('login')">Вхід</button>
+                        <button class="auth-tab" onclick="showAuthTab('register')">Реєстрація</button>
+                    </div>
+                    
+                    <div id="authMessage" class="auth-message" style="display:none;"></div>
+                    
+                    <!-- LOGIN -->
+                    <div id="loginTab">
                         <div class="form-group">
                             <label class="form-label">Email:</label>
                             <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com">
                         </div>
-                        <button onclick="sendLoginCode()" class="btn btn-success" style="width: 100%; margin-top: 1rem;">📧 Відправити код</button>
-                        <div style="text-align: center; margin-top: 1rem; padding: 0.8rem; background: #f8f9fa; border-radius: 8px;">
-                            <p style="color: #7f8c8d; font-size: 0.8rem;"><strong>Немає доступу?</strong><br>Зверніться до адміністратора</p>
-                        </div>
+                        <button onclick="sendSignInLink()" class="btn btn-success" style="width:100%;margin-top:1rem;" id="sendLinkBtn">
+                            📧 Надіслати посилання для входу
+                        </button>
                     </div>
-                    <div id="codeForm" class="auth-form" style="display: none;">
-                        <h3>Введіть код</h3>
+                    
+                    <!-- REGISTER -->
+                    <div id="registerTab" style="display:none;">
                         <div class="form-group">
-                            <label class="form-label">Код з email:</label>
-                            <input type="text" id="loginCode" class="form-input" placeholder="123456" maxlength="6">
+                            <label class="form-label">Ваше ім'я:</label>
+                            <input type="text" id="registerName" class="form-input" placeholder="Олександр">
                         </div>
-                        <button onclick="verifyLoginCode()" class="btn btn-success" style="width: 100%; margin-top: 1rem;">✅ Увійти</button>
-                        <button onclick="backToLogin()" class="btn" style="width: 100%; margin-top: 0.5rem;">← Назад</button>
+                        <div class="form-group" style="margin-top:0.75rem;">
+                            <label class="form-label">Email:</label>
+                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com">
+                        </div>
+                        <div class="form-group" style="margin-top:0.75rem;">
+                            <label class="form-label">Назва компанії:</label>
+                            <input type="text" id="registerCompany" class="form-input" placeholder="Моя компанія">
+                        </div>
+                        <button onclick="registerNewCompany()" class="btn btn-success" style="width:100%;margin-top:1rem;" id="registerBtn">
+                            🚀 Створити компанію
+                        </button>
                     </div>
                 </div>
             </div>
@@ -669,7 +600,6 @@
                 <button class="tab-btn" onclick="switchTab('regular')">🔄 Регулярні</button>
                 <button class="tab-btn" onclick="switchTab('functions')">⚙️ Функції</button>
                 <button class="tab-btn" onclick="switchTab('users')">👥 Команда</button>
-                <button class="tab-btn" onclick="switchTab('analytics')">📈 Аналітика</button>
             </div>
 
             <!-- TASKS -->
@@ -677,7 +607,6 @@
                 <div class="controls">
                     <div class="controls-row">
                         <button class="btn btn-success" onclick="openTaskModal()">+ Завдання</button>
-                        <button class="btn" onclick="exportToCSV()">📊 Експорт</button>
                     </div>
                     <div class="filters">
                         <select class="filter-select" id="statusFilter" onchange="renderTasks()">
@@ -688,22 +617,23 @@
                             <option value="done">Готово</option>
                         </select>
                         <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="">Всі функції</option></select>
-                        <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="">Всі виконавці</option></select>
-                        <button class="btn btn-clear btn-small" onclick="clearFilters()">🗑️</button>
+                        <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="">Всі</option></select>
                     </div>
                 </div>
-                <div class="tasks-container" id="tasksContainer"></div>
+                <div class="tasks-container" id="tasksContainer">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
             </div>
 
             <!-- CONTROL -->
             <div id="controlTab" class="tab-content">
-                <div class="controls"><h2 style="font-size: 1.1rem;">📊 Панель контролю</h2></div>
-                <div style="background: white; border-radius: 12px; padding: 1rem; box-shadow: var(--shadow);">
+                <div class="controls"><h2 style="font-size:1.1rem;">📊 Панель контролю</h2></div>
+                <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
                     <div class="dashboard-cards">
-                        <div class="dashboard-card urgent"><h3>🚨 Критичні</h3><div class="dashboard-number" id="urgentCount">0</div><p>Прострочені</p></div>
-                        <div class="dashboard-card warning"><h3>⚠️ Увага</h3><div class="dashboard-number" id="warningCount">0</div><p>Сьогодні-завтра</p></div>
-                        <div class="dashboard-card active"><h3>🔄 Активні</h3><div class="dashboard-number" id="activeCount">0</div><p>В роботі</p></div>
-                        <div class="dashboard-card completed"><h3>✅ Готово</h3><div class="dashboard-number" id="completedCount">0</div><p>Завершені</p></div>
+                        <div class="dashboard-card urgent"><h3>🚨 Критичні</h3><div class="dashboard-number" id="urgentCount">0</div></div>
+                        <div class="dashboard-card warning"><h3>⚠️ Увага</h3><div class="dashboard-number" id="warningCount">0</div></div>
+                        <div class="dashboard-card active"><h3>🔄 Активні</h3><div class="dashboard-number" id="activeCount">0</div></div>
+                        <div class="dashboard-card completed"><h3>✅ Готово</h3><div class="dashboard-number" id="completedCount">0</div></div>
                     </div>
                     <div id="controlContent"></div>
                 </div>
@@ -712,41 +642,31 @@
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
                 <div class="controls">
-                    <div class="controls-row"><button class="btn btn-success" onclick="openRegularTaskModal()">+ Регулярне</button></div>
-                    <div class="filters"><select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="">Всі функції</option></select></div>
+                    <button class="btn btn-success" onclick="openRegularTaskModal()">+ Регулярне</button>
                 </div>
-                <div id="regularTasksContainer" class="cards-grid"></div>
+                <div id="regularTasksContainer" class="cards-grid">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
             </div>
 
             <!-- FUNCTIONS -->
             <div id="functionsTab" class="tab-content">
-                <div class="controls"><button class="btn btn-success" onclick="openFunctionModal()">+ Функція</button></div>
-                <div id="functionsContainer" class="cards-grid"></div>
+                <div class="controls">
+                    <button class="btn btn-success" onclick="openFunctionModal()">+ Функція</button>
+                </div>
+                <div id="functionsContainer" class="cards-grid">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
             </div>
 
             <!-- USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="controls">
-                    <div class="controls-row">
-                        <button class="btn btn-success" onclick="openUserModal()">+ Додати</button>
-                        <button class="btn btn-warning" onclick="openInviteModal()">📤 Запросити</button>
-                    </div>
-                    <div class="filters"><select class="filter-select" id="userRoleFilter" onchange="renderUsers()"><option value="">Всі ролі</option><option value="owner">Власник</option><option value="manager">Менеджер</option><option value="employee">Співробітник</option></select></div>
+                    <button class="btn btn-success" onclick="openUserModal()">+ Додати</button>
+                    <button class="btn btn-warning" onclick="openInviteModal()">📤 Запросити</button>
                 </div>
-                <div id="usersContainer" class="cards-grid"></div>
-            </div>
-
-            <!-- ANALYTICS -->
-            <div id="analyticsTab" class="tab-content">
-                <div style="background: white; border-radius: 12px; padding: 1rem; box-shadow: var(--shadow);">
-                    <div class="analytics-cards">
-                        <div class="analytics-card"><h3>Всього</h3><div class="analytics-number" id="totalTasksCount">0</div></div>
-                        <div class="analytics-card"><h3>Виконано</h3><div class="analytics-number" id="completedTasksCount">0</div></div>
-                        <div class="analytics-card"><h3>Прострочено</h3><div class="analytics-number" id="overdueTasksCount">0</div></div>
-                        <div class="analytics-card"><h3>Ефективність</h3><div class="analytics-number" id="efficiencyPercent">0%</div></div>
-                    </div>
-                    <div class="chart-container"><h3>📊 Статуси</h3><div id="statusChart"></div></div>
-                    <div class="chart-container"><h3>👥 Навантаження</h3><div id="workloadChart"></div></div>
+                <div id="usersContainer" class="cards-grid">
+                    <div class="loading"><div class="spinner"></div></div>
                 </div>
             </div>
         </div>
@@ -755,20 +675,19 @@
     <!-- MODALS -->
     <div id="taskModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeTaskModal()">&times;</span><h2 id="taskModalTitle">Нове завдання</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('taskModal')">&times;</span><h2 id="taskModalTitle">Нове завдання</h2></div>
             <div class="modal-body">
-                <form id="taskForm">
+                <form id="taskForm" onsubmit="saveTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label">Назва *</label><input type="text" id="taskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label">Функція</label><select id="taskFunction" class="form-select"><option value="">Без функції</option></select></div>
                         <div class="form-group"><label class="form-label">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label">Дедлайн *</label><input type="datetime-local" id="taskDeadline" class="form-input" required></div>
                         <div class="form-group"><label class="form-label">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low">Низький</option><option value="medium" selected>Середній</option><option value="high">Високий</option></select></div>
-                        <div class="form-group"><label class="form-label">Тип</label><select id="taskType" class="form-select"><option value="single">Разове</option><option value="regular">Регулярне</option><option value="bottleneck">Вузьке місце</option></select></div>
                         <div class="form-group"><label class="form-label">Статус</label><select id="taskStatus" class="form-select"><option value="new">Нове</option><option value="progress">В роботі</option><option value="review">Перевірка</option><option value="done">Готово</option></select></div>
                         <div class="form-group full-width"><label class="form-label">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeTaskModal()">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
                 </form>
             </div>
         </div>
@@ -776,18 +695,16 @@
 
     <div id="functionModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeFunctionModal()">&times;</span><h2 id="functionModalTitle">Нова функція</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('functionModal')">&times;</span><h2 id="functionModalTitle">Нова функція</h2></div>
             <div class="modal-body">
-                <form id="functionForm">
+                <form id="functionForm" onsubmit="saveFunction(event)">
                     <div class="form-grid">
                         <div class="form-group"><label class="form-label">Назва *</label><input type="text" id="functionName" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Департамент</label><input type="text" id="functionDepartment" class="form-input"></div>
-                        <div class="form-group"><label class="form-label">Колір</label><input type="color" id="functionColor" class="form-input" value="#3498db" style="height:44px;"></div>
                         <div class="form-group"><label class="form-label">👑 Головний *</label><select id="functionHead" class="form-select" required><option value="">Оберіть</option></select></div>
                         <div class="form-group full-width"><label class="form-label">Опис</label><textarea id="functionDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width"><label class="form-label">👥 Учасники</label><div id="functionAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;"></div></div>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeFunctionModal()">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('functionModal')">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
                 </form>
             </div>
         </div>
@@ -795,18 +712,16 @@
 
     <div id="regularTaskModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeRegularTaskModal()">&times;</span><h2>Регулярне завдання</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('regularTaskModal')">&times;</span><h2>Регулярне завдання</h2></div>
             <div class="modal-body">
-                <form id="regularTaskForm">
+                <form id="regularTaskForm" onsubmit="saveRegularTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label">Функція *</label><select id="regularTaskFunction" class="form-select" required onchange="updateRegularTaskAssignees()"><option value="">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label">Періодичність</label><select id="regularTaskPeriod" class="form-select"><option value="daily">Щодня</option><option value="weekly">Щотижня</option><option value="monthly">Щомісяця</option><option value="workdays">Робочі дні</option></select></div>
-                        <div class="form-group"><label class="form-label">Днів на виконання</label><input type="number" id="regularTaskDuration" class="form-input" value="1" min="1" max="30"></div>
-                        <div class="form-group full-width"><label class="form-label">Опис</label><textarea id="regularTaskDescription" class="form-textarea"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label">👥 Кому призначати</label><div id="regularTaskAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"><p style="color:#7f8c8d;font-size:0.85rem;">Спочатку оберіть функцію</p></div></div>
+                        <div class="form-group"><label class="form-label">Періодичність</label><select id="regularTaskPeriod" class="form-select"><option value="daily">Щодня</option><option value="weekly">Щотижня</option><option value="monthly">Щомісяця</option></select></div>
+                        <div class="form-group full-width"><label class="form-label">👥 Виконавці</label><div id="regularTaskAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"><p style="color:#7f8c8d;">Спочатку оберіть функцію</p></div></div>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeRegularTaskModal()">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('regularTaskModal')">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
                 </form>
             </div>
         </div>
@@ -814,18 +729,16 @@
 
     <div id="userModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeUserModal()">&times;</span><h2 id="userModalTitle">Новий співробітник</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('userModal')">&times;</span><h2 id="userModalTitle">Новий співробітник</h2></div>
             <div class="modal-body">
-                <form id="userForm">
+                <form id="userForm" onsubmit="saveUser(event)">
                     <div class="form-grid">
                         <div class="form-group"><label class="form-label">Ім'я *</label><input type="text" id="userName" class="form-input" required></div>
                         <div class="form-group"><label class="form-label">Email *</label><input type="email" id="userEmail" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Телефон</label><input type="tel" id="userPhone" class="form-input"></div>
-                        <div class="form-group"><label class="form-label">Роль *</label><select id="userRole" class="form-select" required><option value="employee">Співробітник</option><option value="manager">Менеджер</option><option value="owner">Власник</option></select></div>
+                        <div class="form-group"><label class="form-label">Роль *</label><select id="userRole" class="form-select" required><option value="employee">Співробітник</option><option value="manager">Менеджер</option></select></div>
                         <div class="form-group"><label class="form-label">Посада</label><input type="text" id="userPosition" class="form-input"></div>
-                        <div class="form-group"><label class="form-label">Департамент</label><input type="text" id="userDepartment" class="form-input"></div>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeUserModal()">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('userModal')">Скасувати</button><button type="submit" class="btn btn-success">Зберегти</button></div>
                 </form>
             </div>
         </div>
@@ -833,14 +746,18 @@
 
     <div id="inviteModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeInviteModal()">&times;</span><h2>📤 Запрошення</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('inviteModal')">&times;</span><h2>📤 Запрошення</h2></div>
             <div class="modal-body">
-                <form id="inviteForm">
-                    <div class="form-grid">
-                        <div class="form-group"><label class="form-label">Email *</label><input type="email" id="inviteEmail" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Роль</label><select id="inviteRole" class="form-select"><option value="employee">Співробітник</option><option value="manager">Менеджер</option></select></div>
+                <form id="inviteForm" onsubmit="sendInvite(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email співробітника *</label>
+                        <input type="email" id="inviteEmail" class="form-input" required>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeInviteModal()">Скасувати</button><button type="submit" class="btn btn-success">📤 Створити</button></div>
+                    <div class="form-group" style="margin-top:0.75rem;">
+                        <label class="form-label">Роль</label>
+                        <select id="inviteRole" class="form-select"><option value="employee">Співробітник</option><option value="manager">Менеджер</option></select>
+                    </div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('inviteModal')">Скасувати</button><button type="submit" class="btn btn-success">📤 Надіслати</button></div>
                 </form>
             </div>
         </div>
@@ -852,86 +769,855 @@
     </a>
 
     <footer class="footer">
-        <p>Powered by <strong style="color: #3498db;">TALKO System</strong></p>
-        <div class="footer-links"><a href="https://alextalko.com" target="_blank">🛟 Підтримка</a><a href="https://alextalko.com" target="_blank">📚 Документація</a></div>
-        <p style="font-size: 0.7rem; margin-top: 0.5rem;">© 2024 TALKO System</p>
+        <p>Powered by <strong style="color:#3498db;">TALKO System</strong></p>
+        <div class="footer-links"><a href="https://alextalko.com" target="_blank">🛟 Підтримка</a></div>
     </footer>
 
     <script>
-        // FIREBASE
-        const firebaseConfig={apiKey:"AIzaSyCIHYGKw2pZXBXrR7lYFXOB1_F616rufGc",authDomain:"talko-task-system-prod.firebaseapp.com",projectId:"talko-task-system-prod",storageBucket:"talko-task-system-prod.firebasestorage.app",messagingSenderId:"840530352572",appId:"1:840530352572:web:27200f053aa2c9671773b9"};
-        let db=null,auth=null;
-        try{firebase.initializeApp(firebaseConfig);db=firebase.firestore();auth=firebase.auth();console.log('🔥 Firebase OK');}catch(e){console.log('📱 Demo mode');}
+        // =====================
+        // FIREBASE CONFIG
+        // =====================
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1oBJuuFiVVo4HHjjeb81IhGEt1oz4Ydc",
+            authDomain: "task-manager-44e84.firebaseapp.com",
+            projectId: "task-manager-44e84",
+            storageBucket: "task-manager-44e84.firebasestorage.app",
+            messagingSenderId: "181519398491",
+            appId: "1:181519398491:web:baa17a9a88f637ee94717e"
+        };
 
-        // STATE
-        let currentUser=null,currentCompany=null,tasks=[],users=[],functions=[],regularTasks=[];
-        let editingTaskId=null,editingFunctionId=null,editingUserId=null,editingRegularTaskId=null;
-        let currentLanguage=localStorage.getItem('talko_lang')||'ua',authCodes={};
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // AUTH
-        function checkAuth(){const s=localStorage.getItem('talko_session');if(s){const d=JSON.parse(s);currentUser=d.user;currentCompany=d.company;showMainInterface();loadData();}else{showAuthPage();}}
-        function showAuthPage(){document.getElementById('authPage').style.display='flex';document.getElementById('mainInterface').style.display='none';document.getElementById('logoutBtn').style.display='none';}
-        function showMainInterface(){document.getElementById('authPage').style.display='none';document.getElementById('mainInterface').style.display='block';document.getElementById('logoutBtn').style.display='block';document.getElementById('currentUserInfo').style.display='flex';if(currentUser){document.getElementById('currentUserName').textContent=currentUser.name;const r={owner:'Власник',manager:'Менеджер',employee:'Співробітник'}[currentUser.role]||'';document.getElementById('currentUserRole').textContent=r?`(${r})`:'';}renderTasks();}
-        function sendLoginCode(){const email=document.getElementById('loginEmail').value.trim();if(!email){alert('Введіть email');return;}const code=Math.floor(100000+Math.random()*900000).toString();authCodes[email]={code,expiry:Date.now()+10*60*1000};alert(`📧 Код: ${code}`);document.getElementById('loginForm').style.display='none';document.getElementById('codeForm').style.display='block';window.currentAuthEmail=email;}
-        function verifyLoginCode(){const code=document.getElementById('loginCode').value.trim();const d=authCodes[window.currentAuthEmail];if(!d||Date.now()>d.expiry){alert('❌ Код прострочений');backToLogin();return;}if(code!==d.code){alert('❌ Неправильний код');return;}let user=users.find(u=>u.email===window.currentAuthEmail);if(!user){user={id:Date.now(),name:window.currentAuthEmail.split('@')[0],email:window.currentAuthEmail,role:'owner',createdAt:new Date().toISOString()};users.push(user);}currentUser=user;currentCompany={id:'demo',name:'Demo Company'};localStorage.setItem('talko_session',JSON.stringify({user:currentUser,company:currentCompany}));delete authCodes[window.currentAuthEmail];showMainInterface();loadData();alert(`🎉 Вітаємо, ${currentUser.name}!`);}
-        function backToLogin(){document.getElementById('loginForm').style.display='block';document.getElementById('codeForm').style.display='none';document.getElementById('loginCode').value='';}
-        function logout(){localStorage.removeItem('talko_session');currentUser=null;showAuthPage();}
+        // =====================
+        // APP STATE
+        // =====================
+        let currentUser = null;
+        let currentCompany = null;
+        let currentUserData = null;
+        let tasks = [];
+        let users = [];
+        let functions = [];
+        let regularTasks = [];
+        let editingId = null;
 
-        // DATA
-        function loadData(){tasks=JSON.parse(localStorage.getItem('talko_tasks')||'[]');users=JSON.parse(localStorage.getItem('talko_users')||'[]');functions=JSON.parse(localStorage.getItem('talko_functions')||'[]');regularTasks=JSON.parse(localStorage.getItem('talko_regular')||'[]');if(currentUser&&!users.find(u=>u.email===currentUser.email)){users.push(currentUser);saveData();}updateSelects();renderTasks();}
-        function saveData(){localStorage.setItem('talko_tasks',JSON.stringify(tasks));localStorage.setItem('talko_users',JSON.stringify(users));localStorage.setItem('talko_functions',JSON.stringify(functions));localStorage.setItem('talko_regular',JSON.stringify(regularTasks));}
+        // =====================
+        // AUTH FUNCTIONS
+        // =====================
+        const actionCodeSettings = {
+            url: window.location.href.split('?')[0],
+            handleCodeInApp: true
+        };
 
+        function showAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[onclick="showAuthTab('${tab}')"]`).classList.add('active');
+            document.getElementById('loginTab').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerTab').style.display = tab === 'register' ? 'block' : 'none';
+        }
+
+        function showAuthMessage(msg, type = 'info') {
+            const el = document.getElementById('authMessage');
+            el.textContent = msg;
+            el.className = 'auth-message ' + type;
+            el.style.display = 'block';
+        }
+
+        async function sendSignInLink() {
+            const email = document.getElementById('loginEmail').value.trim();
+            if (!email) { showAuthMessage('Введіть email', 'error'); return; }
+            
+            const btn = document.getElementById('sendLinkBtn');
+            btn.disabled = true;
+            btn.textContent = 'Надсилаємо...';
+            
+            try {
+                await auth.sendSignInLinkToEmail(email, actionCodeSettings);
+                localStorage.setItem('emailForSignIn', email);
+                showAuthMessage('📧 Посилання надіслано! Перевірте пошту.', 'success');
+            } catch (e) {
+                showAuthMessage('Помилка: ' + e.message, 'error');
+            }
+            
+            btn.disabled = false;
+            btn.textContent = '📧 Надіслати посилання для входу';
+        }
+
+        async function registerNewCompany() {
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const company = document.getElementById('registerCompany').value.trim();
+            
+            if (!name || !email || !company) {
+                showAuthMessage('Заповніть всі поля', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.textContent = 'Створюємо...';
+            
+            try {
+                // Store registration data
+                localStorage.setItem('pendingRegistration', JSON.stringify({ name, email, company }));
+                localStorage.setItem('emailForSignIn', email);
+                
+                await auth.sendSignInLinkToEmail(email, actionCodeSettings);
+                showAuthMessage('📧 Посилання надіслано! Перевірте пошту для завершення реєстрації.', 'success');
+            } catch (e) {
+                showAuthMessage('Помилка: ' + e.message, 'error');
+            }
+            
+            btn.disabled = false;
+            btn.textContent = '🚀 Створити компанію';
+        }
+
+        async function handleEmailLink() {
+            if (!auth.isSignInWithEmailLink(window.location.href)) return false;
+            
+            let email = localStorage.getItem('emailForSignIn');
+            if (!email) {
+                email = prompt('Введіть email для підтвердження:');
+            }
+            
+            try {
+                const result = await auth.signInWithEmailLink(email, window.location.href);
+                localStorage.removeItem('emailForSignIn');
+                
+                // Check for pending registration
+                const pendingReg = localStorage.getItem('pendingRegistration');
+                if (pendingReg) {
+                    const regData = JSON.parse(pendingReg);
+                    await createNewCompany(result.user, regData);
+                    localStorage.removeItem('pendingRegistration');
+                }
+                
+                // Clear URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return true;
+            } catch (e) {
+                console.error('Email link error:', e);
+                showAuthMessage('Помилка входу: ' + e.message, 'error');
+                return false;
+            }
+        }
+
+        async function createNewCompany(user, regData) {
+            const companyRef = db.collection('companies').doc();
+            const companyId = companyRef.id;
+            
+            await companyRef.set({
+                name: regData.company,
+                ownerId: user.uid,
+                ownerEmail: regData.email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            await companyRef.collection('users').doc(user.uid).set({
+                name: regData.name,
+                email: regData.email,
+                role: 'owner',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // Add user to global users collection with company reference
+            await db.collection('users').doc(user.uid).set({
+                email: regData.email,
+                companyId: companyId,
+                role: 'owner'
+            });
+        }
+
+        async function findUserCompany(userId, email) {
+            // Check global users collection first
+            const userDoc = await db.collection('users').doc(userId).get();
+            if (userDoc.exists) {
+                return userDoc.data().companyId;
+            }
+            
+            // Search for invites by email
+            const invitesQuery = await db.collection('invites')
+                .where('email', '==', email)
+                .where('accepted', '==', false)
+                .limit(1)
+                .get();
+            
+            if (!invitesQuery.empty) {
+                const invite = invitesQuery.docs[0];
+                const inviteData = invite.data();
+                
+                // Accept invite - add user to company
+                const companyId = inviteData.companyId;
+                await db.collection('companies').doc(companyId).collection('users').doc(userId).set({
+                    name: email.split('@')[0],
+                    email: email,
+                    role: inviteData.role || 'employee',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                await db.collection('users').doc(userId).set({
+                    email: email,
+                    companyId: companyId,
+                    role: inviteData.role || 'employee'
+                });
+                
+                await invite.ref.update({ accepted: true, acceptedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                
+                return companyId;
+            }
+            
+            return null;
+        }
+
+        function logout() {
+            auth.signOut();
+        }
+
+        // =====================
+        // AUTH STATE LISTENER
+        // =====================
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // Find user's company
+                const companyId = await findUserCompany(user.uid, user.email);
+                
+                if (!companyId) {
+                    document.getElementById('loadingPage').style.display = 'none';
+                    document.getElementById('authPage').style.display = 'flex';
+                    showAuthMessage('Вас не знайдено в жодній компанії. Зареєструйте нову або попросіть запрошення.', 'info');
+                    showAuthTab('register');
+                    return;
+                }
+                
+                currentCompany = companyId;
+                
+                // Load user data
+                const userDoc = await db.collection('companies').doc(companyId).collection('users').doc(user.uid).get();
+                currentUserData = userDoc.exists ? { id: user.uid, ...userDoc.data() } : { id: user.uid, email: user.email, role: 'employee' };
+                
+                // Load company data
+                const companyDoc = await db.collection('companies').doc(companyId).get();
+                const companyData = companyDoc.data();
+                
+                // Update UI
+                document.getElementById('currentUserName').textContent = currentUserData.name || user.email;
+                document.getElementById('currentUserRole').textContent = `(${getRoleText(currentUserData.role)})`;
+                document.getElementById('companyBadge').textContent = companyData?.name || '';
+                document.getElementById('companyBadge').style.display = 'inline';
+                
+                showMainInterface();
+                loadAllData();
+            } else {
+                document.getElementById('loadingPage').style.display = 'none';
+                document.getElementById('authPage').style.display = 'flex';
+                document.getElementById('mainInterface').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'none';
+            }
+        });
+
+        function showMainInterface() {
+            document.getElementById('loadingPage').style.display = 'none';
+            document.getElementById('authPage').style.display = 'none';
+            document.getElementById('mainInterface').style.display = 'block';
+            document.getElementById('logoutBtn').style.display = 'block';
+            document.getElementById('currentUserInfo').style.display = 'flex';
+        }
+
+        function getRoleText(role) {
+            return { owner: 'Власник', manager: 'Менеджер', employee: 'Співробітник' }[role] || role;
+        }
+
+        // =====================
+        // DATA LOADING
+        // =====================
+        async function loadAllData() {
+            if (!currentCompany) return;
+            
+            // Load users
+            const usersSnap = await db.collection('companies').doc(currentCompany).collection('users').get();
+            users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            
+            // Load functions
+            const funcsSnap = await db.collection('companies').doc(currentCompany).collection('functions').get();
+            functions = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            
+            // Load tasks
+            const tasksSnap = await db.collection('companies').doc(currentCompany).collection('tasks').orderBy('createdAt', 'desc').get();
+            tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            
+            // Load regular tasks
+            const regSnap = await db.collection('companies').doc(currentCompany).collection('regularTasks').get();
+            regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            
+            updateSelects();
+            renderTasks();
+        }
+
+        // =====================
         // TASKS
-        function openTaskModal(id=null){document.getElementById('taskModal').style.display='block';updateSelects();if(id){editingTaskId=id;const t=tasks.find(x=>x.id===id);if(t){document.getElementById('taskModalTitle').textContent='Редагувати';document.getElementById('taskTitle').value=t.title;document.getElementById('taskFunction').value=t.function||'';document.getElementById('taskAssignee').value=t.assignee;document.getElementById('taskDeadline').value=t.deadline;document.getElementById('taskPriority').value=t.priority||'medium';document.getElementById('taskType').value=t.type||'single';document.getElementById('taskStatus').value=t.status||'new';document.getElementById('taskDescription').value=t.description||'';}}else{editingTaskId=null;document.getElementById('taskModalTitle').textContent='Нове завдання';document.getElementById('taskForm').reset();document.getElementById('taskPriority').value='medium';}}
-        function closeTaskModal(){document.getElementById('taskModal').style.display='none';editingTaskId=null;}
-        function saveTask(e){e.preventDefault();const data={title:document.getElementById('taskTitle').value.trim(),function:document.getElementById('taskFunction').value,assignee:document.getElementById('taskAssignee').value,deadline:document.getElementById('taskDeadline').value,priority:document.getElementById('taskPriority').value,type:document.getElementById('taskType').value,status:document.getElementById('taskStatus').value,description:document.getElementById('taskDescription').value.trim(),creator:currentUser?.name||'System',updatedAt:new Date().toISOString()};if(!data.title||!data.assignee||!data.deadline){alert('Заповніть обов\'язкові поля');return;}if(editingTaskId){const i=tasks.findIndex(t=>t.id===editingTaskId);if(i!==-1)tasks[i]={...tasks[i],...data};}else{tasks.push({id:Date.now(),...data,pinned:false,createdAt:new Date().toISOString()});}saveData();renderTasks();closeTaskModal();}
-        function deleteTask(id){if(confirm('Видалити?')){tasks=tasks.filter(t=>t.id!==id);saveData();renderTasks();}}
-        function togglePin(id){const t=tasks.find(x=>x.id===id);if(t){t.pinned=!t.pinned;saveData();renderTasks();}}
-        function renderTasks(){const c=document.getElementById('tasksContainer');const sf=document.getElementById('statusFilter')?.value;const ff=document.getElementById('functionFilter')?.value;const af=document.getElementById('assigneeFilter')?.value;let f=tasks.filter(t=>{if(sf&&t.status!==sf)return false;if(ff&&t.function!==ff)return false;if(af&&t.assignee!==af)return false;return true;});f.sort((a,b)=>{if(a.pinned&&!b.pinned)return -1;if(!a.pinned&&b.pinned)return 1;return new Date(a.deadline)-new Date(b.deadline);});if(f.length===0){c.innerHTML='<div class="empty-state"><h3>📋 Завдань немає</h3><p>Натисніть "+ Завдання"</p></div>';return;}const st={new:'Нове',progress:'В роботі',review:'Перевірка',done:'Готово'};const tt={single:'Разове',regular:'Регулярне',bottleneck:'Вузьке місце'};const pt={low:'Низький',medium:'Середній',high:'Високий'};c.innerHTML=f.map(t=>{const od=new Date(t.deadline)<new Date()&&t.status!=='done';return`<div class="task-card ${t.pinned?'pinned':''} animate-fade-in"><div class="task-card-header"><div class="task-title"><button class="pin-btn ${t.pinned?'pinned':''}" onclick="togglePin(${t.id})">📌</button>${t.title}</div></div><div class="task-meta"><span class="task-meta-item">👤 ${t.assignee}</span><span class="task-meta-item" style="${od?'color:#e74c3c;font-weight:600;':''}">📅 ${formatDate(t.deadline)}</span>${t.function?`<span class="task-meta-item">⚙️ ${t.function}</span>`:''}</div><div class="task-badges"><span class="badge badge-${t.status}">${st[t.status]||t.status}</span><span class="badge badge-${t.type}">${tt[t.type]||t.type}</span><span class="badge badge-${t.priority}">${pt[t.priority]||t.priority}</span></div>${t.description?`<div class="task-info">${t.description}</div>`:''}<div class="task-actions"><button class="btn btn-small" onclick="openTaskModal(${t.id})">✏️</button><button class="btn btn-small btn-danger" onclick="deleteTask(${t.id})">🗑️</button></div></div>`;}).join('');}
-        function clearFilters(){document.getElementById('statusFilter').value='';document.getElementById('functionFilter').value='';document.getElementById('assigneeFilter').value='';renderTasks();}
+        // =====================
+        function openTaskModal(id = null) {
+            document.getElementById('taskModal').style.display = 'block';
+            updateSelects();
+            
+            if (id) {
+                editingId = id;
+                const t = tasks.find(x => x.id === id);
+                if (t) {
+                    document.getElementById('taskModalTitle').textContent = 'Редагувати';
+                    document.getElementById('taskTitle').value = t.title || '';
+                    document.getElementById('taskFunction').value = t.function || '';
+                    document.getElementById('taskAssignee').value = t.assigneeId || '';
+                    document.getElementById('taskDeadline').value = t.deadline || '';
+                    document.getElementById('taskPriority').value = t.priority || 'medium';
+                    document.getElementById('taskStatus').value = t.status || 'new';
+                    document.getElementById('taskDescription').value = t.description || '';
+                }
+            } else {
+                editingId = null;
+                document.getElementById('taskModalTitle').textContent = 'Нове завдання';
+                document.getElementById('taskForm').reset();
+            }
+        }
 
+        async function saveTask(e) {
+            e.preventDefault();
+            
+            const assigneeId = document.getElementById('taskAssignee').value;
+            const assignee = users.find(u => u.id === assigneeId);
+            
+            const data = {
+                title: document.getElementById('taskTitle').value.trim(),
+                function: document.getElementById('taskFunction').value,
+                assigneeId: assigneeId,
+                assigneeName: assignee?.name || '',
+                deadline: document.getElementById('taskDeadline').value,
+                priority: document.getElementById('taskPriority').value,
+                status: document.getElementById('taskStatus').value,
+                description: document.getElementById('taskDescription').value.trim(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            try {
+                if (editingId) {
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(editingId).update(data);
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    data.creatorId = currentUser.uid;
+                    data.creatorName = currentUserData?.name || currentUser.email;
+                    data.pinned = false;
+                    await db.collection('companies').doc(currentCompany).collection('tasks').add(data);
+                }
+                
+                closeModal('taskModal');
+                loadAllData();
+            } catch (e) {
+                alert('Помилка: ' + e.message);
+            }
+        }
+
+        async function deleteTask(id) {
+            if (!confirm('Видалити?')) return;
+            await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
+            loadAllData();
+        }
+
+        async function togglePin(id) {
+            const t = tasks.find(x => x.id === id);
+            if (t) {
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({ pinned: !t.pinned });
+                loadAllData();
+            }
+        }
+
+        function renderTasks() {
+            const c = document.getElementById('tasksContainer');
+            const sf = document.getElementById('statusFilter')?.value;
+            const ff = document.getElementById('functionFilter')?.value;
+            const af = document.getElementById('assigneeFilter')?.value;
+            
+            let f = tasks.filter(t => {
+                if (sf && t.status !== sf) return false;
+                if (ff && t.function !== ff) return false;
+                if (af && t.assigneeId !== af) return false;
+                return true;
+            });
+            
+            f.sort((a, b) => {
+                if (a.pinned && !b.pinned) return -1;
+                if (!a.pinned && b.pinned) return 1;
+                return new Date(a.deadline || 0) - new Date(b.deadline || 0);
+            });
+            
+            if (f.length === 0) {
+                c.innerHTML = '<div class="empty-state"><h3>📋 Завдань немає</h3><p>Створіть перше завдання</p></div>';
+                return;
+            }
+            
+            const st = { new: 'Нове', progress: 'В роботі', review: 'Перевірка', done: 'Готово' };
+            const pt = { low: 'Низький', medium: 'Середній', high: 'Високий' };
+            
+            c.innerHTML = f.map(t => {
+                const od = t.deadline && new Date(t.deadline) < new Date() && t.status !== 'done';
+                return `
+                    <div class="task-card ${t.pinned ? 'pinned' : ''}">
+                        <div class="task-card-header">
+                            <div class="task-title">
+                                <button class="pin-btn ${t.pinned ? 'pinned' : ''}" onclick="togglePin('${t.id}')">📌</button>
+                                ${t.title}
+                            </div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-meta-item">👤 ${t.assigneeName || 'Не призначено'}</span>
+                            <span class="task-meta-item" style="${od ? 'color:#e74c3c;font-weight:600;' : ''}">📅 ${t.deadline ? formatDate(t.deadline) : '-'}</span>
+                            ${t.function ? `<span class="task-meta-item">⚙️ ${t.function}</span>` : ''}
+                        </div>
+                        <div class="task-badges">
+                            <span class="badge badge-${t.status}">${st[t.status] || t.status}</span>
+                            <span class="badge badge-${t.priority}">${pt[t.priority] || t.priority}</span>
+                        </div>
+                        ${t.description ? `<div style="font-size:0.8rem;color:#7f8c8d;padding:0.5rem;background:#f8f9fa;border-radius:8px;">${t.description}</div>` : ''}
+                        <div class="task-actions">
+                            <button class="btn btn-small" onclick="openTaskModal('${t.id}')">✏️</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteTask('${t.id}')">🗑️</button>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        // =====================
         // FUNCTIONS
-        function openFunctionModal(id=null){document.getElementById('functionModal').style.display='block';updateFunctionAssignees();if(id){editingFunctionId=id;const f=functions.find(x=>x.id===id);if(f){document.getElementById('functionModalTitle').textContent='Редагувати';document.getElementById('functionName').value=f.name;document.getElementById('functionDepartment').value=f.department||'';document.getElementById('functionColor').value=f.color||'#3498db';document.getElementById('functionDescription').value=f.description||'';document.getElementById('functionHead').value=f.head||'';setTimeout(()=>{document.querySelectorAll('#functionAssignees input[type="checkbox"]').forEach(cb=>{cb.checked=f.assignees?.includes(cb.value);});},50);}}else{editingFunctionId=null;document.getElementById('functionModalTitle').textContent='Нова функція';document.getElementById('functionForm').reset();document.getElementById('functionColor').value='#3498db';}}
-        function closeFunctionModal(){document.getElementById('functionModal').style.display='none';editingFunctionId=null;}
-        function updateFunctionAssignees(){const c=document.getElementById('functionAssignees');const h=document.getElementById('functionHead');c.innerHTML=users.map(u=>`<label class="assignee-checkbox"><input type="checkbox" value="${u.name}">${u.name}</label>`).join('');h.innerHTML='<option value="">Оберіть</option>'+users.map(u=>`<option value="${u.name}">${u.name}</option>`).join('');}
-        function saveFunction(e){e.preventDefault();const data={name:document.getElementById('functionName').value.trim(),department:document.getElementById('functionDepartment').value.trim(),color:document.getElementById('functionColor').value,description:document.getElementById('functionDescription').value.trim(),head:document.getElementById('functionHead').value,assignees:Array.from(document.querySelectorAll('#functionAssignees input:checked')).map(cb=>cb.value)};if(!data.name||!data.head){alert('Заповніть назву та оберіть головного');return;}if(!data.assignees.includes(data.head))data.assignees.push(data.head);if(editingFunctionId){const i=functions.findIndex(f=>f.id===editingFunctionId);if(i!==-1)functions[i]={...functions[i],...data};}else{functions.push({id:Date.now(),...data});}saveData();updateSelects();renderFunctions();closeFunctionModal();}
-        function deleteFunction(id){if(confirm('Видалити?')){functions=functions.filter(f=>f.id!==id);saveData();updateSelects();renderFunctions();}}
-        function renderFunctions(){const c=document.getElementById('functionsContainer');if(functions.length===0){c.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><h3>⚙️ Функцій немає</h3><p>Створіть першу функцію</p></div>';return;}c.innerHTML=functions.map(f=>{const tc=tasks.filter(t=>t.function===f.name).length;const rc=regularTasks.filter(rt=>rt.function===f.name).length;return`<div class="function-card animate-fade-in"><div class="function-header"><div class="function-title" style="color:${f.color};">⚙️ ${f.name}</div>${f.department?`<span style="font-size:0.75rem;color:#7f8c8d;">🏢 ${f.department}</span>`:''}</div>${f.description?`<div class="function-description">${f.description}</div>`:''}<div class="function-assignees">${f.head?`<span class="assignee-badge head">👑 ${f.head}</span>`:''}${f.assignees?.filter(a=>a!==f.head).map(a=>`<span class="assignee-badge">${a}</span>`).join('')||''}</div><div class="function-stats"><span class="function-stat">📋 ${tc}</span><span class="function-stat">🔄 ${rc}</span></div><div style="display:flex;gap:0.4rem;justify-content:flex-end;margin-top:0.5rem;"><button class="btn btn-small" onclick="openFunctionModal(${f.id})">✏️</button><button class="btn btn-small btn-danger" onclick="deleteFunction(${f.id})">🗑️</button></div></div>`;}).join('');}
+        // =====================
+        function openFunctionModal(id = null) {
+            document.getElementById('functionModal').style.display = 'block';
+            updateFunctionAssignees();
+            
+            if (id) {
+                editingId = id;
+                const f = functions.find(x => x.id === id);
+                if (f) {
+                    document.getElementById('functionModalTitle').textContent = 'Редагувати';
+                    document.getElementById('functionName').value = f.name || '';
+                    document.getElementById('functionHead').value = f.headId || '';
+                    document.getElementById('functionDescription').value = f.description || '';
+                    setTimeout(() => {
+                        document.querySelectorAll('#functionAssignees input').forEach(cb => {
+                            cb.checked = f.assigneeIds?.includes(cb.value);
+                        });
+                    }, 50);
+                }
+            } else {
+                editingId = null;
+                document.getElementById('functionModalTitle').textContent = 'Нова функція';
+                document.getElementById('functionForm').reset();
+            }
+        }
 
+        function updateFunctionAssignees() {
+            const c = document.getElementById('functionAssignees');
+            const h = document.getElementById('functionHead');
+            c.innerHTML = users.map(u => `<label class="assignee-checkbox"><input type="checkbox" value="${u.id}">${u.name || u.email}</label>`).join('');
+            h.innerHTML = '<option value="">Оберіть</option>' + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+        }
+
+        async function saveFunction(e) {
+            e.preventDefault();
+            
+            const headId = document.getElementById('functionHead').value;
+            const head = users.find(u => u.id === headId);
+            const assigneeIds = Array.from(document.querySelectorAll('#functionAssignees input:checked')).map(cb => cb.value);
+            if (!assigneeIds.includes(headId)) assigneeIds.push(headId);
+            
+            const data = {
+                name: document.getElementById('functionName').value.trim(),
+                headId: headId,
+                headName: head?.name || '',
+                description: document.getElementById('functionDescription').value.trim(),
+                assigneeIds: assigneeIds,
+                assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || '').filter(Boolean)
+            };
+            
+            try {
+                if (editingId) {
+                    await db.collection('companies').doc(currentCompany).collection('functions').doc(editingId).update(data);
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('companies').doc(currentCompany).collection('functions').add(data);
+                }
+                closeModal('functionModal');
+                loadAllData();
+            } catch (e) {
+                alert('Помилка: ' + e.message);
+            }
+        }
+
+        async function deleteFunction(id) {
+            if (!confirm('Видалити?')) return;
+            await db.collection('companies').doc(currentCompany).collection('functions').doc(id).delete();
+            loadAllData();
+        }
+
+        function renderFunctions() {
+            const c = document.getElementById('functionsContainer');
+            if (functions.length === 0) {
+                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>⚙️ Функцій немає</h3></div>';
+                return;
+            }
+            c.innerHTML = functions.map(f => `
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-title">⚙️ ${f.name}</div>
+                    </div>
+                    ${f.description ? `<div class="function-description">${f.description}</div>` : ''}
+                    <div class="function-assignees">
+                        ${f.headName ? `<span class="assignee-badge head">👑 ${f.headName}</span>` : ''}
+                        ${f.assigneeNames?.filter(n => n !== f.headName).map(n => `<span class="assignee-badge">${n}</span>`).join('') || ''}
+                    </div>
+                    <div class="function-stats">
+                        <span>📋 ${tasks.filter(t => t.function === f.name).length} завдань</span>
+                        <div>
+                            <button class="btn btn-small" onclick="openFunctionModal('${f.id}')">✏️</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteFunction('${f.id}')">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =====================
         // REGULAR TASKS
-        function openRegularTaskModal(id=null){document.getElementById('regularTaskModal').style.display='block';updateRegularTaskFunctions();if(id){editingRegularTaskId=id;const rt=regularTasks.find(r=>r.id===id);if(rt){document.getElementById('regularTaskTitle').value=rt.title;document.getElementById('regularTaskFunction').value=rt.function;document.getElementById('regularTaskPeriod').value=rt.period;document.getElementById('regularTaskDuration').value=rt.duration;document.getElementById('regularTaskDescription').value=rt.description||'';updateRegularTaskAssignees();setTimeout(()=>{document.querySelectorAll('#regularTaskAssignees input[type="checkbox"]').forEach(cb=>{cb.checked=rt.assignees?.includes(cb.value);});},50);}}else{editingRegularTaskId=null;document.getElementById('regularTaskForm').reset();document.getElementById('regularTaskDuration').value='1';document.getElementById('regularTaskAssignees').innerHTML='<p style="color:#7f8c8d;font-size:0.85rem;">Спочатку оберіть функцію</p>';}}
-        function closeRegularTaskModal(){document.getElementById('regularTaskModal').style.display='none';editingRegularTaskId=null;}
-        function updateRegularTaskFunctions(){const s=document.getElementById('regularTaskFunction');s.innerHTML='<option value="">Оберіть</option>'+functions.map(f=>`<option value="${f.name}">${f.name}</option>`).join('');document.getElementById('regularFunctionFilter').innerHTML='<option value="">Всі функції</option>'+functions.map(f=>`<option value="${f.name}">${f.name}</option>`).join('');}
-        function updateRegularTaskAssignees(){const fn=document.getElementById('regularTaskFunction').value;const c=document.getElementById('regularTaskAssignees');if(!fn){c.innerHTML='<p style="color:#7f8c8d;font-size:0.85rem;">Спочатку оберіть функцію</p>';return;}const f=functions.find(x=>x.name===fn);if(!f||!f.assignees?.length){c.innerHTML='<p style="color:#7f8c8d;font-size:0.85rem;">Немає учасників</p>';return;}c.innerHTML=f.assignees.map(n=>`<label class="assignee-checkbox"><input type="checkbox" value="${n}">${n===f.head?'👑 ':''}${n}</label>`).join('');}
-        function saveRegularTask(e){e.preventDefault();const data={title:document.getElementById('regularTaskTitle').value.trim(),function:document.getElementById('regularTaskFunction').value,period:document.getElementById('regularTaskPeriod').value,duration:parseInt(document.getElementById('regularTaskDuration').value),description:document.getElementById('regularTaskDescription').value.trim(),assignees:Array.from(document.querySelectorAll('#regularTaskAssignees input:checked')).map(cb=>cb.value)};if(!data.title||!data.function){alert('Заповніть назву та функцію');return;}if(data.assignees.length===0){alert('Оберіть виконавців');return;}if(editingRegularTaskId){const i=regularTasks.findIndex(r=>r.id===editingRegularTaskId);if(i!==-1)regularTasks[i]={...regularTasks[i],...data};}else{regularTasks.push({id:Date.now(),...data,active:true,lastGenerated:null,createdAt:new Date().toISOString()});}saveData();renderRegularTasks();closeRegularTaskModal();}
-        function deleteRegularTask(id){if(confirm('Видалити?')){regularTasks=regularTasks.filter(rt=>rt.id!==id);saveData();renderRegularTasks();}}
-        function generateFromRegular(id){const rt=regularTasks.find(r=>r.id===id);if(!rt)return;const dl=new Date();dl.setDate(dl.getDate()+rt.duration);rt.assignees.forEach(a=>{tasks.push({id:Date.now()+Math.random(),title:rt.title,function:rt.function,assignee:a,creator:'System',deadline:dl.toISOString().slice(0,16),status:'new',type:'regular',priority:'medium',pinned:false,description:rt.description,createdAt:new Date().toISOString()});});const i=regularTasks.findIndex(r=>r.id===id);if(i!==-1)regularTasks[i].lastGenerated=new Date().toISOString();saveData();renderRegularTasks();renderTasks();alert(`✅ Створено ${rt.assignees.length} завдань`);}
-        function renderRegularTasks(){const c=document.getElementById('regularTasksContainer');const ff=document.getElementById('regularFunctionFilter')?.value;let f=regularTasks;if(ff)f=regularTasks.filter(rt=>rt.function===ff);if(f.length===0){c.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><h3>🔄 Регулярних немає</h3><p>Створіть регулярне завдання</p></div>';return;}const pt={daily:'Щодня',weekly:'Щотижня',monthly:'Щомісяця',workdays:'Робочі дні'};c.innerHTML=f.map(rt=>{const fn=functions.find(x=>x.name===rt.function);return`<div class="function-card animate-fade-in"><div class="function-header"><div class="function-title">${rt.title}</div><span class="badge badge-regular">${pt[rt.period]||rt.period}</span></div><div class="regular-task-info"><div><strong>Функція:</strong> ${rt.function}</div><div><strong>Днів:</strong> ${rt.duration}</div><div><strong>Останнє:</strong> ${rt.lastGenerated?formatDate(rt.lastGenerated):'Ніколи'}</div>${rt.description?`<div><strong>Опис:</strong> ${rt.description}</div>`:''}</div><div style="margin-bottom:0.5rem;"><div class="regular-task-assignees-title">👥 Призначено:</div><div class="assignee-checkboxes">${rt.assignees.map(n=>`<span class="assignee-checkbox">✓ ${n===fn?.head?'👑 ':''}${n}</span>`).join('')}</div></div><div style="display:flex;gap:0.4rem;justify-content:flex-end;"><button class="btn btn-small btn-success" onclick="generateFromRegular(${rt.id})">⚡</button><button class="btn btn-small" onclick="openRegularTaskModal(${rt.id})">✏️</button><button class="btn btn-small btn-danger" onclick="deleteRegularTask(${rt.id})">🗑️</button></div></div>`;}).join('');}
+        // =====================
+        function openRegularTaskModal(id = null) {
+            document.getElementById('regularTaskModal').style.display = 'block';
+            updateRegularTaskFunctions();
+            editingId = id;
+            
+            if (id) {
+                const rt = regularTasks.find(r => r.id === id);
+                if (rt) {
+                    document.getElementById('regularTaskTitle').value = rt.title;
+                    document.getElementById('regularTaskFunction').value = rt.function;
+                    document.getElementById('regularTaskPeriod').value = rt.period;
+                    updateRegularTaskAssignees();
+                    setTimeout(() => {
+                        document.querySelectorAll('#regularTaskAssignees input').forEach(cb => {
+                            cb.checked = rt.assigneeIds?.includes(cb.value);
+                        });
+                    }, 50);
+                }
+            } else {
+                document.getElementById('regularTaskForm').reset();
+                document.getElementById('regularTaskAssignees').innerHTML = '<p style="color:#7f8c8d;">Спочатку оберіть функцію</p>';
+            }
+        }
 
+        function updateRegularTaskFunctions() {
+            const s = document.getElementById('regularTaskFunction');
+            s.innerHTML = '<option value="">Оберіть</option>' + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+        }
+
+        function updateRegularTaskAssignees() {
+            const fn = document.getElementById('regularTaskFunction').value;
+            const c = document.getElementById('regularTaskAssignees');
+            const f = functions.find(x => x.name === fn);
+            
+            if (!f || !f.assigneeIds?.length) {
+                c.innerHTML = '<p style="color:#7f8c8d;">Немає учасників</p>';
+                return;
+            }
+            
+            c.innerHTML = f.assigneeIds.map(id => {
+                const u = users.find(x => x.id === id);
+                return `<label class="assignee-checkbox"><input type="checkbox" value="${id}">${id === f.headId ? '👑 ' : ''}${u?.name || u?.email || id}</label>`;
+            }).join('');
+        }
+
+        async function saveRegularTask(e) {
+            e.preventDefault();
+            
+            const assigneeIds = Array.from(document.querySelectorAll('#regularTaskAssignees input:checked')).map(cb => cb.value);
+            if (!assigneeIds.length) { alert('Оберіть виконавців'); return; }
+            
+            const data = {
+                title: document.getElementById('regularTaskTitle').value.trim(),
+                function: document.getElementById('regularTaskFunction').value,
+                period: document.getElementById('regularTaskPeriod').value,
+                assigneeIds: assigneeIds,
+                assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || '').filter(Boolean)
+            };
+            
+            try {
+                if (editingId) {
+                    await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(editingId).update(data);
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('companies').doc(currentCompany).collection('regularTasks').add(data);
+                }
+                closeModal('regularTaskModal');
+                loadAllData();
+            } catch (e) {
+                alert('Помилка: ' + e.message);
+            }
+        }
+
+        async function generateFromRegular(id) {
+            const rt = regularTasks.find(r => r.id === id);
+            if (!rt) return;
+            
+            const deadline = new Date();
+            deadline.setDate(deadline.getDate() + 1);
+            
+            const batch = db.batch();
+            rt.assigneeIds.forEach(assigneeId => {
+                const ref = db.collection('companies').doc(currentCompany).collection('tasks').doc();
+                batch.set(ref, {
+                    title: rt.title,
+                    function: rt.function,
+                    assigneeId: assigneeId,
+                    assigneeName: users.find(u => u.id === assigneeId)?.name || '',
+                    deadline: deadline.toISOString().slice(0, 16),
+                    status: 'new',
+                    priority: 'medium',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    creatorName: 'Система'
+                });
+            });
+            
+            await batch.commit();
+            alert(`✅ Створено ${rt.assigneeIds.length} завдань`);
+            loadAllData();
+        }
+
+        function renderRegularTasks() {
+            const c = document.getElementById('regularTasksContainer');
+            const pt = { daily: 'Щодня', weekly: 'Щотижня', monthly: 'Щомісяця' };
+            
+            if (regularTasks.length === 0) {
+                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>🔄 Регулярних немає</h3></div>';
+                return;
+            }
+            
+            c.innerHTML = regularTasks.map(rt => `
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-title">${rt.title}</div>
+                        <span class="badge badge-regular">${pt[rt.period] || rt.period}</span>
+                    </div>
+                    <div style="font-size:0.85rem;color:#7f8c8d;margin-bottom:0.5rem;">Функція: ${rt.function}</div>
+                    <div class="function-assignees">
+                        ${rt.assigneeNames?.map(n => `<span class="assignee-badge">${n}</span>`).join('') || ''}
+                    </div>
+                    <div class="function-stats">
+                        <button class="btn btn-small btn-success" onclick="generateFromRegular('${rt.id}')">⚡ Створити</button>
+                        <div>
+                            <button class="btn btn-small" onclick="openRegularTaskModal('${rt.id}')">✏️</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteRegularTask('${rt.id}')">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteRegularTask(id) {
+            if (!confirm('Видалити?')) return;
+            await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(id).delete();
+            loadAllData();
+        }
+
+        // =====================
         // USERS
-        function openUserModal(id=null){document.getElementById('userModal').style.display='block';if(id){editingUserId=id;const u=users.find(x=>x.id===id);if(u){document.getElementById('userModalTitle').textContent='Редагувати';document.getElementById('userName').value=u.name;document.getElementById('userEmail').value=u.email;document.getElementById('userPhone').value=u.phone||'';document.getElementById('userRole').value=u.role;document.getElementById('userPosition').value=u.position||'';document.getElementById('userDepartment').value=u.department||'';}}else{editingUserId=null;document.getElementById('userModalTitle').textContent='Новий';document.getElementById('userForm').reset();}}
-        function closeUserModal(){document.getElementById('userModal').style.display='none';editingUserId=null;}
-        function saveUser(e){e.preventDefault();const data={name:document.getElementById('userName').value.trim(),email:document.getElementById('userEmail').value.trim(),phone:document.getElementById('userPhone').value.trim(),role:document.getElementById('userRole').value,position:document.getElementById('userPosition').value.trim(),department:document.getElementById('userDepartment').value.trim()};if(!data.name||!data.email){alert('Заповніть ім\'я та email');return;}if(editingUserId){const i=users.findIndex(u=>u.id===editingUserId);if(i!==-1){const old=users[i].name;users[i]={...users[i],...data};if(old!==data.name){tasks.forEach(t=>{if(t.assignee===old)t.assignee=data.name;if(t.creator===old)t.creator=data.name;});functions.forEach(f=>{if(f.head===old)f.head=data.name;f.assignees=f.assignees?.map(a=>a===old?data.name:a);});regularTasks.forEach(rt=>{rt.assignees=rt.assignees?.map(a=>a===old?data.name:a);});}}}else{if(users.find(u=>u.email===data.email)){alert('Email вже існує');return;}users.push({id:Date.now(),...data,createdAt:new Date().toISOString()});}saveData();updateSelects();renderUsers();closeUserModal();}
-        function deleteUser(id){const u=users.find(x=>x.id===id);if(!u)return;if(u.role==='owner'){alert('Не можна видалити власника');return;}if(confirm(`Видалити ${u.name}?`)){users=users.filter(x=>x.id!==id);functions.forEach(f=>{f.assignees=f.assignees?.filter(a=>a!==u.name);if(f.head===u.name&&f.assignees?.length>0)f.head=f.assignees[0];});regularTasks.forEach(rt=>{rt.assignees=rt.assignees?.filter(a=>a!==u.name);});saveData();updateSelects();renderUsers();}}
-        function renderUsers(){const c=document.getElementById('usersContainer');const rf=document.getElementById('userRoleFilter')?.value;let f=users;if(rf)f=users.filter(u=>u.role===rf);if(f.length===0){c.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><h3>👥 Немає</h3><p>Додайте співробітника</p></div>';return;}const rt={owner:'Власник',manager:'Менеджер',employee:'Співробітник'};c.innerHTML=f.map(u=>{const ut=tasks.filter(t=>t.assignee===u.name);const at=ut.filter(t=>t.status!=='done');const uf=functions.filter(fn=>fn.assignees?.includes(u.name));return`<div class="user-card animate-fade-in"><div class="user-header"><div class="user-name">${u.name}</div><span class="role-badge ${u.role}">${rt[u.role]||u.role}</span></div><div class="user-details"><div>📧 ${u.email}</div>${u.phone?`<div>📱 ${u.phone}</div>`:''}${u.position?`<div>💼 ${u.position}</div>`:''}${u.department?`<div>🏢 ${u.department}</div>`:''}<div>⚙️ ${uf.map(fn=>fn.name).join(', ')||'Немає'}</div></div><div class="user-stats"><span>📋 ${ut.length}</span><span style="color:${at.length>0?'#f39c12':'#27ae60'};">🔄 ${at.length}</span></div><div style="display:flex;gap:0.4rem;justify-content:flex-end;"><button class="btn btn-small" onclick="openUserModal(${u.id})">✏️</button>${u.role!=='owner'?`<button class="btn btn-small btn-danger" onclick="deleteUser(${u.id})">🗑️</button>`:''}</div></div>`;}).join('');}
+        // =====================
+        function openUserModal(id = null) {
+            document.getElementById('userModal').style.display = 'block';
+            editingId = id;
+            
+            if (id) {
+                const u = users.find(x => x.id === id);
+                if (u) {
+                    document.getElementById('userModalTitle').textContent = 'Редагувати';
+                    document.getElementById('userName').value = u.name || '';
+                    document.getElementById('userEmail').value = u.email || '';
+                    document.getElementById('userRole').value = u.role || 'employee';
+                    document.getElementById('userPosition').value = u.position || '';
+                }
+            } else {
+                document.getElementById('userModalTitle').textContent = 'Новий';
+                document.getElementById('userForm').reset();
+            }
+        }
 
-        // INVITE
-        function openInviteModal(){document.getElementById('inviteModal').style.display='block';}
-        function closeInviteModal(){document.getElementById('inviteModal').style.display='none';}
-        function createInvite(e){e.preventDefault();const email=document.getElementById('inviteEmail').value.trim();if(users.find(u=>u.email===email)){alert('Вже існує');return;}const code='INV-'+Math.random().toString(36).substr(2,8).toUpperCase();const link=`${window.location.origin}${window.location.pathname}?invite=${code}`;alert(`📤 Посилання:\n${link}`);closeInviteModal();}
+        async function saveUser(e) {
+            e.preventDefault();
+            
+            const data = {
+                name: document.getElementById('userName').value.trim(),
+                email: document.getElementById('userEmail').value.trim(),
+                role: document.getElementById('userRole').value,
+                position: document.getElementById('userPosition').value.trim()
+            };
+            
+            try {
+                if (editingId) {
+                    await db.collection('companies').doc(currentCompany).collection('users').doc(editingId).update(data);
+                } else {
+                    // For new users, create invite instead
+                    await sendInviteToEmail(data.email, data.role);
+                    closeModal('userModal');
+                    return;
+                }
+                closeModal('userModal');
+                loadAllData();
+            } catch (e) {
+                alert('Помилка: ' + e.message);
+            }
+        }
 
-        // CONTROL & ANALYTICS
-        function renderControl(){const now=new Date();const tm=new Date(now);tm.setDate(tm.getDate()+1);const urg=tasks.filter(t=>new Date(t.deadline)<now&&t.status!=='done').length;const wrn=tasks.filter(t=>{const d=new Date(t.deadline);return d>=now&&d<=tm&&t.status!=='done';}).length;const act=tasks.filter(t=>t.status==='progress').length;const cmp=tasks.filter(t=>t.status==='done').length;document.getElementById('urgentCount').textContent=urg;document.getElementById('warningCount').textContent=wrn;document.getElementById('activeCount').textContent=act;document.getElementById('completedCount').textContent=cmp;const wl={};tasks.filter(t=>t.status!=='done').forEach(t=>{wl[t.assignee]=(wl[t.assignee]||0)+1;});document.getElementById('controlContent').innerHTML=`<h3 style="margin-bottom:0.8rem;">👥 Навантаження</h3>${Object.entries(wl).map(([n,c])=>`<div style="display:flex;justify-content:space-between;padding:0.4rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;"><span>${n}</span><span style="font-weight:600;color:${c>5?'#e74c3c':'#27ae60'};">${c}</span></div>`).join('')||'<p style="color:#7f8c8d;">Немає активних</p>'}`;}
-        function renderAnalytics(){const tot=tasks.length;const cmp=tasks.filter(t=>t.status==='done').length;const ovr=tasks.filter(t=>new Date(t.deadline)<new Date()&&t.status!=='done').length;const eff=tot>0?Math.round((cmp/tot)*100):0;document.getElementById('totalTasksCount').textContent=tot;document.getElementById('completedTasksCount').textContent=cmp;document.getElementById('overdueTasksCount').textContent=ovr;document.getElementById('efficiencyPercent').textContent=eff+'%';const sc={new:tasks.filter(t=>t.status==='new').length,progress:tasks.filter(t=>t.status==='progress').length,review:tasks.filter(t=>t.status==='review').length,done:tasks.filter(t=>t.status==='done').length};const sn={new:'Нові',progress:'В роботі',review:'Перевірка',done:'Готово'};const scl={new:'#3498db',progress:'#f39c12',review:'#e91e63',done:'#27ae60'};document.getElementById('statusChart').innerHTML=Object.entries(sc).map(([s,c])=>{const p=tot>0?Math.round((c/tot)*100):0;return`<div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;"><div style="width:10px;height:10px;background:${scl[s]};border-radius:2px;"></div><span style="width:70px;font-size:0.8rem;">${sn[s]}</span><div style="flex:1;height:6px;background:#ecf0f1;border-radius:3px;overflow:hidden;"><div style="width:${p}%;height:100%;background:${scl[s]};"></div></div><span style="font-weight:600;font-size:0.8rem;width:45px;">${c} (${p}%)</span></div>`;}).join('');const asg=[...new Set(tasks.map(t=>t.assignee))].filter(Boolean);const mx=Math.max(...asg.map(a=>tasks.filter(t=>t.assignee===a).length),1);document.getElementById('workloadChart').innerHTML=asg.map(n=>{const c=tasks.filter(t=>t.assignee===n).length;const p=Math.round((c/mx)*100);return`<div style="margin-bottom:0.6rem;"><div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="font-size:0.8rem;font-weight:600;">${n}</span><span style="font-size:0.8rem;">${c}</span></div><div style="height:6px;background:#ecf0f1;border-radius:3px;overflow:hidden;"><div style="width:${p}%;height:100%;background:#3498db;"></div></div></div>`;}).join('')||'<p style="color:#7f8c8d;">Немає даних</p>';}
+        function openInviteModal() {
+            document.getElementById('inviteModal').style.display = 'block';
+        }
 
+        async function sendInvite(e) {
+            e.preventDefault();
+            const email = document.getElementById('inviteEmail').value.trim();
+            const role = document.getElementById('inviteRole').value;
+            await sendInviteToEmail(email, role);
+            closeModal('inviteModal');
+        }
+
+        async function sendInviteToEmail(email, role) {
+            try {
+                await db.collection('invites').add({
+                    email: email,
+                    companyId: currentCompany,
+                    role: role,
+                    invitedBy: currentUser.uid,
+                    accepted: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert(`📤 Запрошення створено!\n\nНадішліть співробітнику посилання:\n${window.location.origin}${window.location.pathname}\n\nВін має увійти з email: ${email}`);
+            } catch (e) {
+                alert('Помилка: ' + e.message);
+            }
+        }
+
+        async function deleteUser(id) {
+            const u = users.find(x => x.id === id);
+            if (u?.role === 'owner') { alert('Не можна видалити власника'); return; }
+            if (!confirm('Видалити?')) return;
+            await db.collection('companies').doc(currentCompany).collection('users').doc(id).delete();
+            loadAllData();
+        }
+
+        function renderUsers() {
+            const c = document.getElementById('usersContainer');
+            if (users.length === 0) {
+                c.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h3>👥 Немає</h3></div>';
+                return;
+            }
+            
+            c.innerHTML = users.map(u => `
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-name">${u.name || u.email}</div>
+                        <span class="role-badge ${u.role}">${getRoleText(u.role)}</span>
+                    </div>
+                    <div class="user-details">
+                        <div>📧 ${u.email}</div>
+                        ${u.position ? `<div>💼 ${u.position}</div>` : ''}
+                    </div>
+                    <div class="user-stats">
+                        <span>📋 ${tasks.filter(t => t.assigneeId === u.id).length} завдань</span>
+                        <div>
+                            <button class="btn btn-small" onclick="openUserModal('${u.id}')">✏️</button>
+                            ${u.role !== 'owner' ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')">🗑️</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =====================
+        // CONTROL DASHBOARD
+        // =====================
+        function renderControl() {
+            const now = new Date();
+            const tm = new Date(now); tm.setDate(tm.getDate() + 1);
+            
+            const urgent = tasks.filter(t => t.deadline && new Date(t.deadline) < now && t.status !== 'done').length;
+            const warning = tasks.filter(t => { const d = new Date(t.deadline); return d >= now && d <= tm && t.status !== 'done'; }).length;
+            const active = tasks.filter(t => t.status === 'progress').length;
+            const completed = tasks.filter(t => t.status === 'done').length;
+            
+            document.getElementById('urgentCount').textContent = urgent;
+            document.getElementById('warningCount').textContent = warning;
+            document.getElementById('activeCount').textContent = active;
+            document.getElementById('completedCount').textContent = completed;
+            
+            const wl = {};
+            tasks.filter(t => t.status !== 'done').forEach(t => { wl[t.assigneeName || 'Не призначено'] = (wl[t.assigneeName || 'Не призначено'] || 0) + 1; });
+            
+            document.getElementById('controlContent').innerHTML = `
+                <h3 style="margin-bottom:0.8rem;">👥 Навантаження</h3>
+                ${Object.entries(wl).map(([n, c]) => `<div style="display:flex;justify-content:space-between;padding:0.4rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;"><span>${n}</span><span style="font-weight:600;color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c}</span></div>`).join('') || '<p style="color:#7f8c8d;">Немає активних</p>'}
+            `;
+        }
+
+        // =====================
         // HELPERS
-        function updateSelects(){const tf=document.getElementById('taskFunction');const ta=document.getElementById('taskAssignee');const ff=document.getElementById('functionFilter');const af=document.getElementById('assigneeFilter');if(tf){const v=tf.value;tf.innerHTML='<option value="">Без функції</option>'+functions.map(f=>`<option value="${f.name}">${f.name}</option>`).join('');tf.value=v;}if(ta){const v=ta.value;ta.innerHTML='<option value="">Оберіть</option>'+users.map(u=>`<option value="${u.name}">${u.name}</option>`).join('');ta.value=v;}if(ff)ff.innerHTML='<option value="">Всі функції</option>'+functions.map(f=>`<option value="${f.name}">${f.name}</option>`).join('');if(af)af.innerHTML='<option value="">Всі виконавці</option>'+users.map(u=>`<option value="${u.name}">${u.name}</option>`).join('');}
-        function formatDate(s){const d=new Date(s);return d.toLocaleDateString('uk-UA',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
-        function switchTab(t){document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.getElementById(t+'Tab').classList.add('active');document.querySelector(`[onclick="switchTab('${t}')"]`).classList.add('active');switch(t){case'tasks':renderTasks();break;case'control':renderControl();break;case'regular':updateRegularTaskFunctions();renderRegularTasks();break;case'functions':renderFunctions();break;case'users':renderUsers();break;case'analytics':renderAnalytics();break;}}
-        function setLanguage(l){currentLanguage=l;localStorage.setItem('talko_lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`[onclick="setLanguage('${l}')"]`).classList.add('active');}
-        function exportToCSV(){const d=tasks.map(t=>({'Завдання':t.title,'Виконавець':t.assignee,'Дедлайн':formatDate(t.deadline),'Статус':t.status,'Пріоритет':t.priority,'Функція':t.function||''}));const csv=[Object.keys(d[0]||{}).join(','),...d.map(r=>Object.values(r).map(v=>`"${v}"`).join(','))].join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=`tasks_${new Date().toISOString().slice(0,10)}.csv`;link.click();}
-        window.onclick=function(e){['taskModal','functionModal','regularTaskModal','userModal','inviteModal'].forEach(id=>{if(e.target===document.getElementById(id))document.getElementById(id).style.display='none';});}
-        document.addEventListener('DOMContentLoaded',function(){document.getElementById('taskForm').addEventListener('submit',saveTask);document.getElementById('functionForm').addEventListener('submit',saveFunction);document.getElementById('regularTaskForm').addEventListener('submit',saveRegularTask);document.getElementById('userForm').addEventListener('submit',saveUser);document.getElementById('inviteForm').addEventListener('submit',createInvite);checkAuth();});
+        // =====================
+        function updateSelects() {
+            const tf = document.getElementById('taskFunction');
+            const ta = document.getElementById('taskAssignee');
+            const ff = document.getElementById('functionFilter');
+            const af = document.getElementById('assigneeFilter');
+            
+            if (tf) tf.innerHTML = '<option value="">Без функції</option>' + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            if (ta) ta.innerHTML = '<option value="">Оберіть</option>' + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            if (ff) ff.innerHTML = '<option value="">Всі функції</option>' + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            if (af) af.innerHTML = '<option value="">Всі</option>' + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+        }
+
+        function formatDate(s) {
+            const d = new Date(s);
+            return d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+            document.getElementById(t + 'Tab').classList.add('active');
+            document.querySelector(`[onclick="switchTab('${t}')"]`).classList.add('active');
+            
+            switch (t) {
+                case 'tasks': renderTasks(); break;
+                case 'control': renderControl(); break;
+                case 'regular': renderRegularTasks(); break;
+                case 'functions': renderFunctions(); break;
+                case 'users': renderUsers(); break;
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            editingId = null;
+        }
+
+        window.onclick = function(e) {
+            ['taskModal', 'functionModal', 'regularTaskModal', 'userModal', 'inviteModal'].forEach(id => {
+                if (e.target === document.getElementById(id)) closeModal(id);
+            });
+        }
+
+        // =====================
+        // INIT
+        // =====================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check for email link sign-in
+            await handleEmailLink();
+        });
     </script>
 </body>
 </html>
