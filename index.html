@@ -303,6 +303,79 @@
             padding-top: 0.5rem;
         }
         
+        .task-deadline-row {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            font-size: 0.85rem;
+            padding: 0.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .task-deadline-row.overdue-text { color: #e74c3c; font-weight: 600; }
+        .task-deadline-row.today-text { color: #2980b9; font-weight: 600; }
+        
+        .time-badge {
+            background: #e8f4fd;
+            color: #2980b9;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .task-detail {
+            font-size: 0.8rem;
+            color: #555;
+            padding: 0.4rem 0.6rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-top: 0.4rem;
+            line-height: 1.4;
+        }
+        
+        .task-detail strong { color: #333; }
+        
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+            border-top: 1px solid #ecf0f1;
+        }
+        
+        .task-created {
+            font-size: 0.7rem;
+            color: #95a5a6;
+        }
+        
+        .task-card.overdue {
+            border-left: 4px solid #e74c3c;
+            background: linear-gradient(90deg, rgba(231, 76, 60, 0.05) 0%, var(--white) 100%);
+        }
+        
+        .task-card.today {
+            border-left: 4px solid #3498db;
+            background: linear-gradient(90deg, rgba(52, 152, 219, 0.05) 0%, var(--white) 100%);
+        }
+        
+        .total-time-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
         .function-stats, .user-stats {
             justify-content: space-between;
             border-top: 1px solid #ecf0f1;
@@ -538,6 +611,81 @@
             .dashboard-cards { grid-template-columns: repeat(4, 1fr); }
         }
         
+        /* Mobile optimizations */
+        @media (max-width: 767px) {
+            .filters {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 0.5rem;
+                gap: 0.5rem;
+            }
+            
+            .filter-select {
+                flex: 0 0 auto;
+                min-width: 130px;
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+            
+            .task-card {
+                padding: 0.75rem;
+            }
+            
+            .task-title {
+                font-size: 0.9rem;
+            }
+            
+            .task-deadline-row {
+                font-size: 0.8rem;
+                gap: 0.5rem;
+            }
+            
+            .task-meta {
+                gap: 0.3rem;
+            }
+            
+            .task-meta-item {
+                font-size: 0.75rem;
+            }
+            
+            .task-detail {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.5rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn-small {
+                padding: 0.35rem 0.5rem;
+                font-size: 0.75rem;
+                min-height: 32px;
+            }
+            
+            .total-time-badge {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .controls-row {
+                justify-content: space-between;
+                width: 100%;
+            }
+            
+            .modal-content {
+                margin-top: 0;
+                border-radius: var(--radius) var(--radius) 0 0;
+                max-height: 95vh;
+            }
+            
+            .form-input, .form-select, .form-textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+        }
+        
         @media (max-width: 400px) {
             .support-btn span { display: none; }
             .support-btn { padding: 14px; border-radius: 50%; font-size: 18px; }
@@ -694,8 +842,15 @@
                 <div class="controls">
                     <div class="controls-row">
                         <button class="btn btn-success" onclick="openTaskModal()" data-i18n="addTask">+ Завдання</button>
+                        <div id="totalTimeInfo"></div>
                     </div>
                     <div class="filters">
+                        <select class="filter-select" id="dateFilter" onchange="renderTasks()">
+                            <option value="" data-i18n="allDates">Всі дати</option>
+                            <option value="today" data-i18n="today">📅 Сьогодні</option>
+                            <option value="week" data-i18n="thisWeek">📆 Цей тиждень</option>
+                            <option value="overdue" data-i18n="overdue">🚨 Прострочені</option>
+                        </select>
                         <select class="filter-select" id="statusFilter" onchange="renderTasks()">
                             <option value="" data-i18n="allStatuses">Всі статуси</option>
                             <option value="new" data-i18n="statusNew">Нові</option>
@@ -805,9 +960,13 @@
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="taskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select"><option value="" data-i18n="noFunction">Без функції</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="deadline">Дедлайн *</label><input type="datetime-local" id="taskDeadline" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="deadlineDate">Дедлайн (дата) *</label><input type="date" id="taskDeadlineDate" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="deadlineTime">Дедлайн (час) *</label><input type="time" id="taskDeadlineTime" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="estimatedTime">Орієнтовний час</label><select id="taskEstimatedTime" class="form-select"><option value="" data-i18n="notSpecified">Не вказано</option><option value="15">15 хв</option><option value="30">30 хв</option><option value="45">45 хв</option><option value="60">1 год</option><option value="90">1.5 год</option><option value="120">2 год</option><option value="180">3 год</option><option value="240">4 год</option><option value="480">8 год</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n="priorityLow">Низький</option><option value="medium" selected data-i18n="priorityMedium">Середній</option><option value="high" data-i18n="priorityHigh">Високий</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="status">Статус</label><select id="taskStatus" class="form-select"><option value="new" data-i18n="statusNew">Нове</option><option value="progress" data-i18n="statusProgress">В роботі</option><option value="review" data-i18n="statusReview">Перевірка</option><option value="done" data-i18n="statusDone">Готово</option></select></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="taskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                     </div>
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
@@ -920,6 +1079,10 @@
                 addTask: '+ Завдання',
                 allStatuses: 'Всі статуси',
                 allFunctions: 'Всі функції',
+                allDates: 'Всі дати',
+                today: '📅 Сьогодні',
+                thisWeek: '📆 Цей тиждень',
+                overdue: '🚨 Прострочені',
                 all: 'Всі',
                 newTask: 'Нове завдання',
                 editTask: 'Редагувати',
@@ -928,7 +1091,12 @@
                 noFunction: 'Без функції',
                 assignee: 'Виконавець *',
                 select: 'Оберіть',
-                deadline: 'Дедлайн *',
+                deadlineDate: 'Дедлайн (дата) *',
+                deadlineTime: 'Дедлайн (час) *',
+                estimatedTime: 'Орієнтовний час',
+                notSpecified: 'Не вказано',
+                expectedResult: 'Очікуваний результат',
+                reportFormat: 'Формат звіту',
                 priority: 'Пріоритет',
                 status: 'Статус',
                 description: 'Опис',
@@ -1046,6 +1214,10 @@
                 addTask: '+ Задача',
                 allStatuses: 'Все статусы',
                 allFunctions: 'Все функции',
+                allDates: 'Все даты',
+                today: '📅 Сегодня',
+                thisWeek: '📆 Эта неделя',
+                overdue: '🚨 Просроченные',
                 all: 'Все',
                 newTask: 'Новая задача',
                 editTask: 'Редактировать',
@@ -1054,7 +1226,12 @@
                 noFunction: 'Без функции',
                 assignee: 'Исполнитель *',
                 select: 'Выберите',
-                deadline: 'Дедлайн *',
+                deadlineDate: 'Дедлайн (дата) *',
+                deadlineTime: 'Дедлайн (время) *',
+                estimatedTime: 'Ориентировочное время',
+                notSpecified: 'Не указано',
+                expectedResult: 'Ожидаемый результат',
+                reportFormat: 'Формат отчета',
                 priority: 'Приоритет',
                 status: 'Статус',
                 description: 'Описание',
@@ -1460,15 +1637,32 @@
                     document.getElementById('taskTitle').value = task.title || '';
                     document.getElementById('taskFunction').value = task.function || '';
                     document.getElementById('taskAssignee').value = task.assigneeId || '';
-                    document.getElementById('taskDeadline').value = task.deadline || '';
+                    // Розбиваємо deadline на дату і час
+                    if (task.deadlineDate) {
+                        document.getElementById('taskDeadlineDate').value = task.deadlineDate;
+                        document.getElementById('taskDeadlineTime').value = task.deadlineTime || '18:00';
+                    } else if (task.deadline) {
+                        // Сумісність зі старими завданнями
+                        const dt = task.deadline.split('T');
+                        document.getElementById('taskDeadlineDate').value = dt[0] || '';
+                        document.getElementById('taskDeadlineTime').value = dt[1]?.slice(0,5) || '18:00';
+                    } else {
+                        document.getElementById('taskDeadlineDate').value = '';
+                        document.getElementById('taskDeadlineTime').value = '';
+                    }
+                    document.getElementById('taskEstimatedTime').value = task.estimatedTime || '';
                     document.getElementById('taskPriority').value = task.priority || 'medium';
                     document.getElementById('taskStatus').value = task.status || 'new';
+                    document.getElementById('taskExpectedResult').value = task.expectedResult || '';
+                    document.getElementById('taskReportFormat').value = task.reportFormat || '';
                     document.getElementById('taskDescription').value = task.description || '';
                 }
             } else {
                 editingId = null;
                 document.getElementById('taskModalTitle').textContent = t('newTask');
                 document.getElementById('taskForm').reset();
+                // Встановлюємо дефолтний час
+                document.getElementById('taskDeadlineTime').value = '18:00';
             }
         }
 
@@ -1477,15 +1671,22 @@
             
             const assigneeId = document.getElementById('taskAssignee').value;
             const assignee = users.find(u => u.id === assigneeId);
+            const deadlineDate = document.getElementById('taskDeadlineDate').value;
+            const deadlineTime = document.getElementById('taskDeadlineTime').value;
             
             const data = {
                 title: document.getElementById('taskTitle').value.trim(),
                 function: document.getElementById('taskFunction').value,
                 assigneeId: assigneeId,
                 assigneeName: assignee?.name || assignee?.email || '',
-                deadline: document.getElementById('taskDeadline').value,
+                deadlineDate: deadlineDate,
+                deadlineTime: deadlineTime,
+                deadline: deadlineDate + 'T' + deadlineTime, // для сумісності
+                estimatedTime: document.getElementById('taskEstimatedTime').value,
                 priority: document.getElementById('taskPriority').value,
                 status: document.getElementById('taskStatus').value,
+                expectedResult: document.getElementById('taskExpectedResult').value.trim(),
+                reportFormat: document.getElementById('taskReportFormat').value.trim(),
                 description: document.getElementById('taskDescription').value.trim(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
@@ -1495,6 +1696,7 @@
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(editingId).update(data);
                 } else {
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    data.createdDate = new Date().toISOString().split('T')[0];
                     data.creatorId = currentUser.uid;
                     data.creatorName = currentUserData?.name || currentUser.email;
                     data.pinned = false;
@@ -1527,54 +1729,105 @@
             const sf = document.getElementById('statusFilter')?.value;
             const ff = document.getElementById('functionFilter')?.value;
             const af = document.getElementById('assigneeFilter')?.value;
+            const df = document.getElementById('dateFilter')?.value;
+            
+            const today = new Date().toISOString().split('T')[0];
             
             let f = tasks.filter(task => {
                 if (sf && task.status !== sf) return false;
                 if (ff && task.function !== ff) return false;
                 if (af && task.assigneeId !== af) return false;
+                if (df === 'today' && task.deadlineDate !== today) return false;
+                if (df === 'overdue') {
+                    const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                    if (taskDate >= today || task.status === 'done') return false;
+                }
+                if (df === 'week') {
+                    const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                    const weekLater = new Date();
+                    weekLater.setDate(weekLater.getDate() + 7);
+                    if (taskDate > weekLater.toISOString().split('T')[0]) return false;
+                }
                 return true;
             });
             
             f.sort((a, b) => {
                 if (a.pinned && !b.pinned) return -1;
                 if (!a.pinned && b.pinned) return 1;
-                return new Date(a.deadline || 0) - new Date(b.deadline || 0);
+                const dateA = a.deadlineDate || (a.deadline ? a.deadline.split('T')[0] : '9999');
+                const dateB = b.deadlineDate || (b.deadline ? b.deadline.split('T')[0] : '9999');
+                return dateA.localeCompare(dateB);
             });
+            
+            // Рахуємо загальний час
+            let totalMinutes = 0;
+            f.filter(task => task.status !== 'done').forEach(task => {
+                if (task.estimatedTime) totalMinutes += parseInt(task.estimatedTime);
+            });
+            const totalHours = Math.floor(totalMinutes / 60);
+            const totalMins = totalMinutes % 60;
+            const totalTimeStr = totalMinutes > 0 ? `⏱️ ${totalHours > 0 ? totalHours + ' год ' : ''}${totalMins > 0 ? totalMins + ' хв' : ''}` : '';
             
             if (f.length === 0) {
                 c.innerHTML = `<div class="empty-state"><h3>${t('noTasks')}</h3><p>${t('createFirstTask')}</p></div>`;
+                document.getElementById('totalTimeInfo').innerHTML = '';
                 return;
             }
             
+            document.getElementById('totalTimeInfo').innerHTML = totalTimeStr ? `<span class="total-time-badge">${totalTimeStr} (${f.filter(x=>x.status!=='done').length} завдань)</span>` : '';
+            
             const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
             const pt = { low: t('priorityLow'), medium: t('priorityMedium'), high: t('priorityHigh') };
+            const etLabels = { '15': '15хв', '30': '30хв', '45': '45хв', '60': '1г', '90': '1.5г', '120': '2г', '180': '3г', '240': '4г', '480': '8г' };
             
             c.innerHTML = f.map(task => {
-                const od = task.deadline && new Date(task.deadline) < new Date() && task.status !== 'done';
+                const taskDeadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                const taskTime = task.deadlineTime || (task.deadline ? task.deadline.split('T')[1]?.slice(0,5) : '');
+                const od = taskDeadline && taskDeadline < today && task.status !== 'done';
+                const isToday = taskDeadline === today;
+                const createdDate = task.createdDate || (task.createdAt?.toDate ? task.createdAt.toDate().toISOString().split('T')[0] : '');
+                
                 return `
-                    <div class="task-card ${task.pinned ? 'pinned' : ''}">
+                    <div class="task-card ${task.pinned ? 'pinned' : ''} ${od ? 'overdue' : ''} ${isToday ? 'today' : ''}">
                         <div class="task-card-header">
                             <div class="task-title">
                                 <button class="pin-btn ${task.pinned ? 'pinned' : ''}" onclick="togglePin('${task.id}')">📌</button>
                                 ${task.title}
                             </div>
+                            <span class="badge badge-${task.status}">${st[task.status] || task.status}</span>
                         </div>
+                        
+                        <div class="task-deadline-row ${od ? 'overdue-text' : ''} ${isToday ? 'today-text' : ''}">
+                            <span>📅 ${taskDeadline ? formatDateShort(taskDeadline) : '-'}</span>
+                            <span>🕐 ${taskTime || '-'}</span>
+                            ${task.estimatedTime ? `<span class="time-badge">⏱️ ${etLabels[task.estimatedTime] || task.estimatedTime + 'хв'}</span>` : ''}
+                        </div>
+                        
                         <div class="task-meta">
                             <span class="task-meta-item">👤 ${task.assigneeName || t('notAssigned')}</span>
-                            <span class="task-meta-item" style="${od ? 'color:#e74c3c;font-weight:600;' : ''}">📅 ${task.deadline ? formatDate(task.deadline) : '-'}</span>
                             ${task.function ? `<span class="task-meta-item">⚙️ ${task.function}</span>` : ''}
-                        </div>
-                        <div class="task-badges">
-                            <span class="badge badge-${task.status}">${st[task.status] || task.status}</span>
                             <span class="badge badge-${task.priority}">${pt[task.priority] || task.priority}</span>
                         </div>
-                        ${task.description ? `<div style="font-size:0.8rem;color:#7f8c8d;padding:0.5rem;background:#f8f9fa;border-radius:8px;margin-top:0.5rem;">${task.description}</div>` : ''}
-                        <div class="task-actions">
-                            <button class="btn btn-small" onclick="openTaskModal('${task.id}')">✏️</button>
-                            <button class="btn btn-small btn-danger" onclick="deleteTask('${task.id}')">🗑️</button>
+                        
+                        ${task.expectedResult ? `<div class="task-detail"><strong>🎯 ${t('expectedResult')}:</strong> ${task.expectedResult}</div>` : ''}
+                        ${task.reportFormat ? `<div class="task-detail"><strong>📋 ${t('reportFormat')}:</strong> ${task.reportFormat}</div>` : ''}
+                        ${task.description ? `<div class="task-detail"><strong>📝</strong> ${task.description}</div>` : ''}
+                        
+                        <div class="task-footer">
+                            <span class="task-created">${t('created')}: ${createdDate ? formatDateShort(createdDate) : '-'}</span>
+                            <div class="task-actions">
+                                <button class="btn btn-small" onclick="openTaskModal('${task.id}')">✏️</button>
+                                <button class="btn btn-small btn-danger" onclick="deleteTask('${task.id}')">🗑️</button>
+                            </div>
                         </div>
                     </div>`;
             }).join('');
+        }
+        
+        function formatDateShort(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'ru-RU', { day: '2-digit', month: '2-digit' });
         }
 
         // =====================
