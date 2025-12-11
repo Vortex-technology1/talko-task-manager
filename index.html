@@ -70,6 +70,23 @@
         
         .header-btn:hover { background: rgba(255,255,255,0.3); }
         
+        .header-ai-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.4rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+        }
+        
+        .header-ai-btn:hover { background: rgba(255,255,255,0.35); transform: translateY(-1px); }
+        .header-ai-btn.tech { background: rgba(46, 204, 113, 0.3); }
+        .header-ai-btn.tech:hover { background: rgba(46, 204, 113, 0.5); }
+        
         .lang-switcher {
             display: flex;
             background: rgba(255,255,255,0.2);
@@ -350,6 +367,26 @@
             color: #95a5a6;
         }
         
+        .regular-schedule {
+            font-size: 0.85rem;
+            color: #2980b9;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            padding: 0.3rem 0.6rem;
+            background: #e8f4fd;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .instruction-preview {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .instruction-preview:hover {
+            background: #e8f4fd;
+        }
+        
         .task-card.overdue {
             border-left: 4px solid #e74c3c;
             background: linear-gradient(90deg, rgba(231, 76, 60, 0.05) 0%, var(--white) 100%);
@@ -583,19 +620,8 @@
         }
         
         .support-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); }
-        .support-btn svg { width: 18px; height: 18px; stroke: #ffffff; }
         
-        .support-btn.human-support {
-            bottom: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            padding: 10px 16px;
-            font-size: 13px;
-        }
-        
-        .support-btn.human-support:hover { 
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5); 
-        }
+        /* Mobile buttons */
         
         @media (min-width: 768px) {
             .header { padding: 1rem 2rem; }
@@ -687,9 +713,10 @@
         }
         
         @media (max-width: 400px) {
+            .header-ai-btn span { display: none; }
+            .header-ai-btn { padding: 0.4rem; font-size: 0.9rem; }
             .support-btn span { display: none; }
             .support-btn { padding: 14px; border-radius: 50%; font-size: 18px; }
-            .support-btn.human-support { bottom: 85px; padding: 12px; font-size: 16px; }
         }
         
         .assignee-checkbox {
@@ -755,6 +782,12 @@
                 <span class="company-badge" id="companyBadge" style="display:none;"></span>
             </div>
             <div class="header-actions">
+                <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="header-ai-btn" title="Питання до керівника">
+                    🎯 <span data-i18n="radarAI">Керівник</span>
+                </a>
+                <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="header-ai-btn tech" title="Технічна допомога">
+                    🔧 <span data-i18n="techAI">Техпідтримка</span>
+                </a>
                 <div class="lang-switcher">
                     <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
                     <button class="lang-btn" onclick="setLanguage('ru')" id="langRU">RU</button>
@@ -917,7 +950,19 @@
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
                 <div class="controls">
-                    <button class="btn btn-success" onclick="openRegularTaskModal()" data-i18n="addRegular">+ Регулярне</button>
+                    <div class="controls-row">
+                        <button class="btn btn-success" onclick="openRegularTaskModal()" data-i18n="addRegular">+ Регулярне</button>
+                    </div>
+                    <div class="filters">
+                        <select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
+                        <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="all">Всі</option></select>
+                        <select class="filter-select" id="regularPeriodFilter" onchange="renderRegularTasks()">
+                            <option value="" data-i18n="allPeriods">Всі періоди</option>
+                            <option value="weekly" data-i18n="weekly">Щотижня</option>
+                            <option value="monthly" data-i18n="monthly">Щомісяця</option>
+                            <option value="quarterly" data-i18n="quarterly">Щокварталу</option>
+                        </select>
+                    </div>
                 </div>
                 <div id="regularTasksContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
@@ -1033,7 +1078,13 @@
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required onchange="updateRegularTaskAssignees()"><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність</label><select id="regularTaskPeriod" class="form-select"><option value="daily" data-i18n="daily">Щодня</option><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
+                        <div class="form-group" id="dayOfWeekGroup"><label class="form-label" data-i18n="dayOfWeek">День тижня *</label><select id="regularTaskDayOfWeek" class="form-select"><option value="1" data-i18n="monday">Понеділок</option><option value="2" data-i18n="tuesday">Вівторок</option><option value="3" data-i18n="wednesday">Середа</option><option value="4" data-i18n="thursday">Четвер</option><option value="5" data-i18n="friday">П'ятниця</option><option value="6" data-i18n="saturday">Субота</option><option value="0" data-i18n="sunday">Неділя</option></select></div>
+                        <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="timeOfDay">Час виконання *</label><input type="time" id="regularTaskTime" class="form-input" value="10:00" required></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="regularTaskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="instruction">📋 Інструкція (необов'язково)</label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="assignees">👥 Виконавці</label><div id="regularTaskAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"><p style="color:#7f8c8d;" data-i18n="selectFunctionFirst">Спочатку оберіть функцію</p></div></div>
                     </div>
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('regularTaskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
@@ -1068,10 +1119,6 @@
 
     <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="support-btn">
         🤖 <span data-i18n="aiSupport">AI Підтримка</span>
-    </a>
-    
-    <a href="https://alextalko.com" target="_blank" class="support-btn human-support">
-        💬 <span data-i18n="support">Підтримка</span>
     </a>
 
     <footer class="footer">
@@ -1167,14 +1214,29 @@
                 // Regular
                 addRegular: '+ Регулярне',
                 regularTask: 'Регулярне завдання',
-                periodicity: 'Періодичність',
-                daily: 'Щодня',
+                periodicity: 'Періодичність *',
                 weekly: 'Щотижня',
                 monthly: 'Щомісяця',
+                quarterly: 'Щокварталу',
+                dayOfWeek: 'День тижня *',
+                dayOfMonth: 'День місяця *',
+                timeOfDay: 'Час виконання *',
+                lastDay: 'Останній день',
+                monday: 'Понеділок',
+                tuesday: 'Вівторок',
+                wednesday: 'Середа',
+                thursday: 'Четвер',
+                friday: "П'ятниця",
+                saturday: 'Субота',
+                sunday: 'Неділя',
+                instruction: '📋 Інструкція (необов\'язково)',
+                allPeriods: 'Всі періоди',
                 assignees: '👥 Виконавці',
                 selectFunctionFirst: 'Спочатку оберіть функцію',
                 noMembers: 'Немає учасників',
                 create: '⚡ Створити',
+                radarAI: 'Керівник',
+                techAI: 'Техпідтримка',
                 
                 // Functions
                 addFunction: '+ Функція',
@@ -1309,14 +1371,29 @@
                 // Regular
                 addRegular: '+ Регулярное',
                 regularTask: 'Регулярная задача',
-                periodicity: 'Периодичность',
-                daily: 'Ежедневно',
+                periodicity: 'Периодичность *',
                 weekly: 'Еженедельно',
                 monthly: 'Ежемесячно',
+                quarterly: 'Ежеквартально',
+                dayOfWeek: 'День недели *',
+                dayOfMonth: 'День месяца *',
+                timeOfDay: 'Время выполнения *',
+                lastDay: 'Последний день',
+                monday: 'Понедельник',
+                tuesday: 'Вторник',
+                wednesday: 'Среда',
+                thursday: 'Четверг',
+                friday: 'Пятница',
+                saturday: 'Суббота',
+                sunday: 'Воскресенье',
+                instruction: '📋 Инструкция (необязательно)',
+                allPeriods: 'Все периоды',
                 assignees: '👥 Исполнители',
                 selectFunctionFirst: 'Сначала выберите функцию',
                 noMembers: 'Нет участников',
                 create: '⚡ Создать',
+                radarAI: 'Руководитель',
+                techAI: 'Техподдержка',
                 
                 // Functions
                 addFunction: '+ Функция',
@@ -2048,9 +2125,24 @@
         // =====================
         // REGULAR TASKS
         // =====================
+        function updatePeriodOptions() {
+            const period = document.getElementById('regularTaskPeriod').value;
+            const dayOfWeekGroup = document.getElementById('dayOfWeekGroup');
+            const dayOfMonthGroup = document.getElementById('dayOfMonthGroup');
+            
+            if (period === 'weekly') {
+                dayOfWeekGroup.style.display = 'block';
+                dayOfMonthGroup.style.display = 'none';
+            } else {
+                dayOfWeekGroup.style.display = 'none';
+                dayOfMonthGroup.style.display = 'block';
+            }
+        }
+        
         function openRegularTaskModal(id = null) {
             document.getElementById('regularTaskModal').style.display = 'block';
             updateRegularTaskFunctions();
+            updatePeriodOptions();
             editingId = id;
             
             if (id) {
@@ -2058,7 +2150,14 @@
                 if (rt) {
                     document.getElementById('regularTaskTitle').value = rt.title;
                     document.getElementById('regularTaskFunction').value = rt.function;
-                    document.getElementById('regularTaskPeriod').value = rt.period;
+                    document.getElementById('regularTaskPeriod').value = rt.period || 'weekly';
+                    updatePeriodOptions();
+                    document.getElementById('regularTaskDayOfWeek').value = rt.dayOfWeek || '1';
+                    document.getElementById('regularTaskDayOfMonth').value = rt.dayOfMonth || '1';
+                    document.getElementById('regularTaskTime').value = rt.time || '10:00';
+                    document.getElementById('regularTaskExpectedResult').value = rt.expectedResult || '';
+                    document.getElementById('regularTaskReportFormat').value = rt.reportFormat || '';
+                    document.getElementById('regularTaskInstruction').value = rt.instruction || '';
                     updateRegularTaskAssignees();
                     setTimeout(() => {
                         document.querySelectorAll('#regularTaskAssignees input').forEach(cb => {
@@ -2068,6 +2167,9 @@
                 }
             } else {
                 document.getElementById('regularTaskForm').reset();
+                document.getElementById('regularTaskTime').value = '10:00';
+                document.getElementById('regularTaskPeriod').value = 'weekly';
+                updatePeriodOptions();
                 document.getElementById('regularTaskAssignees').innerHTML = `<p style="color:#7f8c8d;">${t('selectFunctionFirst')}</p>`;
             }
         }
@@ -2075,6 +2177,12 @@
         function updateRegularTaskFunctions() {
             const s = document.getElementById('regularTaskFunction');
             s.innerHTML = `<option value="">${t('select')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            
+            // Оновлюємо фільтри
+            const ff = document.getElementById('regularFunctionFilter');
+            const af = document.getElementById('regularAssigneeFilter');
+            if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            if (af) af.innerHTML = `<option value="">${t('all')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
         }
 
         function updateRegularTaskAssignees() {
@@ -2099,10 +2207,18 @@
             const assigneeIds = Array.from(document.querySelectorAll('#regularTaskAssignees input:checked')).map(cb => cb.value);
             if (!assigneeIds.length) { alert(currentLang === 'ua' ? 'Оберіть виконавців' : 'Выберите исполнителей'); return; }
             
+            const period = document.getElementById('regularTaskPeriod').value;
+            
             const data = {
                 title: document.getElementById('regularTaskTitle').value.trim(),
                 function: document.getElementById('regularTaskFunction').value,
-                period: document.getElementById('regularTaskPeriod').value,
+                period: period,
+                dayOfWeek: period === 'weekly' ? document.getElementById('regularTaskDayOfWeek').value : null,
+                dayOfMonth: period !== 'weekly' ? document.getElementById('regularTaskDayOfMonth').value : null,
+                time: document.getElementById('regularTaskTime').value,
+                expectedResult: document.getElementById('regularTaskExpectedResult').value.trim(),
+                reportFormat: document.getElementById('regularTaskReportFormat').value.trim(),
+                instruction: document.getElementById('regularTaskInstruction').value.trim(),
                 assigneeIds: assigneeIds,
                 assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || users.find(u => u.id === id)?.email || '').filter(Boolean)
             };
@@ -2127,6 +2243,7 @@
             
             const deadline = new Date();
             deadline.setDate(deadline.getDate() + 1);
+            const deadlineDate = deadline.toISOString().split('T')[0];
             
             const batch = db.batch();
             rt.assigneeIds.forEach(assigneeId => {
@@ -2136,11 +2253,17 @@
                     function: rt.function,
                     assigneeId: assigneeId,
                     assigneeName: users.find(u => u.id === assigneeId)?.name || '',
-                    deadline: deadline.toISOString().slice(0, 16),
+                    deadlineDate: deadlineDate,
+                    deadlineTime: rt.time || '18:00',
+                    deadline: deadlineDate + 'T' + (rt.time || '18:00'),
+                    expectedResult: rt.expectedResult || '',
+                    reportFormat: rt.reportFormat || '',
+                    description: rt.instruction || '',
                     status: 'new',
                     priority: 'medium',
                     pinned: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdDate: new Date().toISOString().split('T')[0],
                     creatorName: currentLang === 'ua' ? 'Система' : 'Система'
                 });
             });
@@ -2158,20 +2281,49 @@
 
         function renderRegularTasks() {
             const c = document.getElementById('regularTasksContainer');
-            const pt = { daily: t('daily'), weekly: t('weekly'), monthly: t('monthly') };
+            const ff = document.getElementById('regularFunctionFilter')?.value;
+            const af = document.getElementById('regularAssigneeFilter')?.value;
+            const pf = document.getElementById('regularPeriodFilter')?.value;
             
-            if (regularTasks.length === 0) {
+            let filtered = regularTasks.filter(rt => {
+                if (ff && rt.function !== ff) return false;
+                if (af && !rt.assigneeIds?.includes(af)) return false;
+                if (pf && rt.period !== pf) return false;
+                return true;
+            });
+            
+            const pt = { weekly: t('weekly'), monthly: t('monthly'), quarterly: t('quarterly') };
+            const days = {
+                '0': currentLang === 'ua' ? 'Нд' : 'Вс',
+                '1': currentLang === 'ua' ? 'Пн' : 'Пн',
+                '2': currentLang === 'ua' ? 'Вт' : 'Вт',
+                '3': currentLang === 'ua' ? 'Ср' : 'Ср',
+                '4': currentLang === 'ua' ? 'Чт' : 'Чт',
+                '5': currentLang === 'ua' ? 'Пт' : 'Пт',
+                '6': currentLang === 'ua' ? 'Сб' : 'Сб'
+            };
+            
+            if (filtered.length === 0) {
                 c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>${t('noRegular')}</h3><p>${t('createRegular')}</p></div>`;
                 return;
             }
             
-            c.innerHTML = regularTasks.map(rt => `
+            c.innerHTML = filtered.map(rt => {
+                const scheduleText = rt.period === 'weekly' 
+                    ? `${days[rt.dayOfWeek] || 'Пн'} о ${rt.time || '10:00'}`
+                    : `${rt.dayOfMonth || '1'}-го о ${rt.time || '10:00'}`;
+                
+                return `
                 <div class="function-card">
                     <div class="function-header">
                         <div class="function-title">${rt.title}</div>
                         <span class="badge" style="background:#f3e5f5;color:#7b1fa2;">${pt[rt.period] || rt.period}</span>
                     </div>
+                    <div class="regular-schedule">🗓️ ${scheduleText}</div>
                     <div style="font-size:0.85rem;color:#7f8c8d;margin-bottom:0.5rem;">${t('function')}: ${rt.function}</div>
+                    ${rt.expectedResult ? `<div class="task-detail"><strong>🎯</strong> ${rt.expectedResult}</div>` : ''}
+                    ${rt.reportFormat ? `<div class="task-detail"><strong>📋</strong> ${rt.reportFormat}</div>` : ''}
+                    ${rt.instruction ? `<div class="task-detail instruction-preview" onclick="showInstruction('${rt.id}')"><strong>📖</strong> ${rt.instruction.substring(0, 50)}${rt.instruction.length > 50 ? '...' : ''} <span style="color:var(--info);">(${currentLang === 'ua' ? 'читати' : 'читать'})</span></div>` : ''}
                     <div class="function-assignees">
                         ${rt.assigneeNames?.map(n => `<span class="assignee-badge">${n}</span>`).join('') || ''}
                     </div>
@@ -2183,7 +2335,14 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
+        }
+        
+        function showInstruction(id) {
+            const rt = regularTasks.find(r => r.id === id);
+            if (rt && rt.instruction) {
+                alert(`📖 ${currentLang === 'ua' ? 'Інструкція' : 'Инструкция'}:\n\n${rt.instruction}`);
+            }
         }
 
         // =====================
