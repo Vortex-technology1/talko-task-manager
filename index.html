@@ -1157,10 +1157,21 @@
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
                 <div class="filters-row" style="background:white;padding:1rem;border-radius:12px;margin-bottom:1rem;box-shadow:var(--shadow);">
-                    <span style="display:flex;align-items:center;gap:0.3rem;">👤 <span data-i18n="assigneeLabel">Виконавець:</span></span>
-                    <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
+                    <button class="btn btn-success" onclick="filterRegularToday()" id="regularTodayBtn">📅 <span data-i18n="todaysTasks">Сьогодні</span></button>
+                    <select class="filter-select" id="regularDayFilter" onchange="renderRegularTasks()">
+                        <option value="" data-i18n="allDays">Всі дні</option>
+                        <option value="1" data-i18n="monday">Понеділок</option>
+                        <option value="2" data-i18n="tuesday">Вівторок</option>
+                        <option value="3" data-i18n="wednesday">Середа</option>
+                        <option value="4" data-i18n="thursday">Четвер</option>
+                        <option value="5" data-i18n="friday">П'ятниця</option>
+                        <option value="6" data-i18n="saturday">Субота</option>
+                        <option value="0" data-i18n="sunday">Неділя</option>
+                    </select>
                     <span style="display:flex;align-items:center;gap:0.3rem;">🏷️ <span data-i18n="functionLabel">Функція:</span></span>
                     <select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
+                    <span style="display:flex;align-items:center;gap:0.3rem;">👤 <span data-i18n="assigneeLabel">Виконавець:</span></span>
+                    <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
                     <button class="btn btn-clear" onclick="clearRegularFilters()">🗑️ <span data-i18n="clear">Очистити</span></button>
                 </div>
                 <div class="controls">
@@ -1544,7 +1555,10 @@
                 createFirstTask: 'Створіть перше завдання',
                 noFunctions: '⚙️ Функцій немає',
                 createFirstFunction: 'Створіть першу функцію',
-                noRegular: '🔄 Регулярних немає',
+                noRegular: 'Регулярних завдань немає',
+                noRegularForDay: 'На цей день регулярних завдань немає',
+                todaysTasks: 'Мої на сьогодні',
+                allDays: 'Всі дні',
                 createRegular: 'Створіть регулярне завдання',
                 noUsers: '👥 Немає користувачів',
                 noCompanies: 'Немає компаній',
@@ -1761,7 +1775,10 @@
                 createFirstTask: 'Создайте первую задачу',
                 noFunctions: '⚙️ Функций нет',
                 createFirstFunction: 'Создайте первую функцию',
-                noRegular: '🔄 Регулярных нет',
+                noRegular: 'Регулярных задач нет',
+                noRegularForDay: 'На этот день регулярных задач нет',
+                todaysTasks: 'Мои на сегодня',
+                allDays: 'Все дни',
                 createRegular: 'Создайте регулярную задачу',
                 noUsers: '👥 Нет пользователей',
                 noCompanies: 'Нет компаний',
@@ -2744,10 +2761,18 @@
             loadAllData();
         }
 
+        function filterRegularToday() {
+            const today = new Date().getDay().toString();
+            document.getElementById('regularDayFilter').value = today;
+            document.getElementById('regularAssigneeFilter').value = currentUser.uid; // Мої завдання
+            renderRegularTasks();
+        }
+        
         function renderRegularTasks() {
             const c = document.getElementById('regularTasksContainer');
             const ff = document.getElementById('regularFunctionFilter')?.value;
             const af = document.getElementById('regularAssigneeFilter')?.value;
+            const dayFilter = document.getElementById('regularDayFilter')?.value;
             
             // Оновлюємо селекти
             const assigneeSelect = document.getElementById('regularAssigneeFilter');
@@ -2759,9 +2784,27 @@
                 functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
             }
             
+            // Визначаємо поточний день місяця для фільтрації місячних/квартальних
+            const todayDate = new Date().getDate();
+            const isLastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() === todayDate;
+            
             let filtered = regularTasks.filter(rt => {
                 if (ff && rt.function !== ff) return false;
                 if (af && !rt.assigneeIds?.includes(af)) return false;
+                
+                // Фільтр по дню
+                if (dayFilter) {
+                    if (rt.period === 'weekly') {
+                        if (rt.dayOfWeek !== dayFilter) return false;
+                    } else {
+                        // Для місячних/квартальних перевіряємо день місяця
+                        if (rt.dayOfMonth === 'last') {
+                            if (!isLastDayOfMonth) return false;
+                        } else {
+                            if (parseInt(rt.dayOfMonth) !== todayDate) return false;
+                        }
+                    }
+                }
                 return true;
             });
             
@@ -2776,8 +2819,16 @@
                 '6': currentLang === 'ua' ? 'Сб' : 'Сб'
             };
             
+            // Показуємо поточний день у кнопці
+            const todayDayName = days[new Date().getDay().toString()];
+            const todayBtn = document.getElementById('regularTodayBtn');
+            if (todayBtn) {
+                todayBtn.innerHTML = `📅 ${t('todaysTasks')} (${todayDayName})`;
+            }
+            
             if (filtered.length === 0) {
-                c.innerHTML = `<div class="empty-table"><h3>${t('noRegular')}</h3><p>${t('createRegular')}</p></div>`;
+                const noTasksMsg = dayFilter ? t('noRegularForDay') : t('noRegular');
+                c.innerHTML = `<div class="empty-table"><h3>${noTasksMsg}</h3><p>${t('createRegular')}</p></div>`;
                 return;
             }
             
@@ -3135,6 +3186,7 @@
         function clearRegularFilters() {
             document.getElementById('regularAssigneeFilter').value = '';
             document.getElementById('regularFunctionFilter').value = '';
+            document.getElementById('regularDayFilter').value = '';
             renderRegularTasks();
         }
 
