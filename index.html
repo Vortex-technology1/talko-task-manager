@@ -1594,6 +1594,7 @@
                 schedule: 'Розклад',
                 statusPeriod: 'Статус',
                 createAgain: 'Створити ще раз',
+                markDone: 'Позначити виконаним',
                 noTasksFound: 'Завдань не знайдено',
                 changeFilters: 'Змініть фільтри або додайте нове завдання',
                 edit: 'Редагувати',
@@ -1818,6 +1819,7 @@
                 schedule: 'Расписание',
                 statusPeriod: 'Статус',
                 createAgain: 'Создать ещё раз',
+                markDone: 'Отметить выполненным',
                 noTasksFound: 'Задач не найдено',
                 changeFilters: 'Измените фильтры или добавьте новую задачу',
                 edit: 'Редактировать',
@@ -2782,6 +2784,74 @@
             await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(id).delete();
             loadAllData();
         }
+        
+        // Швидке виконання регулярного завдання
+        async function completeRegularTask(id) {
+            const rt = regularTasks.find(r => r.id === id);
+            if (!rt) return;
+            
+            const func = functions.find(f => f.name === rt.function);
+            if (!func || !func.assigneeIds?.length) {
+                alert(currentLang === 'ua' ? 'В функції немає виконавців' : 'В функции нет исполнителей');
+                return;
+            }
+            
+            // Визначаємо період
+            const now = new Date();
+            let periodStart;
+            if (rt.period === 'weekly') {
+                const day = now.getDay();
+                const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+                periodStart = new Date(now.getFullYear(), now.getMonth(), diff).toISOString().split('T')[0];
+            } else if (rt.period === 'monthly') {
+                periodStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+            } else {
+                const quarter = Math.floor(now.getMonth() / 3);
+                periodStart = new Date(now.getFullYear(), quarter * 3, 1).toISOString().split('T')[0];
+            }
+            
+            // Перевіряємо чи є вже завдання за цей період
+            const existingTasks = tasks.filter(t => 
+                t.regularTaskId === id && 
+                t.periodStart === periodStart &&
+                t.assigneeId === currentUser.uid
+            );
+            
+            if (existingTasks.length > 0) {
+                // Оновлюємо статус існуючого завдання
+                const taskToUpdate = existingTasks[0];
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).update({
+                    status: 'done',
+                    completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } else {
+                // Створюємо нове і одразу виконане
+                const today = new Date().toISOString().split('T')[0];
+                await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                    title: rt.title,
+                    function: rt.function,
+                    assigneeId: currentUser.uid,
+                    assigneeName: currentUserData?.name || currentUser.email,
+                    deadlineDate: today,
+                    deadlineTime: rt.time || '18:00',
+                    deadline: today + 'T' + (rt.time || '18:00'),
+                    expectedResult: rt.expectedResult || '',
+                    reportFormat: rt.reportFormat || '',
+                    description: rt.instruction || '',
+                    status: 'done',
+                    priority: 'medium',
+                    pinned: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdDate: today,
+                    creatorName: currentLang === 'ua' ? 'Система' : 'Система',
+                    regularTaskId: id,
+                    periodStart: periodStart,
+                    completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+            
+            loadAllData();
+        }
 
         function filterRegularToday() {
             const today = new Date().getDay().toString();
@@ -2956,7 +3026,14 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                ${statusInfo.status === 'notCreated' ? `<button class="action-btn" onclick="generateFromRegular('${rt.id}')" title="${t('create')}" style="background:#4caf50;color:white;">⚡</button>` : `<button class="action-btn" onclick="generateFromRegular('${rt.id}')" title="${t('createAgain')}" style="opacity:0.5;">⚡</button>`}
+                                ${statusInfo.status === 'notCreated' ? `
+                                    <button class="action-btn" onclick="generateFromRegular('${rt.id}')" title="${t('create')}" style="background:#2196f3;color:white;">⚡</button>
+                                    <button class="action-btn" onclick="completeRegularTask('${rt.id}')" title="${t('markDone')}" style="background:#4caf50;color:white;">✅</button>
+                                ` : statusInfo.status === 'inProgress' ? `
+                                    <button class="action-btn" onclick="completeRegularTask('${rt.id}')" title="${t('markDone')}" style="background:#4caf50;color:white;">✅</button>
+                                ` : `
+                                    <button class="action-btn" onclick="generateFromRegular('${rt.id}')" title="${t('createAgain')}" style="opacity:0.4;">⚡</button>
+                                `}
                                 ${rt.instruction ? `<button class="action-btn" onclick="showInstruction('${rt.id}')" title="${t('instruction')}">📖</button>` : ''}
                                 <button class="action-btn" onclick="openRegularTaskModal('${rt.id}')" title="${t('edit')}">✏️</button>
                                 <button class="action-btn" onclick="deleteRegularTask('${rt.id}')" title="${t('delete')}">🗑️</button>
