@@ -406,11 +406,162 @@
             font-weight: 500;
         }
         
+        .total-time-container {
+            padding: 0.5rem 1rem;
+            text-align: right;
+        }
+        
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .btn-clear {
+            background: #95a5a6;
+        }
+        
+        /* Table styles */
+        .table-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+        
+        .tasks-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        .tasks-table th {
+            background: #34495e;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        .tasks-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.85rem;
+        }
+        
+        .tasks-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .tasks-table .task-title-cell {
+            max-width: 250px;
+        }
+        
+        .tasks-table .task-title-text {
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .tasks-table .task-title-text.pinned::before {
+            content: '📌 ';
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .status-new { background: #e3f2fd; color: #1976d2; }
+        .status-progress { background: #fff3e0; color: #f57c00; }
+        .status-review { background: #fce4ec; color: #c2185b; }
+        .status-done { background: #e8f5e8; color: #388e3c; }
+        
+        .deadline-text.overdue { color: #e74c3c; font-weight: 600; }
+        .deadline-text.today { color: #3498db; font-weight: 600; }
+        
+        .action-btns {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .action-btn:hover {
+            background: #ecf0f1;
+        }
+        
+        /* Dashboard subtitle */
+        .dashboard-subtitle {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            margin-top: 0.25rem;
+        }
+        
+        /* Analytics */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .analytics-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        
+        .analytics-card h3 {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .analytics-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .analytics-number.green { color: #27ae60; }
+        .analytics-number.blue { color: #3498db; }
+        .analytics-number.orange { color: #f39c12; }
+        
+        @media (min-width: 768px) {
+            .analytics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
         .controls-row {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             align-items: center;
+        }
+        
+        .empty-table {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+        
+        .empty-table h3 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
         }
         
         .function-stats, .user-stats {
@@ -895,11 +1046,12 @@
         <!-- MAIN INTERFACE -->
         <div id="mainInterface" class="main-interface">
             <div class="tab-navigation">
-                <button class="tab-btn active" onclick="switchTab('tasks')" data-i18n="tabTasks">📋 Завдання</button>
-                <button class="tab-btn" onclick="switchTab('control')" data-i18n="tabControl">📊 Контроль</button>
-                <button class="tab-btn" onclick="switchTab('regular')" data-i18n="tabRegular">🔄 Регулярні</button>
-                <button class="tab-btn" onclick="switchTab('functions')" data-i18n="tabFunctions">⚙️ Функції</button>
-                <button class="tab-btn" onclick="switchTab('users')" data-i18n="tabTeam">👥 Команда</button>
+                <button class="tab-btn active" onclick="switchTab('tasks')" data-i18n="tabTasks">Завдання</button>
+                <button class="tab-btn" onclick="switchTab('control')" data-i18n="tabControl">Контроль</button>
+                <button class="tab-btn" onclick="switchTab('regular')" data-i18n="tabRegular">Регулярні</button>
+                <button class="tab-btn" onclick="switchTab('functions')" data-i18n="tabFunctions">Функції</button>
+                <button class="tab-btn" onclick="switchTab('users')" data-i18n="tabUsers">Співробітники</button>
+                <button class="tab-btn" onclick="switchTab('analytics')" data-i18n="tabAnalytics">Аналітика</button>
                 <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;" data-i18n="tabAdmin">🔧 Адмін</button>
             </div>
 
@@ -907,62 +1059,105 @@
             <div id="tasksTab" class="tab-content active">
                 <div class="controls">
                     <div class="controls-row">
-                        <button class="btn btn-success" onclick="openTaskModal()" data-i18n="addTask">+ Завдання</button>
-                        <div id="totalTimeInfo"></div>
+                        <button class="btn btn-success" onclick="openTaskModal()" data-i18n="addTask">+ Додати завдання</button>
+                        <button class="btn" style="background:#2ecc71;" onclick="exportTasksCSV()">📊 Експорт CSV</button>
                     </div>
-                    <div class="filters">
+                    <div class="filters-row">
+                        <button class="btn btn-clear" onclick="clearTaskFilters()">🗑️ <span data-i18n="clear">Очистити</span></button>
+                        <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()">
+                            <option value="" data-i18n="allTasks">Всі завдання</option>
+                            <option value="my" data-i18n="myTasks">Мої завдання</option>
+                            <option value="created" data-i18n="createdByMe">Створені мною</option>
+                        </select>
                         <select class="filter-select" id="dateFilter" onchange="renderTasks()">
                             <option value="" data-i18n="allDates">Всі дати</option>
-                            <option value="today" data-i18n="today">📅 Сьогодні</option>
-                            <option value="week" data-i18n="thisWeek">📆 Цей тиждень</option>
-                            <option value="overdue" data-i18n="overdue">🚨 Прострочені</option>
+                            <option value="today" data-i18n="today">Сьогодні</option>
+                            <option value="week" data-i18n="thisWeek">Цей тиждень</option>
+                            <option value="overdue" data-i18n="overdue">Прострочені</option>
                         </select>
                         <select class="filter-select" id="statusFilter" onchange="renderTasks()">
-                            <option value="" data-i18n="allStatuses">Всі статуси</option>
+                            <option value="" data-i18n="statuses">Статуси</option>
                             <option value="new" data-i18n="statusNew">Нові</option>
                             <option value="progress" data-i18n="statusProgress">В роботі</option>
                             <option value="review" data-i18n="statusReview">Перевірка</option>
                             <option value="done" data-i18n="statusDone">Готово</option>
                         </select>
-                        <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
-                        <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="" data-i18n="all">Всі</option></select>
+                        <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="" data-i18n="functions">Функції</option></select>
+                        <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="" data-i18n="assignees">Виконавці</option></select>
                     </div>
                 </div>
-                <div class="tasks-container" id="tasksContainer">
+                <div id="totalTimeInfo" class="total-time-container"></div>
+                <div class="table-container" id="tasksContainer">
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
             </div>
 
             <!-- CONTROL -->
             <div id="controlTab" class="tab-content">
-                <div class="controls"><h2 style="font-size:1.1rem;" data-i18n="controlPanel">📊 Панель контролю</h2></div>
+                <div class="controls">
+                    <h2 style="font-size:1.2rem;margin-bottom:0;" data-i18n="controlPanelTitle">Панель контролю завдань</h2>
+                </div>
+                <div class="filters-row" style="background:white;padding:1rem;border-radius:12px;margin-bottom:1rem;box-shadow:var(--shadow);">
+                    <span style="display:flex;align-items:center;gap:0.3rem;">👤 <span data-i18n="assigneeLabel">Виконавець:</span></span>
+                    <select class="filter-select" id="controlAssigneeFilter" onchange="renderControl()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
+                    <span style="display:flex;align-items:center;gap:0.3rem;">🏷️ <span data-i18n="functionLabel">Функція:</span></span>
+                    <select class="filter-select" id="controlFunctionFilter" onchange="renderControl()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
+                    <span style="display:flex;align-items:center;gap:0.3rem;">📅 <span data-i18n="periodLabel">Період:</span></span>
+                    <select class="filter-select" id="controlPeriodFilter" onchange="renderControl()">
+                        <option value="" data-i18n="allTime">Весь час</option>
+                        <option value="today" data-i18n="today">Сьогодні</option>
+                        <option value="week" data-i18n="thisWeek">Цей тиждень</option>
+                        <option value="month" data-i18n="thisMonth">Цей місяць</option>
+                    </select>
+                    <button class="btn btn-clear" onclick="clearControlFilters()">🗑️ <span data-i18n="clear">Очистити</span></button>
+                </div>
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
                     <div class="dashboard-cards">
-                        <div class="dashboard-card urgent"><h3 data-i18n="critical">🚨 Критичні</h3><div class="dashboard-number" id="urgentCount">0</div></div>
-                        <div class="dashboard-card warning"><h3 data-i18n="attention">⚠️ Увага</h3><div class="dashboard-number" id="warningCount">0</div></div>
-                        <div class="dashboard-card active"><h3 data-i18n="active">🔄 Активні</h3><div class="dashboard-number" id="activeCount">0</div></div>
-                        <div class="dashboard-card completed"><h3 data-i18n="completed">✅ Готово</h3><div class="dashboard-number" id="completedCount">0</div></div>
+                        <div class="dashboard-card urgent">
+                            <h3>🚨 <span data-i18n="critical">Критичні</span></h3>
+                            <div class="dashboard-number" id="urgentCount">0</div>
+                            <div class="dashboard-subtitle" data-i18n="overdueLabel">Прострочені</div>
+                        </div>
+                        <div class="dashboard-card warning">
+                            <h3>⚠️ <span data-i18n="attention">Увага</span></h3>
+                            <div class="dashboard-number" id="warningCount">0</div>
+                            <div class="dashboard-subtitle" data-i18n="todayTomorrow">Сьогодні-завтра</div>
+                        </div>
+                        <div class="dashboard-card active">
+                            <h3>🔄 <span data-i18n="active">Активні</span></h3>
+                            <div class="dashboard-number" id="activeCount">0</div>
+                            <div class="dashboard-subtitle" data-i18n="inWork">В роботі</div>
+                        </div>
+                        <div class="dashboard-card completed">
+                            <h3>✅ <span data-i18n="completed">Готово</span></h3>
+                            <div class="dashboard-number" id="completedCount">0</div>
+                            <div class="dashboard-subtitle" data-i18n="completedLabel">Завершені</div>
+                        </div>
                     </div>
-                    <div id="controlContent"></div>
+                    <div style="margin-top:1rem;padding:1rem;background:#f8f9fa;border-radius:8px;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+                            <span data-i18n="viewLabel">Перегляд:</span>
+                            <select class="filter-select" id="controlViewType" onchange="renderControlContent()" style="min-width:150px;">
+                                <option value="workload" data-i18n="workload">Навантаження</option>
+                                <option value="functions" data-i18n="byFunctions">По функціях</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="controlContent" style="margin-top:1rem;"></div>
                 </div>
             </div>
 
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
+                <div class="filters-row" style="background:white;padding:1rem;border-radius:12px;margin-bottom:1rem;box-shadow:var(--shadow);">
+                    <span style="display:flex;align-items:center;gap:0.3rem;">👤 <span data-i18n="assigneeLabel">Виконавець:</span></span>
+                    <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
+                    <span style="display:flex;align-items:center;gap:0.3rem;">🏷️ <span data-i18n="functionLabel">Функція:</span></span>
+                    <select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
+                    <button class="btn btn-clear" onclick="clearRegularFilters()">🗑️ <span data-i18n="clear">Очистити</span></button>
+                </div>
                 <div class="controls">
-                    <div class="controls-row">
-                        <button class="btn btn-success" onclick="openRegularTaskModal()" data-i18n="addRegular">+ Регулярне</button>
-                    </div>
-                    <div class="filters">
-                        <select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
-                        <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="all">Всі</option></select>
-                        <select class="filter-select" id="regularPeriodFilter" onchange="renderRegularTasks()">
-                            <option value="" data-i18n="allPeriods">Всі періоди</option>
-                            <option value="weekly" data-i18n="weekly">Щотижня</option>
-                            <option value="monthly" data-i18n="monthly">Щомісяця</option>
-                            <option value="quarterly" data-i18n="quarterly">Щокварталу</option>
-                        </select>
-                    </div>
+                    <button class="btn btn-success" onclick="openRegularTaskModal()" data-i18n="addRegularTask">+ Регулярне завдання</button>
                 </div>
                 <div id="regularTasksContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
@@ -982,10 +1177,39 @@
             <!-- USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="controls">
+                    <button class="btn btn-success" onclick="openUserModal()" id="addUserBtn" data-i18n="addEmployee">+ Додати співробітника</button>
                     <button class="btn btn-warning" onclick="openInviteModal()" id="inviteBtn" data-i18n="invite">📤 Запросити</button>
                 </div>
                 <div id="usersContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS -->
+            <div id="analyticsTab" class="tab-content">
+                <div class="controls">
+                    <h2 style="font-size:1.2rem;" data-i18n="analytics">📈 Аналітика</h2>
+                </div>
+                <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);">
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3 data-i18n="totalTasks">Всього завдань</h3>
+                            <div class="analytics-number" id="analyticsTotalTasks">0</div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3 data-i18n="completedTasks">Виконано</h3>
+                            <div class="analytics-number green" id="analyticsCompletedTasks">0</div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3 data-i18n="completionRate">Виконання %</h3>
+                            <div class="analytics-number blue" id="analyticsCompletionRate">0%</div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3 data-i18n="avgTime">Сер. час</h3>
+                            <div class="analytics-number orange" id="analyticsAvgTime">-</div>
+                        </div>
+                    </div>
+                    <div id="analyticsContent" style="margin-top:1.5rem;"></div>
                 </div>
             </div>
 
@@ -1112,6 +1336,45 @@
                         <button type="button" onclick="copyInviteLink()" class="btn btn-small" style="margin-top:0.5rem;" data-i18n="copy">📋 Копіювати</button>
                     </div>
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('inviteModal')" data-i18n="close">Закрити</button><button type="submit" class="btn btn-success" data-i18n="createInvite">📤 Створити запрошення</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><span class="close" onclick="closeModal('userModal')">&times;</span><h2 id="userModalTitle" data-i18n="editEmployee">Редагувати співробітника</h2></div>
+            <div class="modal-body">
+                <form id="userForm" onsubmit="saveUser(event)">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label class="form-label" data-i18n="name">Ім'я *</label>
+                            <input type="text" id="userName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="userEmail" class="form-input" readonly style="background:#f0f0f0;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="role">Роль</label>
+                            <select id="userRole" class="form-select">
+                                <option value="employee" data-i18n="roleEmployee">Співробітник</option>
+                                <option value="manager" data-i18n="roleManager">Менеджер</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label" data-i18n="position">Посада</label>
+                            <input type="text" id="userPosition" class="form-input" placeholder="Менеджер з продажу">
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label" data-i18n="userFunctions">Функції співробітника</label>
+                            <div id="userFunctions" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"></div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn" onclick="closeModal('userModal')" data-i18n="cancel">Скасувати</button>
+                        <button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -1286,6 +1549,63 @@
                 error: 'Помилка',
                 created: 'створено',
                 copied: '📋 Посилання скопійовано!',
+                
+                // New filters & analytics
+                clear: 'Очистити',
+                allTasks: 'Всі завдання',
+                myTasks: 'Мої завдання',
+                createdByMe: 'Створені мною',
+                statuses: 'Статуси',
+                functions: 'Функції',
+                task: 'Завдання',
+                createdBy: 'Створив',
+                deadline: 'Дедлайн',
+                type: 'Тип',
+                actions: 'Дії',
+                noTasksFound: 'Завдань не знайдено',
+                changeFilters: 'Змініть фільтри або додайте нове завдання',
+                edit: 'Редагувати',
+                delete: 'Видалити',
+                
+                // Control panel
+                controlPanelTitle: 'Панель контролю завдань',
+                assigneeLabel: 'Виконавець:',
+                functionLabel: 'Функція:',
+                periodLabel: 'Період:',
+                allAssignees: 'Всі виконавці',
+                allTime: 'Весь час',
+                thisMonth: 'Цей місяць',
+                overdueLabel: 'Прострочені',
+                todayTomorrow: 'Сьогодні-завтра',
+                inWork: 'В роботі',
+                completedLabel: 'Завершені',
+                viewLabel: 'Перегляд:',
+                employeeWorkload: 'Навантаження співробітників',
+                byFunctions: 'По функціях',
+                
+                // Analytics
+                tabAnalytics: 'Аналітика',
+                analytics: '📈 Аналітика',
+                totalTasks: 'Всього завдань',
+                completedTasks: 'Виконано',
+                completionRate: 'Виконання %',
+                avgTime: 'Сер. час',
+                byStatus: 'По статусах',
+                topPerformers: 'Топ виконавців',
+                noCompletedTasks: 'Немає виконаних завдань',
+                
+                // Users
+                tabUsers: 'Співробітники',
+                addEmployee: '+ Додати співробітника',
+                editEmployee: 'Редагувати співробітника',
+                name: "Ім'я *",
+                position: 'Посада',
+                userFunctions: 'Функції співробітника',
+                inviteFirst: 'Запросіть першого співробітника',
+                noEmployees: 'Немає співробітників',
+                
+                // Regular
+                addRegularTask: '+ Регулярне завдання',
             },
             ru: {
                 // Auth
@@ -1443,6 +1763,63 @@
                 error: 'Ошибка',
                 created: 'создано',
                 copied: '📋 Ссылка скопирована!',
+                
+                // New filters & analytics
+                clear: 'Очистить',
+                allTasks: 'Все задачи',
+                myTasks: 'Мои задачи',
+                createdByMe: 'Созданные мной',
+                statuses: 'Статусы',
+                functions: 'Функции',
+                task: 'Задача',
+                createdBy: 'Создал',
+                deadline: 'Дедлайн',
+                type: 'Тип',
+                actions: 'Действия',
+                noTasksFound: 'Задач не найдено',
+                changeFilters: 'Измените фильтры или добавьте новую задачу',
+                edit: 'Редактировать',
+                delete: 'Удалить',
+                
+                // Control panel
+                controlPanelTitle: 'Панель контроля задач',
+                assigneeLabel: 'Исполнитель:',
+                functionLabel: 'Функция:',
+                periodLabel: 'Период:',
+                allAssignees: 'Все исполнители',
+                allTime: 'Все время',
+                thisMonth: 'Этот месяц',
+                overdueLabel: 'Просроченные',
+                todayTomorrow: 'Сегодня-завтра',
+                inWork: 'В работе',
+                completedLabel: 'Завершенные',
+                viewLabel: 'Просмотр:',
+                employeeWorkload: 'Нагрузка сотрудников',
+                byFunctions: 'По функциям',
+                
+                // Analytics
+                tabAnalytics: 'Аналитика',
+                analytics: '📈 Аналитика',
+                totalTasks: 'Всего задач',
+                completedTasks: 'Выполнено',
+                completionRate: 'Выполнение %',
+                avgTime: 'Сред. время',
+                byStatus: 'По статусам',
+                topPerformers: 'Топ исполнителей',
+                noCompletedTasks: 'Нет выполненных задач',
+                
+                // Users
+                tabUsers: 'Сотрудники',
+                addEmployee: '+ Добавить сотрудника',
+                editEmployee: 'Редактировать сотрудника',
+                name: 'Имя *',
+                position: 'Должность',
+                userFunctions: 'Функции сотрудника',
+                inviteFirst: 'Пригласите первого сотрудника',
+                noEmployees: 'Нет сотрудников',
+                
+                // Regular
+                addRegularTask: '+ Регулярная задача',
             }
         };
 
@@ -1618,11 +1995,29 @@
         // Google Sign-In
         async function signInWithGoogle() {
             try {
-                await auth.signInWithPopup(googleProvider);
+                // На мобільних використовуємо redirect замість popup
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (isMobile) {
+                    await auth.signInWithRedirect(googleProvider);
+                } else {
+                    await auth.signInWithPopup(googleProvider);
+                }
             } catch (e) {
                 showAuthMessage(t('error') + ': ' + e.message, 'error');
             }
         }
+        
+        // Обробка результату redirect
+        auth.getRedirectResult().then((result) => {
+            if (result.user) {
+                // Користувач увійшов через redirect
+                console.log('Redirect login success');
+            }
+        }).catch((e) => {
+            if (e.code) {
+                showAuthMessage(t('error') + ': ' + e.message, 'error');
+            }
+        });
 
         // Email + Password Sign In
         async function signInWithEmail() {
@@ -1922,6 +2317,7 @@
             const ff = document.getElementById('functionFilter')?.value;
             const af = document.getElementById('assigneeFilter')?.value;
             const df = document.getElementById('dateFilter')?.value;
+            const tf = document.getElementById('taskTypeFilter')?.value;
             
             const today = new Date().toISOString().split('T')[0];
             
@@ -1929,7 +2325,9 @@
                 if (sf && task.status !== sf) return false;
                 if (ff && task.function !== ff) return false;
                 if (af && task.assigneeId !== af) return false;
-                if (df === 'today' && task.deadlineDate !== today) return false;
+                if (tf === 'my' && task.assigneeId !== currentUser.uid) return false;
+                if (tf === 'created' && task.creatorId !== currentUser.uid) return false;
+                if (df === 'today' && (task.deadlineDate || task.deadline?.split('T')[0]) !== today) return false;
                 if (df === 'overdue') {
                     const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
                     if (taskDate >= today || task.status === 'done') return false;
@@ -1960,60 +2358,82 @@
             const totalMins = totalMinutes % 60;
             const totalTimeStr = totalMinutes > 0 ? `⏱️ ${totalHours > 0 ? totalHours + ' год ' : ''}${totalMins > 0 ? totalMins + ' хв' : ''}` : '';
             
+            document.getElementById('totalTimeInfo').innerHTML = totalTimeStr ? `<span class="total-time-badge">${totalTimeStr} (${f.filter(x=>x.status!=='done').length} ${t('tasks')})</span>` : '';
+            
             if (f.length === 0) {
-                c.innerHTML = `<div class="empty-state"><h3>${t('noTasks')}</h3><p>${t('createFirstTask')}</p></div>`;
-                document.getElementById('totalTimeInfo').innerHTML = '';
+                c.innerHTML = `<div class="empty-table"><h3>${t('noTasksFound')}</h3><p>${t('changeFilters')}</p></div>`;
                 return;
             }
             
-            document.getElementById('totalTimeInfo').innerHTML = totalTimeStr ? `<span class="total-time-badge">${totalTimeStr} (${f.filter(x=>x.status!=='done').length} завдань)</span>` : '';
-            
             const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
-            const pt = { low: t('priorityLow'), medium: t('priorityMedium'), high: t('priorityHigh') };
-            const etLabels = { '15': '15хв', '30': '30хв', '45': '45хв', '60': '1г', '90': '1.5г', '120': '2г', '180': '3г', '240': '4г', '480': '8г' };
             
-            c.innerHTML = f.map(task => {
+            let html = `
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>${t('task')}</th>
+                            <th>${t('assignee')}</th>
+                            <th>${t('createdBy')}</th>
+                            <th>${t('deadline')}</th>
+                            <th>${t('status')}</th>
+                            <th>${t('type')}</th>
+                            <th>${t('actions')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
+            f.forEach(task => {
                 const taskDeadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
                 const taskTime = task.deadlineTime || (task.deadline ? task.deadline.split('T')[1]?.slice(0,5) : '');
                 const od = taskDeadline && taskDeadline < today && task.status !== 'done';
                 const isToday = taskDeadline === today;
-                const createdDate = task.createdDate || (task.createdAt?.toDate ? task.createdAt.toDate().toISOString().split('T')[0] : '');
+                const deadlineClass = od ? 'overdue' : (isToday ? 'today' : '');
                 
-                return `
-                    <div class="task-card ${task.pinned ? 'pinned' : ''} ${od ? 'overdue' : ''} ${isToday ? 'today' : ''}">
-                        <div class="task-card-header">
-                            <div class="task-title">
-                                <button class="pin-btn ${task.pinned ? 'pinned' : ''}" onclick="togglePin('${task.id}')">📌</button>
-                                ${task.title}
+                html += `
+                    <tr>
+                        <td class="task-title-cell">
+                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}">${task.title}</span>
+                        </td>
+                        <td>${task.assigneeName || '-'}</td>
+                        <td>${task.creatorName || '-'}</td>
+                        <td class="deadline-text ${deadlineClass}">${taskDeadline ? formatDateShort(taskDeadline) : '-'} ${taskTime || ''}</td>
+                        <td><span class="status-badge status-${task.status}">${st[task.status] || task.status}</span></td>
+                        <td>${task.function || '-'}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" onclick="togglePin('${task.id}')" title="Pin">📌</button>
+                                <button class="action-btn" onclick="openTaskModal('${task.id}')" title="Edit">✏️</button>
+                                <button class="action-btn" onclick="deleteTask('${task.id}')" title="Delete">🗑️</button>
                             </div>
-                            <span class="badge badge-${task.status}">${st[task.status] || task.status}</span>
-                        </div>
-                        
-                        <div class="task-deadline-row ${od ? 'overdue-text' : ''} ${isToday ? 'today-text' : ''}">
-                            <span>📅 ${taskDeadline ? formatDateShort(taskDeadline) : '-'}</span>
-                            <span>🕐 ${taskTime || '-'}</span>
-                            ${task.estimatedTime ? `<span class="time-badge">⏱️ ${etLabels[task.estimatedTime] || task.estimatedTime + 'хв'}</span>` : ''}
-                        </div>
-                        
-                        <div class="task-meta">
-                            <span class="task-meta-item">👤 ${task.assigneeName || t('notAssigned')}</span>
-                            ${task.function ? `<span class="task-meta-item">⚙️ ${task.function}</span>` : ''}
-                            <span class="badge badge-${task.priority}">${pt[task.priority] || task.priority}</span>
-                        </div>
-                        
-                        ${task.expectedResult ? `<div class="task-detail"><strong>🎯 ${t('expectedResult')}:</strong> ${task.expectedResult}</div>` : ''}
-                        ${task.reportFormat ? `<div class="task-detail"><strong>📋 ${t('reportFormat')}:</strong> ${task.reportFormat}</div>` : ''}
-                        ${task.description ? `<div class="task-detail"><strong>📝</strong> ${task.description}</div>` : ''}
-                        
-                        <div class="task-footer">
-                            <span class="task-created">${t('created')}: ${createdDate ? formatDateShort(createdDate) : '-'}</span>
-                            <div class="task-actions">
-                                <button class="btn btn-small" onclick="openTaskModal('${task.id}')">✏️</button>
-                                <button class="btn btn-small btn-danger" onclick="deleteTask('${task.id}')">🗑️</button>
-                            </div>
-                        </div>
-                    </div>`;
-            }).join('');
+                        </td>
+                    </tr>`;
+            });
+            
+            html += `</tbody></table>`;
+            c.innerHTML = html;
+        }
+        
+        function clearTaskFilters() {
+            document.getElementById('taskTypeFilter').value = '';
+            document.getElementById('dateFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('functionFilter').value = '';
+            document.getElementById('assigneeFilter').value = '';
+            renderTasks();
+        }
+        
+        function exportTasksCSV() {
+            let csv = 'Назва,Виконавець,Створив,Дедлайн,Статус,Функція\n';
+            tasks.forEach(task => {
+                const deadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                csv += `"${task.title}","${task.assigneeName || ''}","${task.creatorName || ''}","${deadline}","${task.status}","${task.function || ''}"\n`;
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'tasks_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
         }
         
         function formatDateShort(dateStr) {
@@ -2282,12 +2702,20 @@
             const c = document.getElementById('regularTasksContainer');
             const ff = document.getElementById('regularFunctionFilter')?.value;
             const af = document.getElementById('regularAssigneeFilter')?.value;
-            const pf = document.getElementById('regularPeriodFilter')?.value;
+            
+            // Оновлюємо селекти
+            const assigneeSelect = document.getElementById('regularAssigneeFilter');
+            const functionSelect = document.getElementById('regularFunctionFilter');
+            if (assigneeSelect && assigneeSelect.options.length <= 1) {
+                assigneeSelect.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            }
+            if (functionSelect && functionSelect.options.length <= 1) {
+                functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            }
             
             let filtered = regularTasks.filter(rt => {
                 if (ff && rt.function !== ff) return false;
                 if (af && !rt.assigneeIds?.includes(af)) return false;
-                if (pf && rt.period !== pf) return false;
                 return true;
             });
             
@@ -2402,9 +2830,13 @@
                 return;
             }
             
-            const canDelete = currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
+            const canEdit = currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
             
-            c.innerHTML = users.map(u => `
+            c.innerHTML = users.map(u => {
+                const userFunctions = functions.filter(f => f.assigneeIds?.includes(u.id));
+                const isOwner = u.role === 'owner';
+                
+                return `
                 <div class="user-card">
                     <div class="user-header">
                         <div class="user-name">${u.name || u.email}</div>
@@ -2414,40 +2846,230 @@
                         <div>📧 ${u.email}</div>
                         ${u.position ? `<div>💼 ${u.position}</div>` : ''}
                     </div>
+                    ${userFunctions.length > 0 ? `
+                        <div style="margin:0.5rem 0;display:flex;flex-wrap:wrap;gap:0.25rem;">
+                            ${userFunctions.map(f => `<span class="badge" style="font-size:0.7rem;background:#e8f5e9;color:#2e7d32;">${f.name}</span>`).join('')}
+                        </div>
+                    ` : ''}
                     <div class="user-stats">
                         <span>📋 ${tasks.filter(task => task.assigneeId === u.id).length} ${t('tasks')}</span>
-                        <div>
-                            ${canDelete && u.role !== 'owner' ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')">🗑️</button>` : ''}
+                        <div style="display:flex;gap:0.25rem;">
+                            ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}">✏️</button>` : ''}
+                            ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${t('delete')}">🗑️</button>` : ''}
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
+        }
+        
+        let editingUserId = null;
+        
+        function openUserModal(userId = null) {
+            editingUserId = userId;
+            const modal = document.getElementById('userModal');
+            
+            // Заповнюємо список функцій
+            const userFunctionsDiv = document.getElementById('userFunctions');
+            userFunctionsDiv.innerHTML = functions.map(f => `
+                <label class="assignee-checkbox">
+                    <input type="checkbox" value="${f.id}" data-fname="${f.name}">
+                    ${f.name}
+                </label>
+            `).join('') || `<p style="color:#7f8c8d;">${t('noFunctions')}</p>`;
+            
+            if (userId) {
+                const user = users.find(u => u.id === userId);
+                if (user) {
+                    document.getElementById('userName').value = user.name || '';
+                    document.getElementById('userEmail').value = user.email || '';
+                    document.getElementById('userRole').value = user.role || 'employee';
+                    document.getElementById('userPosition').value = user.position || '';
+                    document.getElementById('userModalTitle').textContent = t('editEmployee');
+                    
+                    // Відмічаємо функції користувача
+                    const userFunctions = functions.filter(f => f.assigneeIds?.includes(userId));
+                    userFunctions.forEach(f => {
+                        const checkbox = userFunctionsDiv.querySelector(`input[value="${f.id}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+            } else {
+                document.getElementById('userForm').reset();
+                document.getElementById('userModalTitle').textContent = t('addEmployee');
+            }
+            
+            modal.style.display = 'block';
+        }
+        
+        async function saveUser(e) {
+            e.preventDefault();
+            
+            if (!editingUserId) return;
+            
+            const name = document.getElementById('userName').value.trim();
+            const role = document.getElementById('userRole').value;
+            const position = document.getElementById('userPosition').value.trim();
+            
+            try {
+                // Оновлюємо дані користувача
+                await db.collection('companies').doc(currentCompany).collection('users').doc(editingUserId).update({
+                    name: name,
+                    role: role,
+                    position: position
+                });
+                
+                // Оновлюємо функції
+                const selectedFunctions = Array.from(document.querySelectorAll('#userFunctions input:checked')).map(cb => cb.value);
+                
+                // Для кожної функції перевіряємо чи потрібно додати/видалити користувача
+                for (const func of functions) {
+                    const funcRef = db.collection('companies').doc(currentCompany).collection('functions').doc(func.id);
+                    const isSelected = selectedFunctions.includes(func.id);
+                    const isCurrentlyAssigned = func.assigneeIds?.includes(editingUserId);
+                    
+                    if (isSelected && !isCurrentlyAssigned) {
+                        await funcRef.update({
+                            assigneeIds: firebase.firestore.FieldValue.arrayUnion(editingUserId)
+                        });
+                    } else if (!isSelected && isCurrentlyAssigned) {
+                        await funcRef.update({
+                            assigneeIds: firebase.firestore.FieldValue.arrayRemove(editingUserId)
+                        });
+                    }
+                }
+                
+                closeModal('userModal');
+                loadAllData();
+            } catch (e) {
+                alert(t('error') + ': ' + e.message);
+            }
         }
 
         // =====================
         // CONTROL DASHBOARD
         // =====================
         function renderControl() {
-            const now = new Date();
-            const tm = new Date(now); tm.setDate(tm.getDate() + 1);
+            const af = document.getElementById('controlAssigneeFilter')?.value;
+            const ff = document.getElementById('controlFunctionFilter')?.value;
+            const pf = document.getElementById('controlPeriodFilter')?.value;
             
-            const urgent = tasks.filter(task => task.deadline && new Date(task.deadline) < now && task.status !== 'done').length;
-            const warning = tasks.filter(task => { const d = new Date(task.deadline); return d >= now && d <= tm && task.status !== 'done'; }).length;
-            const active = tasks.filter(task => task.status === 'progress').length;
-            const completed = tasks.filter(task => task.status === 'done').length;
+            // Оновлюємо селекти
+            const assigneeSelect = document.getElementById('controlAssigneeFilter');
+            const functionSelect = document.getElementById('controlFunctionFilter');
+            if (assigneeSelect && assigneeSelect.options.length <= 1) {
+                assigneeSelect.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            }
+            if (functionSelect && functionSelect.options.length <= 1) {
+                functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            }
+            
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const tm = new Date(now); tm.setDate(tm.getDate() + 1);
+            const tomorrow = tm.toISOString().split('T')[0];
+            
+            // Фільтруємо завдання
+            let filteredTasks = tasks.filter(task => {
+                if (af && task.assigneeId !== af) return false;
+                if (ff && task.function !== ff) return false;
+                if (pf === 'today') {
+                    const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                    if (taskDate !== today) return false;
+                }
+                if (pf === 'week') {
+                    const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                    const weekLater = new Date();
+                    weekLater.setDate(weekLater.getDate() + 7);
+                    if (taskDate > weekLater.toISOString().split('T')[0] || taskDate < today) return false;
+                }
+                if (pf === 'month') {
+                    const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                    const monthLater = new Date();
+                    monthLater.setMonth(monthLater.getMonth() + 1);
+                    if (taskDate > monthLater.toISOString().split('T')[0] || taskDate < today) return false;
+                }
+                return true;
+            });
+            
+            const urgent = filteredTasks.filter(task => {
+                const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                return taskDate && taskDate < today && task.status !== 'done';
+            }).length;
+            
+            const warning = filteredTasks.filter(task => {
+                const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                return (taskDate === today || taskDate === tomorrow) && task.status !== 'done';
+            }).length;
+            
+            const active = filteredTasks.filter(task => task.status === 'progress').length;
+            const completed = filteredTasks.filter(task => task.status === 'done').length;
             
             document.getElementById('urgentCount').textContent = urgent;
             document.getElementById('warningCount').textContent = warning;
             document.getElementById('activeCount').textContent = active;
             document.getElementById('completedCount').textContent = completed;
             
-            const wl = {};
-            tasks.filter(task => task.status !== 'done').forEach(task => { wl[task.assigneeName || t('notAssigned')] = (wl[task.assigneeName || t('notAssigned')] || 0) + 1; });
+            renderControlContent();
+        }
+        
+        function renderControlContent() {
+            const viewType = document.getElementById('controlViewType')?.value || 'workload';
+            const af = document.getElementById('controlAssigneeFilter')?.value;
+            const ff = document.getElementById('controlFunctionFilter')?.value;
             
-            document.getElementById('controlContent').innerHTML = `
-                <h3 style="margin-bottom:0.8rem;">${t('workload')}</h3>
-                ${Object.entries(wl).map(([n, c]) => `<div style="display:flex;justify-content:space-between;padding:0.4rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;"><span>${n}</span><span style="font-weight:600;color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c}</span></div>`).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
-            `;
+            let filteredTasks = tasks.filter(task => {
+                if (af && task.assigneeId !== af) return false;
+                if (ff && task.function !== ff) return false;
+                return task.status !== 'done';
+            });
+            
+            const content = document.getElementById('controlContent');
+            
+            if (viewType === 'workload') {
+                const wl = {};
+                filteredTasks.forEach(task => { 
+                    wl[task.assigneeName || t('notAssigned')] = (wl[task.assigneeName || t('notAssigned')] || 0) + 1; 
+                });
+                
+                content.innerHTML = `
+                    <h3 style="margin-bottom:1rem;">${t('employeeWorkload')}</h3>
+                    ${Object.entries(wl).sort((a,b) => b[1] - a[1]).map(([n, c]) => `
+                        <div style="display:flex;justify-content:space-between;padding:0.6rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;">
+                            <span>👤 ${n}</span>
+                            <span style="font-weight:600;color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c} ${t('tasks')}</span>
+                        </div>
+                    `).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
+                `;
+            } else {
+                const byFunc = {};
+                filteredTasks.forEach(task => { 
+                    const fn = task.function || t('noFunction');
+                    byFunc[fn] = (byFunc[fn] || 0) + 1; 
+                });
+                
+                content.innerHTML = `
+                    <h3 style="margin-bottom:1rem;">${t('byFunctions')}</h3>
+                    ${Object.entries(byFunc).sort((a,b) => b[1] - a[1]).map(([n, c]) => `
+                        <div style="display:flex;justify-content:space-between;padding:0.6rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;">
+                            <span>⚙️ ${n}</span>
+                            <span style="font-weight:600;color:#3498db;">${c} ${t('tasks')}</span>
+                        </div>
+                    `).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
+                `;
+            }
+        }
+        
+        function clearControlFilters() {
+            document.getElementById('controlAssigneeFilter').value = '';
+            document.getElementById('controlFunctionFilter').value = '';
+            document.getElementById('controlPeriodFilter').value = '';
+            renderControl();
+        }
+        
+        function clearRegularFilters() {
+            document.getElementById('regularAssigneeFilter').value = '';
+            document.getElementById('regularFunctionFilter').value = '';
+            renderRegularTasks();
         }
 
         // =====================
@@ -2593,11 +3215,15 @@
             const ta = document.getElementById('taskAssignee');
             const ff = document.getElementById('functionFilter');
             const af = document.getElementById('assigneeFilter');
+            const raf = document.getElementById('regularAssigneeFilter');
+            const rff = document.getElementById('regularFunctionFilter');
             
             if (tf) tf.innerHTML = `<option value="">${t('noFunction')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
             if (ta) ta.innerHTML = `<option value="">${t('select')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
             if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
-            if (af) af.innerHTML = `<option value="">${t('all')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            if (raf) raf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            if (rff) rff.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
         }
 
         function formatDate(s) {
@@ -2617,17 +3243,91 @@
                 case 'regular': renderRegularTasks(); break;
                 case 'functions': renderFunctions(); break;
                 case 'users': renderUsers(); break;
+                case 'analytics': renderAnalytics(); break;
                 case 'admin': renderAdminPanel(); break;
             }
+        }
+        
+        function renderAnalytics() {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(t => t.status === 'done').length;
+            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            document.getElementById('analyticsTotalTasks').textContent = totalTasks;
+            document.getElementById('analyticsCompletedTasks').textContent = completedTasks;
+            document.getElementById('analyticsCompletionRate').textContent = completionRate + '%';
+            
+            // Середній час виконання
+            let totalTime = 0;
+            let countWithTime = 0;
+            tasks.forEach(task => {
+                if (task.estimatedTime) {
+                    totalTime += parseInt(task.estimatedTime);
+                    countWithTime++;
+                }
+            });
+            const avgTime = countWithTime > 0 ? Math.round(totalTime / countWithTime) : 0;
+            const avgHours = Math.floor(avgTime / 60);
+            const avgMins = avgTime % 60;
+            document.getElementById('analyticsAvgTime').textContent = avgTime > 0 ? `${avgHours > 0 ? avgHours + 'г ' : ''}${avgMins}хв` : '-';
+            
+            // Статистика по статусах
+            const byStatus = {
+                new: tasks.filter(task => task.status === 'new').length,
+                progress: tasks.filter(task => task.status === 'progress').length,
+                review: tasks.filter(task => task.status === 'review').length,
+                done: tasks.filter(task => task.status === 'done').length
+            };
+            
+            // Топ виконавців
+            const byAssignee = {};
+            tasks.filter(task => task.status === 'done').forEach(task => {
+                const name = task.assigneeName || 'Не призначено';
+                byAssignee[name] = (byAssignee[name] || 0) + 1;
+            });
+            const topAssignees = Object.entries(byAssignee).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            
+            // Прострочені
+            const today = new Date().toISOString().split('T')[0];
+            const overdue = tasks.filter(task => {
+                const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                return taskDate && taskDate < today && task.status !== 'done';
+            }).length;
+            
+            document.getElementById('analyticsContent').innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1rem;">
+                    <div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
+                        <h4 style="margin-bottom:0.75rem;">${t('byStatus')}</h4>
+                        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                            <div style="display:flex;justify-content:space-between;"><span>🆕 ${t('statusNew')}</span><strong>${byStatus.new}</strong></div>
+                            <div style="display:flex;justify-content:space-between;"><span>🔄 ${t('statusProgress')}</span><strong>${byStatus.progress}</strong></div>
+                            <div style="display:flex;justify-content:space-between;"><span>👀 ${t('statusReview')}</span><strong>${byStatus.review}</strong></div>
+                            <div style="display:flex;justify-content:space-between;"><span>✅ ${t('statusDone')}</span><strong style="color:#27ae60;">${byStatus.done}</strong></div>
+                            <div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;padding-top:0.4rem;margin-top:0.25rem;"><span>🚨 ${t('overdue')}</span><strong style="color:#e74c3c;">${overdue}</strong></div>
+                        </div>
+                    </div>
+                    
+                    <div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
+                        <h4 style="margin-bottom:0.75rem;">🏆 ${t('topPerformers')}</h4>
+                        ${topAssignees.length > 0 ? topAssignees.map(([name, count], i) => `
+                            <div style="display:flex;justify-content:space-between;padding:0.3rem 0;">
+                                <span>${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '👤'} ${name}</span>
+                                <strong style="color:#27ae60;">${count} ✓</strong>
+                            </div>
+                        `).join('') : `<p style="color:#7f8c8d;">${t('noCompletedTasks')}</p>`}
+                    </div>
+                </div>
+            `;
         }
 
         function closeModal(id) {
             document.getElementById(id).style.display = 'none';
             editingId = null;
+            editingUserId = null;
         }
 
         window.onclick = function(e) {
-            ['taskModal', 'functionModal', 'regularTaskModal', 'inviteModal'].forEach(id => {
+            ['taskModal', 'functionModal', 'regularTaskModal', 'inviteModal', 'userModal'].forEach(id => {
                 if (e.target === document.getElementById(id)) closeModal(id);
             });
         }
