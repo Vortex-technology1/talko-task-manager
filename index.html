@@ -1166,7 +1166,7 @@
                 <div class="controls">
                     <button class="btn btn-success" onclick="openRegularTaskModal()" data-i18n="addRegularTask">+ Регулярне завдання</button>
                 </div>
-                <div id="regularTasksContainer" class="cards-grid">
+                <div class="table-container" id="regularTasksContainer">
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
             </div>
@@ -1571,6 +1571,7 @@
                 deadline: 'Дедлайн',
                 type: 'Тип',
                 actions: 'Дії',
+                schedule: 'Розклад',
                 noTasksFound: 'Завдань не знайдено',
                 changeFilters: 'Змініть фільтри або додайте нове завдання',
                 edit: 'Редагувати',
@@ -1787,6 +1788,7 @@
                 deadline: 'Дедлайн',
                 type: 'Тип',
                 actions: 'Действия',
+                schedule: 'Расписание',
                 noTasksFound: 'Задач не найдено',
                 changeFilters: 'Измените фильтры или добавьте новую задачу',
                 edit: 'Редактировать',
@@ -2775,38 +2777,58 @@
             };
             
             if (filtered.length === 0) {
-                c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>${t('noRegular')}</h3><p>${t('createRegular')}</p></div>`;
+                c.innerHTML = `<div class="empty-table"><h3>${t('noRegular')}</h3><p>${t('createRegular')}</p></div>`;
                 return;
             }
             
-            c.innerHTML = filtered.map(rt => {
+            let html = `
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>${t('title')}</th>
+                            <th>${t('function')}</th>
+                            <th>${t('schedule')}</th>
+                            <th>${t('assignees')}</th>
+                            <th>${t('actions')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
+            filtered.forEach(rt => {
                 const scheduleText = rt.period === 'weekly' 
-                    ? `${days[rt.dayOfWeek] || 'Пн'} о ${rt.time || '10:00'}`
-                    : `${rt.dayOfMonth || '1'}-го о ${rt.time || '10:00'}`;
+                    ? `${days[rt.dayOfWeek] || 'Пн'}, ${rt.time || '10:00'}`
+                    : `${rt.dayOfMonth || '1'}-го, ${rt.time || '10:00'}`;
                 
-                return `
-                <div class="function-card">
-                    <div class="function-header">
-                        <div class="function-title">${rt.title}</div>
-                        <span class="badge" style="background:#f3e5f5;color:#7b1fa2;">${pt[rt.period] || rt.period}</span>
-                    </div>
-                    <div class="regular-schedule">🗓️ ${scheduleText}</div>
-                    <div style="font-size:0.85rem;color:#7f8c8d;margin-bottom:0.5rem;">${t('function')}: ${rt.function}</div>
-                    ${rt.expectedResult ? `<div class="task-detail"><strong>🎯</strong> ${rt.expectedResult}</div>` : ''}
-                    ${rt.reportFormat ? `<div class="task-detail"><strong>📋</strong> ${rt.reportFormat}</div>` : ''}
-                    ${rt.instruction ? `<div class="task-detail instruction-preview" onclick="showInstruction('${rt.id}')"><strong>📖</strong> ${rt.instruction.substring(0, 50)}${rt.instruction.length > 50 ? '...' : ''} <span style="color:var(--info);">(${currentLang === 'ua' ? 'читати' : 'читать'})</span></div>` : ''}
-                    <div class="function-assignees">
-                        ${rt.assigneeNames?.map(n => `<span class="assignee-badge">${n}</span>`).join('') || ''}
-                    </div>
-                    <div class="function-stats">
-                        <button class="btn btn-small btn-success" onclick="generateFromRegular('${rt.id}')">${t('create')}</button>
-                        <div>
-                            <button class="btn btn-small" onclick="openRegularTaskModal('${rt.id}')">✏️</button>
-                            <button class="btn btn-small btn-danger" onclick="deleteRegularTask('${rt.id}')">🗑️</button>
-                        </div>
-                    </div>
-                </div>
-            `}).join('');
+                html += `
+                    <tr>
+                        <td>
+                            <div style="font-weight:500;">${rt.title}</div>
+                            ${rt.expectedResult ? `<div style="font-size:0.75rem;color:#7f8c8d;margin-top:2px;">🎯 ${rt.expectedResult.substring(0, 50)}${rt.expectedResult.length > 50 ? '...' : ''}</div>` : ''}
+                        </td>
+                        <td>${rt.function || '-'}</td>
+                        <td>
+                            <span class="status-badge" style="background:#f3e5f5;color:#7b1fa2;">${pt[rt.period] || rt.period}</span>
+                            <div style="font-size:0.8rem;margin-top:4px;">${scheduleText}</div>
+                        </td>
+                        <td>
+                            <div style="display:flex;flex-wrap:wrap;gap:2px;">
+                                ${rt.assigneeNames?.slice(0, 2).map(n => `<span class="assignee-badge" style="font-size:0.7rem;">${n}</span>`).join('') || '-'}
+                                ${rt.assigneeNames?.length > 2 ? `<span class="assignee-badge" style="font-size:0.7rem;">+${rt.assigneeNames.length - 2}</span>` : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" onclick="generateFromRegular('${rt.id}')" title="${t('create')}">⚡</button>
+                                ${rt.instruction ? `<button class="action-btn" onclick="showInstruction('${rt.id}')" title="${t('instruction')}">📖</button>` : ''}
+                                <button class="action-btn" onclick="openRegularTaskModal('${rt.id}')" title="${t('edit')}">✏️</button>
+                                <button class="action-btn" onclick="deleteRegularTask('${rt.id}')" title="${t('delete')}">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+            
+            html += `</tbody></table>`;
+            c.innerHTML = html;
         }
         
         function showInstruction(id) {
