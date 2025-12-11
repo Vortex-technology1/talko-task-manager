@@ -1319,7 +1319,7 @@
                 <form id="regularTaskForm" onsubmit="saveRegularTask(event)">
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required onchange="updateRegularTaskAssignees()"><option value="" data-i18n="select">Оберіть</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
                         <div class="form-group" id="dayOfWeekGroup"><label class="form-label" data-i18n="dayOfWeek">День тижня *</label><select id="regularTaskDayOfWeek" class="form-select"><option value="1" data-i18n="monday">Понеділок</option><option value="2" data-i18n="tuesday">Вівторок</option><option value="3" data-i18n="wednesday">Середа</option><option value="4" data-i18n="thursday">Четвер</option><option value="5" data-i18n="friday">П'ятниця</option><option value="6" data-i18n="saturday">Субота</option><option value="0" data-i18n="sunday">Неділя</option></select></div>
                         <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
@@ -1327,7 +1327,11 @@
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="regularTaskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="instruction">📋 Інструкція (необов'язково)</label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="assignees">👥 Виконавці</label><div id="regularTaskAssignees" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;padding:0.8rem;background:#f8f9fa;border-radius:8px;"><p style="color:#7f8c8d;" data-i18n="selectFunctionFirst">Спочатку оберіть функцію</p></div></div>
+                        <div class="form-group full-width">
+                            <div class="info-box" style="background:#e8f5e9;padding:0.75rem;border-radius:8px;font-size:0.85rem;">
+                                💡 <span data-i18n="functionAssigneeHint">Виконавці беруться автоматично з обраної функції. Хто в функції — той і виконує.</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('regularTaskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
                 </form>
@@ -1554,6 +1558,8 @@
                 noTasks: '📋 Завдань немає',
                 createFirstTask: 'Створіть перше завдання',
                 noFunctions: '⚙️ Функцій немає',
+                functionAssigneeHint: 'Виконавці беруться автоматично з обраної функції. Хто в функції — той і виконує.',
+                people: 'осіб',
                 createFirstFunction: 'Створіть першу функцію',
                 noRegular: 'Регулярних завдань немає',
                 noRegularForDay: 'На цей день регулярних завдань немає',
@@ -1774,6 +1780,8 @@
                 noTasks: '📋 Задач нет',
                 createFirstTask: 'Создайте первую задачу',
                 noFunctions: '⚙️ Функций нет',
+                functionAssigneeHint: 'Исполнители берутся автоматически из выбранной функции. Кто в функции — тот и выполняет.',
+                people: 'чел.',
                 createFirstFunction: 'Создайте первую функцию',
                 noRegular: 'Регулярных задач нет',
                 noRegularForDay: 'На этот день регулярных задач нет',
@@ -2640,69 +2648,50 @@
                     document.getElementById('regularTaskExpectedResult').value = rt.expectedResult || '';
                     document.getElementById('regularTaskReportFormat').value = rt.reportFormat || '';
                     document.getElementById('regularTaskInstruction').value = rt.instruction || '';
-                    updateRegularTaskAssignees();
-                    setTimeout(() => {
-                        document.querySelectorAll('#regularTaskAssignees input').forEach(cb => {
-                            cb.checked = rt.assigneeIds?.includes(cb.value);
-                        });
-                    }, 50);
                 }
             } else {
                 document.getElementById('regularTaskForm').reset();
                 document.getElementById('regularTaskTime').value = '10:00';
                 document.getElementById('regularTaskPeriod').value = 'weekly';
                 updatePeriodOptions();
-                document.getElementById('regularTaskAssignees').innerHTML = `<p style="color:#7f8c8d;">${t('selectFunctionFirst')}</p>`;
             }
         }
 
         function updateRegularTaskFunctions() {
             const s = document.getElementById('regularTaskFunction');
-            s.innerHTML = `<option value="">${t('select')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            s.innerHTML = `<option value="">${t('select')}</option>` + functions.map(f => `<option value="${f.name}">${f.name} (${f.assigneeIds?.length || 0} ${t('people')})</option>`).join('');
             
             // Оновлюємо фільтри
             const ff = document.getElementById('regularFunctionFilter');
             const af = document.getElementById('regularAssigneeFilter');
             if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
-            if (af) af.innerHTML = `<option value="">${t('all')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
-        }
-
-        function updateRegularTaskAssignees() {
-            const fn = document.getElementById('regularTaskFunction').value;
-            const c = document.getElementById('regularTaskAssignees');
-            const f = functions.find(x => x.name === fn);
-            
-            if (!f || !f.assigneeIds?.length) {
-                c.innerHTML = `<p style="color:#7f8c8d;">${t('noMembers')}</p>`;
-                return;
-            }
-            
-            c.innerHTML = f.assigneeIds.map(id => {
-                const u = users.find(x => x.id === id);
-                return `<label class="assignee-checkbox"><input type="checkbox" value="${id}">${id === f.headId ? '👑 ' : ''}${u?.name || u?.email || id}</label>`;
-            }).join('');
+            if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
         }
 
         async function saveRegularTask(e) {
             e.preventDefault();
             
-            const assigneeIds = Array.from(document.querySelectorAll('#regularTaskAssignees input:checked')).map(cb => cb.value);
-            if (!assigneeIds.length) { alert(currentLang === 'ua' ? 'Оберіть виконавців' : 'Выберите исполнителей'); return; }
+            const funcName = document.getElementById('regularTaskFunction').value;
+            const func = functions.find(f => f.name === funcName);
+            
+            if (!func || !func.assigneeIds?.length) {
+                alert(currentLang === 'ua' ? 'В обраній функції немає виконавців' : 'В выбранной функции нет исполнителей');
+                return;
+            }
             
             const period = document.getElementById('regularTaskPeriod').value;
             
             const data = {
                 title: document.getElementById('regularTaskTitle').value.trim(),
-                function: document.getElementById('regularTaskFunction').value,
+                function: funcName,
                 period: period,
                 dayOfWeek: period === 'weekly' ? document.getElementById('regularTaskDayOfWeek').value : null,
                 dayOfMonth: period !== 'weekly' ? document.getElementById('regularTaskDayOfMonth').value : null,
                 time: document.getElementById('regularTaskTime').value,
                 expectedResult: document.getElementById('regularTaskExpectedResult').value.trim(),
                 reportFormat: document.getElementById('regularTaskReportFormat').value.trim(),
-                instruction: document.getElementById('regularTaskInstruction').value.trim(),
-                assigneeIds: assigneeIds,
-                assigneeNames: assigneeIds.map(id => users.find(u => u.id === id)?.name || users.find(u => u.id === id)?.email || '').filter(Boolean)
+                instruction: document.getElementById('regularTaskInstruction').value.trim()
+                // assigneeIds більше не зберігаємо - беремо з функції динамічно
             };
             
             try {
@@ -2723,12 +2712,21 @@
             const rt = regularTasks.find(r => r.id === id);
             if (!rt) return;
             
+            // Беремо виконавців з функції
+            const func = functions.find(f => f.name === rt.function);
+            if (!func || !func.assigneeIds?.length) {
+                alert(currentLang === 'ua' ? 'В функції немає виконавців' : 'В функции нет исполнителей');
+                return;
+            }
+            
+            const assigneeIds = func.assigneeIds;
+            
             const deadline = new Date();
             deadline.setDate(deadline.getDate() + 1);
             const deadlineDate = deadline.toISOString().split('T')[0];
             
             const batch = db.batch();
-            rt.assigneeIds.forEach(assigneeId => {
+            assigneeIds.forEach(assigneeId => {
                 const ref = db.collection('companies').doc(currentCompany).collection('tasks').doc();
                 batch.set(ref, {
                     title: rt.title,
@@ -2751,7 +2749,7 @@
             });
             
             await batch.commit();
-            alert(`✅ ${currentLang === 'ua' ? 'Створено' : 'Создано'} ${rt.assigneeIds.length} ${currentLang === 'ua' ? 'завдань' : 'задач'}`);
+            alert(`✅ ${currentLang === 'ua' ? 'Створено' : 'Создано'} ${assigneeIds.length} ${currentLang === 'ua' ? 'завдань' : 'задач'}`);
             loadAllData();
         }
 
@@ -2790,7 +2788,12 @@
             
             let filtered = regularTasks.filter(rt => {
                 if (ff && rt.function !== ff) return false;
-                if (af && !rt.assigneeIds?.includes(af)) return false;
+                
+                // Фільтр по виконавцю - перевіряємо чи виконавець є в функції
+                if (af) {
+                    const func = functions.find(f => f.name === rt.function);
+                    if (!func?.assigneeIds?.includes(af)) return false;
+                }
                 
                 // Фільтр по дню
                 if (dayFilter) {
@@ -2850,6 +2853,13 @@
                     ? `${days[rt.dayOfWeek] || 'Пн'}, ${rt.time || '10:00'}`
                     : `${rt.dayOfMonth || '1'}-го, ${rt.time || '10:00'}`;
                 
+                // Беремо виконавців з функції динамічно
+                const func = functions.find(f => f.name === rt.function);
+                const assigneeNames = func?.assigneeIds?.map(id => {
+                    const u = users.find(x => x.id === id);
+                    return u?.name || u?.email || '';
+                }).filter(Boolean) || [];
+                
                 html += `
                     <tr>
                         <td>
@@ -2863,8 +2873,8 @@
                         </td>
                         <td>
                             <div style="display:flex;flex-wrap:wrap;gap:2px;">
-                                ${rt.assigneeNames?.slice(0, 2).map(n => `<span class="assignee-badge" style="font-size:0.7rem;">${n}</span>`).join('') || '-'}
-                                ${rt.assigneeNames?.length > 2 ? `<span class="assignee-badge" style="font-size:0.7rem;">+${rt.assigneeNames.length - 2}</span>` : ''}
+                                ${assigneeNames.slice(0, 2).map(n => `<span class="assignee-badge" style="font-size:0.7rem;">${n}</span>`).join('') || '-'}
+                                ${assigneeNames.length > 2 ? `<span class="assignee-badge" style="font-size:0.7rem;">+${assigneeNames.length - 2}</span>` : ''}
                             </div>
                         </td>
                         <td>
