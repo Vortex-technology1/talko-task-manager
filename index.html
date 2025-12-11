@@ -1069,12 +1069,19 @@
                             <option value="my" data-i18n="myTasks">Мої завдання</option>
                             <option value="created" data-i18n="createdByMe">Створені мною</option>
                         </select>
-                        <select class="filter-select" id="dateFilter" onchange="renderTasks()">
+                        <select class="filter-select" id="dateFilter" onchange="handleDateFilter()">
                             <option value="" data-i18n="allDates">Всі дати</option>
                             <option value="today" data-i18n="today">Сьогодні</option>
                             <option value="week" data-i18n="thisWeek">Цей тиждень</option>
+                            <option value="month" data-i18n="thisMonth">Цей місяць</option>
                             <option value="overdue" data-i18n="overdue">Прострочені</option>
+                            <option value="custom" data-i18n="customPeriod">Обрати період</option>
                         </select>
+                        <div id="customDateRange" style="display:none;gap:0.5rem;align-items:center;">
+                            <input type="date" id="dateFrom" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
+                            <span>—</span>
+                            <input type="date" id="dateTo" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
+                        </div>
                         <select class="filter-select" id="statusFilter" onchange="renderTasks()">
                             <option value="" data-i18n="statuses">Статуси</option>
                             <option value="new" data-i18n="statusNew">Нові</option>
@@ -1114,22 +1121,22 @@
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
                     <div class="dashboard-cards">
                         <div class="dashboard-card urgent">
-                            <h3>🚨 <span data-i18n="critical">Критичні</span></h3>
+                            <h3 data-i18n="critical">Критичні</h3>
                             <div class="dashboard-number" id="urgentCount">0</div>
                             <div class="dashboard-subtitle" data-i18n="overdueLabel">Прострочені</div>
                         </div>
                         <div class="dashboard-card warning">
-                            <h3>⚠️ <span data-i18n="attention">Увага</span></h3>
+                            <h3 data-i18n="attention">Увага</h3>
                             <div class="dashboard-number" id="warningCount">0</div>
                             <div class="dashboard-subtitle" data-i18n="todayTomorrow">Сьогодні-завтра</div>
                         </div>
                         <div class="dashboard-card active">
-                            <h3>🔄 <span data-i18n="active">Активні</span></h3>
+                            <h3 data-i18n="active">Активні</h3>
                             <div class="dashboard-number" id="activeCount">0</div>
                             <div class="dashboard-subtitle" data-i18n="inWork">В роботі</div>
                         </div>
                         <div class="dashboard-card completed">
-                            <h3>✅ <span data-i18n="completed">Готово</span></h3>
+                            <h3 data-i18n="completed">Готово</h3>
                             <div class="dashboard-number" id="completedCount">0</div>
                             <div class="dashboard-subtitle" data-i18n="completedLabel">Завершені</div>
                         </div>
@@ -1429,9 +1436,11 @@
                 allStatuses: 'Всі статуси',
                 allFunctions: 'Всі функції',
                 allDates: 'Всі дати',
-                today: '📅 Сьогодні',
-                thisWeek: '📆 Цей тиждень',
-                overdue: '🚨 Прострочені',
+                today: 'Сьогодні',
+                thisWeek: 'Цей тиждень',
+                thisMonth: 'Цей місяць',
+                customPeriod: 'Обрати період',
+                overdue: 'Прострочені',
                 all: 'Всі',
                 newTask: 'Нове завдання',
                 editTask: 'Редагувати',
@@ -1643,9 +1652,11 @@
                 allStatuses: 'Все статусы',
                 allFunctions: 'Все функции',
                 allDates: 'Все даты',
-                today: '📅 Сегодня',
-                thisWeek: '📆 Эта неделя',
-                overdue: '🚨 Просроченные',
+                today: 'Сегодня',
+                thisWeek: 'Эта неделя',
+                thisMonth: 'Этот месяц',
+                customPeriod: 'Выбрать период',
+                overdue: 'Просроченные',
                 all: 'Все',
                 newTask: 'Новая задача',
                 editTask: 'Редактировать',
@@ -2311,6 +2322,24 @@
             }
         }
 
+        function handleDateFilter() {
+            const df = document.getElementById('dateFilter').value;
+            const customRange = document.getElementById('customDateRange');
+            
+            if (df === 'custom') {
+                customRange.style.display = 'flex';
+                // Встановлюємо значення за замовчуванням
+                const today = new Date().toISOString().split('T')[0];
+                const weekLater = new Date();
+                weekLater.setDate(weekLater.getDate() + 7);
+                document.getElementById('dateFrom').value = today;
+                document.getElementById('dateTo').value = weekLater.toISOString().split('T')[0];
+            } else {
+                customRange.style.display = 'none';
+            }
+            renderTasks();
+        }
+        
         function renderTasks() {
             const c = document.getElementById('tasksContainer');
             const sf = document.getElementById('statusFilter')?.value;
@@ -2327,16 +2356,28 @@
                 if (af && task.assigneeId !== af) return false;
                 if (tf === 'my' && task.assigneeId !== currentUser.uid) return false;
                 if (tf === 'created' && task.creatorId !== currentUser.uid) return false;
-                if (df === 'today' && (task.deadlineDate || task.deadline?.split('T')[0]) !== today) return false;
+                
+                const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                
+                if (df === 'today' && taskDate !== today) return false;
                 if (df === 'overdue') {
-                    const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
                     if (taskDate >= today || task.status === 'done') return false;
                 }
                 if (df === 'week') {
-                    const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
                     const weekLater = new Date();
                     weekLater.setDate(weekLater.getDate() + 7);
-                    if (taskDate > weekLater.toISOString().split('T')[0]) return false;
+                    if (taskDate > weekLater.toISOString().split('T')[0] || taskDate < today) return false;
+                }
+                if (df === 'month') {
+                    const monthLater = new Date();
+                    monthLater.setMonth(monthLater.getMonth() + 1);
+                    if (taskDate > monthLater.toISOString().split('T')[0] || taskDate < today) return false;
+                }
+                if (df === 'custom') {
+                    const dateFrom = document.getElementById('dateFrom')?.value;
+                    const dateTo = document.getElementById('dateTo')?.value;
+                    if (dateFrom && taskDate < dateFrom) return false;
+                    if (dateTo && taskDate > dateTo) return false;
                 }
                 return true;
             });
@@ -2419,6 +2460,9 @@
             document.getElementById('statusFilter').value = '';
             document.getElementById('functionFilter').value = '';
             document.getElementById('assigneeFilter').value = '';
+            document.getElementById('customDateRange').style.display = 'none';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
             renderTasks();
         }
         
