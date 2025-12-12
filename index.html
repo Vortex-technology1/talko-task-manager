@@ -4411,89 +4411,111 @@
         }
         
         // =====================
-        // SWIPE TO COMPLETE
+        // SWIPE TO COMPLETE (Event Delegation)
         // =====================
+        let swipeState = {
+            startX: 0,
+            currentX: 0,
+            isDragging: false,
+            activeCard: null
+        };
+        
         function initSwipeHandlers() {
-            const cards = document.querySelectorAll('.mobile-task-card');
+            // Event delegation - one listener for all cards
+            const container = document.getElementById('mobileTasksList');
+            if (!container || container.dataset.swipeInit) return;
             
-            cards.forEach(card => {
-                let startX = 0;
-                let currentX = 0;
-                let isDragging = false;
+            container.dataset.swipeInit = 'true';
+            
+            container.addEventListener('touchstart', (e) => {
+                const card = e.target.closest('.mobile-task-card');
+                if (!card) return;
+                
+                swipeState.startX = e.touches[0].clientX;
+                swipeState.isDragging = true;
+                swipeState.activeCard = card;
+                swipeState.currentX = 0;
+                card.classList.add('swiping');
+            }, { passive: true });
+            
+            container.addEventListener('touchmove', (e) => {
+                if (!swipeState.isDragging || !swipeState.activeCard) return;
+                
+                const card = swipeState.activeCard;
+                const content = card.querySelector('.mobile-task-content');
+                const leftBg = card.querySelector('.swipe-action-bg.left');
+                const rightBg = card.querySelector('.swipe-action-bg.right');
+                const canComplete = card.dataset.canComplete === 'true';
+                
+                if (!content) return;
+                
+                swipeState.currentX = e.touches[0].clientX - swipeState.startX;
+                
+                // Limit swipe distance
+                const maxSwipe = 120;
+                swipeState.currentX = Math.max(-maxSwipe, Math.min(maxSwipe, swipeState.currentX));
+                
+                // Apply transform
+                content.style.transform = `translateX(${swipeState.currentX}px)`;
+                
+                // Show appropriate background
+                if (swipeState.currentX > 30 && canComplete) {
+                    leftBg?.classList.add('visible');
+                    rightBg?.classList.remove('visible');
+                } else if (swipeState.currentX < -30) {
+                    rightBg?.classList.add('visible');
+                    leftBg?.classList.remove('visible');
+                } else {
+                    leftBg?.classList.remove('visible');
+                    rightBg?.classList.remove('visible');
+                }
+            }, { passive: true });
+            
+            container.addEventListener('touchend', () => {
+                if (!swipeState.isDragging || !swipeState.activeCard) return;
+                
+                const card = swipeState.activeCard;
                 const content = card.querySelector('.mobile-task-content');
                 const leftBg = card.querySelector('.swipe-action-bg.left');
                 const rightBg = card.querySelector('.swipe-action-bg.right');
                 const canComplete = card.dataset.canComplete === 'true';
                 const taskId = card.dataset.taskId;
                 
-                if (!content) return;
+                swipeState.isDragging = false;
+                card.classList.remove('swiping');
                 
-                card.addEventListener('touchstart', (e) => {
-                    startX = e.touches[0].clientX;
-                    isDragging = true;
-                    card.classList.add('swiping');
-                }, { passive: true });
+                const threshold = 80;
                 
-                card.addEventListener('touchmove', (e) => {
-                    if (!isDragging) return;
-                    
-                    currentX = e.touches[0].clientX - startX;
-                    
-                    // Limit swipe distance
-                    const maxSwipe = 120;
-                    currentX = Math.max(-maxSwipe, Math.min(maxSwipe, currentX));
-                    
-                    // Apply transform
-                    content.style.transform = `translateX(${currentX}px)`;
-                    
-                    // Show appropriate background
-                    if (currentX > 30 && canComplete) {
-                        leftBg.classList.add('visible');
-                        rightBg.classList.remove('visible');
-                    } else if (currentX < -30) {
-                        rightBg.classList.add('visible');
-                        leftBg.classList.remove('visible');
-                    } else {
-                        leftBg.classList.remove('visible');
-                        rightBg.classList.remove('visible');
-                    }
-                }, { passive: true });
+                // Complete task (swipe right)
+                if (swipeState.currentX > threshold && canComplete) {
+                    content.style.transform = `translateX(100%)`;
+                    content.style.opacity = '0';
+                    setTimeout(() => {
+                        quickCompleteTask(taskId);
+                    }, 200);
+                    swipeState.activeCard = null;
+                    return;
+                }
                 
-                card.addEventListener('touchend', () => {
-                    if (!isDragging) return;
-                    isDragging = false;
-                    card.classList.remove('swiping');
-                    
-                    const threshold = 80;
-                    
-                    // Complete task (swipe right)
-                    if (currentX > threshold && canComplete) {
-                        content.style.transform = `translateX(100%)`;
+                // Delete task (swipe left)
+                if (swipeState.currentX < -threshold) {
+                    if (confirm(t('deleteConfirm'))) {
+                        content.style.transform = `translateX(-100%)`;
                         content.style.opacity = '0';
                         setTimeout(() => {
-                            quickCompleteTask(taskId);
+                            deleteTask(taskId);
                         }, 200);
+                        swipeState.activeCard = null;
                         return;
                     }
-                    
-                    // Delete task (swipe left)
-                    if (currentX < -threshold) {
-                        if (confirm(t('deleteConfirm'))) {
-                            content.style.transform = `translateX(-100%)`;
-                            content.style.opacity = '0';
-                            setTimeout(() => {
-                                deleteTask(taskId);
-                            }, 200);
-                            return;
-                        }
-                    }
-                    
-                    // Reset position
-                    content.style.transform = '';
-                    leftBg.classList.remove('visible');
-                    rightBg.classList.remove('visible');
-                    currentX = 0;
-                });
+                }
+                
+                // Reset position
+                if (content) content.style.transform = '';
+                leftBg?.classList.remove('visible');
+                rightBg?.classList.remove('visible');
+                swipeState.currentX = 0;
+                swipeState.activeCard = null;
             });
         }
         
@@ -5048,7 +5070,9 @@
         
         function initTabSwipeGestures() {
             const mainInterface = document.getElementById('mainInterface');
-            if (!mainInterface) return;
+            if (!mainInterface || mainInterface.dataset.tabSwipeInit) return;
+            
+            mainInterface.dataset.tabSwipeInit = 'true';
             
             mainInterface.addEventListener('touchstart', (e) => {
                 // Ignore if swiping on a task card or modal
