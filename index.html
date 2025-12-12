@@ -862,7 +862,8 @@
             .btn-small {
                 padding: 0.35rem 0.5rem;
                 font-size: 0.75rem;
-                min-height: 32px;
+                min-height: 44px;
+                min-width: 44px;
             }
             
             .total-time-badge {
@@ -883,6 +884,530 @@
             
             .form-input, .form-select, .form-textarea {
                 font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            /* Hide table on mobile */
+            .tasks-table { display: none !important; }
+            
+            /* Mobile task cards */
+            .mobile-tasks-list { display: block; }
+            
+            .mobile-task-card {
+                background: transparent;
+                border-radius: 12px;
+                margin-bottom: 0.75rem;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .mobile-task-content {
+                background: white;
+                padding: 1rem;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                border-left: 4px solid var(--gray);
+                position: relative;
+                z-index: 2;
+                transition: transform 0.2s ease-out, opacity 0.2s;
+            }
+            
+            .mobile-task-card.status-new .mobile-task-content { border-left-color: #3498db; }
+            .mobile-task-card.status-progress .mobile-task-content { border-left-color: #f39c12; }
+            .mobile-task-card.status-review .mobile-task-content { border-left-color: #9b59b6; }
+            .mobile-task-card.status-done .mobile-task-content { border-left-color: #27ae60; opacity: 0.7; }
+            .mobile-task-card.overdue .mobile-task-content { border-left-color: #e74c3c; }
+            .mobile-task-card.pinned .mobile-task-content { border-left-color: #e74c3c; background: #fff5f5; }
+            
+            .mobile-task-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .mobile-task-title {
+                font-weight: 600;
+                font-size: 0.95rem;
+                color: #1a1a1a;
+                flex: 1;
+                line-height: 1.3;
+            }
+            
+            .mobile-task-status {
+                flex-shrink: 0;
+            }
+            
+            .mobile-task-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                font-size: 0.8rem;
+                color: #666;
+                margin-bottom: 0.75rem;
+            }
+            
+            .mobile-task-meta-item {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                background: #f5f5f5;
+                padding: 0.25rem 0.5rem;
+                border-radius: 6px;
+            }
+            
+            .mobile-task-meta-item.deadline-overdue {
+                background: #ffe5e5;
+                color: #e74c3c;
+            }
+            
+            .mobile-task-meta-item.deadline-today {
+                background: #fff3e0;
+                color: #f57c00;
+            }
+            
+            .mobile-task-actions {
+                display: flex;
+                gap: 0.5rem;
+                padding-top: 0.75rem;
+                border-top: 1px solid #eee;
+            }
+            
+            .mobile-action-btn {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.3rem;
+                padding: 0.6rem;
+                border: none;
+                border-radius: 8px;
+                font-size: 0.8rem;
+                font-weight: 500;
+                cursor: pointer;
+                min-height: 44px;
+                transition: all 0.2s;
+            }
+            
+            .mobile-action-btn.complete {
+                background: #e8f5e9;
+                color: #2e7d32;
+            }
+            
+            .mobile-action-btn.edit {
+                background: #e3f2fd;
+                color: #1565c0;
+            }
+            
+            .mobile-action-btn.delete {
+                background: #ffebee;
+                color: #c62828;
+            }
+            
+            .mobile-action-btn:active {
+                transform: scale(0.95);
+            }
+        }
+        
+        /* Desktop: show table, hide mobile cards */
+        @media (min-width: 768px) {
+            .mobile-tasks-list { display: none !important; }
+            .tasks-table { display: table !important; }
+            .bottom-nav { display: none !important; }
+            .fab-add { display: none !important; }
+            .mobile-filter-bar { display: none !important; }
+            .filters-row { display: flex !important; }
+            .controls-row .btn { display: inline-flex !important; }
+        }
+        
+        /* Bottom Navigation for Mobile */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 0.5rem 0;
+            padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+        }
+        
+        .bottom-nav-items {
+            display: flex;
+            justify-content: space-around;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .bottom-nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.5rem 0.75rem;
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            font-size: 0.65rem;
+            cursor: pointer;
+            border-radius: 8px;
+            min-width: 60px;
+            transition: all 0.2s;
+        }
+        
+        .bottom-nav-btn .icon {
+            width: 22px;
+            height: 22px;
+        }
+        
+        .bottom-nav-btn.active {
+            color: var(--success);
+            background: #e8f5e9;
+        }
+        
+        .bottom-nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        @media (max-width: 767px) {
+            .bottom-nav { display: block; }
+            .tab-navigation { display: none; }
+            .main-interface { padding-bottom: 80px; }
+            
+            /* FAB for adding tasks */
+            .fab-add {
+                position: fixed;
+                bottom: 90px;
+                right: 16px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: var(--success);
+                color: white;
+                border: none;
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+                cursor: pointer;
+                z-index: 999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            }
+            
+            .fab-add:active {
+                transform: scale(0.9);
+            }
+            
+            .fab-add .icon {
+                width: 24px;
+                height: 24px;
+            }
+            
+            /* Hide desktop add buttons on mobile */
+            .controls .btn-success:first-child { display: none; }
+            
+            /* Compact mobile header */
+            .header-container {
+                padding: 0.5rem 1rem;
+            }
+            
+            .header-logo {
+                font-size: 1rem;
+            }
+            
+            .header-logo .company-badge {
+                display: none !important;
+            }
+            
+            .header-actions {
+                gap: 0.5rem;
+            }
+            
+            /* Hide AI buttons and full logout on mobile */
+            .header-ai-btn { display: none !important; }
+            .header-btn span { display: none; }
+            .header-btn { 
+                padding: 0.5rem; 
+                border-radius: 50%;
+                min-width: 40px;
+                min-height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .header-btn .icon { margin: 0; }
+            
+            .lang-switcher { display: none; }
+            .user-info { display: none !important; }
+            
+            /* Swipe to complete */
+            .mobile-task-card {
+                position: relative;
+                overflow: hidden;
+                touch-action: pan-y;
+                transition: transform 0.2s ease-out;
+            }
+            
+            .mobile-task-card.swiping {
+                transition: none;
+            }
+            
+            .swipe-action-bg {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                padding: 0 1.5rem;
+                font-weight: 600;
+                font-size: 0.9rem;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            
+            .swipe-action-bg.left {
+                left: 0;
+                background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+                color: white;
+                justify-content: flex-start;
+            }
+            
+            .swipe-action-bg.right {
+                right: 0;
+                background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+                color: white;
+                justify-content: flex-end;
+            }
+            
+            .swipe-action-bg.visible {
+                opacity: 1;
+            }
+            
+            .mobile-task-content {
+                position: relative;
+                background: white;
+                z-index: 1;
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            
+            /* Swipe hint animation */
+            @keyframes swipeHint {
+                0%, 100% { transform: translateX(0); }
+                50% { transform: translateX(10px); }
+            }
+            
+            .mobile-task-card.hint-swipe {
+                animation: swipeHint 0.5s ease-in-out;
+            }
+            
+            /* Pull to refresh */
+            .pull-indicator {
+                position: fixed;
+                top: 60px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-100%);
+                background: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 20px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 998;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.85rem;
+                color: #666;
+                transition: transform 0.3s;
+            }
+            
+            .pull-indicator.visible {
+                transform: translateX(-50%) translateY(0);
+            }
+            
+            .pull-indicator.loading .pull-icon {
+                animation: spin 1s linear infinite;
+            }
+            
+            @keyframes spin {
+                100% { transform: rotate(360deg); }
+            }
+            
+            /* Mobile filter button */
+            .mobile-filter-bar {
+                display: flex;
+                gap: 0.5rem;
+                padding: 0.75rem;
+                background: white;
+                border-radius: 12px;
+                margin-bottom: 0.75rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            }
+            
+            .mobile-filter-btn {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.4rem;
+                padding: 0.7rem;
+                background: #f5f5f5;
+                border: none;
+                border-radius: 10px;
+                font-size: 0.85rem;
+                font-weight: 500;
+                color: #555;
+                cursor: pointer;
+                min-height: 44px;
+                transition: all 0.2s;
+            }
+            
+            .mobile-filter-btn.active {
+                background: var(--success);
+                color: white;
+            }
+            
+            .mobile-filter-btn .filter-count {
+                background: var(--success);
+                color: white;
+                font-size: 0.7rem;
+                padding: 0.15rem 0.4rem;
+                border-radius: 10px;
+                font-weight: 600;
+            }
+            
+            .mobile-filter-btn.active .filter-count {
+                background: white;
+                color: var(--success);
+            }
+            
+            /* Hide desktop filters on mobile */
+            .filters-row { display: none; }
+            .controls-row .btn:not(.btn-success) { display: none; }
+            
+            /* Date group headers */
+            .date-group-header {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 0.5rem;
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #555;
+                border-bottom: 2px solid #eee;
+                margin-top: 0.5rem;
+            }
+            
+            .date-group-header:first-child {
+                margin-top: 0;
+            }
+            
+            .date-group-header .date-label {
+                flex: 1;
+            }
+            
+            .date-group-header .task-count {
+                background: #f0f0f0;
+                padding: 0.2rem 0.6rem;
+                border-radius: 10px;
+                font-size: 0.75rem;
+                color: #888;
+            }
+            
+            .date-group-header.overdue {
+                color: #e74c3c;
+                border-bottom-color: #ffcccc;
+            }
+            
+            .date-group-header.today {
+                color: #f39c12;
+                border-bottom-color: #ffe5b4;
+            }
+            
+            .date-group-header.tomorrow {
+                color: #3498db;
+                border-bottom-color: #cce5ff;
+            }
+            
+            /* Filter modal */
+            .filter-modal-content {
+                padding: 0;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+            
+            .filter-modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                border-bottom: 1px solid #eee;
+                position: sticky;
+                top: 0;
+                background: white;
+                z-index: 10;
+            }
+            
+            .filter-modal-header h3 {
+                margin: 0;
+                font-size: 1.1rem;
+            }
+            
+            .filter-section {
+                padding: 1rem;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .filter-section:last-child {
+                border-bottom: none;
+            }
+            
+            .filter-section-title {
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #888;
+                margin-bottom: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .filter-chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .filter-chip {
+                padding: 0.5rem 1rem;
+                background: #f5f5f5;
+                border: 2px solid transparent;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            
+            .filter-chip.selected {
+                background: #e8f5e9;
+                border-color: var(--success);
+                color: var(--success);
+                font-weight: 500;
+            }
+            
+            .filter-modal-footer {
+                display: flex;
+                gap: 0.75rem;
+                padding: 1rem;
+                border-top: 1px solid #eee;
+                position: sticky;
+                bottom: 0;
+                background: white;
+            }
+            
+            .filter-modal-footer .btn {
+                flex: 1;
             }
         }
         
@@ -1080,6 +1605,20 @@
 
             <!-- TASKS -->
             <div id="tasksTab" class="tab-content active">
+                <!-- Mobile filter bar -->
+                <div class="mobile-filter-bar" id="mobileFilterBar">
+                    <button class="mobile-filter-btn" onclick="setMobileQuickFilter('my')">
+                        <i data-lucide="user" class="icon icon-sm"></i> Мої
+                    </button>
+                    <button class="mobile-filter-btn" onclick="setMobileQuickFilter('today')">
+                        <i data-lucide="calendar" class="icon icon-sm"></i> Сьогодні
+                    </button>
+                    <button class="mobile-filter-btn" onclick="openFilterModal()">
+                        <i data-lucide="sliders" class="icon icon-sm"></i> Фільтри
+                        <span class="filter-count" id="activeFilterCount" style="display:none;">0</span>
+                    </button>
+                </div>
+                
                 <div class="controls">
                     <div class="controls-row">
                         <button class="btn btn-success" onclick="openTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addTask">Додати завдання</span></button>
@@ -2471,6 +3010,32 @@
             }
         }
 
+        // Mobile quick complete
+        async function quickCompleteTask(id) {
+            try {
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({ 
+                    status: 'done',
+                    completedAt: new Date().toISOString()
+                });
+                loadAllData();
+            } catch (e) {
+                alert(t('error') + ': ' + e.message);
+            }
+        }
+        
+        // Reopen completed task
+        async function reopenTask(id) {
+            try {
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({ 
+                    status: 'progress',
+                    completedAt: null
+                });
+                loadAllData();
+            } catch (e) {
+                alert(t('error') + ': ' + e.message);
+            }
+        }
+
         function handleDateFilter() {
             const df = document.getElementById('dateFilter').value;
             const customRange = document.getElementById('customDateRange');
@@ -2557,6 +3122,7 @@
             
             const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
             
+            // Desktop table
             let html = `
                 <table class="tasks-table">
                     <thead>
@@ -2600,8 +3166,123 @@
             });
             
             html += `</tbody></table>`;
+            
+            // Mobile cards with swipe support and date grouping
+            html += `<div class="mobile-tasks-list" id="mobileTasksList">`;
+            
+            // Group tasks by date
+            const groups = {
+                overdue: [],
+                today: [],
+                tomorrow: [],
+                thisWeek: [],
+                later: [],
+                noDueDate: []
+            };
+            
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            
+            const weekEnd = new Date();
+            weekEnd.setDate(weekEnd.getDate() + 7);
+            const weekEndStr = weekEnd.toISOString().split('T')[0];
+            
+            f.forEach(task => {
+                const taskDeadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                
+                if (!taskDeadline) {
+                    groups.noDueDate.push(task);
+                } else if (taskDeadline < today && task.status !== 'done') {
+                    groups.overdue.push(task);
+                } else if (taskDeadline === today) {
+                    groups.today.push(task);
+                } else if (taskDeadline === tomorrowStr) {
+                    groups.tomorrow.push(task);
+                } else if (taskDeadline <= weekEndStr) {
+                    groups.thisWeek.push(task);
+                } else {
+                    groups.later.push(task);
+                }
+            });
+            
+            const groupLabels = {
+                overdue: { label: '🔴 Прострочені', class: 'overdue' },
+                today: { label: '📅 Сьогодні', class: 'today' },
+                tomorrow: { label: '📆 Завтра', class: 'tomorrow' },
+                thisWeek: { label: '📋 Цей тиждень', class: '' },
+                later: { label: '📁 Пізніше', class: '' },
+                noDueDate: { label: '⏳ Без дати', class: '' }
+            };
+            
+            Object.keys(groups).forEach(groupKey => {
+                const group = groups[groupKey];
+                if (group.length === 0) return;
+                
+                const { label, class: headerClass } = groupLabels[groupKey];
+                
+                html += `
+                <div class="date-group-header ${headerClass}">
+                    <span class="date-label">${label}</span>
+                    <span class="task-count">${group.length}</span>
+                </div>`;
+                
+                group.forEach(task => {
+                    const taskDeadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                    const taskTime = task.deadlineTime || (task.deadline ? task.deadline.split('T')[1]?.slice(0,5) : '');
+                    const od = taskDeadline && taskDeadline < today && task.status !== 'done';
+                    const isToday = taskDeadline === today;
+                    const deadlineClass = od ? 'deadline-overdue' : (isToday ? 'deadline-today' : '');
+                    const cardClass = od ? 'overdue' : (task.pinned ? 'pinned' : `status-${task.status}`);
+                    const canSwipeComplete = task.status !== 'done';
+                    
+                    html += `
+                    <div class="mobile-task-card ${cardClass}" data-task-id="${task.id}" data-can-complete="${canSwipeComplete}">
+                        <!-- Swipe backgrounds -->
+                        <div class="swipe-action-bg left"><i data-lucide="check" class="icon"></i> Готово</div>
+                        <div class="swipe-action-bg right"><i data-lucide="trash-2" class="icon"></i> Видалити</div>
+                        
+                        <!-- Card content -->
+                        <div class="mobile-task-content">
+                            <div class="mobile-task-header">
+                                <div class="mobile-task-title">
+                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${task.title}
+                                </div>
+                                <span class="status-badge status-${task.status}">${st[task.status] || task.status}</span>
+                            </div>
+                            
+                            <div class="mobile-task-meta">
+                                ${task.assigneeName ? `<div class="mobile-task-meta-item"><i data-lucide="user" class="icon icon-sm"></i> ${task.assigneeName}</div>` : ''}
+                                ${taskTime ? `<div class="mobile-task-meta-item"><i data-lucide="clock" class="icon icon-sm"></i> ${taskTime}</div>` : ''}
+                                ${task.function ? `<div class="mobile-task-meta-item"><i data-lucide="tag" class="icon icon-sm"></i> ${task.function}</div>` : ''}
+                            </div>
+                            
+                            <div class="mobile-task-actions">
+                                ${task.status !== 'done' ? `
+                                    <button class="mobile-action-btn complete" onclick="quickCompleteTask('${task.id}')">
+                                        <i data-lucide="check" class="icon icon-sm"></i> Готово
+                                    </button>
+                                ` : `
+                                    <button class="mobile-action-btn edit" onclick="reopenTask('${task.id}')">
+                                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> Відновити
+                                    </button>
+                                `}
+                                <button class="mobile-action-btn edit" onclick="openTaskModal('${task.id}')">
+                                    <i data-lucide="pencil" class="icon icon-sm"></i>
+                                </button>
+                                <button class="mobile-action-btn delete" onclick="deleteTask('${task.id}')">
+                                    <i data-lucide="trash-2" class="icon icon-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            });
+            
+            html += `</div>`;
             c.innerHTML = html;
             refreshIcons();
+            initSwipeHandlers();
         }
         
         function clearTaskFilters() {
@@ -3759,6 +4440,915 @@
                 lucide.createIcons();
             }
         }
+        
+        // =====================
+        // SWIPE TO COMPLETE
+        // =====================
+        function initSwipeHandlers() {
+            const cards = document.querySelectorAll('.mobile-task-card');
+            
+            cards.forEach(card => {
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+                const content = card.querySelector('.mobile-task-content');
+                const leftBg = card.querySelector('.swipe-action-bg.left');
+                const rightBg = card.querySelector('.swipe-action-bg.right');
+                const canComplete = card.dataset.canComplete === 'true';
+                const taskId = card.dataset.taskId;
+                
+                if (!content) return;
+                
+                card.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    card.classList.add('swiping');
+                }, { passive: true });
+                
+                card.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    
+                    currentX = e.touches[0].clientX - startX;
+                    
+                    // Limit swipe distance
+                    const maxSwipe = 120;
+                    currentX = Math.max(-maxSwipe, Math.min(maxSwipe, currentX));
+                    
+                    // Apply transform
+                    content.style.transform = `translateX(${currentX}px)`;
+                    
+                    // Show appropriate background
+                    if (currentX > 30 && canComplete) {
+                        leftBg.classList.add('visible');
+                        rightBg.classList.remove('visible');
+                    } else if (currentX < -30) {
+                        rightBg.classList.add('visible');
+                        leftBg.classList.remove('visible');
+                    } else {
+                        leftBg.classList.remove('visible');
+                        rightBg.classList.remove('visible');
+                    }
+                }, { passive: true });
+                
+                card.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    card.classList.remove('swiping');
+                    
+                    const threshold = 80;
+                    
+                    // Complete task (swipe right)
+                    if (currentX > threshold && canComplete) {
+                        content.style.transform = `translateX(100%)`;
+                        content.style.opacity = '0';
+                        setTimeout(() => {
+                            quickCompleteTask(taskId);
+                        }, 200);
+                        return;
+                    }
+                    
+                    // Delete task (swipe left)
+                    if (currentX < -threshold) {
+                        if (confirm(t('deleteConfirm'))) {
+                            content.style.transform = `translateX(-100%)`;
+                            content.style.opacity = '0';
+                            setTimeout(() => {
+                                deleteTask(taskId);
+                            }, 200);
+                            return;
+                        }
+                    }
+                    
+                    // Reset position
+                    content.style.transform = '';
+                    leftBg.classList.remove('visible');
+                    rightBg.classList.remove('visible');
+                    currentX = 0;
+                });
+            });
+        }
+        
+        // =====================
+        // PULL TO REFRESH
+        // =====================
+        let pullStartY = 0;
+        let isPulling = false;
+        let pullIndicator = null;
+        
+        function initPullToRefresh() {
+            const container = document.querySelector('.container');
+            if (!container) return;
+            
+            // Create pull indicator if not exists
+            if (!pullIndicator) {
+                pullIndicator = document.createElement('div');
+                pullIndicator.className = 'pull-indicator';
+                pullIndicator.innerHTML = '<i data-lucide="refresh-cw" class="icon pull-icon"></i> <span>Потягніть для оновлення</span>';
+                document.body.appendChild(pullIndicator);
+                refreshIcons();
+            }
+            
+            container.addEventListener('touchstart', (e) => {
+                if (window.scrollY === 0) {
+                    pullStartY = e.touches[0].clientY;
+                    isPulling = true;
+                }
+            }, { passive: true });
+            
+            container.addEventListener('touchmove', (e) => {
+                if (!isPulling || window.scrollY > 0) return;
+                
+                const pullDistance = e.touches[0].clientY - pullStartY;
+                
+                if (pullDistance > 50 && pullDistance < 150) {
+                    pullIndicator.classList.add('visible');
+                    pullIndicator.querySelector('span').textContent = 'Потягніть для оновлення';
+                } else if (pullDistance >= 150) {
+                    pullIndicator.querySelector('span').textContent = 'Відпустіть для оновлення';
+                }
+            }, { passive: true });
+            
+            container.addEventListener('touchend', () => {
+                if (!isPulling) return;
+                isPulling = false;
+                
+                const pullIndicatorVisible = pullIndicator.classList.contains('visible');
+                const readyToRefresh = pullIndicator.querySelector('span').textContent.includes('Відпустіть');
+                
+                if (pullIndicatorVisible && readyToRefresh) {
+                    pullIndicator.classList.add('loading');
+                    pullIndicator.querySelector('span').textContent = 'Оновлення...';
+                    
+                    loadAllData().then(() => {
+                        setTimeout(() => {
+                            pullIndicator.classList.remove('visible', 'loading');
+                        }, 500);
+                    });
+                } else {
+                    pullIndicator.classList.remove('visible');
+                }
+            });
+        }
+        
+        // Init pull to refresh when page loads
+        document.addEventListener('DOMContentLoaded', initPullToRefresh);
+        
+        // =====================
+        // BROWSER NOTIFICATIONS
+        // =====================
+        let notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+        let notificationCheckInterval = null;
+        let notifiedTasks = new Set(JSON.parse(localStorage.getItem('notifiedTasks') || '[]'));
+        
+        // Check if browser supports notifications
+        function supportsNotifications() {
+            return 'Notification' in window;
+        }
+        
+        // Request permission
+        async function requestNotificationPermission() {
+            if (!supportsNotifications()) {
+                alert('❌ Ваш браузер не підтримує сповіщення');
+                return false;
+            }
+            
+            const permission = await Notification.requestPermission();
+            
+            if (permission === 'granted') {
+                notificationsEnabled = true;
+                localStorage.setItem('notificationsEnabled', 'true');
+                startNotificationChecker();
+                updateNotificationButton();
+                
+                // Show test notification
+                new Notification('✅ Сповіщення увімкнено', {
+                    body: 'Ви отримуватимете нагадування про дедлайни',
+                    icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
+                    tag: 'test'
+                });
+                
+                return true;
+            } else {
+                alert('❌ Дозвіл на сповіщення не надано. Перевірте налаштування браузера.');
+                return false;
+            }
+        }
+        
+        // Disable notifications
+        function disableNotifications() {
+            notificationsEnabled = false;
+            localStorage.setItem('notificationsEnabled', 'false');
+            stopNotificationChecker();
+            updateNotificationButton();
+        }
+        
+        // Toggle notifications
+        async function toggleNotifications() {
+            if (notificationsEnabled) {
+                disableNotifications();
+            } else {
+                await requestNotificationPermission();
+            }
+        }
+        
+        // Check deadlines and send notifications
+        function checkDeadlinesAndNotify() {
+            if (!notificationsEnabled || !tasks.length) return;
+            
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            
+            tasks.forEach(task => {
+                if (task.status === 'done') return;
+                
+                const taskDeadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
+                const taskTime = task.deadlineTime || (task.deadline ? task.deadline.split('T')[1]?.slice(0,5) : '');
+                
+                if (!taskDeadline) return;
+                
+                const notifyKey = `${task.id}-${taskDeadline}`;
+                
+                // Already notified for this deadline
+                if (notifiedTasks.has(notifyKey)) return;
+                
+                // Check if deadline is today
+                if (taskDeadline === today) {
+                    let shouldNotify = false;
+                    let message = '';
+                    
+                    if (taskTime) {
+                        // Has specific time - notify 1 hour before
+                        const [deadlineHour, deadlineMinute] = taskTime.split(':').map(Number);
+                        const deadlineInMinutes = deadlineHour * 60 + deadlineMinute;
+                        const nowInMinutes = currentHour * 60 + currentMinute;
+                        const diff = deadlineInMinutes - nowInMinutes;
+                        
+                        if (diff > 0 && diff <= 60) {
+                            shouldNotify = true;
+                            message = `⏰ Дедлайн через ${diff} хв: ${task.title}`;
+                        } else if (diff <= 0 && diff > -5) {
+                            shouldNotify = true;
+                            message = `🔴 Дедлайн зараз: ${task.title}`;
+                        }
+                    } else {
+                        // No specific time - notify once in the morning (9:00)
+                        if (currentHour === 9 && currentMinute < 5) {
+                            shouldNotify = true;
+                            message = `📅 Сьогодні дедлайн: ${task.title}`;
+                        }
+                    }
+                    
+                    if (shouldNotify) {
+                        sendTaskNotification(task, message, notifyKey);
+                    }
+                }
+                
+                // Check if deadline is tomorrow (notify at 18:00)
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                
+                if (taskDeadline === tomorrowStr && currentHour === 18 && currentMinute < 5) {
+                    const notifyKeyTomorrow = `${task.id}-tomorrow`;
+                    if (!notifiedTasks.has(notifyKeyTomorrow)) {
+                        sendTaskNotification(task, `📆 Завтра дедлайн: ${task.title}`, notifyKeyTomorrow);
+                    }
+                }
+                
+                // Check overdue (notify once)
+                if (taskDeadline < today) {
+                    const notifyKeyOverdue = `${task.id}-overdue`;
+                    if (!notifiedTasks.has(notifyKeyOverdue)) {
+                        sendTaskNotification(task, `🔴 Прострочено: ${task.title}`, notifyKeyOverdue);
+                    }
+                }
+            });
+        }
+        
+        // Send notification
+        function sendTaskNotification(task, message, notifyKey) {
+            try {
+                const notification = new Notification(message, {
+                    body: task.function ? `Функція: ${task.function}` : 'Натисніть щоб відкрити',
+                    icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
+                    tag: task.id,
+                    requireInteraction: true
+                });
+                
+                notification.onclick = () => {
+                    window.focus();
+                    openTaskModal(task.id);
+                    notification.close();
+                };
+                
+                // Mark as notified
+                notifiedTasks.add(notifyKey);
+                localStorage.setItem('notifiedTasks', JSON.stringify([...notifiedTasks]));
+                
+            } catch (e) {
+                console.error('Notification error:', e);
+            }
+        }
+        
+        // Start checking deadlines
+        function startNotificationChecker() {
+            if (notificationCheckInterval) return;
+            
+            // Check immediately
+            checkDeadlinesAndNotify();
+            
+            // Then check every 1 minute
+            notificationCheckInterval = setInterval(checkDeadlinesAndNotify, 60000);
+        }
+        
+        // Stop checking
+        function stopNotificationChecker() {
+            if (notificationCheckInterval) {
+                clearInterval(notificationCheckInterval);
+                notificationCheckInterval = null;
+            }
+        }
+        
+        // Update button state
+        function updateNotificationButton() {
+            const btn = document.getElementById('notificationToggleBtn');
+            if (!btn) return;
+            
+            if (notificationsEnabled) {
+                btn.innerHTML = '<i data-lucide="bell-off" class="icon"></i> Вимкнути сповіщення';
+                btn.classList.add('btn-warning');
+                btn.classList.remove('btn-success');
+            } else {
+                btn.innerHTML = '<i data-lucide="bell" class="icon"></i> Увімкнути сповіщення';
+                btn.classList.remove('btn-warning');
+                btn.classList.add('btn-success');
+            }
+            refreshIcons();
+        }
+        
+        // Clear old notifications daily
+        function clearOldNotifications() {
+            const today = new Date().toISOString().split('T')[0];
+            const lastClear = localStorage.getItem('lastNotificationClear');
+            
+            if (lastClear !== today) {
+                // Keep only overdue notifications
+                const filtered = [...notifiedTasks].filter(key => key.includes('-overdue'));
+                notifiedTasks = new Set(filtered);
+                localStorage.setItem('notifiedTasks', JSON.stringify(filtered));
+                localStorage.setItem('lastNotificationClear', today);
+            }
+        }
+        
+        // Init notifications on load
+        document.addEventListener('DOMContentLoaded', () => {
+            clearOldNotifications();
+            
+            if (notificationsEnabled && Notification.permission === 'granted') {
+                startNotificationChecker();
+            } else if (notificationsEnabled) {
+                // Permission was revoked
+                notificationsEnabled = false;
+                localStorage.setItem('notificationsEnabled', 'false');
+            }
+            
+            updateNotificationButton();
+        });
     </script>
+    
+    <!-- Bottom Navigation for Mobile -->
+    <nav class="bottom-nav" id="bottomNav">
+        <div class="bottom-nav-items">
+            <button class="bottom-nav-btn active" onclick="switchTab('tasks')" data-tab="tasks">
+                <i data-lucide="clipboard-list" class="icon"></i>
+                <span data-i18n="tabTasks">Завдання</span>
+            </button>
+            <button class="bottom-nav-btn" onclick="switchTab('control')" data-tab="control">
+                <i data-lucide="layout-dashboard" class="icon"></i>
+                <span data-i18n="tabControl">Контроль</span>
+            </button>
+            <button class="bottom-nav-btn" onclick="switchTab('regular')" data-tab="regular">
+                <i data-lucide="repeat" class="icon"></i>
+                <span data-i18n="tabRegular">Регулярні</span>
+            </button>
+            <button class="bottom-nav-btn" onclick="switchTab('users')" data-tab="users">
+                <i data-lucide="users" class="icon"></i>
+                <span data-i18n="tabUsers">Команда</span>
+            </button>
+            <button class="bottom-nav-btn" onclick="openMobileMenu()" data-tab="more">
+                <i data-lucide="more-horizontal" class="icon"></i>
+                <span>Ще</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- FAB for adding tasks -->
+    <button class="fab-add" onclick="openTaskModal()" id="fabAdd" style="display:none;">
+        <i data-lucide="plus" class="icon"></i>
+    </button>
+    
+    <!-- Mobile Filter Modal -->
+    <div class="modal" id="filterModal">
+        <div class="modal-content" style="max-width:400px;margin-top:auto;margin-bottom:0;border-radius:16px 16px 0 0;padding:0;">
+            <div class="filter-modal-header">
+                <h3><i data-lucide="sliders" class="icon icon-sm"></i> Фільтри</h3>
+                <button onclick="closeFilterModal()" style="background:none;border:none;cursor:pointer;padding:0.5rem;">
+                    <i data-lucide="x" class="icon"></i>
+                </button>
+            </div>
+            
+            <div class="filter-modal-content">
+                <div class="filter-section">
+                    <div class="filter-section-title">Тип завдань</div>
+                    <div class="filter-chips" id="filterTypeChips">
+                        <div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, 'type')">Всі</div>
+                        <div class="filter-chip" data-value="my" onclick="selectFilterChip(this, 'type')">Мої завдання</div>
+                        <div class="filter-chip" data-value="created" onclick="selectFilterChip(this, 'type')">Створені мною</div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-section-title">Дата</div>
+                    <div class="filter-chips" id="filterDateChips">
+                        <div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, 'date')">Всі</div>
+                        <div class="filter-chip" data-value="overdue" onclick="selectFilterChip(this, 'date')">🔴 Прострочені</div>
+                        <div class="filter-chip" data-value="today" onclick="selectFilterChip(this, 'date')">Сьогодні</div>
+                        <div class="filter-chip" data-value="week" onclick="selectFilterChip(this, 'date')">Цей тиждень</div>
+                        <div class="filter-chip" data-value="month" onclick="selectFilterChip(this, 'date')">Цей місяць</div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-section-title">Статус</div>
+                    <div class="filter-chips" id="filterStatusChips">
+                        <div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, 'status')">Всі</div>
+                        <div class="filter-chip" data-value="new" onclick="selectFilterChip(this, 'status')">Нові</div>
+                        <div class="filter-chip" data-value="progress" onclick="selectFilterChip(this, 'status')">В роботі</div>
+                        <div class="filter-chip" data-value="review" onclick="selectFilterChip(this, 'status')">Перевірка</div>
+                        <div class="filter-chip" data-value="done" onclick="selectFilterChip(this, 'status')">Готово</div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-section-title">Функція</div>
+                    <div class="filter-chips" id="filterFunctionChips">
+                        <div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, 'function')">Всі</div>
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-section-title">Виконавець</div>
+                    <div class="filter-chips" id="filterAssigneeChips">
+                        <div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, 'assignee')">Всі</div>
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filter-modal-footer">
+                <button class="btn" onclick="clearAllFilters()">
+                    <i data-lucide="x" class="icon icon-sm"></i> Очистити
+                </button>
+                <button class="btn btn-success" onclick="applyFiltersAndClose()">
+                    <i data-lucide="check" class="icon icon-sm"></i> Застосувати
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile More Menu Modal -->
+    <div class="modal" id="mobileMenuModal">
+        <div class="modal-content" style="max-width:320px;margin-top:auto;margin-bottom:0;border-radius:16px 16px 0 0;">
+            <div style="padding:1rem;">
+                <h3 style="margin-bottom:1rem;text-align:center;">Меню</h3>
+                <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                    <button class="btn" onclick="switchTab('functions');closeMobileMenu();" style="justify-content:flex-start;">
+                        <i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span>
+                    </button>
+                    <button class="btn" onclick="switchTab('analytics');closeMobileMenu();" style="justify-content:flex-start;">
+                        <i data-lucide="bar-chart-3" class="icon"></i> <span data-i18n="tabAnalytics">Аналітика</span>
+                    </button>
+                    <button class="btn" onclick="openProfileModal();closeMobileMenu();" style="justify-content:flex-start;">
+                        <i data-lucide="user" class="icon"></i> Профіль
+                    </button>
+                    <button id="notificationToggleBtn" class="btn btn-success" onclick="toggleNotifications();closeMobileMenu();" style="justify-content:flex-start;">
+                        <i data-lucide="bell" class="icon"></i> Увімкнути сповіщення
+                    </button>
+                    <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+                        <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;" id="mLangUA">🇺🇦 UA</button>
+                        <button class="btn" onclick="setLanguage('ru');closeMobileMenu();" style="flex:1;" id="mLangRU">RU</button>
+                    </div>
+                    <button class="btn btn-danger" onclick="auth.signOut();closeMobileMenu();" style="justify-content:flex-start;margin-top:0.5rem;">
+                        <i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Mobile menu functions
+        function openMobileMenu() {
+            document.getElementById('mobileMenuModal').style.display = 'flex';
+            refreshIcons();
+        }
+        
+        function closeMobileMenu() {
+            document.getElementById('mobileMenuModal').style.display = 'none';
+        }
+        
+        // =====================
+        // MOBILE FILTERS
+        // =====================
+        let mobileFilters = {
+            type: '',
+            date: '',
+            status: '',
+            function: '',
+            assignee: ''
+        };
+        
+        function openFilterModal() {
+            const modal = document.getElementById('filterModal');
+            modal.style.display = 'flex';
+            
+            // Populate function chips
+            const funcContainer = document.getElementById('filterFunctionChips');
+            funcContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'function\')">Всі</div>';
+            functions.forEach(f => {
+                const selected = mobileFilters.function === f.name ? 'selected' : '';
+                funcContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${f.name}" onclick="selectFilterChip(this, 'function')">${f.name}</div>`;
+            });
+            
+            // Populate assignee chips
+            const assigneeContainer = document.getElementById('filterAssigneeChips');
+            assigneeContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'assignee\')">Всі</div>';
+            users.forEach(u => {
+                const name = u.name || u.email.split('@')[0];
+                const selected = mobileFilters.assignee === u.id ? 'selected' : '';
+                assigneeContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${u.id}" onclick="selectFilterChip(this, 'assignee')">${name}</div>`;
+            });
+            
+            // Sync current filters
+            syncFilterChips();
+            refreshIcons();
+        }
+        
+        function closeFilterModal() {
+            document.getElementById('filterModal').style.display = 'none';
+        }
+        
+        function selectFilterChip(chip, category) {
+            // Remove selected from siblings
+            chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            mobileFilters[category] = chip.dataset.value;
+        }
+        
+        function syncFilterChips() {
+            // Sync type
+            document.querySelectorAll('#filterTypeChips .filter-chip').forEach(c => {
+                c.classList.toggle('selected', c.dataset.value === mobileFilters.type);
+            });
+            // Sync date
+            document.querySelectorAll('#filterDateChips .filter-chip').forEach(c => {
+                c.classList.toggle('selected', c.dataset.value === mobileFilters.date);
+            });
+            // Sync status
+            document.querySelectorAll('#filterStatusChips .filter-chip').forEach(c => {
+                c.classList.toggle('selected', c.dataset.value === mobileFilters.status);
+            });
+        }
+        
+        function applyFiltersAndClose() {
+            // Apply filters to desktop selects
+            document.getElementById('taskTypeFilter').value = mobileFilters.type;
+            document.getElementById('dateFilter').value = mobileFilters.date;
+            document.getElementById('statusFilter').value = mobileFilters.status;
+            document.getElementById('functionFilter').value = mobileFilters.function;
+            document.getElementById('assigneeFilter').value = mobileFilters.assignee;
+            
+            // Update filter count badge
+            updateFilterCount();
+            
+            // Update quick filter buttons
+            updateQuickFilterButtons();
+            
+            renderTasks();
+            closeFilterModal();
+        }
+        
+        function clearAllFilters() {
+            mobileFilters = { type: '', date: '', status: '', function: '', assignee: '' };
+            document.querySelectorAll('.filter-chip').forEach(c => {
+                c.classList.toggle('selected', c.dataset.value === '');
+            });
+            applyFiltersAndClose();
+        }
+        
+        function updateFilterCount() {
+            const count = Object.values(mobileFilters).filter(v => v !== '').length;
+            const badge = document.getElementById('activeFilterCount');
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+        
+        function setMobileQuickFilter(filter) {
+            // Toggle behavior
+            if (filter === 'my') {
+                mobileFilters.type = mobileFilters.type === 'my' ? '' : 'my';
+                mobileFilters.date = '';
+            } else if (filter === 'today') {
+                mobileFilters.date = mobileFilters.date === 'today' ? '' : 'today';
+                mobileFilters.type = '';
+            }
+            
+            // Apply to desktop filters
+            document.getElementById('taskTypeFilter').value = mobileFilters.type;
+            document.getElementById('dateFilter').value = mobileFilters.date;
+            
+            updateQuickFilterButtons();
+            updateFilterCount();
+            renderTasks();
+        }
+        
+        function updateQuickFilterButtons() {
+            document.querySelectorAll('.mobile-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (mobileFilters.type === 'my') {
+                document.querySelector('.mobile-filter-btn[onclick*="my"]')?.classList.add('active');
+            }
+            if (mobileFilters.date === 'today') {
+                document.querySelector('.mobile-filter-btn[onclick*="today"]')?.classList.add('active');
+            }
+        }
+        
+        // Update bottom nav active state
+        const originalSwitchTab = window.switchTab;
+        window.switchTab = function(tab) {
+            originalSwitchTab(tab);
+            
+            // Update bottom nav
+            document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tab) {
+                    btn.classList.add('active');
+                }
+            });
+        };
+        
+        // Show FAB when logged in
+        auth.onAuthStateChanged(user => {
+            const fab = document.getElementById('fabAdd');
+            const bottomNav = document.getElementById('bottomNav');
+            if (user && fab) {
+                fab.style.display = 'flex';
+            } else if (fab) {
+                fab.style.display = 'none';
+            }
+        });
+        
+        // =====================
+        // SWIPE BETWEEN TABS
+        // =====================
+        const mobileTabs = ['tasks', 'control', 'regular', 'users'];
+        let tabSwipeStartX = 0;
+        let tabSwipeStartY = 0;
+        let isTabSwiping = false;
+        
+        function initTabSwipeGestures() {
+            const mainInterface = document.getElementById('mainInterface');
+            if (!mainInterface) return;
+            
+            mainInterface.addEventListener('touchstart', (e) => {
+                // Ignore if swiping on a task card or modal
+                if (e.target.closest('.mobile-task-card') || 
+                    e.target.closest('.modal') ||
+                    e.target.closest('.filter-chips') ||
+                    e.target.closest('input') ||
+                    e.target.closest('select') ||
+                    e.target.closest('button')) {
+                    return;
+                }
+                
+                tabSwipeStartX = e.touches[0].clientX;
+                tabSwipeStartY = e.touches[0].clientY;
+                isTabSwiping = true;
+            }, { passive: true });
+            
+            mainInterface.addEventListener('touchmove', (e) => {
+                if (!isTabSwiping) return;
+                
+                const diffX = e.touches[0].clientX - tabSwipeStartX;
+                const diffY = e.touches[0].clientY - tabSwipeStartY;
+                
+                // If scrolling vertically, cancel swipe
+                if (Math.abs(diffY) > Math.abs(diffX)) {
+                    isTabSwiping = false;
+                }
+            }, { passive: true });
+            
+            mainInterface.addEventListener('touchend', (e) => {
+                if (!isTabSwiping) return;
+                isTabSwiping = false;
+                
+                const diffX = e.changedTouches[0].clientX - tabSwipeStartX;
+                const threshold = 80;
+                
+                // Get current tab
+                const activeTab = document.querySelector('.tab-content.active');
+                if (!activeTab) return;
+                
+                const currentTabId = activeTab.id.replace('Tab', '');
+                const currentIndex = mobileTabs.indexOf(currentTabId);
+                
+                if (currentIndex === -1) return;
+                
+                // Swipe right = previous tab
+                if (diffX > threshold && currentIndex > 0) {
+                    const prevTab = mobileTabs[currentIndex - 1];
+                    switchTab(prevTab);
+                    showTabSwipeIndicator('←');
+                }
+                
+                // Swipe left = next tab
+                if (diffX < -threshold && currentIndex < mobileTabs.length - 1) {
+                    const nextTab = mobileTabs[currentIndex + 1];
+                    switchTab(nextTab);
+                    showTabSwipeIndicator('→');
+                }
+            });
+        }
+        
+        function showTabSwipeIndicator(direction) {
+            // Brief visual feedback
+            const indicator = document.createElement('div');
+            indicator.className = 'tab-swipe-indicator';
+            indicator.textContent = direction;
+            document.body.appendChild(indicator);
+            
+            setTimeout(() => indicator.remove(), 300);
+        }
+        
+        // Init on load
+        document.addEventListener('DOMContentLoaded', initTabSwipeGestures);
+        
+        // =====================
+        // OFFLINE SUPPORT
+        // =====================
+        let offlineData = {
+            tasks: [],
+            functions: [],
+            users: [],
+            regularTasks: []
+        };
+        
+        // Save data to localStorage for offline access
+        function saveOfflineData() {
+            offlineData = {
+                tasks: tasks,
+                functions: functions,
+                users: users,
+                regularTasks: regularTasks,
+                lastSync: new Date().toISOString()
+            };
+            localStorage.setItem('offlineData', JSON.stringify(offlineData));
+        }
+        
+        // Load offline data
+        function loadOfflineData() {
+            const saved = localStorage.getItem('offlineData');
+            if (saved) {
+                offlineData = JSON.parse(saved);
+                return true;
+            }
+            return false;
+        }
+        
+        // Check online status
+        function isOnline() {
+            return navigator.onLine;
+        }
+        
+        // Show offline indicator
+        function updateOnlineStatus() {
+            let indicator = document.getElementById('offlineIndicator');
+            
+            if (!isOnline()) {
+                if (!indicator) {
+                    indicator = document.createElement('div');
+                    indicator.id = 'offlineIndicator';
+                    indicator.className = 'offline-indicator';
+                    indicator.innerHTML = '<i data-lucide="wifi-off" class="icon icon-sm"></i> Офлайн режим';
+                    document.body.appendChild(indicator);
+                    refreshIcons();
+                }
+                indicator.classList.add('visible');
+                
+                // Load offline data
+                if (loadOfflineData() && offlineData.tasks.length) {
+                    tasks = offlineData.tasks;
+                    functions = offlineData.functions;
+                    users = offlineData.users;
+                    regularTasks = offlineData.regularTasks;
+                    renderTasks();
+                }
+            } else {
+                if (indicator) {
+                    indicator.classList.remove('visible');
+                }
+            }
+        }
+        
+        // Auto-save data when loaded
+        const originalLoadAllData = window.loadAllData;
+        if (originalLoadAllData) {
+            window.loadAllData = async function() {
+                const result = await originalLoadAllData();
+                if (isOnline()) {
+                    saveOfflineData();
+                }
+                return result;
+            };
+        }
+        
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            updateOnlineStatus();
+            // Reload fresh data
+            if (typeof loadAllData === 'function') {
+                loadAllData();
+            }
+        });
+        
+        window.addEventListener('offline', updateOnlineStatus);
+        
+        // Check on load
+        document.addEventListener('DOMContentLoaded', updateOnlineStatus);
+        
+        // Periodic save (every 30 seconds)
+        setInterval(() => {
+            if (isOnline() && tasks.length > 0) {
+                saveOfflineData();
+            }
+        }, 30000);
+    </script>
+    
+    <style>
+        /* Tab swipe indicator */
+        .tab-swipe-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: var(--success);
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fadeOut 0.3s forwards;
+            z-index: 9999;
+        }
+        
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+        }
+        
+        /* Offline indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            background: #ff9800;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 9998;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .offline-indicator.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        @media (min-width: 768px) {
+            .tab-swipe-indicator { display: none; }
+        }
+    </style>
 </body>
 </html>
