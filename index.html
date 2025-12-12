@@ -7,6 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -26,6 +27,28 @@
             --radius: 12px;
             --radius-sm: 8px;
         }
+        
+        /* SVG Icon styles */
+        .icon {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            vertical-align: middle;
+        }
+        .icon svg {
+            width: 100%;
+            height: 100%;
+            stroke-width: 2;
+        }
+        .icon-sm { width: 14px; height: 14px; }
+        .icon-lg { width: 22px; height: 22px; }
+        .icon-xl { width: 28px; height: 28px; }
+        
+        .btn .icon, .tab-btn .icon { margin-right: 6px; }
+        .action-btn .icon { margin: 0; }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
@@ -929,25 +952,25 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                🚀 TALKO System
+                <i data-lucide="rocket" class="icon"></i> TALKO System
                 <span class="company-badge" id="companyBadge" style="display:none;"></span>
             </div>
             <div class="header-actions">
                 <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="header-ai-btn" title="Питання до керівника">
-                    🎯 <span data-i18n="radarAI">Керівник</span>
+                    <i data-lucide="target" class="icon"></i> <span data-i18n="radarAI">Керівник</span>
                 </a>
                 <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="header-ai-btn tech" title="Помічник">
-                    🔧 <span data-i18n="techAI">Помічник</span>
+                    <i data-lucide="wrench" class="icon"></i> <span data-i18n="techAI">Помічник</span>
                 </a>
                 <div class="lang-switcher">
                     <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
                     <button class="lang-btn" onclick="setLanguage('ru')" id="langRU">RU</button>
                 </div>
                 <div class="user-info" id="currentUserInfo">
-                    <span>👤 <span id="currentUserName">...</span></span>
+                    <span><i data-lucide="user" class="icon"></i> <span id="currentUserName">...</span></span>
                     <span id="currentUserRole" style="opacity:0.8;font-size:0.8rem;"></span>
                 </div>
-                <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;" data-i18n="logout">🚪 Вийти</button>
+                <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;"><i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span></button>
             </div>
         </div>
     </header>
@@ -962,7 +985,7 @@
         <div id="authPage" class="auth-container" style="display:none;">
             <div class="auth-card">
                 <div class="auth-header">
-                    <h2>🚀 TALKO System</h2>
+                    <h2><i data-lucide="rocket" class="icon icon-lg"></i> TALKO System</h2>
                     <p data-i18n="authSubtitle">Управління завданнями для бізнесу</p>
                 </div>
                 <div class="auth-body">
@@ -970,10 +993,10 @@
                     
                     <!-- NO ACCESS -->
                     <div id="noAccessCard" class="no-access-card" style="display:none;">
-                        <h3 data-i18n="noAccessTitle">🚫 Доступ відсутній</h3>
+                        <h3 data-i18n="noAccessTitle"><i data-lucide="ban" class="icon"></i> Доступ відсутній</h3>
                         <p data-i18n="noAccessText">Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.</p>
-                        <a href="https://alextalko.com" target="_blank" class="btn btn-success" data-i18n="contactSupport">📞 Зв'язатися з підтримкою</a>
-                        <button onclick="logout()" class="btn" style="margin-top:0.5rem;" data-i18n="tryAnotherEmail">🔄 Спробувати інший email</button>
+                        <a href="https://alextalko.com" target="_blank" class="btn btn-success"><i data-lucide="phone" class="icon"></i> <span data-i18n="contactSupport">Зв'язатися з підтримкою</span></a>
+                        <button onclick="logout()" class="btn" style="margin-top:0.5rem;"><i data-lucide="refresh-cw" class="icon"></i> <span data-i18n="tryAnotherEmail">Спробувати інший email</span></button>
                     </div>
                     
                     <!-- LOGIN FORM -->
@@ -993,18 +1016,18 @@
                             <label class="form-label" data-i18n="password">Пароль:</label>
                             <div class="input-wrapper">
                                 <input type="password" id="loginPassword" class="form-input" placeholder="••••••••">
-                                <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+                                <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)"><i data-lucide="eye" class="icon icon-sm"></i></button>
                             </div>
                         </div>
-                        <button onclick="signInWithEmail()" class="btn btn-success" style="width:100%;margin-top:1rem;" data-i18n="signIn">
-                            🔐 Увійти
+                        <button onclick="signInWithEmail()" class="btn btn-success" style="width:100%;margin-top:1rem;">
+                            <i data-lucide="log-in" class="icon"></i> <span data-i18n="signIn">Увійти</span>
                         </button>
                         <p style="text-align:center;margin-top:0.75rem;font-size:0.85rem;">
                             <a href="#" onclick="resetPassword()" style="color:var(--info);" data-i18n="forgotPassword">Забули пароль?</a>
                         </p>
                         <div class="auth-divider"><span data-i18n="haveInvite">Є запрошення?</span></div>
-                        <button onclick="showRegisterForm()" class="btn" style="width:100%;background:#9b59b6;" data-i18n="registerBtn">
-                            📝 Зареєструватися
+                        <button onclick="showRegisterForm()" class="btn" style="width:100%;background:#9b59b6;">
+                            <i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerBtn">Зареєструватися</span>
                         </button>
                         <p style="text-align:center;margin-top:1rem;font-size:0.8rem;color:var(--gray);">
                             <span data-i18n="noAccess">Немає доступу?</span> <a href="https://alextalko.com" target="_blank" style="color:var(--info);" data-i18n="contactUs">Зв'яжіться з нами</a>
@@ -1013,7 +1036,7 @@
                     
                     <!-- REGISTER FORM -->
                     <div id="registerForm" style="display:none;">
-                        <h3 style="text-align:center;margin-bottom:1rem;color:var(--dark);" data-i18n="registerTitle">📝 Реєстрація за запрошенням</h3>
+                        <h3 style="text-align:center;margin-bottom:1rem;color:var(--dark);"><i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerTitle">Реєстрація за запрошенням</span></h3>
                         <div class="form-group">
                             <label class="form-label">Email:</label>
                             <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com">
@@ -1022,18 +1045,18 @@
                             <label class="form-label" data-i18n="createPassword">Придумайте пароль:</label>
                             <div class="input-wrapper">
                                 <input type="password" id="registerPassword" class="form-input" placeholder="мінімум 6 символів">
-                                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)">👁️</button>
+                                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)"><i data-lucide="eye" class="icon icon-sm"></i></button>
                             </div>
                         </div>
                         <div class="form-group" style="margin-top:0.75rem;">
                             <label class="form-label" data-i18n="confirmPassword">Підтвердіть пароль:</label>
                             <div class="input-wrapper">
                                 <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="••••••••">
-                                <button type="button" class="password-toggle" onclick="togglePassword('registerPasswordConfirm', this)">👁️</button>
+                                <button type="button" class="password-toggle" onclick="togglePassword('registerPasswordConfirm', this)"><i data-lucide="eye" class="icon icon-sm"></i></button>
                             </div>
                         </div>
-                        <button onclick="registerWithInvite()" class="btn btn-success" style="width:100%;margin-top:1rem;" data-i18n="registerSubmit">
-                            ✅ Зареєструватися
+                        <button onclick="registerWithInvite()" class="btn btn-success" style="width:100%;margin-top:1rem;">
+                            <i data-lucide="check" class="icon"></i> <span data-i18n="registerSubmit">Зареєструватися</span>
                         </button>
                         <p style="text-align:center;margin-top:1rem;">
                             <a href="#" onclick="showLoginForm()" style="color:var(--info);" data-i18n="backToLogin">← Повернутися до входу</a>
@@ -1046,24 +1069,24 @@
         <!-- MAIN INTERFACE -->
         <div id="mainInterface" class="main-interface">
             <div class="tab-navigation">
-                <button class="tab-btn active" onclick="switchTab('tasks')" data-i18n="tabTasks">Завдання</button>
-                <button class="tab-btn" onclick="switchTab('control')" data-i18n="tabControl">Контроль</button>
-                <button class="tab-btn" onclick="switchTab('regular')" data-i18n="tabRegular">Регулярні</button>
-                <button class="tab-btn" onclick="switchTab('functions')" data-i18n="tabFunctions">Функції</button>
-                <button class="tab-btn" onclick="switchTab('users')" data-i18n="tabUsers">Співробітники</button>
-                <button class="tab-btn" onclick="switchTab('analytics')" data-i18n="tabAnalytics">Аналітика</button>
-                <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;" data-i18n="tabAdmin">🔧 Адмін</button>
+                <button class="tab-btn active" onclick="switchTab('tasks')"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
+                <button class="tab-btn" onclick="switchTab('control')"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
+                <button class="tab-btn" onclick="switchTab('regular')"><i data-lucide="repeat" class="icon"></i> <span data-i18n="tabRegular">Регулярні</span></button>
+                <button class="tab-btn" onclick="switchTab('functions')"><i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span></button>
+                <button class="tab-btn" onclick="switchTab('users')"><i data-lucide="users" class="icon"></i> <span data-i18n="tabUsers">Співробітники</span></button>
+                <button class="tab-btn" onclick="switchTab('analytics')"><i data-lucide="bar-chart-3" class="icon"></i> <span data-i18n="tabAnalytics">Аналітика</span></button>
+                <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;"><i data-lucide="shield" class="icon"></i> <span data-i18n="tabAdmin">Адмін</span></button>
             </div>
 
             <!-- TASKS -->
             <div id="tasksTab" class="tab-content active">
                 <div class="controls">
                     <div class="controls-row">
-                        <button class="btn btn-success" onclick="openTaskModal()" data-i18n="addTask">+ Додати завдання</button>
-                        <button class="btn" style="background:#2ecc71;" onclick="exportTasksCSV()">📊 Експорт CSV</button>
+                        <button class="btn btn-success" onclick="openTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addTask">Додати завдання</span></button>
+                        <button class="btn" style="background:#2ecc71;" onclick="exportTasksCSV()"><i data-lucide="download" class="icon"></i> Експорт CSV</button>
                     </div>
                     <div class="filters-row">
-                        <button class="btn btn-clear" onclick="clearTaskFilters()">🗑️ <span data-i18n="clear">Очистити</span></button>
+                        <button class="btn btn-clear" onclick="clearTaskFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
                         <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()">
                             <option value="" data-i18n="allTasks">Всі завдання</option>
                             <option value="my" data-i18n="myTasks">Мої завдання</option>
@@ -1109,34 +1132,34 @@
                     <select class="filter-select" id="controlAssigneeFilter" onchange="renderControl()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
                     <span style="display:flex;align-items:center;gap:0.3rem;">🏷️ <span data-i18n="functionLabel">Функція:</span></span>
                     <select class="filter-select" id="controlFunctionFilter" onchange="renderControl()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
-                    <span style="display:flex;align-items:center;gap:0.3rem;">📅 <span data-i18n="periodLabel">Період:</span></span>
+                    <span style="display:flex;align-items:center;gap:0.3rem;"><i data-lucide="calendar" class="icon"></i> <span data-i18n="periodLabel">Період:</span></span>
                     <select class="filter-select" id="controlPeriodFilter" onchange="renderControl()">
                         <option value="" data-i18n="allTime">Весь час</option>
                         <option value="today" data-i18n="today">Сьогодні</option>
                         <option value="week" data-i18n="thisWeek">Цей тиждень</option>
                         <option value="month" data-i18n="thisMonth">Цей місяць</option>
                     </select>
-                    <button class="btn btn-clear" onclick="clearControlFilters()">🗑️ <span data-i18n="clear">Очистити</span></button>
+                    <button class="btn btn-clear" onclick="clearControlFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
                 </div>
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
                     <div class="dashboard-cards">
                         <div class="dashboard-card urgent">
-                            <h3 data-i18n="critical">Критичні</h3>
+                            <h3><i data-lucide="alert-triangle" class="icon"></i> <span data-i18n="critical">Критичні</span></h3>
                             <div class="dashboard-number" id="urgentCount">0</div>
                             <div class="dashboard-subtitle" data-i18n="overdueLabel">Прострочені</div>
                         </div>
                         <div class="dashboard-card warning">
-                            <h3 data-i18n="attention">Увага</h3>
+                            <h3><i data-lucide="alert-circle" class="icon"></i> <span data-i18n="attention">Увага</span></h3>
                             <div class="dashboard-number" id="warningCount">0</div>
                             <div class="dashboard-subtitle" data-i18n="todayTomorrow">Сьогодні-завтра</div>
                         </div>
                         <div class="dashboard-card active">
-                            <h3 data-i18n="active">Активні</h3>
+                            <h3><i data-lucide="loader" class="icon"></i> <span data-i18n="active">Активні</span></h3>
                             <div class="dashboard-number" id="activeCount">0</div>
                             <div class="dashboard-subtitle" data-i18n="inWork">В роботі</div>
                         </div>
                         <div class="dashboard-card completed">
-                            <h3 data-i18n="completed">Готово</h3>
+                            <h3><i data-lucide="check-circle" class="icon"></i> <span data-i18n="completed">Готово</span></h3>
                             <div class="dashboard-number" id="completedCount">0</div>
                             <div class="dashboard-subtitle" data-i18n="completedLabel">Завершені</div>
                         </div>
@@ -1157,7 +1180,7 @@
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
                 <div class="filters-row" style="background:white;padding:1rem;border-radius:12px;margin-bottom:1rem;box-shadow:var(--shadow);">
-                    <button class="btn btn-success" onclick="filterRegularToday()" id="regularTodayBtn">📅 <span data-i18n="todaysTasks">Сьогодні</span></button>
+                    <button class="btn btn-success" onclick="filterRegularToday()" id="regularTodayBtn"><i data-lucide="calendar-check" class="icon"></i> <span data-i18n="todaysTasks">Сьогодні</span></button>
                     <select class="filter-select" id="regularDayFilter" onchange="renderRegularTasks()">
                         <option value="" data-i18n="allDays">Всі дні</option>
                         <option value="1" data-i18n="monday">Понеділок</option>
@@ -1172,10 +1195,10 @@
                     <select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
                     <span style="display:flex;align-items:center;gap:0.3rem;">👤 <span data-i18n="assigneeLabel">Виконавець:</span></span>
                     <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
-                    <button class="btn btn-clear" onclick="clearRegularFilters()">🗑️ <span data-i18n="clear">Очистити</span></button>
+                    <button class="btn btn-clear" onclick="clearRegularFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
                 </div>
                 <div class="controls">
-                    <button class="btn btn-success" onclick="openRegularTaskModal()" data-i18n="addRegularTask">+ Регулярне завдання</button>
+                    <button class="btn btn-success" onclick="openRegularTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addRegularTask">Регулярне завдання</span></button>
                 </div>
                 <div class="table-container" id="regularTasksContainer">
                     <div class="loading"><div class="spinner"></div></div>
@@ -1196,7 +1219,7 @@
             <div id="usersTab" class="tab-content">
                 <div class="controls">
                     <button class="btn btn-success" onclick="openUserModal()" id="addUserBtn" data-i18n="addEmployee">+ Додати співробітника</button>
-                    <button class="btn btn-warning" onclick="openInviteModal()" id="inviteBtn" data-i18n="invite">📤 Запросити</button>
+                    <button class="btn btn-warning" onclick="openInviteModal()" id="inviteBtn"><i data-lucide="user-plus" class="icon"></i> <span data-i18n="invite">Запросити</span></button>
                 </div>
                 <div id="usersContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
@@ -1234,10 +1257,10 @@
             <!-- ADMIN (only for superadmin) -->
             <div id="adminTab" class="tab-content">
                 <div class="controls" style="background:linear-gradient(135deg,#fee2e2,#fecaca);">
-                    <h2 style="font-size:1.1rem;color:#dc2626;" data-i18n="adminPanel">🔧 Адмін-панель TALKO</h2>
+                    <h2 style="font-size:1.1rem;color:#dc2626;"><i data-lucide="shield" class="icon"></i> <span data-i18n="adminPanel">Адмін-панель TALKO</span></h2>
                 </div>
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);margin-bottom:1rem;">
-                    <h3 style="margin-bottom:1rem;" data-i18n="createCompany">➕ Створити нову компанію</h3>
+                    <h3 style="margin-bottom:1rem;"><i data-lucide="plus" class="icon"></i> <span data-i18n="createCompany">Створити нову компанію</span></h3>
                     <form id="adminCreateForm" onsubmit="adminCreateCompany(event)">
                         <div class="form-grid">
                             <div class="form-group">
@@ -1257,11 +1280,11 @@
                                 <input type="text" id="adminCompanyName" class="form-input" placeholder="ТОВ Компанія" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success" style="margin-top:1rem;" id="adminCreateBtn" data-i18n="createCompanyBtn">🚀 Створити компанію та Owner</button>
+                        <button type="submit" class="btn btn-success" style="margin-top:1rem;" id="adminCreateBtn"><i data-lucide="rocket" class="icon"></i> <span data-i18n="createCompanyBtn">Створити компанію та Owner</span></button>
                     </form>
                 </div>
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
-                    <h3 style="margin-bottom:1rem;" data-i18n="allCompanies">📋 Всі компанії</h3>
+                    <h3 style="margin-bottom:1rem;"><i data-lucide="list" class="icon"></i> <span data-i18n="allCompanies">Всі компанії</span></h3>
                     <div id="adminCompaniesContainer">
                         <div class="loading"><div class="spinner"></div></div>
                     </div>
@@ -1326,7 +1349,7 @@
                         <div class="form-group"><label class="form-label" data-i18n="timeOfDay">Час виконання *</label><input type="time" id="regularTaskTime" class="form-input" value="10:00" required></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="regularTaskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="instruction">📋 Інструкція (необов'язково)</label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
+                        <div class="form-group full-width"><label class="form-label"><i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="instruction">Інструкція (необов'язково)</span></label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
                         <div class="form-group full-width">
                             <div class="info-box" style="background:#e8f5e9;padding:0.75rem;border-radius:8px;font-size:0.85rem;">
                                 💡 <span data-i18n="functionAssigneeHint">Виконавці беруться автоматично з обраної функції. Хто в функції — той і виконує.</span>
@@ -1341,7 +1364,7 @@
 
     <div id="inviteModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><span class="close" onclick="closeModal('inviteModal')">&times;</span><h2 data-i18n="inviteTitle">📤 Запрошення</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('inviteModal')">&times;</span><h2 data-i18n="inviteTitle">Запрошення</h2></div>
             <div class="modal-body">
                 <form id="inviteForm" onsubmit="sendInvite(event)">
                     <div class="form-group">
@@ -1357,7 +1380,7 @@
                         <input type="text" id="inviteLinkText" class="form-input" readonly style="font-size:0.8rem;">
                         <button type="button" onclick="copyInviteLink()" class="btn btn-small" style="margin-top:0.5rem;" data-i18n="copy">📋 Копіювати</button>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('inviteModal')" data-i18n="close">Закрити</button><button type="submit" class="btn btn-success" data-i18n="createInvite">📤 Створити запрошення</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('inviteModal')" data-i18n="close">Закрити</button><button type="submit" class="btn btn-success"><i data-lucide="send" class="icon"></i> <span data-i18n="createInvite">Створити запрошення</span></button></div>
                 </form>
             </div>
         </div>
@@ -1428,23 +1451,23 @@
                 noAccessTitle: '🚫 Доступ відсутній',
                 noAccessText: "Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.",
                 contactSupport: "📞 Зв'язатися з підтримкою",
-                tryAnotherEmail: '🔄 Спробувати інший email',
+                tryAnotherEmail: 'Спробувати інший email',
                 haveInvite: 'Є запрошення?',
-                registerBtn: '📝 Зареєструватися',
-                registerTitle: '📝 Реєстрація за запрошенням',
+                registerBtn: 'Зареєструватися',
+                registerTitle: 'Реєстрація за запрошенням',
                 createPassword: 'Придумайте пароль:',
                 confirmPassword: 'Підтвердіть пароль:',
-                registerSubmit: '✅ Зареєструватися',
+                registerSubmit: 'Зареєструватися',
                 backToLogin: '← Повернутися до входу',
-                logout: '🚪 Вийти',
+                logout: 'Вийти',
                 
                 // Tabs
-                tabTasks: '📋 Завдання',
-                tabControl: '📊 Контроль',
-                tabRegular: '🔄 Регулярні',
-                tabFunctions: '⚙️ Функції',
+                tabTasks: 'Завдання',
+                tabControl: 'Контроль',
+                tabRegular: 'Регулярні',
+                tabFunctions: 'Функції',
                 tabTeam: '👥 Команда',
-                tabAdmin: '🔧 Адмін',
+                tabAdmin: 'Адмін',
                 
                 // Tasks
                 addTask: '+ Завдання',
@@ -1489,11 +1512,11 @@
                 priorityHigh: 'Високий',
                 
                 // Control
-                controlPanel: '📊 Панель контролю',
-                critical: '🚨 Критичні',
-                attention: '⚠️ Увага',
-                active: '🔄 Активні',
-                completed: '✅ Готово',
+                controlPanel: 'Панель контролю',
+                critical: 'Критичні',
+                attention: 'Увага',
+                active: 'Активні',
+                completed: 'Готово',
                 workload: '👥 Навантаження',
                 noActiveTasks: 'Немає активних завдань',
                 
@@ -1515,12 +1538,12 @@
                 friday: "П'ятниця",
                 saturday: 'Субота',
                 sunday: 'Неділя',
-                instruction: '📋 Інструкція (необов\'язково)',
+                instruction: 'Інструкція (необов\'язково)',
                 allPeriods: 'Всі періоди',
                 assignees: '👥 Виконавці',
                 selectFunctionFirst: 'Спочатку оберіть функцію',
                 noMembers: 'Немає учасників',
-                create: '⚡ Створити',
+                create: 'Створити',
                 radarAI: 'Керівник',
                 techAI: 'Помічник',
                 
@@ -1532,8 +1555,8 @@
                 tasks: 'завдань',
                 
                 // Team
-                invite: '📤 Запросити',
-                inviteTitle: '📤 Запрошення',
+                invite: 'Запросити',
+                inviteTitle: 'Запрошення',
                 employeeEmail: 'Email співробітника *',
                 role: 'Роль',
                 roleOwner: 'Власник',
@@ -1541,23 +1564,23 @@
                 roleEmployee: 'Співробітник',
                 inviteLinkLabel: 'Посилання для входу:',
                 copy: '📋 Копіювати',
-                createInvite: '📤 Створити запрошення',
+                createInvite: 'Створити запрошення',
                 
                 // Admin
-                adminPanel: '🔧 Адмін-панель TALKO',
-                createCompany: '➕ Створити нову компанію',
+                adminPanel: 'Адмін-панель TALKO',
+                createCompany: 'Створити нову компанію',
                 ownerEmail: 'Email власника *',
                 passwordLabel: 'Пароль *',
                 ownerName: "Ім'я власника *",
                 companyName: 'Назва компанії *',
-                createCompanyBtn: '🚀 Створити компанію та Owner',
-                allCompanies: '📋 Всі компанії',
+                createCompanyBtn: 'Створити компанію та Owner',
+                allCompanies: 'Всі компанії',
                 users: 'користувачів',
                 
                 // Empty states
-                noTasks: '📋 Завдань немає',
+                noTasks: 'Завдань немає',
                 createFirstTask: 'Створіть перше завдання',
-                noFunctions: '⚙️ Функцій немає',
+                noFunctions: 'Функцій немає',
                 functionAssigneeHint: 'Виконавці беруться автоматично з обраної функції. Хто в функції — той і виконує.',
                 people: 'осіб',
                 createFirstFunction: 'Створіть першу функцію',
@@ -1577,7 +1600,7 @@
                 deleteConfirm: 'Видалити?',
                 error: 'Помилка',
                 created: 'створено',
-                copied: '📋 Посилання скопійовано!',
+                copied: 'Посилання скопійовано!',
                 
                 // New filters & analytics
                 clear: 'Очистити',
@@ -1653,23 +1676,23 @@
                 noAccessTitle: '🚫 Доступ отсутствует',
                 noAccessText: 'Ваш email не зарегистрирован в системе.<br>Обратитесь к администратору для получения доступа.',
                 contactSupport: '📞 Связаться с поддержкой',
-                tryAnotherEmail: '🔄 Попробовать другой email',
+                tryAnotherEmail: 'Попробовать другой email',
                 haveInvite: 'Есть приглашение?',
-                registerBtn: '📝 Зарегистрироваться',
-                registerTitle: '📝 Регистрация по приглашению',
+                registerBtn: 'Зарегистрироваться',
+                registerTitle: 'Регистрация по приглашению',
                 createPassword: 'Придумайте пароль:',
                 confirmPassword: 'Подтвердите пароль:',
-                registerSubmit: '✅ Зарегистрироваться',
+                registerSubmit: 'Зарегистрироваться',
                 backToLogin: '← Вернуться ко входу',
-                logout: '🚪 Выйти',
+                logout: 'Выйти',
                 
                 // Tabs
-                tabTasks: '📋 Задачи',
-                tabControl: '📊 Контроль',
-                tabRegular: '🔄 Регулярные',
-                tabFunctions: '⚙️ Функции',
+                tabTasks: 'Задачи',
+                tabControl: 'Контроль',
+                tabRegular: 'Регулярные',
+                tabFunctions: 'Функции',
                 tabTeam: '👥 Команда',
-                tabAdmin: '🔧 Админ',
+                tabAdmin: 'Админ',
                 
                 // Tasks
                 addTask: '+ Задача',
@@ -1714,11 +1737,11 @@
                 priorityHigh: 'Высокий',
                 
                 // Control
-                controlPanel: '📊 Панель контроля',
-                critical: '🚨 Критические',
-                attention: '⚠️ Внимание',
-                active: '🔄 Активные',
-                completed: '✅ Готово',
+                controlPanel: 'Панель контроля',
+                critical: 'Критические',
+                attention: 'Внимание',
+                active: 'Активные',
+                completed: 'Готово',
                 workload: '👥 Нагрузка',
                 noActiveTasks: 'Нет активных задач',
                 
@@ -1740,12 +1763,12 @@
                 friday: 'Пятница',
                 saturday: 'Суббота',
                 sunday: 'Воскресенье',
-                instruction: '📋 Инструкция (необязательно)',
+                instruction: 'Инструкция (необязательно)',
                 allPeriods: 'Все периоды',
                 assignees: '👥 Исполнители',
                 selectFunctionFirst: 'Сначала выберите функцию',
                 noMembers: 'Нет участников',
-                create: '⚡ Создать',
+                create: 'Создать',
                 radarAI: 'Руководитель',
                 techAI: 'Помощник',
                 
@@ -1757,8 +1780,8 @@
                 tasks: 'задач',
                 
                 // Team
-                invite: '📤 Пригласить',
-                inviteTitle: '📤 Приглашение',
+                invite: 'Пригласить',
+                inviteTitle: 'Приглашение',
                 employeeEmail: 'Email сотрудника *',
                 role: 'Роль',
                 roleOwner: 'Владелец',
@@ -1766,23 +1789,23 @@
                 roleEmployee: 'Сотрудник',
                 inviteLinkLabel: 'Ссылка для входа:',
                 copy: '📋 Копировать',
-                createInvite: '📤 Создать приглашение',
+                createInvite: 'Создать приглашение',
                 
                 // Admin
-                adminPanel: '🔧 Админ-панель TALKO',
-                createCompany: '➕ Создать новую компанию',
+                adminPanel: 'Админ-панель TALKO',
+                createCompany: 'Создать новую компанию',
                 ownerEmail: 'Email владельца *',
                 passwordLabel: 'Пароль *',
                 ownerName: 'Имя владельца *',
                 companyName: 'Название компании *',
-                createCompanyBtn: '🚀 Создать компанию и Owner',
-                allCompanies: '📋 Все компании',
+                createCompanyBtn: 'Создать компанию и Owner',
+                allCompanies: 'Все компании',
                 users: 'пользователей',
                 
                 // Empty states
-                noTasks: '📋 Задач нет',
+                noTasks: 'Задач нет',
                 createFirstTask: 'Создайте первую задачу',
-                noFunctions: '⚙️ Функций нет',
+                noFunctions: 'Функций нет',
                 functionAssigneeHint: 'Исполнители берутся автоматически из выбранной функции. Кто в функции — тот и выполняет.',
                 people: 'чел.',
                 createFirstFunction: 'Создайте первую функцию',
@@ -1802,7 +1825,7 @@
                 deleteConfirm: 'Удалить?',
                 error: 'Ошибка',
                 created: 'создано',
-                copied: '📋 Ссылка скопирована!',
+                copied: 'Ссылка скопирована!',
                 
                 // New filters & analytics
                 clear: 'Очистить',
@@ -3056,7 +3079,8 @@
             const todayDayName = days[new Date().getDay().toString()];
             const todayBtn = document.getElementById('regularTodayBtn');
             if (todayBtn) {
-                todayBtn.innerHTML = `📅 ${t('todaysTasks')} (${todayDayName})`;
+                todayBtn.innerHTML = `<i data-lucide="calendar-check" class="icon"></i> ${t('todaysTasks')} (${todayDayName})`;
+                refreshIcons();
             }
             
             if (filtered.length === 0) {
@@ -3708,9 +3732,26 @@
         }
 
         // Init language on load
+        // SVG Icon helper
+        function icon(name, size = '') {
+            const sizeClass = size ? ` icon-${size}` : '';
+            return `<i data-lucide="${name}" class="icon${sizeClass}"></i>`;
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             setLanguage(currentLang);
+            // Ініціалізуємо Lucide іконки
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
         });
+        
+        // Переініціалізація іконок після динамічного контенту
+        function refreshIcons() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
     </script>
 </body>
 </html>
