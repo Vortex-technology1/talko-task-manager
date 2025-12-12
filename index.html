@@ -1204,37 +1204,6 @@
                 animation: swipeHint 0.5s ease-in-out;
             }
             
-            /* Pull to refresh */
-            .pull-indicator {
-                position: fixed;
-                top: 60px;
-                left: 50%;
-                transform: translateX(-50%) translateY(-100%);
-                background: white;
-                padding: 0.75rem 1.5rem;
-                border-radius: 20px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                z-index: 998;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-size: 0.85rem;
-                color: #666;
-                transition: transform 0.3s;
-            }
-            
-            .pull-indicator.visible {
-                transform: translateX(-50%) translateY(0);
-            }
-            
-            .pull-indicator.loading .pull-icon {
-                animation: spin 1s linear infinite;
-            }
-            
-            @keyframes spin {
-                100% { transform: rotate(360deg); }
-            }
-            
             /* Mobile filter button */
             .mobile-filter-bar {
                 display: flex;
@@ -4527,71 +4496,6 @@
                 });
             });
         }
-        
-        // =====================
-        // PULL TO REFRESH
-        // =====================
-        let pullStartY = 0;
-        let isPulling = false;
-        let pullIndicator = null;
-        
-        function initPullToRefresh() {
-            const container = document.querySelector('.container');
-            if (!container) return;
-            
-            // Create pull indicator if not exists
-            if (!pullIndicator) {
-                pullIndicator = document.createElement('div');
-                pullIndicator.className = 'pull-indicator';
-                pullIndicator.innerHTML = '<i data-lucide="refresh-cw" class="icon pull-icon"></i> <span>Потягніть для оновлення</span>';
-                document.body.appendChild(pullIndicator);
-                refreshIcons();
-            }
-            
-            container.addEventListener('touchstart', (e) => {
-                if (window.scrollY === 0) {
-                    pullStartY = e.touches[0].clientY;
-                    isPulling = true;
-                }
-            }, { passive: true });
-            
-            container.addEventListener('touchmove', (e) => {
-                if (!isPulling || window.scrollY > 0) return;
-                
-                const pullDistance = e.touches[0].clientY - pullStartY;
-                
-                if (pullDistance > 50 && pullDistance < 150) {
-                    pullIndicator.classList.add('visible');
-                    pullIndicator.querySelector('span').textContent = 'Потягніть для оновлення';
-                } else if (pullDistance >= 150) {
-                    pullIndicator.querySelector('span').textContent = 'Відпустіть для оновлення';
-                }
-            }, { passive: true });
-            
-            container.addEventListener('touchend', () => {
-                if (!isPulling) return;
-                isPulling = false;
-                
-                const pullIndicatorVisible = pullIndicator.classList.contains('visible');
-                const readyToRefresh = pullIndicator.querySelector('span').textContent.includes('Відпустіть');
-                
-                if (pullIndicatorVisible && readyToRefresh) {
-                    pullIndicator.classList.add('loading');
-                    pullIndicator.querySelector('span').textContent = 'Оновлення...';
-                    
-                    loadAllData().then(() => {
-                        setTimeout(() => {
-                            pullIndicator.classList.remove('visible', 'loading');
-                        }, 500);
-                    });
-                } else {
-                    pullIndicator.classList.remove('visible');
-                }
-            });
-        }
-        
-        // Init pull to refresh when page loads
-        document.addEventListener('DOMContentLoaded', initPullToRefresh);
         
         // =====================
         // BROWSER NOTIFICATIONS
