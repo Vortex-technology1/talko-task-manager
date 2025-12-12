@@ -1963,11 +1963,57 @@
             document.getElementById('noAccessCard').style.display = 'block';
         }
 
+        let currentInviteData = null; // Дані поточного інвайту з URL
+        
+        // Перевірка інвайту в URL
+        async function checkInviteUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const inviteId = urlParams.get('invite');
+            
+            if (!inviteId) {
+                currentInviteData = null;
+                return false;
+            }
+            
+            try {
+                const inviteDoc = await db.collection('invites').doc(inviteId).get();
+                
+                if (!inviteDoc.exists) {
+                    showAuthMessage(currentLang === 'ua' ? '❌ Запрошення не знайдено або застаріло' : '❌ Приглашение не найдено или устарело', 'error');
+                    currentInviteData = null;
+                    return false;
+                }
+                
+                const invite = inviteDoc.data();
+                
+                if (invite.accepted) {
+                    currentInviteData = null;
+                    // Не показуємо помилку тут - покажемо форму входу з підказкою
+                    return 'already_used';
+                }
+                
+                currentInviteData = { id: inviteId, ...invite };
+                return true;
+            } catch (e) {
+                console.error('Error checking invite:', e);
+                currentInviteData = null;
+                return false;
+            }
+        }
+        
         function showLoginForm() {
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('noAccessCard').style.display = 'none';
             hideAuthMessage();
+            
+            // Скидаємо поля реєстрації
+            const emailField = document.getElementById('registerEmail');
+            emailField.value = '';
+            emailField.readOnly = false;
+            emailField.style.background = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerPasswordConfirm').value = '';
         }
         
         function showRegisterForm() {
@@ -1975,6 +2021,23 @@
             document.getElementById('registerForm').style.display = 'block';
             document.getElementById('noAccessCard').style.display = 'none';
             hideAuthMessage();
+            
+            // Скидаємо поля входу
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            
+            const emailField = document.getElementById('registerEmail');
+            
+            // Якщо є інвайт в URL — автозаповнюємо email
+            if (currentInviteData && currentInviteData.email) {
+                emailField.value = currentInviteData.email;
+                emailField.readOnly = true;
+                emailField.style.background = '#f0f0f0';
+            } else {
+                emailField.value = '';
+                emailField.readOnly = false;
+                emailField.style.background = '';
+            }
         }
         
         // Реєстрація за запрошенням
@@ -2000,15 +2063,27 @@
             }
             
             try {
-                // Перевіряємо чи є invite
-                const invitesQuery = await db.collection('invites')
-                    .where('email', '==', email)
-                    .where('accepted', '==', false)
-                    .limit(1)
-                    .get();
+                let inviteData = currentInviteData;
                 
-                if (invitesQuery.empty) {
-                    showAuthMessage(currentLang === 'ua' ? '❌ Запрошення для цього email не знайдено' : '❌ Приглашение для этого email не найдено', 'error');
+                // Якщо немає інвайту в URL, шукаємо по email
+                if (!inviteData) {
+                    const invitesQuery = await db.collection('invites')
+                        .where('email', '==', email)
+                        .where('accepted', '==', false)
+                        .limit(1)
+                        .get();
+                    
+                    if (invitesQuery.empty) {
+                        showAuthMessage(currentLang === 'ua' ? '❌ Запрошення для цього email не знайдено' : '❌ Приглашение для этого email не найдено', 'error');
+                        return;
+                    }
+                    
+                    inviteData = { id: invitesQuery.docs[0].id, ...invitesQuery.docs[0].data() };
+                }
+                
+                // Перевіряємо що email співпадає з інвайтом
+                if (inviteData.email.toLowerCase() !== email.toLowerCase()) {
+                    showAuthMessage(currentLang === 'ua' ? '❌ Email не співпадає з запрошенням' : '❌ Email не совпадает с приглашением', 'error');
                     return;
                 }
                 
@@ -2019,6 +2094,12 @@
                 const user = userCredential.user;
                 
                 // Invite буде оброблено в onAuthStateChanged через findUserCompany
+                // (там же додається користувач в компанію з правильною роллю)
+                
+                // Очищаємо URL від параметра invite
+                window.history.replaceState({}, document.title, window.location.pathname);
+                currentInviteData = null;
+                
                 showAuthMessage(currentLang === 'ua' ? '✅ Успішно зареєстровано!' : '✅ Успешно зарегистрировано!', 'success');
                 
             } catch (e) {
@@ -2211,7 +2292,18 @@
                 document.getElementById('mainInterface').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 document.getElementById('adminTabBtn').style.display = 'none';
-                showLoginForm();
+                
+                // Перевіряємо чи є інвайт в URL
+                checkInviteUrl().then(result => {
+                    if (result === true) {
+                        showRegisterForm(); // Одразу показуємо форму реєстрації з email
+                    } else if (result === 'already_used') {
+                        showLoginForm();
+                        showAuthMessage(currentLang === 'ua' ? '⚠️ Це запрошення вже використано. Увійдіть з вашим email та паролем.' : '⚠️ Это приглашение уже использовано. Войдите с вашим email и паролем.', 'info');
+                    } else {
+                        showLoginForm();
+                    }
+                });
             }
         });
 
@@ -3068,7 +3160,7 @@
             const role = document.getElementById('inviteRole').value;
             
             try {
-                await db.collection('invites').add({
+                const inviteRef = await db.collection('invites').add({
                     email: email,
                     companyId: currentCompany,
                     role: role,
@@ -3077,13 +3169,14 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                const link = window.location.origin + window.location.pathname;
+                // Унікальне посилання з ID інвайту
+                const link = window.location.origin + window.location.pathname + '?invite=' + inviteRef.id;
                 document.getElementById('inviteLinkText').value = link;
                 document.getElementById('inviteLink').style.display = 'block';
                 
                 alert(currentLang === 'ua' 
-                    ? `✅ Запрошення створено!\n\nНадішліть посилання співробітнику.\nВін має увійти з email: ${email}`
-                    : `✅ Приглашение создано!\n\nОтправьте ссылку сотруднику.\nОн должен войти с email: ${email}`);
+                    ? `✅ Запрошення створено!\n\nНадішліть посилання співробітнику.`
+                    : `✅ Приглашение создано!\n\nОтправьте ссылку сотруднику.`);
             } catch (e) {
                 alert(t('error') + ': ' + e.message);
             }
