@@ -2819,16 +2819,25 @@
                 document.getElementById('adminTabBtn').style.display = 'none';
                 
                 // Перевіряємо чи є інвайт в URL
-                checkInviteUrl().then(result => {
-                    if (result === true) {
-                        showRegisterForm(); // Одразу показуємо форму реєстрації з email
-                    } else if (result === 'already_used') {
-                        showLoginForm();
-                        showAuthMessage(currentLang === 'ua' ? '⚠️ Це запрошення вже використано. Увійдіть з вашим email та паролем.' : '⚠️ Это приглашение уже использовано. Войдите с вашим email и паролем.', 'info');
-                    } else {
-                        showLoginForm();
-                    }
-                });
+                const urlParams = new URLSearchParams(window.location.search);
+                const inviteId = urlParams.get('invite');
+                
+                if (inviteId) {
+                    // Є invite в URL — перевіряємо валідність і показуємо форму реєстрації
+                    checkInviteUrl().then(result => {
+                        if (result === true) {
+                            showRegisterForm(); // Тепер currentInviteData вже заповнено
+                        } else if (result === 'already_used') {
+                            showLoginForm();
+                            showAuthMessage(currentLang === 'ua' ? '⚠️ Це запрошення вже використано. Увійдіть з вашим email та паролем.' : '⚠️ Это приглашение уже использовано. Войдите с вашим email и паролем.', 'info');
+                        } else {
+                            showRegisterForm(); // Показуємо форму все одно, нехай вводить email вручну
+                            showAuthMessage(currentLang === 'ua' ? '❌ Запрошення не знайдено. Введіть email з якого вас запрошували.' : '❌ Приглашение не найдено. Введите email с которого вас приглашали.', 'error');
+                        }
+                    });
+                } else {
+                    showLoginForm();
+                }
             }
         });
 
