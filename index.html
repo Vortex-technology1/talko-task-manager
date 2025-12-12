@@ -1719,8 +1719,7 @@
             <!-- USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="controls">
-                    <button class="btn btn-success" onclick="openUserModal()" id="addUserBtn" data-i18n="addEmployee">+ Додати співробітника</button>
-                    <button class="btn btn-warning" onclick="openInviteModal()" id="inviteBtn"><i data-lucide="user-plus" class="icon"></i> <span data-i18n="invite">Запросити</span></button>
+                    <button class="btn btn-success" onclick="openInviteModal()" id="inviteBtn"><i data-lucide="user-plus" class="icon"></i> <span data-i18n="invite">Запросити</span></button>
                 </div>
                 <div id="usersContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
@@ -1783,12 +1782,6 @@
                         </div>
                         <button type="submit" class="btn btn-success" style="margin-top:1rem;" id="adminCreateBtn"><i data-lucide="rocket" class="icon"></i> <span data-i18n="createCompanyBtn">Створити компанію та Owner</span></button>
                     </form>
-                </div>
-                <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
-                    <h3 style="margin-bottom:1rem;"><i data-lucide="list" class="icon"></i> <span data-i18n="allCompanies">Всі компанії</span></h3>
-                    <div id="adminCompaniesContainer">
-                        <div class="loading"><div class="spinner"></div></div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -4132,49 +4125,7 @@
         // ADMIN FUNCTIONS
         // =====================
         async function renderAdminPanel() {
-            if (!isSuperAdmin) return;
-            
-            const container = document.getElementById('adminCompaniesContainer');
-            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-            
-            try {
-                const companiesSnap = await db.collection('companies').get();
-                const companies = [];
-                
-                for (const doc of companiesSnap.docs) {
-                    const data = doc.data();
-                    const usersSnap = await db.collection('companies').doc(doc.id).collection('users').get();
-                    companies.push({
-                        id: doc.id,
-                        ...data,
-                        usersCount: usersSnap.size
-                    });
-                }
-                
-                if (companies.length === 0) {
-                    container.innerHTML = `<p style="color:#7f8c8d;text-align:center;padding:2rem;">${t('noCompanies')}</p>`;
-                    return;
-                }
-                
-                container.innerHTML = companies.map(c => `
-                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.5rem;border-left:4px solid var(--info);">
-                        <div>
-                            <strong>${c.name || (currentLang === 'ua' ? 'Без назви' : 'Без названия')}</strong>
-                            <div style="font-size:0.8rem;color:#7f8c8d;">
-                                <i data-lucide="mail" class="icon icon-sm"></i> ${c.ownerEmail || '-'} | <i data-lucide="users" class="icon icon-sm"></i> ${c.usersCount} ${t('users')}
-                            </div>
-                            <div style="font-size:0.75rem;color:#bdc3c7;">ID: ${c.id}</div>
-                        </div>
-                        <div style="display:flex;gap:0.25rem;">
-                            <button class="btn btn-small" onclick="adminViewCompany('${c.id}')"><i data-lucide="eye" class="icon icon-sm"></i></button>
-                            <button class="btn btn-small btn-danger" onclick="adminDeleteCompany('${c.id}', '${c.name}')"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
-                        </div>
-                    </div>
-                `).join('');
-                refreshIcons();
-            } catch (e) {
-                container.innerHTML = `<p style="color:#e74c3c;">${t('error')}: ${e.message}</p>`;
-            }
+            // Список компаній видалено - використовуй Firebase Console
         }
 
         async function adminCreateCompany(e) {
@@ -4217,51 +4168,12 @@
                     : `✅ Компания "${companyName}" создана!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\nОтправьте эти данные клиенту.`);
                 
                 document.getElementById('adminCreateForm').reset();
-                renderAdminPanel();
             } catch (e) {
                 alert(t('error') + ': ' + e.message);
             }
             
             btn.disabled = false;
             btn.textContent = t('createCompanyBtn');
-        }
-
-        async function adminViewCompany(companyId) {
-            currentCompany = companyId;
-            await loadAllData();
-            switchTab('users');
-            alert(currentLang === 'ua' ? 'Переключено на компанію. Дивіться вкладку "Команда".' : 'Переключено на компанию. Смотрите вкладку "Команда".');
-        }
-
-        async function adminDeleteCompany(companyId, companyName) {
-            const confirmMsg = currentLang === 'ua'
-                ? `⚠️ Видалити компанію "${companyName}"?\n\nЦе видалить ВСІ дані:\n- Завдання\n- Функції\n- Користувачів\n\nЦю дію НЕ МОЖНА скасувати!`
-                : `⚠️ Удалить компанию "${companyName}"?\n\nЭто удалит ВСЕ данные:\n- Задачи\n- Функции\n- Пользователей\n\nЭто действие НЕЛЬЗЯ отменить!`;
-            
-            if (!confirm(confirmMsg)) return;
-            if (!confirm(currentLang === 'ua' ? 'Ви ТОЧНО впевнені?' : 'Вы ТОЧНО уверены?')) return;
-            
-            try {
-                const subcollections = ['users', 'tasks', 'functions', 'regularTasks'];
-                for (const sub of subcollections) {
-                    const snap = await db.collection('companies').doc(companyId).collection(sub).get();
-                    const batch = db.batch();
-                    snap.docs.forEach(doc => batch.delete(doc.ref));
-                    await batch.commit();
-                }
-                
-                await db.collection('companies').doc(companyId).delete();
-                
-                const invitesSnap = await db.collection('invites').where('companyId', '==', companyId).get();
-                const invitesBatch = db.batch();
-                invitesSnap.docs.forEach(doc => invitesBatch.delete(doc.ref));
-                await invitesBatch.commit();
-                
-                alert(currentLang === 'ua' ? '✅ Компанію видалено' : '✅ Компания удалена');
-                renderAdminPanel();
-            } catch (e) {
-                alert(t('error') + ': ' + e.message);
-            }
         }
 
         // =====================
