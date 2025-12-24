@@ -1729,7 +1729,7 @@
             <!-- ANALYTICS -->
             <div id="analyticsTab" class="tab-content">
                 <div class="controls">
-                    <h2 style="font-size:1.2rem;" data-i18n="analytics">📈 Аналітика</h2>
+                    <h2 style="font-size:1.2rem;" data-i18n="analytics"><i data-lucide="trending-up" class="icon"></i> Аналітика</h2>
                 </div>
                 <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);">
                     <div class="analytics-grid">
@@ -1846,7 +1846,7 @@
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="instruction">Інструкція (необов'язково)</span></label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
                         <div class="form-group full-width">
                             <div class="info-box" style="background:#e8f5e9;padding:0.75rem;border-radius:8px;font-size:0.85rem;">
-                                💡 <span data-i18n="functionAssigneeHint">Виконавці беруться автоматично з обраної функції. Хто в функції — той і виконує.</span>
+                                <i data-lucide="lightbulb" class="icon icon-sm" style="color:#f59e0b;"></i> <span data-i18n="functionAssigneeHint">Виконавці беруться автоматично з обраної функції. Хто в функції — той і виконує.</span>
                             </div>
                         </div>
                     </div>
@@ -1920,7 +1920,7 @@
     </div>
 
     <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="support-btn">
-        🤖 <span data-i18n="aiSupport">AI Підтримка</span>
+        <i data-lucide="bot" class="icon"></i> <span data-i18n="aiSupport">AI Підтримка</span>
     </a>
 
     <footer class="footer">
@@ -2135,7 +2135,7 @@
                 
                 // Analytics
                 tabAnalytics: 'Аналітика',
-                analytics: '📈 Аналітика',
+                analytics: 'Аналітика',
                 totalTasks: 'Всього завдань',
                 completedTasks: 'Виконано',
                 completionRate: 'Виконання %',
@@ -2360,7 +2360,7 @@
                 
                 // Analytics
                 tabAnalytics: 'Аналитика',
-                analytics: '📈 Аналитика',
+                analytics: 'Аналитика',
                 totalTasks: 'Всего задач',
                 completedTasks: 'Выполнено',
                 completionRate: 'Выполнение %',
@@ -2497,7 +2497,7 @@
                 const inviteDoc = await db.collection('invites').doc(inviteId).get();
                 
                 if (!inviteDoc.exists) {
-                    showAuthMessage(currentLang === 'ua' ? '❌ Запрошення не знайдено або застаріло' : '❌ Приглашение не найдено или устарело', 'error');
+                    showAuthMessage(currentLang === 'ua' ? 'Запрошення не знайдено або застаріло' : 'Приглашение не найдено или устарело', 'error');
                     currentInviteData = null;
                     return false;
                 }
@@ -2592,7 +2592,7 @@
                         .get();
                     
                     if (invitesQuery.empty) {
-                        showAuthMessage(currentLang === 'ua' ? '❌ Запрошення для цього email не знайдено' : '❌ Приглашение для этого email не найдено', 'error');
+                        showAuthMessage(currentLang === 'ua' ? 'Запрошення для цього email не знайдено' : 'Приглашение для этого email не найдено', 'error');
                         return;
                     }
                     
@@ -2601,11 +2601,11 @@
                 
                 // Перевіряємо що email співпадає з інвайтом
                 if (inviteData.email.toLowerCase() !== email.toLowerCase()) {
-                    showAuthMessage(currentLang === 'ua' ? '❌ Email не співпадає з запрошенням' : '❌ Email не совпадает с приглашением', 'error');
+                    showAuthMessage(currentLang === 'ua' ? 'Email не співпадає з запрошенням' : 'Email не совпадает с приглашением', 'error');
                     return;
                 }
                 
-                showAuthMessage(currentLang === 'ua' ? '⏳ Реєстрація...' : '⏳ Регистрация...', 'info');
+                showAuthMessage(currentLang === 'ua' ? 'Реєстрація...' : 'Регистрация...', 'info');
                 
                 // Створюємо користувача в Firebase Auth
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -2618,7 +2618,7 @@
                 window.history.replaceState({}, document.title, window.location.pathname);
                 currentInviteData = null;
                 
-                showAuthMessage(currentLang === 'ua' ? '✅ Успішно зареєстровано!' : '✅ Успешно зарегистрировано!', 'success');
+                showAuthMessage(currentLang === 'ua' ? 'Успішно зареєстровано!' : 'Успешно зарегистрировано!', 'success');
                 
             } catch (e) {
                 let msg = currentLang === 'ua' ? 'Помилка реєстрації' : 'Ошибка регистрации';
@@ -2694,7 +2694,7 @@
             
             try {
                 await auth.sendPasswordResetEmail(email);
-                showAuthMessage(currentLang === 'ua' ? '📧 Посилання надіслано на ' + email : '📧 Ссылка отправлена на ' + email, 'success');
+                showAuthMessage(currentLang === 'ua' ? 'Посилання надіслано на ' + email : 'Ссылка отправлена на ' + email, 'success');
             } catch (e) {
                 showAuthMessage(t('error') + ': ' + e.message, 'error');
             }
@@ -2822,10 +2822,10 @@
                             showRegisterForm(); // Тепер currentInviteData вже заповнено
                         } else if (result === 'already_used') {
                             showLoginForm();
-                            showAuthMessage(currentLang === 'ua' ? '⚠️ Це запрошення вже використано. Увійдіть з вашим email та паролем.' : '⚠️ Это приглашение уже использовано. Войдите с вашим email и паролем.', 'info');
+                            showAuthMessage(currentLang === 'ua' ? 'Це запрошення вже використано. Увійдіть з вашим email та паролем.' : 'Это приглашение уже использовано. Войдите с вашим email и паролем.', 'info');
                         } else {
                             showRegisterForm(); // Показуємо форму все одно, нехай вводить email вручну
-                            showAuthMessage(currentLang === 'ua' ? '❌ Запрошення не знайдено. Введіть email з якого вас запрошували.' : '❌ Приглашение не найдено. Введите email с которого вас приглашали.', 'error');
+                            showAuthMessage(currentLang === 'ua' ? 'Запрошення не знайдено. Введіть email з якого вас запрошували.' : 'Приглашение не найдено. Введите email с которого вас приглашали.', 'error');
                         }
                     });
                 } else {
@@ -3171,12 +3171,12 @@
             });
             
             const groupLabels = {
-                overdue: { label: '🔴 Прострочені', class: 'overdue' },
-                today: { label: '📅 Сьогодні', class: 'today' },
-                tomorrow: { label: '📆 Завтра', class: 'tomorrow' },
-                thisWeek: { label: '📋 Цей тиждень', class: '' },
-                later: { label: '📁 Пізніше', class: '' },
-                noDueDate: { label: '⏳ Без дати', class: '' }
+                overdue: { label: 'Прострочені', class: 'overdue' },
+                today: { label: 'Сьогодні', class: 'today' },
+                tomorrow: { label: 'Завтра', class: 'tomorrow' },
+                thisWeek: { label: 'Цей тиждень', class: '' },
+                later: { label: 'Пізніше', class: '' },
+                noDueDate: { label: 'Без дати', class: '' }
             };
             
             Object.keys(groups).forEach(groupKey => {
@@ -3538,7 +3538,7 @@
             });
             
             await batch.commit();
-            alert(`✅ ${currentLang === 'ua' ? 'Створено' : 'Создано'} ${assigneeIds.length} ${currentLang === 'ua' ? 'завдань' : 'задач'}`);
+            alert(`${currentLang === 'ua' ? 'Створено' : 'Создано'} ${assigneeIds.length} ${currentLang === 'ua' ? 'завдань' : 'задач'}`);
             loadAllData();
         }
 
@@ -3848,8 +3848,8 @@
                 document.getElementById('inviteLink').style.display = 'block';
                 
                 alert(currentLang === 'ua' 
-                    ? `✅ Запрошення створено!\n\nНадішліть посилання співробітнику.`
-                    : `✅ Приглашение создано!\n\nОтправьте ссылку сотруднику.`);
+                    ? `Запрошення створено!\n\nНадішліть посилання співробітнику.`
+                    : `Приглашение создано!\n\nОтправьте ссылку сотруднику.`);
             } catch (e) {
                 alert(t('error') + ': ' + e.message);
             }
@@ -4164,8 +4164,8 @@
                 });
                 
                 alert(currentLang === 'ua'
-                    ? `✅ Компанія "${companyName}" створена!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\nНадішліть ці дані клієнту.`
-                    : `✅ Компания "${companyName}" создана!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\nОтправьте эти данные клиенту.`);
+                    ? `Компанія "${companyName}" створена!\n\nEmail: ${email}\nПароль: ${password}\n\nНадішліть ці дані клієнту.`
+                    : `Компания "${companyName}" создана!\n\nEmail: ${email}\nПароль: ${password}\n\nОтправьте эти данные клиенту.`);
                 
                 document.getElementById('adminCreateForm').reset();
             } catch (e) {
@@ -4448,7 +4448,7 @@
         // Request permission
         async function requestNotificationPermission() {
             if (!supportsNotifications()) {
-                alert('❌ Ваш браузер не підтримує сповіщення');
+                alert('Ваш браузер не підтримує сповіщення');
                 return false;
             }
             
@@ -4461,7 +4461,7 @@
                 updateNotificationButton();
                 
                 // Show test notification
-                new Notification('✅ Сповіщення увімкнено', {
+                new Notification('Сповіщення увімкнено', {
                     body: 'Ви отримуватимете нагадування про дедлайни',
                     icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
                     tag: 'test'
@@ -4469,7 +4469,7 @@
                 
                 return true;
             } else {
-                alert('❌ Дозвіл на сповіщення не надано. Перевірте налаштування браузера.');
+                alert('Дозвіл на сповіщення не надано. Перевірте налаштування браузера.');
                 return false;
             }
         }
@@ -4530,13 +4530,13 @@
                             message = `⏰ Дедлайн через ${diff} хв: ${task.title}`;
                         } else if (diff <= 0 && diff > -5) {
                             shouldNotify = true;
-                            message = `🔴 Дедлайн зараз: ${task.title}`;
+                            message = `Дедлайн зараз: ${task.title}`;
                         }
                     } else {
                         // No specific time - notify once in the morning (9:00)
                         if (currentHour === 9 && currentMinute < 5) {
                             shouldNotify = true;
-                            message = `📅 Сьогодні дедлайн: ${task.title}`;
+                            message = `Сьогодні дедлайн: ${task.title}`;
                         }
                     }
                     
@@ -4553,7 +4553,7 @@
                 if (taskDeadline === tomorrowStr && currentHour === 18 && currentMinute < 5) {
                     const notifyKeyTomorrow = `${task.id}-tomorrow`;
                     if (!notifiedTasks.has(notifyKeyTomorrow)) {
-                        sendTaskNotification(task, `📆 Завтра дедлайн: ${task.title}`, notifyKeyTomorrow);
+                        sendTaskNotification(task, `Завтра дедлайн: ${task.title}`, notifyKeyTomorrow);
                     }
                 }
                 
@@ -4561,7 +4561,7 @@
                 if (taskDeadline < today) {
                     const notifyKeyOverdue = `${task.id}-overdue`;
                     if (!notifiedTasks.has(notifyKeyOverdue)) {
-                        sendTaskNotification(task, `🔴 Прострочено: ${task.title}`, notifyKeyOverdue);
+                        sendTaskNotification(task, `Прострочено: ${task.title}`, notifyKeyOverdue);
                     }
                 }
             });
@@ -4713,7 +4713,7 @@
                     <div class="filter-section-title">Дата</div>
                     <div class="filter-chips" id="filterDateChips">
                         <div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, 'date')">Всі</div>
-                        <div class="filter-chip" data-value="overdue" onclick="selectFilterChip(this, 'date')">🔴 Прострочені</div>
+                        <div class="filter-chip" data-value="overdue" onclick="selectFilterChip(this, 'date')">Прострочені</div>
                         <div class="filter-chip" data-value="today" onclick="selectFilterChip(this, 'date')">Сьогодні</div>
                         <div class="filter-chip" data-value="week" onclick="selectFilterChip(this, 'date')">Цей тиждень</div>
                         <div class="filter-chip" data-value="month" onclick="selectFilterChip(this, 'date')">Цей місяць</div>
@@ -4795,7 +4795,7 @@
                         <i data-lucide="bell" class="icon"></i> Увімкнути сповіщення
                     </button>
                     <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
-                        <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;" id="mLangUA">🇺🇦 UA</button>
+                        <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;" id="mLangUA">UA</button>
                         <button class="btn" onclick="setLanguage('ru');closeMobileMenu();" style="flex:1;" id="mLangRU">RU</button>
                     </div>
                     <button class="btn btn-danger" onclick="auth.signOut();closeMobileMenu();" style="justify-content:flex-start;margin-top:0.5rem;">
