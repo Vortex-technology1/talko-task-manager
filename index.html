@@ -1075,6 +1075,7 @@
             .bottom-nav { display: block; }
             .tab-navigation { display: none; }
             .main-interface { padding-bottom: 80px; }
+            .hide-mobile { display: none !important; }
             
             /* FAB for adding tasks */
             .fab-add {
@@ -1440,6 +1441,1022 @@
             margin-bottom: 1.5rem;
             line-height: 1.5;
         }
+        
+        /* ===================== */
+        /* CALENDAR VIEW STYLES  */
+        /* ===================== */
+        
+        .calendar-view-switcher {
+            display: flex;
+            gap: 0.25rem;
+            background: #e5e7eb;
+            padding: 0.25rem;
+            border-radius: 8px;
+            margin-right: 1rem;
+        }
+        
+        .calendar-view-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--gray);
+            transition: all 0.2s;
+        }
+        
+        .calendar-view-btn:hover {
+            color: var(--dark);
+        }
+        
+        .calendar-view-btn.active {
+            background: white;
+            color: var(--dark);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .calendar-nav-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .calendar-nav-btn:hover {
+            background: #f3f4f6;
+        }
+        
+        .calendar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .calendar-today-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .calendar-today-btn:hover {
+            background: #f3f4f6;
+        }
+        
+        /* Day View */
+        .calendar-day-view {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .calendar-day-header {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+        
+        .calendar-time-gutter {
+            width: 60px;
+            flex-shrink: 0;
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        .calendar-day-column-header {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .calendar-day-column-header .day-name {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+        
+        .calendar-day-column-header .day-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+        
+        .calendar-day-column-header.today .day-number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calendar-day-body {
+            display: flex;
+            position: relative;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+        }
+        
+        .calendar-time-slots {
+            width: 60px;
+            flex-shrink: 0;
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        .calendar-time-slot {
+            height: 60px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-align: right;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .calendar-events-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .calendar-hour-row {
+            height: 60px;
+            border-bottom: 1px solid #f3f4f6;
+            position: relative;
+        }
+        
+        .calendar-hour-row:hover {
+            background: #fafafa;
+        }
+        
+        .calendar-event {
+            position: absolute;
+            left: 4px;
+            right: 4px;
+            border-radius: 6px;
+            padding: 0.35rem 0.5rem;
+            font-size: 0.8rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 1;
+            border-left: 3px solid;
+        }
+        
+        .calendar-event:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2;
+        }
+        
+        .calendar-event.status-new {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+        
+        .calendar-event.status-progress {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+        
+        .calendar-event.status-review {
+            background: #e0e7ff;
+            border-color: #6366f1;
+            color: #3730a3;
+        }
+        
+        .calendar-event.status-done {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+            opacity: 0.7;
+        }
+        
+        .calendar-event-title {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .calendar-event-time {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        
+        .calendar-event-done-mark {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calendar-event-done-mark svg {
+            width: 10px;
+            height: 10px;
+            color: white;
+        }
+        
+        /* Week View */
+        .calendar-week-view {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .calendar-week-header {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+        
+        .calendar-week-day-header {
+            flex: 1;
+            padding: 0.5rem;
+            text-align: center;
+            border-right: 1px solid #e5e7eb;
+            min-width: 0;
+        }
+        
+        .calendar-week-day-header:last-child {
+            border-right: none;
+        }
+        
+        .calendar-week-body {
+            display: flex;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+        }
+        
+        .calendar-week-day-column {
+            flex: 1;
+            border-right: 1px solid #e5e7eb;
+            position: relative;
+            min-width: 0;
+        }
+        
+        .calendar-week-day-column:last-child {
+            border-right: none;
+        }
+        
+        .calendar-week-event {
+            margin: 2px 4px;
+            padding: 0.25rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-left: 3px solid;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Month View */
+        .calendar-month-view {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .calendar-month-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .calendar-month-day-name {
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+        
+        .calendar-month-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .calendar-month-day {
+            min-height: 100px;
+            border-right: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.25rem;
+        }
+        
+        .calendar-month-day:nth-child(7n) {
+            border-right: none;
+        }
+        
+        .calendar-month-day.other-month {
+            background: #f9fafb;
+        }
+        
+        .calendar-month-day.other-month .month-day-number {
+            color: #d1d5db;
+        }
+        
+        .calendar-month-day.today .month-day-number {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .month-day-number {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .calendar-month-event {
+            padding: 0.15rem 0.35rem;
+            margin-bottom: 2px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .calendar-month-more {
+            font-size: 0.7rem;
+            color: var(--gray);
+            padding: 0.15rem 0.35rem;
+            cursor: pointer;
+        }
+        
+        .calendar-month-more:hover {
+            color: var(--primary);
+        }
+        
+        /* All-day events / No time tasks */
+        .calendar-allday-section {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.5rem;
+            background: #fefce8;
+            min-height: 40px;
+        }
+        
+        .calendar-allday-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+        
+        .calendar-allday-event {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            margin: 2px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        
+        /* Current time indicator */
+        .calendar-current-time {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ef4444;
+            z-index: 10;
+        }
+        
+        .calendar-current-time::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: -4px;
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+        
+        /* List View (existing) */
+        .calendar-list-view {
+            /* existing table/card styles */
+        }
+        
+        /* Mobile Calendar Styles */
+        @media (max-width: 767px) {
+            .calendar-header {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding: 0.75rem;
+                margin: 0 -0.5rem 0.75rem -0.5rem;
+                border-radius: 0;
+            }
+            
+            .calendar-view-switcher {
+                order: 1;
+                width: 100%;
+                justify-content: center;
+                margin-right: 0;
+                padding: 0.2rem;
+            }
+            
+            .calendar-view-btn {
+                padding: 0.35rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            .calendar-nav {
+                order: 2;
+                flex: 1;
+            }
+            
+            .calendar-nav-btn {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .calendar-title {
+                order: 3;
+                min-width: auto;
+                font-size: 0.95rem;
+                flex: 2;
+                text-align: center;
+            }
+            
+            .calendar-today-btn {
+                display: none;
+            }
+            
+            /* Add button in header on mobile */
+            .calendar-header .btn-success {
+                order: 4;
+                padding: 0.4rem 0.6rem;
+            }
+            
+            .calendar-day-view {
+                border-radius: 0;
+                margin: 0 -0.5rem;
+            }
+            
+            .calendar-time-gutter,
+            .calendar-time-slots {
+                width: 42px;
+            }
+            
+            .calendar-time-slot {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.25rem;
+                text-align: center;
+            }
+            
+            .calendar-day-header {
+                padding: 0;
+            }
+            
+            .calendar-day-column-header {
+                padding: 0.5rem;
+            }
+            
+            .calendar-day-column-header .day-name {
+                font-size: 0.7rem;
+            }
+            
+            .calendar-day-column-header .day-number {
+                font-size: 1.25rem;
+            }
+            
+            .calendar-day-column-header.today .day-number {
+                width: 34px;
+                height: 34px;
+            }
+            
+            .calendar-day-body {
+                max-height: calc(100vh - 280px);
+                min-height: 400px;
+            }
+            
+            .calendar-hour-row {
+                height: 50px;
+            }
+            
+            .calendar-event {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.3rem;
+                left: 2px;
+                right: 2px;
+            }
+            
+            .calendar-event-title {
+                font-size: 0.75rem;
+            }
+            
+            .calendar-event-time {
+                display: none;
+            }
+            
+            .calendar-allday-section {
+                padding: 0.4rem;
+                margin: 0;
+            }
+            
+            .calendar-allday-event {
+                font-size: 0.7rem;
+                padding: 0.15rem 0.4rem;
+            }
+            
+            /* Week view on mobile */
+            .calendar-week-view {
+                border-radius: 0;
+                margin: 0 -0.5rem;
+            }
+            
+            .calendar-week-header {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                display: flex;
+            }
+            
+            .calendar-week-day-header {
+                min-width: 90px;
+                flex-shrink: 0;
+                padding: 0.5rem 0.25rem;
+            }
+            
+            .calendar-week-body {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                display: flex;
+            }
+            
+            .calendar-week-day-column {
+                min-width: 90px;
+                flex-shrink: 0;
+            }
+            
+            /* Month view on mobile */
+            .calendar-month-view {
+                border-radius: 0;
+                margin: 0 -0.5rem;
+            }
+            
+            .calendar-month-day {
+                min-height: 55px;
+                padding: 0.15rem;
+            }
+            
+            .month-day-number {
+                font-size: 0.75rem;
+            }
+            
+            .calendar-month-event {
+                font-size: 0.6rem;
+                padding: 0.1rem 0.15rem;
+            }
+            
+            .calendar-month-more {
+                font-size: 0.6rem;
+            }
+            
+            /* Regular calendar mobile */
+            .regular-week-view {
+                border-radius: 0;
+                margin: 0 -0.5rem;
+            }
+            
+            .regular-week-header {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .regular-week-day-header {
+                min-width: 120px;
+                flex-shrink: 0;
+                padding: 0.6rem 0.3rem;
+            }
+            
+            .regular-week-day-header .day-name {
+                font-size: 0.8rem;
+            }
+            
+            .regular-week-body {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .regular-week-day-column {
+                min-width: 140px;
+                flex-shrink: 0;
+                padding: 0.4rem;
+            }
+            
+            .regular-task-card {
+                padding: 0.5rem;
+            }
+            
+            .regular-task-card .task-title {
+                font-size: 0.8rem;
+            }
+            
+            .regular-task-card .task-time {
+                font-size: 0.7rem;
+            }
+            
+            .regular-day-empty {
+                padding: 1rem 0.25rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* iOS Safe Areas */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .bottom-nav {
+                padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+            }
+            
+            .calendar-day-body {
+                max-height: calc(100vh - 280px - env(safe-area-inset-bottom));
+            }
+        }
+        
+        /* Demo Data Options */
+        .demo-option-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            width: 100%;
+        }
+        
+        .demo-option-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .demo-option-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .demo-option-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .demo-option-info strong {
+            display: block;
+            font-size: 1rem;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .demo-option-info span {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* Hide calendar on desktop when list is active */
+        .calendar-container {
+            display: none;
+        }
+        
+        .calendar-container.active {
+            display: block;
+        }
+        
+        .list-container {
+            display: none;
+        }
+        
+        .list-container.active {
+            display: block;
+        }
+        
+        /* ===================== */
+        /* REGULAR CALENDAR      */
+        /* ===================== */
+        
+        .regular-calendar-container {
+            display: none;
+        }
+        
+        .regular-calendar-container.active {
+            display: block;
+        }
+        
+        .regular-list-container {
+            display: none;
+        }
+        
+        .regular-list-container.active {
+            display: block;
+        }
+        
+        .regular-week-view {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .regular-week-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .regular-week-day-header {
+            padding: 1rem 0.5rem;
+            text-align: center;
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        .regular-week-day-header:last-child {
+            border-right: none;
+        }
+        
+        .regular-week-day-header .day-name {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        
+        .regular-week-day-header.today {
+            background: #ecfdf5;
+        }
+        
+        .regular-week-day-header.today .day-name {
+            color: var(--success);
+        }
+        
+        .regular-week-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            min-height: 400px;
+        }
+        
+        .regular-week-day-column {
+            border-right: 1px solid #e5e7eb;
+            padding: 0.5rem;
+            min-height: 300px;
+        }
+        
+        .regular-week-day-column:last-child {
+            border-right: none;
+        }
+        
+        .regular-week-day-column.today {
+            background: #f0fdf4;
+        }
+        
+        .regular-task-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 0.6rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .regular-task-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+        
+        .regular-task-card .task-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .regular-task-card .task-title {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .regular-task-card .task-assignee {
+            font-size: 0.7rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .regular-task-card .task-function {
+            font-size: 0.65rem;
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+        
+        /* Empty day placeholder */
+        .regular-day-empty {
+            text-align: center;
+            color: #d1d5db;
+            font-size: 0.8rem;
+            padding: 2rem 0.5rem;
+        }
+        
+        /* ===================== */
+        /* IMPROVED LIST VIEW    */
+        /* ===================== */
+        
+        .task-list-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--gray);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .task-list-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .task-list-card.priority-high { border-left-color: var(--danger); }
+        .task-list-card.priority-medium { border-left-color: var(--warning); }
+        .task-list-card.priority-low { border-left-color: var(--success); }
+        
+        .task-list-card.status-done {
+            opacity: 0.6;
+            border-left-color: var(--success);
+        }
+        
+        .task-list-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        
+        .task-list-checkbox:hover {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+        
+        .task-list-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        .task-list-checkbox.checked svg {
+            color: white;
+        }
+        
+        .task-list-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .task-list-title {
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--dark);
+            margin-bottom: 0.35rem;
+        }
+        
+        .task-list-card.status-done .task-list-title {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+        
+        .task-list-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .task-list-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .task-list-meta-item.overdue {
+            color: var(--danger);
+            font-weight: 500;
+        }
+        
+        .task-list-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        /* Mobile Regular Calendar */
+        @media (max-width: 767px) {
+            .regular-week-header {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .regular-week-day-header {
+                min-width: 80px;
+                flex-shrink: 0;
+            }
+            
+            .regular-week-body {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .regular-week-day-column {
+                min-width: 150px;
+                flex-shrink: 0;
+            }
+            
+            .task-list-card {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .task-list-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1567,59 +2584,133 @@
 
             <!-- TASKS -->
             <div id="tasksTab" class="tab-content active">
-                <!-- Mobile filter bar -->
-                <div class="mobile-filter-bar" id="mobileFilterBar">
-                    <button class="mobile-filter-btn" onclick="setMobileQuickFilter('my')">
-                        <i data-lucide="user" class="icon icon-sm"></i> Мої
-                    </button>
-                    <button class="mobile-filter-btn" onclick="setMobileQuickFilter('today')">
-                        <i data-lucide="calendar" class="icon icon-sm"></i> Сьогодні
-                    </button>
-                    <button class="mobile-filter-btn" onclick="openFilterModal()">
-                        <i data-lucide="sliders" class="icon icon-sm"></i> Фільтри
-                        <span class="filter-count" id="activeFilterCount" style="display:none;">0</span>
-                    </button>
+                
+                <!-- Calendar Header with Navigation -->
+                <div class="calendar-header" id="calendarHeader">
+                    <div class="calendar-nav">
+                        <button class="calendar-nav-btn" onclick="calendarPrev()">
+                            <i data-lucide="chevron-left" class="icon"></i>
+                        </button>
+                        <button class="calendar-today-btn" onclick="calendarToday()">Сьогодні</button>
+                        <button class="calendar-nav-btn" onclick="calendarNext()">
+                            <i data-lucide="chevron-right" class="icon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="calendar-title" id="calendarTitle">Грудень 2024</div>
+                    
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <div class="calendar-view-switcher">
+                            <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')">День</button>
+                            <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')">Тиждень</button>
+                            <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')">Місяць</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')">Список</button>
+                        </div>
+                        <button class="btn btn-success" onclick="openTaskModal()">
+                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile">Додати</span>
+                        </button>
+                    </div>
                 </div>
                 
-                <div class="controls">
-                    <div class="controls-row">
-                        <button class="btn btn-success" onclick="openTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addTask">Додати завдання</span></button>
-                        <button class="btn" style="background:#2ecc71;" onclick="exportTasksCSV()"><i data-lucide="download" class="icon"></i> Експорт CSV</button>
-                    </div>
-                    <div class="filters-row">
-                        <button class="btn btn-clear" onclick="clearTaskFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
-                        <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()">
-                            <option value="" data-i18n="allTasks">Всі завдання</option>
-                            <option value="my" data-i18n="myTasks">Мої завдання</option>
-                            <option value="created" data-i18n="createdByMe">Створені мною</option>
-                        </select>
-                        <select class="filter-select" id="dateFilter" onchange="handleDateFilter()">
-                            <option value="" data-i18n="allDates">Всі дати</option>
-                            <option value="today" data-i18n="today">Сьогодні</option>
-                            <option value="week" data-i18n="thisWeek">Цей тиждень</option>
-                            <option value="month" data-i18n="thisMonth">Цей місяць</option>
-                            <option value="overdue" data-i18n="overdue">Прострочені</option>
-                            <option value="custom" data-i18n="customPeriod">Обрати період</option>
-                        </select>
-                        <div id="customDateRange" style="display:none;gap:0.5rem;align-items:center;">
-                            <input type="date" id="dateFrom" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
-                            <span>—</span>
-                            <input type="date" id="dateTo" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
+                <!-- Calendar Container -->
+                <div class="calendar-container active" id="calendarContainer">
+                    <!-- Day View -->
+                    <div class="calendar-day-view" id="calendarDayView">
+                        <div class="calendar-day-header">
+                            <div class="calendar-time-gutter"></div>
+                            <div class="calendar-day-column-header today" id="dayColumnHeader">
+                                <div class="day-name">Середа</div>
+                                <div class="day-number">25</div>
+                            </div>
                         </div>
-                        <select class="filter-select" id="statusFilter" onchange="renderTasks()">
-                            <option value="" data-i18n="statuses">Статуси</option>
-                            <option value="new" data-i18n="statusNew">Нові</option>
-                            <option value="progress" data-i18n="statusProgress">В роботі</option>
-                            <option value="review" data-i18n="statusReview">Перевірка</option>
-                            <option value="done" data-i18n="statusDone">Готово</option>
-                        </select>
-                        <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="" data-i18n="functions">Функції</option></select>
-                        <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="" data-i18n="assignees">Виконавці</option></select>
+                        <div class="calendar-allday-section" id="calendarAllday">
+                            <div class="calendar-allday-label">Без часу</div>
+                        </div>
+                        <div class="calendar-day-body" id="calendarDayBody">
+                            <div class="calendar-time-slots" id="calendarTimeSlots"></div>
+                            <div class="calendar-events-container" id="calendarEventsContainer">
+                                <div class="calendar-current-time" id="currentTimeLine" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Week View -->
+                    <div class="calendar-week-view" id="calendarWeekView" style="display:none;">
+                        <div class="calendar-week-header" id="weekHeader"></div>
+                        <div class="calendar-week-body" id="weekBody"></div>
+                    </div>
+                    
+                    <!-- Month View -->
+                    <div class="calendar-month-view" id="calendarMonthView" style="display:none;">
+                        <div class="calendar-month-header">
+                            <div class="calendar-month-day-name">Нд</div>
+                            <div class="calendar-month-day-name">Пн</div>
+                            <div class="calendar-month-day-name">Вт</div>
+                            <div class="calendar-month-day-name">Ср</div>
+                            <div class="calendar-month-day-name">Чт</div>
+                            <div class="calendar-month-day-name">Пт</div>
+                            <div class="calendar-month-day-name">Сб</div>
+                        </div>
+                        <div class="calendar-month-body" id="monthBody"></div>
                     </div>
                 </div>
-                <div id="totalTimeInfo" class="total-time-container"></div>
-                <div class="table-container" id="tasksContainer">
-                    <div class="loading"><div class="spinner"></div></div>
+                
+                <!-- List Container (existing table view) -->
+                <div class="list-container" id="listContainer">
+                    <!-- Mobile filter bar -->
+                    <div class="mobile-filter-bar" id="mobileFilterBar">
+                        <button class="mobile-filter-btn" onclick="setMobileQuickFilter('my')">
+                            <i data-lucide="user" class="icon icon-sm"></i> Мої
+                        </button>
+                        <button class="mobile-filter-btn" onclick="setMobileQuickFilter('today')">
+                            <i data-lucide="calendar" class="icon icon-sm"></i> Сьогодні
+                        </button>
+                        <button class="mobile-filter-btn" onclick="openFilterModal()">
+                            <i data-lucide="sliders" class="icon icon-sm"></i> Фільтри
+                            <span class="filter-count" id="activeFilterCount" style="display:none;">0</span>
+                        </button>
+                    </div>
+                    
+                    <div class="controls">
+                        <div class="controls-row">
+                            <button class="btn btn-success" onclick="openTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addTask">Додати завдання</span></button>
+                            <button class="btn" style="background:#2ecc71;" onclick="exportTasksCSV()"><i data-lucide="download" class="icon"></i> Експорт CSV</button>
+                        </div>
+                        <div class="filters-row">
+                            <button class="btn btn-clear" onclick="clearTaskFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
+                            <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()">
+                                <option value="" data-i18n="allTasks">Всі завдання</option>
+                                <option value="my" data-i18n="myTasks">Мої завдання</option>
+                                <option value="created" data-i18n="createdByMe">Створені мною</option>
+                            </select>
+                            <select class="filter-select" id="dateFilter" onchange="handleDateFilter()">
+                                <option value="" data-i18n="allDates">Всі дати</option>
+                                <option value="today" data-i18n="today">Сьогодні</option>
+                                <option value="week" data-i18n="thisWeek">Цей тиждень</option>
+                                <option value="month" data-i18n="thisMonth">Цей місяць</option>
+                                <option value="overdue" data-i18n="overdue">Прострочені</option>
+                                <option value="custom" data-i18n="customPeriod">Обрати період</option>
+                            </select>
+                            <div id="customDateRange" style="display:none;gap:0.5rem;align-items:center;">
+                                <input type="date" id="dateFrom" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
+                                <span>—</span>
+                                <input type="date" id="dateTo" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
+                            </div>
+                            <select class="filter-select" id="statusFilter" onchange="renderTasks()">
+                                <option value="" data-i18n="statuses">Статуси</option>
+                                <option value="new" data-i18n="statusNew">Нові</option>
+                                <option value="progress" data-i18n="statusProgress">В роботі</option>
+                                <option value="review" data-i18n="statusReview">Перевірка</option>
+                                <option value="done" data-i18n="statusDone">Готово</option>
+                            </select>
+                            <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="" data-i18n="functions">Функції</option></select>
+                            <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="" data-i18n="assignees">Виконавці</option></select>
+                        </div>
+                    </div>
+                    <div id="totalTimeInfo" class="total-time-container"></div>
+                    <div class="table-container" id="tasksContainer">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
                 </div>
             </div>
 
@@ -1680,29 +2771,52 @@
 
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
-                <div class="filters-row" style="background:white;padding:1rem;border-radius:12px;margin-bottom:1rem;box-shadow:var(--shadow);">
-                    <button class="btn btn-success" onclick="filterRegularToday()" id="regularTodayBtn"><i data-lucide="calendar-check" class="icon"></i> <span data-i18n="todaysTasks">Сьогодні</span></button>
-                    <select class="filter-select" id="regularDayFilter" onchange="renderRegularTasks()">
-                        <option value="" data-i18n="allDays">Всі дні</option>
-                        <option value="1" data-i18n="monday">Понеділок</option>
-                        <option value="2" data-i18n="tuesday">Вівторок</option>
-                        <option value="3" data-i18n="wednesday">Середа</option>
-                        <option value="4" data-i18n="thursday">Четвер</option>
-                        <option value="5" data-i18n="friday">П'ятниця</option>
-                        <option value="6" data-i18n="saturday">Субота</option>
-                        <option value="0" data-i18n="sunday">Неділя</option>
-                    </select>
-                    <span style="display:flex;align-items:center;gap:0.3rem;"><i data-lucide="tag" class="icon icon-sm"></i> <span data-i18n="functionLabel">Функція:</span></span>
-                    <select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
-                    <span style="display:flex;align-items:center;gap:0.3rem;"><i data-lucide="user" class="icon icon-sm"></i> <span data-i18n="assigneeLabel">Виконавець:</span></span>
-                    <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
-                    <button class="btn btn-clear" onclick="clearRegularFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
+                <!-- Regular Tasks Calendar Header -->
+                <div class="calendar-header" id="regularCalendarHeader">
+                    <div style="display:flex;align-items:center;gap:1rem;">
+                        <h3 style="margin:0;font-size:1.1rem;"><i data-lucide="repeat" class="icon"></i> Регулярні завдання</h3>
+                    </div>
+                    
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <div class="calendar-view-switcher">
+                            <button class="calendar-view-btn active" data-view="week" onclick="setRegularView('week')">Тиждень</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')">Список</button>
+                        </div>
+                        <button class="btn btn-success" onclick="openRegularTaskModal()">
+                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile">Додати</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="controls">
-                    <button class="btn btn-success" onclick="openRegularTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addRegularTask">Регулярне завдання</span></button>
+                
+                <!-- Regular Calendar View (Week) -->
+                <div class="regular-calendar-container active" id="regularCalendarContainer">
+                    <div class="regular-week-view" id="regularWeekView">
+                        <div class="regular-week-header" id="regularWeekHeader"></div>
+                        <div class="regular-week-body" id="regularWeekBody"></div>
+                    </div>
                 </div>
-                <div class="table-container" id="regularTasksContainer">
-                    <div class="loading"><div class="spinner"></div></div>
+                
+                <!-- Regular List View -->
+                <div class="regular-list-container" id="regularListContainer" style="display:none;">
+                    <div class="filters-row" style="background:white;padding:1rem;border-radius:12px;margin-bottom:1rem;box-shadow:var(--shadow);">
+                        <button class="btn btn-success" onclick="filterRegularToday()" id="regularTodayBtn"><i data-lucide="calendar-check" class="icon"></i> <span data-i18n="todaysTasks">Сьогодні</span></button>
+                        <select class="filter-select" id="regularDayFilter" onchange="renderRegularTasks()">
+                            <option value="" data-i18n="allDays">Всі дні</option>
+                            <option value="1" data-i18n="monday">Понеділок</option>
+                            <option value="2" data-i18n="tuesday">Вівторок</option>
+                            <option value="3" data-i18n="wednesday">Середа</option>
+                            <option value="4" data-i18n="thursday">Четвер</option>
+                            <option value="5" data-i18n="friday">П'ятниця</option>
+                            <option value="6" data-i18n="saturday">Субота</option>
+                            <option value="0" data-i18n="sunday">Неділя</option>
+                        </select>
+                        <select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
+                        <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
+                        <button class="btn btn-clear" onclick="clearRegularFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
+                    </div>
+                    <div class="table-container" id="regularTasksContainer">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
                 </div>
             </div>
 
@@ -1728,10 +2842,13 @@
 
             <!-- ANALYTICS -->
             <div id="analyticsTab" class="tab-content">
-                <div class="controls">
-                    <h2 style="font-size:1.2rem;" data-i18n="analytics"><i data-lucide="trending-up" class="icon"></i> Аналітика</h2>
+                <div class="controls" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <h2 style="font-size:1.2rem;margin:0;" data-i18n="analytics"><i data-lucide="trending-up" class="icon"></i> Аналітика</h2>
+                    <button class="btn" onclick="openDemoDataModal()" id="demoDataBtnDesktop" style="display:none;">
+                        <i data-lucide="database" class="icon"></i> Демо-дані
+                    </button>
                 </div>
-                <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);">
+                <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-top:1rem;">
                     <div class="analytics-grid">
                         <div class="analytics-card">
                             <h3 data-i18n="totalTasks">Всього завдань</h3>
@@ -2800,9 +3917,17 @@
                 
                 if (currentUserData.role === 'employee') {
                     document.getElementById('inviteBtn').style.display = 'none';
+                    document.getElementById('demoDataBtn').style.display = 'none';
+                }
+                
+                // Show demo data button for owner/manager
+                if (currentUserData.role === 'owner' || currentUserData.role === 'manager') {
+                    document.getElementById('demoDataBtnDesktop').style.display = 'flex';
                 }
                 
                 showMainInterface();
+                initCalendar();
+                initRegularView();
                 loadAllData();
             } else {
                 document.getElementById('loadingPage').style.display = 'none';
@@ -2869,7 +3994,20 @@
             regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
             
             updateSelects();
-            renderTasks();
+            
+            // Render based on current view
+            if (currentCalendarView === 'list') {
+                renderTasks();
+            } else {
+                renderCalendar();
+            }
+            
+            // Render regular tasks view
+            if (currentRegularView === 'list') {
+                renderRegularTasks();
+            } else {
+                renderRegularWeekView();
+            }
         }
 
         // =====================
@@ -2998,6 +4136,423 @@
             } catch (e) {
                 alert(t('error') + ': ' + e.message);
             }
+        }
+
+        // =====================
+        // CALENDAR VIEW
+        // =====================
+        
+        let currentCalendarView = 'day'; // day, week, month, list
+        let calendarDate = new Date(); // Currently displayed date
+        
+        const dayNames = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота'];
+        const dayNamesShort = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        const monthNames = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 
+                           'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+        
+        function setCalendarView(view) {
+            currentCalendarView = view;
+            
+            // Update buttons
+            document.querySelectorAll('.calendar-view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+            
+            // Show/hide containers
+            const calendarContainer = document.getElementById('calendarContainer');
+            const listContainer = document.getElementById('listContainer');
+            
+            if (view === 'list') {
+                calendarContainer.classList.remove('active');
+                listContainer.classList.add('active');
+                renderTasks();
+            } else {
+                calendarContainer.classList.add('active');
+                listContainer.classList.remove('active');
+                renderCalendar();
+            }
+            
+            // Save preference
+            localStorage.setItem('calendarView', view);
+        }
+        
+        function calendarPrev() {
+            if (currentCalendarView === 'day') {
+                calendarDate.setDate(calendarDate.getDate() - 1);
+            } else if (currentCalendarView === 'week') {
+                calendarDate.setDate(calendarDate.getDate() - 7);
+            } else if (currentCalendarView === 'month') {
+                calendarDate.setMonth(calendarDate.getMonth() - 1);
+            }
+            renderCalendar();
+        }
+        
+        function calendarNext() {
+            if (currentCalendarView === 'day') {
+                calendarDate.setDate(calendarDate.getDate() + 1);
+            } else if (currentCalendarView === 'week') {
+                calendarDate.setDate(calendarDate.getDate() + 7);
+            } else if (currentCalendarView === 'month') {
+                calendarDate.setMonth(calendarDate.getMonth() + 1);
+            }
+            renderCalendar();
+        }
+        
+        function calendarToday() {
+            calendarDate = new Date();
+            renderCalendar();
+        }
+        
+        function renderCalendar() {
+            updateCalendarTitle();
+            
+            if (currentCalendarView === 'day') {
+                renderDayView();
+            } else if (currentCalendarView === 'week') {
+                renderWeekView();
+            } else if (currentCalendarView === 'month') {
+                renderMonthView();
+            }
+            
+            refreshIcons();
+        }
+        
+        function updateCalendarTitle() {
+            const titleEl = document.getElementById('calendarTitle');
+            
+            if (currentCalendarView === 'day') {
+                titleEl.textContent = `${calendarDate.getDate()} ${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
+            } else if (currentCalendarView === 'week') {
+                const weekStart = new Date(calendarDate);
+                weekStart.setDate(calendarDate.getDate() - calendarDate.getDay());
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+                
+                if (weekStart.getMonth() === weekEnd.getMonth()) {
+                    titleEl.textContent = `${weekStart.getDate()} - ${weekEnd.getDate()} ${monthNames[weekStart.getMonth()]} ${weekStart.getFullYear()}`;
+                } else {
+                    titleEl.textContent = `${weekStart.getDate()} ${monthNames[weekStart.getMonth()].slice(0,3)} - ${weekEnd.getDate()} ${monthNames[weekEnd.getMonth()].slice(0,3)} ${weekEnd.getFullYear()}`;
+                }
+            } else if (currentCalendarView === 'month') {
+                titleEl.textContent = `${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
+            }
+        }
+        
+        function renderDayView() {
+            // Hide other views
+            document.getElementById('calendarDayView').style.display = 'block';
+            document.getElementById('calendarWeekView').style.display = 'none';
+            document.getElementById('calendarMonthView').style.display = 'none';
+            
+            const today = new Date();
+            const isToday = calendarDate.toDateString() === today.toDateString();
+            
+            // Update header
+            const headerEl = document.getElementById('dayColumnHeader');
+            headerEl.className = 'calendar-day-column-header' + (isToday ? ' today' : '');
+            headerEl.innerHTML = `
+                <div class="day-name">${dayNames[calendarDate.getDay()]}</div>
+                <div class="day-number">${calendarDate.getDate()}</div>
+            `;
+            
+            // Build time slots
+            const timeSlotsEl = document.getElementById('calendarTimeSlots');
+            const eventsContainerEl = document.getElementById('calendarEventsContainer');
+            
+            let timeSlotsHTML = '';
+            let hoursHTML = '';
+            
+            for (let hour = 0; hour < 24; hour++) {
+                const timeStr = hour.toString().padStart(2, '0') + ':00';
+                timeSlotsHTML += `<div class="calendar-time-slot">${timeStr}</div>`;
+                hoursHTML += `<div class="calendar-hour-row" data-hour="${hour}"></div>`;
+            }
+            
+            timeSlotsEl.innerHTML = timeSlotsHTML;
+            
+            // Keep current time line
+            const currentTimeLineHTML = '<div class="calendar-current-time" id="currentTimeLine" style="display:none;"></div>';
+            eventsContainerEl.innerHTML = hoursHTML + currentTimeLineHTML;
+            
+            // Filter tasks for this day
+            const dayStr = calendarDate.toISOString().split('T')[0];
+            const dayTasks = tasks.filter(task => {
+                if (!task.deadline) return false;
+                const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
+                return taskDate.toISOString().split('T')[0] === dayStr;
+            });
+            
+            // Separate all-day and timed tasks
+            const allDayTasks = [];
+            const timedTasks = [];
+            
+            dayTasks.forEach(task => {
+                const deadline = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
+                const hours = deadline.getHours();
+                const minutes = deadline.getMinutes();
+                
+                // If task has no specific time (00:00) and no estimated time, treat as all-day
+                if (hours === 0 && minutes === 0 && !task.estimatedTime) {
+                    allDayTasks.push(task);
+                } else {
+                    timedTasks.push({ ...task, deadlineDate: deadline });
+                }
+            });
+            
+            // Render all-day section
+            const alldayEl = document.getElementById('calendarAllday');
+            if (allDayTasks.length > 0) {
+                alldayEl.style.display = 'block';
+                alldayEl.innerHTML = `
+                    <div class="calendar-allday-label">Без часу (${allDayTasks.length})</div>
+                    ${allDayTasks.map(task => `
+                        <div class="calendar-allday-event calendar-event status-${task.status}" onclick="openTaskModal('${task.id}')">
+                            ${task.status === 'done' ? '<span style="margin-right:4px;">✓</span>' : ''}
+                            ${task.title}
+                        </div>
+                    `).join('')}
+                `;
+            } else {
+                alldayEl.style.display = 'none';
+            }
+            
+            // Render timed events
+            timedTasks.forEach(task => {
+                const deadline = task.deadlineDate;
+                const startHour = deadline.getHours();
+                const startMinute = deadline.getMinutes();
+                
+                // Calculate duration (use estimatedTime or default to 60 min)
+                const durationMinutes = task.estimatedTime ? parseInt(task.estimatedTime) : 60;
+                
+                // Calculate position and height
+                const topOffset = startHour * 60 + startMinute;
+                const height = Math.max(durationMinutes, 20); // Minimum 20px height
+                
+                const eventHTML = `
+                    <div class="calendar-event status-${task.status}" 
+                         style="top: ${topOffset}px; height: ${height}px;"
+                         onclick="openTaskModal('${task.id}')"
+                         title="${task.title}">
+                        ${task.status === 'done' ? '<div class="calendar-event-done-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' : ''}
+                        <div class="calendar-event-title">${task.title}</div>
+                        <div class="calendar-event-time">${startHour.toString().padStart(2,'0')}:${startMinute.toString().padStart(2,'0')} • ${formatDuration(durationMinutes)}</div>
+                    </div>
+                `;
+                eventsContainerEl.insertAdjacentHTML('beforeend', eventHTML);
+            });
+            
+            // Show current time line if viewing today
+            if (isToday) {
+                updateCurrentTimeLine();
+            }
+        }
+        
+        function formatDuration(minutes) {
+            if (minutes < 60) return `${minutes} хв`;
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return mins > 0 ? `${hours} год ${mins} хв` : `${hours} год`;
+        }
+        
+        function updateCurrentTimeLine() {
+            const now = new Date();
+            const today = new Date();
+            
+            if (calendarDate.toDateString() !== today.toDateString()) {
+                document.getElementById('currentTimeLine').style.display = 'none';
+                return;
+            }
+            
+            const line = document.getElementById('currentTimeLine');
+            if (line) {
+                const topOffset = now.getHours() * 60 + now.getMinutes();
+                line.style.display = 'block';
+                line.style.top = topOffset + 'px';
+            }
+        }
+        
+        function renderWeekView() {
+            document.getElementById('calendarDayView').style.display = 'none';
+            document.getElementById('calendarWeekView').style.display = 'block';
+            document.getElementById('calendarMonthView').style.display = 'none';
+            
+            const weekStart = new Date(calendarDate);
+            weekStart.setDate(calendarDate.getDate() - calendarDate.getDay());
+            
+            const today = new Date();
+            const todayStr = today.toDateString();
+            
+            // Build header
+            const headerEl = document.getElementById('weekHeader');
+            let headerHTML = '<div class="calendar-time-gutter"></div>';
+            
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(weekStart);
+                day.setDate(weekStart.getDate() + i);
+                const isToday = day.toDateString() === todayStr;
+                
+                headerHTML += `
+                    <div class="calendar-week-day-header ${isToday ? 'today' : ''}">
+                        <div class="day-name">${dayNamesShort[i]}</div>
+                        <div class="day-number" ${isToday ? 'style="background:var(--primary);color:white;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;"' : ''}>${day.getDate()}</div>
+                    </div>
+                `;
+            }
+            headerEl.innerHTML = headerHTML;
+            
+            // Build body with time slots
+            const bodyEl = document.getElementById('weekBody');
+            let bodyHTML = '<div class="calendar-time-slots">';
+            
+            for (let hour = 0; hour < 24; hour++) {
+                bodyHTML += `<div class="calendar-time-slot">${hour.toString().padStart(2, '0')}:00</div>`;
+            }
+            bodyHTML += '</div>';
+            
+            // Build columns for each day
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(weekStart);
+                day.setDate(weekStart.getDate() + i);
+                const dayStr = day.toISOString().split('T')[0];
+                
+                bodyHTML += `<div class="calendar-week-day-column" data-date="${dayStr}">`;
+                
+                // Hour rows
+                for (let hour = 0; hour < 24; hour++) {
+                    bodyHTML += `<div class="calendar-hour-row" data-hour="${hour}"></div>`;
+                }
+                
+                // Get tasks for this day
+                const dayTasks = tasks.filter(task => {
+                    if (!task.deadline) return false;
+                    const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
+                    return taskDate.toISOString().split('T')[0] === dayStr;
+                });
+                
+                // Render events
+                dayTasks.forEach(task => {
+                    const deadline = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
+                    const startHour = deadline.getHours();
+                    const startMinute = deadline.getMinutes();
+                    const durationMinutes = task.estimatedTime ? parseInt(task.estimatedTime) : 60;
+                    
+                    const topOffset = startHour * 60 + startMinute;
+                    const height = Math.max(durationMinutes, 20);
+                    
+                    bodyHTML += `
+                        <div class="calendar-event status-${task.status}" 
+                             style="position:absolute; top:${topOffset}px; height:${height}px; left:2px; right:2px;"
+                             onclick="openTaskModal('${task.id}')"
+                             title="${task.title}">
+                            <div class="calendar-event-title" style="font-size:0.7rem;">${task.title}</div>
+                        </div>
+                    `;
+                });
+                
+                bodyHTML += '</div>';
+            }
+            
+            bodyEl.innerHTML = bodyHTML;
+        }
+        
+        function renderMonthView() {
+            document.getElementById('calendarDayView').style.display = 'none';
+            document.getElementById('calendarWeekView').style.display = 'none';
+            document.getElementById('calendarMonthView').style.display = 'block';
+            
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay(); // Day of week (0 = Sunday)
+            const daysInMonth = lastDay.getDate();
+            
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            
+            // Get prev month's last days
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            
+            const bodyEl = document.getElementById('monthBody');
+            let html = '';
+            
+            let dayCounter = 1;
+            let nextMonthDay = 1;
+            
+            // Calculate total cells needed (6 weeks max)
+            const totalCells = 42;
+            
+            for (let i = 0; i < totalCells; i++) {
+                let dayNum, dateStr, isOtherMonth = false;
+                
+                if (i < startDay) {
+                    // Previous month
+                    dayNum = prevMonthLastDay - startDay + i + 1;
+                    const prevMonth = month === 0 ? 11 : month - 1;
+                    const prevYear = month === 0 ? year - 1 : year;
+                    dateStr = `${prevYear}-${(prevMonth + 1).toString().padStart(2, '0')}-${dayNum.toString().padStart(2, '0')}`;
+                    isOtherMonth = true;
+                } else if (dayCounter <= daysInMonth) {
+                    // Current month
+                    dayNum = dayCounter;
+                    dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${dayNum.toString().padStart(2, '0')}`;
+                    dayCounter++;
+                } else {
+                    // Next month
+                    dayNum = nextMonthDay;
+                    const nextMonth = month === 11 ? 0 : month + 1;
+                    const nextYear = month === 11 ? year + 1 : year;
+                    dateStr = `${nextYear}-${(nextMonth + 1).toString().padStart(2, '0')}-${dayNum.toString().padStart(2, '0')}`;
+                    nextMonthDay++;
+                    isOtherMonth = true;
+                }
+                
+                const isToday = dateStr === todayStr;
+                
+                // Get tasks for this day
+                const dayTasks = tasks.filter(task => {
+                    if (!task.deadline) return false;
+                    const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
+                    return taskDate.toISOString().split('T')[0] === dateStr;
+                });
+                
+                html += `
+                    <div class="calendar-month-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}" 
+                         data-date="${dateStr}"
+                         onclick="goToDay('${dateStr}')">
+                        <div class="month-day-number">${dayNum}</div>
+                        ${dayTasks.slice(0, 3).map(task => `
+                            <div class="calendar-month-event calendar-event status-${task.status}" 
+                                 onclick="event.stopPropagation(); openTaskModal('${task.id}')">
+                                ${task.title}
+                            </div>
+                        `).join('')}
+                        ${dayTasks.length > 3 ? `<div class="calendar-month-more">+${dayTasks.length - 3} ще</div>` : ''}
+                    </div>
+                `;
+            }
+            
+            bodyEl.innerHTML = html;
+        }
+        
+        function goToDay(dateStr) {
+            calendarDate = new Date(dateStr);
+            setCalendarView('day');
+        }
+        
+        // Initialize calendar
+        function initCalendar() {
+            // Load saved view preference
+            const savedView = localStorage.getItem('calendarView') || 'day';
+            setCalendarView(savedView);
+            
+            // Generate time slots
+            renderCalendar();
+            
+            // Update current time line every minute
+            setInterval(updateCurrentTimeLine, 60000);
         }
 
         function handleDateFilter() {
@@ -3816,6 +5371,171 @@
             if (rt && rt.instruction) {
                 alert(`${currentLang === 'ua' ? 'Інструкція' : 'Инструкция'}:\n\n${rt.instruction}`);
             }
+        }
+        
+        // =====================
+        // REGULAR CALENDAR VIEW
+        // =====================
+        
+        let currentRegularView = 'week'; // week, list
+        
+        function setRegularView(view) {
+            currentRegularView = view;
+            
+            // Update buttons
+            document.querySelectorAll('#regularCalendarHeader .calendar-view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+            
+            // Show/hide containers
+            const calendarContainer = document.getElementById('regularCalendarContainer');
+            const listContainer = document.getElementById('regularListContainer');
+            
+            if (view === 'list') {
+                calendarContainer.classList.remove('active');
+                calendarContainer.style.display = 'none';
+                listContainer.classList.add('active');
+                listContainer.style.display = 'block';
+                renderRegularTasks();
+            } else {
+                calendarContainer.classList.add('active');
+                calendarContainer.style.display = 'block';
+                listContainer.classList.remove('active');
+                listContainer.style.display = 'none';
+                renderRegularWeekView();
+            }
+            
+            localStorage.setItem('regularView', view);
+        }
+        
+        function renderRegularWeekView() {
+            const headerEl = document.getElementById('regularWeekHeader');
+            const bodyEl = document.getElementById('regularWeekBody');
+            
+            const today = new Date().getDay(); // 0 = Sunday
+            const dayNamesFullUA = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота'];
+            
+            // Build header
+            let headerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const isToday = i === today;
+                headerHTML += `
+                    <div class="regular-week-day-header ${isToday ? 'today' : ''}">
+                        <div class="day-name">${dayNamesFullUA[i]}</div>
+                    </div>
+                `;
+            }
+            headerEl.innerHTML = headerHTML;
+            
+            // Build body
+            let bodyHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const isToday = i === today;
+                const dayTasks = regularTasks.filter(rt => {
+                    if (rt.period === 'weekly') {
+                        return rt.dayOfWeek === i.toString();
+                    }
+                    return false;
+                });
+                
+                // Sort by time
+                dayTasks.sort((a, b) => {
+                    const timeA = a.time || '00:00';
+                    const timeB = b.time || '00:00';
+                    return timeA.localeCompare(timeB);
+                });
+                
+                bodyHTML += `<div class="regular-week-day-column ${isToday ? 'today' : ''}" data-day="${i}">`;
+                
+                if (dayTasks.length === 0) {
+                    bodyHTML += '<div class="regular-day-empty">Немає завдань</div>';
+                } else {
+                    dayTasks.forEach(rt => {
+                        const func = functions.find(f => f.name === rt.function);
+                        const assigneeNames = func?.assigneeIds?.map(id => {
+                            const user = users.find(u => u.id === id);
+                            return user?.name || user?.email?.split('@')[0] || '';
+                        }).filter(Boolean) || [];
+                        
+                        // Get status
+                        const statusInfo = getRegularTaskStatus(rt);
+                        
+                        bodyHTML += `
+                            <div class="regular-task-card" onclick="openRegularTaskModal('${rt.id}')"
+                                 style="border-left-color: ${statusInfo.color};">
+                                <div class="task-time">
+                                    <i data-lucide="clock" class="icon icon-sm"></i>
+                                    ${rt.time || '--:--'}
+                                    ${rt.estimatedTime ? ` • ${formatDuration(parseInt(rt.estimatedTime))}` : ''}
+                                </div>
+                                <div class="task-title">${rt.title}</div>
+                                ${assigneeNames.length > 0 ? `
+                                    <div class="task-assignee">
+                                        <i data-lucide="user" class="icon icon-sm"></i>
+                                        ${assigneeNames.slice(0, 2).join(', ')}${assigneeNames.length > 2 ? ` +${assigneeNames.length - 2}` : ''}
+                                    </div>
+                                ` : ''}
+                                ${rt.function ? `<div class="task-function">${rt.function}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                }
+                
+                bodyHTML += '</div>';
+            }
+            
+            bodyEl.innerHTML = bodyHTML;
+            refreshIcons();
+        }
+        
+        function getRegularTaskStatus(rt) {
+            const today = new Date();
+            const todayDay = today.getDay();
+            const todayDateStr = today.toISOString().split('T')[0];
+            
+            // Check if task should run today
+            let shouldRunToday = false;
+            if (rt.period === 'weekly' && rt.dayOfWeek === todayDay.toString()) {
+                shouldRunToday = true;
+            } else if (rt.period === 'monthly') {
+                const todayDate = today.getDate();
+                if (rt.dayOfMonth === 'last') {
+                    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                    shouldRunToday = todayDate === lastDay;
+                } else {
+                    shouldRunToday = todayDate === parseInt(rt.dayOfMonth);
+                }
+            }
+            
+            // Check completion
+            const lastCompleted = rt.lastCompleted?.toDate ? rt.lastCompleted.toDate() : null;
+            const completedToday = lastCompleted && lastCompleted.toISOString().split('T')[0] === todayDateStr;
+            
+            // Check if task was generated today
+            const generatedTasks = tasks.filter(t => 
+                t.regularTaskId === rt.id && 
+                t.createdAt?.toDate && 
+                t.createdAt.toDate().toISOString().split('T')[0] === todayDateStr
+            );
+            
+            if (completedToday) {
+                return { status: 'completed', color: '#4caf50', text: 'Виконано', lucideIcon: 'check-circle' };
+            } else if (generatedTasks.length > 0) {
+                const allDone = generatedTasks.every(t => t.status === 'done');
+                if (allDone) {
+                    return { status: 'completed', color: '#4caf50', text: 'Виконано', lucideIcon: 'check-circle' };
+                }
+                return { status: 'inProgress', color: '#ff9800', text: 'В роботі', lucideIcon: 'clock' };
+            } else if (shouldRunToday) {
+                return { status: 'notCreated', color: '#2196f3', text: 'Очікує', lucideIcon: 'circle' };
+            } else {
+                return { status: 'inactive', color: '#9e9e9e', text: 'Не сьогодні', lucideIcon: 'minus-circle' };
+            }
+        }
+        
+        function initRegularView() {
+            const savedView = localStorage.getItem('regularView') || 'week';
+            setRegularView(savedView);
         }
 
         // =====================
@@ -4794,6 +6514,9 @@
                     <button id="notificationToggleBtn" class="btn btn-success" onclick="toggleNotifications();closeMobileMenu();" style="justify-content:flex-start;">
                         <i data-lucide="bell" class="icon"></i> Увімкнути сповіщення
                     </button>
+                    <button class="btn" onclick="openDemoDataModal();closeMobileMenu();" style="justify-content:flex-start;" id="demoDataBtn">
+                        <i data-lucide="database" class="icon"></i> Завантажити демо-дані
+                    </button>
                     <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
                         <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;" id="mLangUA">UA</button>
                         <button class="btn" onclick="setLanguage('ru');closeMobileMenu();" style="flex:1;" id="mLangRU">RU</button>
@@ -4801,6 +6524,50 @@
                     <button class="btn btn-danger" onclick="auth.signOut();closeMobileMenu();" style="justify-content:flex-start;margin-top:0.5rem;">
                         <i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Demo Data Modal -->
+    <div class="modal" id="demoDataModal">
+        <div class="modal-content" style="max-width:450px;">
+            <div class="modal-header">
+                <h3><i data-lucide="database" class="icon"></i> Завантажити демо-дані</h3>
+                <button class="close-btn" onclick="closeDemoDataModal()">&times;</button>
+            </div>
+            <div style="padding:1.5rem;">
+                <p style="color:#666;margin-bottom:1.5rem;font-size:0.9rem;">
+                    Оберіть тип бізнесу для завантаження демо-даних. Буде створено функції, регулярні завдання та приклади задач.
+                </p>
+                
+                <div style="display:flex;flex-direction:column;gap:1rem;">
+                    <button class="demo-option-btn" onclick="loadDemoData('clinic')">
+                        <div class="demo-option-icon" style="background:#ecfdf5;color:#10b981;">
+                            <i data-lucide="heart-pulse" class="icon icon-lg"></i>
+                        </div>
+                        <div class="demo-option-info">
+                            <strong>Медична клініка</strong>
+                            <span>Стоматологія, приватна практика, медцентр</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="icon"></i>
+                    </button>
+                    
+                    <button class="demo-option-btn" onclick="loadDemoData('manufacturing')">
+                        <div class="demo-option-icon" style="background:#fef3c7;color:#f59e0b;">
+                            <i data-lucide="factory" class="icon icon-lg"></i>
+                        </div>
+                        <div class="demo-option-info">
+                            <strong>Виробництво</strong>
+                            <span>Завод, цех, виробнича компанія</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="icon"></i>
+                    </button>
+                </div>
+                
+                <div style="margin-top:1.5rem;padding:1rem;background:#fef2f2;border-radius:8px;font-size:0.85rem;color:#991b1b;">
+                    <i data-lucide="alert-triangle" class="icon icon-sm" style="vertical-align:middle;margin-right:0.25rem;"></i>
+                    Увага: демо-дані будуть додані до існуючих даних компанії.
                 </div>
             </div>
         </div>
@@ -4817,6 +6584,221 @@
             document.getElementById('mobileMenuModal').style.display = 'none';
         }
         
+        // =====================
+        // DEMO DATA
+        // =====================
+        
+        function openDemoDataModal() {
+            document.getElementById('demoDataModal').style.display = 'flex';
+            refreshIcons();
+        }
+        
+        function closeDemoDataModal() {
+            document.getElementById('demoDataModal').style.display = 'none';
+        }
+        
+        async function loadDemoData(type) {
+            if (!confirm(currentLang === 'ua' 
+                ? 'Завантажити демо-дані? Існуючі дані не будуть видалені.' 
+                : 'Загрузить демо-данные? Существующие данные не будут удалены.')) {
+                return;
+            }
+            
+            closeDemoDataModal();
+            
+            try {
+                if (type === 'clinic') {
+                    await loadClinicDemoData();
+                } else if (type === 'manufacturing') {
+                    await loadManufacturingDemoData();
+                }
+                
+                await loadAllData();
+                alert(currentLang === 'ua' ? 'Демо-дані успішно завантажено!' : 'Демо-данные успешно загружены!');
+            } catch (e) {
+                console.error('Error loading demo data:', e);
+                alert(currentLang === 'ua' ? 'Помилка завантаження: ' + e.message : 'Ошибка загрузки: ' + e.message);
+            }
+        }
+        
+        async function loadClinicDemoData() {
+            const batch = db.batch();
+            const companyRef = db.collection('companies').doc(currentCompany);
+            
+            // Demo users (if not exist)
+            const demoUsers = [
+                { name: 'Марія Коваленко', email: 'maria@demo.clinic', role: 'employee' },
+                { name: 'Олег Петренко', email: 'oleg@demo.clinic', role: 'employee' },
+                { name: 'Анна Шевченко', email: 'anna@demo.clinic', role: 'employee' }
+            ];
+            
+            const userIds = [];
+            for (const user of demoUsers) {
+                const userRef = companyRef.collection('users').doc();
+                batch.set(userRef, { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                userIds.push(userRef.id);
+            }
+            
+            // Functions for clinic
+            const clinicFunctions = [
+                { name: 'Адміністрування', description: 'Запис пацієнтів, документообіг, організація роботи', assigneeIds: [userIds[0]] },
+                { name: 'Лікування', description: 'Прийом пацієнтів, консультації, процедури', assigneeIds: [userIds[1]] },
+                { name: 'Маркетинг', description: 'Залучення пацієнтів, реклама, соцмережі', assigneeIds: [userIds[0], userIds[2]] },
+                { name: 'Закупівлі', description: 'Замовлення матеріалів, обладнання, розхідники', assigneeIds: [userIds[2]] },
+                { name: 'Фінанси', description: 'Рахунки, звіти, бухгалтерія', assigneeIds: [userIds[0]] }
+            ];
+            
+            const funcRefs = [];
+            for (const func of clinicFunctions) {
+                const funcRef = companyRef.collection('functions').doc();
+                batch.set(funcRef, { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                funcRefs.push({ id: funcRef.id, ...func });
+            }
+            
+            // Regular tasks for clinic
+            const clinicRegularTasks = [
+                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', dayOfWeek: '1', time: '09:00', estimatedTime: '30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра. Підтвердити візит. Нагадати про підготовку якщо потрібно.' },
+                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', dayOfWeek: '2', time: '09:00', estimatedTime: '30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра.' },
+                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', dayOfWeek: '3', time: '09:00', estimatedTime: '30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра.' },
+                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', dayOfWeek: '4', time: '09:00', estimatedTime: '30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра.' },
+                { title: 'Замовлення розхідних матеріалів', function: 'Закупівлі', period: 'weekly', dayOfWeek: '5', time: '14:00', estimatedTime: '60', instruction: 'Перевірити залишки матеріалів. Сформувати замовлення. Відправити постачальнику.' },
+                { title: 'Публікація в соцмережах', function: 'Маркетинг', period: 'weekly', dayOfWeek: '1', time: '11:00', estimatedTime: '45', instruction: 'Підготувати та опублікувати контент в Instagram та Facebook.' },
+                { title: 'Публікація в соцмережах', function: 'Маркетинг', period: 'weekly', dayOfWeek: '4', time: '11:00', estimatedTime: '45', instruction: 'Підготувати та опублікувати контент в Instagram та Facebook.' },
+                { title: 'Фінансовий звіт за тиждень', function: 'Фінанси', period: 'weekly', dayOfWeek: '5', time: '17:00', estimatedTime: '60', instruction: 'Підготувати звіт по виручці, витратах, прибутку за тиждень.' },
+                { title: 'Місячний звіт керівнику', function: 'Фінанси', period: 'monthly', dayOfMonth: 'last', time: '16:00', estimatedTime: '120', instruction: 'Підготувати повний місячний звіт: фінанси, пацієнти, маркетинг, проблеми.' },
+                { title: 'Ревізія обладнання', function: 'Закупівлі', period: 'monthly', dayOfMonth: '15', time: '10:00', estimatedTime: '90', instruction: 'Перевірити стан обладнання, скласти список необхідного ремонту/заміни.' }
+            ];
+            
+            for (const rt of clinicRegularTasks) {
+                const rtRef = companyRef.collection('regularTasks').doc();
+                batch.set(rtRef, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            }
+            
+            // Sample tasks for today/tomorrow
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            // Завдання прив'язані до ФУНКЦІЙ, виконавці беруться автоматично
+            // Коли людина звільняється - видаляємо її з функції, нові завдання падають на нового співробітника
+            const clinicTasks = [
+                { title: 'Первинна консультація - Іванов І.І.', function: 'Лікування', status: 'new', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '10:00', estimatedTime: '45', expectedResult: 'Діагноз, план лікування' },
+                { title: 'Підготувати рекламну акцію на Новий рік', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: tomorrow.toISOString().split('T')[0], deadlineTime: '15:00', estimatedTime: '120', expectedResult: 'Готовий макет та текст акції' },
+                { title: 'Замовити нові рукавички та маски', function: 'Закупівлі', status: 'new', priority: 'medium', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '14:00', estimatedTime: '30', expectedResult: 'Замовлення оформлене' },
+                { title: 'Оплатити рахунок за оренду', function: 'Фінанси', status: 'new', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '16:00', estimatedTime: '15', expectedResult: 'Рахунок оплачено' }
+            ];
+            
+            for (const task of clinicTasks) {
+                // Знаходимо функцію і беремо першого виконавця з неї
+                const func = clinicFunctions.find(f => f.name === task.function);
+                const assigneeId = func?.assigneeIds?.[0] || null;
+                // Знаходимо ім'я виконавця по індексу в userIds
+                const assigneeIndex = userIds.indexOf(assigneeId);
+                const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
+                
+                const taskRef = companyRef.collection('tasks').doc();
+                batch.set(taskRef, { 
+                    ...task,
+                    assigneeId: assigneeId,
+                    assigneeName: assigneeName,
+                    createdBy: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + task.deadlineTime))
+                });
+            }
+            
+            await batch.commit();
+        }
+        
+        async function loadManufacturingDemoData() {
+            const batch = db.batch();
+            const companyRef = db.collection('companies').doc(currentCompany);
+            
+            // Demo users
+            const demoUsers = [
+                { name: 'Сергій Мельник', email: 'sergiy@demo.factory', role: 'employee' },
+                { name: 'Віктор Бондаренко', email: 'viktor@demo.factory', role: 'employee' },
+                { name: 'Ірина Ткаченко', email: 'iryna@demo.factory', role: 'employee' }
+            ];
+            
+            const userIds = [];
+            for (const user of demoUsers) {
+                const userRef = companyRef.collection('users').doc();
+                batch.set(userRef, { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                userIds.push(userRef.id);
+            }
+            
+            // Functions for manufacturing
+            const mfgFunctions = [
+                { name: 'Виробництво', description: 'Управління виробничим процесом, контроль лінії', assigneeIds: [userIds[0]] },
+                { name: 'Контроль якості', description: 'Перевірка продукції, стандарти, брак', assigneeIds: [userIds[1]] },
+                { name: 'Логістика', description: 'Відвантаження, доставка, склад', assigneeIds: [userIds[2]] },
+                { name: 'Постачання', description: 'Закупівля сировини, комплектуючих', assigneeIds: [userIds[2]] },
+                { name: 'Обслуговування', description: 'Ремонт обладнання, профілактика', assigneeIds: [userIds[0], userIds[1]] }
+            ];
+            
+            const funcRefs = [];
+            for (const func of mfgFunctions) {
+                const funcRef = companyRef.collection('functions').doc();
+                batch.set(funcRef, { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                funcRefs.push({ id: funcRef.id, ...func });
+            }
+            
+            // Regular tasks for manufacturing
+            const mfgRegularTasks = [
+                { title: 'Ранкова перевірка обладнання', function: 'Виробництво', period: 'weekly', dayOfWeek: '1', time: '07:30', estimatedTime: '30', instruction: 'Перевірити стан всіх верстатів, рівень мастила, тиск, температуру.' },
+                { title: 'Ранкова перевірка обладнання', function: 'Виробництво', period: 'weekly', dayOfWeek: '2', time: '07:30', estimatedTime: '30', instruction: 'Перевірити стан всіх верстатів.' },
+                { title: 'Ранкова перевірка обладнання', function: 'Виробництво', period: 'weekly', dayOfWeek: '3', time: '07:30', estimatedTime: '30', instruction: 'Перевірити стан всіх верстатів.' },
+                { title: 'Ранкова перевірка обладнання', function: 'Виробництво', period: 'weekly', dayOfWeek: '4', time: '07:30', estimatedTime: '30', instruction: 'Перевірити стан всіх верстатів.' },
+                { title: 'Ранкова перевірка обладнання', function: 'Виробництво', period: 'weekly', dayOfWeek: '5', time: '07:30', estimatedTime: '30', instruction: 'Перевірити стан всіх верстатів.' },
+                { title: 'Контроль якості партії', function: 'Контроль якості', period: 'weekly', dayOfWeek: '2', time: '14:00', estimatedTime: '60', instruction: 'Вибіркова перевірка продукції, заповнення журналу якості.' },
+                { title: 'Контроль якості партії', function: 'Контроль якості', period: 'weekly', dayOfWeek: '4', time: '14:00', estimatedTime: '60', instruction: 'Вибіркова перевірка продукції.' },
+                { title: 'Інвентаризація складу', function: 'Логістика', period: 'weekly', dayOfWeek: '5', time: '16:00', estimatedTime: '90', instruction: 'Перевірити залишки готової продукції та сировини. Оновити систему.' },
+                { title: 'Замовлення сировини', function: 'Постачання', period: 'weekly', dayOfWeek: '1', time: '10:00', estimatedTime: '45', instruction: 'Проаналізувати потреби на тиждень, сформувати замовлення постачальникам.' },
+                { title: 'Технічне обслуговування обладнання', function: 'Обслуговування', period: 'monthly', dayOfMonth: '1', time: '08:00', estimatedTime: '240', instruction: 'Повне ТО всіх верстатів: мастило, фільтри, калібрування.' },
+                { title: 'Звіт по виробництву за місяць', function: 'Виробництво', period: 'monthly', dayOfMonth: 'last', time: '15:00', estimatedTime: '120', instruction: 'Підготувати звіт: обсяг виробництва, простої, брак, ефективність.' }
+            ];
+            
+            for (const rt of mfgRegularTasks) {
+                const rtRef = companyRef.collection('regularTasks').doc();
+                batch.set(rtRef, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            }
+            
+            // Sample tasks - виконавці беруться з функцій автоматично
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const mfgTasks = [
+                { title: 'Виготовити партію 500 од. - Замовлення #1247', function: 'Виробництво', status: 'progress', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '17:00', estimatedTime: '360', expectedResult: '500 одиниць готової продукції' },
+                { title: 'Перевірити якість партії #1245', function: 'Контроль якості', status: 'new', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '12:00', estimatedTime: '60', expectedResult: 'Звіт про якість, % браку' },
+                { title: 'Відвантаження клієнту ТОВ "Альфа"', function: 'Логістика', status: 'new', priority: 'medium', deadlineDate: tomorrow.toISOString().split('T')[0], deadlineTime: '09:00', estimatedTime: '90', expectedResult: 'Товар відвантажено, ТТН підписана' },
+                { title: 'Замовити комплектуючі до верстата #3', function: 'Постачання', status: 'new', priority: 'medium', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '14:00', estimatedTime: '30', expectedResult: 'Замовлення оформлене' },
+                { title: 'Ремонт конвеєра - лінія 2', function: 'Обслуговування', status: 'progress', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '11:00', estimatedTime: '120', expectedResult: 'Конвеєр працює' }
+            ];
+            
+            for (const task of mfgTasks) {
+                // Знаходимо функцію і беремо першого виконавця з неї
+                const func = mfgFunctions.find(f => f.name === task.function);
+                const assigneeId = func?.assigneeIds?.[0] || null;
+                // Знаходимо ім'я виконавця по індексу в userIds
+                const assigneeIndex = userIds.indexOf(assigneeId);
+                const assigneeName = assigneeIndex >= 0 ? demoUsers[assigneeIndex].name : '';
+                
+                const taskRef = companyRef.collection('tasks').doc();
+                batch.set(taskRef, { 
+                    ...task,
+                    assigneeId: assigneeId,
+                    assigneeName: assigneeName,
+                    createdBy: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + task.deadlineTime))
+                });
+            }
+            
+            await batch.commit();
+        }
+
         // =====================
         // MOBILE FILTERS
         // =====================
