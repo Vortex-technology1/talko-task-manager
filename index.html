@@ -3646,7 +3646,7 @@
         // GOOGLE CALENDAR CONFIG
         // =====================
         const GOOGLE_CLIENT_ID = '373376418182-1bc6pfp3qo54n2rt8l0sqjtqaqj6ari3.apps.googleusercontent.com';
-        const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.events';
+        const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.email';
         let googleAccessToken = null;
         let tokenClient = null;
 
@@ -6776,25 +6776,47 @@
             fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
                 headers: { 'Authorization': 'Bearer ' + googleAccessToken }
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Failed to get user info: ' + res.status);
+                }
+                return res.json();
+            })
             .then(userInfo => {
-                // Save to Firestore
+                const email = userInfo.email || currentUser.email || 'Підключено';
+                
+                // Save to Firestore using set with merge
                 return db.collection('companies').doc(currentCompany)
                     .collection('users').doc(currentUser.uid)
-                    .update({
+                    .set({
                         googleCalendarConnected: true,
-                        googleCalendarEmail: userInfo.email,
+                        googleCalendarEmail: email,
                         googleAccessToken: googleAccessToken,
                         googleCalendarUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    })
+                    }, { merge: true })
                     .then(() => {
-                        showCalendarConnected(userInfo.email);
+                        showCalendarConnected(email);
                         alert('Google Calendar успішно підключено!');
                     });
             })
             .catch(err => {
                 console.error('Error saving calendar connection:', err);
-                alert('Помилка збереження: ' + err.message);
+                // Try to save without email
+                db.collection('companies').doc(currentCompany)
+                    .collection('users').doc(currentUser.uid)
+                    .set({
+                        googleCalendarConnected: true,
+                        googleCalendarEmail: currentUser.email || 'Підключено',
+                        googleAccessToken: googleAccessToken,
+                        googleCalendarUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true })
+                    .then(() => {
+                        showCalendarConnected(currentUser.email || 'Підключено');
+                        alert('Google Calendar успішно підключено!');
+                    })
+                    .catch(err2 => {
+                        alert('Помилка збереження: ' + err2.message);
+                    });
             });
         }
         
@@ -6813,11 +6835,11 @@
             // Update Firestore
             db.collection('companies').doc(currentCompany)
                 .collection('users').doc(currentUser.uid)
-                .update({
+                .set({
                     googleCalendarConnected: false,
-                    googleCalendarEmail: null,
-                    googleAccessToken: null
-                })
+                    googleCalendarEmail: firebase.firestore.FieldValue.delete(),
+                    googleAccessToken: firebase.firestore.FieldValue.delete()
+                }, { merge: true })
                 .then(() => {
                     googleAccessToken = null;
                     showCalendarNotConnected();
