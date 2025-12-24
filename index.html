@@ -3665,7 +3665,7 @@
                     <div style="width:60px;height:60px;background:linear-gradient(135deg, var(--primary), var(--primary-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;font-weight:600;" id="profileAvatar">U</div>
                     <div>
                         <div style="font-weight:600;font-size:1.1rem;" id="profileName">Користувач</div>
-                        <div style="color:var(--gray);font-size:0.9rem;" id="profileEmail">email@example.com</div>
+                        <div style="color:var(--gray);font-size:0.9rem;" id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92f7fff3fbfed2f7eaf3ffe2fef7bcf1fdff">[email&#160;protected]</a></div>
                         <div style="margin-top:0.25rem;"><span class="status-badge" style="background:#e0e7ff;color:#4338ca;" id="profileRole">Роль</span></div>
                     </div>
                 </div>
@@ -3729,7 +3729,7 @@
         <p>Powered by <strong style="color:#3498db;">TALKO System</strong></p>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // =====================
         // TRANSLATIONS
         // =====================
@@ -4218,12 +4218,17 @@
             currentLang = lang;
             localStorage.setItem('talko_lang', lang);
             
-            document.getElementById('langUA').classList.toggle('active', lang === 'ua');
-            document.getElementById('langRU').classList.toggle('active', lang === 'ru');
+            // Update desktop buttons
+            document.getElementById('langUA')?.classList.toggle('active', lang === 'ua');
+            document.getElementById('langRU')?.classList.toggle('active', lang === 'ru');
+            
+            // Update mobile buttons
+            document.getElementById('mLangUA')?.classList.toggle('active', lang === 'ua');
+            document.getElementById('mLangRU')?.classList.toggle('active', lang === 'ru');
             
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
+                if (translations[lang] && translations[lang][key]) {
                     if (el.tagName === 'INPUT' && el.type !== 'text' && el.type !== 'email') {
                         el.value = translations[lang][key];
                     } else {
@@ -4234,11 +4239,19 @@
             
             // Re-render dynamic content
             if (currentCompany || isSuperAdmin) {
-                const activeTab = document.querySelector('.tab-btn.active');
-                if (activeTab) {
-                    const tabName = activeTab.getAttribute('onclick').match(/switchTab\('(\w+)'\)/)[1];
-                    switchTab(tabName);
+                // Find active tab from either desktop tabs or bottom nav
+                let tabName = 'tasks';
+                const activeBottomBtn = document.querySelector('.bottom-nav-btn.active');
+                const activeTabBtn = document.querySelector('.tab-btn.active');
+                
+                if (activeBottomBtn && activeBottomBtn.dataset.tab) {
+                    tabName = activeBottomBtn.dataset.tab;
+                } else if (activeTabBtn) {
+                    const match = activeTabBtn.getAttribute('onclick')?.match(/switchTab\('(\w+)'\)/);
+                    if (match) tabName = match[1];
                 }
+                
+                switchTab(tabName);
             }
         }
 
@@ -7071,13 +7084,22 @@
             return d.toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
-        function switchTab(t) {
+        function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
-            document.getElementById(t + 'Tab').classList.add('active');
-            document.querySelector(`[onclick="switchTab('${t}')"]`).classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`)?.classList.add('active');
             
-            switch (t) {
+            // Update bottom nav
+            document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tabName) btn.classList.add('active');
+            });
+            
+            // Update FAB
+            updateFab(tabName);
+            
+            switch (tabName) {
                 case 'tasks': renderTasks(); break;
                 case 'control': renderControl(); break;
                 case 'regular': renderRegularTasks(); break;
@@ -7085,6 +7107,21 @@
                 case 'users': renderUsers(); break;
                 case 'analytics': renderAnalytics(); break;
                 case 'admin': renderAdminPanel(); break;
+            }
+        }
+        
+        function updateFab(tabName) {
+            const fab = document.getElementById('fabAdd');
+            if (!fab) return;
+            
+            if (tabName === 'tasks') {
+                fab.style.display = 'flex';
+                fab.onclick = () => openTaskModal();
+            } else if (tabName === 'regular') {
+                fab.style.display = 'flex';
+                fab.onclick = () => openRegularTaskModal();
+            } else {
+                fab.style.display = 'none';
             }
         }
         
@@ -7526,6 +7563,9 @@
             }
             
             updateNotificationButton();
+            
+            // Init FAB for tasks tab
+            updateFab('tasks');
         });
     </script>
     
@@ -7556,7 +7596,7 @@
     </nav>
     
     <!-- FAB for adding tasks -->
-    <button class="fab-add" onclick="openTaskModal()" id="fabAdd" style="display:none;">
+    <button class="fab-add" id="fabAdd">
         <i data-lucide="plus" class="icon"></i>
     </button>
     
@@ -8061,9 +8101,6 @@
             document.getElementById('taskDeadlineDate').value = dateStr;
             document.getElementById('taskDeadlineTime').value = hour.toString().padStart(2, '0') + ':00';
             document.getElementById('taskStatus').value = 'new';
-            
-            // Reset hidden fields
-            document.getElementById('taskId').value = '';
             
             // Reset assignee and function
             document.getElementById('taskAssignee').value = '';
@@ -8870,13 +8907,4 @@
             transition: transform 0.3s;
         }
         
-        .offline-indicator.visible {
-            transform: translateX(-50%) translateY(0);
-        }
-        
-        @media (min-width: 768px) {
-            .tab-swipe-indicator { display: none; }
-        }
-    </style>
-</body>
-</html>
+        .o
