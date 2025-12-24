@@ -143,6 +143,11 @@
             padding: 0.4rem 0.8rem;
             border-radius: 20px;
             font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+        
+        .user-info:hover {
+            background: rgba(255,255,255,0.35);
         }
         
         .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
@@ -2479,7 +2484,7 @@
                     <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
                     <button class="lang-btn" onclick="setLanguage('ru')" id="langRU">RU</button>
                 </div>
-                <div class="user-info" id="currentUserInfo">
+                <div class="user-info" id="currentUserInfo" onclick="openProfileModal()" style="cursor:pointer;" title="Мій профіль">
                     <span><i data-lucide="user" class="icon"></i> <span id="currentUserName">...</span></span>
                     <span id="currentUserRole" style="opacity:0.8;font-size:0.8rem;"></span>
                 </div>
