@@ -2437,6 +2437,153 @@
             }
         }
         
+        /* Mobile Regular Tasks Day Tabs */
+        .mobile-regular-tabs {
+            display: none;
+        }
+        
+        .mobile-regular-day-view {
+            display: none;
+        }
+        
+        @media (max-width: 767px) {
+            .mobile-regular-tabs {
+                display: block;
+                background: white;
+                padding: 12px 8px;
+                margin: 0 -0.5rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            
+            .regular-day-tabs {
+                display: flex;
+                justify-content: space-between;
+                gap: 4px;
+            }
+            
+            .regular-day-tab {
+                flex: 1;
+                padding: 10px 4px;
+                border: none;
+                background: #f3f4f6;
+                border-radius: 10px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: #6b7280;
+                cursor: pointer;
+                transition: all 0.2s;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .regular-day-tab:active {
+                transform: scale(0.95);
+            }
+            
+            .regular-day-tab.active {
+                background: var(--primary);
+                color: white;
+            }
+            
+            .regular-day-tab.today:not(.active) {
+                background: #e0e7ff;
+                color: var(--primary);
+            }
+            
+            .regular-day-tab.has-tasks::after {
+                content: '';
+                display: block;
+                width: 5px;
+                height: 5px;
+                background: currentColor;
+                border-radius: 50%;
+                margin: 4px auto 0;
+                opacity: 0.6;
+            }
+            
+            .mobile-regular-day-view {
+                display: block;
+                background: #f9fafb;
+                min-height: calc(100vh - 350px);
+                padding: 12px;
+                margin: 0 -0.5rem;
+            }
+            
+            .mobile-regular-day-content {
+                max-height: calc(100vh - 380px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .mobile-regular-empty {
+                text-align: center;
+                padding: 60px 20px;
+                color: #9ca3af;
+            }
+            
+            .mobile-regular-empty-icon {
+                font-size: 3rem;
+                margin-bottom: 12px;
+                opacity: 0.5;
+            }
+            
+            .mobile-regular-empty-text {
+                font-size: 1rem;
+                font-weight: 500;
+            }
+            
+            /* Hide desktop week view on mobile */
+            .regular-calendar-container {
+                display: none !important;
+            }
+            
+            /* Bigger task cards on mobile */
+            .mobile-regular-day-view .regular-task-card {
+                padding: 16px;
+                padding-right: 56px;
+                margin-bottom: 12px;
+                border-radius: 12px;
+            }
+            
+            .mobile-regular-day-view .regular-task-card .task-title {
+                font-size: 1rem;
+                margin-bottom: 6px;
+            }
+            
+            .mobile-regular-day-view .regular-task-card .task-time {
+                font-size: 0.85rem;
+                margin-bottom: 6px;
+            }
+            
+            .mobile-regular-day-view .regular-task-card .task-assignee {
+                font-size: 0.8rem;
+            }
+            
+            .mobile-regular-day-view .regular-task-card .task-function {
+                font-size: 0.75rem;
+                padding: 4px 8px;
+            }
+            
+            .mobile-regular-day-view .regular-task-complete-btn {
+                width: 40px;
+                height: 40px;
+                right: 12px;
+            }
+            
+            .mobile-regular-day-view .regular-task-complete-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+            
+            /* Hide regular header view switcher on mobile */
+            #regularCalendarHeader .calendar-view-switcher {
+                display: none;
+            }
+            
+            #regularCalendarHeader h3 {
+                font-size: 1rem !important;
+            }
+        }
+        
         /* Demo Data Options */
         .demo-option-btn {
             display: flex;
@@ -3169,7 +3316,27 @@
                     </div>
                 </div>
                 
-                <!-- Regular Calendar View (Week) -->
+                <!-- Mobile Day Tabs for Regular Tasks -->
+                <div class="mobile-regular-tabs" id="mobileRegularTabs">
+                    <div class="regular-day-tabs" id="regularDayTabs">
+                        <button class="regular-day-tab" data-day="0" onclick="selectRegularDay(0)">Нд</button>
+                        <button class="regular-day-tab" data-day="1" onclick="selectRegularDay(1)">Пн</button>
+                        <button class="regular-day-tab" data-day="2" onclick="selectRegularDay(2)">Вт</button>
+                        <button class="regular-day-tab" data-day="3" onclick="selectRegularDay(3)">Ср</button>
+                        <button class="regular-day-tab" data-day="4" onclick="selectRegularDay(4)">Чт</button>
+                        <button class="regular-day-tab" data-day="5" onclick="selectRegularDay(5)">Пт</button>
+                        <button class="regular-day-tab" data-day="6" onclick="selectRegularDay(6)">Сб</button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Single Day View -->
+                <div class="mobile-regular-day-view" id="mobileRegularDayView">
+                    <div class="mobile-regular-day-content" id="mobileRegularDayContent">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+                
+                <!-- Regular Calendar View (Week) - Desktop only -->
                 <div class="regular-calendar-container active" id="regularCalendarContainer">
                     <div class="regular-week-view" id="regularWeekView">
                         <div class="regular-week-header" id="regularWeekHeader"></div>
@@ -6325,6 +6492,10 @@
             
             bodyEl.innerHTML = bodyHTML;
             refreshIcons();
+            
+            // Also update mobile view
+            updateRegularDayTabs();
+            renderMobileRegularDay();
         }
         
         function getRegularTaskStatus(rt) {
@@ -6402,9 +6573,120 @@
             loadAllData();
         }
         
+        // Mobile Regular Tasks - selected day
+        let selectedRegularDay = new Date().getDay();
+        
+        function selectRegularDay(day) {
+            selectedRegularDay = day;
+            updateRegularDayTabs();
+            renderMobileRegularDay();
+        }
+        
+        function updateRegularDayTabs() {
+            const tabs = document.querySelectorAll('.regular-day-tab');
+            const today = new Date().getDay();
+            
+            tabs.forEach(tab => {
+                const tabDay = parseInt(tab.dataset.day);
+                tab.classList.remove('active', 'today', 'has-tasks');
+                
+                if (tabDay === selectedRegularDay) {
+                    tab.classList.add('active');
+                }
+                if (tabDay === today) {
+                    tab.classList.add('today');
+                }
+                
+                // Check if day has tasks
+                const hasTasks = regularTasks.some(rt => {
+                    if (rt.period === 'weekly') {
+                        return parseInt(rt.dayOfWeek) === tabDay;
+                    }
+                    return false;
+                });
+                if (hasTasks) {
+                    tab.classList.add('has-tasks');
+                }
+            });
+        }
+        
+        function renderMobileRegularDay() {
+            const container = document.getElementById('mobileRegularDayContent');
+            if (!container) return;
+            
+            const today = new Date();
+            const todayDay = today.getDay();
+            const todayDateStr = today.toISOString().split('T')[0];
+            
+            // Filter tasks for selected day
+            const dayTasks = regularTasks.filter(rt => {
+                if (rt.period === 'weekly') {
+                    return parseInt(rt.dayOfWeek) === selectedRegularDay;
+                }
+                // For monthly tasks, show on all days for now
+                return false;
+            }).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+            
+            if (dayTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="mobile-regular-empty">
+                        <div class="mobile-regular-empty-icon">📋</div>
+                        <div class="mobile-regular-empty-text">Немає регулярних завдань</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            dayTasks.forEach(rt => {
+                const func = functions.find(f => f.name === rt.function);
+                const assigneeNames = func?.assigneeIds?.map(id => {
+                    const user = users.find(u => u.id === id);
+                    return user?.name || user?.email?.split('@')[0] || '';
+                }).filter(Boolean) || [];
+                
+                // Get status
+                const statusInfo = getRegularTaskStatus(rt);
+                
+                html += `
+                    <div class="regular-task-card ${statusInfo.completedToday ? 'completed' : ''}" 
+                         onclick="openRegularTaskModal('${rt.id}')"
+                         style="border-left-color: ${statusInfo.color};">
+                        <div class="task-time">
+                            <i data-lucide="clock" class="icon icon-sm"></i>
+                            ${rt.time || '--:--'}
+                            ${rt.estimatedTime ? ` • ${formatDuration(parseInt(rt.estimatedTime))}` : ''}
+                        </div>
+                        <div class="task-title">${rt.title}</div>
+                        ${assigneeNames.length > 0 ? `
+                            <div class="task-assignee">
+                                <i data-lucide="user" class="icon icon-sm"></i>
+                                ${assigneeNames.slice(0, 2).join(', ')}${assigneeNames.length > 2 ? ` +${assigneeNames.length - 2}` : ''}
+                            </div>
+                        ` : ''}
+                        ${rt.function ? `<div class="task-function">${rt.function}</div>` : ''}
+                        <button class="regular-task-complete-btn ${statusInfo.completedToday ? 'completed' : ''}" 
+                                onclick="event.stopPropagation();markRegularTaskComplete('${rt.id}')"
+                                title="${statusInfo.completedToday ? 'Виконано сьогодні' : 'Позначити виконаним'}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            refreshIcons();
+        }
+        
         function initRegularView() {
             const savedView = localStorage.getItem('regularView') || 'week';
             setRegularView(savedView);
+            
+            // Init mobile view
+            selectedRegularDay = new Date().getDay();
+            updateRegularDayTabs();
+            renderMobileRegularDay();
         }
 
         // =====================
