@@ -1816,176 +1816,10 @@
             .week-strip-day .task-dot.status-in_progress { background: #ff9500; }
             .week-strip-day .task-dot.status-review { background: #af52de; }
             .week-strip-day .task-dot.status-done { background: #34c759; }
-            
-            /* Mobile Agenda View (Apple Calendar Style) */
-            .mobile-agenda {
-                background: #f2f2f7;
-                min-height: 200px;
-                padding: 0;
-            }
-            
-            .agenda-header {
-                padding: 16px 16px 8px;
-                font-size: 1.3rem;
-                font-weight: 700;
-                color: #1c1c1e;
-                background: white;
-                position: sticky;
-                top: 0;
-                z-index: 10;
-            }
-            
-            .agenda-subheader {
-                padding: 0 16px 12px;
-                font-size: 0.9rem;
-                color: #8e8e93;
-                background: white;
-            }
-            
-            .agenda-list {
-                padding: 8px 16px 100px;
-            }
-            
-            .agenda-item {
-                display: flex;
-                align-items: flex-start;
-                gap: 12px;
-                background: white;
-                padding: 14px 16px;
-                border-radius: 12px;
-                margin-bottom: 8px;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-                transition: transform 0.15s ease, box-shadow 0.15s ease;
-                -webkit-tap-highlight-color: transparent;
-            }
-            
-            .agenda-item:active {
-                transform: scale(0.98);
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            }
-            
-            .agenda-item-color {
-                width: 4px;
-                height: 100%;
-                min-height: 40px;
-                border-radius: 2px;
-                flex-shrink: 0;
-            }
-            
-            .agenda-item-color.status-new { background: #007aff; }
-            .agenda-item-color.status-in_progress { background: #ff9500; }
-            .agenda-item-color.status-review { background: #af52de; }
-            .agenda-item-color.status-done { background: #34c759; }
-            
-            .agenda-item-content {
-                flex: 1;
-                min-width: 0;
-            }
-            
-            .agenda-item-title {
-                font-size: 1rem;
-                font-weight: 500;
-                color: #1c1c1e;
-                margin-bottom: 4px;
-                line-height: 1.3;
-            }
-            
-            .agenda-item.done .agenda-item-title {
-                color: #8e8e93;
-                text-decoration: line-through;
-            }
-            
-            .agenda-item-meta {
-                font-size: 0.85rem;
-                color: #8e8e93;
-            }
-            
-            .agenda-item-time {
-                font-weight: 500;
-            }
-            
-            .agenda-item-check {
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                border: 2px solid #c7c7cc;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0;
-                transition: all 0.2s ease;
-                cursor: pointer;
-            }
-            
-            .agenda-item-check:active {
-                transform: scale(0.9);
-            }
-            
-            .agenda-item.done .agenda-item-check {
-                background: #34c759;
-                border-color: #34c759;
-            }
-            
-            .agenda-item.done .agenda-item-check svg {
-                display: block;
-            }
-            
-            .agenda-item-check svg {
-                display: none;
-                width: 14px;
-                height: 14px;
-                color: white;
-            }
-            
-            .agenda-empty {
-                text-align: center;
-                padding: 60px 20px;
-                color: #8e8e93;
-            }
-            
-            .agenda-empty-icon {
-                font-size: 3rem;
-                margin-bottom: 12px;
-                opacity: 0.5;
-            }
-            
-            .agenda-empty-text {
-                font-size: 1rem;
-                font-weight: 500;
-            }
-            
-            /* Long press hint */
-            .long-press-hint {
-                position: fixed;
-                bottom: 100px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(0,0,0,0.8);
-                color: white;
-                padding: 10px 20px;
-                border-radius: 20px;
-                font-size: 0.85rem;
-                z-index: 1000;
-                animation: fadeInUp 0.3s ease;
-            }
-            
-            @keyframes fadeInUp {
-                from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-                to { opacity: 1; transform: translateX(-50%) translateY(0); }
-            }
-            
-            /* Hide time grid on mobile, show agenda instead */
-            .calendar-day-view {
-                display: none !important;
-            }
-            
-            .mobile-agenda {
-                display: block;
-            }
         }
         
-        /* Desktop: hide mobile agenda */
-        .mobile-agenda {
+        /* Desktop: hide mobile elements */
+        .mobile-week-strip {
             display: none;
         }
         
@@ -2366,19 +2200,6 @@
                 flex: 1;
                 text-align: left;
                 margin-left: 4px;
-                cursor: pointer;
-            }
-            
-            .calendar-title::after {
-                content: '';
-                display: inline-block;
-                width: 0;
-                height: 0;
-                border-left: 4px solid transparent;
-                border-right: 4px solid transparent;
-                border-top: 5px solid #6b7280;
-                margin-left: 6px;
-                vertical-align: middle;
             }
             
             .calendar-today-btn {
@@ -2426,6 +2247,18 @@
             
             .calendar-hour-row {
                 height: 48px;
+                cursor: pointer;
+                transition: background 0.1s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .calendar-hour-row:active {
+                background: rgba(0, 122, 255, 0.15) !important;
+            }
+            
+            /* Hint text on empty hours */
+            .calendar-hour-row:empty::after {
+                content: '';
             }
             
             /* Hide desktop day column header */
@@ -2541,36 +2374,55 @@
             }
             
             .regular-week-day-header .day-name {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
             }
             
             .regular-week-body {
                 display: flex;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                padding-bottom: 8px;
             }
             
             .regular-week-day-column {
-                min-width: 140px;
+                min-width: 85%;
+                max-width: 85%;
                 flex-shrink: 0;
-                padding: 0.4rem;
+                padding: 0.5rem;
+                scroll-snap-align: start;
             }
             
             .regular-task-card {
-                padding: 0.5rem;
+                padding: 0.75rem;
+                padding-right: 50px;
+                margin-bottom: 0.75rem;
             }
             
             .regular-task-card .task-title {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
+                line-height: 1.3;
             }
             
             .regular-task-card .task-time {
-                font-size: 0.7rem;
+                font-size: 0.8rem;
+            }
+            
+            .regular-task-complete-btn {
+                width: 36px;
+                height: 36px;
             }
             
             .regular-day-empty {
-                padding: 1rem 0.25rem;
-                font-size: 0.75rem;
+                padding: 2rem 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            /* Scroll indicator */
+            .regular-week-body::after {
+                content: '';
+                min-width: 15%;
+                flex-shrink: 0;
             }
         }
         
@@ -2736,6 +2588,7 @@
             margin-bottom: 0.5rem;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
         }
         
         .regular-task-card:hover {
@@ -2757,6 +2610,7 @@
             font-size: 0.85rem;
             color: var(--dark);
             margin-bottom: 0.25rem;
+            padding-right: 40px;
         }
         
         .regular-task-card .task-assignee {
@@ -2775,6 +2629,64 @@
             border-radius: 4px;
             display: inline-block;
             margin-top: 0.25rem;
+        }
+        
+        /* Complete button for regular tasks */
+        .regular-task-complete-btn {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 5;
+        }
+        
+        .regular-task-complete-btn:hover {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+        
+        .regular-task-complete-btn:active {
+            transform: translateY(-50%) scale(0.9);
+        }
+        
+        .regular-task-complete-btn svg {
+            width: 16px;
+            height: 16px;
+            color: #d1d5db;
+            transition: color 0.2s;
+        }
+        
+        .regular-task-complete-btn:hover svg {
+            color: var(--success);
+        }
+        
+        .regular-task-complete-btn.completed {
+            border-color: var(--success);
+            background: var(--success);
+        }
+        
+        .regular-task-complete-btn.completed svg {
+            color: white;
+        }
+        
+        .regular-task-card.completed {
+            opacity: 0.6;
+            border-left-color: var(--success);
+        }
+        
+        .regular-task-card.completed .task-title {
+            text-decoration: line-through;
+            color: var(--gray);
         }
         
         /* Empty day placeholder */
@@ -3059,7 +2971,7 @@
                         </button>
                     </div>
                     
-                    <div class="calendar-title" id="calendarTitle" onclick="toggleMiniCalendar()">Грудень 2024</div>
+                    <div class="calendar-title" id="calendarTitle">Грудень 2024</div>
                     
                     <div style="display:flex;align-items:center;gap:0.5rem;">
                         <div class="calendar-view-switcher">
@@ -3121,15 +3033,6 @@
                             <div class="calendar-month-day-name">Сб</div>
                         </div>
                         <div class="calendar-month-body" id="monthBody"></div>
-                    </div>
-                    
-                    <!-- Mobile Agenda View (Apple Calendar Style) -->
-                    <div class="mobile-agenda" id="mobileAgenda">
-                        <div class="agenda-header" id="agendaHeader">Сьогодні</div>
-                        <div class="agenda-subheader" id="agendaSubheader"></div>
-                        <div class="agenda-list" id="agendaList">
-                            <!-- Generated by JS -->
-                        </div>
                     </div>
                 </div>
                 
@@ -6391,7 +6294,8 @@
                         const statusInfo = getRegularTaskStatus(rt);
                         
                         bodyHTML += `
-                            <div class="regular-task-card" onclick="openRegularTaskModal('${rt.id}')"
+                            <div class="regular-task-card ${statusInfo.completedToday ? 'completed' : ''}" 
+                                 onclick="openRegularTaskModal('${rt.id}')"
                                  style="border-left-color: ${statusInfo.color};">
                                 <div class="task-time">
                                     <i data-lucide="clock" class="icon icon-sm"></i>
@@ -6406,6 +6310,11 @@
                                     </div>
                                 ` : ''}
                                 ${rt.function ? `<div class="task-function">${rt.function}</div>` : ''}
+                                <button class="regular-task-complete-btn ${statusInfo.completedToday ? 'completed' : ''}" 
+                                        onclick="event.stopPropagation();markRegularTaskComplete('${rt.id}')"
+                                        title="${statusInfo.completedToday ? 'Виконано сьогодні' : 'Позначити виконаним'}">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                </button>
                             </div>
                         `;
                     });
@@ -6449,18 +6358,48 @@
             );
             
             if (completedToday) {
-                return { status: 'completed', color: '#4caf50', text: 'Виконано', lucideIcon: 'check-circle' };
+                return { status: 'completed', color: '#4caf50', text: 'Виконано', lucideIcon: 'check-circle', completedToday: true };
             } else if (generatedTasks.length > 0) {
                 const allDone = generatedTasks.every(t => t.status === 'done');
                 if (allDone) {
-                    return { status: 'completed', color: '#4caf50', text: 'Виконано', lucideIcon: 'check-circle' };
+                    return { status: 'completed', color: '#4caf50', text: 'Виконано', lucideIcon: 'check-circle', completedToday: true };
                 }
-                return { status: 'inProgress', color: '#ff9800', text: 'В роботі', lucideIcon: 'clock' };
+                return { status: 'inProgress', color: '#ff9800', text: 'В роботі', lucideIcon: 'clock', completedToday: false };
             } else if (shouldRunToday) {
-                return { status: 'notCreated', color: '#2196f3', text: 'Очікує', lucideIcon: 'circle' };
+                return { status: 'notCreated', color: '#2196f3', text: 'Очікує', lucideIcon: 'circle', completedToday: false };
             } else {
-                return { status: 'inactive', color: '#9e9e9e', text: 'Не сьогодні', lucideIcon: 'minus-circle' };
+                return { status: 'inactive', color: '#9e9e9e', text: 'Не сьогодні', lucideIcon: 'minus-circle', completedToday: false };
             }
+        }
+        
+        // Mark regular task as completed
+        async function markRegularTaskComplete(taskId) {
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(10);
+            
+            const task = regularTasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            
+            // Check if already completed today
+            const lastCompleted = task.lastCompleted?.toDate ? task.lastCompleted.toDate() : null;
+            const completedToday = lastCompleted && lastCompleted.toISOString().split('T')[0] === todayStr;
+            
+            if (completedToday) {
+                // Unmark as completed
+                await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(taskId).update({
+                    lastCompleted: null
+                });
+            } else {
+                // Mark as completed
+                await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(taskId).update({
+                    lastCompleted: firebase.firestore.Timestamp.now()
+                });
+            }
+            
+            loadAllData();
         }
         
         function initRegularView() {
