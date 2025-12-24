@@ -1701,6 +1701,91 @@
             color: white;
         }
         
+        /* Task Quick Menu */
+        .task-quick-menu {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 10000;
+            min-width: 180px;
+            overflow: hidden;
+            animation: fadeInMenu 0.15s ease;
+        }
+        
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .task-quick-menu-header {
+            padding: 12px 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+        
+        .task-quick-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.15s;
+        }
+        
+        .task-quick-menu-item:hover {
+            background: #f3f4f6;
+        }
+        
+        .task-quick-menu-item.complete {
+            color: #059669;
+        }
+        
+        .task-quick-menu-item.complete:hover {
+            background: #ecfdf5;
+        }
+        
+        .task-quick-menu-item.delete {
+            color: #dc2626;
+        }
+        
+        .task-quick-menu-item.delete:hover {
+            background: #fef2f2;
+        }
+        
+        .task-quick-menu-item svg {
+            flex-shrink: 0;
+        }
+        
+        /* Drag & Drop */
+        .calendar-hour-row {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        
+        .calendar-hour-row:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .calendar-hour-row.drag-over {
+            background: rgba(102, 126, 234, 0.15);
+            box-shadow: inset 0 0 0 2px var(--primary);
+        }
+        
+        .calendar-event[draggable="true"] {
+            cursor: grab;
+        }
+        
+        .calendar-event[draggable="true"]:active {
+            cursor: grabbing;
+        }
+        
         /* Week View */
         .calendar-week-view {
             background: white;
@@ -3349,6 +3434,17 @@
                 
                 // Regular
                 addRegularTask: '+ Регулярне завдання',
+                
+                // Mobile menu
+                menu: 'Меню',
+                aiAssistants: 'AI Асистенти',
+                aiManager: 'Керівник',
+                aiTechnical: 'Технічний',
+                aiSupport: 'AI Помічник (Підтримка)',
+                profile: 'Профіль',
+                enableNotifications: 'Увімкнути сповіщення',
+                disableNotifications: 'Вимкнути сповіщення',
+                loadDemoData: 'Завантажити демо-дані',
             },
             ru: {
                 // Auth
@@ -3574,6 +3670,17 @@
                 
                 // Regular
                 addRegularTask: '+ Регулярная задача',
+                
+                // Mobile menu
+                menu: 'Меню',
+                aiAssistants: 'AI Ассистенты',
+                aiManager: 'Руководитель',
+                aiTechnical: 'Технический',
+                aiSupport: 'AI Помощник (Поддержка)',
+                profile: 'Профиль',
+                enableNotifications: 'Включить уведомления',
+                disableNotifications: 'Отключить уведомления',
+                loadDemoData: 'Загрузить демо-данные',
             }
         };
 
@@ -4374,13 +4481,15 @@
             const timeSlotsEl = document.getElementById('calendarTimeSlots');
             const eventsContainerEl = document.getElementById('calendarEventsContainer');
             
+            const dayStr = calendarDate.toISOString().split('T')[0];
+            
             let timeSlotsHTML = '';
             let hoursHTML = '';
             
             for (let hour = 0; hour < 24; hour++) {
                 const timeStr = hour.toString().padStart(2, '0') + ':00';
                 timeSlotsHTML += `<div class="calendar-time-slot">${timeStr}</div>`;
-                hoursHTML += `<div class="calendar-hour-row" data-hour="${hour}"></div>`;
+                hoursHTML += `<div class="calendar-hour-row" data-hour="${hour}" data-date="${dayStr}" onclick="openTaskAtTime('${dayStr}', ${hour})" ondragover="onHourDragOver(event)" ondragleave="onHourDragLeave(event)" ondrop="onHourDrop(event, '${dayStr}', ${hour})"></div>`;
             }
             
             timeSlotsEl.innerHTML = timeSlotsHTML;
@@ -4390,7 +4499,6 @@
             eventsContainerEl.innerHTML = hoursHTML + currentTimeLineHTML;
             
             // Filter tasks for this day
-            const dayStr = calendarDate.toISOString().split('T')[0];
             const dayTasks = tasks.filter(task => {
                 if (!task.deadline) return false;
                 const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
@@ -4421,7 +4529,7 @@
                 alldayEl.innerHTML = `
                     <div class="calendar-allday-label">Без часу (${allDayTasks.length})</div>
                     ${allDayTasks.map(task => `
-                        <div class="calendar-allday-event calendar-event status-${task.status}" onclick="openTaskModal('${task.id}')">
+                        <div class="calendar-allday-event calendar-event status-${task.status}" onclick="showTaskQuickMenu(event, '${task.id}')">
                             ${task.status === 'done' ? '<span style="margin-right:4px;">✓</span>' : ''}
                             ${task.title}
                         </div>
@@ -4447,7 +4555,9 @@
                 const eventHTML = `
                     <div class="calendar-event status-${task.status}" 
                          style="top: ${topOffset}px; height: ${height}px;"
-                         onclick="openTaskModal('${task.id}')"
+                         onclick="showTaskQuickMenu(event, '${task.id}')"
+                         draggable="true"
+                         ondragstart="onTaskDragStart(event, '${task.id}')"
                          title="${task.title}">
                         ${task.status === 'done' ? '<div class="calendar-event-done-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' : ''}
                         <div class="calendar-event-title">${task.title}</div>
@@ -4535,7 +4645,7 @@
                 
                 // Hour rows
                 for (let hour = 0; hour < 24; hour++) {
-                    bodyHTML += `<div class="calendar-hour-row" data-hour="${hour}"></div>`;
+                    bodyHTML += `<div class="calendar-hour-row" data-hour="${hour}" onclick="openTaskAtTime('${dayStr}', ${hour})" ondragover="onHourDragOver(event)" ondragleave="onHourDragLeave(event)" ondrop="onHourDrop(event, '${dayStr}', ${hour})"></div>`;
                 }
                 
                 // Get tasks for this day
@@ -4558,7 +4668,9 @@
                     bodyHTML += `
                         <div class="calendar-event status-${task.status}" 
                              style="position:absolute; top:${topOffset}px; height:${height}px; left:2px; right:2px;"
-                             onclick="openTaskModal('${task.id}')"
+                             onclick="showTaskQuickMenu(event, '${task.id}')"
+                             draggable="true"
+                             ondragstart="onTaskDragStart(event, '${task.id}')"
                              title="${task.title}">
                             <div class="calendar-event-title" style="font-size:0.7rem;">${task.title}</div>
                         </div>
@@ -4640,7 +4752,7 @@
                         <div class="month-day-number">${dayNum}</div>
                         ${dayTasks.slice(0, 3).map(task => `
                             <div class="calendar-month-event calendar-event status-${task.status}" 
-                                 onclick="event.stopPropagation(); openTaskModal('${task.id}')">
+                                 onclick="event.stopPropagation(); showTaskQuickMenu(event, '${task.id}')">
                                 ${task.title}
                             </div>
                         `).join('')}
@@ -6595,24 +6707,24 @@
     </div>
     
     <!-- Mobile More Menu Modal -->
-    <div class="modal" id="mobileMenuModal">
+    <div class="modal" id="mobileMenuModal" onclick="if(event.target === this) closeMobileMenu();">
         <div class="modal-content" style="max-width:320px;margin-top:auto;margin-bottom:0;border-radius:16px 16px 0 0;">
             <div style="padding:1rem;">
-                <h3 style="margin-bottom:1rem;text-align:center;">Меню</h3>
+                <h3 style="margin-bottom:1rem;text-align:center;" data-i18n="menu">Меню</h3>
                 <div style="display:flex;flex-direction:column;gap:0.5rem;">
                     
                     <!-- AI Assistants -->
-                    <p style="margin:0;font-size:0.8rem;color:#888;text-transform:uppercase;letter-spacing:0.5px;">AI Асистенти</p>
+                    <p style="margin:0;font-size:0.8rem;color:#888;text-transform:uppercase;letter-spacing:0.5px;" data-i18n="aiAssistants">AI Асистенти</p>
                     <div style="display:flex;gap:0.5rem;">
                         <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="btn" style="flex:1;justify-content:center;background:#8b5cf6;color:white;font-size:0.85rem;" onclick="closeMobileMenu();">
-                            <i data-lucide="target" class="icon icon-sm"></i> Керівник
+                            <i data-lucide="target" class="icon icon-sm"></i> <span data-i18n="aiManager">Керівник</span>
                         </a>
                         <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="btn" style="flex:1;justify-content:center;background:#22c55e;color:white;font-size:0.85rem;" onclick="closeMobileMenu();">
-                            <i data-lucide="wrench" class="icon icon-sm"></i> Технічний
+                            <i data-lucide="wrench" class="icon icon-sm"></i> <span data-i18n="aiTechnical">Технічний</span>
                         </a>
                     </div>
                     <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="btn" style="justify-content:center;background:#3b82f6;color:white;" onclick="closeMobileMenu();">
-                        <i data-lucide="message-circle" class="icon"></i> AI Помічник (Підтримка)
+                        <i data-lucide="message-circle" class="icon"></i> <span data-i18n="aiSupport">AI Помічник (Підтримка)</span>
                     </a>
                     
                     <hr style="border:none;border-top:1px solid #eee;margin:0.5rem 0;">
@@ -6624,13 +6736,13 @@
                         <i data-lucide="bar-chart-3" class="icon"></i> <span data-i18n="tabAnalytics">Аналітика</span>
                     </button>
                     <button class="btn" onclick="openProfileModal();closeMobileMenu();" style="justify-content:flex-start;">
-                        <i data-lucide="user" class="icon"></i> Профіль
+                        <i data-lucide="user" class="icon"></i> <span data-i18n="profile">Профіль</span>
                     </button>
                     <button id="notificationToggleBtn" class="btn btn-success" onclick="toggleNotifications();closeMobileMenu();" style="justify-content:flex-start;">
-                        <i data-lucide="bell" class="icon"></i> Увімкнути сповіщення
+                        <i data-lucide="bell" class="icon"></i> <span data-i18n="enableNotifications">Увімкнути сповіщення</span>
                     </button>
                     <button class="btn" onclick="openDemoDataModal();closeMobileMenu();" style="justify-content:flex-start;" id="demoDataBtn">
-                        <i data-lucide="database" class="icon"></i> Завантажити демо-дані
+                        <i data-lucide="database" class="icon"></i> <span data-i18n="loadDemoData">Завантажити демо-дані</span>
                     </button>
                     <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
                         <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;" id="mLangUA">UA</button>
@@ -6971,8 +7083,14 @@
                     }
                 });
                 
-                console.log('Calendar event deleted:', eventId);
-                return true;
+                // 204 = success, 404/410 = already deleted (ok)
+                if (response.ok || response.status === 404 || response.status === 410) {
+                    console.log('Calendar event deleted:', eventId);
+                    return true;
+                }
+                
+                console.warn('Calendar delete response:', response.status);
+                return false;
             } catch (err) {
                 console.error('Error deleting calendar event:', err);
                 return false;
@@ -7003,6 +7121,187 @@
             
             modal.style.display = 'flex';
             refreshIcons();
+        }
+        
+        // =====================
+        // CALENDAR QUICK ACTIONS
+        // =====================
+        
+        // Open task form with pre-filled date and time
+        function openTaskAtTime(dateStr, hour) {
+            editingId = null;
+            document.getElementById('taskModalTitle').textContent = t('addTask');
+            document.getElementById('taskForm').reset();
+            
+            // Pre-fill date and time
+            document.getElementById('taskDeadlineDate').value = dateStr;
+            document.getElementById('taskDeadlineTime').value = hour.toString().padStart(2, '0') + ':00';
+            document.getElementById('taskStatus').value = 'new';
+            
+            // Reset hidden fields
+            document.getElementById('taskId').value = '';
+            
+            // Reset assignee and function
+            document.getElementById('taskAssignee').value = '';
+            document.getElementById('taskFunction').value = '';
+            
+            document.getElementById('taskModal').style.display = 'flex';
+            refreshIcons();
+        }
+        
+        // Quick menu for task actions
+        let activeQuickMenu = null;
+        
+        function showTaskQuickMenu(event, taskId) {
+            event.stopPropagation();
+            
+            // Close existing menu
+            closeTaskQuickMenu();
+            
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            // Create menu
+            const menu = document.createElement('div');
+            menu.className = 'task-quick-menu';
+            menu.id = 'taskQuickMenu';
+            menu.innerHTML = `
+                <div class="task-quick-menu-header">${task.title}</div>
+                <div class="task-quick-menu-item" onclick="openTaskModal('${taskId}');closeTaskQuickMenu();">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Редагувати
+                </div>
+                ${task.status !== 'done' ? `
+                <div class="task-quick-menu-item complete" onclick="quickCompleteFromMenu('${taskId}')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Завершити
+                </div>
+                ` : `
+                <div class="task-quick-menu-item" onclick="reopenTaskFromMenu('${taskId}')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    Відновити
+                </div>
+                `}
+                <div class="task-quick-menu-item delete" onclick="deleteTaskFromMenu('${taskId}')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    Видалити
+                </div>
+            `;
+            
+            // Position menu
+            const rect = event.target.closest('.calendar-event, .calendar-allday-event').getBoundingClientRect();
+            menu.style.position = 'fixed';
+            menu.style.left = Math.min(rect.left, window.innerWidth - 200) + 'px';
+            menu.style.top = Math.min(rect.bottom + 5, window.innerHeight - 180) + 'px';
+            
+            document.body.appendChild(menu);
+            activeQuickMenu = menu;
+            
+            // Close on click outside
+            setTimeout(() => {
+                document.addEventListener('click', closeTaskQuickMenu);
+            }, 10);
+        }
+        
+        function closeTaskQuickMenu() {
+            if (activeQuickMenu) {
+                activeQuickMenu.remove();
+                activeQuickMenu = null;
+            }
+            document.removeEventListener('click', closeTaskQuickMenu);
+        }
+        
+        async function quickCompleteFromMenu(taskId) {
+            closeTaskQuickMenu();
+            
+            const task = tasks.find(t => t.id === taskId);
+            if (task?.calendarEventId && googleAccessToken) {
+                deleteCalendarEvent(task.calendarEventId);
+            }
+            
+            await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({ 
+                status: 'done',
+                completedAt: new Date().toISOString()
+            });
+            loadAllData();
+        }
+        
+        async function reopenTaskFromMenu(taskId) {
+            closeTaskQuickMenu();
+            await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({ 
+                status: 'in_progress'
+            });
+            loadAllData();
+        }
+        
+        async function deleteTaskFromMenu(taskId) {
+            closeTaskQuickMenu();
+            if (!confirm('Видалити це завдання?')) return;
+            
+            const task = tasks.find(t => t.id === taskId);
+            if (task?.calendarEventId && googleAccessToken) {
+                deleteCalendarEvent(task.calendarEventId);
+            }
+            
+            await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).delete();
+            loadAllData();
+        }
+        
+        // Drag and drop
+        let draggedTaskId = null;
+        
+        function onTaskDragStart(event, taskId) {
+            draggedTaskId = taskId;
+            event.dataTransfer.effectAllowed = 'move';
+            event.target.style.opacity = '0.5';
+        }
+        
+        function onTaskDragEnd(event) {
+            event.target.style.opacity = '1';
+            draggedTaskId = null;
+        }
+        
+        function onHourDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            event.target.classList.add('drag-over');
+        }
+        
+        function onHourDragLeave(event) {
+            event.target.classList.remove('drag-over');
+        }
+        
+        async function onHourDrop(event, dateStr, hour) {
+            event.preventDefault();
+            event.target.classList.remove('drag-over');
+            
+            if (!draggedTaskId) return;
+            
+            const task = tasks.find(t => t.id === draggedTaskId);
+            if (!task) return;
+            
+            // Get minutes from original time if available
+            const oldDeadline = task.deadline?.toDate ? task.deadline.toDate() : new Date(task.deadline);
+            const minutes = oldDeadline ? oldDeadline.getMinutes() : 0;
+            
+            const newTime = hour.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+            const newDeadline = dateStr + 'T' + newTime;
+            
+            // Update task
+            await db.collection('companies').doc(currentCompany).collection('tasks').doc(draggedTaskId).update({
+                deadlineDate: dateStr,
+                deadlineTime: newTime,
+                deadline: newDeadline,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // Update Google Calendar
+            if (task.calendarEventId && googleAccessToken) {
+                updateCalendarEvent(task.calendarEventId, { ...task, deadlineDate: dateStr, deadlineTime: newTime });
+            }
+            
+            draggedTaskId = null;
+            loadAllData();
         }
 
         // =====================
