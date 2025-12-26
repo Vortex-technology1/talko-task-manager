@@ -3001,6 +3001,163 @@
                 justify-content: flex-end;
             }
         }
+        
+        /* ===================== */
+        /* COMMENTS SYSTEM       */
+        /* ===================== */
+        
+        .comments-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e5e7eb;
+        }
+        
+        .comments-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .comments-header .comment-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .comments-list {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 0.5rem;
+        }
+        
+        .comments-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .comments-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .comments-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .comment-item {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid var(--primary);
+            animation: slideIn 0.2s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .comment-item.own-comment {
+            background: #ecfdf5;
+            border-left-color: var(--success);
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--dark);
+        }
+        
+        .comment-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+        
+        .comment-text {
+            font-size: 0.9rem;
+            color: #374151;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .comment-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+        
+        .comment-input {
+            flex: 1;
+            min-height: 44px;
+            max-height: 120px;
+            padding: 0.6rem 0.9rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            resize: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .comment-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .comment-send-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .comment-send-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+        
+        .comments-empty {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .comments-section.hidden { display: none; }
+        
+        @media (max-width: 767px) {
+            .comments-list { max-height: 200px; }
+            .comment-input { font-size: 16px; }
+        }
     </style>
 </head>
 <body>
@@ -3564,6 +3721,27 @@
                     </div>
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
                 </form>
+                
+                <!-- COMMENTS SECTION -->
+                <div id="taskCommentsSection" class="comments-section hidden">
+                    <div class="comments-header">
+                        <i data-lucide="message-circle" class="icon"></i>
+                        <span data-i18n="comments">Коментарі</span>
+                        <span id="commentCount" class="comment-count">0</span>
+                    </div>
+                    <div id="commentsList" class="comments-list">
+                        <div class="comments-empty">
+                            <div class="comments-empty-icon">💬</div>
+                            <span data-i18n="noComments">Ще немає коментарів</span>
+                        </div>
+                    </div>
+                    <div class="comment-input-wrapper">
+                        <textarea id="commentInput" class="comment-input" placeholder="Написати коментар..." rows="1" onkeydown="handleCommentKeydown(event)"></textarea>
+                        <button type="button" class="comment-send-btn" onclick="sendComment()" id="sendCommentBtn">
+                            <i data-lucide="send" class="icon"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -3819,6 +3997,11 @@
                 save: 'Зберегти',
                 close: 'Закрити',
                 
+                // Comments
+                comments: 'Коментарі',
+                noComments: 'Ще немає коментарів',
+                writeComment: 'Написати коментар...',
+                
                 // Statuses
                 statusNew: 'Нове',
                 statusProgress: 'В роботі',
@@ -4054,6 +4237,11 @@
                 cancel: 'Отмена',
                 save: 'Сохранить',
                 close: 'Закрыть',
+                
+                // Comments
+                comments: 'Комментарии',
+                noComments: 'Пока нет комментариев',
+                writeComment: 'Написать комментарий...',
                 
                 // Statuses
                 statusNew: 'Новое',
@@ -4768,6 +4956,9 @@
         function openTaskModal(id = null) {
             document.getElementById('taskModal').style.display = 'block';
             updateSelects();
+            
+            // Initialize comments section
+            initTaskComments(id);
             
             if (id) {
                 editingId = id;
@@ -8928,6 +9119,204 @@
                 saveOfflineData();
             }
         }, 30000);
+        
+        // =====================
+        // COMMENTS SYSTEM
+        // =====================
+        
+        let currentTaskIdForComments = null;
+        let commentsUnsubscribe = null;
+        
+        // Initialize comments when opening task modal for editing
+        function initTaskComments(taskId) {
+            currentTaskIdForComments = taskId;
+            const section = document.getElementById('taskCommentsSection');
+            
+            if (!taskId) {
+                // New task - hide comments
+                section.classList.add('hidden');
+                return;
+            }
+            
+            // Show comments section for existing tasks
+            section.classList.remove('hidden');
+            loadComments(taskId);
+            
+            // Re-initialize lucide icons for comment section
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        // Load comments with real-time listener
+        function loadComments(taskId) {
+            const listEl = document.getElementById('commentsList');
+            const countEl = document.getElementById('commentCount');
+            
+            // Unsubscribe from previous listener
+            if (commentsUnsubscribe) {
+                commentsUnsubscribe();
+            }
+            
+            listEl.innerHTML = '<div class="comments-loading">Завантаження...</div>';
+            
+            // Real-time listener for comments
+            commentsUnsubscribe = db.collection('companies').doc(companyId)
+                .collection('tasks').doc(taskId)
+                .collection('comments')
+                .orderBy('createdAt', 'asc')
+                .onSnapshot(snapshot => {
+                    const comments = [];
+                    snapshot.forEach(doc => {
+                        comments.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    renderComments(comments);
+                    countEl.textContent = comments.length;
+                }, error => {
+                    console.error('Error loading comments:', error);
+                    listEl.innerHTML = '<div class="comments-empty">Помилка завантаження</div>';
+                });
+        }
+        
+        // Render comments list
+        function renderComments(comments) {
+            const listEl = document.getElementById('commentsList');
+            const currentUserId = currentUser?.id;
+            
+            if (comments.length === 0) {
+                listEl.innerHTML = `
+                    <div class="comments-empty">
+                        <div class="comments-empty-icon">💬</div>
+                        <span data-i18n="noComments">Ще немає коментарів</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            listEl.innerHTML = comments.map(comment => {
+                const isOwn = comment.authorId === currentUserId;
+                const time = formatCommentTime(comment.createdAt);
+                
+                return `
+                    <div class="comment-item ${isOwn ? 'own-comment' : ''}">
+                        <div class="comment-header">
+                            <span class="comment-author">${escapeHtml(comment.authorName || 'Невідомий')}</span>
+                            <span class="comment-time">${time}</span>
+                        </div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Scroll to bottom
+            listEl.scrollTop = listEl.scrollHeight;
+        }
+        
+        // Format comment timestamp
+        function formatCommentTime(timestamp) {
+            if (!timestamp) return '';
+            
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            // Less than 1 minute
+            if (diff < 60000) return 'щойно';
+            
+            // Less than 1 hour
+            if (diff < 3600000) {
+                const mins = Math.floor(diff / 60000);
+                return `${mins} хв тому`;
+            }
+            
+            // Today
+            if (date.toDateString() === now.toDateString()) {
+                return date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+            }
+            
+            // Yesterday
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.toDateString() === yesterday.toDateString()) {
+                return 'вчора ' + date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+            }
+            
+            // Older
+            return date.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short' }) + 
+                   ' ' + date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        // Send new comment
+        async function sendComment() {
+            const input = document.getElementById('commentInput');
+            const btn = document.getElementById('sendCommentBtn');
+            const text = input.value.trim();
+            
+            if (!text || !currentTaskIdForComments || !currentUser) return;
+            
+            btn.disabled = true;
+            
+            try {
+                await db.collection('companies').doc(companyId)
+                    .collection('tasks').doc(currentTaskIdForComments)
+                    .collection('comments')
+                    .add({
+                        text: text,
+                        authorId: currentUser.id,
+                        authorName: currentUser.name || currentUser.email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                
+                input.value = '';
+                input.style.height = 'auto';
+            } catch (error) {
+                console.error('Error sending comment:', error);
+                showToast('Помилка відправки коментаря', 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        // Handle Enter key in comment input
+        function handleCommentKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendComment();
+            }
+        }
+        
+        // Auto-resize textarea
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.getElementById('commentInput');
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+                });
+            }
+        });
+        
+        // Escape HTML for security
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Clean up comments listener when closing modal
+        const originalCloseModal = window.closeModal;
+        window.closeModal = function(modalId) {
+            if (modalId === 'taskModal' && commentsUnsubscribe) {
+                commentsUnsubscribe();
+                commentsUnsubscribe = null;
+                currentTaskIdForComments = null;
+            }
+            if (originalCloseModal) {
+                originalCloseModal(modalId);
+            }
+        };
     </script>
     
     <style>
