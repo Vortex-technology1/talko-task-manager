@@ -3230,11 +3230,14 @@
                         <p style="text-align:center;margin-top:0.75rem;font-size:0.85rem;">
                             <a href="#" onclick="resetPassword()" style="color:var(--info);" data-i18n="forgotPassword">Забули пароль?</a>
                         </p>
-                        <div class="auth-divider"><span data-i18n="haveInvite">Є запрошення?</span></div>
+                        <div class="auth-divider"><span data-i18n="haveInvite">Перший вхід?</span></div>
                         <button onclick="showRegisterForm()" class="btn" style="width:100%;background:#9b59b6;">
-                            <i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerBtn">Зареєструватися</span>
+                            <i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerBtn">Активувати доступ</span>
                         </button>
-                        <p style="text-align:center;margin-top:1rem;font-size:0.8rem;color:var(--gray);">
+                        <p style="text-align:center;margin-top:0.5rem;font-size:0.75rem;color:var(--gray);line-height:1.4;" data-i18n="registerHint">
+                            ⚡ Тільки для власників при першому вході.<br>Далі використовуйте "Увійти".
+                        </p>
+                        <p style="text-align:center;margin-top:0.75rem;font-size:0.8rem;color:var(--gray);">
                             <span data-i18n="noAccess">Немає доступу?</span> <a href="https://alextalko.com" target="_blank" style="color:var(--info);" data-i18n="contactUs">Зв'яжіться з нами</a>
                         </p>
                     </div>
@@ -3695,6 +3698,38 @@
                         </div>
                     </div>
                     
+                    <!-- Інструкція: Процес для клієнта -->
+                    <div style="background:white;border-radius:12px;padding:1.25rem;box-shadow:var(--shadow);border-left:4px solid #8b5cf6;">
+                        <h4 style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;color:#8b5cf6;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            📋 Інструкція для клієнта
+                        </h4>
+                        <div style="color:#4b5563;font-size:0.9rem;line-height:1.7;">
+                            <p style="margin:0 0 0.75rem;"><b>Надішли клієнту:</b></p>
+                            <div style="background:#f5f3ff;padding:1rem;border-radius:8px;font-size:0.85rem;">
+                                <p style="margin:0 0 0.5rem;">🔗 Посилання: <code style="background:#e9d5ff;padding:0.2rem 0.5rem;border-radius:4px;">taskmanagerai-vert.vercel.app</code></p>
+                                <p style="margin:0 0 0.5rem;">📧 Email: <i>(який ви вказали)</i></p>
+                                <p style="margin:0 0 0.75rem;">🔑 Пароль: <i>(який ви вказали)</i></p>
+                                <hr style="border:none;border-top:1px dashed #c4b5fd;margin:0.75rem 0;">
+                                <p style="margin:0;"><b>Перший вхід:</b> натисніть "Активувати доступ" → введіть email та пароль</p>
+                                <p style="margin:0.25rem 0 0;"><b>Наступні входи:</b> просто "Увійти"</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <!-- Список компаній -->
+                <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);margin-top:1rem;">
+                    <h3 style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;">
+                        <span><i data-lucide="building-2" class="icon"></i> Компанії</span>
+                        <button onclick="loadAdminCompanies()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                            <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
+                        </button>
+                    </h3>
+                    <div id="adminCompaniesList" style="overflow-x:auto;">
+                        <p style="color:var(--gray);text-align:center;padding:2rem;">Натисніть "Оновити" щоб завантажити список</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3949,9 +3984,10 @@
                 noAccessText: "Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.",
                 contactSupport: "📞 Зв'язатися з підтримкою",
                 tryAnotherEmail: 'Спробувати інший email',
-                haveInvite: 'Є запрошення?',
-                registerBtn: 'Зареєструватися',
-                registerTitle: 'Реєстрація за запрошенням',
+                haveInvite: 'Перший вхід?',
+                registerBtn: 'Активувати доступ',
+                registerHint: '⚡ Тільки для власників при першому вході. Далі використовуйте "Увійти".',
+                registerTitle: 'Активація доступу',
                 createPassword: 'Придумайте пароль:',
                 confirmPassword: 'Підтвердіть пароль:',
                 registerSubmit: 'Зареєструватися',
@@ -4190,9 +4226,10 @@
                 noAccessText: 'Ваш email не зарегистрирован в системе.<br>Обратитесь к администратору для получения доступа.',
                 contactSupport: '📞 Связаться с поддержкой',
                 tryAnotherEmail: 'Попробовать другой email',
-                haveInvite: 'Есть приглашение?',
-                registerBtn: 'Зарегистрироваться',
-                registerTitle: 'Регистрация по приглашению',
+                haveInvite: 'Первый вход?',
+                registerBtn: 'Активировать доступ',
+                registerHint: '⚡ Только для владельцев при первом входе. Далее используйте "Войти".',
+                registerTitle: 'Активация доступа',
                 createPassword: 'Придумайте пароль:',
                 confirmPassword: 'Подтвердите пароль:',
                 registerSubmit: 'Зарегистрироваться',
@@ -7262,7 +7299,76 @@
         // ADMIN FUNCTIONS
         // =====================
         async function renderAdminPanel() {
-            // Список компаній видалено - використовуй Firebase Console
+            // Автоматично завантажуємо список при відкритті вкладки
+            loadAdminCompanies();
+        }
+        
+        async function loadAdminCompanies() {
+            if (!isSuperAdmin) return;
+            
+            const container = document.getElementById('adminCompaniesList');
+            container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">Завантаження...</p>';
+            
+            try {
+                const companiesSnap = await db.collection('companies').orderBy('createdAt', 'desc').get();
+                
+                if (companiesSnap.empty) {
+                    container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:2rem;">Компаній ще немає</p>';
+                    return;
+                }
+                
+                let html = `
+                    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                        <thead>
+                            <tr style="background:#f9fafb;text-align:left;">
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Компанія</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Власник</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Email</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Створено</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Юзери</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Завдання</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                for (const doc of companiesSnap.docs) {
+                    const company = doc.data();
+                    const companyId = doc.id;
+                    
+                    // Отримуємо кількість юзерів та завдань
+                    const [usersSnap, tasksSnap] = await Promise.all([
+                        db.collection('companies').doc(companyId).collection('users').get(),
+                        db.collection('companies').doc(companyId).collection('tasks').get()
+                    ]);
+                    
+                    const createdAt = company.createdAt?.toDate?.() 
+                        ? company.createdAt.toDate().toLocaleDateString('uk-UA') 
+                        : '-';
+                    
+                    html += `
+                        <tr style="border-bottom:1px solid #e5e7eb;">
+                            <td style="padding:0.75rem;font-weight:600;">${company.name || 'Без назви'}</td>
+                            <td style="padding:0.75rem;">${company.ownerName || '-'}</td>
+                            <td style="padding:0.75rem;"><code style="background:#f3f4f6;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.8rem;">${company.ownerEmail || '-'}</code></td>
+                            <td style="padding:0.75rem;color:var(--gray);">${createdAt}</td>
+                            <td style="padding:0.75rem;text-align:center;">
+                                <span style="background:#dbeafe;color:#1d4ed8;padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;">${usersSnap.size}</span>
+                            </td>
+                            <td style="padding:0.75rem;text-align:center;">
+                                <span style="background:#dcfce7;color:#16a34a;padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;">${tasksSnap.size}</span>
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading companies:', error);
+                container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:1rem;">Помилка завантаження: ' + error.message + '</p>';
+            }
         }
 
         async function adminCreateCompany(e) {
@@ -7284,6 +7390,7 @@
                 
                 await companyRef.set({
                     name: companyName,
+                    ownerName: name,
                     ownerEmail: email,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     createdBy: currentUser.uid
@@ -7301,10 +7408,14 @@
                 });
                 
                 alert(currentLang === 'ua'
-                    ? `Компанія "${companyName}" створена!\n\nEmail: ${email}\nПароль: ${password}\n\nНадішліть ці дані клієнту.`
-                    : `Компания "${companyName}" создана!\n\nEmail: ${email}\nПароль: ${password}\n\nОтправьте эти данные клиенту.`);
+                    ? `✅ Компанія "${companyName}" створена!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\n📋 Надішліть клієнту:\n1. Посилання: taskmanagerai-vert.vercel.app\n2. Email та пароль\n3. Інструкція: "Активувати доступ" → ввести дані`
+                    : `✅ Компания "${companyName}" создана!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\n📋 Отправьте клиенту:\n1. Ссылка: taskmanagerai-vert.vercel.app\n2. Email и пароль\n3. Инструкция: "Активировать доступ" → ввести данные`);
                 
                 document.getElementById('adminCreateForm').reset();
+                
+                // Оновлюємо список компаній
+                loadAdminCompanies();
+                
             } catch (e) {
                 alert(t('error') + ': ' + e.message);
             }
