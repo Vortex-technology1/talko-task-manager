@@ -239,6 +239,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            padding-bottom: 100px; /* Space for bottom nav */
         }
         .myday-section {
             background: white;
@@ -260,15 +261,21 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.75rem;
+            padding: 1rem;
             border-radius: var(--radius-sm);
             background: #f9fafb;
             margin-bottom: 0.5rem;
             cursor: pointer;
             transition: all 0.2s;
+            min-height: 60px; /* Touch-friendly height */
+            -webkit-tap-highlight-color: transparent;
         }
         .myday-item:last-child { margin-bottom: 0; }
         .myday-item:hover { background: #f0fdf4; }
+        .myday-item:active { 
+            background: #dcfce7; 
+            transform: scale(0.98);
+        }
         .myday-item.done {
             background: #f0fdf4;
             opacity: 0.7;
@@ -279,11 +286,11 @@
         }
         .myday-item.overdue {
             background: #fef2f2;
-            border-left: 3px solid var(--danger);
+            border-left: 4px solid var(--danger);
         }
         .myday-checkbox {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 2px solid #d1d5db;
             display: flex;
@@ -292,8 +299,13 @@
             flex-shrink: 0;
             cursor: pointer;
             transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
         .myday-checkbox:hover { border-color: var(--success); }
+        .myday-checkbox:active { 
+            transform: scale(0.9); 
+            background: #dcfce7;
+        }
         .myday-checkbox.checked {
             background: var(--success);
             border-color: var(--success);
@@ -307,6 +319,8 @@
             font-weight: 500;
             color: var(--dark);
             margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            line-height: 1.3;
         }
         .myday-item-meta {
             font-size: 0.8rem;
@@ -318,13 +332,14 @@
         }
         .myday-item-time {
             background: #e5e7eb;
-            padding: 0.15rem 0.5rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 4px;
             font-size: 0.75rem;
+            font-weight: 500;
         }
         .myday-item-tag {
             font-size: 0.7rem;
-            padding: 0.15rem 0.4rem;
+            padding: 0.2rem 0.5rem;
             border-radius: 4px;
             background: #dbeafe;
             color: #1d4ed8;
@@ -355,6 +370,72 @@
         .myday-all-done h3 {
             color: var(--success);
             margin-bottom: 0.25rem;
+        }
+        .myday-refresh-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0,0,0,0.05);
+            color: var(--gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .myday-refresh-btn:hover {
+            background: rgba(0,0,0,0.1);
+            color: var(--dark);
+        }
+        .myday-refresh-btn:active {
+            transform: scale(0.9);
+        }
+        .myday-refresh-btn.spinning .icon {
+            animation: spin 0.5s linear;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile optimizations for My Day */
+        @media (max-width: 767px) {
+            .myday-header {
+                padding: 1rem;
+                margin: 0 -0.5rem 1rem -0.5rem;
+                border-radius: 0;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .myday-date h2 {
+                font-size: 1.1rem;
+            }
+            .myday-progress {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .myday-progress-bar {
+                flex: 1;
+                max-width: none;
+                width: auto;
+            }
+            .myday-section {
+                border-radius: var(--radius-sm);
+                padding: 0.75rem;
+            }
+            .myday-item {
+                padding: 0.875rem;
+                gap: 0.625rem;
+            }
+            .myday-item-title {
+                font-size: 0.9rem;
+            }
+            .myday-checkbox {
+                width: 28px;
+                height: 28px;
+            }
         }
         
         .controls { 
@@ -3499,11 +3580,16 @@
                             <span id="mydayDateText" class="myday-date-text"></span>
                         </div>
                     </div>
-                    <div class="myday-progress">
-                        <div class="myday-progress-bar">
-                            <div class="myday-progress-fill" id="mydayProgressFill"></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="myday-progress">
+                            <div class="myday-progress-bar">
+                                <div class="myday-progress-fill" id="mydayProgressFill"></div>
+                            </div>
+                            <span id="mydayProgressText" class="myday-progress-text">0/0</span>
                         </div>
-                        <span id="mydayProgressText" class="myday-progress-text">0/0</span>
+                        <button onclick="refreshMyDay()" class="myday-refresh-btn" title="Оновити">
+                            <i data-lucide="refresh-cw" class="icon"></i>
+                        </button>
                     </div>
                 </div>
                 
@@ -6585,27 +6671,55 @@
         }
         
         async function toggleMyDayTask(id, type, generatedTaskId, currentDone) {
-            if (navigator.vibrate) navigator.vibrate(10);
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(currentDone ? 10 : [10, 50, 10]);
             
-            if (type === 'regular') {
-                // Для регулярних - змінюємо статус згенерованого завдання
-                if (generatedTaskId) {
+            // Visual feedback - знаходимо елемент і анімуємо
+            const checkbox = event.target.closest('.myday-checkbox');
+            const item = checkbox?.closest('.myday-item');
+            
+            if (checkbox && !currentDone) {
+                checkbox.classList.add('checked');
+                checkbox.innerHTML = '<i data-lucide="check" class="icon icon-sm"></i>';
+                lucide.createIcons();
+            }
+            if (item && !currentDone) {
+                item.style.transform = 'scale(0.98)';
+                item.style.opacity = '0.7';
+            }
+            
+            try {
+                if (type === 'regular') {
+                    // Для регулярних - змінюємо статус згенерованого завдання
+                    if (generatedTaskId) {
+                        const newStatus = currentDone ? 'new' : 'done';
+                        await db.collection('companies').doc(currentCompany).collection('tasks').doc(generatedTaskId).update({
+                            status: newStatus
+                        });
+                    }
+                } else {
+                    // Для разових - просто міняємо статус
                     const newStatus = currentDone ? 'new' : 'done';
-                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(generatedTaskId).update({
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
                         status: newStatus
                     });
                 }
-            } else {
-                // Для разових - просто міняємо статус
-                const newStatus = currentDone ? 'new' : 'done';
-                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
-                    status: newStatus
-                });
+                
+                // Оновлюємо дані
+                await loadAllData();
+                renderMyDay();
+            } catch (error) {
+                console.error('Error toggling task:', error);
+                // Відновлюємо UI при помилці
+                if (checkbox && !currentDone) {
+                    checkbox.classList.remove('checked');
+                    checkbox.innerHTML = '';
+                }
+                if (item) {
+                    item.style.transform = '';
+                    item.style.opacity = '';
+                }
             }
-            
-            // Оновлюємо UI без повного перезавантаження
-            await loadAllData();
-            renderMyDay();
         }
         
         function openMyDayTask(id, type, generatedTaskId) {
@@ -6616,6 +6730,23 @@
             } else {
                 // Регулярне без згенерованого - відкриваємо регулярне
                 openRegularTaskModal(id);
+            }
+        }
+        
+        async function refreshMyDay() {
+            const btn = document.querySelector('.myday-refresh-btn');
+            if (btn) {
+                btn.classList.add('spinning');
+            }
+            if (navigator.vibrate) navigator.vibrate(10);
+            
+            try {
+                await loadAllData();
+                renderMyDay();
+            } finally {
+                setTimeout(() => {
+                    if (btn) btn.classList.remove('spinning');
+                }, 500);
             }
         }
         
