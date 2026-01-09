@@ -186,6 +186,177 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
+        /* MY DAY STYLES */
+        .myday-header {
+            background: linear-gradient(135deg, #fef3c7, #fef9c3);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .myday-date {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .myday-date h2 {
+            font-size: 1.25rem;
+            margin: 0;
+            color: var(--dark);
+        }
+        .myday-date-text {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        .myday-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .myday-progress-bar {
+            width: 120px;
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .myday-progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .myday-progress-text {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        .myday-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .myday-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+        }
+        .myday-section-title {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .myday-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
+            background: #f9fafb;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .myday-item:last-child { margin-bottom: 0; }
+        .myday-item:hover { background: #f0fdf4; }
+        .myday-item.done {
+            background: #f0fdf4;
+            opacity: 0.7;
+        }
+        .myday-item.done .myday-item-title {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+        .myday-item.overdue {
+            background: #fef2f2;
+            border-left: 3px solid var(--danger);
+        }
+        .myday-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .myday-checkbox:hover { border-color: var(--success); }
+        .myday-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        .myday-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .myday-item-title {
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+        .myday-item-meta {
+            font-size: 0.8rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .myday-item-time {
+            background: #e5e7eb;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+        .myday-item-tag {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        .myday-item-tag.regular {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+        .myday-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray);
+        }
+        .myday-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .myday-all-done {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #dcfce7, #d1fae5);
+            border-radius: var(--radius);
+        }
+        .myday-all-done-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .myday-all-done h3 {
+            color: var(--success);
+            margin-bottom: 0.25rem;
+        }
+        
         .controls { 
             background: var(--white); 
             padding: 1rem; 
@@ -3308,7 +3479,8 @@
         <!-- MAIN INTERFACE -->
         <div id="mainInterface" class="main-interface">
             <div class="tab-navigation">
-                <button class="tab-btn active" onclick="switchTab('tasks')"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
+                <button class="tab-btn active" onclick="switchTab('myday')"><i data-lucide="sun" class="icon"></i> <span data-i18n="tabMyDay">Мій день</span></button>
+                <button class="tab-btn" onclick="switchTab('tasks')"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
                 <button class="tab-btn" onclick="switchTab('control')"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
                 <button class="tab-btn" onclick="switchTab('regular')"><i data-lucide="repeat" class="icon"></i> <span data-i18n="tabRegular">Регулярні</span></button>
                 <button class="tab-btn" onclick="switchTab('functions')"><i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span></button>
@@ -3317,8 +3489,31 @@
                 <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;"><i data-lucide="shield" class="icon"></i> <span data-i18n="tabAdmin">Адмін</span></button>
             </div>
 
+            <!-- MY DAY TAB -->
+            <div id="mydayTab" class="tab-content active">
+                <div class="myday-header">
+                    <div class="myday-date">
+                        <i data-lucide="sun" class="icon icon-lg" style="color:var(--warning);"></i>
+                        <div>
+                            <h2 id="mydayTitle" data-i18n="myDay">Мій день</h2>
+                            <span id="mydayDateText" class="myday-date-text"></span>
+                        </div>
+                    </div>
+                    <div class="myday-progress">
+                        <div class="myday-progress-bar">
+                            <div class="myday-progress-fill" id="mydayProgressFill"></div>
+                        </div>
+                        <span id="mydayProgressText" class="myday-progress-text">0/0</span>
+                    </div>
+                </div>
+                
+                <div id="mydayContent" class="myday-content">
+                    <!-- Контент генерується динамічно -->
+                </div>
+            </div>
+
             <!-- TASKS -->
-            <div id="tasksTab" class="tab-content active">
+            <div id="tasksTab" class="tab-content">
                 
                 <!-- Calendar Header with Navigation -->
                 <div class="calendar-header" id="calendarHeader">
@@ -4070,6 +4265,7 @@
                 logout: 'Вийти',
                 
                 // Tabs
+                tabMyDay: 'Мій день',
                 tabTasks: 'Завдання',
                 tabControl: 'Контроль',
                 tabRegular: 'Регулярні',
@@ -4327,6 +4523,7 @@
                 logout: 'Выйти',
                 
                 // Tabs
+                tabMyDay: 'Мой день',
                 tabTasks: 'Задачи',
                 tabControl: 'Контроль',
                 tabRegular: 'Регулярные',
@@ -5086,6 +5283,9 @@
             
             // Авто-генерація регулярних завдань при вході
             await autoGenerateRegularTasks();
+            
+            // Render My Day (головний екран)
+            renderMyDay();
             
             // Render based on current view
             if (currentCalendarView === 'list') {
@@ -6162,6 +6362,261 @@
                 customRange.style.display = 'none';
             }
             renderTasks();
+        }
+        
+        // =====================
+        // MY DAY RENDERING
+        // =====================
+        function renderMyDay() {
+            const container = document.getElementById('mydayContent');
+            if (!container) return;
+            
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            const todayDay = today.getDay();
+            
+            // Форматуємо дату
+            const dayNames = currentLang === 'ua' 
+                ? ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця', 'Субота']
+                : ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+            const monthNames = currentLang === 'ua'
+                ? ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня']
+                : ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+            
+            const dateText = `${dayNames[todayDay]}, ${today.getDate()} ${monthNames[today.getMonth()]}`;
+            document.getElementById('mydayDateText').textContent = dateText;
+            
+            // Збираємо всі завдання на сьогодні для поточного користувача
+            const myTasks = [];
+            
+            // 1. Разові завдання з дедлайном сьогодні або прострочені
+            tasks.filter(t => {
+                if (t.assigneeId !== currentUser.uid) return false;
+                if (t.deadlineDate === todayStr) return true;
+                if (t.deadlineDate < todayStr && t.status !== 'done') return true; // прострочені
+                return false;
+            }).forEach(t => {
+                myTasks.push({
+                    id: t.id,
+                    title: t.title,
+                    time: t.deadlineTime || '',
+                    function: t.function || '',
+                    type: 'task',
+                    done: t.status === 'done',
+                    overdue: t.deadlineDate < todayStr && t.status !== 'done',
+                    priority: t.priority || 'medium',
+                    originalTask: t
+                });
+            });
+            
+            // 2. Регулярні завдання на сьогодні
+            regularTasks.forEach(rt => {
+                // Перевіряємо чи виконавець поточного користувача в функції
+                const func = functions.find(f => f.name === rt.function);
+                if (!func?.assigneeIds?.includes(currentUser.uid)) return;
+                
+                // Перевіряємо чи сьогодні день цього завдання
+                let isToday = false;
+                if (rt.period === 'weekly') {
+                    if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                        isToday = rt.daysOfWeek.includes(todayDay.toString());
+                    } else if (rt.dayOfWeek) {
+                        isToday = rt.dayOfWeek === todayDay.toString();
+                    }
+                } else if (rt.period === 'monthly') {
+                    const todayDate = today.getDate();
+                    if (rt.dayOfMonth === 'last') {
+                        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                        isToday = todayDate === lastDay;
+                    } else {
+                        isToday = todayDate === parseInt(rt.dayOfMonth);
+                    }
+                } else if (rt.period === 'quarterly') {
+                    const quarterStartMonth = Math.floor(today.getMonth() / 3) * 3;
+                    if (today.getMonth() === quarterStartMonth) {
+                        const todayDate = today.getDate();
+                        if (rt.dayOfMonth === 'last') {
+                            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                            isToday = todayDate === lastDay;
+                        } else {
+                            isToday = todayDate === parseInt(rt.dayOfMonth);
+                        }
+                    }
+                }
+                
+                if (!isToday) return;
+                
+                // Перевіряємо чи виконано
+                const generatedTask = tasks.find(t => 
+                    t.regularTaskId === rt.id && 
+                    t.assigneeId === currentUser.uid &&
+                    t.deadlineDate === todayStr
+                );
+                
+                myTasks.push({
+                    id: rt.id,
+                    title: rt.title,
+                    time: rt.time || '',
+                    function: rt.function || '',
+                    type: 'regular',
+                    done: generatedTask?.status === 'done',
+                    overdue: false,
+                    generatedTaskId: generatedTask?.id,
+                    originalTask: generatedTask || rt
+                });
+            });
+            
+            // Сортуємо: спочатку не виконані, потім по часу
+            myTasks.sort((a, b) => {
+                if (a.done !== b.done) return a.done ? 1 : -1;
+                if (a.overdue !== b.overdue) return a.overdue ? -1 : 1;
+                return (a.time || '99:99').localeCompare(b.time || '99:99');
+            });
+            
+            // Статистика
+            const total = myTasks.length;
+            const done = myTasks.filter(t => t.done).length;
+            const progressPercent = total > 0 ? Math.round((done / total) * 100) : 0;
+            
+            document.getElementById('mydayProgressFill').style.width = progressPercent + '%';
+            document.getElementById('mydayProgressText').textContent = `${done}/${total}`;
+            
+            // Рендеримо
+            if (myTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="myday-empty">
+                        <div class="myday-empty-icon">📋</div>
+                        <h3>${currentLang === 'ua' ? 'На сьогодні завдань немає' : 'На сегодня задач нет'}</h3>
+                        <p style="color:var(--gray);margin-top:0.5rem;">${currentLang === 'ua' ? 'Час відпочити або взяти нові завдання' : 'Время отдохнуть или взять новые задачи'}</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+            
+            // Всі виконані?
+            if (done === total && total > 0) {
+                container.innerHTML = `
+                    <div class="myday-all-done">
+                        <div class="myday-all-done-icon">🎉</div>
+                        <h3>${currentLang === 'ua' ? 'Всі завдання виконано!' : 'Все задачи выполнены!'}</h3>
+                        <p style="color:var(--gray);">${currentLang === 'ua' ? 'Чудова робота! Час на перерву.' : 'Отличная работа! Время на перерыв.'}</p>
+                    </div>
+                    <div class="myday-section" style="margin-top:1rem;">
+                        <div class="myday-section-title">
+                            <i data-lucide="check-circle" class="icon icon-sm" style="color:var(--success);"></i>
+                            ${currentLang === 'ua' ? 'Виконано сьогодні' : 'Выполнено сегодня'} (${done})
+                        </div>
+                        ${myTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+            
+            // Розділяємо на категорії
+            const overdueTasks = myTasks.filter(t => t.overdue && !t.done);
+            const pendingTasks = myTasks.filter(t => !t.done && !t.overdue);
+            const doneTasks = myTasks.filter(t => t.done);
+            
+            let html = '';
+            
+            // Прострочені
+            if (overdueTasks.length > 0) {
+                html += `
+                    <div class="myday-section">
+                        <div class="myday-section-title" style="color:var(--danger);">
+                            <i data-lucide="alert-circle" class="icon icon-sm"></i>
+                            ${currentLang === 'ua' ? 'Прострочено' : 'Просрочено'} (${overdueTasks.length})
+                        </div>
+                        ${overdueTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+            }
+            
+            // Очікують виконання
+            if (pendingTasks.length > 0) {
+                html += `
+                    <div class="myday-section">
+                        <div class="myday-section-title">
+                            <i data-lucide="circle" class="icon icon-sm"></i>
+                            ${currentLang === 'ua' ? 'До виконання' : 'К выполнению'} (${pendingTasks.length})
+                        </div>
+                        ${pendingTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+            }
+            
+            // Виконані
+            if (doneTasks.length > 0) {
+                html += `
+                    <div class="myday-section">
+                        <div class="myday-section-title" style="color:var(--success);">
+                            <i data-lucide="check-circle" class="icon icon-sm"></i>
+                            ${currentLang === 'ua' ? 'Виконано' : 'Выполнено'} (${doneTasks.length})
+                        </div>
+                        ${doneTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+            }
+            
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+        
+        function renderMyDayItem(task) {
+            const checkClass = task.done ? 'checked' : '';
+            const itemClass = task.done ? 'done' : (task.overdue ? 'overdue' : '');
+            const tagClass = task.type === 'regular' ? 'regular' : '';
+            const tagText = task.type === 'regular' 
+                ? (currentLang === 'ua' ? 'регулярне' : 'регулярное')
+                : (currentLang === 'ua' ? 'разове' : 'разовое');
+            
+            return `
+                <div class="myday-item ${itemClass}" onclick="openMyDayTask('${task.id}', '${task.type}', '${task.generatedTaskId || ''}')">
+                    <div class="myday-checkbox ${checkClass}" onclick="event.stopPropagation(); toggleMyDayTask('${task.id}', '${task.type}', '${task.generatedTaskId || ''}', ${task.done})">
+                        ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
+                    </div>
+                    <div class="myday-item-content">
+                        <div class="myday-item-title">${task.title}</div>
+                        <div class="myday-item-meta">
+                            ${task.time ? `<span class="myday-item-time">${task.time}</span>` : ''}
+                            ${task.function ? `<span>${task.function}</span>` : ''}
+                            <span class="myday-item-tag ${tagClass}">${tagText}</span>
+                        </div>
+                    </div>
+                    ${task.overdue ? '<i data-lucide="alert-triangle" class="icon" style="color:var(--danger);"></i>' : ''}
+                </div>`;
+        }
+        
+        async function toggleMyDayTask(id, type, generatedTaskId, currentDone) {
+            if (navigator.vibrate) navigator.vibrate(10);
+            
+            if (type === 'regular') {
+                // Для регулярних - змінюємо статус згенерованого завдання
+                if (generatedTaskId) {
+                    const newStatus = currentDone ? 'new' : 'done';
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(generatedTaskId).update({
+                        status: newStatus
+                    });
+                }
+            } else {
+                // Для разових - просто міняємо статус
+                const newStatus = currentDone ? 'new' : 'done';
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
+                    status: newStatus
+                });
+            }
+            
+            // Оновлюємо UI без повного перезавантаження
+            await loadAllData();
+            renderMyDay();
+        }
+        
+        function openMyDayTask(id, type, generatedTaskId) {
+            if (type === 'regular' && generatedTaskId) {
+                openTaskModal(generatedTaskId);
+            } else if (type === 'task') {
+                openTaskModal(id);
+            } else {
+                // Регулярне без згенерованого - відкриваємо регулярне
+                openRegularTaskModal(id);
+            }
         }
         
         function renderTasks() {
@@ -7928,6 +8383,7 @@
             updateFab(tabName);
             
             switch (tabName) {
+                case 'myday': renderMyDay(); break;
                 case 'tasks': renderTasks(); break;
                 case 'control': renderControl(); break;
                 case 'regular': renderRegularTasks(); break;
@@ -8400,7 +8856,11 @@
     <!-- Bottom Navigation for Mobile -->
     <nav class="bottom-nav" id="bottomNav">
         <div class="bottom-nav-items">
-            <button class="bottom-nav-btn active" onclick="switchTab('tasks')" data-tab="tasks">
+            <button class="bottom-nav-btn active" onclick="switchTab('myday')" data-tab="myday">
+                <i data-lucide="sun" class="icon"></i>
+                <span data-i18n="tabMyDay">Мій день</span>
+            </button>
+            <button class="bottom-nav-btn" onclick="switchTab('tasks')" data-tab="tasks">
                 <i data-lucide="clipboard-list" class="icon"></i>
                 <span data-i18n="tabTasks">Завдання</span>
             </button>
@@ -8411,10 +8871,6 @@
             <button class="bottom-nav-btn" onclick="switchTab('regular')" data-tab="regular">
                 <i data-lucide="repeat" class="icon"></i>
                 <span data-i18n="tabRegular">Регулярні</span>
-            </button>
-            <button class="bottom-nav-btn" onclick="switchTab('users')" data-tab="users">
-                <i data-lucide="users" class="icon"></i>
-                <span data-i18n="tabUsers">Команда</span>
             </button>
             <button class="bottom-nav-btn" onclick="openMobileMenu()" data-tab="more">
                 <i data-lucide="more-horizontal" class="icon"></i>
