@@ -9689,13 +9689,21 @@
             closeTaskQuickMenu();
             if (!confirm('Видалити це завдання?')) return;
             
-            const task = tasks.find(t => t.id === taskId);
-            if (task?.calendarEventId && googleAccessToken) {
-                deleteCalendarEvent(task.calendarEventId);
+            try {
+                console.log('Deleting task:', taskId, 'Company:', currentCompany);
+                
+                const task = tasks.find(t => t.id === taskId);
+                if (task?.calendarEventId && googleAccessToken) {
+                    deleteCalendarEvent(task.calendarEventId);
+                }
+                
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).delete();
+                console.log('Task deleted successfully');
+                loadAllData();
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Помилка видалення: ' + error.message);
             }
-            
-            await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).delete();
-            loadAllData();
         }
         
         // Drag and drop
