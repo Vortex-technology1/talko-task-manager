@@ -6500,9 +6500,9 @@
             
             // 2. Регулярні завдання на сьогодні
             regularTasks.forEach(rt => {
-                // Перевіряємо чи виконавець поточного користувача в функції
+                // Перевіряємо чи поточний користувач є Головним функції
                 const func = functions.find(f => f.name === rt.function);
-                if (!func?.assigneeIds?.includes(currentUser.uid)) return;
+                if (!func || func.headId !== currentUser.uid) return;
                 
                 // Перевіряємо чи сьогодні день цього завдання
                 let isToday = false;
@@ -6539,10 +6539,9 @@
                 
                 if (!isToday) return;
                 
-                // Перевіряємо чи виконано
+                // Перевіряємо чи виконано - шукаємо згенероване завдання
                 const generatedTask = tasks.find(t => 
                     t.regularTaskId === rt.id && 
-                    t.assigneeId === currentUser.uid &&
                     t.deadlineDate === todayStr
                 );
                 
