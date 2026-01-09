@@ -4087,7 +4087,7 @@
                     </div>
                     <div id="commentsList" class="comments-list">
                         <div class="comments-empty">
-                            <div class="comments-empty-icon">💬</div>
+                            <div class="comments-empty-icon"><i data-lucide="message-circle" class="icon icon-xl"></i></div>
                             <span data-i18n="noComments">Ще немає коментарів</span>
                         </div>
                     </div>
@@ -5975,7 +5975,7 @@
             if (dayTasks.length === 0) {
                 agendaList.innerHTML = `
                     <div class="agenda-empty">
-                        <div class="agenda-empty-icon">📅</div>
+                        <div class="agenda-empty-icon"><i data-lucide="calendar" class="icon icon-xl"></i></div>
                         <div class="agenda-empty-text">Немає завдань</div>
                     </div>
                 `;
@@ -6578,7 +6578,7 @@
             if (myTasks.length === 0) {
                 container.innerHTML = `
                     <div class="myday-empty">
-                        <div class="myday-empty-icon">📋</div>
+                        <div class="myday-empty-icon"><i data-lucide="clipboard-list" class="icon icon-xl" style="width:48px;height:48px;color:var(--gray);"></i></div>
                         <h3>${currentLang === 'ua' ? 'На сьогодні завдань немає' : 'На сегодня задач нет'}</h3>
                         <p style="color:var(--gray);margin-top:0.5rem;">${currentLang === 'ua' ? 'Час відпочити або взяти нові завдання' : 'Время отдохнуть или взять новые задачи'}</p>
                     </div>`;
@@ -6590,7 +6590,7 @@
             if (done === total && total > 0) {
                 container.innerHTML = `
                     <div class="myday-all-done">
-                        <div class="myday-all-done-icon">🎉</div>
+                        <div class="myday-all-done-icon"><i data-lucide="party-popper" class="icon" style="width:48px;height:48px;color:var(--success);"></i></div>
                         <h3>${currentLang === 'ua' ? 'Всі завдання виконано!' : 'Все задачи выполнены!'}</h3>
                         <p style="color:var(--gray);">${currentLang === 'ua' ? 'Чудова робота! Час на перерву.' : 'Отличная работа! Время на перерыв.'}</p>
                     </div>
@@ -8490,8 +8490,8 @@
                 });
                 
                 alert(currentLang === 'ua'
-                    ? `✅ Компанія "${companyName}" створена!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\n📋 Надішліть клієнту:\n1. Посилання: taskmanagerai-vert.vercel.app\n2. Email та пароль\n3. Інструкція: "Активувати доступ" → ввести дані`
-                    : `✅ Компания "${companyName}" создана!\n\n📧 Email: ${email}\n🔑 Пароль: ${password}\n\n📋 Отправьте клиенту:\n1. Ссылка: taskmanagerai-vert.vercel.app\n2. Email и пароль\n3. Инструкция: "Активировать доступ" → ввести данные`);
+                    ? `Компанія "${companyName}" створена!\n\nEmail: ${email}\nПароль: ${password}\n\nНадішліть клієнту:\n1. Посилання: taskmanagerai-vert.vercel.app\n2. Email та пароль\n3. Інструкція: "Активувати доступ" → ввести дані`
+                    : `Компания "${companyName}" создана!\n\nEmail: ${email}\nПароль: ${password}\n\nОтправьте клиенту:\n1. Ссылка: taskmanagerai-vert.vercel.app\n2. Email и пароль\n3. Инструкция: "Активировать доступ" → ввести данные`);
                 
                 document.getElementById('adminCreateForm').reset();
                 
@@ -8882,7 +8882,7 @@
                         
                         if (diff > 0 && diff <= 60) {
                             shouldNotify = true;
-                            message = `⏰ Дедлайн через ${diff} хв: ${task.title}`;
+                            message = `Дедлайн через ${diff} хв: ${task.title}`;
                         } else if (diff <= 0 && diff > -5) {
                             shouldNotify = true;
                             message = `Дедлайн зараз: ${task.title}`;
@@ -10381,7 +10381,7 @@
             if (comments.length === 0) {
                 listEl.innerHTML = `
                     <div class="comments-empty">
-                        <div class="comments-empty-icon">💬</div>
+                        <div class="comments-empty-icon"><i data-lucide="message-circle" class="icon icon-xl"></i></div>
                         <span data-i18n="noComments">Ще немає коментарів</span>
                     </div>
                 `;
