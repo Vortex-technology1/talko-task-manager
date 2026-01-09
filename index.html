@@ -5408,7 +5408,10 @@
                 // Перевіряємо чи це завдання на сьогодні
                 let shouldCreateToday = false;
                 
-                if (rt.period === 'weekly') {
+                // Підтримка старого формату daily
+                if (rt.period === 'daily') {
+                    shouldCreateToday = true;
+                } else if (rt.period === 'weekly') {
                     // Підтримка нового формату (масив днів) і старого (один день)
                     if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
                         shouldCreateToday = rt.daysOfWeek.includes(todayDay.toString());
@@ -6503,7 +6506,11 @@
                 
                 // Перевіряємо чи сьогодні день цього завдання
                 let isToday = false;
-                if (rt.period === 'weekly') {
+                
+                // Підтримка старого формату daily
+                if (rt.period === 'daily') {
+                    isToday = true;
+                } else if (rt.period === 'weekly') {
                     if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
                         isToday = rt.daysOfWeek.includes(todayDay.toString());
                     } else if (rt.dayOfWeek) {
@@ -7514,7 +7521,11 @@
             
             filtered.forEach(rt => {
                 let scheduleText;
-                if (rt.period === 'weekly') {
+                
+                // Підтримка старого формату daily
+                if (rt.period === 'daily') {
+                    scheduleText = `${currentLang === 'ua' ? 'Щодня' : 'Ежедневно'}, ${rt.time || '10:00'}`;
+                } else if (rt.period === 'weekly') {
                     // Формуємо текст з вибраних днів
                     const daysList = rt.daysOfWeek || (rt.dayOfWeek ? [rt.dayOfWeek] : ['1']);
                     if (daysList.length === 7) {
@@ -7650,6 +7661,11 @@
             for (let i = 0; i < 7; i++) {
                 const isToday = i === today;
                 const dayTasks = regularTasks.filter(rt => {
+                    // Підтримка старого формату daily - показувати кожен день
+                    if (rt.period === 'daily') {
+                        return true;
+                    }
+                    
                     if (rt.period === 'weekly') {
                         // Підтримка нового формату (масив днів) і старого (один день)
                         if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
@@ -7728,7 +7744,11 @@
             
             // Check if task should run today
             let shouldRunToday = false;
-            if (rt.period === 'weekly') {
+            
+            // Підтримка старого формату daily
+            if (rt.period === 'daily') {
+                shouldRunToday = true;
+            } else if (rt.period === 'weekly') {
                 // Підтримка нового формату (масив днів) і старого (один день)
                 if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
                     shouldRunToday = rt.daysOfWeek.includes(todayDay.toString());
