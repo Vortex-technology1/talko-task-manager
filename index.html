@@ -6678,6 +6678,8 @@
         }
         
         async function toggleMyDayTask(id, type, generatedTaskId, currentDone) {
+            console.log('toggleMyDayTask:', { id, type, generatedTaskId, currentDone });
+            
             // Haptic feedback
             if (navigator.vibrate) navigator.vibrate(currentDone ? 10 : [10, 50, 10]);
             
@@ -6700,15 +6702,37 @@
                     // Для регулярних - змінюємо статус згенерованого завдання
                     if (generatedTaskId) {
                         const newStatus = currentDone ? 'new' : 'done';
+                        console.log('Updating regular task:', generatedTaskId, 'to', newStatus);
                         await db.collection('companies').doc(currentCompany).collection('tasks').doc(generatedTaskId).update({
-                            status: newStatus
+                            status: newStatus,
+                            completedAt: newStatus === 'done' ? new Date().toISOString() : null
                         });
+                    } else {
+                        console.warn('No generatedTaskId for regular task, searching...');
+                        // Шукаємо згенероване завдання
+                        const todayStr = new Date().toISOString().split('T')[0];
+                        const existingTask = tasks.find(t => 
+                            t.regularTaskId === id && 
+                            t.deadlineDate === todayStr
+                        );
+                        if (existingTask) {
+                            const newStatus = currentDone ? 'new' : 'done';
+                            console.log('Found task by search:', existingTask.id);
+                            await db.collection('companies').doc(currentCompany).collection('tasks').doc(existingTask.id).update({
+                                status: newStatus,
+                                completedAt: newStatus === 'done' ? new Date().toISOString() : null
+                            });
+                        } else {
+                            console.error('Could not find generated task for regular:', id);
+                        }
                     }
                 } else {
                     // Для разових - просто міняємо статус
                     const newStatus = currentDone ? 'new' : 'done';
+                    console.log('Updating one-time task:', id, 'to', newStatus);
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
-                        status: newStatus
+                        status: newStatus,
+                        completedAt: newStatus === 'done' ? new Date().toISOString() : null
                     });
                 }
                 
