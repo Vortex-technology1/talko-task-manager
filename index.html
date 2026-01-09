@@ -6836,43 +6836,6 @@
             renderRegularTasks();
         }
         
-        // Отримати статус регулярного завдання за поточний період
-        function getRegularTaskStatus(rt) {
-            const now = new Date();
-            let periodStart;
-            
-            if (rt.period === 'weekly') {
-                // Для щотижневих - період = сьогодні (кожен день окремо)
-                periodStart = now.toISOString().split('T')[0];
-            } else if (rt.period === 'monthly') {
-                periodStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-            } else {
-                const quarter = Math.floor(now.getMonth() / 3);
-                periodStart = new Date(now.getFullYear(), quarter * 3, 1).toISOString().split('T')[0];
-            }
-            
-            // Знаходимо завдання створені з цього регулярного за поточний період
-            const relatedTasks = tasks.filter(t => 
-                t.regularTaskId === rt.id && 
-                t.periodStart === periodStart
-            );
-            
-            if (relatedTasks.length === 0) {
-                return { status: 'notCreated', text: currentLang === 'ua' ? 'Не створено' : 'Не создано', color: '#9e9e9e', lucideIcon: 'circle' };
-            }
-            
-            const allDone = relatedTasks.every(t => t.status === 'done');
-            const anyInProgress = relatedTasks.some(t => t.status !== 'done');
-            
-            if (allDone) {
-                const lastDone = relatedTasks.find(t => t.status === 'done');
-                const doneDate = lastDone?.createdDate || '';
-                return { status: 'done', text: `${currentLang === 'ua' ? 'Виконано' : 'Выполнено'} ${formatDateShort(doneDate)}`, color: '#4caf50', lucideIcon: 'check-circle' };
-            } else {
-                return { status: 'inProgress', text: currentLang === 'ua' ? 'В роботі' : 'В работе', color: '#ff9800', lucideIcon: 'clock' };
-            }
-        }
-        
         function formatDateShort(dateStr) {
             if (!dateStr) return '';
             const d = new Date(dateStr);
@@ -9970,4 +9933,9 @@
             transition: transform 0.3s;
         }
         
-        .o
+        .offline-indicator.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</body>
+</html>
