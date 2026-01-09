@@ -7696,13 +7696,15 @@
                             return user?.name || user?.email?.split('@')[0] || '';
                         }).filter(Boolean) || [];
                         
-                        // Get status
+                        // Get status - але показуємо completed тільки для сьогоднішнього дня
                         const statusInfo = getRegularTaskStatus(rt);
+                        const showCompleted = isToday && statusInfo.completedToday;
+                        const displayColor = isToday ? statusInfo.color : '#9e9e9e'; // Сірий для інших днів
                         
                         bodyHTML += `
-                            <div class="regular-task-card ${statusInfo.completedToday ? 'completed' : ''}" 
+                            <div class="regular-task-card ${showCompleted ? 'completed' : ''}" 
                                  onclick="openRegularTaskModal('${rt.id}')"
-                                 style="border-left-color: ${statusInfo.color};">
+                                 style="border-left-color: ${displayColor};">
                                 <div class="task-time">
                                     <i data-lucide="clock" class="icon icon-sm"></i>
                                     ${rt.time || '--:--'}
@@ -7716,11 +7718,13 @@
                                     </div>
                                 ` : ''}
                                 ${rt.function ? `<div class="task-function">${rt.function}</div>` : ''}
-                                <button class="regular-task-complete-btn ${statusInfo.completedToday ? 'completed' : ''}" 
-                                        onclick="event.stopPropagation();markRegularTaskComplete('${rt.id}')"
-                                        title="${statusInfo.completedToday ? 'Виконано сьогодні' : 'Позначити виконаним'}">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                </button>
+                                ${isToday ? `
+                                    <button class="regular-task-complete-btn ${showCompleted ? 'completed' : ''}" 
+                                            onclick="event.stopPropagation();markRegularTaskComplete('${rt.id}')"
+                                            title="${showCompleted ? 'Виконано сьогодні' : 'Позначити виконаним'}">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                    </button>
+                                ` : ''}
                             </div>
                         `;
                     });
