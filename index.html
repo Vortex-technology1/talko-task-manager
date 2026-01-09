@@ -10363,7 +10363,7 @@
             listEl.innerHTML = '<div class="comments-loading">Завантаження...</div>';
             
             // Real-time listener for comments
-            commentsUnsubscribe = db.collection('companies').doc(companyId)
+            commentsUnsubscribe = db.collection('companies').doc(currentCompany)
                 .collection('tasks').doc(taskId)
                 .collection('comments')
                 .orderBy('createdAt', 'asc')
@@ -10460,7 +10460,7 @@
             btn.disabled = true;
             
             try {
-                await db.collection('companies').doc(companyId)
+                await db.collection('companies').doc(currentCompany)
                     .collection('tasks').doc(currentTaskIdForComments)
                     .collection('comments')
                     .add({
