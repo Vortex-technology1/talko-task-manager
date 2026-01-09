@@ -7197,17 +7197,25 @@
                 if (rt) {
                     document.getElementById('regularTaskTitle').value = rt.title;
                     document.getElementById('regularTaskFunction').value = rt.function;
-                    document.getElementById('regularTaskPeriod').value = rt.period || 'weekly';
-                    updatePeriodOptions();
                     
-                    // Встановлюємо вибрані дні
-                    if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
-                        setSelectedDays(rt.daysOfWeek);
-                    } else if (rt.dayOfWeek) {
-                        // Сумісність зі старим форматом
-                        setSelectedDays([rt.dayOfWeek]);
+                    // Конвертуємо старий daily в weekly з усіма днями
+                    if (rt.period === 'daily') {
+                        document.getElementById('regularTaskPeriod').value = 'weekly';
+                        updatePeriodOptions();
+                        selectAllDays(); // Вибираємо всі дні
                     } else {
-                        setSelectedDays(['1']); // За замовчуванням понеділок
+                        document.getElementById('regularTaskPeriod').value = rt.period || 'weekly';
+                        updatePeriodOptions();
+                        
+                        // Встановлюємо вибрані дні
+                        if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                            setSelectedDays(rt.daysOfWeek);
+                        } else if (rt.dayOfWeek) {
+                            // Сумісність зі старим форматом
+                            setSelectedDays([rt.dayOfWeek]);
+                        } else {
+                            setSelectedDays(['1']); // За замовчуванням понеділок
+                        }
                     }
                     
                     document.getElementById('regularTaskDayOfMonth').value = rt.dayOfMonth || '1';
