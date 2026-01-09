@@ -3846,8 +3846,38 @@
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="daily" data-i18n="daily">Щодня</option><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
-                        <div class="form-group" id="dayOfWeekGroup"><label class="form-label" data-i18n="dayOfWeek">День тижня *</label><select id="regularTaskDayOfWeek" class="form-select"><option value="1" data-i18n="monday">Понеділок</option><option value="2" data-i18n="tuesday">Вівторок</option><option value="3" data-i18n="wednesday">Середа</option><option value="4" data-i18n="thursday">Четвер</option><option value="5" data-i18n="friday">П'ятниця</option><option value="6" data-i18n="saturday">Субота</option><option value="0" data-i18n="sunday">Неділя</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
+                        <div class="form-group full-width" id="dayOfWeekGroup">
+                            <label class="form-label" data-i18n="daysOfWeek">Дні тижня *</label>
+                            <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+                                <button type="button" onclick="selectAllDays()" class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;" data-i18n="selectAll">Всі дні</button>
+                                <button type="button" onclick="selectWorkDays()" class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;" data-i18n="workDays">Пн-Пт</button>
+                                <button type="button" onclick="clearDays()" class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;background:#f3f4f6;color:#374151;" data-i18n="clearDays">Очистити</button>
+                            </div>
+                            <div id="daysCheckboxes" style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+                                <label style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
+                                    <input type="checkbox" name="dayOfWeek" value="1" style="accent-color:var(--primary);"> <span data-i18n="mon">Пн</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
+                                    <input type="checkbox" name="dayOfWeek" value="2" style="accent-color:var(--primary);"> <span data-i18n="tue">Вт</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
+                                    <input type="checkbox" name="dayOfWeek" value="3" style="accent-color:var(--primary);"> <span data-i18n="wed">Ср</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
+                                    <input type="checkbox" name="dayOfWeek" value="4" style="accent-color:var(--primary);"> <span data-i18n="thu">Чт</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
+                                    <input type="checkbox" name="dayOfWeek" value="5" style="accent-color:var(--primary);"> <span data-i18n="fri">Пт</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
+                                    <input type="checkbox" name="dayOfWeek" value="6" style="accent-color:var(--primary);"> <span data-i18n="sat">Сб</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
+                                    <input type="checkbox" name="dayOfWeek" value="0" style="accent-color:var(--primary);"> <span data-i18n="sun">Нд</span>
+                                </label>
+                            </div>
+                        </div>
                         <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="timeOfDay">Час виконання *</label><input type="time" id="regularTaskTime" class="form-input" value="10:00" required></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
@@ -4107,11 +4137,20 @@
                 addRegular: '+ Регулярне',
                 regularTask: 'Регулярне завдання',
                 periodicity: 'Періодичність *',
-                daily: 'Щодня',
                 weekly: 'Щотижня',
                 monthly: 'Щомісяця',
                 quarterly: 'Щокварталу',
-                dayOfWeek: 'День тижня *',
+                daysOfWeek: 'Дні тижня *',
+                selectAll: 'Всі дні',
+                workDays: 'Пн-Пт',
+                clearDays: 'Очистити',
+                mon: 'Пн',
+                tue: 'Вт',
+                wed: 'Ср',
+                thu: 'Чт',
+                fri: 'Пт',
+                sat: 'Сб',
+                sun: 'Нд',
                 dayOfMonth: 'День місяця *',
                 timeOfDay: 'Час виконання *',
                 lastDay: 'Останній день',
@@ -4355,11 +4394,20 @@
                 addRegular: '+ Регулярное',
                 regularTask: 'Регулярная задача',
                 periodicity: 'Периодичность *',
-                daily: 'Ежедневно',
                 weekly: 'Еженедельно',
                 monthly: 'Ежемесячно',
                 quarterly: 'Ежеквартально',
-                dayOfWeek: 'День недели *',
+                daysOfWeek: 'Дни недели *',
+                selectAll: 'Все дни',
+                workDays: 'Пн-Пт',
+                clearDays: 'Очистить',
+                mon: 'Пн',
+                tue: 'Вт',
+                wed: 'Ср',
+                thu: 'Чт',
+                fri: 'Пт',
+                sat: 'Сб',
+                sun: 'Вс',
                 dayOfMonth: 'День месяца *',
                 timeOfDay: 'Время выполнения *',
                 lastDay: 'Последний день',
@@ -5074,10 +5122,13 @@
                 // Перевіряємо чи це завдання на сьогодні
                 let shouldCreateToday = false;
                 
-                if (rt.period === 'daily') {
-                    shouldCreateToday = true;
-                } else if (rt.period === 'weekly' && rt.dayOfWeek === todayDay.toString()) {
-                    shouldCreateToday = true;
+                if (rt.period === 'weekly') {
+                    // Підтримка нового формату (масив днів) і старого (один день)
+                    if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                        shouldCreateToday = rt.daysOfWeek.includes(todayDay.toString());
+                    } else if (rt.dayOfWeek) {
+                        shouldCreateToday = rt.dayOfWeek === todayDay.toString();
+                    }
                 } else if (rt.period === 'monthly') {
                     if (rt.dayOfMonth === 'last') {
                         const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
@@ -6484,11 +6535,7 @@
             const dayOfWeekGroup = document.getElementById('dayOfWeekGroup');
             const dayOfMonthGroup = document.getElementById('dayOfMonthGroup');
             
-            if (period === 'daily') {
-                // Щодня - не потрібен вибір дня
-                dayOfWeekGroup.style.display = 'none';
-                dayOfMonthGroup.style.display = 'none';
-            } else if (period === 'weekly') {
+            if (period === 'weekly') {
                 dayOfWeekGroup.style.display = 'block';
                 dayOfMonthGroup.style.display = 'none';
             } else {
@@ -6497,6 +6544,54 @@
                 dayOfMonthGroup.style.display = 'block';
             }
         }
+        
+        function selectAllDays() {
+            document.querySelectorAll('input[name="dayOfWeek"]').forEach(cb => cb.checked = true);
+            updateDayCheckboxStyles();
+        }
+        
+        function selectWorkDays() {
+            document.querySelectorAll('input[name="dayOfWeek"]').forEach(cb => {
+                cb.checked = ['1','2','3','4','5'].includes(cb.value);
+            });
+            updateDayCheckboxStyles();
+        }
+        
+        function clearDays() {
+            document.querySelectorAll('input[name="dayOfWeek"]').forEach(cb => cb.checked = false);
+            updateDayCheckboxStyles();
+        }
+        
+        function updateDayCheckboxStyles() {
+            document.querySelectorAll('input[name="dayOfWeek"]').forEach(cb => {
+                const label = cb.parentElement;
+                if (cb.checked) {
+                    label.style.background = '#dcfce7';
+                    label.style.borderColor = '#22c55e';
+                } else {
+                    label.style.background = '#f9fafb';
+                    label.style.borderColor = '#e5e7eb';
+                }
+            });
+        }
+        
+        function getSelectedDays() {
+            return Array.from(document.querySelectorAll('input[name="dayOfWeek"]:checked')).map(cb => cb.value);
+        }
+        
+        function setSelectedDays(days) {
+            document.querySelectorAll('input[name="dayOfWeek"]').forEach(cb => {
+                cb.checked = days.includes(cb.value);
+            });
+            updateDayCheckboxStyles();
+        }
+        
+        // Додаємо слухачі для оновлення стилів
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input[name="dayOfWeek"]').forEach(cb => {
+                cb.addEventListener('change', updateDayCheckboxStyles);
+            });
+        });
         
         function openRegularTaskModal(id = null) {
             document.getElementById('regularTaskModal').style.display = 'block';
@@ -6511,7 +6606,17 @@
                     document.getElementById('regularTaskFunction').value = rt.function;
                     document.getElementById('regularTaskPeriod').value = rt.period || 'weekly';
                     updatePeriodOptions();
-                    document.getElementById('regularTaskDayOfWeek').value = rt.dayOfWeek || '1';
+                    
+                    // Встановлюємо вибрані дні
+                    if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                        setSelectedDays(rt.daysOfWeek);
+                    } else if (rt.dayOfWeek) {
+                        // Сумісність зі старим форматом
+                        setSelectedDays([rt.dayOfWeek]);
+                    } else {
+                        setSelectedDays(['1']); // За замовчуванням понеділок
+                    }
+                    
                     document.getElementById('regularTaskDayOfMonth').value = rt.dayOfMonth || '1';
                     document.getElementById('regularTaskTime').value = rt.time || '10:00';
                     document.getElementById('regularTaskExpectedResult').value = rt.expectedResult || '';
@@ -6522,6 +6627,8 @@
                 document.getElementById('regularTaskForm').reset();
                 document.getElementById('regularTaskTime').value = '10:00';
                 document.getElementById('regularTaskPeriod').value = 'weekly';
+                clearDays();
+                setSelectedDays(['1']); // За замовчуванням понеділок
                 updatePeriodOptions();
             }
         }
@@ -6549,12 +6656,19 @@
             }
             
             const period = document.getElementById('regularTaskPeriod').value;
+            const selectedDays = getSelectedDays();
+            
+            // Перевірка що вибраний хоча б один день для weekly
+            if (period === 'weekly' && selectedDays.length === 0) {
+                alert(currentLang === 'ua' ? 'Оберіть хоча б один день тижня' : 'Выберите хотя бы один день недели');
+                return;
+            }
             
             const data = {
                 title: document.getElementById('regularTaskTitle').value.trim(),
                 function: funcName,
                 period: period,
-                dayOfWeek: period === 'weekly' ? document.getElementById('regularTaskDayOfWeek').value : null,
+                daysOfWeek: period === 'weekly' ? selectedDays : null,
                 dayOfMonth: period !== 'weekly' ? document.getElementById('regularTaskDayOfMonth').value : null,
                 time: document.getElementById('regularTaskTime').value,
                 expectedResult: document.getElementById('regularTaskExpectedResult').value.trim(),
@@ -6662,12 +6776,9 @@
             // Визначаємо період
             const now = new Date();
             let periodStart;
-            if (rt.period === 'daily') {
-                periodStart = now.toISOString().split('T')[0]; // Сьогоднішня дата
-            } else if (rt.period === 'weekly') {
-                const day = now.getDay();
-                const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-                periodStart = new Date(now.getFullYear(), now.getMonth(), diff).toISOString().split('T')[0];
+            if (rt.period === 'weekly') {
+                // Для щотижневих з множинними днями - період = сьогодні
+                periodStart = now.toISOString().split('T')[0];
             } else if (rt.period === 'monthly') {
                 periodStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
             } else {
@@ -6730,12 +6841,9 @@
             const now = new Date();
             let periodStart;
             
-            if (rt.period === 'daily') {
-                periodStart = now.toISOString().split('T')[0]; // Сьогоднішня дата
-            } else if (rt.period === 'weekly') {
-                const day = now.getDay();
-                const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-                periodStart = new Date(now.getFullYear(), now.getMonth(), diff).toISOString().split('T')[0];
+            if (rt.period === 'weekly') {
+                // Для щотижневих - період = сьогодні (кожен день окремо)
+                periodStart = now.toISOString().split('T')[0];
             } else if (rt.period === 'monthly') {
                 periodStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
             } else {
@@ -6857,10 +6965,17 @@
             
             filtered.forEach(rt => {
                 let scheduleText;
-                if (rt.period === 'daily') {
-                    scheduleText = `${rt.time || '10:00'}`;
-                } else if (rt.period === 'weekly') {
-                    scheduleText = `${days[rt.dayOfWeek] || 'Пн'}, ${rt.time || '10:00'}`;
+                if (rt.period === 'weekly') {
+                    // Формуємо текст з вибраних днів
+                    const daysList = rt.daysOfWeek || (rt.dayOfWeek ? [rt.dayOfWeek] : ['1']);
+                    if (daysList.length === 7) {
+                        scheduleText = `${currentLang === 'ua' ? 'Щодня' : 'Ежедневно'}, ${rt.time || '10:00'}`;
+                    } else if (daysList.length === 5 && ['1','2','3','4','5'].every(d => daysList.includes(d))) {
+                        scheduleText = `${currentLang === 'ua' ? 'Пн-Пт' : 'Пн-Пт'}, ${rt.time || '10:00'}`;
+                    } else {
+                        const dayNames = daysList.map(d => days[d] || '').filter(Boolean);
+                        scheduleText = `${dayNames.join(', ')}, ${rt.time || '10:00'}`;
+                    }
                 } else {
                     scheduleText = `${rt.dayOfMonth || '1'}-го, ${rt.time || '10:00'}`;
                 }
@@ -6987,7 +7102,12 @@
                 const isToday = i === today;
                 const dayTasks = regularTasks.filter(rt => {
                     if (rt.period === 'weekly') {
-                        return rt.dayOfWeek === i.toString();
+                        // Підтримка нового формату (масив днів) і старого (один день)
+                        if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                            return rt.daysOfWeek.includes(i.toString());
+                        } else if (rt.dayOfWeek) {
+                            return rt.dayOfWeek === i.toString();
+                        }
                     }
                     return false;
                 });
@@ -7059,10 +7179,13 @@
             
             // Check if task should run today
             let shouldRunToday = false;
-            if (rt.period === 'daily') {
-                shouldRunToday = true; // Щодня завжди
-            } else if (rt.period === 'weekly' && rt.dayOfWeek === todayDay.toString()) {
-                shouldRunToday = true;
+            if (rt.period === 'weekly') {
+                // Підтримка нового формату (масив днів) і старого (один день)
+                if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                    shouldRunToday = rt.daysOfWeek.includes(todayDay.toString());
+                } else if (rt.dayOfWeek) {
+                    shouldRunToday = rt.dayOfWeek === todayDay.toString();
+                }
             } else if (rt.period === 'monthly') {
                 const todayDate = today.getDate();
                 if (rt.dayOfMonth === 'last') {
