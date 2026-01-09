@@ -3234,9 +3234,40 @@
                         <button onclick="showRegisterForm()" class="btn" style="width:100%;background:#9b59b6;">
                             <i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerBtn">Активувати доступ</span>
                         </button>
-                        <p style="text-align:center;margin-top:0.5rem;font-size:0.75rem;color:var(--gray);line-height:1.4;" data-i18n="registerHint">
-                            Тільки для власників при першому вході.<br>Далі використовуйте "Увійти".
-                        </p>
+                        
+                        <!-- Акордеон з інструкцією -->
+                        <div style="margin-top:1rem;">
+                            <button onclick="toggleAuthHelp()" id="authHelpToggle" style="width:100%;background:none;border:1px solid #e5e7eb;padding:0.6rem 1rem;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;color:var(--gray);">
+                                <span style="display:flex;align-items:center;gap:0.5rem;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    <span data-i18n="howToLogin">Як увійти?</span>
+                                </span>
+                                <svg id="authHelpArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div id="authHelpContent" style="display:none;padding:1rem;background:#f9fafb;border-radius:0 0 8px 8px;border:1px solid #e5e7eb;border-top:none;font-size:0.8rem;line-height:1.6;">
+                                <div style="margin-bottom:0.75rem;">
+                                    <div style="display:flex;align-items:center;gap:0.4rem;font-weight:600;color:var(--dark);margin-bottom:0.3rem;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                        <span data-i18n="forOwners">Для власників:</span>
+                                    </div>
+                                    <div style="color:var(--gray);padding-left:1.2rem;" data-i18n="ownersInstruction">
+                                        Перший раз → "Активувати доступ"<br>
+                                        Далі → "Увійти" з email та паролем
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display:flex;align-items:center;gap:0.4rem;font-weight:600;color:var(--dark);margin-bottom:0.3rem;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                        <span data-i18n="forEmployees">Для співробітників:</span>
+                                    </div>
+                                    <div style="color:var(--gray);padding-left:1.2rem;" data-i18n="employeesInstruction">
+                                        Перейдіть за посиланням від керівника<br>
+                                        Увійдіть через Google з робочим email
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <p style="text-align:center;margin-top:0.75rem;font-size:0.8rem;color:var(--gray);">
                             <span data-i18n="noAccess">Немає доступу?</span> <a href="https://alextalko.com" target="_blank" style="color:var(--info);" data-i18n="contactUs">Зв'яжіться з нами</a>
                         </p>
@@ -3815,7 +3846,7 @@
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="daily" data-i18n="daily">Щодня</option><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
                         <div class="form-group" id="dayOfWeekGroup"><label class="form-label" data-i18n="dayOfWeek">День тижня *</label><select id="regularTaskDayOfWeek" class="form-select"><option value="1" data-i18n="monday">Понеділок</option><option value="2" data-i18n="tuesday">Вівторок</option><option value="3" data-i18n="wednesday">Середа</option><option value="4" data-i18n="thursday">Четвер</option><option value="5" data-i18n="friday">П'ятниця</option><option value="6" data-i18n="saturday">Субота</option><option value="0" data-i18n="sunday">Неділя</option></select></div>
                         <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="timeOfDay">Час виконання *</label><input type="time" id="regularTaskTime" class="form-input" value="10:00" required></div>
@@ -3996,6 +4027,11 @@
                 haveInvite: 'Перший вхід?',
                 registerBtn: 'Активувати доступ',
                 registerHint: 'Тільки для власників при першому вході. Далі використовуйте "Увійти".',
+                howToLogin: 'Як увійти?',
+                forOwners: 'Для власників:',
+                ownersInstruction: 'Перший раз → "Активувати доступ". Далі → "Увійти" з email та паролем',
+                forEmployees: 'Для співробітників:',
+                employeesInstruction: 'Перейдіть за посиланням від керівника. Увійдіть через Google з робочим email',
                 registerTitle: 'Активація доступу',
                 createPassword: 'Придумайте пароль:',
                 confirmPassword: 'Підтвердіть пароль:',
@@ -4071,6 +4107,7 @@
                 addRegular: '+ Регулярне',
                 regularTask: 'Регулярне завдання',
                 periodicity: 'Періодичність *',
+                daily: 'Щодня',
                 weekly: 'Щотижня',
                 monthly: 'Щомісяця',
                 quarterly: 'Щокварталу',
@@ -4238,6 +4275,11 @@
                 haveInvite: 'Первый вход?',
                 registerBtn: 'Активировать доступ',
                 registerHint: 'Только для владельцев при первом входе. Далее используйте "Войти".',
+                howToLogin: 'Как войти?',
+                forOwners: 'Для владельцев:',
+                ownersInstruction: 'Первый раз → "Активировать доступ". Далее → "Войти" с email и паролем',
+                forEmployees: 'Для сотрудников:',
+                employeesInstruction: 'Перейдите по ссылке от руководителя. Войдите через Google с рабочим email',
                 registerTitle: 'Активация доступа',
                 createPassword: 'Придумайте пароль:',
                 confirmPassword: 'Подтвердите пароль:',
@@ -4313,6 +4355,7 @@
                 addRegular: '+ Регулярное',
                 regularTask: 'Регулярная задача',
                 periodicity: 'Периодичность *',
+                daily: 'Ежедневно',
                 weekly: 'Еженедельно',
                 monthly: 'Ежемесячно',
                 quarterly: 'Ежеквартально',
@@ -4634,6 +4677,18 @@
             emailField.style.background = '';
             document.getElementById('registerPassword').value = '';
             document.getElementById('registerPasswordConfirm').value = '';
+        }
+        
+        function toggleAuthHelp() {
+            const content = document.getElementById('authHelpContent');
+            const arrow = document.getElementById('authHelpArrow');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                content.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
         }
         
         function showRegisterForm() {
@@ -6217,10 +6272,15 @@
             const dayOfWeekGroup = document.getElementById('dayOfWeekGroup');
             const dayOfMonthGroup = document.getElementById('dayOfMonthGroup');
             
-            if (period === 'weekly') {
+            if (period === 'daily') {
+                // Щодня - не потрібен вибір дня
+                dayOfWeekGroup.style.display = 'none';
+                dayOfMonthGroup.style.display = 'none';
+            } else if (period === 'weekly') {
                 dayOfWeekGroup.style.display = 'block';
                 dayOfMonthGroup.style.display = 'none';
             } else {
+                // monthly, quarterly
                 dayOfWeekGroup.style.display = 'none';
                 dayOfMonthGroup.style.display = 'block';
             }
@@ -6390,7 +6450,9 @@
             // Визначаємо період
             const now = new Date();
             let periodStart;
-            if (rt.period === 'weekly') {
+            if (rt.period === 'daily') {
+                periodStart = now.toISOString().split('T')[0]; // Сьогоднішня дата
+            } else if (rt.period === 'weekly') {
                 const day = now.getDay();
                 const diff = now.getDate() - day + (day === 0 ? -6 : 1);
                 periodStart = new Date(now.getFullYear(), now.getMonth(), diff).toISOString().split('T')[0];
@@ -6456,7 +6518,9 @@
             const now = new Date();
             let periodStart;
             
-            if (rt.period === 'weekly') {
+            if (rt.period === 'daily') {
+                periodStart = now.toISOString().split('T')[0]; // Сьогоднішня дата
+            } else if (rt.period === 'weekly') {
                 const day = now.getDay();
                 const diff = now.getDate() - day + (day === 0 ? -6 : 1);
                 periodStart = new Date(now.getFullYear(), now.getMonth(), diff).toISOString().split('T')[0];
@@ -6580,9 +6644,14 @@
                     <tbody>`;
             
             filtered.forEach(rt => {
-                const scheduleText = rt.period === 'weekly' 
-                    ? `${days[rt.dayOfWeek] || 'Пн'}, ${rt.time || '10:00'}`
-                    : `${rt.dayOfMonth || '1'}-го, ${rt.time || '10:00'}`;
+                let scheduleText;
+                if (rt.period === 'daily') {
+                    scheduleText = `${rt.time || '10:00'}`;
+                } else if (rt.period === 'weekly') {
+                    scheduleText = `${days[rt.dayOfWeek] || 'Пн'}, ${rt.time || '10:00'}`;
+                } else {
+                    scheduleText = `${rt.dayOfMonth || '1'}-го, ${rt.time || '10:00'}`;
+                }
                 
                 // Беремо виконавців з функції динамічно
                 const func = functions.find(f => f.name === rt.function);
@@ -6778,7 +6847,9 @@
             
             // Check if task should run today
             let shouldRunToday = false;
-            if (rt.period === 'weekly' && rt.dayOfWeek === todayDay.toString()) {
+            if (rt.period === 'daily') {
+                shouldRunToday = true; // Щодня завжди
+            } else if (rt.period === 'weekly' && rt.dayOfWeek === todayDay.toString()) {
                 shouldRunToday = true;
             } else if (rt.period === 'monthly') {
                 const todayDate = today.getDate();
