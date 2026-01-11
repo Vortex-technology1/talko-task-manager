@@ -4067,8 +4067,17 @@
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select"><option value="" data-i18n="noFunction">Без функції</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="deadlineDate">Дедлайн (дата) *</label><input type="date" id="taskDeadlineDate" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label" data-i18n="deadlineTime">Дедлайн (час) *</label><input type="time" id="taskDeadlineTime" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label" data-i18n="estimatedTime">Орієнтовний час</label><select id="taskEstimatedTime" class="form-select"><option value="" data-i18n="notSpecified">Не вказано</option><option value="15">15 хв</option><option value="30">30 хв</option><option value="45">45 хв</option><option value="60">1 год</option><option value="90">1.5 год</option><option value="120">2 год</option><option value="180">3 год</option><option value="240">4 год</option><option value="480">8 год</option></select></div>
+                        <div class="form-group"><label class="form-label">Початок *</label><input type="time" id="taskDeadlineTime" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label">Кінець / Тривалість</label>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <select id="taskTimeMode" class="form-select" style="width:auto;" onchange="toggleTaskTimeMode()">
+                                    <option value="end">Час кінця</option>
+                                    <option value="duration">Тривалість</option>
+                                </select>
+                                <input type="time" id="taskTimeEnd" class="form-input" value="19:00" style="flex:1;">
+                                <select id="taskEstimatedTime" class="form-select" style="flex:1;display:none;"><option value="15">15 хв</option><option value="30">30 хв</option><option value="45">45 хв</option><option value="60" selected>1 год</option><option value="90">1.5 год</option><option value="120">2 год</option><option value="180">3 год</option><option value="240">4 год</option><option value="480">8 год</option></select>
+                            </div>
+                        </div>
                         <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n="priorityLow">Низький</option><option value="medium" selected data-i18n="priorityMedium">Середній</option><option value="high" data-i18n="priorityHigh">Високий</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="status">Статус</label><select id="taskStatus" class="form-select"><option value="new" data-i18n="statusNew">Нове</option><option value="progress" data-i18n="statusProgress">В роботі</option><option value="review" data-i18n="statusReview">Перевірка</option><option value="done" data-i18n="statusDone">Готово</option></select></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
@@ -4160,7 +4169,26 @@
                             </div>
                         </div>
                         <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="timeOfDay">Час виконання *</label><input type="time" id="regularTaskTime" class="form-input" value="10:00" required></div>
+                        <div class="form-group"><label class="form-label">Початок *</label><input type="time" id="regularTaskTimeStart" class="form-input" value="10:00" required></div>
+                        <div class="form-group"><label class="form-label">Кінець / Тривалість</label>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <select id="regularTaskTimeMode" class="form-select" style="width:auto;" onchange="toggleRegularTimeMode()">
+                                    <option value="end">Час кінця</option>
+                                    <option value="duration">Тривалість</option>
+                                </select>
+                                <input type="time" id="regularTaskTimeEnd" class="form-input" value="11:00" style="flex:1;">
+                                <select id="regularTaskDuration" class="form-select" style="flex:1;display:none;">
+                                    <option value="15">15 хв</option>
+                                    <option value="30">30 хв</option>
+                                    <option value="45">45 хв</option>
+                                    <option value="60" selected>1 год</option>
+                                    <option value="90">1.5 год</option>
+                                    <option value="120">2 год</option>
+                                    <option value="180">3 год</option>
+                                    <option value="240">4 год</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="regularTaskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="instruction">Інструкція (необов'язково)</span></label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
@@ -5634,7 +5662,28 @@
                         document.getElementById('taskDeadlineDate').value = '';
                         document.getElementById('taskDeadlineTime').value = '';
                     }
-                    document.getElementById('taskEstimatedTime').value = task.estimatedTime || '';
+                    
+                    // Час закінчення / тривалість
+                    if (task.timeEnd) {
+                        document.getElementById('taskTimeEnd').value = task.timeEnd;
+                        if (task.duration) {
+                            document.getElementById('taskTimeMode').value = 'duration';
+                            document.getElementById('taskEstimatedTime').value = task.duration;
+                        } else {
+                            document.getElementById('taskTimeMode').value = 'end';
+                        }
+                    } else if (task.estimatedTime) {
+                        document.getElementById('taskTimeMode').value = 'duration';
+                        document.getElementById('taskEstimatedTime').value = task.estimatedTime;
+                        const startTime = task.deadlineTime || '18:00';
+                        document.getElementById('taskTimeEnd').value = calculateEndTime(startTime, parseInt(task.estimatedTime));
+                    } else {
+                        document.getElementById('taskTimeMode').value = 'duration';
+                        document.getElementById('taskEstimatedTime').value = '60';
+                        document.getElementById('taskTimeEnd').value = '19:00';
+                    }
+                    toggleTaskTimeMode();
+                    
                     document.getElementById('taskPriority').value = task.priority || 'medium';
                     document.getElementById('taskStatus').value = task.status || 'new';
                     document.getElementById('taskExpectedResult').value = task.expectedResult || '';
@@ -5647,6 +5696,10 @@
                 document.getElementById('taskForm').reset();
                 // Встановлюємо дефолтний час
                 document.getElementById('taskDeadlineTime').value = '18:00';
+                document.getElementById('taskTimeEnd').value = '19:00';
+                document.getElementById('taskTimeMode').value = 'duration';
+                document.getElementById('taskEstimatedTime').value = '60';
+                toggleTaskTimeMode();
             }
         }
 
@@ -5657,6 +5710,13 @@
             const assignee = users.find(u => u.id === assigneeId);
             const deadlineDate = document.getElementById('taskDeadlineDate').value;
             const deadlineTime = document.getElementById('taskDeadlineTime').value;
+            const timeMode = document.getElementById('taskTimeMode').value;
+            const timeEnd = timeMode === 'end' 
+                ? document.getElementById('taskTimeEnd').value 
+                : calculateEndTime(deadlineTime, parseInt(document.getElementById('taskEstimatedTime').value || '60'));
+            const duration = timeMode === 'duration' 
+                ? parseInt(document.getElementById('taskEstimatedTime').value || '60') 
+                : null;
             
             const data = {
                 title: document.getElementById('taskTitle').value.trim(),
@@ -5665,6 +5725,8 @@
                 assigneeName: assignee?.name || assignee?.email || '',
                 deadlineDate: deadlineDate,
                 deadlineTime: deadlineTime,
+                timeEnd: timeEnd,
+                duration: duration,
                 deadline: deadlineDate + 'T' + deadlineTime, // для сумісності
                 estimatedTime: document.getElementById('taskEstimatedTime').value,
                 priority: document.getElementById('taskPriority').value,
@@ -7146,6 +7208,42 @@
         // =====================
         // REGULAR TASKS
         // =====================
+        function toggleRegularTimeMode() {
+            const mode = document.getElementById('regularTaskTimeMode').value;
+            const endInput = document.getElementById('regularTaskTimeEnd');
+            const durationSelect = document.getElementById('regularTaskDuration');
+            
+            if (mode === 'end') {
+                endInput.style.display = 'block';
+                durationSelect.style.display = 'none';
+            } else {
+                endInput.style.display = 'none';
+                durationSelect.style.display = 'block';
+            }
+        }
+        
+        function toggleTaskTimeMode() {
+            const mode = document.getElementById('taskTimeMode').value;
+            const endInput = document.getElementById('taskTimeEnd');
+            const durationSelect = document.getElementById('taskEstimatedTime');
+            
+            if (mode === 'end') {
+                endInput.style.display = 'block';
+                durationSelect.style.display = 'none';
+            } else {
+                endInput.style.display = 'none';
+                durationSelect.style.display = 'block';
+            }
+        }
+        
+        function calculateEndTime(startTime, durationMinutes) {
+            const [hours, minutes] = startTime.split(':').map(Number);
+            const totalMinutes = hours * 60 + minutes + durationMinutes;
+            const endHours = Math.floor(totalMinutes / 60) % 24;
+            const endMinutes = totalMinutes % 60;
+            return `${String(endHours).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}`;
+        }
+        
         function updatePeriodOptions() {
             const period = document.getElementById('regularTaskPeriod').value;
             const dayOfWeekGroup = document.getElementById('dayOfWeekGroup');
@@ -7242,14 +7340,40 @@
                     }
                     
                     document.getElementById('regularTaskDayOfMonth').value = rt.dayOfMonth || '1';
-                    document.getElementById('regularTaskTime').value = rt.time || '10:00';
+                    
+                    // Час - нова логіка з підтримкою старого формату
+                    if (rt.timeStart) {
+                        document.getElementById('regularTaskTimeStart').value = rt.timeStart;
+                        document.getElementById('regularTaskTimeEnd').value = rt.timeEnd || '11:00';
+                        if (rt.duration) {
+                            document.getElementById('regularTaskTimeMode').value = 'duration';
+                            document.getElementById('regularTaskDuration').value = rt.duration;
+                        } else {
+                            document.getElementById('regularTaskTimeMode').value = 'end';
+                        }
+                    } else if (rt.time) {
+                        // Сумісність зі старим форматом (тільки один час)
+                        document.getElementById('regularTaskTimeStart').value = rt.time;
+                        document.getElementById('regularTaskTimeEnd').value = calculateEndTime(rt.time, 60);
+                        document.getElementById('regularTaskTimeMode').value = 'duration';
+                        document.getElementById('regularTaskDuration').value = '60';
+                    } else {
+                        document.getElementById('regularTaskTimeStart').value = '10:00';
+                        document.getElementById('regularTaskTimeEnd').value = '11:00';
+                    }
+                    toggleRegularTimeMode();
+                    
                     document.getElementById('regularTaskExpectedResult').value = rt.expectedResult || '';
                     document.getElementById('regularTaskReportFormat').value = rt.reportFormat || '';
                     document.getElementById('regularTaskInstruction').value = rt.instruction || '';
                 }
             } else {
                 document.getElementById('regularTaskForm').reset();
-                document.getElementById('regularTaskTime').value = '10:00';
+                document.getElementById('regularTaskTimeStart').value = '10:00';
+                document.getElementById('regularTaskTimeEnd').value = '11:00';
+                document.getElementById('regularTaskTimeMode').value = 'duration';
+                document.getElementById('regularTaskDuration').value = '60';
+                toggleRegularTimeMode();
                 document.getElementById('regularTaskPeriod').value = 'weekly';
                 clearDays();
                 setSelectedDays(['1']); // За замовчуванням понеділок
@@ -7294,7 +7418,13 @@
                 period: period,
                 daysOfWeek: period === 'weekly' ? selectedDays : null,
                 dayOfMonth: period !== 'weekly' ? document.getElementById('regularTaskDayOfMonth').value : null,
-                time: document.getElementById('regularTaskTime').value,
+                timeStart: document.getElementById('regularTaskTimeStart').value,
+                timeEnd: document.getElementById('regularTaskTimeMode').value === 'end' 
+                    ? document.getElementById('regularTaskTimeEnd').value 
+                    : calculateEndTime(document.getElementById('regularTaskTimeStart').value, parseInt(document.getElementById('regularTaskDuration').value)),
+                duration: document.getElementById('regularTaskTimeMode').value === 'duration' 
+                    ? parseInt(document.getElementById('regularTaskDuration').value) 
+                    : null,
                 expectedResult: document.getElementById('regularTaskExpectedResult').value.trim(),
                 reportFormat: document.getElementById('regularTaskReportFormat').value.trim(),
                 instruction: document.getElementById('regularTaskInstruction').value.trim()
