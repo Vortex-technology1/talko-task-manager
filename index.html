@@ -2954,6 +2954,117 @@
             display: block;
         }
         
+        /* Control Panel Expandable Rows */
+        .control-row {
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .control-row:hover {
+            background: #f0f0f0;
+        }
+        
+        .control-row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+        }
+        
+        .control-row-count {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .control-row .expand-icon {
+            transition: transform 0.2s;
+        }
+        
+        .control-row.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .control-row-tasks {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .control-row.expanded .control-row-tasks {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .control-task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        
+        .control-task-item:hover {
+            background: #f0fdf4;
+        }
+        
+        .control-task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .control-task-item.overdue {
+            background: #fef2f2;
+        }
+        
+        .control-task-item.overdue:hover {
+            background: #fee2e2;
+        }
+        
+        .control-task-item .task-title {
+            font-size: 0.85rem;
+            color: var(--dark);
+            flex: 1;
+        }
+        
+        .control-task-item .task-meta {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            font-size: 0.75rem;
+        }
+        
+        .control-task-item .task-func {
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+        
+        .control-task-item .task-assignee {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+        
+        .control-task-item .task-date {
+            color: var(--gray);
+        }
+        
+        .control-task-item .task-date.overdue {
+            color: #dc2626;
+            font-weight: 600;
+        }
+        
         .regular-schedule-view {
             background: white;
             border-radius: 12px;
@@ -8583,37 +8694,85 @@
             const content = document.getElementById('controlContent');
             
             if (viewType === 'workload') {
+                // Group tasks by assignee
                 const wl = {};
                 filteredTasks.forEach(task => { 
-                    wl[task.assigneeName || t('notAssigned')] = (wl[task.assigneeName || t('notAssigned')] || 0) + 1; 
+                    const key = task.assigneeId || 'unassigned';
+                    const name = task.assigneeName || t('notAssigned');
+                    if (!wl[key]) wl[key] = { name, tasks: [] };
+                    wl[key].tasks.push(task);
                 });
                 
                 content.innerHTML = `
                     <h3 style="margin-bottom:1rem;">${t('employeeWorkload')}</h3>
-                    ${Object.entries(wl).sort((a,b) => b[1] - a[1]).map(([n, c]) => `
-                        <div style="display:flex;justify-content:space-between;padding:0.6rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;">
-                            <span><i data-lucide="user" class="icon icon-sm"></i> ${n}</span>
-                            <span style="font-weight:600;color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c} ${t('tasks')}</span>
-                        </div>
-                    `).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
+                    ${Object.entries(wl).sort((a,b) => b[1].tasks.length - a[1].tasks.length).map(([id, data]) => {
+                        const c = data.tasks.length;
+                        const tasksList = data.tasks.map(t => {
+                            const deadline = t.deadlineDate || '';
+                            const isOverdue = deadline && deadline < new Date().toISOString().split('T')[0];
+                            return `
+                                <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="openTaskModal('${t.id}')">
+                                    <span class="task-title">${t.title}</span>
+                                    <span class="task-meta">
+                                        ${t.function ? `<span class="task-func">${t.function}</span>` : ''}
+                                        ${deadline ? `<span class="task-date ${isOverdue ? 'overdue' : ''}">${deadline}</span>` : ''}
+                                    </span>
+                                </div>
+                            `;
+                        }).join('');
+                        
+                        return `
+                            <div class="control-row" onclick="this.classList.toggle('expanded')">
+                                <div class="control-row-header">
+                                    <span><i data-lucide="user" class="icon icon-sm"></i> ${data.name}</span>
+                                    <span class="control-row-count" style="color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c} ${t('tasks')} <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i></span>
+                                </div>
+                                <div class="control-row-tasks">${tasksList}</div>
+                            </div>
+                        `;
+                    }).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
                 `;
             } else {
+                // Group tasks by function
                 const byFunc = {};
                 filteredTasks.forEach(task => { 
                     const fn = task.function || t('noFunction');
-                    byFunc[fn] = (byFunc[fn] || 0) + 1; 
+                    if (!byFunc[fn]) byFunc[fn] = [];
+                    byFunc[fn].push(task);
                 });
                 
                 content.innerHTML = `
                     <h3 style="margin-bottom:1rem;">${t('byFunctions')}</h3>
-                    ${Object.entries(byFunc).sort((a,b) => b[1] - a[1]).map(([n, c]) => `
-                        <div style="display:flex;justify-content:space-between;padding:0.6rem;background:#f8f9fa;border-radius:8px;margin-bottom:0.4rem;">
-                            <span><i data-lucide="settings" class="icon icon-sm"></i> ${n}</span>
-                            <span style="font-weight:600;color:#3498db;">${c} ${t('tasks')}</span>
-                        </div>
-                    `).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
+                    ${Object.entries(byFunc).sort((a,b) => b[1].length - a[1].length).map(([fn, taskList]) => {
+                        const c = taskList.length;
+                        const tasksHTML = taskList.map(t => {
+                            const deadline = t.deadlineDate || '';
+                            const isOverdue = deadline && deadline < new Date().toISOString().split('T')[0];
+                            return `
+                                <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="event.stopPropagation(); openTaskModal('${t.id}')">
+                                    <span class="task-title">${t.title}</span>
+                                    <span class="task-meta">
+                                        ${t.assigneeName ? `<span class="task-assignee">${t.assigneeName}</span>` : ''}
+                                        ${deadline ? `<span class="task-date ${isOverdue ? 'overdue' : ''}">${deadline}</span>` : ''}
+                                    </span>
+                                </div>
+                            `;
+                        }).join('');
+                        
+                        return `
+                            <div class="control-row" onclick="this.classList.toggle('expanded')">
+                                <div class="control-row-header">
+                                    <span><i data-lucide="settings" class="icon icon-sm"></i> ${fn}</span>
+                                    <span class="control-row-count" style="color:#3498db;">${c} ${t('tasks')} <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i></span>
+                                </div>
+                                <div class="control-row-tasks">${tasksHTML}</div>
+                            </div>
+                        `;
+                    }).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
                 `;
             }
+            
+            refreshIcons();
         }
         
         function clearControlFilters() {
