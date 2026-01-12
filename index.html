@@ -2088,7 +2088,8 @@
         .calendar-day-body {
             display: flex;
             position: relative;
-            max-height: calc(100vh - 300px);
+            min-height: 500px;
+            height: calc(100vh - 280px);
             overflow-y: auto;
         }
         
@@ -2096,15 +2097,19 @@
             width: 60px;
             flex-shrink: 0;
             border-right: 1px solid #e5e7eb;
+            background: #f9fafb;
         }
         
         .calendar-time-slot {
             height: 60px;
-            padding: 0.25rem 0.5rem;
+            padding: 4px 8px;
             font-size: 0.75rem;
             color: var(--gray);
             text-align: right;
             border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
         }
         
         .calendar-events-container {
@@ -7050,6 +7055,11 @@
             // Build time slots
             const timeSlotsEl = document.getElementById('calendarTimeSlots');
             const eventsContainerEl = document.getElementById('calendarEventsContainer');
+            
+            if (!timeSlotsEl || !eventsContainerEl) {
+                console.error('Calendar elements not found:', { timeSlotsEl, eventsContainerEl });
+                return;
+            }
             
             const dayStr = calendarDate.toISOString().split('T')[0];
             
