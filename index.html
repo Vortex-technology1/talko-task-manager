@@ -6231,16 +6231,16 @@
             return div.innerHTML;
         }
         
-        // Санітизація для відображення (decode entities)
-        function escapeForDisplay(str) {
+        // Санітизація для відображення (escape HTML entities)
+        function esc(str) {
             if (!str) return '';
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
+        
+        // Alias для зворотної сумісності
+        const escapeForDisplay = esc;
         
         // Валідація завдання
         function validateTaskData(data) {
@@ -6751,11 +6751,11 @@
                     <div class="agenda-item ${isDone ? 'done' : ''}" onclick="showTaskQuickMenu(event, '${task.id}')">
                         <div class="agenda-item-color status-${task.status}"></div>
                         <div class="agenda-item-content">
-                            <div class="agenda-item-title">${task.title}</div>
+                            <div class="agenda-item-title">${esc(task.title)}</div>
                             <div class="agenda-item-meta">
                                 <span class="agenda-item-time">${timeStr}</span>
                                 ${durationStr ? ` • ${durationStr}` : ''}
-                                ${task.assigneeName ? ` • ${task.assigneeName}` : ''}
+                                ${task.assigneeName ? ` • ${esc(task.assigneeName)}` : ''}
                             </div>
                         </div>
                         <div class="agenda-item-check" onclick="event.stopPropagation();toggleTaskFromAgenda('${task.id}')">
@@ -6877,7 +6877,7 @@
                     ${allDayTasks.map(task => `
                         <div class="calendar-allday-event calendar-event status-${task.status}" onclick="showTaskQuickMenu(event, '${task.id}')">
                             ${task.status === 'done' ? '<span style="margin-right:4px;">✓</span>' : ''}
-                            ${task.title}
+                            ${esc(task.title)}
                         </div>
                     `).join('')}
                 `;
@@ -6904,9 +6904,9 @@
                          onclick="showTaskQuickMenu(event, '${task.id}')"
                          draggable="true"
                          ondragstart="onTaskDragStart(event, '${task.id}')"
-                         title="${task.title}">
+                         title="${esc(task.title)}">
                         ${task.status === 'done' ? '<div class="calendar-event-done-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' : ''}
-                        <div class="calendar-event-title">${task.title}</div>
+                        <div class="calendar-event-title">${esc(task.title)}</div>
                         <div class="calendar-event-time">${startHour.toString().padStart(2,'0')}:${startMinute.toString().padStart(2,'0')} • ${formatDuration(durationMinutes)}</div>
                     </div>
                 `;
@@ -7017,8 +7017,8 @@
                              onclick="showTaskQuickMenu(event, '${task.id}')"
                              draggable="true"
                              ondragstart="onTaskDragStart(event, '${task.id}')"
-                             title="${task.title}">
-                            <div class="calendar-event-title" style="font-size:0.7rem;">${task.title}</div>
+                             title="${esc(task.title)}">
+                            <div class="calendar-event-title" style="font-size:0.7rem;">${esc(task.title)}</div>
                         </div>
                     `;
                 });
@@ -7099,7 +7099,7 @@
                         ${dayTasks.slice(0, 3).map(task => `
                             <div class="calendar-month-event calendar-event status-${task.status}" 
                                  onclick="event.stopPropagation(); showTaskQuickMenu(event, '${task.id}')">
-                                ${task.title}
+                                ${esc(task.title)}
                             </div>
                         `).join('')}
                         ${dayTasks.length > 3 ? `<div class="calendar-month-more">+${dayTasks.length - 3} ще</div>` : ''}
@@ -7430,15 +7430,15 @@
                 : (currentLang === 'ua' ? 'разове' : 'разовое');
             
             return `
-                <div class="myday-item ${itemClass}" onclick="openMyDayTask('${task.id}', '${task.type}', '${task.generatedTaskId || ''}')">
-                    <div class="myday-checkbox ${checkClass}" onclick="event.stopPropagation(); toggleMyDayTask('${task.id}', '${task.type}', '${task.generatedTaskId || ''}', ${task.done})">
+                <div class="myday-item ${itemClass}" onclick="openMyDayTask('${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}')">
+                    <div class="myday-checkbox ${checkClass}" onclick="event.stopPropagation(); toggleMyDayTask('${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}', ${task.done})">
                         ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
                     </div>
                     <div class="myday-item-content">
-                        <div class="myday-item-title">${task.title}</div>
+                        <div class="myday-item-title">${esc(task.title)}</div>
                         <div class="myday-item-meta">
-                            ${task.time ? `<span class="myday-item-time">${task.time}</span>` : ''}
-                            ${task.function ? `<span>${task.function}</span>` : ''}
+                            ${task.time ? `<span class="myday-item-time">${esc(task.time)}</span>` : ''}
+                            ${task.function ? `<span>${esc(task.function)}</span>` : ''}
                             <span class="myday-item-tag ${tagClass}">${tagText}</span>
                         </div>
                     </div>
@@ -7447,7 +7447,7 @@
         }
         
         async function toggleMyDayTask(id, type, generatedTaskId, currentDone) {
-            console.log('toggleMyDayTask:', { id, type, generatedTaskId, currentDone });
+            // Debug removed
             
             // Haptic feedback
             if (navigator.vibrate) navigator.vibrate(currentDone ? 10 : [10, 50, 10]);
@@ -7471,7 +7471,7 @@
                     // Для регулярних - змінюємо статус згенерованого завдання
                     if (generatedTaskId) {
                         const newStatus = currentDone ? 'new' : 'done';
-                        console.log('Updating regular task:', generatedTaskId, 'to', newStatus);
+                        // Debug removed
                         await db.collection('companies').doc(currentCompany).collection('tasks').doc(generatedTaskId).update({
                             status: newStatus,
                             completedAt: newStatus === 'done' ? new Date().toISOString() : null
@@ -7486,7 +7486,7 @@
                         );
                         if (existingTask) {
                             const newStatus = currentDone ? 'new' : 'done';
-                            console.log('Found task by search:', existingTask.id);
+                            // Debug removed
                             await db.collection('companies').doc(currentCompany).collection('tasks').doc(existingTask.id).update({
                                 status: newStatus,
                                 completedAt: newStatus === 'done' ? new Date().toISOString() : null
@@ -7498,7 +7498,7 @@
                 } else {
                     // Для разових - просто міняємо статус
                     const newStatus = currentDone ? 'new' : 'done';
-                    console.log('Updating one-time task:', id, 'to', newStatus);
+                    // Debug removed
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
                         status: newStatus,
                         completedAt: newStatus === 'done' ? new Date().toISOString() : null
@@ -7644,13 +7644,13 @@
                 html += `
                     <tr>
                         <td class="task-title-cell">
-                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${task.title}</span>
+                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${esc(task.title)}</span>
                         </td>
-                        <td>${task.assigneeName || '-'}</td>
-                        <td>${task.creatorName || '-'}</td>
+                        <td>${esc(task.assigneeName) || '-'}</td>
+                        <td>${esc(task.creatorName) || '-'}</td>
                         <td class="deadline-text ${deadlineClass}">${taskDeadline ? formatDateShort(taskDeadline) : '-'} ${taskTime || ''}</td>
                         <td><span class="status-badge status-${task.status}">${st[task.status] || task.status}</span></td>
-                        <td>${task.function || '-'}</td>
+                        <td>${esc(task.function) || '-'}</td>
                         <td>
                             <div class="action-btns">
                                 <button class="action-btn" onclick="togglePin('${task.id}')" title="Pin"><i data-lucide="pin" class="icon icon-sm"></i></button>
@@ -7742,15 +7742,15 @@
                         <div class="mobile-task-content">
                             <div class="mobile-task-header">
                                 <div class="mobile-task-title">
-                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${task.title}
+                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${esc(task.title)}
                                 </div>
                                 <span class="status-badge status-${task.status}">${st[task.status] || task.status}</span>
                             </div>
                             
                             <div class="mobile-task-meta">
-                                ${task.assigneeName ? `<div class="mobile-task-meta-item"><i data-lucide="user" class="icon icon-sm"></i> ${task.assigneeName}</div>` : ''}
+                                ${task.assigneeName ? `<div class="mobile-task-meta-item"><i data-lucide="user" class="icon icon-sm"></i> ${esc(task.assigneeName)}</div>` : ''}
                                 ${taskTime ? `<div class="mobile-task-meta-item"><i data-lucide="clock" class="icon icon-sm"></i> ${taskTime}</div>` : ''}
-                                ${task.function ? `<div class="mobile-task-meta-item"><i data-lucide="tag" class="icon icon-sm"></i> ${task.function}</div>` : ''}
+                                ${task.function ? `<div class="mobile-task-meta-item"><i data-lucide="tag" class="icon icon-sm"></i> ${esc(task.function)}</div>` : ''}
                             </div>
                             
                             <div class="mobile-task-actions">
@@ -8532,10 +8532,10 @@
                 html += `
                     <tr>
                         <td>
-                            <div style="font-weight:500;">${rt.title}</div>
-                            ${rt.expectedResult ? `<div style="font-size:0.75rem;color:#7f8c8d;margin-top:2px;"><i data-lucide="target" class="icon icon-sm"></i> ${rt.expectedResult.substring(0, 50)}${rt.expectedResult.length > 50 ? '...' : ''}</div>` : ''}
+                            <div style="font-weight:500;">${esc(rt.title)}</div>
+                            ${rt.expectedResult ? `<div style="font-size:0.75rem;color:#7f8c8d;margin-top:2px;"><i data-lucide="target" class="icon icon-sm"></i> ${esc(rt.expectedResult.substring(0, 50))}${rt.expectedResult.length > 50 ? '...' : ''}</div>` : ''}
                         </td>
-                        <td>${rt.function || '-'}</td>
+                        <td>${esc(rt.function) || '-'}</td>
                         <td>
                             <span class="status-badge" style="background:#f3e5f5;color:#7b1fa2;">${pt[rt.period] || rt.period}</span>
                             <div style="font-size:0.8rem;margin-top:4px;">${scheduleText}</div>
@@ -8692,13 +8692,13 @@
                         <div class="regular-task-block ${isCompleted ? 'completed' : ''} ${isShort ? 'short' : ''} ${isNarrow ? 'narrow' : ''}"
                              style="top: ${taskPos.top}px; height: ${taskPos.height}px; left: calc(4px + ${leftPercent}%); width: calc(${widthPercent}% - 8px);"
                              onclick="openRegularTaskModal('${rt.id}')"
-                             title="${rt.title}\n${timeStart} - ${timeEnd}\n${rt.function || ''}">
+                             title="${esc(rt.title)}\n${timeStart} - ${timeEnd}\n${esc(rt.function) || ''}">
                             <div class="task-time">${timeStart} - ${timeEnd}</div>
-                            <div class="task-title">${rt.title}</div>
+                            <div class="task-title">${esc(rt.title)}</div>
                             ${!isShort && !isNarrow && assigneeNames.length > 0 ? `
-                                <div class="task-assignee">${assigneeNames.slice(0, 2).join(', ')}${assigneeNames.length > 2 ? ` +${assigneeNames.length - 2}` : ''}</div>
+                                <div class="task-assignee">${assigneeNames.map(n => esc(n)).slice(0, 2).join(', ')}${assigneeNames.length > 2 ? ` +${assigneeNames.length - 2}` : ''}</div>
                             ` : ''}
-                            ${!isShort && !isNarrow && rt.function ? `<div class="task-function">${rt.function}</div>` : ''}
+                            ${!isShort && !isNarrow && rt.function ? `<div class="task-function">${esc(rt.function)}</div>` : ''}
                         </div>
                     `;
                 });
@@ -9008,14 +9008,14 @@
                         ${rt.estimatedTime ? ` • ${formatDuration(parseInt(rt.estimatedTime))}` : ''}
                         ${extraLabel ? ` • <span style="color:#8b5cf6;font-weight:500;">${extraLabel}</span>` : ''}
                     </div>
-                    <div class="task-title">${rt.title}</div>
+                    <div class="task-title">${esc(rt.title)}</div>
                     ${assigneeNames.length > 0 ? `
                         <div class="task-assignee">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            ${assigneeNames.slice(0, 2).join(', ')}${assigneeNames.length > 2 ? ` +${assigneeNames.length - 2}` : ''}
+                            ${assigneeNames.map(n => esc(n)).slice(0, 2).join(', ')}${assigneeNames.length > 2 ? ` +${assigneeNames.length - 2}` : ''}
                         </div>
                     ` : ''}
-                    ${rt.function ? `<div class="task-function">${rt.function}</div>` : ''}
+                    ${rt.function ? `<div class="task-function">${esc(rt.function)}</div>` : ''}
                     <button class="regular-task-complete-btn ${statusInfo.completedToday ? 'completed' : ''}" 
                             onclick="event.stopPropagation();markRegularTaskComplete('${rt.id}')"
                             title="${statusInfo.completedToday ? 'Виконано сьогодні' : 'Позначити виконаним'}">
@@ -10446,7 +10446,7 @@
             // Revoke token if exists
             if (googleAccessToken) {
                 google.accounts.oauth2.revoke(googleAccessToken, () => {
-                    console.log('Token revoked');
+                    // Token revoked
                 });
             }
             
@@ -10699,10 +10699,10 @@
                 <div class="task-quick-menu-header">
                     <div style="display:flex;align-items:center;gap:8px;">
                         <div style="width:12px;height:12px;border-radius:50%;background:${statusColor};flex-shrink:0;"></div>
-                        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;">${task.title}</span>
+                        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;">${esc(task.title)}</span>
                     </div>
                     ${isMobile ? `<div style="font-size:0.85rem;color:#888;margin-top:6px;font-weight:400;">
-                        ${deadlineStr}${funcName ? ' • ' + funcName : ''}
+                        ${deadlineStr}${funcName ? ' • ' + esc(funcName) : ''}
                     </div>` : ''}
                 </div>
                 <div class="task-quick-menu-item" onclick="openTaskModal('${taskId}');closeTaskQuickMenu();">
@@ -10785,7 +10785,7 @@
             if (!confirm('Видалити це завдання?')) return;
             
             try {
-                console.log('Deleting task:', taskId, 'Company:', currentCompany);
+                // Debug removed
                 
                 const task = tasks.find(t => t.id === taskId);
                 if (task?.calendarEventId && googleAccessToken) {
@@ -10793,7 +10793,7 @@
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).delete();
-                console.log('Task deleted successfully');
+                // Task deleted
                 await loadAllData();
             } catch (error) {
                 console.error('Delete error:', error);
