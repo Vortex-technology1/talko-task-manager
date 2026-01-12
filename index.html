@@ -66,145 +66,25 @@
         .header { 
             background: var(--header-bg); 
             color: white; 
+            padding: 0.75rem 1rem; 
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
         }
         
-        .header-top {
-            padding: 0.5rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
+        .header-content { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            display: flex; 
+            justify-content: space-between; 
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .header-center {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-        
-        /* Calendar navigation in header */
-        .header-nav {
-            display: none;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 0.5rem;
         }
         
-        .header-nav.visible {
-            display: flex;
-        }
-        
-        .header-nav-btn {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .header-nav-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
-        
-        .header-today-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .header-today-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
-        
-        .header-date {
-            font-size: 1.1rem;
-            font-weight: 600;
-            min-width: 180px;
-            text-align: center;
-        }
-        
-        /* View switcher in header */
-        .header-view-switcher {
-            display: none;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 3px;
-        }
-        
-        .header-view-switcher.visible {
-            display: flex;
-        }
-        
-        .header-view-btn {
-            background: transparent;
-            border: none;
-            color: rgba(255,255,255,0.7);
-            padding: 0.4rem 0.8rem;
-            border-radius: 17px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .header-view-btn.active {
-            background: rgba(255,255,255,0.25);
-            color: white;
-            font-weight: 500;
-        }
-        
-        .header-view-btn:hover {
-            color: white;
-        }
-        
-        /* Add button in header */
-        .header-add-btn {
-            background: var(--primary);
-            border: none;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: all 0.2s;
-        }
-        
-        .header-add-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
+        .logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
         
         .header-btn {
             background: rgba(255,255,255,0.2);
@@ -274,68 +154,18 @@
             background: rgba(255,255,255,0.35);
         }
         
-        /* Header tabs row */
-        .header-tabs {
-            display: flex;
-            padding: 0 1.5rem;
-            gap: 0;
+        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
+        
+        .tab-navigation { 
+            display: flex; 
+            background: var(--white); 
+            border-radius: var(--radius) var(--radius) 0 0; 
+            box-shadow: var(--shadow);
             overflow-x: auto;
             scrollbar-width: none;
         }
         
-        .header-tabs::-webkit-scrollbar { display: none; }
-        
-        .header-tab {
-            background: transparent;
-            border: none;
-            color: rgba(255,255,255,0.7);
-            padding: 0.75rem 1rem;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        
-        .header-tab:hover {
-            color: white;
-            background: rgba(255,255,255,0.05);
-        }
-        
-        .header-tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-        
-        .header-tab .icon {
-            width: 16px;
-            height: 16px;
-        }
-        
-        /* Full width container */
-        .container { 
-            width: 100%;
-            max-width: 100%; 
-            margin: 0; 
-            padding: 0; 
-        }
-        
-        .main-interface {
-            padding: 0;
-        }
-        
-        /* Hide old tab navigation */
-        .tab-navigation { 
-            display: none !important;
-        }
-        
-        /* Tab content full width */
-        .tab-content {
-            padding: 0;
-        }
+        .tab-navigation::-webkit-scrollbar { display: none; }
         
         .tab-btn { 
             background: transparent; 
@@ -685,23 +515,16 @@
         
         .tasks-container, .cards-grid {
             background: var(--white);
-            border-radius: 0;
-            box-shadow: none;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             overflow: hidden;
-        }
-        
-        /* Full width calendar wrapper */
-        .calendar-full-width {
-            width: 100%;
-            min-height: calc(100vh - 120px);
-            background: white;
         }
         
         .cards-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 0.75rem;
-            padding: 1rem 1.5rem;
+            padding: 1rem;
         }
         
         .task-card, .function-card, .user-card {
@@ -1256,66 +1079,21 @@
         /* Mobile buttons */
         
         @media (min-width: 768px) {
-            .logo { font-size: 1.2rem; }
+            .header { padding: 1rem 2rem; }
+            .logo { font-size: 1.4rem; }
             .user-info { display: flex; }
+            .container { padding: 1.5rem; }
             .controls { flex-direction: row; align-items: center; justify-content: space-between; }
             .filters { width: auto; flex-wrap: nowrap; }
             .filter-select { flex: none; min-width: auto; }
             .form-grid { grid-template-columns: 1fr 1fr; }
             .form-group.full-width { grid-column: span 2; }
-            .cards-grid { 
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-                padding: 1.5rem;
-            }
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
             .dashboard-cards { grid-template-columns: repeat(4, 1fr); }
-            
-            /* Header on desktop - only show with .visible class */
-            .header-nav.visible, .header-view-switcher.visible {
-                display: flex !important;
-            }
-            .header-tabs {
-                padding: 0 2rem;
-            }
         }
         
         /* Mobile optimizations */
         @media (max-width: 767px) {
-            /* Hide header elements on mobile */
-            .header-nav, .header-view-switcher, .header-add-btn {
-                display: none !important;
-            }
-            
-            .header-top {
-                padding: 0.5rem 1rem;
-            }
-            
-            .header-left .logo {
-                font-size: 1rem;
-            }
-            
-            .header-right .header-ai-btn span,
-            .header-right .header-btn span {
-                display: none;
-            }
-            
-            .header-tabs {
-                padding: 0 0.5rem;
-                gap: 0;
-            }
-            
-            .header-tab {
-                padding: 0.6rem 0.75rem;
-                font-size: 0.75rem;
-            }
-            
-            .header-tab span {
-                display: none;
-            }
-            
-            .header-tab .icon {
-                margin: 0;
-            }
-            
             .filters {
                 display: flex;
                 overflow-x: auto;
@@ -2088,8 +1866,7 @@
         .calendar-day-body {
             display: flex;
             position: relative;
-            min-height: 500px;
-            height: calc(100vh - 280px);
+            max-height: calc(100vh - 300px);
             overflow-y: auto;
         }
         
@@ -2097,19 +1874,15 @@
             width: 60px;
             flex-shrink: 0;
             border-right: 1px solid #e5e7eb;
-            background: #f9fafb;
         }
         
         .calendar-time-slot {
             height: 60px;
-            padding: 4px 8px;
+            padding: 0.25rem 0.5rem;
             font-size: 0.75rem;
             color: var(--gray);
             text-align: right;
             border-bottom: 1px solid #f3f4f6;
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-end;
         }
         
         .calendar-events-container {
@@ -3971,41 +3744,12 @@
 </head>
 <body>
     <header class="header">
-        <!-- Top row: Logo, Navigation, Actions -->
-        <div class="header-top">
-            <div class="header-left">
-                <div class="logo">
-                    <i data-lucide="rocket" class="icon"></i> TALKO System
-                    <span class="company-badge" id="companyBadge" style="display:none;"></span>
-                </div>
+        <div class="header-content">
+            <div class="logo">
+                <i data-lucide="rocket" class="icon"></i> TALKO System
+                <span class="company-badge" id="companyBadge" style="display:none;"></span>
             </div>
-            
-            <div class="header-center">
-                <!-- Calendar navigation - shows for tasks/regular tabs -->
-                <div class="header-nav" id="headerNav">
-                    <button class="header-nav-btn" onclick="navigateCalendar(-1)" title="Попередній">
-                        <i data-lucide="chevron-left" class="icon"></i>
-                    </button>
-                    <button class="header-today-btn" onclick="goToToday()" data-i18n="today">Сьогодні</button>
-                    <button class="header-nav-btn" onclick="navigateCalendar(1)" title="Наступний">
-                        <i data-lucide="chevron-right" class="icon"></i>
-                    </button>
-                    <span class="header-date" id="headerDate">12 Січень 2026</span>
-                </div>
-                
-                <!-- View switcher -->
-                <div class="header-view-switcher" id="headerViewSwitcher">
-                    <button class="header-view-btn active" onclick="setCalendarView('day')" id="viewBtnDay" data-i18n="day">День</button>
-                    <button class="header-view-btn" onclick="setCalendarView('week')" id="viewBtnWeek" data-i18n="week">Тиждень</button>
-                    <button class="header-view-btn" onclick="setCalendarView('month')" id="viewBtnMonth" data-i18n="month">Місяць</button>
-                    <button class="header-view-btn" onclick="setCalendarView('list')" id="viewBtnList" data-i18n="list">Список</button>
-                </div>
-            </div>
-            
-            <div class="header-right">
-                <button class="header-add-btn" onclick="openAddModal()" id="headerAddBtn">
-                    <i data-lucide="plus" class="icon"></i> <span data-i18n="add">Додати</span>
-                </button>
+            <div class="header-actions">
                 <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="header-ai-btn" title="Питання до керівника">
                     <i data-lucide="target" class="icon"></i> <span data-i18n="radarAI">Керівник</span>
                 </a>
@@ -4022,18 +3766,6 @@
                 </div>
                 <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;"><i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span></button>
             </div>
-        </div>
-        
-        <!-- Bottom row: Tabs -->
-        <div class="header-tabs" id="headerTabs">
-            <button class="header-tab active" onclick="switchTab('myday')" id="tabMyday"><i data-lucide="sun" class="icon"></i> <span data-i18n="tabMyDay">Мій день</span></button>
-            <button class="header-tab" onclick="switchTab('tasks')" id="tabTasks"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
-            <button class="header-tab" onclick="switchTab('control')" id="tabControl"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
-            <button class="header-tab" onclick="switchTab('regular')" id="tabRegular"><i data-lucide="repeat" class="icon"></i> <span data-i18n="tabRegular">Регулярні</span></button>
-            <button class="header-tab" onclick="switchTab('functions')" id="tabFunctions"><i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span></button>
-            <button class="header-tab" onclick="switchTab('users')" id="tabUsers"><i data-lucide="users" class="icon"></i> <span data-i18n="tabUsers">Співробітники</span></button>
-            <button class="header-tab" onclick="switchTab('analytics')" id="tabAnalytics"><i data-lucide="bar-chart-3" class="icon"></i> <span data-i18n="tabAnalytics">Аналітика</span></button>
-            <button class="header-tab" onclick="switchTab('admin')" id="tabAdmin" style="display:none;color:#dc2626;"><i data-lucide="shield" class="icon"></i> <span data-i18n="tabAdmin">Адмін</span></button>
         </div>
     </header>
 
@@ -4198,6 +3930,33 @@
 
             <!-- TASKS -->
             <div id="tasksTab" class="tab-content">
+                
+                <!-- Calendar Header with Navigation -->
+                <div class="calendar-header" id="calendarHeader">
+                    <div class="calendar-nav">
+                        <button class="calendar-nav-btn" onclick="calendarPrev()">
+                            <i data-lucide="chevron-left" class="icon"></i>
+                        </button>
+                        <button class="calendar-today-btn" onclick="calendarToday()">Сьогодні</button>
+                        <button class="calendar-nav-btn" onclick="calendarNext()">
+                            <i data-lucide="chevron-right" class="icon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="calendar-title" id="calendarTitle">Грудень 2024</div>
+                    
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <div class="calendar-view-switcher">
+                            <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')">День</button>
+                            <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')">Тиждень</button>
+                            <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')">Місяць</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')">Список</button>
+                        </div>
+                        <button class="btn btn-success" onclick="openTaskModal()">
+                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile">Додати</span>
+                        </button>
+                    </div>
+                </div>
                 
                 <!-- Mobile Week Strip (Google Calendar style) -->
                 <div class="mobile-week-strip" id="mobileWeekStrip">
@@ -4365,6 +4124,23 @@
 
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
+                <!-- Regular Tasks Calendar Header -->
+                <div class="calendar-header" id="regularCalendarHeader">
+                    <div style="display:flex;align-items:center;gap:1rem;">
+                        <h3 style="margin:0;font-size:1.1rem;"><i data-lucide="repeat" class="icon"></i> Регулярні завдання</h3>
+                    </div>
+                    
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <div class="calendar-view-switcher">
+                            <button class="calendar-view-btn active" data-view="week" onclick="setRegularView('week')">Тиждень</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')">Список</button>
+                        </div>
+                        <button class="btn btn-success" onclick="openRegularTaskModal()">
+                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile">Додати</span>
+                        </button>
+                    </div>
+                </div>
+                
                 <!-- Mobile Day Tabs for Regular Tasks -->
                 <div class="mobile-regular-tabs" id="mobileRegularTabs">
                     <div class="regular-day-tabs" id="regularDayTabs">
@@ -5965,9 +5741,6 @@
             document.getElementById('mainInterface').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'block';
             document.getElementById('currentUserInfo').style.display = 'flex';
-            
-            // Initialize active tab
-            switchTab('myday');
         }
 
         function getRoleText(role) {
@@ -7055,11 +6828,6 @@
             // Build time slots
             const timeSlotsEl = document.getElementById('calendarTimeSlots');
             const eventsContainerEl = document.getElementById('calendarEventsContainer');
-            
-            if (!timeSlotsEl || !eventsContainerEl) {
-                console.error('Calendar elements not found:', { timeSlotsEl, eventsContainerEl });
-                return;
-            }
             
             const dayStr = calendarDate.toISOString().split('T')[0];
             
@@ -9862,43 +9630,14 @@
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.header-tab').forEach(x => x.classList.remove('active'));
-            
             document.getElementById(tabName + 'Tab').classList.add('active');
             document.querySelector(`[onclick="switchTab('${tabName}')"]`)?.classList.add('active');
-            
-            // Update header tab
-            const headerTab = document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
-            if (headerTab) headerTab.classList.add('active');
             
             // Update bottom nav
             document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.dataset.tab === tabName) btn.classList.add('active');
             });
-            
-            // Show/hide header nav and view switcher based on tab
-            const headerNav = document.getElementById('headerNav');
-            const headerViewSwitcher = document.getElementById('headerViewSwitcher');
-            const headerAddBtn = document.getElementById('headerAddBtn');
-            
-            if (tabName === 'tasks') {
-                headerNav.classList.add('visible');
-                headerViewSwitcher.classList.add('visible');
-                headerAddBtn.style.display = 'flex';
-                updateHeaderDate();
-                updateHeaderViewButtons();
-            } else if (tabName === 'regular') {
-                headerNav.classList.add('visible');
-                headerViewSwitcher.classList.add('visible');
-                headerAddBtn.style.display = 'flex';
-                // Switch to regular view buttons
-                updateHeaderForRegular();
-            } else {
-                headerNav.classList.remove('visible');
-                headerViewSwitcher.classList.remove('visible');
-                headerAddBtn.style.display = tabName === 'functions' || tabName === 'users' ? 'flex' : 'none';
-            }
             
             // Update FAB
             updateFab(tabName);
@@ -9912,112 +9651,6 @@
                 case 'users': renderUsers(); break;
                 case 'analytics': renderAnalytics(); break;
                 case 'admin': renderAdminPanel(); break;
-            }
-        }
-        
-        // Update header date display
-        function updateHeaderDate() {
-            const headerDate = document.getElementById('headerDate');
-            if (!headerDate) return;
-            
-            const months = currentLang === 'ua' 
-                ? ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
-                : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-            
-            headerDate.textContent = `${calendarDate.getDate()} ${months[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
-        }
-        
-        // Update header view buttons
-        function updateHeaderViewButtons() {
-            document.querySelectorAll('.header-view-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.getElementById('viewBtn' + currentCalendarView.charAt(0).toUpperCase() + currentCalendarView.slice(1));
-            if (activeBtn) activeBtn.classList.add('active');
-        }
-        
-        // Update header for regular tasks tab
-        function updateHeaderForRegular() {
-            const headerDate = document.getElementById('headerDate');
-            const viewSwitcher = document.getElementById('headerViewSwitcher');
-            
-            // Update view buttons for regular (week/list only)
-            viewSwitcher.innerHTML = `
-                <button class="header-view-btn ${currentRegularView === 'week' ? 'active' : ''}" onclick="setRegularView('week')" data-i18n="week">Тиждень</button>
-                <button class="header-view-btn ${currentRegularView === 'list' ? 'active' : ''}" onclick="setRegularView('list')" data-i18n="list">Список</button>
-            `;
-            
-            // Hide date for regular
-            headerDate.textContent = currentLang === 'ua' ? 'Регулярні завдання' : 'Регулярные задачи';
-        }
-        
-        // Navigate calendar from header
-        function navigateCalendar(direction) {
-            const activeTab = document.querySelector('.header-tab.active');
-            const tabName = activeTab?.id?.replace('tab', '').toLowerCase();
-            
-            if (tabName === 'tasks') {
-                if (currentCalendarView === 'day') {
-                    calendarDate.setDate(calendarDate.getDate() + direction);
-                } else if (currentCalendarView === 'week') {
-                    calendarDate.setDate(calendarDate.getDate() + (direction * 7));
-                } else if (currentCalendarView === 'month') {
-                    calendarDate.setMonth(calendarDate.getMonth() + direction);
-                }
-                updateHeaderDate();
-                renderCalendar();
-            } else if (tabName === 'regular') {
-                // Navigate week for regular
-                regularWeekStart.setDate(regularWeekStart.getDate() + (direction * 7));
-                renderRegularWeekView();
-            }
-        }
-        
-        // Go to today from header
-        function goToToday() {
-            calendarDate = new Date();
-            regularWeekStart = getMonday(new Date());
-            updateHeaderDate();
-            
-            const activeTab = document.querySelector('.header-tab.active');
-            const tabName = activeTab?.id?.replace('tab', '').toLowerCase();
-            
-            if (tabName === 'tasks') {
-                renderCalendar();
-            } else if (tabName === 'regular') {
-                renderRegularWeekView();
-            }
-        }
-        
-        // Set calendar view from header
-        function setCalendarView(view) {
-            currentCalendarView = view;
-            updateHeaderViewButtons();
-            renderCalendar();
-        }
-        
-        // Set regular view from header
-        function setRegularView(view) {
-            currentRegularView = view;
-            document.querySelectorAll('.header-view-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (view === 'week') {
-                renderRegularWeekView();
-            } else {
-                renderRegularTasks();
-            }
-        }
-        
-        // Open add modal based on current tab
-        function openAddModal() {
-            const activeTab = document.querySelector('.header-tab.active');
-            const tabName = activeTab?.id?.replace('tab', '').toLowerCase();
-            
-            switch (tabName) {
-                case 'tasks': openTaskModal(); break;
-                case 'regular': openRegularTaskModal(); break;
-                case 'functions': openFunctionModal(); break;
-                case 'users': openUserModal(); break;
-                default: openTaskModal(); break;
             }
         }
         
