@@ -7311,10 +7311,11 @@
                 
                 if (!isToday) return;
                 
-                // Перевіряємо чи виконано - шукаємо згенероване завдання
+                // Перевіряємо чи виконано - шукаємо згенероване завдання ДЛЯ ПОТОЧНОГО КОРИСТУВАЧА
                 const generatedTask = tasks.find(t => 
                     t.regularTaskId === rt.id && 
-                    t.deadlineDate === todayStr
+                    t.deadlineDate === todayStr &&
+                    t.assigneeId === currentUser.uid
                 );
                 
                 myTasks.push({
@@ -7436,7 +7437,6 @@
                     <div class="myday-checkbox ${checkClass}" onclick="event.stopPropagation(); toggleMyDayTask(event, '${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}', ${task.done})">
                         ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
                     </div>
-                    </div>
                     <div class="myday-item-content">
                         <div class="myday-item-title">${esc(task.title)}</div>
                         <div class="myday-item-meta">
@@ -7450,6 +7450,9 @@
         }
         
         async function toggleMyDayTask(e, id, type, generatedTaskId, currentDone) {
+            console.log('=== toggleMyDayTask CALLED ===');
+            console.log('Params:', { id, type, generatedTaskId, currentDone });
+            
             // Haptic feedback
             if (navigator.vibrate) navigator.vibrate(currentDone ? 10 : [10, 50, 10]);
             
@@ -7470,31 +7473,72 @@
             try {
                 if (type === 'regular') {
                     // Для регулярних - змінюємо статус згенерованого завдання
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    
+                    console.log('toggleMyDayTask regular:', { id, generatedTaskId, currentDone, todayStr, currentUserId: currentUser.uid });
+                    
+                    // Спочатку шукаємо завдання для ПОТОЧНОГО користувача
+                    let taskToUpdate = null;
+                    
                     if (generatedTaskId) {
+                        // Перевіряємо чи це завдання дійсно належить поточному користувачу
+                        taskToUpdate = tasks.find(t => t.id === generatedTaskId && t.assigneeId === currentUser.uid);
+                        console.log('Found by generatedTaskId:', taskToUpdate ? taskToUpdate.id : 'NOT FOUND');
+                    }
+                    
+                    // Якщо не знайшли по generatedTaskId - шукаємо по regularTaskId
+                    if (!taskToUpdate) {
+                        taskToUpdate = tasks.find(t => 
+                            t.regularTaskId === id && 
+                            t.deadlineDate === todayStr &&
+                            t.assigneeId === currentUser.uid
+                        );
+                        console.log('Found by regularTaskId:', taskToUpdate ? taskToUpdate.id : 'NOT FOUND');
+                    }
+                    
+                    console.log('taskToUpdate:', taskToUpdate);
+                    
+                    if (taskToUpdate) {
+                        // Оновлюємо існуюче завдання
                         const newStatus = currentDone ? 'new' : 'done';
-                        // Debug removed
-                        await db.collection('companies').doc(currentCompany).collection('tasks').doc(generatedTaskId).update({
+                        await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).update({
                             status: newStatus,
                             completedAt: newStatus === 'done' ? new Date().toISOString() : null
                         });
-                    } else {
-                        console.warn('No generatedTaskId for regular task, searching...');
-                        // Шукаємо згенероване завдання
-                        const todayStr = new Date().toISOString().split('T')[0];
-                        const existingTask = tasks.find(t => 
-                            t.regularTaskId === id && 
-                            t.deadlineDate === todayStr
-                        );
-                        if (existingTask) {
-                            const newStatus = currentDone ? 'new' : 'done';
-                            // Debug removed
-                            await db.collection('companies').doc(currentCompany).collection('tasks').doc(existingTask.id).update({
-                                status: newStatus,
-                                completedAt: newStatus === 'done' ? new Date().toISOString() : null
+                    } else if (!currentDone) {
+                        // Завдання не існує - створюємо нове і одразу виконане
+                        const rt = regularTasks.find(r => r.id === id);
+                        console.log('Creating new task, rt found:', rt ? rt.title : 'NOT FOUND');
+                        if (rt) {
+                            console.log('Creating task with data:', { title: rt.title, assigneeId: currentUser.uid });
+                            const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                                title: rt.title,
+                                function: rt.function,
+                                assigneeId: currentUser.uid,
+                                assigneeName: currentUserData?.name || currentUser.email,
+                                deadlineDate: todayStr,
+                                deadlineTime: rt.timeStart || rt.time || '18:00',
+                                deadline: todayStr + 'T' + (rt.timeStart || rt.time || '18:00'),
+                                expectedResult: rt.expectedResult || '',
+                                reportFormat: rt.reportFormat || '',
+                                description: rt.instruction || '',
+                                status: 'done',
+                                priority: 'medium',
+                                pinned: false,
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                createdDate: todayStr,
+                                creatorName: currentLang === 'ua' ? 'Система' : 'Система',
+                                regularTaskId: id,
+                                autoGenerated: true,
+                                completedAt: new Date().toISOString()
                             });
                         } else {
-                            console.error('Could not find generated task for regular:', id);
+                            console.error('Could not find regular task template:', id);
+                            throw new Error('Регулярне завдання не знайдено');
                         }
+                    } else {
+                        console.error('Cannot uncheck - task not found for user');
+                        throw new Error('Завдання не знайдено');
                     }
                 } else {
                     // Для разових - просто міняємо статус
@@ -7511,6 +7555,7 @@
                 renderMyDay();
             } catch (error) {
                 console.error('Error toggling task:', error);
+                alert('Помилка: ' + error.message);
                 // Відновлюємо UI при помилці
                 if (checkbox && !currentDone) {
                     checkbox.classList.remove('checked');
