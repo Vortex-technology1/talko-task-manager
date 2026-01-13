@@ -5896,8 +5896,8 @@
                             assigneeId: assigneeId,
                             assigneeName: assignee?.name || assignee?.email || '',
                             deadlineDate: todayStr,
-                            deadlineTime: rt.time || '18:00',
-                            deadline: todayStr + 'T' + (rt.time || '18:00'),
+                            deadlineTime: rt.timeStart || rt.time || '18:00',
+                            deadline: todayStr + 'T' + (rt.timeStart || rt.time || '18:00'),
                             expectedResult: rt.expectedResult || '',
                             reportFormat: rt.reportFormat || '',
                             description: rt.instruction || '',
@@ -5919,7 +5919,7 @@
                             assigneeId: assigneeId,
                             assigneeName: assignee?.name || assignee?.email || '',
                             deadlineDate: todayStr,
-                            deadlineTime: rt.time || '18:00',
+                            deadlineTime: rt.timeStart || rt.time || '18:00',
                             status: 'new',
                             priority: 'medium',
                             regularTaskId: rt.id,
@@ -5976,7 +5976,7 @@
                         ${currentLang === 'ua' ? 'Прострочено' : 'Просрочено'}: ${overdueTasks.length}
                     </div>
                     <div style="font-size:0.85rem;color:#7f1d1d;">
-                        ${overdueTasks.slice(0, 3).map(t => `• ${t.title}`).join('<br>')}
+                        ${overdueTasks.slice(0, 3).map(t => `• ${esc(t.title)}`).join('<br>')}
                         ${overdueTasks.length > 3 ? `<br><i>+${overdueTasks.length - 3} ${currentLang === 'ua' ? 'ще' : 'еще'}...</i>` : ''}
                     </div>
                 </div>
@@ -5989,7 +5989,7 @@
                         ${currentLang === 'ua' ? 'На сьогодні' : 'На сегодня'}: ${todayTasks.length}
                     </div>
                     <div style="font-size:0.85rem;color:#166534;">
-                        ${todayTasks.slice(0, 5).map(t => `• ${t.title}`).join('<br>')}
+                        ${todayTasks.slice(0, 5).map(t => `• ${esc(t.title)}`).join('<br>')}
                         ${todayTasks.length > 5 ? `<br><i>+${todayTasks.length - 5} ${currentLang === 'ua' ? 'ще' : 'еще'}...</i>` : ''}
                     </div>
                 </div>
@@ -7272,9 +7272,9 @@
             
             // 2. Регулярні завдання на сьогодні
             regularTasks.forEach(rt => {
-                // Перевіряємо чи поточний користувач є Головним функції
+                // Перевіряємо чи поточний користувач є виконавцем функції (assignee)
                 const func = functions.find(f => f.name === rt.function);
-                if (!func || func.headId !== currentUser.uid) return;
+                if (!func || !func.assigneeIds?.includes(currentUser.uid)) return;
                 
                 // Перевіряємо чи сьогодні день цього завдання
                 let isToday = false;
@@ -7320,7 +7320,7 @@
                 myTasks.push({
                     id: rt.id,
                     title: rt.title,
-                    time: rt.time || '',
+                    time: rt.timeStart || rt.time || '',
                     function: rt.function || '',
                     type: 'regular',
                     done: generatedTask?.status === 'done',
@@ -7433,8 +7433,9 @@
             
             return `
                 <div class="myday-item ${itemClass}" onclick="openMyDayTask('${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}')">
-                    <div class="myday-checkbox ${checkClass}" onclick="event.stopPropagation(); toggleMyDayTask('${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}', ${task.done})">
+                    <div class="myday-checkbox ${checkClass}" onclick="event.stopPropagation(); toggleMyDayTask(event, '${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}', ${task.done})">
                         ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
+                    </div>
                     </div>
                     <div class="myday-item-content">
                         <div class="myday-item-title">${esc(task.title)}</div>
@@ -7448,14 +7449,12 @@
                 </div>`;
         }
         
-        async function toggleMyDayTask(id, type, generatedTaskId, currentDone) {
-            // Debug removed
-            
+        async function toggleMyDayTask(e, id, type, generatedTaskId, currentDone) {
             // Haptic feedback
             if (navigator.vibrate) navigator.vibrate(currentDone ? 10 : [10, 50, 10]);
             
             // Visual feedback - знаходимо елемент і анімуємо
-            const checkbox = event.target.closest('.myday-checkbox');
+            const checkbox = e?.target?.closest('.myday-checkbox');
             const item = checkbox?.closest('.myday-item');
             
             if (checkbox && !currentDone) {
@@ -7950,18 +7949,18 @@
             c.innerHTML = functions.map(f => `
                 <div class="function-card">
                     <div class="function-header">
-                        <div class="function-title"><i data-lucide="settings" class="icon icon-sm"></i> ${f.name}</div>
+                        <div class="function-title"><i data-lucide="settings" class="icon icon-sm"></i> ${esc(f.name)}</div>
                     </div>
-                    ${f.description ? `<div class="function-description">${f.description}</div>` : ''}
+                    ${f.description ? `<div class="function-description">${esc(f.description)}</div>` : ''}
                     <div class="function-assignees">
-                        ${f.headName ? `<span class="assignee-badge head"><i data-lucide="crown" class="icon icon-sm"></i> ${f.headName}</span>` : ''}
-                        ${f.assigneeNames?.filter(n => n !== f.headName).map(n => `<span class="assignee-badge">${n}</span>`).join('') || ''}
+                        ${f.headName ? `<span class="assignee-badge head"><i data-lucide="crown" class="icon icon-sm"></i> ${esc(f.headName)}</span>` : ''}
+                        ${f.assigneeNames?.filter(n => n !== f.headName).map(n => `<span class="assignee-badge">${esc(n)}</span>`).join('') || ''}
                     </div>
                     <div class="function-stats">
                         <span><i data-lucide="file-text" class="icon icon-sm"></i> ${tasks.filter(task => task.function === f.name).length} ${t('tasks')}</span>
                         <div>
-                            <button class="btn btn-small" onclick="openFunctionModal('${f.id}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
-                            <button class="btn btn-small btn-danger" onclick="deleteFunction('${f.id}')"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                            <button class="btn btn-small" onclick="openFunctionModal('${esc(f.id)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                            <button class="btn btn-small btn-danger" onclick="deleteFunction('${esc(f.id)}')"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                         </div>
                     </div>
                 </div>
@@ -8284,8 +8283,8 @@
                     assigneeId: assigneeId,
                     assigneeName: users.find(u => u.id === assigneeId)?.name || '',
                     deadlineDate: deadlineDate,
-                    deadlineTime: rt.time || '18:00',
-                    deadline: deadlineDate + 'T' + (rt.time || '18:00'),
+                    deadlineTime: rt.timeStart || rt.time || '18:00',
+                    deadline: deadlineDate + 'T' + (rt.timeStart || rt.time || '18:00'),
                     expectedResult: rt.expectedResult || '',
                     reportFormat: rt.reportFormat || '',
                     description: rt.instruction || '',
@@ -8383,8 +8382,8 @@
                     assigneeId: currentUser.uid,
                     assigneeName: currentUserData?.name || currentUser.email,
                     deadlineDate: today,
-                    deadlineTime: rt.time || '18:00',
-                    deadline: today + 'T' + (rt.time || '18:00'),
+                    deadlineTime: rt.timeStart || rt.time || '18:00',
+                    deadline: today + 'T' + (rt.timeStart || rt.time || '18:00'),
                     expectedResult: rt.expectedResult || '',
                     reportFormat: rt.reportFormat || '',
                     description: rt.instruction || '',
@@ -8502,23 +8501,24 @@
             
             filtered.forEach(rt => {
                 let scheduleText;
+                const displayTime = rt.timeStart || rt.time || '10:00';
                 
                 // Підтримка старого формату daily
                 if (rt.period === 'daily') {
-                    scheduleText = `${currentLang === 'ua' ? 'Щодня' : 'Ежедневно'}, ${rt.time || '10:00'}`;
+                    scheduleText = `${currentLang === 'ua' ? 'Щодня' : 'Ежедневно'}, ${displayTime}`;
                 } else if (rt.period === 'weekly') {
                     // Формуємо текст з вибраних днів
                     const daysList = rt.daysOfWeek || (rt.dayOfWeek ? [rt.dayOfWeek] : ['1']);
                     if (daysList.length === 7) {
-                        scheduleText = `${currentLang === 'ua' ? 'Щодня' : 'Ежедневно'}, ${rt.time || '10:00'}`;
+                        scheduleText = `${currentLang === 'ua' ? 'Щодня' : 'Ежедневно'}, ${displayTime}`;
                     } else if (daysList.length === 5 && ['1','2','3','4','5'].every(d => daysList.includes(d))) {
-                        scheduleText = `${currentLang === 'ua' ? 'Пн-Пт' : 'Пн-Пт'}, ${rt.time || '10:00'}`;
+                        scheduleText = `${currentLang === 'ua' ? 'Пн-Пт' : 'Пн-Пт'}, ${displayTime}`;
                     } else {
                         const dayNames = daysList.map(d => days[d] || '').filter(Boolean);
-                        scheduleText = `${dayNames.join(', ')}, ${rt.time || '10:00'}`;
+                        scheduleText = `${dayNames.join(', ')}, ${displayTime}`;
                     }
                 } else {
-                    scheduleText = `${rt.dayOfMonth || '1'}-го, ${rt.time || '10:00'}`;
+                    scheduleText = `${rt.dayOfMonth || '1'}-го, ${displayTime}`;
                 }
                 
                 // Беремо виконавців з функції динамічно
@@ -9006,7 +9006,7 @@
                      style="border-left-color: ${statusInfo.color};">
                     <div class="task-time">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                        ${rt.time || '--:--'}
+                        ${rt.timeStart || rt.time || '--:--'}
                         ${rt.estimatedTime ? ` • ${formatDuration(parseInt(rt.estimatedTime))}` : ''}
                         ${extraLabel ? ` • <span style="color:#8b5cf6;font-weight:500;">${extraLabel}</span>` : ''}
                     </div>
@@ -9310,10 +9310,10 @@
                             const deadline = t.deadlineDate || '';
                             const isOverdue = deadline && deadline < new Date().toISOString().split('T')[0];
                             return `
-                                <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="openTaskModal('${t.id}')">
-                                    <span class="task-title">${t.title}</span>
+                                <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="openTaskModal('${esc(t.id)}')">
+                                    <span class="task-title">${esc(t.title)}</span>
                                     <span class="task-meta">
-                                        ${t.function ? `<span class="task-func">${t.function}</span>` : ''}
+                                        ${t.function ? `<span class="task-func">${esc(t.function)}</span>` : ''}
                                         ${deadline ? `<span class="task-date ${isOverdue ? 'overdue' : ''}">${deadline}</span>` : ''}
                                     </span>
                                 </div>
@@ -9323,7 +9323,7 @@
                         return `
                             <div class="control-row" onclick="this.classList.toggle('expanded')">
                                 <div class="control-row-header">
-                                    <span><i data-lucide="user" class="icon icon-sm"></i> ${data.name}</span>
+                                    <span><i data-lucide="user" class="icon icon-sm"></i> ${esc(data.name)}</span>
                                     <span class="control-row-count" style="color:${c > 5 ? '#e74c3c' : '#27ae60'};">${c} ${t('tasks')} <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i></span>
                                 </div>
                                 <div class="control-row-tasks">${tasksList}</div>
@@ -9348,10 +9348,10 @@
                             const deadline = t.deadlineDate || '';
                             const isOverdue = deadline && deadline < new Date().toISOString().split('T')[0];
                             return `
-                                <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="event.stopPropagation(); openTaskModal('${t.id}')">
-                                    <span class="task-title">${t.title}</span>
+                                <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="event.stopPropagation(); openTaskModal('${esc(t.id)}')">
+                                    <span class="task-title">${esc(t.title)}</span>
                                     <span class="task-meta">
-                                        ${t.assigneeName ? `<span class="task-assignee">${t.assigneeName}</span>` : ''}
+                                        ${t.assigneeName ? `<span class="task-assignee">${esc(t.assigneeName)}</span>` : ''}
                                         ${deadline ? `<span class="task-date ${isOverdue ? 'overdue' : ''}">${deadline}</span>` : ''}
                                     </span>
                                 </div>
