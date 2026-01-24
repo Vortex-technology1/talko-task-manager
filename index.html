@@ -542,6 +542,187 @@
         .task-card:last-child { border-bottom: none; }
         .task-card:hover, .function-card:hover, .user-card:hover { background: #f9fafb; border-color: var(--primary); }
         
+        /* Process Board Styles */
+        .process-board-container {
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        
+        .process-board {
+            display: flex;
+            gap: 1rem;
+            min-width: max-content;
+            padding: 0.5rem;
+        }
+        
+        .process-column {
+            background: #f3f4f6;
+            border-radius: 12px;
+            min-width: 280px;
+            max-width: 320px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 250px);
+        }
+        
+        .process-column-header {
+            padding: 1rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .process-column-header .column-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .process-column-cards {
+            padding: 0.75rem;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .process-card {
+            background: white;
+            border-radius: 10px;
+            padding: 0.875rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .process-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .process-card.overdue {
+            border-left-color: var(--danger);
+            background: #fef2f2;
+        }
+        
+        .process-card-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .process-card-meta {
+            font-size: 0.75rem;
+            color: var(--gray);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .process-card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .process-card-progress {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 3px;
+        }
+        
+        .process-card-progress .step {
+            height: 4px;
+            flex: 1;
+            background: #e5e7eb;
+            border-radius: 2px;
+        }
+        
+        .process-card-progress .step.completed {
+            background: var(--primary);
+        }
+        
+        .process-card-progress .step.current {
+            background: var(--info);
+        }
+        
+        .process-template-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .process-template-step .step-number {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        
+        .process-template-step .step-arrow {
+            color: var(--gray);
+            margin-left: auto;
+        }
+        
+        .process-steps-builder {
+            border: 2px dashed #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            min-height: 120px;
+        }
+        
+        .process-steps-builder.drag-over {
+            border-color: var(--primary);
+            background: #f0fdf4;
+        }
+        
+        .add-step-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        
+        .add-step-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #f0fdf4;
+        }
+        
+        .process-card:last-child { border-bottom: none; }
+        
         .task-card.pinned {
             background: linear-gradient(90deg, rgba(34, 197, 94, 0.08) 0%, var(--white) 100%);
             border-left: 4px solid var(--primary);
@@ -3893,6 +4074,7 @@
                 <button class="tab-btn active" onclick="switchTab('myday')"><i data-lucide="sun" class="icon"></i> <span data-i18n="tabMyDay">Мій день</span></button>
                 <button class="tab-btn" onclick="switchTab('tasks')"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
                 <button class="tab-btn" onclick="switchTab('control')"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
+                <button class="tab-btn" onclick="switchTab('processes')"><i data-lucide="git-branch" class="icon"></i> <span data-i18n="tabProcesses">Процеси</span></button>
                 <button class="tab-btn" onclick="switchTab('regular')"><i data-lucide="repeat" class="icon"></i> <span data-i18n="tabRegular">Регулярні</span></button>
                 <button class="tab-btn" onclick="switchTab('functions')"><i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span></button>
                 <button class="tab-btn" onclick="switchTab('users')"><i data-lucide="users" class="icon"></i> <span data-i18n="tabUsers">Співробітники</span></button>
@@ -4122,6 +4304,45 @@
                 </div>
             </div>
 
+            <!-- PROCESSES (Направляючі форми) -->
+            <div id="processesTab" class="tab-content">
+                <div class="processes-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+                    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                        <h3 style="margin:0;font-size:1.1rem;"><i data-lucide="git-branch" class="icon"></i> <span data-i18n="processes">Бізнес-процеси</span> <span id="processesCounter" class="badge" style="background:var(--primary);color:white;padding:2px 8px;border-radius:10px;font-size:0.8rem;"></span></h3>
+                        <select id="processTemplateFilter" class="filter-select" onchange="renderProcessBoard()" style="min-width:180px;">
+                            <option value="" data-i18n="allProcesses">Всі процеси</option>
+                        </select>
+                        <button id="toggleCompletedBtn" class="btn btn-small" onclick="toggleShowCompletedProcesses()" style="font-size:0.8rem;">
+                            <i data-lucide="archive" class="icon icon-sm"></i> <span data-i18n="showCompleted">Архів</span>
+                        </button>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <a href="https://chatgpt.com/g/g-693ec18df2c0819194f1c3de7404d6fe-talko-ai-business-process" target="_blank" class="btn" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);color:white;border:none;">
+                            <i data-lucide="sparkles" class="icon"></i> <span data-i18n="aiAssistant">AI-асистент</span>
+                        </a>
+                        <button class="btn" onclick="openProcessTemplatesModal()"><i data-lucide="file-cog" class="icon"></i> <span data-i18n="templates">Шаблони</span></button>
+                        <button class="btn btn-success" onclick="openStartProcessModal()"><i data-lucide="play" class="icon"></i> <span data-i18n="startProcess">Запустити</span></button>
+                    </div>
+                </div>
+                
+                <!-- Process Board (Kanban style) -->
+                <div id="processBoardContainer" class="process-board-container">
+                    <div class="process-board" id="processBoard">
+                        <!-- Колонки будуть згенеровані динамічно -->
+                    </div>
+                </div>
+                
+                <!-- Empty state -->
+                <div id="processesEmptyState" class="empty-state" style="display:none;">
+                    <i data-lucide="git-branch" class="icon icon-xl" style="color:var(--gray);margin-bottom:1rem;"></i>
+                    <h3 data-i18n="noProcesses">Немає активних процесів</h3>
+                    <p data-i18n="createProcessTemplate">Створіть шаблон процесу та запустіть перший процес</p>
+                    <button class="btn btn-success" onclick="openProcessTemplatesModal()" style="margin-top:1rem;">
+                        <i data-lucide="plus" class="icon"></i> <span data-i18n="createTemplate">Створити шаблон</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- REGULAR -->
             <div id="regularTab" class="tab-content">
                 <!-- Regular Tasks Calendar Header -->
@@ -4218,8 +4439,9 @@
 
             <!-- FUNCTIONS -->
             <div id="functionsTab" class="tab-content">
-                <div class="controls">
+                <div class="controls" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
                     <button class="btn btn-success" onclick="openFunctionModal()" data-i18n="addFunction">+ Функція</button>
+                    <button class="btn" onclick="openMergeFunctionsModal()" id="mergeFunctionsBtn" style="display:none;"><i data-lucide="git-merge" class="icon"></i> <span data-i18n="mergeFunctions">Об'єднати</span></button>
                 </div>
                 <div id="functionsContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
@@ -4477,6 +4699,145 @@
                     </div>
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('functionModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MERGE FUNCTIONS MODAL -->
+    <div id="mergeFunctionsModal" class="modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('mergeFunctionsModal')">&times;</span>
+                <h2><i data-lucide="git-merge" class="icon"></i> <span data-i18n="mergeFunctions">Об'єднати функції</span></h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="selectFunctionsToMerge">Оберіть функції для об'єднання (2-5):</label>
+                    <div id="mergeFunctionsList" style="max-height:250px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px;padding:0.5rem;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="newFunctionName">Назва об'єднаної функції *</label>
+                    <input type="text" id="mergedFunctionName" class="form-input" placeholder="Введіть назву..." required>
+                </div>
+                <div id="mergePreview" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:1rem;margin-top:1rem;">
+                    <div style="font-weight:600;color:#16a34a;margin-bottom:0.5rem;"><i data-lucide="info" class="icon icon-sm"></i> Буде об'єднано:</div>
+                    <div id="mergePreviewContent" style="font-size:0.9rem;color:#166534;"></div>
+                </div>
+                <div class="form-actions" style="margin-top:1.5rem;">
+                    <button type="button" class="btn" onclick="closeModal('mergeFunctionsModal')" data-i18n="cancel">Скасувати</button>
+                    <button type="button" class="btn btn-success" onclick="executeMergeFunctions()" id="executeMergeBtn" disabled>
+                        <i data-lucide="git-merge" class="icon"></i> <span data-i18n="merge">Об'єднати</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS TEMPLATES MODAL -->
+    <div id="processTemplatesModal" class="modal">
+        <div class="modal-content" style="max-width:700px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('processTemplatesModal')">&times;</span>
+                <h2><i data-lucide="file-cog" class="icon"></i> <span data-i18n="processTemplates">Шаблони процесів</span></h2>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+                    <button class="btn btn-success" onclick="openEditTemplateModal()">
+                        <i data-lucide="plus" class="icon"></i> <span data-i18n="newTemplate">Новий шаблон</span>
+                    </button>
+                </div>
+                <div id="processTemplatesList" style="max-height:400px;overflow-y:auto;">
+                    <!-- Templates list -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT PROCESS TEMPLATE MODAL -->
+    <div id="editProcessTemplateModal" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('editProcessTemplateModal')">&times;</span>
+                <h2 id="editTemplateTitle"><i data-lucide="file-cog" class="icon"></i> <span data-i18n="newTemplate">Новий шаблон</span></h2>
+            </div>
+            <div class="modal-body">
+                <form id="processTemplateForm" onsubmit="saveProcessTemplate(event)">
+                    <input type="hidden" id="processTemplateId">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="templateName">Назва шаблону *</label>
+                        <input type="text" id="processTemplateName" class="form-input" placeholder="Наприклад: Обробка замовлення" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="templateDescription">Опис</label>
+                        <textarea id="processTemplateDescription" class="form-textarea" rows="2" placeholder="Короткий опис процесу"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i data-lucide="git-branch" class="icon icon-sm"></i> <span data-i18n="processSteps">Етапи процесу</span></label>
+                        <div id="templateStepsContainer" class="process-steps-builder">
+                            <!-- Steps will be added here -->
+                        </div>
+                        <button type="button" class="add-step-btn" onclick="addTemplateStep()" style="margin-top:0.5rem;">
+                            <i data-lucide="plus" class="icon icon-sm"></i> <span data-i18n="addStep">Додати етап</span>
+                        </button>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn" onclick="closeModal('editProcessTemplateModal')" data-i18n="cancel">Скасувати</button>
+                        <button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- START PROCESS MODAL -->
+    <div id="startProcessModal" class="modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('startProcessModal')">&times;</span>
+                <h2><i data-lucide="play" class="icon"></i> <span data-i18n="startProcess">Запустити процес</span></h2>
+            </div>
+            <div class="modal-body">
+                <form id="startProcessForm" onsubmit="startProcess(event)">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="selectTemplate">Оберіть шаблон *</label>
+                        <select id="startProcessTemplate" class="form-select" required onchange="updateStartProcessPreview()">
+                            <option value="" data-i18n="select">Оберіть</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="processName">Назва процесу *</label>
+                        <input type="text" id="startProcessName" class="form-input" placeholder="Наприклад: Замовлення #127 - Клієнт Іванов" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i data-lucide="calendar" class="icon icon-sm"></i> <span data-i18n="deadline">Дедлайн</span> <span style="color:var(--gray);font-weight:normal;">(опціонально)</span></label>
+                        <input type="date" id="startProcessDeadline" class="form-input">
+                    </div>
+                    <div id="startProcessPreview" style="display:none;margin-top:1rem;">
+                        <label class="form-label"><i data-lucide="git-branch" class="icon icon-sm"></i> <span data-i18n="processFlow">Послідовність</span></label>
+                        <div id="startProcessSteps" style="display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;padding:1rem;background:#f9fafb;border-radius:8px;"></div>
+                    </div>
+                    <div class="form-actions" style="margin-top:1.5rem;">
+                        <button type="button" class="btn" onclick="closeModal('startProcessModal')" data-i18n="cancel">Скасувати</button>
+                        <button type="submit" class="btn btn-success">
+                            <i data-lucide="play" class="icon"></i> <span data-i18n="start">Запустити</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW PROCESS MODAL -->
+    <div id="viewProcessModal" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('viewProcessModal')">&times;</span>
+                <h2 id="viewProcessTitle"><i data-lucide="git-branch" class="icon"></i> Процес</h2>
+            </div>
+            <div class="modal-body">
+                <div id="viewProcessContent">
+                    <!-- Process details will be here -->
+                </div>
             </div>
         </div>
     </div>
@@ -4839,6 +5200,19 @@
                 head: 'Головний *',
                 members: 'Учасники',
                 tasks: 'завдань',
+                mergeFunctions: 'Об\'єднати',
+                selectFunctionsToMerge: 'Оберіть функції для об\'єднання (2-5):',
+                newFunctionName: 'Назва об\'єднаної функції *',
+                merge: 'Об\'єднати',
+                willBeMerged: 'Буде об\'єднано',
+                tasksCount: 'завдань',
+                regularTasksCount: 'регулярних',
+                assigneesCount: 'виконавців',
+                mergeSuccess: 'Функції успішно об\'єднано',
+                mergeSelectMinTwo: 'Оберіть мінімум 2 функції',
+                mergeSelectMaxFive: 'Максимум 5 функцій',
+                mergeEnterName: 'Введіть назву об\'єднаної функції',
+                mergedFrom: 'Об\'єднано з',
                 
                 // Team
                 invite: 'Запросити',
@@ -4924,6 +5298,42 @@
                 viewLabel: 'Перегляд:',
                 employeeWorkload: 'Навантаження співробітників',
                 byFunctions: 'По функціях',
+                
+                // Processes
+                tabProcesses: 'Процеси',
+                processes: 'Бізнес-процеси',
+                allProcesses: 'Всі процеси',
+                templates: 'Шаблони',
+                startProcess: 'Запустити',
+                aiAssistant: 'AI-асистент',
+                processTemplates: 'Шаблони процесів',
+                newTemplate: 'Новий шаблон',
+                templateName: 'Назва шаблону *',
+                templateDescription: 'Опис',
+                processSteps: 'Етапи процесу',
+                addStep: 'Додати етап',
+                selectTemplate: 'Оберіть шаблон *',
+                processName: 'Назва процесу *',
+                processFlow: 'Послідовність',
+                start: 'Запустити',
+                noProcesses: 'Немає активних процесів',
+                createProcessTemplate: 'Створіть шаблон процесу та запустіть перший процес',
+                createTemplate: 'Створити шаблон',
+                editTemplate: 'Редагувати шаблон',
+                deleteTemplate: 'Видалити шаблон',
+                stepFunction: 'Функція етапу',
+                stepTitle: 'Назва етапу',
+                stepResult: 'Очікуваний результат',
+                completeStep: 'Завершити етап',
+                processHistory: 'Історія процесу',
+                currentStep: 'Поточний етап',
+                processCompleted: 'Процес завершено',
+                noTemplates: 'Немає шаблонів процесів',
+                createFirstTemplate: 'Створіть перший шаблон',
+                activeProcesses: 'активних',
+                templateSaved: 'Шаблон збережено',
+                processStarted: 'Процес запущено',
+                stepCompleted: 'Етап завершено',
                 
                 // Analytics
                 tabAnalytics: 'Аналітика',
@@ -5097,6 +5507,19 @@
                 head: 'Главный *',
                 members: 'Участники',
                 tasks: 'задач',
+                mergeFunctions: 'Объединить',
+                selectFunctionsToMerge: 'Выберите функции для объединения (2-5):',
+                newFunctionName: 'Название объединённой функции *',
+                merge: 'Объединить',
+                willBeMerged: 'Будет объединено',
+                tasksCount: 'задач',
+                regularTasksCount: 'регулярных',
+                assigneesCount: 'исполнителей',
+                mergeSuccess: 'Функции успешно объединены',
+                mergeSelectMinTwo: 'Выберите минимум 2 функции',
+                mergeSelectMaxFive: 'Максимум 5 функций',
+                mergeEnterName: 'Введите название объединённой функции',
+                mergedFrom: 'Объединено из',
                 
                 // Team
                 invite: 'Пригласить',
@@ -5182,6 +5605,42 @@
                 viewLabel: 'Просмотр:',
                 employeeWorkload: 'Нагрузка сотрудников',
                 byFunctions: 'По функциям',
+                
+                // Processes
+                tabProcesses: 'Процессы',
+                processes: 'Бизнес-процессы',
+                allProcesses: 'Все процессы',
+                templates: 'Шаблоны',
+                startProcess: 'Запустить',
+                aiAssistant: 'AI-ассистент',
+                processTemplates: 'Шаблоны процессов',
+                newTemplate: 'Новый шаблон',
+                templateName: 'Название шаблона *',
+                templateDescription: 'Описание',
+                processSteps: 'Этапы процесса',
+                addStep: 'Добавить этап',
+                selectTemplate: 'Выберите шаблон *',
+                processName: 'Название процесса *',
+                processFlow: 'Последовательность',
+                start: 'Запустить',
+                noProcesses: 'Нет активных процессов',
+                createProcessTemplate: 'Создайте шаблон процесса и запустите первый процесс',
+                createTemplate: 'Создать шаблон',
+                editTemplate: 'Редактировать шаблон',
+                deleteTemplate: 'Удалить шаблон',
+                stepFunction: 'Функция этапа',
+                stepTitle: 'Название этапа',
+                stepResult: 'Ожидаемый результат',
+                completeStep: 'Завершить этап',
+                processHistory: 'История процесса',
+                currentStep: 'Текущий этап',
+                processCompleted: 'Процесс завершён',
+                noTemplates: 'Нет шаблонов процессов',
+                createFirstTemplate: 'Создайте первый шаблон',
+                activeProcesses: 'активных',
+                templateSaved: 'Шаблон сохранён',
+                processStarted: 'Процесс запущен',
+                stepCompleted: 'Этап завершён',
                 
                 // Analytics
                 tabAnalytics: 'Аналитика',
@@ -5787,6 +6246,9 @@
                 
                 updateSelects();
                 
+                // Завантажуємо дані процесів
+                await loadProcessData();
+                
                 // Авто-генерація регулярних завдань при вході
                 await autoGenerateRegularTasks();
                 
@@ -6001,7 +6463,7 @@
                         <div style="width:60px;height:60px;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         </div>
-                        <h2 style="margin:0;font-size:1.3rem;color:var(--dark);">${currentLang === 'ua' ? 'Вітаю' : 'Привет'}, ${currentUserData?.name?.split(' ')[0] || currentUser?.email?.split('@')[0] || ''}!</h2>
+                        <h2 style="margin:0;font-size:1.3rem;color:var(--dark);">${currentLang === 'ua' ? 'Вітаю' : 'Привет'}, ${esc(currentUserData?.name?.split(' ')[0] || currentUser?.email?.split('@')[0] || '')}!</h2>
                         <p style="margin:0.25rem 0 0;color:var(--gray);font-size:0.9rem;">${currentLang === 'ua' ? 'Ваші завдання на сьогодні' : 'Ваши задачи на сегодня'}</p>
                     </div>
                     
@@ -7687,10 +8149,13 @@
                 const isToday = taskDeadline === today;
                 const deadlineClass = od ? 'overdue' : (isToday ? 'today' : '');
                 
+                // Індикатор процесу
+                const processIndicator = task.processId ? '<i data-lucide="git-branch" class="icon icon-sm" style="color:#8b5cf6;" title="Завдання з процесу"></i> ' : '';
+                
                 html += `
                     <tr>
                         <td class="task-title-cell">
-                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${esc(task.title)}</span>
+                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${processIndicator}${esc(task.title)}</span>
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td>${esc(task.creatorName) || '-'}</td>
@@ -7890,8 +8355,8 @@
         function updateFunctionAssignees() {
             const c = document.getElementById('functionAssignees');
             const h = document.getElementById('functionHead');
-            c.innerHTML = users.map(u => `<label class="assignee-checkbox"><input type="checkbox" value="${u.id}">${u.name || u.email}</label>`).join('');
-            h.innerHTML = `<option value="">${t('select')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            c.innerHTML = users.map(u => `<label class="assignee-checkbox"><input type="checkbox" value="${esc(u.id)}">${esc(u.name || u.email)}</label>`).join('');
+            h.innerHTML = `<option value="">${t('select')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
         }
 
         async function saveFunction(e) {
@@ -7987,16 +8452,25 @@
 
         function renderFunctions() {
             const c = document.getElementById('functionsContainer');
-            if (functions.length === 0) {
+            // Фільтруємо архівовані функції
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            
+            if (activeFunctions.length === 0) {
                 c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>${t('noFunctions')}</h3><p>${t('createFirstFunction')}</p></div>`;
+                // Ховаємо кнопку об'єднання
+                const mergeBtn = document.getElementById('mergeFunctionsBtn');
+                if (mergeBtn) mergeBtn.style.display = 'none';
                 return;
             }
-            c.innerHTML = functions.map(f => `
+            c.innerHTML = activeFunctions.map(f => {
+                const mergedInfo = f.mergedFrom?.length ? `<div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;"><i data-lucide="git-merge" class="icon icon-sm"></i> ${t('mergedFrom')}: ${f.mergedFrom.map(m => m.name).join(', ')}</div>` : '';
+                return `
                 <div class="function-card">
                     <div class="function-header">
                         <div class="function-title"><i data-lucide="settings" class="icon icon-sm"></i> ${esc(f.name)}</div>
                     </div>
                     ${f.description ? `<div class="function-description">${esc(f.description)}</div>` : ''}
+                    ${mergedInfo}
                     <div class="function-assignees">
                         ${f.headName ? `<span class="assignee-badge head"><i data-lucide="crown" class="icon icon-sm"></i> ${esc(f.headName)}</span>` : ''}
                         ${f.assigneeNames?.filter(n => n !== f.headName).map(n => `<span class="assignee-badge">${esc(n)}</span>`).join('') || ''}
@@ -8009,8 +8483,953 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
             refreshIcons();
+            
+            // Показуємо кнопку об'єднання якщо є 2+ функції
+            const mergeBtn = document.getElementById('mergeFunctionsBtn');
+            if (mergeBtn) {
+                mergeBtn.style.display = functions.length >= 2 ? 'flex' : 'none';
+            }
+        }
+
+        // =====================
+        // MERGE FUNCTIONS
+        // =====================
+        function openMergeFunctionsModal() {
+            const list = document.getElementById('mergeFunctionsList');
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            
+            list.innerHTML = activeFunctions.map(f => {
+                const taskCount = tasks.filter(t => t.function === f.name).length;
+                const regularCount = regularTasks.filter(rt => rt.function === f.name).length;
+                const assigneeCount = f.assigneeIds?.length || 0;
+                return `
+                    <label style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;border-bottom:1px solid #f3f4f6;cursor:pointer;transition:background 0.2s;" 
+                           onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                        <input type="checkbox" name="mergeFunction" value="${esc(f.id)}" onchange="updateMergePreview()" 
+                               style="width:18px;height:18px;accent-color:var(--primary);">
+                        <div style="flex:1;">
+                            <div style="font-weight:500;">${esc(f.name)}</div>
+                            <div style="font-size:0.8rem;color:#6b7280;">
+                                ${taskCount} ${t('tasksCount')} · ${regularCount} ${t('regularTasksCount')} · ${assigneeCount} ${t('assigneesCount')}
+                            </div>
+                        </div>
+                    </label>
+                `;
+            }).join('');
+            
+            document.getElementById('mergedFunctionName').value = '';
+            document.getElementById('mergePreview').style.display = 'none';
+            document.getElementById('executeMergeBtn').disabled = true;
+            
+            document.getElementById('mergeFunctionsModal').style.display = 'block';
+            refreshIcons();
+        }
+        
+        function updateMergePreview() {
+            const selected = Array.from(document.querySelectorAll('input[name="mergeFunction"]:checked')).map(cb => cb.value);
+            const preview = document.getElementById('mergePreview');
+            const content = document.getElementById('mergePreviewContent');
+            const executeBtn = document.getElementById('executeMergeBtn');
+            const nameInput = document.getElementById('mergedFunctionName');
+            
+            if (selected.length < 2) {
+                preview.style.display = 'none';
+                executeBtn.disabled = true;
+                return;
+            }
+            
+            if (selected.length > 5) {
+                alert(t('mergeSelectMaxFive'));
+                return;
+            }
+            
+            // Рахуємо статистику
+            const selectedFunctions = functions.filter(f => selected.includes(f.id));
+            let totalTasks = 0;
+            let totalRegular = 0;
+            let allAssignees = new Set();
+            
+            selectedFunctions.forEach(f => {
+                totalTasks += tasks.filter(t => t.function === f.name).length;
+                totalRegular += regularTasks.filter(rt => rt.function === f.name).length;
+                f.assigneeIds?.forEach(id => allAssignees.add(id));
+            });
+            
+            content.innerHTML = `
+                <div>• <strong>${totalTasks}</strong> ${t('tasksCount')}</div>
+                <div>• <strong>${totalRegular}</strong> ${t('regularTasksCount')}</div>
+                <div>• <strong>${allAssignees.size}</strong> ${t('assigneesCount')}</div>
+                <div style="margin-top:0.5rem;font-size:0.85rem;color:#059669;">
+                    ${t('mergedFrom')}: ${selectedFunctions.map(f => f.name).join(', ')}
+                </div>
+            `;
+            
+            preview.style.display = 'block';
+            executeBtn.disabled = false;
+            
+            // Автозаповнення назви якщо порожня
+            if (!nameInput.value) {
+                nameInput.value = selectedFunctions[0]?.name || '';
+            }
+        }
+        
+        async function executeMergeFunctions() {
+            const selected = Array.from(document.querySelectorAll('input[name="mergeFunction"]:checked')).map(cb => cb.value);
+            const newName = document.getElementById('mergedFunctionName').value.trim();
+            
+            if (selected.length < 2) {
+                alert(t('mergeSelectMinTwo'));
+                return;
+            }
+            
+            if (!newName) {
+                alert(t('mergeEnterName'));
+                return;
+            }
+            
+            const executeBtn = document.getElementById('executeMergeBtn');
+            executeBtn.disabled = true;
+            executeBtn.innerHTML = '<span class="spinner" style="width:16px;height:16px;"></span>';
+            
+            try {
+                const selectedFunctions = functions.filter(f => selected.includes(f.id));
+                
+                // Збираємо всіх виконавців
+                let allAssigneeIds = new Set();
+                let allAssigneeNames = [];
+                let headId = null;
+                let headName = null;
+                
+                selectedFunctions.forEach(f => {
+                    f.assigneeIds?.forEach(id => allAssigneeIds.add(id));
+                    if (f.headId && !headId) {
+                        headId = f.headId;
+                        headName = f.headName;
+                    }
+                });
+                
+                // Отримуємо імена всіх виконавців
+                allAssigneeIds = Array.from(allAssigneeIds);
+                allAssigneeNames = allAssigneeIds.map(id => {
+                    const user = users.find(u => u.id === id);
+                    return user?.name || user?.email || '';
+                }).filter(n => n);
+                
+                // Створюємо нову функцію
+                const mergedFunctionData = {
+                    name: newName,
+                    description: `${t('mergedFrom')}: ${selectedFunctions.map(f => f.name).join(', ')}`,
+                    headId: headId,
+                    headName: headName,
+                    assigneeIds: allAssigneeIds,
+                    assigneeNames: allAssigneeNames,
+                    mergedFrom: selectedFunctions.map(f => ({ id: f.id, name: f.name, mergedAt: new Date().toISOString() })),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'active'
+                };
+                
+                const newFuncRef = await db.collection('companies').doc(currentCompany).collection('functions').add(mergedFunctionData);
+                
+                // Оновлюємо завдання - переносимо на нову функцію
+                const batch = db.batch();
+                let batchCount = 0;
+                
+                for (const f of selectedFunctions) {
+                    // Оновлюємо tasks
+                    const tasksToUpdate = tasks.filter(t => t.function === f.name);
+                    for (const task of tasksToUpdate) {
+                        const taskRef = db.collection('companies').doc(currentCompany).collection('tasks').doc(task.id);
+                        batch.update(taskRef, { 
+                            function: newName,
+                            originalFunction: task.originalFunction || f.name
+                        });
+                        batchCount++;
+                        
+                        // Firebase batch limit = 500
+                        if (batchCount >= 450) {
+                            await batch.commit();
+                            batchCount = 0;
+                        }
+                    }
+                    
+                    // Оновлюємо regularTasks
+                    const regularToUpdate = regularTasks.filter(rt => rt.function === f.name);
+                    for (const rt of regularToUpdate) {
+                        const rtRef = db.collection('companies').doc(currentCompany).collection('regularTasks').doc(rt.id);
+                        batch.update(rtRef, { 
+                            function: newName,
+                            originalFunction: rt.originalFunction || f.name
+                        });
+                        batchCount++;
+                        
+                        if (batchCount >= 450) {
+                            await batch.commit();
+                            batchCount = 0;
+                        }
+                    }
+                    
+                    // Архівуємо стару функцію (не видаляємо)
+                    const funcRef = db.collection('companies').doc(currentCompany).collection('functions').doc(f.id);
+                    batch.update(funcRef, {
+                        status: 'archived',
+                        archivedAt: new Date().toISOString(),
+                        mergedInto: newFuncRef.id,
+                        mergedIntoName: newName
+                    });
+                    batchCount++;
+                }
+                
+                if (batchCount > 0) {
+                    await batch.commit();
+                }
+                
+                closeModal('mergeFunctionsModal');
+                
+                // Оновлюємо локальні дані
+                await loadAllData();
+                
+                alert(t('mergeSuccess'));
+                
+            } catch (error) {
+                console.error('Merge functions error:', error);
+                alert(t('error') + ': ' + error.message);
+            } finally {
+                executeBtn.disabled = false;
+                executeBtn.innerHTML = `<i data-lucide="git-merge" class="icon"></i> <span data-i18n="merge">${t('merge')}</span>`;
+                refreshIcons();
+            }
+        }
+
+        // =====================
+        // PROCESSES (Направляючі форми)
+        // =====================
+        let processTemplates = [];
+        let processes = [];
+        let showCompletedProcesses = false;
+        
+        async function loadProcessData() {
+            if (!currentCompany) return;
+            
+            try {
+                // Завантажуємо шаблони
+                const templatesSnap = await db.collection('companies').doc(currentCompany)
+                    .collection('processTemplates').orderBy('name').get();
+                processTemplates = templatesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                // Завантажуємо процеси (активні або всі в залежності від фільтру)
+                let processQuery = db.collection('companies').doc(currentCompany).collection('processes');
+                if (!showCompletedProcesses) {
+                    processQuery = processQuery.where('status', '==', 'active');
+                }
+                const processesSnap = await processQuery.get();
+                processes = processesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                updateProcessTemplateFilter();
+            } catch (error) {
+                console.error('loadProcessData error:', error);
+            }
+        }
+        
+        function toggleShowCompletedProcesses() {
+            showCompletedProcesses = !showCompletedProcesses;
+            const btn = document.getElementById('toggleCompletedBtn');
+            if (btn) {
+                btn.classList.toggle('active', showCompletedProcesses);
+            }
+            loadProcessData().then(() => renderProcessBoard());
+        }
+        
+        function updateProcessTemplateFilter() {
+            const select = document.getElementById('processTemplateFilter');
+            if (!select) return;
+            select.innerHTML = `<option value="">${t('allProcesses')}</option>` + 
+                processTemplates.map(pt => `<option value="${esc(pt.id)}">${esc(pt.name)}</option>`).join('');
+        }
+        
+        function renderProcessBoard() {
+            const container = document.getElementById('processBoard');
+            const emptyState = document.getElementById('processesEmptyState');
+            const filterValue = document.getElementById('processTemplateFilter')?.value;
+            
+            // Фільтруємо процеси
+            let filteredProcesses = processes;
+            if (filterValue) {
+                filteredProcesses = processes.filter(p => p.templateId === filterValue);
+            }
+            
+            // Якщо немає процесів - показуємо empty state
+            if (filteredProcesses.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                refreshIcons();
+                return;
+            }
+            
+            container.style.display = 'flex';
+            emptyState.style.display = 'none';
+            
+            // Збираємо всі унікальні функції з активних процесів для колонок
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            const columnsData = {};
+            const completedProcesses = [];
+            
+            // Ініціалізуємо колонки для кожної функції що використовується
+            filteredProcesses.forEach(p => {
+                const template = processTemplates.find(t => t.id === p.templateId);
+                if (!template?.steps?.length) return;
+                
+                // Якщо процес завершено - додаємо в окрему колонку
+                if (p.status === 'completed') {
+                    completedProcesses.push({
+                        ...p,
+                        template,
+                        currentStepData: null
+                    });
+                    return;
+                }
+                
+                template.steps.forEach(step => {
+                    if (!columnsData[step.function]) {
+                        columnsData[step.function] = [];
+                    }
+                });
+                
+                // Додаємо процес до поточної колонки
+                // Перевіряємо що currentStep в межах масиву
+                const currentStepIndex = Math.min(p.currentStep || 0, template.steps.length - 1);
+                const currentStepFunc = template.steps[currentStepIndex]?.function;
+                if (currentStepFunc && columnsData[currentStepFunc]) {
+                    columnsData[currentStepFunc].push({
+                        ...p,
+                        template,
+                        currentStepData: template.steps[currentStepIndex]
+                    });
+                }
+            });
+            
+            // Генеруємо HTML колонок
+            let columnsHTML = Object.entries(columnsData).map(([funcName, procs]) => {
+                const func = activeFunctions.find(f => f.name === funcName);
+                return `
+                    <div class="process-column">
+                        <div class="process-column-header">
+                            <span><i data-lucide="settings" class="icon icon-sm"></i> ${esc(funcName)}</span>
+                            <span class="column-count">${procs.length}</span>
+                        </div>
+                        <div class="process-column-cards">
+                            ${procs.map(p => renderProcessCard(p)).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Додаємо колонку завершених (якщо showCompletedProcesses)
+            if (showCompletedProcesses && completedProcesses.length > 0) {
+                columnsHTML += `
+                    <div class="process-column" style="background:#f0fdf4;">
+                        <div class="process-column-header" style="background:#dcfce7;">
+                            <span><i data-lucide="check-circle" class="icon icon-sm" style="color:var(--primary);"></i> ${currentLang === 'ua' ? 'Завершено' : 'Завершено'}</span>
+                            <span class="column-count" style="background:var(--primary);">${completedProcesses.length}</span>
+                        </div>
+                        <div class="process-column-cards">
+                            ${completedProcesses.map(p => renderProcessCard(p, true)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = columnsHTML;
+            
+            // Оновлюємо лічильник
+            const activeCount = processes.filter(p => p.status === 'active').length;
+            const counter = document.getElementById('processesCounter');
+            if (counter) {
+                counter.textContent = activeCount > 0 ? activeCount : '';
+                counter.style.display = activeCount > 0 ? 'inline' : 'none';
+            }
+            
+            // Якщо немає колонок - показуємо empty state
+            if (Object.keys(columnsData).length === 0 && completedProcesses.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+            }
+            
+            refreshIcons();
+        }
+        
+        function renderProcessCard(process, isCompleted = false) {
+            const totalSteps = process.template?.steps?.length || 1;
+            // Безпечний currentStep в межах масиву
+            const currentStep = isCompleted ? totalSteps : Math.min(process.currentStep || 0, totalSteps - 1);
+            const isOverdue = !isCompleted && process.deadline && process.deadline < new Date().toISOString().split('T')[0];
+            
+            // Генеруємо progress dots
+            const progressDots = (process.template?.steps || []).map((step, i) => {
+                let cls = '';
+                if (i < currentStep) cls = 'completed';
+                else if (i === currentStep) cls = 'current';
+                return `<div class="step ${cls}"></div>`;
+            }).join('');
+            
+            return `
+                <div class="process-card ${isOverdue ? 'overdue' : ''}" onclick="openViewProcessModal('${esc(process.id)}')">
+                    <div class="process-card-title">${esc(process.name)}</div>
+                    <div class="process-card-meta">
+                        <span><i data-lucide="file-text" class="icon icon-sm"></i> ${esc(process.template?.name || '')}</span>
+                        ${process.deadline ? `<span><i data-lucide="calendar" class="icon icon-sm"></i> ${process.deadline}</span>` : ''}
+                    </div>
+                    <div class="process-card-progress">
+                        ${progressDots}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // === ШАБЛОНИ ===
+        function openProcessTemplatesModal() {
+            renderTemplatesList();
+            document.getElementById('processTemplatesModal').style.display = 'block';
+            refreshIcons();
+        }
+        
+        function renderTemplatesList() {
+            const container = document.getElementById('processTemplatesList');
+            
+            if (processTemplates.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="padding:2rem;">
+                        <i data-lucide="file-cog" class="icon icon-lg" style="color:var(--gray);"></i>
+                        <p>${t('noTemplates')}</p>
+                    </div>
+                `;
+                refreshIcons();
+                return;
+            }
+            
+            container.innerHTML = processTemplates.map(template => {
+                const stepsPreview = template.steps?.map(s => esc(s.function)).join(' → ') || '';
+                const activeCount = processes.filter(p => p.templateId === template.id).length;
+                
+                return `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;border-bottom:1px solid #e5e7eb;">
+                        <div style="flex:1;">
+                            <div style="font-weight:600;margin-bottom:0.25rem;">${esc(template.name)}</div>
+                            <div style="font-size:0.8rem;color:var(--gray);">
+                                ${stepsPreview}
+                                ${activeCount > 0 ? `<span style="margin-left:0.5rem;background:#dbeafe;color:#1d4ed8;padding:0.15rem 0.5rem;border-radius:10px;font-size:0.75rem;">${activeCount} ${t('activeProcesses')}</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:0.5rem;">
+                            <button class="btn btn-small" onclick="event.stopPropagation(); openEditTemplateModal('${esc(template.id)}')">
+                                <i data-lucide="pencil" class="icon icon-sm"></i>
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="event.stopPropagation(); deleteProcessTemplate('${esc(template.id)}')">
+                                <i data-lucide="trash-2" class="icon icon-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            refreshIcons();
+        }
+        
+        function openEditTemplateModal(templateId = null) {
+            const template = templateId ? processTemplates.find(t => t.id === templateId) : null;
+            
+            document.getElementById('processTemplateId').value = templateId || '';
+            document.getElementById('processTemplateName').value = template?.name || '';
+            document.getElementById('processTemplateDescription').value = template?.description || '';
+            
+            // Рендеримо етапи
+            const stepsContainer = document.getElementById('templateStepsContainer');
+            if (template?.steps?.length) {
+                stepsContainer.innerHTML = template.steps.map((step, i) => renderTemplateStepEditor(step, i)).join('');
+            } else {
+                stepsContainer.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">' + t('addStep') + '</p>';
+            }
+            
+            document.getElementById('editTemplateTitle').innerHTML = `<i data-lucide="file-cog" class="icon"></i> ${template ? t('editTemplate') : t('newTemplate')}`;
+            
+            closeModal('processTemplatesModal');
+            document.getElementById('editProcessTemplateModal').style.display = 'block';
+            refreshIcons();
+        }
+        
+        function renderTemplateStepEditor(step, index) {
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            const funcOptions = activeFunctions.map(f => 
+                `<option value="${esc(f.name)}" ${f.name === step.function ? 'selected' : ''}>${esc(f.name)}</option>`
+            ).join('');
+            
+            return `
+                <div class="process-template-step" data-index="${index}">
+                    <span class="step-number">${index + 1}</span>
+                    <div style="flex:1;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <select class="form-select step-function" style="flex:1;min-width:120px;" onchange="updateStepFunction(${index}, this.value)">
+                            <option value="">${t('stepFunction')}</option>
+                            ${funcOptions}
+                        </select>
+                        <input type="text" class="form-input step-title" placeholder="${t('stepTitle')}" value="${esc(step.title || '')}" 
+                               style="flex:1;min-width:120px;" onchange="updateStepTitle(${index}, this.value)">
+                    </div>
+                    <button type="button" class="btn btn-small btn-danger" onclick="removeTemplateStep(${index})" style="padding:0.3rem 0.5rem;">
+                        <i data-lucide="x" class="icon icon-sm"></i>
+                    </button>
+                </div>
+            `;
+        }
+        
+        function addTemplateStep() {
+            const container = document.getElementById('templateStepsContainer');
+            const steps = container.querySelectorAll('.process-template-step');
+            const newIndex = steps.length;
+            
+            // Видаляємо placeholder якщо є
+            if (steps.length === 0) {
+                container.innerHTML = '';
+            }
+            
+            container.insertAdjacentHTML('beforeend', renderTemplateStepEditor({ function: '', title: '' }, newIndex));
+            refreshIcons();
+        }
+        
+        function removeTemplateStep(index) {
+            const container = document.getElementById('templateStepsContainer');
+            const steps = Array.from(container.querySelectorAll('.process-template-step'));
+            
+            if (steps[index]) {
+                steps[index].remove();
+            }
+            
+            // Перенумеровуємо
+            container.querySelectorAll('.process-template-step').forEach((step, i) => {
+                step.dataset.index = i;
+                step.querySelector('.step-number').textContent = i + 1;
+            });
+            
+            if (container.querySelectorAll('.process-template-step').length === 0) {
+                container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">' + t('addStep') + '</p>';
+            }
+        }
+        
+        function updateStepFunction(index, value) {
+            // Зберігаємо в data атрибут
+        }
+        
+        function updateStepTitle(index, value) {
+            // Зберігаємо в data атрибут
+        }
+        
+        function getTemplateStepsFromEditor() {
+            const container = document.getElementById('templateStepsContainer');
+            const steps = [];
+            
+            container.querySelectorAll('.process-template-step').forEach(stepEl => {
+                const funcSelect = stepEl.querySelector('.step-function');
+                const titleInput = stepEl.querySelector('.step-title');
+                
+                if (funcSelect?.value) {
+                    steps.push({
+                        function: funcSelect.value,
+                        title: titleInput?.value || ''
+                    });
+                }
+            });
+            
+            return steps;
+        }
+        
+        async function saveProcessTemplate(e) {
+            e.preventDefault();
+            
+            const templateId = document.getElementById('processTemplateId').value;
+            const name = document.getElementById('processTemplateName').value.trim();
+            const description = document.getElementById('processTemplateDescription').value.trim();
+            const steps = getTemplateStepsFromEditor();
+            
+            if (!name) {
+                alert(t('templateName'));
+                return;
+            }
+            
+            if (steps.length < 2) {
+                alert(currentLang === 'ua' ? 'Додайте мінімум 2 етапи' : 'Добавьте минимум 2 этапа');
+                return;
+            }
+            
+            // Валідація: перевіряємо що всі функції існують
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            const missingFunctions = steps.filter(s => !activeFunctions.find(f => f.name === s.function));
+            if (missingFunctions.length > 0) {
+                alert(currentLang === 'ua'
+                    ? `Функції не знайдено: ${missingFunctions.map(s => s.function).join(', ')}`
+                    : `Функции не найдены: ${missingFunctions.map(s => s.function).join(', ')}`);
+                return;
+            }
+            
+            try {
+                const data = {
+                    name,
+                    description,
+                    steps,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                if (templateId) {
+                    await db.collection('companies').doc(currentCompany).collection('processTemplates').doc(templateId).update(data);
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    data.createdBy = currentUser.uid;
+                    await db.collection('companies').doc(currentCompany).collection('processTemplates').add(data);
+                }
+                
+                closeModal('editProcessTemplateModal');
+                await loadProcessData();
+                renderProcessBoard();
+                alert(t('templateSaved'));
+                
+            } catch (error) {
+                console.error('saveProcessTemplate error:', error);
+                alert(t('error') + ': ' + error.message);
+            }
+        }
+        
+        async function deleteProcessTemplate(templateId) {
+            if (!confirm(currentLang === 'ua' ? 'Видалити шаблон? Активні процеси залишаться.' : 'Удалить шаблон? Активные процессы останутся.')) {
+                return;
+            }
+            
+            try {
+                await db.collection('companies').doc(currentCompany).collection('processTemplates').doc(templateId).delete();
+                await loadProcessData();
+                renderTemplatesList();
+                renderProcessBoard();
+            } catch (error) {
+                console.error('deleteProcessTemplate error:', error);
+                alert(t('error') + ': ' + error.message);
+            }
+        }
+        
+        // === ЗАПУСК ПРОЦЕСУ ===
+        function openStartProcessModal() {
+            const select = document.getElementById('startProcessTemplate');
+            select.innerHTML = `<option value="">${t('select')}</option>` + 
+                processTemplates.map(pt => `<option value="${esc(pt.id)}">${esc(pt.name)}</option>`).join('');
+            
+            document.getElementById('startProcessName').value = '';
+            document.getElementById('startProcessDeadline').value = '';
+            document.getElementById('startProcessPreview').style.display = 'none';
+            
+            document.getElementById('startProcessModal').style.display = 'block';
+            refreshIcons();
+        }
+        
+        function updateStartProcessPreview() {
+            const templateId = document.getElementById('startProcessTemplate').value;
+            const preview = document.getElementById('startProcessPreview');
+            const stepsContainer = document.getElementById('startProcessSteps');
+            
+            if (!templateId) {
+                preview.style.display = 'none';
+                return;
+            }
+            
+            const template = processTemplates.find(t => t.id === templateId);
+            if (!template?.steps) {
+                preview.style.display = 'none';
+                return;
+            }
+            
+            stepsContainer.innerHTML = template.steps.map((step, i) => `
+                <span style="display:flex;align-items:center;gap:0.25rem;padding:0.4rem 0.75rem;background:white;border-radius:20px;font-size:0.85rem;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                    <span style="width:20px;height:20px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;">${i + 1}</span>
+                    ${esc(step.function)}
+                </span>
+                ${i < template.steps.length - 1 ? '<i data-lucide="arrow-right" class="icon icon-sm" style="color:var(--gray);"></i>' : ''}
+            `).join('');
+            
+            preview.style.display = 'block';
+            refreshIcons();
+        }
+        
+        async function startProcess(e) {
+            e.preventDefault();
+            
+            const templateId = document.getElementById('startProcessTemplate').value;
+            const name = document.getElementById('startProcessName').value.trim();
+            const deadline = document.getElementById('startProcessDeadline').value;
+            
+            if (!templateId || !name) return;
+            
+            const template = processTemplates.find(t => t.id === templateId);
+            if (!template?.steps?.length) return;
+            
+            // Перевіряємо що перша функція має виконавців
+            const firstStep = template.steps[0];
+            const firstFunc = functions.find(f => f.name === firstStep.function);
+            
+            if (!firstFunc) {
+                alert(currentLang === 'ua' 
+                    ? `Функція "${firstStep.function}" не існує. Оновіть шаблон.`
+                    : `Функция "${firstStep.function}" не существует. Обновите шаблон.`);
+                return;
+            }
+            
+            if (!firstFunc.assigneeIds?.length) {
+                alert(currentLang === 'ua' 
+                    ? `Функція "${firstStep.function}" не має виконавців. Додайте виконавців перед запуском.`
+                    : `Функция "${firstStep.function}" не имеет исполнителей. Добавьте исполнителей перед запуском.`);
+                return;
+            }
+            
+            try {
+                // Створюємо процес
+                const processData = {
+                    templateId,
+                    name,
+                    deadline: deadline || null,
+                    status: 'active',
+                    currentStep: 0,
+                    history: [],
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: currentUser.uid
+                };
+                
+                const processRef = await db.collection('companies').doc(currentCompany).collection('processes').add(processData);
+                
+                // Створюємо завдання для першого етапу
+                const func = firstFunc;
+                const headId = func.headId || func.assigneeIds[0];
+                const head = users.find(u => u.id === headId);
+                
+                await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                    title: `[${name}] ${firstStep.title || firstStep.function}`,
+                    function: firstStep.function,
+                    assigneeId: headId,
+                    assigneeName: head?.name || head?.email || '',
+                    deadlineDate: new Date().toISOString().split('T')[0],
+                    deadlineTime: '18:00',
+                    status: 'new',
+                    priority: 'high',
+                    processId: processRef.id,
+                    processStep: 0,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    creatorName: currentLang === 'ua' ? 'Система' : 'Система'
+                });
+                
+                closeModal('startProcessModal');
+                await loadProcessData();
+                renderProcessBoard();
+                alert(t('processStarted'));
+                
+            } catch (error) {
+                console.error('startProcess error:', error);
+                alert(t('error') + ': ' + error.message);
+            }
+        }
+        
+        // === ПЕРЕГЛЯД ПРОЦЕСУ ===
+        function openViewProcessModal(processId) {
+            const process = processes.find(p => p.id === processId);
+            if (!process) return;
+            
+            const template = processTemplates.find(t => t.id === process.templateId);
+            
+            // Якщо шаблон видалено - показуємо повідомлення
+            if (!template) {
+                document.getElementById('viewProcessTitle').innerHTML = `<i data-lucide="git-branch" class="icon"></i> ${esc(process.name)}`;
+                document.getElementById('viewProcessContent').innerHTML = `
+                    <div style="text-align:center;padding:2rem;color:var(--gray);">
+                        <i data-lucide="alert-triangle" class="icon icon-lg" style="margin-bottom:1rem;"></i>
+                        <p>${currentLang === 'ua' ? 'Шаблон процесу було видалено' : 'Шаблон процесса был удалён'}</p>
+                    </div>
+                `;
+                document.getElementById('viewProcessModal').style.display = 'block';
+                refreshIcons();
+                return;
+            }
+            
+            // Перевіряємо чи currentStep в межах steps
+            const safeCurrentStep = Math.min(process.currentStep || 0, template.steps.length - 1);
+            
+            document.getElementById('viewProcessTitle').innerHTML = `<i data-lucide="git-branch" class="icon"></i> ${esc(process.name)}`;
+            
+            const content = document.getElementById('viewProcessContent');
+            content.innerHTML = `
+                <div style="margin-bottom:1.5rem;">
+                    <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${t('processFlow')}</div>
+                    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                        ${(template?.steps || []).map((step, i) => {
+                            let status = '';
+                            let statusIcon = '';
+                            let statusColor = '';
+                            
+                            if (i < safeCurrentStep) {
+                                status = '✓';
+                                statusColor = 'var(--primary)';
+                            } else if (i === safeCurrentStep) {
+                                status = '●';
+                                statusColor = 'var(--info)';
+                            } else {
+                                status = '○';
+                                statusColor = 'var(--gray)';
+                            }
+                            
+                            return `
+                                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:${i === safeCurrentStep ? '#eff6ff' : '#f9fafb'};border-radius:8px;border-left:3px solid ${statusColor};">
+                                    <span style="color:${statusColor};font-weight:600;width:20px;">${status}</span>
+                                    <div style="flex:1;">
+                                        <div style="font-weight:500;">${esc(step.title || step.function)}</div>
+                                        <div style="font-size:0.8rem;color:var(--gray);">${esc(step.function)}</div>
+                                    </div>
+                                    ${i === safeCurrentStep ? `
+                                        <button class="btn btn-small btn-success" onclick="completeProcessStep('${esc(processId)}')">
+                                            <i data-lucide="check" class="icon icon-sm"></i> ${t('completeStep')}
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('') || ''}
+                    </div>
+                </div>
+                
+                ${process.history?.length ? `
+                    <div>
+                        <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${t('processHistory')}</div>
+                        <div style="font-size:0.85rem;">
+                            ${process.history.map(h => `
+                                <div style="padding:0.5rem 0;border-bottom:1px solid #f3f4f6;">
+                                    <span style="color:var(--primary);">✓</span> ${esc(h.stepTitle || '')} 
+                                    <span style="color:var(--gray);">— ${h.completedAt ? new Date(h.completedAt).toLocaleDateString() : ''}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;">
+                    <button class="btn btn-danger btn-small" onclick="deleteProcess('${esc(processId)}')" style="opacity:0.7;">
+                        <i data-lucide="trash-2" class="icon icon-sm"></i> ${currentLang === 'ua' ? 'Видалити процес' : 'Удалить процесс'}
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('viewProcessModal').style.display = 'block';
+            refreshIcons();
+        }
+        
+        async function deleteProcess(processId) {
+            if (!confirm(currentLang === 'ua' ? 'Видалити цей процес? Завдання, створені процесом, залишаться.' : 'Удалить этот процесс? Задачи, созданные процессом, останутся.')) {
+                return;
+            }
+            
+            try {
+                await db.collection('companies').doc(currentCompany).collection('processes').doc(processId).delete();
+                closeModal('viewProcessModal');
+                await loadProcessData();
+                renderProcessBoard();
+            } catch (error) {
+                console.error('deleteProcess error:', error);
+                alert(t('error') + ': ' + error.message);
+            }
+        }
+        
+        async function completeProcessStep(processId) {
+            const process = processes.find(p => p.id === processId);
+            if (!process) return;
+            
+            const template = processTemplates.find(t => t.id === process.templateId);
+            if (!template?.steps?.length) {
+                alert(currentLang === 'ua' ? 'Шаблон процесу не знайдено' : 'Шаблон процесса не найден');
+                return;
+            }
+            
+            const currentStepIndex = Math.min(process.currentStep || 0, template.steps.length - 1);
+            const currentStep = template.steps[currentStepIndex];
+            
+            if (!currentStep) {
+                alert(currentLang === 'ua' ? 'Етап не знайдено' : 'Этап не найден');
+                return;
+            }
+            
+            // Перевіряємо права - чи користувач є членом функції поточного етапу
+            const currentFunc = functions.find(f => f.name === currentStep.function);
+            if (currentFunc && !currentFunc.assigneeIds?.includes(currentUser?.uid)) {
+                // Дозволяємо також власникам/менеджерам
+                const userRole = currentUserData?.role;
+                if (userRole !== 'owner' && userRole !== 'manager') {
+                    alert(currentLang === 'ua' ? 'Тільки члени функції можуть завершити цей етап' : 'Только члены функции могут завершить этот этап');
+                    return;
+                }
+            }
+            
+            const nextStepIndex = currentStepIndex + 1;
+            const nextStep = template.steps[nextStepIndex];
+            
+            try {
+                // Оновлюємо процес
+                const historyEntry = {
+                    step: currentStepIndex,
+                    stepTitle: currentStep.title || currentStep.function,
+                    completedAt: new Date().toISOString(),
+                    completedBy: currentUser.uid
+                };
+                
+                const updateData = {
+                    currentStep: nextStepIndex,
+                    history: firebase.firestore.FieldValue.arrayUnion(historyEntry)
+                };
+                
+                // Якщо це останній етап - завершуємо процес
+                if (!nextStep) {
+                    updateData.status = 'completed';
+                    updateData.completedAt = new Date().toISOString();
+                }
+                
+                await db.collection('companies').doc(currentCompany).collection('processes').doc(processId).update(updateData);
+                
+                // Якщо є наступний етап - створюємо завдання
+                if (nextStep) {
+                    const func = functions.find(f => f.name === nextStep.function);
+                    if (func?.assigneeIds?.length) {
+                        const headId = func.headId || func.assigneeIds[0];
+                        const head = users.find(u => u.id === headId);
+                        
+                        await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                            title: `[${process.name}] ${nextStep.title || nextStep.function}`,
+                            function: nextStep.function,
+                            assigneeId: headId,
+                            assigneeName: head?.name || head?.email || '',
+                            deadlineDate: new Date().toISOString().split('T')[0],
+                            deadlineTime: '18:00',
+                            status: 'new',
+                            priority: 'high',
+                            processId: processId,
+                            processStep: nextStepIndex,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            creatorName: currentLang === 'ua' ? 'Система' : 'Система'
+                        });
+                    } else {
+                        // Попередження якщо функція не має виконавців
+                        alert(currentLang === 'ua' 
+                            ? `Увага: функція "${nextStep.function}" не має виконавців. Завдання не створено.`
+                            : `Внимание: функция "${nextStep.function}" не имеет исполнителей. Задача не создана.`);
+                    }
+                }
+                
+                closeModal('viewProcessModal');
+                await loadProcessData();
+                await loadAllData();
+                renderProcessBoard();
+                alert(nextStep ? t('stepCompleted') : t('processCompleted'));
+                
+            } catch (error) {
+                console.error('completeProcessStep error:', error);
+                alert(t('error') + ': ' + error.message);
+            }
         }
 
         // =====================
@@ -8191,13 +9610,14 @@
 
         function updateRegularTaskFunctions() {
             const s = document.getElementById('regularTaskFunction');
-            s.innerHTML = `<option value="">${t('select')}</option>` + functions.map(f => `<option value="${f.name}">${f.name} (${f.assigneeIds?.length || 0} ${t('people')})</option>`).join('');
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            s.innerHTML = `<option value="">${t('select')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)} (${f.assigneeIds?.length || 0} ${t('people')})</option>`).join('');
             
             // Оновлюємо фільтри
             const ff = document.getElementById('regularFunctionFilter');
             const af = document.getElementById('regularAssigneeFilter');
-            if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
-            if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+            if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
         }
 
         async function saveRegularTask(e) {
@@ -8469,11 +9889,12 @@
             // Оновлюємо селекти
             const assigneeSelect = document.getElementById('regularAssigneeFilter');
             const functionSelect = document.getElementById('regularFunctionFilter');
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
             if (assigneeSelect && assigneeSelect.options.length <= 1) {
-                assigneeSelect.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+                assigneeSelect.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             }
             if (functionSelect && functionSelect.options.length <= 1) {
-                functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+                functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
             }
             
             // Визначаємо поточний день місяця для фільтрації місячних/квартальних
@@ -9268,11 +10689,12 @@
             // Оновлюємо селекти
             const assigneeSelect = document.getElementById('controlAssigneeFilter');
             const functionSelect = document.getElementById('controlFunctionFilter');
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
             if (assigneeSelect && assigneeSelect.options.length <= 1) {
-                assigneeSelect.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
+                assigneeSelect.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             }
             if (functionSelect && functionSelect.options.length <= 1) {
-                functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+                functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
             }
             
             const now = new Date();
@@ -9406,7 +10828,7 @@
                         return `
                             <div class="control-row" onclick="this.classList.toggle('expanded')">
                                 <div class="control-row-header">
-                                    <span><i data-lucide="settings" class="icon icon-sm"></i> ${fn}</span>
+                                    <span><i data-lucide="settings" class="icon icon-sm"></i> ${esc(fn)}</span>
                                     <span class="control-row-count" style="color:#3498db;">${c} ${t('tasks')} <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i></span>
                                 </div>
                                 <div class="control-row-tasks">${tasksHTML}</div>
@@ -9659,12 +11081,15 @@
             const raf = document.getElementById('regularAssigneeFilter');
             const rff = document.getElementById('regularFunctionFilter');
             
-            if (tf) tf.innerHTML = `<option value="">${t('noFunction')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
-            if (ta) ta.innerHTML = `<option value="">${t('select')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
-            if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
-            if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
-            if (raf) raf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${u.id}">${u.name || u.email}</option>`).join('');
-            if (rff) rff.innerHTML = `<option value="">${t('allFunctions')}</option>` + functions.map(f => `<option value="${f.name}">${f.name}</option>`).join('');
+            // Фільтруємо архівовані функції
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            
+            if (tf) tf.innerHTML = `<option value="">${t('noFunction')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (ta) ta.innerHTML = `<option value="">${t('select')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (raf) raf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (rff) rff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
         }
 
         function formatDate(s) {
@@ -9691,6 +11116,7 @@
                 case 'myday': renderMyDay(); break;
                 case 'tasks': renderTasks(); break;
                 case 'control': renderControl(); break;
+                case 'processes': renderProcessBoard(); break;
                 case 'regular': renderRegularTasks(); break;
                 case 'functions': renderFunctions(); break;
                 case 'users': renderUsers(); break;
@@ -9794,7 +11220,7 @@
         }
 
         window.onclick = function(e) {
-            ['taskModal', 'functionModal', 'regularTaskModal', 'inviteModal', 'userModal', 'profileModal'].forEach(id => {
+            ['taskModal', 'functionModal', 'regularTaskModal', 'inviteModal', 'userModal', 'profileModal', 'processTemplatesModal', 'editProcessTemplateModal', 'startProcessModal', 'viewProcessModal'].forEach(id => {
                 if (e.target === document.getElementById(id)) closeModal(id);
             });
         }
@@ -11137,10 +12563,11 @@
             
             // Populate function chips
             const funcContainer = document.getElementById('filterFunctionChips');
+            const activeFuncs = functions.filter(f => f.status !== 'archived');
             funcContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'function\')">Всі</div>';
-            functions.forEach(f => {
+            activeFuncs.forEach(f => {
                 const selected = mobileFilters.function === f.name ? 'selected' : '';
-                funcContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${f.name}" onclick="selectFilterChip(this, 'function')">${f.name}</div>`;
+                funcContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${esc(f.name)}" onclick="selectFilterChip(this, 'function')">${esc(f.name)}</div>`;
             });
             
             // Populate assignee chips
@@ -11149,7 +12576,7 @@
             users.forEach(u => {
                 const name = u.name || u.email.split('@')[0];
                 const selected = mobileFilters.assignee === u.id ? 'selected' : '';
-                assigneeContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${u.id}" onclick="selectFilterChip(this, 'assignee')">${name}</div>`;
+                assigneeContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${esc(u.id)}" onclick="selectFilterChip(this, 'assignee')">${esc(name)}</div>`;
             });
             
             // Sync current filters
