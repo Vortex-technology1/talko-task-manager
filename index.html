@@ -4658,6 +4658,58 @@
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="taskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                         
+                        <!-- Налаштування нагадувань -->
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                <i data-lucide="alarm-clock" class="icon icon-sm"></i> 
+                                <span data-i18n="reminders">Нагадування до дедлайну</span>
+                            </label>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;">
+                                <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
+                                    <input type="checkbox" id="taskReminder60" value="60" style="width:16px;height:16px;accent-color:var(--primary);">
+                                    <span style="font-size:0.85rem;">За 1 год</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
+                                    <input type="checkbox" id="taskReminder30" value="30" style="width:16px;height:16px;accent-color:var(--primary);">
+                                    <span style="font-size:0.85rem;">За 30 хв</span>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
+                                    <input type="checkbox" id="taskReminder15" value="15" checked style="width:16px;height:16px;accent-color:var(--primary);">
+                                    <span style="font-size:0.85rem;">За 15 хв</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Ескалація при простроченні -->
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                <i data-lucide="alert-triangle" class="icon icon-sm"></i> 
+                                <span data-i18n="escalation">Ескалація при простроченні</span>
+                            </label>
+                            <div style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;padding:0.75rem;background:#fef3c7;border-radius:8px;">
+                                <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                                    <input type="checkbox" id="taskEscalationEnabled" style="width:18px;height:18px;accent-color:#f59e0b;">
+                                    <span style="font-size:0.9rem;font-weight:500;">Створити повторну задачу</span>
+                                </label>
+                                <span style="font-size:0.85rem;color:#92400e;">через</span>
+                                <select id="taskEscalationMinutes" style="padding:0.4rem;border-radius:6px;border:1px solid #d1d5db;font-size:0.85rem;">
+                                    <option value="15">15 хв</option>
+                                    <option value="30">30 хв</option>
+                                    <option value="60" selected>1 год</option>
+                                    <option value="120">2 год</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Сповістити про нагадування (контроль) -->
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                <i data-lucide="eye" class="icon icon-sm"></i> 
+                                <span data-i18n="notifyOnReminder">Контроль (хто отримає нагадування)</span>
+                            </label>
+                            <div id="taskNotifyReminder" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f0fdf4;border-radius:8px;max-height:100px;overflow-y:auto;"></div>
+                        </div>
+                        
                         <!-- Сповіщення про виконання -->
                         <div class="form-group full-width">
                             <label class="form-label">
@@ -5179,6 +5231,9 @@
                 notSpecified: 'Не вказано',
                 expectedResult: 'Очікуваний результат',
                 reportFormat: 'Формат звіту',
+                reminders: 'Нагадування до дедлайну',
+                escalation: 'Ескалація при простроченні',
+                notifyOnReminder: 'Контроль (хто отримає нагадування)',
                 notifyOnComplete: 'Сповістити про виконання',
                 priority: 'Пріоритет',
                 status: 'Статус',
@@ -6901,6 +6956,7 @@
             
             // Рендеримо чекбокси для сповіщень
             renderNotifyUsersCheckboxes(id);
+            renderNotifyReminderCheckboxes();
             
             if (id) {
                 editingId = id;
@@ -6953,6 +7009,12 @@
                     
                     // Встановлюємо чекбокси сповіщень
                     setNotifyUsersCheckboxes(task.notifyOnComplete || []);
+                    
+                    // Встановлюємо налаштування нагадувань
+                    setRemindersCheckboxes(task.reminders || [60, 15]);
+                    document.getElementById('taskEscalationEnabled').checked = task.escalationEnabled || false;
+                    document.getElementById('taskEscalationMinutes').value = task.escalationMinutes || 60;
+                    setNotifyReminderCheckboxes(task.notifyOnReminder || []);
                 }
             } else {
                 editingId = null;
@@ -6967,6 +7029,12 @@
                 
                 // За замовчуванням сповіщуємо творця (поточного користувача)
                 setNotifyUsersCheckboxes([currentUser?.uid]);
+                
+                // Дефолтні налаштування нагадувань
+                setRemindersCheckboxes([60, 15]); // За 1 год і 15 хв
+                document.getElementById('taskEscalationEnabled').checked = false;
+                document.getElementById('taskEscalationMinutes').value = 60;
+                setNotifyReminderCheckboxes([currentUser?.uid]); // Контроль творцю
             }
         }
         
@@ -7026,6 +7094,78 @@
             if (!container) return [];
             
             return Array.from(container.querySelectorAll('input[name="notifyUser"]:checked'))
+                .map(cb => cb.value);
+        }
+        
+        // =====================
+        // REMINDERS FUNCTIONS
+        // =====================
+        
+        // Отримуємо вибрані нагадування
+        function getSelectedReminders() {
+            const reminders = [];
+            if (document.getElementById('taskReminder60')?.checked) reminders.push(60);
+            if (document.getElementById('taskReminder30')?.checked) reminders.push(30);
+            if (document.getElementById('taskReminder15')?.checked) reminders.push(15);
+            return reminders;
+        }
+        
+        // Встановлюємо чекбокси нагадувань
+        function setRemindersCheckboxes(reminders) {
+            const r60 = document.getElementById('taskReminder60');
+            const r30 = document.getElementById('taskReminder30');
+            const r15 = document.getElementById('taskReminder15');
+            
+            if (r60) r60.checked = reminders.includes(60);
+            if (r30) r30.checked = reminders.includes(30);
+            if (r15) r15.checked = reminders.includes(15);
+        }
+        
+        // Рендеримо чекбокси для контролю (notifyOnReminder)
+        function renderNotifyReminderCheckboxes() {
+            const container = document.getElementById('taskNotifyReminder');
+            if (!container) return;
+            
+            // Тільки owner/manager можуть контролювати
+            const managers = users.filter(u => u.role === 'owner' || u.role === 'manager');
+            
+            container.innerHTML = managers.map(user => {
+                const roleLabel = user.role === 'owner' ? '👑' : '⭐';
+                return `
+                    <label class="notify-user-checkbox" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;background:white;border:1px solid #e5e7eb;border-radius:20px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
+                        <input type="checkbox" name="notifyReminder" value="${esc(user.id)}" style="margin:0;" onchange="updateNotifyCheckboxStyle(this)">
+                        <span>${roleLabel} ${esc(user.name || user.email)}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+        
+        // Встановлюємо чекбокси контролю
+        function setNotifyReminderCheckboxes(userIds) {
+            const container = document.getElementById('taskNotifyReminder');
+            if (!container) return;
+            
+            container.querySelectorAll('input[name="notifyReminder"]').forEach(cb => {
+                cb.checked = userIds.includes(cb.value);
+                const label = cb.closest('.notify-user-checkbox');
+                if (label) {
+                    if (cb.checked) {
+                        label.style.background = '#f0fdf4';
+                        label.style.borderColor = '#22c55e';
+                    } else {
+                        label.style.background = 'white';
+                        label.style.borderColor = '#e5e7eb';
+                    }
+                }
+            });
+        }
+        
+        // Отримуємо вибраних для контролю
+        function getNotifyReminderFromCheckboxes() {
+            const container = document.getElementById('taskNotifyReminder');
+            if (!container) return [];
+            
+            return Array.from(container.querySelectorAll('input[name="notifyReminder"]:checked'))
                 .map(cb => cb.value);
         }
 
@@ -7098,6 +7238,11 @@
                     reportFormat: document.getElementById('taskReportFormat').value.trim(),
                     description: document.getElementById('taskDescription').value.trim(),
                     notifyOnComplete: getNotifyUsersFromCheckboxes(),
+                    // Нові поля для сповіщень
+                    reminders: getSelectedReminders(),
+                    escalationEnabled: document.getElementById('taskEscalationEnabled').checked,
+                    escalationMinutes: parseInt(document.getElementById('taskEscalationMinutes').value) || 60,
+                    notifyOnReminder: getNotifyReminderFromCheckboxes(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
