@@ -5432,6 +5432,7 @@
                 tabProcesses: 'Процеси',
                 processes: 'Бізнес-процеси',
                 allProcesses: 'Всі процеси',
+                showCompleted: 'Архів',
                 templates: 'Шаблони',
                 startProcess: 'Запустити',
                 aiAssistant: 'AI-асистент',
@@ -5768,6 +5769,7 @@
                 tabProcesses: 'Процессы',
                 processes: 'Бизнес-процессы',
                 allProcesses: 'Все процессы',
+                showCompleted: 'Архив',
                 templates: 'Шаблоны',
                 startProcess: 'Запустить',
                 aiAssistant: 'AI-ассистент',
@@ -11888,7 +11890,7 @@
                 case 'myday': renderMyDay(); break;
                 case 'tasks': renderTasks(); break;
                 case 'control': renderControl(); break;
-                case 'processes': renderProcessBoard(); break;
+                case 'processes': updateProcessTemplateFilter(); renderProcessBoard(); break;
                 case 'regular': renderRegularTasks(); break;
                 case 'functions': renderFunctions(); break;
                 case 'users': renderUsers(); break;
