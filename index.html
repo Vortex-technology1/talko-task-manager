@@ -4129,13 +4129,13 @@
                     
                     <div style="display:flex;align-items:center;gap:0.5rem;">
                         <div class="calendar-view-switcher">
-                            <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')">День</button>
-                            <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')">Тиждень</button>
-                            <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')">Місяць</button>
-                            <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')">Список</button>
+                            <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')" data-i18n="day">День</button>
+                            <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')" data-i18n="week">Тиждень</button>
+                            <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')" data-i18n="month">Місяць</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')" data-i18n="list">Список</button>
                         </div>
                         <button class="btn btn-success" onclick="openTaskModal()">
-                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile">Додати</span>
+                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
                         </button>
                     </div>
                 </div>
@@ -4159,7 +4159,7 @@
                             </div>
                         </div>
                         <div class="calendar-allday-section" id="calendarAllday">
-                            <div class="calendar-allday-label">Без часу</div>
+                            <div class="calendar-allday-label" data-i18n="noTime">Без часу</div>
                         </div>
                         <div class="calendar-day-body" id="calendarDayBody">
                             <div class="calendar-time-slots" id="calendarTimeSlots"></div>
@@ -4176,14 +4176,8 @@
                     
                     <!-- Month View -->
                     <div class="calendar-month-view" id="calendarMonthView" style="display:none;">
-                        <div class="calendar-month-header">
-                            <div class="calendar-month-day-name">Нд</div>
-                            <div class="calendar-month-day-name">Пн</div>
-                            <div class="calendar-month-day-name">Вт</div>
-                            <div class="calendar-month-day-name">Ср</div>
-                            <div class="calendar-month-day-name">Чт</div>
-                            <div class="calendar-month-day-name">Пт</div>
-                            <div class="calendar-month-day-name">Сб</div>
+                        <div class="calendar-month-header" id="calendarMonthDayNames">
+                            <!-- Заповнюється через JS -->
                         </div>
                         <div class="calendar-month-body" id="monthBody"></div>
                     </div>
@@ -4347,16 +4341,16 @@
                 <!-- Regular Tasks Calendar Header -->
                 <div class="calendar-header" id="regularCalendarHeader">
                     <div style="display:flex;align-items:center;gap:1rem;">
-                        <h3 style="margin:0;font-size:1.1rem;"><i data-lucide="repeat" class="icon"></i> Регулярні завдання</h3>
+                        <h3 style="margin:0;font-size:1.1rem;"><i data-lucide="repeat" class="icon"></i> <span data-i18n="regularTasks">Регулярні завдання</span></h3>
                     </div>
                     
                     <div style="display:flex;align-items:center;gap:0.5rem;">
                         <div class="calendar-view-switcher">
-                            <button class="calendar-view-btn active" data-view="week" onclick="setRegularView('week')">Тиждень</button>
-                            <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')">Список</button>
+                            <button class="calendar-view-btn active" data-view="week" onclick="setRegularView('week')" data-i18n="week">Тиждень</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')" data-i18n="list">Список</button>
                         </div>
                         <button class="btn btn-success" onclick="openRegularTaskModal()">
-                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile">Додати</span>
+                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
                         </button>
                     </div>
                 </div>
@@ -5200,6 +5194,7 @@
                 
                 // Tabs
                 tabMyDay: 'Мій день',
+                myDay: 'Мій день',
                 tabTasks: 'Завдання',
                 tabControl: 'Контроль',
                 tabRegular: 'Регулярні',
@@ -5287,6 +5282,13 @@
                 // Regular
                 addRegular: '+ Регулярне',
                 regularTask: 'Регулярне завдання',
+                regularTasks: 'Регулярні завдання',
+                week: 'Тиждень',
+                day: 'День',
+                month: 'Місяць',
+                list: 'Список',
+                add: 'Додати',
+                noTime: 'Без часу',
                 periodicity: 'Періодичність *',
                 weekly: 'Щотижня',
                 monthly: 'Щомісяця',
@@ -5528,6 +5530,7 @@
                 
                 // Tabs
                 tabMyDay: 'Мой день',
+                myDay: 'Мой день',
                 tabTasks: 'Задачи',
                 tabControl: 'Контроль',
                 tabRegular: 'Регулярные',
@@ -5615,6 +5618,13 @@
                 // Regular
                 addRegular: '+ Регулярное',
                 regularTask: 'Регулярная задача',
+                regularTasks: 'Регулярные задачи',
+                week: 'Неделя',
+                day: 'День',
+                month: 'Месяц',
+                list: 'Список',
+                add: 'Добавить',
+                noTime: 'Без времени',
                 periodicity: 'Периодичность *',
                 weekly: 'Еженедельно',
                 monthly: 'Ежемесячно',
@@ -5829,6 +5839,27 @@
 
         let currentLang = localStorage.getItem('talko_lang') || 'ua';
 
+        // Ініціалізуємо переклади при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', () => {
+            // Оновлюємо кнопки мови
+            document.getElementById('langUA')?.classList.toggle('active', currentLang === 'ua');
+            document.getElementById('langRU')?.classList.toggle('active', currentLang === 'ru');
+            document.getElementById('mLangUA')?.classList.toggle('active', currentLang === 'ua');
+            document.getElementById('mLangRU')?.classList.toggle('active', currentLang === 'ru');
+            
+            // Оновлюємо всі тексти з data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    if (el.tagName === 'INPUT' && el.type !== 'text' && el.type !== 'email') {
+                        el.value = translations[currentLang][key];
+                    } else {
+                        el.innerHTML = translations[currentLang][key];
+                    }
+                }
+            });
+        });
+
         function t(key) {
             return translations[currentLang][key] || translations['ua'][key] || key;
         }
@@ -5836,6 +5867,11 @@
         function setLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('talko_lang', lang);
+            
+            // Оновлюємо масиви днів і місяців
+            dayNames = getDayNames();
+            dayNamesShort = getDayNamesShort();
+            monthNames = getMonthNames();
             
             // Update desktop buttons
             document.getElementById('langUA')?.classList.toggle('active', lang === 'ua');
@@ -7660,10 +7696,26 @@
         let currentCalendarView = 'day'; // day, week, month, list
         let calendarDate = new Date(); // Currently displayed date
         
-        const dayNames = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота'];
-        const dayNamesShort = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-        const monthNames = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 
-                           'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+        function getDayNames() {
+            return currentLang === 'ua' 
+                ? ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота']
+                : ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+        }
+        function getDayNamesShort() {
+            return currentLang === 'ua' 
+                ? ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
+                : ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        }
+        function getMonthNames() {
+            return currentLang === 'ua'
+                ? ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
+                : ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+        }
+        
+        // Для сумісності зі старим кодом
+        let dayNames = getDayNames();
+        let dayNamesShort = getDayNamesShort();
+        let monthNames = getMonthNames();
         
         function setCalendarView(view) {
             currentCalendarView = view;
@@ -7865,7 +7917,7 @@
                 agendaList.innerHTML = `
                     <div class="agenda-empty">
                         <div class="agenda-empty-icon"><i data-lucide="calendar" class="icon icon-xl"></i></div>
-                        <div class="agenda-empty-text">Немає завдань</div>
+                        <div class="agenda-empty-text">${currentLang === 'ua' ? 'Немає завдань' : 'Нет задач'}</div>
                     </div>
                 `;
                 return;
@@ -8005,7 +8057,7 @@
             if (allDayTasks.length > 0) {
                 alldayEl.style.display = 'block';
                 alldayEl.innerHTML = `
-                    <div class="calendar-allday-label">Без часу (${allDayTasks.length})</div>
+                    <div class="calendar-allday-label">${currentLang === 'ua' ? 'Без часу' : 'Без времени'} (${allDayTasks.length})</div>
                     ${allDayTasks.map(task => `
                         <div class="calendar-allday-event calendar-event status-${task.status}" onclick="showTaskQuickMenu(event, '${task.id}')">
                             ${task.status === 'done' ? '<span style="margin-right:4px;">✓</span>' : ''}
@@ -8165,6 +8217,13 @@
             document.getElementById('calendarDayView').style.display = 'none';
             document.getElementById('calendarWeekView').style.display = 'none';
             document.getElementById('calendarMonthView').style.display = 'block';
+            
+            // Оновлюємо заголовки днів тижня
+            const monthDayNamesEl = document.getElementById('calendarMonthDayNames');
+            if (monthDayNamesEl) {
+                const shortDays = getDayNamesShort();
+                monthDayNamesEl.innerHTML = shortDays.map(d => `<div class="calendar-month-day-name">${d}</div>`).join('');
+            }
             
             const year = calendarDate.getFullYear();
             const month = calendarDate.getMonth();
@@ -8783,7 +8842,7 @@
             });
             const totalHours = Math.floor(totalMinutes / 60);
             const totalMins = totalMinutes % 60;
-            const totalTimeStr = totalMinutes > 0 ? `⏱️ ${totalHours > 0 ? totalHours + ' год ' : ''}${totalMins > 0 ? totalMins + ' хв' : ''}` : '';
+            const totalTimeStr = totalMinutes > 0 ? `⏱️ ${totalHours > 0 ? totalHours + (currentLang === 'ua' ? ' год ' : ' ч ') : ''}${totalMins > 0 ? totalMins + (currentLang === 'ua' ? ' хв' : ' мин') : ''}` : '';
             
             document.getElementById('totalTimeInfo').innerHTML = totalTimeStr ? `<span class="total-time-badge">${totalTimeStr} (${f.filter(x=>x.status!=='done').length} ${t('tasks')})</span>` : '';
             
@@ -8818,7 +8877,7 @@
                 const deadlineClass = od ? 'overdue' : (isToday ? 'today' : '');
                 
                 // Індикатор процесу
-                const processIndicator = task.processId ? '<i data-lucide="git-branch" class="icon icon-sm" style="color:#8b5cf6;" title="Завдання з процесу"></i> ' : '';
+                const processIndicator = task.processId ? `<i data-lucide="git-branch" class="icon icon-sm" style="color:#8b5cf6;" title="${currentLang === 'ua' ? 'Завдання з процесу' : 'Задача из процесса'}"></i> ` : '';
                 
                 html += `
                     <tr>
@@ -8882,12 +8941,12 @@
             });
             
             const groupLabels = {
-                overdue: { label: 'Прострочені', class: 'overdue' },
-                today: { label: 'Сьогодні', class: 'today' },
-                tomorrow: { label: 'Завтра', class: 'tomorrow' },
-                thisWeek: { label: 'Цей тиждень', class: '' },
-                later: { label: 'Пізніше', class: '' },
-                noDueDate: { label: 'Без дати', class: '' }
+                overdue: { label: currentLang === 'ua' ? 'Прострочені' : 'Просроченные', class: 'overdue' },
+                today: { label: currentLang === 'ua' ? 'Сьогодні' : 'Сегодня', class: 'today' },
+                tomorrow: { label: currentLang === 'ua' ? 'Завтра' : 'Завтра', class: 'tomorrow' },
+                thisWeek: { label: currentLang === 'ua' ? 'Цей тиждень' : 'Эта неделя', class: '' },
+                later: { label: currentLang === 'ua' ? 'Пізніше' : 'Позже', class: '' },
+                noDueDate: { label: currentLang === 'ua' ? 'Без дати' : 'Без даты', class: '' }
             };
             
             Object.keys(groups).forEach(groupKey => {
@@ -9443,7 +9502,7 @@
             const columnsData = {};
             const completedProcesses = [];
             
-            // Ініціалізуємо колонки для кожної функції що використовується
+            // Ініціалізуємо колонки ТІЛЬКИ для функцій де є активні процеси
             filteredProcesses.forEach(p => {
                 const template = processTemplates.find(t => t.id === p.templateId);
                 if (!template?.steps?.length) return;
@@ -9458,17 +9517,14 @@
                     return;
                 }
                 
-                template.steps.forEach(step => {
-                    if (!columnsData[step.function]) {
-                        columnsData[step.function] = [];
-                    }
-                });
-                
-                // Додаємо процес до поточної колонки
-                // Перевіряємо що currentStep в межах масиву
+                // Додаємо процес ТІЛЬКИ до поточної колонки (не створюємо порожні)
                 const currentStepIndex = Math.min(p.currentStep || 0, template.steps.length - 1);
                 const currentStepFunc = template.steps[currentStepIndex]?.function;
-                if (currentStepFunc && columnsData[currentStepFunc]) {
+                
+                if (currentStepFunc) {
+                    if (!columnsData[currentStepFunc]) {
+                        columnsData[currentStepFunc] = [];
+                    }
                     columnsData[currentStepFunc].push({
                         ...p,
                         template,
@@ -9498,7 +9554,7 @@
                 columnsHTML += `
                     <div class="process-column" style="background:#f0fdf4;">
                         <div class="process-column-header" style="background:#dcfce7;">
-                            <span><i data-lucide="check-circle" class="icon icon-sm" style="color:var(--primary);"></i> ${currentLang === 'ua' ? 'Завершено' : 'Завершено'}</span>
+                            <span><i data-lucide="check-circle" class="icon icon-sm" style="color:var(--primary);"></i> ${currentLang === 'ua' ? 'Завершено' : 'Завершены'}</span>
                             <span class="column-count" style="background:var(--primary);">${completedProcesses.length}</span>
                         </div>
                         <div class="process-column-cards">
@@ -10803,7 +10859,7 @@
             const bodyEl = document.getElementById('regularWeekBody');
             
             const today = new Date().getDay(); // 0 = Sunday
-            const dayNamesFullUA = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота'];
+            const dayNamesFullUA = getDayNames();
             
             // Build header
             let headerHTML = '';
@@ -11018,15 +11074,15 @@
             );
             
             if (completedToday) {
-                return { status: 'completed', color: '#4caf50', text: 'Виконано', lucideIcon: 'check-circle', completedToday: true };
+                return { status: 'completed', color: '#4caf50', text: currentLang === 'ua' ? 'Виконано' : 'Выполнено', lucideIcon: 'check-circle', completedToday: true };
             } else if (generatedTasks.length > 0) {
                 const allDone = generatedTasks.every(t => t.status === 'done');
                 if (allDone) {
-                    return { status: 'completed', color: '#4caf50', text: 'Виконано', lucideIcon: 'check-circle', completedToday: true };
+                    return { status: 'completed', color: '#4caf50', text: currentLang === 'ua' ? 'Виконано' : 'Выполнено', lucideIcon: 'check-circle', completedToday: true };
                 }
-                return { status: 'inProgress', color: '#ff9800', text: 'В роботі', lucideIcon: 'clock', completedToday: false };
+                return { status: 'inProgress', color: '#ff9800', text: currentLang === 'ua' ? 'В роботі' : 'В работе', lucideIcon: 'clock', completedToday: false };
             } else if (shouldRunToday) {
-                return { status: 'notCreated', color: '#2196f3', text: 'Очікує', lucideIcon: 'circle', completedToday: false };
+                return { status: 'notCreated', color: '#2196f3', text: currentLang === 'ua' ? 'Очікує' : 'Ожидает', lucideIcon: 'circle', completedToday: false };
             } else {
                 return { status: 'inactive', color: '#9e9e9e', text: 'Не сьогодні', lucideIcon: 'minus-circle', completedToday: false };
             }
@@ -11148,10 +11204,12 @@
             if (monthlyTasks.length > 0) {
                 html += `<div class="mobile-regular-section-header">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                    Щомісячні завдання
+                    ${currentLang === 'ua' ? 'Щомісячні завдання' : 'Ежемесячные задачи'}
                 </div>`;
                 monthlyTasks.forEach(rt => {
-                    const dayLabel = rt.dayOfMonth === 'last' ? 'Останній день' : `${rt.dayOfMonth}-го числа`;
+                    const dayLabel = rt.dayOfMonth === 'last' 
+                        ? (currentLang === 'ua' ? 'Останній день' : 'Последний день')
+                        : (currentLang === 'ua' ? `${rt.dayOfMonth}-го числа` : `${rt.dayOfMonth}-го числа`);
                     html += renderRegularTaskCard(rt, dayLabel);
                 });
             }
@@ -11160,10 +11218,10 @@
             if (quarterlyTasks.length > 0) {
                 html += `<div class="mobile-regular-section-header">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>
-                    Щоквартальні завдання
+                    ${currentLang === 'ua' ? 'Щоквартальні завдання' : 'Ежеквартальные задачи'}
                 </div>`;
                 quarterlyTasks.forEach(rt => {
-                    html += renderRegularTaskCard(rt, 'Раз на квартал');
+                    html += renderRegularTaskCard(rt, currentLang === 'ua' ? 'Раз на квартал' : 'Раз в квартал');
                 });
             }
             
