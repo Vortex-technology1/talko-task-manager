@@ -4642,14 +4642,14 @@
                         <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="deadlineDate">Дедлайн (дата) *</label><input type="date" id="taskDeadlineDate" class="form-input" required></div>
                         <div class="form-group"><label class="form-label">Початок *</label><input type="time" id="taskDeadlineTime" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Кінець / Тривалість</label>
+                        <div class="form-group"><label class="form-label" data-i18n="endDuration">Кінець / Тривалість</label>
                             <div style="display:flex;gap:8px;align-items:center;">
                                 <select id="taskTimeMode" class="form-select" style="width:auto;" onchange="toggleTaskTimeMode()">
-                                    <option value="end">Час кінця</option>
-                                    <option value="duration">Тривалість</option>
+                                    <option value="end" data-i18n="endTime">Час кінця</option>
+                                    <option value="duration" data-i18n="duration">Тривалість</option>
                                 </select>
                                 <input type="time" id="taskTimeEnd" class="form-input" value="19:00" style="flex:1;">
-                                <select id="taskEstimatedTime" class="form-select" style="flex:1;display:none;"><option value="15">15 хв</option><option value="30">30 хв</option><option value="45">45 хв</option><option value="60" selected>1 год</option><option value="90">1.5 год</option><option value="120">2 год</option><option value="180">3 год</option><option value="240">4 год</option><option value="480">8 год</option></select>
+                                <select id="taskEstimatedTime" class="form-select" style="flex:1;display:none;"><option value="15" data-i18n="min15">15 хв</option><option value="30" data-i18n="min30">30 хв</option><option value="45" data-i18n="min45">45 хв</option><option value="60" selected data-i18n="hour1">1 год</option><option value="90" data-i18n="hour1_5">1.5 год</option><option value="120" data-i18n="hour2">2 год</option><option value="180" data-i18n="hour3">3 год</option><option value="240" data-i18n="hour4">4 год</option><option value="480" data-i18n="hour8">8 год</option></select>
                             </div>
                         </div>
                         <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n="priorityLow">Низький</option><option value="medium" selected data-i18n="priorityMedium">Середній</option><option value="high" data-i18n="priorityHigh">Високий</option></select></div>
@@ -4667,15 +4667,15 @@
                             <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;">
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder60" value="60" style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;">За 1 год</span>
+                                    <span style="font-size:0.85rem;" data-i18n="reminder1hour">За 1 год</span>
                                 </label>
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder30" value="30" style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;">За 30 хв</span>
+                                    <span style="font-size:0.85rem;" data-i18n="reminder30min">За 30 хв</span>
                                 </label>
                                 <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.4rem 0.75rem;background:#f9fafb;border-radius:6px;">
                                     <input type="checkbox" id="taskReminder15" value="15" checked style="width:16px;height:16px;accent-color:var(--primary);">
-                                    <span style="font-size:0.85rem;">За 15 хв</span>
+                                    <span style="font-size:0.85rem;" data-i18n="reminder15min">За 15 хв</span>
                                 </label>
                             </div>
                         </div>
@@ -4689,14 +4689,14 @@
                             <div style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;padding:0.75rem;background:#fef3c7;border-radius:8px;">
                                 <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
                                     <input type="checkbox" id="taskEscalationEnabled" style="width:18px;height:18px;accent-color:#f59e0b;">
-                                    <span style="font-size:0.9rem;font-weight:500;">Створити повторну задачу</span>
+                                    <span style="font-size:0.9rem;font-weight:500;" data-i18n="createRepeatTask">Створити повторну задачу</span>
                                 </label>
-                                <span style="font-size:0.85rem;color:#92400e;">через</span>
+                                <span style="font-size:0.85rem;color:#92400e;" data-i18n="afterTime">через</span>
                                 <select id="taskEscalationMinutes" style="padding:0.4rem;border-radius:6px;border:1px solid #d1d5db;font-size:0.85rem;">
-                                    <option value="15">15 хв</option>
-                                    <option value="30">30 хв</option>
-                                    <option value="60" selected>1 год</option>
-                                    <option value="120">2 год</option>
+                                    <option value="15" data-i18n="min15">15 хв</option>
+                                    <option value="30" data-i18n="min30">30 хв</option>
+                                    <option value="60" selected data-i18n="hour1">1 год</option>
+                                    <option value="120" data-i18n="hour2">2 год</option>
                                 </select>
                             </div>
                         </div>
@@ -4944,22 +4944,22 @@
                         </div>
                         <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
                         <div class="form-group"><label class="form-label">Початок *</label><input type="time" id="regularTaskTimeStart" class="form-input" value="10:00" required></div>
-                        <div class="form-group"><label class="form-label">Кінець / Тривалість</label>
+                        <div class="form-group"><label class="form-label" data-i18n="endDuration">Кінець / Тривалість</label>
                             <div style="display:flex;gap:8px;align-items:center;">
                                 <select id="regularTaskTimeMode" class="form-select" style="width:auto;" onchange="toggleRegularTimeMode()">
-                                    <option value="end">Час кінця</option>
-                                    <option value="duration">Тривалість</option>
+                                    <option value="end" data-i18n="endTime">Час кінця</option>
+                                    <option value="duration" data-i18n="duration">Тривалість</option>
                                 </select>
                                 <input type="time" id="regularTaskTimeEnd" class="form-input" value="11:00" style="flex:1;">
                                 <select id="regularTaskDuration" class="form-select" style="flex:1;display:none;">
-                                    <option value="15">15 хв</option>
-                                    <option value="30">30 хв</option>
-                                    <option value="45">45 хв</option>
-                                    <option value="60" selected>1 год</option>
-                                    <option value="90">1.5 год</option>
-                                    <option value="120">2 год</option>
-                                    <option value="180">3 год</option>
-                                    <option value="240">4 год</option>
+                                    <option value="15" data-i18n="min15">15 хв</option>
+                                    <option value="30" data-i18n="min30">30 хв</option>
+                                    <option value="45" data-i18n="min45">45 хв</option>
+                                    <option value="60" selected data-i18n="hour1">1 год</option>
+                                    <option value="90" data-i18n="hour1_5">1.5 год</option>
+                                    <option value="120" data-i18n="hour2">2 год</option>
+                                    <option value="180" data-i18n="hour3">3 год</option>
+                                    <option value="240" data-i18n="hour4">4 год</option>
                                 </select>
                             </div>
                         </div>
@@ -5235,6 +5235,23 @@
                 escalation: 'Ескалація при простроченні',
                 notifyOnReminder: 'Контроль (хто отримає нагадування)',
                 notifyOnComplete: 'Сповістити про виконання',
+                reminder1hour: 'За 1 год',
+                reminder30min: 'За 30 хв',
+                reminder15min: 'За 15 хв',
+                createRepeatTask: 'Створити повторну задачу',
+                afterTime: 'через',
+                min15: '15 хв',
+                min30: '30 хв',
+                min45: '45 хв',
+                hour1: '1 год',
+                hour1_5: '1.5 год',
+                hour2: '2 год',
+                hour3: '3 год',
+                hour4: '4 год',
+                hour8: '8 год',
+                endDuration: 'Кінець / Тривалість',
+                endTime: 'Час кінця',
+                duration: 'Тривалість',
                 priority: 'Пріоритет',
                 status: 'Статус',
                 description: 'Опис',
@@ -5543,6 +5560,26 @@
                 expectedResult: 'Ожидаемый результат',
                 reportFormat: 'Формат отчета',
                 notifyOnComplete: 'Уведомить о выполнении',
+                reminders: 'Напоминание до дедлайна',
+                escalation: 'Эскалация при просрочке',
+                notifyOnReminder: 'Контроль (кто получит напоминание)',
+                reminder1hour: 'За 1 час',
+                reminder30min: 'За 30 мин',
+                reminder15min: 'За 15 мин',
+                createRepeatTask: 'Создать повторную задачу',
+                afterTime: 'через',
+                min15: '15 мин',
+                min30: '30 мин',
+                min45: '45 мин',
+                hour1: '1 час',
+                hour1_5: '1.5 часа',
+                hour2: '2 часа',
+                hour3: '3 часа',
+                hour4: '4 часа',
+                hour8: '8 часов',
+                endDuration: 'Конец / Длительность',
+                endTime: 'Время конца',
+                duration: 'Длительность',
                 priority: 'Приоритет',
                 status: 'Статус',
                 description: 'Описание',
@@ -6208,6 +6245,30 @@
         }
 
         function logout() {
+            // Очищаємо listeners перед виходом
+            if (tasksUnsubscribe) {
+                tasksUnsubscribe();
+                tasksUnsubscribe = null;
+            }
+            if (completedTasksUnsubscribe) {
+                completedTasksUnsubscribe();
+                completedTasksUnsubscribe = null;
+            }
+            if (commentsUnsubscribe) {
+                commentsUnsubscribe();
+                commentsUnsubscribe = null;
+            }
+            
+            // Очищаємо стан
+            currentCompany = null;
+            currentUserData = null;
+            tasks = [];
+            regularTasks = [];
+            functions = [];
+            users = [];
+            processes = [];
+            processTemplates = [];
+            
             auth.signOut().then(() => {
                 showLoginForm();
                 hideAuthMessage();
