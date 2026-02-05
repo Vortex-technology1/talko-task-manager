@@ -6226,48 +6226,69 @@
         }
 
         async function findUserCompany(userId, email) {
-            const userDoc = await db.collection('users').doc(userId).get();
-            if (userDoc.exists) {
-                return userDoc.data().companyId;
-            }
-            
-            const invitesQuery = await db.collection('invites')
-                .where('email', '==', email.toLowerCase())
-                .where('accepted', '==', false)
-                .limit(1)
-                .get();
-            
-            if (!invitesQuery.empty) {
-                const invite = invitesQuery.docs[0];
-                const inviteData = invite.data();
-                const companyId = inviteData.companyId;
-                const isOwnerInvite = inviteData.role === 'owner';
-                
-                await db.collection('companies').doc(companyId).collection('users').doc(userId).set({
-                    name: inviteData.ownerName || email.split('@')[0],
-                    email: email.toLowerCase(),
-                    role: inviteData.role || 'employee',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                await db.collection('users').doc(userId).set({
-                    email: email.toLowerCase(),
-                    companyId: companyId,
-                    role: inviteData.role || 'employee'
-                });
-                
-                if (isOwnerInvite) {
-                    await db.collection('companies').doc(companyId).update({
-                        ownerId: userId
-                    });
+            try {
+                const userDoc = await db.collection('users').doc(userId).get();
+                if (userDoc.exists) {
+                    return userDoc.data().companyId;
                 }
                 
-                await invite.ref.update({ accepted: true, acceptedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                const invitesQuery = await db.collection('invites')
+                    .where('email', '==', email.toLowerCase())
+                    .where('accepted', '==', false)
+                    .limit(1)
+                    .get();
                 
-                return companyId;
+                if (!invitesQuery.empty) {
+                    const invite = invitesQuery.docs[0];
+                    const inviteData = invite.data();
+                    const companyId = inviteData.companyId;
+                    const isOwnerInvite = inviteData.role === 'owner';
+                    
+                    // Batch write — все або нічого (атомарно)
+                    const batch = db.batch();
+                    
+                    // 1. Додаємо юзера в компанію
+                    const companyUserRef = db.collection('companies').doc(companyId).collection('users').doc(userId);
+                    batch.set(companyUserRef, {
+                        name: inviteData.ownerName || inviteData.name || email.split('@')[0],
+                        email: email.toLowerCase(),
+                        role: inviteData.role || 'employee',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // 2. Глобальний маппінг userId → companyId
+                    const globalUserRef = db.collection('users').doc(userId);
+                    batch.set(globalUserRef, {
+                        email: email.toLowerCase(),
+                        companyId: companyId,
+                        role: inviteData.role || 'employee'
+                    });
+                    
+                    // 3. Якщо Owner — оновлюємо компанію
+                    if (isOwnerInvite) {
+                        const companyRef = db.collection('companies').doc(companyId);
+                        batch.update(companyRef, { ownerId: userId });
+                    }
+                    
+                    // 4. Позначаємо invite як використаний
+                    batch.update(invite.ref, { 
+                        accepted: true, 
+                        acceptedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        acceptedBy: userId
+                    });
+                    
+                    // Один запит — все атомарно
+                    await batch.commit();
+                    console.log('[findUserCompany] Batch commit success, role:', inviteData.role);
+                    
+                    return companyId;
+                }
+                
+                return null;
+            } catch (error) {
+                console.error('[findUserCompany] Error:', error);
+                return null;
             }
-            
-            return null;
         }
 
         function logout() {
@@ -6423,17 +6444,27 @@
             
             isLoading = true;
             const thisLoadVersion = ++loadingVersion;
+            const startTime = performance.now();
             
             try {
-                // Паралельне завантаження для швидкості
-                const [usersSnap, funcsSnap, tasksSnap, regSnap] = await Promise.all([
-                    db.collection('companies').doc(currentCompany).collection('users').get(),
-                    db.collection('companies').doc(currentCompany).collection('functions').get(),
-                    db.collection('companies').doc(currentCompany).collection('tasks').orderBy('createdAt', 'desc').get(),
-                    db.collection('companies').doc(currentCompany).collection('regularTasks').get()
+                // Паралельне завантаження ВСЬОГО для швидкості (6 запитів одночасно замість 6 послідовних)
+                const base = db.collection('companies').doc(currentCompany);
+                
+                let processQuery = base.collection('processes');
+                if (!showCompletedProcesses) {
+                    processQuery = processQuery.where('status', '==', 'active');
+                }
+                
+                const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap] = await Promise.all([
+                    base.collection('users').get(),
+                    base.collection('functions').get(),
+                    base.collection('tasks').orderBy('createdAt', 'desc').limit(500).get(),
+                    base.collection('regularTasks').get(),
+                    base.collection('processTemplates').orderBy('name').get(),
+                    processQuery.get()
                 ]);
                 
-                // Перевіряємо чи це ще актуальний запит (не було нового виклику)
+                // Перевіряємо чи це ще актуальний запит
                 if (thisLoadVersion !== loadingVersion) {
                     console.log('loadAllData: newer load started, discarding results');
                     return;
@@ -6444,11 +6475,11 @@
                 functions = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                processTemplates = templatesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                processes = processesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 
                 updateSelects();
-                
-                // Завантажуємо дані процесів
-                await loadProcessData();
+                updateProcessTemplateFilter();
                 
                 // Авто-генерація регулярних завдань при вході
                 await autoGenerateRegularTasks();
@@ -6475,6 +6506,11 @@
                 
                 // Показуємо попап "Мій день" при першому завантаженні
                 showMyDayPopup();
+                
+                // Зберігаємо для offline
+                saveOfflineData();
+                
+                console.log(`[loadAllData] Done in ${Math.round(performance.now() - startTime)}ms, tasks: ${tasks.length}`);
                 
             } catch (error) {
                 console.error('loadAllData error:', error);
@@ -6792,110 +6828,114 @@
         // =====================
         let myDayPopupShown = false;
         
+        // Хелпер: перевірка чи регулярне завдання заплановане на певний день
+        function isRegularTaskDay(rt, date) {
+            const day = date.getDay(); // 0-6
+            const dateNum = date.getDate(); // 1-31
+            
+            if (rt.period === 'daily') return true;
+            
+            if (rt.period === 'weekly') {
+                if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                    return rt.daysOfWeek.includes(day.toString());
+                }
+                return rt.dayOfWeek === day.toString();
+            }
+            
+            if (rt.period === 'monthly') {
+                if (rt.dayOfMonth === 'last') {
+                    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+                    return dateNum === lastDay;
+                }
+                return dateNum === parseInt(rt.dayOfMonth);
+            }
+            
+            if (rt.period === 'quarterly') {
+                const quarterStartMonth = Math.floor(date.getMonth() / 3) * 3;
+                if (date.getMonth() !== quarterStartMonth) return false;
+                if (rt.dayOfMonth === 'last') {
+                    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+                    return dateNum === lastDay;
+                }
+                return dateNum === parseInt(rt.dayOfMonth);
+            }
+            
+            return false;
+        }
+        
         async function autoGenerateRegularTasks() {
             if (!currentUser || !currentCompany) return;
             
             const today = new Date();
             const todayStr = today.toISOString().split('T')[0];
-            const todayDay = today.getDay(); // 0-6 (неділя-субота)
-            const todayDate = today.getDate(); // 1-31
+            
+            // Збираємо всі завдання для batch
+            const tasksToCreate = [];
             
             for (const rt of regularTasks) {
-                // Перевіряємо чи це завдання на сьогодні
-                let shouldCreateToday = false;
+                if (!isRegularTaskDay(rt, today)) continue;
                 
-                // Підтримка старого формату daily
-                if (rt.period === 'daily') {
-                    shouldCreateToday = true;
-                } else if (rt.period === 'weekly') {
-                    // Підтримка нового формату (масив днів) і старого (один день)
-                    if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
-                        shouldCreateToday = rt.daysOfWeek.includes(todayDay.toString());
-                    } else if (rt.dayOfWeek) {
-                        shouldCreateToday = rt.dayOfWeek === todayDay.toString();
-                    }
-                } else if (rt.period === 'monthly') {
-                    if (rt.dayOfMonth === 'last') {
-                        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-                        shouldCreateToday = todayDate === lastDay;
-                    } else {
-                        shouldCreateToday = todayDate === parseInt(rt.dayOfMonth);
-                    }
-                } else if (rt.period === 'quarterly') {
-                    const quarterStartMonth = Math.floor(today.getMonth() / 3) * 3;
-                    if (today.getMonth() === quarterStartMonth) {
-                        if (rt.dayOfMonth === 'last') {
-                            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-                            shouldCreateToday = todayDate === lastDay;
-                        } else {
-                            shouldCreateToday = todayDate === parseInt(rt.dayOfMonth);
-                        }
-                    }
-                }
-                
-                if (!shouldCreateToday) continue;
-                
-                // Отримуємо виконавців з функції
                 const func = functions.find(f => f.name === rt.function);
                 const assigneeIds = func?.assigneeIds || [];
-                
                 if (assigneeIds.length === 0) continue;
                 
-                // Перевіряємо для кожного виконавця чи вже є завдання на сьогодні
                 for (const assigneeId of assigneeIds) {
-                    const existingTask = tasks.find(t => 
+                    // Перевіряємо чи вже є завдання на сьогодні
+                    const exists = tasks.find(t => 
                         t.regularTaskId === rt.id && 
                         t.assigneeId === assigneeId &&
                         t.deadlineDate === todayStr
                     );
+                    if (exists) continue;
                     
-                    if (existingTask) continue; // Вже створено
-                    
-                    // Створюємо завдання
                     const assignee = users.find(u => u.id === assigneeId);
+                    tasksToCreate.push({
+                        title: rt.title,
+                        function: rt.function,
+                        assigneeId: assigneeId,
+                        assigneeName: assignee?.name || assignee?.email || '',
+                        deadlineDate: todayStr,
+                        deadlineTime: rt.timeStart || rt.time || '18:00',
+                        deadline: todayStr + 'T' + (rt.timeStart || rt.time || '18:00'),
+                        expectedResult: rt.expectedResult || '',
+                        reportFormat: rt.reportFormat || '',
+                        description: rt.instruction || '',
+                        status: 'new',
+                        priority: 'medium',
+                        pinned: false,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        createdDate: todayStr,
+                        creatorName: 'Авто',
+                        regularTaskId: rt.id,
+                        notifyOnComplete: rt.notifyOnComplete || [],
+                        autoGenerated: true
+                    });
+                }
+            }
+            
+            if (tasksToCreate.length === 0) return;
+            
+            try {
+                // Batch write — до 500 операцій за раз (Firestore ліміт)
+                const batchSize = 500;
+                for (let i = 0; i < tasksToCreate.length; i += batchSize) {
+                    const batch = db.batch();
+                    const chunk = tasksToCreate.slice(i, i + batchSize);
                     
-                    try {
-                        const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
-                            title: rt.title,
-                            function: rt.function,
-                            assigneeId: assigneeId,
-                            assigneeName: assignee?.name || assignee?.email || '',
-                            deadlineDate: todayStr,
-                            deadlineTime: rt.timeStart || rt.time || '18:00',
-                            deadline: todayStr + 'T' + (rt.timeStart || rt.time || '18:00'),
-                            expectedResult: rt.expectedResult || '',
-                            reportFormat: rt.reportFormat || '',
-                            description: rt.instruction || '',
-                            status: 'new',
-                            priority: 'medium',
-                            pinned: false,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            createdDate: todayStr,
-                            creatorName: currentLang === 'ua' ? 'Авто' : 'Авто',
-                            regularTaskId: rt.id,
-                            notifyOnComplete: rt.notifyOnComplete || [],
-                            autoGenerated: true
-                        });
+                    for (const taskData of chunk) {
+                        const newRef = db.collection('companies').doc(currentCompany).collection('tasks').doc();
+                        batch.set(newRef, taskData);
                         
                         // Додаємо в локальний масив
-                        tasks.unshift({
-                            id: newTaskRef.id,
-                            title: rt.title,
-                            function: rt.function,
-                            assigneeId: assigneeId,
-                            assigneeName: assignee?.name || assignee?.email || '',
-                            deadlineDate: todayStr,
-                            deadlineTime: rt.timeStart || rt.time || '18:00',
-                            status: 'new',
-                            priority: 'medium',
-                            regularTaskId: rt.id,
-                            notifyOnComplete: rt.notifyOnComplete || [],
-                            autoGenerated: true
-                        });
-                    } catch (err) {
-                        console.error('Error auto-creating task:', err);
+                        tasks.unshift({ id: newRef.id, ...taskData });
                     }
+                    
+                    await batch.commit();
                 }
+                
+                console.log(`[AutoGenerate] Created ${tasksToCreate.length} tasks in batch`);
+            } catch (err) {
+                console.error('[AutoGenerate] Batch error:', err);
             }
         }
         
@@ -7362,7 +7402,25 @@
                 }
                 
                 closeModal('taskModal');
-                await loadAllData();
+                
+                // Локальне оновлення замість повного перезавантаження
+                if (currentEditingId) {
+                    // Update — знаходимо і оновлюємо в масиві
+                    const idx = tasks.findIndex(t => t.id === currentEditingId);
+                    if (idx >= 0) {
+                        tasks[idx] = { ...tasks[idx], ...data, id: currentEditingId };
+                    }
+                } else {
+                    // Create — додаємо на початок масиву
+                    tasks.unshift({ id: docRef.id, ...data, createdAt: new Date() });
+                }
+                
+                // Перерендерюємо тільки потрібні views
+                renderMyDay();
+                if (currentCalendarView === 'list') renderTasks();
+                else renderCalendar();
+                updateSelects();
+                
             } catch (error) {
                 console.error('saveTask error:', error);
                 alert(t('error') + ': ' + error.message);
@@ -7538,14 +7596,23 @@
             try {
                 if (type === 'task') {
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(item.id).set(item);
+                    tasks.unshift(item);
+                    renderMyDay();
+                    if (currentCalendarView === 'list') renderTasks();
+                    else renderCalendar();
                 } else if (type === 'regularTask') {
                     await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(item.id).set(item);
+                    regularTasks.unshift(item);
+                    if (currentRegularView === 'list') renderRegularTasks();
+                    else renderRegularWeekView();
                 } else if (type === 'function') {
                     await db.collection('companies').doc(currentCompany).collection('functions').doc(item.id).set(item);
+                    functions.unshift(item);
+                    renderFunctions();
+                    updateSelects();
                 }
                 
                 deletedItemBackup = null;
-                await loadAllData();
             } catch (error) {
                 console.error('Undo error:', error);
                 alert('Помилка відновлення: ' + error.message);
@@ -8729,8 +8796,26 @@
                     });
                 }
                 
-                // Оновлюємо дані
-                await loadAllData();
+                // Локальне оновлення замість loadAllData
+                if (type === 'regular') {
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    let taskToUpdate = tasks.find(t => 
+                        t.regularTaskId === id && 
+                        t.deadlineDate === todayStr && 
+                        t.assigneeId === currentUser.uid
+                    );
+                    if (taskToUpdate) {
+                        taskToUpdate.status = currentDone ? 'new' : 'done';
+                        taskToUpdate.completedAt = currentDone ? null : new Date().toISOString();
+                    }
+                } else {
+                    const task = tasks.find(t => t.id === id);
+                    if (task) {
+                        task.status = currentDone ? 'new' : 'done';
+                        task.completedAt = currentDone ? null : new Date().toISOString();
+                    }
+                }
+                
                 renderMyDay();
             } catch (error) {
                 console.error('Error toggling task:', error);
@@ -9124,12 +9209,18 @@
                 
                 if (currentEditingId) {
                     await db.collection('companies').doc(currentCompany).collection('functions').doc(currentEditingId).update(data);
+                    // Локальне оновлення
+                    const idx = functions.findIndex(f => f.id === currentEditingId);
+                    if (idx >= 0) functions[idx] = { ...functions[idx], ...data };
                 } else {
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection('companies').doc(currentCompany).collection('functions').add(data);
+                    const docRef = await db.collection('companies').doc(currentCompany).collection('functions').add(data);
+                    // Локальне додавання
+                    functions.unshift({ id: docRef.id, ...data, createdAt: new Date() });
                 }
                 closeModal('functionModal');
-                await loadAllData();
+                renderFunctions();
+                updateSelects();
             } catch (error) {
                 console.error('saveFunction error:', error);
                 alert(t('error') + ': ' + error.message);
@@ -10456,12 +10547,19 @@
             try {
                 if (currentEditingId) {
                     await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(currentEditingId).update(data);
+                    // Локальне оновлення
+                    const idx = regularTasks.findIndex(rt => rt.id === currentEditingId);
+                    if (idx >= 0) regularTasks[idx] = { ...regularTasks[idx], ...data };
                 } else {
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection('companies').doc(currentCompany).collection('regularTasks').add(data);
+                    const docRef = await db.collection('companies').doc(currentCompany).collection('regularTasks').add(data);
+                    // Локальне додавання
+                    regularTasks.unshift({ id: docRef.id, ...data, createdAt: new Date() });
                 }
                 closeModal('regularTaskModal');
-                await loadAllData();
+                if (currentRegularView === 'list') renderRegularTasks();
+                else renderRegularWeekView();
+                renderMyDay();
             } catch (error) {
                 console.error('saveRegularTask error:', error);
                 alert(t('error') + ': ' + error.message);
@@ -10532,8 +10630,33 @@
             });
             
             await batch.commit();
+            
+            // Локальне оновлення — додаємо створені завдання в масив
+            const todayStr = new Date().toISOString().split('T')[0];
+            const deadline = new Date();
+            deadline.setDate(deadline.getDate() + 1);
+            const deadlineDate = deadline.toISOString().split('T')[0];
+            
+            assigneeIds.forEach(assigneeId => {
+                tasks.unshift({
+                    id: 'temp_' + Date.now() + '_' + assigneeId, // тимчасовий id
+                    title: rt.title,
+                    function: rt.function,
+                    assigneeId: assigneeId,
+                    assigneeName: users.find(u => u.id === assigneeId)?.name || '',
+                    deadlineDate: deadlineDate,
+                    deadlineTime: rt.timeStart || rt.time || '18:00',
+                    status: 'new',
+                    priority: 'medium',
+                    regularTaskId: id,
+                    createdAt: new Date()
+                });
+            });
+            
             alert(`${currentLang === 'ua' ? 'Створено' : 'Создано'} ${assigneeIds.length} ${currentLang === 'ua' ? 'завдань' : 'задач'}`);
-            await loadAllData();
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
         }
 
         async function deleteRegularTask(id) {
@@ -10604,10 +10727,13 @@
                     status: 'done',
                     completedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                // Локальне оновлення
+                taskToUpdate.status = 'done';
+                taskToUpdate.completedAt = new Date().toISOString();
             } else {
                 // Створюємо нове і одразу виконане
                 const today = new Date().toISOString().split('T')[0];
-                await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                const newTaskData = {
                     title: rt.title,
                     function: rt.function,
                     assigneeId: currentUser.uid,
@@ -10627,10 +10753,15 @@
                     regularTaskId: id,
                     periodStart: periodStart,
                     completedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                };
+                const docRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(newTaskData);
+                // Локальне додавання
+                tasks.unshift({ id: docRef.id, ...newTaskData, createdAt: new Date(), completedAt: new Date().toISOString() });
             }
             
-            await loadAllData();
+            renderMyDay();
+            if (currentRegularView === 'list') renderRegularTasks();
+            else renderRegularWeekView();
         }
 
         function filterRegularToday() {
@@ -11098,14 +11229,20 @@
                 await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(taskId).update({
                     lastCompleted: null
                 });
+                task.lastCompleted = null;
             } else {
                 // Mark as completed
+                const now = firebase.firestore.Timestamp.now();
                 await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(taskId).update({
-                    lastCompleted: firebase.firestore.Timestamp.now()
+                    lastCompleted: now
                 });
+                task.lastCompleted = now;
             }
             
-            await loadAllData();
+            renderMyDay();
+            if (currentRegularView === 'list') renderRegularTasks();
+            else renderRegularWeekView();
+            renderMobileRegularDay();
         }
         
         // Mobile Regular Tasks - selected day
@@ -11313,8 +11450,15 @@
             const u = users.find(x => x.id === id);
             if (u?.role === 'owner') { alert(currentLang === 'ua' ? 'Не можна видалити власника' : 'Нельзя удалить владельца'); return; }
             if (!confirm(t('deleteConfirm'))) return;
+            
             await db.collection('companies').doc(currentCompany).collection('users').doc(id).delete();
-            await loadAllData();
+            
+            // Локальне видалення
+            const idx = users.findIndex(x => x.id === id);
+            if (idx >= 0) users.splice(idx, 1);
+            
+            renderUsers();
+            updateSelects();
         }
 
         function renderUsers() {
@@ -11434,7 +11578,33 @@
                 }
                 
                 closeModal('userModal');
-                await loadAllData();
+                
+                // Локальне оновлення користувача
+                const userIdx = users.findIndex(u => u.id === editingUserId);
+                if (userIdx >= 0) {
+                    users[userIdx] = { 
+                        ...users[userIdx], 
+                        name: document.getElementById('userName').value.trim(),
+                        role: document.getElementById('userRole').value,
+                        position: document.getElementById('userPosition').value.trim()
+                    };
+                }
+                
+                // Локальне оновлення функцій
+                const selectedFunctions = Array.from(document.querySelectorAll('#userFunctions input:checked')).map(cb => cb.value);
+                functions.forEach(func => {
+                    const isSelected = selectedFunctions.includes(func.id);
+                    const isCurrentlyAssigned = func.assigneeIds?.includes(editingUserId);
+                    if (isSelected && !isCurrentlyAssigned) {
+                        func.assigneeIds = [...(func.assigneeIds || []), editingUserId];
+                    } else if (!isSelected && isCurrentlyAssigned) {
+                        func.assigneeIds = (func.assigneeIds || []).filter(id => id !== editingUserId);
+                    }
+                });
+                
+                renderUsers();
+                renderFunctions();
+                updateSelects();
             } catch (e) {
                 alert(t('error') + ': ' + e.message);
             }
@@ -13115,7 +13285,15 @@
                 status: 'done',
                 completedAt: new Date().toISOString()
             });
-            await loadAllData();
+            
+            // Локальне оновлення
+            if (task) {
+                task.status = 'done';
+                task.completedAt = new Date().toISOString();
+            }
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
         }
         
         async function reopenTaskFromMenu(taskId) {
@@ -13123,7 +13301,13 @@
             await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({ 
                 status: 'in_progress'
             });
-            await loadAllData();
+            
+            // Локальне оновлення
+            const task = tasks.find(t => t.id === taskId);
+            if (task) task.status = 'in_progress';
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
         }
         
         async function deleteTaskFromMenu(taskId) {
@@ -13139,8 +13323,13 @@
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).delete();
-                // Task deleted
-                await loadAllData();
+                
+                // Локальне видалення
+                const idx = tasks.findIndex(t => t.id === taskId);
+                if (idx >= 0) tasks.splice(idx, 1);
+                renderMyDay();
+                if (currentCalendarView === 'list') renderTasks();
+                else renderCalendar();
             } catch (error) {
                 console.error('Delete error:', error);
                 alert('Помилка видалення: ' + error.message);
@@ -13200,8 +13389,15 @@
                 updateCalendarEvent(task.calendarEventId, { ...task, deadlineDate: dateStr, deadlineTime: newTime });
             }
             
+            // Локальне оновлення
+            task.deadlineDate = dateStr;
+            task.deadlineTime = newTime;
+            task.deadline = dateStr + 'T' + newTime;
+            
             draggedTaskId = null;
-            await loadAllData();
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
         }
 
         // =====================
