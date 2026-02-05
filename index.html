@@ -10631,12 +10631,7 @@
             
             await batch.commit();
             
-            // Локальне оновлення — додаємо створені завдання в масив
-            const todayStr = new Date().toISOString().split('T')[0];
-            const deadline = new Date();
-            deadline.setDate(deadline.getDate() + 1);
-            const deadlineDate = deadline.toISOString().split('T')[0];
-            
+            // Локальне оновлення — додаємо створені завдання в масив (використовуємо вже визначені deadline та deadlineDate)
             assigneeIds.forEach(assigneeId => {
                 tasks.unshift({
                     id: 'temp_' + Date.now() + '_' + assigneeId, // тимчасовий id
@@ -13866,15 +13861,17 @@
         };
         
         // Show FAB when logged in
-        auth.onAuthStateChanged(user => {
-            const fab = document.getElementById('fabAdd');
-            const bottomNav = document.getElementById('bottomNav');
-            if (user && fab) {
-                fab.style.display = 'flex';
-            } else if (fab) {
-                fab.style.display = 'none';
-            }
-        });
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(user => {
+                const fab = document.getElementById('fabAdd');
+                const bottomNav = document.getElementById('bottomNav');
+                if (user && fab) {
+                    fab.style.display = 'flex';
+                } else if (fab) {
+                    fab.style.display = 'none';
+                }
+            });
+        }
         
         // =====================
         // SWIPE BETWEEN TABS
