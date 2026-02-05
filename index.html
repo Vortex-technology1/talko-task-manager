@@ -11585,8 +11585,7 @@
                     };
                 }
                 
-                // Локальне оновлення функцій
-                const selectedFunctions = Array.from(document.querySelectorAll('#userFunctions input:checked')).map(cb => cb.value);
+                // Локальне оновлення функцій (використовуємо selectedFunctions з рядка вище)
                 functions.forEach(func => {
                     const isSelected = selectedFunctions.includes(func.id);
                     const isCurrentlyAssigned = func.assigneeIds?.includes(editingUserId);
