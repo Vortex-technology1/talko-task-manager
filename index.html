@@ -6118,46 +6118,34 @@
             }
             
             try {
-                let inviteData = currentInviteData;
+                showAuthMessage(currentLang === 'ua' ? 'Реєстрація...' : 'Регистрация...', 'info');
                 
-                // Якщо немає інвайту в URL, шукаємо по email
-                if (!inviteData) {
-                    const invitesQuery = await db.collection('invites')
-                        .where('email', '==', email)
-                        .where('accepted', '==', false)
-                        .limit(1)
-                        .get();
-                    
-                    if (invitesQuery.empty) {
-                        showAuthMessage(currentLang === 'ua' ? 'Запрошення для цього email не знайдено' : 'Приглашение для этого email не найдено', 'error');
-                        return;
-                    }
-                    
-                    inviteData = { id: invitesQuery.docs[0].id, ...invitesQuery.docs[0].data() };
-                }
+                // КРОК 1: Спочатку створюємо Auth акаунт
+                // (потрібен для доступу до Firestore — invites вимагають авторизацію)
+                console.log('[Register] Creating auth account for:', email);
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                console.log('[Register] Auth account created, UID:', user.uid);
                 
-                // Перевіряємо що email співпадає з інвайтом
-                if (inviteData.email.toLowerCase() !== email.toLowerCase()) {
+                // КРОК 2: Тепер авторизовані — шукаємо invite
+                // (onAuthStateChanged спрацює автоматично і викличе findUserCompany,
+                //  який знайде invite і прив'яже юзера до компанії)
+                
+                // Якщо є currentInviteData з URL — перевіряємо відповідність
+                if (currentInviteData && currentInviteData.email.toLowerCase() !== email.toLowerCase()) {
                     showAuthMessage(currentLang === 'ua' ? 'Email не співпадає з запрошенням' : 'Email не совпадает с приглашением', 'error');
                     return;
                 }
-                
-                showAuthMessage(currentLang === 'ua' ? 'Реєстрація...' : 'Регистрация...', 'info');
-                
-                // Створюємо користувача в Firebase Auth
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                
-                // Invite буде оброблено в onAuthStateChanged через findUserCompany
-                // (там же додається користувач в компанію з правильною роллю)
                 
                 // Очищаємо URL від параметра invite
                 window.history.replaceState({}, document.title, window.location.pathname);
                 currentInviteData = null;
                 
+                console.log('[Register] Success! Waiting for onAuthStateChanged...');
                 showAuthMessage(currentLang === 'ua' ? 'Успішно зареєстровано!' : 'Успешно зарегистрировано!', 'success');
                 
             } catch (e) {
+                console.error('[Register] Error:', e.code, e.message);
                 let msg = currentLang === 'ua' ? 'Помилка реєстрації' : 'Ошибка регистрации';
                 if (e.code === 'auth/email-already-in-use') {
                     msg = currentLang === 'ua' ? 'Цей email вже зареєстровано. Спробуйте увійти.' : 'Этот email уже зарегистрирован. Попробуйте войти.';
