@@ -952,6 +952,9 @@
         .status-review { background: #fce4ec; color: #c2185b; }
         .status-done { background: #e8f5e8; color: #388e3c; }
         
+        .myday-item.review { background: #faf5ff; border-left: 3px solid #8b5cf6; }
+        .myday-item.review .myday-item-title { color: #6b21a8; }
+        
         .deadline-text.overdue { color: #e74c3c; font-weight: 600; }
         .deadline-text.today { color: #3498db; font-weight: 600; }
         
@@ -2269,7 +2272,7 @@
             }
             
             .week-strip-day .task-dot.status-new { background: #007aff; }
-            .week-strip-day .task-dot.status-in_progress { background: #ff9500; }
+            .week-strip-day .task-dot.status-progress { background: #ff9500; }
             .week-strip-day .task-dot.status-review { background: #af52de; }
             .week-strip-day .task-dot.status-done { background: #34c759; }
         }
@@ -5499,6 +5502,15 @@
                 enableNotifications: 'Увімкнути сповіщення',
                 disableNotifications: 'Вимкнути сповіщення',
                 loadDemoData: 'Завантажити демо-дані',
+                // Review (перевірка)
+                taskSentForReview: 'Відправлено на перевірку',
+                taskOnReview: 'Завдання на перевірці',
+                acceptTask: 'Прийняти',
+                rejectTask: 'На доопрацювання',
+                taskAccepted: 'Завдання прийнято',
+                taskRejected: 'Повернуто на доопрацювання',
+                reviewByCreator: 'Очікує перевірки постановником',
+                rejectReasonPlaceholder: 'Причина повернення (необовʼязково)',
             },
             ru: {
                 // Auth
@@ -5836,6 +5848,15 @@
                 enableNotifications: 'Включить уведомления',
                 disableNotifications: 'Отключить уведомления',
                 loadDemoData: 'Загрузить демо-данные',
+                // Review (проверка)
+                taskSentForReview: 'Отправлено на проверку',
+                taskOnReview: 'Задача на проверке',
+                acceptTask: 'Принять',
+                rejectTask: 'На доработку',
+                taskAccepted: 'Задача принята',
+                taskRejected: 'Возвращено на доработку',
+                reviewByCreator: 'Ожидает проверки постановщиком',
+                rejectReasonPlaceholder: 'Причина возврата (необязательно)',
             }
         };
 
@@ -6301,6 +6322,14 @@
                 completedTasksUnsubscribe();
                 completedTasksUnsubscribe = null;
             }
+            if (reviewTasksUnsubscribe) {
+                reviewTasksUnsubscribe();
+                reviewTasksUnsubscribe = null;
+            }
+            if (rejectedTasksUnsubscribe) {
+                rejectedTasksUnsubscribe();
+                rejectedTasksUnsubscribe = null;
+            }
             if (commentsUnsubscribe) {
                 commentsUnsubscribe();
                 commentsUnsubscribe = null;
@@ -6566,19 +6595,25 @@
                             ...doc.data()
                         }));
                         
-                        const processTasks = newTasks.filter(t => t.processId);
-                        const regularTasksNew = newTasks.filter(t => t.regularTaskId);
-                        const normalTasks = newTasks.filter(t => !t.processId && !t.regularTaskId);
+                        // Фільтруємо завдання створені НЕ поточним користувачем
+                        // (не показуємо сповіщення коли ставиш завдання сам собі)
+                        const externalTasks = newTasks.filter(t => t.creatorId !== currentUser.uid);
                         
-                        playNotificationSound();
-                        
-                        // Показуємо відповідний toast
-                        if (processTasks.length > 0) {
-                            showNewTaskToast('process', processTasks.length, processTasks[0].title);
-                        } else if (regularTasksNew.length > 0) {
-                            showNewTaskToast('regular', regularTasksNew.length, regularTasksNew[0].title);
-                        } else if (normalTasks.length > 0) {
-                            showNewTaskToast('task', normalTasks.length, normalTasks[0].title);
+                        if (externalTasks.length > 0) {
+                            const processTasks = externalTasks.filter(t => t.processId);
+                            const regularTasksNew = externalTasks.filter(t => t.regularTaskId);
+                            const normalTasks = externalTasks.filter(t => !t.processId && !t.regularTaskId);
+                            
+                            playNotificationSound();
+                            
+                            // Показуємо відповідний toast
+                            if (processTasks.length > 0) {
+                                showNewTaskToast('process', processTasks.length, processTasks[0].title);
+                            } else if (regularTasksNew.length > 0) {
+                                showNewTaskToast('regular', regularTasksNew.length, regularTasksNew[0].title);
+                            } else if (normalTasks.length > 0) {
+                                showNewTaskToast('task', normalTasks.length, normalTasks[0].title);
+                            }
                         }
                         
                         // Оновлюємо локальний масив завдань
@@ -6594,6 +6629,12 @@
             
             // Listener для виконаних завдань (сповіщення спостерігачам)
             initCompletedTasksListener();
+            
+            // Listener для завдань на перевірці (сповіщення постановнику)
+            initReviewTasksListener();
+            
+            // Listener для повернених на доопрацювання завдань
+            initRejectedTasksListener();
         }
         
         let completedTasksUnsubscribe = null;
@@ -6954,7 +6995,7 @@
             const todayTasks = myTasks.filter(t => t.deadlineDate === today && t.status !== 'done');
             
             // Прострочені
-            const overdueTasks = myTasks.filter(t => t.deadlineDate < today && t.status !== 'done');
+            const overdueTasks = myTasks.filter(t => t.deadlineDate < today && t.status !== 'done' && t.status !== 'review');
             
             // Нові завдання з процесів (створені сьогодні)
             const processTasksNew = myTasks.filter(t => 
@@ -7373,6 +7414,8 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
+                let newDocRef = null;
+                
                 if (currentEditingId) {
                     // Update existing task
                     const existingTask = tasks.find(t => t.id === currentEditingId);
@@ -7390,13 +7433,13 @@
                     data.creatorName = currentUserData?.name || currentUser.email;
                     data.pinned = false;
                     
-                    const docRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(data);
+                    newDocRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(data);
                     
                     // Sync with Google Calendar (only if date is set)
                     if (deadlineDate && googleAccessToken) {
                         const calendarEventId = await createCalendarEvent(data);
                         if (calendarEventId) {
-                            await docRef.update({ calendarEventId: calendarEventId });
+                            await newDocRef.update({ calendarEventId: calendarEventId });
                         }
                     }
                 }
@@ -7412,7 +7455,7 @@
                     }
                 } else {
                     // Create — додаємо на початок масиву
-                    tasks.unshift({ id: docRef.id, ...data, createdAt: new Date() });
+                    tasks.unshift({ id: newDocRef.id, ...data, createdAt: new Date() });
                 }
                 
                 // Перерендерюємо тільки потрібні views
@@ -7678,15 +7721,307 @@
             }
         }
 
+        // =====================
+        // REVIEW SYSTEM (Перевірка постановником)
+        // =====================
+        
+        // Визначаємо чи потрібна перевірка постановником
+        function shouldSendForReview(task) {
+            // Якщо постановник = виконавець — одразу done, без перевірки
+            if (!task) return false;
+            if (!task.creatorId) return false;
+            if (task.creatorId === task.assigneeId) return false;
+            if (task.creatorId === currentUser.uid) return false;
+            // Автосгенеровані регулярні завдання — без перевірки
+            if (task.autoGenerated) return false;
+            return true;
+        }
+        
+        // Постановник приймає завдання
+        async function acceptReviewTask(taskId) {
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex < 0) return;
+            
+            const originalTask = { ...tasks[taskIndex] };
+            
+            // Оптимістичне оновлення
+            tasks[taskIndex].status = 'done';
+            tasks[taskIndex].completedAt = new Date().toISOString();
+            tasks[taskIndex].reviewedAt = new Date().toISOString();
+            tasks[taskIndex].reviewedBy = currentUser.uid;
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
+            
+            try {
+                if (originalTask.calendarEventId && googleAccessToken) {
+                    deleteCalendarEvent(originalTask.calendarEventId);
+                }
+                
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
+                    status: 'done',
+                    completedAt: tasks[taskIndex].completedAt,
+                    reviewedAt: tasks[taskIndex].reviewedAt,
+                    reviewedBy: currentUser.uid
+                });
+                
+                showToast(t('taskAccepted'), 'success');
+            } catch (e) {
+                tasks[taskIndex] = originalTask;
+                renderMyDay();
+                if (currentCalendarView === 'list') renderTasks();
+                else renderCalendar();
+                alert(t('error') + ': ' + e.message);
+            }
+        }
+        
+        // Постановник повертає на доопрацювання
+        async function rejectReviewTask(taskId) {
+            const reason = prompt(t('rejectReasonPlaceholder'));
+            
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex < 0) return;
+            
+            const originalTask = { ...tasks[taskIndex] };
+            
+            // Оптимістичне оновлення
+            tasks[taskIndex].status = 'progress';
+            tasks[taskIndex].completedAt = null;
+            tasks[taskIndex].reviewRejectedAt = new Date().toISOString();
+            tasks[taskIndex].reviewRejectedBy = currentUser.uid;
+            if (reason) tasks[taskIndex].reviewRejectReason = reason;
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
+            
+            try {
+                const updateData = {
+                    status: 'progress',
+                    completedAt: null,
+                    reviewRejectedAt: new Date().toISOString(),
+                    reviewRejectedBy: currentUser.uid
+                };
+                if (reason) updateData.reviewRejectReason = reason;
+                
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
+                
+                showToast(t('taskRejected'), 'warning');
+            } catch (e) {
+                tasks[taskIndex] = originalTask;
+                renderMyDay();
+                if (currentCalendarView === 'list') renderTasks();
+                else renderCalendar();
+                alert(t('error') + ': ' + e.message);
+            }
+        }
+        
+        function showToast(message, type = 'success') {
+            const existing = document.getElementById('simpleToast');
+            if (existing) existing.remove();
+            
+            const colors = {
+                success: { bg: 'linear-gradient(135deg, #22c55e, #16a34a)', shadow: 'rgba(34,197,94,0.4)' },
+                warning: { bg: 'linear-gradient(135deg, #f59e0b, #d97706)', shadow: 'rgba(245,158,11,0.4)' },
+                error: { bg: 'linear-gradient(135deg, #ef4444, #dc2626)', shadow: 'rgba(239,68,68,0.4)' },
+                info: { bg: 'linear-gradient(135deg, #3b82f6, #2563eb)', shadow: 'rgba(59,130,246,0.4)' }
+            };
+            const c = colors[type] || colors.success;
+            
+            const toast = document.createElement('div');
+            toast.id = 'simpleToast';
+            toast.style.cssText = `
+                position:fixed;top:20px;right:20px;background:${c.bg};color:white;
+                padding:1rem 1.5rem;border-radius:12px;box-shadow:0 10px 40px ${c.shadow};
+                z-index:10001;animation:slideInRight 0.3s ease;cursor:pointer;
+                max-width:350px;font-weight:500;font-size:0.9rem;
+            `;
+            toast.textContent = message;
+            toast.onclick = () => toast.remove();
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'slideInRight 0.3s reverse';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 4000);
+        }
+        
+        // Listener для завдань на перевірці (сповіщення постановнику)
+        let reviewTasksUnsubscribe = null;
+        let knownReviewTaskIds = new Set();
+        
+        function initReviewTasksListener() {
+            if (!currentCompany || !currentUser) return;
+            
+            if (reviewTasksUnsubscribe) {
+                reviewTasksUnsubscribe();
+            }
+            
+            let isFirstLoad = true;
+            
+            // Слухаємо завдання де поточний юзер — постановник, статус = review
+            // УВАГА: Потрібен складений індекс в Firebase:
+            // Collection: tasks, Fields: creatorId (Ascending), status (Ascending)
+            reviewTasksUnsubscribe = db.collection('companies').doc(currentCompany)
+                .collection('tasks')
+                .where('creatorId', '==', currentUser.uid)
+                .where('status', '==', 'review')
+                .onSnapshot(snapshot => {
+                    const currentIds = new Set(snapshot.docs.map(d => d.id));
+                    
+                    if (isFirstLoad) {
+                        knownReviewTaskIds = currentIds;
+                        isFirstLoad = false;
+                        return;
+                    }
+                    
+                    const newReviews = snapshot.docs.filter(doc => !knownReviewTaskIds.has(doc.id));
+                    
+                    if (newReviews.length > 0) {
+                        newReviews.forEach(doc => {
+                            const task = doc.data();
+                            // Не сповіщаємо якщо сам собі поставив
+                            if (task.assigneeId !== currentUser.uid) {
+                                playNotificationSound();
+                                showReviewTaskToast(task, doc.id);
+                            }
+                        });
+                        
+                        loadAllData();
+                    }
+                    
+                    knownReviewTaskIds = currentIds;
+                }, error => {
+                    console.error('Review tasks listener error:', error);
+                });
+        }
+        
+        // Listener для повернених на доопрацювання (сповіщення виконавцю)
+        let rejectedTasksUnsubscribe = null;
+        let knownRejectedTimestamps = new Map();
+        
+        function initRejectedTasksListener() {
+            if (!currentCompany || !currentUser) return;
+            
+            if (rejectedTasksUnsubscribe) {
+                rejectedTasksUnsubscribe();
+            }
+            
+            let isFirstLoad = true;
+            
+            // Слухаємо завдання де поточний юзер — виконавець, статус = progress
+            // і є поле reviewRejectedAt (означає що повернули з перевірки)
+            rejectedTasksUnsubscribe = db.collection('companies').doc(currentCompany)
+                .collection('tasks')
+                .where('assigneeId', '==', currentUser.uid)
+                .where('status', '==', 'progress')
+                .onSnapshot(snapshot => {
+                    if (isFirstLoad) {
+                        // Запамʼятовуємо поточні timestamp-и
+                        snapshot.docs.forEach(doc => {
+                            const data = doc.data();
+                            if (data.reviewRejectedAt) {
+                                knownRejectedTimestamps.set(doc.id, data.reviewRejectedAt);
+                            }
+                        });
+                        isFirstLoad = false;
+                        return;
+                    }
+                    
+                    // Шукаємо нові повернення
+                    snapshot.docs.forEach(doc => {
+                        const data = doc.data();
+                        if (data.reviewRejectedAt && data.reviewRejectedBy !== currentUser.uid) {
+                            const prevTimestamp = knownRejectedTimestamps.get(doc.id);
+                            if (data.reviewRejectedAt !== prevTimestamp) {
+                                playNotificationSound();
+                                const reason = data.reviewRejectReason;
+                                const creatorName = data.creatorName || '';
+                                const msg = currentLang === 'ua' 
+                                    ? `↩ ${creatorName} повернув завдання: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`
+                                    : `↩ ${creatorName} вернул задачу: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`;
+                                showToast(msg, 'warning');
+                                loadAllData();
+                            }
+                        }
+                        if (data.reviewRejectedAt) {
+                            knownRejectedTimestamps.set(doc.id, data.reviewRejectedAt);
+                        }
+                    });
+                }, error => {
+                    console.error('Rejected tasks listener error:', error);
+                });
+        }
+        
+        function showReviewTaskToast(task, taskId) {
+            const existingToast = document.getElementById('reviewTaskToast');
+            if (existingToast) existingToast.remove();
+            
+            const assigneeName = task.assigneeName || '';
+            const title = task.title || '';
+            const shortTitle = title.length > 25 ? title.substring(0, 25) + '...' : title;
+            
+            const toast = document.createElement('div');
+            toast.id = 'reviewTaskToast';
+            toast.style.cssText = `
+                position:fixed;top:80px;right:20px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);
+                color:white;padding:1rem 1.25rem;border-radius:12px;
+                box-shadow:0 10px 40px rgba(139,92,246,0.4);z-index:10001;
+                display:flex;flex-direction:column;gap:0.75rem;animation:slideInRight 0.3s ease;
+                max-width:360px;width:calc(100% - 40px);
+            `;
+            toast.innerHTML = `
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                    </svg>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-weight:600;">🔍 ${t('taskOnReview')}</div>
+                        <div style="font-size:0.85rem;opacity:0.9;">${esc(assigneeName)}: ${esc(shortTitle)}</div>
+                    </div>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                         style="opacity:0.7;cursor:pointer;flex-shrink:0;" onclick="this.closest('#reviewTaskToast').remove()">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                    <button onclick="this.closest('#reviewTaskToast').remove();acceptReviewTask('${esc(taskId)}')" 
+                            style="flex:1;padding:0.5rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;font-size:0.85rem;">
+                        ✅ ${t('acceptTask')}
+                    </button>
+                    <button onclick="this.closest('#reviewTaskToast').remove();rejectReviewTask('${esc(taskId)}')" 
+                            style="flex:1;padding:0.5rem;border:none;border-radius:8px;background:rgba(255,255,255,0.2);color:white;font-weight:600;cursor:pointer;font-size:0.85rem;">
+                        ↩ ${t('rejectTask')}
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Автоховаємо через 15 сек (більше часу бо потрібна дія)
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'slideInRight 0.3s reverse';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 15000);
+        }
+
         // Mobile quick complete
         async function quickCompleteTask(id) {
             // Оптимістичне оновлення - миттєво показуємо результат
             const taskIndex = tasks.findIndex(t => t.id === id);
             const originalTask = taskIndex >= 0 ? { ...tasks[taskIndex] } : null;
             
+            // Визначаємо статус: review (якщо є постановник) або done
+            const needsReview = shouldSendForReview(originalTask);
+            const newStatus = needsReview ? 'review' : 'done';
+            
             if (taskIndex >= 0) {
-                tasks[taskIndex].status = 'done';
+                tasks[taskIndex].status = newStatus;
                 tasks[taskIndex].completedAt = new Date().toISOString();
+                if (needsReview) tasks[taskIndex].sentForReviewAt = new Date().toISOString();
                 // Перерендерити UI одразу
                 renderMyDay();
                 if (currentCalendarView === 'list') renderTasks();
@@ -7695,14 +8030,21 @@
             
             try {
                 // Delete from Google Calendar when completed
-                if (originalTask?.calendarEventId && googleAccessToken) {
+                if (originalTask?.calendarEventId && googleAccessToken && !needsReview) {
                     deleteCalendarEvent(originalTask.calendarEventId);
                 }
                 
-                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({ 
-                    status: 'done',
+                const updateData = { 
+                    status: newStatus,
                     completedAt: new Date().toISOString()
-                });
+                };
+                if (needsReview) updateData.sentForReviewAt = new Date().toISOString();
+                
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update(updateData);
+                
+                if (needsReview) {
+                    showToast(t('taskSentForReview'), 'info');
+                }
             } catch (e) {
                 // Rollback при помилці
                 if (taskIndex >= 0 && originalTask) {
@@ -8018,11 +8360,15 @@
             if (taskIndex < 0) return;
             
             const originalTask = { ...tasks[taskIndex] };
-            const newStatus = originalTask.status === 'done' ? 'in_progress' : 'done';
+            const needsReview = originalTask.status !== 'done' && originalTask.status !== 'review' && shouldSendForReview(originalTask);
+            const newStatus = originalTask.status === 'done' || originalTask.status === 'review' 
+                ? 'progress' 
+                : (needsReview ? 'review' : 'done');
             
             // Оптимістичне оновлення
             tasks[taskIndex].status = newStatus;
-            tasks[taskIndex].completedAt = newStatus === 'done' ? new Date().toISOString() : null;
+            tasks[taskIndex].completedAt = newStatus === 'done' || newStatus === 'review' ? new Date().toISOString() : null;
+            if (needsReview) tasks[taskIndex].sentForReviewAt = new Date().toISOString();
             renderMyDay();
             renderCalendar();
             
@@ -8031,10 +8377,17 @@
                     deleteCalendarEvent(originalTask.calendarEventId);
                 }
                 
-                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
+                const updateData = {
                     status: newStatus,
-                    completedAt: newStatus === 'done' ? new Date().toISOString() : null
-                });
+                    completedAt: newStatus === 'done' || newStatus === 'review' ? new Date().toISOString() : null
+                };
+                if (needsReview) updateData.sentForReviewAt = new Date().toISOString();
+                
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
+                
+                if (needsReview) {
+                    showToast(t('taskSentForReview'), 'info');
+                }
             } catch (error) {
                 // Rollback
                 tasks[taskIndex] = originalTask;
@@ -8500,7 +8853,7 @@
             tasks.filter(t => {
                 if (t.assigneeId !== currentUser.uid) return false;
                 if (t.deadlineDate === todayStr) return true;
-                if (t.deadlineDate < todayStr && t.status !== 'done') return true; // прострочені
+                if (t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review') return true; // прострочені
                 return false;
             }).forEach(t => {
                 myTasks.push({
@@ -8510,7 +8863,30 @@
                     function: t.function || '',
                     type: 'task',
                     done: t.status === 'done',
-                    overdue: t.deadlineDate < todayStr && t.status !== 'done',
+                    review: t.status === 'review',
+                    overdue: t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review',
+                    priority: t.priority || 'medium',
+                    originalTask: t
+                });
+            });
+            
+            // 1.5. Завдання на перевірці де поточний юзер — постановник (не виконавець)
+            tasks.filter(t => {
+                if (t.status !== 'review') return false;
+                if (t.creatorId !== currentUser.uid) return false;
+                if (t.assigneeId === currentUser.uid) return false; // вже покриті вище
+                // Не дублюємо якщо вже є в myTasks
+                return !myTasks.find(mt => mt.id === t.id);
+            }).forEach(t => {
+                myTasks.push({
+                    id: t.id,
+                    title: t.title,
+                    time: t.deadlineTime || '',
+                    function: t.function || '',
+                    type: 'task',
+                    done: false,
+                    review: true,
+                    overdue: false,
                     priority: t.priority || 'medium',
                     originalTask: t
                 });
@@ -8571,15 +8947,19 @@
                     function: rt.function || '',
                     type: 'regular',
                     done: generatedTask?.status === 'done',
+                    review: generatedTask?.status === 'review',
                     overdue: false,
                     generatedTaskId: generatedTask?.id,
                     originalTask: generatedTask || rt
                 });
             });
             
-            // Сортуємо: спочатку не виконані, потім по часу
+            // Сортуємо: спочатку не виконані, потім review, потім по часу
             myTasks.sort((a, b) => {
+                // done внизу
                 if (a.done !== b.done) return a.done ? 1 : -1;
+                // review після pending
+                if (a.review !== b.review) return a.review ? 1 : -1;
                 if (a.overdue !== b.overdue) return a.overdue ? -1 : 1;
                 return (a.time || '99:99').localeCompare(b.time || '99:99');
             });
@@ -8624,8 +9004,9 @@
             }
             
             // Розділяємо на категорії
-            const overdueTasks = myTasks.filter(t => t.overdue && !t.done);
-            const pendingTasks = myTasks.filter(t => !t.done && !t.overdue);
+            const overdueTasks = myTasks.filter(t => t.overdue && !t.done && !t.review);
+            const pendingTasks = myTasks.filter(t => !t.done && !t.overdue && !t.review);
+            const reviewTasks = myTasks.filter(t => t.review);
             const doneTasks = myTasks.filter(t => t.done);
             
             let html = '';
@@ -8654,6 +9035,18 @@
                     </div>`;
             }
             
+            // На перевірці
+            if (reviewTasks.length > 0) {
+                html += `
+                    <div class="myday-section">
+                        <div class="myday-section-title" style="color:#8b5cf6;">
+                            <i data-lucide="eye" class="icon icon-sm"></i>
+                            ${currentLang === 'ua' ? 'На перевірці' : 'На проверке'} (${reviewTasks.length})
+                        </div>
+                        ${reviewTasks.map(t => renderMyDayItem(t)).join('')}
+                    </div>`;
+            }
+            
             // Виконані
             if (doneTasks.length > 0) {
                 html += `
@@ -8671,17 +9064,43 @@
         }
         
         function renderMyDayItem(task) {
-            const checkClass = task.done ? 'checked' : '';
-            const itemClass = task.done ? 'done' : (task.overdue ? 'overdue' : '');
+            const checkClass = task.done ? 'checked' : (task.review ? 'checked' : '');
+            const itemClass = task.done ? 'done' : (task.review ? 'review' : (task.overdue ? 'overdue' : ''));
             const tagClass = task.type === 'regular' ? 'regular' : '';
             const tagText = task.type === 'regular' 
                 ? (currentLang === 'ua' ? 'регулярне' : 'регулярное')
                 : (currentLang === 'ua' ? 'разове' : 'разовое');
             
+            // Визначаємо чи поточний юзер — постановник цього завдання
+            const isCreator = task.originalTask?.creatorId === currentUser?.uid;
+            const showReviewActions = task.review && isCreator && task.originalTask?.assigneeId !== currentUser?.uid;
+            
+            let reviewActionsHtml = '';
+            if (showReviewActions) {
+                const taskId = task.type === 'regular' ? (task.generatedTaskId || task.id) : task.id;
+                reviewActionsHtml = `
+                    <div style="display:flex;gap:0.4rem;margin-top:0.5rem;" onclick="event.stopPropagation();">
+                        <button onclick="acceptReviewTask('${esc(taskId)}')" 
+                                style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
+                            ✅ ${t('acceptTask')}
+                        </button>
+                        <button onclick="rejectReviewTask('${esc(taskId)}')" 
+                                style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#f59e0b;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
+                            ↩ ${t('rejectTask')}
+                        </button>
+                    </div>`;
+            }
+            
+            let reviewBadge = '';
+            if (task.review) {
+                reviewBadge = `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:#f3e8ff;color:#7c3aed;font-weight:500;">🔍 ${currentLang === 'ua' ? 'Перевірка' : 'Проверка'}</span>`;
+            }
+            
             return `
                 <div class="myday-item ${itemClass}" onclick="openMyDayTask('${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}')">
-                    <div class="myday-checkbox ${checkClass}" onclick="event.stopPropagation(); toggleMyDayTask(event, '${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}', ${task.done})">
+                    <div class="myday-checkbox ${checkClass}" ${!task.review ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${esc(task.id)}', '${esc(task.type)}', '${esc(task.generatedTaskId || '')}', ${task.done || task.review})"` : ''} ${task.review ? 'style="background:#8b5cf6;border-color:#8b5cf6;"' : ''}>
                         ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
+                        ${task.review ? '<i data-lucide="eye" class="icon icon-sm" style="color:white;"></i>' : ''}
                     </div>
                     <div class="myday-item-content">
                         <div class="myday-item-title">${esc(task.title)}</div>
@@ -8689,7 +9108,9 @@
                             ${task.time ? `<span class="myday-item-time">${esc(task.time)}</span>` : ''}
                             ${task.function ? `<span>${esc(task.function)}</span>` : ''}
                             <span class="myday-item-tag ${tagClass}">${tagText}</span>
+                            ${reviewBadge}
                         </div>
+                        ${reviewActionsHtml}
                     </div>
                     ${task.overdue ? '<i data-lucide="alert-triangle" class="icon" style="color:var(--danger);"></i>' : ''}
                 </div>`;
@@ -8787,13 +9208,20 @@
                         throw new Error('Завдання не знайдено');
                     }
                 } else {
-                    // Для разових - просто міняємо статус
-                    const newStatus = currentDone ? 'new' : 'done';
-                    // Debug removed
+                    // Для разових - перевіряємо чи потрібна перевірка
+                    const taskObj = tasks.find(t => t.id === id);
+                    const needsReview = !currentDone && shouldSendForReview(taskObj);
+                    const newStatus = currentDone ? 'new' : (needsReview ? 'review' : 'done');
+                    
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
                         status: newStatus,
-                        completedAt: newStatus === 'done' ? new Date().toISOString() : null
+                        completedAt: newStatus === 'done' || newStatus === 'review' ? new Date().toISOString() : null,
+                        ...(needsReview ? { sentForReviewAt: new Date().toISOString() } : {})
                     });
+                    
+                    if (needsReview) {
+                        showToast(t('taskSentForReview'), 'info');
+                    }
                 }
                 
                 // Локальне оновлення замість loadAllData
@@ -8811,7 +9239,8 @@
                 } else {
                     const task = tasks.find(t => t.id === id);
                     if (task) {
-                        task.status = currentDone ? 'new' : 'done';
+                        const needsReview = !currentDone && shouldSendForReview(task);
+                        task.status = currentDone ? 'new' : (needsReview ? 'review' : 'done');
                         task.completedAt = currentDone ? null : new Date().toISOString();
                     }
                 }
@@ -8947,7 +9376,7 @@
             f.forEach(task => {
                 const taskDeadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
                 const taskTime = task.deadlineTime || (task.deadline ? task.deadline.split('T')[1]?.slice(0,5) : '');
-                const od = taskDeadline && taskDeadline < today && task.status !== 'done';
+                const od = taskDeadline && taskDeadline < today && task.status !== 'done' && task.status !== 'review';
                 const isToday = taskDeadline === today;
                 const deadlineClass = od ? 'overdue' : (isToday ? 'today' : '');
                 
@@ -8966,6 +9395,10 @@
                         <td>${esc(task.function) || '-'}</td>
                         <td>
                             <div class="action-btns">
+                                ${task.status === 'review' && task.creatorId === currentUser?.uid && task.assigneeId !== currentUser?.uid ? `
+                                    <button class="action-btn" onclick="acceptReviewTask('${task.id}')" title="${t('acceptTask')}" style="color:#22c55e;"><i data-lucide="check-circle" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="rejectReviewTask('${task.id}')" title="${t('rejectTask')}" style="color:#f59e0b;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i></button>
+                                ` : ''}
                                 <button class="action-btn" onclick="togglePin('${task.id}')" title="Pin"><i data-lucide="pin" class="icon icon-sm"></i></button>
                                 <button class="action-btn" onclick="openTaskModal('${task.id}')" title="Edit"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                                 <button class="action-btn" onclick="deleteTask('${task.id}')" title="Delete"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
@@ -9002,7 +9435,7 @@
                 
                 if (!taskDeadline) {
                     groups.noDueDate.push(task);
-                } else if (taskDeadline < today && task.status !== 'done') {
+                } else if (taskDeadline < today && task.status !== 'done' && task.status !== 'review') {
                     groups.overdue.push(task);
                 } else if (taskDeadline === today) {
                     groups.today.push(task);
@@ -9039,11 +9472,12 @@
                 group.forEach(task => {
                     const taskDeadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
                     const taskTime = task.deadlineTime || (task.deadline ? task.deadline.split('T')[1]?.slice(0,5) : '');
-                    const od = taskDeadline && taskDeadline < today && task.status !== 'done';
+                    const od = taskDeadline && taskDeadline < today && task.status !== 'done' && task.status !== 'review';
                     const isToday = taskDeadline === today;
                     const deadlineClass = od ? 'deadline-overdue' : (isToday ? 'deadline-today' : '');
                     const cardClass = od ? 'overdue' : (task.pinned ? 'pinned' : `status-${task.status}`);
-                    const canSwipeComplete = task.status !== 'done';
+                    const canSwipeComplete = task.status !== 'done' && task.status !== 'review';
+                    const isReviewForCreator = task.status === 'review' && task.creatorId === currentUser?.uid && task.assigneeId !== currentUser?.uid;
                     
                     html += `
                     <div class="mobile-task-card ${cardClass}" data-task-id="${task.id}" data-can-complete="${canSwipeComplete}">
@@ -9067,7 +9501,18 @@
                             </div>
                             
                             <div class="mobile-task-actions">
-                                ${task.status !== 'done' ? `
+                                ${isReviewForCreator ? `
+                                    <button class="mobile-action-btn complete" onclick="acceptReviewTask('${task.id}')" style="background:#22c55e;">
+                                        <i data-lucide="check" class="icon icon-sm"></i> ${t('acceptTask')}
+                                    </button>
+                                    <button class="mobile-action-btn edit" onclick="rejectReviewTask('${task.id}')" style="background:#f59e0b;color:white;">
+                                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('rejectTask')}
+                                    </button>
+                                ` : task.status === 'review' ? `
+                                    <button class="mobile-action-btn edit" style="opacity:0.6;cursor:default;">
+                                        <i data-lucide="eye" class="icon icon-sm"></i> ${currentLang === 'ua' ? 'Перевірка' : 'Проверка'}
+                                    </button>
+                                ` : task.status !== 'done' ? `
                                     <button class="mobile-action-btn complete" onclick="quickCompleteTask('${task.id}')">
                                         <i data-lucide="check" class="icon icon-sm"></i> Готово
                                     </button>
@@ -11653,7 +12098,7 @@
             
             const urgent = filteredTasks.filter(task => {
                 const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
-                return taskDate && taskDate < today && task.status !== 'done';
+                return taskDate && taskDate < today && task.status !== 'done' && task.status !== 'review';
             }).length;
             
             const warning = filteredTasks.filter(task => {
@@ -12109,7 +12554,7 @@
             const today = new Date().toISOString().split('T')[0];
             const overdue = tasks.filter(task => {
                 const taskDate = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
-                return taskDate && taskDate < today && task.status !== 'done';
+                return taskDate && taskDate < today && task.status !== 'done' && task.status !== 'review';
             }).length;
             
             document.getElementById('analyticsContent').innerHTML = `
@@ -12350,7 +12795,7 @@
             const currentMinute = now.getMinutes();
             
             tasks.forEach(task => {
-                if (task.status === 'done') return;
+                if (task.status === 'done' || task.status === 'review') return;
                 
                 const taskDeadline = task.deadlineDate || (task.deadline ? task.deadline.split('T')[0] : '');
                 const taskTime = task.deadlineTime || (task.deadline ? task.deadline.split('T')[1]?.slice(0,5) : '');
@@ -13186,7 +13631,7 @@
             // Status colors
             const statusColors = {
                 'new': '#3b82f6',
-                'in_progress': '#f59e0b', 
+                'progress': '#f59e0b', 
                 'review': '#8b5cf6',
                 'done': '#10b981'
             };
@@ -13219,17 +13664,31 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     Редагувати
                 </div>
-                ${task.status !== 'done' ? `
+                ${task.status === 'review' && task.creatorId === currentUser?.uid && task.assigneeId !== currentUser?.uid ? `
+                <div class="task-quick-menu-item complete" onclick="acceptReviewTask('${taskId}');closeTaskQuickMenu();">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    ${t('acceptTask')}
+                </div>
+                <div class="task-quick-menu-item" onclick="rejectReviewTask('${taskId}');closeTaskQuickMenu();" style="color:#f59e0b;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    ${t('rejectTask')}
+                </div>
+                ` : task.status !== 'done' && task.status !== 'review' ? `
                 <div class="task-quick-menu-item complete" onclick="quickCompleteFromMenu('${taskId}')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                     Завершити
                 </div>
-                ` : `
+                ` : task.status === 'done' ? `
                 <div class="task-quick-menu-item" onclick="reopenTaskFromMenu('${taskId}')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     Відновити
                 </div>
-                `}
+                ` : task.status === 'review' ? `
+                <div class="task-quick-menu-item" style="color:#8b5cf6;cursor:default;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    ${t('reviewByCreator')}
+                </div>
+                ` : ''}
                 <div class="task-quick-menu-item delete" onclick="deleteTaskFromMenu('${taskId}')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                     Видалити
@@ -13271,34 +13730,45 @@
             closeTaskQuickMenu();
             
             const task = tasks.find(t => t.id === taskId);
-            if (task?.calendarEventId && googleAccessToken) {
+            if (!task) return;
+            
+            const needsReview = shouldSendForReview(task);
+            const newStatus = needsReview ? 'review' : 'done';
+            
+            if (!needsReview && task.calendarEventId && googleAccessToken) {
                 deleteCalendarEvent(task.calendarEventId);
             }
             
-            await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({ 
-                status: 'done',
+            const updateData = { 
+                status: newStatus,
                 completedAt: new Date().toISOString()
-            });
+            };
+            if (needsReview) updateData.sentForReviewAt = new Date().toISOString();
+            
+            await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
             
             // Локальне оновлення
-            if (task) {
-                task.status = 'done';
-                task.completedAt = new Date().toISOString();
-            }
+            task.status = newStatus;
+            task.completedAt = new Date().toISOString();
+            
             renderMyDay();
             if (currentCalendarView === 'list') renderTasks();
             else renderCalendar();
+            
+            if (needsReview) {
+                showToast(t('taskSentForReview'), 'info');
+            }
         }
         
         async function reopenTaskFromMenu(taskId) {
             closeTaskQuickMenu();
             await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({ 
-                status: 'in_progress'
+                status: 'progress'
             });
             
             // Локальне оновлення
             const task = tasks.find(t => t.id === taskId);
-            if (task) task.status = 'in_progress';
+            if (task) task.status = 'progress';
             renderMyDay();
             if (currentCalendarView === 'list') renderTasks();
             else renderCalendar();
@@ -14200,7 +14670,7 @@ Ctrl+N - нове завдання
         // Render comments list
         function renderComments(comments) {
             const listEl = document.getElementById('commentsList');
-            const currentUserId = currentUser?.id;
+            const currentUserId = currentUser?.uid;
             
             if (comments.length === 0) {
                 listEl.innerHTML = `
@@ -14281,8 +14751,8 @@ Ctrl+N - нове завдання
                     .collection('comments')
                     .add({
                         text: text,
-                        authorId: currentUser.id,
-                        authorName: currentUser.name || currentUser.email,
+                        authorId: currentUser.uid,
+                        authorName: currentUserData?.name || currentUser.email,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 
