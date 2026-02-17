@@ -269,6 +269,7 @@
             transition: all 0.2s;
             min-height: 60px; /* Touch-friendly height */
             -webkit-tap-highlight-color: transparent;
+            border-left: 3px solid transparent;
         }
         .myday-item:last-child { margin-bottom: 0; }
         .myday-item:hover { background: #f0fdf4; }
@@ -553,6 +554,27 @@
             gap: 1rem;
             min-width: max-content;
             padding: 0.5rem;
+        }
+        
+        /* Mobile: vertical stacked layout instead of horizontal kanban */
+        @media (max-width: 767px) {
+            .process-board {
+                flex-direction: column;
+                min-width: unset;
+                width: 100%;
+            }
+            .process-board-container {
+                overflow-x: hidden;
+            }
+            .process-column {
+                min-width: unset !important;
+                max-width: unset !important;
+                width: 100%;
+                max-height: none;
+            }
+            .process-column-cards {
+                max-height: none;
+            }
         }
         
         .process-column {
@@ -914,7 +936,25 @@
             text-align: left;
             font-weight: 500;
             font-size: 0.85rem;
+            position: relative;
+            user-select: none;
         }
+        .tasks-table th.sortable { cursor: pointer; }
+        .tasks-table th.sortable:hover { background: #2c3e50; }
+        .tasks-table th .sort-icon { opacity: 0.4; margin-left: 4px; font-size: 0.75rem; }
+        .tasks-table th.sort-active .sort-icon { opacity: 1; }
+        .tasks-table th .col-resize-handle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            cursor: col-resize;
+            background: transparent;
+            z-index: 1;
+        }
+        .tasks-table th .col-resize-handle:hover,
+        .tasks-table th .col-resize-handle.resizing { background: rgba(255,255,255,0.3); }
         
         .tasks-table td {
             padding: 0.75rem 1rem;
@@ -933,10 +973,22 @@
         .tasks-table .task-title-text {
             font-weight: 500;
             color: var(--dark);
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+        .tasks-table .task-title-text:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
         }
         
         .tasks-table .task-title-text.pinned {
             color: #e74c3c;
+        }
+        
+        .btn-clear.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
         
         .status-badge {
@@ -3423,8 +3475,13 @@
         }
         
         .regular-task-block .task-assignee::before {
-            content: '👤';
-            font-size: 0.65rem;
+            content: '';
+            display: inline-block;
+            width: 0.75rem;
+            height: 0.75rem;
+            background: currentColor;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") center/contain no-repeat;
         }
         
         .regular-task-block .task-function {
@@ -4143,6 +4200,18 @@
                     </div>
                 </div>
                 
+                <!-- Calendar Filters -->
+                <div class="filters-row" id="calendarFiltersRow" style="background:white;padding:0.5rem 1rem;border-radius:12px;margin-bottom:0.5rem;box-shadow:var(--shadow);display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
+                    <button class="btn btn-sm" id="calendarMyBtn" onclick="filterCalendarMy()" style="padding:0.35rem 0.7rem;font-size:0.82rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> Мої</button>
+                    <select class="filter-select" id="calendarAssigneeFilter" onchange="renderCalendar()" style="font-size:0.82rem;padding:0.35rem;max-width:180px;">
+                        <option value="" data-i18n="allAssignees">Всі виконавці</option>
+                    </select>
+                    <select class="filter-select" id="calendarFunctionFilter" onchange="renderCalendar()" style="font-size:0.82rem;padding:0.35rem;max-width:180px;">
+                        <option value="" data-i18n="allFunctions">Всі функції</option>
+                    </select>
+                    <span id="calendarFilterCount" style="font-size:0.78rem;color:#6b7280;margin-left:auto;"></span>
+                </div>
+                
                 <!-- Mobile Week Strip (Google Calendar style) -->
                 <div class="mobile-week-strip" id="mobileWeekStrip">
                     <div class="week-strip-days" id="weekStripDays">
@@ -4206,6 +4275,7 @@
                         <div class="controls-row">
                             <button class="btn btn-success" onclick="openTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addTask">Додати завдання</span></button>
                             <button class="btn" style="background:#2ecc71;" onclick="exportTasksCSV()"><i data-lucide="download" class="icon"></i> Експорт CSV</button>
+                            <button class="btn" id="archiveToggleBtn" onclick="toggleArchiveView()" style="background:#6b7280;"><i data-lucide="archive" class="icon"></i> <span data-i18n="archive">Архів</span></button>
                         </div>
                         <div class="filters-row">
                             <button class="btn btn-clear" onclick="clearTaskFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
@@ -4236,11 +4306,39 @@
                             </select>
                             <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="" data-i18n="functions">Функції</option></select>
                             <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="" data-i18n="assignees">Виконавці</option></select>
+                            <button id="hideCompletedBtn" class="btn btn-clear" onclick="toggleHideCompleted()" style="white-space:nowrap;">
+                                <i data-lucide="eye-off" class="icon"></i> <span data-i18n="hideCompleted">${currentLang === 'ua' ? 'Приховати виконані' : 'Скрыть выполненные'}</span>
+                            </button>
                         </div>
                     </div>
                     <div id="totalTimeInfo" class="total-time-container"></div>
                     <div class="table-container" id="tasksContainer">
                         <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                    
+                    <!-- Archive View -->
+                    <div id="archiveContainer" style="display:none;">
+                        <div style="background:linear-gradient(135deg,#f3f4f6,#e5e7eb);padding:1rem;border-radius:var(--radius);margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+                            <div style="display:flex;align-items:center;gap:0.5rem;">
+                                <i data-lucide="archive" class="icon icon-lg" style="color:#6b7280;"></i>
+                                <div>
+                                    <h3 style="font-size:1rem;margin:0;">Архів виконаних завдань</h3>
+                                    <p style="font-size:0.8rem;color:#6b7280;margin:0;">Завдання завершені більше 30 днів тому</p>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                <span id="archiveCount" style="font-size:0.85rem;color:#6b7280;"></span>
+                                <button class="btn btn-small" onclick="toggleArchiveView()" style="background:#6b7280;color:white;">
+                                    <i data-lucide="arrow-left" class="icon icon-sm"></i> Назад до завдань
+                                </button>
+                            </div>
+                        </div>
+                        <div id="archiveTasksList"></div>
+                        <div id="archiveLoadMore" style="display:none;text-align:center;padding:1rem;">
+                            <button class="btn btn-small" onclick="loadMoreArchive()" style="padding:0.6rem 2rem;">
+                                Завантажити ще
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -4308,6 +4406,9 @@
                         <select id="processTemplateFilter" class="filter-select" onchange="renderProcessBoard()" style="min-width:180px;">
                             <option value="" data-i18n="allProcesses">Всі процеси</option>
                         </select>
+                        <select id="processAssigneeFilter" class="filter-select" onchange="renderProcessBoard()" style="min-width:160px;">
+                            <option value="" data-i18n="allAssignees">Всі виконавці</option>
+                        </select>
                         <button id="toggleCompletedBtn" class="btn btn-small" onclick="toggleShowCompletedProcesses()" style="font-size:0.8rem;">
                             <i data-lucide="archive" class="icon icon-sm"></i> <span data-i18n="showCompleted">Архів</span>
                         </button>
@@ -4356,6 +4457,26 @@
                             <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
                         </button>
                     </div>
+                </div>
+                
+                <!-- СПІЛЬНІ ФІЛЬТРИ ДЛЯ ВСІХ VIEWS -->
+                <div class="filters-row" id="regularFiltersRow" style="background:white;padding:0.75rem 1rem;border-radius:12px;margin-bottom:0.75rem;box-shadow:var(--shadow);display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
+                    <button class="btn btn-success btn-sm" onclick="filterRegularToday()" id="regularTodayBtn" style="padding:0.4rem 0.75rem;font-size:0.85rem;"><i data-lucide="calendar-check" class="icon icon-sm"></i> <span data-i18n="todaysTasks">Сьогодні</span></button>
+                    <button class="btn btn-sm" id="regularMyBtn" onclick="filterRegularMy()" style="padding:0.4rem 0.75rem;font-size:0.85rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> <span data-i18n="myTasks">Мої</span></button>
+                    <select class="filter-select" id="regularAssigneeFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
+                    <select class="filter-select" id="regularFunctionFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;"><option value="" data-i18n="allFunctions">Всі функції</option></select>
+                    <select class="filter-select" id="regularDayFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;">
+                        <option value="" data-i18n="allDays">Всі дні</option>
+                        <option value="1" data-i18n="monday">Пн</option>
+                        <option value="2" data-i18n="tuesday">Вт</option>
+                        <option value="3" data-i18n="wednesday">Ср</option>
+                        <option value="4" data-i18n="thursday">Чт</option>
+                        <option value="5" data-i18n="friday">Пт</option>
+                        <option value="6" data-i18n="saturday">Сб</option>
+                        <option value="0" data-i18n="sunday">Нд</option>
+                    </select>
+                    <button class="btn btn-clear btn-sm" onclick="clearRegularFilters()" style="padding:0.4rem 0.75rem;font-size:0.85rem;"><i data-lucide="x" class="icon icon-sm"></i></button>
+                    <span id="regularFilterCount" style="font-size:0.8rem;color:#6b7280;margin-left:auto;"></span>
                 </div>
                 
                 <!-- Mobile Day Tabs for Regular Tasks -->
@@ -4411,22 +4532,6 @@
                 
                 <!-- Regular List View -->
                 <div class="regular-list-container" id="regularListContainer" style="display:none;">
-                    <div class="filters-row" style="background:white;padding:1rem;border-radius:12px;margin-bottom:1rem;box-shadow:var(--shadow);">
-                        <button class="btn btn-success" onclick="filterRegularToday()" id="regularTodayBtn"><i data-lucide="calendar-check" class="icon"></i> <span data-i18n="todaysTasks">Сьогодні</span></button>
-                        <select class="filter-select" id="regularDayFilter" onchange="renderRegularTasks()">
-                            <option value="" data-i18n="allDays">Всі дні</option>
-                            <option value="1" data-i18n="monday">Понеділок</option>
-                            <option value="2" data-i18n="tuesday">Вівторок</option>
-                            <option value="3" data-i18n="wednesday">Середа</option>
-                            <option value="4" data-i18n="thursday">Четвер</option>
-                            <option value="5" data-i18n="friday">П'ятниця</option>
-                            <option value="6" data-i18n="saturday">Субота</option>
-                            <option value="0" data-i18n="sunday">Неділя</option>
-                        </select>
-                        <select class="filter-select" id="regularFunctionFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allFunctions">Всі функції</option></select>
-                        <select class="filter-select" id="regularAssigneeFilter" onchange="renderRegularTasks()"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
-                        <button class="btn btn-clear" onclick="clearRegularFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
-                    </div>
                     <div class="table-container" id="regularTasksContainer">
                         <div class="loading"><div class="spinner"></div></div>
                     </div>
@@ -4649,11 +4754,73 @@
                                 <select id="taskEstimatedTime" class="form-select" style="flex:1;display:none;"><option value="15" data-i18n="min15">15 хв</option><option value="30" data-i18n="min30">30 хв</option><option value="45" data-i18n="min45">45 хв</option><option value="60" selected data-i18n="hour1">1 год</option><option value="90" data-i18n="hour1_5">1.5 год</option><option value="120" data-i18n="hour2">2 год</option><option value="180" data-i18n="hour3">3 год</option><option value="240" data-i18n="hour4">4 год</option><option value="480" data-i18n="hour8">8 год</option></select>
                             </div>
                         </div>
+                        
+                        <!-- FEAT-003: Дата початку -->
+                        <div class="form-group"><label class="form-label" data-i18n="startDate">Дата початку</label><input type="date" id="taskStartDate" class="form-input" placeholder="Опціонально"></div>
+                        
                         <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n="priorityLow">Низький</option><option value="medium" selected data-i18n="priorityMedium">Середній</option><option value="high" data-i18n="priorityHigh">Високий</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="status">Статус</label><select id="taskStatus" class="form-select"><option value="new" data-i18n="statusNew">Нове</option><option value="progress" data-i18n="statusProgress">В роботі</option><option value="review" data-i18n="statusReview">Перевірка</option><option value="done" data-i18n="statusDone">Готово</option></select></div>
+                        
+                        <!-- FEAT-001: Співвиконавці -->
+                        <div class="form-group full-width">
+                            <label class="form-label"><i data-lucide="users" class="icon icon-sm"></i> <span data-i18n="coExecutors">Співвиконавці</span></label>
+                            <div id="taskCoExecutors" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f9fafb;border-radius:8px;max-height:120px;overflow-y:auto;"></div>
+                        </div>
+                        
+                        <!-- FEAT-001: Спостерігачі -->
+                        <div class="form-group full-width">
+                            <label class="form-label"><i data-lucide="eye" class="icon icon-sm"></i> <span data-i18n="observers">Спостерігачі</span></label>
+                            <div id="taskObservers" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f0f9ff;border-radius:8px;max-height:120px;overflow-y:auto;"></div>
+                        </div>
+                        
+                        <!-- FEAT-002+007: Toggles контролю та зміни строків -->
+                        <div class="form-group full-width" style="display:flex;gap:2rem;flex-wrap:wrap;">
+                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#f0fdf4;border-radius:8px;">
+                                <input type="checkbox" id="taskRequireReview" style="width:18px;height:18px;accent-color:var(--primary);" checked>
+                                <span style="font-size:0.85rem;font-weight:500;" data-i18n="requireReview">Перевірка після виконання</span>
+                            </label>
+                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#fef3c7;border-radius:8px;">
+                                <input type="checkbox" id="taskAllowDeadlineChange" style="width:18px;height:18px;accent-color:#f59e0b;">
+                                <span style="font-size:0.85rem;font-weight:500;" data-i18n="allowDeadlineChange">Виконавець може змінювати строки</span>
+                            </label>
+                        </div>
+                        
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="taskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
+                        
+                        <!-- FEAT-001: Чеклист -->
+                        <div class="form-group full-width">
+                            <label class="form-label"><i data-lucide="list-checks" class="icon icon-sm"></i> <span data-i18n="checklist">Чеклист</span></label>
+                            <div id="taskChecklist" style="margin-top:0.5rem;"></div>
+                            <button type="button" onclick="addChecklistItem()" style="margin-top:0.5rem;padding:0.4rem 0.75rem;background:#f9fafb;border:1px dashed #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;color:#6b7280;display:flex;align-items:center;gap:0.4rem;">
+                                <i data-lucide="plus" class="icon icon-sm"></i> <span data-i18n="addChecklistItem">Додати пункт</span>
+                            </button>
+                        </div>
+                        
+                        <!-- FEAT-006: Time Tracking -->
+                        <div class="form-group full-width" id="timeTrackingSection" style="display:none;">
+                            <label class="form-label"><i data-lucide="timer" class="icon icon-sm"></i> <span data-i18n="timeTracking">Облік часу</span></label>
+                            <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:0.5rem;padding:0.75rem;background:#f0f9ff;border-radius:8px;">
+                                <div style="text-align:center;">
+                                    <div style="font-size:0.75rem;color:#6b7280;" data-i18n="planned">Запланований</div>
+                                    <div id="timeTrackPlanned" style="font-size:1.2rem;font-weight:600;color:#3b82f6;">—</div>
+                                </div>
+                                <div style="text-align:center;">
+                                    <div style="font-size:0.75rem;color:#6b7280;" data-i18n="actual">Фактичний</div>
+                                    <div id="timeTrackActual" style="font-size:1.2rem;font-weight:600;color:#22c55e;">00:00</div>
+                                </div>
+                                <div style="flex:1;display:flex;gap:0.5rem;justify-content:flex-end;align-items:center;">
+                                    <button type="button" id="timeTrackBtn" onclick="toggleTimeTracker()" style="padding:0.5rem 1rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;">
+                                        <i data-lucide="play" class="icon icon-sm"></i> <span data-i18n="startTimer">Старт</span>
+                                    </button>
+                                    <button type="button" onclick="addManualTime()" style="padding:0.5rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;background:white;cursor:pointer;font-size:0.85rem;" title="Додати час вручну">
+                                        <i data-lucide="plus" class="icon icon-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="timeTrackLog" style="margin-top:0.5rem;max-height:120px;overflow-y:auto;font-size:0.8rem;color:#6b7280;"></div>
+                        </div>
                         
                         <!-- Налаштування нагадувань -->
                         <div class="form-group full-width">
@@ -5172,13 +5339,13 @@
                 signInGoogle: 'Увійти через Google',
                 or: 'або',
                 password: 'Пароль:',
-                signIn: '🔐 Увійти',
+                signIn: '<i data-lucide="log-in" class="icon icon-sm"></i> Увійти',
                 forgotPassword: 'Забули пароль?',
                 noAccess: 'Немає доступу?',
                 contactUs: "Зв'яжіться з нами",
-                noAccessTitle: '🚫 Доступ відсутній',
+                noAccessTitle: '<i data-lucide="ban" class="icon icon-sm"></i> Доступ відсутній',
                 noAccessText: "Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.",
-                contactSupport: "📞 Зв'язатися з підтримкою",
+                contactSupport: "<i data-lucide=\"phone\" class=\"icon icon-sm\"></i> Зв'язатися з підтримкою",
                 tryAnotherEmail: 'Спробувати інший email',
                 haveInvite: 'Перший вхід?',
                 registerBtn: 'Активувати доступ',
@@ -5267,6 +5434,21 @@
                 statusProgress: 'В роботі',
                 statusReview: 'Перевірка',
                 statusDone: 'Готово',
+                hideCompleted: 'Приховати виконані',
+                coExecutors: 'Співвиконавці',
+                observers: 'Спостерігачі',
+                startDate: 'Дата початку',
+                requireReview: 'Перевірка після виконання',
+                allowDeadlineChange: 'Виконавець може змінювати строки',
+                checklist: 'Чеклист',
+                addChecklistItem: 'Додати пункт',
+                deadlineLocked: 'Зміна строків заблокована постановником',
+                timeTracking: 'Облік часу',
+                planned: 'Запланований',
+                actual: 'Фактичний',
+                startTimer: 'Старт',
+                stopTimer: 'Стоп',
+                addTimeManually: 'Додати час вручну',
                 
                 // Priorities
                 priorityLow: 'Низький',
@@ -5387,7 +5569,7 @@
                 // Other
                 support: 'Підтримка',
                 aiSupport: 'AI Підтримка',
-                footerSupport: '🛟 Підтримка',
+                footerSupport: '<i data-lucide="life-buoy" class="icon icon-sm"></i> Підтримка',
                 notAssigned: 'Не призначено',
                 deleteConfirm: 'Видалити?',
                 error: 'Помилка',
@@ -5518,13 +5700,13 @@
                 signInGoogle: 'Войти через Google',
                 or: 'или',
                 password: 'Пароль:',
-                signIn: '🔐 Войти',
+                signIn: '<i data-lucide="log-in" class="icon icon-sm"></i> Войти',
                 forgotPassword: 'Забыли пароль?',
                 noAccess: 'Нет доступа?',
                 contactUs: 'Свяжитесь с нами',
-                noAccessTitle: '🚫 Доступ отсутствует',
+                noAccessTitle: '<i data-lucide="ban" class="icon icon-sm"></i> Доступ отсутствует',
                 noAccessText: 'Ваш email не зарегистрирован в системе.<br>Обратитесь к администратору для получения доступа.',
-                contactSupport: '📞 Связаться с поддержкой',
+                contactSupport: '<i data-lucide="phone" class="icon icon-sm"></i> Связаться с поддержкой',
                 tryAnotherEmail: 'Попробовать другой email',
                 haveInvite: 'Первый вход?',
                 registerBtn: 'Активировать доступ',
@@ -5613,6 +5795,21 @@
                 statusProgress: 'В работе',
                 statusReview: 'Проверка',
                 statusDone: 'Готово',
+                hideCompleted: 'Скрыть выполненные',
+                coExecutors: 'Соисполнители',
+                observers: 'Наблюдатели',
+                startDate: 'Дата начала',
+                requireReview: 'Проверка после выполнения',
+                allowDeadlineChange: 'Исполнитель может менять сроки',
+                checklist: 'Чеклист',
+                addChecklistItem: 'Добавить пункт',
+                deadlineLocked: 'Изменение сроков заблокировано постановщиком',
+                timeTracking: 'Учет времени',
+                planned: 'Запланировано',
+                actual: 'Фактически',
+                startTimer: 'Старт',
+                stopTimer: 'Стоп',
+                addTimeManually: 'Добавить время вручную',
                 
                 // Priorities
                 priorityLow: 'Низкий',
@@ -5733,7 +5930,7 @@
                 // Other
                 support: 'Поддержка',
                 aiSupport: 'AI Поддержка',
-                footerSupport: '🛟 Поддержка',
+                footerSupport: '<i data-lucide="life-buoy" class="icon icon-sm"></i> Поддержка',
                 notAssigned: 'Не назначено',
                 deleteConfirm: 'Удалить?',
                 error: 'Ошибка',
@@ -5915,7 +6112,8 @@
                 }
             });
             
-            // Re-render dynamic content
+            // Refresh lucide icons after i18n innerHTML updates
+            refreshIcons();
             if (currentCompany || isSuperAdmin) {
                 // Find active tab from either desktop tabs or bottom nav
                 let tabName = 'tasks';
@@ -6334,6 +6532,12 @@
                 commentsUnsubscribe();
                 commentsUnsubscribe = null;
             }
+            // Зупиняємо time tracker
+            if (timeTrackerInterval) {
+                clearInterval(timeTrackerInterval);
+                timeTrackerInterval = null;
+                timeTrackerStart = null;
+            }
             
             // Очищаємо стан
             currentCompany = null;
@@ -6413,6 +6617,10 @@
                 initGoogleCalendar();
                 loadAllData();
                 
+                // Show FAB (було окремим onAuthStateChanged — об'єднано)
+                const fab = document.getElementById('fabAdd');
+                if (fab) fab.style.display = 'flex';
+                
                 // Real-time listener для нових завдань з процесів
                 initTasksListener();
             } else {
@@ -6421,6 +6629,10 @@
                 document.getElementById('mainInterface').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 document.getElementById('adminTabBtn').style.display = 'none';
+                
+                // Hide FAB on logout
+                const fab = document.getElementById('fabAdd');
+                if (fab) fab.style.display = 'none';
                 
                 // Перевіряємо чи є інвайт в URL
                 const urlParams = new URLSearchParams(window.location.search);
@@ -6451,6 +6663,9 @@
             document.getElementById('mainInterface').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'block';
             document.getElementById('currentUserInfo').style.display = 'flex';
+            // Відновлюємо стан кнопки "Приховати виконані"
+            const hideBtn = document.getElementById('hideCompletedBtn');
+            if (hideBtn && hideCompletedTasks) hideBtn.classList.add('active');
         }
 
         function getRoleText(role) {
@@ -6487,7 +6702,7 @@
                 const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap] = await Promise.all([
                     base.collection('users').get(),
                     base.collection('functions').get(),
-                    base.collection('tasks').orderBy('createdAt', 'desc').limit(500).get(),
+                    base.collection('tasks').orderBy('createdAt', 'desc').limit(2000).get(),
                     base.collection('regularTasks').get(),
                     base.collection('processTemplates').orderBy('name').get(),
                     processQuery.get()
@@ -6538,6 +6753,12 @@
                 
                 // Зберігаємо для offline
                 saveOfflineData();
+                
+                // Архівація в фоні (non-blocking) — не чекаємо результату
+                autoArchiveDoneTasks().then(() => {
+                    // Якщо щось заархівувалось — перерендерити
+                    // (tasks[] вже оновлений всередині autoArchiveDoneTasks)
+                }).catch(() => {});
                 
                 console.log(`[loadAllData] Done in ${Math.round(performance.now() - startTime)}ms, tasks: ${tasks.length}`);
                 
@@ -6720,7 +6941,7 @@
                     <polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
                 <div style="flex:1;min-width:0;">
-                    <div style="font-weight:600;">✅ ${currentLang === 'ua' ? 'Завдання виконано!' : 'Задача выполнена!'}</div>
+                    <div style="font-weight:600;">${currentLang === 'ua' ? 'Завдання виконано!' : 'Задача выполнена!'}</div>
                     <div style="font-size:0.85rem;opacity:0.9;">${esc(assigneeName)}: ${esc(shortTitle)}</div>
                 </div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.7;flex-shrink:0;">
@@ -6794,7 +7015,7 @@
                 </svg>
                 <div style="flex:1;min-width:0;">
                     <div style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">
-                        🔔 ${cfg.label}${count > 1 ? ` (${count})` : ''}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> ${cfg.label}${count > 1 ? ` (${count})` : ''}
                     </div>
                     ${shortTitle ? `<div style="font-size:0.85rem;opacity:0.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(shortTitle)}</div>` : ''}
                 </div>
@@ -6902,6 +7123,300 @@
             }
             
             return false;
+        }
+        
+        // =====================
+        // AUTO-ARCHIVE DONE TASKS (> 30 days)
+        // =====================
+        async function autoArchiveDoneTasks() {
+            if (!currentCompany) return;
+            
+            // Run once per day max
+            const lastArchiveKey = `lastArchive_${currentCompany}`;
+            const lastArchive = localStorage.getItem(lastArchiveKey);
+            const today = new Date().toISOString().split('T')[0];
+            if (lastArchive === today) return;
+            
+            try {
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                const base = db.collection('companies').doc(currentCompany);
+                
+                // Filter done tasks from already-loaded local array
+                // This avoids: 1) composite index requirement 2) Timestamp vs string type mismatch
+                const oldDoneTasks = tasks.filter(t => {
+                    if (t.status !== 'done') return false;
+                    // Check createdAt - can be Firestore Timestamp, ISO string, or Date
+                    let created;
+                    if (t.createdAt?.toDate) {
+                        created = t.createdAt.toDate();
+                    } else if (t.createdAt) {
+                        created = new Date(t.createdAt);
+                    } else {
+                        return false;
+                    }
+                    return created < thirtyDaysAgo;
+                });
+                
+                if (oldDoneTasks.length === 0) {
+                    localStorage.setItem(lastArchiveKey, today);
+                    return;
+                }
+                
+                // Firestore batch limit = 500 operations. Each task = 2 ops (set+delete) → max 250/batch
+                const BATCH_SIZE = 250;
+                const committedIds = new Set();
+                
+                for (let i = 0; i < oldDoneTasks.length; i += BATCH_SIZE) {
+                    const chunk = oldDoneTasks.slice(i, i + BATCH_SIZE);
+                    const batch = db.batch();
+                    
+                    chunk.forEach(task => {
+                        const archiveRef = base.collection('tasksArchive').doc(task.id);
+                        const taskRef = base.collection('tasks').doc(task.id);
+                        
+                        const archiveData = {};
+                        Object.keys(task).forEach(key => {
+                            if (key !== 'id') archiveData[key] = task[key];
+                        });
+                        archiveData.archivedAt = firebase.firestore.FieldValue.serverTimestamp();
+                        
+                        batch.set(archiveRef, archiveData);
+                        batch.delete(taskRef);
+                    });
+                    
+                    try {
+                        await batch.commit();
+                        chunk.forEach(t => committedIds.add(t.id));
+                    } catch (batchError) {
+                        console.error(`[autoArchive] Batch ${i / BATCH_SIZE + 1} failed:`, batchError);
+                        break; // Зупиняємо подальші batch, не втрачаємо дані
+                    }
+                }
+                
+                if (committedIds.size > 0) {
+                    console.log(`[autoArchive] Archived ${committedIds.size} done tasks older than 30 days`);
+                    tasks = tasks.filter(t => !committedIds.has(t.id));
+                }
+                
+                localStorage.setItem(lastArchiveKey, today);
+            } catch (error) {
+                console.error('autoArchiveDoneTasks error:', error);
+                // Non-critical — don't block UI, just log
+            }
+        }
+        
+        // =====================
+        // ARCHIVE UI
+        // =====================
+        let isArchiveView = false;
+        let archiveTasks = [];
+        let archiveLastDoc = null;
+        const ARCHIVE_PAGE_SIZE = 50;
+        
+        function toggleArchiveView() {
+            isArchiveView = !isArchiveView;
+            
+            const tasksContainer = document.getElementById('tasksContainer');
+            const archiveContainer = document.getElementById('archiveContainer');
+            const listContainer = tasksContainer?.closest('.list-container');
+            const filtersRow = listContainer?.querySelector('.filters-row');
+            const mobileFilterBar = document.getElementById('mobileFilterBar');
+            const totalTimeInfo = document.getElementById('totalTimeInfo');
+            const archiveBtn = document.getElementById('archiveToggleBtn');
+            
+            if (isArchiveView) {
+                tasksContainer.style.display = 'none';
+                if (filtersRow) filtersRow.style.display = 'none';
+                if (mobileFilterBar) mobileFilterBar.style.display = 'none';
+                if (totalTimeInfo) totalTimeInfo.style.display = 'none';
+                archiveContainer.style.display = 'block';
+                archiveBtn.style.background = 'var(--primary)';
+                archiveBtn.innerHTML = '<i data-lucide="arrow-left" class="icon"></i> <span>Завдання</span>';
+                
+                archiveTasks = [];
+                archiveLastDoc = null;
+                loadArchiveTasks();
+            } else {
+                tasksContainer.style.display = '';
+                if (filtersRow) filtersRow.style.display = '';
+                if (mobileFilterBar) mobileFilterBar.style.display = '';
+                if (totalTimeInfo) totalTimeInfo.style.display = '';
+                archiveContainer.style.display = 'none';
+                archiveBtn.style.background = '#6b7280';
+                archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>Архів</span>';
+            }
+            refreshIcons();
+        }
+        
+        async function loadArchiveTasks() {
+            if (!currentCompany) return;
+            
+            const listEl = document.getElementById('archiveTasksList');
+            if (archiveTasks.length === 0) {
+                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;"><div class="spinner"></div> Завантаження...</div>';
+            }
+            
+            try {
+                const base = db.collection('companies').doc(currentCompany);
+                let query = base.collection('tasksArchive')
+                    .orderBy('archivedAt', 'desc')
+                    .limit(ARCHIVE_PAGE_SIZE);
+                
+                if (archiveLastDoc) {
+                    query = query.startAfter(archiveLastDoc);
+                }
+                
+                const snap = await query.get();
+                
+                if (snap.empty && archiveTasks.length === 0) {
+                    listEl.innerHTML = `
+                        <div style="text-align:center;padding:3rem;color:#9ca3af;">
+                            <i data-lucide="archive" class="icon icon-xl" style="color:#d1d5db;margin-bottom:0.5rem;"></i>
+                            <p>Архів порожній</p>
+                            <p style="font-size:0.8rem;">Завершені завдання старші 30 днів з'являться тут автоматично</p>
+                        </div>`;
+                    refreshIcons();
+                    return;
+                }
+                
+                const newTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                archiveTasks = archiveTasks.concat(newTasks);
+                
+                if (snap.docs.length > 0) {
+                    archiveLastDoc = snap.docs[snap.docs.length - 1];
+                }
+                
+                renderArchiveTasks();
+                
+                // Show/hide load more
+                const loadMoreEl = document.getElementById('archiveLoadMore');
+                loadMoreEl.style.display = snap.docs.length >= ARCHIVE_PAGE_SIZE ? 'block' : 'none';
+                
+            } catch (error) {
+                console.error('loadArchiveTasks error:', error);
+                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#ef4444;">Помилка завантаження архіву</div>';
+            }
+        }
+        
+        function loadMoreArchive() {
+            loadArchiveTasks();
+        }
+        
+        function renderArchiveTasks() {
+            const listEl = document.getElementById('archiveTasksList');
+            const countEl = document.getElementById('archiveCount');
+            
+            countEl.textContent = `${archiveTasks.length} записів`;
+            
+            const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
+            
+            // Desktop table
+            let html = `
+                <table class="tasks-table" style="table-layout:fixed;">
+                    <thead>
+                        <tr>
+                            <th>${t('task')}</th>
+                            <th>${t('assignee')}</th>
+                            <th>${t('deadline')}</th>
+                            <th>${t('type')}</th>
+                            <th>Архівовано</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
+            archiveTasks.forEach(task => {
+                const taskDeadline = task.deadlineDate || '';
+                const archivedDate = task.archivedAt?.toDate ? 
+                    task.archivedAt.toDate().toLocaleDateString('uk-UA') : 
+                    (task.archivedAt ? new Date(task.archivedAt).toLocaleDateString('uk-UA') : '-');
+                
+                html += `
+                    <tr style="opacity:0.8;">
+                        <td class="task-title-cell">
+                            <span class="task-title-text">${esc(task.title)}</span>
+                        </td>
+                        <td>${esc(task.assigneeName) || '-'}</td>
+                        <td>${taskDeadline ? formatDateShort(taskDeadline) : '-'}</td>
+                        <td>${esc(task.function) || '-'}</td>
+                        <td style="font-size:0.8rem;color:#9ca3af;">${archivedDate}</td>
+                        <td>
+                            <button class="action-btn" onclick="restoreFromArchive('${escId(task.id)}')" title="Відновити">
+                                <i data-lucide="rotate-ccw" class="icon icon-sm" style="color:var(--primary);"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+            
+            html += `</tbody></table>`;
+            
+            // Mobile cards
+            html += `<div class="mobile-tasks-list">`;
+            archiveTasks.forEach(task => {
+                const archivedDate = task.archivedAt?.toDate ? 
+                    task.archivedAt.toDate().toLocaleDateString('uk-UA') : '-';
+                
+                html += `
+                <div class="mobile-task-card status-done" style="opacity:0.85;">
+                    <div class="mobile-task-content">
+                        <div class="mobile-task-header">
+                            <div class="mobile-task-title">${esc(task.title)}</div>
+                            <span class="status-badge status-done">${st.done}</span>
+                        </div>
+                        <div class="mobile-task-meta">
+                            ${task.assigneeName ? `<div class="mobile-task-meta-item"><i data-lucide="user" class="icon icon-sm"></i> ${esc(task.assigneeName)}</div>` : ''}
+                            ${task.function ? `<div class="mobile-task-meta-item"><i data-lucide="tag" class="icon icon-sm"></i> ${esc(task.function)}</div>` : ''}
+                            <div class="mobile-task-meta-item"><i data-lucide="archive" class="icon icon-sm"></i> ${archivedDate}</div>
+                        </div>
+                        <div class="mobile-task-actions">
+                            <button class="mobile-action-btn edit" onclick="restoreFromArchive('${escId(task.id)}')">
+                                <i data-lucide="rotate-ccw" class="icon icon-sm"></i> Відновити
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            html += `</div>`;
+            
+            listEl.innerHTML = html;
+            refreshIcons();
+        }
+        
+        async function restoreFromArchive(taskId) {
+            if (!confirm(currentLang === 'ua' ? 'Відновити завдання з архіву?' : 'Восстановить задачу из архива?')) return;
+            
+            try {
+                const base = db.collection('companies').doc(currentCompany);
+                const archiveDoc = await base.collection('tasksArchive').doc(taskId).get();
+                
+                if (!archiveDoc.exists) {
+                    showToast('Завдання не знайдено в архіві', 'error');
+                    return;
+                }
+                
+                const data = archiveDoc.data();
+                delete data.archivedAt;
+                
+                // Restore to tasks + remove from archive
+                const batch = db.batch();
+                batch.set(base.collection('tasks').doc(taskId), data);
+                batch.delete(base.collection('tasksArchive').doc(taskId));
+                await batch.commit();
+                
+                // Update local arrays
+                archiveTasks = archiveTasks.filter(t => t.id !== taskId);
+                if (!tasks.find(t => t.id === taskId)) {
+                    tasks.unshift({ id: taskId, ...data });
+                }
+                
+                renderArchiveTasks();
+                showToast(currentLang === 'ua' ? 'Завдання відновлено' : 'Задача восстановлена', 'success');
+            } catch (error) {
+                console.error('restoreFromArchive error:', error);
+                showToast('Помилка відновлення', 'error');
+            }
         }
         
         async function autoGenerateRegularTasks() {
@@ -7063,7 +7578,7 @@
                 <div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:12px;padding:1rem;margin-bottom:1rem;">
                     <div style="display:flex;align-items:center;gap:0.5rem;color:#7c3aed;font-weight:600;margin-bottom:0.5rem;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
-                        🔔 ${currentLang === 'ua' ? 'Нові з процесів' : 'Новые из процессов'}: ${processTasksNew.length}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> ${currentLang === 'ua' ? 'Нові з процесів' : 'Новые из процессов'}: ${processTasksNew.length}
                     </div>
                     <div style="font-size:0.85rem;color:#5b21b6;">
                         ${processTasksNew.slice(0, 3).map(t => `• ${esc(t.title)}`).join('<br>')}
@@ -7183,6 +7698,22 @@
                     document.getElementById('taskEscalationEnabled').checked = task.escalationEnabled || false;
                     document.getElementById('taskEscalationMinutes').value = task.escalationMinutes || 60;
                     setNotifyReminderCheckboxes(task.notifyOnReminder || []);
+                    
+                    // FEAT-001: Нові поля
+                    renderUserCheckboxes('taskCoExecutors', task.coExecutorIds || []);
+                    renderUserCheckboxes('taskObservers', task.observerIds || []);
+                    document.getElementById('taskStartDate').value = task.startDate || '';
+                    document.getElementById('taskRequireReview').checked = task.requireReview !== false; // default true
+                    document.getElementById('taskAllowDeadlineChange').checked = task.allowDeadlineChange || false;
+                    renderChecklist(task.checklist || []);
+                    
+                    // FEAT-006: Time Tracking
+                    renderTimeTracking(task);
+                    
+                    // FEAT-007: Блокуємо дедлайн якщо не дозволено
+                    const deadlineEditable = canEditDeadline(task);
+                    document.getElementById('taskDeadlineDate').disabled = !deadlineEditable;
+                    document.getElementById('taskDeadlineTime').disabled = !deadlineEditable;
                 }
             } else {
                 editingId = null;
@@ -7203,6 +7734,18 @@
                 document.getElementById('taskEscalationEnabled').checked = false;
                 document.getElementById('taskEscalationMinutes').value = 60;
                 setNotifyReminderCheckboxes([currentUser?.uid]); // Контроль творцю
+                
+                // FEAT-001: Дефолти нових полів
+                renderUserCheckboxes('taskCoExecutors', []);
+                renderUserCheckboxes('taskObservers', []);
+                document.getElementById('taskStartDate').value = '';
+                document.getElementById('taskRequireReview').checked = true;
+                document.getElementById('taskAllowDeadlineChange').checked = false;
+                renderChecklist([]);
+                document.getElementById('taskDeadlineDate').disabled = false;
+                document.getElementById('taskDeadlineTime').disabled = false;
+                // FEAT-006: Ховаємо time tracking для нових завдань
+                document.getElementById('timeTrackingSection').style.display = 'none';
             }
         }
         
@@ -7218,7 +7761,7 @@
             });
             
             container.innerHTML = sortedUsers.map(user => {
-                const roleLabel = user.role === 'owner' ? '👑' : (user.role === 'manager' ? '⭐' : '');
+                const roleLabel = user.role === 'owner' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>' : (user.role === 'manager' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' : '');
                 return `
                     <label class="notify-user-checkbox" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;background:white;border:1px solid #e5e7eb;border-radius:20px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
                         <input type="checkbox" name="notifyUser" value="${esc(user.id)}" style="margin:0;" onchange="updateNotifyCheckboxStyle(this)">
@@ -7298,7 +7841,7 @@
             const managers = users.filter(u => u.role === 'owner' || u.role === 'manager');
             
             container.innerHTML = managers.map(user => {
-                const roleLabel = user.role === 'owner' ? '👑' : '⭐';
+                const roleLabel = user.role === 'owner' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
                 return `
                     <label class="notify-user-checkbox" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;background:white;border:1px solid #e5e7eb;border-radius:20px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
                         <input type="checkbox" name="notifyReminder" value="${esc(user.id)}" style="margin:0;" onchange="updateNotifyCheckboxStyle(this)">
@@ -7370,10 +7913,10 @@
             const currentEditingId = editingId;
             
             const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn?.textContent;
+            const originalText = submitBtn?.innerHTML;
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.textContent = '⏳';
+                submitBtn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>';
             }
             
             try {
@@ -7411,6 +7954,16 @@
                     escalationEnabled: document.getElementById('taskEscalationEnabled').checked,
                     escalationMinutes: parseInt(document.getElementById('taskEscalationMinutes').value) || 60,
                     notifyOnReminder: getNotifyReminderFromCheckboxes(),
+                    // FEAT-001: Співвиконавці та спостерігачі
+                    coExecutorIds: getSelectedUsersFromCheckboxes('taskCoExecutors'),
+                    observerIds: getSelectedUsersFromCheckboxes('taskObservers'),
+                    // FEAT-003: Дата початку
+                    startDate: document.getElementById('taskStartDate').value || null,
+                    // FEAT-002+007: Toggles
+                    requireReview: document.getElementById('taskRequireReview').checked,
+                    allowDeadlineChange: document.getElementById('taskAllowDeadlineChange').checked,
+                    // FEAT-001: Чеклист
+                    checklist: getChecklistData(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
@@ -7471,7 +8024,7 @@
                 isSaving = false;
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = originalText;
+                    submitBtn.innerHTML = originalText;
                 }
             }
         }
@@ -7498,6 +8051,13 @@
         
         // Alias для зворотної сумісності
         const escapeForDisplay = esc;
+        
+        // Escape ID для безпечної вставки в onclick='func("ID")'
+        // Захист від XSS якщо ID містить ' " < > &
+        function escId(id) {
+            if (!id) return '';
+            return String(id).replace(/['"\\<>&]/g, '');
+        }
         
         // Валідація завдання
         function validateTaskData(data) {
@@ -7586,29 +8146,33 @@
             }
         };
         
-        // Undo system
-        let deletedItemBackup = null;
+        // Undo system — stack для підтримки кількох послідовних видалень
+        let deletedItemsStack = [];
         let undoTimeout = null;
         let undoTimerInterval = null;
         
         function showUndoToast(itemName, item, type) {
-            deletedItemBackup = { item, type };
+            // Додаємо в стек (а не перезаписуємо)
+            deletedItemsStack.push({ item, type, name: itemName });
             
             const toast = document.getElementById('undoToast');
             const messageEl = document.getElementById('undoMessage');
             const timerBar = document.getElementById('undoTimerBar');
             
-            // Показуємо назву видаленого елемента
-            messageEl.textContent = itemName;
-            messageEl.title = itemName; // Повна назва при наведенні
+            // Показуємо останній видалений елемент + кількість в стеку
+            if (deletedItemsStack.length > 1) {
+                messageEl.textContent = `${itemName} (+${deletedItemsStack.length - 1} ще)`;
+            } else {
+                messageEl.textContent = itemName;
+            }
+            messageEl.title = deletedItemsStack.map(d => d.name).join(', ');
             timerBar.style.width = '100%';
             toast.classList.add('show');
             
-            // Clear previous timers
+            // Reset timers (перезапускаємо 5 сек від останнього видалення)
             if (undoTimeout) clearTimeout(undoTimeout);
             if (undoTimerInterval) clearInterval(undoTimerInterval);
             
-            // Animate timer bar
             let timeLeft = 100;
             undoTimerInterval = setInterval(() => {
                 timeLeft -= 2;
@@ -7616,10 +8180,9 @@
                 if (timeLeft <= 0) clearInterval(undoTimerInterval);
             }, 100);
             
-            // Auto-hide after 5 seconds
             undoTimeout = setTimeout(() => {
                 hideUndoToast();
-                deletedItemBackup = null;
+                deletedItemsStack = [];
             }, 5000);
         }
         
@@ -7630,35 +8193,58 @@
         }
         
         async function undoDelete() {
-            if (!deletedItemBackup) return;
+            if (deletedItemsStack.length === 0) return;
             
             hideUndoToast();
             
-            const { item, type } = deletedItemBackup;
+            const itemsToRestore = [...deletedItemsStack];
+            deletedItemsStack = [];
             
-            try {
-                if (type === 'task') {
-                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(item.id).set(item);
-                    tasks.unshift(item);
-                    renderMyDay();
-                    if (currentCalendarView === 'list') renderTasks();
-                    else renderCalendar();
-                } else if (type === 'regularTask') {
-                    await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(item.id).set(item);
-                    regularTasks.unshift(item);
-                    if (currentRegularView === 'list') renderRegularTasks();
-                    else renderRegularWeekView();
-                } else if (type === 'function') {
-                    await db.collection('companies').doc(currentCompany).collection('functions').doc(item.id).set(item);
-                    functions.unshift(item);
-                    renderFunctions();
-                    updateSelects();
+            let restored = 0;
+            let failed = 0;
+            
+            for (const { item, type } of itemsToRestore) {
+                try {
+                    if (type === 'task') {
+                        await db.collection('companies').doc(currentCompany).collection('tasks').doc(item.id).set(item);
+                        if (!tasks.find(t => t.id === item.id)) {
+                            tasks.unshift(item);
+                        }
+                    } else if (type === 'regularTask') {
+                        await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(item.id).set(item);
+                        if (!regularTasks.find(t => t.id === item.id)) {
+                            regularTasks.unshift(item);
+                        }
+                    } else if (type === 'function') {
+                        await db.collection('companies').doc(currentCompany).collection('functions').doc(item.id).set(item);
+                        if (!functions.find(f => f.id === item.id)) {
+                            functions.unshift(item);
+                        }
+                    }
+                    restored++;
+                } catch (error) {
+                    console.error('Undo error for item:', item.id, error);
+                    failed++;
                 }
-                
-                deletedItemBackup = null;
-            } catch (error) {
-                console.error('Undo error:', error);
-                alert('Помилка відновлення: ' + error.message);
+            }
+            
+            // Re-render після всіх спроб (навіть якщо частина failed)
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
+            if (currentRegularView === 'list') renderRegularTasks();
+            else renderRegularWeekView();
+            renderFunctions();
+            updateSelects();
+            
+            if (failed > 0) {
+                alert(currentLang === 'ua' 
+                    ? `Відновлено ${restored} з ${restored + failed}. ${failed} не вдалось відновити.` 
+                    : `Восстановлено ${restored} из ${restored + failed}. ${failed} не удалось восстановить.`);
+            } else if (restored > 0) {
+                showToast(currentLang === 'ua' 
+                    ? `Відновлено ${restored} елемент(ів)` 
+                    : `Восстановлено ${restored} элемент(ов)`, 'success');
             }
         }
         
@@ -7668,28 +8254,29 @@
             
             const taskName = task.title || 'Завдання';
             
-            // Оптимістичне видалення
-            const taskIndex = tasks.findIndex(t => t.id === id);
-            if (taskIndex >= 0) {
-                tasks.splice(taskIndex, 1);
-                renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
-            }
+            // Оптимістичне видалення — зберігаємо копію для rollback
+            const taskCopy = { ...task };
+            tasks = tasks.filter(t => t.id !== id);
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
             
             // Показуємо toast з можливістю undo
-            showUndoToast(taskName, task, 'task');
+            showUndoToast(taskName, taskCopy, 'task');
             
             try {
-                // Delete from Google Calendar if connected
-                if (task.calendarEventId && googleAccessToken) {
-                    deleteCalendarEvent(task.calendarEventId);
+                if (taskCopy.calendarEventId && googleAccessToken) {
+                    deleteCalendarEvent(taskCopy.calendarEventId);
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
             } catch (error) {
-                // Rollback
-                tasks.splice(taskIndex, 0, task);
+                // Rollback — вставляємо назад (filter + unshift безпечно незалежно від змін масиву)
+                if (!tasks.find(t => t.id === id)) {
+                    tasks.unshift(taskCopy);
+                }
+                // Видаляємо цей елемент зі стеку undo (вже rollback-нутий)
+                deletedItemsStack = deletedItemsStack.filter(d => d.item.id !== id);
                 renderMyDay();
                 if (currentCalendarView === 'list') renderTasks();
                 else renderCalendar();
@@ -7734,6 +8321,8 @@
             if (task.creatorId === currentUser.uid) return false;
             // Автосгенеровані регулярні завдання — без перевірки
             if (task.autoGenerated) return false;
+            // Per-task toggle: якщо явно вимкнено — без перевірки
+            if (task.requireReview === false) return false;
             return true;
         }
         
@@ -7760,8 +8349,8 @@
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
                     status: 'done',
-                    completedAt: tasks[taskIndex].completedAt,
-                    reviewedAt: tasks[taskIndex].reviewedAt,
+                    completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     reviewedBy: currentUser.uid
                 });
                 
@@ -7778,6 +8367,7 @@
         // Постановник повертає на доопрацювання
         async function rejectReviewTask(taskId) {
             const reason = prompt(t('rejectReasonPlaceholder'));
+            if (reason === null) return; // Cancel — відміна дії
             
             const taskIndex = tasks.findIndex(t => t.id === taskId);
             if (taskIndex < 0) return;
@@ -7813,6 +8403,225 @@
                 else renderCalendar();
                 alert(t('error') + ': ' + e.message);
             }
+        }
+        
+        // =====================
+        // FEAT-006: TIME TRACKING
+        // =====================
+        let timeTrackerInterval = null;
+        let timeTrackerStart = null;
+        let timeTrackerTaskId = null;
+        
+        function toggleTimeTracker() {
+            if (!editingId) return;
+            
+            if (timeTrackerInterval) {
+                // СТОП
+                stopTimeTracker();
+            } else {
+                // СТАРТ
+                timeTrackerStart = Date.now();
+                timeTrackerTaskId = editingId;
+                const btn = document.getElementById('timeTrackBtn');
+                btn.style.background = '#ef4444';
+                btn.innerHTML = '<i data-lucide="square" class="icon icon-sm"></i> <span>Стоп</span>';
+                refreshIcons();
+                
+                timeTrackerInterval = setInterval(() => {
+                    if (!timeTrackerStart) return;
+                    const elapsed = Math.floor((Date.now() - timeTrackerStart) / 1000);
+                    const mins = Math.floor(elapsed / 60);
+                    const secs = elapsed % 60;
+                    document.getElementById('timeTrackActual').textContent = formatTrackedTime(getTotalTrackedMinutes() + mins) + ':' + String(secs).padStart(2, '0').slice(-2);
+                }, 1000);
+            }
+        }
+        
+        function stopTimeTracker() {
+            if (!timeTrackerStart || !timeTrackerTaskId) return;
+            
+            const elapsed = Math.round((Date.now() - timeTrackerStart) / 60000); // хвилини
+            clearInterval(timeTrackerInterval);
+            timeTrackerInterval = null;
+            
+            const btn = document.getElementById('timeTrackBtn');
+            btn.style.background = '#22c55e';
+            btn.innerHTML = '<i data-lucide="play" class="icon icon-sm"></i> <span data-i18n="startTimer">Старт</span>';
+            refreshIcons();
+            
+            if (elapsed >= 1) {
+                addTimeEntry(elapsed);
+            }
+            
+            timeTrackerStart = null;
+        }
+        
+        function addManualTime() {
+            if (!editingId) return;
+            const minutes = prompt(currentLang === 'ua' ? 'Скільки хвилин витрачено?' : 'Сколько минут потрачено?');
+            if (minutes === null) return;
+            const mins = parseInt(minutes);
+            if (isNaN(mins) || mins <= 0) return;
+            addTimeEntry(mins);
+        }
+        
+        function addTimeEntry(minutes) {
+            const task = tasks.find(t => t.id === editingId);
+            if (!task) return;
+            
+            const entry = {
+                minutes: minutes,
+                userId: currentUser.uid,
+                userName: currentUserData?.name || currentUser.email,
+                date: new Date().toISOString()
+            };
+            
+            const timeLog = task.timeLog || [];
+            timeLog.push(entry);
+            
+            // Зберігаємо в Firestore
+            db.collection('companies').doc(currentCompany).collection('tasks').doc(editingId).update({
+                timeLog: timeLog
+            }).then(() => {
+                // Оновлюємо локально
+                task.timeLog = timeLog;
+                renderTimeTracking(task);
+            });
+        }
+        
+        function getTotalTrackedMinutes() {
+            const task = tasks.find(t => t.id === editingId);
+            if (!task || !task.timeLog) return 0;
+            return task.timeLog.reduce((sum, e) => sum + (e.minutes || 0), 0);
+        }
+        
+        function formatTrackedTime(totalMinutes) {
+            const h = Math.floor(totalMinutes / 60);
+            const m = totalMinutes % 60;
+            return `${h}:${String(m).padStart(2, '0')}`;
+        }
+        
+        function renderTimeTracking(task) {
+            const section = document.getElementById('timeTrackingSection');
+            if (!section) return;
+            
+            // Показуємо тільки при редагуванні
+            section.style.display = editingId ? 'block' : 'none';
+            
+            // Запланований час
+            const planned = task?.estimatedTime ? parseInt(task.estimatedTime) : 0;
+            document.getElementById('timeTrackPlanned').textContent = planned > 0 
+                ? formatTrackedTime(planned) : '—';
+            
+            // Фактичний час
+            const total = task?.timeLog ? task.timeLog.reduce((s, e) => s + (e.minutes || 0), 0) : 0;
+            const actualEl = document.getElementById('timeTrackActual');
+            actualEl.textContent = formatTrackedTime(total);
+            
+            // Колір: зелений якщо < план, жовтий якщо ~, червоний якщо >
+            if (planned > 0 && total > planned * 1.2) {
+                actualEl.style.color = '#ef4444';
+            } else if (planned > 0 && total > planned * 0.8) {
+                actualEl.style.color = '#f59e0b';
+            } else {
+                actualEl.style.color = '#22c55e';
+            }
+            
+            // Лог
+            const logEl = document.getElementById('timeTrackLog');
+            if (task?.timeLog && task.timeLog.length > 0) {
+                logEl.innerHTML = task.timeLog.slice(-10).reverse().map(e => {
+                    const date = new Date(e.date);
+                    const dateStr = date.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short' });
+                    const timeStr = date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+                    return `<div style="padding:2px 0;border-bottom:1px solid #f3f4f6;">${esc(e.userName)}: <strong>${esc(String(e.minutes || 0))} хв</strong> — ${esc(dateStr)} ${esc(timeStr)}</div>`;
+                }).join('');
+            } else {
+                logEl.innerHTML = '';
+            }
+        }
+        
+        // =====================
+        // CHECKLIST
+        // =====================
+        let checklistCounter = 0;
+        
+        function addChecklistItem(text = '', checked = false) {
+            checklistCounter++;
+            const id = 'cl_' + checklistCounter;
+            const container = document.getElementById('taskChecklist');
+            const item = document.createElement('div');
+            item.id = id;
+            item.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;';
+            item.innerHTML = `
+                <input type="checkbox" ${checked ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--primary);flex-shrink:0;">
+                <input type="text" value="${esc(text)}" placeholder="${currentLang === 'ua' ? 'Пункт чеклисту...' : 'Пункт чеклиста...'}" 
+                       style="flex:1;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;"
+                       onkeydown="if(event.key==='Enter'){event.preventDefault();addChecklistItem();this.parentElement.nextElementSibling?.querySelector('input[type=text]')?.focus();}">
+                <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#ef4444;padding:2px;">
+                    <i data-lucide="x" class="icon icon-sm"></i>
+                </button>
+            `;
+            container.appendChild(item);
+            refreshIcons();
+            // Фокус на нове поле
+            if (!text) item.querySelector('input[type="text"]').focus();
+        }
+        
+        function getChecklistData() {
+            const items = [];
+            document.querySelectorAll('#taskChecklist > div').forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                const textInput = item.querySelector('input[type="text"]');
+                if (textInput && textInput.value.trim()) {
+                    items.push({ text: textInput.value.trim(), done: checkbox?.checked || false });
+                }
+            });
+            return items;
+        }
+        
+        function renderChecklist(checklist) {
+            const container = document.getElementById('taskChecklist');
+            container.innerHTML = '';
+            checklistCounter = 0;
+            if (!checklist || !Array.isArray(checklist)) return;
+            checklist.forEach(item => addChecklistItem(item.text, item.done));
+        }
+        
+        // =====================
+        // USER CHECKBOXES (co-executors, observers)
+        // =====================
+        function renderUserCheckboxes(containerId, selectedIds = []) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = users.map(user => {
+                const checked = selectedIds.includes(user.id) ? 'checked' : '';
+                return `<label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.3rem 0.6rem;background:white;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;${checked ? 'border-color:var(--primary);background:#f0fdf4;' : ''}">
+                    <input type="checkbox" value="${user.id}" ${checked} style="width:15px;height:15px;accent-color:var(--primary);" 
+                           onchange="this.parentElement.style.borderColor=this.checked?'var(--primary)':'#e5e7eb';this.parentElement.style.background=this.checked?'#f0fdf4':'white';">
+                    ${esc(user.name || user.email)}
+                </label>`;
+            }).join('');
+        }
+        
+        function getSelectedUsersFromCheckboxes(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return [];
+            return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+        }
+        
+        // =====================
+        // FEAT-007: Deadline change validation
+        // =====================
+        function canEditDeadline(task) {
+            if (!task) return true;
+            // Постановник завжди може
+            if (task.creatorId === currentUser?.uid) return true;
+            // Якщо дозволено виконавцю
+            if (task.allowDeadlineChange) return true;
+            // Адмін/овнер завжди може
+            if (currentUserData?.role === 'owner' || currentUserData?.role === 'superadmin') return true;
+            return false;
         }
         
         function showToast(message, type = 'success') {
@@ -7977,7 +8786,7 @@
                         <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
                     </svg>
                     <div style="flex:1;min-width:0;">
-                        <div style="font-weight:600;">🔍 ${t('taskOnReview')}</div>
+                        <div style="font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${t('taskOnReview')}</div>
                         <div style="font-size:0.85rem;opacity:0.9;">${esc(assigneeName)}: ${esc(shortTitle)}</div>
                     </div>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
@@ -7988,7 +8797,7 @@
                 <div style="display:flex;gap:0.5rem;">
                     <button onclick="this.closest('#reviewTaskToast').remove();acceptReviewTask('${esc(taskId)}')" 
                             style="flex:1;padding:0.5rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;font-size:0.85rem;">
-                        ✅ ${t('acceptTask')}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${t('acceptTask')}
                     </button>
                     <button onclick="this.closest('#reviewTaskToast').remove();rejectReviewTask('${esc(taskId)}')" 
                             style="flex:1;padding:0.5rem;border:none;border-radius:8px;background:rgba(255,255,255,0.2);color:white;font-weight:600;cursor:pointer;font-size:0.85rem;">
@@ -8036,9 +8845,9 @@
                 
                 const updateData = { 
                     status: newStatus,
-                    completedAt: new Date().toISOString()
+                    completedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-                if (needsReview) updateData.sentForReviewAt = new Date().toISOString();
+                if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update(updateData);
                 
@@ -8131,6 +8940,23 @@
             if (view === 'list') {
                 calendarContainer.classList.remove('active');
                 listContainer.classList.add('active');
+                // Reset archive view if it was open
+                if (isArchiveView) {
+                    isArchiveView = false;
+                    document.getElementById('tasksContainer').style.display = '';
+                    const filtersRow = document.querySelector('#listContainer .filters-row');
+                    if (filtersRow) filtersRow.style.display = '';
+                    const mobileFilterBar = document.getElementById('mobileFilterBar');
+                    if (mobileFilterBar) mobileFilterBar.style.display = '';
+                    const totalTimeInfo = document.getElementById('totalTimeInfo');
+                    if (totalTimeInfo) totalTimeInfo.style.display = '';
+                    document.getElementById('archiveContainer').style.display = 'none';
+                    const archiveBtn = document.getElementById('archiveToggleBtn');
+                    if (archiveBtn) {
+                        archiveBtn.style.background = '#6b7280';
+                        archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>Архів</span>';
+                    }
+                }
                 renderTasks();
             } else {
                 calendarContainer.classList.add('active');
@@ -8172,6 +8998,7 @@
         function renderCalendar() {
             updateCalendarTitle();
             renderWeekStrip(); // Mobile week strip
+            updateCalendarFilterUI();
             
             if (currentCalendarView === 'day') {
                 renderDayView();
@@ -8182,6 +9009,52 @@
             }
             
             refreshIcons();
+        }
+        
+        function getCalendarFilteredTasks() {
+            const af = document.getElementById('calendarAssigneeFilter')?.value;
+            const ff = document.getElementById('calendarFunctionFilter')?.value;
+            return tasks.filter(task => {
+                if (af && task.assigneeId !== af) return false;
+                if (ff && task.function !== ff) return false;
+                return true;
+            });
+        }
+        
+        function filterCalendarMy() {
+            const af = document.getElementById('calendarAssigneeFilter');
+            if (af.value === currentUser?.uid) {
+                af.value = '';
+            } else {
+                af.value = currentUser?.uid;
+            }
+            renderCalendar();
+        }
+        
+        function updateCalendarFilterUI() {
+            const af = document.getElementById('calendarAssigneeFilter')?.value;
+            const ff = document.getElementById('calendarFunctionFilter')?.value;
+            const myBtn = document.getElementById('calendarMyBtn');
+            if (myBtn) {
+                if (af === currentUser?.uid) {
+                    myBtn.style.background = 'var(--primary)';
+                    myBtn.style.color = 'white';
+                    myBtn.style.borderColor = 'var(--primary)';
+                } else {
+                    myBtn.style.background = '';
+                    myBtn.style.color = '';
+                    myBtn.style.borderColor = '';
+                }
+            }
+            const countEl = document.getElementById('calendarFilterCount');
+            if (countEl) {
+                if (af || ff) {
+                    const filtered = getCalendarFilteredTasks().length;
+                    countEl.textContent = `${filtered} / ${tasks.length}`;
+                } else {
+                    countEl.textContent = '';
+                }
+            }
         }
         
         // Mobile Week Strip (Google Calendar style)
@@ -8210,7 +9083,7 @@
                 const isSelected = day.toDateString() === selectedStr;
                 
                 // Get tasks for this day
-                const dayTasks = tasks.filter(task => {
+                const dayTasks = getCalendarFilteredTasks().filter(task => {
                     if (!task.deadline) return false;
                     const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
                     return taskDate.toISOString().split('T')[0] === dayStr;
@@ -8302,7 +9175,7 @@
             agendaSubheader.textContent = calendarDate.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
             
             // Get tasks for selected day
-            const dayTasks = tasks.filter(task => {
+            const dayTasks = getCalendarFilteredTasks().filter(task => {
                 if (!task.deadline) return false;
                 const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
                 return taskDate.toISOString().split('T')[0] === dayStr;
@@ -8331,7 +9204,7 @@
                 const durationStr = task.estimatedTime ? formatDuration(parseInt(task.estimatedTime)) : '';
                 
                 html += `
-                    <div class="agenda-item ${isDone ? 'done' : ''}" onclick="showTaskQuickMenu(event, '${task.id}')">
+                    <div class="agenda-item ${isDone ? 'done' : ''}" onclick="showTaskQuickMenu(event, '${escId(task.id)}')">
                         <div class="agenda-item-color status-${task.status}"></div>
                         <div class="agenda-item-content">
                             <div class="agenda-item-title">${esc(task.title)}</div>
@@ -8341,7 +9214,7 @@
                                 ${task.assigneeName ? ` • ${esc(task.assigneeName)}` : ''}
                             </div>
                         </div>
-                        <div class="agenda-item-check" onclick="event.stopPropagation();toggleTaskFromAgenda('${task.id}')">
+                        <div class="agenda-item-check" onclick="event.stopPropagation();toggleTaskFromAgenda('${escId(task.id)}')">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                         </div>
                     </div>
@@ -8360,8 +9233,20 @@
             if (taskIndex < 0) return;
             
             const originalTask = { ...tasks[taskIndex] };
-            const needsReview = originalTask.status !== 'done' && originalTask.status !== 'review' && shouldSendForReview(originalTask);
-            const newStatus = originalTask.status === 'done' || originalTask.status === 'review' 
+            
+            // Блокуємо toggle для review tasks — тільки постановник може accept/reject
+            if (originalTask.status === 'review') {
+                if (originalTask.creatorId === currentUser?.uid && originalTask.assigneeId !== currentUser?.uid) {
+                    // Постановник — пропонуємо accept
+                    acceptReviewTask(taskId);
+                } else {
+                    showToast(currentLang === 'ua' ? 'Чекає перевірки постановником' : 'Ожидает проверки постановщиком', 'info');
+                }
+                return;
+            }
+            
+            const needsReview = shouldSendForReview(originalTask);
+            const newStatus = originalTask.status === 'done' 
                 ? 'progress' 
                 : (needsReview ? 'review' : 'done');
             
@@ -8379,9 +9264,9 @@
                 
                 const updateData = {
                     status: newStatus,
-                    completedAt: newStatus === 'done' || newStatus === 'review' ? new Date().toISOString() : null
+                    completedAt: newStatus === 'done' || newStatus === 'review' ? firebase.firestore.FieldValue.serverTimestamp() : null
                 };
-                if (needsReview) updateData.sentForReviewAt = new Date().toISOString();
+                if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
                 
@@ -8439,7 +9324,7 @@
             eventsContainerEl.innerHTML = hoursHTML + currentTimeLineHTML;
             
             // Filter tasks for this day
-            const dayTasks = tasks.filter(task => {
+            const dayTasks = getCalendarFilteredTasks().filter(task => {
                 if (!task.deadline) return false;
                 const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
                 return taskDate.toISOString().split('T')[0] === dayStr;
@@ -8469,8 +9354,8 @@
                 alldayEl.innerHTML = `
                     <div class="calendar-allday-label">${currentLang === 'ua' ? 'Без часу' : 'Без времени'} (${allDayTasks.length})</div>
                     ${allDayTasks.map(task => `
-                        <div class="calendar-allday-event calendar-event status-${task.status}" onclick="showTaskQuickMenu(event, '${task.id}')">
-                            ${task.status === 'done' ? '<span style="margin-right:4px;">✓</span>' : ''}
+                        <div class="calendar-allday-event calendar-event status-${task.status}" onclick="showTaskQuickMenu(event, '${escId(task.id)}')">
+                            ${task.status === 'done' ? '<span style="margin-right:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:-2px;"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}
                             ${esc(task.title)}
                         </div>
                     `).join('')}
@@ -8495,9 +9380,9 @@
                 const eventHTML = `
                     <div class="calendar-event status-${task.status}" 
                          style="top: ${topOffset}px; height: ${height}px;"
-                         onclick="showTaskQuickMenu(event, '${task.id}')"
+                         onclick="showTaskQuickMenu(event, '${escId(task.id)}')"
                          draggable="true"
-                         ondragstart="onTaskDragStart(event, '${task.id}')"
+                         ondragstart="onTaskDragStart(event, '${escId(task.id)}')"
                          title="${esc(task.title)}">
                         ${task.status === 'done' ? '<div class="calendar-event-done-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' : ''}
                         <div class="calendar-event-title">${esc(task.title)}</div>
@@ -8575,6 +9460,17 @@
             }
             bodyHTML += '</div>';
             
+            // PRE-BUILD: date → tasks map for week (O(n) instead of O(7*n))
+            const weekFilteredTasks = getCalendarFilteredTasks();
+            const weekTasksByDate = {};
+            weekFilteredTasks.forEach(task => {
+                if (!task.deadline) return;
+                const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
+                const dateKey = taskDate.toISOString().split('T')[0];
+                if (!weekTasksByDate[dateKey]) weekTasksByDate[dateKey] = [];
+                weekTasksByDate[dateKey].push(task);
+            });
+            
             // Build columns for each day
             for (let i = 0; i < 7; i++) {
                 const day = new Date(weekStart);
@@ -8588,12 +9484,8 @@
                     bodyHTML += `<div class="calendar-hour-row" data-hour="${hour}" onclick="openTaskAtTime('${dayStr}', ${hour})" ondragover="onHourDragOver(event)" ondragleave="onHourDragLeave(event)" ondrop="onHourDrop(event, '${dayStr}', ${hour})"></div>`;
                 }
                 
-                // Get tasks for this day
-                const dayTasks = tasks.filter(task => {
-                    if (!task.deadline) return false;
-                    const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
-                    return taskDate.toISOString().split('T')[0] === dayStr;
-                });
+                // Get tasks for this day (O(1) lookup)
+                const dayTasks = weekTasksByDate[dayStr] || [];
                 
                 // Render events
                 dayTasks.forEach(task => {
@@ -8608,9 +9500,9 @@
                     bodyHTML += `
                         <div class="calendar-event status-${task.status}" 
                              style="position:absolute; top:${topOffset}px; height:${height}px; left:2px; right:2px;"
-                             onclick="showTaskQuickMenu(event, '${task.id}')"
+                             onclick="showTaskQuickMenu(event, '${escId(task.id)}')"
                              draggable="true"
-                             ondragstart="onTaskDragStart(event, '${task.id}')"
+                             ondragstart="onTaskDragStart(event, '${escId(task.id)}')"
                              title="${esc(task.title)}">
                             <div class="calendar-event-title" style="font-size:0.7rem;">${esc(task.title)}</div>
                         </div>
@@ -8652,6 +9544,17 @@
             const bodyEl = document.getElementById('monthBody');
             let html = '';
             
+            // PRE-BUILD: date → tasks map (O(n) instead of O(42*n))
+            const filteredTasks = getCalendarFilteredTasks();
+            const tasksByDate = {};
+            filteredTasks.forEach(task => {
+                if (!task.deadline) return;
+                const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
+                const dateKey = taskDate.toISOString().split('T')[0];
+                if (!tasksByDate[dateKey]) tasksByDate[dateKey] = [];
+                tasksByDate[dateKey].push(task);
+            });
+            
             let dayCounter = 1;
             let nextMonthDay = 1;
             
@@ -8685,12 +9588,8 @@
                 
                 const isToday = dateStr === todayStr;
                 
-                // Get tasks for this day
-                const dayTasks = tasks.filter(task => {
-                    if (!task.deadline) return false;
-                    const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
-                    return taskDate.toISOString().split('T')[0] === dateStr;
-                });
+                // Get tasks for this day (O(1) lookup from pre-built map)
+                const dayTasks = tasksByDate[dateStr] || [];
                 
                 html += `
                     <div class="calendar-month-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}" 
@@ -8699,7 +9598,7 @@
                         <div class="month-day-number">${dayNum}</div>
                         ${dayTasks.slice(0, 3).map(task => `
                             <div class="calendar-month-event calendar-event status-${task.status}" 
-                                 onclick="event.stopPropagation(); showTaskQuickMenu(event, '${task.id}')">
+                                 onclick="event.stopPropagation(); showTaskQuickMenu(event, '${escId(task.id)}')">
                                 ${esc(task.title)}
                             </div>
                         `).join('')}
@@ -8849,13 +9748,30 @@
             // Збираємо всі завдання на сьогодні для поточного користувача
             const myTasks = [];
             
+            // PRE-BUILD: lookup maps для O(1) пошуку (замість O(n) find кожного разу)
+            const myTaskIds = new Set();
+            const funcByName = {};
+            functions.forEach(f => { funcByName[f.name] = f; });
+            
+            // Index для швидкого пошуку згенерованих regular tasks
+            const generatedTaskIndex = {};
+            tasks.forEach(t => {
+                if (t.regularTaskId && t.deadlineDate === todayStr && t.assigneeId === currentUser?.uid) {
+                    // Зберігаємо перший знайдений (масив desc по createdAt → перший = найновіший)
+                    if (!generatedTaskIndex[t.regularTaskId]) {
+                        generatedTaskIndex[t.regularTaskId] = t;
+                    }
+                }
+            });
+            
             // 1. Разові завдання з дедлайном сьогодні або прострочені
             tasks.filter(t => {
                 if (t.assigneeId !== currentUser.uid) return false;
                 if (t.deadlineDate === todayStr) return true;
-                if (t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review') return true; // прострочені
+                if (t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review') return true;
                 return false;
             }).forEach(t => {
+                myTaskIds.add(t.id);
                 myTasks.push({
                     id: t.id,
                     title: t.title,
@@ -8875,8 +9791,8 @@
                 if (t.status !== 'review') return false;
                 if (t.creatorId !== currentUser.uid) return false;
                 if (t.assigneeId === currentUser.uid) return false; // вже покриті вище
-                // Не дублюємо якщо вже є в myTasks
-                return !myTasks.find(mt => mt.id === t.id);
+                // Не дублюємо якщо вже є в myTasks (O(1) Set lookup)
+                return !myTaskIds.has(t.id);
             }).forEach(t => {
                 myTasks.push({
                     id: t.id,
@@ -8894,8 +9810,8 @@
             
             // 2. Регулярні завдання на сьогодні
             regularTasks.forEach(rt => {
-                // Перевіряємо чи поточний користувач є виконавцем функції (assignee)
-                const func = functions.find(f => f.name === rt.function);
+                // Перевіряємо чи поточний користувач є виконавцем функції (O(1) map lookup)
+                const func = funcByName[rt.function];
                 if (!func || !func.assigneeIds?.includes(currentUser.uid)) return;
                 
                 // Перевіряємо чи сьогодні день цього завдання
@@ -8933,12 +9849,8 @@
                 
                 if (!isToday) return;
                 
-                // Перевіряємо чи виконано - шукаємо згенероване завдання ДЛЯ ПОТОЧНОГО КОРИСТУВАЧА
-                const generatedTask = tasks.find(t => 
-                    t.regularTaskId === rt.id && 
-                    t.deadlineDate === todayStr &&
-                    t.assigneeId === currentUser.uid
-                );
+                // Перевіряємо чи виконано (O(1) index lookup замість O(n) find)
+                const generatedTask = generatedTaskIndex[rt.id] || null;
                 
                 myTasks.push({
                     id: rt.id,
@@ -9082,7 +9994,7 @@
                     <div style="display:flex;gap:0.4rem;margin-top:0.5rem;" onclick="event.stopPropagation();">
                         <button onclick="acceptReviewTask('${esc(taskId)}')" 
                                 style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
-                            ✅ ${t('acceptTask')}
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${t('acceptTask')}
                         </button>
                         <button onclick="rejectReviewTask('${esc(taskId)}')" 
                                 style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#f59e0b;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
@@ -9093,7 +10005,7 @@
             
             let reviewBadge = '';
             if (task.review) {
-                reviewBadge = `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:#f3e8ff;color:#7c3aed;font-weight:500;">🔍 ${currentLang === 'ua' ? 'Перевірка' : 'Проверка'}</span>`;
+                reviewBadge = `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:#f3e8ff;color:#7c3aed;font-weight:500;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${currentLang === 'ua' ? 'Перевірка' : 'Проверка'}</span>`;
             }
             
             return `
@@ -9170,7 +10082,7 @@
                         const newStatus = currentDone ? 'new' : 'done';
                         await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).update({
                             status: newStatus,
-                            completedAt: newStatus === 'done' ? new Date().toISOString() : null
+                            completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null
                         });
                     } else if (!currentDone) {
                         // Завдання не існує - створюємо нове і одразу виконане
@@ -9197,7 +10109,7 @@
                                 creatorName: currentLang === 'ua' ? 'Система' : 'Система',
                                 regularTaskId: id,
                                 autoGenerated: true,
-                                completedAt: new Date().toISOString()
+                                completedAt: firebase.firestore.FieldValue.serverTimestamp()
                             });
                         } else {
                             console.error('Could not find regular task template:', id);
@@ -9215,8 +10127,8 @@
                     
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
                         status: newStatus,
-                        completedAt: newStatus === 'done' || newStatus === 'review' ? new Date().toISOString() : null,
-                        ...(needsReview ? { sentForReviewAt: new Date().toISOString() } : {})
+                        completedAt: newStatus === 'done' || newStatus === 'review' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                        ...(needsReview ? { sentForReviewAt: firebase.firestore.FieldValue.serverTimestamp() } : {})
                     });
                     
                     if (needsReview) {
@@ -9290,6 +10202,7 @@
         }
         
         function renderTasks() {
+            tasksVisibleCount = TASKS_PAGE_SIZE; // Reset pagination on filter change
             const c = document.getElementById('tasksContainer');
             const sf = document.getElementById('statusFilter')?.value;
             const ff = document.getElementById('functionFilter')?.value;
@@ -9300,6 +10213,7 @@
             const today = new Date().toISOString().split('T')[0];
             
             let f = tasks.filter(task => {
+                if (hideCompletedTasks && task.status === 'done') return false;
                 if (sf && task.status !== sf) return false;
                 if (ff && task.function !== ff) return false;
                 if (af && task.assigneeId !== af) return false;
@@ -9334,6 +10248,25 @@
             f.sort((a, b) => {
                 if (a.pinned && !b.pinned) return -1;
                 if (!a.pinned && b.pinned) return 1;
+                
+                // Custom sort
+                if (taskSortField) {
+                    let valA, valB;
+                    switch(taskSortField) {
+                        case 'title': valA = (a.title || '').toLowerCase(); valB = (b.title || '').toLowerCase(); break;
+                        case 'assignee': valA = (a.assigneeName || '').toLowerCase(); valB = (b.assigneeName || '').toLowerCase(); break;
+                        case 'creator': valA = (a.creatorName || '').toLowerCase(); valB = (b.creatorName || '').toLowerCase(); break;
+                        case 'deadline': valA = a.deadlineDate || '9999'; valB = b.deadlineDate || '9999'; break;
+                        case 'status': 
+                            const statusOrder = { new: 0, progress: 1, review: 2, done: 3 };
+                            valA = statusOrder[a.status] ?? 9; valB = statusOrder[b.status] ?? 9; break;
+                        case 'function': valA = (a.function || '').toLowerCase(); valB = (b.function || '').toLowerCase(); break;
+                        default: valA = a.deadlineDate || '9999'; valB = b.deadlineDate || '9999';
+                    }
+                    const cmp = typeof valA === 'number' ? valA - valB : String(valA).localeCompare(String(valB));
+                    return taskSortDir === 'desc' ? -cmp : cmp;
+                }
+                
                 const dateA = a.deadlineDate || (a.deadline ? a.deadline.split('T')[0] : '9999');
                 const dateB = b.deadlineDate || (b.deadline ? b.deadline.split('T')[0] : '9999');
                 return dateA.localeCompare(dateB);
@@ -9346,7 +10279,7 @@
             });
             const totalHours = Math.floor(totalMinutes / 60);
             const totalMins = totalMinutes % 60;
-            const totalTimeStr = totalMinutes > 0 ? `⏱️ ${totalHours > 0 ? totalHours + (currentLang === 'ua' ? ' год ' : ' ч ') : ''}${totalMins > 0 ? totalMins + (currentLang === 'ua' ? ' хв' : ' мин') : ''}` : '';
+            const totalTimeStr = totalMinutes > 0 ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${totalHours > 0 ? totalHours + (currentLang === 'ua' ? ' год ' : ' ч ') : ''}${totalMins > 0 ? totalMins + (currentLang === 'ua' ? ' хв' : ' мин') : ''}` : '';
             
             document.getElementById('totalTimeInfo').innerHTML = totalTimeStr ? `<span class="total-time-badge">${totalTimeStr} (${f.filter(x=>x.status!=='done').length} ${t('tasks')})</span>` : '';
             
@@ -9358,16 +10291,22 @@
             const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
             
             // Desktop table
+            const sortIcon = (field) => {
+                if (taskSortField !== field) return '<span class="sort-icon">⇅</span>';
+                return `<span class="sort-icon">${taskSortDir === 'asc' ? '↑' : '↓'}</span>`;
+            };
+            const sortClass = (field) => taskSortField === field ? 'sortable sort-active' : 'sortable';
+            
             let html = `
-                <table class="tasks-table">
+                <table class="tasks-table" style="table-layout:fixed;">
                     <thead>
                         <tr>
-                            <th>${t('task')}</th>
-                            <th>${t('assignee')}</th>
-                            <th>${t('createdBy')}</th>
-                            <th>${t('deadline')}</th>
-                            <th>${t('status')}</th>
-                            <th>${t('type')}</th>
+                            <th class="${sortClass('title')}" onclick="sortTasksBy('title')">${t('task')}${sortIcon('title')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('assignee')}" onclick="sortTasksBy('assignee')">${t('assignee')}${sortIcon('assignee')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('creator')}" onclick="sortTasksBy('creator')">${t('createdBy')}${sortIcon('creator')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('deadline')}" onclick="sortTasksBy('deadline')">${t('deadline')}${sortIcon('deadline')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('status')}" onclick="sortTasksBy('status')">${t('status')}${sortIcon('status')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('function')}" onclick="sortTasksBy('function')">${t('type')}${sortIcon('function')}<div class="col-resize-handle"></div></th>
                             <th>${t('actions')}</th>
                         </tr>
                     </thead>
@@ -9386,7 +10325,7 @@
                 html += `
                     <tr>
                         <td class="task-title-cell">
-                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${processIndicator}${esc(task.title)}</span>
+                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}" onclick="openTaskModal('${escId(task.id)}')">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${processIndicator}${esc(task.title)}</span>
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td>${esc(task.creatorName) || '-'}</td>
@@ -9396,12 +10335,12 @@
                         <td>
                             <div class="action-btns">
                                 ${task.status === 'review' && task.creatorId === currentUser?.uid && task.assigneeId !== currentUser?.uid ? `
-                                    <button class="action-btn" onclick="acceptReviewTask('${task.id}')" title="${t('acceptTask')}" style="color:#22c55e;"><i data-lucide="check-circle" class="icon icon-sm"></i></button>
-                                    <button class="action-btn" onclick="rejectReviewTask('${task.id}')" title="${t('rejectTask')}" style="color:#f59e0b;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="acceptReviewTask('${escId(task.id)}')" title="${t('acceptTask')}" style="color:#22c55e;"><i data-lucide="check-circle" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="rejectReviewTask('${escId(task.id)}')" title="${t('rejectTask')}" style="color:#f59e0b;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i></button>
                                 ` : ''}
-                                <button class="action-btn" onclick="togglePin('${task.id}')" title="Pin"><i data-lucide="pin" class="icon icon-sm"></i></button>
-                                <button class="action-btn" onclick="openTaskModal('${task.id}')" title="Edit"><i data-lucide="pencil" class="icon icon-sm"></i></button>
-                                <button class="action-btn" onclick="deleteTask('${task.id}')" title="Delete"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="togglePin('${escId(task.id)}')" title="Pin"><i data-lucide="pin" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="openTaskModal('${escId(task.id)}')" title="Edit"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="deleteTask('${escId(task.id)}')" title="Delete"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                             </div>
                         </td>
                     </tr>`;
@@ -9502,10 +10441,10 @@
                             
                             <div class="mobile-task-actions">
                                 ${isReviewForCreator ? `
-                                    <button class="mobile-action-btn complete" onclick="acceptReviewTask('${task.id}')" style="background:#22c55e;">
+                                    <button class="mobile-action-btn complete" onclick="acceptReviewTask('${escId(task.id)}')" style="background:#22c55e;">
                                         <i data-lucide="check" class="icon icon-sm"></i> ${t('acceptTask')}
                                     </button>
-                                    <button class="mobile-action-btn edit" onclick="rejectReviewTask('${task.id}')" style="background:#f59e0b;color:white;">
+                                    <button class="mobile-action-btn edit" onclick="rejectReviewTask('${escId(task.id)}')" style="background:#f59e0b;color:white;">
                                         <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('rejectTask')}
                                     </button>
                                 ` : task.status === 'review' ? `
@@ -9513,18 +10452,18 @@
                                         <i data-lucide="eye" class="icon icon-sm"></i> ${currentLang === 'ua' ? 'Перевірка' : 'Проверка'}
                                     </button>
                                 ` : task.status !== 'done' ? `
-                                    <button class="mobile-action-btn complete" onclick="quickCompleteTask('${task.id}')">
+                                    <button class="mobile-action-btn complete" onclick="quickCompleteTask('${escId(task.id)}')">
                                         <i data-lucide="check" class="icon icon-sm"></i> Готово
                                     </button>
                                 ` : `
-                                    <button class="mobile-action-btn edit" onclick="reopenTask('${task.id}')">
+                                    <button class="mobile-action-btn edit" onclick="reopenTask('${escId(task.id)}')">
                                         <i data-lucide="rotate-ccw" class="icon icon-sm"></i> Відновити
                                     </button>
                                 `}
-                                <button class="mobile-action-btn edit" onclick="openTaskModal('${task.id}')">
+                                <button class="mobile-action-btn edit" onclick="openTaskModal('${escId(task.id)}')">
                                     <i data-lucide="pencil" class="icon icon-sm"></i>
                                 </button>
-                                <button class="mobile-action-btn delete" onclick="deleteTask('${task.id}')">
+                                <button class="mobile-action-btn delete" onclick="deleteTask('${escId(task.id)}')">
                                     <i data-lucide="trash-2" class="icon icon-sm"></i>
                                 </button>
                             </div>
@@ -9535,8 +10474,190 @@
             
             html += `</div>`;
             c.innerHTML = html;
+            
+            // Pagination: show only first TASKS_PAGE_SIZE tasks, add "Load More"
+            applyTasksPagination();
+            
             refreshIcons();
             initSwipeHandlers();
+            initTableColumnResize();
+            restoreColumnWidths();
+        }
+        
+        // === TASKS PAGINATION ===
+        const TASKS_PAGE_SIZE = 50;
+        let tasksVisibleCount = TASKS_PAGE_SIZE;
+        
+        function applyTasksPagination() {
+            // Desktop table rows
+            const tableRows = document.querySelectorAll('.tasks-table tbody tr');
+            if (tableRows.length > 0) {
+                tableRows.forEach((row, i) => {
+                    row.style.display = i < tasksVisibleCount ? '' : 'none';
+                });
+                
+                // Remove old "load more" button if exists
+                const oldBtn = document.getElementById('loadMoreTasksBtn');
+                if (oldBtn) oldBtn.remove();
+                
+                if (tableRows.length > tasksVisibleCount) {
+                    const loadMoreHTML = `<div id="loadMoreTasksBtn" style="text-align:center;padding:1rem;">
+                        <button class="btn btn-small" onclick="loadMoreTasks()" style="padding:0.6rem 2rem;">
+                            ${currentLang === 'ua' ? 'Показати ще' : 'Показать ещё'} (${tasksVisibleCount}/${tableRows.length})
+                        </button>
+                    </div>`;
+                    document.querySelector('.tasks-table')?.insertAdjacentHTML('afterend', loadMoreHTML);
+                }
+            }
+            
+            // Mobile cards with proper date group header visibility
+            const mobileList = document.getElementById('mobileTasksList');
+            if (mobileList) {
+                const mobileCards = mobileList.querySelectorAll('.mobile-task-card');
+                const dateHeaders = mobileList.querySelectorAll('.date-group-header');
+                
+                if (mobileCards.length > 0) {
+                    let visibleMobile = 0;
+                    mobileCards.forEach(card => {
+                        if (visibleMobile < tasksVisibleCount) {
+                            card.style.display = '';
+                            visibleMobile++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    
+                    // Hide date group headers where ALL cards in that group are hidden
+                    dateHeaders.forEach(header => {
+                        let nextEl = header.nextElementSibling;
+                        let hasVisibleCard = false;
+                        while (nextEl && !nextEl.classList.contains('date-group-header')) {
+                            if (nextEl.classList.contains('mobile-task-card') && nextEl.style.display !== 'none') {
+                                hasVisibleCard = true;
+                                break;
+                            }
+                            nextEl = nextEl.nextElementSibling;
+                        }
+                        header.style.display = hasVisibleCard ? '' : 'none';
+                    });
+                    
+                    const oldMobileBtn = document.getElementById('loadMoreTasksMobileBtn');
+                    if (oldMobileBtn) oldMobileBtn.remove();
+                    
+                    if (mobileCards.length > tasksVisibleCount) {
+                        mobileList.insertAdjacentHTML('beforeend', `<div id="loadMoreTasksMobileBtn" style="text-align:center;padding:1rem;">
+                            <button class="btn btn-small" onclick="loadMoreTasks()" style="padding:0.6rem 2rem;width:100%;">
+                                ${currentLang === 'ua' ? 'Показати ще' : 'Показать ещё'} (${tasksVisibleCount}/${mobileCards.length})
+                            </button>
+                        </div>`);
+                    }
+                }
+            }
+        }
+        
+        function loadMoreTasks() {
+            tasksVisibleCount += TASKS_PAGE_SIZE;
+            applyTasksPagination();
+            refreshIcons();
+            initSwipeHandlers();
+        }
+        
+        // =====================
+        // TABLE COLUMN RESIZE + SORT
+        // =====================
+        let taskSortField = localStorage.getItem('taskSortField') || '';
+        let taskSortDir = localStorage.getItem('taskSortDir') || 'asc';
+        let hideCompletedTasks = localStorage.getItem('hideCompletedTasks') === 'true';
+        
+        function sortTasksBy(field) {
+            if (taskSortField === field) {
+                taskSortDir = taskSortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                taskSortField = field;
+                taskSortDir = 'asc';
+            }
+            localStorage.setItem('taskSortField', taskSortField);
+            localStorage.setItem('taskSortDir', taskSortDir);
+            renderTasks();
+        }
+        
+        function toggleHideCompleted() {
+            hideCompletedTasks = !hideCompletedTasks;
+            localStorage.setItem('hideCompletedTasks', hideCompletedTasks);
+            const btn = document.getElementById('hideCompletedBtn');
+            if (btn) btn.classList.toggle('active', hideCompletedTasks);
+            renderTasks();
+        }
+        
+        function initTableColumnResize() {
+            const handles = document.querySelectorAll('.col-resize-handle');
+            handles.forEach(handle => {
+                handle.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    const th = handle.parentElement;
+                    const startX = e.clientX;
+                    const startWidth = th.offsetWidth;
+                    handle.classList.add('resizing');
+                    
+                    const onMove = (e2) => {
+                        const newWidth = Math.max(60, startWidth + (e2.clientX - startX));
+                        th.style.width = newWidth + 'px';
+                        th.style.minWidth = newWidth + 'px';
+                        // Синхронізуємо TD цієї колонки
+                        const colIndex = Array.from(th.parentElement.children).indexOf(th);
+                        const rows = th.closest('table').querySelectorAll('tbody tr');
+                        rows.forEach(row => {
+                            const td = row.children[colIndex];
+                            if (td) {
+                                td.style.width = newWidth + 'px';
+                                td.style.minWidth = newWidth + 'px';
+                            }
+                        });
+                    };
+                    const onUp = () => {
+                        handle.classList.remove('resizing');
+                        document.removeEventListener('mousemove', onMove);
+                        document.removeEventListener('mouseup', onUp);
+                        saveColumnWidths();
+                    };
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onUp);
+                });
+            });
+        }
+        
+        function saveColumnWidths() {
+            const ths = document.querySelectorAll('.tasks-table th');
+            if (!ths.length) return;
+            const widths = Array.from(ths).map(th => th.offsetWidth);
+            localStorage.setItem('taskColumnWidths', JSON.stringify(widths));
+        }
+        
+        function restoreColumnWidths() {
+            const saved = localStorage.getItem('taskColumnWidths');
+            if (!saved) return;
+            try {
+                const widths = JSON.parse(saved);
+                const ths = document.querySelectorAll('.tasks-table th');
+                const table = document.querySelector('.tasks-table');
+                if (!ths.length || !table) return;
+                ths.forEach((th, i) => {
+                    if (widths[i]) {
+                        th.style.width = widths[i] + 'px';
+                        th.style.minWidth = widths[i] + 'px';
+                    }
+                });
+                // Також TD
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    Array.from(row.children).forEach((td, i) => {
+                        if (widths[i]) {
+                            td.style.width = widths[i] + 'px';
+                            td.style.minWidth = widths[i] + 'px';
+                        }
+                    });
+                });
+            } catch(e) {}
         }
         
         function clearTaskFilters() {
@@ -9682,20 +10803,21 @@
             const funcName = func.name || 'Функція';
             
             // Оптимістичне видалення
-            const funcIndex = functions.findIndex(f => f.id === id);
-            if (funcIndex >= 0) {
-                functions.splice(funcIndex, 1);
-                renderFunctions();
-            }
+            const funcCopy = { ...func };
+            functions = functions.filter(f => f.id !== id);
+            renderFunctions();
             
             // Показуємо toast з можливістю undo
-            showUndoToast(funcName, func, 'function');
+            showUndoToast(funcName, funcCopy, 'function');
             
             try {
                 await db.collection('companies').doc(currentCompany).collection('functions').doc(id).delete();
             } catch (error) {
                 // Rollback
-                functions.splice(funcIndex, 0, func);
+                if (!functions.find(f => f.id === id)) {
+                    functions.unshift(funcCopy);
+                }
+                deletedItemsStack = deletedItemsStack.filter(d => d.item.id !== id);
                 renderFunctions();
                 hideUndoToast();
                 console.error('deleteFunction error:', error);
@@ -10005,11 +11127,30 @@
             const container = document.getElementById('processBoard');
             const emptyState = document.getElementById('processesEmptyState');
             const filterValue = document.getElementById('processTemplateFilter')?.value;
+            const assigneeFilter = document.getElementById('processAssigneeFilter')?.value;
+            
+            // Оновлюємо select виконавців (одноразово)
+            const paf = document.getElementById('processAssigneeFilter');
+            if (paf && paf.options.length <= 1) {
+                paf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            }
             
             // Фільтруємо процеси
             let filteredProcesses = processes;
             if (filterValue) {
-                filteredProcesses = processes.filter(p => p.templateId === filterValue);
+                filteredProcesses = filteredProcesses.filter(p => p.templateId === filterValue);
+            }
+            // Фільтр по виконавцю: процеси де виконавець відповідальний на поточному кроці
+            if (assigneeFilter) {
+                filteredProcesses = filteredProcesses.filter(p => {
+                    const template = processTemplates.find(t => t.id === p.templateId);
+                    if (!template?.steps?.length) return false;
+                    const currentStepIndex = Math.min(p.currentStep || 0, template.steps.length - 1);
+                    const stepFunc = template.steps[currentStepIndex]?.function;
+                    if (!stepFunc) return false;
+                    const func = functions.find(f => f.name === stepFunc);
+                    return func?.assigneeIds?.includes(assigneeFilter);
+                });
             }
             
             // Якщо немає процесів - показуємо empty state
@@ -10518,13 +11659,13 @@
                             let statusColor = '';
                             
                             if (i < safeCurrentStep) {
-                                status = '✓';
+                                status = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:-2px;"><polyline points="20 6 9 17 4 12"/></svg>';
                                 statusColor = 'var(--primary)';
                             } else if (i === safeCurrentStep) {
-                                status = '●';
+                                status = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="8"/></svg>';
                                 statusColor = 'var(--info)';
                             } else {
-                                status = '○';
+                                status = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>';
                                 statusColor = 'var(--gray)';
                             }
                             
@@ -10552,7 +11693,7 @@
                         <div style="font-size:0.85rem;">
                             ${process.history.map(h => `
                                 <div style="padding:0.5rem 0;border-bottom:1px solid #f3f4f6;">
-                                    <span style="color:var(--primary);">✓</span> ${esc(h.stepTitle || '')} 
+                                    <span style="color:var(--primary);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:-2px;"><polyline points="20 6 9 17 4 12"/></svg></span> ${esc(h.stepTitle || '')} 
                                     <span style="color:var(--gray);">— ${h.completedAt ? new Date(h.completedAt).toLocaleDateString() : ''}</span>
                                 </div>
                             `).join('')}
@@ -10636,7 +11777,7 @@
                 // Якщо це останній етап - завершуємо процес
                 if (!nextStep) {
                     updateData.status = 'completed';
-                    updateData.completedAt = new Date().toISOString();
+                    updateData.completedAt = firebase.firestore.FieldValue.serverTimestamp();
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('processes').doc(processId).update(updateData);
@@ -10878,7 +12019,7 @@
             });
             
             container.innerHTML = sortedUsers.map(user => {
-                const roleLabel = user.role === 'owner' ? '👑' : (user.role === 'manager' ? '⭐' : '');
+                const roleLabel = user.role === 'owner' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>' : (user.role === 'manager' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' : '');
                 return `
                     <label class="notify-user-checkbox" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;background:white;border:1px solid #e5e7eb;border-radius:20px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
                         <input type="checkbox" name="regularNotifyUser" value="${esc(user.id)}" style="margin:0;" onchange="updateNotifyCheckboxStyle(this)">
@@ -11106,21 +12247,22 @@
             const taskName = rt.title || 'Регулярне завдання';
             
             // Оптимістичне видалення
-            const rtIndex = regularTasks.findIndex(r => r.id === id);
-            if (rtIndex >= 0) {
-                regularTasks.splice(rtIndex, 1);
-                if (currentRegularView === 'list') renderRegularTasks();
-                else renderRegularWeekView();
-            }
+            const rtCopy = { ...rt };
+            regularTasks = regularTasks.filter(r => r.id !== id);
+            if (currentRegularView === 'list') renderRegularTasks();
+            else renderRegularWeekView();
             
             // Показуємо toast з можливістю undo
-            showUndoToast(taskName, rt, 'regularTask');
+            showUndoToast(taskName, rtCopy, 'regularTask');
             
             try {
                 await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(id).delete();
             } catch (error) {
                 // Rollback
-                regularTasks.splice(rtIndex, 0, rt);
+                if (!regularTasks.find(r => r.id === id)) {
+                    regularTasks.unshift(rtCopy);
+                }
+                deletedItemsStack = deletedItemsStack.filter(d => d.item.id !== id);
                 if (currentRegularView === 'list') renderRegularTasks();
                 else renderRegularWeekView();
                 hideUndoToast();
@@ -11207,17 +12349,103 @@
         function filterRegularToday() {
             const today = new Date().getDay().toString();
             document.getElementById('regularDayFilter').value = today;
-            document.getElementById('regularAssigneeFilter').value = currentUser.uid; // Мої завдання
-            renderRegularTasks();
+            document.getElementById('regularAssigneeFilter').value = currentUser.uid;
+            applyRegularFilters();
         }
         
-        function renderRegularTasks() {
-            const c = document.getElementById('regularTasksContainer');
+        function filterRegularMy() {
+            const af = document.getElementById('regularAssigneeFilter');
+            if (af.value === currentUser.uid) {
+                af.value = ''; // toggle off
+            } else {
+                af.value = currentUser.uid;
+            }
+            applyRegularFilters();
+        }
+        
+        function applyRegularFilters() {
+            renderRegularTasks();
+            renderRegularWeekView();
+            renderMobileRegularDay();
+            updateRegularFilterUI();
+        }
+        
+        function updateRegularFilterUI() {
+            const af = document.getElementById('regularAssigneeFilter')?.value;
+            const ff = document.getElementById('regularFunctionFilter')?.value;
+            const df = document.getElementById('regularDayFilter')?.value;
+            
+            // Підсвітка кнопки "Мої"
+            const myBtn = document.getElementById('regularMyBtn');
+            if (myBtn) {
+                myBtn.classList.toggle('active', af === currentUser?.uid);
+                if (af === currentUser?.uid) {
+                    myBtn.style.background = 'var(--primary)';
+                    myBtn.style.color = 'white';
+                    myBtn.style.borderColor = 'var(--primary)';
+                } else {
+                    myBtn.style.background = '';
+                    myBtn.style.color = '';
+                    myBtn.style.borderColor = '';
+                }
+            }
+            
+            // Лічильник відфільтрованих
+            const total = regularTasks.length;
+            const filtered = getFilteredRegularTasks().length;
+            const countEl = document.getElementById('regularFilterCount');
+            if (countEl) {
+                if (af || ff || df) {
+                    countEl.textContent = `${filtered} / ${total}`;
+                } else {
+                    countEl.textContent = `${total}`;
+                }
+            }
+        }
+        
+        function getFilteredRegularTasks() {
             const ff = document.getElementById('regularFunctionFilter')?.value;
             const af = document.getElementById('regularAssigneeFilter')?.value;
             const dayFilter = document.getElementById('regularDayFilter')?.value;
             
-            // Оновлюємо селекти
+            const todayDate = new Date().getDate();
+            const isLastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() === todayDate;
+            
+            return regularTasks.filter(rt => {
+                if (ff && rt.function !== ff) return false;
+                
+                // Фільтр по виконавцю
+                if (af) {
+                    const func = functions.find(f => f.name === rt.function);
+                    if (!func?.assigneeIds?.includes(af)) return false;
+                }
+                
+                // Фільтр по дню
+                if (dayFilter) {
+                    if (rt.period === 'weekly') {
+                        if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                            if (!rt.daysOfWeek.includes(dayFilter)) return false;
+                        } else if (rt.dayOfWeek) {
+                            if (rt.dayOfWeek !== dayFilter) return false;
+                        }
+                    } else if (rt.period === 'daily') {
+                        // daily проходить завжди
+                    } else {
+                        if (rt.dayOfMonth === 'last') {
+                            if (!isLastDayOfMonth) return false;
+                        } else {
+                            if (parseInt(rt.dayOfMonth) !== todayDate) return false;
+                        }
+                    }
+                }
+                return true;
+            });
+        }
+        
+        function renderRegularTasks() {
+            const c = document.getElementById('regularTasksContainer');
+            
+            // Оновлюємо селекти (одноразово)
             const assigneeSelect = document.getElementById('regularAssigneeFilter');
             const functionSelect = document.getElementById('regularFunctionFilter');
             const activeFunctions = functions.filter(f => f.status !== 'archived');
@@ -11228,34 +12456,7 @@
                 functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
             }
             
-            // Визначаємо поточний день місяця для фільтрації місячних/квартальних
-            const todayDate = new Date().getDate();
-            const isLastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() === todayDate;
-            
-            let filtered = regularTasks.filter(rt => {
-                if (ff && rt.function !== ff) return false;
-                
-                // Фільтр по виконавцю - перевіряємо чи виконавець є в функції
-                if (af) {
-                    const func = functions.find(f => f.name === rt.function);
-                    if (!func?.assigneeIds?.includes(af)) return false;
-                }
-                
-                // Фільтр по дню
-                if (dayFilter) {
-                    if (rt.period === 'weekly') {
-                        if (rt.dayOfWeek !== dayFilter) return false;
-                    } else {
-                        // Для місячних/квартальних перевіряємо день місяця
-                        if (rt.dayOfMonth === 'last') {
-                            if (!isLastDayOfMonth) return false;
-                        } else {
-                            if (parseInt(rt.dayOfMonth) !== todayDate) return false;
-                        }
-                    }
-                }
-                return true;
-            });
+            let filtered = getFilteredRegularTasks();
             
             const pt = { weekly: t('weekly'), monthly: t('monthly'), quarterly: t('quarterly') };
             const days = {
@@ -11353,16 +12554,16 @@
                         <td>
                             <div class="action-btns">
                                 ${statusInfo.status === 'notCreated' ? `
-                                    <button class="action-btn" onclick="generateFromRegular('${rt.id}')" title="${t('create')}" style="background:#2196f3;color:white;"><i data-lucide="zap" class="icon icon-sm"></i></button>
-                                    <button class="action-btn" onclick="completeRegularTask('${rt.id}')" title="${t('markDone')}" style="background:#4caf50;color:white;"><i data-lucide="check" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="generateFromRegular('${escId(rt.id)}')" title="${t('create')}" style="background:#2196f3;color:white;"><i data-lucide="zap" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="completeRegularTask('${escId(rt.id)}')" title="${t('markDone')}" style="background:#4caf50;color:white;"><i data-lucide="check" class="icon icon-sm"></i></button>
                                 ` : statusInfo.status === 'inProgress' ? `
-                                    <button class="action-btn" onclick="completeRegularTask('${rt.id}')" title="${t('markDone')}" style="background:#4caf50;color:white;"><i data-lucide="check" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="completeRegularTask('${escId(rt.id)}')" title="${t('markDone')}" style="background:#4caf50;color:white;"><i data-lucide="check" class="icon icon-sm"></i></button>
                                 ` : `
-                                    <button class="action-btn" onclick="generateFromRegular('${rt.id}')" title="${t('createAgain')}" style="opacity:0.4;"><i data-lucide="zap" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="generateFromRegular('${escId(rt.id)}')" title="${t('createAgain')}" style="opacity:0.4;"><i data-lucide="zap" class="icon icon-sm"></i></button>
                                 `}
-                                ${rt.instruction ? `<button class="action-btn" onclick="showInstruction('${rt.id}')" title="${t('instruction')}"><i data-lucide="book-open" class="icon icon-sm"></i></button>` : ''}
-                                <button class="action-btn" onclick="openRegularTaskModal('${rt.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
-                                <button class="action-btn" onclick="deleteRegularTask('${rt.id}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                                ${rt.instruction ? `<button class="action-btn" onclick="showInstruction('${escId(rt.id)}')" title="${t('instruction')}"><i data-lucide="book-open" class="icon icon-sm"></i></button>` : ''}
+                                <button class="action-btn" onclick="openRegularTaskModal('${escId(rt.id)}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="deleteRegularTask('${escId(rt.id)}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                             </div>
                         </td>
                     </tr>`;
@@ -11442,7 +12643,20 @@
             
             for (let day = 0; day < 7; day++) {
                 const isToday = day === today;
+                
+                // Застосовуємо фільтри
+                const ff = document.getElementById('regularFunctionFilter')?.value;
+                const af = document.getElementById('regularAssigneeFilter')?.value;
+                
                 const dayTasks = regularTasks.filter(rt => {
+                    // Фільтр по функції
+                    if (ff && rt.function !== ff) return false;
+                    // Фільтр по виконавцю
+                    if (af) {
+                        const func = functions.find(f => f.name === rt.function);
+                        if (!func?.assigneeIds?.includes(af)) return false;
+                    }
+                    // Фільтр по дню
                     if (rt.period === 'daily') return true;
                     if (rt.period === 'weekly') {
                         if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
@@ -11490,7 +12704,7 @@
                     bodyHTML += `
                         <div class="regular-task-block ${isCompleted ? 'completed' : ''} ${isShort ? 'short' : ''} ${isNarrow ? 'narrow' : ''}"
                              style="top: ${taskPos.top}px; height: ${taskPos.height}px; left: calc(4px + ${leftPercent}%); width: calc(${widthPercent}% - 8px);"
-                             onclick="openRegularTaskModal('${rt.id}')"
+                             onclick="openRegularTaskModal('${escId(rt.id)}')"
                              title="${esc(rt.title)}\n${timeStart} - ${timeEnd}\n${esc(rt.function) || ''}">
                             <div class="task-time">${timeStart} - ${timeEnd}</div>
                             <div class="task-title">${esc(rt.title)}</div>
@@ -11731,16 +12945,31 @@
             const todayDate = today.getDate();
             const todayDateStr = today.toISOString().split('T')[0];
             
+            // Фільтри
+            const ff = document.getElementById('regularFunctionFilter')?.value;
+            const af = document.getElementById('regularAssigneeFilter')?.value;
+            
+            const applyUserFilters = (tasks) => {
+                return tasks.filter(rt => {
+                    if (ff && rt.function !== ff) return false;
+                    if (af) {
+                        const func = functions.find(f => f.name === rt.function);
+                        if (!func?.assigneeIds?.includes(af)) return false;
+                    }
+                    return true;
+                });
+            };
+            
             // Filter WEEKLY tasks for selected day
-            const weeklyTasks = regularTasks.filter(rt => {
+            const weeklyTasks = applyUserFilters(regularTasks.filter(rt => {
                 if (rt.period === 'weekly') {
                     return parseInt(rt.dayOfWeek) === selectedRegularDay;
                 }
                 return false;
-            }).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+            })).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
             
             // Get MONTHLY tasks (show in separate section)
-            const monthlyTasks = regularTasks.filter(rt => rt.period === 'monthly')
+            const monthlyTasks = applyUserFilters(regularTasks.filter(rt => rt.period === 'monthly'))
                 .sort((a, b) => {
                     const dayA = a.dayOfMonth === 'last' ? 32 : parseInt(a.dayOfMonth);
                     const dayB = b.dayOfMonth === 'last' ? 32 : parseInt(b.dayOfMonth);
@@ -11748,7 +12977,7 @@
                 });
             
             // Get QUARTERLY tasks
-            const quarterlyTasks = regularTasks.filter(rt => rt.period === 'quarterly')
+            const quarterlyTasks = applyUserFilters(regularTasks.filter(rt => rt.period === 'quarterly'))
                 .sort((a, b) => (a.time || '').localeCompare(b.time || ''));
             
             let html = '';
@@ -11807,7 +13036,7 @@
             
             return `
                 <div class="regular-task-card ${statusInfo.completedToday ? 'completed' : ''}" 
-                     onclick="openRegularTaskModal('${rt.id}')"
+                     onclick="openRegularTaskModal('${escId(rt.id)}')"
                      style="border-left-color: ${statusInfo.color};">
                     <div class="task-time">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -11824,7 +13053,7 @@
                     ` : ''}
                     ${rt.function ? `<div class="task-function">${esc(rt.function)}</div>` : ''}
                     <button class="regular-task-complete-btn ${statusInfo.completedToday ? 'completed' : ''}" 
-                            onclick="event.stopPropagation();markRegularTaskComplete('${rt.id}')"
+                            onclick="event.stopPropagation();markRegularTaskComplete('${escId(rt.id)}')"
                             title="${statusInfo.completedToday ? 'Виконано сьогодні' : 'Позначити виконаним'}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                     </button>
@@ -11917,16 +13146,16 @@
                 return `
                 <div class="user-card">
                     <div class="user-header">
-                        <div class="user-name">${u.name || u.email}</div>
+                        <div class="user-name">${esc(u.name || u.email)}</div>
                         <span class="role-badge ${u.role}">${getRoleText(u.role)}</span>
                     </div>
                     <div class="user-details">
-                        <div><i data-lucide="mail" class="icon icon-sm"></i> ${u.email}</div>
-                        ${u.position ? `<div><i data-lucide="briefcase" class="icon icon-sm"></i> ${u.position}</div>` : ''}
+                        <div><i data-lucide="mail" class="icon icon-sm"></i> ${esc(u.email)}</div>
+                        ${u.position ? `<div><i data-lucide="briefcase" class="icon icon-sm"></i> ${esc(u.position)}</div>` : ''}
                     </div>
                     ${userFunctions.length > 0 ? `
                         <div style="margin:0.5rem 0;display:flex;flex-wrap:wrap;gap:0.25rem;">
-                            ${userFunctions.map(f => `<span class="badge" style="font-size:0.7rem;background:#e8f5e9;color:#2e7d32;">${f.name}</span>`).join('')}
+                            ${userFunctions.map(f => `<span class="badge" style="font-size:0.7rem;background:#e8f5e9;color:#2e7d32;">${esc(f.name)}</span>`).join('')}
                         </div>
                     ` : ''}
                     <div class="user-stats">
@@ -11951,8 +13180,8 @@
             const userFunctionsDiv = document.getElementById('userFunctions');
             userFunctionsDiv.innerHTML = functions.map(f => `
                 <label class="assignee-checkbox">
-                    <input type="checkbox" value="${f.id}" data-fname="${f.name}">
-                    ${f.name}
+                    <input type="checkbox" value="${f.id}" data-fname="${esc(f.name)}">
+                    ${esc(f.name)}
                 </label>
             `).join('') || `<p style="color:#7f8c8d;">${t('noFunctions')}</p>`;
             
@@ -12223,7 +13452,7 @@
             document.getElementById('regularAssigneeFilter').value = '';
             document.getElementById('regularFunctionFilter').value = '';
             document.getElementById('regularDayFilter').value = '';
-            renderRegularTasks();
+            applyRegularFilters();
         }
 
         // =====================
@@ -12280,9 +13509,9 @@
                     
                     html += `
                         <tr style="border-bottom:1px solid #e5e7eb;" id="company-row-${companyId}">
-                            <td style="padding:0.75rem;font-weight:600;">${company.name || 'Без назви'}</td>
-                            <td style="padding:0.75rem;">${company.ownerName || '-'}</td>
-                            <td style="padding:0.75rem;"><code style="background:#f3f4f6;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.8rem;">${company.ownerEmail || '-'}</code></td>
+                            <td style="padding:0.75rem;font-weight:600;">${esc(company.name || 'Без назви')}</td>
+                            <td style="padding:0.75rem;">${esc(company.ownerName || '-')}</td>
+                            <td style="padding:0.75rem;"><code style="background:#f3f4f6;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.8rem;">${esc(company.ownerEmail || '-')}</code></td>
                             <td style="padding:0.75rem;color:var(--gray);">${createdAt}</td>
                             <td style="padding:0.75rem;text-align:center;">
                                 <span style="background:#dbeafe;color:#1d4ed8;padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;">${usersSnap.size}</span>
@@ -12451,6 +13680,9 @@
             const af = document.getElementById('assigneeFilter');
             const raf = document.getElementById('regularAssigneeFilter');
             const rff = document.getElementById('regularFunctionFilter');
+            const caf = document.getElementById('calendarAssigneeFilter');
+            const cff = document.getElementById('calendarFunctionFilter');
+            const paf = document.getElementById('processAssigneeFilter');
             
             // Фільтруємо архівовані функції
             const activeFunctions = functions.filter(f => f.status !== 'archived');
@@ -12461,6 +13693,9 @@
             if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             if (raf) raf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             if (rff) rff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (caf) caf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (cff) cff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (paf) paf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
         }
 
         function formatDate(s) {
@@ -13347,7 +14582,7 @@
                 
                 // Показуємо інструкцію
                 const proceed = confirm(
-                    '📱 Підключення Telegram\n\n' +
+                    'Підключення Telegram\n\n' +
                     '1. Зараз відкриється Telegram бот\n' +
                     '2. Натисніть "Start" або "Запустити"\n' +
                     '3. Бот автоматично підключить сповіщення\n\n' +
@@ -13741,9 +14976,9 @@
             
             const updateData = { 
                 status: newStatus,
-                completedAt: new Date().toISOString()
+                completedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            if (needsReview) updateData.sentForReviewAt = new Date().toISOString();
+            if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
             
             await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
             
@@ -14329,19 +15564,6 @@
             });
         };
         
-        // Show FAB when logged in
-        if (typeof auth !== 'undefined') {
-            auth.onAuthStateChanged(user => {
-                const fab = document.getElementById('fabAdd');
-                const bottomNav = document.getElementById('bottomNav');
-                if (user && fab) {
-                    fab.style.display = 'flex';
-                } else if (fab) {
-                    fab.style.display = 'none';
-                }
-            });
-        }
-        
         // =====================
         // SWIPE BETWEEN TABS
         // =====================
@@ -14441,14 +15663,67 @@
         
         // Save data to localStorage for offline access
         function saveOfflineData() {
-            offlineData = {
-                tasks: tasks,
-                functions: functions,
-                users: users,
-                regularTasks: regularTasks,
-                lastSync: new Date().toISOString()
-            };
-            localStorage.setItem('offlineData', JSON.stringify(offlineData));
+            try {
+                // Зберігаємо тільки потрібні поля — без description, timeLog, checklist
+                // щоб не перевищити localStorage 5MB limit
+                const trimmedTasks = tasks.map(t => ({
+                    id: t.id,
+                    title: t.title,
+                    status: t.status,
+                    assigneeId: t.assigneeId,
+                    assigneeName: t.assigneeName,
+                    creatorId: t.creatorId,
+                    creatorName: t.creatorName,
+                    deadlineDate: t.deadlineDate,
+                    deadlineTime: t.deadlineTime,
+                    deadline: t.deadline,
+                    function: t.function,
+                    priority: t.priority,
+                    pinned: t.pinned,
+                    estimatedTime: t.estimatedTime,
+                    requireReview: t.requireReview,
+                    processId: t.processId,
+                    regularTaskId: t.regularTaskId,
+                    autoGenerated: t.autoGenerated,
+                    createdAt: t.createdAt
+                }));
+                
+                offlineData = {
+                    tasks: trimmedTasks,
+                    functions: functions,
+                    users: users,
+                    regularTasks: regularTasks.map(rt => ({
+                        id: rt.id,
+                        title: rt.title,
+                        function: rt.function,
+                        period: rt.period,
+                        daysOfWeek: rt.daysOfWeek,
+                        dayOfWeek: rt.dayOfWeek,
+                        dayOfMonth: rt.dayOfMonth,
+                        timeStart: rt.timeStart,
+                        estimatedTime: rt.estimatedTime
+                    })),
+                    lastSync: new Date().toISOString()
+                };
+                
+                const json = JSON.stringify(offlineData);
+                
+                // Перевірка розміру перед записом (~5MB limit)
+                if (json.length > 4 * 1024 * 1024) {
+                    // Якщо все ще > 4MB — зберігаємо тільки останні 200 задач
+                    offlineData.tasks = trimmedTasks.slice(0, 200);
+                    localStorage.setItem('offlineData', JSON.stringify(offlineData));
+                } else {
+                    localStorage.setItem('offlineData', json);
+                }
+            } catch (e) {
+                // QuotaExceededError — не блокуємо роботу, просто логуємо
+                console.warn('saveOfflineData: localStorage full, skipping', e.name);
+                try {
+                    // Fallback: видаляємо offline дані щоб звільнити місце
+                    localStorage.removeItem('offlineData');
+                } catch (e2) { /* ignore */ }
+            }
         }
         
         // Load offline data
@@ -14796,10 +16071,16 @@ Ctrl+N - нове завдання
         // Clean up comments listener when closing modal
         const originalCloseModal = window.closeModal;
         window.closeModal = function(modalId) {
-            if (modalId === 'taskModal' && commentsUnsubscribe) {
-                commentsUnsubscribe();
-                commentsUnsubscribe = null;
-                currentTaskIdForComments = null;
+            if (modalId === 'taskModal') {
+                if (commentsUnsubscribe) {
+                    commentsUnsubscribe();
+                    commentsUnsubscribe = null;
+                    currentTaskIdForComments = null;
+                }
+                // Зупиняємо time tracker
+                if (timeTrackerInterval) {
+                    stopTimeTracker();
+                }
             }
             if (originalCloseModal) {
                 originalCloseModal(modalId);
