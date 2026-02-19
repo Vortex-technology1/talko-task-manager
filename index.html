@@ -161,6 +161,8 @@
             background: rgba(255,255,255,0.35);
         }
         
+        .mobile-logout-btn { display: none; }
+        
         .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
         
         .tab-navigation { 
@@ -2080,7 +2082,8 @@
             .header .header-ai-btn,
             .header .lang-switcher,
             .header .user-info,
-            .header #logoutBtn {
+            .header #logoutBtn,
+            .header #demoDataBtnDesktop {
                 display: none !important;
             }
             
@@ -2116,16 +2119,37 @@
                 margin-bottom: 0.5rem;
             }
             
-            /* Fullscreen modals on mobile */
+            /* Fullscreen modals on mobile - only main editing modals */
             .modal {
                 padding: 0;
             }
             
-            .modal-content {
+            #taskModal .modal-content,
+            #regularTaskModal .modal-content,
+            #processTemplatesModal .modal-content,
+            #projectModal .modal-content {
                 border-radius: 0;
                 max-height: 100vh;
                 min-height: 100vh;
                 margin: 0;
+                max-width: 100%;
+            }
+            
+            /* Smaller modals stay compact */
+            #demoDataModal .modal-content,
+            #profileModal .modal-content,
+            #filterModal .modal-content {
+                border-radius: 16px;
+                min-height: auto;
+                max-height: 90vh;
+                margin: auto;
+                max-width: 95%;
+            }
+            
+            /* Mobile menu - bottom sheet */
+            #mobileMenuModal .modal-content {
+                min-height: auto;
+                max-height: none;
             }
             
             .modal-header {
@@ -4852,7 +4876,7 @@
                 </div>
                 <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;"><i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span></button>
                 <button class="header-btn" onclick="openDemoDataModal()" id="demoDataBtnDesktop" style="display:none;background:rgba(239,68,68,0.3);"><i data-lucide="database" class="icon"></i> Демо</button>
-                <button class="mobile-logout-btn" onclick="logout()" style="display:none !important;"><i data-lucide="log-out" class="icon" style="width:18px;height:18px;"></i></button>
+                <button class="mobile-logout-btn" onclick="logout()"><i data-lucide="log-out" class="icon" style="width:18px;height:18px;"></i></button>
             </div>
         </div>
     </header>
@@ -16014,56 +16038,70 @@
     
     <!-- Mobile More Menu Modal -->
     <div class="modal" id="mobileMenuModal" onclick="if(event.target === this) closeMobileMenu();">
-        <div class="modal-content" style="max-width:320px;margin-top:auto;margin-bottom:0;border-radius:16px 16px 0 0;">
-            <div style="padding:1rem;">
-                <h3 style="margin-bottom:1rem;text-align:center;" data-i18n="menu">Меню</h3>
-                <div style="display:flex;flex-direction:column;gap:0.5rem;">
-                    
-                    <!-- AI Assistants -->
-                    <p style="margin:0;font-size:0.8rem;color:#888;text-transform:uppercase;letter-spacing:0.5px;" data-i18n="aiAssistants">AI Асистенти</p>
-                    <div style="display:flex;gap:0.5rem;">
-                        <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="btn" style="flex:1;justify-content:center;background:#8b5cf6;color:white;font-size:0.85rem;" onclick="closeMobileMenu();">
-                            <i data-lucide="target" class="icon icon-sm"></i> <span data-i18n="aiManager">Керівник</span>
-                        </a>
-                        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="btn" style="flex:1;justify-content:center;background:#22c55e;color:white;font-size:0.85rem;" onclick="closeMobileMenu();">
-                            <i data-lucide="wrench" class="icon icon-sm"></i> <span data-i18n="aiTechnical">Технічний</span>
-                        </a>
-                    </div>
-                    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="btn" style="justify-content:center;background:#3b82f6;color:white;" onclick="closeMobileMenu();">
-                        <i data-lucide="message-circle" class="icon"></i> <span data-i18n="aiSupport">AI Помічник (Підтримка)</span>
-                    </a>
-                    
-                    <hr style="border:none;border-top:1px solid #eee;margin:0.5rem 0;">
-                    
-                    <button class="btn" onclick="switchTab('projects');closeMobileMenu();" style="justify-content:flex-start;">
-                        <i data-lucide="folder-kanban" class="icon"></i> <span data-i18n="tabProjects">Проєкти</span>
+        <div class="modal-content" style="max-width:340px;margin-top:auto;margin-bottom:0;border-radius:20px 20px 0 0;padding:0;min-height:auto;">
+            <!-- Handle bar -->
+            <div style="display:flex;justify-content:center;padding:0.75rem 0 0.5rem;">
+                <div style="width:40px;height:4px;background:#ddd;border-radius:4px;"></div>
+            </div>
+            
+            <div style="padding:0 1.25rem 1.25rem;">
+                <!-- Navigation grid -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
+                    <button class="btn" onclick="switchTab('projects');closeMobileMenu();" style="justify-content:center;padding:0.7rem;font-size:0.8rem;">
+                        <i data-lucide="folder-kanban" class="icon icon-sm"></i> Проєкти
                     </button>
-                    <button class="btn" onclick="switchTab('processes');closeMobileMenu();" style="justify-content:flex-start;">
-                        <i data-lucide="git-branch" class="icon"></i> <span data-i18n="tabProcesses">Процеси</span>
+                    <button class="btn" onclick="switchTab('processes');closeMobileMenu();" style="justify-content:center;padding:0.7rem;font-size:0.8rem;">
+                        <i data-lucide="git-branch" class="icon icon-sm"></i> Процеси
                     </button>
-                    <button class="btn" onclick="switchTab('functions');closeMobileMenu();" style="justify-content:flex-start;">
-                        <i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span>
+                    <button class="btn" onclick="switchTab('functions');closeMobileMenu();" style="justify-content:center;padding:0.7rem;font-size:0.8rem;">
+                        <i data-lucide="settings" class="icon icon-sm"></i> Функції
                     </button>
-                    <button class="btn" onclick="switchTab('analytics');closeMobileMenu();" style="justify-content:flex-start;">
-                        <i data-lucide="bar-chart-3" class="icon"></i> <span data-i18n="tabAnalytics">Аналітика</span>
-                    </button>
-                    <button class="btn" onclick="openProfileModal();closeMobileMenu();" style="justify-content:flex-start;">
-                        <i data-lucide="user" class="icon"></i> <span data-i18n="profile">Профіль</span>
-                    </button>
-                    <button id="notificationToggleBtn" class="btn btn-success" onclick="toggleNotifications();closeMobileMenu();" style="justify-content:flex-start;">
-                        <i data-lucide="bell" class="icon"></i> <span data-i18n="enableNotifications">Увімкнути сповіщення</span>
-                    </button>
-                    <button class="btn" onclick="openDemoDataModal();closeMobileMenu();" style="justify-content:flex-start;" id="demoDataBtn">
-                        <i data-lucide="database" class="icon"></i> <span data-i18n="loadDemoData">Завантажити демо-дані</span>
-                    </button>
-                    <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
-                        <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;" id="mLangUA">UA</button>
-                        <button class="btn" onclick="setLanguage('ru');closeMobileMenu();" style="flex:1;" id="mLangRU">RU</button>
-                    </div>
-                    <button class="btn btn-danger" onclick="auth.signOut();closeMobileMenu();" style="justify-content:flex-start;margin-top:0.5rem;">
-                        <i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span>
+                    <button class="btn" onclick="switchTab('analytics');closeMobileMenu();" style="justify-content:center;padding:0.7rem;font-size:0.8rem;">
+                        <i data-lucide="bar-chart-3" class="icon icon-sm"></i> Аналітика
                     </button>
                 </div>
+                
+                <!-- Settings row -->
+                <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+                    <button class="btn" onclick="openProfileModal();closeMobileMenu();" style="flex:1;justify-content:center;padding:0.6rem;font-size:0.8rem;">
+                        <i data-lucide="user" class="icon icon-sm"></i> Профіль
+                    </button>
+                    <button id="notificationToggleBtn" class="btn btn-success" onclick="toggleNotifications();closeMobileMenu();" style="flex:1;justify-content:center;padding:0.6rem;font-size:0.8rem;">
+                        <i data-lucide="bell" class="icon icon-sm"></i> Сповіщення
+                    </button>
+                </div>
+                
+                <!-- Language -->
+                <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+                    <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;" id="mLangUA">🇺🇦 UA</button>
+                    <button class="btn" onclick="setLanguage('ru');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;" id="mLangRU">RU</button>
+                </div>
+                
+                <!-- AI Assistants - collapsed -->
+                <details style="margin-bottom:0.5rem;">
+                    <summary style="font-size:0.75rem;color:#999;cursor:pointer;padding:0.3rem 0;">AI Асистенти ▾</summary>
+                    <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+                        <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="btn" style="flex:1;justify-content:center;background:#8b5cf6;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
+                            <i data-lucide="target" class="icon icon-sm"></i> Керівник
+                        </a>
+                        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="btn" style="flex:1;justify-content:center;background:#22c55e;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
+                            <i data-lucide="wrench" class="icon icon-sm"></i> Технічний
+                        </a>
+                    </div>
+                    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="btn" style="justify-content:center;background:#3b82f6;color:white;font-size:0.75rem;padding:0.5rem;margin-top:0.5rem;width:100%;" onclick="closeMobileMenu();">
+                        <i data-lucide="message-circle" class="icon icon-sm"></i> Підтримка
+                    </a>
+                </details>
+                
+                <!-- SuperAdmin: Demo data -->
+                <button class="btn" onclick="openDemoDataModal();closeMobileMenu();" style="justify-content:center;width:100%;padding:0.6rem;font-size:0.8rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;margin-bottom:0.5rem;" id="demoDataBtn">
+                    <i data-lucide="database" class="icon icon-sm"></i> Демо-дані / Очистити
+                </button>
+                
+                <!-- Logout -->
+                <button class="btn btn-danger" onclick="auth.signOut();closeMobileMenu();" style="justify-content:center;width:100%;padding:0.6rem;font-size:0.85rem;">
+                    <i data-lucide="log-out" class="icon icon-sm"></i> Вийти
+                </button>
             </div>
         </div>
     </div>
