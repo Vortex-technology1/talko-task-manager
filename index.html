@@ -11333,7 +11333,6 @@
                 const newFuncRef = await db.collection('companies').doc(currentCompany).collection('functions').add(mergedFunctionData);
                 
                 // Оновлюємо завдання - переносимо на нову функцію
-                const batch = db.batch();
                 let batch = db.batch();
                 let batchCount = 0;
                 
