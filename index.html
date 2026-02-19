@@ -7,6 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://accounts.google.com/gsi/client"></script>
     <script src="https://apis.google.com/js/api.js"></script>
@@ -3920,6 +3921,194 @@
             word-break: break-word;
         }
         
+        .comment-text a {
+            color: #2563eb;
+            text-decoration: underline;
+            word-break: break-all;
+            transition: color 0.15s;
+        }
+        
+        .comment-text a:hover {
+            color: #1d4ed8;
+        }
+        
+        .comment-text a:visited {
+            color: #7c3aed;
+        }
+        
+        /* File Attachments */
+        .task-files-section {
+            margin-top: 0.5rem;
+        }
+        
+        .task-files-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .task-files-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .task-file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        
+        .task-file-item:hover {
+            background: #f0fdf4;
+            border-color: var(--primary);
+        }
+        
+        .task-file-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .task-file-icon.pdf { background: #ef4444; }
+        .task-file-icon.doc { background: #3b82f6; }
+        .task-file-icon.xls { background: #22c55e; }
+        .task-file-icon.img { background: #f59e0b; }
+        .task-file-icon.other { background: #6b7280; }
+        
+        .task-file-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .task-file-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .task-file-meta {
+            font-size: 0.75rem;
+            color: var(--gray);
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .task-file-actions {
+            display: flex;
+            gap: 0.25rem;
+            flex-shrink: 0;
+        }
+        
+        .task-file-actions button {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            color: var(--gray);
+        }
+        
+        .task-file-actions button:hover {
+            background: #e5e7eb;
+        }
+        
+        .task-file-actions button.delete-file:hover {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+        
+        .file-upload-area:hover,
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: #f0fdf4;
+            color: var(--primary);
+        }
+        
+        .file-upload-area .upload-icon {
+            margin-bottom: 0.25rem;
+        }
+        
+        .file-upload-progress {
+            display: none;
+            margin-top: 0.5rem;
+        }
+        
+        .file-upload-progress .progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .file-upload-progress .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.2s;
+        }
+        
+        .file-upload-progress .progress-text {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+        
+        /* Image preview in files */
+        .task-file-item.image-preview {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .task-file-item.image-preview .file-preview-img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .task-file-item .file-preview-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+        }
+        
         .comment-input-wrapper {
             display: flex;
             gap: 0.5rem;
@@ -4888,6 +5077,35 @@
                 
                 <!-- COMMENTS SECTION -->
                 <div id="taskCommentsSection" class="comments-section hidden">
+                    <!-- FILE ATTACHMENTS -->
+                    <div class="task-files-section">
+                        <div class="task-files-header">
+                            <label class="form-label" style="margin:0;">
+                                <i data-lucide="paperclip" class="icon icon-sm"></i>
+                                <span data-i18n="attachments">Файли</span>
+                                <span id="fileCount" style="background:var(--info);color:white;font-size:0.7rem;padding:0.1rem 0.4rem;border-radius:8px;font-weight:600;margin-left:4px;">0</span>
+                            </label>
+                        </div>
+                        <div id="taskFilesList" class="task-files-list">
+                            <!-- Files rendered here -->
+                        </div>
+                        <div id="fileUploadArea" class="file-upload-area" 
+                             onclick="document.getElementById('fileInput').click()"
+                             ondragover="event.preventDefault(); this.classList.add('dragover')"
+                             ondragleave="this.classList.remove('dragover')"
+                             ondrop="handleFileDrop(event); this.classList.remove('dragover')">
+                            <div class="upload-icon"><i data-lucide="upload-cloud" class="icon icon-lg"></i></div>
+                            <div>Натисніть або перетягніть файли сюди</div>
+                            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.25rem;">Макс. 10 МБ на файл • PDF, DOC, XLS, зображення</div>
+                        </div>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.webp,.zip,.txt,.csv" style="display:none" onchange="handleFileSelect(event)">
+                        <div id="fileUploadProgress" class="file-upload-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="fileProgressFill" style="width:0%"></div></div>
+                            <div class="progress-text" id="fileProgressText">Завантаження...</div>
+                        </div>
+                    </div>
+                    
+                    <div style="height:1rem;"></div>
                     <div class="comments-header">
                         <i data-lucide="message-circle" class="icon"></i>
                         <span data-i18n="comments">Коментарі</span>
@@ -6146,6 +6364,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const storage = firebase.storage();
         const googleProvider = new firebase.auth.GoogleAuthProvider();
 
         // =====================
@@ -7961,7 +8180,7 @@
                     : null;
                 
                 const data = {
-                    title: sanitizeHTML(document.getElementById('taskTitle').value.trim()),
+                    title: document.getElementById('taskTitle').value.trim(),
                     function: document.getElementById('taskFunction').value,
                     assigneeId: assigneeId,
                     assigneeName: assignee?.name || assignee?.email || '',
@@ -11115,6 +11334,7 @@
                 
                 // Оновлюємо завдання - переносимо на нову функцію
                 const batch = db.batch();
+                let batch = db.batch();
                 let batchCount = 0;
                 
                 for (const f of selectedFunctions) {
@@ -11131,6 +11351,7 @@
                         // Firebase batch limit = 500
                         if (batchCount >= 450) {
                             await batch.commit();
+                            batch = db.batch();
                             batchCount = 0;
                         }
                     }
@@ -11147,6 +11368,7 @@
                         
                         if (batchCount >= 450) {
                             await batch.commit();
+                            batch = db.batch();
                             batchCount = 0;
                         }
                     }
@@ -16019,6 +16241,7 @@ Ctrl+N - нове завдання
             // Show comments section for existing tasks
             section.classList.remove('hidden');
             loadComments(taskId);
+            loadTaskFiles(taskId);
             
             // Re-initialize lucide icons for comment section
             if (typeof lucide !== 'undefined') {
@@ -16057,6 +16280,19 @@ Ctrl+N - нове завдання
                 });
         }
         
+        // Linkify — convert URLs to clickable links (after escaping HTML)
+        function linkifyText(escapedText) {
+            if (!escapedText) return '';
+            // Match URLs in already-escaped text
+            const urlRegex = /(https?:\/\/[^\s<>"']+)/gi;
+            return escapedText.replace(urlRegex, function(url) {
+                // Trim trailing punctuation that's likely not part of URL
+                let cleanUrl = url.replace(/[.,;:!?)]+$/, '');
+                let trailing = url.slice(cleanUrl.length);
+                return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${cleanUrl}</a>${trailing}`;
+            });
+        }
+        
         // Render comments list
         function renderComments(comments) {
             const listEl = document.getElementById('commentsList');
@@ -16076,13 +16312,16 @@ Ctrl+N - нове завдання
                 const isOwn = comment.authorId === currentUserId;
                 const time = formatCommentTime(comment.createdAt);
                 
+                // Escape HTML first, then linkify URLs
+                const safeText = linkifyText(escapeHtml(comment.text));
+                
                 return `
                     <div class="comment-item ${isOwn ? 'own-comment' : ''}">
                         <div class="comment-header">
                             <span class="comment-author">${escapeHtml(comment.authorName || 'Невідомий')}</span>
                             <span class="comment-time">${time}</span>
                         </div>
-                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                        <div class="comment-text">${safeText}</div>
                     </div>
                 `;
             }).join('');
@@ -16181,6 +16420,254 @@ Ctrl+N - нове завдання
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        
+        // =====================
+        // FILE ATTACHMENTS
+        // =====================
+        
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+        const ALLOWED_EXTENSIONS = ['pdf','doc','docx','xls','xlsx','png','jpg','jpeg','gif','webp','zip','txt','csv'];
+        
+        function getFileIconClass(filename) {
+            const ext = (filename || '').split('.').pop().toLowerCase();
+            if (['pdf'].includes(ext)) return 'pdf';
+            if (['doc', 'docx', 'txt'].includes(ext)) return 'doc';
+            if (['xls', 'xlsx', 'csv'].includes(ext)) return 'xls';
+            if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) return 'img';
+            return 'other';
+        }
+        
+        function getFileIconLabel(filename) {
+            const ext = (filename || '').split('.').pop().toUpperCase();
+            return ext.slice(0, 4);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' Б';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' КБ';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' МБ';
+        }
+        
+        function isImageFile(filename) {
+            const ext = (filename || '').split('.').pop().toLowerCase();
+            return ['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext);
+        }
+        
+        // Load and render files for a task
+        function loadTaskFiles(taskId) {
+            if (!taskId) {
+                document.getElementById('taskFilesList').innerHTML = '';
+                document.getElementById('fileCount').textContent = '0';
+                return;
+            }
+            
+            const task = tasks.find(t => t.id === taskId);
+            const files = task?.files || [];
+            renderTaskFiles(files);
+        }
+        
+        function renderTaskFiles(files) {
+            const listEl = document.getElementById('taskFilesList');
+            const countEl = document.getElementById('fileCount');
+            
+            countEl.textContent = files.length;
+            
+            if (files.length === 0) {
+                listEl.innerHTML = '';
+                return;
+            }
+            
+            listEl.innerHTML = files.map((file, index) => {
+                const iconClass = getFileIconClass(file.name);
+                const iconLabel = getFileIconLabel(file.name);
+                const isImg = isImageFile(file.name);
+                const canDelete = currentUserData?.role !== 'employee' || 
+                                  file.uploadedBy === currentUser?.uid;
+                
+                return `
+                    <div class="task-file-item ${isImg ? 'image-preview' : ''}">
+                        <div class="file-preview-row">
+                            <div class="task-file-icon ${iconClass}">${iconLabel}</div>
+                            <div class="task-file-info">
+                                <div class="task-file-name" title="${esc(file.name)}">${esc(file.name)}</div>
+                                <div class="task-file-meta">
+                                    <span>${formatFileSize(file.size || 0)}</span>
+                                    <span>${esc(file.uploadedByName || '')}</span>
+                                    ${file.uploadedAt ? `<span>${formatCommentTime(file.uploadedAt)}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="task-file-actions">
+                                <button onclick="downloadTaskFile('${esc(file.url)}')" title="Завантажити">
+                                    <i data-lucide="download" class="icon icon-sm"></i>
+                                </button>
+                                ${canDelete ? `<button class="delete-file" onclick="deleteTaskFile(${index})" title="Видалити">
+                                    <i data-lucide="trash-2" class="icon icon-sm"></i>
+                                </button>` : ''}
+                            </div>
+                        </div>
+                        ${isImg ? `<img src="${esc(file.url)}" class="file-preview-img" alt="${esc(file.name)}" onclick="window.open('${esc(file.url)}', '_blank')" loading="lazy">` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            refreshIcons();
+        }
+        
+        function downloadTaskFile(url) {
+            window.open(url, '_blank');
+        }
+        
+        async function deleteTaskFile(fileIndex) {
+            if (!editingId) return;
+            if (!confirm('Видалити файл?')) return;
+            
+            const task = tasks.find(t => t.id === editingId);
+            if (!task || !task.files || !task.files[fileIndex]) return;
+            
+            const file = task.files[fileIndex];
+            
+            try {
+                // Delete from Storage
+                if (file.storagePath) {
+                    try {
+                        await storage.ref(file.storagePath).delete();
+                    } catch (e) {
+                        console.warn('Storage delete failed (file may not exist):', e);
+                    }
+                }
+                
+                // Remove from task
+                const updatedFiles = [...task.files];
+                updatedFiles.splice(fileIndex, 1);
+                
+                await db.collection('companies').doc(currentCompany)
+                    .collection('tasks').doc(editingId)
+                    .update({ files: updatedFiles });
+                
+                task.files = updatedFiles;
+                renderTaskFiles(updatedFiles);
+                showToast('Файл видалено', 'success');
+            } catch (error) {
+                console.error('deleteTaskFile error:', error);
+                showToast('Помилка видалення файлу', 'error');
+            }
+        }
+        
+        function handleFileDrop(e) {
+            e.preventDefault();
+            const files = e.dataTransfer?.files;
+            if (files && files.length > 0) {
+                uploadFiles(files);
+            }
+        }
+        
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                uploadFiles(files);
+            }
+            // Reset input so same file can be selected again
+            e.target.value = '';
+        }
+        
+        async function uploadFiles(fileList) {
+            if (!editingId || !currentCompany || !currentUser) {
+                showToast('Збережіть завдання перед додаванням файлів', 'warning');
+                return;
+            }
+            
+            const filesToUpload = Array.from(fileList);
+            
+            // Validate
+            for (const file of filesToUpload) {
+                if (file.size > MAX_FILE_SIZE) {
+                    showToast(`Файл "${file.name}" перевищує 10 МБ`, 'error');
+                    return;
+                }
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!ALLOWED_EXTENSIONS.includes(ext)) {
+                    showToast(`Тип файлу .${ext} не підтримується`, 'error');
+                    return;
+                }
+            }
+            
+            const progressEl = document.getElementById('fileUploadProgress');
+            const progressFill = document.getElementById('fileProgressFill');
+            const progressText = document.getElementById('fileProgressText');
+            progressEl.style.display = 'block';
+            
+            const task = tasks.find(t => t.id === editingId);
+            const existingFiles = task?.files || [];
+            const newFiles = [];
+            
+            try {
+                for (let i = 0; i < filesToUpload.length; i++) {
+                    const file = filesToUpload[i];
+                    progressText.textContent = `Завантаження ${i + 1}/${filesToUpload.length}: ${file.name}`;
+                    progressFill.style.width = '10%';
+                    
+                    // Generate unique path
+                    const timestamp = Date.now();
+                    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+                    const storagePath = `companies/${currentCompany}/tasks/${editingId}/${timestamp}_${safeName}`;
+                    
+                    const storageRef = storage.ref(storagePath);
+                    
+                    // Upload with progress tracking
+                    const uploadTask = storageRef.put(file);
+                    
+                    await new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed',
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                progressFill.style.width = progress + '%';
+                            },
+                            (error) => reject(error),
+                            () => resolve()
+                        );
+                    });
+                    
+                    // Get download URL
+                    const url = await storageRef.getDownloadURL();
+                    
+                    newFiles.push({
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        url: url,
+                        storagePath: storagePath,
+                        uploadedBy: currentUser.uid,
+                        uploadedByName: currentUserData?.name || currentUser.email,
+                        uploadedAt: new Date().toISOString()
+                    });
+                }
+                
+                // Save to Firestore
+                const allFiles = [...existingFiles, ...newFiles];
+                await db.collection('companies').doc(currentCompany)
+                    .collection('tasks').doc(editingId)
+                    .update({ files: allFiles });
+                
+                // Update local
+                if (task) task.files = allFiles;
+                renderTaskFiles(allFiles);
+                
+                progressFill.style.width = '100%';
+                progressText.textContent = `Завантажено ${newFiles.length} файл(ів)`;
+                
+                setTimeout(() => {
+                    progressEl.style.display = 'none';
+                    progressFill.style.width = '0%';
+                }, 2000);
+                
+                showToast(`Завантажено ${newFiles.length} файл(ів)`, 'success');
+                
+            } catch (error) {
+                console.error('uploadFiles error:', error);
+                progressEl.style.display = 'none';
+                showToast('Помилка завантаження файлу: ' + error.message, 'error');
+            }
         }
         
         // Clean up comments listener when closing modal
