@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#22c55e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TALKO Tasks">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2322c55e'/><text x='50' y='68' font-size='50' font-family='sans-serif' font-weight='bold' text-anchor='middle' fill='white'>T</text></svg>">
     <title>TALKO System - Таск Менеджер Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -552,12 +558,173 @@
         
         .process-board {
             display: flex;
-            gap: 1rem;
-            min-width: max-content;
-            padding: 0.5rem;
+            flex-direction: column;
+            gap: 0;
+            padding: 0;
         }
         
-        /* Mobile: vertical stacked layout instead of horizontal kanban */
+        /* Pipeline row — один процес на рядок */
+        .process-pipeline-row {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .process-pipeline-row:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-color: #d1d5db;
+        }
+        
+        .process-pipeline-row.overdue {
+            border-left: 4px solid var(--danger);
+            background: #fef8f8;
+        }
+        
+        .process-pipeline-row.completed {
+            opacity: 0.7;
+            border-left: 4px solid var(--primary);
+            background: #f0fdf4;
+        }
+        
+        .process-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .process-row-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--dark);
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .process-row-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+            flex-shrink: 0;
+        }
+        
+        .process-row-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            white-space: nowrap;
+        }
+        
+        .process-row-meta .overdue-badge {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        
+        .process-row-percent {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--primary);
+            min-width: 36px;
+            text-align: right;
+        }
+        
+        .process-row-percent.complete {
+            color: var(--primary);
+        }
+        
+        /* Pipeline steps — горизонтальний рядок етапів */
+        .process-pipeline-steps {
+            display: flex;
+            gap: 2px;
+            align-items: stretch;
+            position: relative;
+        }
+        
+        .pipeline-step {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.4rem 0.25rem;
+            border-radius: 6px;
+            background: #f3f4f6;
+            transition: all 0.2s;
+            min-width: 0;
+        }
+        
+        .pipeline-step.done {
+            background: var(--primary);
+        }
+        
+        .pipeline-step.active {
+            background: #3b82f6;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #3b82f6;
+            z-index: 1;
+        }
+        
+        .pipeline-step.pending {
+            background: #e5e7eb;
+        }
+        
+        .pipeline-step-label {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: white;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            line-height: 1.2;
+        }
+        
+        .pipeline-step.pending .pipeline-step-label {
+            color: #9ca3af;
+        }
+        
+        .pipeline-step.done .pipeline-step-label,
+        .pipeline-step.active .pipeline-step-label {
+            color: white;
+        }
+        
+        /* Стрілки між кроками */
+        .pipeline-arrow {
+            flex-shrink: 0;
+            width: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d1d5db;
+            font-size: 0.7rem;
+        }
+        
+        /* Assignee badge */
+        .process-row-assignee {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Mobile: vertical stacked layout */
         @media (max-width: 767px) {
             .process-board {
                 flex-direction: column;
@@ -567,120 +734,329 @@
             .process-board-container {
                 overflow-x: hidden;
             }
-            .process-column {
-                min-width: unset !important;
-                max-width: unset !important;
-                width: 100%;
-                max-height: none;
+            .process-pipeline-row {
+                padding: 0.75rem;
+                border-radius: 10px;
             }
-            .process-column-cards {
-                max-height: none;
+            .process-row-top {
+                flex-wrap: wrap;
+            }
+            .process-row-meta {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .pipeline-step-label {
+                font-size: 0.55rem;
             }
         }
         
-        .process-column {
-            background: #f3f4f6;
+        /* ===================== */
+        /* PROJECTS             */
+        /* ===================== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+        
+        .project-card {
+            background: white;
             border-radius: 12px;
-            min-width: 280px;
-            max-width: 320px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            max-height: calc(100vh - 250px);
-        }
-        
-        .process-column-header {
-            padding: 1rem;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e5e7eb;
-            background: white;
-            border-radius: 12px 12px 0 0;
-        }
-        
-        .process-column-header .column-count {
-            background: var(--primary);
-            color: white;
-            font-size: 0.75rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-        
-        .process-column-cards {
-            padding: 0.75rem;
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        .process-card {
-            background: white;
-            border-radius: 10px;
-            padding: 0.875rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.25rem;
+            border: 1px solid #e5e7eb;
             cursor: pointer;
             transition: all 0.2s;
-            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
         }
         
-        .process-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .project-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             transform: translateY(-2px);
         }
         
-        .process-card.overdue {
-            border-left-color: var(--danger);
-            background: #fef2f2;
+        .project-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
         }
         
-        .process-card-title {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+        .project-card-title {
+            font-weight: 700;
+            font-size: 1rem;
             color: var(--dark);
+            line-height: 1.3;
         }
         
-        .process-card-meta {
+        .project-card-status {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+        
+        .project-card-status.active { background: #dcfce7; color: #16a34a; }
+        .project-card-status.paused { background: #fef3c7; color: #d97706; }
+        .project-card-status.completed { background: #e0e7ff; color: #4338ca; }
+        
+        .project-card-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .project-card-stats {
+            display: flex;
+            gap: 1rem;
             font-size: 0.75rem;
             color: var(--gray);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            align-items: center;
+            margin-bottom: 0.75rem;
         }
         
-        .process-card-meta span {
+        .project-card-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        
+        .project-progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .project-progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        
+        .project-progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+        
+        .project-card-deadline {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
             display: flex;
             align-items: center;
             gap: 0.25rem;
         }
         
-        .process-card-progress {
-            margin-top: 0.5rem;
+        .project-card-deadline.overdue { color: var(--danger); font-weight: 600; }
+        
+        /* Project list view */
+        .projects-list-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .projects-list-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .projects-list-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        
+        .projects-list-table tr:hover td {
+            background: #f9fafb;
+        }
+        
+        /* Project timeline view */
+        .project-timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+        
+        .timeline-header {
             display: flex;
-            gap: 3px;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 0.5rem;
         }
         
-        .process-card-progress .step {
-            height: 4px;
+        .timeline-header-label {
             flex: 1;
-            background: #e5e7eb;
-            border-radius: 2px;
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--gray);
+            padding: 0.25rem;
         }
         
-        .process-card-progress .step.completed {
-            background: var(--primary);
+        .timeline-row {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            margin-bottom: 4px;
+            position: relative;
         }
         
-        .process-card-progress .step.current {
-            background: var(--info);
+        .timeline-row-label {
+            width: 180px;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding-right: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
         }
         
+        .timeline-row-bar-area {
+            flex: 1;
+            position: relative;
+            height: 100%;
+        }
+        
+        .timeline-bar {
+            position: absolute;
+            height: 24px;
+            top: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 0.5rem;
+            font-size: 0.65rem;
+            color: white;
+            font-weight: 600;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .timeline-bar-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            border-radius: 4px;
+            opacity: 0.3;
+            background: white;
+        }
+        
+        /* Project detail — board/kanban */
+        .project-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        
+        .project-detail-back {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        .project-detail-back:hover { color: var(--primary); }
+        
+        .project-board-columns {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        
+        .project-board-col {
+            min-width: 260px;
+            max-width: 300px;
+            flex-shrink: 0;
+            background: #f3f4f6;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 280px);
+        }
+        
+        .project-board-col-header {
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .project-board-col-cards {
+            padding: 0.5rem;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        
+        .project-task-card {
+            background: white;
+            border-radius: 8px;
+            padding: 0.65rem 0.75rem;
+            cursor: pointer;
+            border-left: 3px solid #e5e7eb;
+            font-size: 0.85rem;
+            transition: box-shadow 0.2s;
+        }
+        
+        .project-task-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .project-task-card.priority-high { border-left-color: #ef4444; }
+        .project-task-card.priority-medium { border-left-color: #f59e0b; }
+        .project-task-card.priority-low { border-left-color: #22c55e; }
+        
+        .project-task-card-title { font-weight: 500; margin-bottom: 0.25rem; }
+        .project-task-card-meta { font-size: 0.7rem; color: var(--gray); display: flex; gap: 0.5rem; }
+        
+        /* Color dot for project color picker */
+        input[name="projectColor"]:checked + .color-dot {
+            border-color: var(--dark) !important;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--dark);
+        }
+        
+        @media (max-width: 767px) {
+            .projects-grid { grid-template-columns: 1fr; }
+            .project-board-columns { flex-direction: column; }
+            .project-board-col { min-width: unset; max-width: unset; max-height: none; }
+            .timeline-row-label { width: 100px; font-size: 0.7rem; }
+        }
+
         .process-template-step {
             display: flex;
             align-items: center;
@@ -744,7 +1120,7 @@
             background: #f0fdf4;
         }
         
-        .process-card:last-child { border-bottom: none; }
+        /* (process-card removed — replaced by pipeline rows) */
         
         .task-card.pinned {
             background: linear-gradient(90deg, rgba(34, 197, 94, 0.08) 0%, var(--white) 100%);
@@ -1412,27 +1788,26 @@
             
             .mobile-task-card {
                 background: transparent;
-                border-radius: 12px;
-                margin-bottom: 0.75rem;
+                border-radius: 0;
+                margin-bottom: 0;
                 position: relative;
                 overflow: hidden;
             }
             
             .mobile-task-content {
                 background: white;
-                padding: 1rem;
-                border-radius: 12px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                padding: 0.75rem 1rem;
                 border-left: 4px solid var(--gray);
                 position: relative;
                 z-index: 2;
                 transition: transform 0.2s ease-out, opacity 0.2s;
+                border-bottom: 1px solid #f0f0f0;
             }
             
             .mobile-task-card.status-new .mobile-task-content { border-left-color: #3498db; }
             .mobile-task-card.status-progress .mobile-task-content { border-left-color: #f39c12; }
             .mobile-task-card.status-review .mobile-task-content { border-left-color: #9b59b6; }
-            .mobile-task-card.status-done .mobile-task-content { border-left-color: #27ae60; opacity: 0.7; }
+            .mobile-task-card.status-done .mobile-task-content { border-left-color: #27ae60; opacity: 0.65; }
             .mobile-task-card.overdue .mobile-task-content { border-left-color: #e74c3c; }
             .mobile-task-card.pinned .mobile-task-content { border-left-color: #e74c3c; background: #fff5f5; }
             
@@ -1441,15 +1816,47 @@
                 justify-content: space-between;
                 align-items: flex-start;
                 gap: 0.5rem;
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.35rem;
             }
             
             .mobile-task-title {
                 font-weight: 600;
-                font-size: 0.95rem;
+                font-size: 0.9rem;
                 color: #1a1a1a;
                 flex: 1;
                 line-height: 1.3;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            
+            .mobile-task-title-done {
+                text-decoration: line-through;
+                color: #999;
+            }
+            
+            .mobile-task-deadline-badge {
+                flex-shrink: 0;
+                font-size: 0.75rem;
+                font-weight: 500;
+                padding: 0.15rem 0.5rem;
+                border-radius: 6px;
+                white-space: nowrap;
+            }
+            
+            .mobile-task-deadline-badge.overdue {
+                background: #fef2f2;
+                color: #dc2626;
+            }
+            
+            .mobile-task-deadline-badge.today {
+                background: #fffbeb;
+                color: #d97706;
+            }
+            
+            .mobile-task-deadline-badge.upcoming {
+                color: #6b7280;
             }
             
             .mobile-task-status {
@@ -1459,36 +1866,84 @@
             .mobile-task-meta {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 0.5rem;
-                font-size: 0.8rem;
-                color: #666;
-                margin-bottom: 0.75rem;
+                gap: 0.4rem;
+                font-size: 0.75rem;
+                color: #888;
+                align-items: center;
             }
             
             .mobile-task-meta-item {
                 display: flex;
                 align-items: center;
-                gap: 0.25rem;
-                background: #f5f5f5;
-                padding: 0.25rem 0.5rem;
-                border-radius: 6px;
+                gap: 0.2rem;
+            }
+            
+            .mobile-task-meta-item .icon {
+                width: 13px;
+                height: 13px;
             }
             
             .mobile-task-meta-item.deadline-overdue {
-                background: #ffe5e5;
                 color: #e74c3c;
+                font-weight: 600;
             }
             
             .mobile-task-meta-item.deadline-today {
-                background: #fff3e0;
                 color: #f57c00;
+                font-weight: 600;
+            }
+            
+            .mobile-task-meta-sep {
+                color: #ddd;
+                font-size: 0.6rem;
+            }
+            
+            /* Аватар ініціали */
+            .mobile-task-avatar {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.65rem;
+                font-weight: 700;
+                color: white;
+                flex-shrink: 0;
+            }
+            
+            /* Badges row — коментарі, файли, чеклист */
+            .mobile-task-badges {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                margin-top: 0.35rem;
+            }
+            
+            .mobile-badge {
+                display: flex;
+                align-items: center;
+                gap: 0.2rem;
+                font-size: 0.7rem;
+                color: #999;
+            }
+            
+            .mobile-badge .icon {
+                width: 13px;
+                height: 13px;
+            }
+            
+            .mobile-badge.has-items {
+                color: #22c55e;
+                font-weight: 600;
             }
             
             .mobile-task-actions {
                 display: flex;
                 gap: 0.5rem;
-                padding-top: 0.75rem;
-                border-top: 1px solid #eee;
+                padding-top: 0.6rem;
+                border-top: 1px solid #f0f0f0;
+                margin-top: 0.4rem;
             }
             
             .mobile-action-btn {
@@ -1497,13 +1952,13 @@
                 align-items: center;
                 justify-content: center;
                 gap: 0.3rem;
-                padding: 0.6rem;
+                padding: 0.5rem;
                 border: none;
                 border-radius: 8px;
                 font-size: 0.8rem;
                 font-weight: 500;
                 cursor: pointer;
-                min-height: 44px;
+                min-height: 40px;
                 transition: all 0.2s;
             }
             
@@ -1662,6 +2117,43 @@
             .lang-switcher { display: none; }
             .user-info { display: none !important; }
             
+            /* Pull-to-refresh */
+            .ptr-indicator {
+                text-align: center;
+                padding: 0;
+                overflow: hidden;
+                height: 0;
+                transition: height 0.2s;
+                color: var(--primary);
+                font-size: 0.85rem;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.4rem;
+            }
+            
+            .ptr-indicator.pulling {
+                height: 50px;
+            }
+            
+            .ptr-indicator.refreshing {
+                height: 50px;
+            }
+            
+            .ptr-spinner {
+                width: 20px;
+                height: 20px;
+                border: 2px solid #e5e7eb;
+                border-top-color: var(--primary);
+                border-radius: 50%;
+                animation: spin 0.6s linear infinite;
+            }
+            
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            
             /* Swipe to complete */
             .mobile-task-card {
                 position: relative;
@@ -1708,10 +2200,7 @@
             
             .mobile-task-content {
                 position: relative;
-                background: white;
                 z-index: 1;
-                padding: 1rem;
-                border-radius: 12px;
             }
             
             /* Swipe hint animation */
@@ -4187,6 +4676,45 @@
         
         .comments-section.hidden { display: none; }
         
+        /* Skeleton loading */
+        .skeleton-card {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-left: 4px solid #e5e7eb;
+            border-bottom: 1px solid #f0f0f0;
+            animation: skeletonPulse 1.2s ease-in-out infinite;
+        }
+        
+        .skeleton-line {
+            height: 14px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            margin-bottom: 0.4rem;
+        }
+        
+        .skeleton-line.short { width: 40%; }
+        .skeleton-line.medium { width: 65%; }
+        .skeleton-line.long { width: 90%; }
+        
+        .skeleton-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .skeleton-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            flex-shrink: 0;
+        }
+        
+        @keyframes skeletonPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
         @media (max-width: 767px) {
             .comments-list { max-height: 200px; }
             .comment-input { font-size: 16px; }
@@ -4340,9 +4868,15 @@
 
         <!-- MAIN INTERFACE -->
         <div id="mainInterface" class="main-interface">
+            <!-- Pull-to-refresh indicator -->
+            <div id="ptrIndicator" class="ptr-indicator">
+                <div class="ptr-spinner"></div>
+                <span>Оновлення...</span>
+            </div>
             <div class="tab-navigation">
                 <button class="tab-btn active" onclick="switchTab('myday')"><i data-lucide="sun" class="icon"></i> <span data-i18n="tabMyDay">Мій день</span></button>
                 <button class="tab-btn" onclick="switchTab('tasks')"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
+                <button class="tab-btn" onclick="switchTab('projects')"><i data-lucide="folder-kanban" class="icon"></i> <span data-i18n="tabProjects">Проєкти</span></button>
                 <button class="tab-btn" onclick="switchTab('control')"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
                 <button class="tab-btn" onclick="switchTab('processes')"><i data-lucide="git-branch" class="icon"></i> <span data-i18n="tabProcesses">Процеси</span></button>
                 <button class="tab-btn" onclick="switchTab('regular')"><i data-lucide="repeat" class="icon"></i> <span data-i18n="tabRegular">Регулярні</span></button>
@@ -4609,6 +5143,48 @@
             </div>
 
             <!-- PROCESSES (Направляючі форми) -->
+            <!-- PROJECTS TAB -->
+            <div id="projectsTab" class="tab-content">
+                <div class="projects-header" id="projectsHeader" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+                    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                        <h3 style="margin:0;font-size:1.1rem;"><i data-lucide="folder-kanban" class="icon"></i> <span data-i18n="projects">Проєкти</span> <span id="projectsCounter" class="badge" style="background:var(--primary);color:white;padding:2px 8px;border-radius:10px;font-size:0.8rem;"></span></h3>
+                        <select id="projectStatusFilter" class="filter-select" onchange="renderProjects()" style="min-width:140px;">
+                            <option value="">Всі статуси</option>
+                            <option value="active" selected>Активні</option>
+                            <option value="completed">Завершені</option>
+                            <option value="paused">Призупинені</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;">
+                        <div class="calendar-view-switcher">
+                            <button class="calendar-view-btn active" data-view="grid" onclick="setProjectView('grid')">Картки</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setProjectView('list')">Список</button>
+                            <button class="calendar-view-btn" data-view="timeline" onclick="setProjectView('timeline')">Таймлайн</button>
+                        </div>
+                        <button class="btn btn-success" onclick="openProjectModal()"><i data-lucide="plus" class="icon"></i> <span class="hide-mobile">Новий проєкт</span></button>
+                    </div>
+                </div>
+                
+                <div id="projectsContent">
+                    <!-- Контент генерується динамічно -->
+                </div>
+                
+                <div id="projectsEmptyState" class="empty-state" style="display:none;">
+                    <i data-lucide="folder-kanban" class="icon icon-xl" style="color:var(--gray);margin-bottom:1rem;"></i>
+                    <h3>Немає проєктів</h3>
+                    <p>Створіть перший проєкт для групування завдань</p>
+                    <button class="btn btn-success" onclick="openProjectModal()" style="margin-top:1rem;">
+                        <i data-lucide="plus" class="icon"></i> Створити проєкт
+                    </button>
+                </div>
+                
+                <!-- Project Detail View (shown when project is selected) -->
+                <div id="projectDetailView" style="display:none;">
+                    <div id="projectDetailContent"></div>
+                </div>
+            </div>
+
+            <!-- PROCESSES -->
             <div id="processesTab" class="tab-content">
                 <div class="processes-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
                     <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
@@ -4692,13 +5268,13 @@
                 <!-- Mobile Day Tabs for Regular Tasks -->
                 <div class="mobile-regular-tabs" id="mobileRegularTabs">
                     <div class="regular-day-tabs" id="regularDayTabs">
-                        <button class="regular-day-tab" data-day="0" onclick="selectRegularDay(0)">Нд</button>
                         <button class="regular-day-tab" data-day="1" onclick="selectRegularDay(1)">Пн</button>
                         <button class="regular-day-tab" data-day="2" onclick="selectRegularDay(2)">Вт</button>
                         <button class="regular-day-tab" data-day="3" onclick="selectRegularDay(3)">Ср</button>
                         <button class="regular-day-tab" data-day="4" onclick="selectRegularDay(4)">Чт</button>
                         <button class="regular-day-tab" data-day="5" onclick="selectRegularDay(5)">Пт</button>
                         <button class="regular-day-tab" data-day="6" onclick="selectRegularDay(6)">Сб</button>
+                        <button class="regular-day-tab" data-day="0" onclick="selectRegularDay(0)">Нд</button>
                     </div>
                 </div>
                 
@@ -4943,6 +5519,40 @@
     </div>
 
     <!-- MODALS -->
+    <!-- PROJECT MODAL -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content" style="max-width:560px;">
+            <div class="modal-header"><span class="close" onclick="closeModal('projectModal')">&times;</span><h2 id="projectModalTitle">Новий проєкт</h2></div>
+            <div class="modal-body">
+                <form id="projectForm" onsubmit="saveProject(event)">
+                    <div class="form-group"><label class="form-label">Назва проєкту *</label><input type="text" id="projectName" class="form-input" required placeholder="Наприклад: Редизайн сайту"></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label class="form-label">Дата старту</label><input type="date" id="projectStartDate" class="form-input"></div>
+                        <div class="form-group"><label class="form-label">Дедлайн</label><input type="date" id="projectDeadline" class="form-input"></div>
+                    </div>
+                    <div class="form-group"><label class="form-label">Колір</label>
+                        <div id="projectColorPicker" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem;">
+                            <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#22c55e" checked style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#22c55e;border:3px solid transparent;"></span></label>
+                            <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#3b82f6" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#3b82f6;border:3px solid transparent;"></span></label>
+                            <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#8b5cf6" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#8b5cf6;border:3px solid transparent;"></span></label>
+                            <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#f59e0b" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#f59e0b;border:3px solid transparent;"></span></label>
+                            <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#ef4444" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#ef4444;border:3px solid transparent;"></span></label>
+                            <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#ec4899" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#ec4899;border:3px solid transparent;"></span></label>
+                            <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#06b6d4" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#06b6d4;border:3px solid transparent;"></span></label>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="form-label">Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту"></textarea></div>
+                    <input type="hidden" id="projectEditId" value="">
+                    <div class="form-actions" style="margin-top:1rem;">
+                        <button type="button" class="btn" onclick="closeModal('projectModal')">Скасувати</button>
+                        <button type="submit" class="btn btn-success"><i data-lucide="check" class="icon"></i> Зберегти</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TASK MODAL -->
     <div id="taskModal" class="modal">
         <div class="modal-content">
             <div class="modal-header"><span class="close" onclick="closeModal('taskModal')">&times;</span><h2 id="taskModalTitle" data-i18n="newTask">Нове завдання</h2></div>
@@ -4951,6 +5561,7 @@
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="taskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select"><option value="" data-i18n="noFunction">Без функції</option></select></div>
+                        <div class="form-group"><label class="form-label">Проєкт</label><select id="taskProject" class="form-select"><option value="">Без проєкту</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="deadlineDate">Дедлайн (дата) *</label><input type="date" id="taskDeadlineDate" class="form-input" required></div>
                         <div class="form-group"><label class="form-label">Початок *</label><input type="time" id="taskDeadlineTime" class="form-input" required></div>
@@ -6400,6 +7011,7 @@
         let users = [];
         let functions = [];
         let regularTasks = [];
+        let projects = [];
         let editingId = null;
         
         // Race condition protection
@@ -6750,8 +7362,8 @@
             }
         }
 
-        function logout() {
-            // Очищаємо listeners перед виходом
+        // Централізована очистка всіх listeners та intervals
+        function cleanupAllListeners() {
             if (tasksUnsubscribe) {
                 tasksUnsubscribe();
                 tasksUnsubscribe = null;
@@ -6772,12 +7384,23 @@
                 commentsUnsubscribe();
                 commentsUnsubscribe = null;
             }
-            // Зупиняємо time tracker
             if (timeTrackerInterval) {
                 clearInterval(timeTrackerInterval);
                 timeTrackerInterval = null;
                 timeTrackerStart = null;
             }
+            if (typeof notificationCheckInterval !== 'undefined' && notificationCheckInterval) {
+                clearInterval(notificationCheckInterval);
+                notificationCheckInterval = null;
+            }
+            if (typeof infiniteScrollObserver !== 'undefined' && infiniteScrollObserver) {
+                infiniteScrollObserver.disconnect();
+                infiniteScrollObserver = null;
+            }
+        }
+        
+        function logout() {
+            cleanupAllListeners();
             
             // Очищаємо стан
             currentCompany = null;
@@ -6788,6 +7411,8 @@
             users = [];
             processes = [];
             processTemplates = [];
+            projects = [];
+            openProjectId = null;
             
             auth.signOut().then(() => {
                 showLoginForm();
@@ -6802,6 +7427,9 @@
             if (user) {
                 currentUser = user;
                 isSuperAdmin = user.email.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase();
+                
+                // Очищаємо попередні listeners перед ініціалізацією нової сесії
+                cleanupAllListeners();
                 
                 if (isSuperAdmin) {
                     document.getElementById('adminTabBtn').style.display = 'block';
@@ -6935,6 +7563,9 @@
             const thisLoadVersion = ++loadingVersion;
             const startTime = performance.now();
             
+            // Показуємо skeleton якщо контент ще порожній
+            showSkeletonLoading();
+            
             try {
                 // Паралельне завантаження ВСЬОГО для швидкості (6 запитів одночасно замість 6 послідовних)
                 const base = db.collection('companies').doc(currentCompany);
@@ -6944,14 +7575,28 @@
                     processQuery = processQuery.where('status', '==', 'active');
                 }
                 
-                const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap] = await Promise.all([
+                const TASKS_LOAD_LIMIT = 5000;
+                
+                const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap, projectsSnap] = await Promise.all([
                     base.collection('users').get(),
                     base.collection('functions').get(),
-                    base.collection('tasks').orderBy('createdAt', 'desc').limit(2000).get(),
+                    base.collection('tasks').orderBy('createdAt', 'desc').limit(TASKS_LOAD_LIMIT).get(),
                     base.collection('regularTasks').get(),
                     base.collection('processTemplates').orderBy('name').get(),
-                    processQuery.get()
+                    processQuery.get(),
+                    base.collection('projects').orderBy('createdAt', 'desc').get()
                 ]);
+                
+                // Попередження якщо досягнуто ліміт
+                if (tasksSnap.docs.length >= TASKS_LOAD_LIMIT) {
+                    console.warn(`[loadAllData] Task limit reached: ${tasksSnap.docs.length}/${TASKS_LOAD_LIMIT}. Oldest tasks may not be visible.`);
+                    showToast(
+                        currentLang === 'ua' 
+                            ? `⚠ Завантажено ${TASKS_LOAD_LIMIT} завдань. Старіші завдання приховані. Рекомендуємо архівувати виконані.`
+                            : `⚠ Загружено ${TASKS_LOAD_LIMIT} задач. Старые задачи скрыты. Рекомендуем архивировать выполненные.`,
+                        'warning'
+                    );
+                }
                 
                 // Перевіряємо чи це ще актуальний запит
                 if (thisLoadVersion !== loadingVersion) {
@@ -6966,9 +7611,11 @@
                 regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 processTemplates = templatesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 processes = processesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                projects = projectsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 
                 updateSelects();
                 updateProcessTemplateFilter();
+                updateProjectSelects();
                 
                 // Авто-генерація регулярних завдань при вході
                 await autoGenerateRegularTasks();
@@ -7026,6 +7673,7 @@
                 if (thisLoadVersion === loadingVersion) {
                     isLoading = false;
                 }
+                hideSkeletonLoading();
             }
         }
         
@@ -7701,8 +8349,33 @@
             
             const today = new Date();
             const todayStr = today.toISOString().split('T')[0];
+            const base = db.collection('companies').doc(currentCompany).collection('tasks');
             
-            // Збираємо всі завдання для batch
+            // Серверна перевірка: які regularTaskId вже мають завдання на сьогодні
+            // Це захищає від дублів коли 2+ таби відкриті одночасно
+            let existingRegularIds = new Set();
+            try {
+                const existingSnap = await base
+                    .where('deadlineDate', '==', todayStr)
+                    .where('autoGenerated', '==', true)
+                    .get();
+                existingSnap.docs.forEach(doc => {
+                    const d = doc.data();
+                    if (d.regularTaskId && d.assigneeId) {
+                        existingRegularIds.add(`${d.regularTaskId}_${d.assigneeId}`);
+                    }
+                });
+            } catch (err) {
+                console.warn('[AutoGenerate] Server check failed, falling back to local:', err);
+                // Fallback: локальна перевірка
+                tasks.forEach(t => {
+                    if (t.regularTaskId && t.deadlineDate === todayStr && t.autoGenerated) {
+                        existingRegularIds.add(`${t.regularTaskId}_${t.assigneeId}`);
+                    }
+                });
+            }
+            
+            // Збираємо завдання для створення
             const tasksToCreate = [];
             
             for (const rt of regularTasks) {
@@ -7713,13 +8386,11 @@
                 if (assigneeIds.length === 0) continue;
                 
                 for (const assigneeId of assigneeIds) {
-                    // Перевіряємо чи вже є завдання на сьогодні
-                    const exists = tasks.find(t => 
-                        t.regularTaskId === rt.id && 
-                        t.assigneeId === assigneeId &&
-                        t.deadlineDate === todayStr
-                    );
-                    if (exists) continue;
+                    const key = `${rt.id}_${assigneeId}`;
+                    if (existingRegularIds.has(key)) continue;
+                    
+                    // Одразу додаємо в set щоб не створити дублі в рамках одного batch
+                    existingRegularIds.add(key);
                     
                     const assignee = users.find(u => u.id === assigneeId);
                     tasksToCreate.push({
@@ -7756,7 +8427,7 @@
                     const chunk = tasksToCreate.slice(i, i + batchSize);
                     
                     for (const taskData of chunk) {
-                        const newRef = db.collection('companies').doc(currentCompany).collection('tasks').doc();
+                        const newRef = base.doc();
                         batch.set(newRef, taskData);
                         
                         // Додаємо в локальний масив
@@ -7913,6 +8584,7 @@
         function openTaskModal(id = null) {
             document.getElementById('taskModal').style.display = 'block';
             updateSelects();
+            updateProjectSelects();
             
             // Initialize comments section
             initTaskComments(id);
@@ -7928,6 +8600,8 @@
                     document.getElementById('taskModalTitle').textContent = t('editTask');
                     document.getElementById('taskTitle').value = task.title || '';
                     document.getElementById('taskFunction').value = task.function || '';
+                    updateProjectSelects();
+                    document.getElementById('taskProject').value = task.projectId || '';
                     document.getElementById('taskAssignee').value = task.assigneeId || '';
                     // Розбиваємо deadline на дату і час
                     const dl = parseDeadline(task);
@@ -8225,6 +8899,7 @@
                 const data = {
                     title: document.getElementById('taskTitle').value.trim(),
                     function: document.getElementById('taskFunction').value,
+                    projectId: document.getElementById('taskProject')?.value || '',
                     assigneeId: assigneeId,
                     assigneeName: assignee?.name || assignee?.email || '',
                     deadlineDate: deadlineDate,
@@ -8264,9 +8939,11 @@
                     const existingTask = tasks.find(t => t.id === currentEditingId);
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(currentEditingId).update(data);
                     
-                    // Sync with Google Calendar
+                    // Sync with Google Calendar (non-blocking)
                     if (existingTask?.calendarEventId && googleAccessToken) {
-                        updateCalendarEvent(existingTask.calendarEventId, data);
+                        updateCalendarEvent(existingTask.calendarEventId, data).catch(err => 
+                            console.warn('[Calendar] Update sync failed:', err)
+                        );
                     }
                 } else {
                     // Create new task
@@ -8307,6 +8984,9 @@
                 else renderCalendar();
                 updateSelects();
                 
+                // Оновлюємо project detail якщо відкритий
+                if (openProjectId) renderProjectDetail(openProjectId);
+                
             } catch (error) {
                 console.error('saveTask error:', error);
                 alert(t('error') + ': ' + error.message);
@@ -8343,10 +9023,15 @@
         const escapeForDisplay = esc;
         
         // Escape ID для безпечної вставки в onclick='func("ID")'
-        // Захист від XSS якщо ID містить ' " < > &
+        // Proper escaping замість видалення символів
         function escId(id) {
             if (!id) return '';
-            return String(id).replace(/['"\\<>&]/g, '');
+            return String(id)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
         
         // Безпечний парсинг deadline — може бути string "2026-02-16T11:30", Firestore Timestamp, або undefined
@@ -8654,7 +9339,7 @@
             
             try {
                 if (taskCopy.calendarEventId && googleAccessToken) {
-                    deleteCalendarEvent(taskCopy.calendarEventId);
+                    deleteCalendarEvent(taskCopy.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
@@ -8732,7 +9417,7 @@
             
             try {
                 if (originalTask.calendarEventId && googleAccessToken) {
-                    deleteCalendarEvent(originalTask.calendarEventId);
+                    deleteCalendarEvent(originalTask.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
@@ -9242,7 +9927,7 @@
             try {
                 // Delete from Google Calendar when completed
                 if (originalTask?.calendarEventId && googleAccessToken && !needsReview) {
-                    deleteCalendarEvent(originalTask.calendarEventId);
+                    deleteCalendarEvent(originalTask.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
                 const updateData = { 
@@ -9662,7 +10347,7 @@
             
             try {
                 if (newStatus === 'done' && originalTask.calendarEventId && googleAccessToken) {
-                    deleteCalendarEvent(originalTask.calendarEventId);
+                    deleteCalendarEvent(originalTask.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
                 const updateData = {
@@ -10827,23 +11512,70 @@
                         <div class="swipe-action-bg right"><i data-lucide="trash-2" class="icon"></i> Видалити</div>
                         
                         <!-- Card content -->
-                        <div class="mobile-task-content">
+                        <div class="mobile-task-content" onclick="openTaskModal('${escId(task.id)}')">
                             <div class="mobile-task-header">
-                                <div class="mobile-task-title">
-                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${esc(task.title)}
+                                <div class="mobile-task-title ${task.status === 'done' ? 'mobile-task-title-done' : ''}">
+                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c;width:14px;height:14px;"></i> ' : ''}${esc(task.title)}
                                 </div>
-                                <span class="status-badge status-${task.status}">${st[task.status] || task.status}</span>
+                                ${(() => {
+                                    if (!taskDeadline) return '';
+                                    if (od) {
+                                        const daysAgo = Math.floor((new Date(today) - new Date(taskDeadline)) / 86400000);
+                                        const label = daysAgo === 1 ? '1 день тому' : daysAgo < 5 ? daysAgo + ' дні тому' : daysAgo + ' днів тому';
+                                        return `<span class="mobile-task-deadline-badge overdue">${label}</span>`;
+                                    }
+                                    if (isToday) return `<span class="mobile-task-deadline-badge today">${taskTime || 'сьогодні'}</span>`;
+                                    // Format date compactly
+                                    const d = new Date(taskDeadline + 'T00:00:00');
+                                    const dayNum = d.getDate();
+                                    const monthShort = ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'][d.getMonth()];
+                                    return `<span class="mobile-task-deadline-badge upcoming">${dayNum} ${monthShort}</span>`;
+                                })()}
                             </div>
                             
                             <div class="mobile-task-meta">
-                                ${task.assigneeName ? `<div class="mobile-task-meta-item"><i data-lucide="user" class="icon icon-sm"></i> ${esc(task.assigneeName)}</div>` : ''}
-                                ${taskTime ? `<div class="mobile-task-meta-item"><i data-lucide="clock" class="icon icon-sm"></i> ${taskTime}</div>` : ''}
-                                ${task.function ? `<div class="mobile-task-meta-item"><i data-lucide="tag" class="icon icon-sm"></i> ${esc(task.function)}</div>` : ''}
+                                ${(() => {
+                                    // Аватар з ініціалами
+                                    const name = task.assigneeName || '';
+                                    const initials = name.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2) || '?';
+                                    const colors = ['#3b82f6','#ef4444','#f59e0b','#8b5cf6','#ec4899','#06b6d4','#22c55e','#f97316'];
+                                    const colorIdx = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % colors.length;
+                                    return `<div class="mobile-task-avatar" style="background:${colors[colorIdx]}">${initials}</div>`;
+                                })()}
+                                <span>${esc(task.assigneeName || '')}</span>
+                                ${task.status !== 'done' ? `
+                                    <span class="mobile-task-meta-sep">•</span>
+                                    <span class="status-badge status-${task.status}" style="font-size:0.7rem;padding:0.1rem 0.4rem;">${st[task.status] || task.status}</span>
+                                ` : ''}
+                                ${task.function ? `<span class="mobile-task-meta-sep">•</span><span>${esc(task.function)}</span>` : ''}
                             </div>
                             
-                            <div class="mobile-task-actions">
+                            ${(() => {
+                                // Badges: чеклист, коментарі, файли, співвиконавці
+                                const badges = [];
+                                const checklist = task.checklist || [];
+                                if (checklist.length > 0) {
+                                    const done = checklist.filter(c => c.checked).length;
+                                    const cls = done === checklist.length ? 'has-items' : '';
+                                    badges.push(`<span class="mobile-badge ${cls}"><i data-lucide="list-checks" class="icon"></i> ${done}/${checklist.length}</span>`);
+                                }
+                                const commentCount = task.commentCount || 0;
+                                if (commentCount > 0) {
+                                    badges.push(`<span class="mobile-badge has-items"><i data-lucide="message-circle" class="icon"></i> ${commentCount}</span>`);
+                                }
+                                const files = task.files || [];
+                                if (files.length > 0) {
+                                    badges.push(`<span class="mobile-badge has-items"><i data-lucide="paperclip" class="icon"></i> ${files.length}</span>`);
+                                }
+                                if (task.coExecutorIds?.length > 0) {
+                                    badges.push(`<span class="mobile-badge"><i data-lucide="users" class="icon"></i> +${task.coExecutorIds.length}</span>`);
+                                }
+                                return badges.length > 0 ? `<div class="mobile-task-badges">${badges.join('')}</div>` : '';
+                            })()}
+                            
+                            <div class="mobile-task-actions" onclick="event.stopPropagation()">
                                 ${isReviewForCreator ? `
-                                    <button class="mobile-action-btn complete" onclick="acceptReviewTask('${escId(task.id)}')" style="background:#22c55e;">
+                                    <button class="mobile-action-btn complete" onclick="acceptReviewTask('${escId(task.id)}')" style="background:#22c55e;color:white;">
                                         <i data-lucide="check" class="icon icon-sm"></i> ${t('acceptTask')}
                                     </button>
                                     <button class="mobile-action-btn edit" onclick="rejectReviewTask('${escId(task.id)}')" style="background:#f59e0b;color:white;">
@@ -10884,6 +11616,9 @@
             initSwipeHandlers();
             initTableColumnResize();
             restoreColumnWidths();
+            
+            // Infinite scroll для автопідвантаження
+            setTimeout(initInfiniteScroll, 100);
         }
         
         // === TASKS PAGINATION ===
@@ -10962,6 +11697,33 @@
             applyTasksPagination();
             refreshIcons();
             initSwipeHandlers();
+        }
+        
+        // Infinite scroll — автоматичне підвантаження при скролі
+        let infiniteScrollObserver = null;
+        let infiniteScrollCooldown = false;
+        
+        function initInfiniteScroll() {
+            if (infiniteScrollObserver) infiniteScrollObserver.disconnect();
+            
+            const sentinel = document.getElementById('loadMoreTasksMobileBtn') || document.getElementById('loadMoreTasksBtn');
+            if (!sentinel) return;
+            
+            infiniteScrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !infiniteScrollCooldown) {
+                        infiniteScrollCooldown = true;
+                        loadMoreTasks();
+                        // Cooldown + переініціалізація на новий sentinel
+                        setTimeout(() => {
+                            infiniteScrollCooldown = false;
+                            initInfiniteScroll();
+                        }, 300);
+                    }
+                });
+            }, { rootMargin: '200px' });
+            
+            infiniteScrollObserver.observe(sentinel);
         }
         
         // =====================
@@ -11090,8 +11852,13 @@
         
         function formatDateShort(dateStr) {
             if (!dateStr) return '-';
-            const d = new Date(dateStr);
-            return d.toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'ru-RU', { day: '2-digit', month: '2-digit' });
+            try {
+                const d = new Date(dateStr + 'T00:00:00');
+                const monthShort = currentLang === 'ua'
+                    ? ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру']
+                    : ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+                return `${d.getDate()} ${monthShort[d.getMonth()]}`;
+            } catch(e) { return dateStr; }
         }
 
         // =====================
@@ -11544,7 +12311,6 @@
             if (filterValue) {
                 filteredProcesses = filteredProcesses.filter(p => p.templateId === filterValue);
             }
-            // Фільтр по виконавцю: процеси де виконавець відповідальний на поточному кроці
             if (assigneeFilter) {
                 filteredProcesses = filteredProcesses.filter(p => {
                     const template = processTemplates.find(t => t.id === p.templateId);
@@ -11557,7 +12323,6 @@
                 });
             }
             
-            // Якщо немає процесів - показуємо empty state
             if (filteredProcesses.length === 0) {
                 container.style.display = 'none';
                 emptyState.style.display = 'block';
@@ -11568,74 +12333,25 @@
             container.style.display = 'flex';
             emptyState.style.display = 'none';
             
-            // Збираємо всі унікальні функції з активних процесів для колонок
-            const activeFunctions = functions.filter(f => f.status !== 'archived');
-            const columnsData = {};
-            const completedProcesses = [];
+            const todayStr = new Date().toISOString().split('T')[0];
             
-            // Ініціалізуємо колонки ТІЛЬКИ для функцій де є активні процеси
-            filteredProcesses.forEach(p => {
+            // Сортуємо: активні overdue першими, потім по прогресу (менший прогрес = вище), завершені внизу
+            const sorted = filteredProcesses.map(p => {
                 const template = processTemplates.find(t => t.id === p.templateId);
-                if (!template?.steps?.length) return;
-                
-                // Якщо процес завершено - додаємо в окрему колонку
-                if (p.status === 'completed') {
-                    completedProcesses.push({
-                        ...p,
-                        template,
-                        currentStepData: null
-                    });
-                    return;
-                }
-                
-                // Додаємо процес ТІЛЬКИ до поточної колонки (не створюємо порожні)
-                const currentStepIndex = Math.min(p.currentStep || 0, template.steps.length - 1);
-                const currentStepFunc = template.steps[currentStepIndex]?.function;
-                
-                if (currentStepFunc) {
-                    if (!columnsData[currentStepFunc]) {
-                        columnsData[currentStepFunc] = [];
-                    }
-                    columnsData[currentStepFunc].push({
-                        ...p,
-                        template,
-                        currentStepData: template.steps[currentStepIndex]
-                    });
-                }
+                const totalSteps = template?.steps?.length || 1;
+                const currentStep = p.status === 'completed' ? totalSteps : Math.min(p.currentStep || 0, totalSteps - 1);
+                const percent = Math.round((currentStep / totalSteps) * 100);
+                const isOverdue = p.status !== 'completed' && p.deadline && p.deadline < todayStr;
+                return { ...p, template, totalSteps, currentStep, percent, isOverdue };
+            }).sort((a, b) => {
+                if (a.status === 'completed' && b.status !== 'completed') return 1;
+                if (a.status !== 'completed' && b.status === 'completed') return -1;
+                if (a.isOverdue && !b.isOverdue) return -1;
+                if (!a.isOverdue && b.isOverdue) return 1;
+                return a.percent - b.percent;
             });
             
-            // Генеруємо HTML колонок
-            let columnsHTML = Object.entries(columnsData).map(([funcName, procs]) => {
-                const func = activeFunctions.find(f => f.name === funcName);
-                return `
-                    <div class="process-column">
-                        <div class="process-column-header">
-                            <span><i data-lucide="settings" class="icon icon-sm"></i> ${esc(funcName)}</span>
-                            <span class="column-count">${procs.length}</span>
-                        </div>
-                        <div class="process-column-cards">
-                            ${procs.map(p => renderProcessCard(p)).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            // Додаємо колонку завершених (якщо showCompletedProcesses)
-            if (showCompletedProcesses && completedProcesses.length > 0) {
-                columnsHTML += `
-                    <div class="process-column" style="background:#f0fdf4;">
-                        <div class="process-column-header" style="background:#dcfce7;">
-                            <span><i data-lucide="check-circle" class="icon icon-sm" style="color:var(--primary);"></i> ${currentLang === 'ua' ? 'Завершено' : 'Завершены'}</span>
-                            <span class="column-count" style="background:var(--primary);">${completedProcesses.length}</span>
-                        </div>
-                        <div class="process-column-cards">
-                            ${completedProcesses.map(p => renderProcessCard(p, true)).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            container.innerHTML = columnsHTML;
+            container.innerHTML = sorted.map(p => renderProcessPipelineRow(p)).join('');
             
             // Оновлюємо лічильник
             const activeCount = processes.filter(p => p.status === 'active').length;
@@ -11645,43 +12361,490 @@
                 counter.style.display = activeCount > 0 ? 'inline' : 'none';
             }
             
-            // Якщо немає колонок - показуємо empty state
-            if (Object.keys(columnsData).length === 0 && completedProcesses.length === 0) {
-                container.style.display = 'none';
-                emptyState.style.display = 'block';
-            }
-            
             refreshIcons();
         }
         
-        function renderProcessCard(process, isCompleted = false) {
-            const totalSteps = process.template?.steps?.length || 1;
-            // Безпечний currentStep в межах масиву
-            const currentStep = isCompleted ? totalSteps : Math.min(process.currentStep || 0, totalSteps - 1);
-            const isOverdue = !isCompleted && process.deadline && process.deadline < new Date().toISOString().split('T')[0];
+        function renderProcessPipelineRow(process) {
+            const template = process.template;
+            if (!template?.steps?.length) return '';
             
-            // Генеруємо progress dots
-            const progressDots = (process.template?.steps || []).map((step, i) => {
-                let cls = '';
-                if (i < currentStep) cls = 'completed';
-                else if (i === currentStep) cls = 'current';
-                return `<div class="step ${cls}"></div>`;
-            }).join('');
+            const totalSteps = process.totalSteps;
+            const currentStep = process.currentStep;
+            const percent = process.percent;
+            const isCompleted = process.status === 'completed';
+            const isOverdue = process.isOverdue;
+            const todayStr = new Date().toISOString().split('T')[0];
+            
+            // Знаходимо відповідального за поточний крок
+            let currentAssignee = '';
+            if (!isCompleted && template.steps[currentStep]) {
+                const stepFunc = template.steps[currentStep].function;
+                const func = functions.find(f => f.name === stepFunc);
+                if (func?.assigneeIds?.length) {
+                    const assignee = users.find(u => func.assigneeIds.includes(u.id));
+                    currentAssignee = assignee?.name || '';
+                }
+            }
+            
+            // Pipeline steps — горизонтальні етапи
+            const stepsHTML = template.steps.map((step, i) => {
+                let cls = 'pending';
+                if (isCompleted || i < currentStep) cls = 'done';
+                else if (i === currentStep) cls = 'active';
+                
+                const label = step.function || `Крок ${i + 1}`;
+                
+                return `<div class="pipeline-step ${cls}" title="${esc(step.name || label)}">
+                    <span class="pipeline-step-label">${esc(label)}</span>
+                </div>`;
+            }).join('<div class="pipeline-arrow">›</div>');
+            
+            // Deadline display
+            let deadlineHTML = '';
+            if (process.deadline) {
+                if (isOverdue) {
+                    const daysAgo = Math.floor((new Date(todayStr) - new Date(process.deadline)) / 86400000);
+                    deadlineHTML = `<span class="overdue-badge"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${daysAgo}д прострочено</span>`;
+                } else {
+                    const d = new Date(process.deadline + 'T00:00:00');
+                    const dayNum = d.getDate();
+                    const monthShort = ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'][d.getMonth()];
+                    deadlineHTML = `<span><i data-lucide="calendar" class="icon icon-sm"></i> ${dayNum} ${monthShort}</span>`;
+                }
+            }
+            
+            const rowClass = isCompleted ? 'completed' : (isOverdue ? 'overdue' : '');
             
             return `
-                <div class="process-card ${isOverdue ? 'overdue' : ''}" onclick="openViewProcessModal('${esc(process.id)}')">
-                    <div class="process-card-title">${esc(process.name)}</div>
-                    <div class="process-card-meta">
-                        <span><i data-lucide="file-text" class="icon icon-sm"></i> ${esc(process.template?.name || '')}</span>
-                        ${process.deadline ? `<span><i data-lucide="calendar" class="icon icon-sm"></i> ${process.deadline}</span>` : ''}
+                <div class="process-pipeline-row ${rowClass}" onclick="openViewProcessModal('${escId(process.id)}')">
+                    <div class="process-row-top">
+                        <div class="process-row-title">
+                            ${isCompleted ? '<i data-lucide="check-circle" class="icon icon-sm" style="color:var(--primary);vertical-align:-2px;"></i> ' : ''}${esc(process.name)}
+                        </div>
+                        <div class="process-row-meta">
+                            <span style="color:#888;font-size:0.75rem;">${esc(template.name)}</span>
+                            ${currentAssignee ? `<span class="process-row-assignee"><i data-lucide="user" class="icon icon-sm"></i> ${esc(currentAssignee)}</span>` : ''}
+                            ${deadlineHTML}
+                            <span class="process-row-percent ${isCompleted ? 'complete' : ''}">${percent}%</span>
+                        </div>
                     </div>
-                    <div class="process-card-progress">
-                        ${progressDots}
+                    <div class="process-pipeline-steps">
+                        ${stepsHTML}
                     </div>
                 </div>
             `;
         }
         
+        // =====================
+        // PROJECTS
+        // =====================
+        let currentProjectView = 'grid';
+        let openProjectId = null;
+        
+        function openProjectModal(projectId = null) {
+            const project = projectId ? projects.find(p => p.id === projectId) : null;
+            document.getElementById('projectEditId').value = projectId || '';
+            document.getElementById('projectName').value = project?.name || '';
+            document.getElementById('projectStartDate').value = project?.startDate || new Date().toISOString().split('T')[0];
+            document.getElementById('projectDeadline').value = project?.deadline || '';
+            document.getElementById('projectDescription').value = project?.description || '';
+            
+            const color = project?.color || '#22c55e';
+            // Reset all, then set matching
+            document.querySelectorAll('input[name="projectColor"]').forEach(r => r.checked = false);
+            const colorInput = document.querySelector(`input[name="projectColor"][value="${color}"]`);
+            if (colorInput) colorInput.checked = true;
+            else document.querySelector('input[name="projectColor"]').checked = true; // fallback to first
+            
+            document.getElementById('projectModalTitle').textContent = project ? 'Редагувати проєкт' : 'Новий проєкт';
+            document.getElementById('projectModal').style.display = 'block';
+            refreshIconsNow();
+        }
+        
+        let isSavingProject = false;
+        async function saveProject(e) {
+            e.preventDefault();
+            if (isSavingProject) return;
+            isSavingProject = true;
+            const submitBtn = document.querySelector('#projectForm button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+            const id = document.getElementById('projectEditId').value;
+            const data = {
+                name: document.getElementById('projectName').value.trim(),
+                startDate: document.getElementById('projectStartDate').value,
+                deadline: document.getElementById('projectDeadline').value,
+                description: document.getElementById('projectDescription').value.trim(),
+                color: document.querySelector('input[name="projectColor"]:checked')?.value || '#22c55e'
+            };
+            if (!data.name) return;
+            
+            try {
+                const base = db.collection('companies').doc(currentCompany).collection('projects');
+                if (id) {
+                    // Не перезаписуємо status при редагуванні
+                    await base.doc(id).update(data);
+                    const idx = projects.findIndex(p => p.id === id);
+                    if (idx >= 0) projects[idx] = { ...projects[idx], ...data };
+                } else {
+                    data.status = 'active';
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    data.creatorId = currentUser.uid;
+                    const ref = await base.add(data);
+                    projects.unshift({ id: ref.id, ...data });
+                }
+                closeModal('projectModal');
+                renderProjects();
+            } catch (err) {
+                console.error('[Projects] Save error:', err);
+                showToast('Помилка збереження проєкту', 'error');
+            } finally {
+                isSavingProject = false;
+                if (submitBtn) submitBtn.disabled = false;
+            }
+        }
+        
+        async function deleteProject(projectId) {
+            if (!confirm('Видалити проєкт? Завдання залишаться, але втратять прив\'язку.')) return;
+            try {
+                await db.collection('companies').doc(currentCompany).collection('projects').doc(projectId).delete();
+                projects = projects.filter(p => p.id !== projectId);
+                // Знімаємо projectId з задач
+                tasks.filter(t => t.projectId === projectId).forEach(t => {
+                    t.projectId = '';
+                    db.collection('companies').doc(currentCompany).collection('tasks').doc(t.id).update({ projectId: '' }).catch(() => {});
+                });
+                if (openProjectId === projectId) closeProjectDetail();
+                renderProjects();
+            } catch (err) {
+                console.error('[Projects] Delete error:', err);
+            }
+        }
+        
+        function getProjectStats(projectId) {
+            const projectTasks = tasks.filter(t => t.projectId === projectId && isTaskVisibleToUser(t));
+            const total = projectTasks.length;
+            const done = projectTasks.filter(t => t.status === 'done').length;
+            const inProgress = projectTasks.filter(t => t.status === 'progress').length;
+            const review = projectTasks.filter(t => t.status === 'review').length;
+            const overdue = projectTasks.filter(t => t.deadlineDate && t.deadlineDate < new Date().toISOString().split('T')[0] && t.status !== 'done' && t.status !== 'review').length;
+            const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+            return { total, done, inProgress, review, overdue, percent, tasks: projectTasks };
+        }
+        
+        function setProjectView(view) {
+            currentProjectView = view;
+            const tab = document.getElementById('projectsTab');
+            if (tab) tab.querySelectorAll('.calendar-view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+            renderProjects();
+        }
+        
+        function renderProjects() {
+            const container = document.getElementById('projectsContent');
+            const emptyState = document.getElementById('projectsEmptyState');
+            const detailView = document.getElementById('projectDetailView');
+            const header = document.getElementById('projectsHeader');
+            
+            if (openProjectId) {
+                container.style.display = 'none';
+                emptyState.style.display = 'none';
+                header.style.display = 'none';
+                detailView.style.display = 'block';
+                renderProjectDetail(openProjectId);
+                return;
+            }
+            
+            detailView.style.display = 'none';
+            header.style.display = 'flex';
+            
+            const statusFilter = document.getElementById('projectStatusFilter')?.value || '';
+            let filtered = projects;
+            if (statusFilter) filtered = filtered.filter(p => p.status === statusFilter);
+            
+            const counter = document.getElementById('projectsCounter');
+            const activeCount = projects.filter(p => p.status === 'active').length;
+            if (counter) { counter.textContent = activeCount || ''; counter.style.display = activeCount ? 'inline' : 'none'; }
+            
+            if (filtered.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            container.style.display = 'block';
+            emptyState.style.display = 'none';
+            
+            // Sync view switcher buttons
+            const tab = document.getElementById('projectsTab');
+            if (tab) tab.querySelectorAll('.calendar-view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === currentProjectView));
+            
+            if (currentProjectView === 'grid') renderProjectsGrid(container, filtered);
+            else if (currentProjectView === 'list') renderProjectsList(container, filtered);
+            else if (currentProjectView === 'timeline') renderProjectsTimeline(container, filtered);
+            
+            refreshIcons();
+        }
+        
+        function renderProjectsGrid(container, filtered) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            container.innerHTML = `<div class="projects-grid">${filtered.map(p => {
+                const s = getProjectStats(p.id);
+                const isOverdue = p.deadline && p.deadline < todayStr && p.status === 'active';
+                return `
+                <div class="project-card" style="--pc:${safeColor(p.color)};" onclick="openProjectDetail('${escId(p.id)}')">
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${safeColor(p.color)};border-radius:12px 12px 0 0;"></div>
+                    <div class="project-card-header">
+                        <div class="project-card-title">${esc(p.name)}</div>
+                        <span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? 'Активний' : p.status === 'completed' ? 'Завершено' : 'Пауза'}</span>
+                    </div>
+                    ${p.description ? `<div class="project-card-desc">${esc(p.description)}</div>` : ''}
+                    <div class="project-card-stats">
+                        <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} завдань</span>
+                        <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} готово</span>
+                        ${s.overdue > 0 ? `<span style="color:var(--danger);font-weight:600;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue} прострочено</span>` : ''}
+                    </div>
+                    <div class="project-progress-bar"><div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(p.color)};"></div></div>
+                    <div class="project-progress-label"><span>${s.done}/${s.total}</span><span>${s.percent}%</span></div>
+                    ${p.deadline ? `<div class="project-card-deadline ${isOverdue ? 'overdue' : ''}"><i data-lucide="calendar" class="icon icon-sm"></i> ${formatDateShort(p.deadline)}</div>` : ''}
+                </div>`;
+            }).join('')}</div>`;
+        }
+        
+        function renderProjectsList(container, filtered) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            container.innerHTML = `<table class="projects-list-table"><thead><tr>
+                <th>Назва</th><th>Статус</th><th>Завдання</th><th>Прогрес</th><th>Дедлайн</th><th></th>
+            </tr></thead><tbody>${filtered.map(p => {
+                const s = getProjectStats(p.id);
+                const isOverdue = p.deadline && p.deadline < todayStr && p.status === 'active';
+                return `<tr onclick="openProjectDetail('${escId(p.id)}')">
+                    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${safeColor(p.color)};margin-right:0.5rem;vertical-align:middle;"></span><strong>${esc(p.name)}</strong></td>
+                    <td><span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? 'Активний' : p.status === 'completed' ? 'Завершено' : 'Пауза'}</span></td>
+                    <td>${s.done}/${s.total}</td>
+                    <td><div class="project-progress-bar" style="width:100px;display:inline-block;vertical-align:middle;"><div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(p.color)};"></div></div> ${s.percent}%</td>
+                    <td class="${isOverdue ? 'project-card-deadline overdue' : ''}">${p.deadline ? formatDateShort(p.deadline) : '—'}</td>
+                    <td><button class="action-btn" onclick="event.stopPropagation();openProjectModal('${escId(p.id)}')" title="Edit"><i data-lucide="pencil" class="icon icon-sm"></i></button></td>
+                </tr>`;
+            }).join('')}</tbody></table>`;
+        }
+        
+        function renderProjectsTimeline(container, filtered) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const today = new Date();
+            
+            // Визначаємо діапазон: мін startDate — макс deadline (+30 днів)
+            let minDate = new Date();
+            let maxDate = new Date();
+            maxDate.setDate(maxDate.getDate() + 60);
+            
+            filtered.forEach(p => {
+                if (p.startDate) { const d = new Date(p.startDate); if (d < minDate) minDate = d; }
+                if (p.deadline) { const d = new Date(p.deadline); if (d > maxDate) maxDate = d; }
+            });
+            
+            minDate.setDate(minDate.getDate() - 7);
+            maxDate.setDate(maxDate.getDate() + 7);
+            
+            const totalDays = Math.ceil((maxDate - minDate) / 86400000);
+            
+            // Генеруємо header тижнів
+            const weeks = [];
+            const d = new Date(minDate);
+            while (d <= maxDate) {
+                const weekNum = getWeekNumber(d);
+                if (!weeks.length || weeks[weeks.length - 1].num !== weekNum) {
+                    weeks.push({ num: weekNum, start: new Date(d), days: 0 });
+                }
+                weeks[weeks.length - 1].days++;
+                d.setDate(d.getDate() + 1);
+            }
+            
+            const headerHTML = weeks.map(w => {
+                const pct = (w.days / totalDays * 100).toFixed(2);
+                const monthShort = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'][w.start.getMonth()];
+                return `<div class="timeline-header-label" style="flex:${pct};">${monthShort} T${w.num}</div>`;
+            }).join('');
+            
+            const rowsHTML = filtered.map(p => {
+                const s = getProjectStats(p.id);
+                const start = p.startDate ? new Date(p.startDate) : today;
+                const end = p.deadline ? new Date(p.deadline) : new Date(start.getTime() + 30 * 86400000);
+                
+                const leftPct = Math.max(0, (start - minDate) / (maxDate - minDate) * 100);
+                const widthPct = Math.min(100 - leftPct, Math.max(2, (end - start) / (maxDate - minDate) * 100));
+                
+                return `
+                <div class="timeline-row">
+                    <div class="timeline-row-label" onclick="openProjectDetail('${escId(p.id)}')" style="color:${safeColor(p.color)};">${esc(p.name)}</div>
+                    <div class="timeline-row-bar-area">
+                        <div class="timeline-bar" title="${esc(p.name)}: ${s.percent}% (${s.done}/${s.total})" style="left:${leftPct}%;width:${widthPct}%;background:${safeColor(p.color)};" onclick="openProjectDetail('${escId(p.id)}')">
+                            <div class="timeline-bar-progress" style="width:${s.percent}%;"></div>
+                            ${s.percent}% (${s.done}/${s.total})
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            
+            // Лінія "Сьогодні" — рахуємо в JS
+            const todayPctNum = ((today - minDate) / (maxDate - minDate) * 100);
+            
+            container.innerHTML = `
+                <div class="project-timeline" style="overflow-x:auto;">
+                    <div style="min-width:800px;">
+                        <div class="timeline-header">${headerHTML}</div>
+                        <div style="position:relative;">
+                            <div style="position:absolute;left:calc(180px + (100% - 180px) * ${todayPctNum / 100});top:0;bottom:0;width:2px;background:#ef4444;opacity:0.5;z-index:1;"></div>
+                            ${rowsHTML}
+                        </div>
+                    </div>
+                </div>`;
+        }
+        
+        function getWeekNumber(d) {
+            const oneJan = new Date(d.getFullYear(), 0, 1);
+            return Math.ceil(((d - oneJan) / 86400000 + oneJan.getDay() + 1) / 7);
+        }
+        
+        // === PROJECT DETAIL VIEW ===
+        function openProjectDetail(projectId) {
+            openProjectId = projectId;
+            renderProjects();
+        }
+        
+        function openTaskForProject(projectId) {
+            openTaskModal();
+            // After modal opens and form resets, set projectId
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    updateProjectSelects();
+                    const sel = document.getElementById('taskProject');
+                    if (sel) sel.value = projectId;
+                }, 0);
+            });
+        }
+        
+        function closeProjectDetail() {
+            openProjectId = null;
+            document.getElementById('projectDetailView').style.display = 'none';
+            document.getElementById('projectsContent').style.display = 'block';
+            document.getElementById('projectsHeader').style.display = 'flex';
+            renderProjects();
+        }
+        
+        function renderProjectDetail(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (!project) { closeProjectDetail(); return; }
+            
+            const s = getProjectStats(projectId);
+            const container = document.getElementById('projectDetailContent');
+            
+            const statusOptions = ['active', 'paused', 'completed'].map(st => 
+                `<option value="${st}" ${project.status === st ? 'selected' : ''}>${st === 'active' ? 'Активний' : st === 'completed' ? 'Завершено' : 'Пауза'}</option>`
+            ).join('');
+            
+            // Board columns
+            const columns = [
+                { key: 'new', label: 'Нові', color: '#3b82f6' },
+                { key: 'progress', label: 'В роботі', color: '#f59e0b' },
+                { key: 'review', label: 'Перевірка', color: '#8b5cf6' },
+                { key: 'done', label: 'Готово', color: '#22c55e' }
+            ];
+            
+            const boardHTML = columns.map(col => {
+                const colTasks = s.tasks.filter(t => t.status === col.key);
+                return `
+                <div class="project-board-col">
+                    <div class="project-board-col-header" style="border-bottom-color:${col.color};">
+                        <span>${col.label}</span>
+                        <span style="background:${col.color};color:white;font-size:0.7rem;padding:0.1rem 0.4rem;border-radius:8px;">${colTasks.length}</span>
+                    </div>
+                    <div class="project-board-col-cards">
+                        ${colTasks.length === 0 ? '<div style="text-align:center;color:#ccc;font-size:0.8rem;padding:1rem;">—</div>' : ''}
+                        ${colTasks.map(t => {
+                            const assignee = t.assigneeName || '';
+                            return `
+                            <div class="project-task-card priority-${t.priority || 'medium'}" onclick="openTaskModal('${escId(t.id)}')">
+                                <div class="project-task-card-title">${esc(t.title)}</div>
+                                <div class="project-task-card-meta">
+                                    ${assignee ? `<span><i data-lucide="user" class="icon icon-sm"></i> ${esc(assignee)}</span>` : ''}
+                                    ${t.deadlineDate ? `<span><i data-lucide="calendar" class="icon icon-sm"></i> ${formatDateShort(t.deadlineDate)}</span>` : ''}
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+            
+            container.innerHTML = `
+                <div class="project-detail-header">
+                    <div class="project-detail-back" onclick="closeProjectDetail()">
+                        <i data-lucide="arrow-left" class="icon"></i>
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${safeColor(project.color)};"></span>
+                        ${esc(project.name)}
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')"><i data-lucide="plus" class="icon icon-sm"></i> Завдання</button>
+                        <select class="filter-select" onchange="updateProjectStatus('${escId(projectId)}', this.value)" style="font-size:0.8rem;padding:0.3rem;">${statusOptions}</select>
+                        <button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                        <button class="btn btn-small btn-danger" onclick="deleteProject('${escId(projectId)}')"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                    </div>
+                </div>
+                
+                <div style="display:flex;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap;">
+                    <div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
+                        <div style="font-size:0.75rem;color:var(--gray);">Всього</div>
+                        <div style="font-size:1.5rem;font-weight:700;">${s.total}</div>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
+                        <div style="font-size:0.75rem;color:var(--gray);">Готово</div>
+                        <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${s.done}</div>
+                    </div>
+                    <div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
+                        <div style="font-size:0.75rem;color:var(--gray);">Прогрес</div>
+                        <div style="font-size:1.5rem;font-weight:700;color:${safeColor(project.color)};">${s.percent}%</div>
+                    </div>
+                    ${s.overdue > 0 ? `<div style="background:#fef2f2;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #fecaca;flex:1;min-width:120px;">
+                        <div style="font-size:0.75rem;color:var(--danger);">Прострочено</div>
+                        <div style="font-size:1.5rem;font-weight:700;color:var(--danger);">${s.overdue}</div>
+                    </div>` : ''}
+                </div>
+                
+                <div class="project-progress-bar" style="height:8px;margin-bottom:1.5rem;">
+                    <div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(project.color)};"></div>
+                </div>
+                
+                <div class="project-board-columns">${boardHTML}</div>
+            `;
+            
+            refreshIcons();
+        }
+        
+        async function updateProjectStatus(projectId, status) {
+            try {
+                await db.collection('companies').doc(currentCompany).collection('projects').doc(projectId).update({ status });
+                const proj = projects.find(x => x.id === projectId);
+                if (proj) proj.status = status;
+                renderProjectDetail(projectId);
+            } catch (e) { console.error(e); }
+        }
+        
+        function updateProjectSelects() {
+            const sel = document.getElementById('taskProject');
+            if (!sel) return;
+            const current = sel.value;
+            sel.innerHTML = '<option value="">Без проєкту</option>' + 
+                projects.filter(p => p.status === 'active').map(p => 
+                    `<option value="${esc(p.id)}">${esc(p.name)}</option>`
+                ).join('');
+            sel.value = current;
+        }
+        
+        // Sanitize color for style attribute — only allow hex colors
+        function safeColor(color, fallback = '#22c55e') {
+            if (!color) return fallback;
+            return /^#[0-9a-fA-F]{3,8}$/.test(color) ? color : fallback;
+        }
+        
+
         // === ШАБЛОНИ ===
         function openProcessTemplatesModal() {
             renderTemplatesList();
@@ -13024,16 +14187,19 @@
             const headerEl = document.getElementById('regularWeekHeader');
             const bodyEl = document.getElementById('regularWeekBody');
             
-            const today = new Date().getDay(); // 0 = Sunday
-            const dayNamesFullUA = getDayNames();
+            const todayJS = new Date().getDay(); // 0 = Sunday
+            // Monday-first mapping: display column 0=Mon(1), 1=Tue(2), ..., 5=Sat(6), 6=Sun(0)
+            const dayOrder = [1, 2, 3, 4, 5, 6, 0]; // JS getDay() values in Mon-first order
+            const dayNamesFullUA = getDayNames(); // index = JS getDay()
             
-            // Build header
+            // Build header — Monday first
             let headerHTML = '';
-            for (let i = 0; i < 7; i++) {
-                const isToday = i === today;
+            for (let col = 0; col < 7; col++) {
+                const jsDay = dayOrder[col];
+                const isToday = jsDay === todayJS;
                 headerHTML += `
                     <div class="regular-week-day-header ${isToday ? 'today' : ''}">
-                        <div class="day-name">${dayNamesFullUA[i]}</div>
+                        <div class="day-name">${dayNamesFullUA[jsDay]}</div>
                     </div>
                 `;
             }
@@ -13045,8 +14211,9 @@
             const endHour = 22; // 22:00
             const hourHeight = 60; // pixels per hour
             
-            for (let day = 0; day < 7; day++) {
-                const isToday = day === today;
+            for (let col = 0; col < 7; col++) {
+                const jsDay = dayOrder[col];
+                const isToday = jsDay === todayJS;
                 
                 // Застосовуємо фільтри
                 const ff = document.getElementById('regularFunctionFilter')?.value;
@@ -13064,9 +14231,9 @@
                     if (rt.period === 'daily') return true;
                     if (rt.period === 'weekly') {
                         if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
-                            return rt.daysOfWeek.includes(day.toString());
+                            return rt.daysOfWeek.includes(jsDay.toString());
                         } else if (rt.dayOfWeek) {
-                            return rt.dayOfWeek === day.toString();
+                            return rt.dayOfWeek === jsDay.toString();
                         }
                     }
                     return false;
@@ -13075,7 +14242,7 @@
                 // Calculate overlaps for parallel display
                 const tasksWithPosition = calculateTaskPositions(dayTasks, startHour, hourHeight);
                 
-                bodyHTML += `<div class="regular-day-column ${isToday ? 'today' : ''}" data-day="${day}">`;
+                bodyHTML += `<div class="regular-day-column ${isToday ? 'today' : ''}" data-day="${jsDay}">`;
                 
                 // Hour lines
                 for (let h = startHour; h < endHour; h++) {
@@ -14110,6 +15277,11 @@
         }
 
         function switchTab(tabName) {
+            // Reset project detail when leaving projects tab
+            if (tabName !== 'projects' && openProjectId) {
+                openProjectId = null;
+            }
+            
             document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
             document.getElementById(tabName + 'Tab').classList.add('active');
@@ -14129,6 +15301,7 @@
                 case 'tasks': renderTasks(); break;
                 case 'control': renderControl(); break;
                 case 'processes': updateProcessTemplateFilter(); renderProcessBoard(); break;
+                case 'projects': renderProjects(); break;
                 case 'regular': renderRegularTasks(); break;
                 case 'functions': renderFunctions(); break;
                 case 'users': renderUsers(); break;
@@ -14147,6 +15320,9 @@
             } else if (tabName === 'regular') {
                 fab.style.display = 'flex';
                 fab.onclick = () => openRegularTaskModal();
+            } else if (tabName === 'projects') {
+                fab.style.display = 'flex';
+                fab.onclick = () => openProjectModal();
             } else {
                 fab.style.display = 'none';
             }
@@ -14349,6 +15525,8 @@
                 const canComplete = card.dataset.canComplete === 'true';
                 const taskId = card.dataset.taskId;
                 
+                const didSwipe = Math.abs(swipeState.currentX) > 10;
+                
                 swipeState.isDragging = false;
                 card.classList.remove('swiping');
                 
@@ -14382,6 +15560,12 @@
                 if (content) content.style.transform = '';
                 leftBg?.classList.remove('visible');
                 rightBg?.classList.remove('visible');
+                
+                // Блокуємо click якщо був swipe (щоб не відкрити модалку після свайпу)
+                if (didSwipe && content) {
+                    content.style.pointerEvents = 'none';
+                    setTimeout(() => { content.style.pointerEvents = ''; }, 50);
+                }
                 swipeState.currentX = 0;
                 swipeState.activeCard = null;
             });
@@ -14738,6 +15922,12 @@
                     
                     <hr style="border:none;border-top:1px solid #eee;margin:0.5rem 0;">
                     
+                    <button class="btn" onclick="switchTab('projects');closeMobileMenu();" style="justify-content:flex-start;">
+                        <i data-lucide="folder-kanban" class="icon"></i> <span data-i18n="tabProjects">Проєкти</span>
+                    </button>
+                    <button class="btn" onclick="switchTab('processes');closeMobileMenu();" style="justify-content:flex-start;">
+                        <i data-lucide="git-branch" class="icon"></i> <span data-i18n="tabProcesses">Процеси</span>
+                    </button>
                     <button class="btn" onclick="switchTab('functions');closeMobileMenu();" style="justify-content:flex-start;">
                         <i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span>
                     </button>
@@ -15401,7 +16591,7 @@
             const newStatus = needsReview ? 'review' : 'done';
             
             if (!needsReview && task.calendarEventId && googleAccessToken) {
-                deleteCalendarEvent(task.calendarEventId);
+                deleteCalendarEvent(task.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
             }
             
             const updateData = { 
@@ -15448,7 +16638,7 @@
                 
                 const task = tasks.find(t => t.id === taskId);
                 if (task?.calendarEventId && googleAccessToken) {
-                    deleteCalendarEvent(task.calendarEventId);
+                    deleteCalendarEvent(task.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).delete();
@@ -15515,7 +16705,9 @@
             
             // Update Google Calendar
             if (task.calendarEventId && googleAccessToken) {
-                updateCalendarEvent(task.calendarEventId, { ...task, deadlineDate: dateStr, deadlineTime: newTime });
+                updateCalendarEvent(task.calendarEventId, { ...task, deadlineDate: dateStr, deadlineTime: newTime }).catch(err => 
+                    console.warn('[Calendar] Update sync failed:', err)
+                );
             }
             
             // Локальне оновлення
@@ -15997,7 +17189,7 @@
         // =====================
         // SWIPE BETWEEN TABS
         // =====================
-        const mobileTabs = ['tasks', 'control', 'regular', 'users'];
+        const mobileTabs = ['tasks', 'projects', 'control', 'regular', 'users'];
         let tabSwipeStartX = 0;
         let tabSwipeStartY = 0;
         let isTabSwiping = false;
@@ -16080,6 +17272,96 @@
         
         // Init on load
         document.addEventListener('DOMContentLoaded', initTabSwipeGestures);
+        
+        // =====================
+        // PULL-TO-REFRESH (mobile)
+        // =====================
+        
+        // Skeleton loading helpers
+        let skeletonShown = false;
+        
+        function showSkeletonLoading() {
+            // Показуємо skeleton тільки якщо контент порожній (перше завантаження)
+            const mydayContent = document.getElementById('mydayContent');
+            if (!mydayContent || mydayContent.children.length > 0) return;
+            if (skeletonShown) return;
+            skeletonShown = true;
+            
+            const skeletonHTML = Array.from({ length: 5 }, () => `
+                <div class="skeleton-card">
+                    <div class="skeleton-line long"></div>
+                    <div class="skeleton-row" style="margin-top:0.3rem;">
+                        <div class="skeleton-circle"></div>
+                        <div class="skeleton-line short" style="margin:0;flex:1;"></div>
+                    </div>
+                </div>
+            `).join('');
+            
+            mydayContent.innerHTML = `<div id="skeletonContainer">${skeletonHTML}</div>`;
+        }
+        
+        function hideSkeletonLoading() {
+            const skeleton = document.getElementById('skeletonContainer');
+            if (skeleton) skeleton.remove();
+            skeletonShown = false;
+        }
+        function initPullToRefresh() {
+            const mainEl = document.getElementById('mainInterface');
+            if (!mainEl || mainEl.dataset.ptrInit) return;
+            mainEl.dataset.ptrInit = 'true';
+            
+            const indicator = document.getElementById('ptrIndicator');
+            let startY = 0;
+            let currentDeltaY = 0;
+            let pulling = false;
+            let refreshing = false;
+            const threshold = 60;
+            
+            mainEl.addEventListener('touchstart', (e) => {
+                if (refreshing) return;
+                if (window.scrollY > 5) return;
+                startY = e.touches[0].clientY;
+                currentDeltaY = 0;
+                pulling = true;
+            }, { passive: true });
+            
+            mainEl.addEventListener('touchmove', (e) => {
+                if (!pulling || refreshing) return;
+                currentDeltaY = e.touches[0].clientY - startY;
+                if (currentDeltaY > 20 && currentDeltaY < threshold * 2.5) {
+                    indicator.classList.add('pulling');
+                    indicator.classList.remove('refreshing');
+                } else if (currentDeltaY <= 20) {
+                    indicator.classList.remove('pulling');
+                }
+            }, { passive: true });
+            
+            mainEl.addEventListener('touchend', async () => {
+                if (!pulling || refreshing) return;
+                pulling = false;
+                
+                // Перевіряємо що реально потягнули достатньо (не випадковий тик)
+                if (currentDeltaY >= threshold && indicator.classList.contains('pulling')) {
+                    indicator.classList.remove('pulling');
+                    indicator.classList.add('refreshing');
+                    refreshing = true;
+                    
+                    try {
+                        await loadAllData();
+                    } catch (e) {
+                        console.error('PTR refresh error:', e);
+                    }
+                    
+                    indicator.classList.remove('refreshing');
+                    refreshing = false;
+                } else {
+                    indicator.classList.remove('pulling');
+                }
+                currentDeltaY = 0;
+            }, { passive: true });
+        }
+        
+        document.addEventListener('DOMContentLoaded', initPullToRefresh);
         
         // =====================
         // OFFLINE SUPPORT
@@ -16367,6 +17649,16 @@ Ctrl+N - нове завдання
                     
                     renderComments(comments);
                     countEl.textContent = comments.length;
+                    
+                    // Синхронізуємо denormalized count якщо розходиться
+                    const localTask = tasks.find(t => t.id === taskId);
+                    if (localTask && (localTask.commentCount || 0) !== comments.length) {
+                        localTask.commentCount = comments.length;
+                        db.collection('companies').doc(currentCompany)
+                            .collection('tasks').doc(taskId)
+                            .update({ commentCount: comments.length })
+                            .catch(() => {});
+                    }
                 }, error => {
                     console.error('Error loading comments:', error);
                     listEl.innerHTML = '<div class="comments-empty">Помилка завантаження</div>';
@@ -16477,6 +17769,16 @@ Ctrl+N - нове завдання
                         authorName: currentUserData?.name || currentUser.email,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                
+                // Denormalized count — для відображення на картці без subcollection query
+                db.collection('companies').doc(currentCompany)
+                    .collection('tasks').doc(currentTaskIdForComments)
+                    .update({ commentCount: firebase.firestore.FieldValue.increment(1) })
+                    .catch(() => {}); // non-blocking
+                
+                // Оновлюємо локально
+                const localTask = tasks.find(t => t.id === currentTaskIdForComments);
+                if (localTask) localTask.commentCount = (localTask.commentCount || 0) + 1;
                 
                 input.value = '';
                 input.style.height = 'auto';
@@ -16970,5 +18272,18 @@ Ctrl+N - нове завдання
         <button class="undo-btn" onclick="undoDelete()">Відмінити</button>
         <div class="toast-timer"><div class="toast-timer-bar" id="undoTimerBar"></div></div>
     </div>
+    
+    <script>
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('[SW] Registered:', reg.scope);
+            }).catch(err => {
+                console.log('[SW] Registration skipped:', err.message);
+            });
+        });
+    }
+    </script>
 </body>
 </html>
