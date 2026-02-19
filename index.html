@@ -2369,7 +2369,7 @@
             }
             
             /* Hide desktop filters on mobile */
-            .filters-row { display: none; }
+            .filters-row { display: none !important; }
             .controls-row .btn:not(.btn-success) { display: none; }
             
             /* Date group headers */
@@ -4851,6 +4851,7 @@
                     <span id="currentUserRole" style="opacity:0.8;font-size:0.8rem;"></span>
                 </div>
                 <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;"><i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span></button>
+                <button class="header-btn" onclick="openDemoDataModal()" id="demoDataBtnDesktop" style="display:none;background:rgba(239,68,68,0.3);"><i data-lucide="database" class="icon"></i> Демо</button>
                 <button class="mobile-logout-btn" onclick="logout()" style="display:none !important;"><i data-lucide="log-out" class="icon" style="width:18px;height:18px;"></i></button>
             </div>
         </div>
@@ -5457,9 +5458,6 @@
             <div id="analyticsTab" class="tab-content">
                 <div class="controls" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
                     <h2 style="font-size:1.2rem;margin:0;" data-i18n="analytics"><i data-lucide="trending-up" class="icon"></i> Аналітика</h2>
-                    <button class="btn" onclick="openDemoDataModal()" id="demoDataBtnDesktop" style="display:none;">
-                        <i data-lucide="database" class="icon"></i> Демо-дані
-                    </button>
                 </div>
                 <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-top:1rem;">
                     <div class="analytics-grid">
@@ -7589,8 +7587,8 @@
                     });
                 }
                 
-                // Show demo data button ONLY for superadmin
-                if (currentUserData.role === 'superadmin') {
+                // Show demo data button ONLY for superadmin (by email, not role)
+                if (isSuperAdmin) {
                     document.getElementById('demoDataBtnDesktop').style.display = 'flex';
                     document.getElementById('demoDataBtn').style.display = 'flex';
                 } else {
@@ -16848,8 +16846,7 @@
         // =====================
         
         function openDemoDataModal() {
-            // Тільки superadmin
-            if (currentUserData?.role !== 'superadmin') {
+            if (!isSuperAdmin) {
                 showToast('Доступно тільки для SuperAdmin', 'error');
                 return;
             }
@@ -16862,7 +16859,7 @@
         }
         
         async function clearAllCompanyData() {
-            if (currentUserData?.role !== 'superadmin') return;
+            if (!isSuperAdmin) return;
             if (!currentCompany) return;
             
             const confirmText = 'ВИДАЛИТИ ВСЕ';
