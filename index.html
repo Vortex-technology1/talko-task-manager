@@ -7488,10 +7488,12 @@
                 rejectedTasksUnsubscribe();
                 rejectedTasksUnsubscribe = null;
             }
-            if (commentsUnsubscribe) {
-                commentsUnsubscribe();
-                commentsUnsubscribe = null;
-            }
+            try {
+                if (commentsUnsubscribe) {
+                    commentsUnsubscribe();
+                    commentsUnsubscribe = null;
+                }
+            } catch(e) {}
             if (timeTrackerInterval) {
                 clearInterval(timeTrackerInterval);
                 timeTrackerInterval = null;
@@ -17109,7 +17111,6 @@
             }
             
             // Demo projects for clinic
-            const today = new Date();
             const clinicProjects = [
                 {
                     name: 'Відкриття другої філії',
