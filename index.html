@@ -2618,12 +2618,13 @@
         .calendar-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 0.5rem;
             padding: 1rem;
             background: white;
             border-radius: 12px;
             margin-bottom: 1rem;
             box-shadow: var(--shadow);
+            flex-wrap: wrap;
         }
         
         .calendar-nav {
@@ -2652,8 +2653,8 @@
         .calendar-title {
             font-size: 1.25rem;
             font-weight: 600;
-            min-width: 200px;
-            text-align: center;
+            min-width: 120px;
+            flex: 1;
         }
         
         .calendar-today-btn {
@@ -3320,7 +3321,7 @@
         /* Mobile Calendar Styles - Google Calendar Style */
         @media (max-width: 767px) {
             .calendar-header {
-                flex-wrap: nowrap;
+                flex-wrap: wrap;
                 gap: 0.5rem;
                 padding: 0.6rem 0.75rem;
                 margin: 0 -0.5rem 0 -0.5rem;
@@ -3331,7 +3332,28 @@
             }
             
             .calendar-view-switcher {
-                display: none;
+                display: flex;
+                gap: 2px;
+                order: 10;
+                width: 100%;
+                padding: 0.25rem;
+                background: #e5e7eb;
+                border-radius: 8px;
+                margin: 0 0 0.25rem 0;
+            }
+            
+            .calendar-view-switcher .calendar-view-btn {
+                flex: 1;
+                font-size: 0;
+                padding: 0.35rem 0;
+                border-radius: 6px;
+                text-align: center;
+                margin-right: 0;
+            }
+            
+            .calendar-view-switcher .calendar-view-btn::after {
+                content: attr(data-short);
+                font-size: 0.78rem;
             }
             
             .calendar-nav {
@@ -5093,16 +5115,15 @@
                     
                     <div class="calendar-title" id="calendarTitle">Грудень 2024</div>
                     
-                    <div style="display:flex;align-items:center;gap:0.5rem;">
-                        <div class="calendar-view-switcher">
-                            <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')" data-i18n="day">День</button>
-                            <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')" data-i18n="week">Тиждень</button>
-                            <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')" data-i18n="month">Місяць</button>
-                            <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')" data-i18n="list">Список</button>
-                        </div>
-                        <button class="btn btn-success" onclick="openTaskModal()">
-                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
-                        </button>
+                    <button class="btn btn-success" onclick="openTaskModal()">
+                        <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
+                    </button>
+                    
+                    <div class="calendar-view-switcher">
+                        <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')" data-i18n="day" data-short="День">День</button>
+                        <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')" data-i18n="week" data-short="Тижд">Тиждень</button>
+                        <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')" data-i18n="month" data-short="Міс">Місяць</button>
+                        <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')" data-i18n="list" data-short="Список">Список</button>
                     </div>
                 </div>
                 
@@ -10214,6 +10235,12 @@
             document.querySelectorAll('.calendar-view-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.view === view);
             });
+            
+            // Hide/show week strip (only useful for day view on mobile)
+            const weekStrip = document.getElementById('mobileWeekStrip');
+            if (weekStrip) {
+                weekStrip.style.display = (view === 'day') ? '' : 'none';
+            }
             
             // Show/hide containers
             const calendarContainer = document.getElementById('calendarContainer');
