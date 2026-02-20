@@ -13005,14 +13005,173 @@
                     </div>` : ''}
                 </div>
                 
-                <div class="project-progress-bar" style="height:8px;margin-bottom:1.5rem;">
+                <div class="project-progress-bar" style="height:8px;margin-bottom:1rem;">
                     <div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(project.color)};"></div>
                 </div>
                 
-                <div class="project-board-columns">${boardHTML}</div>
+                <!-- View Switcher -->
+                <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+                    <button class="calendar-view-btn active" onclick="switchProjectView('board', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                        Kanban
+                    </button>
+                    <button class="calendar-view-btn" onclick="switchProjectView('gantt', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="4" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+                        Gantt
+                    </button>
+                </div>
+                
+                <div id="projectBoardView" class="project-board-columns">${boardHTML}</div>
+                <div id="projectGanttView" style="display:none;">${renderProjectGantt(s.tasks, project)}</div>
             `;
             
             refreshIcons();
+        }
+        
+        function switchProjectView(view, btn) {
+            document.getElementById('projectBoardView').style.display = view === 'board' ? '' : 'none';
+            document.getElementById('projectGanttView').style.display = view === 'gantt' ? '' : 'none';
+            btn.parentElement.querySelectorAll('.calendar-view-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        
+        function renderProjectGantt(projectTasks, project) {
+            if (!projectTasks.length) return '<div style="text-align:center;color:#999;padding:2rem;">Немає завдань для діаграми</div>';
+            
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            
+            // Find date range
+            const dates = projectTasks
+                .filter(t => t.deadlineDate)
+                .map(t => new Date(t.deadlineDate));
+            
+            if (dates.length === 0) return '<div style="text-align:center;color:#999;padding:2rem;">Завдання без дат — Gantt неможливий</div>';
+            
+            // Add today to range
+            dates.push(today);
+            
+            let minDate = new Date(Math.min(...dates));
+            let maxDate = new Date(Math.max(...dates));
+            
+            // Pad range: 2 days before, 3 days after
+            minDate.setDate(minDate.getDate() - 2);
+            maxDate.setDate(maxDate.getDate() + 3);
+            
+            // Generate day columns
+            const days = [];
+            const d = new Date(minDate);
+            while (d <= maxDate) {
+                days.push(new Date(d));
+                d.setDate(d.getDate() + 1);
+            }
+            
+            const totalDays = days.length;
+            const dayWidth = Math.max(36, Math.floor(800 / totalDays));
+            const chartWidth = dayWidth * totalDays;
+            
+            // Status colors
+            const statusColors = {
+                new: { bg: '#dbeafe', border: '#3b82f6' },
+                progress: { bg: '#fef3c7', border: '#f59e0b' },
+                review: { bg: '#e0e7ff', border: '#6366f1' },
+                done: { bg: '#d1fae5', border: '#10b981' }
+            };
+            
+            const statusLabels = { new: 'Нове', progress: 'В роботі', review: 'Перевірка', done: 'Готово' };
+            
+            // Sort tasks by date
+            const sorted = [...projectTasks].sort((a, b) => {
+                const da = a.deadlineDate || '9999';
+                const db = b.deadlineDate || '9999';
+                return da.localeCompare(db);
+            });
+            
+            // Day headers
+            const months = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+            const dayNames = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
+            
+            let headerHTML = days.map((day, i) => {
+                const isToday = day.toISOString().split('T')[0] === todayStr;
+                const isWeekend = day.getDay() === 0 || day.getDay() === 6;
+                return `<div style="width:${dayWidth}px;min-width:${dayWidth}px;text-align:center;font-size:0.65rem;padding:4px 0;${isToday ? 'background:#f0fdf4;font-weight:700;color:#16a34a;' : isWeekend ? 'color:#d1d5db;' : 'color:#9ca3af;'}">
+                    <div>${day.getDate() === 1 || i === 0 ? months[day.getMonth()] : ''}</div>
+                    <div style="font-size:0.75rem;font-weight:${isToday ? '700' : '500'};">${day.getDate()}</div>
+                    <div>${dayNames[day.getDay()]}</div>
+                </div>`;
+            }).join('');
+            
+            // Task rows
+            let rowsHTML = sorted.map(task => {
+                const color = statusColors[task.status] || statusColors.new;
+                const assignee = task.assigneeName ? esc(task.assigneeName).split(' ')[0] : '';
+                
+                if (!task.deadlineDate) {
+                    return `<div style="display:flex;align-items:center;height:36px;border-bottom:1px solid #f3f4f6;">
+                        <div style="width:100%;padding:0 8px;font-size:0.75rem;color:#d1d5db;font-style:italic;">
+                            ${esc(task.title)} — без дати
+                        </div>
+                    </div>`;
+                }
+                
+                const taskDate = new Date(task.deadlineDate);
+                const durationDays = Math.max(1, Math.ceil((parseInt(task.estimatedTime || task.duration || '60')) / 480)); // 8h workday
+                const startDate = new Date(taskDate);
+                startDate.setDate(startDate.getDate() - durationDays + 1);
+                
+                // Calculate position
+                const startOffset = Math.max(0, Math.round((startDate - minDate) / 86400000));
+                const barWidth = Math.max(1, durationDays);
+                const leftPx = startOffset * dayWidth;
+                const widthPx = barWidth * dayWidth - 4;
+                
+                const isOverdue = task.deadlineDate < todayStr && task.status !== 'done';
+                
+                return `<div style="display:flex;align-items:center;height:36px;border-bottom:1px solid #f3f4f6;position:relative;">
+                    <div style="position:absolute;left:${leftPx + 2}px;width:${widthPx}px;height:24px;background:${color.bg};border:1.5px solid ${color.border};border-radius:4px;display:flex;align-items:center;padding:0 6px;cursor:pointer;overflow:hidden;${isOverdue ? 'border-color:#ef4444;background:#fef2f2;' : ''}" onclick="openTaskModal('${escId(task.id)}')" title="${esc(task.title)} — ${statusLabels[task.status] || task.status}${assignee ? ' (' + assignee + ')' : ''}">
+                        <span style="font-size:0.65rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${isOverdue ? '#ef4444' : '#374151'};">${esc(task.title)}</span>
+                    </div>
+                </div>`;
+            }).join('');
+            
+            // Today marker
+            const todayOffset = Math.round((today - minDate) / 86400000);
+            const todayPx = todayOffset * dayWidth + Math.floor(dayWidth / 2);
+            
+            // Left labels
+            let labelsHTML = sorted.map(task => {
+                const color = statusColors[task.status] || statusColors.new;
+                const assignee = task.assigneeName ? esc(task.assigneeName).split(' ')[0] : '';
+                return `<div style="height:36px;display:flex;align-items:center;border-bottom:1px solid #f3f4f6;padding:0 8px;gap:6px;">
+                    <div style="width:6px;height:6px;border-radius:50%;background:${color.border};flex-shrink:0;"></div>
+                    <span style="font-size:0.7rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;color:#374151;" title="${esc(task.title)}">${esc(task.title)}</span>
+                    ${assignee ? `<span style="font-size:0.6rem;color:#9ca3af;">${assignee}</span>` : ''}
+                </div>`;
+            }).join('');
+            
+            return `
+                <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
+                    <div style="display:flex;">
+                        <!-- Labels column -->
+                        <div style="width:200px;min-width:200px;border-right:1px solid #e5e7eb;flex-shrink:0;">
+                            <div style="height:54px;display:flex;align-items:center;padding:0 8px;font-size:0.75rem;font-weight:600;color:#6b7280;border-bottom:1px solid #e5e7eb;">Завдання</div>
+                            ${labelsHTML}
+                        </div>
+                        <!-- Chart area -->
+                        <div style="flex:1;overflow-x:auto;">
+                            <div style="min-width:${chartWidth}px;position:relative;">
+                                <!-- Day headers -->
+                                <div style="display:flex;border-bottom:1px solid #e5e7eb;">${headerHTML}</div>
+                                <!-- Bars -->
+                                <div style="position:relative;">
+                                    <!-- Today line -->
+                                    <div style="position:absolute;top:0;bottom:0;left:${todayPx}px;width:2px;background:#22c55e;z-index:2;opacity:0.6;"></div>
+                                    ${rowsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
         }
         
         async function updateProjectStatus(projectId, status) {
