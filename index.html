@@ -436,8 +436,14 @@
                 padding: 0.75rem;
             }
             .myday-item {
-                padding: 0.875rem;
+                padding: 1rem;
                 gap: 0.625rem;
+                margin-bottom: 0.35rem;
+            }
+            .myday-item:active { 
+                background: #dcfce7; 
+                transform: scale(0.98);
+                transition: all 0.1s;
             }
             .myday-item-title {
                 font-size: 0.9rem;
@@ -1798,12 +1804,19 @@
             
             .mobile-task-content {
                 background: white;
-                padding: 0.75rem 1rem;
+                padding: 1rem 1rem;
                 border-left: 4px solid var(--gray);
                 position: relative;
                 z-index: 2;
-                transition: transform 0.2s ease-out, opacity 0.2s;
+                transition: transform 0.15s ease-out, opacity 0.2s, background 0.15s;
                 border-bottom: 1px solid #f0f0f0;
+                min-height: 56px;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .mobile-task-content:active {
+                background: #f3f4f6;
+                transform: scale(0.985);
             }
             
             .mobile-task-card.status-new .mobile-task-content { border-left-color: #3498db; }
@@ -2133,6 +2146,12 @@
                 min-height: 100vh;
                 margin: 0;
                 max-width: 100%;
+                animation: slideUpModal 0.25s ease-out;
+            }
+            
+            @keyframes slideUpModal {
+                from { transform: translateY(40px); opacity: 0.8; }
+                to { transform: translateY(0); opacity: 1; }
             }
             
             /* Smaller modals stay compact */
@@ -3401,6 +3420,7 @@
                 margin: 0 -0.5rem;
                 box-shadow: none;
                 border-top: none;
+                -webkit-overflow-scrolling: touch;
             }
             
             .calendar-time-gutter,
@@ -3450,12 +3470,18 @@
             
             .calendar-event {
                 font-size: 0.85rem;
-                padding: 6px 8px;
+                padding: 8px 10px;
                 left: 2px;
                 right: 2px;
                 border-radius: 8px;
                 border-left-width: 4px;
-                min-height: 26px;
+                min-height: 36px;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .calendar-event:active {
+                opacity: 0.7;
+                transform: scale(0.98);
             }
             
             .calendar-event-title {
