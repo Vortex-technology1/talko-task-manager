@@ -4978,7 +4978,7 @@
                     <span id="currentUserRole" style="opacity:0.8;font-size:0.8rem;"></span>
                 </div>
                 <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;"><i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span></button>
-                <button class="header-btn" onclick="openDemoDataModal()" id="demoDataBtnDesktop" style="display:none;background:rgba(239,68,68,0.3);"><i data-lucide="database" class="icon"></i> Демо</button>
+                <button class="header-btn" onclick="if(typeof openDemoDataModal==='function')openDemoDataModal()" id="demoDataBtnDesktop" style="display:none;background:rgba(239,68,68,0.3);"><i data-lucide="database" class="icon"></i> Демо</button>
                 <button class="mobile-logout-btn" onclick="logout()"><i data-lucide="log-out" class="icon" style="width:18px;height:18px;"></i></button>
             </div>
         </div>
@@ -7734,7 +7734,7 @@
                 showMainInterface();
                 initCalendar();
                 initRegularView();
-                initGoogleCalendar();
+                if (typeof initGoogleCalendar === 'function') initGoogleCalendar();
                 loadAllData();
                 
                 // Show FAB (було окремим onAuthStateChanged — об'єднано)
@@ -17512,55 +17512,12 @@
         
         async function quickCompleteFromMenu(taskId) {
             closeTaskQuickMenu();
-            
-            const task = tasks.find(t => t.id === taskId);
-            if (!task) return;
-            
-            const needsReview = shouldSendForReview(task);
-            const newStatus = needsReview ? 'review' : 'done';
-            
-            if (!needsReview && task.calendarEventId && googleAccessToken) {
-                deleteCalendarEvent(task.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
-            }
-            
-            const updateData = { 
-                status: newStatus,
-                completedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
-            
-            await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
-            
-            // Автопросування процесу
-            if (!needsReview) {
-                advanceProcessIfLinked(taskId);
-            }
-            
-            // Локальне оновлення
-            task.status = newStatus;
-            task.completedAt = new Date().toISOString();
-            
-            renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
-            
-            if (needsReview) {
-                showToast(t('taskSentForReview'), 'info');
-            }
+            quickCompleteTask(taskId);
         }
         
         async function reopenTaskFromMenu(taskId) {
             closeTaskQuickMenu();
-            await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({ 
-                status: 'progress'
-            });
-            
-            // Локальне оновлення
-            const task = tasks.find(t => t.id === taskId);
-            if (task) task.status = 'progress';
-            renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            reopenTask(taskId);
         }
         
         async function deleteTaskFromMenu(taskId) {
@@ -19457,7 +19414,8 @@ Ctrl+N - нове завдання
             const ago = getTimeAgo(n.time, now);
             const unreadDot = n.read ? '' : '<div style="width:8px;height:8px;background:#3b82f6;border-radius:50%;flex-shrink:0;"></div>';
             
-            return `<div style="display:flex;gap:10px;align-items:flex-start;padding:0.7rem 1.25rem;cursor:pointer;${n.read ? 'opacity:0.6;' : ''}border-bottom:1px solid #f9fafb;" onclick="onNotificationClick('${n.id}'${n.taskId ? \`, '\${n.taskId}'\` : ''})">
+            const taskArg = n.taskId ? ", '" + n.taskId + "'" : '';
+            return `<div style="display:flex;gap:10px;align-items:flex-start;padding:0.7rem 1.25rem;cursor:pointer;${n.read ? 'opacity:0.6;' : ''}border-bottom:1px solid #f9fafb;" onclick="onNotificationClick('${n.id}'${taskArg})">
                 <div style="width:32px;height:32px;border-radius:8px;background:${icon.color}12;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${icon.color}" stroke-width="2">${icon.svg}</svg>
                 </div>
