@@ -68,7 +68,11 @@
             background: #f9fafb; 
             color: var(--dark);
             min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
         }
+        
+        * { -webkit-tap-highlight-color: transparent; }
         
         .header { 
             background: var(--header-bg); 
@@ -92,6 +96,7 @@
         
         .logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
         .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .notification-bell:hover { background: #f3f4f6 !important; }
         
         .header-btn {
             background: rgba(255,255,255,0.2);
@@ -163,7 +168,7 @@
         
         .mobile-logout-btn { display: none; }
         
-        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; overflow-x: hidden; }
         
         .tab-navigation { 
             display: flex; 
@@ -2035,7 +2040,7 @@
             flex-direction: column;
             align-items: center;
             gap: 0.15rem;
-            padding: 0.35rem 0.5rem;
+            padding: 0.4rem 0.3rem;
             background: none;
             border: none;
             color: #b0b8c4;
@@ -2043,9 +2048,12 @@
             font-weight: 500;
             cursor: pointer;
             border-radius: 10px;
-            min-width: 56px;
-            transition: all 0.2s;
+            min-width: 60px;
+            min-height: 48px;
+            transition: color 0.15s, transform 0.1s;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
         .bottom-nav-btn .icon {
@@ -2366,12 +2374,13 @@
             /* Mobile filter button */
             .mobile-filter-bar {
                 display: flex;
-                gap: 0.5rem;
-                padding: 0.75rem;
+                gap: 0.35rem;
+                padding: 0.4rem 0.75rem;
                 background: white;
-                border-radius: 12px;
-                margin-bottom: 0.75rem;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                border-radius: 0;
+                margin: 0 -0.5rem 0.25rem;
+                box-shadow: none;
+                border-bottom: 1px solid #f3f4f6;
             }
             
             .mobile-filter-btn {
@@ -2379,17 +2388,18 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 0.4rem;
-                padding: 0.7rem;
+                gap: 0.3rem;
+                padding: 0.45rem 0.3rem;
                 background: #f5f5f5;
                 border: none;
-                border-radius: 10px;
-                font-size: 0.85rem;
+                border-radius: 8px;
+                font-size: 0.78rem;
                 font-weight: 500;
                 color: #555;
                 cursor: pointer;
-                min-height: 44px;
-                transition: all 0.2s;
+                min-height: 36px;
+                transition: all 0.15s ease;
+                -webkit-tap-highlight-color: transparent;
             }
             
             .mobile-filter-btn.active {
@@ -2643,7 +2653,6 @@
             border-radius: 12px;
             margin-bottom: 1rem;
             box-shadow: var(--shadow);
-            flex-wrap: wrap;
         }
         
         .calendar-nav {
@@ -3341,8 +3350,8 @@
         @media (max-width: 767px) {
             .calendar-header {
                 flex-wrap: wrap;
-                gap: 0.5rem;
-                padding: 0.6rem 0.75rem;
+                gap: 0.3rem;
+                padding: 0.5rem 0.75rem 0.25rem;
                 margin: 0 -0.5rem 0 -0.5rem;
                 border-radius: 0;
                 background: white;
@@ -3352,27 +3361,40 @@
             
             .calendar-view-switcher {
                 display: flex;
-                gap: 2px;
+                gap: 0;
                 order: 10;
                 width: 100%;
-                padding: 0.25rem;
-                background: #e5e7eb;
-                border-radius: 8px;
-                margin: 0 0 0.25rem 0;
+                padding: 3px;
+                background: #f1f3f5;
+                border-radius: 10px;
+                margin: 0.15rem 0 0.15rem;
             }
             
             .calendar-view-switcher .calendar-view-btn {
                 flex: 1;
                 font-size: 0;
-                padding: 0.35rem 0;
-                border-radius: 6px;
+                padding: 0.4rem 0;
+                border-radius: 8px;
                 text-align: center;
                 margin-right: 0;
+                min-height: 36px;
+                transition: all 0.15s ease;
+                border: none;
+                background: transparent;
+                color: #6b7280;
+                font-weight: 500;
+            }
+            
+            .calendar-view-switcher .calendar-view-btn.active {
+                background: white;
+                color: #1a1a1a;
+                font-weight: 600;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             }
             
             .calendar-view-switcher .calendar-view-btn::after {
                 content: attr(data-short);
-                font-size: 0.78rem;
+                font-size: 0.8rem;
             }
             
             .calendar-nav {
@@ -3381,28 +3403,31 @@
             }
             
             .calendar-nav-btn {
-                width: 36px;
-                height: 36px;
+                width: 32px;
+                height: 32px;
                 background: transparent;
+                border: none;
             }
             
             .calendar-title {
                 order: 2;
                 min-width: auto;
-                font-size: 1.1rem;
-                font-weight: 500;
+                font-size: 1.05rem;
+                font-weight: 600;
                 flex: 1;
                 text-align: left;
-                margin-left: 4px;
+                margin-left: 2px;
             }
             
             .calendar-today-btn {
                 display: inline-flex;
                 order: 3;
-                padding: 0.4rem 0.8rem;
-                font-size: 0.85rem;
+                padding: 0.3rem 0.7rem;
+                font-size: 0.8rem;
                 border: 1px solid #e5e7eb;
                 background: white;
+                min-height: 32px;
+            }
             }
             
             /* Hide add button in header on mobile - use FAB instead */
@@ -4943,6 +4968,10 @@
                 <div class="lang-switcher">
                     <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
                     <button class="lang-btn" onclick="setLanguage('ru')" id="langRU">RU</button>
+                </div>
+                <div class="notification-bell" id="notificationBell" onclick="toggleNotificationPanel()" style="position:relative;cursor:pointer;padding:0.4rem;border-radius:8px;display:none;" title="Сповіщення">
+                    <i data-lucide="bell" class="icon" style="width:20px;height:20px;"></i>
+                    <span id="notificationBadge" style="position:absolute;top:0;right:0;width:18px;height:18px;background:#ef4444;color:white;font-size:0.65rem;font-weight:700;border-radius:50%;display:none;align-items:center;justify-content:center;line-height:1;">0</span>
                 </div>
                 <div class="user-info" id="currentUserInfo" onclick="openProfileModal()" style="cursor:pointer;" title="Мій профіль">
                     <span><i data-lucide="user" class="icon"></i> <span id="currentUserName">...</span></span>
@@ -7720,6 +7749,8 @@
                 document.getElementById('mainInterface').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 document.getElementById('adminTabBtn').style.display = 'none';
+                document.getElementById('notificationBell').style.display = 'none';
+                notifications = [];
                 
                 // Hide FAB on logout
                 const fab = document.getElementById('fabAdd');
@@ -7754,6 +7785,7 @@
             document.getElementById('mainInterface').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'block';
             document.getElementById('currentUserInfo').style.display = 'flex';
+            document.getElementById('notificationBell').style.display = 'flex';
             // Відновлюємо стан кнопки "Приховати виконані"
             const hideBtn = document.getElementById('hideCompletedBtn');
             if (hideBtn && hideCompletedTasks) hideBtn.classList.add('active');
@@ -8052,6 +8084,10 @@
         }
         
         function showCompletedTaskToast(task) {
+            // Add to notification center
+            const assignee = task.assigneeName || 'Співробітник';
+            addNotification('completed', 'Завдання виконано', assignee + ': ' + (task.title || ''), task.id || null);
+            
             const existingToast = document.getElementById('completedTaskToast');
             if (existingToast) existingToast.remove();
             
@@ -8104,6 +8140,11 @@
         }
         
         function showNewTaskToast(type, count, title) {
+            // Add to notification center
+            const typeMap = { process: 'process', regular: 'new_task', task: 'new_task' };
+            const labelMap = { process: 'Завдання з процесу', regular: 'Регулярне завдання', task: 'Нове завдання' };
+            addNotification(typeMap[type] || 'new_task', labelMap[type] || 'Нове завдання', title || '', null);
+            
             // Видаляємо попередній toast якщо є
             const existingToast = document.getElementById('newTaskToast');
             if (existingToast) existingToast.remove();
@@ -10068,6 +10109,7 @@
                                     ? `↩ ${creatorName} повернув завдання: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`
                                     : `↩ ${creatorName} вернул задачу: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`;
                                 showToast(msg, 'warning');
+                                addNotification('rejected', 'Повернуто на доопрацювання', (data.creatorName || '') + ': ' + (data.title || ''), doc.id);
                                 // Інкрементальне оновлення
                                 const idx = tasks.findIndex(t => t.id === doc.id);
                                 if (idx >= 0) {
@@ -10088,6 +10130,9 @@
         }
         
         function showReviewTaskToast(task, taskId) {
+            // Add to notification center
+            addNotification('review', 'Завдання на перевірку', (task.assigneeName || '') + ': ' + (task.title || ''), taskId || null);
+            
             const existingToast = document.getElementById('reviewTaskToast');
             if (existingToast) existingToast.remove();
             
@@ -10142,7 +10187,13 @@
         }
 
         // Mobile quick complete
+        const completingTaskIds = new Set();
+        
         async function quickCompleteTask(id) {
+            // Guard against double-tap
+            if (completingTaskIds.has(id)) return;
+            completingTaskIds.add(id);
+            
             // Оптимістичне оновлення - миттєво показуємо результат
             const taskIndex = tasks.findIndex(t => t.id === id);
             const originalTask = taskIndex >= 0 ? { ...tasks[taskIndex] } : null;
@@ -10151,15 +10202,33 @@
             const needsReview = shouldSendForReview(originalTask);
             const newStatus = needsReview ? 'review' : 'done';
             
-            if (taskIndex >= 0) {
+            // Якщо потрібен звіт — показуємо modal перед завершенням
+            if (requiresCompletionReport(originalTask)) {
+                // Зберігаємо попередній статус для rollback
+                if (taskIndex >= 0) {
+                    tasks[taskIndex]._prevStatus = tasks[taskIndex].status;
+                    tasks[taskIndex].status = newStatus;
+                    renderMyDay();
+                    if (currentCalendarView === 'list') renderTasks();
+                    else renderCalendar();
+                }
+                showCompletionReport(id, () => doQuickComplete(id, taskIndex, originalTask, needsReview, newStatus));
+                return;
+            }
+            
+            doQuickComplete(id, taskIndex, originalTask, needsReview, newStatus);
+        }
+        
+        async function doQuickComplete(id, taskIndex, originalTask, needsReview, newStatus) {
+            if (taskIndex >= 0 && !tasks[taskIndex]._prevStatus) {
                 tasks[taskIndex].status = newStatus;
                 tasks[taskIndex].completedAt = new Date().toISOString();
                 if (needsReview) tasks[taskIndex].sentForReviewAt = new Date().toISOString();
-                // Перерендерити UI одразу
                 renderMyDay();
                 if (currentCalendarView === 'list') renderTasks();
                 else renderCalendar();
             }
+            if (taskIndex >= 0) delete tasks[taskIndex]._prevStatus;
             
             try {
                 // Delete from Google Calendar when completed
@@ -10192,6 +10261,8 @@
                     else renderCalendar();
                 }
                 alert(t('error') + ': ' + e.message);
+            } finally {
+                completingTaskIds.delete(id);
             }
         }
         
@@ -10266,6 +10337,18 @@
             const weekStrip = document.getElementById('mobileWeekStrip');
             if (weekStrip) {
                 weekStrip.style.display = (view === 'day') ? '' : 'none';
+            }
+            
+            // Mobile filter bar — only in list view
+            const mobileFilterBar = document.getElementById('mobileFilterBar');
+            if (mobileFilterBar && window.innerWidth < 768) {
+                mobileFilterBar.style.display = (view === 'list') ? '' : 'none';
+            }
+            
+            // Calendar filters — only in calendar views (not list)
+            const calFilterRow = document.getElementById('calendarFiltersRow');
+            if (calFilterRow) {
+                calFilterRow.style.display = (view === 'list' || window.innerWidth < 768) ? 'none' : '';
             }
             
             // Show/hide containers
@@ -13814,12 +13897,14 @@
                         });
                         
                         showToast(`Процес "${process.name}" → крок ${nextStepIndex + 1}/${template.steps.length}: ${nextStep.title || nextStep.function}`, 'success');
+                        addNotification('process', 'Процес просунувся', process.name + ' → крок ' + (nextStepIndex + 1) + '/' + template.steps.length, null);
                     } else {
                         showToast(`Функція "${nextStep.function}" без виконавців — завдання не створено`, 'error');
                     }
                 } else {
                     // Процес завершено!
                     showToast(`Процес "${process.name}" завершено!`, 'success');
+                    addNotification('completed', 'Процес завершено', process.name, null);
                 }
                 
                 // Оновлюємо локальний стан процесу
@@ -15930,46 +16015,216 @@
                 done: visibleTasks.filter(task => task.status === 'done').length
             };
             
-            // Топ виконавців
+            // Прострочені
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            const overdueTasks = visibleTasks.filter(task => {
+                const taskDate = parseDeadline(task).date;
+                return taskDate && taskDate < todayStr && task.status !== 'done' && task.status !== 'review';
+            });
+            
+            document.getElementById('analyticsContent').innerHTML = `
+                ${renderWeeklyChart(visibleTasks, today)}
+                
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1rem;margin-top:1rem;">
+                    ${renderStatusCard(byStatus, overdueTasks.length)}
+                    ${renderTopPerformers(visibleTasks)}
+                    ${renderOverdueDetails(overdueTasks)}
+                    ${renderStuckProcesses()}
+                    ${renderFunctionLoad(visibleTasks)}
+                </div>
+            `;
+            refreshIcons();
+        }
+        
+        function renderWeeklyChart(visibleTasks, today) {
+            // 7 днів назад
+            const days = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                days.push(d.toISOString().split('T')[0]);
+            }
+            const dayNames = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
+            
+            // Рахуємо завершені і створені по днях
+            const doneByDay = {};
+            const createdByDay = {};
+            days.forEach(d => { doneByDay[d] = 0; createdByDay[d] = 0; });
+            
+            visibleTasks.forEach(t => {
+                // Completed
+                if (t.status === 'done' && t.completedAt) {
+                    let cDate;
+                    if (t.completedAt.toDate) cDate = t.completedAt.toDate().toISOString().split('T')[0];
+                    else if (typeof t.completedAt === 'string') cDate = t.completedAt.split('T')[0];
+                    if (cDate && doneByDay[cDate] !== undefined) doneByDay[cDate]++;
+                }
+                // Created
+                if (t.createdAt) {
+                    let crDate;
+                    if (t.createdAt.toDate) crDate = t.createdAt.toDate().toISOString().split('T')[0];
+                    else if (typeof t.createdAt === 'string') crDate = t.createdAt.split('T')[0];
+                    if (crDate && createdByDay[crDate] !== undefined) createdByDay[crDate]++;
+                }
+            });
+            
+            const maxVal = Math.max(1, ...Object.values(doneByDay), ...Object.values(createdByDay));
+            
+            const bars = days.map(d => {
+                const done = doneByDay[d] || 0;
+                const created = createdByDay[d] || 0;
+                const dayDate = new Date(d);
+                const label = dayNames[dayDate.getDay()];
+                const dateNum = dayDate.getDate();
+                const isToday = d === today.toISOString().split('T')[0];
+                
+                return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div style="display:flex;gap:2px;align-items:flex-end;height:80px;">
+                        <div style="width:14px;background:#dbeafe;border-radius:3px 3px 0 0;height:${Math.max(2, (created/maxVal)*70)}px;" title="Створено: ${created}"></div>
+                        <div style="width:14px;background:#22c55e;border-radius:3px 3px 0 0;height:${Math.max(2, (done/maxVal)*70)}px;" title="Виконано: ${done}"></div>
+                    </div>
+                    <div style="font-size:0.65rem;color:${isToday ? '#22c55e' : '#9ca3af'};font-weight:${isToday ? '700' : '400'};">${label}</div>
+                    <div style="font-size:0.7rem;color:${isToday ? '#22c55e' : '#6b7280'};font-weight:${isToday ? '700' : '500'};">${dateNum}</div>
+                </div>`;
+            }).join('');
+            
+            return `<div style="background:white;border-radius:12px;padding:1rem;border:1px solid #e5e7eb;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+                    <h4 style="margin:0;font-size:0.9rem;">Активність за тиждень</h4>
+                    <div style="display:flex;gap:1rem;font-size:0.7rem;">
+                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#dbeafe;border-radius:2px;"></span> Створено</span>
+                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#22c55e;border-radius:2px;"></span> Виконано</span>
+                    </div>
+                </div>
+                <div style="display:flex;gap:4px;align-items:flex-end;">${bars}</div>
+            </div>`;
+        }
+        
+        function renderStatusCard(byStatus, overdueCount) {
+            return `<div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
+                <h4 style="margin-bottom:0.75rem;">${t('byStatus')}</h4>
+                <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="plus-square" class="icon icon-sm" style="color:#3498db"></i> ${t('statusNew')}</span><strong>${byStatus.new}</strong></div>
+                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="loader" class="icon icon-sm" style="color:#f39c12"></i> ${t('statusProgress')}</span><strong>${byStatus.progress}</strong></div>
+                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="eye" class="icon icon-sm" style="color:#9b59b6"></i> ${t('statusReview')}</span><strong>${byStatus.review}</strong></div>
+                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="check-circle" class="icon icon-sm" style="color:#27ae60"></i> ${t('statusDone')}</span><strong style="color:#27ae60;">${byStatus.done}</strong></div>
+                    <div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;padding-top:0.4rem;margin-top:0.25rem;"><span><i data-lucide="alert-triangle" class="icon icon-sm" style="color:#e74c3c"></i> ${t('overdue')}</span><strong style="color:#e74c3c;">${overdueCount}</strong></div>
+                </div>
+            </div>`;
+        }
+        
+        function renderTopPerformers(visibleTasks) {
             const byAssignee = {};
             visibleTasks.filter(task => task.status === 'done').forEach(task => {
                 const name = task.assigneeName || 'Не призначено';
                 byAssignee[name] = (byAssignee[name] || 0) + 1;
             });
             const topAssignees = Object.entries(byAssignee).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const maxDone = topAssignees[0]?.[1] || 1;
             
-            // Прострочені
-            const today = new Date().toISOString().split('T')[0];
-            const overdue = visibleTasks.filter(task => {
-                const taskDate = parseDeadline(task).date;
-                return taskDate && taskDate < today && task.status !== 'done' && task.status !== 'review';
-            }).length;
+            return `<div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
+                <h4 style="margin-bottom:0.75rem;"><i data-lucide="trophy" class="icon icon-sm" style="color:#f39c12"></i> ${t('topPerformers')}</h4>
+                ${topAssignees.length > 0 ? topAssignees.map(([name, count], i) => `
+                    <div style="margin-bottom:0.5rem;">
+                        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">
+                            <span>${i === 0 ? '<i data-lucide="medal" class="icon icon-sm" style="color:#ffd700"></i> ' : ''}${name}</span>
+                            <strong style="color:#27ae60;">${count}</strong>
+                        </div>
+                        <div style="height:4px;background:#e5e7eb;border-radius:99px;"><div style="height:100%;width:${(count/maxDone)*100}%;background:#22c55e;border-radius:99px;"></div></div>
+                    </div>
+                `).join('') : `<p style="color:#7f8c8d;">${t('noCompletedTasks')}</p>`}
+            </div>`;
+        }
+        
+        function renderOverdueDetails(overdueTasks) {
+            if (overdueTasks.length === 0) return '';
             
-            document.getElementById('analyticsContent').innerHTML = `
-                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1rem;">
-                    <div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
-                        <h4 style="margin-bottom:0.75rem;">${t('byStatus')}</h4>
-                        <div style="display:flex;flex-direction:column;gap:0.4rem;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;"><span><i data-lucide="plus-square" class="icon icon-sm" style="color:#3498db"></i> ${t('statusNew')}</span><strong>${byStatus.new}</strong></div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;"><span><i data-lucide="loader" class="icon icon-sm" style="color:#f39c12"></i> ${t('statusProgress')}</span><strong>${byStatus.progress}</strong></div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;"><span><i data-lucide="eye" class="icon icon-sm" style="color:#9b59b6"></i> ${t('statusReview')}</span><strong>${byStatus.review}</strong></div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;"><span><i data-lucide="check-circle" class="icon icon-sm" style="color:#27ae60"></i> ${t('statusDone')}</span><strong style="color:#27ae60;">${byStatus.done}</strong></div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ddd;padding-top:0.4rem;margin-top:0.25rem;"><span><i data-lucide="alert-triangle" class="icon icon-sm" style="color:#e74c3c"></i> ${t('overdue')}</span><strong style="color:#e74c3c;">${overdue}</strong></div>
+            const byPerson = {};
+            overdueTasks.forEach(t => {
+                const name = t.assigneeName || 'Не призначено';
+                if (!byPerson[name]) byPerson[name] = [];
+                byPerson[name].push(t);
+            });
+            
+            return `<div style="background:#fef2f2;border-radius:12px;padding:1rem;border:1px solid #fecaca;">
+                <h4 style="margin-bottom:0.75rem;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> Прострочено (${overdueTasks.length})</h4>
+                ${Object.entries(byPerson).map(([name, tasks]) => `
+                    <div style="margin-bottom:0.5rem;">
+                        <div style="font-size:0.8rem;font-weight:600;color:#991b1b;">${esc(name)} (${tasks.length})</div>
+                        ${tasks.slice(0, 3).map(t => `
+                            <div style="font-size:0.75rem;color:#7f1d1d;padding:2px 0 2px 12px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="openTaskModal('${escId(t.id)}')" title="${esc(t.title)}">
+                                ${esc(t.title)} <span style="color:#dc2626;font-size:0.65rem;">${t.deadlineDate || ''}</span>
+                            </div>
+                        `).join('')}
+                        ${tasks.length > 3 ? `<div style="font-size:0.7rem;color:#dc2626;padding-left:12px;">+${tasks.length - 3} ще...</div>` : ''}
+                    </div>
+                `).join('')}
+            </div>`;
+        }
+        
+        function renderStuckProcesses() {
+            if (!processes || processes.length === 0) return '';
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+            const stuck = processes.filter(p => {
+                if (p.status !== 'active') return false;
+                if (p.deadline && p.deadline < todayStr) return true;
+                // Більше 3 днів на одному кроці
+                const lastHistory = p.history?.[p.history.length - 1];
+                if (lastHistory?.timestamp) {
+                    const ts = lastHistory.timestamp.toDate ? lastHistory.timestamp.toDate() : new Date(lastHistory.timestamp);
+                    const daysSince = (new Date() - ts) / 86400000;
+                    return daysSince > 3;
+                }
+                return false;
+            });
+            
+            if (stuck.length === 0) return '';
+            
+            return `<div style="background:#fffbeb;border-radius:12px;padding:1rem;border:1px solid #fde68a;">
+                <h4 style="margin-bottom:0.75rem;color:#92400e;"><i data-lucide="pause-circle" class="icon icon-sm"></i> Застряглі процеси (${stuck.length})</h4>
+                ${stuck.slice(0, 5).map(p => {
+                    const template = processTemplates.find(t => t.id === p.templateId);
+                    const totalSteps = template?.steps?.length || '?';
+                    const stepName = template?.steps?.[p.currentStep]?.title || template?.steps?.[p.currentStep]?.function || '';
+                    return `<div style="font-size:0.8rem;padding:4px 0;border-bottom:1px solid #fef3c7;">
+                        <div style="font-weight:600;color:#78350f;">${esc(p.name)}</div>
+                        <div style="font-size:0.7rem;color:#92400e;">Крок ${(p.currentStep||0)+1}/${totalSteps}: ${esc(stepName)}${p.deadline ? ' — дедлайн: ' + p.deadline : ''}</div>
+                    </div>`;
+                }).join('')}
+            </div>`;
+        }
+        
+        function renderFunctionLoad(visibleTasks) {
+            const byFunc = {};
+            visibleTasks.filter(t => t.function && t.status !== 'done').forEach(t => {
+                if (!byFunc[t.function]) byFunc[t.function] = { active: 0, overdue: 0 };
+                byFunc[t.function].active++;
+                const taskDate = parseDeadline(t).date;
+                const todayStr = new Date().toISOString().split('T')[0];
+                if (taskDate && taskDate < todayStr) byFunc[t.function].overdue++;
+            });
+            
+            const entries = Object.entries(byFunc).sort((a, b) => b[1].active - a[1].active).slice(0, 6);
+            if (entries.length === 0) return '';
+            const maxActive = entries[0]?.[1]?.active || 1;
+            
+            return `<div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
+                <h4 style="margin-bottom:0.75rem;"><i data-lucide="layers" class="icon icon-sm" style="color:#6366f1"></i> Навантаження по функціях</h4>
+                ${entries.map(([name, data]) => `
+                    <div style="margin-bottom:0.5rem;">
+                        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">
+                            <span>${esc(name)}</span>
+                            <span>${data.active}${data.overdue ? ` <span style="color:#ef4444;font-size:0.7rem;">(${data.overdue} простр.)</span>` : ''}</span>
+                        </div>
+                        <div style="height:4px;background:#e5e7eb;border-radius:99px;position:relative;">
+                            <div style="height:100%;width:${(data.active/maxActive)*100}%;background:#6366f1;border-radius:99px;"></div>
+                            ${data.overdue ? `<div style="position:absolute;top:0;right:0;height:100%;width:${(data.overdue/maxActive)*100}%;background:#ef4444;border-radius:99px;"></div>` : ''}
                         </div>
                     </div>
-                    
-                    <div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
-                        <h4 style="margin-bottom:0.75rem;"><i data-lucide="trophy" class="icon icon-sm" style="color:#f39c12"></i> ${t('topPerformers')}</h4>
-                        ${topAssignees.length > 0 ? topAssignees.map(([name, count], i) => `
-                            <div style="display:flex;justify-content:space-between;padding:0.3rem 0;align-items:center;">
-                                <span><i data-lucide="${i === 0 ? 'medal' : i === 1 ? 'award' : i === 2 ? 'star' : 'user'}" class="icon icon-sm" style="color:${i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#7f8c8d'}"></i> ${name}</span>
-                                <strong style="color:#27ae60;">${count} <i data-lucide="check" class="icon icon-sm"></i></strong>
-                            </div>
-                        `).join('') : `<p style="color:#7f8c8d;">${t('noCompletedTasks')}</p>`}
-                    </div>
-                </div>
-            `;
-            refreshIcons();
+                `).join('')}
+            </div>`;
         }
 
         function closeModal(id) {
@@ -16469,6 +16724,44 @@
         </div>
     </div>
     
+    <!-- COMPLETION REPORT Modal -->
+    <div id="completionReportModal" class="modal" onclick="if(event.target===this) closeCompletionReport(false);" style="z-index:10002;">
+        <div class="modal-content" style="max-width:420px;border-radius:16px;padding:0;overflow:hidden;">
+            <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
+                <h3 style="margin:0;font-size:1rem;display:flex;align-items:center;gap:8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Підтвердження виконання
+                </h3>
+            </div>
+            <div style="padding:1.25rem 1.5rem;" id="completionReportBody">
+                <!-- Filled by JS -->
+            </div>
+            <div style="padding:0.75rem 1.5rem 1.25rem;display:flex;gap:0.75rem;">
+                <button onclick="closeCompletionReport(false)" class="btn" style="flex:1;">Скасувати</button>
+                <button onclick="submitCompletionReport()" class="btn btn-success" style="flex:2;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Підтвердити
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION PANEL -->
+    <div id="notificationPanel" style="display:none;position:fixed;top:56px;right:12px;width:360px;max-width:calc(100vw - 24px);max-height:70vh;background:white;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.15);z-index:10001;overflow:hidden;flex-direction:column;" onclick="event.stopPropagation();">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid #f3f4f6;">
+            <span style="font-weight:700;font-size:0.95rem;">Сповіщення</span>
+            <div style="display:flex;gap:0.5rem;">
+                <button onclick="markAllNotificationsRead()" style="border:none;background:none;font-size:0.75rem;color:#22c55e;cursor:pointer;font-weight:500;">Прочитати все</button>
+                <button onclick="toggleNotificationPanel()" style="border:none;background:none;cursor:pointer;color:#9ca3af;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+        </div>
+        <div id="notificationList" style="overflow-y:auto;max-height:calc(70vh - 60px);padding:0.5rem 0;">
+            <div style="text-align:center;color:#9ca3af;padding:2rem;font-size:0.85rem;">Немає сповіщень</div>
+        </div>
+    </div>
+
     <!-- FOCUS MODE Modal -->
     <div id="focusModal" style="display:none;position:fixed;inset:0;z-index:10000;background:white;flex-direction:column;" onclick="event.stopPropagation();">
         <!-- Header -->
@@ -16494,7 +16787,7 @@
 
     <!-- Mobile More Menu Modal -->
     <div class="modal" id="mobileMenuModal" onclick="if(event.target === this) closeMobileMenu();">
-        <div class="modal-content" style="max-width:340px;margin-top:auto;margin-bottom:0;border-radius:20px 20px 0 0;padding:0;min-height:auto;">
+        <div class="modal-content" style="max-width:100%;margin-top:auto;margin-bottom:0;border-radius:20px 20px 0 0;padding:0;min-height:auto;">
             <!-- Handle bar -->
             <div style="display:flex;justify-content:center;padding:0.75rem 0 0.5rem;">
                 <div style="width:40px;height:4px;background:#ddd;border-radius:4px;"></div>
@@ -16517,17 +16810,23 @@
                 <hr style="border:none;border-top:1px solid #f0f0f0;margin:0 0 0.75rem;">
                 
                 <!-- Navigation grid -->
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
-                    <button class="btn" onclick="switchTab('projects');closeMobileMenu();" style="justify-content:center;padding:0.7rem;font-size:0.8rem;">
-                        <i data-lucide="folder-kanban" class="icon icon-sm"></i> Проєкти
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.4rem;margin-bottom:0.75rem;">
+                    <button class="btn" onclick="switchTab('control');closeMobileMenu();" style="justify-content:center;padding:0.6rem;font-size:0.75rem;flex-direction:column;gap:2px;">
+                        <i data-lucide="layout-dashboard" class="icon icon-sm"></i> Контроль
                     </button>
-                    <button class="btn" onclick="switchTab('processes');closeMobileMenu();" style="justify-content:center;padding:0.7rem;font-size:0.8rem;">
+                    <button class="btn" onclick="switchTab('regular');closeMobileMenu();" style="justify-content:center;padding:0.6rem;font-size:0.75rem;flex-direction:column;gap:2px;">
+                        <i data-lucide="repeat" class="icon icon-sm"></i> Регулярні
+                    </button>
+                    <button class="btn" onclick="switchTab('processes');closeMobileMenu();" style="justify-content:center;padding:0.6rem;font-size:0.75rem;flex-direction:column;gap:2px;">
                         <i data-lucide="git-branch" class="icon icon-sm"></i> Процеси
                     </button>
-                    <button class="btn" onclick="switchTab('functions');closeMobileMenu();" style="justify-content:center;padding:0.7rem;font-size:0.8rem;">
+                    <button class="btn" onclick="switchTab('projects');closeMobileMenu();" style="justify-content:center;padding:0.6rem;font-size:0.75rem;flex-direction:column;gap:2px;">
+                        <i data-lucide="folder-kanban" class="icon icon-sm"></i> Проєкти
+                    </button>
+                    <button class="btn" onclick="switchTab('functions');closeMobileMenu();" style="justify-content:center;padding:0.6rem;font-size:0.75rem;flex-direction:column;gap:2px;">
                         <i data-lucide="settings" class="icon icon-sm"></i> Функції
                     </button>
-                    <button class="btn" onclick="switchTab('analytics');closeMobileMenu();" style="justify-content:center;padding:0.7rem;font-size:0.8rem;">
+                    <button class="btn" onclick="switchTab('analytics');closeMobileMenu();" style="justify-content:center;padding:0.6rem;font-size:0.75rem;flex-direction:column;gap:2px;">
                         <i data-lucide="bar-chart-3" class="icon icon-sm"></i> Аналітика
                     </button>
                 </div>
@@ -18985,6 +19284,224 @@ Ctrl+N - нове завдання
                 originalCloseModal(modalId);
             }
         };
+
+    // =====================
+    // COMPLETION REPORT — підтвердження виконання
+    // =====================
+    let completionReportTaskId = null;
+    let completionReportCallback = null;
+    
+    function requiresCompletionReport(task) {
+        if (!task) return false;
+        return !!(task.reportFormat || task.expectedResult);
+    }
+    
+    function showCompletionReport(taskId, callback) {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) { callback(); return; }
+        
+        completionReportTaskId = taskId;
+        completionReportCallback = callback;
+        
+        const body = document.getElementById('completionReportBody');
+        
+        let html = '';
+        
+        if (task.expectedResult) {
+            html += `<div style="margin-bottom:1rem;padding:0.75rem;background:#f0fdf4;border-radius:10px;border-left:3px solid #22c55e;">
+                <div style="font-size:0.7rem;font-weight:600;color:#16a34a;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;">Очікуваний результат</div>
+                <div style="font-size:0.85rem;color:#1a1a1a;">${esc(task.expectedResult)}</div>
+            </div>`;
+        }
+        
+        if (task.reportFormat) {
+            html += `<div style="margin-bottom:1rem;padding:0.75rem;background:#fffbeb;border-radius:10px;border-left:3px solid #f59e0b;">
+                <div style="font-size:0.7rem;font-weight:600;color:#92400e;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;">Формат звіту</div>
+                <div style="font-size:0.85rem;color:#1a1a1a;">${esc(task.reportFormat)}</div>
+            </div>`;
+        }
+        
+        html += `<div style="margin-top:0.75rem;">
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Коментар до виконання (необов'язково)</label>
+            <textarea id="completionReportText" style="width:100%;min-height:60px;border:1px solid #e5e7eb;border-radius:10px;padding:0.6rem;font-size:0.85rem;resize:vertical;font-family:inherit;" placeholder="Що було зроблено, результат..."></textarea>
+        </div>`;
+        
+        body.innerHTML = html;
+        document.getElementById('completionReportModal').style.display = 'block';
+    }
+    
+    function closeCompletionReport(proceed) {
+        document.getElementById('completionReportModal').style.display = 'none';
+        if (!proceed && completionReportCallback) {
+            // Cancelled — rollback optimistic update
+            completingTaskIds.delete(completionReportTaskId);
+            const taskIndex = tasks.findIndex(t => t.id === completionReportTaskId);
+            if (taskIndex >= 0) {
+                tasks[taskIndex].status = tasks[taskIndex]._prevStatus || 'progress';
+                delete tasks[taskIndex]._prevStatus;
+                renderMyDay();
+                if (currentCalendarView === 'list') renderTasks();
+                else renderCalendar();
+            }
+        }
+        completionReportTaskId = null;
+        completionReportCallback = null;
+    }
+    
+    async function submitCompletionReport() {
+        const text = document.getElementById('completionReportText')?.value?.trim() || '';
+        const taskId = completionReportTaskId;
+        const callback = completionReportCallback;
+        
+        // Save completion note as comment
+        if (text && taskId) {
+            try {
+                await db.collection('companies').doc(currentCompany)
+                    .collection('tasks').doc(taskId)
+                    .collection('comments').add({
+                        text: '[Звіт] ' + text,
+                        authorId: currentUser.uid,
+                        authorName: currentUserData?.name || currentUser.email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                // Also save as completionNote on task
+                await db.collection('companies').doc(currentCompany)
+                    .collection('tasks').doc(taskId)
+                    .update({ completionNote: text });
+            } catch(e) {
+                console.error('Save completion note error:', e);
+            }
+        }
+        
+        document.getElementById('completionReportModal').style.display = 'none';
+        
+        // Proceed with actual completion
+        if (callback) callback();
+        completionReportTaskId = null;
+        completionReportCallback = null;
+    }
+
+    // =====================
+    // NOTIFICATION CENTER
+    // =====================
+    let notifications = [];
+    let notificationPanelOpen = false;
+    const MAX_NOTIFICATIONS = 50;
+    
+    function addNotification(type, title, body, taskId) {
+        const notif = {
+            id: Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+            type, // 'new_task', 'completed', 'review', 'rejected', 'process'
+            title,
+            body,
+            taskId: taskId || null,
+            time: new Date(),
+            read: false
+        };
+        notifications.unshift(notif);
+        if (notifications.length > MAX_NOTIFICATIONS) notifications.pop();
+        updateNotificationBadge();
+        renderNotificationList();
+    }
+    
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        const bell = document.getElementById('notificationBell');
+        if (!badge || !bell) return;
+        
+        const unread = notifications.filter(n => !n.read).length;
+        if (unread > 0) {
+            badge.style.display = 'flex';
+            badge.textContent = unread > 99 ? '99+' : unread;
+            bell.style.background = 'rgba(239,68,68,0.08)';
+        } else {
+            badge.style.display = 'none';
+            bell.style.background = 'transparent';
+        }
+    }
+    
+    function toggleNotificationPanel() {
+        const panel = document.getElementById('notificationPanel');
+        notificationPanelOpen = !notificationPanelOpen;
+        panel.style.display = notificationPanelOpen ? 'flex' : 'none';
+        if (notificationPanelOpen) renderNotificationList();
+    }
+    
+    function markAllNotificationsRead() {
+        notifications.forEach(n => n.read = true);
+        updateNotificationBadge();
+        renderNotificationList();
+    }
+    
+    function renderNotificationList() {
+        const list = document.getElementById('notificationList');
+        if (!list) return;
+        
+        if (notifications.length === 0) {
+            list.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;font-size:0.85rem;">Немає сповіщень</div>';
+            return;
+        }
+        
+        const icons = {
+            new_task: { color: '#3b82f6', svg: '<path d="M12 5v14M5 12h14"/>' },
+            completed: { color: '#22c55e', svg: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+            review: { color: '#8b5cf6', svg: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>' },
+            rejected: { color: '#f59e0b', svg: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>' },
+            process: { color: '#10b981', svg: '<line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>' }
+        };
+        
+        const now = new Date();
+        
+        list.innerHTML = notifications.map(n => {
+            const icon = icons[n.type] || icons.new_task;
+            const ago = getTimeAgo(n.time, now);
+            const unreadDot = n.read ? '' : '<div style="width:8px;height:8px;background:#3b82f6;border-radius:50%;flex-shrink:0;"></div>';
+            
+            return `<div style="display:flex;gap:10px;align-items:flex-start;padding:0.7rem 1.25rem;cursor:pointer;${n.read ? 'opacity:0.6;' : ''}border-bottom:1px solid #f9fafb;" onclick="onNotificationClick('${n.id}'${n.taskId ? \`, '\${n.taskId}'\` : ''})">
+                <div style="width:32px;height:32px;border-radius:8px;background:${icon.color}12;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${icon.color}" stroke-width="2">${icon.svg}</svg>
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:0.8rem;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(n.title)}</div>
+                    <div style="font-size:0.75rem;color:#6b7280;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(n.body)}</div>
+                    <div style="font-size:0.65rem;color:#9ca3af;margin-top:3px;">${ago}</div>
+                </div>
+                ${unreadDot}
+            </div>`;
+        }).join('');
+    }
+    
+    function onNotificationClick(notifId, taskId) {
+        // Mark as read
+        const n = notifications.find(x => x.id === notifId);
+        if (n) n.read = true;
+        updateNotificationBadge();
+        renderNotificationList();
+        
+        // Open task if available
+        if (taskId) {
+            toggleNotificationPanel();
+            openTaskModal(taskId);
+        }
+    }
+    
+    function getTimeAgo(date, now) {
+        const diff = Math.floor((now - new Date(date)) / 1000);
+        if (diff < 60) return 'щойно';
+        if (diff < 3600) return Math.floor(diff / 60) + ' хв тому';
+        if (diff < 86400) return Math.floor(diff / 3600) + ' год тому';
+        return Math.floor(diff / 86400) + ' дн тому';
+    }
+    
+    // Close panel on outside click
+    document.addEventListener('click', (e) => {
+        if (notificationPanelOpen && !e.target.closest('#notificationPanel') && !e.target.closest('#notificationBell')) {
+            notificationPanelOpen = false;
+            document.getElementById('notificationPanel').style.display = 'none';
+        }
+    });
+
+
     </script>
     
     <style>
