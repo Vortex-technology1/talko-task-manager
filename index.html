@@ -3229,6 +3229,32 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            border-left: 3px solid;
+        }
+        
+        .calendar-month-event.status-new {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+        .calendar-month-event.status-progress {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+        .calendar-month-event.status-review {
+            background: #e0e7ff;
+            border-color: #6366f1;
+            color: #3730a3;
+        }
+        .calendar-month-event.status-done {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+            opacity: 0.7;
+        }
+        .calendar-month-event:hover {
+            filter: brightness(0.95);
         }
         
         .calendar-month-more {
@@ -5030,6 +5056,9 @@
                         </div>
                     </div>
                     <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <button onclick="startFocusMode()" class="btn btn-success btn-sm" id="focusModeBtn" style="padding:0.4rem 0.75rem;font-size:0.85rem;white-space:nowrap;">
+                            <i data-lucide="play" class="icon icon-sm"></i> <span data-i18n="focusMode">Фокус</span>
+                        </button>
                         <div class="myday-progress">
                             <div class="myday-progress-bar">
                                 <div class="myday-progress-fill" id="mydayProgressFill"></div>
@@ -8769,7 +8798,7 @@
                     document.getElementById('taskStatus').value = task.status || 'new';
                     document.getElementById('taskExpectedResult').value = task.expectedResult || '';
                     document.getElementById('taskReportFormat').value = task.reportFormat || '';
-                    document.getElementById('taskDescription').value = task.description || '';
+                    document.getElementById('taskDescription').value = task.description || task.instruction || '';
                     
                     // Встановлюємо чекбокси сповіщень
                     setNotifyUsersCheckboxes(task.notifyOnComplete || []);
@@ -9101,6 +9130,11 @@
                 }
                 
                 closeModal('taskModal');
+                
+                // Автопросування процесу якщо завдання завершили через форму
+                if (currentEditingId && data.status === 'done') {
+                    advanceProcessIfLinked(currentEditingId);
+                }
                 
                 // Локальне оновлення замість повного перезавантаження
                 if (currentEditingId) {
@@ -9562,6 +9596,9 @@
                     reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     reviewedBy: currentUser.uid
                 });
+                
+                // Автопросування процесу (review accepted = done)
+                advanceProcessIfLinked(taskId);
                 
                 showToast(t('taskAccepted'), 'success');
             } catch (e) {
@@ -10073,6 +10110,11 @@
                 if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update(updateData);
+                
+                // Автопросування процесу якщо завдання пов'язане
+                if (!needsReview) {
+                    advanceProcessIfLinked(id);
+                }
                 
                 if (needsReview) {
                     showToast(t('taskSentForReview'), 'info');
@@ -10821,8 +10863,9 @@
                          onclick="goToDay('${dateStr}')">
                         <div class="month-day-number">${dayNum}</div>
                         ${dayTasks.slice(0, 3).map(task => `
-                            <div class="calendar-month-event calendar-event status-${task.status}" 
-                                 onclick="event.stopPropagation(); showTaskQuickMenu(event, '${escId(task.id)}')">
+                            <div class="calendar-month-event status-${task.status}" 
+                                 onclick="event.stopPropagation(); showTaskQuickMenu(event, '${escId(task.id)}')"
+                                 title="${esc(task.title)}">
                                 ${esc(task.title)}
                             </div>
                         `).join('')}
@@ -13300,18 +13343,21 @@
                 const head = users.find(u => u.id === headId);
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').add({
-                    title: `[${name}] ${firstStep.title || firstStep.function}`,
+                    title: `[${name}] ${firstStep.title || firstStep.name || firstStep.function}`,
                     function: firstStep.function,
                     assigneeId: headId,
                     assigneeName: head?.name || head?.email || '',
+                    instruction: firstStep.instruction || '',
+                    estimatedTime: firstStep.estimatedTime || '60',
                     deadlineDate: new Date().toISOString().split('T')[0],
                     deadlineTime: '18:00',
                     status: 'new',
                     priority: 'high',
                     processId: processRef.id,
                     processStep: 0,
+                    createdBy: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    creatorName: currentLang === 'ua' ? 'Система' : 'Система'
+                    creatorName: 'Система (авто)'
                 });
                 
                 closeModal('startProcessModal');
@@ -13431,6 +13477,139 @@
             }
         }
         
+        // =====================
+        // AUTO-ADVANCE: Завершення завдання → автопросування процесу
+        // =====================
+        async function advanceProcessIfLinked(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task?.processId) return; // Не пов'язане з процесом
+            
+            const process = processes.find(p => p.id === task.processId);
+            if (!process || process.status !== 'active') return;
+            
+            const template = processTemplates.find(t => t.id === process.templateId);
+            if (!template?.steps?.length) return;
+            
+            // Перевіряємо що завершене завдання — саме поточний крок процесу
+            const currentStepIndex = process.currentStep || 0;
+            if (task.processStep !== currentStepIndex) {
+                console.log('[Process] Task step', task.processStep, '!= current step', currentStepIndex, '— skip');
+                return;
+            }
+            
+            const currentStep = template.steps[currentStepIndex];
+            const nextStepIndex = currentStepIndex + 1;
+            const nextStep = template.steps[nextStepIndex];
+            
+            try {
+                // History entry
+                const historyEntry = {
+                    step: currentStepIndex,
+                    stepTitle: currentStep?.title || currentStep?.function || ('Крок ' + (currentStepIndex + 1)),
+                    completedAt: new Date().toISOString(),
+                    completedBy: currentUser.uid,
+                    taskId: taskId,
+                    auto: true
+                };
+                
+                const updateData = {
+                    currentStep: nextStepIndex,
+                    history: firebase.firestore.FieldValue.arrayUnion(historyEntry)
+                };
+                
+                // Останній крок → завершуємо процес
+                if (!nextStep) {
+                    updateData.status = 'completed';
+                    updateData.completedAt = firebase.firestore.FieldValue.serverTimestamp();
+                }
+                
+                await db.collection('companies').doc(currentCompany).collection('processes').doc(task.processId).update(updateData);
+                
+                // Створюємо завдання для наступного кроку
+                if (nextStep) {
+                    const func = functions.find(f => f.name === nextStep.function);
+                    if (func?.assigneeIds?.length) {
+                        const headId = func.headId || func.assigneeIds[0];
+                        const head = users.find(u => u.id === headId);
+                        
+                        // Розрахунок дедлайну: якщо є deadline процесу — відштовхуємось від нього
+                        let deadlineDate = new Date().toISOString().split('T')[0];
+                        if (process.deadline) {
+                            // Рахуємо скільки часу потрібно на залишкові кроки (від nextStep до кінця)
+                            const remainingMinutes = template.steps.slice(nextStepIndex).reduce((sum, s) => sum + parseInt(s.estimatedTime || 60), 0);
+                            const processDeadline = new Date(process.deadline + 'T18:00:00');
+                            // Дедлайн цього кроку = deadline процесу мінус час на наступні кроки
+                            const remainingAfterThis = template.steps.slice(nextStepIndex + 1).reduce((sum, s) => sum + parseInt(s.estimatedTime || 60), 0);
+                            const stepDeadline = new Date(processDeadline.getTime() - remainingAfterThis * 60000);
+                            
+                            // Але не раніше ніж завтра 
+                            const tomorrow = new Date();
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            deadlineDate = stepDeadline > tomorrow 
+                                ? stepDeadline.toISOString().split('T')[0]
+                                : tomorrow.toISOString().split('T')[0];
+                        }
+                        
+                        const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                            title: `[${process.name}] ${nextStep.title || nextStep.name || nextStep.function}`,
+                            function: nextStep.function,
+                            assigneeId: headId,
+                            assigneeName: head?.name || head?.email || '',
+                            instruction: nextStep.instruction || '',
+                            estimatedTime: nextStep.estimatedTime || '60',
+                            deadlineDate: deadlineDate,
+                            deadlineTime: '18:00',
+                            status: 'new',
+                            priority: 'high',
+                            processId: task.processId,
+                            processStep: nextStepIndex,
+                            createdBy: currentUser.uid,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            creatorName: 'Система (авто)'
+                        });
+                        
+                        // Додаємо в локальний масив для негайного відображення
+                        tasks.push({
+                            id: newTaskRef.id,
+                            title: `[${process.name}] ${nextStep.title || nextStep.name || nextStep.function}`,
+                            function: nextStep.function,
+                            assigneeId: headId,
+                            assigneeName: head?.name || head?.email || '',
+                            deadlineDate: deadlineDate,
+                            deadlineTime: '18:00',
+                            status: 'new',
+                            priority: 'high',
+                            processId: task.processId,
+                            processStep: nextStepIndex
+                        });
+                        
+                        showToast(`🔄 Процес "${process.name}" → крок ${nextStepIndex + 1}/${template.steps.length}: ${nextStep.title || nextStep.function}`, 'success');
+                    } else {
+                        showToast(`⚠️ Функція "${nextStep.function}" без виконавців — завдання не створено`, 'error');
+                    }
+                } else {
+                    // Процес завершено!
+                    showToast(`✅ Процес "${process.name}" завершено!`, 'success');
+                }
+                
+                // Оновлюємо локальний стан процесу
+                const pIdx = processes.findIndex(p => p.id === task.processId);
+                if (pIdx >= 0) {
+                    processes[pIdx].currentStep = nextStepIndex;
+                    if (!nextStep) processes[pIdx].status = 'completed';
+                }
+                
+                // Перерендерити процеси якщо вкладка відкрита
+                if (document.getElementById('processesTab')?.style.display !== 'none') {
+                    renderProcessBoard();
+                }
+                
+            } catch (e) {
+                console.error('[advanceProcess]', e);
+                showToast('Помилка автопросування процесу: ' + e.message, 'error');
+            }
+        }
+        
         async function completeProcessStep(processId) {
             const process = processes.find(p => p.id === processId);
             if (!process) return;
@@ -13441,12 +13620,36 @@
                 return;
             }
             
+            // Re-read from Firestore to prevent stale state after auto-advance
+            try {
+                const freshDoc = await db.collection('companies').doc(currentCompany).collection('processes').doc(processId).get();
+                if (freshDoc.exists) {
+                    const freshData = freshDoc.data();
+                    process.currentStep = freshData.currentStep || 0;
+                    process.status = freshData.status || 'active';
+                    process.history = freshData.history || [];
+                }
+            } catch(e) { /* use local state as fallback */ }
+            
+            if (process.status === 'completed') {
+                showToast('Процес вже завершено', 'info');
+                return;
+            }
+            
             const currentStepIndex = Math.min(process.currentStep || 0, template.steps.length - 1);
             const currentStep = template.steps[currentStepIndex];
             
-            if (!currentStep) {
-                alert(currentLang === 'ua' ? 'Етап не знайдено' : 'Этап не найден');
-                return;
+            // Перевіряємо чи є незавершене автозавдання для цього кроку
+            const pendingAutoTask = tasks.find(t => 
+                t.processId === processId && 
+                t.processStep === currentStepIndex && 
+                t.status !== 'done' && t.status !== 'review'
+            );
+            if (pendingAutoTask) {
+                const skip = confirm(currentLang === 'ua' 
+                    ? `Є незавершене завдання "${pendingAutoTask.title}" для цього кроку. Все одно перейти на наступний крок?`
+                    : `Есть незавершенная задача для этого шага. Все равно перейти?`);
+                if (!skip) return;
             }
             
             // Перевіряємо права - чи користувач є членом функції поточного етапу
@@ -16036,6 +16239,29 @@
         </div>
     </div>
     
+    <!-- FOCUS MODE Modal -->
+    <div id="focusModal" style="display:none;position:fixed;inset:0;z-index:10000;background:white;flex-direction:column;" onclick="event.stopPropagation();">
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid #f3f4f6;background:white;">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+                <div style="width:8px;height:8px;background:#22c55e;border-radius:50%;animation:focusPulse 2s infinite;"></div>
+                <span style="font-weight:700;font-size:0.95rem;color:#1a1a1a;">Режим фокусу</span>
+            </div>
+            <button onclick="closeFocusMode()" style="width:36px;height:36px;border:none;border-radius:50%;background:#f3f4f6;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <!-- Content (rendered by JS) -->
+        <div id="focusContent" style="flex:1;display:flex;flex-direction:column;overflow:hidden;transition:all 0.3s ease;">
+        </div>
+    </div>
+    <style>
+        @keyframes focusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+    </style>
+
     <!-- Mobile More Menu Modal -->
     <div class="modal" id="mobileMenuModal" onclick="if(event.target === this) closeMobileMenu();">
         <div class="modal-content" style="max-width:340px;margin-top:auto;margin-bottom:0;border-radius:20px 20px 0 0;padding:0;min-height:auto;">
@@ -16775,6 +17001,11 @@
             if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
             
             await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
+            
+            // Автопросування процесу
+            if (!needsReview) {
+                advanceProcessIfLinked(taskId);
+            }
             
             // Локальне оновлення
             task.status = newStatus;
@@ -18714,6 +18945,414 @@ Ctrl+N - нове завдання
                 console.log('[SW] Registration skipped:', err.message);
             });
         });
+    }
+    // =====================
+    // FOCUS MODE - Конвеєрний режим виконання завдань
+    // =====================
+    let focusTasks = [];
+    let focusCurrentIndex = 0;
+    let focusTimerInterval = null;
+    let focusTimerSeconds = 0;
+    let focusTimerRunning = false;
+    
+    function getFocusTasks() {
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        const todayDay = today.getDay();
+        const result = [];
+        
+        const funcByName = {};
+        functions.forEach(f => { funcByName[f.name] = f; });
+        
+        const generatedTaskIndex = {};
+        tasks.forEach(t => {
+            if (t.regularTaskId && t.deadlineDate === todayStr && t.assigneeId === currentUser?.uid) {
+                if (!generatedTaskIndex[t.regularTaskId]) generatedTaskIndex[t.regularTaskId] = t;
+            }
+        });
+        
+        // Разові
+        tasks.filter(t => {
+            if (t.assigneeId !== currentUser?.uid) return false;
+            if (t.status === 'done' || t.status === 'review') return false;
+            if (t.deadlineDate === todayStr) return true;
+            if (t.deadlineDate < todayStr) return true;
+            return false;
+        }).forEach(t => {
+            result.push({
+                id: t.id,
+                title: t.title,
+                time: t.deadlineTime || '',
+                description: t.description || t.instruction || '',
+                function: t.function || '',
+                estimatedTime: parseInt(t.estimatedTime || t.duration || '60'),
+                type: 'task',
+                processId: t.processId || null,
+                processStep: t.processStep,
+                priority: t.priority || 'medium',
+                overdue: t.deadlineDate < todayStr,
+                checklist: t.checklist || [],
+                originalTask: t
+            });
+        });
+        
+        // Регулярні (не виконані)
+        regularTasks.forEach(rt => {
+            const func = funcByName[rt.function];
+            if (!func || !func.assigneeIds?.includes(currentUser?.uid)) return;
+            
+            let isToday = false;
+            if (rt.period === 'daily') isToday = true;
+            else if (rt.period === 'weekly') {
+                if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) isToday = rt.daysOfWeek.includes(todayDay.toString());
+                else if (rt.dayOfWeek) isToday = rt.dayOfWeek === todayDay.toString();
+            } else if (rt.period === 'monthly') {
+                const todayDate = today.getDate();
+                isToday = rt.dayOfMonth === 'last' 
+                    ? todayDate === new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate()
+                    : todayDate === parseInt(rt.dayOfMonth);
+            }
+            if (!isToday) return;
+            
+            const gen = generatedTaskIndex[rt.id];
+            if (gen?.status === 'done' || gen?.status === 'review') return;
+            
+            result.push({
+                id: rt.id,
+                generatedTaskId: gen?.id || null,
+                title: rt.title,
+                time: rt.timeStart || rt.time || '',
+                description: rt.instruction || rt.description || '',
+                function: rt.function || '',
+                estimatedTime: parseInt(rt.estimatedTime || rt.duration || '30'),
+                type: 'regular',
+                processId: null,
+                priority: 'medium',
+                overdue: false,
+                checklist: [],
+                originalTask: gen || rt
+            });
+        });
+        
+        // Сортування: прострочені → по часу
+        result.sort((a, b) => {
+            if (a.overdue !== b.overdue) return a.overdue ? -1 : 1;
+            return (a.time || '99:99').localeCompare(b.time || '99:99');
+        });
+        
+        return result;
+    }
+    
+    function startFocusMode() {
+        focusTasks = getFocusTasks();
+        if (focusTasks.length === 0) {
+            showToast(currentLang === 'ua' ? 'Немає завдань на сьогодні!' : 'Нет задач на сегодня!', 'info');
+            return;
+        }
+        focusCurrentIndex = 0;
+        document.getElementById('focusModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        renderFocusTask();
+    }
+    
+    function closeFocusMode() {
+        document.getElementById('focusModal').style.display = 'none';
+        document.body.style.overflow = '';
+        stopFocusTimer();
+        renderMyDay();
+    }
+    
+    function renderFocusTask() {
+        const task = focusTasks[focusCurrentIndex];
+        if (!task) {
+            renderFocusComplete();
+            return;
+        }
+        
+        const total = focusTasks.length;
+        const doneCount = focusCurrentIndex;
+        const progressPercent = Math.round((doneCount / total) * 100);
+        
+        // Process badge
+        let processBadge = '';
+        if (task.processId) {
+            const process = processes.find(p => p.id === task.processId);
+            const template = process ? processTemplates.find(t => t.id === process.templateId) : null;
+            if (process && template) {
+                processBadge = `<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(139,92,246,0.1);border-radius:8px;font-size:0.8rem;color:#7c3aed;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+                    ${esc(process.name)} — крок ${(task.processStep||0)+1}/${template.steps.length}
+                </div>`;
+            }
+        }
+        
+        // Priority color
+        const prioColors = { urgent: '#ef4444', high: '#f59e0b', medium: '#3b82f6', low: '#6b7280' };
+        const prioNames = { urgent: 'Терміново', high: 'Високий', medium: 'Середній', low: 'Низький' };
+        
+        // Checklist
+        let checklistHtml = '';
+        if (task.checklist?.length > 0) {
+            checklistHtml = `<div style="margin-top:1rem;">
+                <div style="font-size:0.8rem;font-weight:600;color:#6b7280;margin-bottom:0.5rem;">Чеклист:</div>
+                ${task.checklist.map((item, i) => `
+                    <label style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;cursor:pointer;font-size:0.9rem;" onclick="event.stopPropagation();">
+                        <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleFocusChecklist(${i})" style="width:18px;height:18px;accent-color:#22c55e;">
+                        <span style="${item.done ? 'text-decoration:line-through;color:#9ca3af;' : ''}">${esc(item.text || item.title || item)}</span>
+                    </label>
+                `).join('')}
+            </div>`;
+        }
+        
+        // Estimated time for timer
+        const estMinutes = task.estimatedTime || 30;
+        
+        const container = document.getElementById('focusContent');
+        container.innerHTML = `
+            <!-- Progress bar -->
+            <div style="padding:1rem 1.5rem 0;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                    <span style="font-size:0.8rem;color:#9ca3af;">Завдання ${doneCount + 1} з ${total}</span>
+                    <span style="font-size:0.8rem;color:#9ca3af;">${progressPercent}%</span>
+                </div>
+                <div style="height:6px;background:#f3f4f6;border-radius:99px;overflow:hidden;">
+                    <div style="height:100%;width:${progressPercent}%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:99px;transition:width 0.5s ease;"></div>
+                </div>
+            </div>
+            
+            <!-- Task card -->
+            <div style="padding:1.5rem;flex:1;overflow-y:auto;">
+                <!-- Status badges -->
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem;">
+                    ${task.time ? `<div style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:#f0fdf4;border-radius:8px;font-size:0.8rem;color:#16a34a;font-weight:500;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        ${esc(task.time)}
+                    </div>` : ''}
+                    <div style="display:flex;align-items:center;gap:4px;padding:4px 10px;background:${prioColors[task.priority]}15;border-radius:8px;font-size:0.8rem;color:${prioColors[task.priority]};font-weight:500;">
+                        ${prioNames[task.priority] || task.priority}
+                    </div>
+                    ${task.function ? `<div style="padding:4px 10px;background:#f3f4f6;border-radius:8px;font-size:0.8rem;color:#6b7280;">${esc(task.function)}</div>` : ''}
+                    ${task.overdue ? `<div style="padding:4px 10px;background:#fef2f2;border-radius:8px;font-size:0.8rem;color:#ef4444;font-weight:600;">⚠ Прострочено</div>` : ''}
+                </div>
+                
+                ${processBadge}
+                
+                <!-- Title -->
+                <h2 style="margin:1rem 0 0.5rem;font-size:1.4rem;font-weight:700;line-height:1.3;color:#1a1a1a;">${esc(task.title)}</h2>
+                
+                <!-- Timer -->
+                <div style="display:flex;align-items:center;gap:1rem;margin:1.5rem 0;padding:1rem;background:#f9fafb;border-radius:12px;">
+                    <div style="font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums;color:#1a1a1a;letter-spacing:1px;" id="focusTimerDisplay">
+                        ${String(Math.floor(estMinutes)).padStart(2,'0')}:00
+                    </div>
+                    <div style="display:flex;gap:0.5rem;">
+                        <button onclick="toggleFocusTimer(${estMinutes})" id="focusTimerBtn" style="width:40px;height:40px;border:none;border-radius:50%;background:#22c55e;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </button>
+                        <button onclick="resetFocusTimer(${estMinutes})" style="width:40px;height:40px;border:none;border-radius:50%;background:#f3f4f6;color:#6b7280;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                        </button>
+                    </div>
+                    <div style="font-size:0.75rem;color:#9ca3af;">
+                        ~${estMinutes} хв
+                    </div>
+                </div>
+                
+                <!-- Description / Instruction -->
+                ${task.description ? `
+                    <div style="margin:1rem 0;padding:1rem;background:#fffbeb;border-radius:12px;border-left:4px solid #f59e0b;">
+                        <div style="font-size:0.75rem;font-weight:600;color:#92400e;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;">📋 Інструкція</div>
+                        <div style="font-size:0.9rem;color:#451a03;line-height:1.6;white-space:pre-line;">${esc(task.description)}</div>
+                    </div>
+                ` : ''}
+                
+                ${checklistHtml}
+            </div>
+            
+            <!-- Action buttons - sticky bottom -->
+            <div style="padding:1rem 1.5rem;border-top:1px solid #f3f4f6;background:white;display:flex;gap:0.75rem;">
+                <button onclick="focusSkipTask()" style="flex:1;padding:1rem;border:2px solid #e5e7eb;border-radius:14px;background:white;font-size:0.95rem;font-weight:600;color:#6b7280;cursor:pointer;">
+                    ⏭ Пропустити
+                </button>
+                <button onclick="focusCompleteTask()" style="flex:2;padding:1rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1.05rem;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(34,197,94,0.4);">
+                    ✅ Виконано
+                </button>
+            </div>
+        `;
+        
+        // Reset timer
+        stopFocusTimer();
+        focusTimerSeconds = estMinutes * 60;
+        focusTimerRunning = false;
+        updateFocusTimerDisplay();
+    }
+    
+    function renderFocusComplete() {
+        const total = focusTasks.length;
+        const container = document.getElementById('focusContent');
+        container.innerHTML = `
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;">
+                <div style="width:80px;height:80px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <h2 style="margin:0 0 0.5rem;font-size:1.5rem;font-weight:700;">Всі завдання виконано!</h2>
+                <p style="color:#6b7280;margin-bottom:2rem;">${total} завдань за сьогодні — чудова робота 💪</p>
+                <button onclick="closeFocusMode()" style="padding:1rem 3rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1rem;font-weight:700;color:white;cursor:pointer;">
+                    Закрити
+                </button>
+            </div>
+        `;
+    }
+    
+    async function focusCompleteTask() {
+        const task = focusTasks[focusCurrentIndex];
+        if (!task) return;
+        
+        stopFocusTimer();
+        
+        // Анімація
+        const content = document.getElementById('focusContent');
+        content.style.opacity = '0.5';
+        content.style.transform = 'translateX(-30px)';
+        
+        try {
+            if (task.type === 'regular') {
+                // Для регулярних — toggleMyDayTask логіка
+                const todayStr = new Date().toISOString().split('T')[0];
+                
+                if (task.generatedTaskId) {
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(task.generatedTaskId).update({
+                        status: 'done',
+                        completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    const local = tasks.find(t => t.id === task.generatedTaskId);
+                    if (local) local.status = 'done';
+                } else {
+                    // Створюємо new task для regular
+                    const rt = regularTasks.find(r => r.id === task.id);
+                    const func = functions.find(f => f.name === rt?.function);
+                    const headId = func?.headId || func?.assigneeIds?.[0] || currentUser.uid;
+                    const head = users.find(u => u.id === headId);
+                    
+                    const ref = await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                        title: rt?.title || task.title,
+                        function: rt?.function || '',
+                        assigneeId: currentUser.uid,
+                        assigneeName: currentUserData?.name || currentUser.email,
+                        deadlineDate: todayStr,
+                        deadlineTime: task.time || '18:00',
+                        status: 'done',
+                        completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        regularTaskId: task.id,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        creatorName: 'Система (фокус)'
+                    });
+                    tasks.unshift({ id: ref.id, status: 'done', regularTaskId: task.id, deadlineDate: todayStr, assigneeId: currentUser.uid });
+                }
+            } else {
+                // Разове завдання
+                const needsReview = shouldSendForReview(task.originalTask);
+                const newStatus = needsReview ? 'review' : 'done';
+                
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(task.id).update({
+                    status: newStatus,
+                    completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                const local = tasks.find(t => t.id === task.id);
+                if (local) local.status = newStatus;
+                
+                // Автопросування процесу
+                if (!needsReview) {
+                    advanceProcessIfLinked(task.id);
+                }
+                
+                if (needsReview) {
+                    showToast('Відправлено на перевірку', 'info');
+                }
+            }
+        } catch (e) {
+            console.error('focusComplete error:', e);
+            showToast('Помилка: ' + e.message, 'error');
+        }
+        
+        // Переходимо до наступного
+        setTimeout(() => {
+            focusCurrentIndex++;
+            content.style.opacity = '1';
+            content.style.transform = 'translateX(0)';
+            renderFocusTask();
+        }, 300);
+    }
+    
+    function focusSkipTask() {
+        stopFocusTimer();
+        const content = document.getElementById('focusContent');
+        content.style.opacity = '0.5';
+        
+        // Переміщуємо в кінець
+        const skipped = focusTasks.splice(focusCurrentIndex, 1)[0];
+        if (skipped) focusTasks.push(skipped);
+        
+        setTimeout(() => {
+            content.style.opacity = '1';
+            if (focusCurrentIndex >= focusTasks.length) focusCurrentIndex = 0;
+            renderFocusTask();
+        }, 200);
+    }
+    
+    // Timer
+    function toggleFocusTimer(estMinutes) {
+        if (focusTimerRunning) {
+            stopFocusTimer();
+        } else {
+            if (focusTimerSeconds <= 0) focusTimerSeconds = estMinutes * 60;
+            focusTimerRunning = true;
+            const btn = document.getElementById('focusTimerBtn');
+            if (btn) btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+            
+            focusTimerInterval = setInterval(() => {
+                focusTimerSeconds--;
+                updateFocusTimerDisplay();
+                if (focusTimerSeconds <= 0) {
+                    stopFocusTimer();
+                    // Vibrate + visual alert
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                    const display = document.getElementById('focusTimerDisplay');
+                    if (display) { display.style.color = '#ef4444'; display.textContent = '00:00 ⏰'; }
+                }
+            }, 1000);
+        }
+    }
+    
+    function stopFocusTimer() {
+        focusTimerRunning = false;
+        if (focusTimerInterval) clearInterval(focusTimerInterval);
+        focusTimerInterval = null;
+        const btn = document.getElementById('focusTimerBtn');
+        if (btn) btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    }
+    
+    function resetFocusTimer(estMinutes) {
+        stopFocusTimer();
+        focusTimerSeconds = estMinutes * 60;
+        updateFocusTimerDisplay();
+        const display = document.getElementById('focusTimerDisplay');
+        if (display) display.style.color = '#1a1a1a';
+    }
+    
+    function updateFocusTimerDisplay() {
+        const display = document.getElementById('focusTimerDisplay');
+        if (!display) return;
+        const m = Math.floor(focusTimerSeconds / 60);
+        const s = focusTimerSeconds % 60;
+        display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    
+    function toggleFocusChecklist(index) {
+        const task = focusTasks[focusCurrentIndex];
+        if (!task?.checklist?.[index]) return;
+        task.checklist[index].done = !task.checklist[index].done;
     }
     </script>
 </body>
