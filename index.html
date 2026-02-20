@@ -5768,6 +5768,12 @@
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="taskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
+                        <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
+                            <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <span data-i18n="askAi">Не зрозуміло? Запитай AI-помічника</span>
+                            </a>
+                        </div>
                         
                         <!-- FEAT-001: Чеклист -->
                         <div class="form-group full-width">
@@ -7757,8 +7763,8 @@
                     console.warn(`[loadAllData] Task limit reached: ${tasksSnap.docs.length}/${TASKS_LOAD_LIMIT}. Oldest tasks may not be visible.`);
                     showToast(
                         currentLang === 'ua' 
-                            ? `⚠ Завантажено ${TASKS_LOAD_LIMIT} завдань. Старіші завдання приховані. Рекомендуємо архівувати виконані.`
-                            : `⚠ Загружено ${TASKS_LOAD_LIMIT} задач. Старые задачи скрыты. Рекомендуем архивировать выполненные.`,
+                            ? `Завантажено ${TASKS_LOAD_LIMIT} завдань. Старіші завдання приховані. Рекомендуємо архівувати виконані.`
+                            : `Загружено ${TASKS_LOAD_LIMIT} задач. Старые задачи скрыты. Рекомендуем архивировать выполненные.`,
                         'warning'
                     );
                 }
@@ -8800,6 +8806,14 @@
                     document.getElementById('taskReportFormat').value = task.reportFormat || '';
                     document.getElementById('taskDescription').value = task.description || task.instruction || '';
                     
+                    // AI Help button
+                    const aiRow = document.getElementById('taskAiHelpRow');
+                    const aiLink = document.getElementById('taskAiHelpLink');
+                    if (aiRow && aiLink) {
+                        aiRow.style.display = 'block';
+                        aiLink.href = getAiHelpUrl(task.title, task.description || task.instruction || '', task.function);
+                    }
+                    
                     // Встановлюємо чекбокси сповіщень
                     setNotifyUsersCheckboxes(task.notifyOnComplete || []);
                     
@@ -8844,6 +8858,9 @@
                 editingId = null;
                 document.getElementById('taskModalTitle').textContent = t('newTask');
                 document.getElementById('taskForm').reset();
+                // Hide AI help for new tasks
+                const aiRow = document.getElementById('taskAiHelpRow');
+                if (aiRow) aiRow.style.display = 'none';
                 // Reset view-only mode
                 document.getElementById('taskForm').querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
                 const submitBtn = document.getElementById('taskForm').querySelector('button[type="submit"]');
@@ -11288,6 +11305,7 @@
                             ${task.function ? `<span>${esc(task.function)}</span>` : ''}
                             <span class="myday-item-tag ${tagClass}">${tagText}</span>
                             ${reviewBadge}
+                            ${!task.done ? getAiHelpButton(task.title, task.originalTask?.description || task.originalTask?.instruction || '', task.function, 'small') : ''}
                         </div>
                         ${reviewActionsHtml}
                     </div>
@@ -13583,13 +13601,13 @@
                             processStep: nextStepIndex
                         });
                         
-                        showToast(`🔄 Процес "${process.name}" → крок ${nextStepIndex + 1}/${template.steps.length}: ${nextStep.title || nextStep.function}`, 'success');
+                        showToast(`Процес "${process.name}" → крок ${nextStepIndex + 1}/${template.steps.length}: ${nextStep.title || nextStep.function}`, 'success');
                     } else {
-                        showToast(`⚠️ Функція "${nextStep.function}" без виконавців — завдання не створено`, 'error');
+                        showToast(`Функція "${nextStep.function}" без виконавців — завдання не створено`, 'error');
                     }
                 } else {
                     // Процес завершено!
-                    showToast(`✅ Процес "${process.name}" завершено!`, 'success');
+                    showToast(`Процес "${process.name}" завершено!`, 'success');
                 }
                 
                 // Оновлюємо локальний стан процесу
@@ -16314,7 +16332,7 @@
                 
                 <!-- Language -->
                 <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-                    <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;" id="mLangUA">🇺🇦 UA</button>
+                    <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;" id="mLangUA">UA</button>
                     <button class="btn" onclick="setLanguage('ru');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;" id="mLangRU">RU</button>
                 </div>
                 
@@ -18549,8 +18567,8 @@ Ctrl+N - нове завдання
                 // Мітка: постановник = ТЗ, виконавець = Результат
                 const isCreatorFile = file.uploadedBy === taskCreatorId;
                 const roleBadge = isCreatorFile
-                    ? '<span class="file-role-badge creator">📋 ТЗ</span>'
-                    : '<span class="file-role-badge executor">✅ Результат</span>';
+                    ? '<span class="file-role-badge creator">ТЗ</span>'
+                    : '<span class="file-role-badge executor">Результат</span>';
                 
                 return `
                     <div class="task-file-item ${isImg ? 'image-preview' : ''}">
@@ -18949,6 +18967,40 @@ Ctrl+N - нове завдання
     // =====================
     // FOCUS MODE - Конвеєрний режим виконання завдань
     // =====================
+    const AI_TECH_LEAD_URL = 'https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead';
+    
+    function getAiHelpUrl(taskTitle, taskDescription, taskFunction) {
+        const prompt = encodeURIComponent(
+            `Допоможи виконати завдання:\n` +
+            `Назва: ${taskTitle || ''}\n` +
+            `${taskFunction ? 'Функція: ' + taskFunction + '\n' : ''}` +
+            `${taskDescription ? 'Інструкція: ' + taskDescription + '\n' : ''}` +
+            `Поясни що потрібно зробити покроково.`
+        );
+        return AI_TECH_LEAD_URL + '?q=' + prompt;
+    }
+    
+    function getAiHelpButton(taskTitle, taskDescription, taskFunction, size) {
+        const url = getAiHelpUrl(taskTitle, taskDescription, taskFunction);
+        if (size === 'small') {
+            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:0.7rem;color:#16a34a;text-decoration:none;white-space:nowrap;" title="Запитати AI">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                AI
+            </a>`;
+        }
+        if (size === 'medium') {
+            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.8rem;color:#16a34a;text-decoration:none;font-weight:500;" title="Запитати AI-помічника">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Не зрозуміло? Запитай AI
+            </a>`;
+        }
+        // large - for focus mode
+        return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;font-size:0.9rem;color:#16a34a;text-decoration:none;font-weight:600;margin-top:0.75rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Не зрозуміло? Запитай AI-помічника
+        </a>`;
+    }
+    
     let focusTasks = [];
     let focusCurrentIndex = 0;
     let focusTimerInterval = null;
@@ -19132,7 +19184,7 @@ Ctrl+N - нове завдання
                         ${prioNames[task.priority] || task.priority}
                     </div>
                     ${task.function ? `<div style="padding:4px 10px;background:#f3f4f6;border-radius:8px;font-size:0.8rem;color:#6b7280;">${esc(task.function)}</div>` : ''}
-                    ${task.overdue ? `<div style="padding:4px 10px;background:#fef2f2;border-radius:8px;font-size:0.8rem;color:#ef4444;font-weight:600;">⚠ Прострочено</div>` : ''}
+                    ${task.overdue ? `<div style="padding:4px 10px;background:#fef2f2;border-radius:8px;font-size:0.8rem;color:#ef4444;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Прострочено</div>` : ''}
                 </div>
                 
                 ${processBadge}
@@ -19161,10 +19213,13 @@ Ctrl+N - нове завдання
                 <!-- Description / Instruction -->
                 ${task.description ? `
                     <div style="margin:1rem 0;padding:1rem;background:#fffbeb;border-radius:12px;border-left:4px solid #f59e0b;">
-                        <div style="font-size:0.75rem;font-weight:600;color:#92400e;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;">📋 Інструкція</div>
+                        <div style="font-size:0.75rem;font-weight:600;color:#92400e;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Інструкція</div>
                         <div style="font-size:0.9rem;color:#451a03;line-height:1.6;white-space:pre-line;">${esc(task.description)}</div>
                     </div>
-                ` : ''}
+                    ${getAiHelpButton(task.title, task.description, task.function, 'large')}
+                ` : `
+                    ${getAiHelpButton(task.title, '', task.function, 'large')}
+                `}
                 
                 ${checklistHtml}
             </div>
@@ -19172,10 +19227,10 @@ Ctrl+N - нове завдання
             <!-- Action buttons - sticky bottom -->
             <div style="padding:1rem 1.5rem;border-top:1px solid #f3f4f6;background:white;display:flex;gap:0.75rem;">
                 <button onclick="focusSkipTask()" style="flex:1;padding:1rem;border:2px solid #e5e7eb;border-radius:14px;background:white;font-size:0.95rem;font-weight:600;color:#6b7280;cursor:pointer;">
-                    ⏭ Пропустити
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg> Пропустити
                 </button>
                 <button onclick="focusCompleteTask()" style="flex:2;padding:1rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1.05rem;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(34,197,94,0.4);">
-                    ✅ Виконано
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Виконано
                 </button>
             </div>
         `;
@@ -19196,7 +19251,7 @@ Ctrl+N - нове завдання
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
                 <h2 style="margin:0 0 0.5rem;font-size:1.5rem;font-weight:700;">Всі завдання виконано!</h2>
-                <p style="color:#6b7280;margin-bottom:2rem;">${total} завдань за сьогодні — чудова робота 💪</p>
+                <p style="color:#6b7280;margin-bottom:2rem;">${total} завдань за сьогодні — чудова робота</p>
                 <button onclick="closeFocusMode()" style="padding:1rem 3rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1rem;font-weight:700;color:white;cursor:pointer;">
                     Закрити
                 </button>
@@ -19319,7 +19374,7 @@ Ctrl+N - нове завдання
                     // Vibrate + visual alert
                     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
                     const display = document.getElementById('focusTimerDisplay');
-                    if (display) { display.style.color = '#ef4444'; display.textContent = '00:00 ⏰'; }
+                    if (display) { display.style.color = '#ef4444'; display.textContent = '00:00'; }
                 }
             }, 1000);
         }
