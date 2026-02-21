@@ -12,7 +12,7 @@ const TELEGRAM_BOT_TOKEN = '8389055770:AAEWTQcwveoIjmAJmtrM4Y1JToNJ3T8t4lY';
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
 // Відправка повідомлення в Telegram
-async function sendTelegramMessage(chatId, text) {
+async function sendTelegramMessage(chatId, text, opts = {}) {
     try {
         const response = await fetch(`${TELEGRAM_API}/sendMessage`, {
             method: 'POST',
@@ -20,7 +20,8 @@ async function sendTelegramMessage(chatId, text) {
             body: JSON.stringify({
                 chat_id: chatId,
                 text: text,
-                parse_mode: 'HTML'
+                parse_mode: 'HTML',
+                ...opts
             })
         });
         return response.json();
@@ -30,18 +31,40 @@ async function sendTelegramMessage(chatId, text) {
     }
 }
 
+// Відправка з inline кнопками
+function taskButtons(taskId, companyId) {
+    return [
+        [
+            { text: '✅ Готово', callback_data: `done:${companyId}:${taskId}` },
+            { text: '🔄 +1 день', callback_data: `postpone:${companyId}:${taskId}` },
+        ],
+        [
+            { text: '📎 Деталі', callback_data: `details:${companyId}:${taskId}` },
+            { text: '🚀 В роботу', callback_data: `progress:${companyId}:${taskId}` },
+        ],
+    ];
+}
+
+async function sendWithButtons(chatId, text, buttons) {
+    return sendTelegramMessage(chatId, text, {
+        reply_markup: { inline_keyboard: buttons }
+    });
+}
+
 // ===========================
-// 1. НОВЕ ЗАВДАННЯ
+// 1. НОВЕ ЗАВДАННЯ (з кнопками!)
 // ===========================
 exports.onNewTask = functions.firestore
     .document('companies/{companyId}/tasks/{taskId}')
     .onCreate(async (snap, context) => {
         const task = snap.data();
-        const { companyId } = context.params;
+        const { companyId, taskId } = context.params;
+        
+        // Не дублювати сповіщення для завдань з Telegram (бот вже шле)
+        if (task.source === 'telegram') return null;
         
         if (!task.assigneeId) return null;
         
-        // Отримуємо Telegram chat_id виконавця
         const userDoc = await db.collection('companies').doc(companyId)
             .collection('users').doc(task.assigneeId).get();
         
@@ -58,7 +81,8 @@ ${task.expectedResult ? `\n📋 Очікуваний результат:\n${task
 ${task.description ? `\n📝 Опис:\n${task.description}` : ''}
         `.trim();
         
-        return sendTelegramMessage(chatId, message);
+        // Шлемо з кнопками
+        return sendWithButtons(chatId, message, taskButtons(taskId, companyId));
     });
 
 // ===========================
@@ -71,14 +95,11 @@ exports.onTaskCompleted = functions.firestore
         const after = change.after.data();
         const { companyId } = context.params;
         
-        // Перевіряємо чи змінився статус на done
         if (before.status === after.status || after.status !== 'done') return null;
         
-        // Отримуємо список тих, кого сповістити
         const notifyUsers = after.notifyOnComplete || [];
         if (notifyUsers.length === 0) return null;
         
-        // Не сповіщаємо виконавця (він і так знає що виконав)
         const usersToNotify = notifyUsers.filter(uid => uid !== after.assigneeId);
         
         for (const userId of usersToNotify) {
@@ -118,12 +139,10 @@ exports.telegramWebhook = functions.https.onRequest(async (req, res) => {
         const userId = update.message.from.id;
         
         if (text.startsWith('/start')) {
-            // Перевіряємо чи є код реєстрації
             const parts = text.split(' ');
             if (parts.length > 1) {
                 const registrationCode = parts[1];
                 
-                // Шукаємо користувача з таким кодом
                 const companiesSnap = await db.collection('companies').get();
                 
                 for (const companyDoc of companiesSnap.docs) {
@@ -135,7 +154,7 @@ exports.telegramWebhook = functions.https.onRequest(async (req, res) => {
                         await userDoc.ref.update({
                             telegramChatId: chatId.toString(),
                             telegramUserId: userId.toString(),
-                            telegramCode: null // Видаляємо код після використання
+                            telegramCode: null
                         });
                         
                         await sendTelegramMessage(chatId, 
@@ -163,9 +182,7 @@ exports.telegramWebhook = functions.https.onRequest(async (req, res) => {
 // ===========================
 // 4. WEBHOOK ДЛЯ ЛІДІВ
 // ===========================
-// Приймає заявки з сайту і автоматично створює процес
 exports.leadWebhook = functions.https.onRequest(async (req, res) => {
-    // CORS headers
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -180,22 +197,14 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
     
     try {
         const { 
-            companyId,      // ID компанії (обов'язково)
-            apiKey,         // API ключ для авторизації
-            name,           // Ім'я ліда
-            phone,          // Телефон
-            email,          // Email
-            source,         // Джерело (сайт, реклама, тощо)
-            message,        // Повідомлення/коментар
-            processTemplate // Назва шаблону процесу для запуску
+            companyId, apiKey, name, phone, email,
+            source, message, processTemplate
         } = req.body;
         
-        // Валідація
         if (!companyId) {
             return res.status(400).json({ error: 'companyId is required' });
         }
         
-        // Перевірка API ключа компанії
         const companyDoc = await db.collection('companies').doc(companyId).get();
         if (!companyDoc.exists) {
             return res.status(404).json({ error: 'Company not found' });
@@ -207,8 +216,6 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
         }
         
         const now = new Date();
-        const dateStr = now.toISOString().split('T')[0];
-        const timeStr = now.toTimeString().slice(0, 5);
         
         // 1. Створюємо запис ліда
         const leadRef = await db.collection('companies').doc(companyId)
@@ -239,7 +246,6 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
         // 3. Якщо є шаблон - запускаємо процес
         let processId = null;
         if (templateToUse && templateToUse.steps && templateToUse.steps.length > 0) {
-            // Створюємо процес
             const processRef = await db.collection('companies').doc(companyId)
                 .collection('processes').add({
                     name: `${templateToUse.name} - ${name || phone || 'Новий лід'}`,
@@ -260,10 +266,8 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
             
             processId = processRef.id;
             
-            // 4. Створюємо першу задачу з процесу
             const firstStep = templateToUse.steps[0];
             
-            // Знаходимо виконавців функції
             const funcsSnap = await db.collection('companies').doc(companyId)
                 .collection('functions')
                 .where('name', '==', firstStep.function)
@@ -277,8 +281,6 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
                 const funcData = funcsSnap.docs[0].data();
                 if (funcData.assigneeIds && funcData.assigneeIds.length > 0) {
                     assigneeId = funcData.assigneeIds[0];
-                    
-                    // Отримуємо ім'я виконавця
                     const userDoc = await db.collection('companies').doc(companyId)
                         .collection('users').doc(assigneeId).get();
                     if (userDoc.exists) {
@@ -287,10 +289,7 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
                 }
             }
             
-            // Дедлайн через 15 хвилин для першого дзвінка
             const deadline = new Date(now.getTime() + 15 * 60 * 1000);
-            const deadlineDate = deadline.toISOString().split('T')[0];
-            const deadlineTime = deadline.toTimeString().slice(0, 5);
             
             await db.collection('companies').doc(companyId)
                 .collection('tasks').add({
@@ -300,8 +299,8 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
                     assigneeName: assigneeName,
                     description: `${firstStep.instruction || ''}\n\n📞 Телефон: ${phone || '-'}\n📧 Email: ${email || '-'}\n💬 Коментар: ${message || '-'}\n🔗 Джерело: ${source || 'Сайт'}`,
                     expectedResult: firstStep.expectedResult || 'Зв\'язатися з клієнтом',
-                    deadlineDate: deadlineDate,
-                    deadlineTime: deadlineTime,
+                    deadlineDate: deadline.toISOString().split('T')[0],
+                    deadlineTime: deadline.toTimeString().slice(0, 5),
                     deadline: admin.firestore.Timestamp.fromDate(deadline),
                     status: 'new',
                     priority: 'high',
@@ -311,15 +310,11 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
                     createdAt: admin.firestore.FieldValue.serverTimestamp(),
                     isAutoGenerated: true,
                     escalationEnabled: true,
-                    escalationMinutes: 15 // Якщо не виконано за 15 хв - ескалація
+                    escalationMinutes: 15
                 });
         } else {
-            // Якщо немає шаблону - створюємо просту задачу
-            // Шукаємо функцію "Адміністрування" або першу доступну
             const funcsSnap = await db.collection('companies').doc(companyId)
-                .collection('functions')
-                .limit(1)
-                .get();
+                .collection('functions').limit(1).get();
             
             let assigneeId = null;
             let assigneeName = '';
@@ -361,7 +356,7 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
                 });
         }
         
-        // 5. Сповіщення в Telegram всім менеджерам
+        // 5. Сповіщення менеджерам
         const usersSnap = await db.collection('companies').doc(companyId)
             .collection('users')
             .where('role', 'in', ['owner', 'manager'])
@@ -398,7 +393,6 @@ exports.leadWebhook = functions.https.onRequest(async (req, res) => {
 // ===========================
 // 5. SCHEDULED: ПЕРЕВІРКА ПРОСТРОЧЕНИХ ЗАДАЧ
 // ===========================
-// Запускається кожні 5 хвилин - перевіряє ВСІ задачі
 exports.checkOverdueTasks = functions.pubsub
     .schedule('every 5 minutes')
     .timeZone('Europe/Kyiv')
@@ -410,9 +404,6 @@ exports.checkOverdueTasks = functions.pubsub
         for (const companyDoc of companiesSnap.docs) {
             const companyId = companyDoc.id;
             
-            // ========================================
-            // 1. ПРОСТРОЧЕНІ ЗАДАЧІ (всі типи)
-            // ========================================
             const tasksSnap = await db.collection('companies').doc(companyId)
                 .collection('tasks')
                 .where('status', 'in', ['new', 'progress'])
@@ -424,35 +415,33 @@ exports.checkOverdueTasks = functions.pubsub
                 
                 const deadline = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
                 
-                // Перевіряємо чи прострочено
                 if (now <= deadline) continue;
-                if (task.overdueNotified) continue; // Вже сповіщували
+                if (task.overdueNotified) continue;
                 
-                // Скільки хвилин прострочено
                 const overdueMinutes = Math.floor((now - deadline) / (1000 * 60));
                 
-                // Визначаємо тип задачі для повідомлення
                 let taskType = '📋 Розпорядження';
                 if (task.processId) taskType = '🟣 Бізнес-процес';
                 else if (task.regularTaskId) taskType = '🟠 Регулярна задача';
                 
-                // Сповіщення виконавцю
+                // Сповіщення виконавцю з кнопками
                 if (task.assigneeId) {
                     const userDoc = await db.collection('companies').doc(companyId)
                         .collection('users').doc(task.assigneeId).get();
                     
                     if (userDoc.exists && userDoc.data().telegramChatId) {
-                        await sendTelegramMessage(userDoc.data().telegramChatId,
+                        await sendWithButtons(userDoc.data().telegramChatId,
                             `⚠️ <b>ПРОСТРОЧЕНО!</b>\n\n` +
                             `${taskType}\n` +
                             `📌 ${task.title}\n` +
                             `⏰ Прострочено на ${overdueMinutes} хв\n\n` +
-                            `Терміново виконайте задачу!`
+                            `Терміново виконайте задачу!`,
+                            taskButtons(taskDoc.id, companyId)
                         );
                     }
                 }
                 
-                // Сповіщення менеджерам/власникам
+                // Сповіщення менеджерам
                 const managersSnap = await db.collection('companies').doc(companyId)
                     .collection('users')
                     .where('role', 'in', ['owner', 'manager'])
@@ -462,30 +451,27 @@ exports.checkOverdueTasks = functions.pubsub
                     if (managerDoc.id === task.assigneeId) continue;
                     const managerData = managerDoc.data();
                     if (managerData.telegramChatId) {
-                        await sendTelegramMessage(managerData.telegramChatId,
+                        await sendWithButtons(managerData.telegramChatId,
                             `⚠️ <b>Задача прострочена!</b>\n\n` +
                             `${taskType}\n` +
                             `📌 ${task.title}\n` +
                             `👤 Виконавець: ${task.assigneeName || 'Не призначено'}\n` +
-                            `⏰ Прострочено на ${overdueMinutes} хв`
+                            `⏰ Прострочено на ${overdueMinutes} хв`,
+                            taskButtons(taskDoc.id, companyId)
                         );
                     }
                 }
                 
-                // Позначаємо що сповістили
                 await taskDoc.ref.update({ 
                     overdueNotified: true,
                     overdueNotifiedAt: admin.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // ========================================
-                // ЕСКАЛАЦІЯ (якщо увімкнена)
-                // ========================================
+                // ЕСКАЛАЦІЯ
                 if (task.escalationEnabled && task.escalationMinutes) {
                     const escalationTime = new Date(deadline.getTime() + task.escalationMinutes * 60 * 1000);
                     
                     if (now >= escalationTime && !task.escalated) {
-                        // Створюємо follow-up задачу
                         const newDeadline = new Date(now.getTime() + 2 * 60 * 60 * 1000);
                         
                         await db.collection('companies').doc(companyId)
@@ -518,9 +504,7 @@ exports.checkOverdueTasks = functions.pubsub
                 }
             }
             
-            // ========================================
-            // 2. ПРОСТРОЧЕНІ БІЗНЕС-ПРОЦЕСИ
-            // ========================================
+            // ПРОСТРОЧЕНІ БІЗНЕС-ПРОЦЕСИ
             const processesSnap = await db.collection('companies').doc(companyId)
                 .collection('processes')
                 .where('status', '==', 'active')
@@ -533,7 +517,6 @@ exports.checkOverdueTasks = functions.pubsub
                 const currentStepData = process.steps[process.currentStep];
                 if (!currentStepData || currentStepData.status !== 'active') continue;
                 
-                // Перевіряємо чи є дедлайн етапу
                 if (currentStepData.deadline) {
                     const stepDeadline = currentStepData.deadline.toDate ? 
                         currentStepData.deadline.toDate() : new Date(currentStepData.deadline);
@@ -541,7 +524,6 @@ exports.checkOverdueTasks = functions.pubsub
                     if (now > stepDeadline && !currentStepData.overdueNotified) {
                         const overdueMinutes = Math.floor((now - stepDeadline) / (1000 * 60));
                         
-                        // Сповіщення менеджерам
                         const managersSnap = await db.collection('companies').doc(companyId)
                             .collection('users')
                             .where('role', 'in', ['owner', 'manager'])
@@ -559,7 +541,6 @@ exports.checkOverdueTasks = functions.pubsub
                             }
                         }
                         
-                        // Оновлюємо статус
                         const updatedSteps = [...process.steps];
                         updatedSteps[process.currentStep].overdueNotified = true;
                         await processDoc.ref.update({ steps: updatedSteps });
@@ -574,7 +555,6 @@ exports.checkOverdueTasks = functions.pubsub
 // ===========================
 // 6. АВТОЗАВЕРШЕННЯ ЕТАПУ ПРОЦЕСУ
 // ===========================
-// Коли задача процесу виконана - відкриваємо наступний етап
 exports.onProcessTaskCompleted = functions.firestore
     .document('companies/{companyId}/tasks/{taskId}')
     .onUpdate(async (change, context) => {
@@ -582,11 +562,9 @@ exports.onProcessTaskCompleted = functions.firestore
         const after = change.after.data();
         const { companyId, taskId } = context.params;
         
-        // Перевіряємо чи це задача процесу і чи змінився статус на done
         if (!after.processId) return null;
         if (before.status === after.status || after.status !== 'done') return null;
         
-        // Отримуємо процес
         const processRef = db.collection('companies').doc(companyId)
             .collection('processes').doc(after.processId);
         const processDoc = await processRef.get();
@@ -596,18 +574,15 @@ exports.onProcessTaskCompleted = functions.firestore
         const process = processDoc.data();
         const currentStep = after.processStep;
         
-        // Оновлюємо статус етапу
         const updatedSteps = [...process.steps];
         if (updatedSteps[currentStep]) {
             updatedSteps[currentStep].status = 'completed';
             updatedSteps[currentStep].completedAt = admin.firestore.FieldValue.serverTimestamp();
         }
         
-        // Перевіряємо чи є наступний етап
         const nextStep = currentStep + 1;
         
         if (nextStep < updatedSteps.length) {
-            // Активуємо наступний етап
             updatedSteps[nextStep].status = 'active';
             
             await processRef.update({
@@ -615,10 +590,8 @@ exports.onProcessTaskCompleted = functions.firestore
                 currentStep: nextStep
             });
             
-            // Створюємо задачу для наступного етапу
             const stepData = updatedSteps[nextStep];
             
-            // Знаходимо виконавця функції
             const funcsSnap = await db.collection('companies').doc(companyId)
                 .collection('functions')
                 .where('name', '==', stepData.function)
@@ -640,12 +613,10 @@ exports.onProcessTaskCompleted = functions.firestore
                 }
             }
             
-            // Визначаємо дедлайн (через estimatedTime хвилин або 24 години)
             const now = new Date();
-            const minutes = parseInt(stepData.estimatedTime) || 1440; // 24 години default
+            const minutes = parseInt(stepData.estimatedTime) || 1440;
             const deadline = new Date(now.getTime() + minutes * 60 * 1000);
             
-            // Створюємо задачу
             const newTaskRef = await db.collection('companies').doc(companyId)
                 .collection('tasks').add({
                     title: `${stepData.name} - ${process.name}`,
@@ -666,34 +637,31 @@ exports.onProcessTaskCompleted = functions.firestore
                     isAutoGenerated: true
                 });
             
-            // ========================================
-            // СПОВІЩЕННЯ ПРО ПЕРЕХІД НА НОВИЙ ЕТАП
-            // ========================================
-            
-            // Сповіщення новому виконавцю
+            // Сповіщення з кнопками
             if (assigneeId) {
                 const assigneeDoc = await db.collection('companies').doc(companyId)
                     .collection('users').doc(assigneeId).get();
                 
                 if (assigneeDoc.exists && assigneeDoc.data().telegramChatId) {
-                    await sendTelegramMessage(assigneeDoc.data().telegramChatId,
+                    await sendWithButtons(assigneeDoc.data().telegramChatId,
                         `🔔 <b>Новий етап процесу!</b>\n\n` +
                         `📋 Процес: ${process.name}\n` +
                         `📍 Етап ${nextStep + 1}/${process.steps.length}: ${stepData.name}\n` +
                         `⏰ Дедлайн: ${deadline.toLocaleString('uk-UA')}\n\n` +
-                        `${stepData.instruction ? `📝 ${stepData.instruction}` : ''}`
+                        `${stepData.instruction ? `📝 ${stepData.instruction}` : ''}`,
+                        taskButtons(newTaskRef.id, companyId)
                     );
                 }
             }
             
-            // Сповіщення менеджерам про прогрес процесу
+            // Сповіщення менеджерам про прогрес
             const managersSnap = await db.collection('companies').doc(companyId)
                 .collection('users')
                 .where('role', 'in', ['owner', 'manager'])
                 .get();
             
             for (const managerDoc of managersSnap.docs) {
-                if (managerDoc.id === assigneeId) continue; // Вже сповістили
+                if (managerDoc.id === assigneeId) continue;
                 const managerData = managerDoc.data();
                 if (managerData.telegramChatId) {
                     await sendTelegramMessage(managerData.telegramChatId,
@@ -707,14 +675,13 @@ exports.onProcessTaskCompleted = functions.firestore
             }
             
         } else {
-            // Процес завершено!
+            // Процес завершено
             await processRef.update({
                 steps: updatedSteps,
                 status: 'completed',
                 completedAt: admin.firestore.FieldValue.serverTimestamp()
             });
             
-            // Сповіщення про завершення процесу
             const usersSnap = await db.collection('companies').doc(companyId)
                 .collection('users')
                 .where('role', 'in', ['owner', 'manager'])
@@ -738,7 +705,6 @@ exports.onProcessTaskCompleted = functions.firestore
 // ===========================
 // 7. SCHEDULED: ВІДКЛАДЕНІ ЗАДАЧІ
 // ===========================
-// Перевіряє чи є задачі які потрібно активувати
 exports.checkScheduledTasks = functions.pubsub
     .schedule('every 15 minutes')
     .timeZone('Europe/Kyiv')
@@ -750,7 +716,6 @@ exports.checkScheduledTasks = functions.pubsub
         for (const companyDoc of companiesSnap.docs) {
             const companyId = companyDoc.id;
             
-            // Шукаємо відкладені задачі які пора активувати
             const scheduledSnap = await db.collection('companies').doc(companyId)
                 .collection('scheduledTasks')
                 .where('activateAt', '<=', admin.firestore.Timestamp.fromDate(now))
@@ -760,7 +725,6 @@ exports.checkScheduledTasks = functions.pubsub
             for (const schedDoc of scheduledSnap.docs) {
                 const schedTask = schedDoc.data();
                 
-                // Створюємо реальну задачу
                 await db.collection('companies').doc(companyId)
                     .collection('tasks').add({
                         ...schedTask.taskData,
@@ -769,10 +733,7 @@ exports.checkScheduledTasks = functions.pubsub
                         scheduledTaskId: schedDoc.id
                     });
                 
-                // Позначаємо як активовану
                 await schedDoc.ref.update({ activated: true });
-                
-                console.log(`Activated scheduled task ${schedDoc.id} in company ${companyId}`);
             }
         }
         
@@ -780,9 +741,8 @@ exports.checkScheduledTasks = functions.pubsub
     });
 
 // ===========================
-// 8. SCHEDULED: НАГАДУВАННЯ ДО ДЕДЛАЙНУ
+// 8. SCHEDULED: НАГАДУВАННЯ ДО ДЕДЛАЙНУ (з кнопками)
 // ===========================
-// Запускається кожні 5 хвилин - перевіряє задачі які скоро закінчуються
 exports.sendReminders = functions.pubsub
     .schedule('every 5 minutes')
     .timeZone('Europe/Kyiv')
@@ -794,7 +754,6 @@ exports.sendReminders = functions.pubsub
         for (const companyDoc of companiesSnap.docs) {
             const companyId = companyDoc.id;
             
-            // Отримуємо активні задачі
             const tasksSnap = await db.collection('companies').doc(companyId)
                 .collection('tasks')
                 .where('status', 'in', ['new', 'progress'])
@@ -807,25 +766,20 @@ exports.sendReminders = functions.pubsub
                 const deadline = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
                 const minutesUntilDeadline = Math.floor((deadline - now) / (1000 * 60));
                 
-                // Пропускаємо якщо вже прострочено
                 if (minutesUntilDeadline < 0) continue;
                 
-                // Налаштування нагадувань (з задачі або дефолтні)
-                const reminders = task.reminders || [60, 15]; // За 60 і 15 хвилин
+                const reminders = task.reminders || [60, 15];
                 const sentReminders = task.sentReminders || [];
                 
                 for (const reminderMinutes of reminders) {
-                    // Перевіряємо чи час нагадування (±3 хвилини для точності)
                     if (minutesUntilDeadline <= reminderMinutes + 3 && 
                         minutesUntilDeadline >= reminderMinutes - 3 &&
                         !sentReminders.includes(reminderMinutes)) {
                         
-                        // Визначаємо тип задачі
                         let taskType = '📋 Розпорядження';
                         if (task.processId) taskType = '🟣 Бізнес-процес';
                         else if (task.regularTaskId) taskType = '🟠 Регулярна задача';
                         
-                        // Форматуємо час
                         let timeText = '';
                         if (reminderMinutes >= 60) {
                             timeText = `${Math.floor(reminderMinutes / 60)} год`;
@@ -833,23 +787,24 @@ exports.sendReminders = functions.pubsub
                             timeText = `${reminderMinutes} хв`;
                         }
                         
-                        // Сповіщення виконавцю
+                        // Нагадування виконавцю з кнопками
                         if (task.assigneeId) {
                             const userDoc = await db.collection('companies').doc(companyId)
                                 .collection('users').doc(task.assigneeId).get();
                             
                             if (userDoc.exists && userDoc.data().telegramChatId) {
-                                await sendTelegramMessage(userDoc.data().telegramChatId,
+                                await sendWithButtons(userDoc.data().telegramChatId,
                                     `⏰ <b>Нагадування!</b>\n\n` +
                                     `${taskType}\n` +
                                     `📌 ${task.title}\n\n` +
                                     `⏳ До дедлайну: ${timeText}\n` +
-                                    `🕐 Дедлайн: ${task.deadlineTime || ''}`
+                                    `🕐 Дедлайн: ${task.deadlineTime || ''}`,
+                                    taskButtons(taskDoc.id, companyId)
                                 );
                             }
                         }
                         
-                        // Сповіщення тим хто в списку контролю
+                        // Контролерам (без кнопок)
                         if (task.notifyOnReminder && task.notifyOnReminder.length > 0) {
                             for (const userId of task.notifyOnReminder) {
                                 if (userId === task.assigneeId) continue;
@@ -868,7 +823,6 @@ exports.sendReminders = functions.pubsub
                             }
                         }
                         
-                        // Позначаємо що нагадування відправлено
                         sentReminders.push(reminderMinutes);
                         await taskDoc.ref.update({ sentReminders: sentReminders });
                     }
@@ -880,16 +834,15 @@ exports.sendReminders = functions.pubsub
     });
 
 // ===========================
-// 9. SCHEDULED: РАНКОВИЙ ЗВІТ (щодня о 9:00)
+// 9. РАНКОВИЙ ЗВІТ КЕРІВНИКАМ (9:00)
 // ===========================
 exports.dailyReport = functions.pubsub
-    .schedule('0 9 * * *')  // Кожен день о 9:00
+    .schedule('0 9 * * *')
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
         const now = new Date();
         const todayStr = now.toISOString().split('T')[0];
         
-        // Вчора
         const yesterday = new Date(now);
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toISOString().split('T')[0];
@@ -900,34 +853,27 @@ exports.dailyReport = functions.pubsub
             const companyId = companyDoc.id;
             const companyData = companyDoc.data();
             
-            // Пропускаємо якщо звіти вимкнені
             if (companyData.dailyReportEnabled === false) continue;
             
-            // Статистика
             let todayTasks = 0;
             let overdueTasks = 0;
             let completedYesterday = 0;
             const userStats = {};
             
-            // Отримуємо всі задачі
             const tasksSnap = await db.collection('companies').doc(companyId)
                 .collection('tasks').get();
             
             for (const taskDoc of tasksSnap.docs) {
                 const task = taskDoc.data();
                 
-                // Задачі на сьогодні
                 if (task.deadlineDate === todayStr && task.status !== 'done') {
                     todayTasks++;
                 }
                 
-                // Прострочені
                 if (task.deadline && task.status !== 'done') {
                     const deadline = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
                     if (deadline < now) {
                         overdueTasks++;
-                        
-                        // Статистика по виконавцях
                         if (task.assigneeId) {
                             if (!userStats[task.assigneeId]) {
                                 userStats[task.assigneeId] = { name: task.assigneeName, completed: 0, overdue: 0 };
@@ -937,12 +883,10 @@ exports.dailyReport = functions.pubsub
                     }
                 }
                 
-                // Виконані вчора
                 if (task.status === 'done' && task.completedAt) {
                     const completedDate = task.completedAt.toDate ? task.completedAt.toDate() : new Date(task.completedAt);
                     if (completedDate.toISOString().split('T')[0] === yesterdayStr) {
                         completedYesterday++;
-                        
                         if (task.assigneeId) {
                             if (!userStats[task.assigneeId]) {
                                 userStats[task.assigneeId] = { name: task.assigneeName, completed: 0, overdue: 0 };
@@ -953,18 +897,14 @@ exports.dailyReport = functions.pubsub
                 }
             }
             
-            // Формуємо звіт
             let report = `📊 <b>Ранковий звіт</b>\n`;
             report += `📅 ${now.toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long' })}\n\n`;
-            
             report += `📋 На сьогодні: <b>${todayTasks}</b> задач\n`;
             report += `✅ Виконано вчора: <b>${completedYesterday}</b>\n`;
-            
             if (overdueTasks > 0) {
                 report += `\n⚠️ <b>Прострочено: ${overdueTasks}</b>\n`;
             }
             
-            // Топ виконавців
             const sortedUsers = Object.entries(userStats)
                 .sort((a, b) => b[1].completed - a[1].completed)
                 .slice(0, 3);
@@ -987,9 +927,7 @@ exports.dailyReport = functions.pubsub
             
             for (const managerDoc of managersSnap.docs) {
                 const managerData = managerDoc.data();
-                // Перевіряємо чи хоче отримувати звіти
                 if (managerData.dailyReportEnabled === false) continue;
-                
                 if (managerData.telegramChatId) {
                     await sendTelegramMessage(managerData.telegramChatId, report);
                 }
@@ -1000,15 +938,119 @@ exports.dailyReport = functions.pubsub
     });
 
 // ===========================
-// 10. SCHEDULED: ТИЖНЕВИЙ ЗВІТ (понеділок о 9:00)
+// 10. ПЕРСОНАЛЬНІ ЗАВДАННЯ КОЖНОМУ (9:05)
+// ===========================
+// Шле КОЖНОМУ підключеному співробітнику його завдання на сьогодні з кнопками
+exports.personalDailyTasks = functions.pubsub
+    .schedule('5 9 * * *')  // 9:05 (після ранкового звіту керівникам)
+    .timeZone('Europe/Kyiv')
+    .onRun(async (context) => {
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+        
+        // Не шлемо у вихідні (сб=6, нд=0)
+        const day = now.getDay();
+        if (day === 0 || day === 6) return null;
+        
+        const companiesSnap = await db.collection('companies').get();
+        
+        for (const companyDoc of companiesSnap.docs) {
+            const companyId = companyDoc.id;
+            const companyData = companyDoc.data();
+            
+            // Пропускаємо якщо вимкнено
+            if (companyData.personalDailyEnabled === false) continue;
+            
+            // Всі підключені юзери
+            const usersSnap = await db.collection('companies').doc(companyId)
+                .collection('users').get();
+            
+            for (const userDoc of usersSnap.docs) {
+                const userData = userDoc.data();
+                if (!userData.telegramChatId) continue;
+                if (userData.personalDailyEnabled === false) continue;
+                
+                const userId = userDoc.id;
+                const chatId = userData.telegramChatId;
+                const userName = userData.name || userData.email || '';
+                
+                // Завдання цього юзера на сьогодні
+                const tasksSnap = await db.collection('companies').doc(companyId)
+                    .collection('tasks')
+                    .where('assigneeId', '==', userId)
+                    .where('status', 'in', ['new', 'progress'])
+                    .get();
+                
+                const todayTasks = [];
+                const overdueTasks = [];
+                
+                tasksSnap.docs.forEach(d => {
+                    const t = { id: d.id, ...d.data() };
+                    if (t.deadlineDate === todayStr) {
+                        todayTasks.push(t);
+                    } else if (t.deadlineDate && t.deadlineDate < todayStr) {
+                        overdueTasks.push(t);
+                    }
+                });
+                
+                // Сортуємо по часу
+                todayTasks.sort((a, b) => (a.deadlineTime || '').localeCompare(b.deadlineTime || ''));
+                
+                // Якщо немає завдань — коротке повідомлення
+                if (todayTasks.length === 0 && overdueTasks.length === 0) {
+                    await sendTelegramMessage(chatId,
+                        `☀️ Доброго ранку, <b>${userName}</b>!\n\n` +
+                        `✅ На сьогодні завдань немає. Гарного дня!`
+                    );
+                    continue;
+                }
+                
+                // Привітання
+                await sendTelegramMessage(chatId,
+                    `☀️ Доброго ранку, <b>${userName}</b>!\n\n` +
+                    `📋 На сьогодні: <b>${todayTasks.length}</b> завдань` +
+                    (overdueTasks.length > 0 ? `\n⚠️ Прострочено: <b>${overdueTasks.length}</b>` : '')
+                );
+                
+                // Прострочені (перші 5)
+                for (const t of overdueTasks.slice(0, 5)) {
+                    const pr = t.priority==='high'?'🔴':t.priority==='low'?'🟢':'🟡';
+                    await sendWithButtons(chatId,
+                        `⚠️ ${pr} <b>${t.title}</b>\n📅 Дедлайн: ${t.deadlineDate}`,
+                        taskButtons(t.id, companyId)
+                    );
+                }
+                if (overdueTasks.length > 5) {
+                    await sendTelegramMessage(chatId, `... ще ${overdueTasks.length - 5} прострочених. /overdue`);
+                }
+                
+                // Завдання на сьогодні (перші 10)
+                for (const t of todayTasks.slice(0, 10)) {
+                    const tm = t.deadlineTime ? ` ⏰ ${t.deadlineTime}` : '';
+                    const pr = t.priority==='high'?'🔴':t.priority==='low'?'🟢':'🟡';
+                    await sendWithButtons(chatId,
+                        `${pr} <b>${t.title}</b>${tm}`,
+                        taskButtons(t.id, companyId)
+                    );
+                }
+                if (todayTasks.length > 10) {
+                    await sendTelegramMessage(chatId, `... ще ${todayTasks.length - 10}. /today`);
+                }
+            }
+        }
+        
+        return null;
+    });
+
+// ===========================
+// 11. ТИЖНЕВИЙ ЗВІТ (понеділок 9:00)
 // ===========================
 exports.weeklyReport = functions.pubsub
-    .schedule('0 9 * * 1')  // Кожен понеділок о 9:00
+    .schedule('0 9 * * 1')
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
         const now = new Date();
         
-        // Минулий тиждень
         const weekAgo = new Date(now);
         weekAgo.setDate(weekAgo.getDate() - 7);
         
@@ -1023,7 +1065,6 @@ exports.weeklyReport = functions.pubsub
             let totalCreated = 0;
             let totalCompleted = 0;
             let totalOverdue = 0;
-            let avgCompletionTime = 0;
             let completionTimes = [];
             const userStats = {};
             
@@ -1033,28 +1074,19 @@ exports.weeklyReport = functions.pubsub
             for (const taskDoc of tasksSnap.docs) {
                 const task = taskDoc.data();
                 
-                // Створені за тиждень
                 if (task.createdAt) {
                     const created = task.createdAt.toDate ? task.createdAt.toDate() : new Date(task.createdAt);
-                    if (created >= weekAgo) {
-                        totalCreated++;
-                    }
+                    if (created >= weekAgo) totalCreated++;
                 }
                 
-                // Виконані за тиждень
                 if (task.status === 'done' && task.completedAt) {
                     const completed = task.completedAt.toDate ? task.completedAt.toDate() : new Date(task.completedAt);
                     if (completed >= weekAgo) {
                         totalCompleted++;
-                        
-                        // Час виконання
                         if (task.createdAt) {
                             const created = task.createdAt.toDate ? task.createdAt.toDate() : new Date(task.createdAt);
-                            const hours = (completed - created) / (1000 * 60 * 60);
-                            completionTimes.push(hours);
+                            completionTimes.push((completed - created) / (1000 * 60 * 60));
                         }
-                        
-                        // Статистика по користувачах
                         if (task.assigneeId) {
                             if (!userStats[task.assigneeId]) {
                                 userStats[task.assigneeId] = { name: task.assigneeName, completed: 0, overdue: 0 };
@@ -1064,12 +1096,10 @@ exports.weeklyReport = functions.pubsub
                     }
                 }
                 
-                // Прострочені
                 if (task.overdueNotified && task.overdueNotifiedAt) {
                     const overdueAt = task.overdueNotifiedAt.toDate ? task.overdueNotifiedAt.toDate() : new Date(task.overdueNotifiedAt);
                     if (overdueAt >= weekAgo) {
                         totalOverdue++;
-                        
                         if (task.assigneeId) {
                             if (!userStats[task.assigneeId]) {
                                 userStats[task.assigneeId] = { name: task.assigneeName, completed: 0, overdue: 0 };
@@ -1080,54 +1110,47 @@ exports.weeklyReport = functions.pubsub
                 }
             }
             
-            // Середній час виконання
+            let avgCompletionTime = 0;
             if (completionTimes.length > 0) {
                 avgCompletionTime = completionTimes.reduce((a, b) => a + b, 0) / completionTimes.length;
             }
             
-            // Формуємо звіт
             let report = `📈 <b>Тижневий звіт</b>\n`;
             report += `📅 ${weekAgo.toLocaleDateString('uk-UA')} - ${now.toLocaleDateString('uk-UA')}\n\n`;
-            
             report += `📊 <b>Загальна статистика:</b>\n`;
             report += `📝 Створено: ${totalCreated}\n`;
             report += `✅ Виконано: ${totalCompleted}\n`;
             report += `⚠️ Прострочено: ${totalOverdue}\n`;
             
             if (avgCompletionTime > 0) {
-                const avgHours = Math.round(avgCompletionTime);
-                report += `⏱ Сер. час виконання: ${avgHours} год\n`;
+                report += `⏱ Сер. час виконання: ${Math.round(avgCompletionTime)} год\n`;
             }
             
-            // Ефективність
             if (totalCreated > 0) {
-                const efficiency = Math.round((totalCompleted / totalCreated) * 100);
-                report += `\n📊 Ефективність: <b>${efficiency}%</b>\n`;
+                report += `\n📊 Ефективність: <b>${Math.round((totalCompleted / totalCreated) * 100)}%</b>\n`;
             }
             
-            // Топ і антитоп
             const sortedByCompleted = Object.entries(userStats)
                 .sort((a, b) => b[1].completed - a[1].completed);
             
             const sortedByOverdue = Object.entries(userStats)
-                .filter(([_, stats]) => stats.overdue > 0)
+                .filter(([_, s]) => s.overdue > 0)
                 .sort((a, b) => b[1].overdue - a[1].overdue);
             
             if (sortedByCompleted.length > 0) {
                 report += `\n🏆 <b>Найкращі:</b>\n`;
-                for (const [_, stats] of sortedByCompleted.slice(0, 3)) {
-                    report += `✅ ${stats.name}: ${stats.completed} задач\n`;
+                for (const [_, s] of sortedByCompleted.slice(0, 3)) {
+                    report += `✅ ${s.name}: ${s.completed} задач\n`;
                 }
             }
             
             if (sortedByOverdue.length > 0) {
                 report += `\n⚠️ <b>Потребують уваги:</b>\n`;
-                for (const [_, stats] of sortedByOverdue.slice(0, 3)) {
-                    report += `❌ ${stats.name}: ${stats.overdue} прострочень\n`;
+                for (const [_, s] of sortedByOverdue.slice(0, 3)) {
+                    report += `❌ ${s.name}: ${s.overdue} прострочень\n`;
                 }
             }
             
-            // Відправляємо
             const managersSnap = await db.collection('companies').doc(companyId)
                 .collection('users')
                 .where('role', 'in', ['owner', 'manager'])
@@ -1136,7 +1159,6 @@ exports.weeklyReport = functions.pubsub
             for (const managerDoc of managersSnap.docs) {
                 const managerData = managerDoc.data();
                 if (managerData.weeklyReportEnabled === false) continue;
-                
                 if (managerData.telegramChatId) {
                     await sendTelegramMessage(managerData.telegramChatId, report);
                 }
