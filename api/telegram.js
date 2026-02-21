@@ -15,14 +15,22 @@ const admin = require('firebase-admin');
 
 // --- Firebase ---
 if (!admin.apps.length) {
-    const pk = process.env.FIREBASE_PRIVATE_KEY
-        ? Buffer.from(process.env.FIREBASE_PRIVATE_KEY, 'base64').toString('utf8')
-        : undefined;
+    let pk = process.env.FIREBASE_PRIVATE_KEY || '';
+    
+    // Try base64 decode first
+    if (pk && !pk.includes('-----BEGIN')) {
+        try { pk = Buffer.from(pk, 'base64').toString('utf8'); } catch(e) {}
+    }
+    // Handle escaped newlines from env vars
+    if (pk && pk.includes('\\n')) {
+        pk = pk.replace(/\\n/g, '\n');
+    }
+    
     admin.initializeApp({
         credential: admin.credential.cert({
             projectId: process.env.FIREBASE_PROJECT_ID || 'task-manager-44e84',
             clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-            privateKey: pk,
+            privateKey: pk || undefined,
         }),
     });
 }
