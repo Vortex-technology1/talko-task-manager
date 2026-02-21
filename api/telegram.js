@@ -356,6 +356,67 @@ async function cmdTeam(chatId, u) {
 }
 
 // ========================
+//  /weekly
+// ========================
+async function cmdWeekly(chatId, u) {
+    const now = new Date();
+    const weekAgo = new Date(now);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const weekAgoStr = weekAgo.toISOString().split('T')[0];
+    const todayStr = now.toISOString().split('T')[0];
+
+    const snap = await db.collection('companies').doc(u.cid).collection('tasks').get();
+
+    let created = 0, completed = 0, overdue = 0;
+    const byP = {};
+
+    snap.docs.forEach(d => {
+        const t = d.data();
+        const n = t.assigneeName || '—';
+        if (!byP[n]) byP[n] = { done: 0, overdue: 0, active: 0 };
+
+        // Створені за тиждень
+        if (t.createdDate && t.createdDate >= weekAgoStr) created++;
+
+        // Виконані за тиждень
+        if (t.status === 'done' && t.completedDate && t.completedDate >= weekAgoStr) {
+            completed++;
+            byP[n].done++;
+        }
+
+        // Активні прострочені
+        if (t.status !== 'done' && t.deadlineDate && t.deadlineDate < todayStr) {
+            overdue++;
+            byP[n].overdue++;
+        }
+
+        // Активні загалом
+        if (t.status !== 'done') byP[n].active++;
+    });
+
+    const eff = created > 0 ? Math.round((completed / created) * 100) : 0;
+
+    let msg = `📈 <b>Тижневий звіт</b>\n`;
+    msg += `📅 ${weekAgoStr} — ${todayStr}\n\n`;
+    msg += `📝 Створено: <b>${created}</b>\n`;
+    msg += `✅ Виконано: <b>${completed}</b>\n`;
+    msg += `⚠️ Прострочено: <b>${overdue}</b>\n`;
+    msg += `📊 Ефективність: <b>${eff}%</b>\n\n`;
+
+    // Топ по виконанню
+    const sorted = Object.entries(byP).sort((a, b) => b[1].done - a[1].done);
+    if (sorted.length > 0) {
+        msg += `🏆 <b>По людях:</b>\n`;
+        sorted.forEach(([n, s]) => {
+            const warn = s.overdue > 0 ? ` ⚠️${s.overdue}` : '';
+            msg += `• <b>${n}</b>: ✅${s.done} | 📋${s.active}${warn}\n`;
+        });
+    }
+
+    return send(chatId, msg);
+}
+
+// ========================
 //  CREATE TASK
 // ========================
 async function createTask(u, p) {
@@ -466,7 +527,7 @@ module.exports = async function handler(req, res) {
                     '📖 <b>Ставити завдання:</b>\n<code>Текст @Виконавець до ДД.ММ</code>\n\n' +
                     '<b>Приклади:</b>\n• <code>Звіт @Олена до 25.02</code>\n• <code>Матеріали @Сергій завтра !!!</code>\n• <code>Перевірка сьогодні о 14:00</code>\n\n' +
                     '!!! високий, ! низький\n\n' +
-                    '/today — мої завдання (з кнопками ✅🔄)\n/overdue — прострочені\n/team — команда'
+                    '/today — мої завдання (з кнопками ✅🔄)\n/overdue — прострочені\n/team — команда\n/weekly — тижневий звіт'
                 );
                 return res.status(200).json({ ok: true });
             }
@@ -477,6 +538,7 @@ module.exports = async function handler(req, res) {
             if (cmd === '/today') await cmdToday(chatId, u);
             else if (cmd === '/overdue') await cmdOverdue(chatId, u);
             else if (cmd === '/team') await cmdTeam(chatId, u);
+            else if (cmd === '/weekly') await cmdWeekly(chatId, u);
             else await send(chatId, '❓ /help — список команд');
 
             return res.status(200).json({ ok: true });
