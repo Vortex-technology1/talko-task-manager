@@ -480,6 +480,109 @@ async function notifyUsers(cid, userIds, type, data) {
 }
 
 // ========================
+//  ШВИДКІ ЗАПИТИ (natural language)
+// ========================
+async function handleQuery(chatId, u, text) {
+    const low = text.toLowerCase();
+    const todayStr = new Date().toISOString().split('T')[0];
+    const snap = await db.collection('companies').doc(u.cid)
+        .collection('tasks').get();
+
+    const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const active = tasks.filter(t => t.status !== 'done');
+    const done = tasks.filter(t => t.status === 'done');
+
+    // --- "хто нічого не зробив" / "хто не виконав" / "хто лінується" ---
+    if (/хто.*(нічого|не виконав|не зробив|лінується|відстає|0 виконано)/i.test(low)) {
+        const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+        const weekAgoStr = weekAgo.toISOString().split('T')[0];
+
+        // Всі юзери компанії
+        const usersSnap = await db.collection('companies').doc(u.cid).collection('users').get();
+        const allUsers = {};
+        usersSnap.docs.forEach(d => { allUsers[d.data().name || d.data().email] = 0; });
+
+        // Хто виконав за тиждень
+        done.forEach(t => {
+            if (t.completedDate && t.completedDate >= weekAgoStr && t.assigneeName) {
+                allUsers[t.assigneeName] = (allUsers[t.assigneeName] || 0) + 1;
+            }
+        });
+
+        const lazy = Object.entries(allUsers).filter(([_, c]) => c === 0);
+        if (lazy.length === 0) return send(chatId, '✅ Всі виконали хоча б 1 завдання за тиждень!');
+
+        let msg = `⚠️ <b>Не виконали нічого за тиждень:</b>\n\n`;
+        lazy.forEach(([n]) => { msg += `• ${n}\n`; });
+        return send(chatId, msg);
+    }
+
+    // --- "скільки виконав Вадим" / "статистика Вадим" / "що зробив Вадим" ---
+    const personMatch = low.match(/(?:скільки|статистика|що зробив|результат|звіт)\s+(?:виконав\s+)?([а-яіїєґa-z]+)/i)
+        || low.match(/([а-яіїєґa-z]+)\s+(?:скільки|статистика|результат)/i);
+    if (personMatch) {
+        const name = personMatch[1].toLowerCase();
+        const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+        const weekAgoStr = weekAgo.toISOString().split('T')[0];
+
+        const personTasks = tasks.filter(t => (t.assigneeName || '').toLowerCase().includes(name));
+        if (personTasks.length === 0) return send(chatId, `❌ Не знайшов "${personMatch[1]}" в завданнях`);
+
+        const pName = personTasks[0].assigneeName;
+        const pActive = personTasks.filter(t => t.status !== 'done');
+        const pDoneWeek = personTasks.filter(t => t.status === 'done' && t.completedDate && t.completedDate >= weekAgoStr);
+        const pOverdue = pActive.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
+
+        let msg = `👤 <b>${pName}</b>\n\n`;
+        msg += `✅ Виконано за тиждень: <b>${pDoneWeek.length}</b>\n`;
+        msg += `📋 Активних: <b>${pActive.length}</b>\n`;
+        msg += `⚠️ Прострочено: <b>${pOverdue.length}</b>\n`;
+
+        if (pOverdue.length > 0) {
+            msg += `\n<b>Прострочені:</b>\n`;
+            pOverdue.slice(0, 5).forEach(t => {
+                msg += `• ${t.title} (📅 ${t.deadlineDate})\n`;
+            });
+        }
+        return send(chatId, msg);
+    }
+
+    // --- "що горить" / "які завдання горять" / "термінові" ---
+    if (/горить|термінов|urgent|критичн|найважлив/i.test(low)) {
+        const urgent = active.filter(t =>
+            t.priority === 'high' || (t.deadlineDate && t.deadlineDate <= todayStr)
+        ).sort((a, b) => (a.deadlineDate || '').localeCompare(b.deadlineDate || ''));
+
+        if (urgent.length === 0) return send(chatId, '✅ Нічого термінового!');
+
+        let msg = `🔥 <b>Горить (${urgent.length}):</b>\n\n`;
+        urgent.slice(0, 10).forEach(t => {
+            const ov = t.deadlineDate && t.deadlineDate < todayStr ? '⚠️' : '🔴';
+            msg += `${ov} ${t.title}\n👤 ${t.assigneeName || '—'} 📅 ${t.deadlineDate || '—'}\n\n`;
+        });
+        return send(chatId, msg);
+    }
+
+    // --- "скільки всього завдань" / "загальна статистика" ---
+    if (/скільки.*завдань|загальн.*статистик|стан справ|як справи|дашборд/i.test(low)) {
+        const act = active.length;
+        const dn = done.length;
+        const ov = active.filter(t => t.deadlineDate && t.deadlineDate < todayStr).length;
+        const todayCount = active.filter(t => t.deadlineDate === todayStr).length;
+
+        let msg = `📊 <b>Стан справ:</b>\n\n`;
+        msg += `📋 Активних: <b>${act}</b>\n`;
+        msg += `📅 На сьогодні: <b>${todayCount}</b>\n`;
+        msg += `⚠️ Прострочено: <b>${ov}</b>\n`;
+        msg += `✅ Виконано всього: <b>${dn}</b>\n`;
+        return send(chatId, msg);
+    }
+
+    // Не розпізнано як запит
+    return null;
+}
+
+// ========================
 //  WEBHOOK HANDLER
 // ========================
 module.exports = async function handler(req, res) {
@@ -543,6 +646,10 @@ module.exports = async function handler(req, res) {
 
             return res.status(200).json({ ok: true });
         }
+
+        // --- Швидкий запит? ---
+        const queryResult = await handleQuery(chatId, u, text);
+        if (queryResult) return res.status(200).json({ ok: true });
 
         // --- Створення завдання ---
         const u = await findByChatId(chatId);
