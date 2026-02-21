@@ -647,16 +647,16 @@ module.exports = async function handler(req, res) {
             return res.status(200).json({ ok: true });
         }
 
-        // --- Швидкий запит? ---
-        const queryResult = await handleQuery(chatId, u, text);
-        if (queryResult) return res.status(200).json({ ok: true });
-
         // --- Створення завдання ---
         const u = await findByChatId(chatId);
         if (!u) {
             await send(chatId, '❌ Спочатку підключіть:\n1. TALKO → Профіль → Telegram\n2. Або: <code>/connect email</code>');
             return res.status(200).json({ ok: true });
         }
+
+        // --- Швидкий запит? ---
+        const queryResult = await handleQuery(chatId, u, text);
+        if (queryResult) return res.status(200).json({ ok: true });
 
         const p = parseTask(text);
         if (!p.title || p.title.length < 2) {
