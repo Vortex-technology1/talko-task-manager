@@ -534,6 +534,100 @@
         
         .filter-select:focus { outline: none; border-color: var(--info); }
         
+        /* Status multi-select dropdown */
+        .status-multiselect {
+            position: relative;
+            flex: 1;
+            min-width: 100px;
+        }
+        .status-multiselect-toggle {
+            padding: 0.6rem;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            font-size: 0.85rem;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            user-select: none;
+        }
+        .status-multiselect-toggle:hover { border-color: #bbb; }
+        .status-multiselect-toggle.open { border-color: var(--info); }
+        .status-multiselect-label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--dark);
+            font-size: 0.85rem;
+        }
+        .status-multiselect-label.placeholder { color: var(--gray); }
+        .status-multiselect-arrow { transition: transform 0.2s; flex-shrink: 0; }
+        .status-multiselect-toggle.open .status-multiselect-arrow { transform: rotate(180deg); }
+        .status-multiselect-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.1rem 0.45rem;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .status-multiselect-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            min-width: 180px;
+            background: var(--white);
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            z-index: 200;
+            padding: 0.35rem 0;
+            animation: statusDropFade 0.15s ease;
+        }
+        .status-multiselect-dropdown.show { display: block; }
+        @keyframes statusDropFade {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .status-multiselect-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.15s;
+            user-select: none;
+        }
+        .status-multiselect-item:hover { background: #f0fdf4; }
+        .status-multiselect-item input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .status-multiselect-all {
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 500;
+            padding-bottom: 0.6rem;
+            margin-bottom: 0.15rem;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
         .tasks-container, .cards-grid {
             background: var(--white);
             border-radius: var(--radius);
@@ -1712,6 +1806,7 @@
             .controls { flex-direction: row; align-items: center; justify-content: space-between; }
             .filters { width: auto; flex-wrap: nowrap; }
             .filter-select { flex: none; min-width: auto; }
+            .status-multiselect { flex: none; min-width: auto; }
             .form-grid { grid-template-columns: 1fr 1fr; }
             .form-group.full-width { grid-column: span 2; }
             .cards-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
@@ -1731,6 +1826,15 @@
             .filter-select {
                 flex: 0 0 auto;
                 min-width: 130px;
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+            
+            .status-multiselect {
+                flex: 0 0 auto;
+                min-width: 130px;
+            }
+            .status-multiselect-toggle {
                 font-size: 0.8rem;
                 padding: 0.5rem;
             }
@@ -5279,13 +5383,22 @@
                                 <span>—</span>
                                 <input type="date" id="dateTo" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
                             </div>
-                            <select class="filter-select" id="statusFilter" onchange="renderTasks()">
-                                <option value="" data-i18n="statuses">Статуси</option>
-                                <option value="new" data-i18n="statusNew">Нові</option>
-                                <option value="progress" data-i18n="statusProgress">В роботі</option>
-                                <option value="review" data-i18n="statusReview">Перевірка</option>
-                                <option value="done" data-i18n="statusDone">Готово</option>
-                            </select>
+                            <div class="status-multiselect" id="statusFilterMulti">
+                                <div class="status-multiselect-toggle" onclick="toggleStatusDropdown(event)">
+                                    <span class="status-multiselect-label" id="statusFilterLabel" data-i18n="statuses">Статуси</span>
+                                    <i data-lucide="chevron-down" class="icon icon-sm status-multiselect-arrow"></i>
+                                </div>
+                                <div class="status-multiselect-dropdown" id="statusDropdown">
+                                    <label class="status-multiselect-item status-multiselect-all" onclick="toggleAllStatuses(event)">
+                                        <input type="checkbox" id="statusAll" checked> <span data-i18n="all">Всі</span>
+                                    </label>
+                                    <label class="status-multiselect-item"><input type="checkbox" value="new" onchange="onStatusCheckChange()"> <span class="status-dot" style="background:#1976d2"></span> <span data-i18n="statusNew">Нові</span></label>
+                                    <label class="status-multiselect-item"><input type="checkbox" value="progress" onchange="onStatusCheckChange()"> <span class="status-dot" style="background:#f57c00"></span> <span data-i18n="statusProgress">В роботі</span></label>
+                                    <label class="status-multiselect-item"><input type="checkbox" value="review" onchange="onStatusCheckChange()"> <span class="status-dot" style="background:#c2185b"></span> <span data-i18n="statusReview">Перевірка</span></label>
+                                    <label class="status-multiselect-item"><input type="checkbox" value="done" onchange="onStatusCheckChange()"> <span class="status-dot" style="background:#388e3c"></span> <span data-i18n="statusDone">Готово</span></label>
+                                </div>
+                            </div>
+                            <input type="hidden" id="statusFilter" value="">
                             <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="" data-i18n="functions">Функції</option></select>
                             <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="" data-i18n="assignees">Виконавці</option></select>
                             <button id="hideCompletedBtn" class="btn btn-clear" onclick="toggleHideCompleted()" style="white-space:nowrap;">
@@ -11622,10 +11735,114 @@
             }
         }
         
+        // =====================
+        // STATUS MULTI-SELECT FILTER
+        // =====================
+        function toggleStatusDropdown(e) {
+            e.stopPropagation();
+            const dd = document.getElementById('statusDropdown');
+            const toggle = dd.previousElementSibling;
+            const isOpen = dd.classList.contains('show');
+            closeStatusDropdown();
+            if (!isOpen) {
+                dd.classList.add('show');
+                toggle.classList.add('open');
+            }
+        }
+        
+        function closeStatusDropdown() {
+            const dd = document.getElementById('statusDropdown');
+            if (dd) {
+                dd.classList.remove('show');
+                dd.previousElementSibling.classList.remove('open');
+            }
+        }
+        
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.status-multiselect')) {
+                closeStatusDropdown();
+            }
+        });
+        
+        function getSelectedStatuses() {
+            const checks = document.querySelectorAll('#statusDropdown .status-multiselect-item:not(.status-multiselect-all) input[type="checkbox"]');
+            const selected = [];
+            checks.forEach(cb => { if (cb.checked) selected.push(cb.value); });
+            return selected;
+        }
+        
+        function onStatusCheckChange() {
+            const checks = document.querySelectorAll('#statusDropdown .status-multiselect-item:not(.status-multiselect-all) input[type="checkbox"]');
+            const allCb = document.getElementById('statusAll');
+            const total = checks.length;
+            const checked = [...checks].filter(cb => cb.checked).length;
+            allCb.checked = (checked === total);
+            allCb.indeterminate = (checked > 0 && checked < total);
+            updateStatusFilterLabel();
+            renderTasks();
+        }
+        
+        function toggleAllStatuses(e) {
+            e.preventDefault();
+            const allCb = document.getElementById('statusAll');
+            const checks = document.querySelectorAll('#statusDropdown .status-multiselect-item:not(.status-multiselect-all) input[type="checkbox"]');
+            // If all checked -> uncheck all; otherwise check all
+            const allChecked = [...checks].every(cb => cb.checked);
+            const newState = !allChecked;
+            checks.forEach(cb => cb.checked = newState);
+            allCb.checked = newState;
+            allCb.indeterminate = false;
+            updateStatusFilterLabel();
+            renderTasks();
+        }
+        
+        function updateStatusFilterLabel() {
+            const label = document.getElementById('statusFilterLabel');
+            const toggle = label.closest('.status-multiselect-toggle');
+            const selected = getSelectedStatuses();
+            const statusNames = { new: 'Нові', progress: 'В роботі', review: 'Перевірка', done: 'Готово' };
+            
+            // Remove old count badge
+            const oldBadge = toggle.querySelector('.status-multiselect-count');
+            if (oldBadge) oldBadge.remove();
+            
+            if (selected.length === 0 || selected.length === 4) {
+                label.textContent = currentLang === 'ru' ? 'Статусы' : 'Статуси';
+                label.classList.add('placeholder');
+            } else if (selected.length === 1) {
+                label.textContent = statusNames[selected[0]] || selected[0];
+                label.classList.remove('placeholder');
+            } else {
+                label.textContent = selected.map(s => statusNames[s]).join(', ');
+                label.classList.remove('placeholder');
+                // Add count badge
+                const badge = document.createElement('span');
+                badge.className = 'status-multiselect-count';
+                badge.textContent = selected.length;
+                toggle.insertBefore(badge, toggle.querySelector('.status-multiselect-arrow'));
+            }
+        }
+        
+        function setStatusFilterFromArray(arr) {
+            const checks = document.querySelectorAll('#statusDropdown .status-multiselect-item:not(.status-multiselect-all) input[type="checkbox"]');
+            const allCb = document.getElementById('statusAll');
+            if (!arr || arr.length === 0) {
+                checks.forEach(cb => cb.checked = false);
+                allCb.checked = false;
+                allCb.indeterminate = false;
+            } else {
+                checks.forEach(cb => cb.checked = arr.includes(cb.value));
+                const checked = [...checks].filter(cb => cb.checked).length;
+                allCb.checked = (checked === checks.length);
+                allCb.indeterminate = (checked > 0 && checked < checks.length);
+            }
+            updateStatusFilterLabel();
+        }
+        
         function renderTasks() {
             tasksVisibleCount = TASKS_PAGE_SIZE; // Reset pagination on filter change
             const c = document.getElementById('tasksContainer');
-            const sf = document.getElementById('statusFilter')?.value;
+            const selectedStatuses = getSelectedStatuses();
             const ff = document.getElementById('functionFilter')?.value;
             const af = document.getElementById('assigneeFilter')?.value;
             const df = document.getElementById('dateFilter')?.value;
@@ -11636,7 +11853,7 @@
             let f = tasks.filter(task => {
                 if (!isTaskVisibleToUser(task)) return false;
                 if (hideCompletedTasks && task.status === 'done') return false;
-                if (sf && task.status !== sf) return false;
+                if (selectedStatuses.length > 0 && !selectedStatuses.includes(task.status)) return false;
                 if (ff && task.function !== ff) return false;
                 if (af && task.assigneeId !== af) return false;
                 if (tf === 'my' && task.assigneeId !== currentUser.uid) return false;
@@ -12160,7 +12377,7 @@
         function clearTaskFilters() {
             document.getElementById('taskTypeFilter').value = '';
             document.getElementById('dateFilter').value = '';
-            document.getElementById('statusFilter').value = '';
+            setStatusFilterFromArray([]);
             document.getElementById('functionFilter').value = '';
             document.getElementById('assigneeFilter').value = '';
             document.getElementById('customDateRange').style.display = 'none';
@@ -17904,7 +18121,7 @@
         let mobileFilters = {
             type: '',
             date: '',
-            status: '',
+            status: [],
             function: '',
             assignee: ''
         };
@@ -17912,6 +18129,9 @@
         function openFilterModal() {
             const modal = document.getElementById('filterModal');
             modal.style.display = 'flex';
+            
+            // Sync desktop status multi-select to mobile
+            mobileFilters.status = getSelectedStatuses();
             
             // Populate function chips
             const funcContainer = document.getElementById('filterFunctionChips');
@@ -17941,10 +18161,45 @@
         }
         
         function selectFilterChip(chip, category) {
-            // Remove selected from siblings
-            chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('selected'));
-            chip.classList.add('selected');
-            mobileFilters[category] = chip.dataset.value;
+            if (category === 'status') {
+                // Multi-select logic for status
+                const val = chip.dataset.value;
+                if (val === '') {
+                    // "Всі" clicked - deselect all specific statuses
+                    mobileFilters.status = [];
+                    chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('selected'));
+                    chip.classList.add('selected');
+                } else {
+                    // Toggle specific status
+                    const allChip = chip.parentElement.querySelector('.filter-chip[data-value=""]');
+                    if (chip.classList.contains('selected')) {
+                        chip.classList.remove('selected');
+                        mobileFilters.status = mobileFilters.status.filter(s => s !== val);
+                    } else {
+                        chip.classList.add('selected');
+                        mobileFilters.status.push(val);
+                    }
+                    // Remove "Всі" selection if specific selected
+                    if (mobileFilters.status.length > 0) {
+                        allChip?.classList.remove('selected');
+                    }
+                    // If none selected, highlight "Всі"
+                    if (mobileFilters.status.length === 0) {
+                        allChip?.classList.add('selected');
+                    }
+                    // If all 4 selected, treat as "Всі"
+                    if (mobileFilters.status.length === 4) {
+                        mobileFilters.status = [];
+                        chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('selected'));
+                        allChip?.classList.add('selected');
+                    }
+                }
+            } else {
+                // Single-select for other categories
+                chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+                mobileFilters[category] = chip.dataset.value;
+            }
         }
         
         function syncFilterChips() {
@@ -17956,9 +18211,14 @@
             document.querySelectorAll('#filterDateChips .filter-chip').forEach(c => {
                 c.classList.toggle('selected', c.dataset.value === mobileFilters.date);
             });
-            // Sync status
+            // Sync status (multi-select)
             document.querySelectorAll('#filterStatusChips .filter-chip').forEach(c => {
-                c.classList.toggle('selected', c.dataset.value === mobileFilters.status);
+                const val = c.dataset.value;
+                if (val === '') {
+                    c.classList.toggle('selected', mobileFilters.status.length === 0);
+                } else {
+                    c.classList.toggle('selected', mobileFilters.status.includes(val));
+                }
             });
         }
         
@@ -17966,7 +18226,7 @@
             // Apply filters to desktop selects
             document.getElementById('taskTypeFilter').value = mobileFilters.type;
             document.getElementById('dateFilter').value = mobileFilters.date;
-            document.getElementById('statusFilter').value = mobileFilters.status;
+            setStatusFilterFromArray(mobileFilters.status);
             document.getElementById('functionFilter').value = mobileFilters.function;
             document.getElementById('assigneeFilter').value = mobileFilters.assignee;
             
@@ -17981,7 +18241,7 @@
         }
         
         function clearAllFilters() {
-            mobileFilters = { type: '', date: '', status: '', function: '', assignee: '' };
+            mobileFilters = { type: '', date: '', status: [], function: '', assignee: '' };
             document.querySelectorAll('.filter-chip').forEach(c => {
                 c.classList.toggle('selected', c.dataset.value === '');
             });
@@ -17989,7 +18249,14 @@
         }
         
         function updateFilterCount() {
-            const count = Object.values(mobileFilters).filter(v => v !== '').length;
+            let count = 0;
+            Object.entries(mobileFilters).forEach(([key, v]) => {
+                if (key === 'status') {
+                    if (Array.isArray(v) && v.length > 0) count++;
+                } else {
+                    if (v !== '') count++;
+                }
+            });
             const badge = document.getElementById('activeFilterCount');
             if (count > 0) {
                 badge.textContent = count;
