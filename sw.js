@@ -3,7 +3,7 @@ const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache
 const PRECACHE_URLS = [
-  'index_task.html',
+  'index.html',
   'manifest.json',
   'icons/icon-192x192.png',
   'icons/icon-512x512.png',
