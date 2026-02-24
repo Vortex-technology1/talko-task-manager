@@ -5215,10 +5215,25 @@
                     
                     <!-- NO ACCESS -->
                     <div id="noAccessCard" class="no-access-card" style="display:none;">
-                        <h3 data-i18n="noAccessTitle"><i data-lucide="ban" class="icon"></i> Доступ відсутній</h3>
-                        <p data-i18n="noAccessText">Ваш email не зареєстровано в системі.<br>Зверніться до адміністратора для отримання доступу.</p>
-                        <a href="https://alextalko.com" target="_blank" class="btn btn-success"><i data-lucide="phone" class="icon"></i> <span data-i18n="contactSupport">Зв'язатися з підтримкою</span></a>
-                        <button onclick="logout()" class="btn" style="margin-top:0.5rem;"><i data-lucide="refresh-cw" class="icon"></i> <span data-i18n="tryAnotherEmail">Спробувати інший email</span></button>
+                        <h3><i data-lucide="building-2" class="icon"></i> Створити компанію</h3>
+                        <p style="font-size:0.9rem;color:#525252;margin-bottom:1rem;">Ваш email не прив'язаний до жодної компанії. Створіть нову або зверніться до адміністратора.</p>
+                        <div id="selfRegForm">
+                            <div class="auth-input-group">
+                                <label>Назва компанії *</label>
+                                <input type="text" id="selfRegCompanyName" class="form-input" placeholder="ТОВ Моя Компанія" required>
+                            </div>
+                            <div class="auth-input-group">
+                                <label>Ваше ім'я *</label>
+                                <input type="text" id="selfRegOwnerName" class="form-input" placeholder="Іван Петренко" required>
+                            </div>
+                            <button onclick="selfRegisterCompany()" class="btn btn-success" style="width:100%;margin-top:0.5rem;" id="selfRegBtn">
+                                <i data-lucide="rocket" class="icon"></i> Створити компанію
+                            </button>
+                        </div>
+                        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+                            <a href="https://alextalko.com" target="_blank" class="btn" style="flex:1;text-align:center;font-size:0.85rem;"><i data-lucide="phone" class="icon icon-sm"></i> Підтримка</a>
+                            <button onclick="logout()" class="btn" style="flex:1;font-size:0.85rem;"><i data-lucide="refresh-cw" class="icon icon-sm"></i> Інший email</button>
+                        </div>
                     </div>
                     
                     <!-- LOGIN FORM -->
@@ -7561,6 +7576,63 @@
             refreshIcons();
         }
 
+        async function selfRegisterCompany() {
+            const user = auth.currentUser;
+            if (!user) { alert('Спочатку увійдіть в акаунт'); return; }
+            
+            const companyName = document.getElementById('selfRegCompanyName')?.value?.trim();
+            const ownerName = document.getElementById('selfRegOwnerName')?.value?.trim();
+            
+            if (!companyName || !ownerName) {
+                alert('Заповніть всі поля');
+                return;
+            }
+            
+            const btn = document.getElementById('selfRegBtn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Створення...'; }
+            
+            try {
+                const companyId = companyName.toLowerCase().replace(/[^a-zа-яіїєґ0-9]/g, '_').substring(0, 30) + '_' + Date.now().toString(36);
+                
+                const batch = db.batch();
+                
+                // 1. Company doc
+                batch.set(db.collection('companies').doc(companyId), {
+                    name: companyName,
+                    ownerName: ownerName,
+                    ownerEmail: user.email.toLowerCase(),
+                    ownerId: user.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    disabled: false
+                });
+                
+                // 2. User in company
+                batch.set(db.collection('companies').doc(companyId).collection('users').doc(user.uid), {
+                    name: ownerName,
+                    email: user.email.toLowerCase(),
+                    role: 'owner',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // 3. Global user mapping
+                batch.set(db.collection('users').doc(user.uid), {
+                    email: user.email.toLowerCase(),
+                    companyId: companyId,
+                    role: 'owner'
+                });
+                
+                await batch.commit();
+                
+                // Reload — onAuthStateChanged знайде companyId і зайде
+                window.location.reload();
+                
+            } catch (error) {
+                console.error('Self registration error:', error);
+                alert('Помилка створення: ' + error.message);
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="rocket" class="icon"></i> Створити компанію'; }
+            }
+        }
+        
         function showNoAccess() {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'none';
@@ -7955,6 +8027,20 @@
                 
                 const companyDoc = await db.collection('companies').doc(companyId).get();
                 const companyData = companyDoc.data();
+                
+                // Перевірка чи компанія заблокована
+                if (companyData?.disabled && !isSuperAdmin) {
+                    document.getElementById('authContainer').style.display = 'flex';
+                    document.getElementById('mainInterface').style.display = 'none';
+                    const authErr = document.getElementById('authError') || document.createElement('p');
+                    authErr.id = 'authError';
+                    authErr.style.cssText = 'color:#dc2626;text-align:center;padding:1rem;font-weight:600;';
+                    authErr.textContent = 'Доступ до цієї компанії заблоковано. Зверніться до адміністратора.';
+                    const authBox = document.querySelector('.auth-box');
+                    if (authBox && !document.getElementById('authError')) authBox.appendChild(authErr);
+                    await auth.signOut();
+                    return;
+                }
                 
                 document.getElementById('currentUserName').textContent = currentUserData.name || user.displayName || user.email;
                 document.getElementById('currentUserRole').textContent = `(${getRoleText(currentUserData.role)})`;
@@ -12057,8 +12143,6 @@
         }
         
         async function toggleMyDayTask(e, id, type, generatedTaskId, currentDone) {
-            console.log('=== toggleMyDayTask CALLED ===');
-            console.log('Params:', { id, type, generatedTaskId, currentDone });
             
             // Haptic feedback
             if (navigator.vibrate) navigator.vibrate(currentDone ? 10 : [10, 50, 10]);
@@ -12082,7 +12166,6 @@
                     // Для регулярних - змінюємо статус згенерованого завдання
                     const todayStr = getLocalDateStr();
                     
-                    console.log('toggleMyDayTask regular:', { id, generatedTaskId, currentDone, todayStr, currentUserId: currentUser.uid });
                     
                     // Спочатку шукаємо завдання для ПОТОЧНОГО користувача
                     let taskToUpdate = null;
@@ -12090,7 +12173,6 @@
                     if (generatedTaskId) {
                         // Перевіряємо чи це завдання дійсно належить поточному користувачу
                         taskToUpdate = tasks.find(t => t.id === generatedTaskId && t.assigneeId === currentUser.uid);
-                        console.log('Found by generatedTaskId:', taskToUpdate ? taskToUpdate.id : 'NOT FOUND');
                     }
                     
                     // Якщо не знайшли по generatedTaskId - шукаємо по regularTaskId
@@ -12100,10 +12182,8 @@
                             t.deadlineDate === todayStr &&
                             t.assigneeId === currentUser.uid
                         );
-                        console.log('Found by regularTaskId:', taskToUpdate ? taskToUpdate.id : 'NOT FOUND');
                     }
                     
-                    console.log('taskToUpdate:', taskToUpdate);
                     
                     if (taskToUpdate) {
                         // Оновлюємо існуюче завдання
@@ -12115,9 +12195,7 @@
                     } else if (!currentDone) {
                         // Завдання не існує - створюємо нове і одразу виконане
                         const rt = regularTasks.find(r => r.id === id);
-                        console.log('Creating new task, rt found:', rt ? rt.title : 'NOT FOUND');
                         if (rt) {
-                            console.log('Creating task with data:', { title: rt.title, assigneeId: currentUser.uid });
                             const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
                                 title: rt.title,
                                 function: rt.function,
@@ -12175,6 +12253,7 @@
                     if (taskToUpdate) {
                         taskToUpdate.status = currentDone ? 'new' : 'done';
                         taskToUpdate.completedAt = currentDone ? null : new Date().toISOString();
+                        if (taskToUpdate.projectId) autoUpdateProjectStatus(taskToUpdate.projectId);
                     }
                 } else {
                     const task = tasks.find(t => t.id === id);
@@ -12182,6 +12261,12 @@
                         const needsReview = !currentDone && shouldSendForReview(task);
                         task.status = currentDone ? 'new' : (needsReview ? 'review' : 'done');
                         task.completedAt = currentDone ? null : new Date().toISOString();
+                        // Автопросування процесу
+                        if (!needsReview && !currentDone) {
+                            advanceProcessIfLinked(task.id);
+                        }
+                        // Автостатус проєкту
+                        if (task.projectId) autoUpdateProjectStatus(task.projectId);
                     }
                 }
                 
@@ -16686,7 +16771,8 @@
                                 <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Створено</th>
                                 <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Юзери</th>
                                 <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Завдання</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;width:60px;"></th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Статус</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;width:80px;"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -16707,7 +16793,7 @@
                         : '-';
                     
                     html += `
-                        <tr style="border-bottom:1px solid #e5e7eb;" id="company-row-${companyId}">
+                        <tr style="border-bottom:1px solid #e5e7eb;${company.disabled ? 'opacity:0.6;background:#fef2f2;' : ''}" id="company-row-${companyId}">
                             <td style="padding:0.75rem;font-weight:600;">${esc(company.name || 'Без назви')}</td>
                             <td style="padding:0.75rem;">${esc(company.ownerName || '-')}</td>
                             <td style="padding:0.75rem;"><code style="background:#f3f4f6;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.8rem;">${esc(company.ownerEmail || '-')}</code></td>
@@ -16719,10 +16805,18 @@
                                 <span style="background:#dcfce7;color:#16a34a;padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;">${tasksSnap.size}</span>
                             </td>
                             <td style="padding:0.75rem;text-align:center;">
+                                <span style="padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;${company.disabled ? 'background:#fee2e2;color:#dc2626;' : 'background:#dcfce7;color:#16a34a;'}">${company.disabled ? 'Заблоковано' : 'Активна'}</span>
+                            </td>
+                            <td style="padding:0.75rem;text-align:center;display:flex;gap:0.25rem;">
+                                <button onclick="toggleCompanyDisabled('${companyId}', ${!!company.disabled})" 
+                                    style="background:${company.disabled ? '#dcfce7' : '#fef3c7'};color:${company.disabled ? '#16a34a' : '#92400e'};border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;"
+                                    title="${company.disabled ? 'Розблокувати' : 'Заблокувати'}">
+                                    ${company.disabled ? '✓' : '⊘'}
+                                </button>
                                 <button onclick="deleteCompany('${companyId}', '${(company.name || '').replace(/'/g, "\\'")}', ${usersSnap.size}, ${tasksSnap.size})" 
-                                    style="background:#fee2e2;color:#dc2626;border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;display:inline-flex;align-items:center;gap:0.25rem;"
+                                    style="background:#fee2e2;color:#dc2626;border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;"
                                     title="Видалити компанію">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                                    ✕
                                 </button>
                             </td>
                         </tr>
@@ -16735,6 +16829,22 @@
             } catch (error) {
                 console.error('Error loading companies:', error);
                 container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:1rem;">Помилка завантаження: ' + error.message + '</p>';
+            }
+        }
+        
+        async function toggleCompanyDisabled(companyId, currentlyDisabled) {
+            if (!isSuperAdmin) return;
+            const newState = !currentlyDisabled;
+            const action = newState ? 'Заблокувати' : 'Розблокувати';
+            if (!confirm(`${action} цю компанію?`)) return;
+            
+            try {
+                await db.collection('companies').doc(companyId).update({ disabled: newState });
+                showToast(`Компанію ${newState ? 'заблоковано' : 'розблоковано'}`, newState ? 'warning' : 'success');
+                loadAdminCompanies();
+            } catch (e) {
+                console.error('Toggle disabled error:', e);
+                alert('Помилка: ' + e.message);
             }
         }
         
