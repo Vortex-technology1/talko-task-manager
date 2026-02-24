@@ -2235,7 +2235,7 @@
             right: 0;
             background: white;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-            z-index: 1000;
+            z-index: 900;
             padding: 0.4rem 0;
             padding-bottom: calc(0.4rem + env(safe-area-inset-bottom));
             border-top: 1px solid #f0f0f0;
@@ -2435,7 +2435,7 @@
                 border: none;
                 box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
                 cursor: pointer;
-                z-index: 999;
+                z-index: 899;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -2597,12 +2597,12 @@
             }
             
             .mobile-filter-btn {
-                flex: 1;
+                flex: 0 0 auto;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 gap: 0.3rem;
-                padding: 0.45rem 0.3rem;
+                padding: 0.45rem 0.5rem;
                 background: #f5f5f5;
                 border: none;
                 border-radius: 8px;
@@ -5453,6 +5453,10 @@
                 <div class="list-container" id="listContainer">
                     <!-- Mobile filter bar -->
                     <div class="mobile-filter-bar" id="mobileFilterBar">
+                        <div style="position:relative;flex:1;display:flex;align-items:center;">
+                            <i data-lucide="search" class="icon" style="width:14px;height:14px;position:absolute;left:10px;color:#9ca3af;pointer-events:none;"></i>
+                            <input type="text" id="mobileTaskSearchInput" placeholder="Пошук завдань..." oninput="document.getElementById('taskSearchInput').value=this.value;debouncedRenderTasks()" style="width:100%;padding:0.5rem 0.5rem 0.5rem 32px;font-size:0.85rem;border:1px solid #e5e7eb;border-radius:10px;outline:none;background:white;" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                        </div>
                         <button class="mobile-filter-btn" onclick="setMobileQuickFilter('my')">
                             <i data-lucide="user" class="icon icon-sm"></i> Мої
                         </button>
@@ -5492,6 +5496,10 @@
                                 <option value="created" data-i18n="createdByMe">Створені мною</option>
                             </select>
                             <span style="width:1px;height:22px;background:#e0e0e0;margin:0 0.15rem;"></span>
+                            <div style="position:relative;display:flex;align-items:center;">
+                                <i data-lucide="search" class="icon" style="width:14px;height:14px;position:absolute;left:8px;color:#9ca3af;pointer-events:none;"></i>
+                                <input type="text" id="taskSearchInput" placeholder="Пошук..." oninput="syncSearchInputs(this);debouncedRenderTasks()" style="padding:0.3rem 0.4rem 0.3rem 28px;font-size:0.8rem;border:1px solid #e5e7eb;border-radius:6px;width:130px;outline:none;transition:all 0.2s;" onfocus="this.style.borderColor='#22c55e';this.style.width='180px'" onblur="this.style.borderColor='#e5e7eb';if(!this.value)this.style.width='130px'">
+                            </div>
                             <select class="filter-select" id="dateFilter" onchange="handleDateFilter()" style="font-size:0.8rem;padding:0.3rem 0.4rem;">
                                 <option value="" data-i18n="allDates">Дати</option>
                                 <option value="today" data-i18n="today">Сьогодні</option>
@@ -10386,6 +10394,7 @@
             dd.style.width = '';
             dd.style.zIndex = '200';
             dd.style.maxHeight = '';
+            dd.style.marginTop = '4px';
         }
         
         function toggleUserMultiSelect(uid) {
@@ -10394,49 +10403,63 @@
             const dd = wrap.querySelector('.user-ms-dropdown');
             const toggle = wrap.querySelector('.user-ms-toggle');
             const isOpen = dd.style.display !== 'none';
+            const isMobile = window.innerWidth < 768;
             
             // Close all other dropdowns
             document.querySelectorAll('.user-ms-dropdown').forEach(d => { d.style.display = 'none'; resetDropdownPosition(d); });
             document.querySelectorAll('.user-ms-toggle').forEach(t => t.style.borderColor = '#d1d5db');
             
             if (!isOpen) {
-                // Position fixed to avoid overflow clipping
-                const rect = toggle.getBoundingClientRect();
-                const spaceBelow = window.innerHeight - rect.bottom;
-                const ddHeight = 240;
-                
-                dd.style.position = 'fixed';
-                dd.style.left = rect.left + 'px';
-                dd.style.width = rect.width + 'px';
-                dd.style.zIndex = '9999';
-                
-                if (spaceBelow >= ddHeight || spaceBelow >= rect.top) {
-                    dd.style.top = rect.bottom + 4 + 'px';
-                    dd.style.bottom = '';
-                    dd.style.maxHeight = Math.min(ddHeight, spaceBelow - 8) + 'px';
-                } else {
-                    dd.style.bottom = (window.innerHeight - rect.top + 4) + 'px';
+                if (isMobile) {
+                    // Mobile: inline — просто розгортаємо під toggle (position:relative)
+                    dd.style.position = 'relative';
                     dd.style.top = '';
-                    dd.style.maxHeight = Math.min(ddHeight, rect.top - 8) + 'px';
+                    dd.style.left = '';
+                    dd.style.right = '';
+                    dd.style.bottom = '';
+                    dd.style.width = '100%';
+                    dd.style.zIndex = '';
+                    dd.style.maxHeight = '200px';
+                    dd.style.marginTop = '4px';
+                } else {
+                    // Desktop: fixed to escape overflow clipping
+                    const rect = toggle.getBoundingClientRect();
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    const ddHeight = 240;
+                    
+                    dd.style.position = 'fixed';
+                    dd.style.left = rect.left + 'px';
+                    dd.style.width = rect.width + 'px';
+                    dd.style.zIndex = '9999';
+                    dd.style.marginTop = '';
+                    
+                    if (spaceBelow >= ddHeight || spaceBelow >= rect.top) {
+                        dd.style.top = rect.bottom + 4 + 'px';
+                        dd.style.bottom = '';
+                        dd.style.maxHeight = Math.min(ddHeight, spaceBelow - 8) + 'px';
+                    } else {
+                        dd.style.bottom = (window.innerHeight - rect.top + 4) + 'px';
+                        dd.style.top = '';
+                        dd.style.maxHeight = Math.min(ddHeight, rect.top - 8) + 'px';
+                    }
                 }
                 
                 dd.style.display = 'block';
                 toggle.style.borderColor = '#22c55e';
                 const inp = dd.querySelector('input[type="text"]');
-                if (inp) setTimeout(() => inp.focus(), 50);
+                if (inp && !isMobile) setTimeout(() => inp.focus(), 50);
                 
-                // Close on outside click or scroll
+                // Close on outside click or scroll (desktop only)
                 const closeHandler = (e) => {
                     if (!wrap.contains(e.target) && !dd.contains(e.target)) {
                         dd.style.display = 'none';
                         resetDropdownPosition(dd);
                         toggle.style.borderColor = '#d1d5db';
                         document.removeEventListener('click', closeHandler);
-                        document.removeEventListener('scroll', scrollHandler, true);
+                        if (!isMobile) document.removeEventListener('scroll', scrollHandler, true);
                     }
                 };
                 const scrollHandler = (e) => {
-                    // Ігноруємо scroll всередині самого dropdown
                     if (dd.contains(e.target)) return;
                     dd.style.display = 'none';
                     resetDropdownPosition(dd);
@@ -10446,7 +10469,7 @@
                 };
                 setTimeout(() => {
                     document.addEventListener('click', closeHandler);
-                    document.addEventListener('scroll', scrollHandler, true);
+                    if (!isMobile) document.addEventListener('scroll', scrollHandler, true);
                 }, 10);
             }
         }
@@ -11939,6 +11962,7 @@
             
             container.innerHTML = html;
             lucide.createIcons();
+            updateOverdueBadge();
         }
         
         function renderMyDayItem(task) {
@@ -12280,6 +12304,7 @@
             const af = document.getElementById('assigneeFilter')?.value;
             const df = document.getElementById('dateFilter')?.value;
             const tf = document.getElementById('taskTypeFilter')?.value;
+            const searchQuery = (document.getElementById('taskSearchInput')?.value || '').toLowerCase().trim();
             
             const today = getLocalDateStr();
             
@@ -12291,6 +12316,9 @@
                 if (af && task.assigneeId !== af) return false;
                 if (tf === 'my' && task.assigneeId !== currentUser.uid) return false;
                 if (tf === 'created' && task.creatorId !== currentUser.uid) return false;
+                if (searchQuery && !(task.title || '').toLowerCase().includes(searchQuery) && 
+                    !(task.description || '').toLowerCase().includes(searchQuery) &&
+                    !(task.assigneeName || '').toLowerCase().includes(searchQuery)) return false;
                 
                 const taskDate = parseDeadline(task).date;
                 
@@ -12401,7 +12429,7 @@
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td>${esc(task.creatorName) || '-'}</td>
                         <td class="deadline-text ${deadlineClass}">${taskDeadline ? formatDateShort(taskDeadline) : '-'} ${taskTime || ''}</td>
-                        <td><span class="status-badge status-${task.status}">${st[task.status] || task.status}</span></td>
+                        <td><span class="status-badge status-${task.status}" style="cursor:pointer;" onclick="cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status}</span></td>
                         <td>${esc(task.function) || '-'}</td>
                         <td>
                             <div class="action-btns">
@@ -12528,7 +12556,7 @@
                                 <span>${esc(task.assigneeName || '')}</span>
                                 ${task.status !== 'done' ? `
                                     <span class="mobile-task-meta-sep">•</span>
-                                    <span class="status-badge status-${task.status}" style="font-size:0.7rem;padding:0.1rem 0.4rem;">${st[task.status] || task.status}</span>
+                                    <span class="status-badge status-${task.status}" style="font-size:0.7rem;padding:0.1rem 0.4rem;cursor:pointer;" onclick="event.stopPropagation();cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status}</span>
                                 ` : ''}
                                 ${task.function ? `<span class="mobile-task-meta-sep">•</span><span>${esc(task.function)}</span>` : ''}
                             </div>
@@ -12599,6 +12627,7 @@
             initSwipeHandlers();
             initTableColumnResize();
             restoreColumnWidths();
+            updateOverdueBadge();
             
             // Infinite scroll для автопідвантаження
             setTimeout(initInfiniteScroll, 100);
@@ -12846,6 +12875,10 @@
             setStatusFilterFromArray([]);
             document.getElementById('functionFilter').value = '';
             document.getElementById('assigneeFilter').value = '';
+            const searchInput = document.getElementById('taskSearchInput');
+            if (searchInput) { searchInput.value = ''; searchInput.style.width = '130px'; }
+            const mobileSearch = document.getElementById('mobileTaskSearchInput');
+            if (mobileSearch) mobileSearch.value = '';
             document.getElementById('customDateRange').style.display = 'none';
             document.getElementById('dateFrom').value = '';
             document.getElementById('dateTo').value = '';
@@ -12938,6 +12971,58 @@
             link.href = URL.createObjectURL(blob);
             link.download = 'tasks_' + getLocalDateStr() + '.xlsx';
             link.click();
+        }
+        
+        // Inline status cycle: new → progress → done (або review)
+        async function cycleTaskStatus(taskId, e) {
+            e.stopPropagation();
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex < 0) return;
+            const task = tasks[taskIndex];
+            
+            // Визначаємо наступний статус
+            let newStatus;
+            if (task.status === 'new') newStatus = 'progress';
+            else if (task.status === 'progress') newStatus = shouldSendForReview(task) ? 'review' : 'done';
+            else if (task.status === 'review') {
+                // Review → викликаємо повноцінний accept (з reviewedAt/reviewedBy)
+                acceptReviewTask(taskId);
+                return;
+            }
+            else if (task.status === 'done') newStatus = 'progress';
+            else return;
+            
+            const originalTask = { ...tasks[taskIndex] };
+            
+            tasks[taskIndex].status = newStatus;
+            if (newStatus === 'done') tasks[taskIndex].completedAt = new Date().toISOString();
+            else tasks[taskIndex].completedAt = null;
+            
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
+            
+            try {
+                const update = { status: newStatus };
+                if (newStatus === 'done') update.completedAt = firebase.firestore.FieldValue.serverTimestamp();
+                else update.completedAt = null;
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(update);
+                if (newStatus === 'done') advanceProcessIfLinked(taskId);
+            } catch(err) {
+                tasks[taskIndex] = originalTask;
+                renderMyDay();
+                if (currentCalendarView === 'list') renderTasks();
+                else renderCalendar();
+                showToast('Помилка: ' + err.message, 'error');
+            }
+        }
+        
+        // Sync search inputs (desktop ↔ mobile)
+        function syncSearchInputs(source) {
+            const desktop = document.getElementById('taskSearchInput');
+            const mobile = document.getElementById('mobileTaskSearchInput');
+            if (source === desktop && mobile) mobile.value = desktop.value;
+            else if (source === mobile && desktop) desktop.value = mobile.value;
         }
         
         function formatDateShort(dateStr) {
@@ -16711,6 +16796,11 @@
             // Update FAB
             updateFab(tabName);
             
+            // Scroll to top при переключенні вкладок
+            window.scrollTo(0, 0);
+            const mainEl = document.getElementById('mainInterface');
+            if (mainEl) mainEl.scrollTop = 0;
+            
             switch (tabName) {
                 case 'myday': renderMyDay(); break;
                 case 'tasks': renderTasks(); break;
@@ -16988,10 +17078,60 @@
         }
 
         function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
             editingId = null;
             editingUserId = null;
+            checkModalState();
         }
+        
+        function checkModalState() {
+            const anyOpen = Array.from(document.querySelectorAll('.modal')).some(m => m.style.display === 'block');
+            if (anyOpen) {
+                document.body.style.overflow = 'hidden';
+                if (window.innerWidth < 768) {
+                    const bn = document.getElementById('bottomNav');
+                    if (bn) bn.style.display = 'none';
+                    const fab = document.getElementById('fabAdd');
+                    if (fab) fab.style.display = 'none';
+                }
+            } else {
+                document.body.style.overflow = '';
+                if (window.innerWidth < 768) {
+                    const bn = document.getElementById('bottomNav');
+                    if (bn) bn.style.display = '';
+                    const fab = document.getElementById('fabAdd');
+                    if (fab) fab.style.display = '';
+                }
+            }
+        }
+        
+        // Overdue badge
+        function updateOverdueBadge() {
+            const badge = document.getElementById('overdueNavBadge');
+            if (!badge) return;
+            const today = getLocalDateStr();
+            const overdue = tasks.filter(t => {
+                if (!isTaskVisibleToUser(t)) return false;
+                if (t.status === 'done') return false;
+                const d = parseDeadline(t).date;
+                return d && d < today;
+            }).length;
+            if (overdue > 0) {
+                badge.textContent = overdue > 99 ? '99+' : overdue;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+        
+        // Auto body-lock: спостерігаємо за зміною display на модалках
+        const _modalObserver = new MutationObserver(() => checkModalState());
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.modal').forEach(m => {
+                _modalObserver.observe(m, { attributes: true, attributeFilter: ['style'] });
+            });
+        });
 
         window.onclick = function(e) {
             // Форми з даними НЕ закриваються по кліку на overlay — тільки хрестиком
@@ -18700,7 +18840,7 @@
         }
         
         function closeFilterModal() {
-            document.getElementById('filterModal').style.display = 'none';
+            closeModal('filterModal');
         }
         
         function selectFilterChip(chip, category) {
@@ -19181,14 +19321,18 @@
             // Escape - закрити модалку
             if (e.key === 'Escape') {
                 const modals = document.querySelectorAll('.modal');
+                let closed = false;
                 modals.forEach(modal => {
                     if (modal.style.display === 'block') {
-                        modal.style.display = 'none';
-                        editingId = null;
+                        closeModal(modal.id);
+                        closed = true;
                     }
                 });
                 // Закрити quick menu
                 closeTaskQuickMenu();
+                // Закрити user-multiselect dropdown
+                document.querySelectorAll('.user-ms-dropdown').forEach(d => { d.style.display = 'none'; resetDropdownPosition(d); });
+                document.querySelectorAll('.user-ms-toggle').forEach(t => t.style.borderColor = '#d1d5db');
                 return;
             }
             
@@ -19212,9 +19356,10 @@
                         e.preventDefault();
                         openTaskModal();
                         break;
-                    case 'k': // Пошук (для майбутнього)
+                    case 'k': // Пошук
                         e.preventDefault();
-                        // TODO: відкрити пошук
+                        const searchInp = document.getElementById('taskSearchInput');
+                        if (searchInp) { switchTab('tasks'); setTimeout(() => searchInp.focus(), 100); }
                         break;
                     case 's': // Зберегти (prevent default browser save)
                         e.preventDefault();
@@ -19229,19 +19374,24 @@
             
             switch(e.key) {
                 case '1':
-                    showTab('myDayTab');
+                    switchTab('myday');
                     break;
                 case '2':
-                    showTab('tasksTab');
+                    switchTab('tasks');
                     break;
                 case '3':
-                    showTab('controlTab');
+                    switchTab('control');
                     break;
                 case '4':
-                    showTab('regularTab');
+                    switchTab('regular');
                     break;
                 case '5':
-                    showTab('functionsTab');
+                    switchTab('functions');
+                    break;
+                case '/':
+                    e.preventDefault();
+                    const si = document.getElementById('taskSearchInput');
+                    if (si) { switchTab('tasks'); setTimeout(() => si.focus(), 100); }
                     break;
                 case '?':
                     // Показати shortcuts help
@@ -19249,6 +19399,7 @@
                     
 Escape - закрити модалку
 Ctrl+N - нове завдання
+Ctrl+K або / - пошук завдань
 1-5 - переключити вкладки
 ? - показати цю довідку`);
                     break;
@@ -19810,7 +19961,7 @@ Ctrl+N - нове завдання
     }
     
     function closeCompletionReport(proceed) {
-        document.getElementById('completionReportModal').style.display = 'none';
+        closeModal('completionReportModal');
         if (!proceed && completionReportCallback) {
             // Cancelled — rollback optimistic update
             completingTaskIds.delete(completionReportTaskId);
@@ -19852,7 +20003,7 @@ Ctrl+N - нове завдання
             }
         }
         
-        document.getElementById('completionReportModal').style.display = 'none';
+        closeModal('completionReportModal');
         
         // Proceed with actual completion
         if (callback) callback();
@@ -20236,7 +20387,7 @@ Ctrl+N - нове завдання
     }
     
     function closeFocusMode() {
-        document.getElementById('focusModal').style.display = 'none';
+        closeModal('focusModal');
         document.body.style.overflow = '';
         stopFocusTimer();
         renderMyDay();
@@ -20546,8 +20697,9 @@ Ctrl+N - нове завдання
                 <i data-lucide="sun" class="icon"></i>
                 <span data-i18n="tabMyDay">Мій день</span>
             </button>
-            <button class="bottom-nav-btn" onclick="switchTab('tasks')" data-tab="tasks">
+            <button class="bottom-nav-btn" onclick="switchTab('tasks')" data-tab="tasks" style="position:relative;">
                 <i data-lucide="clipboard-list" class="icon"></i>
+                <span id="overdueNavBadge" style="display:none;position:absolute;top:2px;right:12px;background:#ef4444;color:white;font-size:0.55rem;font-weight:700;min-width:16px;height:16px;border-radius:8px;align-items:center;justify-content:center;padding:0 4px;line-height:1;"></span>
                 <span data-i18n="tabTasks">Завдання</span>
             </button>
             <button class="bottom-nav-btn" onclick="switchTab('control')" data-tab="control">
