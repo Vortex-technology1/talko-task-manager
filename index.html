@@ -9287,21 +9287,47 @@
             const container = document.getElementById('taskNotifyUsers');
             if (!container) return;
             
-            // Сортуємо: спочатку owner/manager, потім інші
             const sortedUsers = [...users].sort((a, b) => {
                 const roleOrder = { owner: 0, manager: 1, employee: 2 };
                 return (roleOrder[a.role] || 2) - (roleOrder[b.role] || 2);
             });
             
-            container.innerHTML = sortedUsers.map(user => {
-                const roleLabel = user.role === 'owner' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>' : (user.role === 'manager' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' : '');
-                return `
-                    <label class="notify-user-checkbox" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;background:white;border:1px solid #e5e7eb;border-radius:20px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
-                        <input type="checkbox" name="notifyUser" value="${esc(user.id)}" style="margin:0;" onchange="updateNotifyCheckboxStyle(this)">
-                        <span>${roleLabel} ${esc(user.name || user.email)}</span>
-                    </label>
-                `;
-            }).join('');
+            const uid = 'taskNotifyUsers_ms';
+            container.innerHTML = `
+                <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
+                    <div class="user-ms-toggle" onclick="toggleUserMultiSelect('${uid}')" 
+                         style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:white;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;min-height:38px;transition:border-color 0.2s;">
+                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">Оберіть...</span>
+                        <span style="color:#9ca3af;margin-left:0.5rem;display:flex;align-items:center;gap:0.3rem;">
+                            <span style="background:#22c55e;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;font-weight:600;display:none;">0</span>
+                            <i data-lucide="chevron-down" class="icon" style="width:14px;height:14px;"></i>
+                        </span>
+                    </div>
+                    <div class="user-ms-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200;max-height:240px;overflow:hidden;">
+                        <div style="padding:0.4rem;border-bottom:1px solid #f3f4f6;">
+                            <input type="text" placeholder="Пошук..." 
+                                   oninput="filterUserMultiSelect('${uid}', this.value)"
+                                   style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;outline:none;" 
+                                   onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                        </div>
+                        <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
+                            ${sortedUsers.map(user => {
+                                const roleIcon = user.role === 'owner' ? '👑 ' : user.role === 'manager' ? '⭐ ' : '';
+                                return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
+                                                style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;" 
+                                                onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
+                                                onmouseout="if(!this.querySelector('input').checked)this.style.background=''">
+                                    <input type="checkbox" name="notifyUser" value="${esc(user.id)}" 
+                                           style="width:16px;height:16px;accent-color:#22c55e;flex-shrink:0;" 
+                                           onchange="onUserMultiSelectChange('${uid}','taskNotifyUsers')">
+                                    <span>${roleIcon}${esc(user.name || user.email)}</span>
+                                </label>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            refreshIcons();
         }
         
         function updateNotifyCheckboxStyle(checkbox) {
@@ -9319,17 +9345,11 @@
             
             container.querySelectorAll('input[name="notifyUser"]').forEach(cb => {
                 cb.checked = userIds.includes(cb.value);
-                const label = cb.closest('.notify-user-checkbox');
-                if (label) {
-                    if (cb.checked) {
-                        label.style.background = '#f0fdf4';
-                        label.style.borderColor = '#22c55e';
-                    } else {
-                        label.style.background = 'white';
-                        label.style.borderColor = '#e5e7eb';
-                    }
-                }
+                const item = cb.closest('.user-ms-item');
+                if (item) item.style.background = cb.checked ? '#f0fdf4' : '';
             });
+            // Update label
+            onUserMultiSelectChange('taskNotifyUsers_ms', 'taskNotifyUsers');
         }
         
         // Отримуємо вибраних користувачів
@@ -9370,18 +9390,38 @@
             const container = document.getElementById('taskNotifyReminder');
             if (!container) return;
             
-            // Тільки owner/manager можуть контролювати
             const managers = users.filter(u => u.role === 'owner' || u.role === 'manager');
+            const uid = 'taskNotifyReminder_ms';
             
-            container.innerHTML = managers.map(user => {
-                const roleLabel = user.role === 'owner' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="1" style="vertical-align:-2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
-                return `
-                    <label class="notify-user-checkbox" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;background:white;border:1px solid #e5e7eb;border-radius:20px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;">
-                        <input type="checkbox" name="notifyReminder" value="${esc(user.id)}" style="margin:0;" onchange="updateNotifyCheckboxStyle(this)">
-                        <span>${roleLabel} ${esc(user.name || user.email)}</span>
-                    </label>
-                `;
-            }).join('');
+            container.innerHTML = `
+                <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
+                    <div class="user-ms-toggle" onclick="toggleUserMultiSelect('${uid}')" 
+                         style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:white;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;min-height:38px;transition:border-color 0.2s;">
+                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">Оберіть...</span>
+                        <span style="color:#9ca3af;margin-left:0.5rem;display:flex;align-items:center;gap:0.3rem;">
+                            <span style="background:#22c55e;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;font-weight:600;display:none;">0</span>
+                            <i data-lucide="chevron-down" class="icon" style="width:14px;height:14px;"></i>
+                        </span>
+                    </div>
+                    <div class="user-ms-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200;max-height:200px;overflow:hidden;">
+                        <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
+                            ${managers.map(user => {
+                                const roleIcon = user.role === 'owner' ? '👑 ' : '⭐ ';
+                                return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
+                                                style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;" 
+                                                onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
+                                                onmouseout="if(!this.querySelector('input').checked)this.style.background=''">
+                                    <input type="checkbox" name="notifyReminder" value="${esc(user.id)}" 
+                                           style="width:16px;height:16px;accent-color:#22c55e;flex-shrink:0;" 
+                                           onchange="onUserMultiSelectChange('${uid}','taskNotifyReminder')">
+                                    <span>${roleIcon}${esc(user.name || user.email)}</span>
+                                </label>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            refreshIcons();
         }
         
         // Встановлюємо чекбокси контролю
@@ -9391,17 +9431,10 @@
             
             container.querySelectorAll('input[name="notifyReminder"]').forEach(cb => {
                 cb.checked = userIds.includes(cb.value);
-                const label = cb.closest('.notify-user-checkbox');
-                if (label) {
-                    if (cb.checked) {
-                        label.style.background = '#f0fdf4';
-                        label.style.borderColor = '#22c55e';
-                    } else {
-                        label.style.background = 'white';
-                        label.style.borderColor = '#e5e7eb';
-                    }
-                }
+                const item = cb.closest('.user-ms-item');
+                if (item) item.style.background = cb.checked ? '#f0fdf4' : '';
             });
+            onUserMultiSelectChange('taskNotifyReminder_ms', 'taskNotifyReminder');
         }
         
         // Отримуємо вибраних для контролю
@@ -10296,14 +10329,117 @@
         function renderUserCheckboxes(containerId, selectedIds = []) {
             const container = document.getElementById(containerId);
             if (!container) return;
-            container.innerHTML = users.map(user => {
-                const checked = selectedIds.includes(user.id) ? 'checked' : '';
-                return `<label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding:0.3rem 0.6rem;background:white;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;${checked ? 'border-color:var(--primary);background:#f0fdf4;' : ''}">
-                    <input type="checkbox" value="${user.id}" ${checked} style="width:15px;height:15px;accent-color:var(--primary);" 
-                           onchange="this.parentElement.style.borderColor=this.checked?'var(--primary)':'#e5e7eb';this.parentElement.style.background=this.checked?'#f0fdf4':'white';">
-                    ${esc(user.name || user.email)}
-                </label>`;
-            }).join('');
+            
+            const uid = containerId + '_ms';
+            const selectedSet = new Set(selectedIds);
+            
+            // Count selected
+            const selCount = selectedIds.length;
+            const selNames = users.filter(u => selectedSet.has(u.id)).map(u => u.name || u.email).slice(0, 3).join(', ');
+            const moreText = selCount > 3 ? ` +${selCount - 3}` : '';
+            const btnLabel = selCount > 0 ? `${selNames}${moreText}` : 'Оберіть...';
+            
+            container.innerHTML = `
+                <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
+                    <div class="user-ms-toggle" onclick="toggleUserMultiSelect('${uid}')" 
+                         style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:white;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;min-height:38px;transition:border-color 0.2s;">
+                        <span class="user-ms-label" style="color:${selCount ? '#1a1a1a' : '#9ca3af'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${esc(btnLabel)}</span>
+                        <span style="color:#9ca3af;margin-left:0.5rem;display:flex;align-items:center;gap:0.3rem;">
+                            ${selCount ? '<span style="background:#22c55e;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;font-weight:600;">'+selCount+'</span>' : ''}
+                            <i data-lucide="chevron-down" class="icon" style="width:14px;height:14px;"></i>
+                        </span>
+                    </div>
+                    <div class="user-ms-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200;max-height:240px;overflow:hidden;">
+                        <div style="padding:0.4rem;border-bottom:1px solid #f3f4f6;">
+                            <input type="text" placeholder="Пошук..." 
+                                   oninput="filterUserMultiSelect('${uid}', this.value)"
+                                   style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;outline:none;" 
+                                   onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                        </div>
+                        <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
+                            ${users.map(user => {
+                                const checked = selectedSet.has(user.id);
+                                const roleIcon = user.role === 'owner' ? '👑 ' : user.role === 'manager' ? '⭐ ' : '';
+                                return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
+                                                style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;${checked ? 'background:#f0fdf4;' : ''}" 
+                                                onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
+                                                onmouseout="if(!this.querySelector('input').checked)this.style.background=''">
+                                    <input type="checkbox" value="${user.id}" ${checked ? 'checked' : ''} 
+                                           style="width:16px;height:16px;accent-color:#22c55e;flex-shrink:0;" 
+                                           onchange="onUserMultiSelectChange('${uid}', '${containerId}')">
+                                    <span>${roleIcon}${esc(user.name || user.email)}</span>
+                                </label>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            refreshIcons();
+        }
+        
+        function toggleUserMultiSelect(uid) {
+            const wrap = document.getElementById(uid);
+            if (!wrap) return;
+            const dd = wrap.querySelector('.user-ms-dropdown');
+            const isOpen = dd.style.display !== 'none';
+            // Close all other dropdowns
+            document.querySelectorAll('.user-ms-dropdown').forEach(d => d.style.display = 'none');
+            document.querySelectorAll('.user-ms-toggle').forEach(t => t.style.borderColor = '#d1d5db');
+            if (!isOpen) {
+                dd.style.display = 'block';
+                wrap.querySelector('.user-ms-toggle').style.borderColor = '#22c55e';
+                const inp = dd.querySelector('input[type="text"]');
+                if (inp) setTimeout(() => inp.focus(), 50);
+                // Close on outside click
+                setTimeout(() => document.addEventListener('click', function closeMS(e) {
+                    if (!wrap.contains(e.target)) {
+                        dd.style.display = 'none';
+                        wrap.querySelector('.user-ms-toggle').style.borderColor = '#d1d5db';
+                        document.removeEventListener('click', closeMS);
+                    }
+                }), 10);
+            }
+        }
+        
+        function filterUserMultiSelect(uid, query) {
+            const wrap = document.getElementById(uid);
+            if (!wrap) return;
+            const q = query.toLowerCase();
+            wrap.querySelectorAll('.user-ms-item').forEach(item => {
+                item.style.display = item.dataset.name.includes(q) ? 'flex' : 'none';
+            });
+        }
+        
+        function onUserMultiSelectChange(uid, containerId) {
+            const wrap = document.getElementById(uid);
+            if (!wrap) return;
+            // Update toggle label
+            const checked = Array.from(wrap.querySelectorAll('.user-ms-item input:checked'));
+            const names = checked.map(cb => {
+                const label = cb.closest('.user-ms-item');
+                return label ? label.querySelector('span').textContent.trim() : '';
+            });
+            const count = checked.length;
+            const labelEl = wrap.querySelector('.user-ms-label');
+            if (count === 0) {
+                labelEl.textContent = 'Оберіть...';
+                labelEl.style.color = '#9ca3af';
+            } else {
+                labelEl.textContent = names.slice(0, 3).join(', ') + (count > 3 ? ` +${count - 3}` : '');
+                labelEl.style.color = '#1a1a1a';
+            }
+            // Update counter badge
+            const badge = wrap.querySelector('.user-ms-toggle');
+            const existingBadge = badge.querySelector('span[style*="background:#22c55e"]');
+            if (existingBadge) {
+                if (count > 0) { existingBadge.textContent = count; existingBadge.style.display = ''; }
+                else existingBadge.style.display = 'none';
+            }
+            // Update item bg
+            wrap.querySelectorAll('.user-ms-item').forEach(item => {
+                const cb = item.querySelector('input');
+                item.style.background = cb.checked ? '#f0fdf4' : '';
+            });
         }
         
         function getSelectedUsersFromCheckboxes(containerId) {
