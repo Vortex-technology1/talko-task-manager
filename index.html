@@ -5467,23 +5467,23 @@
                     
                     <div class="controls">
                         <div class="controls-row">
-                            <button class="btn btn-success" onclick="openTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addTask">Додати завдання</span></button>
-                            <button class="btn" style="background:#2ecc71;" onclick="exportTasksCSV()"><i data-lucide="download" class="icon"></i> Експорт CSV</button>
+                            <button class="btn btn-success" onclick="openTaskModal()"><i data-lucide="plus" class="icon"></i> <span data-i18n="addTask">Додати</span></button>
+                            <button class="btn" style="background:#2ecc71;" onclick="exportTasksCSV()"><i data-lucide="download" class="icon"></i> CSV</button>
                             <button class="btn" id="archiveToggleBtn" onclick="toggleArchiveView()" style="background:#6b7280;"><i data-lucide="archive" class="icon"></i> <span data-i18n="archive">Архів</span></button>
                         </div>
-                        <div class="filters-row">
-                            <div class="task-type-tabs" style="display:flex;gap:2px;background:#e5e7eb;padding:2px;border-radius:10px;margin-right:0.5rem;">
-                                <button class="task-type-tab active" data-value="" onclick="setTaskTypeFilter(this)" style="padding:0.4rem 0.85rem;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;background:#22c55e;color:white;white-space:nowrap;transition:all 0.2s;" data-i18n="allTasks">Всі</button>
-                                <button class="task-type-tab" data-value="my" onclick="setTaskTypeFilter(this)" style="padding:0.4rem 0.85rem;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:0.3rem;"><i data-lucide="user" class="icon" style="width:14px;height:14px;"></i> <span data-i18n="myTasks">Мої</span></button>
-                                <button class="task-type-tab" data-value="created" onclick="setTaskTypeFilter(this)" style="padding:0.4rem 0.85rem;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.2s;" data-i18n="createdByMe">Створені</button>
+                        <div class="filters-row" style="display:flex;flex-wrap:wrap;gap:0.4rem;align-items:center;padding:0.6rem 1rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
+                            <div class="task-type-tabs" style="display:flex;gap:1px;background:#e5e7eb;padding:2px;border-radius:8px;">
+                                <button class="task-type-tab active" data-value="" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.65rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;background:#22c55e;color:white;white-space:nowrap;transition:all 0.15s;">Всі</button>
+                                <button class="task-type-tab" data-value="my" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.65rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:0.2rem;"><i data-lucide="user" class="icon" style="width:12px;height:12px;"></i> Мої</button>
+                                <button class="task-type-tab" data-value="created" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.65rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;">Створені</button>
                             </div>
                             <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()" style="display:none;">
                                 <option value="" data-i18n="allTasks">Всі завдання</option>
                                 <option value="my" data-i18n="myTasks">Мої завдання</option>
                                 <option value="created" data-i18n="createdByMe">Створені мною</option>
                             </select>
-                            <button class="btn btn-clear" onclick="clearTaskFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
-                            <select class="filter-select" id="dateFilter" onchange="handleDateFilter()">
+                            <span style="width:1px;height:20px;background:#e0e0e0;"></span>
+                            <select class="filter-select" id="dateFilter" onchange="handleDateFilter()" style="font-size:0.8rem;padding:0.3rem 0.5rem;">
                                 <option value="" data-i18n="allDates">Всі дати</option>
                                 <option value="today" data-i18n="today">Сьогодні</option>
                                 <option value="week" data-i18n="thisWeek">Цей тиждень</option>
@@ -5492,13 +5492,13 @@
                                 <option value="custom" data-i18n="customPeriod">Обрати період</option>
                             </select>
                             <div id="customDateRange" style="display:none;gap:0.5rem;align-items:center;">
-                                <input type="date" id="dateFrom" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
+                                <input type="date" id="dateFrom" class="form-input" style="width:auto;padding:0.3rem;" onchange="renderTasks()">
                                 <span>—</span>
-                                <input type="date" id="dateTo" class="form-input" style="width:auto;padding:0.4rem;" onchange="renderTasks()">
+                                <input type="date" id="dateTo" class="form-input" style="width:auto;padding:0.3rem;" onchange="renderTasks()">
                             </div>
                             <div class="status-multiselect" id="statusFilterMulti">
                                 <div class="status-multiselect-toggle" onclick="toggleStatusDropdown(event)">
-                                    <span class="status-multiselect-label" id="statusFilterLabel" data-i18n="statuses">Статуси</span>
+                                    <span class="status-multiselect-label" id="statusFilterLabel" data-i18n="statuses" style="font-size:0.8rem;">Статуси</span>
                                     <i data-lucide="chevron-down" class="icon icon-sm status-multiselect-arrow"></i>
                                 </div>
                                 <div class="status-multiselect-dropdown" id="statusDropdown">
@@ -5512,10 +5512,12 @@
                                 </div>
                             </div>
                             <input type="hidden" id="statusFilter" value="">
-                            <select class="filter-select" id="functionFilter" onchange="renderTasks()"><option value="" data-i18n="functions">Функції</option></select>
-                            <select class="filter-select" id="assigneeFilter" onchange="renderTasks()"><option value="" data-i18n="assignees">Виконавці</option></select>
-                            <button id="hideCompletedBtn" class="btn btn-clear" onclick="toggleHideCompleted()" style="white-space:nowrap;">
-                                <i data-lucide="eye-off" class="icon"></i> <span data-i18n="hideCompleted">${currentLang === 'ua' ? 'Приховати виконані' : 'Скрыть выполненные'}</span>
+                            <select class="filter-select" id="functionFilter" onchange="renderTasks()" style="font-size:0.8rem;padding:0.3rem 0.5rem;"><option value="" data-i18n="functions">Функції</option></select>
+                            <select class="filter-select" id="assigneeFilter" onchange="renderTasks()" style="font-size:0.8rem;padding:0.3rem 0.5rem;"><option value="" data-i18n="assignees">Виконавці</option></select>
+                            <span style="width:1px;height:20px;background:#e0e0e0;"></span>
+                            <button class="btn btn-clear" onclick="clearTaskFilters()" style="padding:0.3rem 0.5rem;font-size:0.78rem;"><i data-lucide="x" class="icon" style="width:12px;height:12px;"></i> Скинути</button>
+                            <button id="hideCompletedBtn" class="btn btn-clear" onclick="toggleHideCompleted()" style="white-space:nowrap;padding:0.3rem 0.5rem;font-size:0.78rem;">
+                                <i data-lucide="eye-off" class="icon" style="width:12px;height:12px;"></i> <span data-i18n="hideCompleted">Сховати виконані</span>
                             </button>
                         </div>
                     </div>
@@ -11275,6 +11277,12 @@
             // Load saved view preference
             const savedView = localStorage.getItem('calendarView') || 'day';
             setCalendarView(savedView);
+            
+            // Гарантія: при list view calendarFiltersRow прихований
+            if (savedView === 'list') {
+                const cfr = document.getElementById('calendarFiltersRow');
+                if (cfr) cfr.style.display = 'none';
+            }
             
             // Generate time slots
             renderCalendar();
