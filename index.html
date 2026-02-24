@@ -5380,7 +5380,7 @@
                         </button>
                     </div>
                     
-                    <div class="calendar-title" id="calendarTitle">Грудень 2024</div>
+                    <div class="calendar-title" id="calendarTitle"></div>
                     
                     <button class="btn btn-success" onclick="openTaskModal()">
                         <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
@@ -6170,6 +6170,19 @@
                                 <span data-i18n="notifyOnComplete">Сповістити про виконання</span>
                             </label>
                             <div id="taskNotifyUsers" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f9fafb;border-radius:8px;max-height:150px;overflow-y:auto;"></div>
+                        </div>
+                    </div>
+                    <div id="taskReviewActions" style="display:none;padding:0.75rem 1rem;margin:0.5rem 0;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:2px solid #22c55e;border-radius:12px;">
+                        <div style="font-size:0.85rem;font-weight:600;color:#16a34a;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;">
+                            <i data-lucide="shield-check" class="icon icon-sm"></i> Завдання на перевірці
+                        </div>
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                            <button type="button" class="btn btn-success" id="taskReviewAcceptBtn" style="flex:1;min-width:140px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
+                                <i data-lucide="check-circle" class="icon"></i> Прийняти роботу
+                            </button>
+                            <button type="button" class="btn" id="taskReviewRejectBtn" style="flex:1;min-width:140px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
+                                <i data-lucide="rotate-ccw" class="icon"></i> На допрацювання
+                            </button>
                         </div>
                     </div>
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
@@ -9168,11 +9181,23 @@
                     if (!canEdit) {
                         document.getElementById('taskModalTitle').textContent = currentLang === 'ua' ? 'Перегляд завдання' : 'Просмотр задачи';
                     }
+                    
+                    // Review actions — показуємо якщо завдання на перевірці і я постановник
+                    const reviewActions = document.getElementById('taskReviewActions');
+                    if (reviewActions) {
+                        const isReviewForMe = task.status === 'review' && 
+                                              task.creatorId === currentUser?.uid && 
+                                              task.assigneeId !== currentUser?.uid;
+                        reviewActions.style.display = isReviewForMe ? 'block' : 'none';
+                    }
                 }
             } else {
                 editingId = null;
                 document.getElementById('taskModalTitle').textContent = t('newTask');
                 document.getElementById('taskForm').reset();
+                // Hide review actions
+                const reviewActions = document.getElementById('taskReviewActions');
+                if (reviewActions) reviewActions.style.display = 'none';
                 // Hide AI help for new tasks
                 const aiRow = document.getElementById('taskAiHelpRow');
                 if (aiRow) aiRow.style.display = 'none';
@@ -9911,6 +9936,19 @@
         }
         
         // Постановник приймає завдання
+        // Review з модалки
+        async function acceptReviewFromModal() {
+            if (!editingId) return;
+            closeModal('taskModal');
+            await acceptReviewTask(editingId);
+        }
+        
+        async function rejectReviewFromModal() {
+            if (!editingId) return;
+            closeModal('taskModal');
+            await rejectReviewTask(editingId);
+        }
+        
         async function acceptReviewTask(taskId) {
             const taskIndex = tasks.findIndex(t => t.id === taskId);
             if (taskIndex < 0) return;
@@ -10612,6 +10650,7 @@
                     }
                 }
                 renderTasks();
+                updateCalendarTitle();
             } else {
                 calendarContainer.classList.add('active');
                 listContainer.classList.remove('active');
@@ -10794,6 +10833,8 @@
                     titleEl.textContent = `${weekStart.getDate()} ${monthNames[weekStart.getMonth()].slice(0,3)} - ${weekEnd.getDate()} ${monthNames[weekEnd.getMonth()].slice(0,3)} ${weekEnd.getFullYear()}`;
                 }
             } else if (currentCalendarView === 'month') {
+                titleEl.textContent = `${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
+            } else if (currentCalendarView === 'list') {
                 titleEl.textContent = `${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
             }
         }
