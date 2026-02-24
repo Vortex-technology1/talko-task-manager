@@ -5468,7 +5468,17 @@
                     <div class="controls" style="margin-bottom:0.5rem;">
                         <div class="filters-row" style="display:flex;flex-wrap:wrap;gap:0.4rem;align-items:center;padding:0.5rem 0.75rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
                             <button class="btn btn-success" onclick="openTaskModal()" style="padding:0.35rem 0.7rem;font-size:0.8rem;"><i data-lucide="plus" class="icon" style="width:14px;height:14px;"></i> <span data-i18n="addTask">Завдання</span></button>
-                            <button class="btn" style="background:#2ecc71;padding:0.35rem 0.7rem;font-size:0.8rem;" onclick="exportTasksCSV()"><i data-lucide="download" class="icon" style="width:14px;height:14px;"></i> CSV</button>
+                            <div style="position:relative;display:inline-block;" id="exportDropdownWrap">
+                                <button class="btn" style="background:#2ecc71;padding:0.35rem 0.7rem;font-size:0.8rem;" onclick="toggleExportDropdown(event)"><i data-lucide="download" class="icon" style="width:14px;height:14px;"></i> Експорт <i data-lucide="chevron-down" class="icon" style="width:12px;height:12px;"></i></button>
+                                <div id="exportDropdown" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:white;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.15);border:1px solid #e5e7eb;z-index:100;min-width:160px;overflow:hidden;">
+                                    <button onclick="exportTasksCSV();closeExportDropdown()" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:0.85rem;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='none'">
+                                        <i data-lucide="file-text" class="icon" style="width:16px;height:16px;color:#22c55e;"></i> CSV (.csv)
+                                    </button>
+                                    <button onclick="exportTasksXLSX();closeExportDropdown()" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:0.85rem;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='none'">
+                                        <i data-lucide="table" class="icon" style="width:16px;height:16px;color:#16a34a;"></i> Excel (.xlsx)
+                                    </button>
+                                </div>
+                            </div>
                             <button class="btn" id="archiveToggleBtn" onclick="toggleArchiveView()" style="background:#6b7280;padding:0.35rem 0.7rem;font-size:0.8rem;"><i data-lucide="archive" class="icon" style="width:14px;height:14px;"></i> <span data-i18n="archive">Архів</span></button>
                             <span style="width:1px;height:22px;background:#e0e0e0;margin:0 0.15rem;"></span>
                             <div class="task-type-tabs" style="display:flex;gap:1px;background:#e5e7eb;padding:2px;border-radius:8px;">
@@ -6172,18 +6182,9 @@
                             <div id="taskNotifyUsers" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f9fafb;border-radius:8px;max-height:150px;overflow-y:auto;"></div>
                         </div>
                     </div>
-                    <div id="taskReviewActions" style="display:none;padding:0.75rem 1rem;margin:0.5rem 0;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:2px solid #22c55e;border-radius:12px;">
-                        <div style="font-size:0.85rem;font-weight:600;color:#16a34a;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;">
-                            <i data-lucide="shield-check" class="icon icon-sm"></i> Завдання на перевірці
-                        </div>
-                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                            <button type="button" class="btn btn-success" id="taskReviewAcceptBtn" style="flex:1;min-width:140px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
-                                <i data-lucide="check-circle" class="icon"></i> Прийняти роботу
-                            </button>
-                            <button type="button" class="btn" id="taskReviewRejectBtn" style="flex:1;min-width:140px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                <i data-lucide="rotate-ccw" class="icon"></i> На допрацювання
-                            </button>
-                        </div>
+                    <div id="taskReviewActions" style="display:none;padding:0.75rem 1rem;margin:0.5rem 0;border-radius:12px;">
+                        <div id="taskActionsLabel" style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;"></div>
+                        <div id="taskActionsButtons" style="display:flex;gap:0.5rem;flex-wrap:wrap;"></div>
                     </div>
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
                 </form>
@@ -9182,13 +9183,59 @@
                         document.getElementById('taskModalTitle').textContent = currentLang === 'ua' ? 'Перегляд завдання' : 'Просмотр задачи';
                     }
                     
-                    // Review actions — показуємо якщо завдання на перевірці і я постановник
+                    // Task actions — показуємо керівнику/постановнику дії залежно від статусу
                     const reviewActions = document.getElementById('taskReviewActions');
                     if (reviewActions) {
-                        const isReviewForMe = task.status === 'review' && 
-                                              task.creatorId === currentUser?.uid && 
-                                              task.assigneeId !== currentUser?.uid;
-                        reviewActions.style.display = isReviewForMe ? 'block' : 'none';
+                        const isOwnerOrAdmin = currentUserData?.role === 'owner' || currentUserData?.role === 'admin';
+                        const isCreator = task.creatorId === currentUser?.uid;
+                        const canManage = isOwnerOrAdmin || isCreator;
+                        const notMyOwnTask = task.assigneeId !== currentUser?.uid;
+                        
+                        if (canManage && task.status !== 'done') {
+                            reviewActions.style.display = 'block';
+                            const label = document.getElementById('taskActionsLabel');
+                            const btns = document.getElementById('taskActionsButtons');
+                            
+                            if (task.status === 'review') {
+                                reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
+                                reviewActions.style.border = '2px solid #22c55e';
+                                label.innerHTML = '<i data-lucide="shield-check" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання на перевірці</span>';
+                                btns.innerHTML = `
+                                    <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
+                                        <i data-lucide="check-circle" class="icon"></i> Прийняти
+                                    </button>
+                                    <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
+                                        <i data-lucide="rotate-ccw" class="icon"></i> Допрацювати
+                                    </button>`;
+                            } else if (task.status === 'new' || task.status === 'progress') {
+                                reviewActions.style.background = 'linear-gradient(135deg,#f0f9ff,#e0f2fe)';
+                                reviewActions.style.border = '2px solid #38bdf8';
+                                const statusLabel = task.status === 'new' ? 'Нове завдання' : 'В роботі';
+                                label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#0284c7;"></i> <span style="color:#0284c7;">Статус: ' + statusLabel + '</span>';
+                                btns.innerHTML = `
+                                    <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
+                                        <i data-lucide="check-circle" class="icon"></i> Прийняти роботу
+                                    </button>
+                                    <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
+                                        <i data-lucide="message-circle" class="icon"></i> Допрацювати
+                                    </button>`;
+                            }
+                            refreshIcons();
+                        } else if (canManage && task.status === 'done') {
+                            reviewActions.style.display = 'block';
+                            reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
+                            reviewActions.style.border = '2px solid #86efac';
+                            const label = document.getElementById('taskActionsLabel');
+                            const btns = document.getElementById('taskActionsButtons');
+                            label.innerHTML = '<i data-lucide="check-circle-2" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання виконано</span>';
+                            btns.innerHTML = `
+                                <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="reopenTaskFromModal()">
+                                    <i data-lucide="rotate-ccw" class="icon"></i> Повернути в роботу
+                                </button>`;
+                            refreshIcons();
+                        } else {
+                            reviewActions.style.display = 'none';
+                        }
                     }
                 }
             } else {
@@ -9947,6 +9994,36 @@
             if (!editingId) return;
             closeModal('taskModal');
             await rejectReviewTask(editingId);
+        }
+        
+        async function reopenTaskFromModal() {
+            if (!editingId) return;
+            const taskIndex = tasks.findIndex(t => t.id === editingId);
+            if (taskIndex < 0) return;
+            
+            const originalTask = { ...tasks[taskIndex] };
+            tasks[taskIndex].status = 'progress';
+            tasks[taskIndex].completedAt = null;
+            closeModal('taskModal');
+            renderMyDay();
+            if (currentCalendarView === 'list') renderTasks();
+            else renderCalendar();
+            
+            try {
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(editingId).update({
+                    status: 'progress',
+                    completedAt: null,
+                    reopenedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    reopenedBy: currentUser.uid
+                });
+                showToast('Завдання повернуто в роботу', 'success');
+            } catch(e) {
+                tasks[taskIndex] = originalTask;
+                renderMyDay();
+                if (currentCalendarView === 'list') renderTasks();
+                else renderCalendar();
+                alert('Помилка: ' + e.message);
+            }
         }
         
         async function acceptReviewTask(taskId) {
@@ -12590,17 +12667,90 @@
             renderTasks();
         }
         
-        function exportTasksCSV() {
-            let csv = 'Назва,Виконавець,Створив,Дедлайн,Статус,Функція\n';
-            tasks.filter(t => isTaskVisibleToUser(t)).forEach(task => {
-                const deadline = parseDeadline(task).date;
-                csv += `"${task.title}","${task.assigneeName || ''}","${task.creatorName || ''}","${deadline}","${task.status}","${task.function || ''}"\n`;
+        // Export dropdown
+        function toggleExportDropdown(e) {
+            e.stopPropagation();
+            const dd = document.getElementById('exportDropdown');
+            dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+            if (dd.style.display === 'block') {
+                refreshIcons();
+                setTimeout(() => document.addEventListener('click', closeExportDropdown, { once: true }), 10);
+            }
+        }
+        function closeExportDropdown() {
+            document.getElementById('exportDropdown').style.display = 'none';
+        }
+        
+        function getExportData() {
+            const st = { new: 'Нове', progress: 'В роботі', review: 'Перевірка', done: 'Готово' };
+            return tasks.filter(t => isTaskVisibleToUser(t)).map(task => {
+                const { date, time } = parseDeadline(task);
+                return {
+                    'Назва': task.title || '',
+                    'Виконавець': task.assigneeName || '',
+                    'Створив': task.creatorName || '',
+                    'Дедлайн': date ? (date + (time ? ' ' + time : '')) : '',
+                    'Статус': st[task.status] || task.status,
+                    'Функція': task.function || '',
+                    'Пріоритет': task.priority === 'high' ? 'Високий' : task.priority === 'low' ? 'Низький' : 'Середній',
+                    'Опис': task.description || task.instruction || ''
+                };
             });
-            
+        }
+
+        function exportTasksCSV() {
+            const data = getExportData();
+            if (data.length === 0) { showToast('Немає завдань для експорту', 'info'); return; }
+            const headers = Object.keys(data[0]);
+            let csv = headers.join(',') + '\n';
+            data.forEach(row => {
+                csv += headers.map(h => `"${(row[h] || '').replace(/"/g, '""')}"`).join(',') + '\n';
+            });
             const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = 'tasks_' + getLocalDateStr() + '.csv';
+            link.click();
+        }
+        
+        function exportTasksXLSX() {
+            const data = getExportData();
+            if (data.length === 0) { showToast('Немає завдань для експорту', 'info'); return; }
+            const headers = Object.keys(data[0]);
+            
+            // Build XLSX using XML spreadsheet format (no library needed)
+            let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+            xml += '<?mso-application progid="Excel.Sheet"?>\n';
+            xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
+            xml += '<Styles><Style ss:ID="header"><Font ss:Bold="1" ss:Size="11"/><Interior ss:Color="#22c55e" ss:Pattern="Solid"/><Font ss:Color="#FFFFFF" ss:Bold="1"/></Style>';
+            xml += '<Style ss:ID="wrap"><Alignment ss:WrapText="1" ss:Vertical="Top"/></Style></Styles>\n';
+            xml += '<Worksheet ss:Name="Завдання"><Table>\n';
+            
+            // Column widths
+            const colWidths = [250, 150, 120, 120, 80, 120, 80, 300];
+            colWidths.forEach(w => { xml += `<Column ss:Width="${w}"/>\n`; });
+            
+            // Header row
+            xml += '<Row ss:Height="24">';
+            headers.forEach(h => { xml += `<Cell ss:StyleID="header"><Data ss:Type="String">${h}</Data></Cell>`; });
+            xml += '</Row>\n';
+            
+            // Data rows
+            data.forEach(row => {
+                xml += '<Row>';
+                headers.forEach(h => {
+                    const val = (row[h] || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    xml += `<Cell ss:StyleID="wrap"><Data ss:Type="String">${val}</Data></Cell>`;
+                });
+                xml += '</Row>\n';
+            });
+            
+            xml += '</Table></Worksheet></Workbook>';
+            
+            const blob = new Blob([xml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'tasks_' + getLocalDateStr() + '.xlsx';
             link.click();
         }
         
