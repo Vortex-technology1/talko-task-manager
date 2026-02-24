@@ -5395,7 +5395,7 @@
                 </div>
                 
                 <!-- Calendar Filters -->
-                <div class="filters-row" id="calendarFiltersRow" style="background:white;padding:0.5rem 1rem;border-radius:12px;margin-bottom:0.5rem;box-shadow:var(--shadow);display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
+                <div class="filters-row" id="calendarFiltersRow" style="background:white;padding:0.5rem 1rem;border-radius:12px;margin-bottom:0.5rem;box-shadow:var(--shadow);display:none;flex-wrap:wrap;gap:0.5rem;align-items:center;">
                     <button class="btn btn-sm" id="calendarMyBtn" onclick="filterCalendarMy()" style="padding:0.35rem 0.7rem;font-size:0.82rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> Мої</button>
                     <select class="filter-select" id="calendarAssigneeFilter" onchange="renderCalendar()" style="font-size:0.82rem;padding:0.35rem;max-width:180px;">
                         <option value="" data-i18n="allAssignees">Всі виконавці</option>
@@ -5472,12 +5472,17 @@
                             <button class="btn" id="archiveToggleBtn" onclick="toggleArchiveView()" style="background:#6b7280;"><i data-lucide="archive" class="icon"></i> <span data-i18n="archive">Архів</span></button>
                         </div>
                         <div class="filters-row">
-                            <button class="btn btn-clear" onclick="clearTaskFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
-                            <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()">
+                            <div class="task-type-tabs" style="display:flex;gap:2px;background:#e5e7eb;padding:2px;border-radius:10px;margin-right:0.5rem;">
+                                <button class="task-type-tab active" data-value="" onclick="setTaskTypeFilter(this)" style="padding:0.4rem 0.85rem;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;background:#22c55e;color:white;white-space:nowrap;transition:all 0.2s;" data-i18n="allTasks">Всі</button>
+                                <button class="task-type-tab" data-value="my" onclick="setTaskTypeFilter(this)" style="padding:0.4rem 0.85rem;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:0.3rem;"><i data-lucide="user" class="icon" style="width:14px;height:14px;"></i> <span data-i18n="myTasks">Мої</span></button>
+                                <button class="task-type-tab" data-value="created" onclick="setTaskTypeFilter(this)" style="padding:0.4rem 0.85rem;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.2s;" data-i18n="createdByMe">Створені</button>
+                            </div>
+                            <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()" style="display:none;">
                                 <option value="" data-i18n="allTasks">Всі завдання</option>
                                 <option value="my" data-i18n="myTasks">Мої завдання</option>
                                 <option value="created" data-i18n="createdByMe">Створені мною</option>
                             </select>
+                            <button class="btn btn-clear" onclick="clearTaskFilters()"><i data-lucide="x" class="icon"></i> <span data-i18n="clear">Очистити</span></button>
                             <select class="filter-select" id="dateFilter" onchange="handleDateFilter()">
                                 <option value="" data-i18n="allDates">Всі дати</option>
                                 <option value="today" data-i18n="today">Сьогодні</option>
@@ -10578,7 +10583,7 @@
             // Calendar filters — only in calendar views (not list)
             const calFilterRow = document.getElementById('calendarFiltersRow');
             if (calFilterRow) {
-                calFilterRow.style.display = (view === 'list' || window.innerWidth < 768) ? 'none' : '';
+                calFilterRow.style.display = (view === 'list' || window.innerWidth < 768) ? 'none' : 'flex';
             }
             
             // Show/hide containers
@@ -12491,6 +12496,39 @@
             } catch(e) {}
         }
         
+        function setTaskTypeFilter(btn) {
+            const val = btn.dataset.value;
+            document.getElementById('taskTypeFilter').value = val;
+            // Update tab styles
+            document.querySelectorAll('.task-type-tab').forEach(t => {
+                if (t.dataset.value === val) {
+                    t.style.background = '#22c55e';
+                    t.style.color = 'white';
+                    t.classList.add('active');
+                } else {
+                    t.style.background = 'transparent';
+                    t.style.color = '#555';
+                    t.classList.remove('active');
+                }
+            });
+            renderTasks();
+        }
+        
+        function syncTaskTypeTabs() {
+            const val = document.getElementById('taskTypeFilter').value;
+            document.querySelectorAll('.task-type-tab').forEach(t => {
+                if (t.dataset.value === val) {
+                    t.style.background = '#22c55e';
+                    t.style.color = 'white';
+                    t.classList.add('active');
+                } else {
+                    t.style.background = 'transparent';
+                    t.style.color = '#555';
+                    t.classList.remove('active');
+                }
+            });
+        }
+        
         function clearTaskFilters() {
             document.getElementById('taskTypeFilter').value = '';
             document.getElementById('dateFilter').value = '';
@@ -12500,6 +12538,7 @@
             document.getElementById('customDateRange').style.display = 'none';
             document.getElementById('dateFrom').value = '';
             document.getElementById('dateTo').value = '';
+            syncTaskTypeTabs();
             renderTasks();
         }
         
@@ -18345,6 +18384,7 @@
         function applyFiltersAndClose() {
             // Apply filters to desktop selects
             document.getElementById('taskTypeFilter').value = mobileFilters.type;
+            syncTaskTypeTabs();
             document.getElementById('dateFilter').value = mobileFilters.date;
             setStatusFilterFromArray(mobileFilters.status);
             document.getElementById('functionFilter').value = mobileFilters.function;
