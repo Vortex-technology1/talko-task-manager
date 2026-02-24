@@ -1689,31 +1689,136 @@
         .auth-container {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: calc(100vh - 80px);
-            padding: 1rem;
+            padding: 0;
+            background: #f9fafb;
         }
         
         .auth-card {
             background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
+            border-radius: 0;
+            box-shadow: none;
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
             overflow: hidden;
-            border: 1px solid #e5e7eb;
+            border: none;
+        }
+        
+        @media (min-width: 768px) {
+            .auth-container {
+                align-items: center;
+                padding: 1rem;
+            }
+            .auth-card {
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                border: 1px solid #e5e7eb;
+            }
         }
         
         .auth-header {
             background: var(--header-bg);
             color: white;
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
             text-align: center;
         }
         
-        .auth-header h2 { font-size: 1.4rem; margin-bottom: 0.3rem; }
-        .auth-header p { opacity: 0.9; font-size: 0.85rem; }
-        .auth-body { padding: 1.25rem; }
+        .auth-header h2 { font-size: 1.5rem; margin-bottom: 0.4rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .auth-header p { opacity: 0.85; font-size: 0.9rem; }
+        .auth-body { padding: 1.5rem; }
+        
+        .auth-input-group {
+            margin-bottom: 1rem;
+        }
+        .auth-input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.4rem;
+        }
+        .auth-input-group .form-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #f9fafb;
+        }
+        .auth-input-group .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+            background: white;
+            outline: none;
+        }
+        .auth-input-group .input-wrapper {
+            position: relative;
+        }
+        .auth-input-group .input-wrapper .form-input {
+            padding-right: 50px;
+        }
+        .auth-input-group .password-toggle {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-btn-primary {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            min-height: 56px;
+            margin-top: 1.25rem;
+        }
+        .auth-btn-primary:active {
+            transform: scale(0.98);
+        }
+        .auth-btn-login {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+        }
+        .auth-btn-login:hover {
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        }
+        .auth-btn-register {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 14px rgba(168, 85, 247, 0.3);
+        }
+        .auth-btn-register:hover {
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+        }
+        
+        .auth-forgot-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--info);
+            text-decoration: none;
+        }
+        .auth-forgot-link:hover { text-decoration: underline; }
         
         .auth-message {
             padding: 0.75rem;
@@ -5118,38 +5223,37 @@
                     
                     <!-- LOGIN FORM -->
                     <div id="loginForm">
-                        <div class="form-group">
-                            <label class="form-label">Email:</label>
-                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com">
+                        <div class="auth-input-group">
+                            <label>Email:</label>
+                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com" autocomplete="email">
                         </div>
-                        <div class="form-group" style="margin-top:0.75rem;">
-                            <label class="form-label" data-i18n="password">Пароль:</label>
+                        <div class="auth-input-group">
+                            <label data-i18n="password">Пароль:</label>
                             <div class="input-wrapper">
-                                <input type="password" id="loginPassword" class="form-input" placeholder="••••••••">
+                                <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" autocomplete="current-password">
                                 <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)"><i data-lucide="eye" class="icon icon-sm"></i></button>
                             </div>
                         </div>
-                        <button onclick="signInWithEmail()" class="btn btn-success" style="width:100%;margin-top:1rem;">
-                            <i data-lucide="log-in" class="icon"></i> <span data-i18n="signIn">Увійти</span>
+                        <button onclick="signInWithEmail()" class="auth-btn-primary auth-btn-login">
+                            <i data-lucide="log-in" class="icon icon-lg"></i> <span data-i18n="signIn">Увійти</span>
                         </button>
-                        <p style="text-align:center;margin-top:0.75rem;font-size:0.85rem;">
-                            <a href="#" onclick="resetPassword()" style="color:var(--info);" data-i18n="forgotPassword">Забули пароль?</a>
-                        </p>
+                        <a href="#" onclick="resetPassword(); return false;" class="auth-forgot-link" data-i18n="forgotPassword">Забули пароль?</a>
+                        
                         <div class="auth-divider"><span data-i18n="haveInvite">Перший вхід?</span></div>
-                        <button onclick="showRegisterForm()" class="btn" style="width:100%;background:#9b59b6;">
-                            <i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerBtn">Активувати доступ</span>
+                        <button onclick="showRegisterForm()" class="auth-btn-primary auth-btn-register">
+                            <i data-lucide="user-plus" class="icon icon-lg"></i> <span data-i18n="registerBtn">Активувати доступ</span>
                         </button>
                         
                         <!-- Акордеон з інструкцією -->
-                        <div style="margin-top:1rem;">
-                            <button onclick="toggleAuthHelp()" id="authHelpToggle" style="width:100%;background:none;border:1px solid #e5e7eb;padding:0.6rem 1rem;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;color:var(--gray);">
+                        <div style="margin-top:1.25rem;">
+                            <button onclick="toggleAuthHelp()" id="authHelpToggle" style="width:100%;background:none;border:1px solid #e5e7eb;padding:0.75rem 1rem;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:0.9rem;color:var(--gray);min-height:48px;">
                                 <span style="display:flex;align-items:center;gap:0.5rem;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                                     <span data-i18n="howToLogin">Як увійти?</span>
                                 </span>
                                 <svg id="authHelpArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
                             </button>
-                            <div id="authHelpContent" style="display:none;padding:1rem;background:#f9fafb;border-radius:0 0 8px 8px;border:1px solid #e5e7eb;border-top:none;font-size:0.8rem;line-height:1.6;">
+                            <div id="authHelpContent" style="display:none;padding:1rem;background:#f9fafb;border-radius:0 0 12px 12px;border:1px solid #e5e7eb;border-top:none;font-size:0.85rem;line-height:1.7;">
                                 <div style="margin-bottom:0.75rem;">
                                     <div style="display:flex;align-items:center;gap:0.4rem;font-weight:600;color:var(--dark);margin-bottom:0.3rem;">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -5173,37 +5277,37 @@
                             </div>
                         </div>
                         
-                        <p style="text-align:center;margin-top:0.75rem;font-size:0.8rem;color:var(--gray);">
-                            <span data-i18n="noAccess">Немає доступу?</span> <a href="https://alextalko.com" target="_blank" style="color:var(--info);" data-i18n="contactUs">Зв'яжіться з нами</a>
+                        <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--gray);">
+                            <span data-i18n="noAccess">Немає доступу?</span> <a href="https://alextalko.com" target="_blank" style="color:var(--info);font-weight:500;" data-i18n="contactUs">Зв'яжіться з нами</a>
                         </p>
                     </div>
                     
                     <!-- REGISTER FORM -->
                     <div id="registerForm" style="display:none;">
-                        <h3 style="text-align:center;margin-bottom:1rem;color:var(--dark);"><i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerTitle">Реєстрація за запрошенням</span></h3>
-                        <div class="form-group">
-                            <label class="form-label">Email:</label>
-                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com">
+                        <h3 style="text-align:center;margin-bottom:1.25rem;color:var(--dark);font-size:1.1rem;"><i data-lucide="user-plus" class="icon"></i> <span data-i18n="registerTitle">Реєстрація за запрошенням</span></h3>
+                        <div class="auth-input-group">
+                            <label>Email:</label>
+                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com" autocomplete="email">
                         </div>
-                        <div class="form-group" style="margin-top:0.75rem;">
-                            <label class="form-label" data-i18n="createPassword">Придумайте пароль:</label>
+                        <div class="auth-input-group">
+                            <label data-i18n="createPassword">Придумайте пароль:</label>
                             <div class="input-wrapper">
-                                <input type="password" id="registerPassword" class="form-input" placeholder="мінімум 6 символів">
+                                <input type="password" id="registerPassword" class="form-input" placeholder="мінімум 6 символів" autocomplete="new-password">
                                 <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)"><i data-lucide="eye" class="icon icon-sm"></i></button>
                             </div>
                         </div>
-                        <div class="form-group" style="margin-top:0.75rem;">
-                            <label class="form-label" data-i18n="confirmPassword">Підтвердіть пароль:</label>
+                        <div class="auth-input-group">
+                            <label data-i18n="confirmPassword">Підтвердіть пароль:</label>
                             <div class="input-wrapper">
-                                <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="••••••••">
+                                <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="••••••••" autocomplete="new-password">
                                 <button type="button" class="password-toggle" onclick="togglePassword('registerPasswordConfirm', this)"><i data-lucide="eye" class="icon icon-sm"></i></button>
                             </div>
                         </div>
-                        <button onclick="registerWithInvite()" class="btn btn-success" style="width:100%;margin-top:1rem;">
-                            <i data-lucide="check" class="icon"></i> <span data-i18n="registerSubmit">Зареєструватися</span>
+                        <button onclick="registerWithInvite()" class="auth-btn-primary auth-btn-login">
+                            <i data-lucide="check" class="icon icon-lg"></i> <span data-i18n="registerSubmit">Зареєструватися</span>
                         </button>
-                        <p style="text-align:center;margin-top:1rem;">
-                            <a href="#" onclick="showLoginForm()" style="color:var(--info);" data-i18n="backToLogin">← Повернутися до входу</a>
+                        <p style="text-align:center;margin-top:1.25rem;">
+                            <a href="#" onclick="showLoginForm()" style="color:var(--info);font-size:0.9rem;font-weight:500;" data-i18n="backToLogin">← Повернутися до входу</a>
                         </p>
                     </div>
                 </div>
@@ -8435,7 +8539,7 @@
             // Run once per day max
             const lastArchiveKey = `lastArchive_${currentCompany}`;
             const lastArchive = localStorage.getItem(lastArchiveKey);
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalDateStr();
             if (lastArchive === today) return;
             
             try {
@@ -8724,7 +8828,7 @@
             if (!currentUser || !currentCompany) return;
             
             const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
+            const todayStr = getLocalDateStr(today);
             const base = db.collection('companies').doc(currentCompany).collection('tasks');
             
             // Серверна перевірка: які regularTaskId вже мають завдання на сьогодні
@@ -8827,7 +8931,7 @@
             if (myDayPopupShown) return;
             myDayPopupShown = true;
             
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalDateStr();
             const myTasks = tasks.filter(t => t.assigneeId === currentUser?.uid);
             
             // Завдання на сьогодні
@@ -9335,7 +9439,7 @@
                 } else {
                     // Create new task
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    data.createdDate = new Date().toISOString().split('T')[0];
+                    data.createdDate = getLocalDateStr();
                     data.creatorId = currentUser.uid;
                     data.creatorName = currentUserData?.name || currentUser.email;
                     data.pinned = false;
@@ -9403,6 +9507,15 @@
             return div.innerHTML;
         }
         
+        // Локальна дата у форматі YYYY-MM-DD (без UTC зсуву)
+        function getLocalDateStr(d) {
+            if (!d) d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+        
         // Санітизація для відображення (escape HTML entities)
         function esc(str) {
             if (!str) return '';
@@ -9433,7 +9546,7 @@
             if (!date && task.deadline) {
                 if (task.deadline.toDate) {
                     const d = task.deadline.toDate();
-                    date = d.toISOString().split('T')[0];
+                    date = getLocalDateStr(d);
                     if (!time) time = d.toTimeString().slice(0,5);
                 } else if (typeof task.deadline === 'string') {
                     date = task.deadline.split('T')[0];
@@ -9473,7 +9586,7 @@
                 try {
                     if (task.deadline.toDate) {
                         const d = task.deadline.toDate();
-                        date = d.toISOString().split('T')[0];
+                        date = getLocalDateStr(d);
                         time = d.toTimeString().slice(0,5);
                     } else if (typeof task.deadline === 'string' && task.deadline.includes('T')) {
                         date = task.deadline.split('T')[0];
@@ -10613,7 +10726,7 @@
             for (let i = 0; i < 7; i++) {
                 const day = new Date(weekStart);
                 day.setDate(weekStart.getDate() + i);
-                const dayStr = day.toISOString().split('T')[0];
+                const dayStr = getLocalDateStr(day);
                 
                 const isToday = day.toDateString() === todayStr;
                 const isSelected = day.toDateString() === selectedStr;
@@ -10622,7 +10735,7 @@
                 const dayTasks = getCalendarFilteredTasks().filter(task => {
                     if (!task.deadline) return false;
                     const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
-                    return taskDate.toISOString().split('T')[0] === dayStr;
+                    return getLocalDateStr(taskDate) === dayStr;
                 });
                 
                 // Generate task dots (max 3)
@@ -10690,7 +10803,7 @@
             const today = new Date();
             const todayStr = today.toDateString();
             const selectedStr = calendarDate.toDateString();
-            const dayStr = calendarDate.toISOString().split('T')[0];
+            const dayStr = getLocalDateStr(calendarDate);
             
             // Set header
             const isToday = selectedStr === todayStr;
@@ -10714,7 +10827,7 @@
             const dayTasks = getCalendarFilteredTasks().filter(task => {
                 if (!task.deadline) return false;
                 const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
-                return taskDate.toISOString().split('T')[0] === dayStr;
+                return getLocalDateStr(taskDate) === dayStr;
             }).sort((a, b) => {
                 const aDate = a.deadline?.toDate ? a.deadline.toDate() : new Date(a.deadline);
                 const bDate = b.deadline?.toDate ? b.deadline.toDate() : new Date(b.deadline);
@@ -10842,7 +10955,7 @@
             const timeSlotsEl = document.getElementById('calendarTimeSlots');
             const eventsContainerEl = document.getElementById('calendarEventsContainer');
             
-            const dayStr = calendarDate.toISOString().split('T')[0];
+            const dayStr = getLocalDateStr(calendarDate);
             
             let timeSlotsHTML = '';
             let hoursHTML = '';
@@ -10863,7 +10976,7 @@
             const dayTasks = getCalendarFilteredTasks().filter(task => {
                 if (!task.deadline) return false;
                 const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
-                return taskDate.toISOString().split('T')[0] === dayStr;
+                return getLocalDateStr(taskDate) === dayStr;
             });
             
             // Separate all-day and timed tasks
@@ -11002,7 +11115,7 @@
             weekFilteredTasks.forEach(task => {
                 if (!task.deadline) return;
                 const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
-                const dateKey = taskDate.toISOString().split('T')[0];
+                const dateKey = getLocalDateStr(taskDate);
                 if (!weekTasksByDate[dateKey]) weekTasksByDate[dateKey] = [];
                 weekTasksByDate[dateKey].push(task);
             });
@@ -11011,7 +11124,7 @@
             for (let i = 0; i < 7; i++) {
                 const day = new Date(weekStart);
                 day.setDate(weekStart.getDate() + i);
-                const dayStr = day.toISOString().split('T')[0];
+                const dayStr = getLocalDateStr(day);
                 
                 bodyHTML += `<div class="calendar-week-day-column" data-date="${dayStr}">`;
                 
@@ -11072,7 +11185,7 @@
             const daysInMonth = lastDay.getDate();
             
             const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
+            const todayStr = getLocalDateStr(today);
             
             // Get prev month's last days
             const prevMonthLastDay = new Date(year, month, 0).getDate();
@@ -11086,7 +11199,7 @@
             filteredTasks.forEach(task => {
                 if (!task.deadline) return;
                 const taskDate = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
-                const dateKey = taskDate.toISOString().split('T')[0];
+                const dateKey = getLocalDateStr(taskDate);
                 if (!tasksByDate[dateKey]) tasksByDate[dateKey] = [];
                 tasksByDate[dateKey].push(task);
             });
@@ -11249,11 +11362,11 @@
             if (df === 'custom') {
                 customRange.style.display = 'flex';
                 // Встановлюємо значення за замовчуванням
-                const today = new Date().toISOString().split('T')[0];
+                const today = getLocalDateStr();
                 const weekLater = new Date();
                 weekLater.setDate(weekLater.getDate() + 7);
                 document.getElementById('dateFrom').value = today;
-                document.getElementById('dateTo').value = weekLater.toISOString().split('T')[0];
+                document.getElementById('dateTo').value = getLocalDateStr(weekLater);
             } else {
                 customRange.style.display = 'none';
             }
@@ -11268,7 +11381,7 @@
             if (!container) return;
             
             const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
+            const todayStr = getLocalDateStr(today);
             const todayDay = today.getDay();
             
             // Форматуємо дату
@@ -11590,7 +11703,7 @@
             try {
                 if (type === 'regular') {
                     // Для регулярних - змінюємо статус згенерованого завдання
-                    const todayStr = new Date().toISOString().split('T')[0];
+                    const todayStr = getLocalDateStr();
                     
                     console.log('toggleMyDayTask regular:', { id, generatedTaskId, currentDone, todayStr, currentUserId: currentUser.uid });
                     
@@ -11676,7 +11789,7 @@
                 
                 // Локальне оновлення замість loadAllData
                 if (type === 'regular') {
-                    const todayStr = new Date().toISOString().split('T')[0];
+                    const todayStr = getLocalDateStr();
                     let taskToUpdate = tasks.find(t => 
                         t.regularTaskId === id && 
                         t.deadlineDate === todayStr && 
@@ -11852,7 +11965,7 @@
             const df = document.getElementById('dateFilter')?.value;
             const tf = document.getElementById('taskTypeFilter')?.value;
             
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalDateStr();
             
             let f = tasks.filter(task => {
                 if (!isTaskVisibleToUser(task)) return false;
@@ -11872,12 +11985,12 @@
                 if (df === 'week') {
                     const weekLater = new Date();
                     weekLater.setDate(weekLater.getDate() + 7);
-                    if (taskDate > weekLater.toISOString().split('T')[0] || taskDate < today) return false;
+                    if (taskDate > getLocalDateStr(weekLater) || taskDate < today) return false;
                 }
                 if (df === 'month') {
                     const monthLater = new Date();
                     monthLater.setMonth(monthLater.getMonth() + 1);
-                    if (taskDate > monthLater.toISOString().split('T')[0] || taskDate < today) return false;
+                    if (taskDate > getLocalDateStr(monthLater) || taskDate < today) return false;
                 }
                 if (df === 'custom') {
                     const dateFrom = document.getElementById('dateFrom')?.value;
@@ -11895,13 +12008,13 @@
                 // Custom sort
                 if (taskSortField) {
                     let valA, valB;
+                    const statusOrder = { new: 0, progress: 1, review: 2, done: 3 };
                     switch(taskSortField) {
                         case 'title': valA = (a.title || '').toLowerCase(); valB = (b.title || '').toLowerCase(); break;
                         case 'assignee': valA = (a.assigneeName || '').toLowerCase(); valB = (b.assigneeName || '').toLowerCase(); break;
                         case 'creator': valA = (a.creatorName || '').toLowerCase(); valB = (b.creatorName || '').toLowerCase(); break;
                         case 'deadline': valA = a.deadlineDate || '9999'; valB = b.deadlineDate || '9999'; break;
                         case 'status': 
-                            const statusOrder = { new: 0, progress: 1, review: 2, done: 3 };
                             valA = statusOrder[a.status] ?? 9; valB = statusOrder[b.status] ?? 9; break;
                         case 'function': valA = (a.function || '').toLowerCase(); valB = (b.function || '').toLowerCase(); break;
                         default: valA = a.deadlineDate || '9999'; valB = b.deadlineDate || '9999';
@@ -12005,11 +12118,11 @@
             
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            const tomorrowStr = getLocalDateStr(tomorrow);
             
             const weekEnd = new Date();
             weekEnd.setDate(weekEnd.getDate() + 7);
-            const weekEndStr = weekEnd.toISOString().split('T')[0];
+            const weekEndStr = getLocalDateStr(weekEnd);
             
             f.forEach(task => {
                 const taskDeadline = parseDeadline(task).date;
@@ -12080,9 +12193,9 @@
                                     }
                                     if (isToday) return `<span class="mobile-task-deadline-badge today">${taskTime || 'сьогодні'}</span>`;
                                     // Format date compactly
-                                    const d = new Date(taskDeadline + 'T00:00:00');
-                                    const dayNum = d.getDate();
-                                    const monthShort = ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'][d.getMonth()];
+                                    const dp = taskDeadline.split('-');
+                                    const dayNum = parseInt(dp[2]);
+                                    const monthShort = ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'][parseInt(dp[1]) - 1];
                                     return `<span class="mobile-task-deadline-badge upcoming">${dayNum} ${monthShort}</span>`;
                                 })()}
                             </div>
@@ -12400,18 +12513,21 @@
             const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'tasks_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.download = 'tasks_' + getLocalDateStr() + '.csv';
             link.click();
         }
         
         function formatDateShort(dateStr) {
             if (!dateStr) return '-';
             try {
-                const d = new Date(dateStr + 'T00:00:00');
+                const parts = dateStr.split('-');
+                const year = parseInt(parts[0]);
+                const month = parseInt(parts[1]) - 1;
+                const day = parseInt(parts[2]);
                 const monthShort = currentLang === 'ua'
                     ? ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру']
                     : ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
-                return `${d.getDate()} ${monthShort[d.getMonth()]}`;
+                return `${day} ${monthShort[month]}`;
             } catch(e) { return dateStr; }
         }
 
@@ -12887,7 +13003,7 @@
             container.style.display = 'flex';
             emptyState.style.display = 'none';
             
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getLocalDateStr();
             
             // Сортуємо: активні overdue першими, потім по прогресу (менший прогрес = вище), завершені внизу
             const sorted = filteredProcesses.map(p => {
@@ -12927,7 +13043,7 @@
             const percent = process.percent;
             const isCompleted = process.status === 'completed';
             const isOverdue = process.isOverdue;
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getLocalDateStr();
             
             // Знаходимо відповідального за поточний крок
             let currentAssignee = '';
@@ -12960,9 +13076,9 @@
                     const daysAgo = Math.floor((new Date(todayStr) - new Date(process.deadline)) / 86400000);
                     deadlineHTML = `<span class="overdue-badge"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${daysAgo}д прострочено</span>`;
                 } else {
-                    const d = new Date(process.deadline + 'T00:00:00');
-                    const dayNum = d.getDate();
-                    const monthShort = ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'][d.getMonth()];
+                    const dp = process.deadline.split('-');
+                    const dayNum = parseInt(dp[2]);
+                    const monthShort = ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'][parseInt(dp[1]) - 1];
                     deadlineHTML = `<span><i data-lucide="calendar" class="icon icon-sm"></i> ${dayNum} ${monthShort}</span>`;
                 }
             }
@@ -12999,7 +13115,7 @@
             const project = projectId ? projects.find(p => p.id === projectId) : null;
             document.getElementById('projectEditId').value = projectId || '';
             document.getElementById('projectName').value = project?.name || '';
-            document.getElementById('projectStartDate').value = project?.startDate || new Date().toISOString().split('T')[0];
+            document.getElementById('projectStartDate').value = project?.startDate || getLocalDateStr();
             document.getElementById('projectDeadline').value = project?.deadline || '';
             document.getElementById('projectDescription').value = project?.description || '';
             
@@ -13080,7 +13196,7 @@
             const done = projectTasks.filter(t => t.status === 'done').length;
             const inProgress = projectTasks.filter(t => t.status === 'progress').length;
             const review = projectTasks.filter(t => t.status === 'review').length;
-            const overdue = projectTasks.filter(t => t.deadlineDate && t.deadlineDate < new Date().toISOString().split('T')[0] && t.status !== 'done' && t.status !== 'review').length;
+            const overdue = projectTasks.filter(t => t.deadlineDate && t.deadlineDate < getLocalDateStr() && t.status !== 'done' && t.status !== 'review').length;
             const percent = total > 0 ? Math.round((done / total) * 100) : 0;
             return { total, done, inProgress, review, overdue, percent, tasks: projectTasks };
         }
@@ -13139,7 +13255,7 @@
         }
         
         function renderProjectsGrid(container, filtered) {
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getLocalDateStr();
             container.innerHTML = `<div class="projects-grid">${filtered.map(p => {
                 const s = getProjectStats(p.id);
                 const isOverdue = p.deadline && p.deadline < todayStr && p.status === 'active';
@@ -13164,7 +13280,7 @@
         }
         
         function renderProjectsList(container, filtered) {
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getLocalDateStr();
             container.innerHTML = `<table class="projects-list-table"><thead><tr>
                 <th>Назва</th><th>Статус</th><th>Завдання</th><th>Прогрес</th><th>Дедлайн</th><th></th>
             </tr></thead><tbody>${filtered.map(p => {
@@ -13182,7 +13298,7 @@
         }
         
         function renderProjectsTimeline(container, filtered) {
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getLocalDateStr();
             const today = new Date();
             
             // Визначаємо діапазон: мін startDate — макс deadline (+30 днів)
@@ -13396,7 +13512,7 @@
             if (!projectTasks.length) return '<div style="text-align:center;color:#999;padding:2rem;">Немає завдань для діаграми</div>';
             
             const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
+            const todayStr = getLocalDateStr(today);
             
             // Find date range
             const dates = projectTasks
@@ -13449,7 +13565,7 @@
             const dayNames = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
             
             let headerHTML = days.map((day, i) => {
-                const isToday = day.toISOString().split('T')[0] === todayStr;
+                const isToday = getLocalDateStr(day) === todayStr;
                 const isWeekend = day.getDay() === 0 || day.getDay() === 6;
                 return `<div style="width:${dayWidth}px;min-width:${dayWidth}px;text-align:center;font-size:0.65rem;padding:4px 0;${isToday ? 'background:#f0fdf4;font-weight:700;color:#16a34a;' : isWeekend ? 'color:#d1d5db;' : 'color:#9ca3af;'}">
                     <div>${day.getDate() === 1 || i === 0 ? months[day.getMonth()] : ''}</div>
@@ -13883,7 +13999,7 @@
                     assigneeName: head?.name || head?.email || '',
                     instruction: firstStep.instruction || '',
                     estimatedTime: firstStep.estimatedTime || '60',
-                    deadlineDate: new Date().toISOString().split('T')[0],
+                    deadlineDate: getLocalDateStr(),
                     deadlineTime: '18:00',
                     status: 'new',
                     priority: 'high',
@@ -14067,7 +14183,7 @@
                         const head = users.find(u => u.id === headId);
                         
                         // Розрахунок дедлайну: якщо є deadline процесу — відштовхуємось від нього
-                        let deadlineDate = new Date().toISOString().split('T')[0];
+                        let deadlineDate = getLocalDateStr();
                         if (process.deadline) {
                             // Рахуємо скільки часу потрібно на залишкові кроки (від nextStep до кінця)
                             const remainingMinutes = template.steps.slice(nextStepIndex).reduce((sum, s) => sum + parseInt(s.estimatedTime || 60), 0);
@@ -14080,8 +14196,8 @@
                             const tomorrow = new Date();
                             tomorrow.setDate(tomorrow.getDate() + 1);
                             deadlineDate = stepDeadline > tomorrow 
-                                ? stepDeadline.toISOString().split('T')[0]
-                                : tomorrow.toISOString().split('T')[0];
+                                ? getLocalDateStr(stepDeadline)
+                                : getLocalDateStr(tomorrow);
                         }
                         
                         const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
@@ -14236,7 +14352,7 @@
                             function: nextStep.function,
                             assigneeId: headId,
                             assigneeName: head?.name || head?.email || '',
-                            deadlineDate: new Date().toISOString().split('T')[0],
+                            deadlineDate: getLocalDateStr(),
                             deadlineTime: '18:00',
                             status: 'new',
                             priority: 'high',
@@ -14612,7 +14728,7 @@
             
             const deadline = new Date();
             deadline.setDate(deadline.getDate() + 1);
-            const deadlineDate = deadline.toISOString().split('T')[0];
+            const deadlineDate = getLocalDateStr(deadline);
             
             // Визначаємо початок поточного періоду
             const now = new Date();
@@ -14621,14 +14737,14 @@
                 // Понеділок поточного тижня
                 const day = now.getDay();
                 const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-                periodStart = new Date(now.setDate(diff)).toISOString().split('T')[0];
+                periodStart = getLocalDateStr(new Date(now.setDate(diff)));
             } else if (rt.period === 'monthly') {
                 // 1-е число поточного місяця
-                periodStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+                periodStart = getLocalDateStr(new Date(now.getFullYear(), now.getMonth(), 1));
             } else {
                 // Квартал - 1-е число першого місяця кварталу
                 const quarter = Math.floor(now.getMonth() / 3);
-                periodStart = new Date(now.getFullYear(), quarter * 3, 1).toISOString().split('T')[0];
+                periodStart = getLocalDateStr(new Date(now.getFullYear(), quarter * 3, 1));
             }
             
             const batch = db.batch();
@@ -14649,7 +14765,7 @@
                     priority: 'medium',
                     pinned: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    createdDate: new Date().toISOString().split('T')[0],
+                    createdDate: getLocalDateStr(),
                     creatorName: currentLang === 'ua' ? 'Система' : 'Система',
                     // Зв'язок з регулярним завданням
                     regularTaskId: id,
@@ -14729,12 +14845,12 @@
             let periodStart;
             if (rt.period === 'weekly') {
                 // Для щотижневих з множинними днями - період = сьогодні
-                periodStart = now.toISOString().split('T')[0];
+                periodStart = getLocalDateStr(now);
             } else if (rt.period === 'monthly') {
-                periodStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+                periodStart = getLocalDateStr(new Date(now.getFullYear(), now.getMonth(), 1));
             } else {
                 const quarter = Math.floor(now.getMonth() / 3);
-                periodStart = new Date(now.getFullYear(), quarter * 3, 1).toISOString().split('T')[0];
+                periodStart = getLocalDateStr(new Date(now.getFullYear(), quarter * 3, 1));
             }
             
             // Перевіряємо чи є вже завдання за цей період
@@ -14756,7 +14872,7 @@
                 taskToUpdate.completedAt = new Date().toISOString();
             } else {
                 // Створюємо нове і одразу виконане
-                const today = new Date().toISOString().split('T')[0];
+                const today = getLocalDateStr();
                 const newTaskData = {
                     title: rt.title,
                     function: rt.function,
@@ -15259,7 +15375,7 @@
         function getRegularTaskStatus(rt) {
             const today = new Date();
             const todayDay = today.getDay();
-            const todayDateStr = today.toISOString().split('T')[0];
+            const todayDateStr = getLocalDateStr(today);
             
             // Check if task should run today
             let shouldRunToday = false;
@@ -15286,13 +15402,13 @@
             
             // Check completion
             const lastCompleted = rt.lastCompleted?.toDate ? rt.lastCompleted.toDate() : null;
-            const completedToday = lastCompleted && lastCompleted.toISOString().split('T')[0] === todayDateStr;
+            const completedToday = lastCompleted && lastCompletegetLocalDateStr(d) === todayDateStr;
             
             // Check if task was generated today
             const generatedTasks = tasks.filter(t => 
                 t.regularTaskId === rt.id && 
                 t.createdAt?.toDate && 
-                t.createdAt.toDate().toISOString().split('T')[0] === todayDateStr
+                getLocalDateStr(t.createdAt.toDate()) === todayDateStr
             );
             
             if (completedToday) {
@@ -15319,11 +15435,11 @@
             if (!task) return;
             
             const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
+            const todayStr = getLocalDateStr(today);
             
             // Check if already completed today
             const lastCompleted = task.lastCompleted?.toDate ? task.lastCompleted.toDate() : null;
-            const completedToday = lastCompleted && lastCompleted.toISOString().split('T')[0] === todayStr;
+            const completedToday = lastCompleted && lastCompletegetLocalDateStr(d) === todayStr;
             
             if (completedToday) {
                 // Unmark as completed
@@ -15390,7 +15506,7 @@
             const today = new Date();
             const todayDay = today.getDay();
             const todayDate = today.getDate();
-            const todayDateStr = today.toISOString().split('T')[0];
+            const todayDateStr = getLocalDateStr(today);
             
             // Фільтри
             const ff = document.getElementById('regularFunctionFilter')?.value;
@@ -15745,9 +15861,9 @@
             }
             
             const now = new Date();
-            const today = now.toISOString().split('T')[0];
+            const today = getLocalDateStr(now);
             const tm = new Date(now); tm.setDate(tm.getDate() + 1);
-            const tomorrow = tm.toISOString().split('T')[0];
+            const tomorrow = getLocalDateStr(tm);
             
             // Фільтруємо завдання
             let filteredTasks = tasks.filter(task => {
@@ -15762,13 +15878,13 @@
                     const taskDate = parseDeadline(task).date;
                     const weekLater = new Date();
                     weekLater.setDate(weekLater.getDate() + 7);
-                    if (taskDate > weekLater.toISOString().split('T')[0] || taskDate < today) return false;
+                    if (taskDate > getLocalDateStr(weekLater) || taskDate < today) return false;
                 }
                 if (pf === 'month') {
                     const taskDate = parseDeadline(task).date;
                     const monthLater = new Date();
                     monthLater.setMonth(monthLater.getMonth() + 1);
-                    if (taskDate > monthLater.toISOString().split('T')[0] || taskDate < today) return false;
+                    if (taskDate > getLocalDateStr(monthLater) || taskDate < today) return false;
                 }
                 return true;
             });
@@ -15824,7 +15940,7 @@
                         const c = data.tasks.length;
                         const tasksList = data.tasks.map(t => {
                             const deadline = t.deadlineDate || '';
-                            const isOverdue = deadline && deadline < new Date().toISOString().split('T')[0];
+                            const isOverdue = deadline && deadline < getLocalDateStr();
                             return `
                                 <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="openTaskModal('${esc(t.id)}')">
                                     <span class="task-title">${esc(t.title)}</span>
@@ -15862,7 +15978,7 @@
                         const c = taskList.length;
                         const tasksHTML = taskList.map(t => {
                             const deadline = t.deadlineDate || '';
-                            const isOverdue = deadline && deadline < new Date().toISOString().split('T')[0];
+                            const isOverdue = deadline && deadline < getLocalDateStr();
                             return `
                                 <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="event.stopPropagation(); openTaskModal('${esc(t.id)}')">
                                     <span class="task-title">${esc(t.title)}</span>
@@ -16238,7 +16354,7 @@
             
             // Прострочені
             const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
+            const todayStr = getLocalDateStr(today);
             const overdueTasks = visibleTasks.filter(task => {
                 const taskDate = parseDeadline(task).date;
                 return taskDate && taskDate < todayStr && task.status !== 'done' && task.status !== 'review';
@@ -16264,7 +16380,7 @@
             for (let i = 6; i >= 0; i--) {
                 const d = new Date(today);
                 d.setDate(d.getDate() - i);
-                days.push(d.toISOString().split('T')[0]);
+                days.push(getLocalDateStr(d));
             }
             const dayNames = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
             
@@ -16277,14 +16393,14 @@
                 // Completed
                 if (t.status === 'done' && t.completedAt) {
                     let cDate;
-                    if (t.completedAt.toDate) cDate = t.completedAt.toDate().toISOString().split('T')[0];
+                    if (t.completedAt.toDate) cDate = getLocalDateStr(t.completedAt.toDate());
                     else if (typeof t.completedAt === 'string') cDate = t.completedAt.split('T')[0];
                     if (cDate && doneByDay[cDate] !== undefined) doneByDay[cDate]++;
                 }
                 // Created
                 if (t.createdAt) {
                     let crDate;
-                    if (t.createdAt.toDate) crDate = t.createdAt.toDate().toISOString().split('T')[0];
+                    if (t.createdAt.toDate) crDate = getLocalDateStr(t.createdAt.toDate());
                     else if (typeof t.createdAt === 'string') crDate = t.createdAt.split('T')[0];
                     if (crDate && createdByDay[crDate] !== undefined) createdByDay[crDate]++;
                 }
@@ -16298,7 +16414,7 @@
                 const dayDate = new Date(d);
                 const label = dayNames[dayDate.getDay()];
                 const dateNum = dayDate.getDate();
-                const isToday = d === today.toISOString().split('T')[0];
+                const isToday = d === getLocalDateStr(today);
                 
                 return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
                     <div style="display:flex;gap:2px;align-items:flex-end;height:80px;">
@@ -16387,7 +16503,7 @@
         function renderStuckProcesses() {
             if (!processes || processes.length === 0) return '';
             
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getLocalDateStr();
             const stuck = processes.filter(p => {
                 if (p.status !== 'active') return false;
                 if (p.deadline && p.deadline < todayStr) return true;
@@ -16423,7 +16539,7 @@
                 if (!byFunc[t.function]) byFunc[t.function] = { active: 0, overdue: 0 };
                 byFunc[t.function].active++;
                 const taskDate = parseDeadline(t).date;
-                const todayStr = new Date().toISOString().split('T')[0];
+                const todayStr = getLocalDateStr();
                 if (taskDate && taskDate < todayStr) byFunc[t.function].overdue++;
             });
             
@@ -16680,7 +16796,7 @@
             if (!notificationsEnabled || !tasks.length) return;
             
             const now = new Date();
-            const today = now.toISOString().split('T')[0];
+            const today = getLocalDateStr(now);
             const currentHour = now.getHours();
             const currentMinute = now.getMinutes();
             
@@ -16731,7 +16847,7 @@
                 // Check if deadline is tomorrow (notify at 18:00)
                 const tomorrow = new Date(now);
                 tomorrow.setDate(tomorrow.getDate() + 1);
-                const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                const tomorrowStr = getLocalDateStr(tomorrow);
                 
                 if (taskDeadline === tomorrowStr && currentHour === 18 && currentMinute < 5) {
                     const notifyKeyTomorrow = `${task.id}-tomorrow`;
@@ -16813,7 +16929,7 @@
         
         // Clear old notifications daily
         function clearOldNotifications() {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalDateStr();
             const lastClear = localStorage.getItem('lastNotificationClear');
             
             if (lastClear !== today) {
@@ -17706,10 +17822,10 @@
             // Завдання прив'язані до ФУНКЦІЙ, виконавці беруться автоматично
             // Коли людина звільняється - видаляємо її з функції, нові завдання падають на нового співробітника
             const clinicTasks = [
-                { title: 'Первинна консультація - Іванов І.І.', function: 'Лікування', status: 'new', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '10:00', estimatedTime: '45', expectedResult: 'Діагноз, план лікування' },
-                { title: 'Підготувати рекламну акцію на Новий рік', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: tomorrow.toISOString().split('T')[0], deadlineTime: '15:00', estimatedTime: '120', expectedResult: 'Готовий макет та текст акції' },
-                { title: 'Замовити нові рукавички та маски', function: 'Закупівлі', status: 'new', priority: 'medium', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '14:00', estimatedTime: '30', expectedResult: 'Замовлення оформлене' },
-                { title: 'Оплатити рахунок за оренду', function: 'Фінанси', status: 'new', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '16:00', estimatedTime: '15', expectedResult: 'Рахунок оплачено' }
+                { title: 'Первинна консультація - Іванов І.І.', function: 'Лікування', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '10:00', estimatedTime: '45', expectedResult: 'Діагноз, план лікування' },
+                { title: 'Підготувати рекламну акцію на Новий рік', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(tomorrow), deadlineTime: '15:00', estimatedTime: '120', expectedResult: 'Готовий макет та текст акції' },
+                { title: 'Замовити нові рукавички та маски', function: 'Закупівлі', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(today), deadlineTime: '14:00', estimatedTime: '30', expectedResult: 'Замовлення оформлене' },
+                { title: 'Оплатити рахунок за оренду', function: 'Фінанси', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '16:00', estimatedTime: '15', expectedResult: 'Рахунок оплачено' }
             ];
             
             for (const task of clinicTasks) {
@@ -17790,7 +17906,7 @@
                         currentStep: 3,
                         status: 'active',
                         assigneeId: userIds[1],
-                        deadline: new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0],
+                        deadline: getLocalDateStr(new Date(Date.now() + 5 * 86400000)),
                         createdBy: currentUser.uid,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
@@ -17803,7 +17919,7 @@
                         currentStep: 1,
                         status: 'active',
                         assigneeId: userIds[2],
-                        deadline: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
+                        deadline: getLocalDateStr(new Date(Date.now() + 14 * 86400000)),
                         createdBy: currentUser.uid,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
@@ -17817,24 +17933,24 @@
                     description: 'Планування та запуск нової локації клініки в Луцьку',
                     color: '#3b82f6',
                     status: 'active',
-                    startDate: new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0],
-                    deadline: new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0]
+                    startDate: getLocalDateStr(new Date(Date.now() - 30 * 86400000)),
+                    deadline: getLocalDateStr(new Date(Date.now() + 90 * 86400000))
                 },
                 {
                     name: 'Впровадження CRM системи',
                     description: 'Автоматизація запису пацієнтів та нагадувань',
                     color: '#8b5cf6',
                     status: 'active',
-                    startDate: new Date(Date.now() - 14 * 86400000).toISOString().split('T')[0],
-                    deadline: new Date(Date.now() + 45 * 86400000).toISOString().split('T')[0]
+                    startDate: getLocalDateStr(new Date(Date.now() - 14 * 86400000)),
+                    deadline: getLocalDateStr(new Date(Date.now() + 45 * 86400000))
                 },
                 {
                     name: 'Сертифікація ISO 9001',
                     description: 'Підготовка документації та проходження аудиту',
                     color: '#f59e0b',
                     status: 'paused',
-                    startDate: new Date(Date.now() - 60 * 86400000).toISOString().split('T')[0],
-                    deadline: new Date(Date.now() + 120 * 86400000).toISOString().split('T')[0]
+                    startDate: getLocalDateStr(new Date(Date.now() - 60 * 86400000)),
+                    deadline: getLocalDateStr(new Date(Date.now() + 120 * 86400000))
                 }
             ];
             
@@ -17851,11 +17967,11 @@
             
             // Додаємо задачі з прив'язкою до проєктів
             const projectTasks = [
-                { title: 'Знайти приміщення для другої філії', function: 'Адміністрування', status: 'progress', priority: 'high', deadlineDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0], projectId: projectRefs[0] },
-                { title: 'Отримати ліцензію МОЗ', function: 'Адміністрування', status: 'new', priority: 'high', deadlineDate: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0], projectId: projectRefs[0] },
-                { title: 'Порівняти CRM: Bitrix vs HubSpot vs TALKO', function: 'Маркетинг', status: 'done', priority: 'medium', deadlineDate: new Date(Date.now() - 3 * 86400000).toISOString().split('T')[0], projectId: projectRefs[1] },
-                { title: 'Налаштувати автоматичні нагадування', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: new Date(Date.now() + 10 * 86400000).toISOString().split('T')[0], projectId: projectRefs[1] },
-                { title: 'Навчити персонал роботі з CRM', function: 'Адміністрування', status: 'new', priority: 'low', deadlineDate: new Date(Date.now() + 20 * 86400000).toISOString().split('T')[0], projectId: projectRefs[1] }
+                { title: 'Знайти приміщення для другої філії', function: 'Адміністрування', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 7 * 86400000)), projectId: projectRefs[0] },
+                { title: 'Отримати ліцензію МОЗ', function: 'Адміністрування', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 30 * 86400000)), projectId: projectRefs[0] },
+                { title: 'Порівняти CRM: Bitrix vs HubSpot vs TALKO', function: 'Маркетинг', status: 'done', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() - 3 * 86400000)), projectId: projectRefs[1] },
+                { title: 'Налаштувати автоматичні нагадування', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 10 * 86400000)), projectId: projectRefs[1] },
+                { title: 'Навчити персонал роботі з CRM', function: 'Адміністрування', status: 'new', priority: 'low', deadlineDate: getLocalDateStr(new Date(Date.now() + 20 * 86400000)), projectId: projectRefs[1] }
             ];
             
             for (const task of projectTasks) {
@@ -17935,11 +18051,11 @@
             tomorrow.setDate(tomorrow.getDate() + 1);
             
             const mfgTasks = [
-                { title: 'Виготовити партію 500 од. - Замовлення #1247', function: 'Виробництво', status: 'progress', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '17:00', estimatedTime: '360', expectedResult: '500 одиниць готової продукції' },
-                { title: 'Перевірити якість партії #1245', function: 'Контроль якості', status: 'new', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '12:00', estimatedTime: '60', expectedResult: 'Звіт про якість, % браку' },
-                { title: 'Відвантаження клієнту ТОВ "Альфа"', function: 'Логістика', status: 'new', priority: 'medium', deadlineDate: tomorrow.toISOString().split('T')[0], deadlineTime: '09:00', estimatedTime: '90', expectedResult: 'Товар відвантажено, ТТН підписана' },
-                { title: 'Замовити комплектуючі до верстата #3', function: 'Постачання', status: 'new', priority: 'medium', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '14:00', estimatedTime: '30', expectedResult: 'Замовлення оформлене' },
-                { title: 'Ремонт конвеєра - лінія 2', function: 'Обслуговування', status: 'progress', priority: 'high', deadlineDate: today.toISOString().split('T')[0], deadlineTime: '11:00', estimatedTime: '120', expectedResult: 'Конвеєр працює' }
+                { title: 'Виготовити партію 500 од. - Замовлення #1247', function: 'Виробництво', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '17:00', estimatedTime: '360', expectedResult: '500 одиниць готової продукції' },
+                { title: 'Перевірити якість партії #1245', function: 'Контроль якості', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '12:00', estimatedTime: '60', expectedResult: 'Звіт про якість, % браку' },
+                { title: 'Відвантаження клієнту ТОВ "Альфа"', function: 'Логістика', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(tomorrow), deadlineTime: '09:00', estimatedTime: '90', expectedResult: 'Товар відвантажено, ТТН підписана' },
+                { title: 'Замовити комплектуючі до верстата #3', function: 'Постачання', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(today), deadlineTime: '14:00', estimatedTime: '30', expectedResult: 'Замовлення оформлене' },
+                { title: 'Ремонт конвеєра - лінія 2', function: 'Обслуговування', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '11:00', estimatedTime: '120', expectedResult: 'Конвеєр працює' }
             ];
             
             for (const task of mfgTasks) {
@@ -18021,7 +18137,7 @@
                         currentStep: 4,
                         status: 'active',
                         assigneeId: userIds[0],
-                        deadline: new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0],
+                        deadline: getLocalDateStr(new Date(Date.now() + 3 * 86400000)),
                         createdBy: currentUser.uid,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
@@ -18032,7 +18148,7 @@
                         currentStep: 1,
                         status: 'active',
                         assigneeId: userIds[2],
-                        deadline: new Date(Date.now() + 10 * 86400000).toISOString().split('T')[0],
+                        deadline: getLocalDateStr(new Date(Date.now() + 10 * 86400000)),
                         createdBy: currentUser.uid,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
@@ -18045,7 +18161,7 @@
                         currentStep: 3,
                         status: 'active',
                         assigneeId: userIds[0],
-                        deadline: new Date(Date.now() - 1 * 86400000).toISOString().split('T')[0],
+                        deadline: getLocalDateStr(new Date(Date.now() - 1 * 86400000)),
                         createdBy: currentUser.uid,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
@@ -18059,24 +18175,24 @@
                     description: 'Монтаж та налагодження лінії #4 для нового продукту',
                     color: '#ef4444',
                     status: 'active',
-                    startDate: new Date(Date.now() - 20 * 86400000).toISOString().split('T')[0],
-                    deadline: new Date(Date.now() + 60 * 86400000).toISOString().split('T')[0]
+                    startDate: getLocalDateStr(new Date(Date.now() - 20 * 86400000)),
+                    deadline: getLocalDateStr(new Date(Date.now() + 60 * 86400000))
                 },
                 {
                     name: 'Автоматизація складу',
                     description: 'Впровадження WMS системи та штрихкодування',
                     color: '#3b82f6',
                     status: 'active',
-                    startDate: new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0],
-                    deadline: new Date(Date.now() + 45 * 86400000).toISOString().split('T')[0]
+                    startDate: getLocalDateStr(new Date(Date.now() - 7 * 86400000)),
+                    deadline: getLocalDateStr(new Date(Date.now() + 45 * 86400000))
                 },
                 {
                     name: 'Зменшення браку на 50%',
                     description: 'Аналіз причин браку, навчання персоналу, нові стандарти',
                     color: '#22c55e',
                     status: 'active',
-                    startDate: new Date(Date.now() - 45 * 86400000).toISOString().split('T')[0],
-                    deadline: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0]
+                    startDate: getLocalDateStr(new Date(Date.now() - 45 * 86400000)),
+                    deadline: getLocalDateStr(new Date(Date.now() + 30 * 86400000))
                 }
             ];
             
@@ -18093,13 +18209,13 @@
             
             // Задачі з прив'язкою до проєктів
             const mfgProjectTasks = [
-                { title: 'Фундамент під лінію #4', function: 'Виробництво', status: 'done', priority: 'high', deadlineDate: new Date(Date.now() - 5 * 86400000).toISOString().split('T')[0], projectId: mfgProjectRefs[0] },
-                { title: 'Монтаж обладнання лінії #4', function: 'Обслуговування', status: 'progress', priority: 'high', deadlineDate: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0], projectId: mfgProjectRefs[0] },
-                { title: 'Тестовий запуск лінії #4', function: 'Виробництво', status: 'new', priority: 'high', deadlineDate: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0], projectId: mfgProjectRefs[0] },
-                { title: 'Обрати WMS систему', function: 'Логістика', status: 'done', priority: 'medium', deadlineDate: new Date(Date.now() - 2 * 86400000).toISOString().split('T')[0], projectId: mfgProjectRefs[1] },
-                { title: 'Закупити сканери штрихкодів', function: 'Постачання', status: 'progress', priority: 'medium', deadlineDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0], projectId: mfgProjectRefs[1] },
-                { title: 'Аналіз причин браку за 6 місяців', function: 'Контроль якості', status: 'done', priority: 'high', deadlineDate: new Date(Date.now() - 10 * 86400000).toISOString().split('T')[0], projectId: mfgProjectRefs[2] },
-                { title: 'Навчання операторів новим стандартам', function: 'Виробництво', status: 'progress', priority: 'medium', deadlineDate: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0], projectId: mfgProjectRefs[2] }
+                { title: 'Фундамент під лінію #4', function: 'Виробництво', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() - 5 * 86400000)), projectId: mfgProjectRefs[0] },
+                { title: 'Монтаж обладнання лінії #4', function: 'Обслуговування', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 14 * 86400000)), projectId: mfgProjectRefs[0] },
+                { title: 'Тестовий запуск лінії #4', function: 'Виробництво', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 30 * 86400000)), projectId: mfgProjectRefs[0] },
+                { title: 'Обрати WMS систему', function: 'Логістика', status: 'done', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() - 2 * 86400000)), projectId: mfgProjectRefs[1] },
+                { title: 'Закупити сканери штрихкодів', function: 'Постачання', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 7 * 86400000)), projectId: mfgProjectRefs[1] },
+                { title: 'Аналіз причин браку за 6 місяців', function: 'Контроль якості', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() - 10 * 86400000)), projectId: mfgProjectRefs[2] },
+                { title: 'Навчання операторів новим стандартам', function: 'Виробництво', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 14 * 86400000)), projectId: mfgProjectRefs[2] }
             ];
             
             for (const task of mfgProjectTasks) {
@@ -19597,7 +19713,7 @@ Ctrl+N - нове завдання
     
     function getFocusTasks() {
         const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
+        const todayStr = getLocalDateStr(today);
         const todayDay = today.getDay();
         const result = [];
         
@@ -19861,7 +19977,7 @@ Ctrl+N - нове завдання
         try {
             if (task.type === 'regular') {
                 // Для регулярних — toggleMyDayTask логіка
-                const todayStr = new Date().toISOString().split('T')[0];
+                const todayStr = getLocalDateStr();
                 
                 if (task.generatedTaskId) {
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(task.generatedTaskId).update({
