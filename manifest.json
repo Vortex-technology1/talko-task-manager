@@ -2,7 +2,7 @@
   "name": "TALKO Task Manager",
   "short_name": "TALKO Tasks",
   "description": "Управління завданнями для бізнесу",
-  "start_url": "/index_task.html",
+  "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
