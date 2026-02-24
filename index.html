@@ -6057,13 +6057,13 @@
                         <!-- FEAT-001: Співвиконавці -->
                         <div class="form-group full-width">
                             <label class="form-label"><i data-lucide="users" class="icon icon-sm"></i> <span data-i18n="coExecutors">Співвиконавці</span></label>
-                            <div id="taskCoExecutors" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f9fafb;border-radius:8px;max-height:120px;overflow-y:auto;"></div>
+                            <div id="taskCoExecutors" style="margin-top:0.5rem;"></div>
                         </div>
                         
                         <!-- FEAT-001: Спостерігачі -->
                         <div class="form-group full-width">
                             <label class="form-label"><i data-lucide="eye" class="icon icon-sm"></i> <span data-i18n="observers">Спостерігачі</span></label>
-                            <div id="taskObservers" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f0f9ff;border-radius:8px;max-height:120px;overflow-y:auto;"></div>
+                            <div id="taskObservers" style="margin-top:0.5rem;"></div>
                         </div>
                         
                         <!-- FEAT-002+007: Toggles контролю та зміни строків -->
@@ -6170,7 +6170,7 @@
                                 <i data-lucide="eye" class="icon icon-sm"></i> 
                                 <span data-i18n="notifyOnReminder">Контроль (хто отримає нагадування)</span>
                             </label>
-                            <div id="taskNotifyReminder" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f0fdf4;border-radius:8px;max-height:100px;overflow-y:auto;"></div>
+                            <div id="taskNotifyReminder" style="margin-top:0.5rem;"></div>
                         </div>
                         
                         <!-- Сповіщення про виконання -->
@@ -6179,7 +6179,7 @@
                                 <i data-lucide="bell" class="icon icon-sm"></i> 
                                 <span data-i18n="notifyOnComplete">Сповістити про виконання</span>
                             </label>
-                            <div id="taskNotifyUsers" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;padding:0.75rem;background:#f9fafb;border-radius:8px;max-height:150px;overflow-y:auto;"></div>
+                            <div id="taskNotifyUsers" style="margin-top:0.5rem;"></div>
                         </div>
                     </div>
                     <div id="taskReviewActions" style="display:none;padding:0.75rem 1rem;margin:0.5rem 0;border-radius:12px;">
@@ -10377,27 +10377,77 @@
             refreshIcons();
         }
         
+        function resetDropdownPosition(dd) {
+            dd.style.position = 'absolute';
+            dd.style.top = '100%';
+            dd.style.bottom = '';
+            dd.style.left = '0';
+            dd.style.right = '0';
+            dd.style.width = '';
+            dd.style.zIndex = '200';
+            dd.style.maxHeight = '';
+        }
+        
         function toggleUserMultiSelect(uid) {
             const wrap = document.getElementById(uid);
             if (!wrap) return;
             const dd = wrap.querySelector('.user-ms-dropdown');
+            const toggle = wrap.querySelector('.user-ms-toggle');
             const isOpen = dd.style.display !== 'none';
+            
             // Close all other dropdowns
-            document.querySelectorAll('.user-ms-dropdown').forEach(d => d.style.display = 'none');
+            document.querySelectorAll('.user-ms-dropdown').forEach(d => { d.style.display = 'none'; resetDropdownPosition(d); });
             document.querySelectorAll('.user-ms-toggle').forEach(t => t.style.borderColor = '#d1d5db');
+            
             if (!isOpen) {
+                // Position fixed to avoid overflow clipping
+                const rect = toggle.getBoundingClientRect();
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const ddHeight = 240;
+                
+                dd.style.position = 'fixed';
+                dd.style.left = rect.left + 'px';
+                dd.style.width = rect.width + 'px';
+                dd.style.zIndex = '9999';
+                
+                if (spaceBelow >= ddHeight || spaceBelow >= rect.top) {
+                    dd.style.top = rect.bottom + 4 + 'px';
+                    dd.style.bottom = '';
+                    dd.style.maxHeight = Math.min(ddHeight, spaceBelow - 8) + 'px';
+                } else {
+                    dd.style.bottom = (window.innerHeight - rect.top + 4) + 'px';
+                    dd.style.top = '';
+                    dd.style.maxHeight = Math.min(ddHeight, rect.top - 8) + 'px';
+                }
+                
                 dd.style.display = 'block';
-                wrap.querySelector('.user-ms-toggle').style.borderColor = '#22c55e';
+                toggle.style.borderColor = '#22c55e';
                 const inp = dd.querySelector('input[type="text"]');
                 if (inp) setTimeout(() => inp.focus(), 50);
-                // Close on outside click
-                setTimeout(() => document.addEventListener('click', function closeMS(e) {
-                    if (!wrap.contains(e.target)) {
+                
+                // Close on outside click or scroll
+                const closeHandler = (e) => {
+                    if (!wrap.contains(e.target) && !dd.contains(e.target)) {
                         dd.style.display = 'none';
-                        wrap.querySelector('.user-ms-toggle').style.borderColor = '#d1d5db';
-                        document.removeEventListener('click', closeMS);
+                        resetDropdownPosition(dd);
+                        toggle.style.borderColor = '#d1d5db';
+                        document.removeEventListener('click', closeHandler);
+                        document.removeEventListener('scroll', scrollHandler, true);
                     }
-                }), 10);
+                };
+                const scrollHandler = (e) => {
+                    // Ігноруємо scroll всередині самого dropdown
+                    if (dd.contains(e.target)) return;
+                    dd.style.display = 'none';
+                    resetDropdownPosition(dd);
+                    toggle.style.borderColor = '#d1d5db';
+                    document.removeEventListener('click', closeHandler);
+                    document.removeEventListener('scroll', scrollHandler, true);
+                };
+                setTimeout(() => {
+                    document.addEventListener('click', closeHandler);
+                    document.addEventListener('scroll', scrollHandler, true);
+                }, 10);
             }
         }
         
