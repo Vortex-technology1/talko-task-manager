@@ -9108,7 +9108,7 @@
                     document.getElementById('taskModalTitle').textContent = t('editTask');
                     document.getElementById('taskTitle').value = task.title || '';
                     document.getElementById('taskFunction').value = task.function || '';
-                    updateProjectSelects();
+                    updateProjectSelects(task.projectId);
                     document.getElementById('taskProject').value = task.projectId || '';
                     document.getElementById('taskAssignee').value = task.assigneeId || '';
                     // Розбиваємо deadline на дату і час
@@ -9543,10 +9543,13 @@
                 };
                 
                 let newDocRef = null;
+                let _prevProjectId = '';
                 
                 if (currentEditingId) {
                     // Update existing task
                     const existingTask = tasks.find(t => t.id === currentEditingId);
+                    // Зберігаємо попередній projectId для автостатусу
+                    _prevProjectId = existingTask?.projectId || '';
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(currentEditingId).update(data);
                     
                     // Sync with Google Calendar (non-blocking)
@@ -9576,6 +9579,14 @@
                 
                 closeModal('taskModal');
                 
+                // FIX 3: Warning якщо дедлайн задачі > дедлайн проєкту
+                if (data.projectId && data.deadlineDate) {
+                    const proj = projects.find(p => p.id === data.projectId);
+                    if (proj?.deadline && data.deadlineDate > proj.deadline && data.status !== 'done') {
+                        showToast(`⚠️ Дедлайн задачі (${formatDateShort(data.deadlineDate)}) виходить за дедлайн проєкту "${proj.name}" (${formatDateShort(proj.deadline)})`, 'warning');
+                    }
+                }
+                
                 // Автопросування процесу якщо завдання завершили через форму
                 if (currentEditingId && data.status === 'done') {
                     advanceProcessIfLinked(currentEditingId);
@@ -9601,6 +9612,12 @@
                 
                 // Оновлюємо project detail якщо відкритий
                 if (openProjectId) renderProjectDetail(openProjectId);
+                
+                // Автостатус проекту (оновити новий і старий проєкт)
+                if (data.projectId) autoUpdateProjectStatus(data.projectId);
+                if (_prevProjectId && _prevProjectId !== data.projectId) {
+                    autoUpdateProjectStatus(_prevProjectId);
+                }
                 
             } catch (error) {
                 console.error('saveTask error:', error);
@@ -9934,6 +9951,13 @@
             renderFunctions();
             updateSelects();
             
+            // Автостатус проєктів для відновлених задач
+            const affectedProjects = new Set();
+            itemsToRestore.forEach(({ item, type }) => {
+                if (type === 'task' && item.projectId) affectedProjects.add(item.projectId);
+            });
+            affectedProjects.forEach(pid => autoUpdateProjectStatus(pid));
+            
             if (failed > 0) {
                 alert(currentLang === 'ua' 
                     ? `Відновлено ${restored} з ${restored + failed}. ${failed} не вдалось відновити.` 
@@ -9967,6 +9991,8 @@
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
+                // Автостатус проєкту після видалення задачі
+                if (taskCopy.projectId) autoUpdateProjectStatus(taskCopy.projectId);
             } catch (error) {
                 // Rollback — вставляємо назад (filter + unshift безпечно незалежно від змін масиву)
                 if (!tasks.find(t => t.id === id)) {
@@ -10058,6 +10084,8 @@
                     reopenedBy: currentUser.uid
                 });
                 showToast('Завдання повернуто в роботу', 'success');
+                // Автостатус проєкту
+                if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
             } catch(e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
@@ -10096,6 +10124,9 @@
                 
                 // Автопросування процесу (review accepted = done)
                 advanceProcessIfLinked(taskId);
+                // Автостатус проекту
+                const acceptedTask = tasks[taskIndex];
+                if (acceptedTask?.projectId) autoUpdateProjectStatus(acceptedTask.projectId);
                 
                 showToast(t('taskAccepted'), 'success');
             } catch (e) {
@@ -10808,6 +10839,8 @@
                 if (!needsReview) {
                     advanceProcessIfLinked(id);
                 }
+                // Автостатус проєкту
+                if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
                 
                 if (needsReview) {
                     showToast(t('taskSentForReview'), 'info');
@@ -10845,6 +10878,8 @@
                     status: 'progress',
                     completedAt: null
                 });
+                // Автостатус проєкту (done→progress може змінити completed→active)
+                if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
             } catch (e) {
                 // Rollback при помилці
                 if (taskIndex >= 0 && originalTask) {
@@ -11255,6 +11290,8 @@
                 if (needsReview) {
                     showToast(t('taskSentForReview'), 'info');
                 }
+                // Автостатус проєкту
+                if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
             } catch (error) {
                 // Rollback
                 tasks[taskIndex] = originalTask;
@@ -13008,6 +13045,8 @@
                 else update.completedAt = null;
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(update);
                 if (newStatus === 'done') advanceProcessIfLinked(taskId);
+                // Автостатус проекту
+                if (task.projectId) autoUpdateProjectStatus(task.projectId);
             } catch(err) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
@@ -13682,17 +13721,23 @@
         }
         
         async function deleteProject(projectId) {
-            if (!confirm('Видалити проєкт? Завдання залишаться, але втратять прив\'язку.')) return;
+            const s = getProjectStats(projectId);
+            const msg = s.total > 0 
+                ? `Видалити проєкт? ${s.total} завдань (${s.total - s.done} незавершених) залишаться в загальному списку без прив'язки до проєкту.`
+                : 'Видалити порожній проєкт?';
+            if (!confirm(msg)) return;
             try {
                 await db.collection('companies').doc(currentCompany).collection('projects').doc(projectId).delete();
                 projects = projects.filter(p => p.id !== projectId);
                 // Знімаємо projectId з задач
-                tasks.filter(t => t.projectId === projectId).forEach(t => {
+                const orphaned = tasks.filter(t => t.projectId === projectId);
+                orphaned.forEach(t => {
                     t.projectId = '';
                     db.collection('companies').doc(currentCompany).collection('tasks').doc(t.id).update({ projectId: '' }).catch(() => {});
                 });
                 if (openProjectId === projectId) closeProjectDetail();
                 renderProjects();
+                if (orphaned.length > 0) showToast(`${orphaned.length} завдань відв'язано від проєкту`, 'info');
             } catch (err) {
                 console.error('[Projects] Delete error:', err);
             }
@@ -13706,7 +13751,54 @@
             const review = projectTasks.filter(t => t.status === 'review').length;
             const overdue = projectTasks.filter(t => t.deadlineDate && t.deadlineDate < getLocalDateStr() && t.status !== 'done' && t.status !== 'review').length;
             const percent = total > 0 ? Math.round((done / total) * 100) : 0;
-            return { total, done, inProgress, review, overdue, percent, tasks: projectTasks };
+            
+            // FIX 3: Конфлікт дедлайнів
+            const project = projects.find(p => p.id === projectId);
+            const deadlineConflicts = [];
+            if (project?.deadline) {
+                projectTasks.forEach(t => {
+                    if (t.deadlineDate && t.deadlineDate > project.deadline && t.status !== 'done') {
+                        deadlineConflicts.push(t);
+                    }
+                });
+            }
+            
+            return { total, done, inProgress, review, overdue, percent, tasks: projectTasks, deadlineConflicts };
+        }
+        
+        // FIX 4: Автооновлення статусу проекту
+        async function autoUpdateProjectStatus(projectId) {
+            if (!projectId) return;
+            const project = projects.find(p => p.id === projectId);
+            if (!project || project.status === 'paused') return; // paused = ручний override
+            
+            // Рахуємо ВСІ задачі проєкту (не user-filtered!)
+            const allProjectTasks = tasks.filter(t => t.projectId === projectId);
+            const total = allProjectTasks.length;
+            if (total === 0) return;
+            
+            const doneCount = allProjectTasks.filter(t => t.status === 'done').length;
+            const activeCount = allProjectTasks.filter(t => t.status === 'progress' || t.status === 'review').length;
+            
+            let newStatus = project.status;
+            if (doneCount === total) {
+                newStatus = 'completed';
+            } else if (project.status === 'completed' && doneCount < total) {
+                newStatus = 'active';
+            } else if (doneCount > 0 || activeCount > 0) {
+                newStatus = 'active';
+            }
+            
+            if (newStatus !== project.status) {
+                project.status = newStatus;
+                try {
+                    await db.collection('companies').doc(currentCompany).collection('projects').doc(projectId).update({ status: newStatus });
+                    const statusLabel = newStatus === 'completed' ? 'Завершено' : 'Активний';
+                    showToast(`Проєкт "${project.name}" → ${statusLabel}`, 'success');
+                } catch(e) { console.warn('autoUpdateProjectStatus error:', e); }
+                renderProjects();
+                if (openProjectId === projectId) renderProjectDetail(projectId);
+            }
         }
         
         function setProjectView(view) {
@@ -13779,6 +13871,7 @@
                         <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} завдань</span>
                         <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} готово</span>
                         ${s.overdue > 0 ? `<span style="color:var(--danger);font-weight:600;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue} прострочено</span>` : ''}
+                        ${s.deadlineConflicts.length > 0 ? `<span style="color:#ea580c;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${s.deadlineConflicts.length} за дедлайном</span>` : ''}
                     </div>
                     <div class="project-progress-bar"><div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(p.color)};"></div></div>
                     <div class="project-progress-label"><span>${s.done}/${s.total}</span><span>${s.percent}%</span></div>
@@ -13893,7 +13986,7 @@
             // After modal opens and form resets, set projectId
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    updateProjectSelects();
+                    updateProjectSelects(projectId);
                     const sel = document.getElementById('taskProject');
                     if (sel) sel.value = projectId;
                 }, 0);
@@ -13989,6 +14082,20 @@
                 <div class="project-progress-bar" style="height:8px;margin-bottom:1rem;">
                     <div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(project.color)};"></div>
                 </div>
+                
+                ${s.deadlineConflicts.length > 0 ? `
+                <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:0.75rem 1rem;margin-bottom:1rem;display:flex;gap:0.5rem;align-items:flex-start;">
+                    <i data-lucide="alert-triangle" class="icon" style="width:18px;height:18px;color:#ea580c;flex-shrink:0;margin-top:2px;"></i>
+                    <div>
+                        <div style="font-weight:600;font-size:0.85rem;color:#c2410c;margin-bottom:0.25rem;">
+                            ${s.deadlineConflicts.length} ${s.deadlineConflicts.length === 1 ? 'завдання виходить' : 'завдань виходять'} за дедлайн проєкту (${formatDateShort(project.deadline)})
+                        </div>
+                        <div style="font-size:0.8rem;color:#9a3412;">
+                            ${s.deadlineConflicts.slice(0, 3).map(t => `• ${esc(t.title)} — ${formatDateShort(t.deadlineDate)}`).join('<br>')}
+                            ${s.deadlineConflicts.length > 3 ? `<br>...та ще ${s.deadlineConflicts.length - 3}` : ''}
+                        </div>
+                    </div>
+                </div>` : ''}
                 
                 <!-- View Switcher -->
                 <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
@@ -14156,22 +14263,41 @@
         }
         
         async function updateProjectStatus(projectId, status) {
+            // Попередження при ручному завершенні з незавершеними задачами
+            if (status === 'completed') {
+                const s = getProjectStats(projectId);
+                const undone = s.total - s.done;
+                if (undone > 0 && !confirm(`В проєкті ${undone} незавершених завдань. Все одно позначити як "Завершено"?`)) {
+                    // Повернути select назад
+                    renderProjectDetail(projectId);
+                    return;
+                }
+            }
             try {
                 await db.collection('companies').doc(currentCompany).collection('projects').doc(projectId).update({ status });
                 const proj = projects.find(x => x.id === projectId);
                 if (proj) proj.status = status;
                 renderProjectDetail(projectId);
+                renderProjects();
             } catch (e) { console.error(e); }
         }
         
-        function updateProjectSelects() {
+        function updateProjectSelects(forceIncludeId) {
             const sel = document.getElementById('taskProject');
             if (!sel) return;
-            const current = sel.value;
+            const current = forceIncludeId || sel.value;
+            // Показуємо active + поточний проєкт задачі (навіть якщо completed/paused)
+            const activeProjects = projects.filter(p => p.status === 'active');
+            const currentProject = current ? projects.find(p => p.id === current) : null;
+            const showProjects = [...activeProjects];
+            if (currentProject && !showProjects.find(p => p.id === currentProject.id)) {
+                showProjects.push(currentProject);
+            }
             sel.innerHTML = '<option value="">Без проєкту</option>' + 
-                projects.filter(p => p.status === 'active').map(p => 
-                    `<option value="${esc(p.id)}">${esc(p.name)}</option>`
-                ).join('');
+                showProjects.map(p => {
+                    const suffix = p.status !== 'active' ? ` (${p.status === 'completed' ? 'завершено' : 'пауза'})` : '';
+                    return `<option value="${esc(p.id)}">${esc(p.name)}${suffix}</option>`;
+                }).join('');
             sel.value = current;
         }
         
@@ -18151,6 +18277,8 @@
                 renderMyDay();
                 if (currentCalendarView === 'list') renderTasks();
                 else renderCalendar();
+                // Автостатус проєкту
+                if (task?.projectId) autoUpdateProjectStatus(task.projectId);
             } catch (error) {
                 console.error('Delete error:', error);
                 alert('Помилка видалення: ' + error.message);
@@ -18530,11 +18658,21 @@
             
             // Додаємо задачі з прив'язкою до проєктів
             const projectTasks = [
+                // Проект 0: Відкриття другої філії (7 завдань)
                 { title: 'Знайти приміщення для другої філії', function: 'Адміністрування', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 7 * 86400000)), projectId: projectRefs[0] },
                 { title: 'Отримати ліцензію МОЗ', function: 'Адміністрування', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 30 * 86400000)), projectId: projectRefs[0] },
+                { title: 'Ремонт та облаштування кабінетів', function: 'Адміністрування', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 45 * 86400000)), projectId: projectRefs[0] },
+                { title: 'Закупівля обладнання для філії', function: 'Адміністрування', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 40 * 86400000)), projectId: projectRefs[0] },
+                { title: 'Набір персоналу для філії', function: 'Адміністрування', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 50 * 86400000)), projectId: projectRefs[0] },
+                { title: 'Підключити філію до IT-інфраструктури', function: 'Адміністрування', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 55 * 86400000)), projectId: projectRefs[0] },
+                { title: 'Маркетинг відкриття нової локації', function: 'Маркетинг', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 60 * 86400000)), projectId: projectRefs[0] },
+                // Проект 1: Впровадження CRM (6 завдань)
                 { title: 'Порівняти CRM: Bitrix vs HubSpot vs TALKO', function: 'Маркетинг', status: 'done', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() - 3 * 86400000)), projectId: projectRefs[1] },
                 { title: 'Налаштувати автоматичні нагадування', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 10 * 86400000)), projectId: projectRefs[1] },
-                { title: 'Навчити персонал роботі з CRM', function: 'Адміністрування', status: 'new', priority: 'low', deadlineDate: getLocalDateStr(new Date(Date.now() + 20 * 86400000)), projectId: projectRefs[1] }
+                { title: 'Навчити персонал роботі з CRM', function: 'Адміністрування', status: 'new', priority: 'low', deadlineDate: getLocalDateStr(new Date(Date.now() + 20 * 86400000)), projectId: projectRefs[1] },
+                { title: 'Імпорт бази пацієнтів в CRM', function: 'Маркетинг', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() - 5 * 86400000)), projectId: projectRefs[1] },
+                { title: 'Налаштувати воронку продажів', function: 'Маркетинг', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 8 * 86400000)), projectId: projectRefs[1] },
+                { title: 'Інтеграція CRM з телефонією', function: 'Адміністрування', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 15 * 86400000)), projectId: projectRefs[1] }
             ];
             
             for (const task of projectTasks) {
@@ -18772,13 +18910,31 @@
             
             // Задачі з прив'язкою до проєктів
             const mfgProjectTasks = [
+                // Проект 0: Запуск нової виробничої лінії (8 завдань)
                 { title: 'Фундамент під лінію #4', function: 'Виробництво', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() - 5 * 86400000)), projectId: mfgProjectRefs[0] },
                 { title: 'Монтаж обладнання лінії #4', function: 'Обслуговування', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 14 * 86400000)), projectId: mfgProjectRefs[0] },
                 { title: 'Тестовий запуск лінії #4', function: 'Виробництво', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 30 * 86400000)), projectId: mfgProjectRefs[0] },
+                { title: 'Підключення електрики 380V', function: 'Обслуговування', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() - 3 * 86400000)), projectId: mfgProjectRefs[0] },
+                { title: 'Калібрування датчиків лінії #4', function: 'Контроль якості', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 25 * 86400000)), projectId: mfgProjectRefs[0] },
+                { title: 'Навчання операторів лінії #4', function: 'Виробництво', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 35 * 86400000)), projectId: mfgProjectRefs[0] },
+                { title: 'Закупівля сировини для тестового запуску', function: 'Постачання', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 10 * 86400000)), projectId: mfgProjectRefs[0] },
+                { title: 'Узгодження графіку змін для лінії #4', function: 'Виробництво', status: 'new', priority: 'low', deadlineDate: getLocalDateStr(new Date(Date.now() + 28 * 86400000)), projectId: mfgProjectRefs[0] },
+                // Проект 1: Автоматизація складу (7 завдань)
                 { title: 'Обрати WMS систему', function: 'Логістика', status: 'done', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() - 2 * 86400000)), projectId: mfgProjectRefs[1] },
                 { title: 'Закупити сканери штрихкодів', function: 'Постачання', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 7 * 86400000)), projectId: mfgProjectRefs[1] },
+                { title: 'Розмітка зон зберігання', function: 'Логістика', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() - 8 * 86400000)), projectId: mfgProjectRefs[1] },
+                { title: 'Налаштування WMS під наш склад', function: 'Логістика', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 12 * 86400000)), projectId: mfgProjectRefs[1] },
+                { title: 'Інтеграція WMS з 1С', function: 'Логістика', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 20 * 86400000)), projectId: mfgProjectRefs[1] },
+                { title: 'Навчання комірників роботі зі сканерами', function: 'Логістика', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 25 * 86400000)), projectId: mfgProjectRefs[1] },
+                { title: 'Тестова інвентаризація з WMS', function: 'Логістика', status: 'new', priority: 'low', deadlineDate: getLocalDateStr(new Date(Date.now() + 30 * 86400000)), projectId: mfgProjectRefs[1] },
+                // Проект 2: Зменшення браку на 50% (7 завдань)
                 { title: 'Аналіз причин браку за 6 місяців', function: 'Контроль якості', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() - 10 * 86400000)), projectId: mfgProjectRefs[2] },
-                { title: 'Навчання операторів новим стандартам', function: 'Виробництво', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 14 * 86400000)), projectId: mfgProjectRefs[2] }
+                { title: 'Навчання операторів новим стандартам', function: 'Виробництво', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 14 * 86400000)), projectId: mfgProjectRefs[2] },
+                { title: 'Встановити датчики контролю на лінії #1-3', function: 'Обслуговування', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() - 4 * 86400000)), projectId: mfgProjectRefs[2] },
+                { title: 'Розробити чек-листи контролю якості', function: 'Контроль якості', status: 'done', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() - 7 * 86400000)), projectId: mfgProjectRefs[2] },
+                { title: 'Впровадити систему звітів по браку', function: 'Контроль якості', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now() + 5 * 86400000)), projectId: mfgProjectRefs[2] },
+                { title: 'Заміна зношеного інструменту', function: 'Постачання', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 3 * 86400000)), projectId: mfgProjectRefs[2] },
+                { title: 'Контрольний замір браку через 30 днів', function: 'Контроль якості', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now() + 30 * 86400000)), projectId: mfgProjectRefs[2] }
             ];
             
             for (const task of mfgProjectTasks) {
@@ -20600,6 +20756,8 @@ Ctrl+K або / - пошук завдань
                 if (!needsReview) {
                     advanceProcessIfLinked(task.id);
                 }
+                // Автостатус проєкту
+                if (task.projectId) autoUpdateProjectStatus(task.projectId);
                 
                 if (needsReview) {
                     showToast('Відправлено на перевірку', 'info');
