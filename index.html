@@ -5119,6 +5119,40 @@
         
         .comments-section.hidden { display: none; }
         
+        /* Audit log entries */
+        .audit-entry {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        .audit-entry:last-child { border-bottom: none; }
+        .audit-icon { 
+            width: 24px; height: 24px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            flex-shrink: 0; font-size: 0.7rem; margin-top: 2px;
+        }
+        .audit-body { flex: 1; }
+        .audit-user { font-weight: 600; color: var(--text); }
+        .audit-action { color: var(--gray); }
+        .audit-time { font-size: 0.7rem; color: #9ca3af; margin-top: 2px; }
+        .audit-value { 
+            display: inline-block; padding: 0.1rem 0.35rem; border-radius: 4px; 
+            font-size: 0.75rem; font-weight: 500; background: #f3f4f6;
+        }
+        
+        /* Escalation badges */
+        .escalation-badge {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            padding: 0.15rem 0.5rem; border-radius: 10px;
+            font-size: 0.7rem; font-weight: 600;
+        }
+        .escalation-1 { background: #fef3c7; color: #92400e; }
+        .escalation-2 { background: #fed7aa; color: #9a3412; }
+        .escalation-3 { background: #fee2e2; color: #dc2626; }
+        
         /* Skeleton loading */
         .skeleton-card {
             background: white;
@@ -6259,6 +6293,19 @@
                         <button type="button" class="comment-send-btn" onclick="sendComment()" id="sendCommentBtn">
                             <i data-lucide="send" class="icon"></i>
                         </button>
+                    </div>
+                </div>
+                
+                <!-- AUDIT LOG SECTION -->
+                <div id="taskHistorySection" class="comments-section hidden" style="margin-top:0;">
+                    <div class="comments-header" style="cursor:pointer;" onclick="toggleHistorySection()">
+                        <i data-lucide="history" class="icon"></i>
+                        <span>Історія змін</span>
+                        <span id="historyCount" class="comment-count">0</span>
+                        <i data-lucide="chevron-down" class="icon icon-sm" id="historyChevron" style="margin-left:auto;transition:transform 0.2s;"></i>
+                    </div>
+                    <div id="historyList" style="display:none;max-height:300px;overflow-y:auto;padding:0.5rem 0;">
+                        <p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">Немає записів</p>
                     </div>
                 </div>
             </div>
@@ -8257,6 +8304,8 @@
             } finally {
                 if (thisLoadVersion === loadingVersion) {
                     isLoading = false;
+                    // Check escalations after data is loaded
+                    checkEscalations();
                 }
                 hideSkeletonLoading();
             }
@@ -9638,6 +9687,21 @@
                     _prevProjectId = existingTask?.projectId || '';
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(currentEditingId).update(data);
                     
+                    // AUDIT LOG — визначаємо що змінилось
+                    if (existingTask) {
+                        const trackedFields = ['title','status','assigneeId','deadlineDate','deadlineTime','priority','description','expectedResult','projectId','function','requireReview'];
+                        const changes = {};
+                        for (const f of trackedFields) {
+                            if (String(data[f] ?? '') !== String(existingTask[f] ?? '')) {
+                                changes[f] = data[f];
+                            }
+                        }
+                        if (Object.keys(changes).length > 0) {
+                            const action = changes.status ? 'status' : changes.assigneeId ? 'reassign' : changes.deadlineDate || changes.deadlineTime ? 'deadline' : 'edit';
+                            logTaskChange(currentEditingId, action, changes, existingTask);
+                        }
+                    }
+                    
                     // Sync with Google Calendar (non-blocking)
                     if (existingTask?.calendarEventId && googleAccessToken) {
                         updateCalendarEvent(existingTask.calendarEventId, data).catch(err => 
@@ -9653,6 +9717,9 @@
                     data.pinned = false;
                     
                     newDocRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(data);
+                    
+                    // AUDIT LOG — створення задачі
+                    logTaskChange(newDocRef.id, 'created', { title: data.title, assigneeId: data.assigneeId, deadlineDate: data.deadlineDate }, null);
                     
                     // Sync with Google Calendar (only if date is set)
                     if (deadlineDate && googleAccessToken) {
@@ -10079,6 +10146,7 @@
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
                 // Автостатус проєкту після видалення задачі
                 if (taskCopy.projectId) autoUpdateProjectStatus(taskCopy.projectId);
+                // Note: audit log not needed for deletes — task doc is gone
             } catch (error) {
                 // Rollback — вставляємо назад (filter + unshift безпечно незалежно від змін масиву)
                 if (!tasks.find(t => t.id === id)) {
@@ -10170,6 +10238,8 @@
                     reopenedBy: currentUser.uid
                 });
                 showToast('Завдання повернуто в роботу', 'success');
+                // AUDIT LOG
+                logTaskChange(editingId, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' });
                 // Автостатус проєкту
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
             } catch(e) {
@@ -10213,6 +10283,8 @@
                 // Автостатус проекту
                 const acceptedTask = tasks[taskIndex];
                 if (acceptedTask?.projectId) autoUpdateProjectStatus(acceptedTask.projectId);
+                // AUDIT LOG
+                logTaskChange(taskId, 'review', { status: 'done' }, { status: 'review' });
                 
                 showToast(t('taskAccepted'), 'success');
             } catch (e) {
@@ -10254,6 +10326,8 @@
                 if (reason) updateData.reviewRejectReason = reason;
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
+                // AUDIT LOG
+                logTaskChange(taskId, 'status', { status: updateData.status }, { status: 'review' });
                 
                 showToast(t('taskRejected'), 'warning');
             } catch (e) {
@@ -10927,6 +11001,8 @@
                 }
                 // Автостатус проєкту
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
+                // AUDIT LOG
+                logTaskChange(id, 'complete', { status: newStatus }, { status: originalTask?.status || 'todo' });
                 
                 if (needsReview) {
                     showToast(t('taskSentForReview'), 'info');
@@ -10966,6 +11042,8 @@
                 });
                 // Автостатус проєкту (done→progress може змінити completed→active)
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
+                // AUDIT LOG
+                logTaskChange(id, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' });
             } catch (e) {
                 // Rollback при помилці
                 if (taskIndex >= 0 && originalTask) {
@@ -11372,6 +11450,8 @@
                 if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
+                // AUDIT LOG
+                logTaskChange(taskId, updateData.status === 'done' ? 'complete' : 'status', { status: updateData.status }, { status: originalTask?.status });
                 
                 if (needsReview) {
                     showToast(t('taskSentForReview'), 'info');
@@ -12192,6 +12272,8 @@
                             status: newStatus,
                             completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null
                         });
+                        // AUDIT LOG
+                        logTaskChange(taskToUpdate.id, newStatus === 'done' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
                     } else if (!currentDone) {
                         // Завдання не існує - створюємо нове і одразу виконане
                         const rt = regularTasks.find(r => r.id === id);
@@ -12236,6 +12318,8 @@
                         completedAt: newStatus === 'done' || newStatus === 'review' ? firebase.firestore.FieldValue.serverTimestamp() : null,
                         ...(needsReview ? { sentForReviewAt: firebase.firestore.FieldValue.serverTimestamp() } : {})
                     });
+                    // AUDIT LOG
+                    logTaskChange(id, newStatus === 'done' || newStatus === 'review' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
                     
                     if (needsReview) {
                         showToast(t('taskSentForReview'), 'info');
@@ -13132,6 +13216,8 @@
                 if (newStatus === 'done') advanceProcessIfLinked(taskId);
                 // Автостатус проекту
                 if (task.projectId) autoUpdateProjectStatus(task.projectId);
+                // AUDIT LOG
+                logTaskChange(taskId, newStatus === 'done' ? 'complete' : 'status', { status: newStatus }, { status: task.status });
             } catch(err) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
@@ -15586,6 +15672,7 @@
                     status: 'done',
                     completedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                logTaskChange(taskToUpdate.id, 'complete', { status: 'done' }, { status: taskToUpdate.status });
                 // Локальне оновлення
                 taskToUpdate.status = 'done';
                 taskToUpdate.completedAt = new Date().toISOString();
@@ -16662,7 +16749,7 @@
                             const isOverdue = deadline && deadline < getLocalDateStr();
                             return `
                                 <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="openTaskModal('${esc(t.id)}')">
-                                    <span class="task-title">${esc(t.title)}</span>
+                                    <span class="task-title">${esc(t.title)} ${getEscalationBadgeHtml(t)}</span>
                                     <span class="task-meta">
                                         ${t.function ? `<span class="task-func">${esc(t.function)}</span>` : ''}
                                         ${deadline ? `<span class="task-date ${isOverdue ? 'overdue' : ''}">${deadline}</span>` : ''}
@@ -16700,7 +16787,7 @@
                             const isOverdue = deadline && deadline < getLocalDateStr();
                             return `
                                 <div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="event.stopPropagation(); openTaskModal('${esc(t.id)}')">
-                                    <span class="task-title">${esc(t.title)}</span>
+                                    <span class="task-title">${esc(t.title)} ${getEscalationBadgeHtml(t)}</span>
                                     <span class="task-meta">
                                         ${t.assigneeName ? `<span class="task-assignee">${esc(t.assigneeName)}</span>` : ''}
                                         ${deadline ? `<span class="task-date ${isOverdue ? 'overdue' : ''}">${deadline}</span>` : ''}
@@ -18442,6 +18529,9 @@
                 deadline: newDeadline,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
+            // AUDIT LOG — deadline change via drag
+            const dragTask = tasks.find(t => t.id === draggedTaskId);
+            logTaskChange(draggedTaskId, 'deadline', { deadlineDate: dateStr, deadlineTime: newTime }, { deadlineDate: dragTask?.deadlineDate, deadlineTime: dragTask?.deadlineTime });
             
             // Update Google Calendar
             if (task.calendarEventId && googleAccessToken) {
@@ -19697,6 +19787,7 @@ Ctrl+K або / - пошук завдань
             if (!taskId) {
                 // New task - hide comments
                 section.classList.add('hidden');
+                document.getElementById('taskHistorySection')?.classList.add('hidden');
                 return;
             }
             
@@ -19704,6 +19795,9 @@ Ctrl+K або / - пошук завдань
             section.classList.remove('hidden');
             loadComments(taskId);
             loadTaskFiles(taskId);
+            
+            // Load audit history
+            loadTaskHistory(taskId);
             
             // Re-initialize lucide icons for comment section
             if (typeof lucide !== 'undefined') {
@@ -19882,6 +19976,238 @@ Ctrl+K або / - пошук завдань
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendComment();
+            }
+        }
+        
+        // =============================================
+        // AUDIT LOG — Логування змін задач
+        // =============================================
+        
+        const AUDIT_FIELD_LABELS = {
+            title: 'Назву', status: 'Статус', assigneeId: 'Виконавця',
+            deadlineDate: 'Дедлайн', deadlineTime: 'Час', priority: 'Пріоритет',
+            description: 'Опис', expectedResult: 'Очікуваний результат',
+            projectId: 'Проєкт', 'function': 'Функцію', requireReview: 'Ревью',
+            checklist: 'Чекліст', coExecutorIds: 'Співвиконавців', observerIds: 'Спостерігачів'
+        };
+        
+        const AUDIT_ICONS = {
+            created: { icon: '➕', bg: '#dcfce7' },
+            status: { icon: '🔄', bg: '#dbeafe' },
+            reassign: { icon: '👤', bg: '#e0e7ff' },
+            deadline: { icon: '📅', bg: '#fef3c7' },
+            edit: { icon: '✏️', bg: '#f3f4f6' },
+            delete: { icon: '🗑️', bg: '#fee2e2' },
+            complete: { icon: '✅', bg: '#dcfce7' },
+            reopen: { icon: '🔓', bg: '#fef3c7' },
+            review: { icon: '👁️', bg: '#e0e7ff' },
+            escalation: { icon: '🚨', bg: '#fee2e2' }
+        };
+        
+        async function logTaskChange(taskId, action, changes, oldTask) {
+            if (!currentCompany || !taskId) return;
+            try {
+                const entry = {
+                    action: action,
+                    userId: currentUserData?.id || '',
+                    userName: currentUserData?.name || currentUserData?.email || 'Unknown',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    changes: changes || {}
+                };
+                
+                // Зберігаємо старі та нові значення
+                if (oldTask && changes) {
+                    const details = {};
+                    for (const field of Object.keys(changes)) {
+                        details[field] = {
+                            from: oldTask[field] ?? '',
+                            to: changes[field] ?? ''
+                        };
+                    }
+                    entry.details = details;
+                }
+                
+                await db.collection('companies').doc(currentCompany)
+                    .collection('tasks').doc(taskId)
+                    .collection('history').add(entry);
+            } catch (e) {
+                console.warn('[AuditLog] Error:', e.message);
+            }
+        }
+        
+        async function loadTaskHistory(taskId) {
+            const container = document.getElementById('historyList');
+            const countEl = document.getElementById('historyCount');
+            const section = document.getElementById('taskHistorySection');
+            
+            if (!container || !currentCompany || !taskId) return;
+            
+            section?.classList.remove('hidden');
+            container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:0.5rem;">Завантаження...</p>';
+            
+            try {
+                const snap = await db.collection('companies').doc(currentCompany)
+                    .collection('tasks').doc(taskId)
+                    .collection('history')
+                    .orderBy('timestamp', 'desc')
+                    .limit(50)
+                    .get();
+                
+                if (countEl) countEl.textContent = snap.size;
+                
+                if (snap.empty) {
+                    container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">Ще немає записів</p>';
+                    return;
+                }
+                
+                let html = '';
+                snap.forEach(doc => {
+                    const entry = doc.data();
+                    html += renderAuditEntry(entry);
+                });
+                container.innerHTML = html;
+                
+            } catch (e) {
+                console.warn('[AuditLog] Load error:', e.message);
+                container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">Помилка завантаження</p>';
+            }
+        }
+        
+        function renderAuditEntry(entry) {
+            const iconData = AUDIT_ICONS[entry.action] || AUDIT_ICONS.edit;
+            const time = entry.timestamp?.toDate?.() 
+                ? entry.timestamp.toDate().toLocaleString('uk-UA', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' })
+                : '';
+            
+            let actionText = '';
+            switch (entry.action) {
+                case 'created': actionText = 'створив задачу'; break;
+                case 'complete': actionText = 'завершив задачу'; break;
+                case 'reopen': actionText = 'повернув задачу в роботу'; break;
+                case 'review': actionText = 'прийняв задачу з ревью'; break;
+                case 'delete': actionText = 'видалив задачу'; break;
+                case 'escalation': actionText = 'ескалація прострочення'; break;
+                default: actionText = formatChangeDetails(entry); break;
+            }
+            
+            return `<div class="audit-entry">
+                <div class="audit-icon" style="background:${iconData.bg}">${iconData.icon}</div>
+                <div class="audit-body">
+                    <div><span class="audit-user">${esc(entry.userName)}</span> <span class="audit-action">${actionText}</span></div>
+                    <div class="audit-time">${time}</div>
+                </div>
+            </div>`;
+        }
+        
+        function formatChangeDetails(entry) {
+            if (!entry.details) return 'змінив задачу';
+            const parts = [];
+            for (const [field, vals] of Object.entries(entry.details)) {
+                const label = AUDIT_FIELD_LABELS[field] || field;
+                if (field === 'status') {
+                    parts.push(`змінив статус: <span class="audit-value">${getStatusLabel(vals.from)}</span> → <span class="audit-value">${getStatusLabel(vals.to)}</span>`);
+                } else if (field === 'assigneeId') {
+                    const fromUser = users.find(u => u.id === vals.from);
+                    const toUser = users.find(u => u.id === vals.to);
+                    parts.push(`перепризначив: <span class="audit-value">${esc(fromUser?.name || vals.from || '—')}</span> → <span class="audit-value">${esc(toUser?.name || vals.to)}</span>`);
+                } else if (field === 'deadlineDate' || field === 'deadlineTime') {
+                    parts.push(`змінив ${label.toLowerCase()}: <span class="audit-value">${esc(vals.from || '—')}</span> → <span class="audit-value">${esc(String(vals.to))}</span>`);
+                } else if (field === 'priority') {
+                    parts.push(`змінив пріоритет: <span class="audit-value">${vals.from}</span> → <span class="audit-value">${vals.to}</span>`);
+                } else {
+                    parts.push(`змінив ${label.toLowerCase()}`);
+                }
+            }
+            return parts.join(', ') || 'змінив задачу';
+        }
+        
+        function getStatusLabel(status) {
+            const map = { todo: 'Очікує', in_progress: 'В роботі', review: 'На перевірці', done: 'Виконано' };
+            return map[status] || status || '—';
+        }
+        
+        function toggleHistorySection() {
+            const list = document.getElementById('historyList');
+            const chevron = document.getElementById('historyChevron');
+            if (!list) return;
+            const isHidden = list.style.display === 'none';
+            list.style.display = isHidden ? 'block' : 'none';
+            if (chevron) chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+        }
+        
+        // =============================================
+        // CASCADING ESCALATION — Каскадна ескалація
+        // =============================================
+        
+        const ESCALATION_LEVELS = [
+            { days: 1, level: 1, label: 'Прострочено 1+ день', target: 'assignee', color: '#92400e' },
+            { days: 3, level: 2, label: 'Прострочено 3+ дні', target: 'manager', color: '#9a3412' },
+            { days: 7, level: 3, label: 'Прострочено 7+ днів', target: 'owner', color: '#dc2626' }
+        ];
+        
+        function getEscalationLevel(task) {
+            if (!task.deadlineDate || task.status === 'done') return null;
+            
+            const now = new Date();
+            const deadline = new Date(task.deadlineDate + 'T' + (task.deadlineTime || '23:59'));
+            const diffMs = now - deadline;
+            if (diffMs <= 0) return null;
+            
+            const diffDays = diffMs / (1000 * 60 * 60 * 24);
+            
+            let level = null;
+            for (const esc of ESCALATION_LEVELS) {
+                if (diffDays >= esc.days) level = esc;
+            }
+            return level;
+        }
+        
+        function getEscalationBadgeHtml(task) {
+            const level = getEscalationLevel(task);
+            if (!level) return '';
+            return `<span class="escalation-badge escalation-${level.level}" title="${level.label}">🚨 ${level.label}</span>`;
+        }
+        
+        async function checkEscalations() {
+            if (!currentCompany) return;
+            
+            const overdueTasks = tasks.filter(t => {
+                if (t.status === 'done') return false;
+                const level = getEscalationLevel(t);
+                return level && level.level >= 2;
+            });
+            
+            if (overdueTasks.length === 0) return;
+            
+            // Групуємо по рівнях
+            const level2 = overdueTasks.filter(t => getEscalationLevel(t)?.level === 2);
+            const level3 = overdueTasks.filter(t => getEscalationLevel(t)?.level === 3);
+            
+            // Показуємо сповіщення для менеджерів та овнерів
+            if (currentUserData?.role === 'owner' || currentUserData?.role === 'manager') {
+                if (level3.length > 0) {
+                    showToast(`🚨 КРИТИЧНО: ${level3.length} задач прострочено 7+ днів!`, 'error', 8000);
+                } else if (level2.length > 0) {
+                    showToast(`⚠️ ${level2.length} задач прострочено 3+ дні`, 'warning', 5000);
+                }
+            }
+            
+            // Логуємо ескалації які ще не логувались сьогодні
+            const today = getLocalDateStr();
+            for (const task of overdueTasks) {
+                const level = getEscalationLevel(task);
+                if (!level) continue;
+                
+                const lastEscKey = `esc_${task.id}_${level.level}_${today}`;
+                if (sessionStorage.getItem(lastEscKey)) continue;
+                
+                await logTaskChange(task.id, 'escalation', {
+                    level: level.level,
+                    label: level.label,
+                    overdueDays: Math.floor((new Date() - new Date(task.deadlineDate + 'T' + (task.deadlineTime || '23:59'))) / (1000 * 60 * 60 * 24))
+                }, null);
+                
+                sessionStorage.setItem(lastEscKey, '1');
             }
         }
         
@@ -20825,6 +21151,7 @@ Ctrl+K або / - пошук завдань
                         status: 'done',
                         completedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                    logTaskChange(task.generatedTaskId, 'complete', { status: 'done' }, { status: 'new' });
                     const local = tasks.find(t => t.id === task.generatedTaskId);
                     if (local) local.status = 'done';
                 } else {
@@ -20858,6 +21185,7 @@ Ctrl+K або / - пошук завдань
                     status: newStatus,
                     completedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                logTaskChange(task.id, 'complete', { status: newStatus }, { status: task.originalTask?.status || 'new' });
                 
                 const local = tasks.find(t => t.id === task.id);
                 if (local) local.status = newStatus;
