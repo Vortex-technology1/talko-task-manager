@@ -5153,6 +5153,59 @@
         .escalation-2 { background: #fed7aa; color: #9a3412; }
         .escalation-3 { background: #fee2e2; color: #dc2626; }
         
+        /* Kanban Board */
+        .kanban-board {
+            display: flex; gap: 0.75rem; overflow-x: auto;
+            padding: 0.5rem 0; min-height: 70vh;
+            -webkit-overflow-scrolling: touch;
+        }
+        .kanban-column {
+            flex: 0 0 280px; max-width: 280px;
+            background: #f3f4f6; border-radius: 12px;
+            display: flex; flex-direction: column; max-height: 80vh;
+        }
+        .kanban-column-header {
+            padding: 0.75rem; font-weight: 700; font-size: 0.85rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: 12px 12px 0 0; position: sticky; top: 0;
+        }
+        .kanban-column-count {
+            background: rgba(255,255,255,0.7); padding: 0.1rem 0.5rem;
+            border-radius: 10px; font-size: 0.75rem; font-weight: 700;
+        }
+        .kanban-column-body {
+            flex: 1; overflow-y: auto; padding: 0.5rem;
+            display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .kanban-card {
+            background: white; border-radius: 10px; padding: 0.7rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer;
+            border-left: 3px solid transparent; transition: box-shadow 0.15s;
+        }
+        .kanban-card:hover { box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+        .kanban-card.overdue { border-left-color: #ef4444; }
+        .kanban-card.today { border-left-color: #f59e0b; }
+        .kanban-card-title {
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem;
+            line-height: 1.3; color: var(--text);
+        }
+        .kanban-card-meta {
+            display: flex; flex-wrap: wrap; gap: 0.3rem; font-size: 0.72rem; color: #6b7280;
+        }
+        .kanban-card-meta span {
+            display: inline-flex; align-items: center; gap: 0.2rem;
+        }
+        .kanban-card-badge {
+            display: inline-block; padding: 0.1rem 0.35rem; border-radius: 6px;
+            font-size: 0.68rem; font-weight: 600;
+        }
+        .kanban-card.dragging { opacity: 0.4; }
+        .kanban-column-body.drag-over { background: #e0f2fe; border-radius: 0 0 12px 12px; }
+        @media(max-width:768px) {
+            .kanban-board { gap: 0.5rem; }
+            .kanban-column { flex: 0 0 250px; max-width: 250px; }
+        }
+        
         /* Skeleton loading */
         .skeleton-card {
             background: white;
@@ -5440,6 +5493,8 @@
                         <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')" data-i18n="week" data-short="Тижд">Тиждень</button>
                         <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')" data-i18n="month" data-short="Міс">Місяць</button>
                         <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')" data-i18n="list" data-short="Список">Список</button>
+                        <button class="calendar-view-btn" data-view="kanban" onclick="setCalendarView('kanban')" data-short="Канбан">Канбан</button>
+                        <button class="calendar-view-btn" data-view="deadlines" onclick="setCalendarView('deadlines')" data-short="Терміни">Терміни</button>
                     </div>
                 </div>
                 
@@ -8270,6 +8325,8 @@
                 // Render based on current view
                 if (currentCalendarView === 'list') {
                     renderTasks();
+                } else if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') {
+                    renderKanbanBoard(currentCalendarView);
                 } else {
                     renderCalendar();
                 }
@@ -8389,8 +8446,7 @@
                         
                         // Точковий ререндер
                         renderMyDay();
-                        if (currentCalendarView === 'list') renderTasks();
-                        else renderCalendar();
+                        refreshCurrentView();
                     }
                     
                     knownTaskIds = currentTaskIds;
@@ -8457,8 +8513,7 @@
                         });
                         
                         renderMyDay();
-                        if (currentCalendarView === 'list') renderTasks();
-                        else renderCalendar();
+                        refreshCurrentView();
                     }
                     
                     knownCompletedTaskIds = currentIds;
@@ -9794,8 +9849,7 @@
                 
                 // Перерендерюємо тільки потрібні views
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
                 updateSelects();
                 
                 // Оновлюємо project detail якщо відкритий
@@ -10132,8 +10186,7 @@
             
             // Re-render після всіх спроб (навіть якщо частина failed)
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            refreshCurrentView();
             if (currentRegularView === 'list') renderRegularTasks();
             else renderRegularWeekView();
             renderFunctions();
@@ -10167,8 +10220,7 @@
             const taskCopy = { ...task };
             tasks = tasks.filter(t => t.id !== id);
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            refreshCurrentView();
             
             // Показуємо toast з можливістю undo
             showUndoToast(taskName, taskCopy, 'task');
@@ -10190,8 +10242,7 @@
                 // Видаляємо цей елемент зі стеку undo (вже rollback-нутий)
                 deletedItemsStack = deletedItemsStack.filter(d => d.item.id !== id);
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
                 hideUndoToast();
                 console.error('deleteTask error:', error);
                 alert(t('error') + ': ' + error.message);
@@ -10207,7 +10258,7 @@
             // Оптимістичне оновлення
             tasks[taskIndex].pinned = !originalPinned;
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
+            refreshCurrentView();
             
             try {
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({ pinned: !originalPinned });
@@ -10215,7 +10266,7 @@
                 // Rollback
                 tasks[taskIndex].pinned = originalPinned;
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
+                refreshCurrentView();
                 console.error('togglePin error:', error);
             }
         }
@@ -10272,8 +10323,7 @@
             tasks[taskIndex].completedAt = null;
             closeModal('taskModal');
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            refreshCurrentView();
             
             try {
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
@@ -10290,8 +10340,7 @@
             } catch(e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
                 alert('Помилка: ' + e.message);
             }
         }
@@ -10308,8 +10357,7 @@
             tasks[taskIndex].reviewedAt = new Date().toISOString();
             tasks[taskIndex].reviewedBy = currentUser.uid;
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            refreshCurrentView();
             
             try {
                 if (originalTask.calendarEventId && googleAccessToken) {
@@ -10335,8 +10383,7 @@
             } catch (e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
                 alert(t('error') + ': ' + e.message);
             }
         }
@@ -10358,8 +10405,7 @@
             tasks[taskIndex].reviewRejectedBy = currentUser.uid;
             if (reason) tasks[taskIndex].reviewRejectReason = reason;
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            refreshCurrentView();
             
             try {
                 const updateData = {
@@ -10378,8 +10424,7 @@
             } catch (e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
                 alert(t('error') + ': ' + e.message);
             }
         }
@@ -10850,8 +10895,7 @@
                         });
                         
                         renderMyDay();
-                        if (currentCalendarView === 'list') renderTasks();
-                        else renderCalendar();
+                        refreshCurrentView();
                     }
                     
                     knownReviewTaskIds = currentIds;
@@ -10912,8 +10956,7 @@
                                     tasks[idx] = { ...tasks[idx], ...data, id: doc.id };
                                 }
                                 renderMyDay();
-                                if (currentCalendarView === 'list') renderTasks();
-                                else renderCalendar();
+                                refreshCurrentView();
                             }
                         }
                         if (data.reviewRejectedAt) {
@@ -11005,8 +11048,7 @@
                     tasks[taskIndex]._prevStatus = tasks[taskIndex].status;
                     tasks[taskIndex].status = newStatus;
                     renderMyDay();
-                    if (currentCalendarView === 'list') renderTasks();
-                    else renderCalendar();
+                    refreshCurrentView();
                 }
                 showCompletionReport(id, () => doQuickComplete(id, taskIndex, originalTask, needsReview, newStatus));
                 return;
@@ -11021,8 +11063,7 @@
                 tasks[taskIndex].completedAt = new Date().toISOString();
                 if (needsReview) tasks[taskIndex].sentForReviewAt = new Date().toISOString();
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
             }
             if (taskIndex >= 0) delete tasks[taskIndex]._prevStatus;
             
@@ -11057,8 +11098,7 @@
                 if (taskIndex >= 0 && originalTask) {
                     tasks[taskIndex] = originalTask;
                     renderMyDay();
-                    if (currentCalendarView === 'list') renderTasks();
-                    else renderCalendar();
+                    refreshCurrentView();
                 }
                 alert(t('error') + ': ' + e.message);
             } finally {
@@ -11076,8 +11116,7 @@
                 tasks[taskIndex].status = 'progress';
                 tasks[taskIndex].completedAt = null;
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
             }
             
             try {
@@ -11094,8 +11133,7 @@
                 if (taskIndex >= 0 && originalTask) {
                     tasks[taskIndex] = originalTask;
                     renderMyDay();
-                    if (currentCalendarView === 'list') renderTasks();
-                    else renderCalendar();
+                    refreshCurrentView();
                 }
                 alert(t('error') + ': ' + e.message);
             }
@@ -11143,16 +11181,23 @@
                 weekStrip.style.display = (view === 'day') ? '' : 'none';
             }
             
+            // Hide calendar nav for kanban/deadlines/list (arrows make no sense)
+            const calNavBtns = document.querySelector('.calendar-nav');
+            if (calNavBtns) {
+                calNavBtns.style.display = (view === 'kanban' || view === 'deadlines' || view === 'list') ? 'none' : '';
+            }
+            
             // Mobile filter bar — only in list view
             const mobileFilterBar = document.getElementById('mobileFilterBar');
             if (mobileFilterBar && window.innerWidth < 768) {
                 mobileFilterBar.style.display = (view === 'list') ? '' : 'none';
             }
             
-            // Calendar filters — only in calendar views (not list)
+            // Calendar filters — only in calendar views (not list, not kanban)
             const calFilterRow = document.getElementById('calendarFiltersRow');
             if (calFilterRow) {
-                calFilterRow.style.display = (view === 'list' || window.innerWidth < 768) ? 'none' : 'flex';
+                const isCalView = (view !== 'list' && view !== 'kanban' && view !== 'deadlines' && window.innerWidth >= 768);
+                calFilterRow.style.display = isCalView ? 'flex' : 'none';
             }
             
             // Show/hide containers
@@ -11162,6 +11207,15 @@
             if (view === 'list') {
                 calendarContainer.classList.remove('active');
                 listContainer.classList.add('active');
+                listContainer.style.display = '';
+                listContainer.style.minHeight = '';
+                const tasksC = document.getElementById('tasksContainer');
+                if (tasksC) tasksC.style.display = '';
+                const totalTimeInfo = document.getElementById('totalTimeInfo');
+                if (totalTimeInfo) totalTimeInfo.style.display = '';
+                // Hide kanban
+                const kanbanC = document.getElementById('kanbanContainer');
+                if (kanbanC) kanbanC.style.display = 'none';
                 // Reset archive view if it was open
                 if (isArchiveView) {
                     isArchiveView = false;
@@ -11181,9 +11235,41 @@
                 }
                 renderTasks();
                 updateCalendarTitle();
+            } else if (view === 'kanban' || view === 'deadlines') {
+                calendarContainer.classList.remove('active');
+                listContainer.classList.remove('active');
+                // Show list filters row (reuse for kanban filtering)
+                const listFiltersRow = document.querySelector('#listContainer .filters-row');
+                if (listFiltersRow) {
+                    listFiltersRow.style.display = '';
+                    listFiltersRow.style.position = 'relative';
+                    listFiltersRow.style.zIndex = '10';
+                }
+                listContainer.style.display = 'block';
+                listContainer.style.minHeight = '0';
+                const tasksC = document.getElementById('tasksContainer');
+                if (tasksC) tasksC.style.display = 'none';
+                const totalTimeInfo = document.getElementById('totalTimeInfo');
+                if (totalTimeInfo) totalTimeInfo.style.display = 'none';
+                
+                let kanbanC = document.getElementById('kanbanContainer');
+                if (!kanbanC) {
+                    kanbanC = document.createElement('div');
+                    kanbanC.id = 'kanbanContainer';
+                    listContainer.parentNode.insertBefore(kanbanC, listContainer.nextSibling);
+                }
+                kanbanC.style.display = 'block';
+                renderKanbanBoard(view);
+                updateCalendarTitle();
             } else {
                 calendarContainer.classList.add('active');
                 listContainer.classList.remove('active');
+                listContainer.style.display = '';
+                listContainer.style.minHeight = '';
+                const tasksC = document.getElementById('tasksContainer');
+                if (tasksC) tasksC.style.display = '';
+                const kanbanC = document.getElementById('kanbanContainer');
+                if (kanbanC) kanbanC.style.display = 'none';
                 renderCalendar();
             }
             
@@ -11192,6 +11278,7 @@
         }
         
         function calendarPrev() {
+            if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines' || currentCalendarView === 'list') return;
             if (currentCalendarView === 'day') {
                 calendarDate.setDate(calendarDate.getDate() - 1);
             } else if (currentCalendarView === 'week') {
@@ -11203,6 +11290,7 @@
         }
         
         function calendarNext() {
+            if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines' || currentCalendarView === 'list') return;
             if (currentCalendarView === 'day') {
                 calendarDate.setDate(calendarDate.getDate() + 1);
             } else if (currentCalendarView === 'week') {
@@ -11214,6 +11302,7 @@
         }
         
         function calendarToday() {
+            if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines' || currentCalendarView === 'list') return;
             calendarDate = new Date();
             renderCalendar();
         }
@@ -11366,6 +11455,10 @@
                 titleEl.textContent = `${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
             } else if (currentCalendarView === 'list') {
                 titleEl.textContent = `${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
+            } else if (currentCalendarView === 'kanban') {
+                titleEl.textContent = 'Канбан: Статуси';
+            } else if (currentCalendarView === 'deadlines') {
+                titleEl.textContent = 'Канбан: Терміни';
             }
         }
         
@@ -12548,6 +12641,11 @@
         }
         
         function renderTasks() {
+            // If kanban view is active, render kanban instead
+            if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') {
+                renderKanbanBoard(currentCalendarView);
+                return;
+            }
             tasksVisibleCount = TASKS_PAGE_SIZE; // Reset pagination on filter change
             const c = document.getElementById('tasksContainer');
             const selectedStatuses = getSelectedStatuses();
@@ -12679,7 +12777,7 @@
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td>${esc(task.creatorName) || '-'}</td>
-                        <td class="deadline-text ${deadlineClass}">${taskDeadline ? formatDateShort(taskDeadline) : '-'} ${taskTime || ''}</td>
+                        <td class="deadline-text ${deadlineClass}" onclick="inlineEditDeadline(event, '${escId(task.id)}', '${task.deadlineDate || ''}')" style="cursor:pointer;" title="Натисніть щоб змінити дату">${taskDeadline ? formatDateShort(taskDeadline) : '-'} ${taskTime || ''}</td>
                         <td><span class="status-badge status-${task.status}" style="cursor:pointer;" onclick="cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status}</span></td>
                         <td>${esc(task.function) || '-'}</td>
                         <td>
@@ -13225,6 +13323,67 @@
         }
         
         // Inline status cycle: new → progress → done (або review)
+        // Inline deadline editing — клік на дату в таблиці
+        function inlineEditDeadline(event, taskId, currentDate) {
+            event.stopPropagation();
+            const td = event.currentTarget;
+            
+            // Якщо вже є input — не дублюємо
+            if (td.querySelector('input')) return;
+            
+            const originalHTML = td.innerHTML;
+            const input = document.createElement('input');
+            input.type = 'date';
+            input.value = currentDate || '';
+            input.style.cssText = 'width:130px;padding:0.25rem;border:2px solid #22c55e;border-radius:8px;font-size:0.85rem;outline:none;';
+            
+            td.innerHTML = '';
+            td.appendChild(input);
+            input.focus();
+            
+            async function save() {
+                const newDate = input.value;
+                if (newDate === currentDate || (!newDate && !currentDate)) {
+                    td.innerHTML = originalHTML;
+                    return;
+                }
+                
+                const task = tasks.find(t => t.id === taskId);
+                const oldDate = task?.deadlineDate;
+                
+                try {
+                    const updateData = { deadlineDate: newDate || '', updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                    if (newDate && task?.deadlineTime) {
+                        updateData.deadline = newDate + 'T' + task.deadlineTime;
+                    }
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
+                    
+                    // Локальне оновлення
+                    if (task) task.deadlineDate = newDate;
+                    
+                    // Audit log
+                    logTaskChange(taskId, 'deadline', { deadlineDate: newDate }, { deadlineDate: oldDate });
+                    
+                    // Перерендер
+                    renderTasks();
+                    showToast('Дедлайн оновлено', 'success');
+                } catch (e) {
+                    td.innerHTML = originalHTML;
+                    showToast('Помилка: ' + e.message, 'error');
+                }
+            }
+            
+            input.addEventListener('change', save);
+            input.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (td.querySelector('input')) td.innerHTML = originalHTML;
+                }, 200);
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') { td.innerHTML = originalHTML; }
+            });
+        }
+        
         async function cycleTaskStatus(taskId, e) {
             e.stopPropagation();
             const taskIndex = tasks.findIndex(t => t.id === taskId);
@@ -13250,8 +13409,7 @@
             else tasks[taskIndex].completedAt = null;
             
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            refreshCurrentView();
             
             try {
                 const update = { status: newStatus };
@@ -13266,8 +13424,7 @@
             } catch(err) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
                 showToast('Помилка: ' + err.message, 'error');
             }
         }
@@ -15644,8 +15801,7 @@
             
             alert(`${currentLang === 'ua' ? 'Створено' : 'Создано'} ${assigneeIds.length} ${currentLang === 'ua' ? 'завдань' : 'задач'}`);
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            refreshCurrentView();
         }
 
         async function deleteRegularTask(id) {
@@ -17171,7 +17327,7 @@
             
             switch (tabName) {
                 case 'myday': renderMyDay(); break;
-                case 'tasks': renderTasks(); break;
+                case 'tasks': setCalendarView(currentCalendarView); break;
                 case 'control': renderControl(); break;
                 case 'processes': updateProcessTemplateFilter(); renderProcessBoard(); break;
                 case 'projects': renderProjects(); break;
@@ -18517,8 +18673,7 @@
                 const idx = tasks.findIndex(t => t.id === taskId);
                 if (idx >= 0) tasks.splice(idx, 1);
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
                 // Автостатус проєкту
                 if (task?.projectId) autoUpdateProjectStatus(task.projectId);
             } catch (error) {
@@ -18592,8 +18747,7 @@
             
             draggedTaskId = null;
             renderMyDay();
-            if (currentCalendarView === 'list') renderTasks();
-            else renderCalendar();
+            refreshCurrentView();
         }
 
         // =====================
@@ -20267,6 +20421,386 @@ Ctrl+K або / - пошук завдань
             }
         });
         
+        // =====================
+        // KANBAN BOARD (Status + Deadlines)
+        // =====================
+        
+        function refreshCurrentView() {
+            if (currentCalendarView === 'list') renderTasks();
+            else if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') renderKanbanBoard(currentCalendarView);
+            else renderCalendar();
+        }
+        
+        function renderKanbanBoard(mode) {
+            const container = document.getElementById('kanbanContainer');
+            if (!container) return;
+            
+            // Filter tasks same as list
+            let filtered = tasks.filter(t => t.status !== 'done' || mode === 'kanban');
+            
+            // Apply current filters (same as list view)
+            const funcF = document.getElementById('functionFilter')?.value;
+            const assigneeF = document.getElementById('assigneeFilter')?.value;
+            if (funcF) filtered = filtered.filter(t => t.functionId === funcF);
+            if (assigneeF) filtered = filtered.filter(t => t.assigneeId === assigneeF);
+            
+            let columns;
+            
+            if (mode === 'kanban') {
+                // STATUS KANBAN
+                columns = [
+                    { id: 'new', title: 'Нові', color: '#3b82f6', bg: '#eff6ff', tasks: [] },
+                    { id: 'progress', title: 'В роботі', color: '#f59e0b', bg: '#fffbeb', tasks: [] },
+                    { id: 'review', title: 'На перевірці', color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
+                    { id: 'done', title: 'Готово', color: '#22c55e', bg: '#f0fdf4', tasks: [] }
+                ];
+                filtered.forEach(t => {
+                    const col = columns.find(c => c.id === (t.status || 'new'));
+                    if (col) col.tasks.push(t);
+                    else columns[0].tasks.push(t);
+                });
+            } else {
+                // DEADLINE KANBAN
+                const today = getLocalDateStr();
+                const todayD = new Date(today + 'T12:00:00');
+                // End of this week = next Sunday (Ukrainian week: Mon-Sun)
+                const dayOfWeek = todayD.getDay(); // 0=Sun
+                const daysToSunday = dayOfWeek === 0 ? 0 : (7 - dayOfWeek);
+                const endOfWeek = new Date(todayD);
+                endOfWeek.setDate(endOfWeek.getDate() + daysToSunday);
+                const endOfNextWeek = new Date(endOfWeek);
+                endOfNextWeek.setDate(endOfNextWeek.getDate() + 7);
+                const endWeekStr = endOfWeek.toISOString().split('T')[0];
+                const endNextWeekStr = endOfNextWeek.toISOString().split('T')[0];
+                
+                columns = [
+                    { id: 'overdue', title: 'Протерміновані', color: '#ef4444', bg: '#fef2f2', tasks: [] },
+                    { id: 'today', title: 'На сьогодні', color: '#f59e0b', bg: '#fffbeb', tasks: [] },
+                    { id: 'this_week', title: 'Цей тиждень', color: '#3b82f6', bg: '#eff6ff', tasks: [] },
+                    { id: 'next_week', title: 'Наступний тиждень', color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
+                    { id: 'later', title: 'Пізніше', color: '#06b6d4', bg: '#ecfeff', tasks: [] },
+                    { id: 'no_deadline', title: 'Без терміну', color: '#6b7280', bg: '#f9fafb', tasks: [] }
+                ];
+                
+                filtered.filter(t => t.status !== 'done').forEach(t => {
+                    const dl = t.deadlineDate;
+                    if (!dl) { columns[5].tasks.push(t); return; }
+                    if (dl < today) columns[0].tasks.push(t);
+                    else if (dl === today) columns[1].tasks.push(t);
+                    else if (dl <= endWeekStr) columns[2].tasks.push(t);
+                    else if (dl <= endNextWeekStr) columns[3].tasks.push(t);
+                    else columns[4].tasks.push(t);
+                });
+            }
+            
+            let html = '<div class="kanban-board">';
+            
+            columns.forEach(col => {
+                html += `<div class="kanban-column" data-col="${col.id}">
+                    <div class="kanban-column-header" style="background:${col.bg};color:${col.color};border-bottom:2px solid ${col.color}">
+                        <span>${col.title}</span>
+                        <span class="kanban-column-count" style="color:${col.color}">${col.tasks.length}</span>
+                    </div>
+                    <div class="kanban-column-body" data-col="${col.id}" 
+                         ondragover="kanbanDragOver(event)" ondragleave="kanbanDragLeave(event)" ondrop="kanbanDrop(event,'${mode}')">
+                        <div class="kanban-add-btn" onclick="openTaskModalForKanban('${col.id}','${mode}')" 
+                             style="text-align:center;padding:0.4rem;color:#9ca3af;cursor:pointer;font-size:0.8rem;border:1px dashed #d1d5db;border-radius:8px;">+ Додати</div>`;
+                
+                // Sort tasks: overdue first, then by deadline
+                col.tasks.sort((a, b) => {
+                    if (a.deadlineDate && b.deadlineDate) return a.deadlineDate.localeCompare(b.deadlineDate);
+                    if (a.deadlineDate) return -1;
+                    return 1;
+                });
+                
+                const todayStr = getLocalDateStr();
+                col.tasks.forEach(t => {
+                    const assignee = companyUsers.find(u => u.id === t.assigneeId);
+                    const assigneeName = assignee ? (assignee.displayName || assignee.email).split(' ')[0] : '';
+                    const funcName = (companyFunctions.find(f => f.id === t.functionId) || {}).name || '';
+                    const isOverdue = t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done';
+                    const isToday = t.deadlineDate === todayStr;
+                    const escalation = getEscalationLevel(t);
+                    
+                    let deadlineHtml = '';
+                    if (t.deadlineDate) {
+                        const d = new Date(t.deadlineDate + 'T12:00:00');
+                        const dayMonth = d.toLocaleDateString('uk', {day:'numeric', month:'short'});
+                        const color = isOverdue ? '#ef4444' : isToday ? '#f59e0b' : '#6b7280';
+                        deadlineHtml = `<span style="color:${color}">📅 ${dayMonth}</span>`;
+                    }
+                    
+                    let checkHtml = '';
+                    if (t.checklist?.length) {
+                        const done = t.checklist.filter(c => c.done).length;
+                        checkHtml = `<span>☑ ${done}/${t.checklist.length}</span>`;
+                    }
+                    
+                    let imgHtml = '';
+                    if (t.attachments?.length) {
+                        const img = t.attachments.find(a => a.type?.startsWith('image/'));
+                        if (img && img.url && (img.url.startsWith('https://') || img.url.startsWith('data:image/'))) {
+                            imgHtml = `<img src="${escapeHtml(img.url)}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:0.3rem;" onerror="this.remove()">`;
+                        }
+                    }
+                    
+                    let prioHtml = '';
+                    if (t.priority === 'high') prioHtml = '<span class="kanban-card-badge" style="background:#fef2f2;color:#ef4444">🔴</span>';
+                    else if (t.priority === 'medium') prioHtml = '<span class="kanban-card-badge" style="background:#fffbeb;color:#f59e0b">🟡</span>';
+                    
+                    let escalBadge = '';
+                    if (escalation) {
+                        const escColors = {1:'#fef3c7;color:#92400e',2:'#fed7aa;color:#9a3412',3:'#fee2e2;color:#dc2626'};
+                        escalBadge = `<span class="kanban-card-badge" style="background:${escColors[escalation.level]}; font-size:0.65rem">${escalation.label}</span>`;
+                    }
+                    
+                    let statusBadge = '';
+                    if (mode === 'deadlines') {
+                        const stColors = {new:'#eff6ff;color:#3b82f6', progress:'#fffbeb;color:#f59e0b', review:'#f5f3ff;color:#8b5cf6'};
+                        const stLabels = {new:'Нове', progress:'В роботі', review:'Перевірка'};
+                        if (stColors[t.status]) statusBadge = `<span class="kanban-card-badge" style="background:${stColors[t.status]};font-size:0.65rem">${stLabels[t.status]}</span>`;
+                    }
+                    
+                    html += `<div class="kanban-card ${isOverdue?'overdue':''} ${isToday?'today':''}" 
+                                  draggable="true" data-task-id="${t.id}"
+                                  ondragstart="kanbanDragStart(event)" ondragend="kanbanDragEnd(event)"
+                                  onclick="kanbanCardClick(event,'${t.id}')">
+                        ${imgHtml}
+                        <div class="kanban-card-title">${escapeHtml(t.title)}</div>
+                        <div class="kanban-card-meta">
+                            ${prioHtml}${escalBadge}${statusBadge}
+                            ${deadlineHtml}${checkHtml}
+                            ${funcName ? `<span style="background:#f0fdf4;color:#16a34a;padding:0.1rem 0.3rem;border-radius:4px">${escapeHtml(funcName)}</span>` : ''}
+                            ${assigneeName ? `<span>👤 ${escapeHtml(assigneeName)}</span>` : ''}
+                        </div>
+                    </div>`;
+                });
+                
+                html += '</div></div>';
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+            
+            // Attach touch events for mobile drag
+            const board = container.querySelector('.kanban-board');
+            if (board) {
+                board.addEventListener('touchstart', kanbanTouchStart, { passive: true });
+                board.addEventListener('touchmove', kanbanTouchMove, { passive: false });
+                board.addEventListener('touchend', kanbanTouchEnd, { passive: true });
+            }
+        }
+        
+        // Kanban Drag & Drop
+        let kanbanDraggedId = null;
+        let kanbanWasDragged = false;
+        
+        function kanbanDragStart(e) {
+            kanbanDraggedId = e.target.closest('.kanban-card')?.dataset.taskId;
+            if (!kanbanDraggedId) return;
+            kanbanWasDragged = false;
+            e.target.closest('.kanban-card').classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', kanbanDraggedId);
+        }
+        function kanbanDragEnd(e) {
+            kanbanWasDragged = true;
+            e.target.classList.remove('dragging');
+            document.querySelectorAll('.kanban-column-body').forEach(b => b.classList.remove('drag-over'));
+            // Reset flag after click event would fire
+            setTimeout(() => { kanbanWasDragged = false; }, 50);
+        }
+        function kanbanCardClick(e, taskId) {
+            if (kanbanWasDragged) { e.stopPropagation(); return; }
+            if (kanbanTouchMoved) { e.stopPropagation(); return; }
+            openEditTask(taskId);
+        }
+        function kanbanDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+        function kanbanDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        
+        // Mobile touch drag & drop
+        let kanbanTouchCard = null;
+        let kanbanTouchClone = null;
+        let kanbanTouchStartY = 0;
+        let kanbanTouchMoved = false;
+        
+        function kanbanTouchStart(e) {
+            const card = e.target.closest('.kanban-card');
+            if (!card) return;
+            kanbanTouchCard = card;
+            kanbanTouchStartY = e.touches[0].clientY;
+            kanbanTouchMoved = false;
+            kanbanDraggedId = card.dataset.taskId;
+        }
+        
+        function kanbanTouchMove(e) {
+            if (!kanbanTouchCard) return;
+            const dy = Math.abs(e.touches[0].clientY - kanbanTouchStartY);
+            if (dy < 10 && !kanbanTouchMoved) return; // threshold
+            kanbanTouchMoved = true;
+            e.preventDefault();
+            
+            if (!kanbanTouchClone) {
+                kanbanTouchClone = kanbanTouchCard.cloneNode(true);
+                kanbanTouchClone.style.cssText = 'position:fixed;z-index:9999;opacity:0.8;pointer-events:none;width:250px;transform:rotate(2deg);';
+                document.body.appendChild(kanbanTouchClone);
+                kanbanTouchCard.classList.add('dragging');
+            }
+            kanbanTouchClone.style.left = (e.touches[0].clientX - 125) + 'px';
+            kanbanTouchClone.style.top = (e.touches[0].clientY - 30) + 'px';
+            
+            // Highlight column under touch
+            document.querySelectorAll('.kanban-column-body').forEach(b => b.classList.remove('drag-over'));
+            const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+            const colBody = el?.closest('.kanban-column-body');
+            if (colBody) colBody.classList.add('drag-over');
+        }
+        
+        function kanbanTouchEnd(e) {
+            if (!kanbanTouchCard) return;
+            if (kanbanTouchClone) {
+                kanbanTouchClone.remove();
+                kanbanTouchClone = null;
+            }
+            kanbanTouchCard.classList.remove('dragging');
+            document.querySelectorAll('.kanban-column-body').forEach(b => b.classList.remove('drag-over'));
+            
+            if (kanbanTouchMoved && kanbanDraggedId) {
+                const touch = e.changedTouches[0];
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                const colBody = el?.closest('.kanban-column-body');
+                if (colBody) {
+                    const mode = currentCalendarView;
+                    kanbanDrop({ preventDefault(){}, currentTarget: colBody }, mode);
+                }
+            }
+            kanbanTouchCard = null;
+            kanbanTouchMoved = false;
+        }
+        let kanbanDropLock = false;
+        async function kanbanDrop(e, mode) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!kanbanDraggedId || kanbanDropLock) return;
+            kanbanDropLock = true;
+            
+            const targetCol = e.currentTarget.dataset.col;
+            const task = tasks.find(t => t.id === kanbanDraggedId);
+            if (!task) return;
+            
+            // Permission check: owner/admin/manager can move any, employee only own
+            const role = currentUserData?.role;
+            const canMove = role === 'owner' || role === 'admin' || role === 'manager' 
+                || task.assigneeId === currentUser.uid || task.creatorId === currentUser.uid;
+            if (!canMove) {
+                showToast('Недостатньо прав для зміни цієї задачі', 'error');
+                kanbanDropLock = false; return;
+            }
+            
+            if (mode === 'kanban') {
+                // STATUS DRAG: change status
+                const oldStatus = task.status;
+                if (targetCol === oldStatus) { kanbanDropLock = false; return; }
+                
+                try {
+                    const ref = db.collection(`companies/${currentCompany}/tasks`).doc(task.id);
+                    const upd = { status: targetCol, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                    if (targetCol === 'done') {
+                        upd.completedAt = firebase.firestore.FieldValue.serverTimestamp();
+                        upd.completedBy = currentUser.uid;
+                    }
+                    await ref.update(upd);
+                    await logTaskChange(task.id, 'status', { from: oldStatus, to: targetCol });
+                    task.status = targetCol;
+                    if (targetCol === 'done') { task.completedAt = new Date(); task.completedBy = currentUser.uid; }
+                    showToast(`Статус → ${targetCol === 'done' ? 'Готово' : targetCol === 'review' ? 'Перевірка' : targetCol === 'progress' ? 'В роботі' : 'Нове'}`, 'success');
+                } catch(err) {
+                    console.error('Kanban status drop error:', err);
+                    showToast('Помилка зміни статусу', 'error');
+                    kanbanDropLock = false; return;
+                }
+            } else {
+                // DEADLINE DRAG: change deadline
+                const today = getLocalDateStr();
+                const todayD = new Date(today);
+                let newDeadline = null;
+                
+                if (targetCol === 'today') {
+                    newDeadline = today;
+                } else if (targetCol === 'this_week') {
+                    const fri = new Date(todayD);
+                    fri.setDate(fri.getDate() + (5 - fri.getDay() + 7) % 7);
+                    if (fri <= todayD) fri.setDate(fri.getDate() + 7);
+                    newDeadline = fri.toISOString().split('T')[0];
+                } else if (targetCol === 'next_week') {
+                    const nextMon = new Date(todayD);
+                    nextMon.setDate(nextMon.getDate() + (8 - nextMon.getDay()) % 7);
+                    if (nextMon <= todayD) nextMon.setDate(nextMon.getDate() + 7);
+                    const nextFri = new Date(nextMon);
+                    nextFri.setDate(nextFri.getDate() + 4);
+                    newDeadline = nextFri.toISOString().split('T')[0];
+                } else if (targetCol === 'later') {
+                    // Set to 2 weeks from today (Friday)
+                    const laterDate = new Date(todayD);
+                    laterDate.setDate(laterDate.getDate() + 14);
+                    newDeadline = laterDate.toISOString().split('T')[0];
+                } else if (targetCol === 'no_deadline') {
+                    newDeadline = null;
+                } else if (targetCol === 'overdue') {
+                    kanbanDropLock = false; return; // cant drag TO overdue
+                }
+                
+                const oldDl = task.deadlineDate || null;
+                try {
+                    const ref = db.collection(`companies/${currentCompany}/tasks`).doc(task.id);
+                    await ref.update({ deadlineDate: newDeadline || firebase.firestore.FieldValue.delete(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    await logTaskChange(task.id, 'edit', { field: 'deadlineDate', from: oldDl, to: newDeadline });
+                    task.deadlineDate = newDeadline;
+                    showToast(newDeadline ? `Дедлайн → ${newDeadline}` : 'Дедлайн знято', 'success');
+                } catch(err) {
+                    console.error('Kanban deadline drop error:', err);
+                    showToast('Помилка зміни дедлайну', 'error');
+                    kanbanDropLock = false; return;
+                }
+            }
+            
+            renderKanbanBoard(mode);
+            kanbanDropLock = false;
+        }
+        
+        function openTaskModalForKanban(colId, mode) {
+            openAddTask();
+            // Pre-set based on column
+            setTimeout(() => {
+                if (mode === 'kanban') {
+                    // set status after save? Not needed — new tasks always 'new'
+                } else {
+                    const today = getLocalDateStr();
+                    const todayD = new Date(today);
+                    let dl = '';
+                    if (colId === 'today') dl = today;
+                    else if (colId === 'this_week') {
+                        const fri = new Date(todayD);
+                        fri.setDate(fri.getDate() + (5 - fri.getDay() + 7) % 7);
+                        dl = fri.toISOString().split('T')[0];
+                    } else if (colId === 'next_week') {
+                        const nextFri = new Date(todayD);
+                        nextFri.setDate(nextFri.getDate() + (12 - nextFri.getDay()) % 7);
+                        dl = nextFri.toISOString().split('T')[0];
+                    }
+                    if (dl) {
+                        const deadlineInput = document.getElementById('taskDeadlineDate');
+                        if (deadlineInput) deadlineInput.value = dl;
+                    }
+                }
+            }, 100);
+        }
+        
         // Escape HTML for security
         function escapeHtml(text) {
             if (!text) return '';
@@ -20607,8 +21141,7 @@ Ctrl+K або / - пошук завдань
                 tasks[taskIndex].status = tasks[taskIndex]._prevStatus || 'progress';
                 delete tasks[taskIndex]._prevStatus;
                 renderMyDay();
-                if (currentCalendarView === 'list') renderTasks();
-                else renderCalendar();
+                refreshCurrentView();
             }
         }
         completionReportTaskId = null;
