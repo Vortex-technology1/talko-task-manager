@@ -8077,7 +8077,7 @@
                 
                 // Перевірка чи компанія заблокована
                 if (companyData?.disabled && !isSuperAdmin) {
-                    document.getElementById('authContainer').style.display = 'flex';
+                    document.getElementById('authPage').style.display = 'flex';
                     document.getElementById('mainInterface').style.display = 'none';
                     const authErr = document.getElementById('authError') || document.createElement('p');
                     authErr.id = 'authError';
@@ -9330,39 +9330,74 @@
                     const reviewActions = document.getElementById('taskReviewActions');
                     if (reviewActions) {
                         const isOwnerOrAdmin = currentUserData?.role === 'owner' || currentUserData?.role === 'admin';
+                        const isManager = currentUserData?.role === 'manager';
                         const isCreator = task.creatorId === currentUser?.uid;
-                        const canManage = isOwnerOrAdmin || isCreator;
-                        const notMyOwnTask = task.assigneeId !== currentUser?.uid;
+                        const canManage = isOwnerOrAdmin || isManager || isCreator;
+                        const isAssignee = task.assigneeId === currentUser?.uid;
                         
-                        if (canManage && task.status !== 'done') {
+                        if (canManage && task.status === 'review') {
+                            // Менеджер/owner бачить кнопки ревью
                             reviewActions.style.display = 'block';
+                            reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
+                            reviewActions.style.border = '2px solid #22c55e';
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
+                            label.innerHTML = '<i data-lucide="shield-check" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання на перевірці</span>';
+                            btns.innerHTML = `
+                                <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
+                                    <i data-lucide="check-circle" class="icon"></i> Прийняти
+                                </button>
+                                <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
+                                    <i data-lucide="rotate-ccw" class="icon"></i> Допрацювати
+                                </button>`;
+                            refreshIcons();
+                        } else if (isAssignee && (task.status === 'new' || task.status === 'progress')) {
+                            // Виконавець бачить кнопку Виконано
+                            reviewActions.style.display = 'block';
+                            reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
+                            reviewActions.style.border = '2px solid #22c55e';
+                            const label = document.getElementById('taskActionsLabel');
+                            const btns = document.getElementById('taskActionsButtons');
+                            const statusLabel = task.status === 'new' ? 'Нове завдання' : 'В роботі';
+                            label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Статус: ' + statusLabel + '</span>';
                             
-                            if (task.status === 'review') {
-                                reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
-                                reviewActions.style.border = '2px solid #22c55e';
-                                label.innerHTML = '<i data-lucide="shield-check" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання на перевірці</span>';
-                                btns.innerHTML = `
-                                    <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
-                                        <i data-lucide="check-circle" class="icon"></i> Прийняти
-                                    </button>
-                                    <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                        <i data-lucide="rotate-ccw" class="icon"></i> Допрацювати
-                                    </button>`;
-                            } else if (task.status === 'new' || task.status === 'progress') {
-                                reviewActions.style.background = 'linear-gradient(135deg,#f0f9ff,#e0f2fe)';
-                                reviewActions.style.border = '2px solid #38bdf8';
-                                const statusLabel = task.status === 'new' ? 'Нове завдання' : 'В роботі';
-                                label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#0284c7;"></i> <span style="color:#0284c7;">Статус: ' + statusLabel + '</span>';
-                                btns.innerHTML = `
-                                    <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
-                                        <i data-lucide="check-circle" class="icon"></i> Прийняти роботу
-                                    </button>
-                                    <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                        <i data-lucide="message-circle" class="icon"></i> Допрацювати
-                                    </button>`;
-                            }
+                            const manageButtons = canManage ? `
+                                <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
+                                    <i data-lucide="message-circle" class="icon"></i> Допрацювати
+                                </button>` : '';
+                            
+                            btns.innerHTML = `
+                                <button type="button" class="btn btn-success" style="flex:1;min-width:180px;padding:0.75rem 1rem;font-size:1rem;font-weight:700;" onclick="completeTaskFromModal()">
+                                    <i data-lucide="check-circle" class="icon"></i> Виконано
+                                </button>
+                                ${manageButtons}`;
+                            refreshIcons();
+                        } else if (!isAssignee && canManage && (task.status === 'new' || task.status === 'progress')) {
+                            // Менеджер дивиться чужу задачу (не на ревью)
+                            reviewActions.style.display = 'block';
+                            reviewActions.style.background = 'linear-gradient(135deg,#f0f9ff,#e0f2fe)';
+                            reviewActions.style.border = '2px solid #38bdf8';
+                            const label = document.getElementById('taskActionsLabel');
+                            const btns = document.getElementById('taskActionsButtons');
+                            const statusLabel = task.status === 'new' ? 'Нове завдання' : 'В роботі';
+                            label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#0284c7;"></i> <span style="color:#0284c7;">Статус: ' + statusLabel + '</span>';
+                            btns.innerHTML = `
+                                <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
+                                    <i data-lucide="check-circle" class="icon"></i> Прийняти роботу
+                                </button>
+                                <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
+                                    <i data-lucide="message-circle" class="icon"></i> Допрацювати
+                                </button>`;
+                            refreshIcons();
+                        } else if (isAssignee && task.status === 'review') {
+                            // Працівник бачить що його задача на перевірці
+                            reviewActions.style.display = 'block';
+                            reviewActions.style.background = 'linear-gradient(135deg,#fffbeb,#fef3c7)';
+                            reviewActions.style.border = '2px solid #f59e0b';
+                            const label = document.getElementById('taskActionsLabel');
+                            const btns = document.getElementById('taskActionsButtons');
+                            label.innerHTML = '<i data-lucide="clock" class="icon icon-sm" style="color:#d97706;"></i> <span style="color:#d97706;">Завдання на перевірці у керівника</span>';
+                            btns.innerHTML = '<p style="font-size:0.85rem;color:#92400e;margin:0;">Очікуйте підтвердження або зауваження</p>';
                             refreshIcons();
                         } else if (canManage && task.status === 'done') {
                             reviewActions.style.display = 'block';
@@ -9378,31 +9413,6 @@
                             refreshIcons();
                         } else {
                             reviewActions.style.display = 'none';
-                        }
-                        
-                        // Кнопка "Виконано" для виконавця — ЗАВЖДИ показуємо якщо він assignee і задача не done
-                        const isAssignee = task.assigneeId === currentUser?.uid;
-                        if (isAssignee && task.status !== 'done' && task.status !== 'review') {
-                            reviewActions.style.display = 'block';
-                            reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
-                            reviewActions.style.border = '2px solid #22c55e';
-                            const label = document.getElementById('taskActionsLabel');
-                            const btns = document.getElementById('taskActionsButtons');
-                            const statusLabel = task.status === 'new' ? 'Нове завдання' : 'В роботі';
-                            label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Статус: ' + statusLabel + '</span>';
-                            
-                            // Якщо canManage — додаємо кнопку Виконано ДО менеджерських кнопок
-                            const manageButtons = canManage ? `
-                                <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                    <i data-lucide="message-circle" class="icon"></i> Допрацювати
-                                </button>` : '';
-                            
-                            btns.innerHTML = `
-                                <button type="button" class="btn btn-success" style="flex:1;min-width:180px;padding:0.75rem 1rem;font-size:1rem;font-weight:700;" onclick="completeTaskFromModal()">
-                                    <i data-lucide="check-circle" class="icon"></i> Виконано
-                                </button>
-                                ${manageButtons}`;
-                            refreshIcons();
                         }
                     }
                 }
@@ -10232,25 +10242,29 @@
         // Review з модалки
         async function acceptReviewFromModal() {
             if (!editingId) return;
+            const taskId = editingId;
             closeModal('taskModal');
-            await acceptReviewTask(editingId);
+            await acceptReviewTask(taskId);
         }
         
         async function completeTaskFromModal() {
             if (!editingId) return;
+            const taskId = editingId;
             closeModal('taskModal');
-            await quickCompleteTask(editingId);
+            await quickCompleteTask(taskId);
         }
         
         async function rejectReviewFromModal() {
             if (!editingId) return;
+            const taskId = editingId;
             closeModal('taskModal');
-            await rejectReviewTask(editingId);
+            await rejectReviewTask(taskId);
         }
         
         async function reopenTaskFromModal() {
             if (!editingId) return;
-            const taskIndex = tasks.findIndex(t => t.id === editingId);
+            const taskId = editingId;
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
             if (taskIndex < 0) return;
             
             const originalTask = { ...tasks[taskIndex] };
@@ -10262,7 +10276,7 @@
             else renderCalendar();
             
             try {
-                await db.collection('companies').doc(currentCompany).collection('tasks').doc(editingId).update({
+                await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
                     status: 'progress',
                     completedAt: null,
                     reopenedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -10270,7 +10284,7 @@
                 });
                 showToast('Завдання повернуто в роботу', 'success');
                 // AUDIT LOG
-                logTaskChange(editingId, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' });
+                logTaskChange(taskId, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' });
                 // Автостатус проєкту
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
             } catch(e) {
