@@ -9380,9 +9380,9 @@
                             reviewActions.style.display = 'none';
                         }
                         
-                        // Кнопка "Виконано" для виконавця (якщо задача не done і не показані менеджерські кнопки)
+                        // Кнопка "Виконано" для виконавця — ЗАВЖДИ показуємо якщо він assignee і задача не done
                         const isAssignee = task.assigneeId === currentUser?.uid;
-                        if (isAssignee && task.status !== 'done' && !(canManage && task.status !== 'done')) {
+                        if (isAssignee && task.status !== 'done' && task.status !== 'review') {
                             reviewActions.style.display = 'block';
                             reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
                             reviewActions.style.border = '2px solid #22c55e';
@@ -9390,10 +9390,18 @@
                             const btns = document.getElementById('taskActionsButtons');
                             const statusLabel = task.status === 'new' ? 'Нове завдання' : 'В роботі';
                             label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Статус: ' + statusLabel + '</span>';
+                            
+                            // Якщо canManage — додаємо кнопку Виконано ДО менеджерських кнопок
+                            const manageButtons = canManage ? `
+                                <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
+                                    <i data-lucide="message-circle" class="icon"></i> Допрацювати
+                                </button>` : '';
+                            
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:180px;padding:0.75rem 1rem;font-size:1rem;font-weight:700;" onclick="completeTaskFromModal()">
-                                    <i data-lucide="check-circle" class="icon"></i> ✅ Виконано
-                                </button>`;
+                                    <i data-lucide="check-circle" class="icon"></i> Виконано
+                                </button>
+                                ${manageButtons}`;
                             refreshIcons();
                         }
                     }
