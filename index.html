@@ -6136,7 +6136,7 @@
                         </div>
                         
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="taskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:60px;" placeholder="Скрін / Посилання / Фото / Документ"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
                             <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
@@ -6530,7 +6530,7 @@
                             </div>
                         </div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><input type="text" id="regularTaskReportFormat" class="form-input" placeholder="Скрін / Посилання / Фото / Документ"></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:60px;" placeholder="Скрін / Посилання / Фото / Документ"></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="instruction">Інструкція (необов'язково)</span></label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
                         
                         <!-- Сповіщення про виконання -->
@@ -9379,6 +9379,23 @@
                         } else {
                             reviewActions.style.display = 'none';
                         }
+                        
+                        // Кнопка "Виконано" для виконавця (якщо задача не done і не показані менеджерські кнопки)
+                        const isAssignee = task.assigneeId === currentUser?.uid;
+                        if (isAssignee && task.status !== 'done' && !(canManage && task.status !== 'done')) {
+                            reviewActions.style.display = 'block';
+                            reviewActions.style.background = 'linear-gradient(135deg,#f0fdf4,#ecfdf5)';
+                            reviewActions.style.border = '2px solid #22c55e';
+                            const label = document.getElementById('taskActionsLabel');
+                            const btns = document.getElementById('taskActionsButtons');
+                            const statusLabel = task.status === 'new' ? 'Нове завдання' : 'В роботі';
+                            label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Статус: ' + statusLabel + '</span>';
+                            btns.innerHTML = `
+                                <button type="button" class="btn btn-success" style="flex:1;min-width:180px;padding:0.75rem 1rem;font-size:1rem;font-weight:700;" onclick="completeTaskFromModal()">
+                                    <i data-lucide="check-circle" class="icon"></i> ✅ Виконано
+                                </button>`;
+                            refreshIcons();
+                        }
                     }
                 }
             } else {
@@ -10209,6 +10226,12 @@
             if (!editingId) return;
             closeModal('taskModal');
             await acceptReviewTask(editingId);
+        }
+        
+        async function completeTaskFromModal() {
+            if (!editingId) return;
+            closeModal('taskModal');
+            await quickCompleteTask(editingId);
         }
         
         async function rejectReviewFromModal() {
