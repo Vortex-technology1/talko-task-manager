@@ -1660,7 +1660,8 @@
         }
         
         .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--info); }
-        .form-textarea { resize: vertical; min-height: 70px; }
+        .form-textarea { resize: vertical; min-height: 70px; cursor: text; }
+        .form-textarea::-webkit-resizer { background: linear-gradient(135deg, transparent 40%, #d1d5db 40%, #d1d5db 45%, transparent 45%, transparent 60%, #d1d5db 60%, #d1d5db 65%, transparent 65%); }
         .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
         
         .dashboard-cards {
@@ -6192,7 +6193,7 @@
                         </div>
                         
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:60px;" placeholder="Скрін / Посилання / Фото / Документ"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
                             <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
@@ -6532,6 +6533,7 @@
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
+                        <div class="form-group"><label class="form-label">Виконавець</label><select id="regularTaskAssignee" class="form-select"><option value="">З функції (авто)</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
                         <div class="form-group full-width" id="dayOfWeekGroup">
                             <label class="form-label" data-i18n="daysOfWeek">Дні тижня *</label>
@@ -6585,9 +6587,21 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий 🔴</option><option value="low" data-i18n="low">Низький</option></select></div>
+                        <div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="regularTaskRequireReview" style="accent-color:var(--primary);width:18px;height:18px;"> <span data-i18n="requireReview">Потрібна перевірка</span></label></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:60px;" placeholder="Скрін / Посилання / Фото / Документ"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ"></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="instruction">Інструкція (необов'язково)</span></label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
+                        
+                        <!-- Чекліст для регулярних -->
+                        <div class="form-group full-width">
+                            <label class="form-label"><i data-lucide="check-square" class="icon icon-sm"></i> Чекліст</label>
+                            <div id="regularTaskChecklist" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.5rem;"></div>
+                            <div style="display:flex;gap:0.5rem;">
+                                <input type="text" id="regularChecklistInput" class="form-input" placeholder="Новий пункт..." style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addRegularChecklistItem();}">
+                                <button type="button" class="btn btn-success" onclick="addRegularChecklistItem()" style="padding:0.4rem 0.8rem;">+</button>
+                            </div>
+                        </div>
                         
                         <!-- Сповіщення про виконання -->
                         <div class="form-group full-width">
@@ -8437,6 +8451,8 @@
                         
                         // Інкрементальне оновлення — додаємо нові задачі в масив замість повного рефетчу
                         for (const newTask of newTasks) {
+                            // Skip tasks being deleted (prevent race condition)
+                            if (pendingDeleteIds.has(newTask.id)) continue;
                             const existingIdx = tasks.findIndex(t => t.id === newTask.id);
                             if (existingIdx >= 0) {
                                 tasks[existingIdx] = newTask;
@@ -9080,8 +9096,14 @@
             for (const rt of regularTasks) {
                 if (!isRegularTaskDay(rt, today)) continue;
                 
-                const func = functions.find(f => f.name === rt.function);
-                const assigneeIds = func?.assigneeIds || [];
+                let assigneeIds;
+                if (rt.assigneeId) {
+                    // Прямий виконавець з регулярного завдання
+                    assigneeIds = [rt.assigneeId];
+                } else {
+                    const func = functions.find(f => f.name === rt.function);
+                    assigneeIds = func?.assigneeIds || [];
+                }
                 if (assigneeIds.length === 0) continue;
                 
                 for (const assigneeId of assigneeIds) {
@@ -9104,7 +9126,9 @@
                         reportFormat: rt.reportFormat || '',
                         description: rt.instruction || '',
                         status: 'new',
-                        priority: 'medium',
+                        priority: rt.priority || 'medium',
+                        requireReview: rt.requireReview || false,
+                        checklist: (rt.checklist || []).map(c => ({ text: c.text || c, done: false })),
                         pinned: false,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         createdDate: todayStr,
@@ -9124,16 +9148,18 @@
                 for (let i = 0; i < tasksToCreate.length; i += batchSize) {
                     const batch = db.batch();
                     const chunk = tasksToCreate.slice(i, i + batchSize);
+                    const localTasks = [];
                     
                     for (const taskData of chunk) {
                         const newRef = base.doc();
                         batch.set(newRef, taskData);
-                        
-                        // Додаємо в локальний масив
-                        tasks.unshift({ id: newRef.id, ...taskData });
+                        localTasks.push({ id: newRef.id, ...taskData });
                     }
                     
                     await batch.commit();
+                    
+                    // Додаємо в локальний масив ПІСЛЯ успішного commit
+                    localTasks.forEach(t => tasks.unshift(t));
                 }
                 
                 console.log(`[AutoGenerate] Created ${tasksToCreate.length} tasks in batch`);
@@ -9841,7 +9867,13 @@
                     // Update — знаходимо і оновлюємо в масиві
                     const idx = tasks.findIndex(t => t.id === currentEditingId);
                     if (idx >= 0) {
-                        tasks[idx] = { ...tasks[idx], ...data, id: currentEditingId };
+                        // Прибираємо FieldValue sentinels перед локальним merge
+                        const localData = { ...data };
+                        delete localData.updatedAt;
+                        delete localData.createdAt;
+                        delete localData.completedAt;
+                        delete localData.sentForReviewAt;
+                        tasks[idx] = { ...tasks[idx], ...localData, id: currentEditingId };
                     }
                 } else {
                     // Create — додаємо на початок масиву
@@ -10152,6 +10184,21 @@
                     } else if (val && typeof val === 'object' && val.seconds !== undefined && val.nanoseconds !== undefined) {
                         // Серіалізований Timestamp без toDate
                         clean[key] = new firebase.firestore.Timestamp(val.seconds, val.nanoseconds);
+                    } else if (Array.isArray(val)) {
+                        // Рекурсивно обробляємо масиви
+                        clean[key] = val.map(item => {
+                            if (item && typeof item === 'object' && typeof item.toDate === 'function') {
+                                return firebase.firestore.Timestamp.fromDate(item.toDate());
+                            } else if (item && typeof item === 'object' && item.seconds !== undefined && item.nanoseconds !== undefined) {
+                                return new firebase.firestore.Timestamp(item.seconds, item.nanoseconds);
+                            } else if (item && typeof item === 'object' && !Array.isArray(item)) {
+                                return cleanForRestore({ ...item, id: undefined });
+                            }
+                            return item;
+                        });
+                    } else if (val && typeof val === 'object' && !(val instanceof Date)) {
+                        // Рекурсивно обробляємо вкладені об'єкти
+                        clean[key] = cleanForRestore({ ...val, id: undefined });
                     } else {
                         clean[key] = val;
                     }
@@ -10217,6 +10264,9 @@
             
             const taskName = task.title || 'Завдання';
             
+            // Prevent snapshot from re-inserting during async delete
+            pendingDeleteIds.add(id);
+            
             // Оптимістичне видалення — зберігаємо копію для rollback
             const taskCopy = { ...task };
             tasks = tasks.filter(t => t.id !== id);
@@ -10232,10 +10282,12 @@
                 }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
+                pendingDeleteIds.delete(id);
                 // Автостатус проєкту після видалення задачі
                 if (taskCopy.projectId) autoUpdateProjectStatus(taskCopy.projectId);
                 // Note: audit log not needed for deletes — task doc is gone
             } catch (error) {
+                pendingDeleteIds.delete(id);
                 // Rollback — вставляємо назад (filter + unshift безпечно незалежно від змін масиву)
                 if (!tasks.find(t => t.id === id)) {
                     tasks.unshift(taskCopy);
@@ -10293,9 +10345,11 @@
         // Постановник приймає завдання
         // Review з модалки
         async function acceptReviewFromModal() {
-            if (!editingId) return;
+            console.log('[acceptReview] editingId:', editingId);
+            if (!editingId) { console.error('[acceptReview] No editingId!'); return; }
             const taskId = editingId;
             closeModal('taskModal');
+            console.log('[acceptReview] calling acceptReviewTask:', taskId);
             await acceptReviewTask(taskId);
         }
         
@@ -11028,6 +11082,7 @@
 
         // Mobile quick complete
         const completingTaskIds = new Set();
+        const pendingDeleteIds = new Set(); // Prevent snapshot re-inserting during delete
         
         async function quickCompleteTask(id) {
             // Guard against double-tap
@@ -11732,18 +11787,17 @@
         function updateCurrentTimeLine() {
             const now = new Date();
             const today = new Date();
+            const line = document.getElementById('currentTimeLine');
+            if (!line) return;
             
             if (calendarDate.toDateString() !== today.toDateString()) {
-                document.getElementById('currentTimeLine').style.display = 'none';
+                line.style.display = 'none';
                 return;
             }
             
-            const line = document.getElementById('currentTimeLine');
-            if (line) {
-                const topOffset = now.getHours() * 60 + now.getMinutes();
-                line.style.display = 'block';
-                line.style.top = topOffset + 'px';
-            }
+            const topOffset = now.getHours() * 60 + now.getMinutes();
+            line.style.display = 'block';
+            line.style.top = topOffset + 'px';
         }
         
         function renderWeekView() {
@@ -12414,7 +12468,24 @@
                         // AUDIT LOG
                         logTaskChange(taskToUpdate.id, newStatus === 'done' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
                     } else if (!currentDone) {
-                        // Завдання не існує - створюємо нове і одразу виконане
+                        // Завдання не існує в локальному масиві - перевіряємо Firestore напряму
+                        const todayStr2 = getLocalDateStr();
+                        const existCheck = await db.collection('companies').doc(currentCompany)
+                            .collection('tasks')
+                            .where('regularTaskId', '==', id)
+                            .where('deadlineDate', '==', todayStr2)
+                            .where('assigneeId', '==', currentUser.uid)
+                            .limit(1).get();
+                        
+                        if (!existCheck.empty) {
+                            // Вже існує в Firestore — оновлюємо замість створення
+                            const existingDoc = existCheck.docs[0];
+                            await existingDoc.ref.update({
+                                status: 'done',
+                                completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        } else {
+                        // Створюємо нове
                         const rt = regularTasks.find(r => r.id === id);
                         if (rt) {
                             const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
@@ -12422,9 +12493,9 @@
                                 function: rt.function,
                                 assigneeId: currentUser.uid,
                                 assigneeName: currentUserData?.name || currentUser.email,
-                                deadlineDate: todayStr,
+                                deadlineDate: todayStr2,
                                 deadlineTime: rt.timeStart || rt.time || '18:00',
-                                deadline: todayStr + 'T' + (rt.timeStart || rt.time || '18:00'),
+                                deadline: todayStr2 + 'T' + (rt.timeStart || rt.time || '18:00'),
                                 expectedResult: rt.expectedResult || '',
                                 reportFormat: rt.reportFormat || '',
                                 description: rt.instruction || '',
@@ -12432,7 +12503,7 @@
                                 priority: 'medium',
                                 pinned: false,
                                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                createdDate: todayStr,
+                                createdDate: todayStr2,
                                 creatorName: currentLang === 'ua' ? 'Система' : 'Система',
                                 regularTaskId: id,
                                 autoGenerated: true,
@@ -12442,6 +12513,7 @@
                             console.error('Could not find regular task template:', id);
                             throw new Error('Регулярне завдання не знайдено');
                         }
+                        } // close existCheck else
                     } else {
                         console.error('Cannot uncheck - task not found for user');
                         throw new Error('Завдання не знайдено');
@@ -13332,41 +13404,60 @@
             // Якщо вже є input — не дублюємо
             if (td.querySelector('input')) return;
             
+            const task = tasks.find(t => t.id === taskId);
             const originalHTML = td.innerHTML;
-            const input = document.createElement('input');
-            input.type = 'date';
-            input.value = currentDate || '';
-            input.style.cssText = 'width:130px;padding:0.25rem;border:2px solid #22c55e;border-radius:8px;font-size:0.85rem;outline:none;';
             
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'display:flex;gap:4px;align-items:center;';
+            
+            const dateInput = document.createElement('input');
+            dateInput.type = 'date';
+            dateInput.value = currentDate || '';
+            dateInput.style.cssText = 'width:130px;padding:0.25rem;border:2px solid #22c55e;border-radius:8px;font-size:0.85rem;outline:none;';
+            
+            const timeInput = document.createElement('input');
+            timeInput.type = 'time';
+            timeInput.value = task?.deadlineTime || '';
+            timeInput.style.cssText = 'width:90px;padding:0.25rem;border:2px solid #22c55e;border-radius:8px;font-size:0.85rem;outline:none;';
+            
+            wrap.appendChild(dateInput);
+            wrap.appendChild(timeInput);
             td.innerHTML = '';
-            td.appendChild(input);
-            input.focus();
+            td.appendChild(wrap);
+            dateInput.focus();
             
+            let saved = false;
             async function save() {
-                const newDate = input.value;
-                if (newDate === currentDate || (!newDate && !currentDate)) {
+                if (saved) return;
+                const newDate = dateInput.value;
+                const newTime = timeInput.value;
+                if (newDate === (currentDate || '') && newTime === (task?.deadlineTime || '')) {
                     td.innerHTML = originalHTML;
                     return;
                 }
+                saved = true;
                 
-                const task = tasks.find(t => t.id === taskId);
                 const oldDate = task?.deadlineDate;
+                const oldTime = task?.deadlineTime;
                 
                 try {
-                    const updateData = { deadlineDate: newDate || '', updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-                    if (newDate && task?.deadlineTime) {
-                        updateData.deadline = newDate + 'T' + task.deadlineTime;
+                    const updateData = { 
+                        deadlineDate: newDate || '', 
+                        deadlineTime: newTime || '',
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+                    };
+                    if (newDate) {
+                        updateData.deadline = newDate + 'T' + (newTime || '23:59');
                     }
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
                     
-                    // Локальне оновлення
-                    if (task) task.deadlineDate = newDate;
+                    if (task) {
+                        task.deadlineDate = newDate;
+                        task.deadlineTime = newTime;
+                    }
                     
-                    // Audit log
-                    logTaskChange(taskId, 'deadline', { deadlineDate: newDate }, { deadlineDate: oldDate });
-                    
-                    // Перерендер
-                    renderTasks();
+                    logTaskChange(taskId, 'deadline', { deadlineDate: newDate, deadlineTime: newTime }, { deadlineDate: oldDate, deadlineTime: oldTime });
+                    refreshCurrentView();
                     showToast('Дедлайн оновлено', 'success');
                 } catch (e) {
                     td.innerHTML = originalHTML;
@@ -13374,15 +13465,28 @@
                 }
             }
             
-            input.addEventListener('change', save);
-            input.addEventListener('blur', () => {
+            dateInput.addEventListener('change', () => {}); // just update value
+            timeInput.addEventListener('change', () => {}); // just update value
+            
+            function handleBlur() {
                 setTimeout(() => {
-                    if (td.querySelector('input')) td.innerHTML = originalHTML;
+                    if (wrap.contains(document.activeElement)) return; // still inside wrap
+                    if (!saved) {
+                        const newDate = dateInput.value;
+                        const newTime = timeInput.value;
+                        if (newDate !== (currentDate || '') || newTime !== (task?.deadlineTime || '')) {
+                            save();
+                        } else {
+                            td.innerHTML = originalHTML;
+                        }
+                    }
                 }, 200);
-            });
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') { td.innerHTML = originalHTML; }
-            });
+            }
+            dateInput.addEventListener('blur', handleBlur);
+            timeInput.addEventListener('blur', handleBlur);
+            
+            dateInput.addEventListener('keydown', (e) => { if (e.key === 'Escape') td.innerHTML = originalHTML; });
+            timeInput.addEventListener('keydown', (e) => { if (e.key === 'Escape') td.innerHTML = originalHTML; });
         }
         
         async function cycleTaskStatus(taskId, e) {
@@ -15554,6 +15658,12 @@
                     document.getElementById('regularTaskReportFormat').value = rt.reportFormat || '';
                     document.getElementById('regularTaskInstruction').value = rt.instruction || '';
                     
+                    // Нові поля
+                    document.getElementById('regularTaskPriority').value = rt.priority || 'medium';
+                    document.getElementById('regularTaskRequireReview').checked = rt.requireReview || false;
+                    document.getElementById('regularTaskAssignee').value = rt.assigneeId || '';
+                    renderRegularChecklist(rt.checklist || []);
+                    
                     // Встановлюємо чекбокси сповіщень
                     setRegularNotifyUsersCheckboxes(rt.notifyOnComplete || []);
                 }
@@ -15565,6 +15675,10 @@
                 document.getElementById('regularTaskDuration').value = '60';
                 toggleRegularTimeMode();
                 document.getElementById('regularTaskPeriod').value = 'weekly';
+                document.getElementById('regularTaskPriority').value = 'medium';
+                document.getElementById('regularTaskRequireReview').checked = false;
+                document.getElementById('regularTaskAssignee').value = '';
+                renderRegularChecklist([]);
                 clearDays();
                 setSelectedDays(['1']); // За замовчуванням понеділок
                 updatePeriodOptions();
@@ -15626,8 +15740,45 @@
             const af = document.getElementById('regularAssigneeFilter');
             if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
             if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            // Оновлюємо select виконавця для регулярного завдання
+            const rta = document.getElementById('regularTaskAssignee');
+            if (rta) rta.innerHTML = `<option value="">З функції (авто)</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
         }
-
+        let regularChecklistItems = [];
+        
+        function renderRegularChecklist(items) {
+            regularChecklistItems = items || [];
+            const container = document.getElementById('regularTaskChecklist');
+            if (!container) return;
+            container.innerHTML = regularChecklistItems.map((item, i) => `
+                <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.6rem;background:#f9fafb;border-radius:8px;">
+                    <span style="flex:1;font-size:0.85rem;">${escapeHtml(typeof item === 'string' ? item : item.text || item)}</span>
+                    <button type="button" onclick="removeRegularChecklistItem(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem;padding:0 4px;">✕</button>
+                </div>
+            `).join('');
+        }
+        
+        function addRegularChecklistItem() {
+            const input = document.getElementById('regularChecklistInput');
+            const text = input.value.trim();
+            if (!text) return;
+            regularChecklistItems.push({ text: text, done: false });
+            input.value = '';
+            renderRegularChecklist(regularChecklistItems);
+        }
+        
+        function removeRegularChecklistItem(index) {
+            regularChecklistItems.splice(index, 1);
+            renderRegularChecklist(regularChecklistItems);
+        }
+        
+        function getRegularChecklist() {
+            return regularChecklistItems.map(item => ({
+                text: typeof item === 'string' ? item : item.text || '',
+                done: false
+            }));
+        }
+        
         async function saveRegularTask(e) {
             e.preventDefault();
             
@@ -15641,9 +15792,10 @@
             
             const funcName = document.getElementById('regularTaskFunction').value;
             const func = functions.find(f => f.name === funcName);
+            const directAssignee = document.getElementById('regularTaskAssignee').value;
             
-            if (!func || !func.assigneeIds?.length) {
-                alert(currentLang === 'ua' ? 'В обраній функції немає виконавців' : 'В выбранной функции нет исполнителей');
+            if (!directAssignee && (!func || !func.assigneeIds?.length)) {
+                alert(currentLang === 'ua' ? 'Оберіть виконавця або функцію з виконавцями' : 'Выберите исполнителя или функцию с исполнителями');
                 return;
             }
             
@@ -15692,8 +15844,12 @@
                 expectedResult: document.getElementById('regularTaskExpectedResult').value.trim(),
                 reportFormat: document.getElementById('regularTaskReportFormat').value.trim(),
                 instruction: document.getElementById('regularTaskInstruction').value.trim(),
-                notifyOnComplete: getRegularNotifyUsersFromCheckboxes()
-                // assigneeIds більше не зберігаємо - беремо з функції динамічно
+                notifyOnComplete: getRegularNotifyUsersFromCheckboxes(),
+                priority: document.getElementById('regularTaskPriority').value || 'medium',
+                requireReview: document.getElementById('regularTaskRequireReview').checked || false,
+                assigneeId: document.getElementById('regularTaskAssignee').value || '',
+                checklist: getRegularChecklist()
+                // assigneeIds більше не зберігаємо - беруться з функції динамічно
             };
             
             try {
@@ -17294,6 +17450,8 @@
             if (caf) caf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             if (cff) cff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
             if (paf) paf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            const rta = document.getElementById('regularTaskAssignee');
+            if (rta) rta.innerHTML = `<option value="">З функції (авто)</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
         }
 
         function formatDate(s) {
@@ -20692,7 +20850,7 @@ Ctrl+K або / - пошук завдань
             
             const targetCol = e.currentTarget.dataset.col;
             const task = tasks.find(t => t.id === kanbanDraggedId);
-            if (!task) return;
+            if (!task) { kanbanDropLock = false; return; }
             
             // Permission check: owner/admin/manager can move any, employee only own
             const role = currentUserData?.role;
@@ -20790,8 +20948,12 @@ Ctrl+K або / - пошук завдань
                         fri.setDate(fri.getDate() + (5 - fri.getDay() + 7) % 7);
                         dl = fri.toISOString().split('T')[0];
                     } else if (colId === 'next_week') {
-                        const nextFri = new Date(todayD);
-                        nextFri.setDate(nextFri.getDate() + (12 - nextFri.getDay()) % 7);
+                        // Find next Monday, then +4 for Friday
+                        const nextMon = new Date(todayD);
+                        nextMon.setDate(nextMon.getDate() + (8 - nextMon.getDay()) % 7);
+                        if (nextMon <= todayD) nextMon.setDate(nextMon.getDate() + 7);
+                        const nextFri = new Date(nextMon);
+                        nextFri.setDate(nextFri.getDate() + 4);
                         dl = nextFri.toISOString().split('T')[0];
                     }
                     if (dl) {
