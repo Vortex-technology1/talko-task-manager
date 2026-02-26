@@ -15867,6 +15867,10 @@
                 closeModal('regularTaskModal');
                 if (currentRegularView === 'list') renderRegularTasks();
                 else renderRegularWeekView();
+                
+                // Автогенерація завдань для нового/оновленого регулярного
+                await autoGenerateRegularTasks();
+                
                 renderMyDay();
             } catch (error) {
                 console.error('saveRegularTask error:', error);
