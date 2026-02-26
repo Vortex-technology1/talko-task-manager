@@ -3644,8 +3644,8 @@
             }
             }
             
-            /* Hide add button in header on mobile - use FAB instead */
-            .calendar-header .btn-success {
+            /* Hide add button in TASKS header on mobile - use FAB instead */
+            #calendarHeader .btn-success {
                 display: none;
             }
             
@@ -5820,6 +5820,9 @@
                 <div class="calendar-header" id="regularCalendarHeader">
                     <div style="display:flex;align-items:center;gap:1rem;">
                         <h3 style="margin:0;font-size:1.1rem;"><i data-lucide="repeat" class="icon"></i> <span data-i18n="regularTasks">Регулярні завдання</span></h3>
+                        <button class="btn btn-success" onclick="openRegularTaskModal()" style="white-space:nowrap;">
+                            <i data-lucide="plus" class="icon"></i> <span data-i18n="add">Додати</span>
+                        </button>
                     </div>
                     
                     <div style="display:flex;align-items:center;gap:0.5rem;">
@@ -5827,9 +5830,6 @@
                             <button class="calendar-view-btn active" data-view="week" onclick="setRegularView('week')" data-i18n="week">Тиждень</button>
                             <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')" data-i18n="list">Список</button>
                         </div>
-                        <button class="btn btn-success" onclick="openRegularTaskModal()">
-                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
-                        </button>
                     </div>
                 </div>
                 
