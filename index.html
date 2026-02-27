@@ -7476,6 +7476,10 @@
                 normal: 'Звичайний',
                 projects: 'Проєкти',
                 tabProjects: 'Проєкти',
+                workloadByFunctions: 'Навантаження по функціях',
+                overdueShort: 'простр.',
+                overdue1day: 'Прострочено 1+ день',
+                stuckProcesses: 'Застряглі процеси',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
                 projectStatusChanged: 'Проєкт "{name}" → {status}',
                 confirmProjectComplete: 'В проєкті {n} незавершених завдань. Все одно позначити як "Завершено"?',
@@ -8171,6 +8175,10 @@
                 normal: 'Обычный',
                 projects: 'Проекты',
                 tabProjects: 'Проекты',
+                workloadByFunctions: 'Нагрузка по функциям',
+                overdueShort: 'проср.',
+                overdue1day: 'Просрочено 1+ день',
+                stuckProcesses: 'Застрявшие процессы',
                 tasksUnlinked: '{n} задач отвязано от проекта',
                 projectStatusChanged: 'Проект "{name}" → {status}',
                 confirmProjectComplete: 'В проекте {n} незавершённых задач. Всё равно пометить как "Завершено"?',
@@ -8868,6 +8876,10 @@
                 normal: 'Zwykły',
                 projects: 'Projekty',
                 tabProjects: 'Projekty',
+                workloadByFunctions: 'Obciążenie wg funkcji',
+                overdueShort: 'przeter.',
+                overdue1day: 'Przeterminowane 1+ dzień',
+                stuckProcesses: 'Zablokowane procesy',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
                 projectStatusChanged: 'Projekt "{name}" → {status}',
                 confirmProjectComplete: 'W projekcie jest {n} niezakończonych zadań. Oznaczyć jako "Zakończone"?',
@@ -19396,7 +19408,7 @@
                 case 'control': renderControl(); break;
                 case 'processes': updateProcessTemplateFilter(); renderProcessBoard(); break;
                 case 'projects': renderProjects(); break;
-                case 'regular': renderRegularTasks(); break;
+                case 'regular': if (currentRegularView === 'list') renderRegularTasks(); else renderRegularWeekView(); break;
                 case 'functions': renderFunctions(); break;
                 case 'users': renderUsers(); break;
                 case 'analytics': renderAnalytics(); break;
@@ -19587,7 +19599,7 @@
             });
             
             return `<div style="background:#fef2f2;border-radius:12px;padding:1rem;border:1px solid #fecaca;">
-                <h4 style="margin-bottom:0.75rem;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> Прострочено (${overdueTasks.length})</h4>
+                <h4 style="margin-bottom:0.75rem;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus')} (${overdueTasks.length})</h4>
                 ${Object.entries(byPerson).map(([name, tasks]) => `
                     <div style="margin-bottom:0.5rem;">
                         <div style="font-size:0.8rem;font-weight:600;color:#991b1b;">${esc(name)} (${tasks.length})</div>
@@ -19622,7 +19634,7 @@
             if (stuck.length === 0) return '';
             
             return `<div style="background:#fffbeb;border-radius:12px;padding:1rem;border:1px solid #fde68a;">
-                <h4 style="margin-bottom:0.75rem;color:#92400e;"><i data-lucide="pause-circle" class="icon icon-sm"></i> Застряглі процеси (${stuck.length})</h4>
+                <h4 style="margin-bottom:0.75rem;color:#92400e;"><i data-lucide="pause-circle" class="icon icon-sm"></i> ${t('stuckProcesses')} (${stuck.length})</h4>
                 ${stuck.slice(0, 5).map(p => {
                     const template = processTemplates.find(t => t.id === p.templateId);
                     const totalSteps = template?.steps?.length || '?';
@@ -19650,12 +19662,12 @@
             const maxActive = entries[0]?.[1]?.active || 1;
             
             return `<div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
-                <h4 style="margin-bottom:0.75rem;"><i data-lucide="layers" class="icon icon-sm" style="color:#6366f1"></i> Навантаження по функціях</h4>
+                <h4 style="margin-bottom:0.75rem;"><i data-lucide="layers" class="icon icon-sm" style="color:#6366f1"></i> ${t('workloadByFunctions')}</h4>
                 ${entries.map(([name, data]) => `
                     <div style="margin-bottom:0.5rem;">
                         <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">
                             <span>${esc(name)}</span>
-                            <span>${data.active}${data.overdue ? ` <span style="color:#ef4444;font-size:0.7rem;">(${data.overdue} простр.)</span>` : ''}</span>
+                            <span>${data.active}${data.overdue ? ` <span style="color:#ef4444;font-size:0.7rem;">(${data.overdue} ${t('overdueShort')})</span>` : ''}</span>
                         </div>
                         <div style="height:4px;background:#e5e7eb;border-radius:99px;position:relative;">
                             <div style="height:100%;width:${(data.active/maxActive)*100}%;background:#6366f1;border-radius:99px;"></div>
@@ -20010,7 +20022,7 @@
                 if (taskDeadline < today) {
                     const notifyKeyOverdue = `${task.id}-overdue`;
                     if (!notifiedTasks.has(notifyKeyOverdue)) {
-                        sendTaskNotification(task, `Прострочено: ${task.title}`, notifyKeyOverdue);
+                        sendTaskNotification(task, `${t('overdueStatus')}: ${task.title}`, notifyKeyOverdue);
                     }
                 }
             });
@@ -22389,7 +22401,7 @@ Ctrl+K або / - пошук завдань
         // =============================================
         
         const ESCALATION_LEVELS = [
-            { days: 1, level: 1, label: 'Прострочено 1+ день', target: 'assignee', color: '#92400e' },
+            { days: 1, level: 1, label: t('overdue1day'), target: 'assignee', color: '#92400e' },
             { days: 3, level: 2, label: t('overdue3days'), target: 'manager', color: '#9a3412' },
             { days: 7, level: 3, label: t('overdue7days'), target: 'owner', color: '#dc2626' }
         ];
@@ -23711,7 +23723,7 @@ Ctrl+K або / - пошук завдань
                         ${prioNames[task.priority] || task.priority}
                     </div>
                     ${task.function ? `<div style="padding:4px 10px;background:#f3f4f6;border-radius:8px;font-size:0.8rem;color:#6b7280;">${esc(task.function)}</div>` : ''}
-                    ${task.overdue ? `<div style="padding:4px 10px;background:#fef2f2;border-radius:8px;font-size:0.8rem;color:#ef4444;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Прострочено</div>` : ''}
+                    ${task.overdue ? `<div style="padding:4px 10px;background:#fef2f2;border-radius:8px;font-size:0.8rem;color:#ef4444;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${t('overdueStatus')}</div>` : ''}
                 </div>
                 
                 ${processBadge}
