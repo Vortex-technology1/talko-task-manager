@@ -14906,21 +14906,21 @@
                     if (oldName && oldName !== data.name) {
                         const base = db.collection('companies').doc(currentCompany);
                         let batch = db.batch(); let bc = 0;
-                        tasks.filter(tk => tk.function === oldName).forEach(tk => {
+                        for (const tk of tasks.filter(t => t.function === oldName)) {
                             batch.update(base.collection('tasks').doc(tk.id), { function: data.name }); tk.function = data.name;
                             if (++bc >= 450) { await batch.commit(); batch = db.batch(); bc = 0; }
-                        });
-                        regularTasks.filter(rt => rt.function === oldName).forEach(rt => {
+                        }
+                        for (const rt of regularTasks.filter(r => r.function === oldName)) {
                             batch.update(base.collection('regularTasks').doc(rt.id), { function: data.name }); rt.function = data.name;
                             if (++bc >= 450) { await batch.commit(); batch = db.batch(); bc = 0; }
-                        });
-                        processTemplates.forEach(pt => {
+                        }
+                        for (const pt of processTemplates) {
                             if (pt.steps?.some(s => s.function === oldName)) {
                                 const upSteps = pt.steps.map(s => s.function === oldName ? { ...s, function: data.name } : s);
                                 batch.update(base.collection('processTemplates').doc(pt.id), { steps: upSteps }); pt.steps = upSteps;
                                 if (++bc >= 450) { await batch.commit(); batch = db.batch(); bc = 0; }
                             }
-                        });
+                        }
                         if (bc > 0) await batch.commit();
                     }
                     const idx = functions.findIndex(f => f.id === currentEditingId);
