@@ -7604,6 +7604,9 @@
                 teamStatus: 'Команда сьогодні',
                 academyAI: 'Академія',
                 funcDescAI: 'Опис функцій',
+                criticalOverdueWarning: 'задач прострочено 3+ днів.',
+                criticalOverdueAdvice: 'Рекомендація: спочатку закрийте прострочені задачі.',
+                continueAnyway: 'Все одно створити задачу?',
                 requireReport: 'Звіт при завершенні',
                 active: 'акт.',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
@@ -9038,6 +9041,9 @@
                 teamStatus: 'Zespół dzisiaj',
                 academyAI: 'Akademia',
                 funcDescAI: 'Opis funkcji',
+                criticalOverdueWarning: 'zadań przeterminowanych 3+ dni.',
+                criticalOverdueAdvice: 'Zalecenie: najpierw zamknij przeterminowane zadania.',
+                continueAnyway: 'Czy mimo to utworzyć zadanie?',
                 requireReport: 'Raport po zakończeniu',
                 active: 'akt.',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
@@ -11429,6 +11435,29 @@
             try {
                 const assigneeId = document.getElementById('taskAssignee').value;
                 const assignee = users.find(u => u.id === assigneeId);
+                
+                // Warn if assignee has critical overdue tasks
+                if (assigneeId && !currentEditingId) {
+                    const todayStr = getLocalDateStr(new Date());
+                    const criticalOverdue = tasks.filter(t => 
+                        t.assigneeId === assigneeId && 
+                        t.status !== 'done' && 
+                        t.deadlineDate && 
+                        t.deadlineDate < todayStr &&
+                        Math.floor((new Date() - new Date(t.deadlineDate + 'T23:59')) / 86400000) >= 3
+                    );
+                    if (criticalOverdue.length >= 3) {
+                        const name = assignee?.name || assignee?.email || '';
+                        const proceed = confirm(
+                            `${name}: ${criticalOverdue.length} ${t('criticalOverdueWarning') || 'задач прострочено 3+ днів.'}\n\n${t('criticalOverdueAdvice') || 'Рекомендація: спочатку закрийте прострочені задачі.'}\n\n${t('continueAnyway') || 'Все одно створити задачу?'}`
+                        );
+                        if (!proceed) {
+                            isSaving = false;
+                            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+                            return;
+                        }
+                    }
+                }
                 const deadlineDate = document.getElementById('taskDeadlineDate').value;
                 const deadlineTime = document.getElementById('taskDeadlineTime').value;
                 const timeMode = document.getElementById('taskTimeMode').value;
@@ -21117,11 +21146,29 @@
                     }
                 }
                 
-                // Check overdue (notify once)
+                // Check overdue — daily reminders with escalation
                 if (taskDeadline < today) {
-                    const notifyKeyOverdue = `${task.id}-overdue`;
-                    if (!notifiedTasks.has(notifyKeyOverdue)) {
-                        sendTaskNotification(task, `${t('overdueStatus')}: ${task.title}`, notifyKeyOverdue);
+                    const daysOverdue = Math.floor((now - new Date(taskDeadline + 'T23:59')) / 86400000);
+                    const overdueKey = `${task.id}-overdue-${today}`;
+                    if (!notifiedTasks.has(overdueKey) && currentHour >= 9 && currentHour < 10) {
+                        let msg = '';
+                        if (daysOverdue >= 7) {
+                            msg = `КРИТИЧНО (${daysOverdue} дн.): ${task.title}`;
+                        } else if (daysOverdue >= 3) {
+                            msg = `Прострочено ${daysOverdue} дн.: ${task.title}`;
+                        } else {
+                            msg = `${t('overdueStatus')}: ${task.title}`;
+                        }
+                        sendTaskNotification(task, msg, overdueKey);
+                    }
+                    
+                    // Notify manager/owner about critical overdue (7+ days)
+                    if (daysOverdue >= 7 && (currentUserData?.role === 'owner' || currentUserData?.role === 'manager')) {
+                        const mgrKey = `${task.id}-mgr-overdue-${today}`;
+                        if (!notifiedTasks.has(mgrKey) && task.assigneeId !== currentUser?.uid && currentHour >= 9 && currentHour < 10) {
+                            const assigneeName = task.assigneeName || '';
+                            sendTaskNotification(task, `${assigneeName}: ${daysOverdue} дн. прострочено — ${task.title}`, mgrKey);
+                        }
                     }
                 }
             });
