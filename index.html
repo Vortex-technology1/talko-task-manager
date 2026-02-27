@@ -5740,6 +5740,8 @@
                             <select class="filter-select" id="controlViewType" onchange="renderControlContent()" style="min-width:150px;">
                                 <option value="workload" data-i18n="workload">Навантаження</option>
                                 <option value="functions" data-i18n="byFunctions">По функціях</option>
+                                <option value="pipeline" data-i18n="delegationPipeline">Воронка делегування</option>
+                                <option value="journal" data-i18n="failureJournal">Журнал збоїв</option>
                             </select>
                         </div>
                     </div>
@@ -7301,7 +7303,6 @@
                 processAdvancedShort: 'Процес просунувся',
                 processCompletedShort: 'Процес завершено',
                 newTask: 'Нове завдання',
-                regularTaskLabel: 'Регулярне завдання',
                 processTask: 'Завдання з процесу',
                 fromFunctionAuto: 'З функції (авто)',
                 deleteProjectWithTasks: 'Видалити проєкт? {total} завдань ({undone} незавершених) залишаться в загальному списку.',
@@ -7484,6 +7485,17 @@
                 daily: 'Щоденно',
                 monthly: 'Щомісяця',
                 dayShort: 'го',
+                autonomyIndex: 'Індекс автономності',
+                returnedFromReview: 'Повернуто з ревью',
+                showDetails: 'Детальніше',
+                hideDetails: 'Згорнути',
+                more: 'ще',
+                delegationPipeline: 'Воронка делегування',
+                failureJournal: 'Журнал збоїв',
+                notStarted: 'Не розпочато',
+                noIncidents: 'Збоїв не виявлено',
+                completion30d: 'Виконання 30дн',
+                regularTaskLabel: 'рег.',
                 active: 'акт.',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
                 projectStatusChanged: 'Проєкт "{name}" → {status}',
@@ -8709,7 +8721,6 @@
                 processAdvancedShort: 'Proces przesunięty',
                 processCompletedShort: 'Proces zakończony',
                 newTask: 'Nowe zadanie',
-                regularTaskLabel: 'Zadanie regularne',
                 processTask: 'Zadanie z procesu',
                 fromFunctionAuto: 'Z funkcji (auto)',
                 deleteProjectWithTasks: 'Usunąć projekt? {total} zadań ({undone} niezakończonych) pozostanie na liście.',
@@ -8892,6 +8903,17 @@
                 daily: 'Codziennie',
                 monthly: 'Co miesiąc',
                 dayShort: '-go',
+                autonomyIndex: 'Indeks autonomii',
+                returnedFromReview: 'Zwrócone z recenzji',
+                showDetails: 'Szczegóły',
+                hideDetails: 'Zwiń',
+                more: 'więcej',
+                delegationPipeline: 'Lejek delegowania',
+                failureJournal: 'Dziennik awarii',
+                notStarted: 'Nie rozpoczęto',
+                noIncidents: 'Brak awarii',
+                completion30d: 'Wykonanie 30dn',
+                regularTaskLabel: 'reg.',
                 active: 'akt.',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
                 projectStatusChanged: 'Projekt "{name}" → {status}',
@@ -18118,6 +18140,43 @@
             });
         }
         
+        function getRegularTaskCompletionStats(rt, daysBack = 30) {
+            const now = new Date();
+            const cutoff = new Date(now);
+            cutoff.setDate(cutoff.getDate() - daysBack);
+            
+            // Count expected days
+            let expectedDays = 0;
+            for (let d = new Date(cutoff); d <= now; d.setDate(d.getDate() + 1)) {
+                const dow = d.getDay();
+                if (rt.period === 'daily') expectedDays++;
+                else if (rt.period === 'weekly') {
+                    const daysArr = rt.daysOfWeek || (rt.dayOfWeek ? [rt.dayOfWeek] : []);
+                    if (daysArr.includes(dow.toString())) expectedDays++;
+                } else if (rt.period === 'monthly') {
+                    const dom = d.getDate();
+                    if (rt.dayOfMonth === 'last') {
+                        const last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+                        if (dom === last) expectedDays++;
+                    } else if (dom === parseInt(rt.dayOfMonth)) expectedDays++;
+                }
+            }
+            
+            // Count completed
+            const cutoffStr = getLocalDateStr(cutoff);
+            const completedTasks = tasks.filter(t => 
+                t.regularTaskId === rt.id && 
+                t.status === 'done' &&
+                t.deadlineDate && t.deadlineDate >= cutoffStr
+            );
+            const completedDays = new Set(completedTasks.map(t => t.deadlineDate)).size;
+            
+            const pct = expectedDays > 0 ? Math.round(completedDays / expectedDays * 100) : 0;
+            const color = pct >= 80 ? '#16a34a' : pct >= 50 ? '#f59e0b' : '#ef4444';
+            
+            return { expected: expectedDays, completed: completedDays, pct, color };
+        }
+
         function renderRegularTasks() {
             const c = document.getElementById('regularTasksContainer');
             
@@ -18168,6 +18227,7 @@
                             <th>${t('function')}</th>
                             <th>${t('schedule')}</th>
                             <th>${t('statusPeriod')}</th>
+                            <th>${t('completion30d') || '30 дн'}</th>
                             <th>${t('assignees')}</th>
                             <th>${t('actions')}</th>
                         </tr>
@@ -18221,6 +18281,18 @@
                             <span class="status-badge" style="background:${statusInfo.color}20;color:${statusInfo.color};font-weight:500;">
                                 <i data-lucide="${statusInfo.lucideIcon}" class="icon icon-sm" style="color:${statusInfo.color}"></i> ${statusInfo.text}
                             </span>
+                        </td>
+                        <td>
+                            ${(() => {
+                                const stats = getRegularTaskCompletionStats(rt);
+                                return `<div style="text-align:center;">
+                                    <div style="font-size:1rem;font-weight:700;color:${stats.color};">${stats.pct}%</div>
+                                    <div style="font-size:0.68rem;color:#9ca3af;">${stats.completed}/${stats.expected}</div>
+                                    <div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:3px;">
+                                        <div style="height:100%;width:${Math.min(stats.pct,100)}%;background:${stats.color};border-radius:2px;"></div>
+                                    </div>
+                                </div>`;
+                            })()}
                         </td>
                         <td>
                             <div style="display:flex;flex-wrap:wrap;gap:2px;">
@@ -18879,13 +18951,153 @@
             }
             
             const canEdit = currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
-            
+            const todayStr = getLocalDateStr(new Date());
+            const shortDays = getDayNamesShort();
+            const jsDayToIdx = {1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6};
+
             c.innerHTML = users.map(u => {
                 const userFunctions = functions.filter(f => f.assigneeIds?.includes(u.id));
                 const isOwner = u.role === 'owner';
                 
+                // Task stats
+                const userTasks = tasks.filter(t => t.assigneeId === u.id);
+                const activeTasks = userTasks.filter(t => t.status !== 'done');
+                const doneTasks = userTasks.filter(t => t.status === 'done');
+                const newTasks = userTasks.filter(t => t.status === 'new');
+                const inProgress = userTasks.filter(t => t.status === 'progress');
+                const onReview = userTasks.filter(t => t.status === 'review');
+                const overdue = activeTasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
+                const returned = userTasks.filter(t => t.reviewRejectedAt);
+                
+                // Autonomy index: % done without returns (from all done tasks)
+                const doneWithoutReturn = doneTasks.filter(t => !t.reviewRejectedAt).length;
+                const autonomyPct = doneTasks.length > 0 ? Math.round(doneWithoutReturn / doneTasks.length * 100) : 0;
+                const autonomyColor = autonomyPct >= 80 ? '#16a34a' : autonomyPct >= 50 ? '#f59e0b' : '#ef4444';
+                
+                // Regular tasks & weekly hours
+                const userRegular = regularTasks.filter(rt => {
+                    const func = functions.find(f => f.name === rt.function);
+                    return func?.assigneeIds?.includes(u.id);
+                });
+                let weeklyMin = 0;
+                userRegular.forEach(rt => {
+                    const start = rt.timeStart || rt.time || '';
+                    const end = rt.timeEnd || '';
+                    let dur = rt.estimatedTime || 60;
+                    if (start && end) {
+                        const [sh,sm] = start.split(':').map(Number);
+                        const [eh,em] = end.split(':').map(Number);
+                        dur = (eh*60+em) - (sh*60+sm);
+                        if (dur <= 0) dur = 60;
+                    }
+                    let dpw = 1;
+                    if (rt.period === 'daily') dpw = 5;
+                    else if (rt.period === 'weekly' && rt.daysOfWeek) dpw = rt.daysOfWeek.length;
+                    else if (rt.period === 'monthly') dpw = 0.25;
+                    weeklyMin += dur * dpw;
+                });
+                const weeklyHrs = Math.round(weeklyMin / 60 * 10) / 10;
+                const overloadFlag = weeklyHrs > 35;
+                
+                // Delegation pipeline
+                const pipelineHTML = `
+                <div style="display:flex;gap:2px;align-items:center;margin:0.5rem 0;">
+                    <div style="flex:1;text-align:center;padding:0.3rem;background:#eff6ff;border-radius:6px 0 0 6px;">
+                        <div style="font-size:1.1rem;font-weight:700;color:#2563eb;">${newTasks.length}</div>
+                        <div style="font-size:0.65rem;color:#6b7280;">${t('statusNew')}</div>
+                    </div>
+                    <div style="flex:1;text-align:center;padding:0.3rem;background:#fefce8;">
+                        <div style="font-size:1.1rem;font-weight:700;color:#ca8a04;">${inProgress.length}</div>
+                        <div style="font-size:0.65rem;color:#6b7280;">${t('inProgressStatus')}</div>
+                    </div>
+                    <div style="flex:1;text-align:center;padding:0.3rem;background:#f3e8ff;">
+                        <div style="font-size:1.1rem;font-weight:700;color:#9333ea;">${onReview.length}</div>
+                        <div style="font-size:0.65rem;color:#6b7280;">${t('statusOnReview')}</div>
+                    </div>
+                    <div style="flex:1;text-align:center;padding:0.3rem;background:#dcfce7;border-radius:0 6px 6px 0;">
+                        <div style="font-size:1.1rem;font-weight:700;color:#16a34a;">${doneTasks.length}</div>
+                        <div style="font-size:0.65rem;color:#6b7280;">${t('statusDone')}</div>
+                    </div>
+                </div>`;
+                
+                // Expanded detail panel
+                const detailHTML = `
+                <div id="userDetail_${u.id}" style="display:none;margin-top:0.5rem;border-top:1px solid #e5e7eb;padding-top:0.75rem;">
+                    
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
+                        <div style="background:#f0fdf4;border-radius:8px;padding:0.5rem;text-align:center;">
+                            <div style="font-size:0.7rem;color:#6b7280;">${t('autonomyIndex') || 'Індекс автономності'}</div>
+                            <div style="font-size:1.3rem;font-weight:700;color:${autonomyColor};">${autonomyPct}%</div>
+                        </div>
+                        <div style="background:${overloadFlag ? '#fef2f2' : '#f0f9ff'};border-radius:8px;padding:0.5rem;text-align:center;">
+                            <div style="font-size:0.7rem;color:#6b7280;">${t('hoursPerWeek')}</div>
+                            <div style="font-size:1.3rem;font-weight:700;color:${overloadFlag ? '#ef4444' : '#0284c7'};">${weeklyHrs}</div>
+                        </div>
+                    </div>
+                    
+                    ${overdue.length > 0 ? `
+                    <div style="background:#fef2f2;border-radius:8px;padding:0.5rem;margin-bottom:0.5rem;">
+                        <div style="font-size:0.8rem;font-weight:600;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus')} (${overdue.length})</div>
+                        ${overdue.slice(0,3).map(t => `<div style="font-size:0.78rem;color:#374151;padding:0.2rem 0;">&bull; ${esc(t.title)} <span style="color:#ef4444;">${t.deadlineDate || ''}</span></div>`).join('')}
+                        ${overdue.length > 3 ? `<div style="font-size:0.72rem;color:#9ca3af;">+${overdue.length - 3} ${t('more') || 'ще'}...</div>` : ''}
+                    </div>` : ''}
+                    
+                    ${returned.length > 0 ? `
+                    <div style="background:#fffbeb;border-radius:8px;padding:0.5rem;margin-bottom:0.5rem;">
+                        <div style="font-size:0.8rem;font-weight:600;color:#b45309;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('returnedFromReview') || 'Повернуто з ревью'} (${returned.length})</div>
+                    </div>` : ''}
+                    
+                    ${userRegular.length > 0 ? `
+                    <div style="margin-bottom:0.5rem;">
+                        <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">
+                            <i data-lucide="repeat" class="icon icon-sm"></i> ${t('tabRegular')} (${userRegular.length})
+                        </div>
+                        ${userRegular.map(rt => {
+                            const status = getRegularTaskStatus(rt);
+                            const start = rt.timeStart || rt.time || '—';
+                            const end = rt.timeEnd || '';
+                            const timeStr = end ? start + '–' + end : start;
+                            let scheduleStr = '';
+                            if (rt.period === 'daily') {
+                                scheduleStr = `<span style="font-size:0.7rem;background:#dcfce7;color:#16a34a;padding:1px 6px;border-radius:4px;">${t('daily')}</span>`;
+                            } else if (rt.period === 'weekly' && rt.daysOfWeek) {
+                                scheduleStr = rt.daysOfWeek
+                                    .map(d => parseInt(d))
+                                    .sort((a,b) => (jsDayToIdx[a]??7) - (jsDayToIdx[b]??7))
+                                    .map(d => `<span style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;font-size:0.65rem;font-weight:600;background:#dcfce7;color:#16a34a;">${shortDays[jsDayToIdx[d]] || d}</span>`)
+                                    .join(' ');
+                            } else if (rt.period === 'monthly') {
+                                scheduleStr = `<span style="font-size:0.7rem;background:#e0e7ff;color:#4338ca;padding:1px 6px;border-radius:4px;">${t('monthly')} ${rt.dayOfMonth || '1'}</span>`;
+                            }
+                            return `
+                            <div style="display:flex;align-items:center;gap:0.4rem;padding:0.35rem 0.5rem;margin-bottom:0.25rem;background:#f9fafb;border-radius:6px;font-size:0.8rem;cursor:pointer;" onclick="openRegularTaskModal('${escId(rt.id)}')">
+                                <span style="width:7px;height:7px;border-radius:50%;background:${status.color};flex-shrink:0;"></span>
+                                <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;">${esc(rt.title)}</span>
+                                <span style="color:#6b7280;font-size:0.72rem;white-space:nowrap;">${timeStr}</span>
+                            </div>
+                            <div style="padding:0 0.5rem 0.3rem;display:flex;gap:3px;">${scheduleStr}</div>`;
+                        }).join('')}
+                    </div>` : ''}
+                    
+                    ${userFunctions.length > 0 ? `
+                    <div>
+                        <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.3rem;">
+                            <i data-lucide="settings" class="icon icon-sm"></i> ${t('tabFunctions')}
+                        </div>
+                        ${userFunctions.map(f => {
+                            const fTasks = tasks.filter(t => t.function === f.name && t.assigneeId === u.id);
+                            const fActive = fTasks.filter(t => t.status !== 'done').length;
+                            const fDone = fTasks.filter(t => t.status === 'done').length;
+                            return `<div style="display:flex;justify-content:space-between;padding:0.25rem 0.5rem;font-size:0.8rem;">
+                                <span style="font-weight:500;">${esc(f.name)}</span>
+                                <span style="color:#6b7280;">${fActive} ${t('active')} / ${fDone} ${t('doneLabel')}</span>
+                            </div>`;
+                        }).join('')}
+                    </div>` : ''}
+                </div>`;
+
                 return `
-                <div class="user-card">
+                <div class="user-card" style="cursor:pointer;" onclick="toggleUserDetail('${u.id}', event)">
                     <div class="user-header">
                         <div class="user-name">${esc(u.name || u.email)}</div>
                         <span class="role-badge ${u.role}">${getRoleText(u.role)}</span>
@@ -18899,16 +19111,41 @@
                             ${userFunctions.map(f => `<span class="badge" style="font-size:0.7rem;background:#e8f5e9;color:#2e7d32;">${esc(f.name)}</span>`).join('')}
                         </div>
                     ` : ''}
-                    <div class="user-stats">
-                        <span><i data-lucide="file-text" class="icon icon-sm"></i> ${tasks.filter(task => task.assigneeId === u.id).length} ${t('tasks')}</span>
-                        <div style="display:flex;gap:0.25rem;">
+                    ${pipelineHTML}
+                    <div class="user-stats" style="flex-wrap:wrap;gap:0.4rem;">
+                        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center;">
+                            <span style="font-size:0.8rem;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks.length} ${t('active')}</span>
+                            <span style="font-size:0.8rem;"><i data-lucide="repeat" class="icon icon-sm"></i> ${userRegular.length} ${t('regularTaskLabel')}</span>
+                            <span style="font-size:0.8rem;font-weight:600;color:${autonomyColor};">${autonomyPct}%</span>
+                            ${overdue.length > 0 ? `<span style="font-size:0.8rem;color:#ef4444;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${overdue.length}</span>` : ''}
+                        </div>
+                        <div style="display:flex;gap:0.25rem;" onclick="event.stopPropagation();">
                             ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
                             ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : ''}
                         </div>
                     </div>
+                    <div style="text-align:center;padding-top:0.2rem;margin-top:0.2rem;border-top:1px dashed #e5e7eb;">
+                        <span id="userToggle_${u.id}" style="font-size:0.73rem;color:#9ca3af;"><i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showDetails') || 'Детальніше'}</span>
+                    </div>
+                    ${detailHTML}
                 </div>
             `}).join('');
             refreshIcons();
+        }
+        
+        function toggleUserDetail(userId, event) {
+            if (event.target.closest('button') || event.target.closest('a')) return;
+            const section = document.getElementById('userDetail_' + userId);
+            const toggle = document.getElementById('userToggle_' + userId);
+            if (!section) return;
+            const isOpen = section.style.display !== 'none';
+            section.style.display = isOpen ? 'none' : 'block';
+            if (toggle) {
+                toggle.innerHTML = isOpen 
+                    ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showDetails') || 'Детальніше'}`
+                    : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${t('hideDetails') || 'Згорнути'}`;
+                refreshIcons();
+            }
         }
         
         let editingUserId = null;
@@ -19141,8 +19378,7 @@
                         `;
                     }).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
                 `;
-            } else {
-                // Group tasks by function
+            } else if (viewType === 'functions') {
                 const byFunc = {};
                 filteredTasks.forEach(task => { 
                     const fn = task.function || t('noFunction');
@@ -19178,6 +19414,201 @@
                             </div>
                         `;
                     }).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
+                `;
+            } else if (viewType === 'pipeline') {
+                // Delegation Pipeline
+                const todayStr = getLocalDateStr(new Date());
+                const allVisible = tasks.filter(task => {
+                    if (!isTaskVisibleToUser(task)) return false;
+                    if (af && task.assigneeId !== af) return false;
+                    if (ff && task.function !== ff) return false;
+                    return true;
+                });
+
+                const statuses = [
+                    { key: 'new', label: t('statusNew'), color: '#3b82f6', bg: '#eff6ff' },
+                    { key: 'progress', label: t('inProgressStatus'), color: '#f59e0b', bg: '#fefce8' },
+                    { key: 'review', label: t('statusOnReview'), color: '#8b5cf6', bg: '#f5f3ff' },
+                    { key: 'done', label: t('statusDone'), color: '#16a34a', bg: '#f0fdf4' }
+                ];
+
+                const byPerson = {};
+                allVisible.forEach(task => {
+                    const uid = task.assigneeId || 'unassigned';
+                    const name = task.assigneeName || t('notAssigned');
+                    if (!byPerson[uid]) byPerson[uid] = { name, new: [], progress: [], review: [], done: [] };
+                    if (byPerson[uid][task.status]) byPerson[uid][task.status].push(task);
+                });
+
+                content.innerHTML = `
+                    <h3 style="margin-bottom:1rem;">${t('delegationPipeline')}</h3>
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:1.5rem;text-align:center;">
+                        ${statuses.map(s => {
+                            const cnt = allVisible.filter(t => t.status === s.key).length;
+                            return `<div style="background:${s.bg};padding:0.6rem;border-radius:8px;">
+                                <div style="font-size:1.4rem;font-weight:700;color:${s.color};">${cnt}</div>
+                                <div style="font-size:0.72rem;color:#6b7280;">${s.label}</div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                    ${Object.entries(byPerson).sort((a,b) => {
+                        const aAct = a[1].new.length + a[1].progress.length + a[1].review.length;
+                        const bAct = b[1].new.length + b[1].progress.length + b[1].review.length;
+                        return bAct - aAct;
+                    }).map(([uid, data]) => {
+                        const doneCount = data.done.length;
+                        const doneClean = data.done.filter(t => !t.reviewRejectedAt).length;
+                        const autonomy = doneCount > 0 ? Math.round(doneClean / doneCount * 100) : 0;
+                        const autoColor = autonomy >= 80 ? '#16a34a' : autonomy >= 50 ? '#f59e0b' : '#ef4444';
+                        const overdue = [...data.new, ...data.progress].filter(t => t.deadlineDate && t.deadlineDate < todayStr).length;
+                        const returned = [...data.progress, ...data.done].filter(t => t.reviewRejectedAt).length;
+
+                        return `
+                        <div class="control-row" onclick="this.classList.toggle('expanded')" style="margin-bottom:0.5rem;">
+                            <div class="control-row-header" style="flex-wrap:wrap;gap:0.4rem;">
+                                <span><i data-lucide="user" class="icon icon-sm"></i> ${esc(data.name)}</span>
+                                <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">
+                                    ${overdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:600;">⚠ ${overdue}</span>` : ''}
+                                    ${returned > 0 ? `<span style="background:#fffbeb;color:#b45309;padding:2px 8px;border-radius:10px;font-size:0.72rem;">↩ ${returned}</span>` : ''}
+                                    <span style="font-weight:600;color:${autoColor};font-size:0.78rem;">${autonomy}%</span>
+                                    <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i>
+                                </div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:0.3rem 0.5rem;">
+                                ${statuses.map(s => `<div style="text-align:center;font-size:0.85rem;font-weight:600;color:${s.color};">${data[s.key].length}</div>`).join('')}
+                            </div>
+                            <div class="control-row-tasks">
+                                ${statuses.filter(s => data[s.key].length > 0).map(s => `
+                                    <div style="margin-bottom:0.5rem;">
+                                        <div style="font-size:0.75rem;font-weight:600;color:${s.color};padding:0.3rem 0;border-bottom:2px solid ${s.color};">${s.label} (${data[s.key].length})</div>
+                                        ${data[s.key].slice(0, 10).map(t => {
+                                            const isOverdue = t.deadlineDate && t.deadlineDate < todayStr && s.key !== 'done';
+                                            return `<div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="event.stopPropagation();openTaskModal('${escId(t.id)}')" style="display:flex;align-items:center;gap:0.3rem;">
+                                                ${t.reviewRejectedAt ? '<span style="color:#f59e0b;font-size:0.7rem;">↩</span>' : ''}
+                                                <span class="task-title" style="flex:1;">${esc(t.title)}</span>
+                                                <span style="font-size:0.7rem;color:#9ca3af;">${t.deadlineDate || ''}</span>
+                                            </div>`;
+                                        }).join('')}
+                                        ${data[s.key].length > 10 ? `<div style="font-size:0.72rem;color:#9ca3af;padding:0.2rem;">+${data[s.key].length - 10} ${t('more')}...</div>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>`;
+                    }).join('')}
+                `;
+            } else if (viewType === 'journal') {
+                // Management Failures Journal
+                const todayStr = getLocalDateStr(new Date());
+                const allVisible = tasks.filter(task => isTaskVisibleToUser(task));
+                
+                // Collect incidents
+                const incidents = [];
+                
+                // 1. Overdue tasks
+                allVisible.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').forEach(t => {
+                    const daysLate = Math.floor((new Date() - new Date(t.deadlineDate)) / 86400000);
+                    incidents.push({
+                        type: 'overdue',
+                        icon: 'alert-triangle',
+                        color: '#ef4444',
+                        bg: '#fef2f2',
+                        label: t('overdueStatus'),
+                        title: t.title,
+                        person: t.assigneeName || t('notAssigned'),
+                        func: t.function || '',
+                        date: t.deadlineDate,
+                        detail: `${daysLate} ${t('daysAgo')}`,
+                        severity: daysLate > 7 ? 3 : daysLate > 3 ? 2 : 1,
+                        taskId: t.id
+                    });
+                });
+                
+                // 2. Review returns
+                allVisible.filter(t => t.reviewRejectedAt).forEach(t => {
+                    const rejDate = typeof t.reviewRejectedAt === 'string' ? t.reviewRejectedAt.substring(0,10) : 
+                        t.reviewRejectedAt?.toDate ? getLocalDateStr(t.reviewRejectedAt.toDate()) : '';
+                    incidents.push({
+                        type: 'returned',
+                        icon: 'rotate-ccw',
+                        color: '#f59e0b',
+                        bg: '#fffbeb',
+                        label: t('returnedFromReview'),
+                        title: t.title,
+                        person: t.assigneeName || t('notAssigned'),
+                        func: t.function || '',
+                        date: rejDate,
+                        detail: t.reviewRejectReason || '',
+                        severity: 1,
+                        taskId: t.id
+                    });
+                });
+                
+                // 3. Tasks stuck as 'new' for >3 days
+                allVisible.filter(t => t.status === 'new' && t.createdAt).forEach(t => {
+                    const created = t.createdAt?.toDate ? t.createdAt.toDate() : new Date(t.createdAt);
+                    const daysOld = Math.floor((new Date() - created) / 86400000);
+                    if (daysOld >= 3) {
+                        incidents.push({
+                            type: 'stuck',
+                            icon: 'pause-circle',
+                            color: '#6366f1',
+                            bg: '#eef2ff',
+                            label: t('notStarted') || 'Не розпочато',
+                            title: t.title,
+                            person: t.assigneeName || t('notAssigned'),
+                            func: t.function || '',
+                            date: getLocalDateStr(created),
+                            detail: `${daysOld} ${t('daysAgo')}`,
+                            severity: daysOld > 7 ? 2 : 1,
+                            taskId: t.id
+                        });
+                    }
+                });
+                
+                // Sort: severity desc, then date desc
+                incidents.sort((a,b) => b.severity - a.severity || (b.date || '').localeCompare(a.date || ''));
+                
+                // Stats
+                const overdueCount = incidents.filter(i => i.type === 'overdue').length;
+                const returnedCount = incidents.filter(i => i.type === 'returned').length;
+                const stuckCount = incidents.filter(i => i.type === 'stuck').length;
+                
+                content.innerHTML = `
+                    <h3 style="margin-bottom:1rem;">${t('failureJournal')}</h3>
+                    
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem;">
+                        <div style="background:#fef2f2;border-radius:8px;padding:0.6rem;text-align:center;">
+                            <div style="font-size:1.3rem;font-weight:700;color:#ef4444;">${overdueCount}</div>
+                            <div style="font-size:0.72rem;color:#6b7280;">${t('overdueStatus')}</div>
+                        </div>
+                        <div style="background:#fffbeb;border-radius:8px;padding:0.6rem;text-align:center;">
+                            <div style="font-size:1.3rem;font-weight:700;color:#f59e0b;">${returnedCount}</div>
+                            <div style="font-size:0.72rem;color:#6b7280;">${t('returnedFromReview')}</div>
+                        </div>
+                        <div style="background:#eef2ff;border-radius:8px;padding:0.6rem;text-align:center;">
+                            <div style="font-size:1.3rem;font-weight:700;color:#6366f1;">${stuckCount}</div>
+                            <div style="font-size:0.72rem;color:#6b7280;">${t('notStarted') || 'Не розпочато'}</div>
+                        </div>
+                    </div>
+                    
+                    ${incidents.length === 0 ? `<div style="text-align:center;padding:2rem;color:#9ca3af;"><i data-lucide="check-circle" class="icon" style="width:48px;height:48px;color:#16a34a;"></i><p style="margin-top:0.5rem;">${t('noIncidents') || 'Збоїв не виявлено'}</p></div>` : ''}
+                    
+                    ${incidents.map(inc => `
+                        <div style="display:flex;gap:0.6rem;padding:0.6rem;margin-bottom:0.3rem;background:${inc.bg};border-radius:8px;border-left:4px solid ${inc.color};cursor:pointer;" onclick="openTaskModal('${escId(inc.taskId)}')">
+                            <div style="flex-shrink:0;padding-top:2px;"><i data-lucide="${inc.icon}" class="icon icon-sm" style="color:${inc.color};"></i></div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="display:flex;justify-content:space-between;gap:0.3rem;">
+                                    <span style="font-weight:600;font-size:0.85rem;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(inc.title)}</span>
+                                    <span style="font-size:0.7rem;color:#9ca3af;white-space:nowrap;">${inc.date}</span>
+                                </div>
+                                <div style="display:flex;gap:0.5rem;font-size:0.75rem;color:#6b7280;margin-top:2px;">
+                                    <span>${esc(inc.person)}</span>
+                                    ${inc.func ? `<span>• ${esc(inc.func)}</span>` : ''}
+                                    ${inc.detail ? `<span style="color:${inc.color};font-weight:500;">• ${esc(inc.detail)}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
                 `;
             }
             
@@ -20999,6 +21430,10 @@
                     await loadClinicDemoData();
                 } else if (type === 'manufacturing') {
                     await loadManufacturingDemoData();
+                } else if (type === 'furniture') {
+                    await loadFurnitureDemoData();
+                } else if (type === 'construction') {
+                    await loadConstructionDemoData();
                 }
                 
                 await loadAllData();
@@ -21045,16 +21480,14 @@
             
             // Regular tasks for clinic
             const clinicRegularTasks = [
-                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', dayOfWeek: '1', time: '09:00', estimatedTime: '30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра. Підтвердити візит. Нагадати про підготовку якщо потрібно.' },
-                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', dayOfWeek: '2', time: '09:00', estimatedTime: '30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра.' },
-                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', dayOfWeek: '3', time: '09:00', estimatedTime: '30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра.' },
-                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', dayOfWeek: '4', time: '09:00', estimatedTime: '30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра.' },
-                { title: 'Замовлення розхідних матеріалів', function: 'Закупівлі', period: 'weekly', dayOfWeek: '5', time: '14:00', estimatedTime: '60', instruction: 'Перевірити залишки матеріалів. Сформувати замовлення. Відправити постачальнику.' },
-                { title: 'Публікація в соцмережах', function: 'Маркетинг', period: 'weekly', dayOfWeek: '1', time: '11:00', estimatedTime: '45', instruction: 'Підготувати та опублікувати контент в Instagram та Facebook.' },
-                { title: 'Публікація в соцмережах', function: 'Маркетинг', period: 'weekly', dayOfWeek: '4', time: '11:00', estimatedTime: '45', instruction: 'Підготувати та опублікувати контент в Instagram та Facebook.' },
-                { title: 'Фінансовий звіт за тиждень', function: 'Фінанси', period: 'weekly', dayOfWeek: '5', time: '17:00', estimatedTime: '60', instruction: 'Підготувати звіт по виручці, витратах, прибутку за тиждень.' },
-                { title: 'Місячний звіт керівнику', function: 'Фінанси', period: 'monthly', dayOfMonth: 'last', time: '16:00', estimatedTime: '120', instruction: 'Підготувати повний місячний звіт: фінанси, пацієнти, маркетинг, проблеми.' },
-                { title: 'Ревізія обладнання', function: 'Закупівлі', period: 'monthly', dayOfMonth: '15', time: '10:00', estimatedTime: '90', instruction: 'Перевірити стан обладнання, скласти список необхідного ремонту/заміни.' }
+                { title: 'Обдзвін пацієнтів на завтра', function: 'Адміністрування', period: 'weekly', daysOfWeek: ['1','2','3','4'], timeStart: '09:00', timeEnd: '09:30', instruction: 'Зателефонувати всім пацієнтам, записаним на завтра. Підтвердити візит. Нагадати про підготовку.', expectedResult: 'Всі пацієнти підтверджені або перенесені' },
+                { title: 'Замовлення розхідних матеріалів', function: 'Закупівлі', period: 'weekly', daysOfWeek: ['5'], timeStart: '14:00', timeEnd: '15:00', instruction: 'Перевірити залишки матеріалів. Сформувати замовлення. Відправити постачальнику.', expectedResult: 'Замовлення відправлене постачальнику' },
+                { title: 'Публікація в соцмережах', function: 'Маркетинг', period: 'weekly', daysOfWeek: ['1','3','5'], timeStart: '11:00', timeEnd: '11:45', instruction: 'Підготувати та опублікувати контент в Instagram та Facebook. Мінімум 1 пост + 2 stories.', expectedResult: 'Пост опублікований, stories виставлені' },
+                { title: 'Фінансовий звіт за тиждень', function: 'Фінанси', period: 'weekly', daysOfWeek: ['5'], timeStart: '17:00', timeEnd: '18:00', instruction: 'Підготувати звіт по виручці, витратах, прибутку за тиждень.', expectedResult: 'Звіт в Google Sheets оновлений' },
+                { title: 'Планёрка з командою', function: 'Адміністрування', period: 'weekly', daysOfWeek: ['1'], timeStart: '08:30', timeEnd: '09:00', instruction: 'Обговорити план на тиждень, проблеми, завдання кожному.', expectedResult: 'Протокол наради, завдання делеговані' },
+                { title: 'Аналіз відгуків пацієнтів', function: 'Маркетинг', period: 'weekly', daysOfWeek: ['3'], timeStart: '16:00', timeEnd: '16:30', instruction: 'Перевірити Google Maps, Facebook, Instagram на нові відгуки. Відповісти на кожен.', expectedResult: 'Всі відгуки оброблені, відповіді надані' },
+                { title: 'Місячний звіт керівнику', function: 'Фінанси', period: 'monthly', dayOfMonth: 'last', timeStart: '16:00', timeEnd: '18:00', instruction: 'Підготувати повний місячний звіт: фінанси, пацієнти, маркетинг, проблеми.', expectedResult: 'Звіт презентований керівнику' },
+                { title: 'Ревізія обладнання', function: 'Закупівлі', period: 'monthly', dayOfMonth: '15', timeStart: '10:00', timeEnd: '11:30', instruction: 'Перевірити стан обладнання, скласти список необхідного ремонту/заміни.', expectedResult: 'Акт ревізії підписаний' }
             ];
             
             for (const rt of clinicRegularTasks) {
@@ -21069,11 +21502,20 @@
             
             // Завдання прив'язані до ФУНКЦІЙ, виконавці беруться автоматично
             // Коли людина звільняється - видаляємо її з функції, нові завдання падають на нового співробітника
+            const d3ago = new Date(today); d3ago.setDate(d3ago.getDate() - 3);
+            const d5ago = new Date(today); d5ago.setDate(d5ago.getDate() - 5);
+            const d7ago = new Date(today); d7ago.setDate(d7ago.getDate() - 7);
             const clinicTasks = [
                 { title: 'Первинна консультація - Іванов І.І.', function: 'Лікування', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '10:00', estimatedTime: '45', expectedResult: 'Діагноз, план лікування' },
-                { title: 'Підготувати рекламну акцію на Новий рік', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(tomorrow), deadlineTime: '15:00', estimatedTime: '120', expectedResult: 'Готовий макет та текст акції' },
+                { title: 'Підготувати рекламну акцію', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(tomorrow), deadlineTime: '15:00', estimatedTime: '120', expectedResult: 'Готовий макет та текст акції' },
                 { title: 'Замовити нові рукавички та маски', function: 'Закупівлі', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(today), deadlineTime: '14:00', estimatedTime: '30', expectedResult: 'Замовлення оформлене' },
-                { title: 'Оплатити рахунок за оренду', function: 'Фінанси', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '16:00', estimatedTime: '15', expectedResult: 'Рахунок оплачено' }
+                { title: 'Оплатити рахунок за оренду', function: 'Фінанси', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '16:00', estimatedTime: '15', expectedResult: 'Рахунок оплачено' },
+                { title: 'Оновити прайс-лист послуг', function: 'Адміністрування', status: 'progress', priority: 'low', deadlineDate: getLocalDateStr(d5ago), deadlineTime: '18:00', expectedResult: 'Новий прайс затверджений' },
+                { title: 'Відправити результати аналізів Сидоренку', function: 'Лікування', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(d3ago), deadlineTime: '12:00', expectedResult: 'Результати надіслані на email' },
+                { title: 'Перевірити терміни придатності медикаментів', function: 'Закупівлі', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(d7ago), deadlineTime: '10:00', expectedResult: 'Список прострочених, замовлення на заміну' },
+                { title: 'Налаштувати email-розсилку пацієнтам', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(d3ago), deadlineTime: '16:00', expectedResult: 'Шаблон розсилки готовий', reviewRejectedAt: new Date(Date.now() - 86400000).toISOString(), reviewRejectReason: 'Текст не відповідає бренду' },
+                { title: 'Підготувати план закупівель на квартал', function: 'Закупівлі', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(d5ago), deadlineTime: '14:00', expectedResult: 'План затверджений', reviewRejectedAt: new Date(Date.now() - 2*86400000).toISOString(), reviewRejectReason: 'Бюджет перевищений на 20%' },
+                { title: 'Звіт по задоволеності пацієнтів', function: 'Маркетинг', status: 'review', priority: 'medium', deadlineDate: getLocalDateStr(today), deadlineTime: '17:00', expectedResult: 'Звіт з NPS та рекомендаціями' }
             ];
             
             for (const task of clinicTasks) {
@@ -21511,9 +21953,316 @@
             await batch.commit();
         }
 
-        // =====================
-        // MOBILE FILTERS
-        // =====================
+        async function loadFurnitureDemoData() {
+            const batch = db.batch();
+            const companyRef = db.collection('companies').doc(currentCompany);
+            
+            const demoUsers = [
+                { name: 'Дмитро Савчук', email: 'dmytro@demo.furniture', role: 'employee' },
+                { name: 'Наталія Коваль', email: 'natalia@demo.furniture', role: 'employee' },
+                { name: 'Андрій Лисенко', email: 'andriy@demo.furniture', role: 'employee' },
+                { name: 'Оксана Білик', email: 'oksana@demo.furniture', role: 'employee' }
+            ];
+            
+            const userIds = [];
+            for (const u of demoUsers) {
+                const ref = companyRef.collection('users').doc();
+                batch.set(ref, { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                userIds.push(ref.id);
+            }
+            
+            const funcs = [
+                { name: 'Продажі', description: 'Консультації клієнтів, оформлення замовлень, воронка продажів', assigneeIds: [userIds[1]] },
+                { name: 'Виробництво', description: 'Виготовлення меблів, збірка, фурнітура', assigneeIds: [userIds[0], userIds[2]] },
+                { name: 'Дизайн', description: 'Проєктування, 3D-візуалізація, підбір матеріалів', assigneeIds: [userIds[2]] },
+                { name: 'Закупівлі', description: 'Матеріали, фурнітура, тканини, постачальники', assigneeIds: [userIds[0]] },
+                { name: 'Доставка та монтаж', description: 'Логістика, збірка у клієнта, рекламації', assigneeIds: [userIds[0], userIds[2]] },
+                { name: 'Маркетинг', description: 'Реклама, соцмережі, фото контент, виставки', assigneeIds: [userIds[1], userIds[3]] },
+                { name: 'Фінанси', description: 'Рахунки, оплати, собівартість, прибуток', assigneeIds: [userIds[3]] }
+            ];
+            
+            const funcRefs = [];
+            for (const f of funcs) {
+                const ref = companyRef.collection('functions').doc();
+                batch.set(ref, { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                funcRefs.push({ id: ref.id, ...f });
+            }
+            
+            const regularTasks = [
+                { title: 'Обробка нових заявок з сайту', function: 'Продажі', period: 'weekly', daysOfWeek: ['1','2','3','4','5'], timeStart: '09:00', timeEnd: '09:30', instruction: 'Перевірити CRM на нові заявки, передзвонити протягом 30 хв.', expectedResult: 'Всі заявки оброблені, статуси оновлені в CRM' },
+                { title: 'Планёрка виробництва', function: 'Виробництво', period: 'weekly', daysOfWeek: ['1'], timeStart: '08:00', timeEnd: '08:30', instruction: 'Розподілити замовлення на тиждень, визначити пріоритети.', expectedResult: 'Графік виробництва на тиждень затверджений' },
+                { title: 'Перевірка складських залишків', function: 'Закупівлі', period: 'weekly', daysOfWeek: ['2','5'], timeStart: '10:00', timeEnd: '10:45', instruction: 'Перевірити залишки ДСП, МДФ, фурнітури. Замовити якщо < мін. запас.', expectedResult: 'Дефіцитні позиції замовлені' },
+                { title: 'Фото нових виробів для каталогу', function: 'Маркетинг', period: 'weekly', daysOfWeek: ['3'], timeStart: '14:00', timeEnd: '15:00', instruction: 'Зфотографувати готові вироби перед відправкою. Мін. 5 фото з різних ракурсів.', expectedResult: '5+ фото в папці Google Drive' },
+                { title: 'Контент для Instagram та Facebook', function: 'Маркетинг', period: 'weekly', daysOfWeek: ['1','3','5'], timeStart: '11:00', timeEnd: '11:45', instruction: 'Підготувати та опублікувати пост: фото виробу + ціна + переваги.', expectedResult: 'Пост опублікований в 2 соцмережі' },
+                { title: 'Фінансовий звіт за тиждень', function: 'Фінанси', period: 'weekly', daysOfWeek: ['5'], timeStart: '16:00', timeEnd: '17:00', instruction: 'Звіт: виручка, витрати на матеріали, ФОП, чистий прибуток.', expectedResult: 'Таблиця з P&L за тиждень' },
+                { title: 'Розрахунок собівартості нових виробів', function: 'Фінанси', period: 'monthly', dayOfMonth: '1', timeStart: '10:00', timeEnd: '12:00', instruction: 'Перерахувати собівартість з урахуванням нових цін на матеріали.', expectedResult: 'Оновлений прайс з маржинальністю' },
+                { title: 'Інвентаризація виробництва', function: 'Виробництво', period: 'monthly', dayOfMonth: '15', timeStart: '08:00', timeEnd: '10:00', instruction: 'Перевірити стан інструменту, верстатів, залишки матеріалів в цеху.', expectedResult: 'Акт інвентаризації' }
+            ];
+            
+            for (const rt of regularTasks) {
+                const ref = companyRef.collection('regularTasks').doc();
+                batch.set(ref, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            }
+            
+            const today = new Date();
+            const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+            const d3ago = new Date(today); d3ago.setDate(d3ago.getDate() - 3);
+            const d5ago = new Date(today); d5ago.setDate(d5ago.getDate() - 5);
+            
+            const tasksList = [
+                { title: 'Кухня "Модерн" — замовлення #412', function: 'Виробництво', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '17:00', expectedResult: 'Кухня зібрана, готова до доставки' },
+                { title: 'Шафа-купе для Петренко — 3D проєкт', function: 'Дизайн', status: 'review', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '14:00', expectedResult: '3D візуалізація погоджена клієнтом' },
+                { title: 'Доставка та монтаж — Коваленко', function: 'Доставка та монтаж', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(tomorrow), deadlineTime: '10:00', expectedResult: 'Меблі встановлені, акт підписаний' },
+                { title: 'Замовити фурнітуру Blum', function: 'Закупівлі', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(today), deadlineTime: '12:00', expectedResult: 'Замовлення відправлене постачальнику' },
+                { title: 'Рекламація — скрип дверцят у Іванченко', function: 'Доставка та монтаж', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(d3ago), deadlineTime: '15:00', expectedResult: 'Проблема усунена, клієнт задоволений' },
+                { title: 'Комерційна пропозиція для офісу "Альфа Груп"', function: 'Продажі', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(d5ago), deadlineTime: '18:00', expectedResult: 'КП з цінами та візуалізацією надіслана' },
+                { title: 'Розробити дизайн стенду для виставки', function: 'Маркетинг', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(d3ago), deadlineTime: '17:00', expectedResult: 'Макет стенду затверджений', reviewRejectedAt: new Date(Date.now() - 86400000).toISOString(), reviewRejectReason: 'Не відповідає фірмовому стилю' },
+                { title: 'Стіл "Лофт" — замовлення #415', function: 'Виробництво', status: 'done', priority: 'medium', deadlineDate: getLocalDateStr(d3ago), deadlineTime: '17:00', expectedResult: 'Стіл готовий' },
+                { title: 'Оплатити рахунок за ДСП Egger', function: 'Фінанси', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '16:00', expectedResult: 'Рахунок оплачений' }
+            ];
+            
+            for (const task of tasksList) {
+                const func = funcs.find(f => f.name === task.function);
+                const assigneeId = func?.assigneeIds?.[0] || null;
+                const idx = userIds.indexOf(assigneeId);
+                const assigneeName = idx >= 0 ? demoUsers[idx].name : '';
+                const ref = companyRef.collection('tasks').doc();
+                batch.set(ref, { ...task, assigneeId, assigneeName, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) });
+            }
+            
+            // Business processes
+            const processTemplates = [
+                {
+                    name: 'Виконання замовлення клієнта',
+                    description: 'Від заявки до монтажу у клієнта',
+                    steps: [
+                        { name: 'Прийом замовлення', function: 'Продажі', estimatedTime: '30', instruction: 'Зафіксувати побажання, бюджет, терміни. Підписати договір.' },
+                        { name: 'Замір приміщення', function: 'Дизайн', estimatedTime: '120', instruction: 'Виїхати на замір. Зафіксувати розміри, фото, особливості приміщення.' },
+                        { name: '3D-проєктування', function: 'Дизайн', estimatedTime: '240', instruction: 'Створити 3D модель. Підібрати матеріали та кольори. Погодити з клієнтом.' },
+                        { name: 'Розрахунок собівартості', function: 'Фінанси', estimatedTime: '60', instruction: 'Розрахувати собівартість: матеріали + робота + доставка. Підготувати рахунок.' },
+                        { name: 'Закупівля матеріалів', function: 'Закупівлі', estimatedTime: '120', instruction: 'Замовити ДСП/МДФ, фурнітуру, скло, фасади за специфікацією.' },
+                        { name: 'Виготовлення', function: 'Виробництво', estimatedTime: '960', instruction: 'Розкрій → кромлення → свердління → збірка → перевірка.' },
+                        { name: 'Контроль якості', function: 'Виробництво', estimatedTime: '60', instruction: 'Перевірити зібраний виріб: геометрія, фурнітура, поверхня, колір.' },
+                        { name: 'Доставка та монтаж', function: 'Доставка та монтаж', estimatedTime: '240', instruction: 'Доставити, зібрати у клієнта, підписати акт приймання.' }
+                    ]
+                },
+                {
+                    name: 'Рекламація клієнта',
+                    description: 'Обробка скарги та усунення проблеми',
+                    steps: [
+                        { name: 'Прийом скарги', function: 'Продажі', estimatedTime: '15', instruction: 'Зафіксувати проблему, фото, контакти. Вибачитись.' },
+                        { name: 'Діагностика проблеми', function: 'Виробництво', estimatedTime: '60', instruction: 'Визначити причину: виробничий брак, транспортування, монтаж.' },
+                        { name: 'Усунення дефекту', function: 'Доставка та монтаж', estimatedTime: '120', instruction: 'Виїхати до клієнта, усунути проблему або замінити деталь.' },
+                        { name: 'Контроль задоволеності', function: 'Продажі', estimatedTime: '10', instruction: 'Подзвонити через 3 дні, переконатись що все ОК. Запросити відгук.' }
+                    ]
+                }
+            ];
+            
+            for (const tpl of processTemplates) {
+                const tplRef = companyRef.collection('processTemplates').doc();
+                batch.set(tplRef, { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                if (tpl.name === 'Виконання замовлення клієнта') {
+                    for (const proc of [
+                        { name: 'Кухня "Модерн" — Петренко', currentStep: 6, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 5*86400000)) },
+                        { name: 'Шафа-купе — Іванченко О.', currentStep: 3, status: 'active', assigneeId: userIds[2], deadline: getLocalDateStr(new Date(Date.now() + 14*86400000)) },
+                        { name: 'Офісні меблі — "Альфа Груп"', currentStep: 1, status: 'active', assigneeId: userIds[1], deadline: getLocalDateStr(new Date(Date.now() + 30*86400000)) }
+                    ]) {
+                        const pRef = companyRef.collection('processes').doc();
+                        batch.set(pRef, { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    }
+                }
+            }
+            
+            // Projects
+            const projects = [
+                { name: 'Запуск інтернет-магазину', description: 'Сайт з каталогом, калькулятором і онлайн-замовленням', color: '#3b82f6', status: 'active', startDate: getLocalDateStr(new Date(Date.now() - 14*86400000)), deadline: getLocalDateStr(new Date(Date.now() + 60*86400000)) },
+                { name: 'Вихід на ринок Польщі', description: 'Адаптація каталогу, логістика, маркетинг для PL ринку', color: '#8b5cf6', status: 'active', startDate: getLocalDateStr(new Date(Date.now() - 7*86400000)), deadline: getLocalDateStr(new Date(Date.now() + 90*86400000)) },
+                { name: 'Оновлення виробничого цеху', description: 'Нове обладнання, вентиляція, організація простору', color: '#f59e0b', status: 'active', startDate: getLocalDateStr(new Date(Date.now() - 30*86400000)), deadline: getLocalDateStr(new Date(Date.now() + 45*86400000)) }
+            ];
+            const projRefs = [];
+            for (const p of projects) {
+                const ref = companyRef.collection('projects').doc();
+                batch.set(ref, { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                projRefs.push(ref.id);
+            }
+            
+            const projTasks = [
+                { title: 'Обрати платформу для сайту', function: 'Маркетинг', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()-7*86400000)), projectId: projRefs[0] },
+                { title: 'Фотосесія каталогу (50 виробів)', function: 'Маркетинг', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+14*86400000)), projectId: projRefs[0] },
+                { title: 'Налаштувати онлайн-калькулятор', function: 'Маркетинг', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now()+30*86400000)), projectId: projRefs[0] },
+                { title: 'SEO та запуск реклами', function: 'Маркетинг', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now()+45*86400000)), projectId: projRefs[0] },
+                { title: 'Переклад каталогу на польську', function: 'Маркетинг', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+20*86400000)), projectId: projRefs[1] },
+                { title: 'Знайти логістичного партнера в PL', function: 'Доставка та монтаж', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+30*86400000)), projectId: projRefs[1] },
+                { title: 'Купити ЧПУ-фрезер', function: 'Закупівлі', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+14*86400000)), projectId: projRefs[2] },
+                { title: 'Монтаж вентиляції в цеху', function: 'Виробництво', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now()+21*86400000)), projectId: projRefs[2] }
+            ];
+            for (const t of projTasks) {
+                const func = funcs.find(f => f.name === t.function);
+                const aid = func?.assigneeIds?.[0] || null;
+                const ai = userIds.indexOf(aid);
+                const ref = companyRef.collection('tasks').doc();
+                batch.set(ref, { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            }
+            
+            await batch.commit();
+        }
+
+        async function loadConstructionDemoData() {
+            const batch = db.batch();
+            const companyRef = db.collection('companies').doc(currentCompany);
+            
+            const demoUsers = [
+                { name: 'Віталій Крищук', email: 'vitaliy@demo.build', role: 'employee' },
+                { name: 'Роман Гаврилюк', email: 'roman@demo.build', role: 'employee' },
+                { name: 'Олена Мартинюк', email: 'olena@demo.build', role: 'employee' },
+                { name: 'Ігор Степаненко', email: 'igor@demo.build', role: 'employee' }
+            ];
+            
+            const userIds = [];
+            for (const u of demoUsers) {
+                const ref = companyRef.collection('users').doc();
+                batch.set(ref, { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                userIds.push(ref.id);
+            }
+            
+            const funcs = [
+                { name: 'Управління об\'єктами', description: 'Координація робіт на будмайданчиках, графіки, контроль', assigneeIds: [userIds[0]] },
+                { name: 'Кошторис та тендери', description: 'Розрахунки, комерційні пропозиції, тендерна документація', assigneeIds: [userIds[2]] },
+                { name: 'Закупівля матеріалів', description: 'Будматеріали, інструмент, техніка, постачальники', assigneeIds: [userIds[1]] },
+                { name: 'Бригади та персонал', description: 'Розподіл бригад, графіки, ФОП, табель', assigneeIds: [userIds[0], userIds[1]] },
+                { name: 'Проєктування', description: 'Проєктна документація, дозволи, погодження', assigneeIds: [userIds[2]] },
+                { name: 'Контроль якості', description: 'Перевірка робіт, акти прихованих робіт, стандарти', assigneeIds: [userIds[0], userIds[3]] },
+                { name: 'Безпека', description: 'Охорона праці, ТБ, допуски, інструктажі', assigneeIds: [userIds[3]] },
+                { name: 'Фінанси', description: 'Оплати підрядникам, рахунки, бюджет об\'єктів', assigneeIds: [userIds[2], userIds[3]] }
+            ];
+            
+            const funcRefs = [];
+            for (const f of funcs) {
+                const ref = companyRef.collection('functions').doc();
+                batch.set(ref, { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                funcRefs.push({ id: ref.id, ...f });
+            }
+            
+            const regularTasks = [
+                { title: 'Ранковий обхід об\'єктів', function: 'Управління об\'єктами', period: 'weekly', daysOfWeek: ['1','2','3','4','5'], timeStart: '08:00', timeEnd: '09:00', instruction: 'Перевірити: бригади на місцях, матеріали доставлені, безпека ОК, прогрес за вчора.', expectedResult: 'Звіт по кожному об\'єкту в чат' },
+                { title: 'Планёрка з бригадирами', function: 'Бригади та персонал', period: 'weekly', daysOfWeek: ['1'], timeStart: '07:30', timeEnd: '08:00', instruction: 'План на тиждень: хто де працює, які матеріали потрібні, дедлайни.', expectedResult: 'Графік робіт на тиждень' },
+                { title: 'Перевірка залишків на складі', function: 'Закупівля матеріалів', period: 'weekly', daysOfWeek: ['2','5'], timeStart: '10:00', timeEnd: '10:45', instruction: 'Цемент, арматура, цегла, пісок, утеплювач — перевірити і замовити якщо < 3 дні запасу.', expectedResult: 'Замовлення на дефіцитні позиції' },
+                { title: 'Фотозвіт з об\'єктів', function: 'Управління об\'єктами', period: 'weekly', daysOfWeek: ['3','5'], timeStart: '16:00', timeEnd: '16:30', instruction: 'Фото прогресу кожного об\'єкту. Мін. 5 фото/об\'єкт. Завантажити в папку.', expectedResult: 'Фото в Google Drive по папках об\'єктів' },
+                { title: 'Інструктаж з техніки безпеки', function: 'Безпека', period: 'weekly', daysOfWeek: ['1'], timeStart: '07:00', timeEnd: '07:30', instruction: 'Провести інструктаж для нових працівників та нагадування для постійних.', expectedResult: 'Журнал ТБ підписаний' },
+                { title: 'Табель робочого часу', function: 'Бригади та персонал', period: 'weekly', daysOfWeek: ['5'], timeStart: '17:00', timeEnd: '17:30', instruction: 'Заповнити табель за тиждень по кожній бригаді.', expectedResult: 'Табель в Excel' },
+                { title: 'Фінансовий звіт по об\'єктах', function: 'Фінанси', period: 'weekly', daysOfWeek: ['5'], timeStart: '16:00', timeEnd: '17:00', instruction: 'Витрати vs бюджет по кожному об\'єкту. Сигнали якщо перевищення >10%.', expectedResult: 'Звіт бюджет/факт' },
+                { title: 'Перевірка дозвільних документів', function: 'Проєктування', period: 'monthly', dayOfMonth: '1', timeStart: '10:00', timeEnd: '12:00', instruction: 'Перевірити терміни дозволів, ліцензій, страховок. Продовжити якщо потрібно.', expectedResult: 'Всі документи актуальні' }
+            ];
+            
+            for (const rt of regularTasks) {
+                const ref = companyRef.collection('regularTasks').doc();
+                batch.set(ref, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            }
+            
+            const today = new Date();
+            const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+            const d3ago = new Date(today); d3ago.setDate(d3ago.getDate() - 3);
+            const d5ago = new Date(today); d5ago.setDate(d5ago.getDate() - 5);
+            const d7ago = new Date(today); d7ago.setDate(d7ago.getDate() - 7);
+            
+            const tasksList = [
+                { title: 'Залити фундамент — секція Б', function: 'Управління об\'єктами', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '17:00', expectedResult: 'Фундамент залитий, вібрування виконано' },
+                { title: 'Замовити арматуру 12мм — 5 тонн', function: 'Закупівля матеріалів', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '12:00', expectedResult: 'Арматура замовлена, доставка через 2 дні' },
+                { title: 'Підписати акт прихованих робіт — об\'єкт "Озерна"', function: 'Контроль якості', status: 'review', priority: 'high', deadlineDate: getLocalDateStr(today), deadlineTime: '15:00', expectedResult: 'Акт підписаний інженером та замовником' },
+                { title: 'Кошторис на утеплення фасаду', function: 'Кошторис та тендери', status: 'progress', priority: 'medium', deadlineDate: getLocalDateStr(d3ago), deadlineTime: '18:00', expectedResult: 'Кошторис з деталізацією', reviewRejectedAt: new Date(Date.now()-86400000).toISOString(), reviewRejectReason: 'Не враховано вартість лісів' },
+                { title: 'Перевести бригаду Кравченка на об\'єкт "Парковий"', function: 'Бригади та персонал', status: 'new', priority: 'medium', deadlineDate: getLocalDateStr(d5ago), deadlineTime: '08:00', expectedResult: 'Бригада на новому об\'єкті' },
+                { title: 'Оплатити підряднику за електромонтаж', function: 'Фінанси', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(d7ago), deadlineTime: '16:00', expectedResult: 'Оплата виконана' },
+                { title: 'Усунення зауважень інспекції', function: 'Безпека', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(d3ago), deadlineTime: '17:00', expectedResult: 'Зауваження усунені, фотозвіт' },
+                { title: 'Монтаж вікон — поверхи 3-5', function: 'Управління об\'єктами', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(d5ago), deadlineTime: '17:00', expectedResult: 'Вікна встановлені на 3-5 поверхах' },
+                { title: 'Тендерна пропозиція — ЖК "Сонячний"', function: 'Кошторис та тендери', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(tomorrow), deadlineTime: '12:00', expectedResult: 'Пакет тендерної документації' }
+            ];
+            
+            for (const task of tasksList) {
+                const func = funcs.find(f => f.name === task.function);
+                const aid = func?.assigneeIds?.[0] || null;
+                const ai = userIds.indexOf(aid);
+                const ref = companyRef.collection('tasks').doc();
+                batch.set(ref, { ...task, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) });
+            }
+            
+            // Business processes
+            const processTemplates = [
+                {
+                    name: 'Будівництво об\'єкту',
+                    description: 'Повний цикл від проєкту до здачі',
+                    steps: [
+                        { name: 'Проєктування та дозволи', function: 'Проєктування', estimatedTime: '2400', instruction: 'Розробити проєкт, отримати дозвіл на будівництво, погодження.' },
+                        { name: 'Підготовка майданчика', function: 'Управління об\'єктами', estimatedTime: '480', instruction: 'Огородження, тимчасове електропостачання, побутовки.' },
+                        { name: 'Земляні роботи та фундамент', function: 'Управління об\'єктами', estimatedTime: '960', instruction: 'Котлован, армування, заливка фундаменту.' },
+                        { name: 'Зведення каркасу', function: 'Управління об\'єктами', estimatedTime: '1920', instruction: 'Стіни, перекриття, покрівля.' },
+                        { name: 'Інженерні мережі', function: 'Управління об\'єктами', estimatedTime: '960', instruction: 'Електрика, водопостачання, каналізація, опалення.' },
+                        { name: 'Оздоблювальні роботи', function: 'Управління об\'єктами', estimatedTime: '1440', instruction: 'Штукатурка, фарбування, підлога, плитка.' },
+                        { name: 'Контроль та здача', function: 'Контроль якості', estimatedTime: '240', instruction: 'Перевірка якості, усунення дефектів, акт здачі-приймання.' }
+                    ]
+                },
+                {
+                    name: 'Тендерна пропозиція',
+                    description: 'Підготовка та подача тендерної документації',
+                    steps: [
+                        { name: 'Аналіз тендерних умов', function: 'Кошторис та тендери', estimatedTime: '120', instruction: 'Вивчити вимоги, терміни, критерії оцінки.' },
+                        { name: 'Розрахунок кошторису', function: 'Кошторис та тендери', estimatedTime: '480', instruction: 'Деталізований кошторис з розцінками та матеріалами.' },
+                        { name: 'Формування пакету документів', function: 'Кошторис та тендери', estimatedTime: '240', instruction: 'Ліцензії, досвід, фін. звітність, гарантії.' },
+                        { name: 'Подача та презентація', function: 'Кошторис та тендери', estimatedTime: '120', instruction: 'Подати документи, при потребі — презентація замовнику.' }
+                    ]
+                }
+            ];
+            
+            for (const tpl of processTemplates) {
+                const tplRef = companyRef.collection('processTemplates').doc();
+                batch.set(tplRef, { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                if (tpl.name === 'Будівництво об\'єкту') {
+                    for (const proc of [
+                        { name: 'ЖК "Озерна" — корпус А', currentStep: 5, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 60*86400000)) },
+                        { name: 'Котедж "Парковий 12"', currentStep: 3, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 30*86400000)) }
+                    ]) {
+                        const pRef = companyRef.collection('processes').doc();
+                        batch.set(pRef, { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    }
+                }
+                if (tpl.name === 'Тендерна пропозиція') {
+                    const pRef = companyRef.collection('processes').doc();
+                    batch.set(pRef, { name: 'Тендер ЖК "Сонячний"', templateId: tplRef.id, currentStep: 2, status: 'active', assigneeId: userIds[2], deadline: getLocalDateStr(new Date(Date.now() + 3*86400000)), createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                }
+            }
+            
+            // Projects
+            const projects = [
+                { name: 'ЖК "Озерна" — корпус А', description: '9-поверховий житловий будинок, 54 квартири', color: '#ef4444', status: 'active', startDate: getLocalDateStr(new Date(Date.now() - 90*86400000)), deadline: getLocalDateStr(new Date(Date.now() + 180*86400000)) },
+                { name: 'Котедж "Парковий 12"', description: 'Приватний котедж 280 м², під ключ', color: '#3b82f6', status: 'active', startDate: getLocalDateStr(new Date(Date.now() - 30*86400000)), deadline: getLocalDateStr(new Date(Date.now() + 90*86400000)) },
+                { name: 'Тендер ЖК "Сонячний"', description: 'Підготовка до тендеру на генпідряд', color: '#f59e0b', status: 'active', startDate: getLocalDateStr(new Date(Date.now() - 7*86400000)), deadline: getLocalDateStr(new Date(Date.now() + 14*86400000)) }
+            ];
+            const projRefs = [];
+            for (const p of projects) {
+                const ref = companyRef.collection('projects').doc();
+                batch.set(ref, { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                projRefs.push(ref.id);
+            }
+            
+            const projTasks = [
+                { title: 'Монтаж перекриття 6-го поверху', function: 'Управління об\'єктами', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+5*86400000)), projectId: projRefs[0] },
+                { title: 'Прокладка каналізації 1-3 поверхи', function: 'Управління об\'єктами', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()-10*86400000)), projectId: projRefs[0] },
+                { title: 'Замовити ліфтове обладнання', function: 'Закупівля матеріалів', status: 'new', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+20*86400000)), projectId: projRefs[0] },
+                { title: 'Заливка фундаменту — котедж', function: 'Управління об\'єктами', status: 'done', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()-15*86400000)), projectId: projRefs[1] },
+                { title: 'Мурування стін 1-го поверху', function: 'Управління об\'єктами', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+7*86400000)), projectId: projRefs[1] },
+                { title: 'Проєкт інженерних мереж котеджу', function: 'Проєктування', status: 'review', priority: 'medium', deadlineDate: getLocalDateStr(new Date(Date.now()+3*86400000)), projectId: projRefs[1] },
+                { title: 'Збір тендерної документації', function: 'Кошторис та тендери', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+3*86400000)), projectId: projRefs[2] },
+                { title: 'Кошторис генпідряду ЖК "Сонячний"', function: 'Кошторис та тендери', status: 'progress', priority: 'high', deadlineDate: getLocalDateStr(new Date(Date.now()+5*86400000)), projectId: projRefs[2] }
+            ];
+            for (const t of projTasks) {
+                const func = funcs.find(f => f.name === t.function);
+                const aid = func?.assigneeIds?.[0] || null;
+                const ai = userIds.indexOf(aid);
+                const ref = companyRef.collection('tasks').doc();
+                batch.set(ref, { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            }
+            
+            await batch.commit();
+        }
         let mobileFilters = {
             type: '',
             date: '',
@@ -24338,6 +25087,28 @@ Ctrl+K або / - пошук завдань
                         <div class="demo-option-info">
                             <strong>Виробництво</strong>
                             <span>Завод, цех, виробнича компанія</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="icon"></i>
+                    </button>
+                    
+                    <button class="demo-option-btn" onclick="loadDemoData('furniture')">
+                        <div class="demo-option-icon" style="background:#fce7f3;color:#ec4899;">
+                            <i data-lucide="sofa" class="icon icon-lg"></i>
+                        </div>
+                        <div class="demo-option-info">
+                            <strong>Меблевий бізнес</strong>
+                            <span>Виробництво меблів на замовлення, салон</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="icon"></i>
+                    </button>
+                    
+                    <button class="demo-option-btn" onclick="loadDemoData('construction')">
+                        <div class="demo-option-icon" style="background:#dbeafe;color:#3b82f6;">
+                            <i data-lucide="hard-hat" class="icon icon-lg"></i>
+                        </div>
+                        <div class="demo-option-info">
+                            <strong>Будівельна компанія</strong>
+                            <span>Генпідряд, об\'єкти, бригади, тендери</span>
                         </div>
                         <i data-lucide="chevron-right" class="icon"></i>
                     </button>
