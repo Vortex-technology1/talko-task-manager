@@ -653,6 +653,83 @@
             padding: 1rem;
         }
         
+        /* Structure Board */
+        .struct-board {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding: 1rem;
+            min-height: 400px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .struct-column {
+            min-width: 220px;
+            max-width: 280px;
+            flex-shrink: 0;
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .struct-col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            min-height: 32px;
+        }
+        .struct-col-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #374151;
+            cursor: text;
+        }
+        .struct-col-stats {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.3rem 0;
+            margin-bottom: 0.5rem;
+        }
+        .struct-col-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            min-height: 60px;
+        }
+        .struct-func-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.6rem;
+            cursor: grab;
+            transition: all 0.15s;
+            font-size: 0.82rem;
+        }
+        .struct-func-card:active { cursor: grabbing; }
+        .struct-func-card.dragging { opacity: 0.5; transform: rotate(2deg); }
+        .struct-col-body.drag-over { background: #dcfce7; border-radius: 8px; }
+        .struct-add-col {
+            min-width: 180px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .struct-add-col:hover { background: #e5e7eb; color: #374151; }
+        
         .task-card, .function-card, .user-card {
             padding: 1rem;
             border-bottom: 1px solid #e5e7eb;
@@ -5933,13 +6010,18 @@
 
             <!-- FUNCTIONS -->
             <div id="functionsTab" class="tab-content">
-                <div class="controls" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <div class="controls" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
                     <button class="btn btn-success" onclick="openFunctionModal()" data-i18n="addFunction">+ Функція</button>
                     <button class="btn" onclick="openMergeFunctionsModal()" id="mergeFunctionsBtn" style="display:none;"><i data-lucide="git-merge" class="icon"></i> <span data-i18n="mergeFunctions">Об'єднати</span></button>
+                    <div style="margin-left:auto;display:flex;gap:2px;background:#f3f4f6;border-radius:8px;padding:2px;">
+                        <button class="calendar-view-btn active" onclick="setFunctionsView('cards')" data-fview="cards" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:white;font-weight:500;"><i data-lucide="layout-grid" class="icon icon-sm"></i> <span data-i18n="cardsView">Картки</span></button>
+                        <button class="calendar-view-btn" onclick="setFunctionsView('structure')" data-fview="structure" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:transparent;font-weight:500;"><i data-lucide="columns" class="icon icon-sm"></i> <span data-i18n="structureView">Структура</span></button>
+                    </div>
                 </div>
                 <div id="functionsContainer" class="cards-grid">
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
+                <div id="functionsStructureContainer" style="display:none;"></div>
             </div>
 
             <!-- USERS -->
@@ -6605,7 +6687,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий 🔴</option><option value="low" data-i18n="low">Низький</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий ●</option><option value="low" data-i18n="low">Низький</option></select></div>
                         <div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="regularTaskRequireReview" style="accent-color:var(--primary);width:18px;height:18px;"> <span data-i18n="requireReview">Потрібна перевірка</span></label></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
@@ -7293,7 +7375,7 @@
                 createError: 'Помилка створення',
                 taskNotFoundArchive: 'Завдання не знайдено в архіві',
                 restoreError: 'Помилка відновлення',
-                deadlineExceedsProject: '⚠️ Дедлайн задачі ({taskDate}) виходить за дедлайн проєкту "{projName}" ({projDate})',
+                deadlineExceedsProject: '⚠ Дедлайн задачі ({taskDate}) виходить за дедлайн проєкту "{projName}" ({projDate})',
                 noTasksForExport: 'Немає завдань для експорту',
                 deadlineUpdated: 'Дедлайн оновлено',
                 taskModifiedByOther: 'Це завдання було змінено іншим користувачем. Зберегти ваші зміни?',
@@ -7319,7 +7401,6 @@
                 noProjects: 'Немає проєктів',
                 createFirstProject: 'Створіть перший проєкт для групування завдань',
                 allStatuses: 'Всі статуси',
-                cardsView: 'Картки',
                 listView: 'Список',
                 timelineView: 'Таймлайн',
                 searchTasks: 'Пошук завдань...',
@@ -7410,7 +7491,6 @@
                 noRecordsYet: 'Ще немає записів',
                 minutesAgo: 'хв тому',
                 hoursAgo: 'год тому',
-                daysAgo: 'дн тому',
                 noNotifications: 'Немає сповіщень',
                 overdueGroup: 'Протерміновані',
                 forToday: 'На сьогодні',
@@ -7471,7 +7551,7 @@
                 askAi: 'Не зрозуміло? Запитай AI-помічника',
                 attachments: 'Файли',
                 focusMode: 'Фокус',
-                high: 'Високий 🔴',
+                high: 'Високий ●',
                 normal: 'Звичайний',
                 projects: 'Проєкти',
                 tabProjects: 'Проєкти',
@@ -7496,6 +7576,15 @@
                 noIncidents: 'Збоїв не виявлено',
                 completion30d: 'Виконання 30дн',
                 regularTaskLabel: 'рег.',
+                cardsView: 'Картки',
+                structureView: 'Структура',
+                dragHere: 'Перетягніть функцію сюди',
+                addCategory: 'Додати колонку',
+                categoryName: 'Назва колонки:',
+                categoryExists: 'Така колонка вже є',
+                categoryHasFunctions: 'В колонці є функції. Вони стануть без категорії. Видалити?',
+                daysAgo: 'дн.',
+                openTask: 'Відкрити задачу',
                 active: 'акт.',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
                 projectStatusChanged: 'Проєкт "{name}" → {status}',
@@ -7522,8 +7611,8 @@
                 deletingData: 'Видалення даних...',
                 deletedNRecords: 'Видалено {n} записів',
                 commentSendError: 'Помилка відправки коментаря',
-                escalationCritical: '🚨 КРИТИЧНО: {n} задач прострочено 7+ днів!',
-                escalationWarning: '⚠️ {n} задач прострочено 3+ дні',
+                escalationCritical: '⚠ КРИТИЧНО: {n} задач прострочено 7+ днів!',
+                escalationWarning: '⚠ {n} задач прострочено 3+ дні',
                 noPermissionTask: 'Недостатньо прав для зміни цієї задачі',
                 deadlineChangeError: 'Помилка зміни дедлайну',
                 deleteFileConfirm: 'Видалити файл?',
@@ -8006,7 +8095,7 @@
                 createError: 'Ошибка создания',
                 taskNotFoundArchive: 'Задача не найдена в архиве',
                 restoreError: 'Ошибка восстановления',
-                deadlineExceedsProject: '⚠️ Дедлайн задачи ({taskDate}) выходит за дедлайн проекта "{projName}" ({projDate})',
+                deadlineExceedsProject: '⚠ Дедлайн задачи ({taskDate}) выходит за дедлайн проекта "{projName}" ({projDate})',
                 noTasksForExport: 'Нет задач для экспорта',
                 deadlineUpdated: 'Дедлайн обновлён',
                 taskModifiedByOther: 'Эта задача была изменена другим пользователем. Сохранить изменения?',
@@ -8185,7 +8274,7 @@
                 askAi: 'Не понятно? Спросите AI-помощника',
                 attachments: 'Файлы',
                 focusMode: 'Фокус',
-                high: 'Высокий 🔴',
+                high: 'Высокий ●',
                 normal: 'Обычный',
                 projects: 'Проекты',
                 tabProjects: 'Проекты',
@@ -8225,8 +8314,8 @@
                 deletingData: 'Удаление данных...',
                 deletedNRecords: 'Удалено {n} записей',
                 commentSendError: 'Ошибка отправки комментария',
-                escalationCritical: '🚨 КРИТИЧНО: {n} задач просрочено 7+ дней!',
-                escalationWarning: '⚠️ {n} задач просрочено 3+ дня',
+                escalationCritical: '⚠ КРИТИЧНО: {n} задач просрочено 7+ дней!',
+                escalationWarning: '⚠ {n} задач просрочено 3+ дня',
                 noPermissionTask: 'Недостаточно прав для изменения этой задачи',
                 deadlineChangeError: 'Ошибка изменения дедлайна',
                 deleteFileConfirm: 'Удалить файл?',
@@ -8711,7 +8800,7 @@
                 createError: 'Błąd tworzenia',
                 taskNotFoundArchive: 'Zadanie nie znalezione w archiwum',
                 restoreError: 'Błąd przywracania',
-                deadlineExceedsProject: '⚠️ Termin zadania ({taskDate}) wykracza poza termin projektu "{projName}" ({projDate})',
+                deadlineExceedsProject: '⚠ Termin zadania ({taskDate}) wykracza poza termin projektu "{projName}" ({projDate})',
                 noTasksForExport: 'Brak zadań do eksportu',
                 deadlineUpdated: 'Termin zaktualizowany',
                 taskModifiedByOther: 'To zadanie zostało zmienione przez innego użytkownika. Zapisać zmiany?',
@@ -8737,7 +8826,6 @@
                 noProjects: 'Brak projektów',
                 createFirstProject: 'Utwórz pierwszy projekt do grupowania zadań',
                 allStatuses: 'Wszystkie statusy',
-                cardsView: 'Karty',
                 listView: 'Lista',
                 timelineView: 'Oś czasu',
                 searchTasks: 'Szukaj zadań...',
@@ -8828,7 +8916,6 @@
                 noRecordsYet: 'Brak wpisów',
                 minutesAgo: 'min temu',
                 hoursAgo: 'godz temu',
-                daysAgo: 'dn temu',
                 noNotifications: 'Brak powiadomień',
                 overdueGroup: 'Przeterminowane',
                 forToday: 'Na dzisiaj',
@@ -8889,7 +8976,7 @@
                 askAi: 'Nie rozumiesz? Zapytaj asystenta AI',
                 attachments: 'Pliki',
                 focusMode: 'Fokus',
-                high: 'Wysoki 🔴',
+                high: 'Wysoki ●',
                 normal: 'Zwykły',
                 projects: 'Projekty',
                 tabProjects: 'Projekty',
@@ -8914,6 +9001,15 @@
                 noIncidents: 'Brak awarii',
                 completion30d: 'Wykonanie 30dn',
                 regularTaskLabel: 'reg.',
+                cardsView: 'Karty',
+                structureView: 'Struktura',
+                dragHere: 'Przeciągnij funkcję tutaj',
+                addCategory: 'Dodaj kolumnę',
+                categoryName: 'Nazwa kolumny:',
+                categoryExists: 'Taka kolumna już istnieje',
+                categoryHasFunctions: 'W kolumnie są funkcje. Stracą kategorię. Usunąć?',
+                daysAgo: 'dn.',
+                openTask: 'Otwórz zadanie',
                 active: 'akt.',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
                 projectStatusChanged: 'Projekt "{name}" → {status}',
@@ -8940,8 +9036,8 @@
                 deletingData: 'Usuwanie danych...',
                 deletedNRecords: 'Usunięto {n} rekordów',
                 commentSendError: 'Błąd wysyłania komentarza',
-                escalationCritical: '🚨 KRYTYCZNIE: {n} zadań przeterminowanych 7+ dni!',
-                escalationWarning: '⚠️ {n} zadań przeterminowanych 3+ dni',
+                escalationCritical: '⚠ KRYTYCZNIE: {n} zadań przeterminowanych 7+ dni!',
+                escalationWarning: '⚠ {n} zadań przeterminowanych 3+ dni',
                 noPermissionTask: 'Brak uprawnień do zmiany tego zadania',
                 deadlineChangeError: 'Błąd zmiany terminu',
                 deleteFileConfirm: 'Usunąć plik?',
@@ -11122,7 +11218,7 @@
                         </div>
                         <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
                             ${sortedUsers.map(user => {
-                                const roleIcon = user.role === 'owner' ? '👑 ' : user.role === 'manager' ? '⭐ ' : '';
+                                const roleIcon = user.role === 'owner' ? '♛ ' : user.role === 'manager' ? '★ ' : '';
                                 return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
                                                 style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;" 
                                                 onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
@@ -11216,7 +11312,7 @@
                     <div class="user-ms-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200;max-height:200px;overflow:hidden;">
                         <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
                             ${managers.map(user => {
-                                const roleIcon = user.role === 'owner' ? '👑 ' : '⭐ ';
+                                const roleIcon = user.role === 'owner' ? '♛ ' : '★ ';
                                 return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
                                                 style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;" 
                                                 onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
@@ -12391,7 +12487,7 @@
                         <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
                             ${users.map(user => {
                                 const checked = selectedSet.has(user.id);
-                                const roleIcon = user.role === 'owner' ? '👑 ' : user.role === 'manager' ? '⭐ ' : '';
+                                const roleIcon = user.role === 'owner' ? '♛ ' : user.role === 'manager' ? '★ ' : '';
                                 return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
                                                 style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;${checked ? 'background:#f0fdf4;' : ''}" 
                                                 onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
@@ -12687,7 +12783,7 @@
                                 playNotificationSound();
                                 const reason = data.reviewRejectReason;
                                 const creatorName = data.creatorName || '';
-                                const msg = `↩ ${creatorName} ${t('rejectedTaskMsg')}: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`;
+                                const msg = `${creatorName} ${t('rejectedTaskMsg')}: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`;
                                 showToast(msg, 'warning');
                                 addNotification('rejected', t('taskReturnedForRevision') || 'Повернуто на доопрацювання', (data.creatorName || '') + ': ' + (data.title || ''), doc.id);
                                 // Інкрементальне оновлення
@@ -12751,7 +12847,7 @@
                     </button>
                     <button onclick="this.closest('#reviewTaskToast').remove();rejectReviewTask('${escId(taskId)}')" 
                             style="flex:1;padding:0.5rem;border:none;border-radius:8px;background:rgba(255,255,255,0.2);color:white;font-weight:600;cursor:pointer;font-size:0.85rem;">
-                        ↩ ${t('rejectTask')}
+                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('rejectTask')}
                     </button>
                 </div>
             `;
@@ -14093,7 +14189,7 @@
                         </button>
                         <button onclick="rejectReviewTask('${escId(taskId)}')" 
                                 style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#f59e0b;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
-                            ↩ ${t('rejectTask')}
+                            <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('rejectTask')}
                         </button>
                     </div>`;
             }
@@ -15587,8 +15683,202 @@
         }
 
         // =====================
-        // MERGE FUNCTIONS
+        // FUNCTIONS STRUCTURE VIEW
         // =====================
+        let currentFunctionsView = 'cards';
+        const DEFAULT_CATEGORIES = ['Управління', 'Люди', 'Залучення', 'Продаж', 'Фінанси', 'Підготовка', 'Виконання', 'Логістика'];
+        
+        function setFunctionsView(view) {
+            currentFunctionsView = view;
+            document.querySelectorAll('[data-fview]').forEach(b => {
+                b.style.background = b.dataset.fview === view ? 'white' : 'transparent';
+                b.style.fontWeight = b.dataset.fview === view ? '600' : '400';
+            });
+            document.getElementById('functionsContainer').style.display = view === 'cards' ? '' : 'none';
+            document.getElementById('functionsStructureContainer').style.display = view === 'structure' ? '' : 'none';
+            if (view === 'structure') renderFunctionsStructure();
+            refreshIcons();
+        }
+        
+        function getStructureCategories() {
+            // Get categories from functions + defaults
+            const fromFunctions = functions.filter(f => f.category).map(f => f.category);
+            const saved = JSON.parse(localStorage.getItem('structCategories_' + (currentCompany || '')) || 'null');
+            if (saved) return saved;
+            // Build from existing + defaults
+            const cats = [...new Set([...DEFAULT_CATEGORIES, ...fromFunctions])];
+            return cats;
+        }
+        
+        function saveStructureCategories(cats) {
+            localStorage.setItem('structCategories_' + (currentCompany || ''), JSON.stringify(cats));
+        }
+        
+        function renderFunctionsStructure() {
+            const container = document.getElementById('functionsStructureContainer');
+            const categories = getStructureCategories();
+            const activeFunctions = functions.filter(f => f.status !== 'archived');
+            const todayStr = getLocalDateStr(new Date());
+            
+            let html = '<div class="struct-board">';
+            
+            categories.forEach((cat, colIdx) => {
+                const colFuncs = activeFunctions.filter(f => f.category === cat);
+                const unassigned = colIdx === 0 ? activeFunctions.filter(f => !f.category || !categories.includes(f.category)) : [];
+                const allFuncs = [...colFuncs, ...unassigned];
+                
+                // Aggregate stats
+                let totalPeople = 0, totalTasks = 0, totalRegular = 0, totalWeeklyMin = 0;
+                allFuncs.forEach(f => {
+                    totalPeople += f.assigneeIds?.length || 0;
+                    totalTasks += tasks.filter(t => t.function === f.name && t.status !== 'done').length;
+                    const fReg = regularTasks.filter(rt => rt.function === f.name);
+                    totalRegular += fReg.length;
+                    fReg.forEach(rt => {
+                        let dur = rt.estimatedTime || 60;
+                        if (rt.timeStart && rt.timeEnd) {
+                            const [sh,sm] = rt.timeStart.split(':').map(Number);
+                            const [eh,em] = rt.timeEnd.split(':').map(Number);
+                            dur = (eh*60+em)-(sh*60+sm);
+                            if (dur <= 0) dur = 60;
+                        }
+                        let dpw = 1;
+                        if (rt.period === 'daily') dpw = 5;
+                        else if (rt.period === 'weekly' && rt.daysOfWeek) dpw = rt.daysOfWeek.length;
+                        else if (rt.period === 'monthly') dpw = 0.25;
+                        totalWeeklyMin += dur * dpw;
+                    });
+                });
+                const weeklyHrs = Math.round(totalWeeklyMin / 60 * 10) / 10;
+                
+                html += `
+                <div class="struct-column" data-category="${esc(cat)}">
+                    <div class="struct-col-header">
+                        <span class="struct-col-title" contenteditable="true" onblur="renameCategory(${colIdx}, this.textContent.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(cat)}</span>
+                        <button onclick="removeCategory(${colIdx})" style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:2px;" title="${t('delete')}"><i data-lucide="x" class="icon icon-sm"></i></button>
+                    </div>
+                    <div class="struct-col-stats">
+                        <span><i data-lucide="users" class="icon icon-sm"></i> ${totalPeople}</span>
+                        <span><i data-lucide="file-text" class="icon icon-sm"></i> ${totalTasks}</span>
+                        <span><i data-lucide="repeat" class="icon icon-sm"></i> ${totalRegular}</span>
+                        ${weeklyHrs > 0 ? `<span style="color:#0284c7;font-weight:600;"><i data-lucide="clock" class="icon icon-sm"></i> ${weeklyHrs}</span>` : ''}
+                    </div>
+                    <div class="struct-col-body" data-col-idx="${colIdx}" data-cat="${esc(cat)}"
+                        ondragover="event.preventDefault();this.classList.add('drag-over');"
+                        ondragleave="this.classList.remove('drag-over');"
+                        ondrop="dropFunction(event, this);">
+                        ${allFuncs.map(f => {
+                            const fTasks = tasks.filter(t => t.function === f.name && t.status !== 'done').length;
+                            const fReg = regularTasks.filter(rt => rt.function === f.name).length;
+                            const overdue = tasks.filter(t => t.function === f.name && t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').length;
+                            return `
+                            <div class="struct-func-card" draggable="true" data-func-id="${escId(f.id)}"
+                                ondragstart="dragFunction(event, '${escId(f.id)}')"
+                                ondragend="this.classList.remove('dragging');">
+                                <div style="font-weight:600;margin-bottom:0.25rem;">${esc(f.name)}</div>
+                                <div style="display:flex;gap:0.5rem;font-size:0.72rem;color:#6b7280;">
+                                    <span><i data-lucide="users" class="icon icon-sm"></i> ${f.assigneeIds?.length || 0}</span>
+                                    <span><i data-lucide="file-text" class="icon icon-sm"></i> ${fTasks}</span>
+                                    <span><i data-lucide="repeat" class="icon icon-sm"></i> ${fReg}</span>
+                                    ${overdue > 0 ? `<span style="color:#ef4444;font-weight:600;display:inline-flex;align-items:center;gap:2px;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${overdue}</span>` : ''}
+                                </div>
+                                ${f.assigneeNames?.length ? `<div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:0.3rem;">${f.assigneeNames.slice(0,2).map(n => `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 5px;border-radius:4px;">${esc(n)}</span>`).join('')}${f.assigneeNames.length > 2 ? `<span style="font-size:0.65rem;color:#9ca3af;">+${f.assigneeNames.length-2}</span>` : ''}</div>` : ''}
+                            </div>`;
+                        }).join('')}
+                        ${allFuncs.length === 0 ? `<div style="text-align:center;padding:1rem;color:#d1d5db;font-size:0.78rem;">${t('dragHere') || 'Перетягніть функцію сюди'}</div>` : ''}
+                    </div>
+                </div>`;
+            });
+            
+            html += `
+                <div class="struct-add-col" onclick="addCategory()">
+                    <span><i data-lucide="plus" class="icon icon-sm"></i> ${t('addCategory') || 'Додати колонку'}</span>
+                </div>
+            </div>`;
+            
+            container.innerHTML = html;
+            refreshIcons();
+        }
+        
+        let draggedFuncId = null;
+        
+        function dragFunction(event, funcId) {
+            draggedFuncId = funcId;
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'move';
+        }
+        
+        async function dropFunction(event, target) {
+            event.preventDefault();
+            target.classList.remove('drag-over');
+            if (!draggedFuncId) return;
+            
+            const newCategory = target.dataset.cat;
+            const func = functions.find(f => f.id === draggedFuncId);
+            if (!func || func.category === newCategory) { draggedFuncId = null; return; }
+            
+            // Optimistic update
+            func.category = newCategory;
+            renderFunctionsStructure();
+            
+            // Save to Firestore
+            try {
+                await db.collection('companies').doc(currentCompany).collection('functions').doc(draggedFuncId).update({ category: newCategory });
+            } catch(e) {
+                console.error('Error updating category:', e);
+                showToast(t('saveError') || 'Помилка збереження', 'error');
+            }
+            draggedFuncId = null;
+        }
+        
+        function addCategory() {
+            const name = prompt(t('categoryName') || 'Назва колонки:');
+            if (!name || !name.trim()) return;
+            const cats = getStructureCategories();
+            if (cats.includes(name.trim())) { showToast(t('categoryExists') || 'Така колонка вже є', 'warning'); return; }
+            cats.push(name.trim());
+            saveStructureCategories(cats);
+            renderFunctionsStructure();
+        }
+        
+        function removeCategory(idx) {
+            const cats = getStructureCategories();
+            const cat = cats[idx];
+            const funcsInCat = functions.filter(f => f.category === cat);
+            if (funcsInCat.length > 0) {
+                if (!confirm((t('categoryHasFunctions') || 'В цій колонці є функції. Вони стануть без категорії. Видалити?'))) return;
+                funcsInCat.forEach(f => { f.category = ''; });
+                // Save to Firestore
+                const batch = db.batch();
+                funcsInCat.forEach(f => {
+                    batch.update(db.collection('companies').doc(currentCompany).collection('functions').doc(f.id), { category: '' });
+                });
+                batch.commit().catch(e => console.error(e));
+            }
+            cats.splice(idx, 1);
+            saveStructureCategories(cats);
+            renderFunctionsStructure();
+        }
+        
+        function renameCategory(idx, newName) {
+            if (!newName) return;
+            const cats = getStructureCategories();
+            const oldName = cats[idx];
+            if (oldName === newName) return;
+            cats[idx] = newName;
+            saveStructureCategories(cats);
+            
+            // Update functions with old category
+            const funcsInCat = functions.filter(f => f.category === oldName);
+            if (funcsInCat.length > 0) {
+                const batch = db.batch();
+                funcsInCat.forEach(f => {
+                    f.category = newName;
+                    batch.update(db.collection('companies').doc(currentCompany).collection('functions').doc(f.id), { category: newName });
+                });
+                batch.commit().catch(e => console.error(e));
+            }
+        }
         function openMergeFunctionsModal() {
             const list = document.getElementById('mergeFunctionsList');
             const activeFunctions = functions.filter(f => f.status !== 'archived');
@@ -17714,7 +18004,7 @@
             container.innerHTML = regularChecklistItems.map((item, i) => `
                 <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.6rem;background:#f9fafb;border-radius:8px;">
                     <span style="flex:1;font-size:0.85rem;">${escapeHtml(typeof item === 'string' ? item : item.text || item)}</span>
-                    <button type="button" onclick="removeRegularChecklistItem(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem;padding:0 4px;">✕</button>
+                    <button type="button" onclick="removeRegularChecklistItem(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem;padding:0 4px;">×</button>
                 </div>
             `).join('');
         }
@@ -17928,6 +18218,54 @@
             alert(`${t('createdLabel')} ${assigneeIds.length} ${t('tasksWord')}`);
             renderMyDay();
             refreshCurrentView();
+        }
+
+        async function openTodayRegularTask(regularId) {
+            const rt = regularTasks.find(r => r.id === regularId);
+            if (!rt) return;
+            
+            const todayStr = getLocalDateStr(new Date());
+            
+            // Find existing generated task for today
+            let todayTask = tasks.find(t => 
+                t.regularTaskId === regularId && 
+                (t.deadlineDate === todayStr || t.createdDate === todayStr)
+            );
+            
+            if (!todayTask) {
+                // Generate task and open it
+                const func = functions.find(f => f.name === rt.function);
+                if (!func || !func.assigneeIds?.length) {
+                    alert(t('noExecutorsInFunction'));
+                    return;
+                }
+                const assigneeId = func.assigneeIds[0];
+                const ref = db.collection('companies').doc(currentCompany).collection('tasks').doc();
+                const taskData = {
+                    title: rt.title,
+                    function: rt.function,
+                    assigneeId: assigneeId,
+                    assigneeName: users.find(u => u.id === assigneeId)?.name || '',
+                    deadlineDate: todayStr,
+                    deadlineTime: rt.timeStart || rt.time || '18:00',
+                    expectedResult: rt.expectedResult || '',
+                    reportFormat: rt.reportFormat || '',
+                    description: rt.instruction || '',
+                    status: 'new',
+                    priority: rt.priority || 'medium',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdDate: todayStr,
+                    creatorId: currentUser.uid,
+                    regularTaskId: regularId
+                };
+                await ref.set(taskData);
+                todayTask = { id: ref.id, ...taskData, createdAt: new Date() };
+                tasks.unshift(todayTask);
+                renderMyDay();
+            }
+            
+            // Open the task modal
+            openTaskModal(todayTask.id);
         }
 
         async function deleteRegularTask(id) {
@@ -18303,12 +18641,13 @@
                         <td>
                             <div class="action-btns">
                                 ${statusInfo.status === 'notCreated' ? `
-                                    <button class="action-btn" onclick="generateFromRegular('${escId(rt.id)}')" title="${t('create')}" style="background:#2196f3;color:white;"><i data-lucide="zap" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask') || 'Відкрити задачу'}" style="background:#2196f3;color:white;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
                                     <button class="action-btn" onclick="completeRegularTask('${escId(rt.id)}')" title="${t('markDone')}" style="background:#4caf50;color:white;"><i data-lucide="check" class="icon icon-sm"></i></button>
                                 ` : statusInfo.status === 'inProgress' ? `
+                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask') || 'Відкрити задачу'}" style="background:#2196f3;color:white;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
                                     <button class="action-btn" onclick="completeRegularTask('${escId(rt.id)}')" title="${t('markDone')}" style="background:#4caf50;color:white;"><i data-lucide="check" class="icon icon-sm"></i></button>
                                 ` : `
-                                    <button class="action-btn" onclick="generateFromRegular('${escId(rt.id)}')" title="${t('createAgain')}" style="opacity:0.4;"><i data-lucide="zap" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask') || 'Відкрити задачу'}" style="opacity:0.6;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
                                 `}
                                 ${rt.instruction ? `<button class="action-btn" onclick="showInstruction('${escId(rt.id)}')" title="${t('instruction')}"><i data-lucide="book-open" class="icon icon-sm"></i></button>` : ''}
                                 <button class="action-btn" onclick="openRegularTaskModal('${escId(rt.id)}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
@@ -19098,34 +19437,32 @@
 
                 return `
                 <div class="user-card" style="cursor:pointer;" onclick="toggleUserDetail('${u.id}', event)">
-                    <div class="user-header">
-                        <div class="user-name">${esc(u.name || u.email)}</div>
-                        <span class="role-badge ${u.role}">${getRoleText(u.role)}</span>
-                    </div>
-                    <div class="user-details">
-                        <div><i data-lucide="mail" class="icon icon-sm"></i> ${esc(u.email)}</div>
-                        ${u.position ? `<div><i data-lucide="briefcase" class="icon icon-sm"></i> ${esc(u.position)}</div>` : ''}
-                    </div>
-                    ${userFunctions.length > 0 ? `
-                        <div style="margin:0.5rem 0;display:flex;flex-wrap:wrap;gap:0.25rem;">
-                            ${userFunctions.map(f => `<span class="badge" style="font-size:0.7rem;background:#e8f5e9;color:#2e7d32;">${esc(f.name)}</span>`).join('')}
+                    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+                        <div style="flex:1;">
+                            <div class="user-name" style="margin-bottom:2px;">${esc(u.name || u.email)}</div>
+                            <div style="font-size:0.75rem;color:#6b7280;">${esc(u.email)}${u.position ? ` · ${esc(u.position)}` : ''}</div>
                         </div>
-                    ` : ''}
-                    ${pipelineHTML}
-                    <div class="user-stats" style="flex-wrap:wrap;gap:0.4rem;">
-                        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center;">
-                            <span style="font-size:0.8rem;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks.length} ${t('active')}</span>
-                            <span style="font-size:0.8rem;"><i data-lucide="repeat" class="icon icon-sm"></i> ${userRegular.length} ${t('regularTaskLabel')}</span>
-                            <span style="font-size:0.8rem;font-weight:600;color:${autonomyColor};">${autonomyPct}%</span>
-                            ${overdue.length > 0 ? `<span style="font-size:0.8rem;color:#ef4444;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${overdue.length}</span>` : ''}
+                        <span class="role-badge ${u.role}" style="flex-shrink:0;">${getRoleText(u.role)}</span>
+                    </div>
+                    ${userFunctions.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.4rem;">${userFunctions.map(f => `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:4px;">${esc(f.name)}</span>`).join('')}</div>` : ''}
+                    <div style="display:flex;gap:2px;margin-bottom:0.4rem;">
+                        <div style="flex:1;text-align:center;padding:2px 0;background:#eff6ff;border-radius:4px 0 0 4px;font-size:0.78rem;font-weight:600;color:#2563eb;" title="${t('statusNew')}">${newTasks.length}</div>
+                        <div style="flex:1;text-align:center;padding:2px 0;background:#fefce8;font-size:0.78rem;font-weight:600;color:#ca8a04;" title="${t('inProgressStatus')}">${inProgress.length}</div>
+                        <div style="flex:1;text-align:center;padding:2px 0;background:#f3e8ff;font-size:0.78rem;font-weight:600;color:#9333ea;" title="${t('statusOnReview')}">${onReview.length}</div>
+                        <div style="flex:1;text-align:center;padding:2px 0;background:#dcfce7;border-radius:0 4px 4px 0;font-size:0.78rem;font-weight:600;color:#16a34a;" title="${t('statusDone')}">${doneTasks.length}</div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div style="display:flex;gap:0.6rem;font-size:0.75rem;color:#6b7280;align-items:center;">
+                            <span style="font-weight:600;color:${autonomyColor};">${autonomyPct}%</span>
+                            <span>${weeklyHrs} ${t('hoursPerWeek')}</span>
+                            ${overdue.length > 0 ? `<span style="color:#ef4444;font-weight:600;">⚠${overdue.length}</span>` : ''}
+                            ${returned.length > 0 ? `<span style="color:#f59e0b;">↩${returned.length}</span>` : ''}
                         </div>
-                        <div style="display:flex;gap:0.25rem;" onclick="event.stopPropagation();">
+                        <div style="display:flex;gap:0.25rem;align-items:center;" onclick="event.stopPropagation();">
                             ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
                             ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : ''}
+                            <i data-lucide="chevron-down" class="icon icon-sm" style="color:#d1d5db;" id="userToggle_${u.id}"></i>
                         </div>
-                    </div>
-                    <div style="text-align:center;padding-top:0.2rem;margin-top:0.2rem;border-top:1px dashed #e5e7eb;">
-                        <span id="userToggle_${u.id}" style="font-size:0.73rem;color:#9ca3af;"><i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showDetails') || 'Детальніше'}</span>
                     </div>
                     ${detailHTML}
                 </div>
@@ -19141,9 +19478,7 @@
             const isOpen = section.style.display !== 'none';
             section.style.display = isOpen ? 'none' : 'block';
             if (toggle) {
-                toggle.innerHTML = isOpen 
-                    ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showDetails') || 'Детальніше'}`
-                    : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${t('hideDetails') || 'Згорнути'}`;
+                toggle.setAttribute('data-lucide', isOpen ? 'chevron-down' : 'chevron-up');
                 refreshIcons();
             }
         }
@@ -19468,8 +19803,8 @@
                             <div class="control-row-header" style="flex-wrap:wrap;gap:0.4rem;">
                                 <span><i data-lucide="user" class="icon icon-sm"></i> ${esc(data.name)}</span>
                                 <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">
-                                    ${overdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:600;">⚠ ${overdue}</span>` : ''}
-                                    ${returned > 0 ? `<span style="background:#fffbeb;color:#b45309;padding:2px 8px;border-radius:10px;font-size:0.72rem;">↩ ${returned}</span>` : ''}
+                                    ${overdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:600;display:inline-flex;align-items:center;gap:2px;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${overdue}</span>` : ''}
+                                    ${returned > 0 ? `<span style="background:#fffbeb;color:#b45309;padding:2px 8px;border-radius:10px;font-size:0.72rem;display:inline-flex;align-items:center;gap:2px;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${returned}</span>` : ''}
                                     <span style="font-weight:600;color:${autoColor};font-size:0.78rem;">${autonomy}%</span>
                                     <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i>
                                 </div>
@@ -19484,7 +19819,7 @@
                                         ${data[s.key].slice(0, 10).map(t => {
                                             const isOverdue = t.deadlineDate && t.deadlineDate < todayStr && s.key !== 'done';
                                             return `<div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="event.stopPropagation();openTaskModal('${escId(t.id)}')" style="display:flex;align-items:center;gap:0.3rem;">
-                                                ${t.reviewRejectedAt ? '<span style="color:#f59e0b;font-size:0.7rem;">↩</span>' : ''}
+                                                ${t.reviewRejectedAt ? '<i data-lucide="rotate-ccw" class="icon icon-sm" style="color:#f59e0b;width:12px;height:12px;"></i>' : ''}
                                                 <span class="task-title" style="flex:1;">${esc(t.title)}</span>
                                                 <span style="font-size:0.7rem;color:#9ca3af;">${t.deadlineDate || ''}</span>
                                             </div>`;
@@ -23098,16 +23433,16 @@ Ctrl+K або / - пошук завдань
         };
         
         const AUDIT_ICONS = {
-            created: { icon: '➕', bg: '#dcfce7' },
-            status: { icon: '🔄', bg: '#dbeafe' },
-            reassign: { icon: '👤', bg: '#e0e7ff' },
-            deadline: { icon: '📅', bg: '#fef3c7' },
-            edit: { icon: '✏️', bg: '#f3f4f6' },
-            delete: { icon: '🗑️', bg: '#fee2e2' },
-            complete: { icon: '✅', bg: '#dcfce7' },
-            reopen: { icon: '🔓', bg: '#fef3c7' },
-            review: { icon: '👁️', bg: '#e0e7ff' },
-            escalation: { icon: '🚨', bg: '#fee2e2' }
+            created: { icon: '＋', bg: '#dcfce7' },
+            status: { icon: '⟳', bg: '#dbeafe' },
+            reassign: { icon: '⊙', bg: '#e0e7ff' },
+            deadline: { icon: '⊘', bg: '#fef3c7' },
+            edit: { icon: '✎', bg: '#f3f4f6' },
+            delete: { icon: '⊗', bg: '#fee2e2' },
+            complete: { icon: '✓', bg: '#dcfce7' },
+            reopen: { icon: '⊕', bg: '#fef3c7' },
+            review: { icon: '◉', bg: '#e0e7ff' },
+            escalation: { icon: '⚠', bg: '#fee2e2' }
         };
         
         const _logDebounce = new Map();
@@ -23283,7 +23618,7 @@ Ctrl+K або / - пошук завдань
         function getEscalationBadgeHtml(task) {
             const level = getEscalationLevel(task);
             if (!level) return '';
-            return `<span class="escalation-badge escalation-${level.level}" title="${level.label}">🚨 ${level.label}</span>`;
+            return `<span class="escalation-badge escalation-${level.level}" title="${level.label}">⚠ ${level.label}</span>`;
         }
         
         async function checkEscalations() {
@@ -23446,13 +23781,13 @@ Ctrl+K або / - пошук завдань
                         const d = new Date(t.deadlineDate + 'T12:00:00');
                         const dayMonth = d.toLocaleDateString('uk', {day:'numeric', month:'short'});
                         const color = isOverdue ? '#ef4444' : isToday ? '#f59e0b' : '#6b7280';
-                        deadlineHtml = `<span style="color:${color}">📅 ${dayMonth}</span>`;
+                        deadlineHtml = `<span style="color:${color}">${dayMonth}</span>`;
                     }
                     
                     let checkHtml = '';
                     if (t.checklist?.length) {
                         const done = t.checklist.filter(c => c.done).length;
-                        checkHtml = `<span>☑ ${done}/${t.checklist.length}</span>`;
+                        checkHtml = `<span>✓ ${done}/${t.checklist.length}</span>`;
                     }
                     
                     let imgHtml = '';
@@ -23464,8 +23799,8 @@ Ctrl+K або / - пошук завдань
                     }
                     
                     let prioHtml = '';
-                    if (t.priority === 'high') prioHtml = '<span class="kanban-card-badge" style="background:#fef2f2;color:#ef4444">🔴</span>';
-                    else if (t.priority === 'medium') prioHtml = '<span class="kanban-card-badge" style="background:#fffbeb;color:#f59e0b">🟡</span>';
+                    if (t.priority === 'high') prioHtml = '<span class="kanban-card-badge" style="background:#fef2f2;color:#ef4444">●</span>';
+                    else if (t.priority === 'medium') prioHtml = '<span class="kanban-card-badge" style="background:#fffbeb;color:#f59e0b"><i data-lucide="minus-circle" class="icon icon-sm"></i></span>';
                     
                     let escalBadge = '';
                     if (escalation) {
@@ -23490,7 +23825,7 @@ Ctrl+K або / - пошук завдань
                             ${prioHtml}${escalBadge}${statusBadge}
                             ${deadlineHtml}${checkHtml}
                             ${funcName ? `<span style="background:#f0fdf4;color:#16a34a;padding:0.1rem 0.3rem;border-radius:4px">${escapeHtml(funcName)}</span>` : ''}
-                            ${assigneeName ? `<span>👤 ${escapeHtml(assigneeName)}</span>` : ''}
+                            ${assigneeName ? `<span>${escapeHtml(assigneeName)}</span>` : ''}
                         </div>
                     </div>`;
                 });
@@ -24284,7 +24619,7 @@ Ctrl+K або / - пошук завдань
                     Додати
                 </button>
                 <button onclick="dismissInstallBanner()" style="background:none;border:none;color:rgba(255,255,255,0.5);
-                    cursor:pointer;font-size:1.2rem;padding:4px;flex-shrink:0;">✕</button>
+                    cursor:pointer;font-size:1.2rem;padding:4px;flex-shrink:0;">×</button>
             </div>
         `;
         document.body.appendChild(banner);
@@ -24328,7 +24663,7 @@ Ctrl+K або / - пошук завдань
                             <div style="flex:1;">
                                 <div style="font-weight:600;font-size:0.95rem;">Встановити TALKO Tasks</div>
                             </div>
-                            <button onclick="dismissIOSHint()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1.2rem;">✕</button>
+                            <button onclick="dismissIOSHint()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1.2rem;">×</button>
                         </div>
                         <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);line-height:1.5;">
                             Натисніть <span style="display:inline-flex;align-items:center;background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:6px;margin:0 2px;">
