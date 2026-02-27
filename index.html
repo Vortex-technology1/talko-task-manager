@@ -6932,7 +6932,6 @@
                 controlPanel: 'Панель контролю',
                 critical: 'Критичні',
                 attention: 'Увага',
-                active: 'Активні',
                 completed: 'Готово',
                 workload: 'Навантаження',
                 noActiveTasks: 'Немає активних завдань',
@@ -6949,7 +6948,6 @@
                 noTime: 'Без часу',
                 periodicity: 'Періодичність *',
                 weekly: 'Щотижня',
-                monthly: 'Щомісяця',
                 quarterly: 'Щокварталу',
                 daysOfWeek: 'Дні тижня *',
                 selectAll: 'Всі дні',
@@ -7213,7 +7211,6 @@
                 selectAtLeastOneDay: 'Оберіть хоча б один день тижня',
                 noExecutorsInFunction: 'В функції немає виконавців',
                 tasksWord: 'завдань',
-                daily: 'Щодня',
                 monFri: 'Пн-Пт',
                 instructionLabel: 'Інструкція',
                 completedStatus: 'Виконано',
@@ -7481,6 +7478,13 @@
                 overdueShort: 'простр.',
                 overdue1day: 'Прострочено 1+ день',
                 stuckProcesses: 'Застряглі процеси',
+                showRegularTasks: 'Показати регулярні завдання',
+                hideRegularTasks: 'Сховати регулярні завдання',
+                hoursPerWeek: 'год/тижд',
+                daily: 'Щоденно',
+                monthly: 'Щомісяця',
+                dayShort: 'го',
+                active: 'акт.',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
                 projectStatusChanged: 'Проєкт "{name}" → {status}',
                 confirmProjectComplete: 'В проєкті {n} незавершених завдань. Все одно позначити як "Завершено"?',
@@ -7632,7 +7636,6 @@
                 controlPanel: 'Панель контроля',
                 critical: 'Критические',
                 attention: 'Внимание',
-                active: 'Активные',
                 completed: 'Готово',
                 workload: 'Нагрузка',
                 noActiveTasks: 'Нет активных задач',
@@ -7649,7 +7652,6 @@
                 noTime: 'Без времени',
                 periodicity: 'Периодичность *',
                 weekly: 'Еженедельно',
-                monthly: 'Ежемесячно',
                 quarterly: 'Ежеквартально',
                 daysOfWeek: 'Дни недели *',
                 selectAll: 'Все дни',
@@ -7913,7 +7915,6 @@
                 selectAtLeastOneDay: 'Выберите хотя бы один день недели',
                 noExecutorsInFunction: 'В функции нет исполнителей',
                 tasksWord: 'задач',
-                daily: 'Ежедневно',
                 monFri: 'Пн-Пт',
                 instructionLabel: 'Инструкция',
                 completedStatus: 'Выполнено',
@@ -8180,6 +8181,13 @@
                 overdueShort: 'проср.',
                 overdue1day: 'Просрочено 1+ день',
                 stuckProcesses: 'Застрявшие процессы',
+                showRegularTasks: 'Показать регулярные задачи',
+                hideRegularTasks: 'Скрыть регулярные задачи',
+                hoursPerWeek: 'ч/нед',
+                daily: 'Ежедневно',
+                monthly: 'Ежемесячно',
+                dayShort: 'го',
+                active: 'акт.',
                 tasksUnlinked: '{n} задач отвязано от проекта',
                 projectStatusChanged: 'Проект "{name}" → {status}',
                 confirmProjectComplete: 'В проекте {n} незавершённых задач. Всё равно пометить как "Завершено"?',
@@ -8332,7 +8340,6 @@
                 controlPanel: 'Panel kontroli',
                 critical: 'Krytyczne',
                 attention: 'Uwaga',
-                active: 'Aktywne',
                 completed: 'Gotowe',
                 workload: 'Obciążenie',
                 noActiveTasks: 'Brak aktywnych zadań',
@@ -8349,7 +8356,6 @@
                 noTime: 'Bez czasu',
                 periodicity: 'Częstotliwość *',
                 weekly: 'Co tydzień',
-                monthly: 'Co miesiąc',
                 quarterly: 'Co kwartał',
                 daysOfWeek: 'Dni tygodnia *',
                 selectAll: 'Wszystkie dni',
@@ -8613,7 +8619,6 @@
                 selectAtLeastOneDay: 'Wybierz przynajmniej jeden dzień tygodnia',
                 noExecutorsInFunction: 'W funkcji nie ma wykonawców',
                 tasksWord: 'zadań',
-                daily: 'Codziennie',
                 monFri: 'Pn-Pt',
                 instructionLabel: 'Instrukcja',
                 completedStatus: 'Wykonano',
@@ -8881,6 +8886,13 @@
                 overdueShort: 'przeter.',
                 overdue1day: 'Przeterminowane 1+ dzień',
                 stuckProcesses: 'Zablokowane procesy',
+                showRegularTasks: 'Pokaż zadania regularne',
+                hideRegularTasks: 'Ukryj zadania regularne',
+                hoursPerWeek: 'godz/tydz',
+                daily: 'Codziennie',
+                monthly: 'Co miesiąc',
+                dayShort: '-go',
+                active: 'akt.',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
                 projectStatusChanged: 'Projekt "{name}" → {status}',
                 confirmProjectComplete: 'W projekcie jest {n} niezakończonych zadań. Oznaczyć jako "Zakończone"?',
@@ -15416,20 +15428,91 @@
 
         function renderFunctions() {
             const c = document.getElementById('functionsContainer');
-            // Фільтруємо архівовані функції
             const activeFunctions = functions.filter(f => f.status !== 'archived');
             
             if (activeFunctions.length === 0) {
                 c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>${t('noFunctions')}</h3><p>${t('createFirstFunction')}</p></div>`;
-                // Ховаємо кнопку об'єднання
                 const mergeBtn = document.getElementById('mergeFunctionsBtn');
                 if (mergeBtn) mergeBtn.style.display = 'none';
                 return;
             }
+
+            const shortDays = getDayNamesShort();
+            // JS getDay(): 0=Sun, but shortDays is Mon-first [Пн,Вт,Ср,Чт,Пт,Сб,Нд]
+            // Mapping: shortDays[0]=Mon(1), [1]=Tue(2), ..., [5]=Sat(6), [6]=Sun(0)
+            const jsDayToIdx = {1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6};
+
             c.innerHTML = activeFunctions.map(f => {
                 const mergedInfo = f.mergedFrom?.length ? `<div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;"><i data-lucide="git-merge" class="icon icon-sm"></i> ${t('mergedFrom')}: ${f.mergedFrom.map(m => m.name).join(', ')}</div>` : '';
+                
+                const funcTasks = tasks.filter(task => task.function === f.name);
+                const funcRegular = regularTasks.filter(rt => rt.function === f.name);
+                const activeTasks = funcTasks.filter(t => t.status !== 'done').length;
+                const doneTasks = funcTasks.filter(t => t.status === 'done').length;
+
+                // Calculate weekly hours for regular tasks
+                let weeklyMinutes = 0;
+                funcRegular.forEach(rt => {
+                    const start = rt.timeStart || rt.time || '';
+                    const end = rt.timeEnd || '';
+                    let durMin = rt.estimatedTime || 60;
+                    if (start && end) {
+                        const [sh,sm] = start.split(':').map(Number);
+                        const [eh,em] = end.split(':').map(Number);
+                        durMin = (eh*60+em) - (sh*60+sm);
+                        if (durMin <= 0) durMin = 60;
+                    }
+                    let daysPerWeek = 1;
+                    if (rt.period === 'daily') daysPerWeek = 5;
+                    else if (rt.period === 'weekly' && rt.daysOfWeek) daysPerWeek = rt.daysOfWeek.length;
+                    else if (rt.period === 'monthly') daysPerWeek = 0.25;
+                    weeklyMinutes += durMin * daysPerWeek;
+                });
+                const weeklyHours = Math.round(weeklyMinutes / 60 * 10) / 10;
+
+                // Regular tasks detail
+                let regularHTML = '';
+                if (funcRegular.length > 0) {
+                    regularHTML = `
+                    <div class="func-regular-section" id="funcRegular_${escId(f.id)}" style="display:none;margin-top:0.75rem;border-top:1px solid #e5e7eb;padding-top:0.75rem;">
+                        <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.5rem;">
+                            <i data-lucide="repeat" class="icon icon-sm"></i> ${t('tabRegular')} (${funcRegular.length})
+                        </div>
+                        ${funcRegular.map(rt => {
+                            const status = getRegularTaskStatus(rt);
+                            const start = rt.timeStart || rt.time || '—';
+                            const end = rt.timeEnd || '';
+                            const timeStr = end ? start + '–' + end : start;
+                            
+                            // Schedule display
+                            let scheduleStr = '';
+                            if (rt.period === 'daily') {
+                                scheduleStr = t('daily') || 'Щоденно';
+                            } else if (rt.period === 'weekly' && rt.daysOfWeek) {
+                                scheduleStr = rt.daysOfWeek
+                                    .map(d => parseInt(d))
+                                    .sort((a,b) => (jsDayToIdx[a]??7) - (jsDayToIdx[b]??7))
+                                    .map(d => `<span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;font-size:0.7rem;font-weight:600;${rt.daysOfWeek.includes(d.toString()) ? 'background:#dcfce7;color:#16a34a;' : ''}">${shortDays[jsDayToIdx[d]] || d}</span>`)
+                                    .join('');
+                            } else if (rt.period === 'monthly') {
+                                scheduleStr = (t('monthly') || 'Щомісяця') + ' ' + (rt.dayOfMonth || '1') + '-' + (t('dayShort') || 'го');
+                            }
+
+                            return `
+                            <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.5rem;margin-bottom:0.3rem;background:#f9fafb;border-radius:8px;font-size:0.82rem;cursor:pointer;" onclick="openRegularTaskModal('${escId(rt.id)}')">
+                                <span style="width:8px;height:8px;border-radius:50%;background:${status.color};flex-shrink:0;"></span>
+                                <span style="flex:1;font-weight:500;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(rt.title)}</span>
+                                <span style="color:#6b7280;font-size:0.75rem;white-space:nowrap;">${timeStr}</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:0.3rem;padding:0 0.5rem 0.4rem;margin-bottom:0.2rem;">
+                                <span style="display:flex;gap:2px;">${scheduleStr}</span>
+                            </div>`;
+                        }).join('')}
+                    </div>`;
+                }
+
                 return `
-                <div class="function-card">
+                <div class="function-card" style="cursor:pointer;" onclick="toggleFuncRegular('${escId(f.id)}', event)">
                     <div class="function-header">
                         <div class="function-title"><i data-lucide="settings" class="icon icon-sm"></i> ${esc(f.name)}</div>
                     </div>
@@ -15439,21 +15522,45 @@
                         ${f.headName ? `<span class="assignee-badge head"><i data-lucide="crown" class="icon icon-sm"></i> ${esc(f.headName)}</span>` : ''}
                         ${f.assigneeNames?.filter(n => n !== f.headName).map(n => `<span class="assignee-badge">${esc(n)}</span>`).join('') || ''}
                     </div>
-                    <div class="function-stats">
-                        <span><i data-lucide="file-text" class="icon icon-sm"></i> ${tasks.filter(task => task.function === f.name).length} ${t('tasks')}</span>
-                        <div>
+                    <div class="function-stats" style="flex-wrap:wrap;gap:0.5rem;">
+                        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks} ${t('active') || 'акт.'} / ${doneTasks} ${t('doneLabel')}</span>
+                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="repeat" class="icon icon-sm"></i> ${funcRegular.length} ${t('regularTaskLabel') || 'рег.'}</span>
+                            ${weeklyHours > 0 ? `<span style="font-size:0.82rem;color:#0284c7;font-weight:600;"><i data-lucide="clock" class="icon icon-sm"></i> ${weeklyHours} ${t('hoursPerWeek') || 'год/тижд'}</span>` : ''}
+                        </div>
+                        <div style="display:flex;gap:0.3rem;" onclick="event.stopPropagation();">
                             <button class="btn btn-small" onclick="openFunctionModal('${escId(f.id)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                             <button class="btn btn-small btn-danger" onclick="deleteFunction('${escId(f.id)}')"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                         </div>
                     </div>
+                    ${funcRegular.length > 0 ? `
+                    <div style="text-align:center;padding-top:0.3rem;margin-top:0.3rem;border-top:1px dashed #e5e7eb;">
+                        <span class="func-toggle-hint" id="funcToggle_${escId(f.id)}" style="font-size:0.75rem;color:#9ca3af;"><i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks') || 'Показати регулярні'}</span>
+                    </div>` : ''}
+                    ${regularHTML}
                 </div>
             `}).join('');
             refreshIcons();
             
-            // Показуємо кнопку об'єднання якщо є 2+ функції
             const mergeBtn = document.getElementById('mergeFunctionsBtn');
             if (mergeBtn) {
                 mergeBtn.style.display = functions.length >= 2 ? 'flex' : 'none';
+            }
+        }
+
+        function toggleFuncRegular(funcId, event) {
+            // Don't toggle if clicking buttons
+            if (event.target.closest('button') || event.target.closest('a')) return;
+            const section = document.getElementById('funcRegular_' + funcId);
+            const toggle = document.getElementById('funcToggle_' + funcId);
+            if (!section) return;
+            const isOpen = section.style.display !== 'none';
+            section.style.display = isOpen ? 'none' : 'block';
+            if (toggle) {
+                toggle.innerHTML = isOpen 
+                    ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks') || 'Показати регулярні'}`
+                    : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${t('hideRegularTasks') || 'Сховати регулярні'}`;
+                refreshIcons();
             }
         }
 
