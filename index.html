@@ -5509,7 +5509,7 @@
                         <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')" data-i18n="day" data-short="День">День</button>
                         <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')" data-i18n="week" data-short="Тижд">Тиждень</button>
                         <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')" data-i18n="month" data-short="Міс">Місяць</button>
-                        <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')" data-i18n="list" data-short="Список" data-i18n="listView">Список</button>
+                        <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')" data-short="Список" data-i18n="listView">Список</button>
                         <button class="calendar-view-btn" data-view="kanban" onclick="setCalendarView('kanban')" data-short="Канбан" data-i18n="kanbanView">Канбан</button>
                         <button class="calendar-view-btn" data-view="deadlines" onclick="setCalendarView('deadlines')" data-short="Терміни" data-i18n="deadlinesView">Терміни</button>
                     </div>
@@ -5517,7 +5517,7 @@
                 
                 <!-- Calendar Filters -->
                 <div class="filters-row" id="calendarFiltersRow" style="background:white;padding:0.5rem 1rem;border-radius:12px;margin-bottom:0.5rem;box-shadow:var(--shadow);display:none;flex-wrap:wrap;gap:0.5rem;align-items:center;">
-                    <button class="btn btn-sm" id="calendarMyBtn" onclick="filterCalendarMy()" style="padding:0.35rem 0.7rem;font-size:0.82rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> Мої</button>
+                    <button class="btn btn-sm" id="calendarMyBtn" onclick="filterCalendarMy()" style="padding:0.35rem 0.7rem;font-size:0.82rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> <span data-i18n="mine">Мої</span></button>
                     <select class="filter-select" id="calendarAssigneeFilter" onchange="renderCalendar()" style="font-size:0.82rem;padding:0.35rem;max-width:180px;">
                         <option value="" data-i18n="allAssignees">Всі виконавці</option>
                     </select>
@@ -5608,8 +5608,8 @@
                             <span style="width:1px;height:22px;background:#e0e0e0;margin:0 0.15rem;"></span>
                             <div class="task-type-tabs" style="display:flex;gap:1px;background:#e5e7eb;padding:2px;border-radius:8px;">
                                 <button class="task-type-tab active" data-value="" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;background:#22c55e;color:white;white-space:nowrap;transition:all 0.15s;" data-i18n="all">Всі</button>
-                                <button class="task-type-tab" data-value="my" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:0.2rem;"><i data-lucide="user" class="icon" style="width:12px;height:12px;"></i> Мої</button>
-                                <button class="task-type-tab" data-value="created" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;">Створені</button>
+                                <button class="task-type-tab" data-value="my" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:0.2rem;"><i data-lucide="user" class="icon" style="width:12px;height:12px;"></i> <span data-i18n="mine">Мої</span></button>
+                                <button class="task-type-tab" data-value="created" data-i18n="created" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;">Створені</button>
                             </div>
                             <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()" style="display:none;">
                                 <option value="" data-i18n="allTasks">Всі завдання</option>
@@ -5844,7 +5844,7 @@
                     <div style="display:flex;align-items:center;gap:0.5rem;">
                         <div class="calendar-view-switcher">
                             <button class="calendar-view-btn active" data-view="week" onclick="setRegularView('week')" data-i18n="week">Тиждень</button>
-                            <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')" data-i18n="list" data-i18n="listView">Список</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')" data-i18n="listView">Список</button>
                         </div>
                     </div>
                 </div>
@@ -5852,7 +5852,7 @@
                 <!-- СПІЛЬНІ ФІЛЬТРИ ДЛЯ ВСІХ VIEWS -->
                 <div class="filters-row" id="regularFiltersRow" style="background:white;padding:0.75rem 1rem;border-radius:12px;margin-bottom:0.75rem;box-shadow:var(--shadow);display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
                     <button class="btn btn-success btn-sm" onclick="filterRegularToday()" id="regularTodayBtn" style="padding:0.4rem 0.75rem;font-size:0.85rem;"><i data-lucide="calendar-check" class="icon icon-sm"></i> <span data-i18n="todaysTasks">Сьогодні</span></button>
-                    <button class="btn btn-sm" id="regularMyBtn" onclick="filterRegularMy()" style="padding:0.4rem 0.75rem;font-size:0.85rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> <span data-i18n="myTasks" data-i18n="mine">Мої</span></button>
+                    <button class="btn btn-sm" id="regularMyBtn" onclick="filterRegularMy()" style="padding:0.4rem 0.75rem;font-size:0.85rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> <span data-i18n="mine">Мої</span></button>
                     <select class="filter-select" id="regularAssigneeFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
                     <select class="filter-select" id="regularFunctionFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;"><option value="" data-i18n="allFunctions">Всі функції</option></select>
                     <select class="filter-select" id="regularDayFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;">
@@ -8971,10 +8971,12 @@
             // Update desktop buttons
             document.getElementById('langUA')?.classList.toggle('active', lang === 'ua');
             document.getElementById('langRU')?.classList.toggle('active', lang === 'ru');
+            document.getElementById('langPL')?.classList.toggle('active', lang === 'pl');
             
             // Update mobile buttons
             document.getElementById('mLangUA')?.classList.toggle('active', lang === 'ua');
             document.getElementById('mLangRU')?.classList.toggle('active', lang === 'ru');
+            document.getElementById('mLangPL')?.classList.toggle('active', lang === 'pl');
             
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -9010,6 +9012,7 @@
                 }
                 
                 switchTab(tabName);
+                updateSelects(true);
             }
         }
 
