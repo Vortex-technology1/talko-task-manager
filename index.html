@@ -10983,7 +10983,7 @@
                                     <i data-lucide="check-circle" class="icon"></i> ${t('acceptWork')}
                                 </button>
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                    <i data-lucide="message-circle" class="icon"></i> Допрацювати
+                                    <i data-lucide="message-circle" class="icon"></i> ${t('reviseTask')}
                                 </button>`;
                             refreshIcons();
                         } else if (isAssignee && task.status === 'review') {
@@ -11072,7 +11072,7 @@
                 <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
                     <div class="user-ms-toggle" onclick="toggleUserMultiSelect('${uid}')" 
                          style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:white;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;min-height:38px;transition:border-color 0.2s;">
-                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">Оберіть...</span>
+                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${t('selectPlaceholder')}</span>
                         <span style="color:#9ca3af;margin-left:0.5rem;display:flex;align-items:center;gap:0.3rem;">
                             <span style="background:#22c55e;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;font-weight:600;display:none;">0</span>
                             <i data-lucide="chevron-down" class="icon" style="width:14px;height:14px;"></i>
@@ -11172,7 +11172,7 @@
                 <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
                     <div class="user-ms-toggle" onclick="toggleUserMultiSelect('${uid}')" 
                          style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:white;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;min-height:38px;transition:border-color 0.2s;">
-                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">Оберіть...</span>
+                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${t('selectPlaceholder')}</span>
                         <span style="color:#9ca3af;margin-left:0.5rem;display:flex;align-items:center;gap:0.3rem;">
                             <span style="background:#22c55e;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;font-weight:600;display:none;">0</span>
                             <i data-lucide="chevron-down" class="icon" style="width:14px;height:14px;"></i>
@@ -12484,7 +12484,7 @@
             const count = checked.length;
             const labelEl = wrap.querySelector('.user-ms-label');
             if (count === 0) {
-                labelEl.textContent = 'Оберіть...';
+                labelEl.textContent = t('selectPlaceholder');
                 labelEl.style.color = '#9ca3af';
             } else {
                 labelEl.textContent = names.slice(0, 3).join(', ') + (count > 3 ? ` +${count - 3}` : '');
