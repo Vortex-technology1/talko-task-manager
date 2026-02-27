@@ -5279,7 +5279,7 @@
                     <i data-lucide="target" class="icon"></i> <span data-i18n="radarAI">Керівник</span>
                 </a>
                 <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="header-ai-btn tech" title="Помічник">
-                    <i data-lucide="wrench" class="icon"></i> <span data-i18n="techAI">Помічник</span>
+                    <i data-lucide="wrench" class="icon"></i> <span data-i18n="techAI" data-i18n="techAI">Помічник</span>
                 </a>
                 <div class="lang-switcher">
                     <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
@@ -5320,15 +5320,15 @@
                     <!-- NO ACCESS -->
                     <div id="noAccessCard" class="no-access-card" style="display:none;">
                         <h3><i data-lucide="building-2" class="icon"></i> Створити компанію</h3>
-                        <p style="font-size:0.9rem;color:#525252;margin-bottom:1rem;">Ваш email не прив'язаний до жодної компанії. Створіть нову або зверніться до адміністратора.</p>
+                        <p style="font-size:0.9rem;color:#525252;margin-bottom:1rem;">data-i18n="noCompanyAccess">Ваш email не прив'язаний до жодної компанії. Створіть нову або зверніться до адміністратора.</p>
                         <div id="selfRegForm">
                             <div class="auth-input-group">
-                                <label>Назва компанії *</label>
-                                <input type="text" id="selfRegCompanyName" class="form-input" placeholder="ТОВ Моя Компанія" required>
+                                <label data-i18n="companyNameLabel">Назва компанії *</label>
+                                <input type="text" id="selfRegCompanyName" class="form-input" placeholder="ТОВ Моя Компанія" data-i18n-placeholder="companyNamePh" required>
                             </div>
                             <div class="auth-input-group">
-                                <label>Ваше ім'я *</label>
-                                <input type="text" id="selfRegOwnerName" class="form-input" placeholder="Іван Петренко" required>
+                                <label data-i18n="yourNameLabel">Ваше ім'я *</label>
+                                <input type="text" id="selfRegOwnerName" class="form-input" placeholder="Іван Петренко" data-i18n-placeholder="yourNamePh" required>
                             </div>
                             <button onclick="selfRegisterCompany()" class="btn btn-success" style="width:100%;margin-top:0.5rem;" id="selfRegBtn">
                                 <i data-lucide="rocket" class="icon"></i> Створити компанію
@@ -5438,7 +5438,7 @@
             <!-- Pull-to-refresh indicator -->
             <div id="ptrIndicator" class="ptr-indicator">
                 <div class="ptr-spinner"></div>
-                <span>Оновлення...</span>
+                <span data-i18n="updating">Оновлення...</span>
             </div>
             <div class="tab-navigation">
                 <button class="tab-btn active" onclick="switchTab('myday')"><i data-lucide="sun" class="icon"></i> <span data-i18n="tabMyDay">Мій день</span></button>
@@ -5493,7 +5493,7 @@
                         <button class="calendar-nav-btn" onclick="calendarPrev()">
                             <i data-lucide="chevron-left" class="icon"></i>
                         </button>
-                        <button class="calendar-today-btn" onclick="calendarToday()">Сьогодні</button>
+                        <button class="calendar-today-btn" onclick="calendarToday()" data-i18n="today">Сьогодні</button>
                         <button class="calendar-nav-btn" onclick="calendarNext()">
                             <i data-lucide="chevron-right" class="icon"></i>
                         </button>
@@ -5509,9 +5509,9 @@
                         <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')" data-i18n="day" data-short="День">День</button>
                         <button class="calendar-view-btn" data-view="week" onclick="setCalendarView('week')" data-i18n="week" data-short="Тижд">Тиждень</button>
                         <button class="calendar-view-btn" data-view="month" onclick="setCalendarView('month')" data-i18n="month" data-short="Міс">Місяць</button>
-                        <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')" data-i18n="list" data-short="Список">Список</button>
-                        <button class="calendar-view-btn" data-view="kanban" onclick="setCalendarView('kanban')" data-short="Канбан">Канбан</button>
-                        <button class="calendar-view-btn" data-view="deadlines" onclick="setCalendarView('deadlines')" data-short="Терміни">Терміни</button>
+                        <button class="calendar-view-btn" data-view="list" onclick="setCalendarView('list')" data-i18n="list" data-short="Список" data-i18n="listView">Список</button>
+                        <button class="calendar-view-btn" data-view="kanban" onclick="setCalendarView('kanban')" data-short="Канбан" data-i18n="kanbanView">Канбан</button>
+                        <button class="calendar-view-btn" data-view="deadlines" onclick="setCalendarView('deadlines')" data-short="Терміни" data-i18n="deadlinesView">Терміни</button>
                     </div>
                 </div>
                 
@@ -5576,7 +5576,7 @@
                     <div class="mobile-filter-bar" id="mobileFilterBar">
                         <div style="position:relative;flex:1;display:flex;align-items:center;">
                             <i data-lucide="search" class="icon" style="width:14px;height:14px;position:absolute;left:10px;color:#9ca3af;pointer-events:none;"></i>
-                            <input type="text" id="mobileTaskSearchInput" placeholder="Пошук завдань..." oninput="document.getElementById('taskSearchInput').value=this.value;debouncedRenderTasks()" style="width:100%;padding:0.5rem 0.5rem 0.5rem 32px;font-size:0.85rem;border:1px solid #e5e7eb;border-radius:10px;outline:none;background:white;" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                            <input type="text" id="mobileTaskSearchInput" placeholder="Пошук завдань..." data-i18n-placeholder="searchTasks" oninput="document.getElementById('taskSearchInput').value=this.value;debouncedRenderTasks()" style="width:100%;padding:0.5rem 0.5rem 0.5rem 32px;font-size:0.85rem;border:1px solid #e5e7eb;border-radius:10px;outline:none;background:white;" onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                         </div>
                         <button class="mobile-filter-btn" onclick="setMobileQuickFilter('my')">
                             <i data-lucide="user" class="icon icon-sm"></i> Мої
@@ -5607,7 +5607,7 @@
                             <button class="btn" id="archiveToggleBtn" onclick="toggleArchiveView()" style="background:#6b7280;padding:0.35rem 0.7rem;font-size:0.8rem;"><i data-lucide="archive" class="icon" style="width:14px;height:14px;"></i> <span data-i18n="archive">Архів</span></button>
                             <span style="width:1px;height:22px;background:#e0e0e0;margin:0 0.15rem;"></span>
                             <div class="task-type-tabs" style="display:flex;gap:1px;background:#e5e7eb;padding:2px;border-radius:8px;">
-                                <button class="task-type-tab active" data-value="" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;background:#22c55e;color:white;white-space:nowrap;transition:all 0.15s;">Всі</button>
+                                <button class="task-type-tab active" data-value="" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;background:#22c55e;color:white;white-space:nowrap;transition:all 0.15s;" data-i18n="all">Всі</button>
                                 <button class="task-type-tab" data-value="my" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:0.2rem;"><i data-lucide="user" class="icon" style="width:12px;height:12px;"></i> Мої</button>
                                 <button class="task-type-tab" data-value="created" onclick="setTaskTypeFilter(this)" style="padding:0.3rem 0.6rem;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;">Створені</button>
                             </div>
@@ -5619,7 +5619,7 @@
                             <span style="width:1px;height:22px;background:#e0e0e0;margin:0 0.15rem;"></span>
                             <div style="position:relative;display:flex;align-items:center;">
                                 <i data-lucide="search" class="icon" style="width:14px;height:14px;position:absolute;left:8px;color:#9ca3af;pointer-events:none;"></i>
-                                <input type="text" id="taskSearchInput" placeholder="Пошук..." oninput="syncSearchInputs(this);debouncedRenderTasks()" style="padding:0.3rem 0.4rem 0.3rem 28px;font-size:0.8rem;border:1px solid #e5e7eb;border-radius:6px;width:130px;outline:none;transition:all 0.2s;" onfocus="this.style.borderColor='#22c55e';this.style.width='180px'" onblur="this.style.borderColor='#e5e7eb';if(!this.value)this.style.width='130px'">
+                                <input type="text" id="taskSearchInput" placeholder="Пошук..." data-i18n-placeholder="search" oninput="syncSearchInputs(this);debouncedRenderTasks()" style="padding:0.3rem 0.4rem 0.3rem 28px;font-size:0.8rem;border:1px solid #e5e7eb;border-radius:6px;width:130px;outline:none;transition:all 0.2s;" onfocus="this.style.borderColor='#22c55e';this.style.width='180px'" onblur="this.style.borderColor='#e5e7eb';if(!this.value)this.style.width='130px'">
                             </div>
                             <select class="filter-select" id="dateFilter" onchange="handleDateFilter()" style="font-size:0.8rem;padding:0.3rem 0.4rem;">
                                 <option value="" data-i18n="allDates">Дати</option>
@@ -5670,8 +5670,8 @@
                             <div style="display:flex;align-items:center;gap:0.5rem;">
                                 <i data-lucide="archive" class="icon icon-lg" style="color:#6b7280;"></i>
                                 <div>
-                                    <h3 style="font-size:1rem;margin:0;">Архів виконаних завдань</h3>
-                                    <p style="font-size:0.8rem;color:#6b7280;margin:0;">Завдання завершені більше 30 днів тому</p>
+                                    <h3 style="font-size:1rem;margin:0;" data-i18n="archiveTitle">Архів виконаних завдань</h3>
+                                    <p style="font-size:0.8rem;color:#6b7280;margin:0;" data-i18n="archiveSubtitle">Завдання завершені більше 30 днів тому</p>
                                 </div>
                             </div>
                             <div style="display:flex;gap:0.5rem;align-items:center;">
@@ -5754,18 +5754,18 @@
                         <h3 style="margin:0;font-size:1.1rem;"><i data-lucide="folder-kanban" class="icon"></i> <span data-i18n="projects">Проєкти</span> <span id="projectsCounter" class="badge" style="background:var(--primary);color:white;padding:2px 8px;border-radius:10px;font-size:0.8rem;"></span></h3>
                         <select id="projectStatusFilter" class="filter-select" onchange="renderProjects()" style="min-width:140px;">
                             <option value="">Всі статуси</option>
-                            <option value="active" selected>Активні</option>
-                            <option value="completed">Завершені</option>
-                            <option value="paused">Призупинені</option>
+                            <option value="active" selected data-i18n="projectActive">Активні</option>
+                            <option value="completed" data-i18n="projectCompleted">Завершені</option>
+                            <option value="paused" data-i18n="projectPaused">Призупинені</option>
                         </select>
                     </div>
                     <div style="display:flex;gap:0.5rem;">
                         <div class="calendar-view-switcher">
-                            <button class="calendar-view-btn active" data-view="grid" onclick="setProjectView('grid')">Картки</button>
-                            <button class="calendar-view-btn" data-view="list" onclick="setProjectView('list')">Список</button>
-                            <button class="calendar-view-btn" data-view="timeline" onclick="setProjectView('timeline')">Таймлайн</button>
+                            <button class="calendar-view-btn active" data-view="grid" onclick="setProjectView('grid')" data-i18n="cardsView">Картки</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setProjectView('list')" data-i18n="listView">Список</button>
+                            <button class="calendar-view-btn" data-view="timeline" onclick="setProjectView('timeline')" data-i18n="timelineView">Таймлайн</button>
                         </div>
-                        <button class="btn btn-success" onclick="openProjectModal()"><i data-lucide="plus" class="icon"></i> <span class="hide-mobile">Новий проєкт</span></button>
+                        <button class="btn btn-success" onclick="openProjectModal()"><i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="newProject">Новий проєкт</span></button>
                     </div>
                 </div>
                 
@@ -5775,8 +5775,8 @@
                 
                 <div id="projectsEmptyState" class="empty-state" style="display:none;">
                     <i data-lucide="folder-kanban" class="icon icon-xl" style="color:var(--gray);margin-bottom:1rem;"></i>
-                    <h3>Немає проєктів</h3>
-                    <p>Створіть перший проєкт для групування завдань</p>
+                    <h3 data-i18n="noProjects">Немає проєктів</h3>
+                    <p data-i18n="createFirstProject">Створіть перший проєкт для групування завдань</p>
                     <button class="btn btn-success" onclick="openProjectModal()" style="margin-top:1rem;">
                         <i data-lucide="plus" class="icon"></i> Створити проєкт
                     </button>
@@ -5844,7 +5844,7 @@
                     <div style="display:flex;align-items:center;gap:0.5rem;">
                         <div class="calendar-view-switcher">
                             <button class="calendar-view-btn active" data-view="week" onclick="setRegularView('week')" data-i18n="week">Тиждень</button>
-                            <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')" data-i18n="list">Список</button>
+                            <button class="calendar-view-btn" data-view="list" onclick="setRegularView('list')" data-i18n="list" data-i18n="listView">Список</button>
                         </div>
                     </div>
                 </div>
@@ -5852,7 +5852,7 @@
                 <!-- СПІЛЬНІ ФІЛЬТРИ ДЛЯ ВСІХ VIEWS -->
                 <div class="filters-row" id="regularFiltersRow" style="background:white;padding:0.75rem 1rem;border-radius:12px;margin-bottom:0.75rem;box-shadow:var(--shadow);display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
                     <button class="btn btn-success btn-sm" onclick="filterRegularToday()" id="regularTodayBtn" style="padding:0.4rem 0.75rem;font-size:0.85rem;"><i data-lucide="calendar-check" class="icon icon-sm"></i> <span data-i18n="todaysTasks">Сьогодні</span></button>
-                    <button class="btn btn-sm" id="regularMyBtn" onclick="filterRegularMy()" style="padding:0.4rem 0.75rem;font-size:0.85rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> <span data-i18n="myTasks">Мої</span></button>
+                    <button class="btn btn-sm" id="regularMyBtn" onclick="filterRegularMy()" style="padding:0.4rem 0.75rem;font-size:0.85rem;white-space:nowrap;"><i data-lucide="user" class="icon icon-sm"></i> <span data-i18n="myTasks" data-i18n="mine">Мої</span></button>
                     <select class="filter-select" id="regularAssigneeFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;"><option value="" data-i18n="allAssignees">Всі виконавці</option></select>
                     <select class="filter-select" id="regularFunctionFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;"><option value="" data-i18n="allFunctions">Всі функції</option></select>
                     <select class="filter-select" id="regularDayFilter" onchange="applyRegularFilters()" style="font-size:0.85rem;padding:0.4rem;">
@@ -5996,11 +5996,11 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label" data-i18n="ownerName">Ім'я власника *</label>
-                                <input type="text" id="adminOwnerName" class="form-input" placeholder="Іван Петренко" required>
+                                <input type="text" id="adminOwnerName" class="form-input" placeholder="Іван Петренко" data-i18n-placeholder="yourNamePh" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" data-i18n="companyName">Назва компанії *</label>
-                                <input type="text" id="adminCompanyName" class="form-input" placeholder="ТОВ Компанія" required>
+                                <label class="form-label" data-i18n="companyName" data-i18n="companyNameLabel">Назва компанії *</label>
+                                <input type="text" id="adminCompanyName" class="form-input" placeholder="ТОВ Компанія" data-i18n-placeholder="companyNamePh2" required>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-success" style="margin-top:1rem;" id="adminCreateBtn"><i data-lucide="rocket" class="icon"></i> <span data-i18n="createCompanyBtn">Створити компанію та Owner</span></button>
@@ -6123,15 +6123,15 @@
     <!-- PROJECT MODAL -->
     <div id="projectModal" class="modal">
         <div class="modal-content" style="max-width:560px;">
-            <div class="modal-header"><span class="close" onclick="closeModal('projectModal')">&times;</span><h2 id="projectModalTitle">Новий проєкт</h2></div>
+            <div class="modal-header"><span class="close" onclick="closeModal('projectModal')">&times;</span><h2 id="projectModalTitle" data-i18n="newProject">Новий проєкт</h2></div>
             <div class="modal-body">
                 <form id="projectForm" onsubmit="saveProject(event)">
-                    <div class="form-group"><label class="form-label">Назва проєкту *</label><input type="text" id="projectName" class="form-input" required placeholder="Наприклад: Редизайн сайту"></div>
+                    <div class="form-group"><label class="form-label" data-i18n="projectNameLabel">Назва проєкту *</label><input type="text" id="projectName" class="form-input" required placeholder="Наприклад: Редизайн сайту" data-i18n-placeholder="projectNamePh"></div>
                     <div class="form-grid">
-                        <div class="form-group"><label class="form-label">Дата старту</label><input type="date" id="projectStartDate" class="form-input"></div>
-                        <div class="form-group"><label class="form-label">Дедлайн</label><input type="date" id="projectDeadline" class="form-input"></div>
+                        <div class="form-group"><label class="form-label" data-i18n="startDate">Дата старту</label><input type="date" id="projectStartDate" class="form-input"></div>
+                        <div class="form-group"><label class="form-label" data-i18n="deadline">Дедлайн</label><input type="date" id="projectDeadline" class="form-input"></div>
                     </div>
-                    <div class="form-group"><label class="form-label">Колір</label>
+                    <div class="form-group"><label class="form-label" data-i18n="color">Колір</label>
                         <div id="projectColorPicker" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem;">
                             <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#22c55e" checked style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#22c55e;border:3px solid transparent;"></span></label>
                             <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#3b82f6" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#3b82f6;border:3px solid transparent;"></span></label>
@@ -6142,10 +6142,10 @@
                             <label style="cursor:pointer;"><input type="radio" name="projectColor" value="#06b6d4" style="display:none;"><span class="color-dot" style="width:28px;height:28px;border-radius:50%;display:block;background:#06b6d4;border:3px solid transparent;"></span></label>
                         </div>
                     </div>
-                    <div class="form-group"><label class="form-label">Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту"></textarea></div>
+                    <div class="form-group"><label class="form-label" data-i18n="description">Опис</label><textarea id="projectDescription" class="form-textarea" rows="3" placeholder="Короткий опис мети проєкту" data-i18n-placeholder="projectDescPh"></textarea></div>
                     <input type="hidden" id="projectEditId" value="">
                     <div class="form-actions" style="margin-top:1rem;">
-                        <button type="button" class="btn" onclick="closeModal('projectModal')">Скасувати</button>
+                        <button type="button" class="btn" onclick="closeModal('projectModal')" data-i18n="cancel">Скасувати</button>
                         <button type="submit" class="btn btn-success"><i data-lucide="check" class="icon"></i> Зберегти</button>
                     </div>
                 </form>
@@ -6162,10 +6162,10 @@
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="taskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція</label><select id="taskFunction" class="form-select"><option value="" data-i18n="noFunction">Без функції</option></select></div>
-                        <div class="form-group"><label class="form-label">Проєкт</label><select id="taskProject" class="form-select"><option value="">Без проєкту</option></select></div>
+                        <div class="form-group"><label class="form-label">Проєкт</label><select id="taskProject" class="form-select"><option value="" data-i18n="noProject">Без проєкту</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець *</label><select id="taskAssignee" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="deadlineDate">Дедлайн (дата) *</label><input type="date" id="taskDeadlineDate" class="form-input" required></div>
-                        <div class="form-group"><label class="form-label">Початок *</label><input type="time" id="taskDeadlineTime" class="form-input" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="startRequired">Початок *</label><input type="time" id="taskDeadlineTime" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="endDuration">Кінець / Тривалість</label>
                             <div style="display:flex;gap:8px;align-items:center;">
                                 <select id="taskTimeMode" class="form-select" style="width:auto;" onchange="toggleTaskTimeMode()">
@@ -6178,7 +6178,7 @@
                         </div>
                         
                         <!-- FEAT-003: Дата початку -->
-                        <div class="form-group"><label class="form-label" data-i18n="startDate">Дата початку</label><input type="date" id="taskStartDate" class="form-input" placeholder="Опціонально"></div>
+                        <div class="form-group"><label class="form-label" data-i18n="startDate">Дата початку</label><input type="date" id="taskStartDate" class="form-input" placeholder="Опціонально" data-i18n-placeholder="optional"></div>
                         
                         <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="taskPriority" class="form-select"><option value="low" data-i18n="priorityLow">Низький</option><option value="medium" selected data-i18n="priorityMedium">Середній</option><option value="high" data-i18n="priorityHigh">Високий</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="status">Статус</label><select id="taskStatus" class="form-select"><option value="new" data-i18n="statusNew">Нове</option><option value="progress" data-i18n="statusProgress">В роботі</option><option value="review" data-i18n="statusReview">Перевірка</option><option value="done" data-i18n="statusDone">Готово</option></select></div>
@@ -6207,8 +6207,8 @@
                             </label>
                         </div>
                         
-                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="taskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="description">Опис</label><textarea id="taskDescription" class="form-textarea"></textarea></div>
                         <div class="form-group full-width" id="taskAiHelpRow" style="display:none;">
                             <a id="taskAiHelpLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.85rem;color:#16a34a;text-decoration:none;font-weight:500;">
@@ -6315,7 +6315,7 @@
                         <div id="taskActionsLabel" style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;"></div>
                         <div id="taskActionsButtons" style="display:flex;gap:0.5rem;flex-wrap:wrap;"></div>
                     </div>
-                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
+                    <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save" data-i18n="save">Зберегти</button></div>
                 </form>
                 
                 <!-- COMMENTS SECTION -->
@@ -6338,13 +6338,13 @@
                              ondragleave="this.classList.remove('dragover')"
                              ondrop="handleFileDrop(event); this.classList.remove('dragover')">
                             <div class="upload-icon"><i data-lucide="upload-cloud" class="icon icon-lg"></i></div>
-                            <div>Натисніть або перетягніть файли сюди</div>
-                            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.25rem;">Макс. 10 МБ на файл • PDF, DOC, XLS, зображення</div>
+                            <div data-i18n="dropFilesHere">Натисніть або перетягніть файли сюди</div>
+                            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.25rem;" data-i18n="fileTypesHint">Макс. 10 МБ на файл • PDF, DOC, XLS, зображення</div>
                         </div>
                         <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.webp,.zip,.txt,.csv" style="display:none" onchange="handleFileSelect(event)">
                         <div id="fileUploadProgress" class="file-upload-progress">
                             <div class="progress-bar"><div class="progress-fill" id="fileProgressFill" style="width:0%"></div></div>
-                            <div class="progress-text" id="fileProgressText">Завантаження...</div>
+                            <div class="progress-text" id="fileProgressText" data-i18n="uploading">Завантаження...</div>
                         </div>
                     </div>
                     
@@ -6361,7 +6361,7 @@
                         </div>
                     </div>
                     <div class="comment-input-wrapper">
-                        <textarea id="commentInput" class="comment-input" placeholder="Написати коментар..." rows="1" onkeydown="handleCommentKeydown(event)"></textarea>
+                        <textarea id="commentInput" class="comment-input" placeholder="Написати коментар..." data-i18n-placeholder="writeComment" rows="1" onkeydown="handleCommentKeydown(event)"></textarea>
                         <button type="button" class="comment-send-btn" onclick="sendComment()" id="sendCommentBtn">
                             <i data-lucide="send" class="icon"></i>
                         </button>
@@ -6372,12 +6372,12 @@
                 <div id="taskHistorySection" class="comments-section hidden" style="margin-top:0;">
                     <div class="comments-header" style="cursor:pointer;" onclick="toggleHistorySection()">
                         <i data-lucide="history" class="icon"></i>
-                        <span>Історія змін</span>
+                        <span data-i18n="changeHistory">Історія змін</span>
                         <span id="historyCount" class="comment-count">0</span>
                         <i data-lucide="chevron-down" class="icon icon-sm" id="historyChevron" style="margin-left:auto;transition:transform 0.2s;"></i>
                     </div>
                     <div id="historyList" style="display:none;max-height:300px;overflow-y:auto;padding:0.5rem 0;">
-                        <p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">Немає записів</p>
+                        <p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;" data-i18n="noRecords">Немає записів</p>
                     </div>
                 </div>
             </div>
@@ -6415,7 +6415,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" data-i18n="newFunctionName">Назва об'єднаної функції *</label>
-                    <input type="text" id="mergedFunctionName" class="form-input" placeholder="Введіть назву..." required>
+                    <input type="text" id="mergedFunctionName" class="form-input" placeholder="Введіть назву..." data-i18n-placeholder="enterName" required>
                 </div>
                 <div id="mergePreview" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:1rem;margin-top:1rem;">
                     <div style="font-weight:600;color:#16a34a;margin-bottom:0.5rem;"><i data-lucide="info" class="icon icon-sm"></i> Буде об'єднано:</div>
@@ -6463,11 +6463,11 @@
                     <input type="hidden" id="processTemplateId">
                     <div class="form-group">
                         <label class="form-label" data-i18n="templateName">Назва шаблону *</label>
-                        <input type="text" id="processTemplateName" class="form-input" placeholder="Наприклад: Обробка замовлення" required>
+                        <input type="text" id="processTemplateName" class="form-input" placeholder="Наприклад: Обробка замовлення" data-i18n-placeholder="processNamePh" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label" data-i18n="templateDescription">Опис</label>
-                        <textarea id="processTemplateDescription" class="form-textarea" rows="2" placeholder="Короткий опис процесу"></textarea>
+                        <textarea id="processTemplateDescription" class="form-textarea" rows="2" placeholder="Короткий опис процесу" data-i18n-placeholder="processDescPh"></textarea>
                     </div>
                     <div class="form-group">
                         <label class="form-label"><i data-lucide="git-branch" class="icon icon-sm"></i> <span data-i18n="processSteps">Етапи процесу</span></label>
@@ -6504,7 +6504,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" data-i18n="processName">Назва процесу *</label>
-                        <input type="text" id="startProcessName" class="form-input" placeholder="Наприклад: Замовлення #127 - Клієнт Іванов" required>
+                        <input type="text" id="startProcessName" class="form-input" placeholder="Наприклад: Замовлення #127 - Клієнт Іванов" data-i18n-placeholder="processInstancePh" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label"><i data-lucide="calendar" class="icon icon-sm"></i> <span data-i18n="deadline">Дедлайн</span> <span style="color:var(--gray);font-weight:normal;">(опціонально)</span></label>
@@ -6548,7 +6548,7 @@
                     <div class="form-grid">
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
-                        <div class="form-group"><label class="form-label">Виконавець</label><select id="regularTaskAssignee" class="form-select"><option value="">З функції (авто)</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="assignee">Виконавець</label><select id="regularTaskAssignee" class="form-select"><option value="">З функції (авто)</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
                         <div class="form-group full-width" id="dayOfWeekGroup">
                             <label class="form-label" data-i18n="daysOfWeek">Дні тижня *</label>
@@ -6582,7 +6582,7 @@
                             </div>
                         </div>
                         <div class="form-group" id="dayOfMonthGroup" style="display:none;"><label class="form-label" data-i18n="dayOfMonth">День місяця *</label><select id="regularTaskDayOfMonth" class="form-select"><option value="1">1</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="last" data-i18n="lastDay">Останній день</option></select></div>
-                        <div class="form-group"><label class="form-label">Початок *</label><input type="time" id="regularTaskTimeStart" class="form-input" value="10:00" required></div>
+                        <div class="form-group"><label class="form-label" data-i18n="startRequired">Початок *</label><input type="time" id="regularTaskTimeStart" class="form-input" value="10:00" required></div>
                         <div class="form-group"><label class="form-label" data-i18n="endDuration">Кінець / Тривалість</label>
                             <div style="display:flex;gap:8px;align-items:center;">
                                 <select id="regularTaskTimeMode" class="form-select" style="width:auto;" onchange="toggleRegularTimeMode()">
@@ -6604,8 +6604,8 @@
                         </div>
                         <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий 🔴</option><option value="low" data-i18n="low">Низький</option></select></div>
                         <div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="regularTaskRequireReview" style="accent-color:var(--primary);width:18px;height:18px;"> <span data-i18n="requireReview">Потрібна перевірка</span></label></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?"></textarea></div>
-                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
+                        <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label"><i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="instruction">Інструкція (необов'язково)</span></label><textarea id="regularTaskInstruction" class="form-textarea" style="min-height:100px;" placeholder="Детальна інструкція як виконувати це завдання..."></textarea></div>
                         
                         <!-- Чекліст для регулярних -->
@@ -6613,7 +6613,7 @@
                             <label class="form-label"><i data-lucide="check-square" class="icon icon-sm"></i> Чекліст</label>
                             <div id="regularTaskChecklist" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.5rem;"></div>
                             <div style="display:flex;gap:0.5rem;">
-                                <input type="text" id="regularChecklistInput" class="form-input" placeholder="Новий пункт..." style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addRegularChecklistItem();}">
+                                <input type="text" id="regularChecklistInput" class="form-input" placeholder="Новий пункт..." data-i18n-placeholder="newChecklistItem" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addRegularChecklistItem();}">
                                 <button type="button" class="btn btn-success" onclick="addRegularChecklistItem()" style="padding:0.4rem 0.8rem;">+</button>
                             </div>
                         </div>
@@ -6649,7 +6649,7 @@
                         <input type="email" id="inviteEmail" class="form-input" required>
                     </div>
                     <div class="form-group" style="margin-top:0.75rem;">
-                        <label class="form-label" data-i18n="role">Роль</label>
+                        <label class="form-label" data-i18n="role" data-i18n="role">Роль</label>
                         <select id="inviteRole" class="form-select"><option value="employee" data-i18n="roleEmployee">Співробітник</option><option value="manager" data-i18n="roleManager">Менеджер</option></select>
                     </div>
                     <div id="inviteLink" style="margin-top:1rem;padding:1rem;background:#e3f2fd;border-radius:8px;display:none;">
@@ -6686,7 +6686,7 @@
                         </div>
                         <div class="form-group full-width">
                             <label class="form-label" data-i18n="position">Посада</label>
-                            <input type="text" id="userPosition" class="form-input" placeholder="Менеджер з продажу">
+                            <input type="text" id="userPosition" class="form-input" placeholder="Менеджер з продажу" data-i18n-placeholder="functionNamePh">
                         </div>
                         <div class="form-group full-width">
                             <label class="form-label" data-i18n="userFunctions">Функції співробітника</label>
@@ -6714,7 +6714,7 @@
                 <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #e5e7eb;">
                     <div style="width:60px;height:60px;background:linear-gradient(135deg, var(--primary), var(--primary-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;font-weight:600;" id="profileAvatar">U</div>
                     <div>
-                        <div style="font-weight:600;font-size:1.1rem;" id="profileName">Користувач</div>
+                        <div style="font-weight:600;font-size:1.1rem;" id="profileName" data-i18n="user">Користувач</div>
                         <div style="color:var(--gray);font-size:0.9rem;" id="profileEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92f7fff3fbfed2f7eaf3ffe2fef7bcf1fdff">[email&#160;protected]</a></div>
                         <div style="margin-top:0.25rem;"><span class="status-badge" style="background:#e0e7ff;color:#4338ca;" id="profileRole">Роль</span></div>
                     </div>
@@ -6736,7 +6736,7 @@
                         </div>
                         <div>
                             <div style="font-weight:600;">Google Calendar</div>
-                            <div style="font-size:0.8rem;color:var(--gray);">Синхронізація завдань з календарем</div>
+                            <div style="font-size:0.8rem;color:var(--gray);" data-i18n="calendarSyncDesc">Синхронізація завдань з календарем</div>
                         </div>
                     </div>
                     
@@ -6752,7 +6752,7 @@
                         <div id="gcalConnected" style="display:none;">
                             <div style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:#ecfdf5;border-radius:8px;margin-bottom:0.75rem;">
                                 <i data-lucide="check-circle" class="icon" style="color:#10b981;"></i>
-                                <span style="color:#065f46;font-weight:500;">Календар підключено</span>
+                                <span style="color:#065f46;font-weight:500;" data-i18n="calendarConnected">Календар підключено</span>
                             </div>
                             <p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;" id="gcalEmail"></p>
                             <button class="btn" onclick="disconnectGoogleCalendar()" style="width:100%;background:#fee2e2;color:#991b1b;">
@@ -6772,7 +6772,7 @@
                         </div>
                         <div>
                             <div style="font-weight:600;">Telegram сповіщення</div>
-                            <div style="font-size:0.8rem;color:var(--gray);">Отримуйте сповіщення про завдання</div>
+                            <div style="font-size:0.8rem;color:var(--gray);" data-i18n="telegramDesc">Отримуйте сповіщення про завдання</div>
                         </div>
                     </div>
                     
@@ -6789,7 +6789,7 @@
                         <div id="telegramConnected" style="display:none;">
                             <div style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:#ecfdf5;border-radius:8px;margin-bottom:0.75rem;">
                                 <i data-lucide="check-circle" class="icon" style="color:#10b981;"></i>
-                                <span style="color:#065f46;font-weight:500;">Telegram підключено</span>
+                                <span style="color:#065f46;font-weight:500;" data-i18n="telegramConnected">Telegram підключено</span>
                             </div>
                             <button class="btn" onclick="disconnectTelegram()" style="width:100%;background:#fee2e2;color:#991b1b;">
                                 <i data-lucide="unlink" class="icon"></i> Відключити
@@ -6861,20 +6861,14 @@
                 
                 // Tasks
                 addTask: '+ Завдання',
-                allStatuses: 'Всі статуси',
                 allFunctions: 'Всі функції',
                 allDates: 'Всі дати',
-                today: 'Сьогодні',
-                thisWeek: 'Цей тиждень',
                 customPeriod: 'Обрати період',
                 overdue: 'Прострочені',
-                all: 'Всі',
-                newTask: 'Нове завдання',
                 editTask: 'Редагувати',
                 title: 'Назва *',
                 function: 'Функція',
                 noFunction: 'Без функції',
-                assignee: 'Виконавець *',
                 select: 'Оберіть',
                 deadlineDate: 'Дедлайн (дата) *',
                 deadlineTime: 'Дедлайн (час) *',
@@ -6905,28 +6899,21 @@
                 duration: 'Тривалість',
                 priority: 'Пріоритет',
                 status: 'Статус',
-                description: 'Опис',
-                cancel: 'Скасувати',
-                save: 'Зберегти',
                 close: 'Закрити',
                 
                 // Comments
                 comments: 'Коментарі',
-                noComments: 'Ще немає коментарів',
-                writeComment: 'Написати коментар...',
                 
                 // Statuses
                 statusNew: 'Нове',
-                statusProgress: 'В роботі',
+                statusProgress: t('inProgressStatus'),
                 statusReview: 'Перевірка',
-                statusDone: 'Готово',
                 hideCompleted: 'Приховати виконані',
                 coExecutors: 'Співвиконавці',
                 observers: 'Спостерігачі',
                 startDate: 'Дата початку',
                 requireReview: 'Перевірка після виконання',
                 allowDeadlineChange: 'Виконавець може змінювати строки',
-                checklist: 'Чеклист',
                 addChecklistItem: 'Додати пункт',
                 deadlineLocked: 'Зміна строків заблокована постановником',
                 timeTracking: 'Облік часу',
@@ -6934,7 +6921,6 @@
                 actual: 'Фактичний',
                 startTimer: 'Старт',
                 stopTimer: 'Стоп',
-                addTimeManually: 'Додати час вручну',
                 
                 // Priorities
                 priorityLow: 'Низький',
@@ -7004,7 +6990,6 @@
                 selectFunctionsToMerge: 'Оберіть функції для об\'єднання (2-5):',
                 newFunctionName: 'Назва об\'єднаної функції *',
                 merge: 'Об\'єднати',
-                willBeMerged: 'Буде об\'єднано',
                 tasksCount: 'завдань',
                 regularTasksCount: 'регулярних',
                 assigneesCount: 'виконавців',
@@ -7018,7 +7003,6 @@
                 invite: 'Запросити',
                 inviteTitle: 'Запрошення',
                 employeeEmail: 'Email співробітника *',
-                role: 'Роль',
                 roleOwner: 'Власник',
                 roleManager: 'Менеджер',
                 roleEmployee: 'Співробітник',
@@ -7028,7 +7012,6 @@
                 
                 // Admin
                 adminPanel: 'Адмін-панель TALKO',
-                createCompany: 'Створити нову компанію',
                 ownerEmail: 'Email власника *',
                 passwordLabel: 'Пароль *',
                 ownerName: "Ім'я власника *",
@@ -7050,15 +7033,12 @@
                 allDays: 'Всі дні',
                 createRegular: 'Створіть регулярне завдання',
                 noUsers: 'Немає користувачів',
-                noCompanies: 'Немає компаній',
                 
                 // Other
-                support: 'Підтримка',
                 footerSupport: '<i data-lucide="life-buoy" class="icon icon-sm"></i> Підтримка',
                 notAssigned: 'Не призначено',
                 deleteConfirm: 'Видалити?',
                 error: 'Помилка',
-                created: 'створено',
                 copied: 'Посилання скопійовано!',
                 
                 // New filters & analytics
@@ -7076,7 +7056,6 @@
                 schedule: 'Розклад',
                 statusPeriod: 'Статус',
                 createAgain: 'Створити ще раз',
-                markDone: 'Позначити виконаним',
                 noTasksFound: 'Завдань не знайдено',
                 changeFilters: 'Змініть фільтри або додайте нове завдання',
                 edit: 'Редагувати',
@@ -7138,7 +7117,7 @@
                 tabAnalytics: 'Аналітика',
                 analytics: 'Аналітика',
                 totalTasks: 'Всього завдань',
-                completedTasks: 'Виконано',
+                completedTasks: t('statusDone'),
                 completionRate: 'Виконання %',
                 avgTime: 'Сер. час',
                 byStatus: 'По статусах',
@@ -7165,13 +7144,9 @@
                 aiTechnical: 'Технічний',
                 aiSupport: 'AI Помічник (Підтримка)',
                 profile: 'Профіль',
-                enableNotifications: 'Увімкнути сповіщення',
-                disableNotifications: 'Вимкнути сповіщення',
                 loadDemoData: 'Завантажити демо-дані',
                 // Review (перевірка)
                 taskSentForReview: 'Відправлено на перевірку',
-                taskOnReview: 'Завдання на перевірці',
-                acceptTask: 'Прийняти',
                 rejectTask: 'На доопрацювання',
                 taskAccepted: 'Завдання прийнято',
                 taskRejected: 'Повернуто на доопрацювання',
@@ -7201,15 +7176,12 @@
                 inviteAlreadyUsed: 'Це запрошення вже використано. Увійдіть з вашим email та паролем.',
                 inviteNotFoundEmail: 'Запрошення не знайдено. Введіть email з якого вас запрошували.',
                 employeeRole: 'Співробітник',
-                taskCompleted: 'Завдання виконано!',
                 fromProcess: 'З бізнес-процесу',
-                regularTaskLabel: 'Регулярне завдання',
                 newTaskLabel: 'Нове завдання',
                 restoreFromArchive: 'Відновити завдання з архіву?',
                 taskRestored: 'Завдання відновлено',
                 overdueStatus: 'Прострочено',
                 moreItems: 'ще',
-                forToday: 'На сьогодні',
                 newFromProcesses: 'Нові з процесів',
                 greeting: 'Вітаю',
                 yourTasksToday: 'Ваші завдання на сьогодні',
@@ -7224,8 +7196,8 @@
                 overdueLabel2: 'Прострочені',
                 todayLabel: 'Сьогодні',
                 tomorrowLabel: 'Завтра',
-                thisWeekLabel: 'Цей тиждень',
-                laterLabel: 'Пізніше',
+                thisWeekLabel: t('thisWeek'),
+                laterLabel: t('later'),
                 noDateLabel: 'Без дати',
                 reviewLabel: 'Перевірка',
                 showMore: 'Показати ще',
@@ -7239,14 +7211,12 @@
                 selectAssigneeOrFunction: 'Оберіть виконавця або функцію з виконавцями',
                 selectAtLeastOneDay: 'Оберіть хоча б один день тижня',
                 noExecutorsInFunction: 'В функції немає виконавців',
-                createdLabel: 'Створено',
                 tasksWord: 'завдань',
                 daily: 'Щодня',
                 monFri: 'Пн-Пт',
                 instructionLabel: 'Інструкція',
                 completedStatus: 'Виконано',
-                inProgressStatus: 'В роботі',
-                pendingStatus: 'Очікує',
+                pendingStatus: t('statusPending'),
                 monthlyTasks: 'Щомісячні завдання',
                 lastDayLabel: 'Останній день',
                 dayOfMonthLabel: '-го числа',
@@ -7258,18 +7228,16 @@
                 viewBtn: 'Переглянути',
                 editBtn: 'Редагувати',
                 demoDataLoaded: 'Демо-дані успішно завантажено!',
-                loadError: 'Помилка завантаження: ',
                 noTasksToday: 'Немає завдань на сьогодні!',
                 hourShort: ' год ',
                 minShort: ' хв',
                 taskFromProcess: 'Завдання з процесу',
                 noTasksForToday: 'На сьогодні завдань немає',
                 timeToRest: 'Час відпочити або взяти нові завдання',
-                allTasksDone: 'Всі завдання виконано!',
                 greatJob: 'Чудова робота! Час на перерву.',
                 doneToday: 'Виконано сьогодні',
                 toDo: 'До виконання',
-                onReview: 'На перевірці',
+                onReview: t('statusOnReview'),
                 regularType: 'регулярне',
                 oneTimeType: 'разове',
                 daySun: 'Нд',
@@ -7340,6 +7308,174 @@
                 fromFunctionAuto: 'З функції (авто)',
                 deleteProjectWithTasks: 'Видалити проєкт? {total} завдань ({undone} незавершених) залишаться в загальному списку.',
                 deleteEmptyProject: 'Видалити порожній проєкт?',
+                doneWord: 'готово',
+                overdueWord: 'прострочено',
+                pastDeadline: 'за дедлайном',
+                nameLabel: 'Назва',
+                statusLabel: 'Статус',
+                progressLabel: 'Прогрес',
+                noTasksForChart: 'Немає завдань для діаграми',
+                tasksExceedDeadline: 'завдань виходять за дедлайн проєкту',
+                updating: 'Оновлення...',
+                noProjects: 'Немає проєктів',
+                createFirstProject: 'Створіть перший проєкт для групування завдань',
+                allStatuses: 'Всі статуси',
+                cardsView: 'Картки',
+                listView: 'Список',
+                timelineView: 'Таймлайн',
+                searchTasks: 'Пошук завдань...',
+                search: 'Пошук...',
+                archiveTitle: 'Архів виконаних завдань',
+                backToTasks: 'Назад до завдань',
+                archiveSubtitle: 'Завдання завершені більше 30 днів тому',
+                all: 'Всі',
+                created: 'Створені',
+                mine: 'Мої',
+                export: 'Експорт',
+                resetFilter: 'Скинути',
+                kanbanView: 'Канбан',
+                deadlinesView: 'Терміни',
+                today: 'Сьогодні',
+                refresh: 'Оновити',
+                calendarSyncDesc: 'Синхронізація завдань з календарем',
+                calendarConnected: 'Календар підключено',
+                telegramNotifications: 'Telegram сповіщення',
+                telegramDesc: 'Отримуйте сповіщення про завдання',
+                telegramConnected: 'Telegram підключено',
+                askManager: 'Питання до керівника',
+                notifications: 'Сповіщення',
+                myProfile: 'Мій профіль',
+                demo: 'Демо',
+                createCompany: 'Створити компанію',
+                noCompanyAccess: 'Ваш email не привʼязаний до жодної компанії. Створіть нову або зверніться до адміністратора.',
+                companyNameLabel: 'Назва компанії *',
+                companyNamePh: 'ТОВ Моя Компанія',
+                yourNameLabel: 'Ваше імʼя *',
+                yourNamePh: 'Іван Петренко',
+                support: 'Підтримка',
+                otherEmail: 'Інший email',
+                minChars: 'мінімум 6 символів',
+                projectNameLabel: 'Назва проєкту *',
+                projectNamePh: 'Наприклад: Редизайн сайту',
+                color: 'Колір',
+                projectDescPh: 'Короткий опис мети проєкту',
+                description: 'Опис',
+                cancel: 'Скасувати',
+                save: 'Зберегти',
+                noProject: 'Без проєкту',
+                startRequired: 'Початок *',
+                addTimeManually: 'Додати час вручну',
+                dropFilesHere: 'Натисніть або перетягніть файли сюди',
+                fileTypesHint: 'Макс. 10 МБ на файл • PDF, DOC, XLS, зображення',
+                uploading: 'Завантаження...',
+                writeComment: 'Написати коментар...',
+                changeHistory: 'Історія змін',
+                noRecords: 'Немає записів',
+                checklist: 'Чекліст',
+                newChecklistItem: 'Новий пункт...',
+                expectedResultPh: 'Що конкретно має бути зроблено?',
+                reportFormatPh: 'Скрін / Посилання / Фото / Документ',
+                optional: 'Опціонально',
+                processNamePh: 'Наприклад: Обробка замовлення',
+                processDescPh: 'Короткий опис процесу',
+                processInstancePh: 'Наприклад: Замовлення #127 - Клієнт Іванов',
+                process: 'Процес',
+                assignee: 'Виконавець',
+                enterName: 'Введіть назву...',
+                willBeMerged: 'Буде обʼєднано:',
+                user: 'Користувач',
+                role: 'Роль',
+                functionNamePh: 'Менеджер з продажу',
+                minCharsShort: 'мін. 6 символів',
+                companyNamePh2: 'ТОВ Компанія',
+                companies: 'Компанії',
+                taskOnReview: 'Завдання на перевірці',
+                acceptTask: 'Прийняти',
+                reviseTask: 'Допрацювати',
+                markDone: 'Виконано',
+                acceptWork: 'Прийняти роботу',
+                taskOnReviewByManager: 'Завдання на перевірці у керівника',
+                awaitConfirmation: 'Очікуйте підтвердження або зауваження',
+                taskIsDone: 'Завдання виконано',
+                returnToWork: 'Повернути в роботу',
+                tasksTab: 'Завдання',
+                archiveTab: 'Архів',
+                archiveEmpty: 'Архів порожній',
+                archiveHint: 'Завершені завдання старші 30 днів зʼявляться тут автоматично',
+                loadError: 'Помилка завантаження',
+                inProgressStatus: 'В роботі',
+                noComments: 'Ще немає коментарів',
+                unknown: 'Невідомий',
+                justNow: 'щойно',
+                yesterday: 'вчора',
+                noRecordsYet: 'Ще немає записів',
+                minutesAgo: 'хв тому',
+                hoursAgo: 'год тому',
+                daysAgo: 'дн тому',
+                noNotifications: 'Немає сповіщень',
+                overdueGroup: 'Протерміновані',
+                forToday: 'На сьогодні',
+                thisWeek: 'Цей тиждень',
+                nextWeek: 'Наступний тиждень',
+                later: 'Пізніше',
+                noDeadline: 'Без терміну',
+                notToday: 'Не сьогодні',
+                noRegularTasks: 'Немає регулярних завдань',
+                noCompanies: 'Компаній ще немає',
+                noName: 'Без назви',
+                blocked: 'Заблоковано',
+                activeStatus: 'Активна',
+                unblock: 'Розблокувати',
+                block: 'Заблокувати',
+                companyCol: 'Компанія',
+                ownerCol: 'Власник',
+                createdCol: 'Створено',
+                usersCol: 'Юзери',
+                tasksCol: 'Завдання',
+                statusCol: 'Статус',
+                allTasksDone: 'Всі завдання виконано!',
+                greatJobToday: 'завдань за сьогодні — чудова робота',
+                selectPlaceholder: 'Оберіть...',
+                offlineMode: 'Офлайн режим',
+                result: 'Результат',
+                weeklyActivity: 'Активність за тиждень',
+                createdLabel: 'Створено',
+                doneLabel: 'Виконано',
+                overdue3days: 'Прострочено 3+ дні',
+                overdue7days: 'Прострочено 7+ днів',
+                notificationsEnabled: 'Сповіщення увімкнено',
+                notificationsEnabledDesc: 'Ви отримуватимете нагадування про дедлайни',
+                disableNotifications: 'Вимкнути сповіщення',
+                enableNotifications: 'Увімкнути сповіщення',
+                auditCreated: 'створив задачу',
+                auditCompleted: 'завершив задачу',
+                auditReopened: 'повернув задачу в роботу',
+                auditAccepted: 'прийняв задачу з ревью',
+                auditDeleted: 'видалив задачу',
+                auditEscalation: 'ескалація прострочення',
+                auditChanged: 'змінив задачу',
+                statusPending: 'Очікує',
+                statusOnReview: 'На перевірці',
+                statusDone: 'Виконано',
+                titleRequired: 'Назва завдання обовʼязкова',
+                titleTooLong: 'Назва занадто довга (макс. 500 символів)',
+                invalidDate: 'Невірний формат дати',
+                invalidTime: 'Невірний формат часу',
+                descTooLong: 'Опис занадто довгий (макс. 10000 символів)',
+                functionRequired: 'Функція обовʼязкова',
+                invalidStartTime: 'Невірний час початку',
+                regularTaskNotFound: 'Регулярне завдання не знайдено',
+                taskNotFound: 'Завдання не знайдено',
+                installApp: 'Встановити TALKO Tasks',
+                addToHomeScreen: 'Додати на головний екран',
+                archive: 'Архів',
+                askAi: 'Не зрозуміло? Запитай AI-помічника',
+                attachments: 'Файли',
+                focusMode: 'Фокус',
+                high: 'Високий 🔴',
+                normal: 'Звичайний',
+                projects: 'Проєкти',
+                tabProjects: 'Проєкти',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
                 projectStatusChanged: 'Проєкт "{name}" → {status}',
                 confirmProjectComplete: 'В проєкті {n} незавершених завдань. Все одно позначити як "Завершено"?',
@@ -7421,20 +7557,14 @@
                 
                 // Tasks
                 addTask: '+ Задача',
-                allStatuses: 'Все статусы',
                 allFunctions: 'Все функции',
                 allDates: 'Все даты',
-                today: 'Сегодня',
-                thisWeek: 'Эта неделя',
                 customPeriod: 'Выбрать период',
                 overdue: 'Просроченные',
-                all: 'Все',
-                newTask: 'Новая задача',
                 editTask: 'Редактировать',
                 title: 'Название *',
                 function: 'Функция',
                 noFunction: 'Без функции',
-                assignee: 'Исполнитель *',
                 select: 'Выберите',
                 deadlineDate: 'Дедлайн (дата) *',
                 deadlineTime: 'Дедлайн (время) *',
@@ -7465,28 +7595,21 @@
                 duration: 'Длительность',
                 priority: 'Приоритет',
                 status: 'Статус',
-                description: 'Описание',
-                cancel: 'Отмена',
-                save: 'Сохранить',
                 close: 'Закрыть',
                 
                 // Comments
                 comments: 'Комментарии',
-                noComments: 'Пока нет комментариев',
-                writeComment: 'Написать комментарий...',
                 
                 // Statuses
                 statusNew: 'Новое',
                 statusProgress: 'В работе',
                 statusReview: 'Проверка',
-                statusDone: 'Готово',
                 hideCompleted: 'Скрыть выполненные',
                 coExecutors: 'Соисполнители',
                 observers: 'Наблюдатели',
                 startDate: 'Дата начала',
                 requireReview: 'Проверка после выполнения',
                 allowDeadlineChange: 'Исполнитель может менять сроки',
-                checklist: 'Чеклист',
                 addChecklistItem: 'Добавить пункт',
                 deadlineLocked: 'Изменение сроков заблокировано постановщиком',
                 timeTracking: 'Учет времени',
@@ -7494,7 +7617,6 @@
                 actual: 'Фактически',
                 startTimer: 'Старт',
                 stopTimer: 'Стоп',
-                addTimeManually: 'Добавить время вручную',
                 
                 // Priorities
                 priorityLow: 'Низкий',
@@ -7564,7 +7686,6 @@
                 selectFunctionsToMerge: 'Выберите функции для объединения (2-5):',
                 newFunctionName: 'Название объединённой функции *',
                 merge: 'Объединить',
-                willBeMerged: 'Будет объединено',
                 tasksCount: 'задач',
                 regularTasksCount: 'регулярных',
                 assigneesCount: 'исполнителей',
@@ -7578,7 +7699,6 @@
                 invite: 'Пригласить',
                 inviteTitle: 'Приглашение',
                 employeeEmail: 'Email сотрудника *',
-                role: 'Роль',
                 roleOwner: 'Владелец',
                 roleManager: 'Менеджер',
                 roleEmployee: 'Сотрудник',
@@ -7588,7 +7708,6 @@
                 
                 // Admin
                 adminPanel: 'Админ-панель TALKO',
-                createCompany: 'Создать новую компанию',
                 ownerEmail: 'Email владельца *',
                 passwordLabel: 'Пароль *',
                 ownerName: 'Имя владельца *',
@@ -7610,15 +7729,12 @@
                 allDays: 'Все дни',
                 createRegular: 'Создайте регулярную задачу',
                 noUsers: 'Нет пользователей',
-                noCompanies: 'Нет компаний',
                 
                 // Other
-                support: 'Поддержка',
                 footerSupport: '<i data-lucide="life-buoy" class="icon icon-sm"></i> Поддержка',
                 notAssigned: 'Не назначено',
                 deleteConfirm: 'Удалить?',
                 error: 'Ошибка',
-                created: 'создано',
                 copied: 'Ссылка скопирована!',
                 
                 // New filters & analytics
@@ -7636,7 +7752,6 @@
                 schedule: 'Расписание',
                 statusPeriod: 'Статус',
                 createAgain: 'Создать ещё раз',
-                markDone: 'Отметить выполненным',
                 noTasksFound: 'Задач не найдено',
                 changeFilters: 'Измените фильтры или добавьте новую задачу',
                 edit: 'Редактировать',
@@ -7725,13 +7840,9 @@
                 aiTechnical: 'Технический',
                 aiSupport: 'AI Помощник (Поддержка)',
                 profile: 'Профиль',
-                enableNotifications: 'Включить уведомления',
-                disableNotifications: 'Отключить уведомления',
                 loadDemoData: 'Загрузить демо-данные',
                 // Review (проверка)
                 taskSentForReview: 'Отправлено на проверку',
-                taskOnReview: 'Задача на проверке',
-                acceptTask: 'Принять',
                 rejectTask: 'На доработку',
                 taskAccepted: 'Задача принята',
                 taskRejected: 'Возвращено на доработку',
@@ -7761,15 +7872,12 @@
                 inviteAlreadyUsed: 'Это приглашение уже использовано. Войдите с вашим email и паролем.',
                 inviteNotFoundEmail: 'Приглашение не найдено. Введите email с которого вас приглашали.',
                 employeeRole: 'Сотрудник',
-                taskCompleted: 'Задача выполнена!',
                 fromProcess: 'Из бизнес-процесса',
-                regularTaskLabel: 'Регулярная задача',
                 newTaskLabel: 'Новая задача',
                 restoreFromArchive: 'Восстановить задачу из архива?',
                 taskRestored: 'Задача восстановлена',
                 overdueStatus: 'Просрочено',
                 moreItems: 'еще',
-                forToday: 'На сегодня',
                 newFromProcesses: 'Новые из процессов',
                 greeting: 'Привет',
                 yourTasksToday: 'Ваши задачи на сегодня',
@@ -7799,13 +7907,11 @@
                 selectAssigneeOrFunction: 'Выберите исполнителя или функцию с исполнителями',
                 selectAtLeastOneDay: 'Выберите хотя бы один день недели',
                 noExecutorsInFunction: 'В функции нет исполнителей',
-                createdLabel: 'Создано',
                 tasksWord: 'задач',
                 daily: 'Ежедневно',
                 monFri: 'Пн-Пт',
                 instructionLabel: 'Инструкция',
                 completedStatus: 'Выполнено',
-                inProgressStatus: 'В работе',
                 pendingStatus: 'Ожидает',
                 monthlyTasks: 'Ежемесячные задачи',
                 lastDayLabel: 'Последний день',
@@ -7818,14 +7924,12 @@
                 viewBtn: 'Просмотреть',
                 editBtn: 'Редактировать',
                 demoDataLoaded: 'Демо-данные успешно загружены!',
-                loadError: 'Ошибка загрузки: ',
                 noTasksToday: 'Нет задач на сегодня!',
                 hourShort: ' ч ',
                 minShort: ' мин',
                 taskFromProcess: 'Задача из процесса',
                 noTasksForToday: 'На сегодня задач нет',
                 timeToRest: 'Время отдохнуть или взять новые задачи',
-                allTasksDone: 'Все задачи выполнены!',
                 greatJob: 'Отличная работа! Время на перерыв.',
                 doneToday: 'Выполнено сегодня',
                 toDo: 'К выполнению',
@@ -7899,6 +8003,174 @@
                 fromFunctionAuto: 'Из функции (авто)',
                 deleteProjectWithTasks: 'Удалить проект? {total} задач ({undone} незавершённых) останутся в общем списке.',
                 deleteEmptyProject: 'Удалить пустой проект?',
+                doneWord: 'готово',
+                overdueWord: 'просрочено',
+                pastDeadline: 'за дедлайном',
+                nameLabel: 'Название',
+                statusLabel: 'Статус',
+                progressLabel: 'Прогресс',
+                noTasksForChart: 'Нет задач для диаграммы',
+                tasksExceedDeadline: 'задач выходят за дедлайн проекта',
+                updating: 'Обновление...',
+                noProjects: 'Нет проектов',
+                createFirstProject: 'Создайте первый проект для группировки задач',
+                allStatuses: 'Все статусы',
+                cardsView: 'Карточки',
+                listView: 'Список',
+                timelineView: 'Таймлайн',
+                searchTasks: 'Поиск задач...',
+                search: 'Поиск...',
+                archiveTitle: 'Архив выполненных задач',
+                backToTasks: 'Назад к задачам',
+                archiveSubtitle: 'Задачи завершённые более 30 дней назад',
+                all: 'Все',
+                created: 'Созданные',
+                mine: 'Мои',
+                export: 'Экспорт',
+                resetFilter: 'Сбросить',
+                kanbanView: 'Канбан',
+                deadlinesView: 'Сроки',
+                today: 'Сегодня',
+                refresh: 'Обновить',
+                calendarSyncDesc: 'Синхронизация задач с календарём',
+                calendarConnected: 'Календарь подключён',
+                telegramNotifications: 'Telegram уведомления',
+                telegramDesc: 'Получайте уведомления о задачах',
+                telegramConnected: 'Telegram подключён',
+                askManager: 'Вопрос руководителю',
+                notifications: 'Уведомления',
+                myProfile: 'Мой профиль',
+                demo: 'Демо',
+                createCompany: 'Создать компанию',
+                noCompanyAccess: 'Ваш email не привязан ни к одной компании. Создайте новую или обратитесь к администратору.',
+                companyNameLabel: 'Название компании *',
+                companyNamePh: 'ООО Моя Компания',
+                yourNameLabel: 'Ваше имя *',
+                yourNamePh: 'Иван Петренко',
+                support: 'Поддержка',
+                otherEmail: 'Другой email',
+                minChars: 'минимум 6 символов',
+                projectNameLabel: 'Название проекта *',
+                projectNamePh: 'Например: Редизайн сайта',
+                color: 'Цвет',
+                projectDescPh: 'Краткое описание цели проекта',
+                description: 'Описание',
+                cancel: 'Отмена',
+                save: 'Сохранить',
+                noProject: 'Без проекта',
+                startRequired: 'Начало *',
+                addTimeManually: 'Добавить время вручную',
+                dropFilesHere: 'Нажмите или перетащите файлы сюда',
+                fileTypesHint: 'Макс. 10 МБ на файл • PDF, DOC, XLS, изображения',
+                uploading: 'Загрузка...',
+                writeComment: 'Написать комментарий...',
+                changeHistory: 'История изменений',
+                noRecords: 'Нет записей',
+                checklist: 'Чеклист',
+                newChecklistItem: 'Новый пункт...',
+                expectedResultPh: 'Что конкретно должно быть сделано?',
+                reportFormatPh: 'Скрин / Ссылка / Фото / Документ',
+                optional: 'Опционально',
+                processNamePh: 'Например: Обработка заказа',
+                processDescPh: 'Краткое описание процесса',
+                processInstancePh: 'Например: Заказ #127 - Клиент Иванов',
+                process: 'Процесс',
+                assignee: 'Исполнитель',
+                enterName: 'Введите название...',
+                willBeMerged: 'Будет объединено:',
+                user: 'Пользователь',
+                role: 'Роль',
+                functionNamePh: 'Менеджер по продажам',
+                minCharsShort: 'мин. 6 символов',
+                companyNamePh2: 'ООО Компания',
+                companies: 'Компании',
+                taskOnReview: 'Задача на проверке',
+                acceptTask: 'Принять',
+                reviseTask: 'Доработать',
+                markDone: 'Выполнено',
+                acceptWork: 'Принять работу',
+                taskOnReviewByManager: 'Задача на проверке у руководителя',
+                awaitConfirmation: 'Ожидайте подтверждения или замечаний',
+                taskIsDone: 'Задача выполнена',
+                returnToWork: 'Вернуть в работу',
+                tasksTab: 'Задачи',
+                archiveTab: 'Архив',
+                archiveEmpty: 'Архив пуст',
+                archiveHint: 'Завершённые задачи старше 30 дней появятся тут автоматически',
+                loadError: 'Ошибка загрузки',
+                inProgressStatus: 'В работе',
+                noComments: 'Комментариев пока нет',
+                unknown: 'Неизвестный',
+                justNow: 'только что',
+                yesterday: 'вчера',
+                noRecordsYet: 'Записей пока нет',
+                minutesAgo: 'мин назад',
+                hoursAgo: 'ч назад',
+                daysAgo: 'дн назад',
+                noNotifications: 'Нет уведомлений',
+                overdueGroup: 'Просроченные',
+                forToday: 'На сегодня',
+                thisWeek: 'Эта неделя',
+                nextWeek: 'Следующая неделя',
+                later: 'Позже',
+                noDeadline: 'Без срока',
+                notToday: 'Не сегодня',
+                noRegularTasks: 'Нет регулярных задач',
+                noCompanies: 'Компаний пока нет',
+                noName: 'Без названия',
+                blocked: 'Заблокирована',
+                activeStatus: 'Активна',
+                unblock: 'Разблокировать',
+                block: 'Заблокировать',
+                companyCol: 'Компания',
+                ownerCol: 'Владелец',
+                createdCol: 'Создано',
+                usersCol: 'Пользователи',
+                tasksCol: 'Задачи',
+                statusCol: 'Статус',
+                allTasksDone: 'Все задачи выполнены!',
+                greatJobToday: 'задач за сегодня — отличная работа',
+                selectPlaceholder: 'Выберите...',
+                offlineMode: 'Офлайн режим',
+                result: 'Результат',
+                weeklyActivity: 'Активность за неделю',
+                createdLabel: 'Создано',
+                doneLabel: 'Выполнено',
+                overdue3days: 'Просрочено 3+ дня',
+                overdue7days: 'Просрочено 7+ дней',
+                notificationsEnabled: 'Уведомления включены',
+                notificationsEnabledDesc: 'Вы будете получать напоминания о дедлайнах',
+                disableNotifications: 'Выключить уведомления',
+                enableNotifications: 'Включить уведомления',
+                auditCreated: 'создал задачу',
+                auditCompleted: 'завершил задачу',
+                auditReopened: 'вернул задачу в работу',
+                auditAccepted: 'принял задачу с ревью',
+                auditDeleted: 'удалил задачу',
+                auditEscalation: 'эскалация просрочки',
+                auditChanged: 'изменил задачу',
+                statusPending: 'Ожидает',
+                statusOnReview: 'На проверке',
+                statusDone: 'Выполнено',
+                titleRequired: 'Название задачи обязательно',
+                titleTooLong: 'Название слишком длинное (макс. 500 символов)',
+                invalidDate: 'Неверный формат даты',
+                invalidTime: 'Неверный формат времени',
+                descTooLong: 'Описание слишком длинное (макс. 10000 символов)',
+                functionRequired: 'Функция обязательна',
+                invalidStartTime: 'Неверное время начала',
+                regularTaskNotFound: 'Регулярная задача не найдена',
+                taskNotFound: 'Задача не найдена',
+                installApp: 'Установить TALKO Tasks',
+                addToHomeScreen: 'Добавить на главный экран',
+                archive: 'Архив',
+                askAi: 'Не понятно? Спросите AI-помощника',
+                attachments: 'Файлы',
+                focusMode: 'Фокус',
+                high: 'Высокий 🔴',
+                normal: 'Обычный',
+                projects: 'Проекты',
+                tabProjects: 'Проекты',
                 tasksUnlinked: '{n} задач отвязано от проекта',
                 projectStatusChanged: 'Проект "{name}" → {status}',
                 confirmProjectComplete: 'В проекте {n} незавершённых задач. Всё равно пометить как "Завершено"?',
@@ -7980,21 +8252,15 @@
                 
                 // Tasks
                 addTask: '+ Zadanie',
-                allStatuses: 'Wszystkie statusy',
                 allFunctions: 'Wszystkie funkcje',
                 allDates: 'Wszystkie daty',
-                today: 'Dzisiaj',
-                thisWeek: 'Ten tydzień',
                 thisMonth: 'Ten miesiąc',
                 customPeriod: 'Wybierz okres',
                 overdue: 'Zaległe',
-                all: 'Wszystkie',
-                newTask: 'Nowe zadanie',
                 editTask: 'Edytuj',
                 title: 'Nazwa *',
                 function: 'Funkcja',
                 noFunction: 'Bez funkcji',
-                assignee: 'Wykonawca *',
                 select: 'Wybierz',
                 deadlineDate: 'Termin (data) *',
                 deadlineTime: 'Termin (czas) *',
@@ -8025,28 +8291,21 @@
                 duration: 'Czas trwania',
                 priority: 'Priorytet',
                 status: 'Status',
-                description: 'Opis',
-                cancel: 'Anuluj',
-                save: 'Zapisz',
                 close: 'Zamknij',
                 
                 // Comments
                 comments: 'Komentarze',
-                noComments: 'Brak komentarzy',
-                writeComment: 'Napisz komentarz...',
                 
                 // Statuses
                 statusNew: 'Nowe',
                 statusProgress: 'W toku',
                 statusReview: 'Weryfikacja',
-                statusDone: 'Gotowe',
                 hideCompleted: 'Ukryj wykonane',
                 coExecutors: 'Współwykonawcy',
                 observers: 'Obserwatorzy',
                 startDate: 'Data rozpoczęcia',
                 requireReview: 'Weryfikacja po wykonaniu',
                 allowDeadlineChange: 'Wykonawca może zmieniać terminy',
-                checklist: 'Checklist',
                 addChecklistItem: 'Dodaj punkt',
                 deadlineLocked: 'Zmiana terminów zablokowana przez zleceniodawcę',
                 timeTracking: 'Śledzenie czasu',
@@ -8054,7 +8313,6 @@
                 actual: 'Rzeczywisty',
                 startTimer: 'Start',
                 stopTimer: 'Stop',
-                addTimeManually: 'Dodaj czas ręcznie',
                 
                 // Priorities
                 priorityLow: 'Niski',
@@ -8124,7 +8382,6 @@
                 selectFunctionsToMerge: 'Wybierz funkcje do połączenia (2-5):',
                 newFunctionName: 'Nazwa połączonej funkcji *',
                 merge: 'Połącz',
-                willBeMerged: 'Zostanie połączono',
                 tasksCount: 'zadań',
                 regularTasksCount: 'regularnych',
                 assigneesCount: 'wykonawców',
@@ -8138,7 +8395,6 @@
                 invite: 'Zaproś',
                 inviteTitle: 'Zaproszenie',
                 employeeEmail: 'Email pracownika *',
-                role: 'Rola',
                 roleOwner: 'Właściciel',
                 roleManager: 'Menedżer',
                 roleEmployee: 'Pracownik',
@@ -8148,7 +8404,6 @@
                 
                 // Admin
                 adminPanel: 'Panel admina TALKO',
-                createCompany: 'Utwórz nową firmę',
                 ownerEmail: 'Email właściciela *',
                 passwordLabel: 'Hasło *',
                 ownerName: 'Imię właściciela *',
@@ -8170,16 +8425,13 @@
                 allDays: 'Wszystkie dni',
                 createRegular: 'Utwórz zadanie regularne',
                 noUsers: 'Brak użytkowników',
-                noCompanies: 'Brak firm',
                 
                 // Other
-                support: 'Pomoc',
                 aiSupport: 'AI Pomoc',
                 footerSupport: '<i data-lucide="life-buoy" class="icon icon-sm"></i> Pomoc',
                 notAssigned: 'Nie przypisano',
                 deleteConfirm: 'Usunąć?',
                 error: 'Błąd',
-                created: 'utworzono',
                 copied: 'Link skopiowany!',
                 
                 // New filters & analytics
@@ -8197,7 +8449,6 @@
                 schedule: 'Harmonogram',
                 statusPeriod: 'Status',
                 createAgain: 'Utwórz ponownie',
-                markDone: 'Oznacz jako wykonane',
                 noTasksFound: 'Nie znaleziono zadań',
                 changeFilters: 'Zmień filtry lub dodaj nowe zadanie',
                 edit: 'Edytuj',
@@ -8284,14 +8535,10 @@
                 aiManager: 'Kierownik',
                 aiTechnical: 'Techniczny',
                 profile: 'Profil',
-                enableNotifications: 'Włącz powiadomienia',
-                disableNotifications: 'Wyłącz powiadomienia',
                 loadDemoData: 'Załaduj dane demo',
                 
                 // Review
                 taskSentForReview: 'Wysłano do weryfikacji',
-                taskOnReview: 'Zadanie w weryfikacji',
-                acceptTask: 'Akceptuj',
                 rejectTask: 'Do poprawy',
                 taskAccepted: 'Zadanie zaakceptowane',
                 taskRejected: 'Zwrócono do poprawy',
@@ -8321,15 +8568,12 @@
                 inviteAlreadyUsed: 'To zaproszenie zostało już wykorzystane. Zaloguj się emailem i hasłem.',
                 inviteNotFoundEmail: 'Zaproszenie nie znalezione. Wprowadź email, na który otrzymałeś zaproszenie.',
                 employeeRole: 'Pracownik',
-                taskCompleted: 'Zadanie wykonane!',
                 fromProcess: 'Z procesu biznesowego',
-                regularTaskLabel: 'Zadanie regularne',
                 newTaskLabel: 'Nowe zadanie',
                 restoreFromArchive: 'Przywrócić zadanie z archiwum?',
                 taskRestored: 'Zadanie przywrócone',
                 overdueStatus: 'Zaległe',
                 moreItems: 'więcej',
-                forToday: 'Na dzisiaj',
                 newFromProcesses: 'Nowe z procesów',
                 greeting: 'Cześć',
                 yourTasksToday: 'Twoje zadania na dzisiaj',
@@ -8359,13 +8603,11 @@
                 selectAssigneeOrFunction: 'Wybierz wykonawcę lub funkcję z wykonawcami',
                 selectAtLeastOneDay: 'Wybierz przynajmniej jeden dzień tygodnia',
                 noExecutorsInFunction: 'W funkcji nie ma wykonawców',
-                createdLabel: 'Utworzono',
                 tasksWord: 'zadań',
                 daily: 'Codziennie',
                 monFri: 'Pn-Pt',
                 instructionLabel: 'Instrukcja',
                 completedStatus: 'Wykonano',
-                inProgressStatus: 'W toku',
                 pendingStatus: 'Oczekuje',
                 monthlyTasks: 'Zadania miesięczne',
                 lastDayLabel: 'Ostatni dzień',
@@ -8378,14 +8620,12 @@
                 viewBtn: 'Podgląd',
                 editBtn: 'Edytuj',
                 demoDataLoaded: 'Dane demo załadowane pomyślnie!',
-                loadError: 'Błąd ładowania: ',
                 noTasksToday: 'Brak zadań na dzisiaj!',
                 hourShort: ' godz ',
                 minShort: ' min',
                 taskFromProcess: 'Zadanie z procesu',
                 noTasksForToday: 'Na dzisiaj brak zadań',
                 timeToRest: 'Czas na odpoczynek lub nowe zadania',
-                allTasksDone: 'Wszystkie zadania wykonane!',
                 greatJob: 'Świetna robota! Czas na przerwę.',
                 doneToday: 'Wykonano dzisiaj',
                 toDo: 'Do wykonania',
@@ -8460,6 +8700,174 @@
                 fromFunctionAuto: 'Z funkcji (auto)',
                 deleteProjectWithTasks: 'Usunąć projekt? {total} zadań ({undone} niezakończonych) pozostanie na liście.',
                 deleteEmptyProject: 'Usunąć pusty projekt?',
+                doneWord: 'gotowe',
+                overdueWord: 'przeterminowane',
+                pastDeadline: 'po terminie',
+                nameLabel: 'Nazwa',
+                statusLabel: 'Status',
+                progressLabel: 'Postęp',
+                noTasksForChart: 'Brak zadań do wykresu',
+                tasksExceedDeadline: 'zadań wykracza poza termin projektu',
+                updating: 'Aktualizacja...',
+                noProjects: 'Brak projektów',
+                createFirstProject: 'Utwórz pierwszy projekt do grupowania zadań',
+                allStatuses: 'Wszystkie statusy',
+                cardsView: 'Karty',
+                listView: 'Lista',
+                timelineView: 'Oś czasu',
+                searchTasks: 'Szukaj zadań...',
+                search: 'Szukaj...',
+                archiveTitle: 'Archiwum wykonanych zadań',
+                backToTasks: 'Powrót do zadań',
+                archiveSubtitle: 'Zadania zakończone ponad 30 dni temu',
+                all: 'Wszystkie',
+                created: 'Utworzone',
+                mine: 'Moje',
+                export: 'Eksport',
+                resetFilter: 'Resetuj',
+                kanbanView: 'Kanban',
+                deadlinesView: 'Terminy',
+                today: 'Dzisiaj',
+                refresh: 'Odśwież',
+                calendarSyncDesc: 'Synchronizacja zadań z kalendarzem',
+                calendarConnected: 'Kalendarz podłączony',
+                telegramNotifications: 'Powiadomienia Telegram',
+                telegramDesc: 'Otrzymuj powiadomienia o zadaniach',
+                telegramConnected: 'Telegram podłączony',
+                askManager: 'Pytanie do kierownika',
+                notifications: 'Powiadomienia',
+                myProfile: 'Mój profil',
+                demo: 'Demo',
+                createCompany: 'Utwórz firmę',
+                noCompanyAccess: 'Twój email nie jest powiązany z żadną firmą. Utwórz nową lub skontaktuj się z administratorem.',
+                companyNameLabel: 'Nazwa firmy *',
+                companyNamePh: 'Sp. z o.o. Moja Firma',
+                yourNameLabel: 'Twoje imię *',
+                yourNamePh: 'Jan Kowalski',
+                support: 'Wsparcie',
+                otherEmail: 'Inny email',
+                minChars: 'minimum 6 znaków',
+                projectNameLabel: 'Nazwa projektu *',
+                projectNamePh: 'Na przykład: Redesign strony',
+                color: 'Kolor',
+                projectDescPh: 'Krótki opis celu projektu',
+                description: 'Opis',
+                cancel: 'Anuluj',
+                save: 'Zapisz',
+                noProject: 'Bez projektu',
+                startRequired: 'Początek *',
+                addTimeManually: 'Dodaj czas ręcznie',
+                dropFilesHere: 'Kliknij lub przeciągnij pliki tutaj',
+                fileTypesHint: 'Maks. 10 MB na plik • PDF, DOC, XLS, obrazy',
+                uploading: 'Ładowanie...',
+                writeComment: 'Napisz komentarz...',
+                changeHistory: 'Historia zmian',
+                noRecords: 'Brak wpisów',
+                checklist: 'Checklista',
+                newChecklistItem: 'Nowy punkt...',
+                expectedResultPh: 'Co konkretnie ma być zrobione?',
+                reportFormatPh: 'Screen / Link / Zdjęcie / Dokument',
+                optional: 'Opcjonalnie',
+                processNamePh: 'Na przykład: Obsługa zamówienia',
+                processDescPh: 'Krótki opis procesu',
+                processInstancePh: 'Na przykład: Zamówienie #127 - Klient Kowalski',
+                process: 'Proces',
+                assignee: 'Wykonawca',
+                enterName: 'Wpisz nazwę...',
+                willBeMerged: 'Zostanie połączone:',
+                user: 'Użytkownik',
+                role: 'Rola',
+                functionNamePh: 'Kierownik sprzedaży',
+                minCharsShort: 'min. 6 znaków',
+                companyNamePh2: 'Sp. z o.o. Firma',
+                companies: 'Firmy',
+                taskOnReview: 'Zadanie w trakcie weryfikacji',
+                acceptTask: 'Zaakceptuj',
+                reviseTask: 'Do poprawy',
+                markDone: 'Wykonano',
+                acceptWork: 'Zaakceptuj pracę',
+                taskOnReviewByManager: 'Zadanie weryfikowane przez kierownika',
+                awaitConfirmation: 'Oczekuj na potwierdzenie lub uwagi',
+                taskIsDone: 'Zadanie wykonane',
+                returnToWork: 'Zwróć do pracy',
+                tasksTab: 'Zadania',
+                archiveTab: 'Archiwum',
+                archiveEmpty: 'Archiwum jest puste',
+                archiveHint: 'Zadania zakończone ponad 30 dni temu pojawią się tutaj automatycznie',
+                loadError: 'Błąd ładowania',
+                inProgressStatus: 'W trakcie',
+                noComments: 'Brak komentarzy',
+                unknown: 'Nieznany',
+                justNow: 'przed chwilą',
+                yesterday: 'wczoraj',
+                noRecordsYet: 'Brak wpisów',
+                minutesAgo: 'min temu',
+                hoursAgo: 'godz temu',
+                daysAgo: 'dn temu',
+                noNotifications: 'Brak powiadomień',
+                overdueGroup: 'Przeterminowane',
+                forToday: 'Na dzisiaj',
+                thisWeek: 'Ten tydzień',
+                nextWeek: 'Następny tydzień',
+                later: 'Później',
+                noDeadline: 'Bez terminu',
+                notToday: 'Nie dzisiaj',
+                noRegularTasks: 'Brak zadań regularnych',
+                noCompanies: 'Brak firm',
+                noName: 'Bez nazwy',
+                blocked: 'Zablokowana',
+                activeStatus: 'Aktywna',
+                unblock: 'Odblokuj',
+                block: 'Zablokuj',
+                companyCol: 'Firma',
+                ownerCol: 'Właściciel',
+                createdCol: 'Utworzono',
+                usersCol: 'Użytkownicy',
+                tasksCol: 'Zadania',
+                statusCol: 'Status',
+                allTasksDone: 'Wszystkie zadania wykonane!',
+                greatJobToday: 'zadań dzisiaj — świetna robota',
+                selectPlaceholder: 'Wybierz...',
+                offlineMode: 'Tryb offline',
+                result: 'Wynik',
+                weeklyActivity: 'Aktywność tygodniowa',
+                createdLabel: 'Utworzono',
+                doneLabel: 'Wykonano',
+                overdue3days: 'Przeterminowane 3+ dni',
+                overdue7days: 'Przeterminowane 7+ dni',
+                notificationsEnabled: 'Powiadomienia włączone',
+                notificationsEnabledDesc: 'Będziesz otrzymywać przypomnienia o terminach',
+                disableNotifications: 'Wyłącz powiadomienia',
+                enableNotifications: 'Włącz powiadomienia',
+                auditCreated: 'utworzył zadanie',
+                auditCompleted: 'zakończył zadanie',
+                auditReopened: 'przywrócił zadanie',
+                auditAccepted: 'zaakceptował zadanie z recenzji',
+                auditDeleted: 'usunął zadanie',
+                auditEscalation: 'eskalacja przeterminowania',
+                auditChanged: 'zmienił zadanie',
+                statusPending: 'Oczekuje',
+                statusOnReview: 'W recenzji',
+                statusDone: 'Wykonano',
+                titleRequired: 'Nazwa zadania jest wymagana',
+                titleTooLong: 'Nazwa zbyt długa (maks. 500 znaków)',
+                invalidDate: 'Nieprawidłowy format daty',
+                invalidTime: 'Nieprawidłowy format czasu',
+                descTooLong: 'Opis zbyt długi (maks. 10000 znaków)',
+                functionRequired: 'Funkcja jest wymagana',
+                invalidStartTime: 'Nieprawidłowy czas rozpoczęcia',
+                regularTaskNotFound: 'Nie znaleziono zadania regularnego',
+                taskNotFound: 'Nie znaleziono zadania',
+                installApp: 'Zainstaluj TALKO Tasks',
+                addToHomeScreen: 'Dodaj do ekranu głównego',
+                archive: 'Archiwum',
+                askAi: 'Nie rozumiesz? Zapytaj asystenta AI',
+                attachments: 'Pliki',
+                focusMode: 'Fokus',
+                high: 'Wysoki 🔴',
+                normal: 'Zwykły',
+                projects: 'Projekty',
+                tabProjects: 'Projekty',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
                 projectStatusChanged: 'Projekt "{name}" → {status}',
                 confirmProjectComplete: 'W projekcie jest {n} niezakończonych zadań. Oznaczyć jako "Zakończone"?',
@@ -8525,6 +8933,12 @@
                     }
                 }
             });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    el.placeholder = translations[currentLang][key];
+                }
+            });
         });
 
         function t(key) {
@@ -8570,6 +8984,13 @@
                     } else {
                         el.innerHTML = translations[lang][key];
                     }
+                }
+            });
+            // Translate placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
                 }
             });
             
@@ -9172,7 +9593,7 @@
                     const authErr = document.getElementById('authError') || document.createElement('p');
                     authErr.id = 'authError';
                     authErr.style.cssText = 'color:#dc2626;text-align:center;padding:1rem;font-weight:600;';
-                    authErr.textContent = 'Доступ до цієї компанії заблоковано. Зверніться до адміністратора.';
+                    authErr.textContent = t('companyBlocked');
                     const authBox = document.querySelector('.auth-box');
                     if (authBox && !document.getElementById('authError')) authBox.appendChild(authErr);
                     await auth.signOut();
@@ -9776,7 +10197,7 @@
             if (newCount > 0) {
                 document.title = `(${newCount}) TALKO System`;
             } else {
-                document.title = 'TALKO System - Таск Менеджер Pro';
+                document.title = 'TALKO System - Task Manager Pro';
             }
         }
         
@@ -10506,10 +10927,10 @@
                             label.innerHTML = '<i data-lucide="shield-check" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання на перевірці</span>';
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
-                                    <i data-lucide="check-circle" class="icon"></i> Прийняти
+                                    <i data-lucide="check-circle" class="icon"></i> ${t('acceptTask')}
                                 </button>
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                    <i data-lucide="rotate-ccw" class="icon"></i> Допрацювати
+                                    <i data-lucide="rotate-ccw" class="icon"></i> ${t('reviseTask')}
                                 </button>`;
                             refreshIcons();
                         } else if (isAssignee && (task.status === 'new' || task.status === 'progress')) {
@@ -10524,12 +10945,12 @@
                             
                             const manageButtons = canManage ? `
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                    <i data-lucide="message-circle" class="icon"></i> Допрацювати
+                                    <i data-lucide="message-circle" class="icon"></i> ${t('reviseTask')}
                                 </button>` : '';
                             
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:180px;padding:0.75rem 1rem;font-size:1rem;font-weight:700;" onclick="completeTaskFromModal()">
-                                    <i data-lucide="check-circle" class="icon"></i> Виконано
+                                    <i data-lucide="check-circle" class="icon"></i> ${t('markDone')}
                                 </button>
                                 ${manageButtons}`;
                             refreshIcons();
@@ -10544,7 +10965,7 @@
                             label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#0284c7;"></i> <span style="color:#0284c7;">Статус: ' + statusLabel + '</span>';
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
-                                    <i data-lucide="check-circle" class="icon"></i> Прийняти роботу
+                                    <i data-lucide="check-circle" class="icon"></i> ${t('acceptWork')}
                                 </button>
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
                                     <i data-lucide="message-circle" class="icon"></i> Допрацювати
@@ -10569,7 +10990,7 @@
                             label.innerHTML = '<i data-lucide="check-circle-2" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання виконано</span>';
                             btns.innerHTML = `
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="reopenTaskFromModal()">
-                                    <i data-lucide="rotate-ccw" class="icon"></i> Повернути в роботу
+                                    <i data-lucide="rotate-ccw" class="icon"></i> ${t('returnToWork')}
                                 </button>`;
                             refreshIcons();
                         } else {
@@ -10644,7 +11065,7 @@
                     </div>
                     <div class="user-ms-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200;max-height:240px;overflow:hidden;">
                         <div style="padding:0.4rem;border-bottom:1px solid #f3f4f6;">
-                            <input type="text" placeholder="Пошук..." 
+                            <input type="text" placeholder="Пошук..." data-i18n-placeholder="search" 
                                    oninput="filterUserMultiSelect('${uid}', this.value)"
                                    style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;outline:none;" 
                                    onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
@@ -11216,21 +11637,21 @@
             const errors = [];
             
             if (!data.title || data.title.trim().length === 0) {
-                errors.push('Назва завдання обов\'язкова');
+                errors.push(t('titleRequired'));
             } else if (data.title.length > 500) {
-                errors.push('Назва занадто довга (макс. 500 символів)');
+                errors.push(t('titleTooLong'));
             }
             
             if (data.deadlineDate && !/^\d{4}-\d{2}-\d{2}$/.test(data.deadlineDate)) {
-                errors.push('Невірний формат дати');
+                errors.push(t('invalidDate'));
             }
             
             if (data.deadlineTime && !/^\d{2}:\d{2}$/.test(data.deadlineTime)) {
-                errors.push('Невірний формат часу');
+                errors.push(t('invalidTime'));
             }
             
             if (data.description && data.description.length > 10000) {
-                errors.push('Опис занадто довгий (макс. 10000 символів)');
+                errors.push(t('descTooLong'));
             }
             
             return errors;
@@ -11241,17 +11662,17 @@
             const errors = [];
             
             if (!data.title || data.title.trim().length === 0) {
-                errors.push('Назва завдання обов\'язкова');
+                errors.push(t('titleRequired'));
             } else if (data.title.length > 500) {
-                errors.push('Назва занадто довга (макс. 500 символів)');
+                errors.push(t('titleTooLong'));
             }
             
             if (!data.function) {
-                errors.push('Функція обов\'язкова');
+                errors.push(t('functionRequired'));
             }
             
             if (!data.timeStart || !/^\d{2}:\d{2}$/.test(data.timeStart)) {
-                errors.push('Невірний час початку');
+                errors.push(t('invalidStartTime'));
             }
             
             return errors;
@@ -11898,7 +12319,7 @@
             const selCount = selectedIds.length;
             const selNames = users.filter(u => selectedSet.has(u.id)).map(u => u.name || u.email).slice(0, 3).join(', ');
             const moreText = selCount > 3 ? ` +${selCount - 3}` : '';
-            const btnLabel = selCount > 0 ? `${selNames}${moreText}` : 'Оберіть...';
+            const btnLabel = selCount > 0 ? `${selNames}${moreText}` : t('selectPlaceholder');
             
             container.innerHTML = `
                 <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
@@ -11912,7 +12333,7 @@
                     </div>
                     <div class="user-ms-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200;max-height:240px;overflow:hidden;">
                         <div style="padding:0.4rem;border-bottom:1px solid #f3f4f6;">
-                            <input type="text" placeholder="Пошук..." 
+                            <input type="text" placeholder="Пошук..." data-i18n-placeholder="search" 
                                    oninput="filterUserMultiSelect('${uid}', this.value)"
                                    style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;outline:none;" 
                                    onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
@@ -13749,12 +14170,12 @@
                             });
                         } else {
                             console.error('Could not find regular task template:', id);
-                            throw new Error('Регулярне завдання не знайдено');
+                            throw new Error(t('regularTaskNotFound'));
                         }
                         } // close existCheck else
                     } else {
                         console.error('Cannot uncheck - task not found for user');
-                        throw new Error('Завдання не знайдено');
+                        throw new Error(t('taskNotFound'));
                     }
                 } else {
                     // Для разових - перевіряємо чи потрібна перевірка
@@ -15671,10 +16092,10 @@
                     </div>
                     ${p.description ? `<div class="project-card-desc">${esc(p.description)}</div>` : ''}
                     <div class="project-card-stats">
-                        <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} завдань</span>
-                        <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} готово</span>
-                        ${s.overdue > 0 ? `<span style="color:var(--danger);font-weight:600;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue} прострочено</span>` : ''}
-                        ${s.deadlineConflicts.length > 0 ? `<span style="color:#ea580c;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${s.deadlineConflicts.length} за дедлайном</span>` : ''}
+                        <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} ${t('tasksWord')}</span>
+                        <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} ${t('doneWord')}</span>
+                        ${s.overdue > 0 ? `<span style="color:var(--danger);font-weight:600;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue} ${t('overdueWord')}</span>` : ''}
+                        ${s.deadlineConflicts.length > 0 ? `<span style="color:#ea580c;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${s.deadlineConflicts.length} ${t('pastDeadline')}</span>` : ''}
                     </div>
                     <div class="project-progress-bar"><div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(p.color)};"></div></div>
                     <div class="project-progress-label"><span>${s.done}/${s.total}</span><span>${s.percent}%</span></div>
@@ -15686,7 +16107,7 @@
         function renderProjectsList(container, filtered) {
             const todayStr = getLocalDateStr();
             container.innerHTML = `<table class="projects-list-table"><thead><tr>
-                <th>Назва</th><th>Статус</th><th>Завдання</th><th>Прогрес</th><th>Дедлайн</th><th></th>
+                <th>${t('nameLabel')}</th><th>${t('statusLabel')}</th><th>${t('tasksWord')}</th><th>${t('progressLabel')}</th><th>${t('deadline')}</th><th></th>
             </tr></thead><tbody>${filtered.map(p => {
                 const s = getProjectStats(p.id);
                 const isOverdue = p.deadline && p.deadline < todayStr && p.status === 'active';
@@ -15891,7 +16312,7 @@
                     <i data-lucide="alert-triangle" class="icon" style="width:18px;height:18px;color:#ea580c;flex-shrink:0;margin-top:2px;"></i>
                     <div>
                         <div style="font-weight:600;font-size:0.85rem;color:#c2410c;margin-bottom:0.25rem;">
-                            ${s.deadlineConflicts.length} ${s.deadlineConflicts.length === 1 ? 'завдання виходить' : 'завдань виходять'} за дедлайн проєкту (${formatDateShort(project.deadline)})
+                            ${s.deadlineConflicts.length} ${t('tasksExceedDeadline')} (${formatDateShort(project.deadline)})
                         </div>
                         <div style="font-size:0.8rem;color:#9a3412;">
                             ${s.deadlineConflicts.slice(0, 3).map(t => `• ${esc(t.title)} — ${formatDateShort(t.deadlineDate)}`).join('<br>')}
@@ -16097,7 +16518,7 @@
             if (currentProject && !showProjects.find(p => p.id === currentProject.id)) {
                 showProjects.push(currentProject);
             }
-            sel.innerHTML = '<option value="">Без проєкту</option>' + 
+            sel.innerHTML = '<option value="" data-i18n="noProject">Без проєкту</option>' + 
                 showProjects.map(p => {
                     const suffix = p.status !== 'active' ? ` (${p.status === 'completed' ? 'завершено' : 'пауза'})` : '';
                     return `<option value="${esc(p.id)}">${esc(p.name)}${suffix}</option>`;
@@ -17996,7 +18417,7 @@
             } else if (shouldRunToday) {
                 return { status: 'notCreated', color: '#2196f3', text: t('pendingStatus'), lucideIcon: 'circle', completedToday: false };
             } else {
-                return { status: 'inactive', color: '#9e9e9e', text: 'Не сьогодні', lucideIcon: 'minus-circle', completedToday: false };
+                return { status: 'inactive', color: '#9e9e9e', text: t('notToday'), lucideIcon: 'minus-circle', completedToday: false };
             }
         }
         
@@ -18666,7 +19087,7 @@
             if (!isSuperAdmin) return;
             
             const container = document.getElementById('adminCompaniesList');
-            container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">Завантаження...</p>';
+            container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;" data-i18n="uploading">Завантаження...</p>';
             
             try {
                 const companiesSnap = await db.collection('companies').orderBy('createdAt', 'desc').get();
@@ -18680,13 +19101,13 @@
                     <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
                         <thead>
                             <tr style="background:#f9fafb;text-align:left;">
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Компанія</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Власник</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('companyCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('ownerCol')}</th>
                                 <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Email</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Створено</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Юзери</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Завдання</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Статус</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('createdCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('usersCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('tasksCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('statusCol')}</th>
                                 <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;width:80px;"></th>
                             </tr>
                         </thead>
@@ -18709,7 +19130,7 @@
                     
                     html += `
                         <tr style="border-bottom:1px solid #e5e7eb;${company.disabled ? 'opacity:0.6;background:#fef2f2;' : ''}" id="company-row-${companyId}">
-                            <td style="padding:0.75rem;font-weight:600;">${esc(company.name || 'Без назви')}</td>
+                            <td style="padding:0.75rem;font-weight:600;">${esc(company.name || t('noName'))}</td>
                             <td style="padding:0.75rem;">${esc(company.ownerName || '-')}</td>
                             <td style="padding:0.75rem;"><code style="background:#f3f4f6;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.8rem;">${esc(company.ownerEmail || '-')}</code></td>
                             <td style="padding:0.75rem;color:var(--gray);">${createdAt}</td>
@@ -18720,12 +19141,12 @@
                                 <span style="background:#dcfce7;color:#16a34a;padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;">${tasksSnap.size}</span>
                             </td>
                             <td style="padding:0.75rem;text-align:center;">
-                                <span style="padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;${company.disabled ? 'background:#fee2e2;color:#dc2626;' : 'background:#dcfce7;color:#16a34a;'}">${company.disabled ? 'Заблоковано' : 'Активна'}</span>
+                                <span style="padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;${company.disabled ? 'background:#fee2e2;color:#dc2626;' : 'background:#dcfce7;color:#16a34a;'}">${company.disabled ? t('blocked') : t('activeStatus')}</span>
                             </td>
                             <td style="padding:0.75rem;text-align:center;display:flex;gap:0.25rem;">
                                 <button onclick="toggleCompanyDisabled('${companyId}', ${!!company.disabled})" 
                                     style="background:${company.disabled ? '#dcfce7' : '#fef3c7'};color:${company.disabled ? '#16a34a' : '#92400e'};border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;"
-                                    title="${company.disabled ? 'Розблокувати' : 'Заблокувати'}">
+                                    title="${company.disabled ? t('unblock') : t('block')}">
                                     ${company.disabled ? '✓' : '⊘'}
                                 </button>
                                 <button onclick="deleteCompany('${escId(companyId)}', '${escId(company.name || '')}', ${usersSnap.size}, ${tasksSnap.size})" 
@@ -19106,10 +19527,10 @@
             
             return `<div style="background:white;border-radius:12px;padding:1rem;border:1px solid #e5e7eb;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-                    <h4 style="margin:0;font-size:0.9rem;">Активність за тиждень</h4>
+                    <h4 style="margin:0;font-size:0.9rem;">${t('weeklyActivity')}</h4>
                     <div style="display:flex;gap:1rem;font-size:0.7rem;">
-                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#dbeafe;border-radius:2px;"></span> Створено</span>
-                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#22c55e;border-radius:2px;"></span> Виконано</span>
+                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#dbeafe;border-radius:2px;"></span> ${t('createdLabel')}</span>
+                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#22c55e;border-radius:2px;"></span> ${t('doneLabel')}</span>
                     </div>
                 </div>
                 <div style="display:flex;gap:4px;align-items:flex-end;">${bars}</div>
@@ -19487,8 +19908,8 @@
                 updateNotificationButton();
                 
                 // Show test notification
-                new Notification('Сповіщення увімкнено', {
-                    body: 'Ви отримуватимете нагадування про дедлайни',
+                new Notification(t('notificationsEnabled'), {
+                    body: t('notificationsEnabledDesc'),
                     icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
                     tag: 'test'
                 });
@@ -19642,11 +20063,11 @@
             if (!btn) return;
             
             if (notificationsEnabled) {
-                btn.innerHTML = '<i data-lucide="bell-off" class="icon"></i> Вимкнути сповіщення';
+                btn.innerHTML = '<i data-lucide="bell-off" class="icon"></i> ' + t('disableNotifications') + "'";
                 btn.classList.add('btn-warning');
                 btn.classList.remove('btn-success');
             } else {
-                btn.innerHTML = '<i data-lucide="bell" class="icon"></i> Увімкнути сповіщення';
+                btn.innerHTML = '<i data-lucide="bell" class="icon"></i> ' + t('enableNotifications') + "'";
                 btn.classList.remove('btn-warning');
                 btn.classList.add('btn-success');
             }
@@ -21628,7 +22049,7 @@ Ctrl+K або / - пошук завдань
                 commentsUnsubscribe();
             }
             
-            listEl.innerHTML = '<div class="comments-loading">Завантаження...</div>';
+            listEl.innerHTML = '<div class="comments-loading" data-i18n="uploading">Завантаження...</div>';
             
             // Real-time listener for comments
             commentsUnsubscribe = db.collection('companies').doc(currentCompany)
@@ -21697,7 +22118,7 @@ Ctrl+K або / - пошук завдань
                 return `
                     <div class="comment-item ${isOwn ? 'own-comment' : ''}">
                         <div class="comment-header">
-                            <span class="comment-author">${escapeHtml(comment.authorName || 'Невідомий')}</span>
+                            <span class="comment-author">${escapeHtml(comment.authorName || t('unknown'))}</span>
                             <span class="comment-time">${time}</span>
                         </div>
                         <div class="comment-text">${safeText}</div>
@@ -21718,7 +22139,7 @@ Ctrl+K або / - пошук завдань
             const diff = now - date;
             
             // Less than 1 minute
-            if (diff < 60000) return 'щойно';
+            if (diff < 60000) return t('justNow');
             
             // Less than 1 hour
             if (diff < 3600000) {
@@ -21868,7 +22289,7 @@ Ctrl+K або / - пошук завдань
             if (!container || !currentCompany || !taskId) return;
             
             section?.classList.remove('hidden');
-            container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:0.5rem;">Завантаження...</p>';
+            container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:0.5rem;" data-i18n="uploading">Завантаження...</p>';
             
             try {
                 const snap = await db.collection('companies').doc(currentCompany)
@@ -21906,12 +22327,12 @@ Ctrl+K або / - пошук завдань
             
             let actionText = '';
             switch (entry.action) {
-                case 'created': actionText = 'створив задачу'; break;
-                case 'complete': actionText = 'завершив задачу'; break;
-                case 'reopen': actionText = 'повернув задачу в роботу'; break;
-                case 'review': actionText = 'прийняв задачу з ревью'; break;
-                case 'delete': actionText = 'видалив задачу'; break;
-                case 'escalation': actionText = 'ескалація прострочення'; break;
+                case 'created': actionText = t('auditCreated'); break;
+                case 'complete': actionText = t('auditCompleted'); break;
+                case 'reopen': actionText = t('auditReopened'); break;
+                case 'review': actionText = t('auditAccepted'); break;
+                case 'delete': actionText = t('auditDeleted'); break;
+                case 'escalation': actionText = t('auditEscalation'); break;
                 default: actionText = formatChangeDetails(entry); break;
             }
             
@@ -21925,7 +22346,7 @@ Ctrl+K або / - пошук завдань
         }
         
         function formatChangeDetails(entry) {
-            if (!entry.details) return 'змінив задачу';
+            if (!entry.details) return t('auditChanged');
             const parts = [];
             for (const [field, vals] of Object.entries(entry.details)) {
                 const label = AUDIT_FIELD_LABELS[field] || field;
@@ -21943,7 +22364,7 @@ Ctrl+K або / - пошук завдань
                     parts.push(`змінив ${label.toLowerCase()}`);
                 }
             }
-            return parts.join(', ') || 'змінив задачу';
+            return parts.join(', ') || t('auditChanged');
         }
         
         function getStatusLabel(status) {
@@ -21966,8 +22387,8 @@ Ctrl+K або / - пошук завдань
         
         const ESCALATION_LEVELS = [
             { days: 1, level: 1, label: 'Прострочено 1+ день', target: 'assignee', color: '#92400e' },
-            { days: 3, level: 2, label: 'Прострочено 3+ дні', target: 'manager', color: '#9a3412' },
-            { days: 7, level: 3, label: 'Прострочено 7+ днів', target: 'owner', color: '#dc2626' }
+            { days: 3, level: 2, label: t('overdue3days'), target: 'manager', color: '#9a3412' },
+            { days: 7, level: 3, label: t('overdue7days'), target: 'owner', color: '#dc2626' }
         ];
         
         function getEscalationLevel(task) {
@@ -22100,12 +22521,12 @@ Ctrl+K або / - пошук завдань
                 const endNextWeekStr = endOfNextWeek.toISOString().split('T')[0];
                 
                 columns = [
-                    { id: 'overdue', title: 'Протерміновані', color: '#ef4444', bg: '#fef2f2', tasks: [] },
-                    { id: 'today', title: 'На сьогодні', color: '#f59e0b', bg: '#fffbeb', tasks: [] },
-                    { id: 'this_week', title: 'Цей тиждень', color: '#3b82f6', bg: '#eff6ff', tasks: [] },
-                    { id: 'next_week', title: 'Наступний тиждень', color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
-                    { id: 'later', title: 'Пізніше', color: '#06b6d4', bg: '#ecfeff', tasks: [] },
-                    { id: 'no_deadline', title: 'Без терміну', color: '#6b7280', bg: '#f9fafb', tasks: [] }
+                    { id: 'overdue', title: t('overdueGroup'), color: '#ef4444', bg: '#fef2f2', tasks: [] },
+                    { id: 'today', title: t('forToday'), color: '#f59e0b', bg: '#fffbeb', tasks: [] },
+                    { id: 'this_week', title: t('thisWeek'), color: '#3b82f6', bg: '#eff6ff', tasks: [] },
+                    { id: 'next_week', title: t('nextWeek'), color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
+                    { id: 'later', title: t('later'), color: '#06b6d4', bg: '#ecfeff', tasks: [] },
+                    { id: 'no_deadline', title: t('noDeadline'), color: '#6b7280', bg: '#f9fafb', tasks: [] }
                 ];
                 
                 filtered.filter(t => t.status !== 'done').forEach(t => {
@@ -22942,10 +23363,10 @@ Ctrl+K або / - пошук завдань
     
     function getTimeAgo(date, now) {
         const diff = Math.floor((now - new Date(date)) / 1000);
-        if (diff < 60) return 'щойно';
-        if (diff < 3600) return Math.floor(diff / 60) + ' хв тому';
-        if (diff < 86400) return Math.floor(diff / 3600) + ' год тому';
-        return Math.floor(diff / 86400) + ' дн тому';
+        if (diff < 60) return t('justNow');
+        if (diff < 3600) return Math.floor(diff / 60) + ' ' + t('minutesAgo');
+        if (diff < 86400) return Math.floor(diff / 3600) + ' ' + t('hoursAgo');
+        return Math.floor(diff / 86400) + ' ' + t('daysAgo');
     }
     
     // Close panel on outside click
@@ -23354,7 +23775,7 @@ Ctrl+K або / - пошук завдань
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
                 <h2 style="margin:0 0 0.5rem;font-size:1.5rem;font-weight:700;">Всі завдання виконано!</h2>
-                <p style="color:#6b7280;margin-bottom:2rem;">${total} завдань за сьогодні — чудова робота</p>
+                <p style="color:#6b7280;margin-bottom:2rem;">${total} ' + t('greatJobToday') + '</p>
                 <button onclick="closeFocusMode()" style="padding:1rem 3rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1rem;font-weight:700;color:white;cursor:pointer;">
                     Закрити
                 </button>
@@ -23651,7 +24072,7 @@ Ctrl+K або / - пошук завдань
     <!-- NOTIFICATION PANEL -->
     <div id="notificationPanel" style="display:none;position:fixed;top:56px;right:12px;width:360px;max-width:calc(100vw - 24px);max-height:70vh;background:white;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.15);z-index:10001;overflow:hidden;flex-direction:column;" onclick="event.stopPropagation();">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid #f3f4f6;">
-            <span style="font-weight:700;font-size:0.95rem;">Сповіщення</span>
+            <span style="font-weight:700;font-size:0.95rem;" data-i18n="notifications">Сповіщення</span>
             <div style="display:flex;gap:0.5rem;">
                 <button onclick="markAllNotificationsRead()" style="border:none;background:none;font-size:0.75rem;color:#22c55e;cursor:pointer;font-weight:500;">Прочитати все</button>
                 <button onclick="toggleNotificationPanel()" style="border:none;background:none;cursor:pointer;color:#9ca3af;">
