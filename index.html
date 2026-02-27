@@ -5357,7 +5357,13 @@
                     <i data-lucide="target" class="icon"></i> <span data-i18n="radarAI">Керівник</span>
                 </a>
                 <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="header-ai-btn tech" title="Помічник">
-                    <i data-lucide="wrench" class="icon"></i> <span data-i18n="techAI" data-i18n="techAI">Помічник</span>
+                    <i data-lucide="wrench" class="icon"></i> <span data-i18n="techAI">Помічник</span>
+                </a>
+                <a href="https://chatgpt.com/g/g-694ea789f6fc8191a90694aae93de819-team-academy-ai" target="_blank" class="header-ai-btn" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);" title="Академія для команди">
+                    <i data-lucide="graduation-cap" class="icon"></i> <span data-i18n="academyAI">Академія</span>
+                </a>
+                <a href="https://chatgpt.com/g/g-684c0092653c81919f42552c12434fa7-function-description-generator" target="_blank" class="header-ai-btn" style="background:linear-gradient(135deg,#f59e0b,#d97706);" title="Опис функцій">
+                    <i data-lucide="file-text" class="icon"></i> <span data-i18n="funcDescAI">Інструкції</span>
                 </a>
                 <div class="lang-switcher">
                     <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
@@ -5815,6 +5821,7 @@
                         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
                             <span data-i18n="viewLabel">Перегляд:</span>
                             <select class="filter-select" id="controlViewType" onchange="renderControlContent()" style="min-width:150px;">
+                                <option value="briefing" data-i18n="morningBriefing">Брифінг</option>
                                 <option value="workload" data-i18n="workload">Навантаження</option>
                                 <option value="functions" data-i18n="byFunctions">По функціях</option>
                                 <option value="pipeline" data-i18n="delegationPipeline">Воронка делегування</option>
@@ -6290,6 +6297,10 @@
                                 <input type="checkbox" id="taskAllowDeadlineChange" style="width:18px;height:18px;accent-color:#f59e0b;">
                                 <span style="font-size:0.85rem;font-weight:500;" data-i18n="allowDeadlineChange">Виконавець може змінювати строки</span>
                             </label>
+                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;background:#ede9fe;border-radius:8px;">
+                                <input type="checkbox" id="taskRequireReport" style="width:18px;height:18px;accent-color:#8b5cf6;">
+                                <span style="font-size:0.85rem;font-weight:500;" data-i18n="requireReport">Звіт при завершенні</span>
+                            </label>
                         </div>
                         
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="taskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
@@ -6687,7 +6698,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий ●</option><option value="low" data-i18n="low">Низький</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="priority">Пріоритет</label><select id="regularTaskPriority" class="form-select"><option value="medium" data-i18n="normal">Звичайний</option><option value="high" data-i18n="high">Високий </option><option value="low" data-i18n="low">Низький</option></select></div>
                         <div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:0.5rem;"><input type="checkbox" id="regularTaskRequireReview" style="accent-color:var(--primary);width:18px;height:18px;"> <span data-i18n="requireReview">Потрібна перевірка</span></label></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="expectedResult">Очікуваний результат</label><textarea id="regularTaskExpectedResult" class="form-textarea" placeholder="Що конкретно має бути зроблено?" data-i18n-placeholder="expectedResultPh"></textarea></div>
                         <div class="form-group full-width"><label class="form-label" data-i18n="reportFormat">Формат звіту</label><textarea id="regularTaskReportFormat" class="form-textarea" style="min-height:80px;resize:vertical;" placeholder="Скрін / Посилання / Фото / Документ" data-i18n-placeholder="reportFormatPh"></textarea></div>
@@ -7375,7 +7386,7 @@
                 createError: 'Помилка створення',
                 taskNotFoundArchive: 'Завдання не знайдено в архіві',
                 restoreError: 'Помилка відновлення',
-                deadlineExceedsProject: '⚠ Дедлайн задачі ({taskDate}) виходить за дедлайн проєкту "{projName}" ({projDate})',
+                deadlineExceedsProject: '! Дедлайн задачі ({taskDate}) виходить за дедлайн проєкту "{projName}" ({projDate})',
                 noTasksForExport: 'Немає завдань для експорту',
                 deadlineUpdated: 'Дедлайн оновлено',
                 taskModifiedByOther: 'Це завдання було змінено іншим користувачем. Зберегти ваші зміни?',
@@ -7493,7 +7504,6 @@
                 hoursAgo: 'год тому',
                 noNotifications: 'Немає сповіщень',
                 overdueGroup: 'Протерміновані',
-                forToday: 'На сьогодні',
                 thisWeek: 'Цей тиждень',
                 nextWeek: 'Наступний тиждень',
                 later: 'Пізніше',
@@ -7551,7 +7561,7 @@
                 askAi: 'Не зрозуміло? Запитай AI-помічника',
                 attachments: 'Файли',
                 focusMode: 'Фокус',
-                high: 'Високий ●',
+                high: 'Високий ',
                 normal: 'Звичайний',
                 projects: 'Проєкти',
                 tabProjects: 'Проєкти',
@@ -7585,6 +7595,16 @@
                 categoryHasFunctions: 'В колонці є функції. Вони стануть без категорії. Видалити?',
                 daysAgo: 'дн.',
                 openTask: 'Відкрити задачу',
+                morningBriefing: 'Брифінг',
+                allGood: 'Все під контролем',
+                attentionRequired: 'Потрібна увага!',
+                warningIssues: 'Є питання',
+                criticalOverdue: 'Критично прострочені',
+                forToday: 'на сьогодні',
+                teamStatus: 'Команда сьогодні',
+                academyAI: 'Академія',
+                funcDescAI: 'Опис функцій',
+                requireReport: 'Звіт при завершенні',
                 active: 'акт.',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
                 projectStatusChanged: 'Проєкт "{name}" → {status}',
@@ -7611,8 +7631,8 @@
                 deletingData: 'Видалення даних...',
                 deletedNRecords: 'Видалено {n} записів',
                 commentSendError: 'Помилка відправки коментаря',
-                escalationCritical: '⚠ КРИТИЧНО: {n} задач прострочено 7+ днів!',
-                escalationWarning: '⚠ {n} задач прострочено 3+ дні',
+                escalationCritical: 'КРИТИЧНО: {n} задач прострочено 7+ днів!',
+                escalationWarning: '! {n} задач прострочено 3+ дні',
                 noPermissionTask: 'Недостатньо прав для зміни цієї задачі',
                 deadlineChangeError: 'Помилка зміни дедлайну',
                 deleteFileConfirm: 'Видалити файл?',
@@ -8095,7 +8115,7 @@
                 createError: 'Ошибка создания',
                 taskNotFoundArchive: 'Задача не найдена в архиве',
                 restoreError: 'Ошибка восстановления',
-                deadlineExceedsProject: '⚠ Дедлайн задачи ({taskDate}) выходит за дедлайн проекта "{projName}" ({projDate})',
+                deadlineExceedsProject: 'Дедлайн задачи ({taskDate}) выходит за дедлайн проекта "{projName}" ({projDate})',
                 noTasksForExport: 'Нет задач для экспорта',
                 deadlineUpdated: 'Дедлайн обновлён',
                 taskModifiedByOther: 'Эта задача была изменена другим пользователем. Сохранить изменения?',
@@ -8274,7 +8294,7 @@
                 askAi: 'Не понятно? Спросите AI-помощника',
                 attachments: 'Файлы',
                 focusMode: 'Фокус',
-                high: 'Высокий ●',
+                high: 'Высокий ',
                 normal: 'Обычный',
                 projects: 'Проекты',
                 tabProjects: 'Проекты',
@@ -8314,8 +8334,8 @@
                 deletingData: 'Удаление данных...',
                 deletedNRecords: 'Удалено {n} записей',
                 commentSendError: 'Ошибка отправки комментария',
-                escalationCritical: '⚠ КРИТИЧНО: {n} задач просрочено 7+ дней!',
-                escalationWarning: '⚠ {n} задач просрочено 3+ дня',
+                escalationCritical: 'КРИТИЧНО: {n} задач просрочено 7+ дней!',
+                escalationWarning: '! {n} задач просрочено 3+ дня',
                 noPermissionTask: 'Недостаточно прав для изменения этой задачи',
                 deadlineChangeError: 'Ошибка изменения дедлайна',
                 deleteFileConfirm: 'Удалить файл?',
@@ -8800,7 +8820,7 @@
                 createError: 'Błąd tworzenia',
                 taskNotFoundArchive: 'Zadanie nie znalezione w archiwum',
                 restoreError: 'Błąd przywracania',
-                deadlineExceedsProject: '⚠ Termin zadania ({taskDate}) wykracza poza termin projektu "{projName}" ({projDate})',
+                deadlineExceedsProject: '! Termin zadania ({taskDate}) wykracza poza termin projektu "{projName}" ({projDate})',
                 noTasksForExport: 'Brak zadań do eksportu',
                 deadlineUpdated: 'Termin zaktualizowany',
                 taskModifiedByOther: 'To zadanie zostało zmienione przez innego użytkownika. Zapisać zmiany?',
@@ -8918,7 +8938,6 @@
                 hoursAgo: 'godz temu',
                 noNotifications: 'Brak powiadomień',
                 overdueGroup: 'Przeterminowane',
-                forToday: 'Na dzisiaj',
                 thisWeek: 'Ten tydzień',
                 nextWeek: 'Następny tydzień',
                 later: 'Później',
@@ -8976,7 +8995,7 @@
                 askAi: 'Nie rozumiesz? Zapytaj asystenta AI',
                 attachments: 'Pliki',
                 focusMode: 'Fokus',
-                high: 'Wysoki ●',
+                high: 'Wysoki ',
                 normal: 'Zwykły',
                 projects: 'Projekty',
                 tabProjects: 'Projekty',
@@ -9010,6 +9029,16 @@
                 categoryHasFunctions: 'W kolumnie są funkcje. Stracą kategorię. Usunąć?',
                 daysAgo: 'dn.',
                 openTask: 'Otwórz zadanie',
+                morningBriefing: 'Briefing',
+                allGood: 'Wszystko pod kontrolą',
+                attentionRequired: 'Wymaga uwagi!',
+                warningIssues: 'Są pytania',
+                criticalOverdue: 'Krytycznie przeterminowane',
+                forToday: 'na dziś',
+                teamStatus: 'Zespół dzisiaj',
+                academyAI: 'Akademia',
+                funcDescAI: 'Opis funkcji',
+                requireReport: 'Raport po zakończeniu',
                 active: 'akt.',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
                 projectStatusChanged: 'Projekt "{name}" → {status}',
@@ -9036,8 +9065,8 @@
                 deletingData: 'Usuwanie danych...',
                 deletedNRecords: 'Usunięto {n} rekordów',
                 commentSendError: 'Błąd wysyłania komentarza',
-                escalationCritical: '⚠ KRYTYCZNIE: {n} zadań przeterminowanych 7+ dni!',
-                escalationWarning: '⚠ {n} zadań przeterminowanych 3+ dni',
+                escalationCritical: '! KRYTYCZNIE: {n} zadań przeterminowanych 7+ dni!',
+                escalationWarning: '! {n} zadań przeterminowanych 3+ dni',
                 noPermissionTask: 'Brak uprawnień do zmiany tego zadania',
                 deadlineChangeError: 'Błąd zmiany terminu',
                 deleteFileConfirm: 'Usunąć plik?',
@@ -9229,6 +9258,7 @@
                 _coalescePending = false;
                 if (_coalesceMyDay) { _coalesceMyDay = false; renderMyDay(); }
                 if (_coalesceView) { _coalesceView = false; refreshCurrentView(); }
+                updateOverdueBadges();
             });
         }
         
@@ -9967,6 +9997,9 @@
                     showMyDayPopup();
                     sessionStorage.setItem('myDayShown', '1');
                 }
+                
+                // Update overdue badges
+                updateOverdueBadges();
                 
                 // Зберігаємо для offline — deferred to idle
                 if ('requestIdleCallback' in window) {
@@ -11029,6 +11062,7 @@
                     document.getElementById('taskStartDate').value = task.startDate || '';
                     document.getElementById('taskRequireReview').checked = task.requireReview !== false; // default true
                     document.getElementById('taskAllowDeadlineChange').checked = task.allowDeadlineChange || false;
+                    document.getElementById('taskRequireReport').checked = task.requireReport !== undefined ? task.requireReport : !!(task.expectedResult || task.reportFormat);
                     renderChecklist(task.checklist || []);
                     
                     // FEAT-006: Time Tracking
@@ -11180,6 +11214,7 @@
                 document.getElementById('taskStartDate').value = '';
                 document.getElementById('taskRequireReview').checked = true;
                 document.getElementById('taskAllowDeadlineChange').checked = false;
+                document.getElementById('taskRequireReport').checked = false;
                 renderChecklist([]);
                 document.getElementById('taskDeadlineDate').disabled = false;
                 document.getElementById('taskDeadlineTime').disabled = false;
@@ -11218,7 +11253,7 @@
                         </div>
                         <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
                             ${sortedUsers.map(user => {
-                                const roleIcon = user.role === 'owner' ? '♛ ' : user.role === 'manager' ? '★ ' : '';
+                                const roleIcon = user.role === 'owner' ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M3 20h18"/></svg> ' : user.role === 'manager' ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ' : '';
                                 return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
                                                 style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;" 
                                                 onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
@@ -11312,7 +11347,7 @@
                     <div class="user-ms-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200;max-height:200px;overflow:hidden;">
                         <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
                             ${managers.map(user => {
-                                const roleIcon = user.role === 'owner' ? '♛ ' : '★ ';
+                                const roleIcon = user.role === 'owner' ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M3 20h18"/></svg> ' : '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ';
                                 return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
                                                 style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;" 
                                                 onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
@@ -11436,6 +11471,7 @@
                     // FEAT-002+007: Toggles
                     requireReview: document.getElementById('taskRequireReview').checked,
                     allowDeadlineChange: document.getElementById('taskAllowDeadlineChange').checked,
+                    requireReport: document.getElementById('taskRequireReport').checked,
                     // FEAT-001: Чеклист
                     checklist: getChecklistData(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -12487,7 +12523,7 @@
                         <div class="user-ms-list" style="overflow-y:auto;max-height:190px;padding:0.25rem;">
                             ${users.map(user => {
                                 const checked = selectedSet.has(user.id);
-                                const roleIcon = user.role === 'owner' ? '♛ ' : user.role === 'manager' ? '★ ' : '';
+                                const roleIcon = user.role === 'owner' ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M3 20h18"/></svg> ' : user.role === 'manager' ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#3b82f6" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ' : '';
                                 return `<label class="user-ms-item" data-name="${esc((user.name || user.email).toLowerCase())}" 
                                                 style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;cursor:pointer;border-radius:6px;font-size:0.84rem;transition:background 0.1s;${checked ? 'background:#f0fdf4;' : ''}" 
                                                 onmouseover="if(!this.querySelector('input').checked)this.style.background='#f9fafb'" 
@@ -14072,7 +14108,8 @@
             const progressPercent = total > 0 ? Math.round((done / total) * 100) : 0;
             
             document.getElementById('mydayProgressFill').style.width = progressPercent + '%';
-            document.getElementById('mydayProgressText').textContent = `${done}/${total}`;
+            document.getElementById('mydayProgressFill').style.background = progressPercent >= 80 ? 'var(--success)' : progressPercent >= 40 ? '#f59e0b' : '#ef4444';
+            document.getElementById('mydayProgressText').textContent = `${done}/${total} (${progressPercent}%)`;
             
             // Рендеримо
             if (myTasks.length === 0) {
@@ -18004,7 +18041,7 @@
             container.innerHTML = regularChecklistItems.map((item, i) => `
                 <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.6rem;background:#f9fafb;border-radius:8px;">
                     <span style="flex:1;font-size:0.85rem;">${escapeHtml(typeof item === 'string' ? item : item.text || item)}</span>
-                    <button type="button" onclick="removeRegularChecklistItem(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem;padding:0 4px;">×</button>
+                    <button type="button" onclick="removeRegularChecklistItem(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem;padding:0 4px;">&times;</button>
                 </div>
             `).join('');
         }
@@ -19455,8 +19492,8 @@
                         <div style="display:flex;gap:0.6rem;font-size:0.75rem;color:#6b7280;align-items:center;">
                             <span style="font-weight:600;color:${autonomyColor};">${autonomyPct}%</span>
                             <span>${weeklyHrs} ${t('hoursPerWeek')}</span>
-                            ${overdue.length > 0 ? `<span style="color:#ef4444;font-weight:600;">⚠${overdue.length}</span>` : ''}
-                            ${returned.length > 0 ? `<span style="color:#f59e0b;">↩${returned.length}</span>` : ''}
+                            ${overdue.length > 0 ? `<span style="color:#ef4444;font-weight:600;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>${overdue.length}</span>` : ''}
+                            ${returned.length > 0 ? `<span style="color:#f59e0b;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>${returned.length}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.25rem;align-items:center;" onclick="event.stopPropagation();">
                             ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
@@ -19674,7 +19711,140 @@
             
             const content = document.getElementById('controlContent');
             
-            if (viewType === 'workload') {
+            if (viewType === 'briefing') {
+                // MORNING BRIEFING — one-page "what's burning"
+                const todayStr = getLocalDateStr(new Date());
+                const allTasks = tasks.filter(t => isTaskVisibleToUser(t));
+                
+                // 1. CRITICAL: overdue tasks
+                const overdue = allTasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done');
+                const critical = overdue.filter(t => {
+                    const d = Math.floor((new Date() - new Date(t.deadlineDate)) / 86400000);
+                    return d >= 7;
+                });
+                const warning = overdue.filter(t => {
+                    const d = Math.floor((new Date() - new Date(t.deadlineDate)) / 86400000);
+                    return d >= 3 && d < 7;
+                });
+                const fresh = overdue.filter(t => {
+                    const d = Math.floor((new Date() - new Date(t.deadlineDate)) / 86400000);
+                    return d < 3;
+                });
+                
+                // 2. STUCK: tasks in 'new' status for >3 days
+                const stuck = allTasks.filter(t => {
+                    if (t.status !== 'new') return false;
+                    const created = t.createdAt?.toDate ? t.createdAt.toDate() : (t.createdAt ? new Date(t.createdAt) : null);
+                    return created && (new Date() - created) / 86400000 > 3;
+                });
+                
+                // 3. TODAY: tasks due today
+                const todayTasks = allTasks.filter(t => t.deadlineDate === todayStr && t.status !== 'done');
+                
+                // 4. ON REVIEW: waiting for approval
+                const onReview = allTasks.filter(t => t.status === 'review');
+                
+                // 5. PEOPLE STATUS
+                const peopleStats = users.map(u => {
+                    const ut = allTasks.filter(t => t.assigneeId === u.id);
+                    const uOverdue = ut.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').length;
+                    const uActive = ut.filter(t => t.status !== 'done').length;
+                    const uDone = ut.filter(t => t.status === 'done').length;
+                    const uToday = ut.filter(t => t.deadlineDate === todayStr && t.status !== 'done').length;
+                    return { ...u, overdue: uOverdue, active: uActive, done: uDone, today: uToday };
+                }).filter(u => u.active > 0 || u.overdue > 0).sort((a,b) => b.overdue - a.overdue);
+                
+                // 6. REGULAR TASKS completion rate (today)
+                const todayDow = new Date().getDay().toString();
+                const todaysRegular = regularTasks.filter(rt => {
+                    if (rt.period === 'daily') return true;
+                    if (rt.period === 'weekly' && rt.daysOfWeek?.includes(todayDow)) return true;
+                    if (rt.period === 'monthly' && parseInt(rt.dayOfMonth) === new Date().getDate()) return true;
+                    return false;
+                });
+                const regDone = todaysRegular.filter(rt => {
+                    return tasks.some(t => t.regularTaskId === rt.id && t.deadlineDate === todayStr && t.status === 'done');
+                }).length;
+                
+                // Overall health score
+                const healthScore = overdue.length === 0 && stuck.length === 0 ? 'green' : 
+                    critical.length > 0 ? 'red' : 'yellow';
+                const healthIcon = healthScore === 'green' ? 'check-circle' : healthScore === 'red' ? 'alert-octagon' : 'alert-triangle';
+                const healthColor = healthScore === 'green' ? '#16a34a' : healthScore === 'red' ? '#ef4444' : '#f59e0b';
+                const healthText = healthScore === 'green' ? (t('allGood') || 'Все під контролем') : 
+                    healthScore === 'red' ? (t('attentionRequired') || 'Потрібна увага!') : (t('warningIssues') || 'Є питання');
+
+                content.innerHTML = `
+                    <div style="margin-bottom:1rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:${healthColor}15;border-radius:10px;border-left:4px solid ${healthColor};">
+                            <i data-lucide="${healthIcon}" class="icon" style="color:${healthColor};width:28px;height:28px;flex-shrink:0;"></i>
+                            <div>
+                                <div style="font-weight:700;font-size:1rem;color:${healthColor};">${healthText}</div>
+                                <div style="font-size:0.78rem;color:#6b7280;">${overdue.length} ${t('overdueStatus') || 'прострочених'} · ${todayTasks.length} ${t('forToday') || 'на сьогодні'} · ${onReview.length} ${t('statusOnReview') || 'на перевірці'}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${critical.length > 0 ? `
+                    <div style="background:#fef2f2;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
+                        <div style="font-weight:700;color:#dc2626;margin-bottom:0.4rem;"><i data-lucide="alert-octagon" class="icon icon-sm"></i> ${t('criticalOverdue') || 'Критично прострочені'} (7+ ${t('daysAgo') || 'дн.'})</div>
+                        ${critical.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #fecaca;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
+                            <span style="font-weight:500;">${esc(tk.title)}</span>
+                            <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')} · ${tk.deadlineDate}</span>
+                        </div>`).join('')}
+                        ${critical.length > 5 ? `<div style="font-size:0.75rem;color:#9ca3af;padding-top:0.3rem;">+${critical.length-5}...</div>` : ''}
+                    </div>` : ''}
+                    
+                    ${warning.length > 0 ? `
+                    <div style="background:#fffbeb;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
+                        <div style="font-weight:700;color:#b45309;margin-bottom:0.4rem;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus') || 'Прострочені'} (3-7 ${t('daysAgo') || 'дн.'})</div>
+                        ${warning.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #fde68a;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
+                            <span style="font-weight:500;">${esc(tk.title)}</span>
+                            <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')} · ${tk.deadlineDate}</span>
+                        </div>`).join('')}
+                    </div>` : ''}
+                    
+                    ${stuck.length > 0 ? `
+                    <div style="background:#eef2ff;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
+                        <div style="font-weight:700;color:#4338ca;margin-bottom:0.4rem;"><i data-lucide="pause-circle" class="icon icon-sm"></i> ${t('notStarted') || 'Не розпочато'} (3+ ${t('daysAgo') || 'дн.'})</div>
+                        ${stuck.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #c7d2fe;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
+                            <span style="font-weight:500;">${esc(tk.title)}</span>
+                            <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')}</span>
+                        </div>`).join('')}
+                    </div>` : ''}
+                    
+                    ${onReview.length > 0 ? `
+                    <div style="background:#f5f3ff;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
+                        <div style="font-weight:700;color:#7c3aed;margin-bottom:0.4rem;"><i data-lucide="eye" class="icon icon-sm"></i> ${t('statusOnReview') || 'Чекають перевірки'} (${onReview.length})</div>
+                        ${onReview.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #ddd6fe;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
+                            <span style="font-weight:500;">${esc(tk.title)}</span>
+                            <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')}</span>
+                        </div>`).join('')}
+                    </div>` : ''}
+                    
+                    <div style="background:#f9fafb;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
+                        <div style="font-weight:700;color:#374151;margin-bottom:0.5rem;"><i data-lucide="users" class="icon icon-sm"></i> ${t('teamStatus') || 'Команда сьогодні'}</div>
+                        ${peopleStats.map(p => `
+                        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;font-size:0.82rem;border-bottom:1px solid #e5e7eb;">
+                            <span style="width:6px;height:6px;border-radius:50%;background:${p.overdue > 0 ? '#ef4444' : '#16a34a'};flex-shrink:0;"></span>
+                            <span style="flex:1;font-weight:500;">${esc(p.name || p.email)}</span>
+                            <span style="color:#6b7280;">${p.today} ${t('forToday') || 'на сьогодні'}</span>
+                            ${p.overdue > 0 ? `<span style="color:#ef4444;font-weight:600;">${p.overdue} !</span>` : ''}
+                        </div>`).join('')}
+                    </div>
+                    
+                    ${todaysRegular.length > 0 ? `
+                    <div style="background:#f0fdf4;border-radius:10px;padding:0.75rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-weight:700;color:#374151;"><i data-lucide="repeat" class="icon icon-sm"></i> ${t('tabRegular') || 'Регулярні'} ${t('forToday') || 'на сьогодні'}</span>
+                            <span style="font-size:0.85rem;font-weight:600;color:${regDone === todaysRegular.length ? '#16a34a' : '#f59e0b'};">${regDone}/${todaysRegular.length}</span>
+                        </div>
+                        <div style="height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+                            <div style="height:100%;width:${todaysRegular.length > 0 ? Math.round(regDone/todaysRegular.length*100) : 0}%;background:#16a34a;border-radius:3px;transition:width 0.3s;"></div>
+                        </div>
+                    </div>` : ''}
+                `;
+            } else if (viewType === 'workload') {
                 // Group tasks by assignee
                 const wl = {};
                 filteredTasks.forEach(task => { 
@@ -20036,12 +20206,12 @@
                                 <button onclick="toggleCompanyDisabled('${companyId}', ${!!company.disabled})" 
                                     style="background:${company.disabled ? '#dcfce7' : '#fef3c7'};color:${company.disabled ? '#16a34a' : '#92400e'};border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;"
                                     title="${company.disabled ? t('unblock') : t('block')}">
-                                    ${company.disabled ? '✓' : '⊘'}
+                                    ${company.disabled ? 'ON' : 'OFF'}
                                 </button>
                                 <button onclick="deleteCompany('${escId(companyId)}', '${escId(company.name || '')}', ${usersSnap.size}, ${tasksSnap.size})" 
                                     style="background:#fee2e2;color:#dc2626;border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;"
                                     title="Видалити компанію">
-                                    ✕
+                                    &times;
                                 </button>
                             </td>
                         </tr>
@@ -20283,11 +20453,66 @@
                 case 'processes': updateProcessTemplateFilter(); renderProcessBoard(); break;
                 case 'projects': renderProjects(); break;
                 case 'regular': if (currentRegularView === 'list') renderRegularTasks(); else renderRegularWeekView(); break;
-                case 'functions': renderFunctions(); break;
+                case 'functions': renderFunctions(); if (currentFunctionsView === 'structure') renderFunctionsStructure(); break;
                 case 'users': renderUsers(); break;
                 case 'analytics': renderAnalytics(); break;
                 case 'admin': renderAdminPanel(); break;
             }
+            
+            updateOverdueBadges();
+        }
+        
+        function updateOverdueBadges() {
+            const todayStr = getLocalDateStr(new Date());
+            const overdue = tasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done' && isTaskVisibleToUser(t)).length;
+            const onReview = tasks.filter(t => t.status === 'review' && isTaskVisibleToUser(t)).length;
+            
+            // Control tab badge
+            const controlBtn = document.querySelector("[onclick=\"switchTab('control')\"]");
+            if (controlBtn) {
+                let badge = controlBtn.querySelector('.tab-badge');
+                if (overdue > 0) {
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className = 'tab-badge';
+                        badge.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;background:#ef4444;color:white;font-size:0.6rem;font-weight:700;margin-left:4px;padding:0 4px;';
+                        controlBtn.appendChild(badge);
+                    }
+                    badge.textContent = overdue;
+                } else if (badge) badge.remove();
+            }
+            
+            // My Day badge (review tasks)
+            const mydayBtn = document.querySelector("[onclick=\"switchTab('myday')\"]");
+            if (mydayBtn) {
+                let badge = mydayBtn.querySelector('.tab-badge');
+                if (onReview > 0) {
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className = 'tab-badge';
+                        badge.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;background:#8b5cf6;color:white;font-size:0.6rem;font-weight:700;margin-left:4px;padding:0 4px;';
+                        mydayBtn.appendChild(badge);
+                    }
+                    badge.textContent = onReview;
+                } else if (badge) badge.remove();
+            }
+            
+            // Mobile bottom nav badges
+            document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+                let badge = btn.querySelector('.tab-badge');
+                if (btn.dataset.tab === 'control' && overdue > 0) {
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className = 'tab-badge';
+                        badge.style.cssText = 'position:absolute;top:2px;right:8px;min-width:14px;height:14px;border-radius:7px;background:#ef4444;color:white;font-size:0.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px;';
+                        btn.style.position = 'relative';
+                        btn.appendChild(badge);
+                    }
+                    badge.textContent = overdue;
+                } else if (badge && (btn.dataset.tab === 'control')) {
+                    badge.remove();
+                }
+            });
         }
         
         function updateFab(tabName) {
@@ -23433,16 +23658,16 @@ Ctrl+K або / - пошук завдань
         };
         
         const AUDIT_ICONS = {
-            created: { icon: '＋', bg: '#dcfce7' },
-            status: { icon: '⟳', bg: '#dbeafe' },
-            reassign: { icon: '⊙', bg: '#e0e7ff' },
-            deadline: { icon: '⊘', bg: '#fef3c7' },
-            edit: { icon: '✎', bg: '#f3f4f6' },
-            delete: { icon: '⊗', bg: '#fee2e2' },
-            complete: { icon: '✓', bg: '#dcfce7' },
-            reopen: { icon: '⊕', bg: '#fef3c7' },
-            review: { icon: '◉', bg: '#e0e7ff' },
-            escalation: { icon: '⚠', bg: '#fee2e2' }
+            created: { icon: '+', bg: '#dcfce7' },
+            status: { icon: '~', bg: '#dbeafe' },
+            reassign: { icon: '@', bg: '#e0e7ff' },
+            deadline: { icon: '#', bg: '#fef3c7' },
+            edit: { icon: '/', bg: '#f3f4f6' },
+            delete: { icon: 'x', bg: '#fee2e2' },
+            complete: { icon: 'v', bg: '#dcfce7' },
+            reopen: { icon: 'o', bg: '#fef3c7' },
+            review: { icon: '*', bg: '#e0e7ff' },
+            escalation: { icon: '!', bg: '#fee2e2' }
         };
         
         const _logDebounce = new Map();
@@ -23618,7 +23843,7 @@ Ctrl+K або / - пошук завдань
         function getEscalationBadgeHtml(task) {
             const level = getEscalationLevel(task);
             if (!level) return '';
-            return `<span class="escalation-badge escalation-${level.level}" title="${level.label}">⚠ ${level.label}</span>`;
+            return `<span class="escalation-badge escalation-${level.level}" title="${level.label}"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> ${level.label}</span>`;
         }
         
         async function checkEscalations() {
@@ -23787,7 +24012,7 @@ Ctrl+K або / - пошук завдань
                     let checkHtml = '';
                     if (t.checklist?.length) {
                         const done = t.checklist.filter(c => c.done).length;
-                        checkHtml = `<span>✓ ${done}/${t.checklist.length}</span>`;
+                        checkHtml = `<span> ${done}/${t.checklist.length}</span>`;
                     }
                     
                     let imgHtml = '';
@@ -23799,7 +24024,7 @@ Ctrl+K або / - пошук завдань
                     }
                     
                     let prioHtml = '';
-                    if (t.priority === 'high') prioHtml = '<span class="kanban-card-badge" style="background:#fef2f2;color:#ef4444">●</span>';
+                    if (t.priority === 'high') prioHtml = '<span class="kanban-card-badge" style="background:#fef2f2;color:#ef4444"></span>';
                     else if (t.priority === 'medium') prioHtml = '<span class="kanban-card-badge" style="background:#fffbeb;color:#f59e0b"><i data-lucide="minus-circle" class="icon icon-sm"></i></span>';
                     
                     let escalBadge = '';
@@ -24373,6 +24598,10 @@ Ctrl+K або / - пошук завдань
     
     function requiresCompletionReport(task) {
         if (!task) return false;
+        // Explicit flag takes priority
+        if (task.requireReport === true) return true;
+        if (task.requireReport === false) return false;
+        // Default: require if expectedResult or reportFormat is set
         return !!(task.reportFormat || task.expectedResult);
     }
     
@@ -24619,7 +24848,7 @@ Ctrl+K або / - пошук завдань
                     Додати
                 </button>
                 <button onclick="dismissInstallBanner()" style="background:none;border:none;color:rgba(255,255,255,0.5);
-                    cursor:pointer;font-size:1.2rem;padding:4px;flex-shrink:0;">×</button>
+                    cursor:pointer;font-size:1.2rem;padding:4px;flex-shrink:0;">&times;</button>
             </div>
         `;
         document.body.appendChild(banner);
@@ -24663,7 +24892,7 @@ Ctrl+K або / - пошук завдань
                             <div style="flex:1;">
                                 <div style="font-weight:600;font-size:0.95rem;">Встановити TALKO Tasks</div>
                             </div>
-                            <button onclick="dismissIOSHint()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1.2rem;">×</button>
+                            <button onclick="dismissIOSHint()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1.2rem;">&times;</button>
                         </div>
                         <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);line-height:1.5;">
                             Натисніть <span style="display:inline-flex;align-items:center;background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:6px;margin:0 2px;">
