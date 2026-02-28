@@ -25836,7 +25836,7 @@ Ctrl+K або / - пошук завдань
     // AI ASSISTANTS CONFIG (owner panel)
     // =====================
     function openAiAssistantsModal() {
-        if (!SUPER_ADMINS.includes(currentUser?.email)) {
+        if (!isSuperAdmin) {
             showToast('Тільки для адміністратора TALKO', 'error'); return;
         }
         loadAiAssistants();
