@@ -5343,6 +5343,51 @@
             .comments-list { max-height: 200px; }
             .comment-input { font-size: 16px; }
         }
+
+        /* Onboarding hints */
+        .hint-pulse { position: relative; }
+        .hint-pulse::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: inherit;
+            border: 2px solid #3b82f6;
+            animation: hintPulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.03); }
+        }
+        .hint-tooltip {
+            position: fixed;
+            z-index: 10020;
+            background: #1e293b;
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            max-width: 260px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            animation: hintFadeIn 0.3s ease;
+        }
+        .hint-tooltip .hint-dismiss {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 2px 10px;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.72rem;
+        }
+        .hint-tooltip .hint-step { font-size: 0.65rem; color: #94a3b8; margin-bottom: 4px; }
+        @keyframes hintFadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -5550,7 +5595,10 @@
                             <span id="mydayDateText" class="myday-date-text"></span>
                         </div>
                     </div>
-                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <button onclick="openNextTask()" class="btn" id="nextTaskBtn" style="padding:0.4rem 0.75rem;font-size:0.85rem;white-space:nowrap;background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;border:none;">
+                            <i data-lucide="arrow-right-circle" class="icon icon-sm"></i> <span data-i18n="nextTask">Наступна</span>
+                        </button>
                         <button onclick="startFocusMode()" class="btn btn-success btn-sm" id="focusModeBtn" style="padding:0.4rem 0.75rem;font-size:0.85rem;white-space:nowrap;">
                             <i data-lucide="play" class="icon icon-sm"></i> <span data-i18n="focusMode">Фокус</span>
                         </button>
@@ -7517,7 +7565,6 @@
                 overdueGroup: 'Протерміновані',
                 thisWeek: 'Цей тиждень',
                 nextWeek: 'Наступний тиждень',
-                later: 'Пізніше',
                 noDeadline: 'Без терміну',
                 notToday: 'Не сьогодні',
                 noRegularTasks: 'Немає регулярних завдань',
@@ -7646,6 +7693,19 @@
                 manual: 'ручний',
                 requireReport: 'Звіт при завершенні',
                 taskGenAI: 'Як ставити завдання',
+                nextTask: 'Наступна',
+                goodMorning: 'Доброго ранку',
+                tasksForToday: 'задач',
+                startDay: 'Почати день',
+                later: 'Пізніше',
+                tracked: 'зафіксовано',
+                hintNextTask: 'Натисніть, щоб відкрити найважливішу задачу. Система сама вибере.',
+                hintTasks: 'Всі задачі. Фільтри "Мої" та "Сьогодні" покажуть тільки ваші.',
+                hintControl: 'Панель керівника: брифінг, журнал збоїв, аналітика команди.',
+                hintMore: 'AI-асистенти, функції, аналітика, профіль, налаштування мови.',
+                gotIt: 'Зрозуміло',
+                skip: 'Пропустити',
+                next: 'Далі',
                 active: 'акт.',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
                 projectStatusChanged: 'Проєкт "{name}" → {status}',
@@ -7847,6 +7907,20 @@
                 academyAI: 'Академия',
                 funcDescAI: 'Описание функций',
                 taskGenAI: 'Как ставить задачи',
+                delegationPipeline: 'Воронка делегирования',
+                failureJournal: 'Журнал сбоев',
+                nextTask: 'Следующая',
+                goodMorning: 'Доброе утро',
+                tasksForToday: 'задач',
+                startDay: 'Начать день',
+                tracked: 'зафиксировано',
+                hintNextTask: 'Нажмите, чтобы открыть самую важную задачу. Система сама выберет.',
+                hintTasks: 'Все задачи. Фильтры "Мои" и "Сегодня" покажут только ваши.',
+                hintControl: 'Панель руководителя: брифинг, журнал сбоев, аналитика команды.',
+                hintMore: 'AI-ассистенты, функции, аналитика, профиль, настройки языка.',
+                gotIt: 'Понятно',
+                skip: 'Пропустить',
+                next: 'Далее',
                 
                 // Functions
                 addFunction: '+ Функция',
@@ -8981,7 +9055,6 @@
                 overdueGroup: 'Przeterminowane',
                 thisWeek: 'Ten tydzień',
                 nextWeek: 'Następny tydzień',
-                later: 'Później',
                 noDeadline: 'Bez terminu',
                 notToday: 'Nie dzisiaj',
                 noRegularTasks: 'Brak zadań regularnych',
@@ -9110,6 +9183,19 @@
                 manual: 'ręczny',
                 requireReport: 'Raport po zakończeniu',
                 taskGenAI: 'Jak zlecać zadania',
+                nextTask: 'Następne',
+                goodMorning: 'Dzień dobry',
+                tasksForToday: 'zadań',
+                startDay: 'Rozpocznij dzień',
+                later: 'Później',
+                tracked: 'zarejestrowano',
+                hintNextTask: 'Kliknij, aby otworzyć najważniejsze zadanie. System sam wybierze.',
+                hintTasks: 'Wszystkie zadania. Filtry "Moje" i "Dziś" pokażą tylko twoje.',
+                hintControl: 'Panel kierownika: briefing, dziennik awarii, analityka zespołu.',
+                hintMore: 'Asystenci AI, funkcje, analityka, profil, ustawienia języka.',
+                gotIt: 'Rozumiem',
+                skip: 'Pomiń',
+                next: 'Dalej',
                 active: 'akt.',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
                 projectStatusChanged: 'Projekt "{name}" → {status}',
@@ -10100,6 +10186,8 @@
                     checkEscalations();
                     // Load manual incidents for journal
                     loadManualIncidents().catch(() => {});
+                    // Show morning start modal (once per day)
+                    setTimeout(() => { checkMorningStart(); startOnboarding(); }, 1500);
                 }
                 hideSkeletonLoading();
             }
@@ -14349,6 +14437,7 @@
                         </div>
                         ${reviewActionsHtml}
                     </div>
+                    ${!task.done && !task.review ? getTimerButtonHtml(task.id) : ''}
                     ${task.overdue ? '<i data-lucide="alert-triangle" class="icon" style="color:var(--danger);"></i>' : ''}
                 </div>`;
         }
@@ -24739,6 +24828,334 @@ Ctrl+K або / - пошук завдань
                 originalCloseModal(modalId);
             }
         };
+
+    // =====================
+    // NEXT TASK — AI-like task prioritization
+    // =====================
+    function getNextTask() {
+        const todayStr = getLocalDateStr(new Date());
+        const uid = currentUser?.uid;
+        if (!uid) return null;
+        
+        const myActive = tasks.filter(t => 
+            t.assigneeId === uid && t.status !== 'done' && t.status !== 'review'
+        );
+        
+        if (myActive.length === 0) return null;
+        
+        // Priority: 1) overdue by severity, 2) high priority today, 3) today by time, 4) future
+        myActive.sort((a, b) => {
+            const aOverdue = a.deadlineDate && a.deadlineDate < todayStr ? 1 : 0;
+            const bOverdue = b.deadlineDate && b.deadlineDate < todayStr ? 1 : 0;
+            if (aOverdue !== bOverdue) return bOverdue - aOverdue; // overdue first
+            
+            const prioScore = { high: 3, medium: 2, low: 1 };
+            const aPrio = prioScore[a.priority] || 2;
+            const bPrio = prioScore[b.priority] || 2;
+            if (aPrio !== bPrio) return bPrio - aPrio; // high priority first
+            
+            // By deadline date then time
+            const aDate = a.deadlineDate || '9999';
+            const bDate = b.deadlineDate || '9999';
+            if (aDate !== bDate) return aDate.localeCompare(bDate);
+            
+            const aTime = a.deadlineTime || '23:59';
+            const bTime = b.deadlineTime || '23:59';
+            return aTime.localeCompare(bTime);
+        });
+        
+        return myActive[0];
+    }
+    
+    function openNextTask() {
+        const next = getNextTask();
+        if (!next) {
+            showToast(t('noTasksForToday') || 'Немає активних задач', 'success', 2000);
+            return;
+        }
+        openTaskModal(next.id);
+    }
+    
+    // =====================
+    // MORNING START — auto-start day
+    // =====================
+    function checkMorningStart() {
+        if (!currentUser) return;
+        const todayStr = getLocalDateStr(new Date());
+        const key = `morningStart_${currentUser.uid}_${todayStr}`;
+        if (sessionStorage.getItem(key)) return;
+        
+        // Only show for employees and managers, not on weekends optionally
+        const uid = currentUser.uid;
+        const myActive = tasks.filter(t => 
+            t.assigneeId === uid && t.status !== 'done' && t.deadlineDate && t.deadlineDate <= todayStr
+        );
+        const myRegularCount = regularTasks.filter(rt => {
+            if (!rt.assigneeId && !rt.assigneeIds?.length) return false;
+            const ids = rt.assigneeIds || [rt.assigneeId];
+            return ids.includes(uid);
+        }).length;
+        
+        if (myActive.length === 0 && myRegularCount === 0) {
+            sessionStorage.setItem(key, '1');
+            return;
+        }
+        
+        const overdue = myActive.filter(t => t.deadlineDate < todayStr).length;
+        const userName = currentUserData?.name?.split(' ')[0] || '';
+        
+        // Build morning modal
+        const overlay = document.createElement('div');
+        overlay.id = 'morningOverlay';
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10010;display:flex;align-items:center;justify-content:center;padding:1rem;';
+        
+        overlay.innerHTML = `
+        <div style="background:white;border-radius:16px;max-width:380px;width:100%;padding:1.5rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </div>
+            <h3 style="margin-bottom:0.25rem;">${t('goodMorning') || 'Доброго ранку'}${userName ? ', ' + userName : ''}!</h3>
+            <div style="display:flex;justify-content:center;gap:1rem;margin:1rem 0;">
+                <div style="background:#f0fdf4;border-radius:10px;padding:0.6rem 1rem;">
+                    <div style="font-size:1.5rem;font-weight:700;color:#16a34a;">${myActive.length}</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">${t('tasksForToday') || 'задач'}</div>
+                </div>
+                ${overdue > 0 ? `
+                <div style="background:#fef2f2;border-radius:10px;padding:0.6rem 1rem;">
+                    <div style="font-size:1.5rem;font-weight:700;color:#ef4444;">${overdue}</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">${t('overdueStatus') || 'прострочених'}</div>
+                </div>` : ''}
+                ${myRegularCount > 0 ? `
+                <div style="background:#f0f9ff;border-radius:10px;padding:0.6rem 1rem;">
+                    <div style="font-size:1.5rem;font-weight:700;color:#0284c7;">${myRegularCount}</div>
+                    <div style="font-size:0.7rem;color:#6b7280;">${t('tabRegular') || 'регулярних'}</div>
+                </div>` : ''}
+            </div>
+            <button onclick="startMyDay()" style="width:100%;padding:0.75rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border:none;border-radius:10px;font-weight:700;font-size:1rem;cursor:pointer;margin-bottom:0.5rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                ${t('startDay') || 'Почати день'}
+            </button>
+            <button onclick="dismissMorning()" style="width:100%;padding:0.5rem;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:0.85rem;">
+                ${t('later') || 'Пізніше'}
+            </button>
+        </div>`;
+        
+        document.body.appendChild(overlay);
+        sessionStorage.setItem(key, '1');
+    }
+    
+    function startMyDay() {
+        document.getElementById('morningOverlay')?.remove();
+        const next = getNextTask();
+        if (next) openTaskModal(next.id);
+    }
+    
+    function dismissMorning() {
+        document.getElementById('morningOverlay')?.remove();
+    }
+    
+    // =====================
+    // TASK TIMER — track execution time
+    // =====================
+    let activeTimer = null;
+    let timerInterval = null;
+    
+    function startTaskTimer(taskId) {
+        if (activeTimer && activeTimer.taskId === taskId) return; // already running
+        stopTaskTimer(false); // stop previous
+        
+        activeTimer = {
+            taskId,
+            startTime: Date.now()
+        };
+        
+        updateTimerDisplay(taskId);
+        timerInterval = setInterval(() => updateTimerDisplay(taskId), 1000);
+        
+        // Save start time to Firestore
+        if (currentCompany) {
+            db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId)
+                .update({ timerStartedAt: firebase.firestore.FieldValue.serverTimestamp() })
+                .catch(() => {});
+        }
+        
+        const btn = document.getElementById('timerBtn_' + taskId);
+        if (btn) {
+            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+            btn.style.background = '#ef4444';
+            btn.onclick = () => stopTaskTimer(true);
+        }
+    }
+    
+    function stopTaskTimer(save) {
+        if (!activeTimer) return;
+        
+        clearInterval(timerInterval);
+        timerInterval = null;
+        
+        if (save && currentCompany) {
+            const elapsed = Math.round((Date.now() - activeTimer.startTime) / 60000); // minutes
+            if (elapsed < 1) { activeTimer = null; return; } // less than 1 min — ignore
+            
+            const taskId = activeTimer.taskId;
+            const entry = {
+                minutes: elapsed,
+                date: new Date().toISOString(),
+                userName: currentUserData?.name || currentUser?.email || '',
+                userId: currentUser?.uid
+            };
+            
+            db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId)
+                .update({ 
+                    timeLog: firebase.firestore.FieldValue.arrayUnion(entry),
+                    timerStartedAt: null
+                }).catch(() => {});
+            
+            // Update local
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                if (!task.timeLog) task.timeLog = [];
+                task.timeLog.push(entry);
+            }
+            
+            showToast(`${elapsed} ${t('min') || 'хв'} ${t('tracked') || 'зафіксовано'}`, 'success', 2000);
+        }
+        
+        // Reset button
+        const btn = document.getElementById('timerBtn_' + activeTimer.taskId);
+        if (btn) {
+            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+            btn.style.background = '#22c55e';
+            const tid = activeTimer.taskId;
+            btn.onclick = () => startTaskTimer(tid);
+        }
+        
+        const display = document.getElementById('timerDisplay_' + activeTimer.taskId);
+        if (display) display.textContent = '';
+        
+        activeTimer = null;
+    }
+    
+    function updateTimerDisplay(taskId) {
+        if (!activeTimer || activeTimer.taskId !== taskId) return;
+        const elapsed = Math.floor((Date.now() - activeTimer.startTime) / 1000);
+        const m = Math.floor(elapsed / 60);
+        const s = elapsed % 60;
+        const display = document.getElementById('timerDisplay_' + taskId);
+        if (display) display.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+    }
+    
+    function getTimerButtonHtml(taskId) {
+        const isRunning = activeTimer?.taskId === taskId;
+        const icon = isRunning 
+            ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+            : '<polygon points="5 3 19 12 5 21 5 3"/>';
+        const color = isRunning ? '#ef4444' : '#22c55e';
+        const action = isRunning ? `stopTaskTimer(true)` : `startTaskTimer('${escId(taskId)}')`;
+        
+        return `<button id="timerBtn_${escId(taskId)}" onclick="event.stopPropagation();${action}" style="display:flex;align-items:center;gap:4px;padding:3px 8px;background:${color};color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.7rem;font-weight:600;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">${icon}</svg>
+            <span id="timerDisplay_${escId(taskId)}" style="min-width:28px;"></span>
+        </button>`;
+    }
+
+    // =====================
+    // ONBOARDING HINTS — step-by-step tooltips for new users
+    // =====================
+    const ONBOARDING_HINTS = [
+        {
+            target: '#nextTaskBtn',
+            text: 'hintNextTask',
+            fallback: 'Натисніть, щоб відкрити найважливішу задачу. Система сама вибере що робити першим.',
+            position: 'below'
+        },
+        {
+            target: '[data-tab="tasks"]',
+            text: 'hintTasks',
+            fallback: 'Тут всі задачі. Використовуйте фільтри "Мої" та "Сьогодні" щоб бачити тільки своє.',
+            position: 'above'
+        },
+        {
+            target: '[data-tab="control"]',
+            text: 'hintControl',
+            fallback: 'Панель керівника: брифінг, журнал збоїв, аналітика по команді.',
+            position: 'above'
+        },
+        {
+            target: '[data-tab="more"]',
+            text: 'hintMore',
+            fallback: 'Тут AI-асистенти, функції, аналітика, профіль та налаштування.',
+            position: 'above'
+        }
+    ];
+    
+    let currentHintIndex = 0;
+    
+    function startOnboarding() {
+        const key = `onboarding_${currentUser?.uid}`;
+        if (localStorage.getItem(key)) return;
+        currentHintIndex = 0;
+        setTimeout(() => showNextHint(), 2000);
+    }
+    
+    function showNextHint() {
+        // Remove previous
+        document.querySelector('.hint-tooltip')?.remove();
+        document.querySelector('.hint-pulse')?.classList.remove('hint-pulse');
+        
+        if (currentHintIndex >= ONBOARDING_HINTS.length) {
+            // Done
+            const key = `onboarding_${currentUser?.uid}`;
+            localStorage.setItem(key, '1');
+            return;
+        }
+        
+        const hint = ONBOARDING_HINTS[currentHintIndex];
+        const el = document.querySelector(hint.target);
+        if (!el) { currentHintIndex++; showNextHint(); return; }
+        
+        // Pulse the target
+        el.classList.add('hint-pulse');
+        
+        // Create tooltip
+        const rect = el.getBoundingClientRect();
+        const tooltip = document.createElement('div');
+        tooltip.className = 'hint-tooltip';
+        
+        const stepText = `${currentHintIndex + 1}/${ONBOARDING_HINTS.length}`;
+        const hintText = t(hint.text) || hint.fallback;
+        
+        tooltip.innerHTML = `
+            <div class="hint-step">${stepText}</div>
+            <div>${hintText}</div>
+            <button class="hint-dismiss" onclick="advanceHint()">${currentHintIndex < ONBOARDING_HINTS.length - 1 ? (t('next') || 'Далі') : (t('gotIt') || 'Зрозуміло')}</button>
+            <button class="hint-dismiss" onclick="skipOnboarding()" style="margin-left:4px;opacity:0.6;">${t('skip') || 'Пропустити'}</button>
+        `;
+        
+        document.body.appendChild(tooltip);
+        
+        // Position
+        const ttRect = tooltip.getBoundingClientRect();
+        if (hint.position === 'above') {
+            tooltip.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+            tooltip.style.left = Math.max(8, Math.min(rect.left + rect.width/2 - ttRect.width/2, window.innerWidth - ttRect.width - 8)) + 'px';
+        } else {
+            tooltip.style.top = (rect.bottom + 8) + 'px';
+            tooltip.style.left = Math.max(8, Math.min(rect.left + rect.width/2 - ttRect.width/2, window.innerWidth - ttRect.width - 8)) + 'px';
+        }
+    }
+    
+    function advanceHint() {
+        currentHintIndex++;
+        showNextHint();
+    }
+    
+    function skipOnboarding() {
+        document.querySelector('.hint-tooltip')?.remove();
+        document.querySelector('.hint-pulse')?.classList.remove('hint-pulse');
+        const key = `onboarding_${currentUser?.uid}`;
+        localStorage.setItem(key, '1');
+    }
 
     // =====================
     // MANUAL INCIDENTS (Journal)
