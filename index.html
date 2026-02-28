@@ -5363,7 +5363,10 @@
                     <i data-lucide="graduation-cap" class="icon"></i> <span data-i18n="academyAI">Академія</span>
                 </a>
                 <a href="https://chatgpt.com/g/g-684c0092653c81919f42552c12434fa7-function-description-generator" target="_blank" class="header-ai-btn" style="background:linear-gradient(135deg,#f59e0b,#d97706);" title="Опис функцій">
-                    <i data-lucide="file-text" class="icon"></i> <span data-i18n="funcDescAI">Інструкції</span>
+                    <i data-lucide="file-text" class="icon"></i> <span data-i18n="funcDescAI">Опис функцій</span>
+                </a>
+                <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="header-ai-btn" style="background:linear-gradient(135deg,#0284c7,#0369a1);" title="Як ставити завдання">
+                    <i data-lucide="list-plus" class="icon"></i> <span data-i18n="taskGenAI">Завдання</span>
                 </a>
                 <div class="lang-switcher">
                     <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
@@ -5585,9 +5588,22 @@
                     
                     <div class="calendar-title" id="calendarTitle"></div>
                     
-                    <button class="btn btn-success" onclick="openTaskModal()">
-                        <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
-                    </button>
+                    <div style="position:relative;display:inline-block;" id="addTaskDropdown">
+                        <button class="btn btn-success" onclick="toggleAddTaskMenu(event)">
+                            <i data-lucide="plus" class="icon"></i> <span class="hide-mobile" data-i18n="add">Додати</span>
+                        </button>
+                        <div id="addTaskMenu" style="display:none;position:absolute;top:100%;right:0;margin-top:4px;background:white;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:100;min-width:200px;overflow:hidden;">
+                            <button onclick="openTaskModal();closeAddTaskMenu();" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:0.85rem;text-align:left;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
+                                <i data-lucide="plus" class="icon icon-sm" style="color:#22c55e;"></i> <span data-i18n="newTask">Нова задача</span>
+                            </button>
+                            <button onclick="openTemplatePickerModal();closeAddTaskMenu();" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:0.85rem;text-align:left;border-top:1px solid #f3f4f6;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
+                                <i data-lucide="copy" class="icon icon-sm" style="color:#8b5cf6;"></i> <span data-i18n="fromTemplate">З шаблону</span>
+                            </button>
+                            <button onclick="openManageTemplatesModal();closeAddTaskMenu();" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:0.85rem;text-align:left;border-top:1px solid #f3f4f6;color:#6b7280;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
+                                <i data-lucide="settings" class="icon icon-sm"></i> <span data-i18n="manageTemplates">Шаблони</span>
+                            </button>
+                        </div>
+                    </div>
                     
                     <div class="calendar-view-switcher">
                         <button class="calendar-view-btn active" data-view="day" onclick="setCalendarView('day')" data-i18n="day" data-short="День">День</button>
@@ -6903,9 +6919,7 @@
         </div>
     </div>
 
-    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="support-btn">
-        <i data-lucide="bot" class="icon"></i> <span data-i18n="aiSupport">AI Підтримка</span>
-    </a>
+    <!-- AI buttons moved to mobile menu and header -->
 
     <footer class="footer">
         <p>Powered by <strong style="color:#3498db;">TALKO System</strong></p>
@@ -7191,7 +7205,6 @@
                 start: 'Запустити',
                 noProcesses: 'Немає активних процесів',
                 createProcessTemplate: 'Створіть шаблон процесу та запустіть перший процес',
-                createTemplate: 'Створити шаблон',
                 editTemplate: 'Редагувати шаблон',
                 deleteTemplate: 'Видалити шаблон',
                 stepFunction: 'Функція етапу',
@@ -7200,7 +7213,6 @@
                 completeStep: 'Завершити етап',
                 processHistory: 'Історія процесу',
                 currentStep: 'Поточний етап',
-                noTemplates: 'Немає шаблонів процесів',
                 createFirstTemplate: 'Створіть перший шаблон',
                 activeProcesses: 'активних',
                 templateSaved: 'Шаблон збережено',
@@ -7395,7 +7407,6 @@
                 taskForReview: 'Завдання на перевірку',
                 processAdvancedShort: 'Процес просунувся',
                 processCompletedShort: 'Процес завершено',
-                newTask: 'Нове завдання',
                 processTask: 'Завдання з процесу',
                 fromFunctionAuto: 'З функції (авто)',
                 deleteProjectWithTasks: 'Видалити проєкт? {total} завдань ({undone} незавершених) залишаться в загальному списку.',
@@ -7607,7 +7618,34 @@
                 criticalOverdueWarning: 'задач прострочено 3+ днів.',
                 criticalOverdueAdvice: 'Рекомендація: спочатку закрийте прострочені задачі.',
                 continueAnyway: 'Все одно створити задачу?',
+                newTask: 'Нова задача',
+                fromTemplate: 'З шаблону',
+                manageTemplates: 'Шаблони',
+                noTemplates: 'Шаблонів ще немає',
+                createTemplate: 'Створити шаблон',
+                templateApplied: 'Шаблон застосовано',
+                templatesCount: 'шаблонів',
+                addIncident: 'Додати збій',
+                whatHappened: 'Що сталось?',
+                cat_people: 'Люди',
+                cat_process: 'Процес',
+                cat_finance: 'Фінанси',
+                cat_clients: 'Клієнти',
+                cat_quality: 'Якість',
+                cat_other: 'Інше',
+                severityLow: 'Незначний',
+                severityMedium: 'Середній',
+                severityHigh: 'Критичний',
+                responsible: 'Відповідальний',
+                incidentDetails: 'Деталі, причина, що робити...',
+                incidentSaved: 'Збій зафіксовано',
+                incidentResolved: 'Розібрано',
+                manualIncidents: 'Ручні',
+                resolvedIncidents: 'розібрано',
+                markResolved: 'Розібрано',
+                manual: 'ручний',
                 requireReport: 'Звіт при завершенні',
+                taskGenAI: 'Як ставити завдання',
                 active: 'акт.',
                 tasksUnlinked: '{n} завдань відвʼязано від проєкту',
                 projectStatusChanged: 'Проєкт "{name}" → {status}',
@@ -8628,7 +8666,6 @@
                 start: 'Uruchom',
                 noProcesses: 'Brak aktywnych procesów',
                 createProcessTemplate: 'Utwórz szablon procesu i uruchom pierwszy proces',
-                createTemplate: 'Utwórz szablon',
                 editTemplate: 'Edytuj szablon',
                 deleteTemplate: 'Usuń szablon',
                 stepFunction: 'Funkcja etapu',
@@ -8637,7 +8674,6 @@
                 completeStep: 'Zakończ etap',
                 processHistory: 'Historia procesu',
                 currentStep: 'Bieżący etap',
-                noTemplates: 'Brak szablonów procesów',
                 createFirstTemplate: 'Utwórz pierwszy szablon',
                 activeProcesses: 'aktywnych',
                 templateSaved: 'Szablon zapisany',
@@ -8832,7 +8868,6 @@
                 taskForReview: 'Zadanie do weryfikacji',
                 processAdvancedShort: 'Proces przesunięty',
                 processCompletedShort: 'Proces zakończony',
-                newTask: 'Nowe zadanie',
                 processTask: 'Zadanie z procesu',
                 fromFunctionAuto: 'Z funkcji (auto)',
                 deleteProjectWithTasks: 'Usunąć projekt? {total} zadań ({undone} niezakończonych) pozostanie na liście.',
@@ -9044,7 +9079,34 @@
                 criticalOverdueWarning: 'zadań przeterminowanych 3+ dni.',
                 criticalOverdueAdvice: 'Zalecenie: najpierw zamknij przeterminowane zadania.',
                 continueAnyway: 'Czy mimo to utworzyć zadanie?',
+                newTask: 'Nowe zadanie',
+                fromTemplate: 'Z szablonu',
+                manageTemplates: 'Szablony',
+                noTemplates: 'Brak szablonów',
+                createTemplate: 'Utwórz szablon',
+                templateApplied: 'Szablon zastosowany',
+                templatesCount: 'szablonów',
+                addIncident: 'Dodaj awarię',
+                whatHappened: 'Co się stało?',
+                cat_people: 'Ludzie',
+                cat_process: 'Proces',
+                cat_finance: 'Finanse',
+                cat_clients: 'Klienci',
+                cat_quality: 'Jakość',
+                cat_other: 'Inne',
+                severityLow: 'Nieznaczny',
+                severityMedium: 'Średni',
+                severityHigh: 'Krytyczny',
+                responsible: 'Odpowiedzialny',
+                incidentDetails: 'Szczegóły, przyczyna, co robić...',
+                incidentSaved: 'Awaria zarejestrowana',
+                incidentResolved: 'Rozwiązano',
+                manualIncidents: 'Ręczne',
+                resolvedIncidents: 'rozwiązano',
+                markResolved: 'Rozwiązano',
+                manual: 'ręczny',
                 requireReport: 'Raport po zakończeniu',
+                taskGenAI: 'Jak zlecać zadania',
                 active: 'akt.',
                 tasksUnlinked: '{n} zadań odłączono od projektu',
                 projectStatusChanged: 'Projekt "{name}" → {status}',
@@ -10033,6 +10095,8 @@
                     isLoading = false;
                     // Check escalations after data is loaded
                     checkEscalations();
+                    // Load manual incidents for journal
+                    loadManualIncidents().catch(() => {});
                 }
                 hideSkeletonLoading();
             }
@@ -19365,17 +19429,17 @@
                 const isOwner = u.role === 'owner';
                 
                 // Task stats
-                const userTasks = tasks.filter(t => t.assigneeId === u.id);
-                const activeTasks = userTasks.filter(t => t.status !== 'done');
-                const doneTasks = userTasks.filter(t => t.status === 'done');
-                const newTasks = userTasks.filter(t => t.status === 'new');
-                const inProgress = userTasks.filter(t => t.status === 'progress');
-                const onReview = userTasks.filter(t => t.status === 'review');
-                const overdue = activeTasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
-                const returned = userTasks.filter(t => t.reviewRejectedAt);
+                const userTasks = tasks.filter(tk => tk.assigneeId === u.id);
+                const activeTasks = userTasks.filter(tk => tk.status !== 'done');
+                const doneTasks = userTasks.filter(tk => tk.status === 'done');
+                const newTasks = userTasks.filter(tk => tk.status === 'new');
+                const inProgress = userTasks.filter(tk => tk.status === 'progress');
+                const onReview = userTasks.filter(tk => tk.status === 'review');
+                const overdue = activeTasks.filter(tk => tk.deadlineDate && t.deadlineDate < todayStr);
+                const returned = userTasks.filter(tk => tk.reviewRejectedAt);
                 
                 // Autonomy index: % done without returns (from all done tasks)
-                const doneWithoutReturn = doneTasks.filter(t => !t.reviewRejectedAt).length;
+                const doneWithoutReturn = doneTasks.filter(tk => !tk.reviewRejectedAt).length;
                 const autonomyPct = doneTasks.length > 0 ? Math.round(doneWithoutReturn / doneTasks.length * 100) : 0;
                 const autonomyColor = autonomyPct >= 80 ? '#16a34a' : autonomyPct >= 50 ? '#f59e0b' : '#ef4444';
                 
@@ -19490,9 +19554,9 @@
                             <i data-lucide="settings" class="icon icon-sm"></i> ${t('tabFunctions')}
                         </div>
                         ${userFunctions.map(f => {
-                            const fTasks = tasks.filter(t => t.function === f.name && t.assigneeId === u.id);
-                            const fActive = fTasks.filter(t => t.status !== 'done').length;
-                            const fDone = fTasks.filter(t => t.status === 'done').length;
+                            const fTasks = tasks.filter(tk => tk.function === f.name && t.assigneeId === u.id);
+                            const fActive = fTasks.filter(tk => tk.status !== 'done').length;
+                            const fDone = fTasks.filter(tk => tk.status === 'done').length;
                             return `<div style="display:flex;justify-content:space-between;padding:0.25rem 0.5rem;font-size:0.8rem;">
                                 <span style="font-weight:500;">${esc(f.name)}</span>
                                 <span style="color:#6b7280;">${fActive} ${t('active')} / ${fDone} ${t('doneLabel')}</span>
@@ -20035,68 +20099,89 @@
                 const todayStr = getLocalDateStr(new Date());
                 const allVisible = tasks.filter(task => isTaskVisibleToUser(task));
                 
-                // Collect incidents
+                // Collect auto incidents
                 const incidents = [];
                 
                 // 1. Overdue tasks
-                allVisible.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').forEach(t => {
-                    const daysLate = Math.floor((new Date() - new Date(t.deadlineDate)) / 86400000);
+                allVisible.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done').forEach(tk => {
+                    const daysLate = Math.floor((new Date() - new Date(tk.deadlineDate)) / 86400000);
                     incidents.push({
-                        type: 'overdue',
-                        icon: 'alert-triangle',
-                        color: '#ef4444',
-                        bg: '#fef2f2',
+                        type: 'overdue', auto: true,
+                        icon: 'alert-triangle', color: '#ef4444', bg: '#fef2f2',
                         label: t('overdueStatus'),
-                        title: t.title,
-                        person: t.assigneeName || t('notAssigned'),
-                        func: t.function || '',
-                        date: t.deadlineDate,
+                        title: tk.title,
+                        person: tk.assigneeName || t('notAssigned'),
+                        func: tk.function || '',
+                        date: tk.deadlineDate,
                         detail: `${daysLate} ${t('daysAgo')}`,
                         severity: daysLate > 7 ? 3 : daysLate > 3 ? 2 : 1,
-                        taskId: t.id
+                        taskId: tk.id
                     });
                 });
                 
                 // 2. Review returns
-                allVisible.filter(t => t.reviewRejectedAt).forEach(t => {
-                    const rejDate = typeof t.reviewRejectedAt === 'string' ? t.reviewRejectedAt.substring(0,10) : 
-                        t.reviewRejectedAt?.toDate ? getLocalDateStr(t.reviewRejectedAt.toDate()) : '';
+                allVisible.filter(tk => tk.reviewRejectedAt).forEach(tk => {
+                    const rejDate = typeof tk.reviewRejectedAt === 'string' ? tk.reviewRejectedAt.substring(0,10) : 
+                        tk.reviewRejectedAt?.toDate ? getLocalDateStr(tk.reviewRejectedAt.toDate()) : '';
                     incidents.push({
-                        type: 'returned',
-                        icon: 'rotate-ccw',
-                        color: '#f59e0b',
-                        bg: '#fffbeb',
+                        type: 'returned', auto: true,
+                        icon: 'rotate-ccw', color: '#f59e0b', bg: '#fffbeb',
                         label: t('returnedFromReview'),
-                        title: t.title,
-                        person: t.assigneeName || t('notAssigned'),
-                        func: t.function || '',
+                        title: tk.title,
+                        person: tk.assigneeName || t('notAssigned'),
+                        func: tk.function || '',
                         date: rejDate,
-                        detail: t.reviewRejectReason || '',
+                        detail: tk.reviewRejectReason || '',
                         severity: 1,
-                        taskId: t.id
+                        taskId: tk.id
                     });
                 });
                 
                 // 3. Tasks stuck as 'new' for >3 days
-                allVisible.filter(t => t.status === 'new' && t.createdAt).forEach(t => {
-                    const created = t.createdAt?.toDate ? t.createdAt.toDate() : new Date(t.createdAt);
+                allVisible.filter(tk => tk.status === 'new' && tk.createdAt).forEach(tk => {
+                    const created = tk.createdAt?.toDate ? tk.createdAt.toDate() : new Date(tk.createdAt);
                     const daysOld = Math.floor((new Date() - created) / 86400000);
                     if (daysOld >= 3) {
                         incidents.push({
-                            type: 'stuck',
-                            icon: 'pause-circle',
-                            color: '#6366f1',
-                            bg: '#eef2ff',
+                            type: 'stuck', auto: true,
+                            icon: 'pause-circle', color: '#6366f1', bg: '#eef2ff',
                             label: t('notStarted') || 'Не розпочато',
-                            title: t.title,
-                            person: t.assigneeName || t('notAssigned'),
-                            func: t.function || '',
+                            title: tk.title,
+                            person: tk.assigneeName || t('notAssigned'),
+                            func: tk.function || '',
                             date: getLocalDateStr(created),
                             detail: `${daysOld} ${t('daysAgo')}`,
                             severity: daysOld > 7 ? 2 : 1,
-                            taskId: t.id
+                            taskId: tk.id
                         });
                     }
+                });
+                
+                // 4. Manual incidents from Firestore
+                const manualIncidents = (window._manualIncidents || []).filter(mi => !mi.resolved);
+                const resolvedCount = (window._manualIncidents || []).filter(mi => mi.resolved).length;
+                manualIncidents.forEach(mi => {
+                    const catConfig = {
+                        people: { icon: 'users', color: '#dc2626', bg: '#fef2f2' },
+                        process: { icon: 'git-branch', color: '#ea580c', bg: '#fff7ed' },
+                        finance: { icon: 'dollar-sign', color: '#b45309', bg: '#fffbeb' },
+                        clients: { icon: 'user-x', color: '#9333ea', bg: '#faf5ff' },
+                        quality: { icon: 'alert-octagon', color: '#dc2626', bg: '#fef2f2' },
+                        other: { icon: 'flag', color: '#6b7280', bg: '#f9fafb' }
+                    };
+                    const cat = catConfig[mi.category] || catConfig.other;
+                    incidents.push({
+                        type: 'manual', auto: false,
+                        icon: cat.icon, color: cat.color, bg: cat.bg,
+                        label: mi.category ? (t('cat_' + mi.category) || mi.category) : '',
+                        title: mi.title,
+                        person: mi.responsible || '',
+                        func: '',
+                        date: mi.date || '',
+                        detail: mi.description || '',
+                        severity: mi.severity || 1,
+                        manualId: mi.id
+                    });
                 });
                 
                 // Sort: severity desc, then date desc
@@ -20106,41 +20191,56 @@
                 const overdueCount = incidents.filter(i => i.type === 'overdue').length;
                 const returnedCount = incidents.filter(i => i.type === 'returned').length;
                 const stuckCount = incidents.filter(i => i.type === 'stuck').length;
+                const manualCount = incidents.filter(i => i.type === 'manual').length;
                 
                 content.innerHTML = `
-                    <h3 style="margin-bottom:1rem;">${t('failureJournal')}</h3>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                        <h3>${t('failureJournal')}</h3>
+                        <button class="btn btn-success btn-small" onclick="toggleAddIncidentForm()">
+                            <i data-lucide="plus" class="icon icon-sm"></i> ${t('addIncident') || 'Додати збій'}
+                        </button>
+                    </div>
                     
-                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem;">
-                        <div style="background:#fef2f2;border-radius:8px;padding:0.6rem;text-align:center;">
-                            <div style="font-size:1.3rem;font-weight:700;color:#ef4444;">${overdueCount}</div>
-                            <div style="font-size:0.72rem;color:#6b7280;">${t('overdueStatus')}</div>
+                    <div id="addIncidentFormArea" style="display:none;margin-bottom:1rem;"></div>
+                    
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:1rem;">
+                        <div style="background:#fef2f2;border-radius:8px;padding:0.5rem;text-align:center;">
+                            <div style="font-size:1.2rem;font-weight:700;color:#ef4444;">${overdueCount}</div>
+                            <div style="font-size:0.68rem;color:#6b7280;">${t('overdueStatus')}</div>
                         </div>
-                        <div style="background:#fffbeb;border-radius:8px;padding:0.6rem;text-align:center;">
-                            <div style="font-size:1.3rem;font-weight:700;color:#f59e0b;">${returnedCount}</div>
-                            <div style="font-size:0.72rem;color:#6b7280;">${t('returnedFromReview')}</div>
+                        <div style="background:#fffbeb;border-radius:8px;padding:0.5rem;text-align:center;">
+                            <div style="font-size:1.2rem;font-weight:700;color:#f59e0b;">${returnedCount}</div>
+                            <div style="font-size:0.68rem;color:#6b7280;">${t('returnedFromReview')}</div>
                         </div>
-                        <div style="background:#eef2ff;border-radius:8px;padding:0.6rem;text-align:center;">
-                            <div style="font-size:1.3rem;font-weight:700;color:#6366f1;">${stuckCount}</div>
-                            <div style="font-size:0.72rem;color:#6b7280;">${t('notStarted') || 'Не розпочато'}</div>
+                        <div style="background:#eef2ff;border-radius:8px;padding:0.5rem;text-align:center;">
+                            <div style="font-size:1.2rem;font-weight:700;color:#6366f1;">${stuckCount}</div>
+                            <div style="font-size:0.68rem;color:#6b7280;">${t('notStarted') || 'Зависли'}</div>
+                        </div>
+                        <div style="background:#faf5ff;border-radius:8px;padding:0.5rem;text-align:center;">
+                            <div style="font-size:1.2rem;font-weight:700;color:#9333ea;">${manualCount}</div>
+                            <div style="font-size:0.68rem;color:#6b7280;">${t('manualIncidents') || 'Ручні'}</div>
                         </div>
                     </div>
+                    ${resolvedCount > 0 ? `<div style="font-size:0.75rem;color:#16a34a;margin-bottom:0.5rem;"><i data-lucide="check-circle" class="icon icon-sm"></i> ${resolvedCount} ${t('resolvedIncidents') || 'розібрано'}</div>` : ''}
                     
                     ${incidents.length === 0 ? `<div style="text-align:center;padding:2rem;color:#9ca3af;"><i data-lucide="check-circle" class="icon" style="width:48px;height:48px;color:#16a34a;"></i><p style="margin-top:0.5rem;">${t('noIncidents') || 'Збоїв не виявлено'}</p></div>` : ''}
                     
                     ${incidents.map(inc => `
-                        <div style="display:flex;gap:0.6rem;padding:0.6rem;margin-bottom:0.3rem;background:${inc.bg};border-radius:8px;border-left:4px solid ${inc.color};cursor:pointer;" onclick="openTaskModal('${escId(inc.taskId)}')">
+                        <div style="display:flex;gap:0.6rem;padding:0.6rem;margin-bottom:0.3rem;background:${inc.bg};border-radius:8px;border-left:4px solid ${inc.color};">
                             <div style="flex-shrink:0;padding-top:2px;"><i data-lucide="${inc.icon}" class="icon icon-sm" style="color:${inc.color};"></i></div>
-                            <div style="flex:1;min-width:0;">
+                            <div style="flex:1;min-width:0;${inc.taskId ? 'cursor:pointer;' : ''}" ${inc.taskId ? `onclick="openTaskModal('${escId(inc.taskId)}')"` : ''}>
                                 <div style="display:flex;justify-content:space-between;gap:0.3rem;">
                                     <span style="font-weight:600;font-size:0.85rem;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(inc.title)}</span>
                                     <span style="font-size:0.7rem;color:#9ca3af;white-space:nowrap;">${inc.date}</span>
                                 </div>
                                 <div style="display:flex;gap:0.5rem;font-size:0.75rem;color:#6b7280;margin-top:2px;">
                                     <span>${esc(inc.person)}</span>
-                                    ${inc.func ? `<span>• ${esc(inc.func)}</span>` : ''}
-                                    ${inc.detail ? `<span style="color:${inc.color};font-weight:500;">• ${esc(inc.detail)}</span>` : ''}
+                                    ${inc.func ? `<span>· ${esc(inc.func)}</span>` : ''}
+                                    ${inc.detail ? `<span style="color:${inc.color};font-weight:500;">· ${esc(inc.detail)}</span>` : ''}
+                                    ${!inc.auto ? `<span style="background:#e0e7ff;color:#4338ca;padding:0 4px;border-radius:3px;font-size:0.65rem;">${t('manual') || 'ручний'}</span>` : ''}
                                 </div>
                             </div>
+                            ${inc.manualId ? `<button onclick="resolveIncident('${escId(inc.manualId)}')" style="background:none;border:none;cursor:pointer;color:#16a34a;padding:4px;flex-shrink:0;" title="${t('markResolved') || 'Розібрано'}"><i data-lucide="check-circle" class="icon icon-sm"></i></button>` : ''}
                         </div>
                     `).join('')}
                 `;
@@ -24638,6 +24738,343 @@ Ctrl+K або / - пошук завдань
         };
 
     // =====================
+    // MANUAL INCIDENTS (Journal)
+    // =====================
+    window._manualIncidents = [];
+    
+    async function loadManualIncidents() {
+        if (!currentCompany) return;
+        try {
+            const snap = await db.collection('companies').doc(currentCompany)
+                .collection('incidents').orderBy('createdAt', 'desc').limit(100).get();
+            window._manualIncidents = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch(e) { console.error('loadManualIncidents:', e); }
+    }
+    
+    function toggleAddIncidentForm() {
+        const area = document.getElementById('addIncidentFormArea');
+        if (!area) return;
+        if (area.style.display !== 'none') {
+            area.style.display = 'none';
+            area.innerHTML = '';
+            return;
+        }
+        
+        const userOptions = users.map(u => `<option value="${esc(u.name || u.email)}">${esc(u.name || u.email)}</option>`).join('');
+        
+        area.innerHTML = `
+        <div style="background:#f9fafb;border-radius:10px;padding:1rem;border:1px solid #e5e7eb;">
+            <div style="font-weight:600;font-size:0.9rem;margin-bottom:0.75rem;"><i data-lucide="flag" class="icon icon-sm" style="color:#ef4444;"></i> ${t('addIncident') || 'Зафіксувати збій'}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                <div style="grid-column:1/-1;">
+                    <input type="text" id="incidentTitle" placeholder="${t('whatHappened') || 'Що сталось?'}" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                </div>
+                <div>
+                    <select id="incidentCategory" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                        <option value="people">${t('cat_people') || 'Люди'}</option>
+                        <option value="process">${t('cat_process') || 'Процес'}</option>
+                        <option value="finance">${t('cat_finance') || 'Фінанси'}</option>
+                        <option value="clients">${t('cat_clients') || 'Клієнти'}</option>
+                        <option value="quality">${t('cat_quality') || 'Якість'}</option>
+                        <option value="other">${t('cat_other') || 'Інше'}</option>
+                    </select>
+                </div>
+                <div>
+                    <select id="incidentSeverity" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                        <option value="1">${t('severityLow') || 'Незначний'}</option>
+                        <option value="2" selected>${t('severityMedium') || 'Середній'}</option>
+                        <option value="3">${t('severityHigh') || 'Критичний'}</option>
+                    </select>
+                </div>
+                <div style="grid-column:1/-1;">
+                    <select id="incidentResponsible" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                        <option value="">— ${t('responsible') || 'Відповідальний'} —</option>
+                        ${userOptions}
+                    </select>
+                </div>
+                <div style="grid-column:1/-1;">
+                    <textarea id="incidentDescription" placeholder="${t('incidentDetails') || 'Деталі, причина, що робити...'}" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;min-height:50px;resize:vertical;"></textarea>
+                </div>
+            </div>
+            <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+                <button class="btn btn-success" onclick="saveIncident()" style="flex:1;">
+                    <i data-lucide="check" class="icon icon-sm"></i> ${t('save') || 'Зберегти'}
+                </button>
+                <button class="btn" onclick="toggleAddIncidentForm();">${t('cancel') || 'Скасувати'}</button>
+            </div>
+        </div>`;
+        area.style.display = 'block';
+        refreshIcons();
+        document.getElementById('incidentTitle').focus();
+    }
+    
+    async function saveIncident() {
+        const title = document.getElementById('incidentTitle').value.trim();
+        if (!title) { alert(t('enterName') || 'Введіть опис'); return; }
+        
+        const data = {
+            title,
+            category: document.getElementById('incidentCategory').value,
+            severity: parseInt(document.getElementById('incidentSeverity').value),
+            responsible: document.getElementById('incidentResponsible').value,
+            description: document.getElementById('incidentDescription').value.trim(),
+            date: getLocalDateStr(new Date()),
+            resolved: false,
+            createdBy: currentUser.uid,
+            createdByName: currentUserData?.name || currentUser.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        try {
+            const ref = await db.collection('companies').doc(currentCompany)
+                .collection('incidents').add(data);
+            window._manualIncidents.unshift({ id: ref.id, ...data, createdAt: new Date() });
+            toggleAddIncidentForm();
+            renderControl();
+            showToast(t('incidentSaved') || 'Збій зафіксовано', 'success', 2000);
+        } catch(e) {
+            console.error('saveIncident:', e);
+            alert(t('error') + ': ' + e.message);
+        }
+    }
+    
+    async function resolveIncident(id) {
+        try {
+            await db.collection('companies').doc(currentCompany)
+                .collection('incidents').doc(id).update({ resolved: true, resolvedAt: firebase.firestore.FieldValue.serverTimestamp(), resolvedBy: currentUser.uid });
+            const inc = window._manualIncidents.find(i => i.id === id);
+            if (inc) inc.resolved = true;
+            renderControl();
+            showToast(t('incidentResolved') || 'Збій розібрано', 'success', 2000);
+        } catch(e) {
+            console.error('resolveIncident:', e);
+        }
+    }
+
+    // =====================
+    // TASK TEMPLATES
+    // =====================
+    let taskTemplates = [];
+    
+    function toggleAddTaskMenu(event) {
+        event.stopPropagation();
+        const menu = document.getElementById('addTaskMenu');
+        const isOpen = menu.style.display !== 'none';
+        menu.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen) {
+            document.addEventListener('click', closeAddTaskMenu, { once: true });
+        }
+        refreshIcons();
+    }
+    
+    function closeAddTaskMenu() {
+        const menu = document.getElementById('addTaskMenu');
+        if (menu) menu.style.display = 'none';
+    }
+    
+    async function loadTaskTemplates() {
+        if (!currentCompany) return;
+        try {
+            const snap = await db.collection('companies').doc(currentCompany).collection('taskTemplates').orderBy('title').get();
+            taskTemplates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch(e) { console.error('loadTaskTemplates:', e); }
+    }
+    
+    function openTemplatePickerModal() {
+        loadTaskTemplates().then(() => {
+            const body = document.getElementById('templatePickerBody');
+            if (taskTemplates.length === 0) {
+                body.innerHTML = `
+                    <div style="text-align:center;padding:2rem;color:#6b7280;">
+                        <i data-lucide="inbox" class="icon" style="width:40px;height:40px;color:#d1d5db;display:block;margin:0 auto 0.75rem;"></i>
+                        <p style="margin-bottom:1rem;">${t('noTemplates') || 'Шаблонів ще немає'}</p>
+                        <button class="btn btn-success" onclick="closeModal('templatePickerModal');openManageTemplatesModal();">
+                            <i data-lucide="plus" class="icon icon-sm"></i> ${t('createTemplate') || 'Створити шаблон'}
+                        </button>
+                    </div>`;
+            } else {
+                body.innerHTML = `
+                    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                        ${taskTemplates.map(tpl => `
+                        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.65rem;background:#f9fafb;border-radius:8px;cursor:pointer;transition:background 0.15s;" 
+                            onclick="createTaskFromTemplate('${escId(tpl.id)}')"
+                            onmouseover="this.style.background='#ecfdf5'" onmouseout="this.style.background='#f9fafb'">
+                            <div style="width:36px;height:36px;border-radius:8px;background:${tpl.color || '#e0e7ff'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i data-lucide="${tpl.icon || 'file-text'}" class="icon icon-sm" style="color:${tpl.iconColor || '#4338ca'};"></i>
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-weight:600;font-size:0.85rem;">${esc(tpl.title)}</div>
+                                ${tpl.function ? `<div style="font-size:0.72rem;color:#6b7280;">${esc(tpl.function)}${tpl.estimatedTime ? ' · ' + tpl.estimatedTime + ' ' + (t('min') || 'хв') : ''}</div>` : ''}
+                            </div>
+                            <i data-lucide="chevron-right" class="icon icon-sm" style="color:#d1d5db;"></i>
+                        </div>`).join('')}
+                    </div>`;
+            }
+            document.getElementById('templatePickerModal').style.display = 'block';
+            refreshIcons();
+        });
+    }
+    
+    function createTaskFromTemplate(templateId) {
+        const tpl = taskTemplates.find(t => t.id === templateId);
+        if (!tpl) return;
+        closeModal('templatePickerModal');
+        
+        // Open task modal and fill with template data
+        openTaskModal();
+        
+        setTimeout(() => {
+            if (tpl.title) document.getElementById('taskTitle').value = tpl.title;
+            if (tpl.function) document.getElementById('taskFunction').value = tpl.function;
+            if (tpl.priority) document.getElementById('taskPriority').value = tpl.priority;
+            if (tpl.expectedResult) document.getElementById('taskExpectedResult').value = tpl.expectedResult;
+            if (tpl.reportFormat) document.getElementById('taskReportFormat').value = tpl.reportFormat;
+            if (tpl.description) document.getElementById('taskDescription').value = tpl.description;
+            if (tpl.estimatedTime) document.getElementById('taskEstimatedTime').value = tpl.estimatedTime;
+            if (tpl.requireReview !== undefined) document.getElementById('taskRequireReview').checked = tpl.requireReview;
+            if (tpl.requireReport !== undefined) document.getElementById('taskRequireReport').checked = tpl.requireReport;
+            if (tpl.checklist?.length) renderChecklist(tpl.checklist);
+            
+            // Trigger function change to update assignee
+            const funcSelect = document.getElementById('taskFunction');
+            if (funcSelect) funcSelect.dispatchEvent(new Event('change'));
+            
+            showToast(t('templateApplied') || 'Шаблон застосовано', 'success', 2000);
+        }, 200);
+    }
+    
+    function openManageTemplatesModal() {
+        loadTaskTemplates().then(() => renderManageTemplates());
+        document.getElementById('manageTemplatesModal').style.display = 'block';
+    }
+    
+    function renderManageTemplates() {
+        const body = document.getElementById('manageTemplatesBody');
+        
+        let html = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <span style="font-size:0.85rem;color:#6b7280;">${taskTemplates.length} ${t('templatesCount') || 'шаблонів'}</span>
+                <button class="btn btn-success btn-small" onclick="openTemplateEditor()">
+                    <i data-lucide="plus" class="icon icon-sm"></i> ${t('createTemplate') || 'Створити'}
+                </button>
+            </div>
+            <div id="templateEditorArea"></div>`;
+        
+        if (taskTemplates.length > 0) {
+            html += `<div style="display:flex;flex-direction:column;gap:0.4rem;">
+                ${taskTemplates.map(tpl => `
+                <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;background:#f9fafb;border-radius:8px;">
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-weight:600;font-size:0.85rem;">${esc(tpl.title)}</div>
+                        <div style="font-size:0.72rem;color:#6b7280;">${esc(tpl.function || '')}${tpl.expectedResult ? ' · ' + esc(tpl.expectedResult).substring(0,40) : ''}</div>
+                    </div>
+                    <button class="action-btn" onclick="editTemplate('${escId(tpl.id)}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                    <button class="action-btn" onclick="deleteTemplate('${escId(tpl.id)}')" title="${t('delete')}" style="color:#ef4444;"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                </div>`).join('')}
+            </div>`;
+        }
+        
+        body.innerHTML = html;
+        refreshIcons();
+    }
+    
+    function openTemplateEditor(templateId) {
+        const tpl = templateId ? taskTemplates.find(t => t.id === templateId) : {};
+        const area = document.getElementById('templateEditorArea');
+        
+        const funcOptions = functions.filter(f => f.status !== 'archived')
+            .map(f => `<option value="${esc(f.name)}" ${tpl.function === f.name ? 'selected' : ''}>${esc(f.name)}</option>`).join('');
+        
+        area.innerHTML = `
+        <div style="background:#f0fdf4;border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid #dcfce7;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('taskName') || 'Назва'} *</label>
+                    <input type="text" id="tplTitle" value="${esc(tpl.title || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${t('taskName') || 'Назва шаблону'}">
+                </div>
+                <div>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('function') || 'Функція'}</label>
+                    <select id="tplFunction" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
+                        <option value="">—</option>${funcOptions}
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('estimatedTime') || 'Час (хв)'}</label>
+                    <input type="number" id="tplEstimatedTime" value="${tpl.estimatedTime || ''}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="60">
+                </div>
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('expectedResult') || 'Очікуваний результат'}</label>
+                    <input type="text" id="tplExpectedResult" value="${esc(tpl.expectedResult || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
+                </div>
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('reportFormat') || 'Формат звіту'}</label>
+                    <input type="text" id="tplReportFormat" value="${esc(tpl.reportFormat || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${t('reportFormatPlaceholder') || 'Скрін / Посилання / Фото'}">
+                </div>
+                <div style="grid-column:1/-1;">
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('instruction') || 'Інструкція'}</label>
+                    <textarea id="tplDescription" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;min-height:60px;resize:vertical;">${esc(tpl.description || '')}</textarea>
+                </div>
+            </div>
+            <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+                <button class="btn btn-success" onclick="saveTemplate('${templateId || ''}')" style="flex:1;">
+                    <i data-lucide="check" class="icon icon-sm"></i> ${t('save') || 'Зберегти'}
+                </button>
+                <button class="btn" onclick="document.getElementById('templateEditorArea').innerHTML='';renderManageTemplates();">
+                    ${t('cancel') || 'Скасувати'}
+                </button>
+            </div>
+        </div>`;
+        refreshIcons();
+    }
+    
+    function editTemplate(id) { openTemplateEditor(id); }
+    
+    async function saveTemplate(id) {
+        const title = document.getElementById('tplTitle').value.trim();
+        if (!title) { alert(t('enterName') || 'Введіть назву'); return; }
+        
+        const data = {
+            title,
+            function: document.getElementById('tplFunction').value,
+            estimatedTime: document.getElementById('tplEstimatedTime').value,
+            expectedResult: document.getElementById('tplExpectedResult').value.trim(),
+            reportFormat: document.getElementById('tplReportFormat').value.trim(),
+            description: document.getElementById('tplDescription').value.trim(),
+            requireReview: true,
+            requireReport: !!(document.getElementById('tplExpectedResult').value.trim() || document.getElementById('tplReportFormat').value.trim()),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        try {
+            if (id) {
+                await db.collection('companies').doc(currentCompany).collection('taskTemplates').doc(id).update(data);
+            } else {
+                data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                data.createdBy = currentUser.uid;
+                await db.collection('companies').doc(currentCompany).collection('taskTemplates').add(data);
+            }
+            await loadTaskTemplates();
+            document.getElementById('templateEditorArea').innerHTML = '';
+            renderManageTemplates();
+            showToast(t('saved') || 'Збережено', 'success', 2000);
+        } catch(e) {
+            console.error('saveTemplate:', e);
+            alert(t('error') + ': ' + e.message);
+        }
+    }
+    
+    async function deleteTemplate(id) {
+        if (!confirm(t('confirmDelete') || 'Видалити шаблон?')) return;
+        try {
+            await db.collection('companies').doc(currentCompany).collection('taskTemplates').doc(id).delete();
+            taskTemplates = taskTemplates.filter(t => t.id !== id);
+            renderManageTemplates();
+        } catch(e) {
+            console.error('deleteTemplate:', e);
+        }
+    }
+
+    // =====================
     // COMPLETION REPORT — підтвердження виконання
     // =====================
     let completionReportTaskId = null;
@@ -25532,6 +25969,32 @@ Ctrl+K або / - пошук завдань
     
     <!-- COMPLETION REPORT Modal -->
     <div id="completionReportModal" class="modal" onclick="if(event.target===this) closeCompletionReport(false);" style="z-index:10002;">
+
+    <!-- TEMPLATE PICKER MODAL -->
+    <div id="templatePickerModal" class="modal" onclick="if(event.target===this) closeModal('templatePickerModal');" style="z-index:10001;">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <h3><i data-lucide="copy" class="icon"></i> <span data-i18n="fromTemplate">З шаблону</span></h3>
+                <button class="close-btn" onclick="closeModal('templatePickerModal')">&times;</button>
+            </div>
+            <div style="padding:1rem;" id="templatePickerBody">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MANAGE TEMPLATES MODAL -->
+    <div id="manageTemplatesModal" class="modal" onclick="if(event.target===this) closeModal('manageTemplatesModal');" style="z-index:10001;">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-header">
+                <h3><i data-lucide="settings" class="icon"></i> <span data-i18n="manageTemplates">Шаблони</span></h3>
+                <button class="close-btn" onclick="closeModal('manageTemplatesModal')">&times;</button>
+            </div>
+            <div style="padding:1rem;" id="manageTemplatesBody">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+    </div>
         <div class="modal-content" style="max-width:420px;border-radius:16px;padding:0;overflow:hidden;">
             <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
                 <h3 style="margin:0;font-size:1rem;display:flex;align-items:center;gap:8px;">
@@ -25600,17 +26063,26 @@ Ctrl+K або / - пошук завдань
             </div>
             
             <div style="padding:0 1.25rem 1.25rem;">
-                <!-- AI Assistants - top -->
-                <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-                    <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="btn" style="flex:1;justify-content:center;background:#8b5cf6;color:white;font-size:0.8rem;padding:0.6rem;" onclick="closeMobileMenu();">
-                        <i data-lucide="target" class="icon icon-sm"></i> Керівник
+                <!-- AI Assistants -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.5rem;">
+                    <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="btn" style="justify-content:center;background:#8b5cf6;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
+                        <i data-lucide="target" class="icon icon-sm"></i> <span data-i18n="radarAI">Керівник</span>
                     </a>
-                    <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="btn" style="flex:1;justify-content:center;background:#22c55e;color:white;font-size:0.8rem;padding:0.6rem;" onclick="closeMobileMenu();">
-                        <i data-lucide="wrench" class="icon icon-sm"></i> Технічний
+                    <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="btn" style="justify-content:center;background:#22c55e;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
+                        <i data-lucide="wrench" class="icon icon-sm"></i> <span data-i18n="techAI">Технічний</span>
+                    </a>
+                    <a href="https://chatgpt.com/g/g-694ea789f6fc8191a90694aae93de819-team-academy-ai" target="_blank" class="btn" style="justify-content:center;background:#6366f1;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
+                        <i data-lucide="graduation-cap" class="icon icon-sm"></i> <span data-i18n="academyAI">Академія</span>
+                    </a>
+                    <a href="https://chatgpt.com/g/g-684c0092653c81919f42552c12434fa7-function-description-generator" target="_blank" class="btn" style="justify-content:center;background:#f59e0b;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
+                        <i data-lucide="file-text" class="icon icon-sm"></i> <span data-i18n="funcDescAI">Опис функцій</span>
                     </a>
                 </div>
-                <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="btn" style="justify-content:center;background:#3b82f6;color:white;font-size:0.8rem;padding:0.6rem;margin-bottom:0.75rem;width:100%;" onclick="closeMobileMenu();">
-                    <i data-lucide="message-circle" class="icon icon-sm"></i> Підтримка
+                <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="btn" style="justify-content:center;background:#0284c7;color:white;font-size:0.75rem;padding:0.5rem;margin-bottom:0.5rem;width:100%;" onclick="closeMobileMenu();">
+                    <i data-lucide="list-plus" class="icon icon-sm"></i> <span data-i18n="taskGenAI">Як ставити завдання</span>
+                </a>
+                <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="btn" style="justify-content:center;background:#3b82f6;color:white;font-size:0.75rem;padding:0.5rem;margin-bottom:0.75rem;width:100%;" onclick="closeMobileMenu();">
+                    <i data-lucide="message-circle" class="icon icon-sm"></i> <span data-i18n="aiSupport">Підтримка</span>
                 </a>
                 
                 <hr style="border:none;border-top:1px solid #f0f0f0;margin:0 0 0.75rem;">
