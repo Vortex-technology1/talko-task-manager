@@ -6172,7 +6172,7 @@
                                 <div style="margin-top:0.3rem;line-height:1.6;">
                                     1. Клієнт сам реєструється на сайті<br>
                                     2. Ти бачиш нову компанію в таблиці<br>
-                                    3. Через AI Генератор → створюєш структуру<br>
+                                    3. Через AI Структура → створюєш структуру<br>
                                     4. Або вставляєш JSON через Імпорт
                                 </div>
                             </div>
@@ -25879,7 +25879,7 @@ Ctrl+K або / - пошук завдань
         const container = document.getElementById('aiAssistantsList');
         
         if (list.length === 0) {
-            container.innerHTML = '<p style="color:#6b7280;text-align:center;">Немає асистентів. Натисніть "Додати" або запустіть AI Генератор (створить автоматично).</p>';
+            container.innerHTML = '<p style="color:#6b7280;text-align:center;">Немає асистентів. Натисніть "Додати" або запустіть AI Структура (створить автоматично).</p>';
             return;
         }
         
@@ -27326,7 +27326,7 @@ Ctrl+K або / - пошук завдань
         <div class="modal-content" style="max-width:600px;">
             <div class="modal-header">
                 <span class="close" onclick="closeModal('aiGeneratorModal')">&times;</span>
-                <h2><i data-lucide="sparkles" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiStructureGenerator">AI Генератор структури</span></h2>
+                <h2><i data-lucide="sparkles" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiStructureGenerator">AI Структура</span></h2>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -27434,7 +27434,7 @@ Ctrl+K або / - пошук завдань
                 </a>
                 <div id="ownerAiButtons" style="display:none;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.75rem;">
                     <button class="btn" onclick="openAiGeneratorModal();closeMobileMenu();" style="justify-content:center;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:white;font-size:0.75rem;padding:0.5rem;">
-                        <i data-lucide="sparkles" class="icon icon-sm"></i> <span data-i18n="aiGenerator">AI Генератор</span>
+                        <i data-lucide="sparkles" class="icon icon-sm"></i> <span data-i18n="aiGenerator">AI Структура</span>
                     </button>
                     <button class="btn" onclick="openImportStructureModal();closeMobileMenu();" style="justify-content:center;background:#374151;color:white;font-size:0.75rem;padding:0.5rem;">
                         <i data-lucide="upload" class="icon icon-sm"></i> <span data-i18n="importJSON">Імпорт JSON</span>
