@@ -19528,23 +19528,23 @@
                             const timeStr = end ? start + '–' + end : start;
                             let scheduleStr = '';
                             if (rt.period === 'daily') {
-                                scheduleStr = `<span style="font-size:0.7rem;background:#dcfce7;color:#16a34a;padding:1px 6px;border-radius:4px;">${t('daily')}</span>`;
+                                scheduleStr = '';
                             } else if (rt.period === 'weekly' && rt.daysOfWeek) {
                                 scheduleStr = rt.daysOfWeek
                                     .map(d => parseInt(d))
                                     .sort((a,b) => (jsDayToIdx[a]??7) - (jsDayToIdx[b]??7))
-                                    .map(d => `<span style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;font-size:0.65rem;font-weight:600;background:#dcfce7;color:#16a34a;">${shortDays[jsDayToIdx[d]] || d}</span>`)
-                                    .join(' ');
+                                    .map(d => `<span style="display:inline-block;min-width:16px;height:16px;line-height:16px;text-align:center;border-radius:50%;font-size:0.58rem;font-weight:700;background:#dcfce7;color:#16a34a;">${shortDays[jsDayToIdx[d]] || d}</span>`)
+                                    .join('');
                             } else if (rt.period === 'monthly') {
-                                scheduleStr = `<span style="font-size:0.7rem;background:#e0e7ff;color:#4338ca;padding:1px 6px;border-radius:4px;">${t('monthly')} ${rt.dayOfMonth || '1'}</span>`;
+                                scheduleStr = `<span style="font-size:0.62rem;background:#e0e7ff;color:#4338ca;padding:0 4px;border-radius:3px;line-height:16px;">${rt.dayOfMonth || '1'}/${t('month') || 'міс'}</span>`;
                             }
                             return `
-                            <div style="display:flex;align-items:center;gap:0.4rem;padding:0.35rem 0.5rem;margin-bottom:0.25rem;background:#f9fafb;border-radius:6px;font-size:0.8rem;cursor:pointer;" onclick="openRegularTaskModal('${escId(rt.id)}')">
-                                <span style="width:7px;height:7px;border-radius:50%;background:${status.color};flex-shrink:0;"></span>
+                            <div style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.5rem;margin-bottom:0.15rem;background:#f9fafb;border-radius:6px;font-size:0.78rem;cursor:pointer;" onclick="openRegularTaskModal('${escId(rt.id)}')">
+                                <span style="width:6px;height:6px;border-radius:50%;background:${status.color};flex-shrink:0;"></span>
                                 <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;">${esc(rt.title)}</span>
-                                <span style="color:#6b7280;font-size:0.72rem;white-space:nowrap;">${timeStr}</span>
-                            </div>
-                            <div style="padding:0 0.5rem 0.3rem;display:flex;gap:3px;">${scheduleStr}</div>`;
+                                ${scheduleStr ? `<span style="display:flex;gap:1px;flex-shrink:0;">${scheduleStr}</span>` : ''}
+                                <span style="color:#9ca3af;font-size:0.68rem;white-space:nowrap;flex-shrink:0;">${timeStr}</span>
+                            </div>`;
                         }).join('')}
                     </div>` : ''}
                     
@@ -19554,7 +19554,7 @@
                             <i data-lucide="settings" class="icon icon-sm"></i> ${t('tabFunctions')}
                         </div>
                         ${userFunctions.map(f => {
-                            const fTasks = tasks.filter(tk => tk.function === f.name && t.assigneeId === u.id);
+                            const fTasks = tasks.filter(tk => tk.function === f.name && tk.assigneeId === u.id);
                             const fActive = fTasks.filter(tk => tk.status !== 'done').length;
                             const fDone = fTasks.filter(tk => tk.status === 'done').length;
                             return `<div style="display:flex;justify-content:space-between;padding:0.25rem 0.5rem;font-size:0.8rem;">
