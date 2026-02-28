@@ -10002,6 +10002,11 @@
                     document.getElementById('demoDataBtn').style.display = 'none';
                 }
                 
+                // AI buttons: Generator + Import = owner only, AI config = admin/superadmin only
+                const isOwnerRole = currentUserData.role === 'owner';
+                document.getElementById('ownerAiButtons').style.display = isOwnerRole ? 'grid' : 'none';
+                document.getElementById('aiAssistantsBtnMenu').style.display = isSuperAdmin ? 'flex' : 'none';
+                
                 showMainInterface();
                 initCalendar();
                 initRegularView();
@@ -25656,6 +25661,380 @@ Ctrl+K або / - пошук завдань
     }
 
     // =====================
+    // AI STRUCTURE GENERATOR + IMPORT + ASSISTANTS CONFIG
+    // =====================
+    let generatedStructure = null;
+    
+    function openAiGeneratorModal() {
+        if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin') {
+            showToast(t('ownerOnly') || 'Тільки для власника', 'error'); return;
+        }
+        document.getElementById('aiGenPrompt').value = '';
+        document.getElementById('aiGenPreview').style.display = 'none';
+        document.getElementById('aiGenLoading').style.display = 'none';
+        document.getElementById('aiGenBtn').style.display = '';
+        generatedStructure = null;
+        document.getElementById('aiGeneratorModal').style.display = 'block';
+        refreshIconsNow();
+    }
+    
+    function openImportStructureModal() {
+        if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin') {
+            showToast(t('ownerOnly') || 'Тільки для власника', 'error'); return;
+        }
+        document.getElementById('importJsonText').value = '';
+        document.getElementById('importStructureModal').style.display = 'block';
+    }
+    
+    async function runAiGenerator() {
+        const prompt = document.getElementById('aiGenPrompt').value.trim();
+        if (!prompt) return;
+        
+        document.getElementById('aiGenBtn').style.display = 'none';
+        document.getElementById('aiGenLoading').style.display = 'block';
+        document.getElementById('aiGenPreview').style.display = 'none';
+        
+        try {
+            // Ensure structureGenerator assistant exists
+            await ensureDefaultAssistants();
+            
+            // Call Cloud Function
+            const aiAssistant = firebase.app().functions('europe-west1').httpsCallable('aiAssistant');
+            const result = await aiAssistant({
+                companyId: currentCompany,
+                assistantId: 'structureGenerator',
+                userMessage: prompt,
+                contextData: {
+                    existingFunctions: functions.map(f => f.name),
+                    existingUsers: users.map(u => ({ name: u.name, role: u.role }))
+                }
+            });
+            
+            // Parse JSON from response
+            let content = result.data.content;
+            // Extract JSON from markdown code blocks if present
+            const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+            if (jsonMatch) content = jsonMatch[1];
+            
+            generatedStructure = JSON.parse(content);
+            renderStructurePreview(generatedStructure);
+            
+        } catch (e) {
+            console.error('AI Generator error:', e);
+            showToast((e.message || 'Помилка AI генератора') + '. Перевірте API ключ в AI Асистентах.', 'error', 5000);
+            document.getElementById('aiGenBtn').style.display = '';
+        }
+        
+        document.getElementById('aiGenLoading').style.display = 'none';
+    }
+    
+    function renderStructurePreview(data) {
+        const container = document.getElementById('aiGenPreviewContent');
+        let html = '';
+        
+        if (data.functions?.length) {
+            html += `<div style="font-weight:600;margin-bottom:0.3rem;">${t('tabFunctions') || 'Функції'} (${data.functions.length}):</div>`;
+            data.functions.forEach(f => {
+                html += `<div style="padding:0.3rem 0;border-bottom:1px solid #e5e7eb;">
+                    <strong>${esc(f.name)}</strong> ${f.description ? `<span style="color:#6b7280;">— ${esc(f.description.substring(0, 60))}...</span>` : ''}
+                    ${f.regularTasks?.length ? `<div style="font-size:0.72rem;color:#8b5cf6;margin-top:2px;">${f.regularTasks.length} рег. задач</div>` : ''}
+                </div>`;
+            });
+        }
+        
+        if (data.processTemplates?.length) {
+            html += `<div style="font-weight:600;margin-top:0.75rem;margin-bottom:0.3rem;">${t('processTemplates') || 'Шаблони процесів'} (${data.processTemplates.length}):</div>`;
+            data.processTemplates.forEach(pt => {
+                html += `<div style="padding:0.3rem 0;border-bottom:1px solid #e5e7eb;">
+                    <strong>${esc(pt.name)}</strong>
+                    <div style="font-size:0.72rem;color:#6b7280;">${pt.steps?.map(s => esc(s.function)).join(' → ')}</div>
+                </div>`;
+            });
+        }
+        
+        if (data.taskTemplates?.length) {
+            html += `<div style="font-weight:600;margin-top:0.75rem;margin-bottom:0.3rem;">${t('taskTemplates') || 'Шаблони задач'} (${data.taskTemplates.length}):</div>`;
+            data.taskTemplates.forEach(tt => {
+                html += `<div style="padding:0.3rem 0;font-size:0.82rem;">${esc(tt.title)} <span style="color:#6b7280;">[${esc(tt.function || '')}]</span></div>`;
+            });
+        }
+        
+        container.innerHTML = html || '<p style="color:#6b7280;">Порожня структура</p>';
+        document.getElementById('aiGenPreview').style.display = 'block';
+    }
+    
+    async function applyAiStructure() {
+        if (!generatedStructure) return;
+        await importStructure(generatedStructure);
+        closeModal('aiGeneratorModal');
+    }
+    
+    async function importStructureFromJson() {
+        const text = document.getElementById('importJsonText').value.trim();
+        if (!text) return;
+        
+        try {
+            const data = JSON.parse(text);
+            await importStructure(data);
+            closeModal('importStructureModal');
+        } catch (e) {
+            alert('JSON parse error: ' + e.message);
+        }
+    }
+    
+    async function importStructure(data) {
+        if (!currentCompany) return;
+        const base = db.collection('companies').doc(currentCompany);
+        
+        let created = { functions: 0, regularTasks: 0, processTemplates: 0, taskTemplates: 0 };
+        
+        try {
+            // 1. Create functions
+            if (data.functions?.length) {
+                for (const f of data.functions) {
+                    // Skip if function with same name exists
+                    if (functions.find(ef => ef.name === f.name)) continue;
+                    
+                    const funcData = {
+                        name: f.name,
+                        description: f.description || '',
+                        status: 'active',
+                        assigneeIds: [],
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    
+                    const funcRef = await base.collection('functions').add(funcData);
+                    functions.push({ id: funcRef.id, ...funcData, assigneeIds: [] });
+                    created.functions++;
+                    
+                    // Create regular tasks for this function
+                    if (f.regularTasks?.length) {
+                        for (const rt of f.regularTasks) {
+                            const rtData = {
+                                title: rt.title,
+                                function: f.name,
+                                instruction: rt.instruction || rt.description || '',
+                                scheduleType: rt.scheduleType || 'daily',
+                                scheduleDays: rt.scheduleDays || [],
+                                scheduleMonthDay: rt.scheduleMonthDay || null,
+                                deadlineTime: rt.deadlineTime || '18:00',
+                                startTime: rt.startTime || '',
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                            };
+                            await base.collection('regularTasks').add(rtData);
+                            created.regularTasks++;
+                        }
+                    }
+                }
+            }
+            
+            // 2. Create process templates
+            if (data.processTemplates?.length) {
+                for (const pt of data.processTemplates) {
+                    const ptData = {
+                        name: pt.name,
+                        description: pt.description || '',
+                        steps: (pt.steps || []).map(s => ({
+                            function: s.function,
+                            title: s.title || '',
+                            expectedResult: s.expectedResult || '',
+                            controlQuestion: s.controlQuestion || '',
+                            instruction: s.instruction || '',
+                            slaMinutes: s.slaMinutes || 0,
+                            checkpoint: s.checkpoint || false,
+                            smartAssign: s.smartAssign !== false
+                        })),
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        createdBy: currentUser.uid
+                    };
+                    await base.collection('processTemplates').add(ptData);
+                    created.processTemplates++;
+                }
+            }
+            
+            // 3. Create task templates
+            if (data.taskTemplates?.length) {
+                for (const tt of data.taskTemplates) {
+                    const ttData = {
+                        title: tt.title,
+                        function: tt.function || '',
+                        description: tt.description || tt.instruction || '',
+                        priority: tt.priority || 'medium',
+                        estimatedTime: tt.estimatedTime || '60',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                    await base.collection('taskTemplates').add(ttData);
+                    created.taskTemplates++;
+                }
+            }
+            
+            // Reload
+            await loadAllData();
+            
+            const msg = `${t('imported') || 'Імпортовано'}: ${created.functions} ${t('tabFunctions') || 'функцій'}, ${created.regularTasks} ${t('tabRegular') || 'рег. задач'}, ${created.processTemplates} ${t('processTemplates') || 'процесів'}, ${created.taskTemplates} шаблонів`;
+            showToast(msg, 'success', 5000);
+            
+        } catch (e) {
+            console.error('Import error:', e);
+            showToast(t('error') + ': ' + e.message, 'error');
+        }
+    }
+    
+    // =====================
+    // AI ASSISTANTS CONFIG (owner panel)
+    // =====================
+    function openAiAssistantsModal() {
+        if (!SUPER_ADMINS.includes(currentUser?.email)) {
+            showToast('Тільки для адміністратора TALKO', 'error'); return;
+        }
+        loadAiAssistants();
+        loadAiApiKey();
+        document.getElementById('aiAssistantsModal').style.display = 'block';
+        refreshIconsNow();
+    }
+    
+    async function loadAiApiKey() {
+        const doc = await db.collection('companies').doc(currentCompany).get();
+        const key = doc.data()?.openaiApiKey || '';
+        document.getElementById('aiApiKeyInput').value = key ? key.substring(0, 8) + '...' : '';
+    }
+    
+    async function saveAiApiKey() {
+        const key = document.getElementById('aiApiKeyInput').value.trim();
+        if (!key || key.includes('...')) return;
+        await db.collection('companies').doc(currentCompany).update({ openaiApiKey: key });
+        showToast('API Key збережено', 'success');
+        document.getElementById('aiApiKeyInput').value = key.substring(0, 8) + '...';
+    }
+    
+    async function loadAiAssistants() {
+        const snap = await db.collection('companies').doc(currentCompany)
+            .collection('aiAssistants').get();
+        
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const container = document.getElementById('aiAssistantsList');
+        
+        if (list.length === 0) {
+            container.innerHTML = '<p style="color:#6b7280;text-align:center;">Немає налаштованих асистентів. Натисніть "Додати" або використайте AI Генератор (створить автоматично).</p>';
+            return;
+        }
+        
+        container.innerHTML = list.map(a => `
+            <div style="padding:0.75rem;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:0.5rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                    <strong>${esc(a.name || a.id)}</strong>
+                    <span style="font-size:0.7rem;background:#f3f4f6;padding:2px 6px;border-radius:4px;">${esc(a.model || 'gpt-4o-mini')}</span>
+                </div>
+                <textarea onchange="updateAssistantPrompt('${escId(a.id)}', this.value)" style="width:100%;min-height:80px;border:1px solid #e5e7eb;border-radius:6px;padding:0.5rem;font-size:0.75rem;resize:vertical;">${esc(a.systemPrompt || '')}</textarea>
+                <div style="display:flex;gap:0.5rem;margin-top:0.3rem;">
+                    <select onchange="updateAssistantModel('${escId(a.id)}', this.value)" style="font-size:0.75rem;padding:0.2rem;border:1px solid #e5e7eb;border-radius:4px;">
+                        <option value="gpt-4o-mini" ${a.model === 'gpt-4o-mini' ? 'selected' : ''}>GPT-4o Mini ($)</option>
+                        <option value="gpt-4o" ${a.model === 'gpt-4o' ? 'selected' : ''}>GPT-4o ($$)</option>
+                        <option value="gpt-4.1-mini" ${a.model === 'gpt-4.1-mini' ? 'selected' : ''}>GPT-4.1 Mini ($)</option>
+                        <option value="gpt-4.1" ${a.model === 'gpt-4.1' ? 'selected' : ''}>GPT-4.1 ($$)</option>
+                    </select>
+                    <button onclick="deleteAiAssistant('${escId(a.id)}')" class="btn btn-small btn-danger" style="font-size:0.7rem;padding:2px 8px;">
+                        <i data-lucide="trash-2" class="icon icon-sm"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        refreshIconsNow();
+    }
+    
+    async function addAiAssistant() {
+        const name = prompt(t('assistantName') || 'Назва асистента:');
+        if (!name) return;
+        
+        await db.collection('companies').doc(currentCompany)
+            .collection('aiAssistants').add({
+                name,
+                systemPrompt: '',
+                model: 'gpt-4o-mini',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        loadAiAssistants();
+    }
+    
+    async function updateAssistantPrompt(id, prompt) {
+        await db.collection('companies').doc(currentCompany)
+            .collection('aiAssistants').doc(id).update({ systemPrompt: prompt });
+    }
+    
+    async function updateAssistantModel(id, model) {
+        await db.collection('companies').doc(currentCompany)
+            .collection('aiAssistants').doc(id).update({ model });
+    }
+    
+    async function deleteAiAssistant(id) {
+        if (!confirm('Видалити асистента?')) return;
+        await db.collection('companies').doc(currentCompany)
+            .collection('aiAssistants').doc(id).delete();
+        loadAiAssistants();
+    }
+    
+    async function ensureDefaultAssistants() {
+        const ref = db.collection('companies').doc(currentCompany)
+            .collection('aiAssistants').doc('structureGenerator');
+        const doc = await ref.get();
+        
+        if (!doc.exists) {
+            await ref.set({
+                name: 'Генератор структури',
+                model: 'gpt-4o-mini',
+                systemPrompt: `Ти — AI-консультант з організації бізнесу. Генеруй структуру компанії у форматі JSON.
+
+ФОРМАТ ВІДПОВІДІ (тільки JSON, без пояснень):
+{
+  "functions": [
+    {
+      "name": "Назва функції",
+      "description": "Що робить ця функція",
+      "regularTasks": [
+        {
+          "title": "Назва регулярної задачі",
+          "instruction": "Що конкретно робити",
+          "scheduleType": "daily|weekly|monthly",
+          "scheduleDays": [1,2,3,4,5],
+          "deadlineTime": "18:00"
+        }
+      ]
+    }
+  ],
+  "processTemplates": [
+    {
+      "name": "Назва процесу",
+      "description": "Опис",
+      "steps": [
+        {
+          "function": "Назва функції (з functions вище)",
+          "title": "Назва кроку",
+          "expectedResult": "Що має бути зроблено",
+          "controlQuestion": "Як перевірити?",
+          "instruction": "Інструкція виконавцю",
+          "slaMinutes": 480,
+          "checkpoint": false,
+          "smartAssign": true
+        }
+      ]
+    }
+  ]
+}
+
+ПРАВИЛА:
+- Генеруй 5-10 функцій під конкретний бізнес
+- Кожна функція — 2-5 регулярних задач
+- 2-4 шаблони бізнес-процесів
+- scheduleDays: 1=Пн, 2=Вт, ... 5=Пт, 6=Сб, 0=Нд
+- slaMinutes: реалістичний час на крок (240=4год, 480=8год, 1440=1день)
+- Пиши українською
+- Тільки JSON у відповіді, без markdown`,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+    }
+
+    // =====================
     // MANUAL INCIDENTS (Journal)
     // =====================
     window._manualIncidents = [];
@@ -26976,6 +27355,88 @@ Ctrl+K або / - пошук завдань
     </style>
 
     <!-- Mobile More Menu Modal -->
+    <!-- AI STRUCTURE GENERATOR MODAL -->
+    <div id="aiGeneratorModal" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('aiGeneratorModal')">&times;</span>
+                <h2><i data-lucide="sparkles" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiStructureGenerator">AI Генератор структури</span></h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="describeYourBusiness">Опишіть ваш бізнес</label>
+                    <textarea id="aiGenPrompt" class="form-textarea" rows="4" placeholder="Стоматологічна клініка, 3 лікарі, 2 адміністратори, 1 маркетолог. Послуги: імплантація, протезування, терапія, ортодонтія." data-i18n-placeholder="businessDescriptionPh"></textarea>
+                </div>
+                <button onclick="runAiGenerator()" class="btn btn-success" id="aiGenBtn" style="width:100%;">
+                    <i data-lucide="sparkles" class="icon"></i> <span data-i18n="generate">Згенерувати структуру</span>
+                </button>
+                <div id="aiGenLoading" style="display:none;text-align:center;padding:2rem;">
+                    <div style="display:inline-block;width:32px;height:32px;border:3px solid #e5e7eb;border-top:3px solid #8b5cf6;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+                    <p style="color:#6b7280;margin-top:0.5rem;" data-i18n="generating">AI генерує структуру...</p>
+                </div>
+                <div id="aiGenPreview" style="display:none;margin-top:1rem;">
+                    <div style="font-weight:600;margin-bottom:0.5rem;" data-i18n="previewStructure">Попередній перегляд:</div>
+                    <div id="aiGenPreviewContent" style="max-height:300px;overflow-y:auto;background:#f9fafb;border-radius:8px;padding:1rem;font-size:0.82rem;"></div>
+                    <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+                        <button onclick="applyAiStructure()" class="btn btn-success" style="flex:1;">
+                            <i data-lucide="check" class="icon"></i> <span data-i18n="applyStructure">Застосувати</span>
+                        </button>
+                        <button onclick="document.getElementById('aiGenPreview').style.display='none';document.getElementById('aiGenBtn').style.display=''" class="btn" style="flex:1;">
+                            <i data-lucide="rotate-ccw" class="icon"></i> <span data-i18n="regenerate">Перегенерувати</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORT JSON STRUCTURE MODAL -->
+    <div id="importStructureModal" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('importStructureModal')">&times;</span>
+                <h2><i data-lucide="upload" class="icon"></i> <span data-i18n="importStructure">Імпорт структури</span></h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">JSON</label>
+                    <textarea id="importJsonText" class="form-textarea" rows="10" placeholder='{"functions":[...],"regularTasks":[...],"processTemplates":[...]}' style="font-family:monospace;font-size:0.75rem;"></textarea>
+                </div>
+                <button onclick="importStructureFromJson()" class="btn btn-success" style="width:100%;">
+                    <i data-lucide="upload" class="icon"></i> <span data-i18n="importAndCreate">Імпортувати та створити</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI ASSISTANTS CONFIG MODAL (owner only) -->
+    <div id="aiAssistantsModal" class="modal">
+        <div class="modal-content" style="max-width:650px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('aiAssistantsModal')">&times;</span>
+                <h2><i data-lucide="bot" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiAssistantsConfig">AI Асистенти</span></h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">OpenAI API Key</label>
+                    <div style="display:flex;gap:0.5rem;">
+                        <input type="password" id="aiApiKeyInput" class="form-input" placeholder="sk-..." style="flex:1;font-family:monospace;">
+                        <button onclick="saveAiApiKey()" class="btn btn-success btn-small">
+                            <i data-lucide="save" class="icon icon-sm"></i>
+                        </button>
+                    </div>
+                    <small style="color:#6b7280;">Зберігається в Firebase, використовується через Cloud Function</small>
+                </div>
+                <hr style="border:none;border-top:1px solid #e5e7eb;margin:1rem 0;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+                    <span style="font-weight:600;">Асистенти</span>
+                    <button onclick="addAiAssistant()" class="btn btn-small btn-success"><i data-lucide="plus" class="icon icon-sm"></i> Додати</button>
+                </div>
+                <div id="aiAssistantsList"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="mobileMenuModal" onclick="if(event.target === this) closeMobileMenu();">
         <div class="modal-content" style="max-width:100%;margin-top:auto;margin-bottom:0;border-radius:20px 20px 0 0;padding:0;min-height:auto;">
             <!-- Handle bar -->
@@ -27002,9 +27463,17 @@ Ctrl+K або / - пошук завдань
                 <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="btn" style="justify-content:center;background:#0284c7;color:white;font-size:0.75rem;padding:0.5rem;margin-bottom:0.5rem;width:100%;" onclick="closeMobileMenu();">
                     <i data-lucide="list-plus" class="icon icon-sm"></i> <span data-i18n="taskGenAI">Як ставити завдання</span>
                 </a>
-                <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="btn" style="justify-content:center;background:#3b82f6;color:white;font-size:0.75rem;padding:0.5rem;margin-bottom:0.75rem;width:100%;" onclick="closeMobileMenu();">
+                <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="btn" style="justify-content:center;background:#3b82f6;color:white;font-size:0.75rem;padding:0.5rem;margin-bottom:0.5rem;width:100%;" onclick="closeMobileMenu();">
                     <i data-lucide="message-circle" class="icon icon-sm"></i> <span data-i18n="aiSupport">Підтримка</span>
                 </a>
+                <div id="ownerAiButtons" style="display:none;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.75rem;">
+                    <button class="btn" onclick="openAiGeneratorModal();closeMobileMenu();" style="justify-content:center;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:white;font-size:0.75rem;padding:0.5rem;">
+                        <i data-lucide="sparkles" class="icon icon-sm"></i> <span data-i18n="aiGenerator">AI Генератор</span>
+                    </button>
+                    <button class="btn" onclick="openImportStructureModal();closeMobileMenu();" style="justify-content:center;background:#374151;color:white;font-size:0.75rem;padding:0.5rem;">
+                        <i data-lucide="upload" class="icon icon-sm"></i> <span data-i18n="importJSON">Імпорт JSON</span>
+                    </button>
+                </div>
                 
                 <hr style="border:none;border-top:1px solid #f0f0f0;margin:0 0 0.75rem;">
                 
@@ -27037,6 +27506,9 @@ Ctrl+K або / - пошук завдань
                     </button>
                     <button id="notificationToggleBtn" class="btn btn-success" onclick="toggleNotifications();closeMobileMenu();" style="flex:1;justify-content:center;padding:0.6rem;font-size:0.8rem;">
                         <i data-lucide="bell" class="icon icon-sm"></i> Сповіщення
+                    </button>
+                    <button class="btn" onclick="openAiAssistantsModal();closeMobileMenu();" style="flex:1;justify-content:center;padding:0.6rem;font-size:0.8rem;background:#f3e8ff;color:#7c3aed;" id="aiAssistantsBtnMenu">
+                        <i data-lucide="bot" class="icon icon-sm"></i> AI
                     </button>
                 </div>
                 
