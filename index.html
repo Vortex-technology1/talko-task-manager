@@ -19061,7 +19061,7 @@
             
             // Check completion
             const lastCompleted = rt.lastCompleted?.toDate ? rt.lastCompleted.toDate() : null;
-            const completedToday = lastCompleted && lastCompletegetLocalDateStr(d) === todayDateStr;
+            const completedToday = lastCompleted && getLocalDateStr(lastCompleted) === todayDateStr;
             
             // Check if task was generated today
             const generatedTasks = tasks.filter(t => 
@@ -19098,7 +19098,7 @@
             
             // Check if already completed today
             const lastCompleted = task.lastCompleted?.toDate ? task.lastCompleted.toDate() : null;
-            const completedToday = lastCompleted && lastCompletegetLocalDateStr(d) === todayStr;
+            const completedToday = lastCompleted && getLocalDateStr(lastCompleted) === todayStr;
             
             if (completedToday) {
                 // Unmark as completed
@@ -24748,7 +24748,10 @@ Ctrl+K або / - пошук завдань
             const snap = await db.collection('companies').doc(currentCompany)
                 .collection('incidents').orderBy('createdAt', 'desc').limit(100).get();
             window._manualIncidents = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        } catch(e) { console.error('loadManualIncidents:', e); }
+        } catch(e) { 
+            // Firestore rules may not include 'incidents' collection yet — silent fail
+            window._manualIncidents = [];
+        }
     }
     
     function toggleAddIncidentForm() {
