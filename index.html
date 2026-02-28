@@ -6138,140 +6138,92 @@
             <!-- ADMIN (only for superadmin) -->
             <div id="adminTab" class="tab-content">
                 <div class="controls" style="background:linear-gradient(135deg,#fee2e2,#fecaca);">
-                    <h2 style="font-size:1.1rem;color:#dc2626;"><i data-lucide="shield" class="icon"></i> <span data-i18n="adminPanel">Адмін-панель TALKO</span></h2>
+                    <h2 style="font-size:1.1rem;color:#dc2626;"><i data-lucide="shield" class="icon"></i> Адмін-панель TALKO</h2>
                 </div>
+
+                <!-- Компанії — головний блок -->
                 <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);margin-bottom:1rem;">
-                    <h3 style="margin-bottom:1rem;"><i data-lucide="plus" class="icon"></i> <span data-i18n="createCompany">Створити нову компанію</span></h3>
-                    <form id="adminCreateForm" onsubmit="adminCreateCompany(event)">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="ownerEmail">Email власника *</label>
-                                <input type="email" id="adminOwnerEmail" class="form-input" placeholder="client@email.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="passwordLabel">Пароль *</label>
-                                <input type="text" id="adminOwnerPassword" class="form-input" placeholder="мін. 6 символів" required minlength="6">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="ownerName">Ім'я власника *</label>
-                                <input type="text" id="adminOwnerName" class="form-input" placeholder="Іван Петренко" data-i18n-placeholder="yourNamePh" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" data-i18n="companyName" data-i18n="companyNameLabel">Назва компанії *</label>
-                                <input type="text" id="adminCompanyName" class="form-input" placeholder="ТОВ Компанія" data-i18n-placeholder="companyNamePh2" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-success" style="margin-top:1rem;" id="adminCreateBtn"><i data-lucide="rocket" class="icon"></i> <span data-i18n="createCompanyBtn">Створити компанію та Owner</span></button>
-                    </form>
-                </div>
-                
-                <!-- Інструкції для адміна -->
-                <div style="display:grid;gap:1rem;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));">
-                    
-                    <!-- Інструкція: Додавання Owner -->
-                    <div style="background:white;border-radius:12px;padding:1.25rem;box-shadow:var(--shadow);border-left:4px solid #3b82f6;">
-                        <h4 style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;color:#3b82f6;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            1. Додавання Owner (Власника)
-                        </h4>
-                        <ol style="margin:0;padding-left:1.25rem;color:#4b5563;font-size:0.9rem;line-height:1.7;">
-                            <li>Заповни форму вище і натисни <b>"Створити компанію та Owner"</b></li>
-                            <li>Система автоматично створить:
-                                <ul style="margin:0.3rem 0;padding-left:1rem;">
-                                    <li>Компанію в Firebase</li>
-                                    <li>Користувача з роллю Owner</li>
-                                    <li>Акаунт в Firebase Auth</li>
-                                </ul>
-                            </li>
-                            <li>Надішли клієнту:
-                                <ul style="margin:0.3rem 0;padding-left:1rem;">
-                                    <li>Посилання: <code style="background:#f3f4f6;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.85rem;">taskmanagerai-vert.vercel.app</code></li>
-                                    <li>Email та пароль</li>
-                                </ul>
-                            </li>
-                        </ol>
-                    </div>
-                    
-                    <!-- Інструкція: Додавання співробітників -->
-                    <div style="background:white;border-radius:12px;padding:1.25rem;box-shadow:var(--shadow);border-left:4px solid #10b981;">
-                        <h4 style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;color:#10b981;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-                            2. Додавання співробітників
-                        </h4>
-                        <ol style="margin:0;padding-left:1.25rem;color:#4b5563;font-size:0.9rem;line-height:1.7;">
-                            <li><b>Owner сам додає</b> співробітників через вкладку "Співробітники"</li>
-                            <li>Owner натискає <b>"+ Додати співробітника"</b></li>
-                            <li>Вводить email і створює запрошення</li>
-                            <li>Система генерує посилання для реєстрації</li>
-                            <li>Співробітник переходить по посиланню і створює пароль</li>
-                        </ol>
-                        <div style="margin-top:0.75rem;padding:0.75rem;background:#f0fdf4;border-radius:8px;font-size:0.85rem;color:#166534;">
-                            <b>Важливо:</b> Адмін не додає співробітників напряму — це робить Owner компанії
-                        </div>
-                    </div>
-                    
-                    <!-- Інструкція: Google Calendar -->
-                    <div style="background:white;border-radius:12px;padding:1.25rem;box-shadow:var(--shadow);border-left:4px solid #f59e0b;">
-                        <h4 style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;color:#f59e0b;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                            3. Інтеграція Google Calendar
-                        </h4>
-                        <div style="color:#4b5563;font-size:0.9rem;line-height:1.7;">
-                            <p style="margin:0 0 0.75rem;"><b>Поточний режим:</b> Testing (до 100 користувачів)</p>
-                            <p style="margin:0 0 0.5rem;"><b>Щоб клієнт міг підключити календар:</b></p>
-                            <ol style="margin:0;padding-left:1.25rem;">
-                                <li>Відкрий <a href="https://console.cloud.google.com/apis/credentials/consent?project=stats-tracker-ai" target="_blank" style="color:#f59e0b;">Google Cloud Console → Audience</a></li>
-                                <li>Натисни <b>"+ Add users"</b></li>
-                                <li>Введи email клієнта (той самий що в TALKO)</li>
-                                <li>Натисни <b>"Save"</b></li>
-                            </ol>
-                            <div style="margin-top:0.75rem;padding:0.75rem;background:#fefce8;border-radius:8px;font-size:0.85rem;color:#854d0e;">
-                                <b>Ліміт:</b> 100 Test Users. Після цього потрібна верифікація Google (1-4 тижні)
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Інструкція: Процес для клієнта -->
-                    <div style="background:white;border-radius:12px;padding:1.25rem;box-shadow:var(--shadow);border-left:4px solid #8b5cf6;">
-                        <h4 style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;color:#8b5cf6;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                            Інструкція для клієнта
-                        </h4>
-                        <div style="color:#4b5563;font-size:0.9rem;line-height:1.7;">
-                            <p style="margin:0 0 0.75rem;"><b>Надішли клієнту:</b></p>
-                            <div style="background:#f5f3ff;padding:1rem;border-radius:8px;font-size:0.85rem;">
-                                <p style="margin:0 0 0.5rem;display:flex;align-items:center;gap:0.4rem;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                                    Посилання: <code style="background:#e9d5ff;padding:0.2rem 0.5rem;border-radius:4px;">taskmanagerai-vert.vercel.app</code>
-                                </p>
-                                <p style="margin:0 0 0.5rem;display:flex;align-items:center;gap:0.4rem;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                                    Email: <i>(який ви вказали)</i>
-                                </p>
-                                <p style="margin:0 0 0.75rem;display:flex;align-items:center;gap:0.4rem;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-                                    Пароль: <i>(який ви вказали)</i>
-                                </p>
-                                <hr style="border:none;border-top:1px dashed #c4b5fd;margin:0.75rem 0;">
-                                <p style="margin:0;"><b>Перший вхід:</b> натисніть "Активувати доступ" → введіть email та пароль</p>
-                                <p style="margin:0.25rem 0 0;"><b>Наступні входи:</b> просто "Увійти"</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                
-                <!-- Список компаній -->
-                <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);margin-top:1rem;">
                     <h3 style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;">
                         <span><i data-lucide="building-2" class="icon"></i> Компанії</span>
-                        <button onclick="loadAdminCompanies()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
-                            <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
-                        </button>
+                        <div style="display:flex;gap:0.5rem;">
+                            <button onclick="openAiAssistantsModal()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f3e8ff;color:#7c3aed;">
+                                <i data-lucide="bot" class="icon icon-sm"></i> AI
+                            </button>
+                            <button onclick="loadAdminCompanies()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
+                            </button>
+                        </div>
                     </h3>
                     <div id="adminCompaniesList" style="overflow-x:auto;">
                         <p style="color:var(--gray);text-align:center;padding:2rem;">Натисніть "Оновити" щоб завантажити список</p>
                     </div>
+                </div>
+
+                <!-- Швидка інструкція -->
+                <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
+                    <details>
+                        <summary style="cursor:pointer;font-weight:600;font-size:0.85rem;color:#374151;display:flex;align-items:center;gap:0.5rem;">
+                            <i data-lucide="book-open" class="icon icon-sm" style="color:#6b7280;"></i> Памʼятка адміна
+                        </summary>
+                        <div style="margin-top:0.75rem;display:grid;gap:0.75rem;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));font-size:0.8rem;color:#4b5563;">
+                            
+                            <div style="padding:0.75rem;background:#f0f9ff;border-radius:8px;border-left:3px solid #3b82f6;">
+                                <strong style="color:#1d4ed8;">🆕 Новий клієнт</strong>
+                                <div style="margin-top:0.3rem;line-height:1.6;">
+                                    1. Клієнт сам реєструється на сайті<br>
+                                    2. Ти бачиш нову компанію в таблиці<br>
+                                    3. Через AI Генератор → створюєш структуру<br>
+                                    4. Або вставляєш JSON через Імпорт
+                                </div>
+                            </div>
+                            
+                            <div style="padding:0.75rem;background:#f0fdf4;border-radius:8px;border-left:3px solid #16a34a;">
+                                <strong style="color:#16a34a;">⚙️ Налаштування AI</strong>
+                                <div style="margin-top:0.3rem;line-height:1.6;">
+                                    1. Кнопка "AI" → ввести OpenAI ключ<br>
+                                    2. Промпти асистентів → можна редагувати<br>
+                                    3. Вибір моделі: GPT-4o mini ($) / GPT-4o ($$)<br>
+                                    4. Ключ зберігається в Firestore (безпечно)
+                                </div>
+                            </div>
+                            
+                            <div style="padding:0.75rem;background:#fef2f2;border-radius:8px;border-left:3px solid #ef4444;">
+                                <strong style="color:#dc2626;">🚫 Блокування</strong>
+                                <div style="margin-top:0.3rem;line-height:1.6;">
+                                    OFF → компанія заблоковано (не можуть увійти)<br>
+                                    ON → розблокувати<br>
+                                    × → видалити (з підтвердженням)
+                                </div>
+                            </div>
+                            
+                            <div style="padding:0.75rem;background:#fefce8;border-radius:8px;border-left:3px solid #f59e0b;">
+                                <strong style="color:#b45309;">📅 Google Calendar</strong>
+                                <div style="margin-top:0.3rem;line-height:1.6;">
+                                    <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" style="color:#2563eb;">Google Console → Audience</a><br>
+                                    "+ Add users" → email клієнта → Save<br>
+                                    Ліміт: 100 test users (потім верифікація)
+                                </div>
+                            </div>
+                            
+                            <div style="padding:0.75rem;background:#faf5ff;border-radius:8px;border-left:3px solid #8b5cf6;">
+                                <strong style="color:#7c3aed;">🔗 Telegram Bot</strong>
+                                <div style="margin-top:0.3rem;line-height:1.6;">
+                                    Token в Firebase Secrets (не в коді)<br>
+                                    Webhook URL: /telegramWebhook<br>
+                                    Команди: /today, /overdue + кнопки
+                                </div>
+                            </div>
+                            
+                            <div style="padding:0.75rem;background:#f8fafc;border-radius:8px;border-left:3px solid #64748b;">
+                                <strong style="color:#475569;">🚀 Deploy</strong>
+                                <div style="margin-top:0.3rem;line-height:1.6;">
+                                    GitHub push → Vercel auto-deploy<br>
+                                    Functions: firebase deploy --only functions<br>
+                                    Secrets: firebase functions:secrets:set KEY
+                                </div>
+                            </div>
+                        </div>
+                    </details>
                 </div>
             </div>
         </div>
