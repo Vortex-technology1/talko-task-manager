@@ -5617,6 +5617,7 @@
                 <div id="mydayContent" class="myday-content">
                     <!-- Контент генерується динамічно -->
                 </div>
+                <div id="myAnalytics" style="display:none;"></div>
             </div>
 
             <!-- TASKS -->
@@ -5895,6 +5896,7 @@
                     </div>
                     <div id="controlContent" style="margin-top:1rem;"></div>
                 </div>
+                <div id="teamDashboard" style="display:none;margin-top:1rem;padding:1rem;background:white;border-radius:12px;box-shadow:var(--shadow);"></div>
             </div>
 
             <!-- PROCESSES (Направляючі форми) -->
@@ -7276,7 +7278,6 @@
                 totalTasks: 'Всього завдань',
                 completedTasks: 'Виконано',
                 completionRate: 'Виконання %',
-                avgTime: 'Сер. час',
                 byStatus: 'По статусах',
                 topPerformers: 'Топ виконавців',
                 noCompletedTasks: 'Немає виконаних завдань',
@@ -7566,7 +7567,6 @@
                 hoursAgo: 'год тому',
                 noNotifications: 'Немає сповіщень',
                 overdueGroup: 'Протерміновані',
-                thisWeek: 'Цей тиждень',
                 nextWeek: 'Наступний тиждень',
                 noDeadline: 'Без терміну',
                 notToday: 'Не сьогодні',
@@ -7711,6 +7711,13 @@
                 expectedResult: 'Очікуваний результат',
                 controlQuestion: 'Контрольне питання',
                 previousSteps: 'Попередні етапи',
+                myStats: 'Моя статистика',
+                daysStreak: 'днів без прострочень',
+                thisWeek: 'цей тиждень',
+                avgTime: 'сер. час',
+                teamDashboard: 'Команда',
+                bottleneck: 'Вузьке місце',
+                processesWaiting: 'процесів чекають',
                 hintNextTask: 'Натисніть, щоб відкрити найважливішу задачу. Система сама вибере.',
                 hintTasks: 'Всі задачі. Фільтри "Мої" та "Сьогодні" покажуть тільки ваші.',
                 hintControl: 'Панель керівника: брифінг, журнал збоїв, аналітика команди.',
@@ -7934,6 +7941,11 @@
                 expectedResult: 'Ожидаемый результат',
                 controlQuestion: 'Контрольный вопрос',
                 previousSteps: 'Предыдущие этапы',
+                myStats: 'Моя статистика',
+                daysStreak: 'дней без просрочек',
+                teamDashboard: 'Команда',
+                bottleneck: 'Узкое место',
+                processesWaiting: 'процессов ожидают',
                 hintNextTask: 'Нажмите, чтобы открыть самую важную задачу. Система сама выберет.',
                 hintTasks: 'Все задачи. Фильтры "Мои" и "Сегодня" покажут только ваши.',
                 hintControl: 'Панель руководителя: брифинг, журнал сбоев, аналитика команды.',
@@ -8782,7 +8794,6 @@
                 totalTasks: 'Razem zadań',
                 completedTasks: 'Wykonano',
                 completionRate: 'Wykonanie %',
-                avgTime: 'Śr. czas',
                 byStatus: 'Wg statusów',
                 topPerformers: 'Top wykonawców',
                 noCompletedTasks: 'Brak wykonanych zadań',
@@ -9072,7 +9083,6 @@
                 hoursAgo: 'godz temu',
                 noNotifications: 'Brak powiadomień',
                 overdueGroup: 'Przeterminowane',
-                thisWeek: 'Ten tydzień',
                 nextWeek: 'Następny tydzień',
                 noDeadline: 'Bez terminu',
                 notToday: 'Nie dzisiaj',
@@ -9217,6 +9227,13 @@
                 expectedResult: 'Oczekiwany rezultat',
                 controlQuestion: 'Pytanie kontrolne',
                 previousSteps: 'Poprzednie etapy',
+                myStats: 'Moje statystyki',
+                daysStreak: 'dni bez opóźnień',
+                thisWeek: 'ten tydzień',
+                avgTime: 'śr. czas',
+                teamDashboard: 'Zespół',
+                bottleneck: 'Wąskie gardło',
+                processesWaiting: 'procesów oczekuje',
                 hintNextTask: 'Kliknij, aby otworzyć najważniejsze zadanie. System sam wybierze.',
                 hintTasks: 'Wszystkie zadania. Filtry "Moje" i "Dziś" pokażą tylko twoje.',
                 hintControl: 'Panel kierownika: briefing, dziennik awarii, analityka zespołu.',
@@ -10215,7 +10232,7 @@
                     // Load manual incidents for journal
                     loadManualIncidents().catch(() => {});
                     // Show morning start modal (once per day)
-                    setTimeout(() => { checkMorningStart(); startOnboarding(); }, 1500);
+                    setTimeout(() => { checkMorningStart(); startOnboarding(); saveDailySnapshot(); }, 1500);
                 }
                 hideSkeletonLoading();
             }
@@ -11751,6 +11768,34 @@
                         if (Object.keys(changes).length > 0) {
                             const action = changes.status ? 'status' : changes.assigneeId ? 'reassign' : changes.deadlineDate || changes.deadlineTime ? 'deadline' : 'edit';
                             logTaskChange(currentEditingId, action, changes, existingTask);
+                            
+                            // Decision log for AGI
+                            if (changes.assigneeId) {
+                                logDecision('reassign', {
+                                    taskId: currentEditingId,
+                                    taskTitle: data.title,
+                                    from: existingTask.assigneeId,
+                                    to: data.assigneeId,
+                                    function: data.function
+                                });
+                            }
+                            if (changes.deadlineDate) {
+                                logDecision('deadline_change', {
+                                    taskId: currentEditingId,
+                                    taskTitle: data.title,
+                                    from: existingTask.deadlineDate,
+                                    to: data.deadlineDate,
+                                    assignee: data.assigneeId
+                                });
+                            }
+                            if (changes.priority) {
+                                logDecision('priority_change', {
+                                    taskId: currentEditingId,
+                                    taskTitle: data.title,
+                                    from: existingTask.priority,
+                                    to: data.priority
+                                });
+                            }
                         }
                     }
                     
@@ -14413,6 +14458,7 @@
             container.innerHTML = html;
             lucide.createIcons();
             updateOverdueBadge();
+            renderMyAnalytics();
         }
         
         function renderMyDayItem(task) {
@@ -20041,6 +20087,7 @@
             document.getElementById('completedCount').textContent = completed;
             
             renderControlContent();
+            renderTeamDashboard();
         }
         
         function renderControlContent() {
@@ -25316,6 +25363,296 @@ Ctrl+K або / - пошук завдань
         document.querySelector('.hint-pulse')?.classList.remove('hint-pulse');
         const key = `onboarding_${currentUser?.uid}`;
         localStorage.setItem(key, '1');
+    }
+
+    // =====================
+    // PERSONAL ANALYTICS — employee self-insight
+    // =====================
+    function renderMyAnalytics() {
+        const container = document.getElementById('myAnalytics');
+        if (!container || !currentUser) return;
+        
+        const uid = currentUser.uid;
+        const todayStr = getLocalDateStr();
+        const now = new Date();
+        
+        // Calculate week boundaries (Mon-Sun)
+        const dayOfWeek = now.getDay() || 7;
+        const weekStart = new Date(now); weekStart.setDate(now.getDate() - dayOfWeek + 1);
+        const weekStartStr = getLocalDateStr(weekStart);
+        const lastWeekStart = new Date(weekStart); lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+        const lastWeekStartStr = getLocalDateStr(lastWeekStart);
+        
+        const myTasks = tasks.filter(t => t.assigneeId === uid);
+        const myDone = myTasks.filter(t => t.status === 'done');
+        const myActive = myTasks.filter(t => t.status !== 'done');
+        const myOverdue = myActive.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
+        
+        // This week
+        const thisWeekDone = myDone.filter(t => t.completedAt && getDateStr(t.completedAt) >= weekStartStr);
+        const lastWeekDone = myDone.filter(t => t.completedAt && getDateStr(t.completedAt) >= lastWeekStartStr && getDateStr(t.completedAt) < weekStartStr);
+        
+        // Avg completion time from timeLog
+        const trackedTasks = myDone.filter(t => t.timeLog?.length > 0);
+        const avgMinutes = trackedTasks.length > 0 
+            ? Math.round(trackedTasks.reduce((s, t) => s + t.timeLog.reduce((ss, e) => ss + (e.minutes || 0), 0), 0) / trackedTasks.length)
+            : 0;
+        
+        // Streak — consecutive days without overdue
+        let streak = 0;
+        const checkDate = new Date(now);
+        for (let d = 0; d < 30; d++) {
+            const dStr = getLocalDateStr(checkDate);
+            const hadOverdue = myTasks.some(t => 
+                t.deadlineDate === dStr && t.status !== 'done' && 
+                t.completedAt && getDateStr(t.completedAt) > dStr
+            );
+            if (hadOverdue && d > 0) break;
+            if (d > 0) streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        }
+        
+        // Daily chart data — last 14 days
+        const chartDays = [];
+        for (let d = 13; d >= 0; d--) {
+            const cd = new Date(now); cd.setDate(now.getDate() - d);
+            const cdStr = getLocalDateStr(cd);
+            const dayDone = myDone.filter(t => t.completedAt && getDateStr(t.completedAt) === cdStr).length;
+            const dayName = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'][cd.getDay()];
+            chartDays.push({ label: dayName, count: dayDone, date: cdStr });
+        }
+        const maxCount = Math.max(...chartDays.map(d => d.count), 1);
+        
+        // Trend arrow
+        const thisWeekCount = thisWeekDone.length;
+        const lastWeekCount = lastWeekDone.length;
+        const trendIcon = thisWeekCount > lastWeekCount 
+            ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>'
+            : thisWeekCount < lastWeekCount 
+                ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>'
+                : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        
+        container.style.display = 'block';
+        container.innerHTML = `
+            <div style="margin-top:1rem;padding:1rem;background:white;border-radius:12px;border:1px solid #e5e7eb;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+                    <span style="font-weight:600;font-size:0.85rem;color:#374151;">${t('myStats') || 'Моя статистика'}</span>
+                    ${streak > 1 ? `<span style="font-size:0.72rem;background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:10px;font-weight:600;">${streak} ${t('daysStreak') || 'днів без прострочень'}</span>` : ''}
+                </div>
+                
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:0.75rem;">
+                    <div style="text-align:center;padding:0.5rem;background:#f0fdf4;border-radius:8px;">
+                        <div style="font-size:1.2rem;font-weight:700;color:#16a34a;">${thisWeekCount}</div>
+                        <div style="font-size:0.62rem;color:#6b7280;">${t('thisWeek') || 'цей тиждень'} ${trendIcon}</div>
+                    </div>
+                    <div style="text-align:center;padding:0.5rem;background:#f9fafb;border-radius:8px;">
+                        <div style="font-size:1.2rem;font-weight:700;color:#374151;">${myActive.length}</div>
+                        <div style="font-size:0.62rem;color:#6b7280;">${t('active') || 'активних'}</div>
+                    </div>
+                    <div style="text-align:center;padding:0.5rem;background:${myOverdue.length > 0 ? '#fef2f2' : '#f9fafb'};border-radius:8px;">
+                        <div style="font-size:1.2rem;font-weight:700;color:${myOverdue.length > 0 ? '#ef4444' : '#374151'};">${myOverdue.length}</div>
+                        <div style="font-size:0.62rem;color:#6b7280;">${t('overdueStatus') || 'прострочено'}</div>
+                    </div>
+                    <div style="text-align:center;padding:0.5rem;background:#f0f9ff;border-radius:8px;">
+                        <div style="font-size:1.2rem;font-weight:700;color:#0284c7;">${avgMinutes > 0 ? avgMinutes + 'хв' : '—'}</div>
+                        <div style="font-size:0.62rem;color:#6b7280;">${t('avgTime') || 'сер. час'}</div>
+                    </div>
+                </div>
+                
+                <div style="display:flex;align-items:end;gap:2px;height:50px;">
+                    ${chartDays.map(d => {
+                        const h = Math.max(4, Math.round((d.count / maxCount) * 46));
+                        const today = d.date === todayStr;
+                        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;" title="${d.date}: ${d.count}">
+                            <div style="width:100%;height:${h}px;background:${today ? '#22c55e' : (d.count > 0 ? '#bbf7d0' : '#f3f4f6')};border-radius:2px;"></div>
+                            <span style="font-size:0.5rem;color:#9ca3af;margin-top:1px;">${d.label}</span>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    function getDateStr(val) {
+        if (!val) return '';
+        if (typeof val === 'string') return val.substring(0, 10);
+        if (val.toDate) return getLocalDateStr(val.toDate());
+        if (val instanceof Date) return getLocalDateStr(val);
+        return '';
+    }
+    
+    // =====================
+    // TEAM DASHBOARD — manager overview
+    // =====================
+    function renderTeamDashboard() {
+        const container = document.getElementById('teamDashboard');
+        if (!container) return;
+        if (currentUserData?.role === 'employee') { container.style.display = 'none'; return; }
+        
+        const todayStr = getLocalDateStr();
+        const now = new Date();
+        const dayOfWeek = now.getDay() || 7;
+        const weekStart = new Date(now); weekStart.setDate(now.getDate() - dayOfWeek + 1);
+        const weekStartStr = getLocalDateStr(weekStart);
+        
+        const teamData = users.map(u => {
+            const ut = tasks.filter(t => t.assigneeId === u.id);
+            const active = ut.filter(t => t.status !== 'done');
+            const overdue = active.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
+            const weekDone = ut.filter(t => t.status === 'done' && t.completedAt && getDateStr(t.completedAt) >= weekStartStr);
+            const todayDone = ut.filter(t => t.status === 'done' && t.completedAt && getDateStr(t.completedAt) === todayStr);
+            
+            let status = 'normal';
+            if (overdue.length >= 3) status = 'critical';
+            else if (overdue.length > 0) status = 'warning';
+            else if (active.length > 8) status = 'overloaded';
+            else if (active.length < 2 && weekDone.length < 3) status = 'idle';
+            
+            return { user: u, active: active.length, overdue: overdue.length, weekDone: weekDone.length, todayDone: todayDone.length, status };
+        }).filter(d => d.user.role !== 'owner' || users.length <= 2)
+          .sort((a, b) => b.overdue - a.overdue || b.active - a.active);
+        
+        if (teamData.length === 0) { container.style.display = 'none'; return; }
+        
+        // Process bottleneck
+        const activeProcesses = processes.filter(p => p.status === 'active');
+        let bottleneckHtml = '';
+        if (activeProcesses.length > 0) {
+            const stepCounts = {};
+            activeProcesses.forEach(p => {
+                const tpl = processTemplates.find(t => t.id === p.templateId);
+                if (tpl?.steps) {
+                    const step = tpl.steps[p.currentStep || 0];
+                    if (step) {
+                        const key = step.function;
+                        if (!stepCounts[key]) stepCounts[key] = 0;
+                        stepCounts[key]++;
+                    }
+                }
+            });
+            const sorted = Object.entries(stepCounts).sort((a, b) => b[1] - a[1]);
+            if (sorted.length > 0 && sorted[0][1] > 1) {
+                bottleneckHtml = `<div style="margin-top:0.5rem;padding:0.4rem 0.75rem;background:#fef3c7;border-radius:8px;font-size:0.75rem;color:#92400e;">
+                    <strong>${t('bottleneck') || 'Вузьке місце'}:</strong> ${esc(sorted[0][0])} — ${sorted[0][1]} ${t('processesWaiting') || 'процесів чекають'}
+                </div>`;
+            }
+        }
+        
+        const statusColors = { critical: '#fef2f2', warning: '#fffbeb', overloaded: '#fff7ed', idle: '#f0f9ff', normal: '#f9fafb' };
+        const statusIcons = { critical: '#ef4444', warning: '#f59e0b', overloaded: '#f97316', idle: '#0284c7', normal: '#6b7280' };
+        
+        container.style.display = 'block';
+        container.innerHTML = `
+            <div style="font-weight:600;font-size:0.85rem;color:#374151;margin-bottom:0.5rem;">${t('teamDashboard') || 'Команда'}</div>
+            <div style="display:flex;flex-direction:column;gap:0.3rem;">
+                ${teamData.map(d => `
+                    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;background:${statusColors[d.status]};border-radius:8px;border-left:3px solid ${statusIcons[d.status]};">
+                        <div style="flex:1;font-size:0.82rem;font-weight:500;">${esc(d.user.name || d.user.email)}</div>
+                        <span style="font-size:0.72rem;color:#16a34a;font-weight:600;" title="${t('doneToday') || 'Сьогодні'}">${d.todayDone}</span>
+                        <span style="font-size:0.72rem;color:#374151;" title="${t('thisWeek') || 'Тиждень'}">${d.weekDone}w</span>
+                        <span style="font-size:0.72rem;color:#6b7280;" title="${t('active') || 'Активних'}">${d.active}a</span>
+                        ${d.overdue > 0 ? `<span style="font-size:0.72rem;color:#ef4444;font-weight:700;" title="${t('overdueStatus') || 'Прострочено'}">${d.overdue}!</span>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+            ${bottleneckHtml}
+        `;
+    }
+    
+    // =====================
+    // DAILY SNAPSHOT — data for future AGI analysis
+    // =====================
+    async function saveDailySnapshot() {
+        if (!currentCompany || !currentUser) return;
+        const todayStr = getLocalDateStr();
+        const key = `snapshot_${currentCompany}_${todayStr}`;
+        if (localStorage.getItem(key)) return;
+        
+        // Only owner/manager saves snapshots
+        if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin') return;
+        
+        const activeTasks = tasks.filter(t => t.status !== 'done');
+        const overdueTasks = activeTasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
+        const doneTodayTasks = tasks.filter(t => t.status === 'done' && t.completedAt && getDateStr(t.completedAt) === todayStr);
+        
+        // Per-user load
+        const userLoads = users.map(u => ({
+            uid: u.id,
+            name: u.name || u.email,
+            active: activeTasks.filter(t => t.assigneeId === u.id).length,
+            overdue: overdueTasks.filter(t => t.assigneeId === u.id).length,
+            doneToday: doneTodayTasks.filter(t => t.assigneeId === u.id).length
+        }));
+        
+        // Per-function load
+        const funcLoads = functions.map(f => ({
+            name: f.name,
+            active: activeTasks.filter(t => t.function === f.name).length,
+            overdue: overdueTasks.filter(t => t.function === f.name).length
+        }));
+        
+        // Process status
+        const activeProc = processes.filter(p => p.status === 'active').length;
+        const overdueProc = processes.filter(p => p.status === 'active' && p.deadline && p.deadline < todayStr).length;
+        
+        // SLA breaches
+        const slaBreaches = processes.filter(p => {
+            if (p.status !== 'active') return false;
+            const tpl = processTemplates.find(t => t.id === p.templateId);
+            if (!tpl?.steps) return false;
+            const step = tpl.steps[p.currentStep || 0];
+            // If step has SLA and task exists and is overdue
+            return step?.slaMinutes && tasks.some(t => 
+                t.processId === p.id && t.processStep === (p.currentStep || 0) && 
+                t.status !== 'done' && t.deadlineDate && t.deadlineDate < todayStr
+            );
+        }).length;
+        
+        const snapshot = {
+            date: todayStr,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            totals: {
+                tasks: tasks.length,
+                active: activeTasks.length,
+                overdue: overdueTasks.length,
+                doneToday: doneTodayTasks.length,
+                users: users.length,
+                functions: functions.length,
+                activeProcesses: activeProc,
+                overdueProcesses: overdueProc,
+                slaBreaches: slaBreaches
+            },
+            userLoads,
+            funcLoads,
+            createdBy: currentUser.uid
+        };
+        
+        try {
+            await db.collection('companies').doc(currentCompany)
+                .collection('snapshots').doc(todayStr).set(snapshot);
+            localStorage.setItem(key, '1');
+            console.log('[Snapshot] Daily snapshot saved for', todayStr);
+        } catch (e) {
+            console.warn('[Snapshot] Failed:', e.message);
+        }
+    }
+    
+    // =====================
+    // DECISION LOG — track manual management decisions for AGI learning
+    // =====================
+    function logDecision(type, details) {
+        if (!currentCompany || !currentUser) return;
+        const entry = {
+            type, // reassign, deadline_change, escalation_manual, priority_change, process_override
+            details,
+            date: getLocalDateStr(),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            userId: currentUser.uid,
+            userName: currentUserData?.name || currentUser.email
+        };
+        
+        db.collection('companies').doc(currentCompany)
+            .collection('decisions').add(entry).catch(() => {});
     }
 
     // =====================
