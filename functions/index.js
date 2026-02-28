@@ -1280,9 +1280,13 @@ exports.aiAssistant = functions
                 throw new functions.https.HttpsError('permission-denied', 'Not a member');
             }
 
-            // Load assistant
-            const aDoc = await db.collection('companies').doc(companyId)
-                .collection('aiAssistants').doc(assistantId).get();
+            // Load assistant — global first, then company fallback
+            let aDoc = await db.collection('settings').doc('ai')
+                .collection('assistants').doc(assistantId).get();
+            if (!aDoc.exists) {
+                aDoc = await db.collection('companies').doc(companyId)
+                    .collection('aiAssistants').doc(assistantId).get();
+            }
             if (!aDoc.exists) {
                 throw new functions.https.HttpsError('not-found', 'Assistant not found');
             }
@@ -1290,16 +1294,16 @@ exports.aiAssistant = functions
             const assistant = aDoc.data();
             const model = assistant.model || 'gpt-4o-mini';
 
-            // Get API key
+            // Get API key: company → global settings
             let apiKey = '';
             const companyDoc = await db.collection('companies').doc(companyId).get();
             if (companyDoc.exists && companyDoc.data().openaiApiKey) {
                 apiKey = companyDoc.data().openaiApiKey;
             }
             if (!apiKey) {
-                const globalDoc = await db.collection('settings').doc('ai').get();
-                if (globalDoc.exists && globalDoc.data().openaiApiKey) {
-                    apiKey = globalDoc.data().openaiApiKey;
+                const settingsDoc = await db.collection('settings').doc('ai').get();
+                if (settingsDoc.exists && settingsDoc.data().openaiApiKey) {
+                    apiKey = settingsDoc.data().openaiApiKey;
                 }
             }
             if (!apiKey) {
