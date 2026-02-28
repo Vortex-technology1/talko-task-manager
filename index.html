@@ -6667,6 +6667,10 @@
                         <input type="text" id="startProcessName" class="form-input" placeholder="Наприклад: Замовлення #127 - Клієнт Іванов" data-i18n-placeholder="processInstancePh" required>
                     </div>
                     <div class="form-group">
+                        <label class="form-label"><i data-lucide="tag" class="icon icon-sm"></i> <span data-i18n="processObject">Об'єкт / Клієнт</span> <span style="color:var(--gray);font-weight:normal;">(${t('optional') || 'опціонально'})</span></label>
+                        <input type="text" id="startProcessObject" class="form-input" placeholder="Клієнт, об'єкт, номер замовлення..." data-i18n-placeholder="processObjectPh">
+                    </div>
+                    <div class="form-group">
                         <label class="form-label"><i data-lucide="calendar" class="icon icon-sm"></i> <span data-i18n="deadline">Дедлайн</span> <span style="color:var(--gray);font-weight:normal;">(опціонально)</span></label>
                         <input type="date" id="startProcessDeadline" class="form-input">
                     </div>
@@ -7032,7 +7036,6 @@
                 deadlineTime: 'Дедлайн (час) *',
                 estimatedTime: 'Орієнтовний час',
                 notSpecified: 'Не вказано',
-                expectedResult: 'Очікуваний результат',
                 reportFormat: 'Формат звіту',
                 reminders: 'Нагадування до дедлайну',
                 escalation: 'Ескалація при простроченні',
@@ -7699,6 +7702,15 @@
                 startDay: 'Почати день',
                 later: 'Пізніше',
                 tracked: 'зафіксовано',
+                processObject: "Об'єкт / Клієнт",
+                processObjectPh: 'Клієнт, об\'єкт, номер замовлення...',
+                checkpoint: 'Підтвердження',
+                smartAssign: 'Авторозподіл',
+                details: 'Деталі',
+                noSLA: 'Без SLA',
+                expectedResult: 'Очікуваний результат',
+                controlQuestion: 'Контрольне питання',
+                previousSteps: 'Попередні етапи',
                 hintNextTask: 'Натисніть, щоб відкрити найважливішу задачу. Система сама вибере.',
                 hintTasks: 'Всі задачі. Фільтри "Мої" та "Сьогодні" покажуть тільки ваші.',
                 hintControl: 'Панель керівника: брифінг, журнал збоїв, аналітика команди.',
@@ -7801,7 +7813,6 @@
                 deadlineTime: 'Дедлайн (время) *',
                 estimatedTime: 'Ориентировочное время',
                 notSpecified: 'Не указано',
-                expectedResult: 'Ожидаемый результат',
                 reportFormat: 'Формат отчета',
                 notifyOnComplete: 'Уведомить о выполнении',
                 reminders: 'Напоминание до дедлайна',
@@ -7914,6 +7925,15 @@
                 tasksForToday: 'задач',
                 startDay: 'Начать день',
                 tracked: 'зафиксировано',
+                processObject: 'Объект / Клиент',
+                processObjectPh: 'Клиент, объект, номер заказа...',
+                checkpoint: 'Подтверждение',
+                smartAssign: 'Авторасп.',
+                details: 'Детали',
+                noSLA: 'Без SLA',
+                expectedResult: 'Ожидаемый результат',
+                controlQuestion: 'Контрольный вопрос',
+                previousSteps: 'Предыдущие этапы',
                 hintNextTask: 'Нажмите, чтобы открыть самую важную задачу. Система сама выберет.',
                 hintTasks: 'Все задачи. Фильтры "Мои" и "Сегодня" покажут только ваши.',
                 hintControl: 'Панель руководителя: брифинг, журнал сбоев, аналитика команды.',
@@ -8522,7 +8542,6 @@
                 deadlineTime: 'Termin (czas) *',
                 estimatedTime: 'Szacowany czas',
                 notSpecified: 'Nie określono',
-                expectedResult: 'Oczekiwany rezultat',
                 reportFormat: 'Format raportu',
                 reminders: 'Przypomnienia przed terminem',
                 escalation: 'Eskalacja przy opóźnieniu',
@@ -9189,6 +9208,15 @@
                 startDay: 'Rozpocznij dzień',
                 later: 'Później',
                 tracked: 'zarejestrowano',
+                processObject: 'Obiekt / Klient',
+                processObjectPh: 'Klient, obiekt, numer zamowienia...',
+                checkpoint: 'Zatwierdzenie',
+                smartAssign: 'Autoprzypisanie',
+                details: 'Szczegoly',
+                noSLA: 'Bez SLA',
+                expectedResult: 'Oczekiwany rezultat',
+                controlQuestion: 'Pytanie kontrolne',
+                previousSteps: 'Poprzednie etapy',
                 hintNextTask: 'Kliknij, aby otworzyć najważniejsze zadanie. System sam wybierze.',
                 hintTasks: 'Wszystkie zadania. Filtry "Moje" i "Dziś" pokażą tylko twoje.',
                 hintControl: 'Panel kierownika: briefing, dziennik awarii, analityka zespołu.',
@@ -16484,6 +16512,7 @@
                         </div>
                         <div class="process-row-meta">
                             <span style="color:#888;font-size:0.75rem;">${esc(template.name)}</span>
+                            ${process.objectName ? `<span style="font-size:0.72rem;background:#e0f2fe;color:#0369a1;padding:1px 6px;border-radius:4px;">${esc(process.objectName)}</span>` : ''}
                             ${currentAssignee ? `<span class="process-row-assignee"><i data-lucide="user" class="icon icon-sm"></i> ${esc(currentAssignee)}</span>` : ''}
                             ${deadlineHTML}
                             <span class="process-row-percent ${isCompleted ? 'complete' : ''}">${percent}%</span>
@@ -17267,18 +17296,46 @@
                 `<option value="${esc(f.name)}" ${f.name === step.function ? 'selected' : ''}>${esc(f.name)}</option>`
             ).join('');
             
+            const expanded = step.expectedResult || step.controlQuestion || step.instruction || step.slaMinutes;
+            
             return `
                 <div class="process-template-step" data-index="${index}">
                     <span class="step-number">${index + 1}</span>
-                    <div style="flex:1;display:flex;gap:0.5rem;flex-wrap:wrap;">
-                        <select class="form-select step-function" style="flex:1;min-width:120px;" onchange="updateStepFunction(${index}, this.value)">
-                            <option value="">${t('stepFunction')}</option>
-                            ${funcOptions}
-                        </select>
-                        <input type="text" class="form-input step-title" placeholder="${t('stepTitle')}" value="${esc(step.title || '')}" 
-                               style="flex:1;min-width:120px;" onchange="updateStepTitle(${index}, this.value)">
+                    <div style="flex:1;">
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.3rem;">
+                            <select class="form-select step-function" style="flex:1;min-width:120px;" onchange="updateStepFunction(${index}, this.value)">
+                                <option value="">${t('stepFunction') || 'Функція'}</option>
+                                ${funcOptions}
+                            </select>
+                            <input type="text" class="form-input step-title" placeholder="${t('stepTitle') || 'Назва кроку'}" value="${esc(step.title || '')}" style="flex:1;min-width:120px;">
+                        </div>
+                        <div style="display:flex;gap:0.3rem;align-items:center;">
+                            <select class="form-select step-sla" style="width:90px;font-size:0.75rem;padding:0.25rem;">
+                                <option value="" ${!step.slaMinutes ? 'selected' : ''}>${t('noSLA') || 'Без SLA'}</option>
+                                <option value="30" ${step.slaMinutes == 30 ? 'selected' : ''}>30 ${t('min') || 'хв'}</option>
+                                <option value="60" ${step.slaMinutes == 60 ? 'selected' : ''}>1 ${t('hour') || 'год'}</option>
+                                <option value="120" ${step.slaMinutes == 120 ? 'selected' : ''}>2 ${t('hour') || 'год'}</option>
+                                <option value="240" ${step.slaMinutes == 240 ? 'selected' : ''}>4 ${t('hour') || 'год'}</option>
+                                <option value="480" ${step.slaMinutes == 480 ? 'selected' : ''}>8 ${t('hour') || 'год'}</option>
+                                <option value="1440" ${step.slaMinutes == 1440 ? 'selected' : ''}>1 ${t('day') || 'день'}</option>
+                                <option value="2880" ${step.slaMinutes == 2880 ? 'selected' : ''}>2 ${t('days') || 'дні'}</option>
+                                <option value="4320" ${step.slaMinutes == 4320 ? 'selected' : ''}>3 ${t('days') || 'дні'}</option>
+                            </select>
+                            <label style="font-size:0.7rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
+                                <input type="checkbox" class="step-checkpoint" ${step.checkpoint ? 'checked' : ''}> ${t('checkpoint') || 'Підтвердження'}
+                            </label>
+                            <label style="font-size:0.7rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
+                                <input type="checkbox" class="step-smartassign" ${step.smartAssign !== false ? 'checked' : ''}> ${t('smartAssign') || 'Авторозподіл'}
+                            </label>
+                            <button type="button" onclick="toggleStepDetails(${index})" style="background:none;border:none;cursor:pointer;font-size:0.7rem;color:#3b82f6;">${t('details') || 'Деталі'}</button>
+                        </div>
+                        <div class="step-details" id="stepDetails_${index}" style="display:${expanded ? 'block' : 'none'};margin-top:0.3rem;">
+                            <input type="text" class="form-input step-expectedResult" placeholder="${t('expectedResult') || 'Продукт/результат етапу'}" value="${esc(step.expectedResult || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
+                            <input type="text" class="form-input step-controlQuestion" placeholder="${t('controlQuestion') || 'Контрольне питання (так/ні)'}" value="${esc(step.controlQuestion || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
+                            <textarea class="form-textarea step-instruction" placeholder="${t('instruction') || 'Інструкція для виконавця'}" style="font-size:0.8rem;min-height:40px;">${esc(step.instruction || '')}</textarea>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-small btn-danger" onclick="removeTemplateStep(${index})" style="padding:0.3rem 0.5rem;">
+                    <button type="button" class="btn btn-small btn-danger" onclick="removeTemplateStep(${index})" style="padding:0.3rem 0.5rem;align-self:start;">
                         <i data-lucide="x" class="icon icon-sm"></i>
                     </button>
                 </div>
@@ -17326,6 +17383,11 @@
             // Зберігаємо в data атрибут
         }
         
+        function toggleStepDetails(index) {
+            const el = document.getElementById('stepDetails_' + index);
+            if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+        
         function getTemplateStepsFromEditor() {
             const container = document.getElementById('templateStepsContainer');
             const steps = [];
@@ -17337,7 +17399,13 @@
                 if (funcSelect?.value) {
                     steps.push({
                         function: funcSelect.value,
-                        title: titleInput?.value || ''
+                        title: titleInput?.value || '',
+                        expectedResult: stepEl.querySelector('.step-expectedResult')?.value || '',
+                        controlQuestion: stepEl.querySelector('.step-controlQuestion')?.value || '',
+                        instruction: stepEl.querySelector('.step-instruction')?.value || '',
+                        slaMinutes: parseInt(stepEl.querySelector('.step-sla')?.value) || 0,
+                        checkpoint: stepEl.querySelector('.step-checkpoint')?.checked || false,
+                        smartAssign: stepEl.querySelector('.step-smartassign')?.checked !== false
                     });
                 }
             });
@@ -17456,19 +17524,42 @@
             refreshIcons();
         }
         
+        // === SMART ASSIGN — find least loaded person in function ===
+        function getSmartAssignee(func) {
+            if (!func?.assigneeIds?.length) return null;
+            if (func.assigneeIds.length === 1) return func.assigneeIds[0];
+            
+            // Count active tasks per person in this function
+            const todayStr = getLocalDateStr();
+            const loads = func.assigneeIds.map(uid => {
+                const activeTasks = tasks.filter(t => 
+                    t.assigneeId === uid && t.status !== 'done' && 
+                    t.function === func.name
+                ).length;
+                const overdue = tasks.filter(t =>
+                    t.assigneeId === uid && t.status !== 'done' &&
+                    t.deadlineDate && t.deadlineDate < todayStr
+                ).length;
+                return { uid, load: activeTasks + overdue * 2 }; // overdue weighs double
+            });
+            
+            loads.sort((a, b) => a.load - b.load);
+            return loads[0].uid;
+        }
+        
         async function startProcess(e) {
             e.preventDefault();
             
             const templateId = document.getElementById('startProcessTemplate').value;
             const name = document.getElementById('startProcessName').value.trim();
             const deadline = document.getElementById('startProcessDeadline').value;
+            const processObject = document.getElementById('startProcessObject')?.value?.trim() || '';
             
             if (!templateId || !name) return;
             
             const template = processTemplates.find(t => t.id === templateId);
             if (!template?.steps?.length) return;
             
-            // Перевіряємо що перша функція має виконавців
             const firstStep = template.steps[0];
             const firstFunc = functions.find(f => f.name === firstStep.function);
             
@@ -17483,13 +17574,14 @@
             }
             
             try {
-                // Створюємо процес
                 const processData = {
                     templateId,
                     name,
+                    objectName: processObject,
                     deadline: deadline || null,
                     status: 'active',
                     currentStep: 0,
+                    stepResults: [],
                     history: [],
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     createdBy: currentUser.uid
@@ -17497,48 +17589,71 @@
                 
                 const processRef = await db.collection('companies').doc(currentCompany).collection('processes').add(processData);
                 
-                // Створюємо завдання для першого етапу
-                const func = firstFunc;
-                const headId = func.headId || func.assigneeIds[0];
-                const head = users.find(u => u.id === headId);
+                // Smart assign or head
+                const assigneeId = firstStep.smartAssign !== false
+                    ? getSmartAssignee(firstFunc)
+                    : (firstFunc.headId || firstFunc.assigneeIds[0]);
+                const assignee = users.find(u => u.id === assigneeId);
                 
                 // Smart deadline
                 let firstDeadlineDate = new Date().toISOString().split('T')[0];
                 if (deadline) {
                     const pdl = new Date(deadline + 'T18:00:00');
-                    const remAfter = template.steps.slice(1).reduce((s, st) => s + parseInt(st.estimatedTime || 60), 0);
+                    const remAfter = template.steps.slice(1).reduce((s, st) => s + parseInt(st.slaMinutes || st.estimatedTime || 60), 0);
                     const sdl = new Date(pdl.getTime() - remAfter * 60000);
                     const tmw = new Date(); tmw.setDate(tmw.getDate() + 1);
                     firstDeadlineDate = sdl > tmw ? sdl.toISOString().split('T')[0] : tmw.toISOString().split('T')[0];
+                } else if (firstStep.slaMinutes) {
+                    // SLA-based deadline
+                    const slaDl = new Date(Date.now() + firstStep.slaMinutes * 60000);
+                    firstDeadlineDate = getLocalDateStr(slaDl);
                 }
                 
-                const firstTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                // Build instruction with context
+                let fullInstruction = firstStep.instruction || '';
+                if (processObject) {
+                    fullInstruction = (processObject ? `[${processObject}]\n` : '') + fullInstruction;
+                }
+                if (firstStep.expectedResult) {
+                    fullInstruction += `\n\n${t('expectedResult') || 'Очікуваний результат'}: ${firstStep.expectedResult}`;
+                }
+                if (firstStep.controlQuestion) {
+                    fullInstruction += `\n${t('controlQuestion') || 'Контрольне питання'}: ${firstStep.controlQuestion}`;
+                }
+                
+                const taskData = {
                     title: `[${name}] ${firstStep.title || firstStep.name || firstStep.function}`,
                     function: firstStep.function,
-                    assigneeId: headId,
-                    assigneeName: head?.name || head?.email || '',
-                    instruction: firstStep.instruction || '',
-                    estimatedTime: firstStep.estimatedTime || '60',
+                    assigneeId: assigneeId,
+                    assigneeName: assignee?.name || assignee?.email || '',
+                    instruction: fullInstruction,
+                    description: fullInstruction,
+                    expectedResult: firstStep.expectedResult || '',
+                    estimatedTime: String(firstStep.slaMinutes || firstStep.estimatedTime || 60),
                     deadlineDate: firstDeadlineDate,
                     deadlineTime: '18:00',
                     status: 'new',
                     priority: 'high',
                     processId: processRef.id,
                     processStep: 0,
+                    processObject: processObject,
+                    requireReview: firstStep.checkpoint || false,
                     createdBy: currentUser.uid,
                     creatorId: currentUser.uid,
                     createdDate: getLocalDateStr(),
                     deadline: firstDeadlineDate + 'T18:00',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     creatorName: t('systemUser')
-                });
+                };
+                
+                await db.collection('companies').doc(currentCompany).collection('tasks').add(taskData);
                 
                 closeModal('startProcessModal');
                 await loadProcessData();
                 renderProcessBoard();
                 renderMyDay();
                 refreshCurrentView();
-                alert(t('processStarted'));
+                showToast(t('processStarted') || 'Процес запущено', 'success');
                 
             } catch (error) {
                 console.error('startProcess error:', error);
@@ -17553,77 +17668,101 @@
             
             const template = processTemplates.find(t => t.id === process.templateId);
             
-            // Якщо шаблон видалено - показуємо повідомлення
             if (!template) {
                 document.getElementById('viewProcessTitle').innerHTML = `<i data-lucide="git-branch" class="icon"></i> ${esc(process.name)}`;
                 document.getElementById('viewProcessContent').innerHTML = `
                     <div style="text-align:center;padding:2rem;color:var(--gray);">
                         <i data-lucide="alert-triangle" class="icon icon-lg" style="margin-bottom:1rem;"></i>
                         <p>${t('templateDeleted')}</p>
-                    </div>
-                `;
+                    </div>`;
                 document.getElementById('viewProcessModal').style.display = 'block';
                 refreshIcons();
                 return;
             }
             
-            // Перевіряємо чи currentStep в межах steps
             const safeCurrentStep = Math.min(process.currentStep || 0, template.steps.length - 1);
+            const stepResults = process.stepResults || [];
             
             document.getElementById('viewProcessTitle').innerHTML = `<i data-lucide="git-branch" class="icon"></i> ${esc(process.name)}`;
             
             const content = document.getElementById('viewProcessContent');
             content.innerHTML = `
+                ${process.objectName ? `
+                <div style="margin-bottom:1rem;padding:0.6rem 1rem;background:#f0f9ff;border-radius:8px;display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    <span style="font-weight:600;color:#0369a1;">${esc(process.objectName)}</span>
+                </div>` : ''}
+                
                 <div style="margin-bottom:1.5rem;">
-                    <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${t('processFlow')}</div>
+                    <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${t('processFlow') || 'Послідовність'}</div>
                     <div style="display:flex;flex-direction:column;gap:0.5rem;">
                         ${(template?.steps || []).map((step, i) => {
-                            let status = '';
-                            let statusIcon = '';
-                            let statusColor = '';
+                            let statusColor = 'var(--gray)';
+                            let statusIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>';
+                            let bgColor = '#f9fafb';
                             
-                            if (i < safeCurrentStep) {
-                                status = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:-2px;"><polyline points="20 6 9 17 4 12"/></svg>';
+                            const isCompleted = process.status === 'completed' || i < safeCurrentStep;
+                            const isCurrent = i === safeCurrentStep && process.status !== 'completed';
+                            
+                            if (isCompleted) {
+                                statusIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:-2px;"><polyline points="20 6 9 17 4 12"/></svg>';
                                 statusColor = 'var(--primary)';
-                            } else if (i === safeCurrentStep) {
-                                status = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="8"/></svg>';
+                            } else if (isCurrent) {
+                                statusIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="8"/></svg>';
                                 statusColor = 'var(--info)';
-                            } else {
-                                status = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>';
-                                statusColor = 'var(--gray)';
+                                bgColor = '#eff6ff';
                             }
                             
+                            // Find step result
+                            const result = stepResults.find(r => r.step === i);
+                            
+                            // SLA info
+                            let slaHtml = '';
+                            if (step.slaMinutes) {
+                                const slaH = step.slaMinutes >= 60 ? Math.round(step.slaMinutes / 60) + 'h' : step.slaMinutes + 'm';
+                                if (result?.actualMinutes && result.actualMinutes > step.slaMinutes) {
+                                    slaHtml = `<span style="font-size:0.68rem;background:#fef2f2;color:#ef4444;padding:1px 5px;border-radius:3px;">SLA ${slaH} / ${Math.round(result.actualMinutes)}m</span>`;
+                                } else if (result?.actualMinutes) {
+                                    slaHtml = `<span style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:3px;">SLA ${slaH}</span>`;
+                                } else {
+                                    slaHtml = `<span style="font-size:0.68rem;background:#f3f4f6;color:#6b7280;padding:1px 5px;border-radius:3px;">SLA ${slaH}</span>`;
+                                }
+                            }
+                            
+                            // Checkpoint badge
+                            const checkpointBadge = step.checkpoint ? '<span style="font-size:0.68rem;background:#fef3c7;color:#b45309;padding:1px 5px;border-radius:3px;">Checkpoint</span>' : '';
+                            
                             return `
-                                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:${i === safeCurrentStep ? '#eff6ff' : '#f9fafb'};border-radius:8px;border-left:3px solid ${statusColor};">
-                                    <span style="color:${statusColor};font-weight:600;width:20px;">${status}</span>
-                                    <div style="flex:1;">
-                                        <div style="font-weight:500;">${esc(step.title || step.function)}</div>
-                                        <div style="font-size:0.8rem;color:var(--gray);">${esc(step.function)}</div>
+                                <div style="padding:0.75rem;background:${bgColor};border-radius:8px;border-left:3px solid ${statusColor};">
+                                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                                        <span style="color:${statusColor};font-weight:600;width:20px;">${statusIcon}</span>
+                                        <div style="flex:1;">
+                                            <div style="font-weight:500;">${esc(step.title || step.function)} ${slaHtml} ${checkpointBadge}</div>
+                                            <div style="font-size:0.78rem;color:var(--gray);">${esc(step.function)}${step.expectedResult ? ` — ${esc(step.expectedResult)}` : ''}</div>
+                                        </div>
+                                        ${isCurrent ? `
+                                            <button class="btn btn-small btn-success" onclick="completeProcessStep('${escId(processId)}')">
+                                                <i data-lucide="check" class="icon icon-sm"></i> ${t('completeStep')}
+                                            </button>
+                                        ` : ''}
                                     </div>
-                                    ${i === safeCurrentStep && process.status !== 'completed' ? `
-                                        <button class="btn btn-small btn-success" onclick="completeProcessStep('${escId(processId)}')">
-                                            <i data-lucide="check" class="icon icon-sm"></i> ${t('completeStep')}
-                                        </button>
-                                    ` : ''}
+                                    ${result ? `
+                                        <div style="margin-top:0.4rem;padding-top:0.4rem;border-top:1px solid #e5e7eb;font-size:0.78rem;">
+                                            <span style="color:var(--primary);font-weight:500;">${esc(result.completedByName || '')}</span>
+                                            <span style="color:var(--gray);">${result.completedAt ? new Date(result.completedAt).toLocaleDateString() : ''}</span>
+                                            ${result.result ? `<div style="margin-top:2px;color:#374151;background:white;padding:4px 8px;border-radius:4px;">${esc(result.result)}</div>` : ''}
+                                        </div>` : ''}
                                 </div>
                             `;
                         }).join('') || ''}
                     </div>
                 </div>
                 
-                ${process.history?.length ? `
-                    <div>
-                        <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${t('processHistory')}</div>
-                        <div style="font-size:0.85rem;">
-                            ${process.history.map(h => `
-                                <div style="padding:0.5rem 0;border-bottom:1px solid #f3f4f6;">
-                                    <span style="color:var(--primary);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:-2px;"><polyline points="20 6 9 17 4 12"/></svg></span> ${esc(h.stepTitle || '')} 
-                                    <span style="color:var(--gray);">— ${h.completedAt ? new Date(h.completedAt).toLocaleDateString() : ''}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : ''}
+                ${process.deadline ? `
+                <div style="font-size:0.82rem;color:var(--gray);margin-bottom:0.5rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+                    ${t('deadline') || 'Дедлайн'}: <strong>${process.deadline}</strong>
+                </div>` : ''}
                 
                 <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;">
                     <button class="btn btn-danger btn-small" onclick="deleteProcess('${escId(processId)}')" style="opacity:0.7;">
@@ -17665,7 +17804,7 @@
         // =====================
         async function advanceProcessIfLinked(taskId) {
             const task = tasks.find(t => t.id === taskId);
-            if (!task?.processId) return; // Не пов'язане з процесом
+            if (!task?.processId) return;
             
             const process = processes.find(p => p.id === task.processId);
             if (!process || process.status !== 'active') return;
@@ -17673,7 +17812,6 @@
             const template = processTemplates.find(t => t.id === process.templateId);
             if (!template?.steps?.length) return;
             
-            // Перевіряємо що завершене завдання — саме поточний крок процесу
             const currentStepIndex = process.currentStep || 0;
             if (task.processStep !== currentStepIndex) {
                 console.log('[Process] Task step', task.processStep, '!= current step', currentStepIndex, '— skip');
@@ -17685,43 +17823,59 @@
             const nextStep = template.steps[nextStepIndex];
             
             try {
+                // Save step result for context chain
+                const stepResult = {
+                    step: currentStepIndex,
+                    function: currentStep.function,
+                    title: currentStep.title || currentStep.function,
+                    completedBy: currentUser.uid,
+                    completedByName: currentUserData?.name || currentUser?.email || '',
+                    completedAt: new Date().toISOString(),
+                    taskId: taskId,
+                    // Collect result from task comments/report
+                    result: task.completionComment || task.expectedResult || '',
+                    trackedMinutes: task.timeLog ? task.timeLog.reduce((s, e) => s + (e.minutes || 0), 0) : 0
+                };
+                
                 // History entry
                 const historyEntry = {
                     step: currentStepIndex,
                     stepTitle: currentStep?.title || currentStep?.function || ('Крок ' + (currentStepIndex + 1)),
                     completedAt: new Date().toISOString(),
                     completedBy: currentUser.uid,
+                    completedByName: currentUserData?.name || '',
                     taskId: taskId,
-                    auto: true
+                    auto: true,
+                    slaMinutes: currentStep.slaMinutes || 0,
+                    actualMinutes: stepResult.trackedMinutes
                 };
                 
-                // Перевіряємо функцію ПЕРЕД update process
+                // Check next step function exists
                 if (nextStep) {
                     const checkFunc = functions.find(f => f.name === nextStep.function);
                     if (!checkFunc?.assigneeIds?.length) {
                         showToast(t('noAssigneesInFunc') + ': ' + nextStep.function, 'error');
-                        return; // НЕ інкрементуємо process — не буде stuck
+                        return;
                     }
                 }
                 
                 const updateData = {
                     currentStep: nextStepIndex,
-                    history: firebase.firestore.FieldValue.arrayUnion(historyEntry)
+                    history: firebase.firestore.FieldValue.arrayUnion(historyEntry),
+                    stepResults: firebase.firestore.FieldValue.arrayUnion(stepResult)
                 };
                 
-                // Останній крок → завершуємо процес
                 if (!nextStep) {
                     updateData.status = 'completed';
                     updateData.completedAt = firebase.firestore.FieldValue.serverTimestamp();
                 }
                 
-                // Transaction: prevent race when 2 users complete same step
+                // Transaction: prevent race
                 const processRef = db.collection('companies').doc(currentCompany).collection('processes').doc(task.processId);
                 const raceDetected = await db.runTransaction(async (tx) => {
                     const processDoc = await tx.get(processRef);
                     if (!processDoc.exists) return true;
                     const serverStep = processDoc.data().currentStep || 0;
-                    // Another user already advanced this step
                     if (serverStep !== currentStepIndex) {
                         console.log('[Process] Race detected: server step', serverStep, '!= local', currentStepIndex);
                         return true;
@@ -17730,7 +17884,6 @@
                     return false;
                 });
                 if (raceDetected) {
-                    // Refresh process data
                     const freshDoc = await processRef.get();
                     if (freshDoc.exists) {
                         const pIdx = processes.findIndex(p => p.id === task.processId);
@@ -17739,92 +17892,100 @@
                     return;
                 }
                 
-                // Створюємо завдання для наступного кроку
+                // Create task for next step
                 if (nextStep) {
                     const func = functions.find(f => f.name === nextStep.function);
                     if (func?.assigneeIds?.length) {
-                        const headId = func.headId || func.assigneeIds[0];
-                        const head = users.find(u => u.id === headId);
+                        // Smart assign: least loaded person OR head
+                        const assigneeId = nextStep.smartAssign !== false
+                            ? getSmartAssignee(func)
+                            : (func.headId || func.assigneeIds[0]);
+                        const assignee = users.find(u => u.id === assigneeId);
                         
-                        // Розрахунок дедлайну: якщо є deadline процесу — відштовхуємось від нього
+                        // Deadline calculation
                         let deadlineDate = getLocalDateStr();
                         if (process.deadline) {
                             const processDeadline = new Date(process.deadline + 'T18:00:00');
-                            // Дедлайн цього кроку = deadline процесу мінус час на наступні кроки
-                            const remainingAfterThis = template.steps.slice(nextStepIndex + 1).reduce((sum, s) => sum + parseInt(s.estimatedTime || 60), 0);
+                            const remainingAfterThis = template.steps.slice(nextStepIndex + 1).reduce((sum, s) => sum + parseInt(s.slaMinutes || s.estimatedTime || 60), 0);
                             const stepDeadline = new Date(processDeadline.getTime() - remainingAfterThis * 60000);
-                            
-                            // Але не раніше ніж завтра 
                             const tomorrow = new Date();
                             tomorrow.setDate(tomorrow.getDate() + 1);
                             deadlineDate = stepDeadline > tomorrow 
                                 ? getLocalDateStr(stepDeadline)
                                 : getLocalDateStr(tomorrow);
+                        } else if (nextStep.slaMinutes) {
+                            const slaDl = new Date(Date.now() + nextStep.slaMinutes * 60000);
+                            deadlineDate = getLocalDateStr(slaDl);
                         }
                         
-                        const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add({
+                        // Build context-rich instruction
+                        const prevResults = (process.stepResults || []).concat([stepResult]);
+                        let contextBlock = '';
+                        if (prevResults.length > 0) {
+                            contextBlock = `--- ${t('previousSteps') || 'Попередні етапи'} ---\n` +
+                                prevResults.map((r, i) => 
+                                    `${i+1}. ${r.title || r.function}: ${r.result || '(без коментаря)'} [${r.completedByName}]`
+                                ).join('\n') + '\n---\n\n';
+                        }
+                        
+                        let fullInstruction = contextBlock;
+                        if (process.objectName) fullInstruction += `[${process.objectName}]\n`;
+                        fullInstruction += nextStep.instruction || '';
+                        if (nextStep.expectedResult) {
+                            fullInstruction += `\n\n${t('expectedResult') || 'Очікуваний результат'}: ${nextStep.expectedResult}`;
+                        }
+                        if (nextStep.controlQuestion) {
+                            fullInstruction += `\n${t('controlQuestion') || 'Контрольне питання'}: ${nextStep.controlQuestion}`;
+                        }
+                        
+                        const taskData = {
                             title: `[${process.name}] ${nextStep.title || nextStep.name || nextStep.function}`,
                             function: nextStep.function,
-                            assigneeId: headId,
-                            assigneeName: head?.name || head?.email || '',
-                            instruction: nextStep.instruction || '',
-                            estimatedTime: nextStep.estimatedTime || '60',
+                            assigneeId: assigneeId,
+                            assigneeName: assignee?.name || assignee?.email || '',
+                            instruction: fullInstruction,
+                            description: fullInstruction,
+                            expectedResult: nextStep.expectedResult || '',
+                            estimatedTime: String(nextStep.slaMinutes || nextStep.estimatedTime || 60),
                             deadlineDate: deadlineDate,
                             deadlineTime: '18:00',
                             status: 'new',
                             priority: 'high',
                             processId: task.processId,
                             processStep: nextStepIndex,
+                            processObject: process.objectName || '',
+                            requireReview: nextStep.checkpoint || false,
                             createdBy: currentUser.uid,
                             creatorId: currentUser.uid,
                             createdDate: getLocalDateStr(),
                             deadline: deadlineDate + 'T18:00',
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                             creatorName: t('systemUser')
-                        });
+                        };
                         
-                        // Додаємо в локальний масив для негайного відображення
-                        tasks.push({
-                            id: newTaskRef.id,
-                            title: `[${process.name}] ${nextStep.title || nextStep.name || nextStep.function}`,
-                            function: nextStep.function,
-                            assigneeId: headId,
-                            assigneeName: head?.name || head?.email || '',
-                            instruction: nextStep.instruction || '',
-                            estimatedTime: nextStep.estimatedTime || '60',
-                            deadlineDate: deadlineDate,
-                            deadlineTime: '18:00',
-                            deadline: deadlineDate + 'T18:00',
-                            status: 'new',
-                            priority: 'high',
-                            processId: task.processId,
-                            processStep: nextStepIndex,
-                            createdBy: currentUser.uid,
-                            creatorId: currentUser.uid,
-                            createdDate: getLocalDateStr(),
-                            creatorName: t('systemUser'),
-                            createdAt: new Date()
-                        });
+                        const newTaskRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(taskData);
+                        
+                        tasks.push({ id: newTaskRef.id, ...taskData, createdAt: new Date() });
                         
                         showToast(t('processAdvanced').replace('{name}', process.name).replace('{step}', nextStepIndex+1).replace('{total}', template.steps.length).replace('{stepName}', nextStep.title || nextStep.function), 'success');
-                        addNotification('process', t('processAdvancedShort') || 'Процес просунувся', process.name + ' → крок ' + (nextStepIndex + 1) + '/' + template.steps.length, null);
+                        addNotification('process', t('processAdvancedShort') || 'Процес просунувся', process.name + ' → ' + (nextStepIndex + 1) + '/' + template.steps.length, null);
                     } else {
                         showToast(t('processNoExecutors').replace('{func}', nextStep.function), 'error');
                     }
                 } else {
-                    // Процес завершено!
                     showToast(t('processCompleted').replace('{name}', process.name), 'success');
                     addNotification('completed', t('processCompletedShort') || 'Процес завершено', process.name, null);
                 }
                 
-                // Оновлюємо локальний стан процесу
+                // Update local state
                 const pIdx = processes.findIndex(p => p.id === task.processId);
                 if (pIdx >= 0) {
                     processes[pIdx].currentStep = nextStepIndex;
+                    if (!processes[pIdx].stepResults) processes[pIdx].stepResults = [];
+                    processes[pIdx].stepResults.push(stepResult);
                     if (!nextStep) processes[pIdx].status = 'completed';
                 }
                 
-                // Перерендерити процеси якщо вкладка відкрита
                 if (document.getElementById('processesTab')?.style.display !== 'none') {
                     renderProcessBoard();
                 }
