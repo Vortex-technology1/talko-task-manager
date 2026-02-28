@@ -9956,7 +9956,7 @@
                 
                 // AI buttons: Generator + Import = owner only, AI config = admin/superadmin only
                 const isOwnerRole = currentUserData.role === 'owner';
-                document.getElementById('ownerAiButtons').style.display = isOwnerRole ? 'grid' : 'none';
+                document.getElementById('ownerAiButtons').style.display = (isOwnerRole || isSuperAdmin) ? 'grid' : 'none';
                 document.getElementById('aiAssistantsBtnMenu').style.display = isSuperAdmin ? 'flex' : 'none';
                 
                 showMainInterface();
@@ -25618,8 +25618,11 @@ Ctrl+K або / - пошук завдань
     let generatedStructure = null;
     
     function openAiGeneratorModal() {
-        if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin') {
+        if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin' && !isSuperAdmin) {
             showToast(t('ownerOnly') || 'Тільки для власника', 'error'); return;
+        }
+        if (!currentCompany) {
+            showToast('Оберіть компанію спочатку', 'error'); return;
         }
         document.getElementById('aiGenPrompt').value = '';
         document.getElementById('aiGenPreview').style.display = 'none';
@@ -25631,8 +25634,11 @@ Ctrl+K або / - пошук завдань
     }
     
     function openImportStructureModal() {
-        if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin') {
+        if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin' && !isSuperAdmin) {
             showToast(t('ownerOnly') || 'Тільки для власника', 'error'); return;
+        }
+        if (!currentCompany) {
+            showToast('Оберіть компанію спочатку', 'error'); return;
         }
         document.getElementById('importJsonText').value = '';
         document.getElementById('importStructureModal').style.display = 'block';
@@ -25846,28 +25852,34 @@ Ctrl+K або / - пошук завдань
     }
     
     async function loadAiApiKey() {
-        const doc = await db.collection('companies').doc(currentCompany).get();
-        const key = doc.data()?.openaiApiKey || '';
+        // Global API key in settings/ai
+        const doc = await db.collection('settings').doc('ai').get();
+        const key = doc.exists ? (doc.data()?.openaiApiKey || '') : '';
         document.getElementById('aiApiKeyInput').value = key ? key.substring(0, 8) + '...' : '';
     }
     
     async function saveAiApiKey() {
         const key = document.getElementById('aiApiKeyInput').value.trim();
         if (!key || key.includes('...')) return;
-        await db.collection('companies').doc(currentCompany).update({ openaiApiKey: key });
+        await db.collection('settings').doc('ai').set({ openaiApiKey: key }, { merge: true });
+        // Also save to current company if exists (for Cloud Function fallback)
+        if (currentCompany) {
+            await db.collection('companies').doc(currentCompany).update({ openaiApiKey: key }).catch(() => {});
+        }
         showToast('API Key збережено', 'success');
         document.getElementById('aiApiKeyInput').value = key.substring(0, 8) + '...';
     }
     
     async function loadAiAssistants() {
-        const snap = await db.collection('companies').doc(currentCompany)
-            .collection('aiAssistants').get();
+        // Global assistants in settings/aiAssistants
+        const snap = await db.collection('settings').doc('ai')
+            .collection('assistants').get();
         
         const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         const container = document.getElementById('aiAssistantsList');
         
         if (list.length === 0) {
-            container.innerHTML = '<p style="color:#6b7280;text-align:center;">Немає налаштованих асистентів. Натисніть "Додати" або використайте AI Генератор (створить автоматично).</p>';
+            container.innerHTML = '<p style="color:#6b7280;text-align:center;">Немає асистентів. Натисніть "Додати" або запустіть AI Генератор (створить автоматично).</p>';
             return;
         }
         
@@ -25881,9 +25893,10 @@ Ctrl+K або / - пошук завдань
                 <div style="display:flex;gap:0.5rem;margin-top:0.3rem;">
                     <select onchange="updateAssistantModel('${escId(a.id)}', this.value)" style="font-size:0.75rem;padding:0.2rem;border:1px solid #e5e7eb;border-radius:4px;">
                         <option value="gpt-4o-mini" ${a.model === 'gpt-4o-mini' ? 'selected' : ''}>GPT-4o Mini ($)</option>
-                        <option value="gpt-4o" ${a.model === 'gpt-4o' ? 'selected' : ''}>GPT-4o ($$)</option>
                         <option value="gpt-4.1-mini" ${a.model === 'gpt-4.1-mini' ? 'selected' : ''}>GPT-4.1 Mini ($)</option>
                         <option value="gpt-4.1" ${a.model === 'gpt-4.1' ? 'selected' : ''}>GPT-4.1 ($$)</option>
+                        <option value="gpt-4o" ${a.model === 'gpt-4o' ? 'selected' : ''}>GPT-4o ($$)</option>
+                        <option value="gpt-5.2" ${a.model === 'gpt-5.2' ? 'selected' : ''}>GPT-5.2 ($$$)</option>
                     </select>
                     <button onclick="deleteAiAssistant('${escId(a.id)}')" class="btn btn-small btn-danger" style="font-size:0.7rem;padding:2px 8px;">
                         <i data-lucide="trash-2" class="icon icon-sm"></i>
@@ -25898,8 +25911,8 @@ Ctrl+K або / - пошук завдань
         const name = prompt(t('assistantName') || 'Назва асистента:');
         if (!name) return;
         
-        await db.collection('companies').doc(currentCompany)
-            .collection('aiAssistants').add({
+        await db.collection('settings').doc('ai')
+            .collection('assistants').add({
                 name,
                 systemPrompt: '',
                 model: 'gpt-4o-mini',
@@ -25909,31 +25922,32 @@ Ctrl+K або / - пошук завдань
     }
     
     async function updateAssistantPrompt(id, prompt) {
-        await db.collection('companies').doc(currentCompany)
-            .collection('aiAssistants').doc(id).update({ systemPrompt: prompt });
+        await db.collection('settings').doc('ai')
+            .collection('assistants').doc(id).update({ systemPrompt: prompt });
     }
     
     async function updateAssistantModel(id, model) {
-        await db.collection('companies').doc(currentCompany)
-            .collection('aiAssistants').doc(id).update({ model });
+        await db.collection('settings').doc('ai')
+            .collection('assistants').doc(id).update({ model });
     }
     
     async function deleteAiAssistant(id) {
         if (!confirm('Видалити асистента?')) return;
-        await db.collection('companies').doc(currentCompany)
-            .collection('aiAssistants').doc(id).delete();
+        await db.collection('settings').doc('ai')
+            .collection('assistants').doc(id).delete();
         loadAiAssistants();
     }
     
     async function ensureDefaultAssistants() {
-        const ref = db.collection('companies').doc(currentCompany)
-            .collection('aiAssistants').doc('structureGenerator');
+        // Global: settings/ai/assistants/structureGenerator
+        const ref = db.collection('settings').doc('ai')
+            .collection('assistants').doc('structureGenerator');
         const doc = await ref.get();
         
         if (!doc.exists) {
             await ref.set({
                 name: 'Генератор структури',
-                model: 'gpt-4o-mini',
+                model: 'gpt-5.2',
                 systemPrompt: `Ти — AI-консультант з організації бізнесу. Генеруй структуру компанії у форматі JSON.
 
 ФОРМАТ ВІДПОВІДІ (тільки JSON, без пояснень):
