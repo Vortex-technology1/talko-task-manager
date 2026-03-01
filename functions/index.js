@@ -1324,7 +1324,7 @@ exports.aiAssistant = functions
             const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                body: JSON.stringify({ model, messages, temperature: 0.7, max_tokens: 4000 })
+                body: JSON.stringify({ model, messages, temperature: 0.7, max_completion_tokens: 4000 })
             });
 
             if (!response.ok) {
