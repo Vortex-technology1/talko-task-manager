@@ -1273,11 +1273,14 @@ exports.aiAssistant = functions
         }
 
         try {
-            // Verify user
-            const userDoc = await db.collection('companies').doc(companyId)
-                .collection('users').doc(context.auth.uid).get();
-            if (!userDoc.exists) {
-                throw new functions.https.HttpsError('permission-denied', 'Not a member');
+            // Verify user — superadmin or company member
+            const isSuperAdmin = context.auth.token.email === 'management.talco@gmail.com';
+            if (!isSuperAdmin) {
+                const userDoc = await db.collection('companies').doc(companyId)
+                    .collection('users').doc(context.auth.uid).get();
+                if (!userDoc.exists) {
+                    throw new functions.https.HttpsError('permission-denied', 'Not a member');
+                }
             }
 
             // Load assistant — global first, then company fallback
