@@ -1,0 +1,165 @@
+        /* Tab swipe indicator */
+        .tab-swipe-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: var(--success);
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fadeOut 0.3s forwards;
+            z-index: 9999;
+        }
+        
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+        }
+        
+        @keyframes slideUpBanner {
+            from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        /* Offline indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            background: #ff9800;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 9998;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .offline-indicator.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* Undo Toast */
+        .undo-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            z-index: 10001;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s, visibility 0.3s;
+            max-width: 500px;
+            width: calc(100% - 32px);
+            border: 1px solid rgba(255,255,255,0.1);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        .undo-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        
+        .undo-toast .toast-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .undo-toast .toast-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #ef4444;
+        }
+        
+        .undo-toast .toast-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .undo-toast .toast-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .undo-toast .toast-message {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .undo-toast .undo-btn {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .undo-toast .undo-btn:hover {
+            background: #16a34a;
+            transform: scale(1.05);
+        }
+        
+        .undo-toast .toast-timer {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 16px 16px;
+            overflow: hidden;
+        }
+        
+        .undo-toast .toast-timer-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+            transition: width 0.1s linear;
+        }
+        
+        @media (max-width: 500px) {
+            .undo-toast {
+                bottom: 80px;
+                padding: 14px 16px;
+                gap: 12px;
+            }
+            .undo-toast .toast-icon {
+                width: 36px;
+                height: 36px;
+            }
+            .undo-toast .undo-btn {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+            }
+        }

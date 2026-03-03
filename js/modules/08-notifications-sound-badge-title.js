@@ -1,0 +1,363 @@
+// =====================
+        // NOTIFICATIONS (Sound, Badge, Title)
+        // =====================
+        let tasksUnsubscribe = null;
+        let lastTaskCount = 0;
+        
+        function initTasksListener() {
+            if (!currentCompany || !currentUser) return;
+            
+            // Відписуємось від попереднього listener
+            if (tasksUnsubscribe) {
+                tasksUnsubscribe();
+            }
+            
+            // Зберігаємо ID завдань які вже бачили
+            let knownTaskIds = new Set();
+            let isFirstLoad = true;
+            
+            // Real-time listener на завдання користувача
+            tasksUnsubscribe = db.collection('companies').doc(currentCompany)
+                .collection('tasks')
+                .where('assigneeId', '==', currentUser.uid)
+                .where('status', '==', 'new')
+                .onSnapshot(snapshot => {
+                    const currentTaskIds = new Set(snapshot.docs.map(d => d.id));
+                    
+                    // При першому завантаженні просто запам'ятовуємо
+                    if (isFirstLoad) {
+                        knownTaskIds = currentTaskIds;
+                        isFirstLoad = false;
+                        lastTaskCount = snapshot.docs.length;
+                        updatePageTitle();
+                        return;
+                    }
+                    
+                    // Знаходимо нові завдання (яких не було раніше)
+                    const newTaskDocs = snapshot.docs.filter(doc => !knownTaskIds.has(doc.id));
+                    
+                    if (newTaskDocs.length > 0) {
+                        // Визначаємо тип завдання для правильного повідомлення
+                        const newTasks = newTaskDocs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        
+                        // Фільтруємо завдання створені НЕ поточним користувачем
+                        // (не показуємо сповіщення коли ставиш завдання сам собі)
+                        const externalTasks = newTasks.filter(t => t.creatorId !== currentUser.uid);
+                        
+                        if (externalTasks.length > 0) {
+                            const processTasks = externalTasks.filter(t => t.processId);
+                            const regularTasksNew = externalTasks.filter(t => t.regularTaskId);
+                            const normalTasks = externalTasks.filter(t => !t.processId && !t.regularTaskId);
+                            
+                            playNotificationSound();
+                            
+                            // Показуємо відповідний toast
+                            if (processTasks.length > 0) {
+                                showNewTaskToast('process', processTasks.length, processTasks[0].title);
+                            } else if (regularTasksNew.length > 0) {
+                                showNewTaskToast('regular', regularTasksNew.length, regularTasksNew[0].title);
+                            } else if (normalTasks.length > 0) {
+                                showNewTaskToast('task', normalTasks.length, normalTasks[0].title);
+                            }
+                        }
+                        
+                        // Інкрементальне оновлення — додаємо нові задачі в масив замість повного рефетчу
+                        for (const newTask of newTasks) {
+                            // Skip tasks being deleted (prevent race condition)
+                            if (pendingDeleteIds.has(newTask.id)) continue;
+                            const existingIdx = tasks.findIndex(t => t.id === newTask.id);
+                            if (existingIdx >= 0) {
+                                tasks[existingIdx] = newTask;
+                            } else {
+                                tasks.unshift(newTask);
+                            }
+                        }
+                        
+                        // Точковий ререндер — coalesced
+                        scheduleRender();
+                    }
+                    
+                    knownTaskIds = currentTaskIds;
+                    lastTaskCount = snapshot.docs.length;
+                    updatePageTitle();
+                }, error => {
+                    console.error('Tasks listener error:', error);
+                });
+            
+            // ═══ REQUIRED FIRESTORE COMPOSITE INDEXES ═══
+            // Create these in Firebase Console → Firestore → Indexes:
+            // 1. tasks: assigneeId ASC, createdAt DESC
+            // 2. tasks: creatorId ASC, createdAt DESC  
+            // 3. tasks: assigneeId ASC, status ASC (for snapshot listeners)
+            // 4. tasks: creatorId ASC, status ASC (for review listener)
+            // 5. tasks: notifyOnComplete ARRAY, status ASC
+            // 6. tasks: deadlineDate ASC, autoGenerated ASC
+            // 7. tasks: coExecutorIds ARRAY (single-field, auto-created)
+            // 8. tasks: observerIds ARRAY (single-field, auto-created)
+            
+            // Listener для виконаних завдань (сповіщення спостерігачам)
+            initCompletedTasksListener();
+            
+            // Listener для завдань на перевірці (сповіщення постановнику)
+            initReviewTasksListener();
+            
+            // Listener для повернених на доопрацювання завдань
+            initRejectedTasksListener();
+        }
+        
+        let completedTasksUnsubscribe = null;
+        let knownCompletedTaskIds = new Set();
+        
+        function initCompletedTasksListener() {
+            if (!currentCompany || !currentUser) return;
+            
+            if (completedTasksUnsubscribe) {
+                completedTasksUnsubscribe();
+            }
+            
+            let isFirstLoad = true;
+            
+            // Слухаємо завдання де поточний користувач в списку notifyOnComplete
+            // УВАГА: Потрібен складений індекс в Firebase:
+            // Collection: tasks, Fields: notifyOnComplete (Arrays), status (Ascending)
+            completedTasksUnsubscribe = db.collection('companies').doc(currentCompany)
+                .collection('tasks')
+                .where('notifyOnComplete', 'array-contains', currentUser.uid)
+                .where('status', '==', 'done')
+                .onSnapshot(snapshot => {
+                    const currentIds = new Set(snapshot.docs.map(d => d.id));
+                    
+                    if (isFirstLoad) {
+                        knownCompletedTaskIds = currentIds;
+                        isFirstLoad = false;
+                        return;
+                    }
+                    
+                    // Знаходимо нові виконані завдання
+                    const newlyCompleted = snapshot.docs.filter(doc => !knownCompletedTaskIds.has(doc.id));
+                    
+                    if (newlyCompleted.length > 0) {
+                        newlyCompleted.forEach(doc => {
+                            const task = doc.data();
+                            // Не сповіщаємо якщо сам виконав
+                            if (task.assigneeId !== currentUser.uid) {
+                                playNotificationSound();
+                                showCompletedTaskToast(task);
+                            }
+                            // Інкрементальне оновлення — оновлюємо статус локально
+                            const idx = tasks.findIndex(t => t.id === doc.id);
+                            if (idx >= 0) {
+                                tasks[idx] = { ...tasks[idx], ...task, id: doc.id };
+                            }
+                        });
+                        
+                        scheduleRender();
+                    }
+                    
+                    knownCompletedTaskIds = currentIds;
+                }, error => {
+                    console.error('Completed tasks listener error:', error);
+                });
+        }
+        
+        function showCompletedTaskToast(task) {
+            // Add to notification center
+            const assignee = task.assigneeName || 'Співробітник';
+            addNotification('completed', t('taskCompleted') || 'Завдання виконано', assignee + ': ' + (task.title || ''), task.id || null);
+            
+            const existingToast = document.getElementById('completedTaskToast');
+            if (existingToast) existingToast.remove();
+            
+            const assigneeName = task.assigneeName || (t('employeeRole'));
+            const title = task.title || '';
+            const shortTitle = title.length > 25 ? title.substring(0, 25) + '...' : title;
+            
+            const toast = document.createElement('div');
+            toast.id = 'completedTaskToast';
+            toast.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+                z-index: 10001;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                animation: slideInRight 0.3s ease;
+                cursor: pointer;
+                max-width: 350px;
+            `;
+            toast.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-weight:600;">${t('taskCompleted')}</div>
+                    <div style="font-size:0.85rem;opacity:0.9;">${esc(assigneeName)}: ${esc(shortTitle)}</div>
+                </div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.7;flex-shrink:0;">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            `;
+            toast.onclick = () => toast.remove();
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'slideInRight 0.3s reverse';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 6000);
+        }
+        
+        function showNewTaskToast(type, count, title) {
+            // Add to notification center
+            const typeMap = { process: 'process', regular: 'new_task', task: 'new_task' };
+            const labelMap = { process: 'Завдання з процесу', regular: 'Регулярне завдання', task: 'Нове завдання' };
+            addNotification(typeMap[type] || 'new_task', labelMap[type] || 'Нове завдання', title || '', null);
+            
+            // Видаляємо попередній toast якщо є
+            const existingToast = document.getElementById('newTaskToast');
+            if (existingToast) existingToast.remove();
+            
+            // Налаштування для різних типів
+            const config = {
+                process: {
+                    gradient: 'linear-gradient(135deg, #8b5cf6, #6366f1)',
+                    shadow: 'rgba(139, 92, 246, 0.4)',
+                    icon: '<line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
+                    label: t('fromProcess')
+                },
+                regular: {
+                    gradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                    shadow: 'rgba(245, 158, 11, 0.4)',
+                    icon: '<path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"/>',
+                    label: t('regularTaskLabel')
+                },
+                task: {
+                    gradient: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                    shadow: 'rgba(34, 197, 94, 0.4)',
+                    icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+                    label: t('newTaskLabel')
+                }
+            };
+            
+            const cfg = config[type] || config.task;
+            const shortTitle = title && title.length > 30 ? title.substring(0, 30) + '...' : title;
+            
+            const toast = document.createElement('div');
+            toast.id = 'newTaskToast';
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${cfg.gradient};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 40px ${cfg.shadow};
+                z-index: 10001;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                animation: slideInRight 0.3s ease;
+                cursor: pointer;
+                max-width: 350px;
+            `;
+            toast.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    ${cfg.icon}
+                </svg>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-weight:600;display:flex;align-items:center;gap:0.5rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> ${cfg.label}${count > 1 ? ` (${count})` : ''}
+                    </div>
+                    ${shortTitle ? `<div style="font-size:0.85rem;opacity:0.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(shortTitle)}</div>` : ''}
+                </div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.7;flex-shrink:0;">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            `;
+            toast.onclick = () => {
+                toast.remove();
+                switchTab('tasks');
+            };
+            
+            document.body.appendChild(toast);
+            
+            // Додаємо анімацію (тільки раз)
+            if (!document.getElementById('toastAnimationStyle')) {
+                const style = document.createElement('style');
+                style.id = 'toastAnimationStyle';
+                style.textContent = `
+                    @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Автоматично ховаємо через 5 секунд
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'slideInRight 0.3s reverse';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        }
+        
+        function playNotificationSound() {
+            try {
+                // Створюємо простий beep звук через Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch (e) {
+                console.log('Sound not supported');
+            }
+        }
+        
+        function updatePageTitle() {
+            const myTasks = tasks.filter(t => t.assigneeId === currentUser?.uid && t.status !== 'done');
+            const newCount = myTasks.filter(t => t.status === 'new').length;
+            
+            if (newCount > 0) {
+                document.title = `(${newCount}) TALKO System`;
+            } else {
+                document.title = 'TALKO System - Task Manager Pro';
+            }
+        }
+        
+        // Оновлюємо title при зміні завдань
+        let _pageTitleInterval = setInterval(updatePageTitle, 30000);
+        
+        // Multi-tab sync: reload data when tab becomes visible after being hidden
+        let _lastVisibleTime = Date.now();
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) return;
+            const elapsed = Date.now() - _lastVisibleTime;
+            _lastVisibleTime = Date.now();
+            // If tab was hidden for >60s and user is logged in, refresh data
+            if (elapsed > 60000 && currentUser && currentCompany) {
+                console.log('[MultiTab] Tab restored after', Math.round(elapsed/1000), 's — refreshing');
+                loadAllData();
+            }
+        });
