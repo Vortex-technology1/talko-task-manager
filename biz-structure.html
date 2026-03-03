@@ -7041,207 +7041,256 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     }
 
     // === FIRESTORE FUNCTIONS ===
+    // NOTE: Functions data now comes via postMessage from parent TM window.
+    // This iframe only manages functionConnections/ in Firestore directly.
+    // loadFromFirestore is kept for backward compat but now just signals parent.
+    
     function loadFromFirestore() {
         if (!State.currentUser) return;
         
-        console.log('[LOAD] Завантажуємо дані для:', State.currentUser.uid);
+        console.log('[LOAD] Requesting functions from parent TM via postMessage...');
         showLoading(t('loading.data'));
         
-        State.isLocalUpdate = true;
-        State.hasPendingChanges = false;
+        // Signal parent that iframe is ready
+        try {
+            window.parent.postMessage({ type: 'BIZ_IFRAME_READY' }, '*');
+        } catch (e) {
+            console.error('[ERR] Cannot reach parent:', e);
+        }
         
-        db.collection('companies').doc(window._bizCompanyId).collection('bizStructure').doc('main').get()
-            .then(doc => {
+        // Load connections from Firestore (iframe owns this collection)
+        loadConnections();
+        
+        // Timeout fallback — if parent doesn't respond in 5s, try legacy load
+        State._parentTimeout = setTimeout(() => {
+            if (State.functions.length === 0) {
+                console.log('[FALLBACK] Parent did not respond, trying legacy load...');
+                loadFromFirestoreLegacy();
+            }
+        }, 5000);
+    }
+    
+    // Load connections from Firestore (iframe manages this)
+    function loadConnections() {
+        if (!window._bizCompanyId) return;
+        
+        db.collection('companies').doc(window._bizCompanyId)
+            .collection('functionConnections')
+            .onSnapshot(snapshot => {
+                State.connections = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    fromId: doc.data().from || doc.data().fromId || '',
+                    toId: doc.data().to || doc.data().toId || '',
+                    type: doc.data().type || 'hierarchy'
+                }));
+                console.log('[CONN] Loaded connections:', State.connections.length);
+                if (typeof window.renderConnections === 'function') {
+                    window.renderConnections();
+                } else if (typeof window.renderFunctions === 'function') {
+                    window.renderFunctions();
+                }
+            }, error => {
+                console.error('[ERR] Connections listener error:', error);
+            });
+    }
+    
+    // Listen for FUNCTIONS_UPDATE from parent TM
+    window.addEventListener('message', function(event) {
+        if (!event.data || !event.data.type) return;
+        
+        const msg = event.data;
+        
+        switch (msg.type) {
+            case 'FUNCTIONS_UPDATE':
+                // Parent TM sent fresh functions data
+                if (State._parentTimeout) {
+                    clearTimeout(State._parentTimeout);
+                    State._parentTimeout = null;
+                }
                 hideLoading();
                 
-                if (doc.exists) {
-                    const data = doc.data();
+                console.log('[SYNC] Received', msg.functions?.length || 0, 'functions from TM');
+                
+                var oldFunctionsMap = {};
+                State.functions.forEach(f => { if (f.id) oldFunctionsMap[f.id] = f; });
+                
+                State.functions = (msg.functions || []).map(function(tmFunc) {
+                    var old = oldFunctionsMap[tmFunc.id];
                     
-                    // Підтримка обох структур: data.functions АБО data.structure.functions
-                    const functions = data.functions || (data.structure && data.structure.functions) || [];
-                    const connections = data.connections || (data.structure && data.structure.connections) || [];
-                    const language = data.language || data.Language || (data.structure && data.structure.Language);
+                    // Canvas position: prefer existing local position > Firestore canvas field > auto-position
+                    var canvasPos = (old && old.x) ? { x: old.x, y: old.y, width: old.width || 220, height: old.height || 140 }
+                        : tmFunc.canvas ? { x: tmFunc.canvas.x, y: tmFunc.canvas.y, width: tmFunc.canvas.width || 220, height: tmFunc.canvas.height || 140 }
+                        : null;
                     
-                    if (functions.length > 0) {
-                        State.functions = functions.map(func => ({
-                            ...func,
-                            id: func.id || Utils.generateId(),
-                            created: func.created || new Date().toISOString(),
-                            modified: func.modified || func.created || new Date().toISOString()
+                    // Canvas-specific data (kpi, tags, etc.)
+                    var cd = tmFunc.canvasData || (old ? {
+                        kpi: old.kpi || '',
+                        tags: old.tags || [],
+                        statisticsArray: old.statisticsArray || [],
+                        link: old.link || '',
+                        notes: old.notes || '',
+                        color: old.color || 'default'
+                    } : null) || {};
+                    
+                    return {
+                        id: tmFunc.id,
+                        name: tmFunc.name || '',
+                        // Canvas display uses 'responsible' — map from headName
+                        responsible: tmFunc.headName || '',
+                        description: tmFunc.description || '',
+                        // Canvas-specific fields from canvasData
+                        kpi: cd.kpi || '',
+                        tags: cd.tags || [],
+                        statisticsArray: cd.statisticsArray || [],
+                        employees: tmFunc.assigneeNames || cd.employees || [],
+                        link: cd.link || '',
+                        notes: cd.notes || tmFunc.description || '',
+                        color: cd.color || 'default',
+                        // Position
+                        x: canvasPos ? canvasPos.x : null,
+                        y: canvasPos ? canvasPos.y : null,
+                        width: canvasPos ? canvasPos.width : 220,
+                        height: canvasPos ? canvasPos.height : 140,
+                        // Meta
+                        created: tmFunc.createdAt ? new Date(tmFunc.createdAt).toISOString() : new Date().toISOString(),
+                        modified: tmFunc.updatedAt ? new Date(tmFunc.updatedAt).toISOString() : new Date().toISOString(),
+                        // Keep TM references
+                        _tmHeadId: tmFunc.headId || '',
+                        _tmAssigneeIds: tmFunc.assigneeIds || []
+                    };
+                });
+                
+                // Auto-position functions that don't have canvas coordinates
+                var needsSave = false;
+                var autoIdx = 0;
+                State.functions.forEach(function(func) {
+                    if (func.x === null || func.y === null) {
+                        var cols = 4;
+                        func.x = 50 + (autoIdx % cols) * 280;
+                        func.y = 50 + Math.floor(autoIdx / cols) * 200;
+                        needsSave = true;
+                    }
+                    autoIdx++;
+                });
+                
+                // Save auto-positions back to Firestore via parent
+                if (needsSave) {
+                    var posUpdates = State.functions
+                        .filter(f => f.id)
+                        .map(f => ({
+                            functionId: f.id,
+                            canvas: { x: f.x, y: f.y, width: f.width || 220, height: f.height || 140 }
                         }));
-                        State.connections = connections;
-                        State.dataVersion = data.version || 0;
-                        
-                        if (language && translations[language]) {
-                            State.currentLanguage = language;
-                            localStorage.setItem('talko_language', language);
-                            updateLanguageInterface();
-                        }
-                        
-                        console.log('[OK] Завантажено функцій:', State.functions.length);
-                        
-                        // Зберігаємо локальний backup
-                        try {
-                            localStorage.setItem('talko_local_backup_' + State.currentUser.uid, JSON.stringify({
-                                functions: State.functions,
-                                connections: State.connections,
-                                language: State.currentLanguage,
-                                timestamp: Date.now(),
-                                userId: State.currentUser.uid
-                            }));
-                        } catch (e) {}
-                        
-                        // Якщо була вкладена структура - нормалізуємо
-                        if (data.structure && data.structure.functions && !data.functions) {
-                            console.log('[FIX] Нормалізація структури...');
-                            saveToFirestore();
-                        }
-                        
-                        // Trigger render
+                    if (posUpdates.length > 0) {
+                        window.parent.postMessage({
+                            type: 'CANVAS_BATCH_POSITION_UPDATE',
+                            updates: posUpdates
+                        }, '*');
+                    }
+                }
+                
+                if (typeof window.renderFunctions === 'function') {
+                    window.renderFunctions();
+                }
+                
+                // Auto zoom to fit on first load
+                if (!State._initialZoomDone && State.functions.length > 0) {
+                    State._initialZoomDone = true;
+                    setTimeout(function() {
+                        if (typeof window.zoomToFit === 'function') window.zoomToFit();
+                    }, 300);
+                }
+                
+                State.isLocalUpdate = false;
+                updateConnectionStatus('success', t('notification.data_synced'));
+                updateSaveIndicator('saved');
+                break;
+                
+            case 'FUNCTION_CREATED_CONFIRMED':
+                // Parent confirmed creation — update temp ID to real ID
+                if (msg.tempId && msg.realId) {
+                    var func = State.functions.find(f => f.id === msg.tempId);
+                    if (func) {
+                        func.id = msg.realId;
+                        // Update connections that reference tempId
+                        State.connections.forEach(function(conn) {
+                            if (conn.fromId === msg.tempId) conn.fromId = msg.realId;
+                            if (conn.toId === msg.tempId) conn.toId = msg.realId;
+                        });
                         if (typeof window.renderFunctions === 'function') {
                             window.renderFunctions();
                         }
+                    }
+                }
+                break;
+        }
+    });
+    
+    // Legacy fallback: load from old bizStructure/main (for existing data)
+    function loadFromFirestoreLegacy() {
+        if (!State.currentUser || !window._bizCompanyId) return;
+        
+        console.log('[LEGACY] Loading from bizStructure/main...');
+        
+        db.collection('companies').doc(window._bizCompanyId).collection('bizStructure').doc('main').get()
+            .then(function(doc) {
+                hideLoading();
+                if (doc.exists) {
+                    var data = doc.data();
+                    var funcs = data.functions || (data.structure && data.structure.functions) || [];
+                    var conns = data.connections || (data.structure && data.structure.connections) || [];
+                    
+                    if (funcs.length > 0) {
+                        State.functions = funcs.map(function(func) {
+                            return {
+                                ...func,
+                                id: func.id || Utils.generateId(),
+                                created: func.created || new Date().toISOString(),
+                                modified: func.modified || new Date().toISOString()
+                            };
+                        });
+                        State.connections = conns;
                         
-                        // Автоматично центруємо всі картки після завантаження
-                        setTimeout(() => {
-                            if (typeof window.zoomToFit === 'function') {
-                                window.zoomToFit();
-                            }
-                        }, 300);
+                        console.log('[LEGACY] Loaded', State.functions.length, 'functions from legacy storage');
                         
-                        // Ініціалізуємо історію з завантаженими даними
-                        clearHistory();
-                        
-                        setTimeout(() => {
-                            State.isLocalUpdate = false;
-                            setupStructureListener();
-                        }, 1000);
-                        
-                    } else {
-                        // Спробуємо відновити з локального backup
-                        console.log('[EMPTY] Структура не знайдена, перевіряємо локальний backup...');
-                        const restored = tryRestoreFromLocalBackup();
-                        if (!restored) {
-                            State.functions = [];
-                            State.connections = [];
-                            if (typeof window.renderFunctions === 'function') {
-                                window.renderFunctions();
-                            }
-                            setTimeout(() => {
-                                State.isLocalUpdate = false;
-                                setupStructureListener();
-                            }, 1000);
+                        if (typeof window.renderFunctions === 'function') {
+                            window.renderFunctions();
                         }
+                        setTimeout(function() {
+                            if (typeof window.zoomToFit === 'function') window.zoomToFit();
+                        }, 300);
                     }
                 } else {
-                    console.log('[EMPTY] Структура не знайдена, перевіряємо стару...');
-                    const restored = tryRestoreFromLocalBackup();
-                    if (!restored) {
-                        migrateFromOldStructure();
-                    }
+                    // Try user-level storage
+                    return db.collection('users').doc(State.currentUser.uid)
+                        .collection('main').doc('structure').get()
+                        .then(function(userDoc) {
+                            if (userDoc.exists) {
+                                var uData = userDoc.data();
+                                var uFuncs = uData.functions || [];
+                                if (uFuncs.length > 0) {
+                                    State.functions = uFuncs.map(function(func) {
+                                        return { ...func, id: func.id || Utils.generateId() };
+                                    });
+                                    State.connections = uData.connections || [];
+                                    console.log('[LEGACY-USER] Loaded', State.functions.length, 'functions');
+                                    if (typeof window.renderFunctions === 'function') window.renderFunctions();
+                                    setTimeout(function() { if (typeof window.zoomToFit === 'function') window.zoomToFit(); }, 300);
+                                }
+                            }
+                        });
                 }
             })
-            .catch(error => {
+            .catch(function(error) {
                 hideLoading();
-                console.error('[ERR] Помилка завантаження:', error);
-                State.isLocalUpdate = false;
-                
-                // Спробуємо відновити з локального backup
-                const restored = tryRestoreFromLocalBackup();
-                if (!restored) {
-                    showNotification(t('notification.sync_error'), 'error');
-                }
-                
-                // Retry after delay
-                setTimeout(() => {
-                    if (State.currentUser && State.functions.length === 0) {
-                        loadFromFirestore();
-                    }
-                }, 5000);
+                console.error('[LEGACY] Load error:', error);
             });
     }
 
     function setupStructureListener() {
-        if (!State.currentUser || State.structureListener) return;
-        
-        console.log('[LISTEN] Встановлюємо listener...');
-        
-        State.structureListener = db.collection('users').doc(State.currentUser.uid)
-            .collection('main').doc('structure')
-            .onSnapshot(doc => {
-                // Скидаємо лічильник спроб при успішному отриманні даних
-                State.retryAttempts = 0;
-                
-                if (State.isLocalUpdate || State.isSaving || State.hasPendingChanges) {
-                    return;
-                }
-                
-                if (doc.exists) {
-                    const data = doc.data();
-                    const serverModified = new Date(data.lastModified || 0).getTime();
-                    const localModified = State.lastLocalSaveTime || 0;
-                    const timeDiff = serverModified - localModified;
-                    
-                    // Підтримка обох структур
-                    const functions = data.functions || (data.structure && data.structure.functions) || [];
-                    const connections = data.connections || (data.structure && data.structure.connections) || [];
-                    
-                    if (timeDiff > 5000 && functions.length > 0) {
-                        const serverVersion = data.version || 0;
-                        
-                        // Якщо сервер має новішу версію - застосовуємо серверні дані
-                        // Навіть якщо там менше функцій (користувач міг видалити на іншому пристрої)
-                        if (serverVersion > State.dataVersion || State.functions.length === 0) {
-                            console.log('[SYNC] Застосовуємо серверні дані v' + serverVersion + ':', functions.length, 'функцій');
-                            
-                            State.functions = functions.map(func => ({
-                                ...func,
-                                id: func.id || Utils.generateId()
-                            }));
-                            State.connections = connections;
-                            State.dataVersion = serverVersion;
-                            
-                            // Оновлюємо локальний backup
-                            try {
-                                localStorage.setItem('talko_local_backup_' + State.currentUser.uid, JSON.stringify({
-                                    functions: State.functions,
-                                    connections: State.connections,
-                                    language: State.currentLanguage,
-                                    timestamp: Date.now(),
-                                    userId: State.currentUser.uid
-                                }));
-                            } catch (e) {}
-                            
-                            if (typeof window.renderFunctions === 'function') {
-                                window.renderFunctions();
-                            }
-                            showNotification(t('notification.data_synced'), 'success');
-                        }
-                    }
-                }
-            }, error => {
-                console.error('[ERR] Помилка listener:', error.code || error.message || error);
-                
-                // Відписуємось від зламаного listener
-                if (State.structureListener) {
-                    State.structureListener();
-                    State.structureListener = null;
-                }
-                
-                // Перезапускаємо listener через 5 секунд
-                if (State.retryAttempts < State.MAX_RETRY_ATTEMPTS) {
-                    State.retryAttempts++;
-                    console.log('[RETRY] Перезапуск listener через 5 сек... Спроба', State.retryAttempts);
-                    setTimeout(() => {
-                        if (State.currentUser) {
-                            setupStructureListener();
-                        }
-                    }, 5000);
-                } else {
-                    console.error('[ERR] Досягнуто максимум спроб перезапуску listener');
-                    showNotification('Помилка синхронізації. Оновіть сторінку.', 'error');
-                }
-            });
+        // No longer needed — functions come via postMessage from parent TM.
+        // Connections are handled by loadConnections() with onSnapshot.
+        console.log('[LISTEN] Structure listener disabled — using postMessage bridge');
     }
 
     function tryRestoreFromLocalBackup() {
@@ -7368,13 +7417,12 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     function saveToFirestore() {
         if (!State.currentUser) return Promise.resolve();
         
-        // ЗАХИСТ: не зберігаємо порожні дані якщо раніше були функції
+        // PROTECT: don't save empty data if functions existed before
         if (State.functions.length === 0 && State.dataVersion > 1) {
-            console.warn('[WARN] Спроба зберегти порожню структуру заблокована!');
+            console.warn('[WARN] Empty save blocked!');
             return Promise.resolve();
         }
         
-        State.isLocalUpdate = true;
         State.isSaving = true;
         State.hasPendingChanges = false;
         State.lastLocalSaveTime = Date.now();
@@ -7383,77 +7431,99 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
         updateConnectionStatus('saving', t('notification.saving'));
         updateSaveIndicator('saving');
         
-        const data = {
-            functions: State.functions,
-            connections: State.connections,
-            groups: State.groups,
-            language: State.currentLanguage,
-            version: State.dataVersion,
-            lastModified: new Date().toISOString(),
-            deviceId: navigator.userAgent.substring(0, 50),
-            functionsCount: State.functions.length
-        };
+        // Save connections to Firestore (iframe owns this)
+        var connectionsPromise = saveConnectionsToFirestore();
         
-        console.log('[SAVE] Зберігаю структуру:', data.functions.length, 'функцій');
+        // Send canvas positions to parent TM via postMessage
+        var posUpdates = State.functions
+            .filter(function(f) { return f.id; })
+            .map(function(f) {
+                return {
+                    functionId: f.id,
+                    canvas: { x: f.x, y: f.y, width: f.width || 220, height: f.height || 140 }
+                };
+            });
         
-        return db.collection('users').doc(State.currentUser.uid)
-            .collection('main').doc('structure').set(data)
-            .then(() => {
-                console.log('[OK] Збережено в Firestore');
-                updateConnectionStatus('success', t('notification.saved'));
-                updateSaveIndicator('saved');
-                State.saveRetryAttempts = 0; // Скидаємо лічильник при успіху
-                
-                // Оновлюємо локальний backup
-                try {
-                    localStorage.setItem('talko_local_backup_' + State.currentUser.uid, JSON.stringify({
-                        functions: State.functions,
-                        connections: State.connections,
-                        groups: State.groups,
-                        language: State.currentLanguage,
-                        timestamp: Date.now(),
-                        userId: State.currentUser.uid
-                    }));
-                } catch (e) {}
-                
-                setTimeout(() => {
-                    State.isLocalUpdate = false;
-                    State.isSaving = false;
-                }, 2000);
-            })
-            .catch(error => {
-                console.error('[ERR] Помилка збереження:', error);
+        if (posUpdates.length > 0) {
+            try {
+                window.parent.postMessage({
+                    type: 'CANVAS_BATCH_POSITION_UPDATE',
+                    updates: posUpdates
+                }, '*');
+            } catch (e) {
+                console.error('[SAVE] postMessage error:', e);
+            }
+        }
+        
+        // Local backup
+        try {
+            localStorage.setItem('talko_local_backup_' + State.currentUser.uid, JSON.stringify({
+                functions: State.functions,
+                connections: State.connections,
+                groups: State.groups,
+                language: State.currentLanguage,
+                timestamp: Date.now(),
+                userId: State.currentUser.uid
+            }));
+        } catch (e) {}
+        
+        return connectionsPromise.then(function() {
+            console.log('[SAVE] Saved connections + sent positions via postMessage');
+            updateConnectionStatus('success', t('notification.saved'));
+            updateSaveIndicator('saved');
+            State.saveRetryAttempts = 0;
+            
+            setTimeout(function() {
                 State.isLocalUpdate = false;
                 State.isSaving = false;
-                
-                // Зберігаємо локально навіть при помилці Firebase
-                try {
-                    localStorage.setItem('talko_local_backup_' + State.currentUser.uid, JSON.stringify({
-                        functions: State.functions,
-                        connections: State.connections,
-                        groups: State.groups,
-                        language: State.currentLanguage,
-                        timestamp: Date.now(),
-                        userId: State.currentUser.uid,
-                        pendingSync: true
-                    }));
-                    console.log('[LOCAL] Збережено локально, очікує синхронізації');
-                } catch (e) {}
-                
-                updateConnectionStatus('error', t('notification.sync_error'));
-                updateSaveIndicator('error');
-                
-                // Retry з обмеженням спроб
-                if (State.saveRetryAttempts < State.MAX_RETRY_ATTEMPTS) {
-                    State.saveRetryAttempts++;
-                    console.log('[RETRY] Повторне збереження через 5 сек... Спроба', State.saveRetryAttempts);
-                    setTimeout(() => saveToFirestore(), 5000);
-                } else {
-                    console.error('[ERR] Досягнуто максимум спроб збереження');
-                    showNotification('Не вдалося зберегти. Перевірте підключення.', 'error');
-                    State.saveRetryAttempts = 0;
+            }, 500);
+        }).catch(function(error) {
+            console.error('[ERR] Save error:', error);
+            State.isLocalUpdate = false;
+            State.isSaving = false;
+            updateConnectionStatus('error', t('notification.sync_error'));
+            updateSaveIndicator('error');
+            
+            if (State.saveRetryAttempts < State.MAX_RETRY_ATTEMPTS) {
+                State.saveRetryAttempts++;
+                setTimeout(function() { saveToFirestore(); }, 5000);
+            }
+        });
+    }
+    
+    // Save connections to Firestore (iframe-owned collection)
+    function saveConnectionsToFirestore() {
+        if (!window._bizCompanyId) return Promise.resolve();
+        
+        var connRef = db.collection('companies').doc(window._bizCompanyId).collection('functionConnections');
+        
+        // Strategy: delete all existing, write all current (simpler than diffing)
+        // For small datasets this is fine; for large, would need proper diff
+        return connRef.get().then(function(snapshot) {
+            var batch = db.batch();
+            var bc = 0;
+            
+            // Delete old connections
+            snapshot.docs.forEach(function(doc) {
+                batch.delete(doc.ref);
+                if (++bc >= 450) { return; } // Safety limit
+            });
+            
+            // Add current connections
+            State.connections.forEach(function(conn) {
+                if (conn.fromId && conn.toId) {
+                    var newRef = connRef.doc();
+                    batch.set(newRef, {
+                        from: conn.fromId,
+                        to: conn.toId,
+                        type: conn.type || 'hierarchy',
+                        created: conn.created || new Date().toISOString()
+                    });
                 }
             });
+            
+            return batch.commit();
+        });
     }
 
     const debouncedSave = Utils.debounce(() => {
@@ -7727,42 +7797,105 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             y = Math.random() * 200 + 100;
         }
         
-        const functionData = {
-            id: State.editingIndex >= 0 ? State.functions[State.editingIndex].id : Utils.generateId(),
-            name,
-            responsible,
-            link,
+        const canvasDataObj = {
             kpi,
-            notes,
             tags: [...State.currentTags],
             statisticsArray: [...State.currentStats],
-            employees: [...State.currentEmployees],
+            link,
+            notes,
             color: State.selectedColor,
-            x,
-            y,
-            created: State.editingIndex >= 0 
-                ? State.functions[State.editingIndex].created 
-                : new Date().toISOString(),
-            modified: new Date().toISOString()
+            employees: [...State.currentEmployees]
         };
         
-        // Зберігаємо історію ПЕРЕД зміною
+        const canvasPos = { x, y, width: 220, height: 140 };
+        
+        // Save history BEFORE change
         const actionName = State.editingIndex >= 0 ? 'edit_function' : 'add_function';
         saveHistory(actionName);
         
         if (State.editingIndex >= 0) {
-            State.functions[State.editingIndex] = functionData;
+            // EDIT existing function — send update to parent TM
+            const existingFunc = State.functions[State.editingIndex];
+            const funcId = existingFunc.id;
+            
+            // Update local state
+            existingFunc.name = name;
+            existingFunc.responsible = responsible;
+            existingFunc.kpi = kpi;
+            existingFunc.notes = notes;
+            existingFunc.link = link;
+            existingFunc.tags = [...State.currentTags];
+            existingFunc.statisticsArray = [...State.currentStats];
+            existingFunc.employees = [...State.currentEmployees];
+            existingFunc.color = State.selectedColor;
+            existingFunc.modified = new Date().toISOString();
+            
+            // Send to parent TM via postMessage
+            if (funcId && funcId.length > 5) {
+                // Real Firestore ID — update through parent
+                window.parent.postMessage({
+                    type: 'FUNCTION_UPDATED_ON_CANVAS',
+                    functionId: funcId,
+                    updates: {
+                        name: name,
+                        description: notes,
+                        headName: responsible,
+                        canvas: canvasPos,
+                        canvasData: canvasDataObj
+                    }
+                }, '*');
+            }
         } else {
+            // CREATE new function — send to parent TM
+            const tempId = Utils.generateId();
+            
+            const functionData = {
+                id: tempId,
+                name,
+                responsible,
+                link,
+                kpi,
+                notes,
+                tags: [...State.currentTags],
+                statisticsArray: [...State.currentStats],
+                employees: [...State.currentEmployees],
+                color: State.selectedColor,
+                x,
+                y,
+                width: 220,
+                height: 140,
+                created: new Date().toISOString(),
+                modified: new Date().toISOString()
+            };
+            
             State.functions.push(functionData);
             
-            // Використовуємо ID-based connection замість індексів
+            // Auto-connect to parent if creating sub-function
             if (State.parentFunction !== null && State.functions[State.parentFunction]) {
                 const parentId = State.functions[State.parentFunction].id;
-                const childId = functionData.id;
+                const childId = tempId;
                 if (parentId && childId) {
                     State.connections.push({ fromId: parentId, toId: childId });
                 }
             }
+            
+            // Send to parent TM to create in Firestore
+            window.parent.postMessage({
+                type: 'FUNCTION_CREATED_ON_CANVAS',
+                functionData: {
+                    tempId: tempId,
+                    name: name,
+                    responsible: responsible,
+                    notes: notes,
+                    kpi: kpi,
+                    link: link,
+                    tags: [...State.currentTags],
+                    statisticsArray: [...State.currentStats],
+                    employees: [...State.currentEmployees],
+                    color: State.selectedColor,
+                    canvas: canvasPos
+                }
+            }, '*');
         }
         
         closeModal();
@@ -7771,6 +7904,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             window.renderFunctions();
         }
         
+        // Save connections (still via debouncedSave for connections only)
         debouncedSave();
     }
 
@@ -8433,93 +8567,36 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             return;
         }
         
-        // Зберігаємо історію ПЕРЕД видаленням
+        // Save history BEFORE deletion
         saveHistory('delete_function');
         
         const deletingIndex = State.deletingIndex;
         const deletingFunc = State.functions[deletingIndex];
         const deletingId = deletingFunc?.id;
         
-        // Визначаємо чи використовується новий формат (ID) чи старий (index)
-        const hasIdConnections = State.connections.some(conn => conn.fromId || conn.toId);
+        // Remove connections to/from deleted function (local state)
+        State.connections = State.connections.filter(function(conn) {
+            var isFrom = conn.fromId === deletingId || conn.from === deletingIndex;
+            var isTo = conn.toId === deletingId || conn.to === deletingIndex;
+            return !isFrom && !isTo;
+        });
         
-        if (hasIdConnections || deletingId) {
-            // Новий формат - просто фільтруємо по ID
-            const incomingConnections = State.connections.filter(conn => 
-                conn.toId === deletingId || conn.to === deletingIndex
-            );
-            const outgoingConnections = State.connections.filter(conn => 
-                conn.fromId === deletingId || conn.from === deletingIndex
-            );
-            
-            // Reconnect children to parents (якщо є)
-            const newConnections = [];
-            incomingConnections.forEach(incoming => {
-                outgoingConnections.forEach(outgoing => {
-                    const fromId = incoming.fromId || (State.functions[incoming.from]?.id);
-                    const toId = outgoing.toId || (State.functions[outgoing.to]?.id);
-                    
-                    if (fromId && toId && fromId !== toId) {
-                        const exists = State.connections.find(conn => 
-                            (conn.fromId === fromId && conn.toId === toId) ||
-                            (State.functions[conn.from]?.id === fromId && State.functions[conn.to]?.id === toId)
-                        );
-                        if (!exists) {
-                            newConnections.push({ fromId, toId });
-                        }
-                    }
-                });
-            });
-            
-            // Remove connections to/from deleted node
-            State.connections = State.connections.filter(conn => {
-                // Перевіряємо обидва формати
-                const isFromDeleted = conn.fromId === deletingId || conn.from === deletingIndex;
-                const isToDeleted = conn.toId === deletingId || conn.to === deletingIndex;
-                return !isFromDeleted && !isToDeleted;
-            });
-            
-            // Add new connections
-            State.connections.push(...newConnections);
-        } else {
-            // Старий формат - коригуємо індекси (для backward compatibility)
-            const incomingConnections = State.connections.filter(conn => conn.to === deletingIndex);
-            const outgoingConnections = State.connections.filter(conn => conn.from === deletingIndex);
-            
-            const newConnections = [];
-            incomingConnections.forEach(incoming => {
-                outgoingConnections.forEach(outgoing => {
-                    const exists = State.connections.find(conn => 
-                        conn.from === incoming.from && conn.to === outgoing.to
-                    );
-                    if (!exists && incoming.from !== outgoing.to) {
-                        newConnections.push({
-                            from: incoming.from > deletingIndex ? incoming.from - 1 : incoming.from,
-                            to: outgoing.to > deletingIndex ? outgoing.to - 1 : outgoing.to
-                        });
-                    }
-                });
-            });
-            
-            // Remove connections to/from deleted node and adjust indices
-            State.connections = State.connections
-                .filter(conn => conn.from !== deletingIndex && conn.to !== deletingIndex)
-                .map(conn => ({
-                    from: conn.from > deletingIndex ? conn.from - 1 : conn.from,
-                    to: conn.to > deletingIndex ? conn.to - 1 : conn.to
-                }));
-            
-            // Add new connections
-            State.connections.push(...newConnections);
-        }
-        
-        // Remove function
+        // Remove function from local state
         State.functions.splice(deletingIndex, 1);
+        
+        // Send delete to parent TM via postMessage
+        if (deletingId && deletingId.length > 5) {
+            window.parent.postMessage({
+                type: 'FUNCTION_DELETED_ON_CANVAS',
+                functionId: deletingId
+            }, '*');
+        }
         
         if (typeof window.renderFunctions === 'function') {
             window.renderFunctions();
         }
         
+        // Save connections update
         debouncedSave();
         closeConfirmModal();
     }

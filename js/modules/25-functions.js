@@ -119,6 +119,17 @@
                     if (idx >= 0) functions[idx] = { ...functions[idx], ...data };
                 } else {
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    // Canvas defaults for biz-structure sync
+                    if (!data.canvas) {
+                        const idx = functions.length;
+                        const cols = 4;
+                        data.canvas = {
+                            x: 50 + (idx % cols) * 280,
+                            y: 50 + Math.floor(idx / cols) * 200,
+                            width: 220,
+                            height: 140
+                        };
+                    }
                     const docRef = await db.collection('companies').doc(currentCompany).collection('functions').add(data);
                     // Локальне додавання
                     functions.unshift({ id: docRef.id, ...data, createdAt: new Date() });
@@ -126,6 +137,8 @@
                 closeModal('functionModal');
                 renderFunctions();
                 updateSelects();
+                // Sync to biz-structure canvas
+                if (typeof sendFunctionsToIframe === 'function') sendFunctionsToIframe();
             } catch (error) {
                 console.error('saveFunction error:', error);
                 alert(t('error') + ': ' + error.message);
@@ -155,7 +168,22 @@
             showUndoToast(funcName, funcCopy, 'function');
             
             try {
-                await db.collection('companies').doc(currentCompany).collection('functions').doc(id).delete();
+                // Batch delete: function + related connections
+                const batch = db.batch();
+                batch.delete(db.collection('companies').doc(currentCompany).collection('functions').doc(id));
+                
+                // Delete related functionConnections
+                const connSnap1 = await db.collection('companies').doc(currentCompany)
+                    .collection('functionConnections').where('from', '==', id).get();
+                const connSnap2 = await db.collection('companies').doc(currentCompany)
+                    .collection('functionConnections').where('to', '==', id).get();
+                connSnap1.docs.forEach(d => batch.delete(d.ref));
+                connSnap2.docs.forEach(d => batch.delete(d.ref));
+                
+                await batch.commit();
+                
+                // Sync to canvas
+                if (typeof sendFunctionsToIframe === 'function') sendFunctionsToIframe();
             } catch (error) {
                 // Rollback
                 if (!functions.find(f => f.id === id)) {

@@ -87,6 +87,9 @@
                 updateProcessTemplateFilter();
                 updateProjectSelects();
                 
+                // Sync functions to biz-structure canvas iframe
+                if (typeof sendFunctionsToIframe === 'function') sendFunctionsToIframe();
+                
                 // Авто-генерація регулярних завдань при вході
                 await autoGenerateRegularTasks();
                 
