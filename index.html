@@ -53,27 +53,59 @@
                 <span class="company-badge" id="companyBadge" style="display:none;"></span>
             </div>
             <div class="header-actions">
-                <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="header-ai-btn" title="Питання до керівника">
-                    <i data-lucide="target" class="icon"></i> <span data-i18n="radarAI">Керівник</span>
-                </a>
-                <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="header-ai-btn tech" title="Помічник">
-                    <i data-lucide="wrench" class="icon"></i> <span data-i18n="techAI">Помічник</span>
-                </a>
-                <a href="https://chatgpt.com/g/g-693ec18df2c0819194f1c3de7404d6fe-talko-ai-business-process" target="_blank" class="header-ai-btn" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);" title="Опис бізнес-процесу">
-                    <i data-lucide="workflow" class="icon"></i> <span data-i18n="businessProcessAI">Бізнес-процес</span>
-                </a>
-                <a href="https://chatgpt.com/g/g-684c0092653c81919f42552c12434fa7-function-description-generator" target="_blank" class="header-ai-btn" style="background:linear-gradient(135deg,#f59e0b,#d97706);" title="Опис функцій">
-                    <i data-lucide="file-text" class="icon"></i> <span data-i18n="funcDescAI">Опис функцій</span>
-                </a>
-                <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="header-ai-btn" style="background:linear-gradient(135deg,#0284c7,#0369a1);" title="Як ставити завдання">
-                    <i data-lucide="list-plus" class="icon"></i> <span data-i18n="taskGenAI">Завдання</span>
-                </a>
-                <div class="lang-switcher">
-                    <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
-                    <button class="lang-btn" onclick="setLanguage('ru')" id="langRU">RU</button>
-                    <button class="lang-btn" onclick="setLanguage('pl')" id="langPL">PL</button>
-                    <button class="lang-btn" onclick="setLanguage('en')" id="langEN">EN</button>
-                    <button class="lang-btn" onclick="setLanguage('de')" id="langDE">DE</button>
+                <!-- AI Assistants Dropdown -->
+                <div class="hdr-dropdown" id="aiDropdown">
+                    <button class="hdr-dropdown-btn ai-btn" onclick="toggleHdrDropdown('aiDropdown')">
+                        <i data-lucide="bot" class="icon"></i> <span data-i18n="aiAssistants">AI</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.7"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+                    <div class="hdr-dropdown-menu" id="aiDropdownMenu">
+                        <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="hdr-dropdown-item">
+                            <span class="hdr-item-icon" style="background:#22c55e"><i data-lucide="wrench" class="icon"></i></span>
+                            <span data-i18n="techAI">Помічник</span>
+                        </a>
+                        <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="hdr-dropdown-item">
+                            <span class="hdr-item-icon" style="background:#ef4444"><i data-lucide="target" class="icon"></i></span>
+                            <span data-i18n="radarAI">Керівник</span>
+                        </a>
+                        <a href="https://chatgpt.com/g/g-693ec18df2c0819194f1c3de7404d6fe-talko-ai-business-process" target="_blank" class="hdr-dropdown-item">
+                            <span class="hdr-item-icon" style="background:#8b5cf6"><i data-lucide="workflow" class="icon"></i></span>
+                            <span data-i18n="businessProcessAI">Бізнес-процес</span>
+                        </a>
+                        <a href="https://chatgpt.com/g/g-684c0092653c81919f42552c12434fa7-function-description-generator" target="_blank" class="hdr-dropdown-item">
+                            <span class="hdr-item-icon" style="background:#f59e0b"><i data-lucide="file-text" class="icon"></i></span>
+                            <span data-i18n="funcDescAI">Опис функцій</span>
+                        </a>
+                        <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="hdr-dropdown-item">
+                            <span class="hdr-item-icon" style="background:#0284c7"><i data-lucide="list-plus" class="icon"></i></span>
+                            <span data-i18n="taskGenAI">Завдання</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Language Dropdown -->
+                <div class="hdr-dropdown" id="langDropdown">
+                    <button class="hdr-dropdown-btn lang-btn-main" onclick="toggleHdrDropdown('langDropdown')">
+                        <i data-lucide="globe" class="icon"></i> <span id="currentLangLabel">UA</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.7"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+                    <div class="hdr-dropdown-menu" id="langDropdownMenu">
+                        <button class="hdr-dropdown-item lang-opt active" data-lang="ua" onclick="setLanguageFromDropdown('ua')">
+                            <span class="lang-flag">🇺🇦</span> Українська
+                        </button>
+                        <button class="hdr-dropdown-item lang-opt" data-lang="ru" onclick="setLanguageFromDropdown('ru')">
+                            <span class="lang-flag">🇷🇺</span> Русский
+                        </button>
+                        <button class="hdr-dropdown-item lang-opt" data-lang="pl" onclick="setLanguageFromDropdown('pl')">
+                            <span class="lang-flag">🇵🇱</span> Polski
+                        </button>
+                        <button class="hdr-dropdown-item lang-opt" data-lang="en" onclick="setLanguageFromDropdown('en')">
+                            <span class="lang-flag">🇬🇧</span> English
+                        </button>
+                        <button class="hdr-dropdown-item lang-opt" data-lang="de" onclick="setLanguageFromDropdown('de')">
+                            <span class="lang-flag">🇩🇪</span> Deutsch
+                        </button>
+                    </div>
                 </div>
                 <div class="notification-bell" id="notificationBell" onclick="toggleNotificationPanel()" style="position:relative;cursor:pointer;padding:0.4rem;border-radius:8px;display:none;" title="Сповіщення">
                     <i data-lucide="bell" class="icon" style="width:20px;height:20px;"></i>
@@ -1968,8 +2000,8 @@
                     <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="btn" style="justify-content:center;background:#8b5cf6;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
                         <i data-lucide="target" class="icon icon-sm"></i> <span data-i18n="radarAI">Керівник</span>
                     </a>
-                    <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="btn" style="justify-content:center;background:#22c55e;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
-                        <i data-lucide="wrench" class="icon icon-sm"></i> <span data-i18n="techAI">Технічний</span>
+                    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="btn" style="justify-content:center;background:#22c55e;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
+                        <i data-lucide="wrench" class="icon icon-sm"></i> <span data-i18n="techAI">Помічник</span>
                     </a>
                     <a href="https://chatgpt.com/g/g-693ec18df2c0819194f1c3de7404d6fe-talko-ai-business-process" target="_blank" class="btn" style="justify-content:center;background:#6366f1;color:white;font-size:0.75rem;padding:0.5rem;" onclick="closeMobileMenu();">
                         <i data-lucide="workflow" class="icon icon-sm"></i> <span data-i18n="businessProcessAI">Бізнес-процес</span>
@@ -2031,10 +2063,12 @@
                 </div>
                 
                 <!-- Language -->
-                <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-                    <button class="btn" onclick="setLanguage('ua');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;" id="mLangUA">UA</button>
-                    <button class="btn" onclick="setLanguage('ru');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;" id="mLangRU">RU</button>
-                    <button class="btn" onclick="setLanguage('pl');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;" id="mLangPL">PL</button>
+                <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem;flex-wrap:wrap;">
+                    <button class="btn" onclick="setLanguageFromDropdown('ua');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;min-width:44px;" id="mLangUA">🇺🇦 UA</button>
+                    <button class="btn" onclick="setLanguageFromDropdown('ru');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;min-width:44px;" id="mLangRU">🇷🇺 RU</button>
+                    <button class="btn" onclick="setLanguageFromDropdown('pl');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;min-width:44px;" id="mLangPL">🇵🇱 PL</button>
+                    <button class="btn" onclick="setLanguageFromDropdown('en');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;min-width:44px;" id="mLangEN">🇬🇧 EN</button>
+                    <button class="btn" onclick="setLanguageFromDropdown('de');closeMobileMenu();" style="flex:1;justify-content:center;padding:0.5rem;font-size:0.8rem;min-width:44px;" id="mLangDE">🇩🇪 DE</button>
                 </div>
                 
                 <!-- SuperAdmin: Demo data -->
@@ -2306,6 +2340,47 @@
         <button class="undo-btn" onclick="undoDelete()">Відмінити</button>
         <div class="toast-timer"><div class="toast-timer-bar" id="undoTimerBar"></div></div>
     </div>
+    <script>
+    // Header dropdown toggle
+    function toggleHdrDropdown(id) {
+        var menu = document.querySelector('#' + id + ' .hdr-dropdown-menu');
+        var wasOpen = menu.classList.contains('show');
+        // Close all dropdowns
+        document.querySelectorAll('.hdr-dropdown-menu').forEach(m => m.classList.remove('show'));
+        if (!wasOpen) {
+            menu.classList.add('show');
+            setTimeout(() => document.addEventListener('click', closeAllHdrDropdowns, { once: true }), 10);
+        }
+    }
+    function closeAllHdrDropdowns() {
+        document.querySelectorAll('.hdr-dropdown-menu').forEach(m => m.classList.remove('show'));
+    }
+    
+    // Language from dropdown
+    function setLanguageFromDropdown(lang) {
+        setLanguage(lang);
+        // Update label
+        var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE' };
+        var el = document.getElementById('currentLangLabel');
+        if (el) el.textContent = labels[lang] || lang.toUpperCase();
+        // Update active state
+        document.querySelectorAll('.lang-opt').forEach(b => {
+            b.classList.toggle('active', b.dataset.lang === lang);
+        });
+        closeAllHdrDropdowns();
+    }
+    
+    // Init lang label on load
+    document.addEventListener('DOMContentLoaded', function() {
+        var lang = localStorage.getItem('talko_lang') || 'ua';
+        var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE' };
+        var el = document.getElementById('currentLangLabel');
+        if (el) el.textContent = labels[lang] || 'UA';
+        document.querySelectorAll('.lang-opt').forEach(b => {
+            b.classList.toggle('active', b.dataset.lang === lang);
+        });
+    });
+    </script>
     
 </body>
 

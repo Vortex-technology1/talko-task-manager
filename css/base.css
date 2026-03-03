@@ -68,47 +68,71 @@
         
         .header-btn:hover { background: rgba(255,255,255,0.3); }
         
-        .header-ai-btn {
-            background: rgba(255,255,255,0.2);
+        .header-ai-btn { display: none; } /* legacy — replaced by dropdown */
+        .lang-switcher { display: none; } /* legacy — replaced by dropdown */
+        
+        /* Header Dropdowns */
+        .hdr-dropdown { position: relative; }
+        .hdr-dropdown-btn {
+            background: rgba(255,255,255,0.15);
             color: white;
-            padding: 0.4rem 0.6rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 0.35rem 0.7rem;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.35rem;
             transition: all 0.2s;
+            white-space: nowrap;
         }
-        
-        .header-ai-btn:hover { background: rgba(255,255,255,0.35); transform: translateY(-1px); }
-        .header-ai-btn.tech { background: rgba(46, 204, 113, 0.3); }
-        .header-ai-btn.tech:hover { background: rgba(46, 204, 113, 0.5); }
-        
-        .lang-switcher {
+        .hdr-dropdown-btn:hover { background: rgba(255,255,255,0.25); }
+        .hdr-dropdown-btn.ai-btn { background: rgba(139,92,246,0.35); border-color: rgba(139,92,246,0.3); }
+        .hdr-dropdown-btn.ai-btn:hover { background: rgba(139,92,246,0.5); }
+        .hdr-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+            min-width: 200px;
+            padding: 6px;
+            z-index: 9999;
+            animation: hdrFadeIn 0.15s ease;
+        }
+        .hdr-dropdown-menu.show { display: block; }
+        @keyframes hdrFadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+        .hdr-dropdown-item {
             display: flex;
-            background: rgba(255,255,255,0.2);
-            border-radius: 15px;
-            overflow: hidden;
-        }
-        
-        .lang-btn {
-            background: transparent;
-            border: none;
-            color: rgba(255,255,255,0.7);
-            padding: 0.3rem 0.5rem;
-            font-size: 0.75rem;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.55rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: #374151;
+            text-decoration: none;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.15s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
         }
-        
-        .lang-btn.active {
-            background: rgba(255,255,255,0.3);
-            color: white;
-            font-weight: 600;
+        .hdr-dropdown-item:hover { background: #f3f4f6; }
+        .hdr-dropdown-item.active { background: #f0fdf4; color: #16a34a; font-weight: 600; }
+        .hdr-item-icon {
+            width: 28px; height: 28px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; flex-shrink: 0;
         }
-        
-        .lang-btn:hover { color: white; }
+        .hdr-item-icon .icon { width: 14px; height: 14px; }
+        .lang-flag { font-size: 1.1rem; }
         
         .user-info {
             display: none;
