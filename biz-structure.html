@@ -12,14 +12,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
-window._bizCompanyId = null;
-window.addEventListener("message", function(e) {
-  if (e.data && e.data.type === "biz-auth") {
-    window._bizCompanyId = e.data.companyId;
-    console.log("[BIZ] Auth:", e.data.companyId);
-  }
-});
-if (window.parent !== window) window.parent.postMessage({type:"biz-auth-request"}, "*");
+// Get companyId from URL parameter
+var urlParams = new URLSearchParams(window.location.search);
+window._bizCompanyId = urlParams.get('company') || null;
+console.log('[BIZ] Company from URL:', window._bizCompanyId);
 </script>
 </head>
 <body>
