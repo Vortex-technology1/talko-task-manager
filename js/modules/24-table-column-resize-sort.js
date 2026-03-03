@@ -136,7 +136,7 @@
             document.getElementById('functionFilter').value = '';
             document.getElementById('assigneeFilter').value = '';
             const searchInput = document.getElementById('taskSearchInput');
-            if (searchInput) { searchInput.value = ''; searchInput.style.width = '130px'; }
+            if (searchInput) { searchInput.value = ''; searchInput.style.width = '120px'; }
             const mobileSearch = document.getElementById('mobileTaskSearchInput');
             if (mobileSearch) mobileSearch.value = '';
             document.getElementById('customDateRange').style.display = 'none';

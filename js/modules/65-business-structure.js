@@ -7,7 +7,6 @@
 // ============================================================
 
 let _bizIframeReady = false;
-let _bizPendingFunctions = null;
 
 function showBizStructureTab() {
     var c = document.getElementById("bizstructureTab");
@@ -44,8 +43,7 @@ function sendFunctionsToIframe() {
     }
     
     if (!_bizIframeReady) {
-        console.log('[BIZ-BRIDGE] sendFunctionsToIframe: iframe not ready yet, queuing');
-        _bizPendingFunctions = true;
+        console.log('[BIZ-BRIDGE] sendFunctionsToIframe: iframe not ready yet');
         return;
     }
     
@@ -79,6 +77,8 @@ function sendFunctionsToIframe() {
 
 // Listen for messages FROM iframe
 window.addEventListener('message', async function(event) {
+    // Validate origin — only accept from same origin
+    if (event.origin !== window.location.origin) return;
     if (!event.data || !event.data.type) return;
     
     const msg = event.data;
@@ -94,7 +94,6 @@ window.addEventListener('message', async function(event) {
             _bizIframeReady = true;
             console.log('[BIZ-BRIDGE] iframe ready! functions available:', functions.length);
             sendFunctionsToIframe();
-            _bizPendingFunctions = null;
             break;
             
         case 'CANVAS_POSITION_UPDATE':
@@ -254,9 +253,14 @@ window.addEventListener('message', async function(event) {
                         .collection('functions').doc(msg.functionId)
                         .update(updateData);
                     
+                    // Update local state (without serverTimestamp sentinel)
                     var fn4 = functions.find(f => f.id === msg.functionId);
                     if (fn4) {
-                        Object.assign(fn4, updateData);
+                        if (msg.updates.name !== undefined) fn4.name = msg.updates.name;
+                        if (msg.updates.description !== undefined) fn4.description = msg.updates.description;
+                        if (msg.updates.canvas !== undefined) fn4.canvas = msg.updates.canvas;
+                        if (msg.updates.canvasData !== undefined) fn4.canvasData = msg.updates.canvasData;
+                        if (msg.updates.headName !== undefined) fn4.headName = msg.updates.headName;
                         fn4.updatedAt = new Date();
                     }
                     renderFunctions();

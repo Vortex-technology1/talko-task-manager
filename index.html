@@ -56,7 +56,7 @@
                 <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="header-ai-btn" title="Питання до керівника">
                     <i data-lucide="target" class="icon"></i> <span data-i18n="radarAI">Керівник</span>
                 </a>
-                <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="header-ai-btn tech" title="Помічник">
+                <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="header-ai-btn tech" title="Помічник">
                     <i data-lucide="wrench" class="icon"></i> <span data-i18n="techAI">Помічник</span>
                 </a>
                 <a href="https://chatgpt.com/g/g-693ec18df2c0819194f1c3de7404d6fe-talko-ai-business-process" target="_blank" class="header-ai-btn" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);" title="Опис бізнес-процесу">
@@ -72,6 +72,8 @@
                     <button class="lang-btn active" onclick="setLanguage('ua')" id="langUA">UA</button>
                     <button class="lang-btn" onclick="setLanguage('ru')" id="langRU">RU</button>
                     <button class="lang-btn" onclick="setLanguage('pl')" id="langPL">PL</button>
+                    <button class="lang-btn" onclick="setLanguage('en')" id="langEN">EN</button>
+                    <button class="lang-btn" onclick="setLanguage('de')" id="langDE">DE</button>
                 </div>
                 <div class="notification-bell" id="notificationBell" onclick="toggleNotificationPanel()" style="position:relative;cursor:pointer;padding:0.4rem;border-radius:8px;display:none;" title="Сповіщення">
                     <i data-lucide="bell" class="icon" style="width:20px;height:20px;"></i>
@@ -398,53 +400,74 @@
                     </div>
                     
                     <div class="controls" style="margin-bottom:0.5rem;">
-                        <div class="filters-row" style="display:flex;flex-wrap:nowrap;gap:0.35rem;align-items:center;padding:0.4rem 0.6rem;background:white;border-radius:12px;box-shadow:var(--shadow);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-                            <button class="btn btn-success" onclick="openTaskModal()" style="padding:0.3rem 0.6rem;font-size:0.78rem;white-space:nowrap;flex-shrink:0;border-radius:8px;"><i data-lucide="plus" class="icon" style="width:13px;height:13px;"></i> <span data-i18n="addTask">Завдання</span></button>
+                        <style>
+                            .tbar{display:flex;flex-wrap:nowrap;gap:6px;align-items:center;padding:6px 10px;background:white;border-radius:12px;box-shadow:var(--shadow);overflow-x:auto;-webkit-overflow-scrolling:touch;}
+                            .tbar::-webkit-scrollbar{display:none}
+                            .tbar{scrollbar-width:none}
+                            .tbar .tb{height:30px;padding:0 10px;font-size:12px;font-weight:500;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;transition:all .15s;color:white;}
+                            .tbar .tb-green{background:#22c55e;}
+                            .tbar .tb-green:hover{background:#16a34a;}
+                            .tbar .tb-gray{background:#6b7280;}
+                            .tbar .tb-gray:hover{background:#4b5563;}
+                            .tbar .tb-outline{background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;}
+                            .tbar .tb-outline:hover{background:#e5e7eb;}
+                            .tbar .tb-red{background:#ef4444;}
+                            .tbar .tb-red:hover{background:#dc2626;}
+                            .tbar .tdiv{width:1px;height:20px;background:#e5e7eb;flex-shrink:0;}
+                            .tbar .tsel{height:30px;padding:0 8px;font-size:12px;border:1px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;flex-shrink:0;color:#374151;}
+                            .tbar .tsearch{height:30px;padding:0 8px 0 28px;font-size:12px;border:1px solid #e5e7eb;border-radius:8px;width:120px;outline:none;flex-shrink:0;transition:all .2s;}
+                            .tbar .tsearch:focus{border-color:#22c55e;width:160px;}
+                            .tbar .ttabs{display:flex;gap:1px;background:#f3f4f6;padding:2px;border-radius:8px;flex-shrink:0;}
+                            .tbar .task-type-tab{height:26px;padding:0 8px;border:none;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;background:transparent;color:#6b7280;white-space:nowrap;transition:all .15s;}
+                            .tbar .task-type-tab.active{background:#22c55e;color:white;}
+                        </style>
+                        <div class="tbar filters-row">
+                            <button class="tb tb-green" onclick="openTaskModal()"><i data-lucide="plus" class="icon" style="width:14px;height:14px;"></i> <span data-i18n="addTask">Завдання</span></button>
                             <div style="position:relative;display:inline-block;flex-shrink:0;" id="exportDropdownWrap">
-                                <button class="btn" style="background:#2ecc71;padding:0.3rem 0.6rem;font-size:0.78rem;white-space:nowrap;border-radius:8px;" onclick="toggleExportDropdown(event)"><i data-lucide="download" class="icon" style="width:13px;height:13px;"></i> Експорт <i data-lucide="chevron-down" class="icon" style="width:10px;height:10px;"></i></button>
+                                <button class="tb tb-green" onclick="toggleExportDropdown(event)"><i data-lucide="download" class="icon" style="width:13px;height:13px;"></i> Експорт</button>
                                 <div id="exportDropdown" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:white;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.15);border:1px solid #e5e7eb;z-index:100;min-width:160px;overflow:hidden;">
-                                    <button onclick="exportTasksCSV();closeExportDropdown()" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:0.85rem;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='none'">
-                                        <i data-lucide="file-text" class="icon" style="width:16px;height:16px;color:#22c55e;"></i> CSV (.csv)
+                                    <button onclick="exportTasksCSV();closeExportDropdown()" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:13px;text-align:left;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='none'">
+                                        <i data-lucide="file-text" class="icon" style="width:16px;height:16px;color:#22c55e;"></i> CSV
                                     </button>
-                                    <button onclick="exportTasksXLSX();closeExportDropdown()" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:0.85rem;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='none'">
-                                        <i data-lucide="table" class="icon" style="width:16px;height:16px;color:#16a34a;"></i> Excel (.xlsx)
+                                    <button onclick="exportTasksXLSX();closeExportDropdown()" style="display:flex;align-items:center;gap:0.5rem;width:100%;padding:0.6rem 1rem;border:none;background:none;cursor:pointer;font-size:13px;text-align:left;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='none'">
+                                        <i data-lucide="table" class="icon" style="width:16px;height:16px;color:#16a34a;"></i> Excel
                                     </button>
                                 </div>
                             </div>
-                            <button class="btn" id="archiveToggleBtn" onclick="toggleArchiveView()" style="background:#6b7280;padding:0.3rem 0.6rem;font-size:0.78rem;white-space:nowrap;flex-shrink:0;border-radius:8px;"><i data-lucide="archive" class="icon" style="width:13px;height:13px;"></i> <span data-i18n="archive">Архів</span></button>
-                            <span style="width:1px;height:20px;background:#e5e7eb;margin:0 0.1rem;flex-shrink:0;"></span>
-                            <div class="task-type-tabs" style="display:flex;gap:1px;background:#f3f4f6;padding:2px;border-radius:8px;flex-shrink:0;">
-                                <button class="task-type-tab active" data-value="" onclick="setTaskTypeFilter(this)" style="padding:0.25rem 0.5rem;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;background:#22c55e;color:white;white-space:nowrap;transition:all 0.15s;" data-i18n="all">Всі</button>
-                                <button class="task-type-tab" data-value="my" onclick="setTaskTypeFilter(this)" style="padding:0.25rem 0.5rem;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:0.15rem;"><i data-lucide="user" class="icon" style="width:11px;height:11px;"></i> <span data-i18n="mine">Мої</span></button>
-                                <button class="task-type-tab" data-value="created" data-i18n="created" onclick="setTaskTypeFilter(this)" style="padding:0.25rem 0.5rem;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:500;background:transparent;color:#555;white-space:nowrap;transition:all 0.15s;">Створені</button>
+                            <button class="tb tb-gray" id="archiveToggleBtn" onclick="toggleArchiveView()"><i data-lucide="archive" class="icon" style="width:13px;height:13px;"></i> <span data-i18n="archive">Архів</span></button>
+                            <span class="tdiv"></span>
+                            <div class="ttabs">
+                                <button class="task-type-tab active" data-value="" onclick="setTaskTypeFilter(this)" data-i18n="all">Всі</button>
+                                <button class="task-type-tab" data-value="my" onclick="setTaskTypeFilter(this)"><span data-i18n="mine">Мої</span></button>
+                                <button class="task-type-tab" data-value="created" onclick="setTaskTypeFilter(this)" data-i18n="created">Створені</button>
                             </div>
                             <select class="filter-select" id="taskTypeFilter" onchange="renderTasks()" style="display:none;">
                                 <option value="" data-i18n="allTasks">Всі завдання</option>
                                 <option value="my" data-i18n="myTasks">Мої завдання</option>
                                 <option value="created" data-i18n="createdByMe">Створені мною</option>
                             </select>
-                            <span style="width:1px;height:20px;background:#e5e7eb;margin:0 0.1rem;flex-shrink:0;"></span>
+                            <span class="tdiv"></span>
                             <div style="position:relative;display:flex;align-items:center;flex-shrink:0;">
-                                <i data-lucide="search" class="icon" style="width:13px;height:13px;position:absolute;left:7px;color:#9ca3af;pointer-events:none;"></i>
-                                <input type="text" id="taskSearchInput" placeholder="Пошук..." data-i18n-placeholder="search" oninput="syncSearchInputs(this);debouncedRenderTasks()" style="padding:0.25rem 0.35rem 0.25rem 26px;font-size:0.78rem;border:1px solid #e5e7eb;border-radius:6px;width:110px;outline:none;transition:all 0.2s;" onfocus="this.style.borderColor='#22c55e';this.style.width='160px'" onblur="this.style.borderColor='#e5e7eb';if(!this.value)this.style.width='110px'">
+                                <i data-lucide="search" class="icon" style="width:13px;height:13px;position:absolute;left:8px;color:#9ca3af;pointer-events:none;"></i>
+                                <input type="text" class="tsearch" id="taskSearchInput" placeholder="Пошук..." data-i18n-placeholder="search" oninput="syncSearchInputs(this);debouncedRenderTasks()">
                             </div>
-                            <select class="filter-select" id="dateFilter" onchange="handleDateFilter()" style="font-size:0.78rem;padding:0.25rem 0.35rem;flex-shrink:0;border-radius:6px;border:1px solid #e5e7eb;">
-                                <option value="" data-i18n="allDates">Дати</option>
+                            <select class="tsel" id="dateFilter" onchange="handleDateFilter()">
+                                <option value="" data-i18n="allDates">Всі дати</option>
                                 <option value="today" data-i18n="today">Сьогодні</option>
                                 <option value="week" data-i18n="thisWeek">Тиждень</option>
                                 <option value="month" data-i18n="thisMonth">Місяць</option>
                                 <option value="overdue" data-i18n="overdue">Прострочені</option>
                                 <option value="custom" data-i18n="customPeriod">Період</option>
                             </select>
-                            <div id="customDateRange" style="display:none;gap:0.4rem;align-items:center;">
-                                <input type="date" id="dateFrom" class="form-input" style="width:auto;padding:0.25rem;" onchange="renderTasks()">
+                            <div id="customDateRange" style="display:none;gap:4px;align-items:center;">
+                                <input type="date" id="dateFrom" class="tsel" style="width:auto;" onchange="renderTasks()">
                                 <span>—</span>
-                                <input type="date" id="dateTo" class="form-input" style="width:auto;padding:0.25rem;" onchange="renderTasks()">
+                                <input type="date" id="dateTo" class="tsel" style="width:auto;" onchange="renderTasks()">
                             </div>
                             <div class="status-multiselect" id="statusFilterMulti" style="flex-shrink:0;">
-                                <div class="status-multiselect-toggle" onclick="toggleStatusDropdown(event)">
-                                    <span class="status-multiselect-label" id="statusFilterLabel" data-i18n="statuses" style="font-size:0.78rem;">Статуси</span>
-                                    <i data-lucide="chevron-down" class="icon icon-sm status-multiselect-arrow"></i>
+                                <div class="status-multiselect-toggle" onclick="toggleStatusDropdown(event)" style="height:30px;padding:0 8px;font-size:12px;border:1px solid #e5e7eb;border-radius:8px;display:flex;align-items:center;gap:4px;">
+                                    <span class="status-multiselect-label" id="statusFilterLabel" data-i18n="statuses" style="font-size:12px;">Статуси</span>
+                                    <i data-lucide="chevron-down" class="icon" style="width:12px;height:12px;"></i>
                                 </div>
                                 <div class="status-multiselect-dropdown" id="statusDropdown">
                                     <label class="status-multiselect-item status-multiselect-all" onclick="toggleAllStatuses(event)">
@@ -457,13 +480,11 @@
                                 </div>
                             </div>
                             <input type="hidden" id="statusFilter" value="">
-                            <select class="filter-select" id="functionFilter" onchange="refreshCurrentView()" style="font-size:0.78rem;padding:0.25rem 0.35rem;flex-shrink:0;border-radius:6px;border:1px solid #e5e7eb;"><option value="" data-i18n="functions">Функції</option></select>
-                            <select class="filter-select" id="assigneeFilter" onchange="refreshCurrentView()" style="font-size:0.78rem;padding:0.25rem 0.35rem;flex-shrink:0;border-radius:6px;border:1px solid #e5e7eb;"><option value="" data-i18n="assignees">Виконавці</option></select>
-                            <span style="width:1px;height:20px;background:#e5e7eb;margin:0 0.1rem;flex-shrink:0;"></span>
-                            <button id="hideCompletedBtn" class="btn btn-clear" onclick="toggleHideCompleted()" style="white-space:nowrap;padding:0.25rem 0.4rem;font-size:0.73rem;flex-shrink:0;border-radius:6px;">
-                                <i data-lucide="eye-off" class="icon" style="width:11px;height:11px;"></i> <span data-i18n="hideCompleted">Виконані</span>
-                            </button>
-                            <button class="btn btn-clear" onclick="clearTaskFilters()" style="padding:0.25rem 0.4rem;font-size:0.73rem;white-space:nowrap;flex-shrink:0;border-radius:6px;"><i data-lucide="x" class="icon" style="width:11px;height:11px;"></i> <span data-i18n="resetFilter">Скинути</span></button>
+                            <select class="tsel" id="functionFilter" onchange="refreshCurrentView()"><option value="" data-i18n="functions">Всі функції</option></select>
+                            <select class="tsel" id="assigneeFilter" onchange="refreshCurrentView()"><option value="" data-i18n="assignees">Всі виконавці</option></select>
+                            <span class="tdiv"></span>
+                            <button class="tb tb-outline" id="hideCompletedBtn" onclick="toggleHideCompleted()"><i data-lucide="eye-off" class="icon" style="width:13px;height:13px;"></i> <span data-i18n="hideCompleted">Виконані</span></button>
+                            <button class="tb tb-outline" onclick="clearTaskFilters()" style="padding:0 8px;"><i data-lucide="x" class="icon" style="width:13px;height:13px;"></i></button>
                         </div>
                     </div>
                     <div id="totalTimeInfo" class="total-time-container"></div>

@@ -84,7 +84,7 @@
                 const isOwnerRole = currentUserData.role === 'owner';
                 document.getElementById('ownerAiButtons').style.display = (isOwnerRole || isSuperAdmin) ? 'grid' : 'none';
                 document.getElementById('aiAssistantsBtnMenu').style.display = isSuperAdmin ? 'flex' : 'none';
-                document.getElementById('aiStructureBtnDesktop').style.display = (isOwnerRole || isSuperAdmin) ? '' : 'none';
+                document.getElementById('aiStructureBtnDesktop').style.display = 'none'; // temporarily disabled
                 
                 showMainInterface();
                 initCalendar();

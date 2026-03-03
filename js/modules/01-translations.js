@@ -2360,6 +2360,186 @@
                 sentForReview: 'Wysłano do weryfikacji',
                 editProject: 'Edytuj projekt',
             },
+            en: {
+                // Auth
+                authSubtitle: 'Business task management',
+                signInGoogle: 'Sign in with Google',
+                or: 'or',
+                password: 'Password:',
+                signIn: '<i data-lucide="log-in" class="icon icon-sm"></i> Sign In',
+                forgotPassword: 'Forgot password?',
+                logout: 'Sign Out',
+                // Tabs
+                tabMyDay: 'My Day', myDay: 'My Day',
+                tabTasks: 'Tasks', tabControl: 'Control', tabRegular: 'Regular',
+                tabFunctions: 'Functions', tabTeam: 'Team', tabAdmin: 'Admin',
+                // Tasks
+                addTask: '+ Task', allFunctions: 'All functions', allDates: 'All dates',
+                customPeriod: 'Custom period', overdue: 'Overdue', editTask: 'Edit',
+                deleteTask: 'Delete', taskName: 'Task name', description: 'Description',
+                deadline: 'Deadline', assignee: 'Assignee', function_: 'Function',
+                save: 'Save', cancel: 'Cancel', close: 'Close', confirm: 'Confirm',
+                all: 'All', mine: 'My', created: 'Created',
+                // Status
+                statusNew: 'New', statusProgress: 'In Progress', statusReview: 'Review', statusDone: 'Done',
+                statuses: 'Statuses', functions: 'Functions', assignees: 'Assignees',
+                // Filters
+                today: 'Today', thisWeek: 'Week', thisMonth: 'Month',
+                hideCompleted: 'Completed', resetFilter: 'Reset',
+                search: 'Search...', archive: 'Archive',
+                // Control
+                controlDashboard: 'Control Dashboard', overdueCount: 'Overdue',
+                // Regular
+                addRegular: '+ Regular', frequency: 'Frequency', daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly',
+                // Functions
+                addFunction: '+ Function', functionName: 'Function name',
+                mergeFunctions: 'Merge', cardsView: 'Cards', structureView: 'Structure',
+                // Team
+                inviteEmployee: 'Invite employee', role: 'Role', owner: 'Owner', manager: 'Manager', employee: 'Employee',
+                // Table
+                task: 'Task', creator: 'Creator', type: 'Type', actions: 'Actions',
+                // Common
+                loading: 'Loading...', noData: 'No data', error: 'Error',
+                deleteConfirm: 'Are you sure you want to delete?',
+                yes: 'Yes', no: 'No', ok: 'OK',
+                // Calendar
+                day: 'Day', week: 'Week', month: 'Month', list: 'List', kanban: 'Kanban', deadlines: 'Deadlines',
+                // Projects
+                projects: 'Projects', addProject: '+ Project', projectName: 'Project name',
+                editProject: 'Edit project',
+                // Form fields
+                title: 'Title *', function_: 'Function', noFunction: 'No function',
+                select: 'Select', deadlineDate: 'Deadline (date) *', deadlineTime: 'Deadline (time) *',
+                notSpecified: 'Not specified', estimatedTime: 'Estimated time',
+                // Priority
+                priority: 'Priority', priorityLow: 'Low', priorityMedium: 'Medium',
+                priorityHigh: 'High', priorityUrgent: 'Urgent',
+                // Checklist & comments
+                checklist: 'Checklist', addItem: 'Add item', subtasks: 'Subtasks',
+                comments: 'Comments', addComment: 'Add comment', noComments: 'No comments yet',
+                // Regular tasks
+                regularTask: 'Regular task', period: 'Period',
+                daysOfWeek: 'Days of week *', dayOfMonth: 'Day of month *',
+                timeStart: 'Start time', timeEnd: 'End time',
+                active: 'active', doneLabel: 'Done', hoursPerWeek: 'hrs/wk',
+                regularTaskLabel: 'reg.', showRegularTasks: 'Show regular tasks',
+                hideRegularTasks: 'Hide regular tasks', addRegularTask: '+ Regular task',
+                // Functions
+                newFunction: 'New function', noFunctions: 'No functions',
+                createFirstFunction: 'Create first function', allFunctions: 'All functions',
+                // Processes
+                process: 'Process', processName: 'Process name *',
+                addStep: 'Add step', steps: 'Steps',
+                // Team
+                inviteTitle: 'Invitation', inviteEmail: 'Email', inviteName: 'Name',
+                inviteRole: 'Role', sendInvite: 'Send invite', teamMembers: 'Team members',
+                noPermissionTask: 'Insufficient permissions', tooManyRequests: 'Too many requests. Wait a moment.',
+                // Control
+                controlTitle: 'Control', totalTasks: 'Total tasks',
+                tasksOverdue: 'Overdue', tasksOnReview: 'On review', tasksNew: 'New',
+                // Tabs extended
+                analytics: 'Analytics', tabProjects: 'Projects', tabProcesses: 'Processes',
+                tabAnalytics: 'Analytics', tabStructure: 'Structure', tabEmployees: 'Team',
+                // Time
+                min15: '15 min', min30: '30 min', min45: '45 min',
+                hour1: '1 hour', hour2: '2 hours', hour3: '3 hours', hour4: '4 hours', hour8: '8 hours',
+                // Misc
+                duplicate: 'Duplicate', copy: 'copy', pin: 'Pin',
+                noData: 'No data', error: 'Error', success: 'Success',
+                deleteConfirm: 'Are you sure you want to delete?',
+                techAI: 'Support',
+                sentForReview: 'Sent for review',
+            },
+            de: {
+                // Auth
+                authSubtitle: 'Aufgabenmanagement für Unternehmen',
+                signInGoogle: 'Mit Google anmelden',
+                or: 'oder',
+                password: 'Passwort:',
+                signIn: '<i data-lucide="log-in" class="icon icon-sm"></i> Anmelden',
+                forgotPassword: 'Passwort vergessen?',
+                logout: 'Abmelden',
+                // Tabs
+                tabMyDay: 'Mein Tag', myDay: 'Mein Tag',
+                tabTasks: 'Aufgaben', tabControl: 'Kontrolle', tabRegular: 'Regelmäßig',
+                tabFunctions: 'Funktionen', tabTeam: 'Team', tabAdmin: 'Admin',
+                // Tasks
+                addTask: '+ Aufgabe', allFunctions: 'Alle Funktionen', allDates: 'Alle Daten',
+                customPeriod: 'Zeitraum wählen', overdue: 'Überfällig', editTask: 'Bearbeiten',
+                deleteTask: 'Löschen', taskName: 'Aufgabenname', description: 'Beschreibung',
+                deadline: 'Frist', assignee: 'Verantwortlicher', function_: 'Funktion',
+                save: 'Speichern', cancel: 'Abbrechen', close: 'Schließen', confirm: 'Bestätigen',
+                all: 'Alle', mine: 'Meine', created: 'Erstellt',
+                // Status
+                statusNew: 'Neu', statusProgress: 'In Bearbeitung', statusReview: 'Prüfung', statusDone: 'Erledigt',
+                statuses: 'Status', functions: 'Funktionen', assignees: 'Verantwortliche',
+                // Filters
+                today: 'Heute', thisWeek: 'Woche', thisMonth: 'Monat',
+                hideCompleted: 'Erledigte', resetFilter: 'Zurücksetzen',
+                search: 'Suche...', archive: 'Archiv',
+                // Control
+                controlDashboard: 'Kontroll-Dashboard', overdueCount: 'Überfällig',
+                // Regular
+                addRegular: '+ Regelmäßig', frequency: 'Häufigkeit', daily: 'Täglich', weekly: 'Wöchentlich', monthly: 'Monatlich',
+                // Functions
+                addFunction: '+ Funktion', functionName: 'Funktionsname',
+                mergeFunctions: 'Zusammenführen', cardsView: 'Karten', structureView: 'Struktur',
+                // Team
+                inviteEmployee: 'Mitarbeiter einladen', role: 'Rolle', owner: 'Eigentümer', manager: 'Manager', employee: 'Mitarbeiter',
+                // Table
+                task: 'Aufgabe', creator: 'Ersteller', type: 'Typ', actions: 'Aktionen',
+                // Common
+                loading: 'Laden...', noData: 'Keine Daten', error: 'Fehler',
+                deleteConfirm: 'Möchten Sie wirklich löschen?',
+                yes: 'Ja', no: 'Nein', ok: 'OK',
+                // Calendar
+                day: 'Tag', week: 'Woche', month: 'Monat', list: 'Liste', kanban: 'Kanban', deadlines: 'Fristen',
+                // Projects
+                projects: 'Projekte', addProject: '+ Projekt', projectName: 'Projektname',
+                editProject: 'Projekt bearbeiten',
+                // Form fields
+                title: 'Titel *', function_: 'Funktion', noFunction: 'Keine Funktion',
+                select: 'Auswählen', deadlineDate: 'Frist (Datum) *', deadlineTime: 'Frist (Uhrzeit) *',
+                notSpecified: 'Nicht angegeben', estimatedTime: 'Geschätzte Zeit',
+                // Priority
+                priority: 'Priorität', priorityLow: 'Niedrig', priorityMedium: 'Mittel',
+                priorityHigh: 'Hoch', priorityUrgent: 'Dringend',
+                // Checklist & comments
+                checklist: 'Checkliste', addItem: 'Hinzufügen', subtasks: 'Unteraufgaben',
+                comments: 'Kommentare', addComment: 'Kommentar hinzufügen', noComments: 'Noch keine Kommentare',
+                // Regular tasks
+                regularTask: 'Regelmäßige Aufgabe', period: 'Zeitraum',
+                daysOfWeek: 'Wochentage *', dayOfMonth: 'Tag des Monats *',
+                timeStart: 'Startzeit', timeEnd: 'Endzeit',
+                active: 'aktiv', doneLabel: 'Erledigt', hoursPerWeek: 'Std/Wo',
+                regularTaskLabel: 'reg.', showRegularTasks: 'Regelmäßige anzeigen',
+                hideRegularTasks: 'Regelmäßige ausblenden', addRegularTask: '+ Regelmäßig',
+                // Functions
+                newFunction: 'Neue Funktion', noFunctions: 'Keine Funktionen',
+                createFirstFunction: 'Erste Funktion erstellen', allFunctions: 'Alle Funktionen',
+                // Processes
+                process: 'Prozess', processName: 'Prozessname *',
+                addStep: 'Schritt hinzufügen', steps: 'Schritte',
+                // Team
+                inviteTitle: 'Einladung', inviteEmail: 'E-Mail', inviteName: 'Name',
+                inviteRole: 'Rolle', sendInvite: 'Einladung senden', teamMembers: 'Teammitglieder',
+                noPermissionTask: 'Unzureichende Berechtigungen', tooManyRequests: 'Zu viele Anfragen. Bitte warten.',
+                // Control
+                controlTitle: 'Kontrolle', totalTasks: 'Gesamtaufgaben',
+                tasksOverdue: 'Überfällig', tasksOnReview: 'Zur Prüfung', tasksNew: 'Neu',
+                // Tabs extended
+                analytics: 'Analytik', tabProjects: 'Projekte', tabProcesses: 'Prozesse',
+                tabAnalytics: 'Analytik', tabStructure: 'Struktur', tabEmployees: 'Team',
+                // Time
+                min15: '15 Min', min30: '30 Min', min45: '45 Min',
+                hour1: '1 Stunde', hour2: '2 Stunden', hour3: '3 Stunden', hour4: '4 Stunden', hour8: '8 Stunden',
+                // Misc
+                duplicate: 'Duplizieren', copy: 'Kopie', pin: 'Anheften',
+                noData: 'Keine Daten', error: 'Fehler', success: 'Erfolg',
+                deleteConfirm: 'Möchten Sie wirklich löschen?',
+                techAI: 'Support',
+                sentForReview: 'Zur Prüfung gesendet',
+            },
         };
 
         let currentLang = localStorage.getItem('talko_lang') || 'ua';
@@ -2370,9 +2550,13 @@
             document.getElementById('langUA')?.classList.toggle('active', currentLang === 'ua');
             document.getElementById('langRU')?.classList.toggle('active', currentLang === 'ru');
             document.getElementById('langPL')?.classList.toggle('active', currentLang === 'pl');
+            document.getElementById('langEN')?.classList.toggle('active', currentLang === 'en');
+            document.getElementById('langDE')?.classList.toggle('active', currentLang === 'de');
             document.getElementById('mLangUA')?.classList.toggle('active', currentLang === 'ua');
             document.getElementById('mLangRU')?.classList.toggle('active', currentLang === 'ru');
             document.getElementById('mLangPL')?.classList.toggle('active', currentLang === 'pl');
+            document.getElementById('mLangEN')?.classList.toggle('active', currentLang === 'en');
+            document.getElementById('mLangDE')?.classList.toggle('active', currentLang === 'de');
             
             // Оновлюємо всі тексти з data-i18n
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -2424,11 +2608,15 @@
             document.getElementById('langUA')?.classList.toggle('active', lang === 'ua');
             document.getElementById('langRU')?.classList.toggle('active', lang === 'ru');
             document.getElementById('langPL')?.classList.toggle('active', lang === 'pl');
+            document.getElementById('langEN')?.classList.toggle('active', lang === 'en');
+            document.getElementById('langDE')?.classList.toggle('active', lang === 'de');
             
             // Update mobile buttons
             document.getElementById('mLangUA')?.classList.toggle('active', lang === 'ua');
             document.getElementById('mLangRU')?.classList.toggle('active', lang === 'ru');
             document.getElementById('mLangPL')?.classList.toggle('active', lang === 'pl');
+            document.getElementById('mLangEN')?.classList.toggle('active', lang === 'en');
+            document.getElementById('mLangDE')?.classList.toggle('active', lang === 'de');
             
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
