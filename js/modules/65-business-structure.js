@@ -37,12 +37,18 @@ function hideBizStructureTab() {}
 // Send functions[] array to iframe via postMessage
 function sendFunctionsToIframe() {
     var f = document.getElementById("bizIframe");
-    if (!f || !f.contentWindow) return;
+    if (!f || !f.contentWindow) {
+        console.log('[BIZ-BRIDGE] sendFunctionsToIframe: iframe not found in DOM');
+        return;
+    }
     
     if (!_bizIframeReady) {
+        console.log('[BIZ-BRIDGE] sendFunctionsToIframe: iframe not ready yet, queuing');
         _bizPendingFunctions = true;
         return;
     }
+    
+    console.log('[BIZ-BRIDGE] Sending', functions.length, 'functions to iframe');
     
     try {
         f.contentWindow.postMessage({
@@ -64,6 +70,7 @@ function sendFunctionsToIframe() {
             })),
             companyId: currentCompany
         }, '*');
+        console.log('[BIZ-BRIDGE] postMessage sent successfully');
     } catch (e) {
         console.error('[BIZ-BRIDGE] postMessage error:', e);
     }
@@ -75,11 +82,16 @@ window.addEventListener('message', async function(event) {
     
     const msg = event.data;
     
+    // Log all biz-related messages
+    if (msg.type.startsWith('BIZ_') || msg.type.startsWith('CANVAS_') || msg.type.startsWith('FUNCTION_')) {
+        console.log('[BIZ-BRIDGE] Received message:', msg.type);
+    }
+    
     switch (msg.type) {
         
         case 'BIZ_IFRAME_READY':
             _bizIframeReady = true;
-            console.log('[BIZ-BRIDGE] iframe ready, sending functions:', functions.length);
+            console.log('[BIZ-BRIDGE] iframe ready! functions available:', functions.length);
             sendFunctionsToIframe();
             _bizPendingFunctions = null;
             break;

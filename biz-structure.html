@@ -4764,7 +4764,6 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     <div class="app-container" id="appContainer" style="display: none;">
         <div class="toolbar" role="toolbar">
             <div class="toolbar-left">
-                <div class="logo">TALKO System</div>
                 <button class="tool-btn add-btn" id="addFunctionBtn" type="button" title="Додати нову функцію">
                     <span>+ ДОДАТИ</span>
                 </button>
@@ -7051,23 +7050,42 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
         console.log('[LOAD] Requesting functions from parent TM via postMessage...');
         showLoading(t('loading.data'));
         
-        // Signal parent that iframe is ready
-        try {
-            window.parent.postMessage({ type: 'BIZ_IFRAME_READY' }, '*');
-        } catch (e) {
-            console.error('[ERR] Cannot reach parent:', e);
+        // Signal parent that iframe is ready — retry every 2s until we get FUNCTIONS_UPDATE
+        State._readyRetryCount = 0;
+        State._readyMaxRetries = 3; // 6 seconds max, then fallback to direct Firestore read
+        
+        function sendReadySignal() {
+            if (State.functions.length > 0 || State._readyRetryCount >= State._readyMaxRetries) {
+                // Already got data or exhausted retries
+                if (State._readyInterval) {
+                    clearInterval(State._readyInterval);
+                    State._readyInterval = null;
+                }
+                if (State.functions.length === 0 && State._readyRetryCount >= State._readyMaxRetries) {
+                    console.log('[FALLBACK] Parent did not respond after retries, trying legacy load...');
+                    loadFromFirestoreLegacy();
+                }
+                return;
+            }
+            
+            State._readyRetryCount++;
+            console.log('[READY] Sending BIZ_IFRAME_READY to parent (attempt ' + State._readyRetryCount + ')');
+            
+            try {
+                window.parent.postMessage({ type: 'BIZ_IFRAME_READY' }, '*');
+            } catch (e) {
+                console.error('[ERR] Cannot reach parent:', e);
+            }
         }
+        
+        // Send immediately
+        sendReadySignal();
+        
+        // Then retry every 2 seconds
+        State._readyInterval = setInterval(sendReadySignal, 2000);
         
         // Load connections from Firestore (iframe owns this collection)
         loadConnections();
-        
-        // Timeout fallback — if parent doesn't respond in 5s, try legacy load
-        State._parentTimeout = setTimeout(() => {
-            if (State.functions.length === 0) {
-                console.log('[FALLBACK] Parent did not respond, trying legacy load...');
-                loadFromFirestoreLegacy();
-            }
-        }, 5000);
     }
     
     // Load connections from Firestore (iframe manages this)
@@ -7106,6 +7124,11 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                 if (State._parentTimeout) {
                     clearTimeout(State._parentTimeout);
                     State._parentTimeout = null;
+                }
+                // Stop ready signal retries
+                if (State._readyInterval) {
+                    clearInterval(State._readyInterval);
+                    State._readyInterval = null;
                 }
                 hideLoading();
                 
@@ -7230,7 +7253,84 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     function loadFromFirestoreLegacy() {
         if (!State.currentUser || !window._bizCompanyId) return;
         
-        console.log('[LEGACY] Loading from bizStructure/main...');
+        console.log('[LEGACY] Trying direct Firestore read from functions/ collection...');
+        
+        // FIRST: try reading from companies/{companyId}/functions/ (same as TM)
+        db.collection('companies').doc(window._bizCompanyId).collection('functions').get()
+            .then(function(snapshot) {
+                if (snapshot.docs.length > 0) {
+                    hideLoading();
+                    console.log('[DIRECT] Loaded', snapshot.docs.length, 'functions from Firestore functions/ collection');
+                    
+                    State.functions = snapshot.docs.map(function(doc, index) {
+                        var data = doc.data();
+                        var canvasPos = data.canvas || null;
+                        var cd = data.canvasData || {};
+                        var cols = 4;
+                        
+                        return {
+                            id: doc.id,
+                            name: data.name || '',
+                            responsible: data.headName || '',
+                            description: data.description || '',
+                            kpi: cd.kpi || '',
+                            tags: cd.tags || [],
+                            statisticsArray: cd.statisticsArray || [],
+                            employees: data.assigneeNames || cd.employees || [],
+                            link: cd.link || '',
+                            notes: cd.notes || data.description || '',
+                            color: cd.color || 'default',
+                            x: canvasPos ? canvasPos.x : (50 + (index % cols) * 280),
+                            y: canvasPos ? canvasPos.y : (50 + Math.floor(index / cols) * 200),
+                            width: canvasPos ? (canvasPos.width || 220) : 220,
+                            height: canvasPos ? (canvasPos.height || 140) : 140,
+                            created: data.createdAt ? new Date(data.createdAt.seconds ? data.createdAt.seconds * 1000 : data.createdAt).toISOString() : new Date().toISOString(),
+                            modified: data.updatedAt ? new Date(data.updatedAt.seconds ? data.updatedAt.seconds * 1000 : data.updatedAt).toISOString() : new Date().toISOString(),
+                            _tmHeadId: data.headId || '',
+                            _tmAssigneeIds: data.assigneeIds || []
+                        };
+                    });
+                    
+                    // Save auto-positions for functions without canvas data
+                    var needsSave = State.functions.some(function(f) { return !f.x || f.x === 0; });
+                    if (needsSave) {
+                        try {
+                            window.parent.postMessage({
+                                type: 'CANVAS_BATCH_POSITION_UPDATE',
+                                updates: State.functions.map(function(f) {
+                                    return { functionId: f.id, canvas: { x: f.x, y: f.y, width: f.width, height: f.height } };
+                                })
+                            }, '*');
+                        } catch(e) {}
+                    }
+                    
+                    if (typeof window.renderFunctions === 'function') {
+                        window.renderFunctions();
+                    }
+                    
+                    setTimeout(function() {
+                        if (typeof window.zoomToFit === 'function') window.zoomToFit();
+                    }, 300);
+                    
+                    State.isLocalUpdate = false;
+                    updateConnectionStatus('success', t('notification.data_synced'));
+                    updateSaveIndicator('saved');
+                    return;
+                }
+                
+                // If no functions in functions/ collection, try legacy paths
+                console.log('[LEGACY] No functions in functions/ collection, trying bizStructure/main...');
+                return loadFromLegacyPaths();
+            })
+            .catch(function(error) {
+                console.error('[LEGACY] Direct read error:', error);
+                hideLoading();
+                loadFromLegacyPaths();
+            });
+    }
+    
+    function loadFromLegacyPaths() {
+        if (!window._bizCompanyId) { hideLoading(); return; }
         
         db.collection('companies').doc(window._bizCompanyId).collection('bizStructure').doc('main').get()
             .then(function(doc) {
@@ -7251,7 +7351,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                         });
                         State.connections = conns;
                         
-                        console.log('[LEGACY] Loaded', State.functions.length, 'functions from legacy storage');
+                        console.log('[LEGACY] Loaded', State.functions.length, 'functions from bizStructure/main');
                         
                         if (typeof window.renderFunctions === 'function') {
                             window.renderFunctions();
@@ -7259,27 +7359,29 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                         setTimeout(function() {
                             if (typeof window.zoomToFit === 'function') window.zoomToFit();
                         }, 300);
+                        return;
                     }
-                } else {
-                    // Try user-level storage
-                    return db.collection('users').doc(State.currentUser.uid)
-                        .collection('main').doc('structure').get()
-                        .then(function(userDoc) {
-                            if (userDoc.exists) {
-                                var uData = userDoc.data();
-                                var uFuncs = uData.functions || [];
-                                if (uFuncs.length > 0) {
-                                    State.functions = uFuncs.map(function(func) {
-                                        return { ...func, id: func.id || Utils.generateId() };
-                                    });
-                                    State.connections = uData.connections || [];
-                                    console.log('[LEGACY-USER] Loaded', State.functions.length, 'functions');
-                                    if (typeof window.renderFunctions === 'function') window.renderFunctions();
-                                    setTimeout(function() { if (typeof window.zoomToFit === 'function') window.zoomToFit(); }, 300);
-                                }
-                            }
-                        });
                 }
+                
+                // Try user-level storage
+                if (!State.currentUser) return;
+                return db.collection('users').doc(State.currentUser.uid)
+                    .collection('main').doc('structure').get()
+                    .then(function(userDoc) {
+                        if (userDoc.exists) {
+                            var uData = userDoc.data();
+                            var uFuncs = uData.functions || [];
+                            if (uFuncs.length > 0) {
+                                State.functions = uFuncs.map(function(func) {
+                                    return { ...func, id: func.id || Utils.generateId() };
+                                });
+                                State.connections = uData.connections || [];
+                                console.log('[LEGACY-USER] Loaded', State.functions.length, 'functions');
+                                if (typeof window.renderFunctions === 'function') window.renderFunctions();
+                                setTimeout(function() { if (typeof window.zoomToFit === 'function') window.zoomToFit(); }, 300);
+                            }
+                        }
+                    });
             })
             .catch(function(error) {
                 hideLoading();
