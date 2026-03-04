@@ -79,6 +79,10 @@
                 <span class="company-badge" id="companyBadge" style="display:none;"></span>
             </div>
             <div class="header-actions">
+                <!-- 24/7 AI Support -->
+                <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="hdr-dropdown-btn" style="background:#22c55e;color:#fff;text-decoration:none;gap:0.35rem;" title="AI Підтримка 24/7">
+                    <i data-lucide="headphones" class="icon"></i> <span data-i18n="aiSupport">AI Підтримка 24/7</span>
+                </a>
                 <!-- AI Assistants Dropdown -->
                 <div class="hdr-dropdown" id="aiDropdown">
                     <button class="hdr-dropdown-btn ai-btn" onclick="toggleHdrDropdown('aiDropdown')">
@@ -89,6 +93,10 @@
                         <a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-organizational-structure" target="_blank" class="hdr-dropdown-item">
                             <span class="hdr-item-icon" style="background:#3b82f6"><i data-lucide="network" class="icon"></i></span>
                             <span data-i18n="aiStructure">AI Структура</span>
+                        </a>
+                        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="hdr-dropdown-item">
+                            <span class="hdr-item-icon" style="background:#06b6d4"><i data-lucide="cpu" class="icon"></i></span>
+                            <span data-i18n="techLeadAI">Технічний</span>
                         </a>
                         <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="hdr-dropdown-item">
                             <span class="hdr-item-icon" style="background:#22c55e"><i data-lucide="wrench" class="icon"></i></span>
@@ -301,6 +309,7 @@
                 <button class="tab-btn" onclick="switchTab('functions')"><i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span></button>
                 <button class="tab-btn" onclick="switchTab('users')"><i data-lucide="users" class="icon"></i> <span data-i18n="tabUsers">Співробітники</span></button>
                 <button class="tab-btn" onclick="switchTab('analytics')"><i data-lucide="bar-chart-3" class="icon"></i> <span data-i18n="tabAnalytics">Аналітика</span></button>
+                <button class="tab-btn" onclick="switchTab('statistics')" id="statisticsTabBtn" style="display:none;"><i data-lucide="trending-up" class="icon"></i> <span data-i18n="tabStatistics">Статистика</span></button>
             <button class="tab-btn" onclick="switchTab('bizstructure')" data-tab="bizstructure">
                 <i data-lucide="network" class="icon"></i> <span data-i18n="tabStructure">Структура</span>
             </button>
@@ -851,6 +860,47 @@
 
             <!-- ANALYTICS -->
             <div id="analyticsTab" class="tab-content">
+            </div>
+
+            <!-- STATISTICS -->
+            <div id="statisticsTab" class="tab-content">
+                <div class="controls" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                    <button class="btn btn-success" onclick="openMetricModal()" id="addMetricBtn"><i data-lucide="plus" class="icon"></i> <span data-i18n="addMetric">Метрика</span></button>
+                    <button class="btn" onclick="openQuickInputModal()" id="quickInputBtn"><i data-lucide="edit-3" class="icon"></i> <span data-i18n="quickInput">Внести дані</span></button>
+                    <button class="btn" onclick="runAIAnalysis()" id="aiAnalysisBtn" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:white;"><i data-lucide="sparkles" class="icon"></i> <span data-i18n="aiAnalysis">AI Аналіз</span></button>
+                    <div style="margin-left:auto;display:flex;gap:2px;background:#f3f4f6;border-radius:8px;padding:2px;">
+                        <button class="calendar-view-btn active" onclick="setStatsView('dashboard')" data-sview="dashboard" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:white;font-weight:500;"><i data-lucide="layout-dashboard" class="icon icon-sm"></i> <span data-i18n="dashboard">Дашборд</span></button>
+                        <button class="calendar-view-btn" onclick="setStatsView('table')" data-sview="table" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:transparent;font-weight:500;"><i data-lucide="table" class="icon icon-sm"></i> <span data-i18n="tableView">Таблиця</span></button>
+                        <button class="calendar-view-btn" onclick="setStatsView('charts')" data-sview="charts" style="padding:0.35rem 0.7rem;font-size:0.8rem;border:none;border-radius:6px;cursor:pointer;background:transparent;font-weight:500;"><i data-lucide="line-chart" class="icon icon-sm"></i> <span data-i18n="chartsView">Графіки</span></button>
+                    </div>
+                </div>
+                <!-- Scope tabs -->
+                <div style="display:flex;gap:0.5rem;margin:0.75rem 0;flex-wrap:wrap;">
+                    <button class="btn btn-sm active" onclick="setStatsScope('my')" id="statsScopeMy" data-i18n="scopeMy">Моє</button>
+                    <button class="btn btn-sm" onclick="setStatsScope('function')" id="statsScopeFunc" data-i18n="scopeFunction">Функції</button>
+                    <button class="btn btn-sm" onclick="setStatsScope('company')" id="statsScopeCompany" data-i18n="scopeCompany">Компанія</button>
+                    <div id="statsFunctionSelector" style="display:none;margin-left:0.5rem;"></div>
+                </div>
+                <!-- Period selector -->
+                <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;align-items:center;">
+                    <select id="statsPeriodType" onchange="renderStatistics()" style="padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                        <option value="daily" data-i18n="daily">Щоденно</option>
+                        <option value="weekly" selected data-i18n="weekly">Щотижнево</option>
+                        <option value="monthly" data-i18n="monthly">Щомісячно</option>
+                    </select>
+                    <button class="btn btn-sm" onclick="statsNavigatePeriod(-1)"><i data-lucide="chevron-left" class="icon icon-sm"></i></button>
+                    <span id="statsPeriodLabel" style="font-weight:600;font-size:0.85rem;min-width:120px;text-align:center;"></span>
+                    <button class="btn btn-sm" onclick="statsNavigatePeriod(1)"><i data-lucide="chevron-right" class="icon icon-sm"></i></button>
+                </div>
+                <!-- KPI Debts alert -->
+                <div id="statsKpiDebts" style="display:none;"></div>
+                <!-- AI Insights -->
+                <div id="statsAiInsights" style="display:none;"></div>
+                <!-- Main content -->
+                <div id="statisticsContainer">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
                 <div class="controls" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
                     <h2 style="font-size:1.2rem;margin:0;" data-i18n="analytics"><i data-lucide="trending-up" class="icon"></i> Аналітика</h2>
                 </div>
@@ -1743,6 +1793,7 @@
     <script src="js/modules/63-notification-center.js"></script>
     <script src="js/modules/64-focus-mode.js"></script>
     <script src="js/modules/65-business-structure.js"></script>
+    <script src="js/modules/66-statistics.js"></script>
 
     <!-- Bottom Navigation & Overlays -->
     <!-- Bottom Navigation for Mobile -->
@@ -2080,6 +2131,9 @@
                     <button class="btn" onclick="switchTab('analytics');closeMobileMenu();" style="justify-content:center;padding:0.6rem;font-size:0.75rem;flex-direction:column;gap:2px;">
                         <i data-lucide="bar-chart-3" class="icon icon-sm"></i> Аналітика
                     </button>
+                    <button class="btn" onclick="switchTab('statistics');closeMobileMenu();" id="statsMobileBtn" style="display:none;justify-content:center;padding:0.6rem;font-size:0.75rem;flex-direction:column;gap:2px;">
+                        <i data-lucide="trending-up" class="icon icon-sm"></i> Статистика
+                    </button>
                 </div>
                 
                 <!-- Settings row -->
@@ -2386,5 +2440,135 @@
     });
     </script>
     
+    <!-- STATISTICS MODALS -->
+    <!-- Create/Edit Metric -->
+    <div id="metricModal" class="modal">
+        <div class="modal-content" style="max-width:560px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('metricModal')">&times;</span>
+                <h2><i data-lucide="trending-up" class="icon" style="color:var(--primary);"></i> <span id="metricModalTitle" data-i18n="addMetric">Нова метрика</span></h2>
+            </div>
+            <div class="form-group">
+                <label data-i18n="metricName">Назва метрики</label>
+                <input type="text" id="metricName" placeholder="Дзвінки, Продажі, Монтажі..." class="input">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                <div class="form-group">
+                    <label data-i18n="metricUnit">Одиниця виміру</label>
+                    <select id="metricUnit" class="input">
+                        <option value="шт">шт</option>
+                        <option value="UAH">UAH</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="%">%</option>
+                        <option value="год">год</option>
+                        <option value="хв">хв</option>
+                        <option value="custom">Інше...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="metricFrequency">Частота</label>
+                    <select id="metricFrequency" class="input">
+                        <option value="daily" data-i18n="daily">Щоденно</option>
+                        <option value="weekly" data-i18n="weekly">Щотижнево</option>
+                        <option value="monthly" data-i18n="monthly">Щомісячно</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                <div class="form-group">
+                    <label data-i18n="metricInputType">Тип введення</label>
+                    <select id="metricInputType" class="input" onchange="toggleAutoSpec()">
+                        <option value="manual" data-i18n="manual">Ручний</option>
+                        <option value="auto" data-i18n="autoFromTasks">Авто (із задач)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="metricPrivacy">Видимість</label>
+                    <select id="metricPrivacy" class="input">
+                        <option value="public" data-i18n="visibilityPublic">Всім</option>
+                        <option value="restricted" data-i18n="visibilityRestricted">Обмежена</option>
+                        <option value="owner_only" data-i18n="visibilityOwnerOnly">Тільки власник</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Auto spec (hidden by default) -->
+            <div id="autoSpecBlock" style="display:none;background:#f0fdf4;padding:0.75rem;border-radius:12px;margin-bottom:0.75rem;">
+                <label style="font-weight:600;font-size:0.85rem;" data-i18n="autoMetricRule">Правило авто-підрахунку</label>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.5rem;">
+                    <select id="autoSpecType" class="input">
+                        <option value="task_count" data-i18n="autoTaskCount">К-сть виконаних задач</option>
+                        <option value="task_overdue" data-i18n="autoTaskOverdue">К-сть прострочених</option>
+                    </select>
+                    <select id="autoSpecFunction" class="input">
+                        <option value="" data-i18n="allFunctions">Всі функції</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Target -->
+            <div class="form-group">
+                <label data-i18n="metricTarget">Цільовий показник (план)</label>
+                <input type="number" id="metricTarget" placeholder="0" class="input">
+            </div>
+            <!-- Formula -->
+            <div class="form-group">
+                <label data-i18n="metricFormula">Формула (опційно)</label>
+                <input type="text" id="metricFormula" placeholder="metric1 / metric2 * 100" class="input" style="font-family:monospace;">
+                <small style="color:var(--gray);font-size:0.75rem;" data-i18n="formulaHint">Конверсія = продажі / ліди * 100</small>
+            </div>
+            <!-- Bind to functions -->
+            <div class="form-group">
+                <label data-i18n="bindToFunctions">Прив'язати до функцій</label>
+                <div id="metricFunctionsList" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;"></div>
+            </div>
+            <!-- Alert rules -->
+            <div class="form-group" style="background:#fef3c7;padding:0.75rem;border-radius:12px;">
+                <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                    <input type="checkbox" id="metricAlertEnabled"> <span data-i18n="enableAlerts">Сповіщення при аномалії</span>
+                </label>
+                <div id="metricAlertConfig" style="display:none;margin-top:0.5rem;">
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <span data-i18n="alertWhenDrops">Якщо падіння більше</span>
+                        <input type="number" id="metricAlertThreshold" value="20" style="width:60px;" class="input">
+                        <span>%</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-success" onclick="saveMetric()" style="width:100%;margin-top:0.5rem;padding:0.75rem;font-size:1rem;">
+                <i data-lucide="save" class="icon"></i> <span data-i18n="save">Зберегти</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Input Modal -->
+    <div id="quickInputModal" class="modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('quickInputModal')">&times;</span>
+                <h2><i data-lucide="edit-3" class="icon" style="color:var(--primary);"></i> <span data-i18n="quickInput">Внести дані</span></h2>
+            </div>
+            <div id="quickInputDate" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;">
+                <input type="date" id="quickInputDatePicker" class="input" style="flex:1;">
+            </div>
+            <div id="quickInputList" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
+            <button class="btn btn-success" onclick="saveQuickInput()" style="width:100%;margin-top:0.75rem;padding:0.75rem;font-size:1rem;">
+                <i data-lucide="check" class="icon"></i> <span data-i18n="saveAll">Зберегти все</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Analysis Modal -->
+    <div id="aiAnalysisModal" class="modal">
+        <div class="modal-content" style="max-width:700px;max-height:85vh;overflow-y:auto;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('aiAnalysisModal')">&times;</span>
+                <h2><i data-lucide="sparkles" class="icon" style="color:#8b5cf6;"></i> <span data-i18n="aiAnalysisTitle">AI Аналіз метрик</span></h2>
+            </div>
+            <div id="aiAnalysisContent">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

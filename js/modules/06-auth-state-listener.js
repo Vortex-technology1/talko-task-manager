@@ -91,6 +91,7 @@
                 initRegularView();
                 initGoogleCalendar();
                 loadAllData();
+                if (typeof initStatistics === 'function') initStatistics();
                 
                 // Show FAB (було окремим onAuthStateChanged — об'єднано)
                 const fab = document.getElementById('fabAdd');

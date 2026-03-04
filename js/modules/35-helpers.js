@@ -92,6 +92,7 @@
                 case 'functions': renderFunctions(); if (currentFunctionsView === 'structure') renderFunctionsStructure(); break;
                 case 'users': renderUsers(); break;
                 case 'analytics': renderAnalytics(); break;
+                case 'statistics': renderStatistics(); break;
                 case 'admin': renderAdminPanel(); break;
                 case 'bizstructure': if (typeof showBizStructureTab === 'function') showBizStructureTab(); break;
             }

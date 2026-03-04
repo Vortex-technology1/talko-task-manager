@@ -32,11 +32,11 @@
                 
                 // Показуємо інструкцію
                 const proceed = confirm(
-                    t('connectTelegramTitle') + '\n\n' +
+                    'Підключення Telegram\n\n' +
                     '1. Зараз відкриється Telegram бот\n' +
                     '2. Натисніть "Start" або "Запустити"\n' +
                     '3. Бот автоматично підключить сповіщення\n\n' +
-                    t('openTelegram')
+                    'Відкрити Telegram?'
                 );
                 
                 if (proceed) {
@@ -106,6 +106,33 @@
             if (connected) connected.style.display = 'none';
         }
         
+        // Auto-refresh Google token (silent, no popup)
+        async function refreshGoogleToken() {
+            return new Promise((resolve) => {
+                if (!tokenClient) { resolve(false); return; }
+                const origCallback = tokenClient.callback;
+                tokenClient.callback = (response) => {
+                    tokenClient.callback = origCallback;
+                    if (response.error) { 
+                        console.log('Token refresh failed:', response.error);
+                        googleAccessToken = null;
+                        resolve(false); 
+                        return; 
+                    }
+                    googleAccessToken = response.access_token;
+                    // Save new token to Firestore
+                    if (currentUser && currentCompany) {
+                        db.collection('companies').doc(currentCompany)
+                            .collection('users').doc(currentUser.uid)
+                            .set({ googleAccessToken: response.access_token }, { merge: true })
+                            .catch(() => {});
+                    }
+                    resolve(true);
+                };
+                tokenClient.requestAccessToken({ prompt: '' });
+            });
+        }
+        
         // Create event in Google Calendar
         async function createCalendarEvent(task) {
             if (!googleAccessToken) {
@@ -148,8 +175,25 @@
                 });
                 
                 if (response.status === 401) {
-                    // Token expired, need to reconnect
-                    console.log('Google token expired');
+                    // Token expired, try silent refresh
+                    console.log('Google token expired, refreshing...');
+                    const refreshed = await refreshGoogleToken();
+                    if (refreshed) {
+                        // Retry with new token
+                        const retry = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + googleAccessToken,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(event)
+                        });
+                        if (retry.ok) {
+                            const result = await retry.json();
+                            console.log('Calendar event created (after refresh):', result.id);
+                            return result.id;
+                        }
+                    }
                     googleAccessToken = null;
                     return null;
                 }
@@ -201,6 +245,17 @@
                 });
                 
                 if (!response.ok) {
+                    if (response.status === 401) {
+                        const refreshed = await refreshGoogleToken();
+                        if (refreshed) {
+                            const retry = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`, {
+                                method: 'PATCH',
+                                headers: { 'Authorization': 'Bearer ' + googleAccessToken, 'Content-Type': 'application/json' },
+                                body: JSON.stringify(event)
+                            });
+                            if (retry.ok) return true;
+                        }
+                    }
                     throw new Error('Failed to update event');
                 }
                 
@@ -252,7 +307,7 @@
             const avatarEl = document.getElementById('profileAvatar');
             
             if (currentUserData) {
-                const name = currentUserData.name || currentUser?.displayName || t('user');
+                const name = currentUserData.name || currentUser?.displayName || 'Користувач';
                 if (nameEl) nameEl.textContent = name;
                 if (emailEl) emailEl.textContent = currentUser?.email || '';
                 if (roleEl) roleEl.textContent = getRoleText(currentUserData.role);

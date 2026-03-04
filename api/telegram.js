@@ -26,6 +26,7 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+if (!TOKEN) console.error('WARNING: TELEGRAM_BOT_TOKEN not set');
 
 // ========================
 //  i18n — TRANSLATIONS
@@ -1087,8 +1088,13 @@ module.exports = async function handler(req, res) {
         }
         const lang = detectLang(u.data, tgLang);
 
-        const queryResult = await handleQuery(chatId, u, text, lang);
-        if (queryResult) return res.status(200).json({ ok: true });
+        // Smart routing: long messages or messages with @ are likely tasks, not NLP queries
+        const looksLikeTask = text.length > 60 || /@[А-Яа-яІіЇїЄєҐґA-Za-z]/.test(text);
+
+        if (!looksLikeTask) {
+            const queryResult = await handleQuery(chatId, u, text, lang);
+            if (queryResult) return res.status(200).json({ ok: true });
+        }
 
         const p = parseTask(text);
         if (!p.title || p.title.length < 2) {
