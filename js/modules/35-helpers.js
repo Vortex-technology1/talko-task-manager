@@ -67,6 +67,8 @@
             const menu = document.getElementById('moreTabsMenu');
             if (menu) menu.style.display = 'none';
         }
+        window.toggleMoreTabs = toggleMoreTabs;
+        window.closeMoreTabs = closeMoreTabs;
         // Close on outside click
         document.addEventListener('click', function(e) {
             const dd = document.getElementById('moreTabsDropdown');
