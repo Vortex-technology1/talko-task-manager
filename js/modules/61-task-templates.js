@@ -34,9 +34,9 @@
                 body.innerHTML = `
                     <div style="text-align:center;padding:2rem;color:#6b7280;">
                         <i data-lucide="inbox" class="icon" style="width:40px;height:40px;color:#d1d5db;display:block;margin:0 auto 0.75rem;"></i>
-                        <p style="margin-bottom:1rem;">${t('noTemplates') || 'Шаблонів ще немає'}</p>
+                        <p style="margin-bottom:1rem;">${t('noTemplates')}</p>
                         <button class="btn btn-success" onclick="closeModal('templatePickerModal');openManageTemplatesModal();">
-                            <i data-lucide="plus" class="icon icon-sm"></i> ${t('createTemplate') || 'Створити шаблон'}
+                            <i data-lucide="plus" class="icon icon-sm"></i> ${t('createTemplate')}
                         </button>
                     </div>`;
             } else {
@@ -51,7 +51,7 @@
                             </div>
                             <div style="flex:1;min-width:0;">
                                 <div style="font-weight:600;font-size:0.85rem;">${esc(tpl.title)}</div>
-                                ${tpl.function ? `<div style="font-size:0.72rem;color:#6b7280;">${esc(tpl.function)}${tpl.estimatedTime ? ' · ' + tpl.estimatedTime + ' ' + (t('min') || 'хв') : ''}</div>` : ''}
+                                ${tpl.function ? `<div style="font-size:0.72rem;color:#6b7280;">${esc(tpl.function)}${tpl.estimatedTime ? ' · ' + tpl.estimatedTime + ' ' + (t('min')) : ''}</div>` : ''}
                             </div>
                             <i data-lucide="chevron-right" class="icon icon-sm" style="color:#d1d5db;"></i>
                         </div>`).join('')}
@@ -86,7 +86,7 @@
             const funcSelect = document.getElementById('taskFunction');
             if (funcSelect) funcSelect.dispatchEvent(new Event('change'));
             
-            showToast(t('templateApplied') || 'Шаблон застосовано', 'success', 2000);
+            showToast(t('templateApplied'), 'success', 2000);
         }, 200);
     }
     
@@ -100,9 +100,9 @@
         
         let html = `
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                <span style="font-size:0.85rem;color:#6b7280;">${taskTemplates.length} ${t('templatesCount') || 'шаблонів'}</span>
+                <span style="font-size:0.85rem;color:#6b7280;">${taskTemplates.length} ${t('templatesCount')}</span>
                 <button class="btn btn-success btn-small" onclick="openTemplateEditor()">
-                    <i data-lucide="plus" class="icon icon-sm"></i> ${t('createTemplate') || 'Створити'}
+                    <i data-lucide="plus" class="icon icon-sm"></i> ${t('createTemplate')}
                 </button>
             </div>
             <div id="templateEditorArea"></div>`;
@@ -136,38 +136,38 @@
         <div style="background:#f0fdf4;border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid #dcfce7;">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                 <div style="grid-column:1/-1;">
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('taskName') || 'Назва'} *</label>
-                    <input type="text" id="tplTitle" value="${esc(tpl.title || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${t('taskName') || 'Назва шаблону'}">
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('taskName')} *</label>
+                    <input type="text" id="tplTitle" value="${esc(tpl.title || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${t('taskName')}">
                 </div>
                 <div>
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('function') || 'Функція'}</label>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('function')}</label>
                     <select id="tplFunction" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
                         <option value="">—</option>${funcOptions}
                     </select>
                 </div>
                 <div>
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('estimatedTime') || 'Час (хв)'}</label>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('estimatedTime')}</label>
                     <input type="number" id="tplEstimatedTime" value="${tpl.estimatedTime || ''}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="60">
                 </div>
                 <div style="grid-column:1/-1;">
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('expectedResult') || 'Очікуваний результат'}</label>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('expectedResult')}</label>
                     <input type="text" id="tplExpectedResult" value="${esc(tpl.expectedResult || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
                 </div>
                 <div style="grid-column:1/-1;">
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('reportFormat') || 'Формат звіту'}</label>
-                    <input type="text" id="tplReportFormat" value="${esc(tpl.reportFormat || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${t('reportFormatPlaceholder') || 'Скрін / Посилання / Фото'}">
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('reportFormat')}</label>
+                    <input type="text" id="tplReportFormat" value="${esc(tpl.reportFormat || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${t('reportFormatPlaceholder')}">
                 </div>
                 <div style="grid-column:1/-1;">
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('instruction') || 'Інструкція'}</label>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('instruction')}</label>
                     <textarea id="tplDescription" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;min-height:60px;resize:vertical;">${esc(tpl.description || '')}</textarea>
                 </div>
             </div>
             <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
                 <button class="btn btn-success" onclick="saveTemplate('${templateId || ''}')" style="flex:1;">
-                    <i data-lucide="check" class="icon icon-sm"></i> ${t('save') || 'Зберегти'}
+                    <i data-lucide="check" class="icon icon-sm"></i> ${t('save')}
                 </button>
                 <button class="btn" onclick="document.getElementById('templateEditorArea').innerHTML='';renderManageTemplates();">
-                    ${t('cancel') || 'Скасувати'}
+                    ${t('cancel')}
                 </button>
             </div>
         </div>`;
@@ -178,7 +178,7 @@
     
     async function saveTemplate(id) {
         const title = document.getElementById('tplTitle').value.trim();
-        if (!title) { alert(t('enterName') || 'Введіть назву'); return; }
+        if (!title) { alert(t('enterName')); return; }
         
         const data = {
             title,
@@ -203,7 +203,7 @@
             await loadTaskTemplates();
             document.getElementById('templateEditorArea').innerHTML = '';
             renderManageTemplates();
-            showToast(t('saved') || 'Збережено', 'success', 2000);
+            showToast(t('saved'), 'success', 2000);
         } catch(e) {
             console.error('saveTemplate:', e);
             alert(t('error') + ': ' + e.message);
@@ -211,7 +211,7 @@
     }
     
     async function deleteTemplate(id) {
-        if (!confirm(t('confirmDelete') || 'Видалити шаблон?')) return;
+        if (!confirm(t('confirmDelete'))) return;
         try {
             await db.collection('companies').doc(currentCompany).collection('taskTemplates').doc(id).delete();
             taskTemplates = taskTemplates.filter(t => t.id !== id);

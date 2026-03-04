@@ -74,7 +74,7 @@
                                 </button>
                                 <button onclick="deleteCompany('${escId(companyId)}', '${escId(company.name || '')}', ${usersSnap.size}, ${tasksSnap.size})" 
                                     style="background:#fee2e2;color:#dc2626;border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;"
-                                    title="Видалити компанію">
+                                    title="${t('deleteCompanyTitle')}">
                                     &times;
                                 </button>
                             </td>
@@ -94,7 +94,7 @@
         async function toggleCompanyDisabled(companyId, currentlyDisabled) {
             if (!isSuperAdmin) return;
             const newState = !currentlyDisabled;
-            const action = newState ? 'Заблокувати' : 'Розблокувати';
+            const action = newState ? t('blockAction') : t('unblockAction');
             if (!confirm(t('confirmCompanyAction').replace('{action}', action))) return;
             
             try {
@@ -119,7 +119,7 @@
             const confirmMsg2 = t('deleteCompanyConfirm2').replace('{name}', companyName);
             
             const userInput = prompt(confirmMsg2);
-            if (userInput?.toLowerCase() !== 'так' && userInput?.toLowerCase() !== 'да') {
+            const yesVariants = ['ua','ru','en','de','pl'].map(l => (translations[l]?.confirmYes || '').toLowerCase()).filter(Boolean); if (!yesVariants.includes(userInput?.toLowerCase())) {
                 return;
             }
             

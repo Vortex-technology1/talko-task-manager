@@ -192,7 +192,7 @@
             const avgTime = countWithTime > 0 ? Math.round(totalTime / countWithTime) : 0;
             const avgHours = Math.floor(avgTime / 60);
             const avgMins = avgTime % 60;
-            document.getElementById('analyticsAvgTime').textContent = avgTime > 0 ? `${avgHours > 0 ? avgHours + 'г ' : ''}${avgMins}хв` : '-';
+            document.getElementById('analyticsAvgTime').textContent = avgTime > 0 ? `${avgHours > 0 ? avgHours + t('hourShortG') + ' ' : ''}${avgMins}${t('minShortM')}` : '-';
             
             // Статистика по статусах
             const byStatus = {
@@ -232,7 +232,7 @@
                 d.setDate(d.getDate() - i);
                 days.push(getLocalDateStr(d));
             }
-            const dayNames = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
+            const dayNames = getDayNamesShort();
             
             // Рахуємо завершені і створені по днях
             const doneByDay = {};
@@ -304,7 +304,7 @@
         function renderTopPerformers(visibleTasks) {
             const byAssignee = {};
             visibleTasks.filter(task => task.status === 'done').forEach(task => {
-                const name = task.assigneeName || 'Не призначено';
+                const name = task.assigneeName || t('notAssigned');
                 byAssignee[name] = (byAssignee[name] || 0) + 1;
             });
             const topAssignees = Object.entries(byAssignee).sort((a, b) => b[1] - a[1]).slice(0, 5);
@@ -329,7 +329,7 @@
             
             const byPerson = {};
             overdueTasks.forEach(t => {
-                const name = t.assigneeName || 'Не призначено';
+                const name = t.assigneeName || t('notAssigned');
                 if (!byPerson[name]) byPerson[name] = [];
                 byPerson[name].push(t);
             });

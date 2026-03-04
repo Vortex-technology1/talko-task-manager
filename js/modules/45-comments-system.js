@@ -148,7 +148,7 @@
             const yesterday = new Date(now);
             yesterday.setDate(yesterday.getDate() - 1);
             if (date.toDateString() === yesterday.toDateString()) {
-                return 'вчора ' + date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+                return t('yesterdayLabel') + ' ' + date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
             }
             
             // Older

@@ -5,10 +5,10 @@
     
     function openAiGeneratorModal() {
         if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin' && !isSuperAdmin) {
-            showToast(t('ownerOnly') || 'Тільки для власника', 'error'); return;
+            showToast(t('ownerOnly'), 'error'); return;
         }
         if (!currentCompany) {
-            showToast('Оберіть компанію спочатку', 'error'); return;
+            showToast(t('selectCompanyFirst'), 'error'); return;
         }
         document.getElementById('aiGenPrompt').value = '';
         document.getElementById('aiGenPreview').style.display = 'none';
@@ -21,10 +21,10 @@
     
     function openImportStructureModal() {
         if (currentUserData?.role !== 'owner' && currentUserData?.role !== 'admin' && !isSuperAdmin) {
-            showToast(t('ownerOnly') || 'Тільки для власника', 'error'); return;
+            showToast(t('ownerOnly'), 'error'); return;
         }
         if (!currentCompany) {
-            showToast('Оберіть компанію спочатку', 'error'); return;
+            showToast(t('selectCompanyFirst'), 'error'); return;
         }
         document.getElementById('importJsonText').value = '';
         document.getElementById('importStructureModal').style.display = 'block';
@@ -65,7 +65,7 @@
             
         } catch (e) {
             console.error('AI Generator error:', e);
-            showToast((e.message || 'Помилка AI генератора') + '. Перевірте API ключ в AI Асистентах.', 'error', 5000);
+            showToast(t('aiGeneratorError'), 'error', 5000);
             document.getElementById('aiGenBtn').style.display = '';
         }
         
@@ -77,7 +77,7 @@
         let html = '';
         
         if (data.functions?.length) {
-            html += `<div style="font-weight:600;margin-bottom:0.3rem;">${t('tabFunctions') || 'Функції'} (${data.functions.length}):</div>`;
+            html += `<div style="font-weight:600;margin-bottom:0.3rem;">${t('tabFunctions')} (${data.functions.length}):</div>`;
             data.functions.forEach(f => {
                 html += `<div style="padding:0.3rem 0;border-bottom:1px solid #e5e7eb;">
                     <strong>${esc(f.name)}</strong> ${f.description ? `<span style="color:#6b7280;">— ${esc(f.description.substring(0, 60))}...</span>` : ''}
@@ -87,7 +87,7 @@
         }
         
         if (data.processTemplates?.length) {
-            html += `<div style="font-weight:600;margin-top:0.75rem;margin-bottom:0.3rem;">${t('processTemplates') || 'Шаблони процесів'} (${data.processTemplates.length}):</div>`;
+            html += `<div style="font-weight:600;margin-top:0.75rem;margin-bottom:0.3rem;">${t('processTemplates')} (${data.processTemplates.length}):</div>`;
             data.processTemplates.forEach(pt => {
                 html += `<div style="padding:0.3rem 0;border-bottom:1px solid #e5e7eb;">
                     <strong>${esc(pt.name)}</strong>
@@ -97,13 +97,13 @@
         }
         
         if (data.taskTemplates?.length) {
-            html += `<div style="font-weight:600;margin-top:0.75rem;margin-bottom:0.3rem;">${t('taskTemplates') || 'Шаблони задач'} (${data.taskTemplates.length}):</div>`;
+            html += `<div style="font-weight:600;margin-top:0.75rem;margin-bottom:0.3rem;">${t('taskTemplates')} (${data.taskTemplates.length}):</div>`;
             data.taskTemplates.forEach(tt => {
                 html += `<div style="padding:0.3rem 0;font-size:0.82rem;">${esc(tt.title)} <span style="color:#6b7280;">[${esc(tt.function || '')}]</span></div>`;
             });
         }
         
-        container.innerHTML = html || '<p style="color:#6b7280;">Порожня структура</p>';
+        container.innerHTML = html || '<p style="color:#6b7280;">' + t('emptyStructure') + '</p>';
         document.getElementById('aiGenPreview').style.display = 'block';
     }
     
@@ -215,7 +215,7 @@
             // Reload
             await loadAllData();
             
-            const msg = `${t('imported') || 'Імпортовано'}: ${created.functions} ${t('tabFunctions') || 'функцій'}, ${created.regularTasks} ${t('tabRegular') || 'рег. задач'}, ${created.processTemplates} ${t('processTemplates') || 'процесів'}, ${created.taskTemplates} шаблонів`;
+            const msg = `${t('imported')}: ${created.functions} ${t('tabFunctions')}, ${created.regularTasks} ${t('tabRegular')}, ${created.processTemplates} ${t('processTemplates')}, ${created.taskTemplates} шаблонів`;
             showToast(msg, 'success', 5000);
             
         } catch (e) {

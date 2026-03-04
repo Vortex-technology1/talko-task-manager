@@ -154,7 +154,7 @@
             if (process.deadline) {
                 if (isOverdue) {
                     const daysAgo = Math.floor((new Date(todayStr) - new Date(process.deadline)) / 86400000);
-                    deadlineHTML = `<span class="overdue-badge"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${daysAgo}д прострочено</span>`;
+                    deadlineHTML = `<span class="overdue-badge"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${daysAgo}${t('daysOverdue')}</span>`;
                 } else {
                     const dp = process.deadline.split('-');
                     const dayNum = parseInt(dp[2]);

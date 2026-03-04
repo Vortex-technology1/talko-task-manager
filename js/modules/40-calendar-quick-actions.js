@@ -39,7 +39,7 @@
             // Get deadline info
             const deadline = task.deadline?.toDate ? task.deadline.toDate() : new Date(task.deadline);
             const deadlineStr = deadline.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-            const assignee = task.assigneeName || 'Не призначено';
+            const assignee = task.assigneeName || t('notAssigned');
             const funcName = task.function || '';
             
             // Status colors

@@ -98,7 +98,7 @@
                     const archiveBtn = document.getElementById('archiveToggleBtn');
                     if (archiveBtn) {
                         archiveBtn.style.background = '#6b7280';
-                        archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>Архів</span>';
+                        archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>' + t('archive') + '</span>';
                     }
                 }
                 renderTasks();
@@ -251,7 +251,7 @@
             const weekStart = new Date(calendarDate);
             weekStart.setDate(calendarDate.getDate() - ((calendarDate.getDay() + 6) % 7));
             
-            const shortDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
+            const shortDays = getDayNamesShort();
             
             let html = '';
             
@@ -324,9 +324,9 @@
             } else if (currentCalendarView === 'list') {
                 titleEl.textContent = `${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
             } else if (currentCalendarView === 'kanban') {
-                titleEl.textContent = 'Канбан: Статуси';
+                titleEl.textContent = t('kanban') + ': ' + t('statuses');
             } else if (currentCalendarView === 'deadlines') {
-                titleEl.textContent = 'Канбан: Терміни';
+                titleEl.textContent = t('kanban') + ': ' + t('deadlines');
             }
         }
         
@@ -349,11 +349,11 @@
             const isYesterday = calendarDate.toDateString() === new Date(today.getTime() - 86400000).toDateString();
             
             if (isToday) {
-                agendaHeader.textContent = 'Сьогодні';
+                agendaHeader.textContent = t('today');
             } else if (isTomorrow) {
-                agendaHeader.textContent = 'Завтра';
+                agendaHeader.textContent = t('tomorrow');
             } else if (isYesterday) {
-                agendaHeader.textContent = 'Вчора';
+                agendaHeader.textContent = t('yesterdayLabel');
             } else {
                 agendaHeader.textContent = calendarDate.toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long' });
             }

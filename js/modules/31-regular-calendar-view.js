@@ -475,7 +475,7 @@
                     ${rt.function ? `<div class="task-function">${esc(rt.function)}</div>` : ''}
                     <button class="regular-task-complete-btn ${statusInfo.completedToday ? 'completed' : ''}" 
                             onclick="event.stopPropagation();markRegularTaskComplete('${escId(rt.id)}')"
-                            title="${statusInfo.completedToday ? 'Виконано сьогодні' : 'Позначити виконаним'}">
+                            title="${statusInfo.completedToday ? t('doneToday') : t('markAsDone')}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                     </button>
                 </div>

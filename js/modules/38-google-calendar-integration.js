@@ -41,7 +41,7 @@
             
             if (connected) connected.style.display = 'block';
             if (notConnected) notConnected.style.display = 'none';
-            if (emailEl) emailEl.textContent = 'Підключено: ' + email;
+            if (emailEl) emailEl.textContent = t('connected') + ': ' + email;
         }
         
         function showCalendarNotConnected() {
@@ -82,7 +82,7 @@
                 return res.json();
             })
             .then(userInfo => {
-                const email = userInfo.email || currentUser.email || 'Підключено';
+                const email = userInfo.email || currentUser.email || t('connected');
                 
                 // Save to Firestore using set with merge
                 return db.collection('companies').doc(currentCompany)
@@ -105,12 +105,12 @@
                     .collection('users').doc(currentUser.uid)
                     .set({
                         googleCalendarConnected: true,
-                        googleCalendarEmail: currentUser.email || 'Підключено',
+                        googleCalendarEmail: currentUser.email || t('connected'),
                         googleAccessToken: googleAccessToken,
                         googleCalendarUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true })
                     .then(() => {
-                        showCalendarConnected(currentUser.email || 'Підключено');
+                        showCalendarConnected(currentUser.email || t('connected'));
                         alert(t('googleCalendarConnected'));
                     })
                     .catch(err2 => {

@@ -12,7 +12,7 @@ function showBizStructureTab() {
     var c = document.getElementById("bizstructureTab");
     if (!c) return;
     if (!currentCompany) {
-        c.innerHTML = "<p style=\"padding:20px;color:#888;\">Завантаження компанії...</p>";
+        c.innerHTML = "<p style=\"padding:20px;color:#888;\">" + t('loadingCompany') + "</p>";
         return;
     }
     var f = document.getElementById("bizIframe");
@@ -162,7 +162,7 @@ window.addEventListener('message', async function(event) {
             if (currentCompany && msg.functionData) {
                 try {
                     var data = {
-                        name: msg.functionData.name || 'Нова функція',
+                        name: msg.functionData.name || t('newFunctionFallback'),
                         headId: '',
                         headName: msg.functionData.responsible || '',
                         description: msg.functionData.notes || '',

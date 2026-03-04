@@ -24,7 +24,7 @@
                 if (totalTimeInfo) totalTimeInfo.style.display = 'none';
                 archiveContainer.style.display = 'block';
                 archiveBtn.style.background = 'var(--primary)';
-                archiveBtn.innerHTML = '<i data-lucide="arrow-left" class="icon"></i> <span>Завдання</span>';
+                archiveBtn.innerHTML = '<i data-lucide="arrow-left" class="icon"></i> <span>' + t('tasks') + '</span>';
                 
                 archiveTasks = [];
                 archiveLastDoc = null;
@@ -36,7 +36,7 @@
                 if (totalTimeInfo) totalTimeInfo.style.display = '';
                 archiveContainer.style.display = 'none';
                 archiveBtn.style.background = '#6b7280';
-                archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>Архів</span>';
+                archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>' + t('archive') + '</span>';
             }
             refreshIcons();
         }
@@ -46,7 +46,7 @@
             
             const listEl = document.getElementById('archiveTasksList');
             if (archiveTasks.length === 0) {
-                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;"><div class="spinner"></div> Завантаження...</div>';
+                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;"><div class="spinner"></div>' + t('loading') + '</div>';
             }
             
             try {
@@ -65,8 +65,8 @@
                     listEl.innerHTML = `
                         <div style="text-align:center;padding:3rem;color:#9ca3af;">
                             <i data-lucide="archive" class="icon icon-xl" style="color:#d1d5db;margin-bottom:0.5rem;"></i>
-                            <p>Архів порожній</p>
-                            <p style="font-size:0.8rem;">Завершені завдання старші 30 днів з'являться тут автоматично</p>
+                            <p>' + t('archiveEmpty') + '</p>
+                            <p style="font-size:0.8rem;">' + t('archiveAutoHint') + '</p>
                         </div>`;
                     refreshIcons();
                     return;
@@ -87,7 +87,7 @@
                 
             } catch (error) {
                 console.error('loadArchiveTasks error:', error);
-                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#ef4444;">Помилка завантаження архіву</div>';
+                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#ef4444;">' + t('archiveLoadError') + '</div>';
             }
         }
         
@@ -99,7 +99,7 @@
             const listEl = document.getElementById('archiveTasksList');
             const countEl = document.getElementById('archiveCount');
             
-            countEl.textContent = `${archiveTasks.length} записів`;
+            countEl.textContent = t('recordsCount').replace('{n}', archiveTasks.length);
             
             const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
             
@@ -112,7 +112,7 @@
                             <th>${t('assignee')}</th>
                             <th>${t('deadline')}</th>
                             <th>${t('type')}</th>
-                            <th>Архівовано</th>
+                            <th>' + t('archivedAt') + '</th>
                             <th>Дії</th>
                         </tr>
                     </thead>
@@ -134,7 +134,7 @@
                         <td>${esc(task.function) || '-'}</td>
                         <td style="font-size:0.8rem;color:#9ca3af;">${archivedDate}</td>
                         <td>
-                            <button class="action-btn" onclick="restoreFromArchive('${escId(task.id)}')" title="Відновити">
+                            <button class="action-btn" onclick="restoreFromArchive('${escId(task.id)}')" title="${t('reopen')}">
                                 <i data-lucide="rotate-ccw" class="icon icon-sm" style="color:var(--primary);"></i>
                             </button>
                         </td>

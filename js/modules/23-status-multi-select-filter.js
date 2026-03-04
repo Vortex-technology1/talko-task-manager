@@ -63,7 +63,7 @@
             const label = document.getElementById('statusFilterLabel');
             const toggle = label.closest('.status-multiselect-toggle');
             const selected = getSelectedStatuses();
-            const statusNames = { new: 'Нові', progress: 'В роботі', review: 'Перевірка', done: 'Готово' };
+            const statusNames = { new: t('statusPluralNew'), progress: t('statusPluralProgress'), review: t('statusPluralReview'), done: t('statusPluralDone') };
             
             // Remove old count badge
             const oldBadge = toggle.querySelector('.status-multiselect-count');
@@ -239,7 +239,7 @@
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td>${esc(task.creatorName) || '-'}</td>
-                        <td class="deadline-text ${deadlineClass}" onclick="inlineEditDeadline(event, '${escId(task.id)}', '${task.deadlineDate || ''}')" style="cursor:pointer;" title="Натисніть щоб змінити дату">${taskDeadline ? formatDateShort(taskDeadline) : '-'}${task.timeEnd ? ' ' + task.timeEnd : ''}</td>
+                        <td class="deadline-text ${deadlineClass}" onclick="inlineEditDeadline(event, '${escId(task.id)}', '${task.deadlineDate || ''}')" style="cursor:pointer;" title="${t('clickToChangeDate')}">${taskDeadline ? formatDateShort(taskDeadline) : '-'}${task.timeEnd ? ' ' + task.timeEnd : ''}</td>
                         <td><span class="status-badge status-${task.status}" style="cursor:pointer;" onclick="cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status}</span></td>
                         <td>${esc(task.function) || '-'}</td>
                         <td>
@@ -248,9 +248,9 @@
                                     <button class="action-btn" onclick="acceptReviewTask('${escId(task.id)}')" title="${t('acceptTask')}" style="color:#22c55e;"><i data-lucide="check-circle" class="icon icon-sm"></i></button>
                                     <button class="action-btn" onclick="rejectReviewTask('${escId(task.id)}')" title="${t('rejectTask')}" style="color:#f59e0b;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i></button>
                                 ` : ''}
-                                <button class="action-btn" onclick="togglePin('${escId(task.id)}')" title="Pin"><i data-lucide="pin" class="icon icon-sm"></i></button>
-                                <button class="action-btn" onclick="openTaskModal('${escId(task.id)}')" title="Edit"><i data-lucide="pencil" class="icon icon-sm"></i></button>
-                                <button class="action-btn" onclick="deleteTask('${escId(task.id)}')" title="Delete"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="togglePin('${escId(task.id)}')" title="${t('pin')}"><i data-lucide="pin" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="openTaskModal('${escId(task.id)}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="deleteTask('${escId(task.id)}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                             </div>
                         </td>
                     </tr>`;
@@ -346,7 +346,7 @@
                                         const label = daysAgo === 1 ? '1 день тому' : daysAgo < 5 ? daysAgo + ' дні тому' : daysAgo + ' днів тому';
                                         return `<span class="mobile-task-deadline-badge overdue">${label}</span>`;
                                     }
-                                    if (isToday) return `<span class="mobile-task-deadline-badge today">${task.timeEnd || 'сьогодні'}</span>`;
+                                    if (isToday) return `<span class="mobile-task-deadline-badge today">${task.timeEnd || t('today')}</span>`;
                                     // Format date compactly
                                     const dp = taskDeadline.split('-');
                                     const dayNum = parseInt(dp[2]);

@@ -3,11 +3,11 @@
         // =============================================
         
         const AUDIT_FIELD_LABELS = {
-            title: 'Назву', status: 'Статус', assigneeId: 'Виконавця',
-            deadlineDate: 'Дедлайн', deadlineTime: 'Час', priority: 'Пріоритет',
-            description: 'Опис', expectedResult: 'Очікуваний результат',
-            projectId: 'Проєкт', 'function': 'Функцію', requireReview: 'Ревью',
-            checklist: 'Чекліст', coExecutorIds: 'Співвиконавців', observerIds: 'Спостерігачів'
+            title: t('auditFieldTitle'), status: t('auditFieldStatus'), assigneeId: t('auditFieldAssignee'),
+            deadlineDate: t('auditFieldDeadline'), deadlineTime: t('auditFieldTime'), priority: t('auditFieldPriority'),
+            description: t('description'), expectedResult: t('expectedResult'),
+            projectId: t('project'), 'function': t('functionColon'), requireReview: t('review'),
+            checklist: t('auditFieldChecklist'), coExecutorIds: t('auditFieldCoExecutors'), observerIds: t('auditFieldObservers')
         };
         
         const AUDIT_ICONS = {
@@ -87,7 +87,7 @@
                 if (countEl) countEl.textContent = snap.size;
                 
                 if (snap.empty) {
-                    container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">Ще немає записів</p>';
+                    container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">' + t('noRecordsYet') + '</p>';
                     return;
                 }
                 
@@ -100,7 +100,7 @@
                 
             } catch (e) {
                 console.warn('[AuditLog] Load error:', e.message);
-                container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">Помилка завантаження</p>';
+                container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">' + t('loadError') + '</p>';
             }
         }
         
@@ -136,24 +136,24 @@
             for (const [field, vals] of Object.entries(entry.details)) {
                 const label = AUDIT_FIELD_LABELS[field] || field;
                 if (field === 'status') {
-                    parts.push(`змінив статус: <span class="audit-value">${getStatusLabel(vals.from)}</span> → <span class="audit-value">${getStatusLabel(vals.to)}</span>`);
+                    parts.push(`${t('auditChangedStatus')}: <span class="audit-value">${getStatusLabel(vals.from)}</span> → <span class="audit-value">${getStatusLabel(vals.to)}</span>`);
                 } else if (field === 'assigneeId') {
                     const fromUser = users.find(u => u.id === vals.from);
                     const toUser = users.find(u => u.id === vals.to);
-                    parts.push(`перепризначив: <span class="audit-value">${esc(fromUser?.name || vals.from || '—')}</span> → <span class="audit-value">${esc(toUser?.name || vals.to)}</span>`);
+                    parts.push(`${t('auditReassigned')}: <span class="audit-value">${esc(fromUser?.name || vals.from || '—')}</span> → <span class="audit-value">${esc(toUser?.name || vals.to)}</span>`);
                 } else if (field === 'deadlineDate' || field === 'deadlineTime') {
-                    parts.push(`змінив ${label.toLowerCase()}: <span class="audit-value">${esc(vals.from || '—')}</span> → <span class="audit-value">${esc(String(vals.to))}</span>`);
+                    parts.push(`${t('auditChanged')} ${label.toLowerCase()}: <span class="audit-value">${esc(vals.from || '—')}</span> → <span class="audit-value">${esc(String(vals.to))}</span>`);
                 } else if (field === 'priority') {
-                    parts.push(`змінив пріоритет: <span class="audit-value">${vals.from}</span> → <span class="audit-value">${vals.to}</span>`);
+                    parts.push(`${t('auditChangedPriority')}: <span class="audit-value">${vals.from}</span> → <span class="audit-value">${vals.to}</span>`);
                 } else {
-                    parts.push(`змінив ${label.toLowerCase()}`);
+                    parts.push(`${t('auditChanged')} ${label.toLowerCase()}`);
                 }
             }
             return parts.join(', ') || t('auditChanged');
         }
         
         function getStatusLabel(status) {
-            const map = { todo: 'Очікує', in_progress: 'В роботі', review: 'На перевірці', done: 'Виконано' };
+            const map = { todo: t('auditStatusWaiting'), in_progress: t('auditStatusInProgress'), review: t('auditStatusReview'), done: t('auditStatusDone') };
             return map[status] || status || '—';
         }
         

@@ -526,7 +526,7 @@
             const rt = regularTasks.find(r => r.id === id);
             if (!rt) return;
             
-            const taskName = rt.title || 'Регулярне завдання';
+            const taskName = rt.title || t('regularTaskFallback');
             
             // Оптимістичне видалення
             const rtCopy = { ...rt };
@@ -819,7 +819,7 @@
                             <th>${t('function')}</th>
                             <th>${t('schedule')}</th>
                             <th>${t('statusPeriod')}</th>
-                            <th>${t('completion30d') || '30 дн'}</th>
+                            <th>${t('completion30d')}</th>
                             <th>${t('assignees')}</th>
                             <th>${t('actions')}</th>
                         </tr>
@@ -895,13 +895,13 @@
                         <td>
                             <div class="action-btns">
                                 ${statusInfo.status === 'notCreated' ? `
-                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask') || 'Відкрити задачу'}" style="background:#2196f3;color:white;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask')}" style="background:#2196f3;color:white;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
                                     <button class="action-btn" onclick="completeRegularTask('${escId(rt.id)}')" title="${t('markDone')}" style="background:#4caf50;color:white;"><i data-lucide="check" class="icon icon-sm"></i></button>
                                 ` : statusInfo.status === 'inProgress' ? `
-                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask') || 'Відкрити задачу'}" style="background:#2196f3;color:white;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask')}" style="background:#2196f3;color:white;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
                                     <button class="action-btn" onclick="completeRegularTask('${escId(rt.id)}')" title="${t('markDone')}" style="background:#4caf50;color:white;"><i data-lucide="check" class="icon icon-sm"></i></button>
                                 ` : `
-                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask') || 'Відкрити задачу'}" style="opacity:0.6;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="openTodayRegularTask('${escId(rt.id)}')" title="${t('openTask')}" style="opacity:0.6;"><i data-lucide="external-link" class="icon icon-sm"></i></button>
                                 `}
                                 ${rt.instruction ? `<button class="action-btn" onclick="showInstruction('${escId(rt.id)}')" title="${t('instruction')}"><i data-lucide="book-open" class="icon icon-sm"></i></button>` : ''}
                                 <button class="action-btn" onclick="openRegularTaskModal('${escId(rt.id)}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>

@@ -17,7 +17,7 @@
                 timeTrackerTaskId = editingId;
                 const btn = document.getElementById('timeTrackBtn');
                 btn.style.background = '#ef4444';
-                btn.innerHTML = '<i data-lucide="square" class="icon icon-sm"></i> <span>Стоп</span>';
+                btn.innerHTML = '<i data-lucide="square" class="icon icon-sm"></i> <span>' + t('btnStop') + '</span>';
                 refreshIcons();
                 
                 timeTrackerInterval = setInterval(() => {

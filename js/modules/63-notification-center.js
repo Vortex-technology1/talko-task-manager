@@ -58,7 +58,7 @@
         if (!list) return;
         
         if (notifications.length === 0) {
-            list.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;font-size:0.85rem;">Немає сповіщень</div>';
+            list.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;font-size:0.85rem;">' + t('noNotifications') + '</div>';
             return;
         }
         

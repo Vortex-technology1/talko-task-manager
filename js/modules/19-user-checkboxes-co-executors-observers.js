@@ -26,7 +26,7 @@
                     </div>
                     <div class="user-ms-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200;max-height:240px;overflow:hidden;">
                         <div style="padding:0.4rem;border-bottom:1px solid #f3f4f6;">
-                            <input type="text" placeholder="Пошук..." data-i18n-placeholder="search" 
+                            <input type="text" placeholder="" data-i18n-placeholder="search" 
                                    oninput="filterUserMultiSelect('${uid}', this.value)"
                                    style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;outline:none;" 
                                    onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">

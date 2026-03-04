@@ -5,25 +5,25 @@
         {
             target: '#nextTaskBtn',
             text: 'hintNextTask',
-            fallback: 'Натисніть, щоб відкрити найважливішу задачу. Система сама вибере що робити першим.',
+            fallback: t('hintOpenNextTask'),
             position: 'below'
         },
         {
             target: '[data-tab="tasks"]',
             text: 'hintTasks',
-            fallback: 'Тут всі задачі. Використовуйте фільтри "Мої" та "Сьогодні" щоб бачити тільки своє.',
+            fallback: t('hintTasksFilters'),
             position: 'above'
         },
         {
             target: '[data-tab="control"]',
             text: 'hintControl',
-            fallback: 'Панель керівника: брифінг, журнал збоїв, аналітика по команді.',
+            fallback: t('hintControlPanel'),
             position: 'above'
         },
         {
             target: '[data-tab="more"]',
             text: 'hintMore',
-            fallback: 'Тут AI-асистенти, функції, аналітика, профіль та налаштування.',
+            fallback: t('hintSettingsMenu'),
             position: 'above'
         }
     ];
@@ -65,8 +65,8 @@
         tooltip.innerHTML = `
             <div class="hint-step">${stepText}</div>
             <div>${hintText}</div>
-            <button class="hint-dismiss" onclick="advanceHint()">${currentHintIndex < ONBOARDING_HINTS.length - 1 ? (t('next') || 'Далі') : (t('gotIt') || 'Зрозуміло')}</button>
-            <button class="hint-dismiss" onclick="skipOnboarding()" style="margin-left:4px;opacity:0.6;">${t('skip') || 'Пропустити'}</button>
+            <button class="hint-dismiss" onclick="advanceHint()">${currentHintIndex < ONBOARDING_HINTS.length - 1 ? (t('next')) : (t('gotIt'))}</button>
+            <button class="hint-dismiss" onclick="skipOnboarding()" style="margin-left:4px;opacity:0.6;">${t('skip')}</button>
         `;
         
         document.body.appendChild(tooltip);

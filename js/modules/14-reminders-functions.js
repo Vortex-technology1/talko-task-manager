@@ -139,7 +139,7 @@
                     if (criticalOverdue.length >= 3) {
                         const name = assignee?.name || assignee?.email || '';
                         const proceed = confirm(
-                            `${name}: ${criticalOverdue.length} ${t('criticalOverdueWarning') || 'задач прострочено 3+ днів.'}\n\n${t('criticalOverdueAdvice') || 'Рекомендація: спочатку закрийте прострочені задачі.'}\n\n${t('continueAnyway') || 'Все одно створити задачу?'}`
+                            `${name}: ${criticalOverdue.length} ${t('criticalOverdueWarning')}\n\n${t('criticalOverdueAdvice')}\n\n${t('continueAnyway')}`
                         );
                         if (!proceed) {
                             isSaving = false;
@@ -235,7 +235,7 @@
                             const freshDoc = await db.collection('companies').doc(currentCompany).collection('tasks').doc(currentEditingId).get();
                             const freshUpdated = freshDoc.data()?.updatedAt;
                             if (freshUpdated?.toMillis && freshUpdated.toMillis() > existingTask._openedAt) {
-                                if (!confirm(t('taskModifiedByOther') || 'Task was modified by another user. Save anyway?')) {
+                                if (!confirm(t('taskModifiedByOther'))) {
                                     isSaving = false;
                                     if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
                                     return;

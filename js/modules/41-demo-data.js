@@ -19,7 +19,7 @@
             if (!isSuperAdmin) return;
             if (!currentCompany) return;
             
-            const confirmText = 'ВИДАЛИТИ ВСЕ';
+            const confirmText = t('deleteAllConfirmText');
             const input = prompt(`Введіть "${confirmText}" щоб підтвердити повне видалення всіх даних компанії (крім користувачів):`);
             if (input !== confirmText) {
                 if (input !== null) showToast(t('textMismatch'), 'error');
@@ -962,7 +962,7 @@
             // Populate function chips
             const funcContainer = document.getElementById('filterFunctionChips');
             const activeFuncs = functions.filter(f => f.status !== 'archived');
-            funcContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'function\')">Всі</div>';
+            funcContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'function\')">' + t('all') + '</div>';
             activeFuncs.forEach(f => {
                 const selected = mobileFilters.function === f.name ? 'selected' : '';
                 funcContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${esc(f.name)}" onclick="selectFilterChip(this, 'function')">${esc(f.name)}</div>`;
@@ -970,7 +970,7 @@
             
             // Populate assignee chips
             const assigneeContainer = document.getElementById('filterAssigneeChips');
-            assigneeContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'assignee\')">Всі</div>';
+            assigneeContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'assignee\')">' + t('all') + '</div>';
             users.forEach(u => {
                 const name = u.name || u.email.split('@')[0];
                 const selected = mobileFilters.assignee === u.id ? 'selected' : '';

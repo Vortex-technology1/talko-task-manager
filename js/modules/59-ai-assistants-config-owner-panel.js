@@ -3,7 +3,7 @@
     // =====================
     function openAiAssistantsModal() {
         if (!isSuperAdmin) {
-            showToast('Тільки для адміністратора TALKO', 'error'); return;
+            showToast(t('adminOnlyTalko'), 'error'); return;
         }
         loadAiAssistants();
         loadAiApiKey();
@@ -26,7 +26,7 @@
         if (currentCompany) {
             await db.collection('companies').doc(currentCompany).update({ openaiApiKey: key }).catch(() => {});
         }
-        showToast('API Key збережено', 'success');
+        showToast(t('apiKeySaved'), 'success');
         document.getElementById('aiApiKeyInput').value = key.substring(0, 8) + '...';
     }
     
@@ -39,7 +39,7 @@
         const container = document.getElementById('aiAssistantsList');
         
         if (list.length === 0) {
-            container.innerHTML = '<p style="color:#6b7280;text-align:center;">Немає асистентів. Натисніть "Додати" або запустіть AI Структура (створить автоматично).</p>';
+            container.innerHTML = '<p style="color:#6b7280;text-align:center;">' + t('noAssistantsHint') + '</p>';
             return;
         }
         
@@ -68,7 +68,7 @@
     }
     
     async function addAiAssistant() {
-        const name = prompt(t('assistantName') || 'Назва асистента:');
+        const name = prompt(t('assistantName'));
         if (!name) return;
         
         await db.collection('settings').doc('ai')
@@ -92,7 +92,7 @@
     }
     
     async function deleteAiAssistant(id) {
-        if (!confirm('Видалити асистента?')) return;
+        if (!confirm(t('deleteAssistant'))) return;
         await db.collection('settings').doc('ai')
             .collection('assistants').doc(id).delete();
         loadAiAssistants();
@@ -106,7 +106,7 @@
         
         if (!doc.exists) {
             await ref.set({
-                name: 'Генератор структури',
+                name: t('structureGenerator'),
                 model: 'gpt-5.2',
                 systemPrompt: `Ти — AI-консультант з організації бізнесу. Генеруй структуру компанії у форматі JSON.
 

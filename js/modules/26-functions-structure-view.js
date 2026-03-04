@@ -101,14 +101,14 @@
                                 ${f.assigneeNames?.length ? `<div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:0.3rem;">${f.assigneeNames.slice(0,2).map(n => `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 5px;border-radius:4px;">${esc(n)}</span>`).join('')}${f.assigneeNames.length > 2 ? `<span style="font-size:0.65rem;color:#9ca3af;">+${f.assigneeNames.length-2}</span>` : ''}</div>` : ''}
                             </div>`;
                         }).join('')}
-                        ${allFuncs.length === 0 ? `<div style="text-align:center;padding:1rem;color:#d1d5db;font-size:0.78rem;">${t('dragHere') || 'Перетягніть функцію сюди'}</div>` : ''}
+                        ${allFuncs.length === 0 ? `<div style="text-align:center;padding:1rem;color:#d1d5db;font-size:0.78rem;">${t('dragHere')}</div>` : ''}
                     </div>
                 </div>`;
             });
             
             html += `
                 <div class="struct-add-col" onclick="addCategory()">
-                    <span><i data-lucide="plus" class="icon icon-sm"></i> ${t('addCategory') || 'Додати колонку'}</span>
+                    <span><i data-lucide="plus" class="icon icon-sm"></i> ${t('addCategory')}</span>
                 </div>
             </div>`;
             
@@ -142,16 +142,16 @@
                 await db.collection('companies').doc(currentCompany).collection('functions').doc(draggedFuncId).update({ category: newCategory });
             } catch(e) {
                 console.error('Error updating category:', e);
-                showToast(t('saveError') || 'Помилка збереження', 'error');
+                showToast(t('saveError'), 'error');
             }
             draggedFuncId = null;
         }
         
         function addCategory() {
-            const name = prompt(t('categoryName') || 'Назва колонки:');
+            const name = prompt(t('categoryName'));
             if (!name || !name.trim()) return;
             const cats = getStructureCategories();
-            if (cats.includes(name.trim())) { showToast(t('categoryExists') || 'Така колонка вже є', 'warning'); return; }
+            if (cats.includes(name.trim())) { showToast(t('categoryExists'), 'warning'); return; }
             cats.push(name.trim());
             saveStructureCategories(cats);
             renderFunctionsStructure();
@@ -162,7 +162,7 @@
             const cat = cats[idx];
             const funcsInCat = functions.filter(f => f.category === cat);
             if (funcsInCat.length > 0) {
-                if (!confirm((t('categoryHasFunctions') || 'В цій колонці є функції. Вони стануть без категорії. Видалити?'))) return;
+                if (!confirm((t('categoryHasFunctions')))) return;
                 funcsInCat.forEach(f => { f.category = ''; });
                 // Save to Firestore
                 const batch = db.batch();

@@ -151,7 +151,7 @@
                     let statusBadge = '';
                     if (mode === 'deadlines') {
                         const stColors = {new:'#eff6ff;color:#3b82f6', progress:'#fffbeb;color:#f59e0b', review:'#f5f3ff;color:#8b5cf6'};
-                        const stLabels = {new:'Нове', progress:'В роботі', review:'Перевірка'};
+                        const stLabels = {new:t('statusNewLabel'), progress:t('statusProgressLabel'), review:t('statusReviewLabel')};
                         if (stColors[t.status]) statusBadge = `<span class="kanban-card-badge" style="background:${stColors[t.status]};font-size:0.65rem">${stLabels[t.status]}</span>`;
                     }
                     
@@ -376,7 +376,7 @@
                     await ref.update({ deadlineDate: newDeadline || firebase.firestore.FieldValue.delete(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
                     await logTaskChange(task.id, 'edit', { field: 'deadlineDate', from: oldDl, to: newDeadline });
                     task.deadlineDate = newDeadline;
-                    showToast(newDeadline ? `Дедлайн → ${newDeadline}` : 'Дедлайн знято', 'success');
+                    showToast(newDeadline ? `${t('deadlineChanged')} → ${newDeadline}` : t('deadlineRemoved'), 'success');
                 } catch(err) {
                     console.error('Kanban deadline drop error:', err);
                     showToast(t('deadlineChangeError'), 'error');

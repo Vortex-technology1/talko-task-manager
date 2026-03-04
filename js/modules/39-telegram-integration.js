@@ -32,11 +32,11 @@
                 
                 // Показуємо інструкцію
                 const proceed = confirm(
-                    'Підключення Telegram\n\n' +
+                    t('connectTelegramTitle') + '\n\n' +
                     '1. Зараз відкриється Telegram бот\n' +
                     '2. Натисніть "Start" або "Запустити"\n' +
                     '3. Бот автоматично підключить сповіщення\n\n' +
-                    'Відкрити Telegram?'
+                    t('openTelegram')
                 );
                 
                 if (proceed) {
@@ -252,7 +252,7 @@
             const avatarEl = document.getElementById('profileAvatar');
             
             if (currentUserData) {
-                const name = currentUserData.name || currentUser?.displayName || 'Користувач';
+                const name = currentUserData.name || currentUser?.displayName || t('user');
                 if (nameEl) nameEl.textContent = name;
                 if (emailEl) emailEl.textContent = currentUser?.email || '';
                 if (roleEl) roleEl.textContent = getRoleText(currentUserData.role);

@@ -39,7 +39,7 @@
                 // History entry
                 const historyEntry = {
                     step: currentStepIndex,
-                    stepTitle: currentStep?.title || currentStep?.function || ('Крок ' + (currentStepIndex + 1)),
+                    stepTitle: currentStep?.title || currentStep?.function || (t('stepN') + ' ' + (currentStepIndex + 1)),
                     completedAt: new Date().toISOString(),
                     completedBy: currentUser.uid,
                     completedByName: currentUserData?.name || '',
@@ -121,9 +121,9 @@
                         const prevResults = (process.stepResults || []).concat([stepResult]);
                         let contextBlock = '';
                         if (prevResults.length > 0) {
-                            contextBlock = `--- ${t('previousSteps') || 'Попередні етапи'} ---\n` +
+                            contextBlock = `--- ${t('previousStepsLabel')} ---\n` +
                                 prevResults.map((r, i) => 
-                                    `${i+1}. ${r.title || r.function}: ${r.result || '(без коментаря)'} [${r.completedByName}]`
+                                    `${i+1}. ${r.title || r.function}: ${r.result || t('noComment')} [${r.completedByName}]`
                                 ).join('\n') + '\n---\n\n';
                         }
                         
@@ -131,10 +131,10 @@
                         if (process.objectName) fullInstruction += `[${process.objectName}]\n`;
                         fullInstruction += nextStep.instruction || '';
                         if (nextStep.expectedResult) {
-                            fullInstruction += `\n\n${t('expectedResult') || 'Очікуваний результат'}: ${nextStep.expectedResult}`;
+                            fullInstruction += `\n\n${t('expectedResult')}: ${nextStep.expectedResult}`;
                         }
                         if (nextStep.controlQuestion) {
-                            fullInstruction += `\n${t('controlQuestion') || 'Контрольне питання'}: ${nextStep.controlQuestion}`;
+                            fullInstruction += `\n${t('controlQuestion')}: ${nextStep.controlQuestion}`;
                         }
                         
                         const taskData = {
@@ -167,13 +167,13 @@
                         tasks.push({ id: newTaskRef.id, ...taskData, createdAt: new Date() });
                         
                         showToast(t('processAdvanced').replace('{name}', process.name).replace('{step}', nextStepIndex+1).replace('{total}', template.steps.length).replace('{stepName}', nextStep.title || nextStep.function), 'success');
-                        addNotification('process', t('processAdvancedShort') || 'Процес просунувся', process.name + ' → ' + (nextStepIndex + 1) + '/' + template.steps.length, null);
+                        addNotification('process', t('processAdvancedShort'), process.name + ' → ' + (nextStepIndex + 1) + '/' + template.steps.length, null);
                     } else {
                         showToast(t('processNoExecutors').replace('{func}', nextStep.function), 'error');
                     }
                 } else {
                     showToast(t('processCompleted').replace('{name}', process.name), 'success');
-                    addNotification('completed', t('processCompletedShort') || 'Процес завершено', process.name, null);
+                    addNotification('completed', t('processCompletedShort'), process.name, null);
                 }
                 
                 // Update local state

@@ -200,7 +200,7 @@
                     
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
                         <div style="background:#f0fdf4;border-radius:8px;padding:0.5rem;text-align:center;">
-                            <div style="font-size:0.7rem;color:#6b7280;">${t('autonomyIndex') || 'Індекс автономності'}</div>
+                            <div style="font-size:0.7rem;color:#6b7280;">${t('autonomyIndex')}</div>
                             <div style="font-size:1.3rem;font-weight:700;color:${autonomyColor};">${autonomyPct}%</div>
                         </div>
                         <div style="background:${overloadFlag ? '#fef2f2' : '#f0f9ff'};border-radius:8px;padding:0.5rem;text-align:center;">
@@ -213,12 +213,12 @@
                     <div style="background:#fef2f2;border-radius:8px;padding:0.5rem;margin-bottom:0.5rem;">
                         <div style="font-size:0.8rem;font-weight:600;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus')} (${overdue.length})</div>
                         ${overdue.slice(0,3).map(t => `<div style="font-size:0.78rem;color:#374151;padding:0.2rem 0;">&bull; ${esc(t.title)} <span style="color:#ef4444;">${t.deadlineDate || ''}</span></div>`).join('')}
-                        ${overdue.length > 3 ? `<div style="font-size:0.72rem;color:#9ca3af;">+${overdue.length - 3} ${t('more') || 'ще'}...</div>` : ''}
+                        ${overdue.length > 3 ? `<div style="font-size:0.72rem;color:#9ca3af;">+${overdue.length - 3} ${t('more')}...</div>` : ''}
                     </div>` : ''}
                     
                     ${returned.length > 0 ? `
                     <div style="background:#fffbeb;border-radius:8px;padding:0.5rem;margin-bottom:0.5rem;">
-                        <div style="font-size:0.8rem;font-weight:600;color:#b45309;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('returnedFromReview') || 'Повернуто з ревью'} (${returned.length})</div>
+                        <div style="font-size:0.8rem;font-weight:600;color:#b45309;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('returnedFromReview')} (${returned.length})</div>
                     </div>` : ''}
                     
                     ${userRegular.length > 0 ? `
@@ -241,7 +241,7 @@
                                     .map(d => `<span style="display:inline-block;min-width:16px;height:16px;line-height:16px;text-align:center;border-radius:50%;font-size:0.58rem;font-weight:700;background:#dcfce7;color:#16a34a;">${shortDays[jsDayToIdx[d]] || d}</span>`)
                                     .join('');
                             } else if (rt.period === 'monthly') {
-                                scheduleStr = `<span style="font-size:0.62rem;background:#e0e7ff;color:#4338ca;padding:0 4px;border-radius:3px;line-height:16px;">${rt.dayOfMonth || '1'}/${t('month') || 'міс'}</span>`;
+                                scheduleStr = `<span style="font-size:0.62rem;background:#e0e7ff;color:#4338ca;padding:0 4px;border-radius:3px;line-height:16px;">${rt.dayOfMonth || '1'}/${t('monthShort')}</span>`;
                             }
                             return `
                             <div style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.5rem;margin-bottom:0.15rem;background:#f9fafb;border-radius:6px;font-size:0.78rem;cursor:pointer;" onclick="openRegularTaskModal('${escId(rt.id)}')">

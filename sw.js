@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-03-04-fix23b';
+const CACHE_VERSION = '2026-03-04-fix31';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache
@@ -167,7 +167,7 @@ self.addEventListener('fetch', (event) => {
       })
       .catch(() => {
         return caches.match(event.request).then(cached => {
-          return cached || new Response('Offline — перевірте з\'єднання з інтернетом', {
+          return cached || new Response('Offline', {
             status: 503,
             headers: { 'Content-Type': 'text/html; charset=utf-8' }
           });

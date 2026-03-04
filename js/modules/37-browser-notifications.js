@@ -91,16 +91,16 @@
                         
                         if (diff > 0 && diff <= 60) {
                             shouldNotify = true;
-                            message = `Дедлайн через ${diff} хв: ${task.title}`;
+                            message = t('deadlineInMinutes').replace('{n}', diff).replace('{title}', task.title);
                         } else if (diff <= 0 && diff > -5) {
                             shouldNotify = true;
-                            message = `Дедлайн зараз: ${task.title}`;
+                            message = t('deadlineNow').replace('{title}', task.title);
                         }
                     } else {
                         // No specific time - notify once in the morning (9:00)
                         if (currentHour === 9 && currentMinute < 5) {
                             shouldNotify = true;
-                            message = `Сьогодні дедлайн: ${task.title}`;
+                            message = t('deadlineToday').replace('{title}', task.title);
                         }
                     }
                     
@@ -117,7 +117,7 @@
                 if (taskDeadline === tomorrowStr && currentHour === 18 && currentMinute < 5) {
                     const notifyKeyTomorrow = `${task.id}-tomorrow`;
                     if (!notifiedTasks.has(notifyKeyTomorrow)) {
-                        sendTaskNotification(task, `Завтра дедлайн: ${task.title}`, notifyKeyTomorrow);
+                        sendTaskNotification(task, t('deadlineTomorrow').replace('{title}', task.title), notifyKeyTomorrow);
                     }
                 }
                 
@@ -128,9 +128,9 @@
                     if (!notifiedTasks.has(overdueKey) && currentHour >= 9 && currentHour < 10) {
                         let msg = '';
                         if (daysOverdue >= 7) {
-                            msg = `КРИТИЧНО (${daysOverdue} дн.): ${task.title}`;
+                            msg = t('overdueCriticalDays').replace('{n}', daysOverdue).replace('{title}', task.title);
                         } else if (daysOverdue >= 3) {
-                            msg = `Прострочено ${daysOverdue} дн.: ${task.title}`;
+                            msg = t('overdueDays').replace('{n}', daysOverdue).replace('{title}', task.title);
                         } else {
                             msg = `${t('overdueStatus')}: ${task.title}`;
                         }
@@ -142,7 +142,7 @@
                         const mgrKey = `${task.id}-mgr-overdue-${today}`;
                         if (!notifiedTasks.has(mgrKey) && task.assigneeId !== currentUser?.uid && currentHour >= 9 && currentHour < 10) {
                             const assigneeName = task.assigneeName || '';
-                            sendTaskNotification(task, `${assigneeName}: ${daysOverdue} дн. прострочено — ${task.title}`, mgrKey);
+                            sendTaskNotification(task, t('overdueManagerAlert').replace('{name}', assigneeName).replace('{n}', daysOverdue).replace('{title}', task.title), mgrKey);
                         }
                     }
                 }
@@ -153,7 +153,7 @@
         function sendTaskNotification(task, message, notifyKey) {
             try {
                 const notification = new Notification(message, {
-                    body: task.function ? `Функція: ${task.function}` : 'Натисніть щоб відкрити',
+                    body: task.function ? `${t('functionColon')}: ${task.function}` : t('clickToOpen'),
                     icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
                     tag: task.id,
                     requireInteraction: true

@@ -37,7 +37,7 @@
             }
             
             const btn = document.getElementById('selfRegBtn');
-            if (btn) { btn.disabled = true; btn.textContent = 'Створення...'; }
+            if (btn) { btn.disabled = true; btn.textContent = t('loading'); }
             
             try {
                 const companyId = companyName.toLowerCase().replace(/[^a-zа-яіїєґ0-9]/g, '_').substring(0, 30) + '_' + Date.now().toString(36);

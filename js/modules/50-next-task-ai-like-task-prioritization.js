@@ -39,7 +39,7 @@
     function openNextTask() {
         const next = getNextTask();
         if (!next) {
-            showToast(t('noTasksForToday') || 'Немає активних задач', 'success', 2000);
+            showToast(t('noTasksForToday'), 'success', 2000);
             return;
         }
         openTaskModal(next.id);

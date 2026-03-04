@@ -156,7 +156,7 @@
             const funcName = func.name || t('function');
             const usedInTemplates = processTemplates.filter(pt => pt.steps?.some(s => s.function === funcName));
             if (usedInTemplates.length > 0) {
-                if (!confirm(funcName + ' → ' + usedInTemplates.map(pt => pt.name).join(', ') + '\n\n' + (t('deleteConfirm') || 'Видалити?'))) return;
+                if (!confirm(funcName + ' → ' + usedInTemplates.map(pt => pt.name).join(', ') + '\n\n' + (t('deleteConfirm')))) return;
             }
             
             // Оптимістичне видалення
@@ -258,7 +258,7 @@
                             // Schedule display
                             let scheduleStr = '';
                             if (rt.period === 'daily') {
-                                scheduleStr = t('daily') || 'Щоденно';
+                                scheduleStr = t('daily');
                             } else if (rt.period === 'weekly' && rt.daysOfWeek) {
                                 scheduleStr = rt.daysOfWeek
                                     .map(d => parseInt(d))
@@ -266,7 +266,7 @@
                                     .map(d => `<span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;font-size:0.7rem;font-weight:600;${rt.daysOfWeek.includes(d.toString()) ? 'background:#dcfce7;color:#16a34a;' : ''}">${shortDays[jsDayToIdx[d]] || d}</span>`)
                                     .join('');
                             } else if (rt.period === 'monthly') {
-                                scheduleStr = (t('monthly') || 'Щомісяця') + ' ' + (rt.dayOfMonth || '1') + '-' + (t('dayShort') || 'го');
+                                scheduleStr = (t('monthly')) + ' ' + (rt.dayOfMonth || '1') + '-' + (t('dayShort'));
                             }
 
                             return `
@@ -295,9 +295,9 @@
                     </div>
                     <div class="function-stats" style="flex-wrap:wrap;gap:0.5rem;">
                         <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
-                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks} ${t('active') || 'акт.'} / ${doneTasks} ${t('doneLabel')}</span>
-                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="repeat" class="icon icon-sm"></i> ${funcRegular.length} ${t('regularTaskLabel') || 'рег.'}</span>
-                            ${weeklyHours > 0 ? `<span style="font-size:0.82rem;color:#0284c7;font-weight:600;"><i data-lucide="clock" class="icon icon-sm"></i> ${weeklyHours} ${t('hoursPerWeek') || 'год/тижд'}</span>` : ''}
+                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks} ${t('active')} / ${doneTasks} ${t('doneLabel')}</span>
+                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="repeat" class="icon icon-sm"></i> ${funcRegular.length} ${t('regularTaskLabel')}</span>
+                            ${weeklyHours > 0 ? `<span style="font-size:0.82rem;color:#0284c7;font-weight:600;"><i data-lucide="clock" class="icon icon-sm"></i> ${weeklyHours} ${t('hoursPerWeek')}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.3rem;" onclick="event.stopPropagation();">
                             <button class="btn btn-small" onclick="openFunctionModal('${escId(f.id)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
@@ -306,7 +306,7 @@
                     </div>
                     ${funcRegular.length > 0 ? `
                     <div style="text-align:center;padding-top:0.3rem;margin-top:0.3rem;border-top:1px dashed #e5e7eb;">
-                        <span class="func-toggle-hint" id="funcToggle_${escId(f.id)}" style="font-size:0.75rem;color:#9ca3af;"><i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks') || 'Показати регулярні'}</span>
+                        <span class="func-toggle-hint" id="funcToggle_${escId(f.id)}" style="font-size:0.75rem;color:#9ca3af;"><i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks')}</span>
                     </div>` : ''}
                     ${regularHTML}
                 </div>
@@ -329,8 +329,8 @@
             section.style.display = isOpen ? 'none' : 'block';
             if (toggle) {
                 toggle.innerHTML = isOpen 
-                    ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks') || 'Показати регулярні'}`
-                    : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${t('hideRegularTasks') || 'Сховати регулярні'}`;
+                    ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks')}`
+                    : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${t('hideRegularTasks')}`;
                 refreshIcons();
             }
         }

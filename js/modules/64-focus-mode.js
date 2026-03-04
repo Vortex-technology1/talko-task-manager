@@ -5,11 +5,11 @@
     
     function getAiHelpUrl(taskTitle, taskDescription, taskFunction) {
         const prompt = encodeURIComponent(
-            `Допоможи виконати завдання:\n` +
-            `Назва: ${taskTitle || ''}\n` +
-            `${taskFunction ? 'Функція: ' + taskFunction + '\n' : ''}` +
-            `${taskDescription ? 'Інструкція: ' + taskDescription + '\n' : ''}` +
-            `Поясни що потрібно зробити покроково.`
+            t('aiPromptHelp') + '\n' +
+            t('aiPromptName') + ' ' + (taskTitle || '') + '\n' +
+            `${taskFunction ? t('functionColon') + ': ' + taskFunction + '\n' : ''}` +
+            `${taskDescription ? t('instructionColon') + ': ' + taskDescription + '\n' : ''}` +
+            t('aiPromptExplain')
         );
         return AI_TECH_LEAD_URL + '?q=' + prompt;
     }
@@ -17,21 +17,21 @@
     function getAiHelpButton(taskTitle, taskDescription, taskFunction, size) {
         const url = getAiHelpUrl(taskTitle, taskDescription, taskFunction);
         if (size === 'small') {
-            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:0.7rem;color:#16a34a;text-decoration:none;white-space:nowrap;" title="Запитати AI">
+            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:0.7rem;color:#16a34a;text-decoration:none;white-space:nowrap;" title="${t('askAI')}">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 AI
             </a>`;
         }
         if (size === 'medium') {
-            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.8rem;color:#16a34a;text-decoration:none;font-weight:500;" title="Запитати AI-помічника">
+            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.8rem;color:#16a34a;text-decoration:none;font-weight:500;" title="${t('askAIAssistant')}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                Не зрозуміло? Запитай AI
+                ${t('notClear')} ${t('askAI')}
             </a>`;
         }
         // large - for focus mode
         return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;font-size:0.9rem;color:#16a34a;text-decoration:none;font-weight:600;margin-top:0.75rem;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Не зрозуміло? Запитай AI-помічника
+            ${t('notClear')} ${t('askAIAssistant')}
         </a>`;
     }
     
@@ -167,20 +167,20 @@
             if (process && template) {
                 processBadge = `<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(139,92,246,0.1);border-radius:8px;font-size:0.8rem;color:#7c3aed;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
-                    ${esc(process.name)} — крок ${(task.processStep||0)+1}/${template.steps.length}
+                    ${esc(process.name)} — ${t('stepNofTotal').replace('{n}', (task.processStep||0)+1).replace('{total}', template.steps.length)}
                 </div>`;
             }
         }
         
         // Priority color
         const prioColors = { urgent: '#ef4444', high: '#f59e0b', medium: '#3b82f6', low: '#6b7280' };
-        const prioNames = { urgent: 'Терміново', high: 'Високий', medium: 'Середній', low: 'Низький' };
+        const prioNames = { urgent: t('priorityNames_urgent'), high: t('priorityNames_high'), medium: t('priorityNames_medium'), low: t('priorityNames_low') };
         
         // Checklist
         let checklistHtml = '';
         if (task.checklist?.length > 0) {
             checklistHtml = `<div style="margin-top:1rem;">
-                <div style="font-size:0.8rem;font-weight:600;color:#6b7280;margin-bottom:0.5rem;">Чеклист:</div>
+                <div style="font-size:0.8rem;font-weight:600;color:#6b7280;margin-bottom:0.5rem;">${t('checklistLabel')}:</div>
                 ${task.checklist.map((item, i) => `
                     <label style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;cursor:pointer;font-size:0.9rem;" onclick="event.stopPropagation();">
                         <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleFocusChecklist(${i})" style="width:18px;height:18px;accent-color:#22c55e;">
@@ -198,7 +198,7 @@
             <!-- Progress bar -->
             <div style="padding:1rem 1.5rem 0;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
-                    <span style="font-size:0.8rem;color:#9ca3af;">Завдання ${doneCount + 1} з ${total}</span>
+                    <span style="font-size:0.8rem;color:#9ca3af;">${t('taskNofM').replace('{n}', doneCount + 1).replace('{total}', total)}</span>
                     <span style="font-size:0.8rem;color:#9ca3af;">${progressPercent}%</span>
                 </div>
                 <div style="height:6px;background:#f3f4f6;border-radius:99px;overflow:hidden;">
@@ -240,14 +240,14 @@
                         </button>
                     </div>
                     <div style="font-size:0.75rem;color:#9ca3af;">
-                        ~${estMinutes} хв
+                        ${t('estMinutes').replace('{n}', estMinutes)}
                     </div>
                 </div>
                 
                 <!-- Description / Instruction -->
                 ${task.description ? `
                     <div style="margin:1rem 0;padding:1rem;background:#fffbeb;border-radius:12px;border-left:4px solid #f59e0b;">
-                        <div style="font-size:0.75rem;font-weight:600;color:#92400e;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Інструкція</div>
+                        <div style="font-size:0.75rem;font-weight:600;color:#92400e;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> ${t('instructionLabel')}</div>
                         <div style="font-size:0.9rem;color:#451a03;line-height:1.6;white-space:pre-line;">${esc(task.description)}</div>
                     </div>
                     ${getAiHelpButton(task.title, task.description, task.function, 'large')}
@@ -261,10 +261,10 @@
             <!-- Action buttons - sticky bottom -->
             <div style="padding:1rem 1.5rem;border-top:1px solid #f3f4f6;background:white;display:flex;gap:0.75rem;">
                 <button onclick="focusSkipTask()" style="flex:1;padding:1rem;border:2px solid #e5e7eb;border-radius:14px;background:white;font-size:0.95rem;font-weight:600;color:#6b7280;cursor:pointer;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg> Пропустити
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg> ${t('skipAction')}
                 </button>
                 <button onclick="focusCompleteTask()" style="flex:2;padding:1rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1.05rem;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(34,197,94,0.4);">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Виконано
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${t('doneAction')}
                 </button>
             </div>
         `;
@@ -284,7 +284,7 @@
                 <div style="width:80px;height:80px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
-                <h2 style="margin:0 0 0.5rem;font-size:1.5rem;font-weight:700;">Всі завдання виконано!</h2>
+                <h2 style="margin:0 0 0.5rem;font-size:1.5rem;font-weight:700;">${t('allTasksDone')}</h2>
                 <p style="color:#6b7280;margin-bottom:2rem;">${total} ' + t('greatJobToday') + '</p>
                 <button onclick="closeFocusMode()" style="padding:1rem 3rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1rem;font-weight:700;color:white;cursor:pointer;">
                     Закрити

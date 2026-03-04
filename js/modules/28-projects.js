@@ -72,8 +72,8 @@
             if (currentUserData?.role === 'employee') { showToast(t('noPermissionTask'), 'error'); return; }
             const s = getProjectStats(projectId);
             const msg = s.total > 0 
-                ? (t('deleteProjectWithTasks') || 'Видалити проєкт?').replace('{total}', s.total).replace('{undone}', s.total - s.done)
-                : (t('deleteEmptyProject') || 'Видалити порожній проєкт?');
+                ? (t('deleteProjectWithTasks')).replace('{total}', s.total).replace('{undone}', s.total - s.done)
+                : (t('deleteEmptyProject'));
             if (!confirm(msg)) return;
             try {
                 await db.collection('companies').doc(currentCompany).collection('projects').doc(projectId).delete();
@@ -314,7 +314,7 @@
             
             const headerHTML = weeks.map(w => {
                 const pct = (w.days / totalDays * 100).toFixed(2);
-                const monthShort = (typeof getMonthNames === 'function' ? getMonthNames() : ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'])[w.start.getMonth()];
+                const monthShort = (typeof getMonthNames === 'function' ? getMonthNames() : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])[w.start.getMonth()];
                 return `<div class="timeline-header-label" style="flex:${pct};">${monthShort} T${w.num}</div>`;
             }).join('');
             
@@ -507,7 +507,7 @@
         }
         
         function renderProjectGantt(projectTasks, project) {
-            if (!projectTasks.length) return '<div style="text-align:center;color:#999;padding:2rem;">Немає завдань для діаграми</div>';
+            if (!projectTasks.length) return '<div style="text-align:center;color:#999;padding:2rem;">' + t('noTasksForGantt') + '</div>';
             
             const today = new Date();
             const todayStr = getLocalDateStr(today);
@@ -679,7 +679,7 @@
             }
             sel.innerHTML = '<option value="" data-i18n="noProject">Без проєкту</option>' + 
                 showProjects.map(p => {
-                    const suffix = p.status !== 'active' ? ` (${p.status === 'completed' ? 'завершено' : 'пауза'})` : '';
+                    const suffix = p.status !== 'active' ? ` (${p.status === 'completed' ? t('completedProjectStatus') : t('pausedProjectStatus')})` : '';
                     return `<option value="${esc(p.id)}">${esc(p.name)}${suffix}</option>`;
                 }).join('');
             sel.value = current;
@@ -777,35 +777,35 @@
                     <div style="flex:1;">
                         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.3rem;">
                             <select class="form-select step-function" style="flex:1;min-width:120px;" onchange="updateStepFunction(${index}, this.value)">
-                                <option value="">${t('stepFunction') || 'Функція'}</option>
+                                <option value="">${t('stepFunction')}</option>
                                 ${funcOptions}
                             </select>
-                            <input type="text" class="form-input step-title" placeholder="${t('stepTitle') || 'Назва кроку'}" value="${esc(step.title || '')}" style="flex:1;min-width:120px;">
+                            <input type="text" class="form-input step-title" placeholder="${t('stepTitle')}" value="${esc(step.title || '')}" style="flex:1;min-width:120px;">
                         </div>
                         <div style="display:flex;gap:0.3rem;align-items:center;">
                             <select class="form-select step-sla" style="width:90px;font-size:0.75rem;padding:0.25rem;">
-                                <option value="" ${!step.slaMinutes ? 'selected' : ''}>${t('noSLA') || 'Без SLA'}</option>
-                                <option value="30" ${step.slaMinutes == 30 ? 'selected' : ''}>30 ${t('min') || 'хв'}</option>
-                                <option value="60" ${step.slaMinutes == 60 ? 'selected' : ''}>1 ${t('hour') || 'год'}</option>
-                                <option value="120" ${step.slaMinutes == 120 ? 'selected' : ''}>2 ${t('hour') || 'год'}</option>
-                                <option value="240" ${step.slaMinutes == 240 ? 'selected' : ''}>4 ${t('hour') || 'год'}</option>
-                                <option value="480" ${step.slaMinutes == 480 ? 'selected' : ''}>8 ${t('hour') || 'год'}</option>
-                                <option value="1440" ${step.slaMinutes == 1440 ? 'selected' : ''}>1 ${t('day') || 'день'}</option>
-                                <option value="2880" ${step.slaMinutes == 2880 ? 'selected' : ''}>2 ${t('days') || 'дні'}</option>
-                                <option value="4320" ${step.slaMinutes == 4320 ? 'selected' : ''}>3 ${t('days') || 'дні'}</option>
+                                <option value="" ${!step.slaMinutes ? 'selected' : ''}>${t('noSLA')}</option>
+                                <option value="30" ${step.slaMinutes == 30 ? 'selected' : ''}>30 ${t('min')}</option>
+                                <option value="60" ${step.slaMinutes == 60 ? 'selected' : ''}>1 ${t('hour')}</option>
+                                <option value="120" ${step.slaMinutes == 120 ? 'selected' : ''}>2 ${t('hour')}</option>
+                                <option value="240" ${step.slaMinutes == 240 ? 'selected' : ''}>4 ${t('hour')}</option>
+                                <option value="480" ${step.slaMinutes == 480 ? 'selected' : ''}>8 ${t('hour')}</option>
+                                <option value="1440" ${step.slaMinutes == 1440 ? 'selected' : ''}>1 ${t('day')}</option>
+                                <option value="2880" ${step.slaMinutes == 2880 ? 'selected' : ''}>2 ${t('days')}</option>
+                                <option value="4320" ${step.slaMinutes == 4320 ? 'selected' : ''}>3 ${t('days')}</option>
                             </select>
                             <label style="font-size:0.7rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
-                                <input type="checkbox" class="step-checkpoint" ${step.checkpoint ? 'checked' : ''}> ${t('checkpoint') || 'Підтвердження'}
+                                <input type="checkbox" class="step-checkpoint" ${step.checkpoint ? 'checked' : ''}> ${t('checkpoint')}
                             </label>
                             <label style="font-size:0.7rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
-                                <input type="checkbox" class="step-smartassign" ${step.smartAssign !== false ? 'checked' : ''}> ${t('smartAssign') || 'Авторозподіл'}
+                                <input type="checkbox" class="step-smartassign" ${step.smartAssign !== false ? 'checked' : ''}> ${t('smartAssign')}
                             </label>
-                            <button type="button" onclick="toggleStepDetails(${index})" style="background:none;border:none;cursor:pointer;font-size:0.7rem;color:#3b82f6;">${t('details') || 'Деталі'}</button>
+                            <button type="button" onclick="toggleStepDetails(${index})" style="background:none;border:none;cursor:pointer;font-size:0.7rem;color:#3b82f6;">${t('details')}</button>
                         </div>
                         <div class="step-details" id="stepDetails_${index}" style="display:${expanded ? 'block' : 'none'};margin-top:0.3rem;">
-                            <input type="text" class="form-input step-expectedResult" placeholder="${t('expectedResult') || 'Продукт/результат етапу'}" value="${esc(step.expectedResult || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
-                            <input type="text" class="form-input step-controlQuestion" placeholder="${t('controlQuestion') || 'Контрольне питання (так/ні)'}" value="${esc(step.controlQuestion || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
-                            <textarea class="form-textarea step-instruction" placeholder="${t('instruction') || 'Інструкція для виконавця'}" style="font-size:0.8rem;min-height:40px;">${esc(step.instruction || '')}</textarea>
+                            <input type="text" class="form-input step-expectedResult" placeholder="${t('expectedResult')}" value="${esc(step.expectedResult || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
+                            <input type="text" class="form-input step-controlQuestion" placeholder="${t('controlQuestion')}" value="${esc(step.controlQuestion || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
+                            <textarea class="form-textarea step-instruction" placeholder="${t('instruction')}" style="font-size:0.8rem;min-height:40px;">${esc(step.instruction || '')}</textarea>
                         </div>
                     </div>
                     <button type="button" class="btn btn-small btn-danger" onclick="removeTemplateStep(${index})" style="padding:0.3rem 0.5rem;align-self:start;">
@@ -1088,10 +1088,10 @@
                     fullInstruction = (processObject ? `[${processObject}]\n` : '') + fullInstruction;
                 }
                 if (firstStep.expectedResult) {
-                    fullInstruction += `\n\n${t('expectedResult') || 'Очікуваний результат'}: ${firstStep.expectedResult}`;
+                    fullInstruction += `\n\n${t('expectedResult')}: ${firstStep.expectedResult}`;
                 }
                 if (firstStep.controlQuestion) {
-                    fullInstruction += `\n${t('controlQuestion') || 'Контрольне питання'}: ${firstStep.controlQuestion}`;
+                    fullInstruction += `\n${t('controlQuestion')}: ${firstStep.controlQuestion}`;
                 }
                 
                 const taskData = {
@@ -1126,7 +1126,7 @@
                 renderProcessBoard();
                 renderMyDay();
                 refreshCurrentView();
-                showToast(t('processStarted') || 'Процес запущено', 'success');
+                showToast(t('processStarted'), 'success');
                 
             } catch (error) {
                 console.error('startProcess error:', error);
@@ -1167,7 +1167,7 @@
                 </div>` : ''}
                 
                 <div style="margin-bottom:1.5rem;">
-                    <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${t('processFlow') || 'Послідовність'}</div>
+                    <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${t('processFlow')}</div>
                     <div style="display:flex;flex-direction:column;gap:0.5rem;">
                         ${(template?.steps || []).map((step, i) => {
                             let statusColor = 'var(--gray)';
@@ -1234,7 +1234,7 @@
                 ${process.deadline ? `
                 <div style="font-size:0.82rem;color:var(--gray);margin-bottom:0.5rem;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-                    ${t('deadline') || 'Дедлайн'}: <strong>${process.deadline}</strong>
+                    ${t('deadline')}: <strong>${process.deadline}</strong>
                 </div>` : ''}
                 
                 <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;">

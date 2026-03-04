@@ -153,8 +153,8 @@
                     critical.length > 0 ? 'red' : 'yellow';
                 const healthIcon = healthScore === 'green' ? 'check-circle' : healthScore === 'red' ? 'alert-octagon' : 'alert-triangle';
                 const healthColor = healthScore === 'green' ? '#16a34a' : healthScore === 'red' ? '#ef4444' : '#f59e0b';
-                const healthText = healthScore === 'green' ? (t('allGood') || 'Все під контролем') : 
-                    healthScore === 'red' ? (t('attentionRequired') || 'Потрібна увага!') : (t('warningIssues') || 'Є питання');
+                const healthText = healthScore === 'green' ? (t('allGood')) : 
+                    healthScore === 'red' ? (t('attentionRequired')) : (t('warningIssues'));
 
                 content.innerHTML = `
                     <div style="margin-bottom:1rem;">
@@ -162,14 +162,14 @@
                             <i data-lucide="${healthIcon}" class="icon" style="color:${healthColor};width:28px;height:28px;flex-shrink:0;"></i>
                             <div>
                                 <div style="font-weight:700;font-size:1rem;color:${healthColor};">${healthText}</div>
-                                <div style="font-size:0.78rem;color:#6b7280;">${overdue.length} ${t('overdueStatus') || 'прострочених'} · ${todayTasks.length} ${t('forToday') || 'на сьогодні'} · ${onReview.length} ${t('statusOnReview') || 'на перевірці'}</div>
+                                <div style="font-size:0.78rem;color:#6b7280;">${overdue.length} ${t('overdueStatus')} · ${todayTasks.length} ${t('forToday')} · ${onReview.length} ${t('statusOnReview')}</div>
                             </div>
                         </div>
                     </div>
                     
                     ${critical.length > 0 ? `
                     <div style="background:#fef2f2;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#dc2626;margin-bottom:0.4rem;"><i data-lucide="alert-octagon" class="icon icon-sm"></i> ${t('criticalOverdue') || 'Критично прострочені'} (7+ ${t('daysAgo') || 'дн.'})</div>
+                        <div style="font-weight:700;color:#dc2626;margin-bottom:0.4rem;"><i data-lucide="alert-octagon" class="icon icon-sm"></i> ${t('criticalOverdue')} (7+ ${t('daysAgo')})</div>
                         ${critical.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #fecaca;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
                             <span style="font-weight:500;">${esc(tk.title)}</span>
                             <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')} · ${tk.deadlineDate}</span>
@@ -179,7 +179,7 @@
                     
                     ${warning.length > 0 ? `
                     <div style="background:#fffbeb;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#b45309;margin-bottom:0.4rem;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus') || 'Прострочені'} (3-7 ${t('daysAgo') || 'дн.'})</div>
+                        <div style="font-weight:700;color:#b45309;margin-bottom:0.4rem;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus')} (3-7 ${t('daysAgo')})</div>
                         ${warning.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #fde68a;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
                             <span style="font-weight:500;">${esc(tk.title)}</span>
                             <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')} · ${tk.deadlineDate}</span>
@@ -188,7 +188,7 @@
                     
                     ${stuck.length > 0 ? `
                     <div style="background:#eef2ff;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#4338ca;margin-bottom:0.4rem;"><i data-lucide="pause-circle" class="icon icon-sm"></i> ${t('notStarted') || 'Не розпочато'} (3+ ${t('daysAgo') || 'дн.'})</div>
+                        <div style="font-weight:700;color:#4338ca;margin-bottom:0.4rem;"><i data-lucide="pause-circle" class="icon icon-sm"></i> ${t('notStarted')} (3+ ${t('daysAgo')})</div>
                         ${stuck.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #c7d2fe;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
                             <span style="font-weight:500;">${esc(tk.title)}</span>
                             <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')}</span>
@@ -197,7 +197,7 @@
                     
                     ${onReview.length > 0 ? `
                     <div style="background:#f5f3ff;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#7c3aed;margin-bottom:0.4rem;"><i data-lucide="eye" class="icon icon-sm"></i> ${t('statusOnReview') || 'Чекають перевірки'} (${onReview.length})</div>
+                        <div style="font-weight:700;color:#7c3aed;margin-bottom:0.4rem;"><i data-lucide="eye" class="icon icon-sm"></i> ${t('statusOnReview')} (${onReview.length})</div>
                         ${onReview.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #ddd6fe;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
                             <span style="font-weight:500;">${esc(tk.title)}</span>
                             <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')}</span>
@@ -205,12 +205,12 @@
                     </div>` : ''}
                     
                     <div style="background:#f9fafb;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#374151;margin-bottom:0.5rem;"><i data-lucide="users" class="icon icon-sm"></i> ${t('teamStatus') || 'Команда сьогодні'}</div>
+                        <div style="font-weight:700;color:#374151;margin-bottom:0.5rem;"><i data-lucide="users" class="icon icon-sm"></i> ${t('teamStatus')}</div>
                         ${peopleStats.map(p => `
                         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;font-size:0.82rem;border-bottom:1px solid #e5e7eb;">
                             <span style="width:6px;height:6px;border-radius:50%;background:${p.overdue > 0 ? '#ef4444' : '#16a34a'};flex-shrink:0;"></span>
                             <span style="flex:1;font-weight:500;">${esc(p.name || p.email)}</span>
-                            <span style="color:#6b7280;">${p.today} ${t('forToday') || 'на сьогодні'}</span>
+                            <span style="color:#6b7280;">${p.today} ${t('forToday')}</span>
                             ${p.overdue > 0 ? `<span style="color:#ef4444;font-weight:600;">${p.overdue} !</span>` : ''}
                         </div>`).join('')}
                     </div>
@@ -218,7 +218,7 @@
                     ${todaysRegular.length > 0 ? `
                     <div style="background:#f0fdf4;border-radius:10px;padding:0.75rem;">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
-                            <span style="font-weight:700;color:#374151;"><i data-lucide="repeat" class="icon icon-sm"></i> ${t('tabRegular') || 'Регулярні'} ${t('forToday') || 'на сьогодні'}</span>
+                            <span style="font-weight:700;color:#374151;"><i data-lucide="repeat" class="icon icon-sm"></i> ${t('tabRegular')} ${t('forToday')}</span>
                             <span style="font-size:0.85rem;font-weight:600;color:${regDone === todaysRegular.length ? '#16a34a' : '#f59e0b'};">${regDone}/${todaysRegular.length}</span>
                         </div>
                         <div style="height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
@@ -434,7 +434,7 @@
                         incidents.push({
                             type: 'stuck', auto: true,
                             icon: 'pause-circle', color: '#6366f1', bg: '#eef2ff',
-                            label: t('notStarted') || 'Не розпочато',
+                            label: t('notStarted'),
                             title: tk.title,
                             person: tk.assigneeName || t('notAssigned'),
                             func: tk.function || '',
@@ -486,7 +486,7 @@
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
                         <h3>${t('failureJournal')}</h3>
                         <button class="btn btn-success btn-small" onclick="toggleAddIncidentForm()">
-                            <i data-lucide="plus" class="icon icon-sm"></i> ${t('addIncident') || 'Додати збій'}
+                            <i data-lucide="plus" class="icon icon-sm"></i> ${t('addIncident')}
                         </button>
                     </div>
                     
@@ -503,16 +503,16 @@
                         </div>
                         <div style="background:#eef2ff;border-radius:8px;padding:0.5rem;text-align:center;">
                             <div style="font-size:1.2rem;font-weight:700;color:#6366f1;">${stuckCount}</div>
-                            <div style="font-size:0.68rem;color:#6b7280;">${t('notStarted') || 'Зависли'}</div>
+                            <div style="font-size:0.68rem;color:#6b7280;">${t('notStarted')}</div>
                         </div>
                         <div style="background:#faf5ff;border-radius:8px;padding:0.5rem;text-align:center;">
                             <div style="font-size:1.2rem;font-weight:700;color:#9333ea;">${manualCount}</div>
-                            <div style="font-size:0.68rem;color:#6b7280;">${t('manualIncidents') || 'Ручні'}</div>
+                            <div style="font-size:0.68rem;color:#6b7280;">${t('manualIncidents')}</div>
                         </div>
                     </div>
-                    ${resolvedCount > 0 ? `<div style="font-size:0.75rem;color:#16a34a;margin-bottom:0.5rem;"><i data-lucide="check-circle" class="icon icon-sm"></i> ${resolvedCount} ${t('resolvedIncidents') || 'розібрано'}</div>` : ''}
+                    ${resolvedCount > 0 ? `<div style="font-size:0.75rem;color:#16a34a;margin-bottom:0.5rem;"><i data-lucide="check-circle" class="icon icon-sm"></i> ${resolvedCount} ${t('resolvedIncidents')}</div>` : ''}
                     
-                    ${incidents.length === 0 ? `<div style="text-align:center;padding:2rem;color:#9ca3af;"><i data-lucide="check-circle" class="icon" style="width:48px;height:48px;color:#16a34a;"></i><p style="margin-top:0.5rem;">${t('noIncidents') || 'Збоїв не виявлено'}</p></div>` : ''}
+                    ${incidents.length === 0 ? `<div style="text-align:center;padding:2rem;color:#9ca3af;"><i data-lucide="check-circle" class="icon" style="width:48px;height:48px;color:#16a34a;"></i><p style="margin-top:0.5rem;">${t('noIncidents')}</p></div>` : ''}
                     
                     ${incidents.map(inc => `
                         <div style="display:flex;gap:0.6rem;padding:0.6rem;margin-bottom:0.3rem;background:${inc.bg};border-radius:8px;border-left:4px solid ${inc.color};">
@@ -526,10 +526,10 @@
                                     <span>${esc(inc.person)}</span>
                                     ${inc.func ? `<span>· ${esc(inc.func)}</span>` : ''}
                                     ${inc.detail ? `<span style="color:${inc.color};font-weight:500;">· ${esc(inc.detail)}</span>` : ''}
-                                    ${!inc.auto ? `<span style="background:#e0e7ff;color:#4338ca;padding:0 4px;border-radius:3px;font-size:0.65rem;">${t('manual') || 'ручний'}</span>` : ''}
+                                    ${!inc.auto ? `<span style="background:#e0e7ff;color:#4338ca;padding:0 4px;border-radius:3px;font-size:0.65rem;">${t('manual')}</span>` : ''}
                                 </div>
                             </div>
-                            ${inc.manualId ? `<button onclick="resolveIncident('${escId(inc.manualId)}')" style="background:none;border:none;cursor:pointer;color:#16a34a;padding:4px;flex-shrink:0;" title="${t('markResolved') || 'Розібрано'}"><i data-lucide="check-circle" class="icon icon-sm"></i></button>` : ''}
+                            ${inc.manualId ? `<button onclick="resolveIncident('${escId(inc.manualId)}')" style="background:none;border:none;cursor:pointer;color:#16a34a;padding:4px;flex-shrink:0;" title="${t('markResolved')}"><i data-lucide="check-circle" class="icon icon-sm"></i></button>` : ''}
                         </div>
                     `).join('')}
                 `;

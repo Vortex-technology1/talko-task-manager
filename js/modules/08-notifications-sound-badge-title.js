@@ -165,8 +165,8 @@
         
         function showCompletedTaskToast(task) {
             // Add to notification center
-            const assignee = task.assigneeName || 'Співробітник';
-            addNotification('completed', t('taskCompleted') || 'Завдання виконано', assignee + ': ' + (task.title || ''), task.id || null);
+            const assignee = task.assigneeName || t('employee');
+            addNotification('completed', t('taskCompleted'), assignee + ': ' + (task.title || ''), task.id || null);
             
             const existingToast = document.getElementById('completedTaskToast');
             if (existingToast) existingToast.remove();
@@ -222,8 +222,8 @@
         function showNewTaskToast(type, count, title) {
             // Add to notification center
             const typeMap = { process: 'process', regular: 'new_task', task: 'new_task' };
-            const labelMap = { process: 'Завдання з процесу', regular: 'Регулярне завдання', task: 'Нове завдання' };
-            addNotification(typeMap[type] || 'new_task', labelMap[type] || 'Нове завдання', title || '', null);
+            const labelMap = { process: t('notificationProcess'), regular: t('notificationRegular'), task: t('notificationNewTask') };
+            addNotification(typeMap[type] || 'new_task', labelMap[type] || t('notificationNewTask'), title || '', null);
             
             // Видаляємо попередній toast якщо є
             const existingToast = document.getElementById('newTaskToast');

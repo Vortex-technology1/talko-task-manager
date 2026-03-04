@@ -142,7 +142,7 @@
                                 const creatorName = data.creatorName || '';
                                 const msg = `${creatorName} ${t('rejectedTaskMsg')}: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`;
                                 showToast(msg, 'warning');
-                                addNotification('rejected', t('taskReturnedForRevision') || 'Повернуто на доопрацювання', (data.creatorName || '') + ': ' + (data.title || ''), doc.id);
+                                addNotification('rejected', t('taskReturnedForRevision'), (data.creatorName || '') + ': ' + (data.title || ''), doc.id);
                                 // Інкрементальне оновлення
                                 const idx = tasks.findIndex(t => t.id === doc.id);
                                 if (idx >= 0) {
@@ -165,7 +165,7 @@
         
         function showReviewTaskToast(task, taskId) {
             // Add to notification center
-            addNotification('review', t('taskForReview') || 'Завдання на перевірку', (task.assigneeName || '') + ': ' + (task.title || ''), taskId || null);
+            addNotification('review', t('taskForReview'), (task.assigneeName || '') + ': ' + (task.title || ''), taskId || null);
             
             const existingToast = document.getElementById('reviewTaskToast');
             if (existingToast) existingToast.remove();

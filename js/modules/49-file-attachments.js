@@ -20,9 +20,9 @@
         }
         
         function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' Б';
-            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' КБ';
-            return (bytes / (1024 * 1024)).toFixed(1) + ' МБ';
+            if (bytes < 1024) return bytes + ' ' + t('bytesB');
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' ' + t('kilobytesKB');
+            return (bytes / (1024 * 1024)).toFixed(1) + ' ' + t('megabytesMB');
         }
         
         function isImageFile(filename) {
@@ -84,10 +84,10 @@
                                 </div>
                             </div>
                             <div class="task-file-actions">
-                                <button onclick="downloadTaskFile('${escId(file.url)}')" title="Завантажити">
+                                <button onclick="downloadTaskFile('${escId(file.url)}')" title="${t('download')}">
                                     <i data-lucide="download" class="icon icon-sm"></i>
                                 </button>
-                                ${canDelete ? `<button class="delete-file" onclick="deleteTaskFile(${index})" title="Видалити">
+                                ${canDelete ? `<button class="delete-file" onclick="deleteTaskFile(${index})" title="${t('delete')}">
                                     <i data-lucide="trash-2" class="icon icon-sm"></i>
                                 </button>` : ''}
                             </div>
@@ -190,7 +190,7 @@
             try {
                 for (let i = 0; i < filesToUpload.length; i++) {
                     const file = filesToUpload[i];
-                    progressText.textContent = `Завантаження ${i + 1}/${filesToUpload.length}: ${file.name}`;
+                    progressText.textContent = t('uploadProgress').replace('{i}', i + 1).replace('{total}', filesToUpload.length).replace('{name}', file.name);
                     progressFill.style.width = '10%';
                     
                     // Generate unique path
@@ -240,7 +240,7 @@
                 renderTaskFiles(allFiles);
                 
                 progressFill.style.width = '100%';
-                progressText.textContent = `Завантажено ${newFiles.length} файл(ів)`;
+                progressText.textContent = t('filesUploaded').replace('{n}', newFiles.length);
                 
                 setTimeout(() => {
                     progressEl.style.display = 'none';

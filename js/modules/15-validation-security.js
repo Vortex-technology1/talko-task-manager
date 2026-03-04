@@ -415,7 +415,7 @@
             const task = tasks.find(t => t.id === id);
             if (!task) return;
             
-            const taskName = task.title || 'Завдання';
+            const taskName = task.title || t('taskLabel');
             
             // Prevent snapshot from re-inserting during async delete
             pendingDeleteIds.add(id);

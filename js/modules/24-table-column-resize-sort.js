@@ -161,18 +161,18 @@
         }
         
         function getExportData() {
-            const st = { new: 'Нове', progress: 'В роботі', review: 'Перевірка', done: 'Готово' };
+            const st = { new: t('statusNewLabel'), progress: t('statusProgressLabel'), review: t('statusReviewLabel'), done: t('statusDoneLabel') };
             return tasks.filter(t => isTaskVisibleToUser(t)).map(task => {
                 const { date, time } = parseDeadline(task);
                 return {
-                    'Назва': task.title || '',
-                    'Виконавець': task.assigneeName || '',
-                    'Створив': task.creatorName || '',
-                    'Дедлайн': date ? (date + (time ? ' ' + time : '')) : '',
-                    'Статус': st[task.status] || task.status,
-                    'Функція': task.function || '',
-                    'Пріоритет': task.priority === 'high' ? 'Високий' : task.priority === 'low' ? 'Низький' : 'Середній',
-                    'Опис': task.description || task.instruction || ''
+                    [t('taskName')]: task.title || '',
+                    [t('assignee')]: task.assigneeName || '',
+                    [t('createdBy')]: task.creatorName || '',
+                    [t('deadline')]: date ? (date + (time ? ' ' + time : '')) : '',
+                    [t('status')]: st[task.status] || task.status,
+                    [t('functionLabel')]: task.function || '',
+                    [t('priority')]: task.priority === 'high' ? t('priorityNames_high') : task.priority === 'low' ? t('priorityNames_low') : t('priorityNames_medium'),
+                    [t('description')]: task.description || task.instruction || ''
                 };
             });
         }
@@ -203,7 +203,7 @@
             xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
             xml += '<Styles><Style ss:ID="header"><Font ss:Bold="1" ss:Size="11"/><Interior ss:Color="#22c55e" ss:Pattern="Solid"/><Font ss:Color="#FFFFFF" ss:Bold="1"/></Style>';
             xml += '<Style ss:ID="wrap"><Alignment ss:WrapText="1" ss:Vertical="Top"/></Style></Styles>\n';
-            xml += '<Worksheet ss:Name="Завдання"><Table>\n';
+            xml += '<Worksheet ss:Name="' + t('tasks') + '"><Table>\n';
             
             // Column widths
             const colWidths = [250, 150, 120, 120, 80, 120, 80, 300];
