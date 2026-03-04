@@ -14,7 +14,8 @@
     let statsMetrics = [];
     let statsEntries = [];
     let statsTargets = [];
-    let statsCurrentScope = 'my';       // my | function | company
+    let statsCurrentScope = 'my';       // my | function | project | company
+    let statsSelectedProjectId = '';     // for project scope
     let statsCurrentView = 'dashboard'; // dashboard | table | charts
     let statsPeriodOffset = 0;
     let statsEditingMetricId = null;
@@ -88,18 +89,24 @@
     // ========================
     function setStatsScope(scope) {
         // P1-4: employee cannot see company scope
-        if (scope === 'company' && getUserRole() === 'employee') scope = 'my';
+        if ((scope === 'company' || scope === 'project') && getUserRole() === 'employee') scope = 'my';
         statsCurrentScope = scope;
 
         document.querySelectorAll('[id^="statsScope"]').forEach(el => el.classList.remove('active'));
-        const map = { my: 'My', function: 'Func', company: 'Company' };
+        const map = { my: 'My', function: 'Func', project: 'Project', company: 'Company' };
         const btn = document.getElementById('statsScope' + map[scope]);
         if (btn) btn.classList.add('active');
 
         // P0-3: show/hide function selector
         updateFunctionSelector();
+        renderScopeBar();
         renderStatistics();
     }
+
+    window.onStatsProjectChange = function(projectId) {
+        statsSelectedProjectId = projectId;
+        renderStatistics();
+    };
 
     function setStatsView(v) {
         statsCurrentView = v;
@@ -280,6 +287,15 @@
                     }
                 }
 
+            } else if (statsCurrentScope === 'project' && statsSelectedProjectId) {
+                // Project view: pull project-scope entries
+                const projSnap = await entriesRef()
+                    .where('periodKey', '==', pk)
+                    .where('scope', '==', 'project')
+                    .where('scopeId', '==', statsSelectedProjectId)
+                    .get();
+                results = projSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
             } else {
                 // Owner/manager company view or fallback: pull all for period
                 const s = await entriesRef().where('periodKey', '==', pk).get();
@@ -319,8 +335,11 @@
             inputType: document.getElementById('metricInputType')?.value || 'manual',
             privacy: document.getElementById('metricPrivacy')?.value || 'public',
             formula: document.getElementById('metricFormula')?.value?.trim() || '',
-            alertEnabled: document.getElementById('metricAlertEnabled')?.checked || false,
+            alertEnabled: document.getElementById('metricAlertEnabled')?.value === 'true',
             alertThreshold: parseInt(document.getElementById('metricAlertThreshold')?.value) || 20,
+            importance: document.getElementById('metricImportance')?.value || 'critical',
+            isInverse: document.getElementById('metricIsInverse')?.checked || false,
+            responsibleId: document.getElementById('metricResponsible')?.value || '',
             boundFunctions: {},
             autoSpec: null,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -415,6 +434,9 @@
         if (statsCurrentScope === 'function' && statsSelectedFunctionId) {
             scope = 'function';
             scopeId = statsSelectedFunctionId;
+        } else if (statsCurrentScope === 'project' && statsSelectedProjectId) {
+            scope = 'project';
+            scopeId = statsSelectedProjectId;
         } else if (statsCurrentScope === 'company') {
             scope = 'company';
             scopeId = currentCompany;
@@ -592,59 +614,100 @@
     // ========================
     //  METRIC MODAL
     // ========================
+    // Unit pill selector
+    window.selectMetricUnit = function(unit) {
+        document.getElementById('metricUnit').value = unit;
+        document.querySelectorAll('#metricUnitPills .stats-pill').forEach(b => {
+            const isActive = b.dataset.unit === unit;
+            b.style.background = isActive ? 'var(--primary)' : 'white';
+            b.style.color = isActive ? 'white' : 'var(--dark)';
+            b.style.borderColor = isActive ? 'var(--primary)' : '#e5e7eb';
+        });
+    };
+
+    // Importance pill selector
+    window.selectMetricImportance = function(imp) {
+        document.getElementById('metricImportance').value = imp;
+        document.querySelectorAll('#metricImportancePills .stats-pill').forEach(b => {
+            const isActive = b.dataset.imp === imp;
+            b.style.background = isActive ? 'var(--primary)' : 'white';
+            b.style.color = isActive ? 'white' : 'var(--dark)';
+            b.style.borderColor = isActive ? 'var(--primary)' : '#e5e7eb';
+            // Fix inner text color
+            const sub = b.querySelector('span span');
+            if (sub) sub.style.color = isActive ? 'rgba(255,255,255,0.8)' : '#9ca3af';
+        });
+    };
+
     function openMetricModal(mid) {
         statsEditingMetricId = mid || null;
 
+        // Populate responsible dropdown with company users
+        const respSel = document.getElementById('metricResponsible');
+        if (respSel) {
+            const us = typeof users !== 'undefined' ? users : [];
+            respSel.innerHTML = '<option value="">Не призначено</option>' +
+                us.map(u => '<option value="' + u.id + '">' + esc(u.name || u.email || u.id) + '</option>').join('');
+        }
+
+        // Populate functions list
         const fl = document.getElementById('metricFunctionsList');
         if (fl) {
             const fs = typeof functions !== 'undefined' ? functions : [];
             fl.innerHTML = fs.map(f =>
-                '<label style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.6rem;background:#f3f4f6;border-radius:8px;font-size:0.8rem;cursor:pointer;">' +
-                '<input type="checkbox" value="' + f.id + '" class="metric-func-cb"> ' + esc(f.name || f.title || '') +
+                '<label style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.7rem;background:#f3f4f6;border-radius:10px;font-size:0.8rem;cursor:pointer;">' +
+                '<input type="checkbox" value="' + f.id + '" class="metric-func-cb" style="accent-color:var(--primary);"> ' + esc(f.name || f.title || '') +
                 '</label>'
             ).join('');
         }
 
-        const af = document.getElementById('autoSpecFunction');
-        if (af) {
-            const fs = typeof functions !== 'undefined' ? functions : [];
-            af.innerHTML = '<option value="">' + (t('allFunctions') || 'Всі функції') + '</option>' +
-                fs.map(f => '<option value="' + f.id + '">' + esc(f.name || f.title || '') + '</option>').join('');
-        }
+        // Show/hide delete button
+        const delBtn = document.getElementById('metricDeleteBtn');
+        if (delBtn) delBtn.style.display = mid ? 'flex' : 'none';
 
         if (mid) {
             const m = statsMetrics.find(x => x.id === mid);
             if (m) {
-                document.getElementById('metricModalTitle').textContent = t('editMetric') || 'Редагувати';
+                document.getElementById('metricModalTitle').textContent = 'Редагувати показник';
                 document.getElementById('metricName').value = m.name || '';
-                document.getElementById('metricUnit').value = m.unit || 'шт';
                 document.getElementById('metricFrequency').value = m.frequency || 'weekly';
-                document.getElementById('metricFrequency').disabled = true; // P0-1: immutable
+                document.getElementById('metricFrequency').disabled = true;
+                document.getElementById('metricTarget').value = m.defaultTarget || '';
+                document.getElementById('metricFormula').value = m.formula || '';
                 document.getElementById('metricInputType').value = m.inputType || 'manual';
                 document.getElementById('metricPrivacy').value = m.privacy || 'public';
-                document.getElementById('metricFormula').value = m.formula || '';
-                document.getElementById('metricAlertEnabled').checked = m.alertEnabled || false;
-                document.getElementById('metricAlertThreshold').value = m.alertThreshold || 20;
+                document.getElementById('metricIsInverse').checked = m.isInverse || false;
+                // Set unit pills
+                selectMetricUnit(m.unit || 'шт');
+                // Set importance
+                selectMetricImportance(m.importance || 'critical');
+                // Set responsible
+                if (respSel && m.responsibleId) respSel.value = m.responsibleId;
+                // Set alert
+                const alertEl = document.getElementById('metricAlertEnabled');
+                if (alertEl) alertEl.value = m.alertEnabled ? 'true' : 'false';
                 if (m.boundFunctions) {
                     document.querySelectorAll('.metric-func-cb').forEach(cb => {
                         cb.checked = !!m.boundFunctions[cb.value];
                     });
                 }
-                toggleAutoSpec();
             }
         } else {
-            document.getElementById('metricModalTitle').textContent = t('addMetric') || 'Нова метрика';
+            document.getElementById('metricModalTitle').textContent = 'Новий показник';
             document.getElementById('metricName').value = '';
-            document.getElementById('metricUnit').value = 'шт';
             document.getElementById('metricFrequency').value = 'weekly';
-            document.getElementById('metricFrequency').disabled = false; // P0-1: editable for new
+            document.getElementById('metricFrequency').disabled = false;
+            document.getElementById('metricTarget').value = '';
+            document.getElementById('metricFormula').value = '';
             document.getElementById('metricInputType').value = 'manual';
             document.getElementById('metricPrivacy').value = 'public';
-            document.getElementById('metricFormula').value = '';
-            document.getElementById('metricTarget').value = '';
-            document.getElementById('metricAlertEnabled').checked = false;
+            document.getElementById('metricIsInverse').checked = false;
+            selectMetricUnit('грн');
+            selectMetricImportance('critical');
+            if (respSel) respSel.value = '';
         }
-        openModal('metricModal');
+
+        document.getElementById('metricModal').style.display = 'flex';
     }
 
     function toggleAutoSpec() {
@@ -711,6 +774,7 @@
             { id: 'function', label: t('scopeFunction') || 'Функції' },
         ];
         if (role === 'owner' || role === 'manager' || role === 'admin') {
+            scopes.push({ id: 'project', label: 'Проєкт' });
             scopes.push({ id: 'company', label: t('scopeCompany') || 'Компанія' });
         }
 
@@ -732,12 +796,24 @@
                 </select>`;
             }
         }
+        // Project selector
+        let projSel = '';
+        if (statsCurrentScope === 'project') {
+            const ps = typeof projects !== 'undefined' ? projects.filter(p => p.status === 'active') : [];
+            if (ps.length > 0) {
+                if (!statsSelectedProjectId && ps.length > 0) statsSelectedProjectId = ps[0].id;
+                projSel = `<select class="stats-func-select" onchange="onStatsProjectChange(this.value)">
+                    ${ps.map(p => `<option value="${p.id}" ${p.id === statsSelectedProjectId ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}
+                </select>`;
+            }
+        }
 
         sb.innerHTML = `
         <input type="hidden" id="statsPeriodTypeHidden" value="${curPT}">
         <div class="stats-bar">
             ${scopes.map(s => `<button class="stats-pill ${statsCurrentScope === s.id ? 'active' : ''}" onclick="setStatsScope('${s.id}')">${s.label}</button>`).join('')}
             ${funcSel}
+            ${projSel}
             <div class="stats-bar-sep"></div>
             ${periodTypes.map(p => `<button class="stats-pill ${curPT === p.v ? 'active' : ''}" onclick="setStatsPeriodType('${p.v}')">${p.l}</button>`).join('')}
             <div class="stats-bar-sep"></div>
@@ -843,19 +919,29 @@
                     <th style="min-width:150px;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</th>`;
 
         // Column headers = metric names with actions
+        const impColors = { critical: '#ef4444', high: '#f97316', medium: '#f59e0b', low: '#22c55e' };
         metrics.forEach((m, mi) => {
             const color = METRIC_COLORS[mi % METRIC_COLORS.length];
             const privacy = m.privacy === 'owner_only' ? ` ${SVG.lock}` : m.privacy === 'restricted' ? ` ${SVG.eye}` : '';
-            const unit = m.unit ? ` <span style="font-weight:400;opacity:0.6;">${m.unit}</span>` : '';
+            const unit = m.unit ? ` <sup style="font-weight:400;opacity:0.5;font-size:0.65rem;">${esc(m.unit)}</sup>` : '';
+            const impColor = impColors[m.importance] || '#22c55e';
+            const inverse = m.isInverse ? ' <span style="font-size:0.6rem;color:#ef4444;">↓</span>' : '';
+            // Responsible name
+            let respName = '';
+            if (m.responsibleId) {
+                const ru = (typeof users !== 'undefined' ? users : []).find(u => u.id === m.responsibleId);
+                respName = ru ? esc(ru.name || ru.email || '').split(' ')[0] : '';
+            }
             const role = getUserRole();
             const canEdit = role === 'owner' || role === 'manager' || role === 'admin';
             html += `<th>
-                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
                     <span style="display:flex;align-items:center;gap:4px;">
-                        <span class="stats-metric-dot" style="background:${color};"></span>
-                        ${esc(m.name)}${unit}${privacy}
+                        <span style="width:8px;height:8px;border-radius:50%;background:${impColor};flex-shrink:0;"></span>
+                        ${esc(m.name)}${unit}${privacy}${inverse}
                     </span>
-                    <div style="display:flex;gap:2px;opacity:0.5;">
+                    ${respName ? `<span style="font-size:0.62rem;font-weight:400;color:${color};">● ${respName}</span>` : ''}
+                    <div style="display:flex;gap:2px;opacity:0.4;margin-top:1px;">
                         ${canEdit ? `<button class="stats-comment-btn" onclick="openMetricModal('${m.id}')" title="Редагувати">${SVG.settings}</button>` : ''}
                         ${canEdit ? `<button class="stats-comment-btn" onclick="deleteMetric('${m.id}')" title="Видалити" style="color:#ef4444;">${SVG.trash}</button>` : ''}
                         <button class="stats-comment-btn" onclick="openTrendsChart('${m.id}')" title="Графік тренду">${SVG.barChart}</button>
@@ -882,9 +968,14 @@
                 if (val !== null && val !== undefined) {
                     // Value + progress
                     const formatted = formatValue(val, m.unit);
+                    const entryId = entry?.id || '';
                     if (tgt && tgt > 0) {
                         const pct = Math.min(Math.round((val / tgt) * 100), 999);
-                        const pctColor = pct >= 90 ? '#22c55e' : pct >= 70 ? '#f59e0b' : '#ef4444';
+                        // For inverse metrics (lower is better): flip colors
+                        const isInv = m.isInverse || false;
+                        const pctColor = isInv
+                            ? (pct <= 100 ? '#22c55e' : pct <= 130 ? '#f59e0b' : '#ef4444')
+                            : (pct >= 90 ? '#22c55e' : pct >= 70 ? '#f59e0b' : '#ef4444');
                         cellHtml = `
                         <div style="display:flex;align-items:center;gap:6px;justify-content:center;">
                             <span class="stats-val" onclick="openMetricDetail('${m.id}','${pk}')">${formatted}</span>
@@ -892,9 +983,13 @@
                                 <div class="stats-prog-bar"><div class="stats-prog-fill" style="width:${Math.min(pct, 100)}%;background:${pctColor};"></div></div>
                                 <span class="stats-prog-pct" style="color:${pctColor};">${pct}%</span>
                             </div>
+                            ${entryId ? `<button class="stats-comment-btn" onclick="deleteEntry('${entryId}')" title="Видалити запис" style="color:#d1d5db;opacity:0;transition:opacity 0.15s;">${SVG.trash}</button>` : ''}
                         </div>`;
                     } else {
-                        cellHtml = `<span class="stats-val" onclick="openMetricDetail('${m.id}','${pk}')">${formatted}</span>`;
+                        cellHtml = `<div style="display:flex;align-items:center;gap:4px;justify-content:center;">
+                            <span class="stats-val" onclick="openMetricDetail('${m.id}','${pk}')">${formatted}</span>
+                            ${entryId ? `<button class="stats-comment-btn" onclick="deleteEntry('${entryId}')" title="Видалити запис" style="color:#d1d5db;opacity:0;transition:opacity 0.15s;">${SVG.trash}</button>` : ''}
+                        </div>`;
                     }
                 } else {
                     cellHtml = `<span class="stats-val-empty" onclick="openMetricDetail('${m.id}','${pk}')">—</span>`;
@@ -1193,6 +1288,20 @@
     // ========================
     //  GLOBAL EXPORTS
     // ========================
+    // Delete single entry
+    window.deleteEntry = async function(entryId) {
+        if (!entryId) return;
+        if (!confirm(t('confirmDeleteEntry') || 'Видалити цей запис?')) return;
+        try {
+            await entriesRef().doc(entryId).delete();
+            showToast(t('deleted') || 'Видалено', 'success');
+            await renderStatistics();
+        } catch (e) {
+            console.error('[STATS] deleteEntry:', e);
+            showToast('Помилка: ' + e.message, 'error');
+        }
+    };
+
     // ========================
     //  TRENDS CHART
     // ========================
@@ -1397,11 +1506,11 @@
     // ========================
     async function generateStatsDemoData() {
         if (!currentCompany || !currentUser) {
-            showToast('Спочатку увійдіть в компанію', 'error');
-            return;
+            showToast('Спочатку увійдіть в компанію', 'error'); return;
         }
 
-        if (!confirm('Згенерувати 15 демо-метрик з даними за 8 тижнів? Існуючі метрики не будуть видалені.')) return;
+        const niche = prompt('Виберіть нішу демо-даних:\n1 — Меблевий бізнес\n2 — Будівництво та ремонти\n3 — Медична клініка\n\nВведіть 1, 2 або 3:');
+        if (!niche || !['1','2','3'].includes(niche.trim())) { showToast('Виберіть 1, 2 або 3', 'error'); return; }
 
         const now = new Date();
         const uid = currentUser.uid;
@@ -1409,97 +1518,112 @@
         const funcList = typeof functions !== 'undefined' ? functions : [];
         const funcIds = funcList.map(f => f.id);
 
-        const demoMetrics = [
-            // WEEKLY — Marketing & Sales
-            { name: 'Ліди (вхідні)', unit: 'шт', frequency: 'weekly', privacy: 'public', target: 50, func: 0 },
-            { name: 'Дзвінки', unit: 'шт', frequency: 'weekly', privacy: 'public', target: 120, func: 0 },
-            { name: 'Записи на консультацію', unit: 'шт', frequency: 'weekly', privacy: 'public', target: 25, func: 0 },
-            { name: 'Продажі', unit: 'шт', frequency: 'weekly', privacy: 'restricted', target: 12, func: 1 },
-            { name: 'Виручка', unit: 'грн', frequency: 'weekly', privacy: 'restricted', target: 180000, func: 1 },
-            { name: 'Конверсія лід→запис', unit: '%', frequency: 'weekly', privacy: 'public', target: 35, func: 0 },
-            { name: 'Конверсія запис→продаж', unit: '%', frequency: 'weekly', privacy: 'restricted', target: 48, func: 1 },
-            { name: 'Середній чек', unit: 'грн', frequency: 'weekly', privacy: 'restricted', target: 15000, func: 1 },
-            { name: 'Повторні клієнти', unit: 'шт', frequency: 'weekly', privacy: 'public', target: 8, func: 2 },
-            { name: 'Витрати на рекламу', unit: 'грн', frequency: 'weekly', privacy: 'owner_only', target: 25000, func: 0 },
-            // MONTHLY — Operations & HR
-            { name: 'NPS клієнтів', unit: 'балів', frequency: 'monthly', privacy: 'public', target: 72, func: 2 },
-            { name: 'Плинність персоналу', unit: '%', frequency: 'monthly', privacy: 'owner_only', target: 5, func: 3 },
-            { name: 'Чистий прибуток', unit: 'грн', frequency: 'monthly', privacy: 'owner_only', target: 420000, func: 1 },
-            // DAILY — Operational
-            { name: 'Час відповіді клієнту', unit: 'хв', frequency: 'daily', privacy: 'public', target: 15, func: 2 },
-            { name: 'Виконано завдань', unit: 'шт', frequency: 'daily', privacy: 'public', target: 18, func: 3 },
-        ];
+        const NICHES = {
+            '1': { name: 'Меблевий бізнес', metrics: [
+                { name: 'Замовлення', unit: 'шт', freq: 'weekly', target: 28, privacy: 'public', v: 0.3 },
+                { name: 'Виготовлено', unit: 'шт', freq: 'weekly', target: 24, privacy: 'public', v: 0.2 },
+                { name: 'Виручка', unit: 'грн', freq: 'weekly', target: 320000, privacy: 'restricted', v: 0.25 },
+                { name: 'Середній чек', unit: 'грн', freq: 'weekly', target: 12500, privacy: 'restricted', v: 0.15 },
+                { name: 'Ліди з сайту', unit: 'шт', freq: 'weekly', target: 85, privacy: 'public', v: 0.35 },
+                { name: 'Конверсія лід-замовлення', unit: '%', freq: 'weekly', target: 33, privacy: 'public', v: 0.2 },
+                { name: 'Повернення', unit: 'шт', freq: 'weekly', target: 2, privacy: 'public', v: 0.6 },
+                { name: 'Витрати матеріали', unit: 'грн', freq: 'weekly', target: 145000, privacy: 'owner_only', v: 0.15 },
+                { name: 'Витрати реклама', unit: 'грн', freq: 'weekly', target: 18000, privacy: 'owner_only', v: 0.2 },
+                { name: 'Собівартість', unit: 'грн', freq: 'weekly', target: 7200, privacy: 'restricted', v: 0.12 },
+                { name: 'Простій', unit: 'год', freq: 'weekly', target: 4, privacy: 'public', v: 0.5 },
+                { name: 'Брак', unit: 'шт', freq: 'weekly', target: 1, privacy: 'public', v: 0.8 },
+                { name: 'Ефективність', unit: '%', freq: 'weekly', target: 87, privacy: 'public', v: 0.08 },
+                { name: 'NPS', unit: 'балів', freq: 'monthly', target: 74, privacy: 'public', v: 0.1 },
+                { name: 'Чистий прибуток', unit: 'грн', freq: 'monthly', target: 185000, privacy: 'owner_only', v: 0.2 },
+                { name: 'Виробіток/працівник', unit: 'грн', freq: 'monthly', target: 42000, privacy: 'restricted', v: 0.15 },
+                { name: 'План виробництва', unit: '%', freq: 'monthly', target: 92, privacy: 'public', v: 0.08 },
+            ]},
+            '2': { name: 'Будівництво та ремонти', metrics: [
+                { name: 'Нові заявки', unit: 'шт', freq: 'weekly', target: 35, privacy: 'public', v: 0.3 },
+                { name: 'Виїзди на обєкт', unit: 'шт', freq: 'weekly', target: 18, privacy: 'public', v: 0.25 },
+                { name: 'Підписані договори', unit: 'шт', freq: 'weekly', target: 8, privacy: 'restricted', v: 0.3 },
+                { name: 'Виручка', unit: 'грн', freq: 'weekly', target: 480000, privacy: 'restricted', v: 0.25 },
+                { name: 'Середній чек', unit: 'грн', freq: 'weekly', target: 62000, privacy: 'restricted', v: 0.15 },
+                { name: 'Конверсія заявка-договір', unit: '%', freq: 'weekly', target: 23, privacy: 'public', v: 0.2 },
+                { name: 'Активних обєктів', unit: 'шт', freq: 'weekly', target: 12, privacy: 'public', v: 0.15 },
+                { name: 'Завершено обєктів', unit: 'шт', freq: 'weekly', target: 3, privacy: 'public', v: 0.4 },
+                { name: 'Прострочені дедлайни', unit: 'шт', freq: 'weekly', target: 1, privacy: 'public', v: 0.7 },
+                { name: 'Витрати матеріали', unit: 'грн', freq: 'weekly', target: 210000, privacy: 'owner_only', v: 0.2 },
+                { name: 'Витрати субпідряд', unit: 'грн', freq: 'weekly', target: 95000, privacy: 'owner_only', v: 0.3 },
+                { name: 'Витрати реклама', unit: 'грн', freq: 'weekly', target: 22000, privacy: 'owner_only', v: 0.2 },
+                { name: 'Фото до/після', unit: 'шт', freq: 'weekly', target: 6, privacy: 'public', v: 0.35 },
+                { name: 'NPS', unit: 'балів', freq: 'monthly', target: 68, privacy: 'public', v: 0.12 },
+                { name: 'Чистий прибуток', unit: 'грн', freq: 'monthly', target: 320000, privacy: 'owner_only', v: 0.22 },
+                { name: 'Маржинальність', unit: '%', freq: 'monthly', target: 35, privacy: 'owner_only', v: 0.1 },
+                { name: 'Відгуки Google', unit: 'шт', freq: 'monthly', target: 8, privacy: 'public', v: 0.4 },
+            ]},
+            '3': { name: 'Медична клініка', metrics: [
+                { name: 'Первинних пацієнтів', unit: 'шт', freq: 'weekly', target: 42, privacy: 'public', v: 0.25 },
+                { name: 'Повторних пацієнтів', unit: 'шт', freq: 'weekly', target: 65, privacy: 'public', v: 0.2 },
+                { name: 'Дзвінки вхідні', unit: 'шт', freq: 'weekly', target: 180, privacy: 'public', v: 0.2 },
+                { name: 'Конверсія дзвінок-запис', unit: '%', freq: 'weekly', target: 72, privacy: 'public', v: 0.1 },
+                { name: 'Конверсія запис-прихід', unit: '%', freq: 'weekly', target: 85, privacy: 'public', v: 0.08 },
+                { name: 'Виручка', unit: 'грн', freq: 'weekly', target: 520000, privacy: 'restricted', v: 0.2 },
+                { name: 'Середній чек', unit: 'грн', freq: 'weekly', target: 4800, privacy: 'restricted', v: 0.12 },
+                { name: 'Кількість послуг', unit: 'шт', freq: 'weekly', target: 285, privacy: 'public', v: 0.15 },
+                { name: 'Завантаженість', unit: '%', freq: 'weekly', target: 78, privacy: 'restricted', v: 0.1 },
+                { name: 'Скасовані записи', unit: 'шт', freq: 'weekly', target: 8, privacy: 'public', v: 0.4 },
+                { name: 'Час очікування', unit: 'хв', freq: 'weekly', target: 12, privacy: 'public', v: 0.3 },
+                { name: 'Витрати реклама', unit: 'грн', freq: 'weekly', target: 35000, privacy: 'owner_only', v: 0.2 },
+                { name: 'Вартість ліда', unit: 'грн', freq: 'weekly', target: 280, privacy: 'owner_only', v: 0.25 },
+                { name: 'Витрати матеріали', unit: 'грн', freq: 'weekly', target: 85000, privacy: 'owner_only', v: 0.15 },
+                { name: 'NPS', unit: 'балів', freq: 'monthly', target: 82, privacy: 'public', v: 0.08 },
+                { name: 'Чистий прибуток', unit: 'грн', freq: 'monthly', target: 380000, privacy: 'owner_only', v: 0.2 },
+                { name: 'Відгуки Google', unit: 'шт', freq: 'monthly', target: 12, privacy: 'public', v: 0.35 },
+                { name: 'Плинність персоналу', unit: '%', freq: 'monthly', target: 4, privacy: 'owner_only', v: 0.3 },
+            ]},
+        };
 
-        showToast('Генерую 15 демо-метрик...', 'info');
+        const nicheData = NICHES[niche.trim()];
+        if (!confirm('Згенерувати ' + nicheData.metrics.length + ' метрик для "' + nicheData.name + '" з даними за 10 тижнів?')) return;
 
+        showToast('Генерую "' + nicheData.name + '"...', 'info');
         try {
-            const periodsMap = { daily: 7, weekly: 8, monthly: 4 };
-            for (const dm of demoMetrics) {
+            const periodsMap = { daily: 10, weekly: 10, monthly: 6 };
+            for (let mi = 0; mi < nicheData.metrics.length; mi++) {
+                const dm = nicheData.metrics[mi];
                 const funcBind = {};
-                if (funcIds.length > 0 && dm.func < funcIds.length) funcBind[funcIds[dm.func]] = true;
-
-                const metricData = {
-                    name: dm.name, unit: dm.unit, frequency: dm.frequency,
+                const funcIdx = mi % Math.max(funcIds.length, 1);
+                if (funcIds.length > 0) funcBind[funcIds[funcIdx]] = true;
+                const metricRef = await metricsRef().add({
+                    name: dm.name, unit: dm.unit, frequency: dm.freq,
                     privacy: dm.privacy, inputType: 'manual', formula: '',
-                    alertEnabled: dm.name.includes('Конверсія'),
-                    alertThreshold: 20, boundFunctions: funcBind, autoSpec: null,
-                    createdBy: uid,
+                    alertEnabled: dm.unit === '%', alertThreshold: 20,
+                    importance: dm.name.includes('Виручка') || dm.name.includes('Прибуток') || dm.name.includes('Конверсія') ? 'critical' : dm.name.includes('Витрати') || dm.name.includes('Середній') ? 'high' : dm.name.includes('NPS') || dm.name.includes('Відгуки') ? 'medium' : 'low',
+                    isInverse: dm.name.includes('Брак') || dm.name.includes('Простій') || dm.name.includes('Повернення') || dm.name.includes('Рекламації') || dm.name.includes('Прострочені') || dm.name.includes('Скасовані') || dm.name.includes('Плинність') || dm.name.includes('Час очікування') || dm.name.includes('Вартість ліда'),
+                    responsibleId: (typeof users !== 'undefined' && users.length > 0) ? users[mi % users.length]?.id || '' : '',
+                    boundFunctions: funcBind, autoSpec: null, createdBy: uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                };
-
-                const metricRef = await metricsRef().add(metricData);
+                });
                 const metricId = metricRef.id;
-                const periods = periodsMap[dm.frequency] || 8;
-
+                const periods = periodsMap[dm.freq] || 10;
                 for (let i = 0; i < periods; i++) {
-                    const offset = -(i);
                     let pk;
-                    if (dm.frequency === 'daily') {
-                        const d = new Date(now); d.setDate(d.getDate() + offset);
-                        pk = d.toISOString().split('T')[0];
-                    } else if (dm.frequency === 'weekly') {
-                        const d = new Date(now); d.setDate(d.getDate() + offset * 7);
-                        pk = toWeekKey(d);
-                    } else {
-                        const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-                        pk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-                    }
-
-                    // Realistic trend: recent periods slightly better
-                    const trendMult = 1 + (periods - i) * 0.02; // +2% per newer period
-                    const base = dm.target * trendMult;
-                    const variance = dm.target * 0.25;
-                    let value = Math.round(base + (Math.random() * 2 - 1) * variance);
-                    // Special: % metrics stay within range
-                    if (dm.unit === '%') value = Math.max(1, Math.min(value, 95));
+                    if (dm.freq === 'daily') { const d = new Date(now); d.setDate(d.getDate() - i); pk = d.toISOString().split('T')[0]; }
+                    else if (dm.freq === 'weekly') { const d = new Date(now); d.setDate(d.getDate() - i * 7); pk = toWeekKey(d); }
+                    else { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); pk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
+                    const age = (periods - i) / periods;
+                    const trend = 0.85 + age * 0.2;
+                    const noise = (Math.random() * 2 - 1) * (dm.v || 0.25);
+                    let value = Math.round(dm.target * trend * (1 + noise));
+                    if (dm.unit === '%' || dm.unit === 'балів') value = Math.max(1, Math.min(value, 98));
                     value = Math.max(0, value);
-
-                    await entriesRef().add({
-                        metricId, periodType: dm.frequency, periodKey: pk,
-                        scope: 'user', scopeId: uid,
-                        date: new Date().toISOString().split('T')[0],
-                        value, source: 'demo', isOverride: false,
-                        createdBy: uid, userName,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    });
-
-                    await targetsRef().add({
-                        metricId, periodKey: pk, periodType: dm.frequency,
-                        scope: 'company', scopeId: currentCompany,
-                        targetValue: dm.target, setBy: uid,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    });
+                    const tgtVar = dm.target * 0.05;
+                    const periodTarget = Math.round(dm.target + (Math.random() * 2 - 1) * tgtVar);
+                    await entriesRef().add({ metricId, periodType: dm.freq, periodKey: pk, scope: 'user', scopeId: uid, date: new Date().toISOString().split('T')[0], value, source: 'demo', isOverride: false, createdBy: uid, userName, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    await targetsRef().add({ metricId, periodKey: pk, periodType: dm.freq, scope: 'company', scopeId: currentCompany, targetValue: periodTarget, setBy: uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 }
             }
-
-            showToast('Демо-дані створені! Перейдіть на вкладку Метрики.', 'success');
+            showToast(nicheData.name + ' — ' + nicheData.metrics.length + ' метрик створено!', 'success');
             await loadMetrics();
             renderStatistics();
-        } catch (e) {
-            console.error('[STATS] generateDemoData:', e);
-            showToast('Помилка: ' + e.message, 'error');
-        }
+        } catch (e) { console.error('[STATS] demo:', e); showToast('Помилка: ' + e.message, 'error'); }
     }
 
     window.initStatistics = initStatistics;

@@ -23,6 +23,8 @@
                     document.getElementById('taskFunction').value = task.function || '';
                     updateProjectSelects(task.projectId);
                     document.getElementById('taskProject').value = task.projectId || '';
+                    // Load stages for this project
+                    updateTaskStageSelect(task.projectId, task.stageId);
                     document.getElementById('taskAssignee').value = task.assigneeId || '';
                     // Розбиваємо deadline на дату і час
                     const dl = parseDeadline(task);

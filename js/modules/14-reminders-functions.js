@@ -163,6 +163,7 @@
                     title: document.getElementById('taskTitle').value.trim(),
                     function: document.getElementById('taskFunction').value,
                     projectId: document.getElementById('taskProject')?.value || '',
+                    stageId: document.getElementById('taskStage')?.value || '',
                     assigneeId: assigneeId,
                     assigneeName: assignee?.name || assignee?.email || '',
                     deadlineDate: deadlineDate,
@@ -376,6 +377,11 @@
                 if (data.projectId) autoUpdateProjectStatus(data.projectId);
                 if (_prevProjectId && _prevProjectId !== data.projectId) {
                     autoUpdateProjectStatus(_prevProjectId);
+                }
+                
+                // Auto-update stage progress
+                if (data.stageId && typeof window.autoUpdateStageProgress === 'function') {
+                    window.autoUpdateStageProgress(data.stageId);
                 }
                 
             } catch (error) {

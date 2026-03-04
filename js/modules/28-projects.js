@@ -11,6 +11,10 @@
             document.getElementById('projectStartDate').value = project?.startDate || getLocalDateStr();
             document.getElementById('projectDeadline').value = project?.deadline || '';
             document.getElementById('projectDescription').value = project?.description || '';
+            document.getElementById('projectPlannedRevenue').value = project?.plannedRevenue || '';
+            document.getElementById('projectPlannedMaterialCost').value = project?.plannedMaterialCost || '';
+            document.getElementById('projectPlannedLaborCost').value = project?.plannedLaborCost || '';
+            document.getElementById('projectClientName').value = project?.clientName || '';
             
             const color = project?.color || '#22c55e';
             // Reset all, then set matching
@@ -37,7 +41,11 @@
                 startDate: document.getElementById('projectStartDate').value,
                 deadline: document.getElementById('projectDeadline').value,
                 description: document.getElementById('projectDescription').value.trim(),
-                color: document.querySelector('input[name="projectColor"]:checked')?.value || '#22c55e'
+                color: document.querySelector('input[name="projectColor"]:checked')?.value || '#22c55e',
+                plannedRevenue: parseFloat(document.getElementById('projectPlannedRevenue')?.value) || 0,
+                plannedMaterialCost: parseFloat(document.getElementById('projectPlannedMaterialCost')?.value) || 0,
+                plannedLaborCost: parseFloat(document.getElementById('projectPlannedLaborCost')?.value) || 0,
+                clientName: document.getElementById('projectClientName')?.value?.trim() || '',
             };
             if (!data.name) { isSavingProject = false; if (submitBtn) submitBtn.disabled = false; return; }
             
@@ -366,15 +374,27 @@
         
         function openTaskForProject(projectId) {
             openTaskModal();
-            // After modal opens and form resets, set projectId
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     updateProjectSelects(projectId);
                     const sel = document.getElementById('taskProject');
                     if (sel) sel.value = projectId;
+                    updateTaskStageSelect(projectId, '');
                 }, 0);
             });
         }
+        
+        window.openTaskForProjectStage = function(projectId, stageId) {
+            openTaskModal();
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    updateProjectSelects(projectId);
+                    const sel = document.getElementById('taskProject');
+                    if (sel) sel.value = projectId;
+                    updateTaskStageSelect(projectId, stageId);
+                }, 50);
+            });
+        };
         
         function closeProjectDetail() {
             openProjectId = null;
@@ -387,6 +407,21 @@
         function renderProjectDetail(projectId) {
             const project = projects.find(p => p.id === projectId);
             if (!project) { closeProjectDetail(); return; }
+            
+            // Load stages and materials async
+            if (typeof window.loadProjectStages === 'function') {
+                Promise.all([
+                    window.loadProjectStages(projectId),
+                    window.loadProjectMaterials(projectId),
+                    typeof window.loadQualityChecks === 'function' ? window.loadQualityChecks(projectId) : Promise.resolve([]),
+                ]).then(() => {
+                    // Re-render stages section
+                    const sv = document.getElementById('projectStagesView');
+                    if (sv && typeof window.renderStagesList === 'function') {
+                        sv.innerHTML = window.renderStagesList(projectId);
+                    }
+                });
+            }
             
             const s = getProjectStats(projectId);
             const container = document.getElementById('projectDetailContent');
@@ -460,6 +495,15 @@
                         <div style="font-size:0.75rem;color:var(--danger);">${t('overdueLabel2')}</div>
                         <div style="font-size:1.5rem;font-weight:700;color:var(--danger);">${s.overdue}</div>
                     </div>` : ''}
+                    ${project.plannedRevenue ? `<div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
+                        <div style="font-size:0.75rem;color:var(--gray);">Бюджет</div>
+                        <div style="font-size:1.1rem;font-weight:700;">${Number(project.plannedRevenue).toLocaleString()} ₴</div>
+                        ${project.plannedMaterialCost || project.plannedLaborCost ? `<div style="font-size:0.68rem;color:#9ca3af;">Мат: ${Number(project.plannedMaterialCost || 0).toLocaleString()} | Робота: ${Number(project.plannedLaborCost || 0).toLocaleString()}</div>` : ''}
+                    </div>` : ''}
+                    ${project.clientName ? `<div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
+                        <div style="font-size:0.75rem;color:var(--gray);">Клієнт</div>
+                        <div style="font-size:0.95rem;font-weight:600;">${esc(project.clientName)}</div>
+                    </div>` : ''}
                 </div>
                 
                 <div class="project-progress-bar" style="height:8px;margin-bottom:1rem;">
@@ -486,14 +530,24 @@
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                         Kanban
                     </button>
+                    <button class="calendar-view-btn" onclick="switchProjectView('stages', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        Етапи
+                    </button>
                     <button class="calendar-view-btn" onclick="switchProjectView('gantt', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="4" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
                         Gantt
                     </button>
+                    <button class="calendar-view-btn" onclick="switchProjectView('standards', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Стандарти
+                    </button>
                 </div>
                 
                 <div id="projectBoardView" class="project-board-columns">${boardHTML}</div>
+                <div id="projectStagesView" style="display:none;">${typeof renderStagesList === 'function' ? renderStagesList(projectId) : '<div>Loading stages...</div>'}</div>
                 <div id="projectGanttView" style="display:none;">${renderProjectGantt(s.tasks, project)}</div>
+                <div id="projectStandardsView" style="display:none;"><div id="standardsListContainer"></div></div>
             `;
             
             refreshIcons();
@@ -501,7 +555,18 @@
         
         function switchProjectView(view, btn) {
             document.getElementById('projectBoardView').style.display = view === 'board' ? '' : 'none';
+            const stagesView = document.getElementById('projectStagesView');
+            if (stagesView) stagesView.style.display = view === 'stages' ? '' : 'none';
             document.getElementById('projectGanttView').style.display = view === 'gantt' ? '' : 'none';
+            const stdView = document.getElementById('projectStandardsView');
+            if (stdView) {
+                stdView.style.display = view === 'standards' ? '' : 'none';
+                if (view === 'standards' && typeof window.loadWorkStandards === 'function') {
+                    window.loadWorkStandards().then(() => {
+                        if (typeof window.renderStandardsList === 'function') window.renderStandardsList();
+                    });
+                }
+            }
             btn.parentElement.querySelectorAll('.calendar-view-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
@@ -670,7 +735,6 @@
             const sel = document.getElementById('taskProject');
             if (!sel) return;
             const current = forceIncludeId || sel.value;
-            // Показуємо active + поточний проєкт задачі (навіть якщо completed/paused)
             const activeProjects = projects.filter(p => p.status === 'active');
             const currentProject = current ? projects.find(p => p.id === current) : null;
             const showProjects = [...activeProjects];
@@ -684,6 +748,34 @@
                 }).join('');
             sel.value = current;
         }
+        
+        // Stage select — loads stages for selected project
+        function updateTaskStageSelect(projectId, selectedStageId) {
+            const sel = document.getElementById('taskStage');
+            if (!sel) return;
+            if (!projectId) {
+                sel.innerHTML = '<option value="">Без етапу</option>';
+                sel.disabled = true;
+                return;
+            }
+            sel.disabled = false;
+            // Load stages async
+            if (typeof window.loadProjectStages === 'function') {
+                window.loadProjectStages(projectId).then(stages => {
+                    sel.innerHTML = '<option value="">Без етапу</option>' +
+                        stages.sort((a,b) => (a.order||0)-(b.order||0)).map(s => {
+                            const statusIcon = s.status === 'done' ? '✓' : s.status === 'blocked' ? '⚠' : s.status === 'in_progress' ? '▶' : '○';
+                            return `<option value="${s.id}" ${s.id === selectedStageId ? 'selected' : ''}>${statusIcon} ${s.order}. ${esc(s.name)}</option>`;
+                        }).join('');
+                    if (selectedStageId) sel.value = selectedStageId;
+                });
+            }
+        }
+        
+        window.onTaskProjectChange = function() {
+            const projectId = document.getElementById('taskProject')?.value || '';
+            updateTaskStageSelect(projectId, '');
+        };
         
         // Sanitize color for style attribute — only allow hex colors
         function safeColor(color, fallback = '#22c55e') {

@@ -447,3 +447,7 @@
 #trendsChartSvg text { pointer-events: none; }
 .stats-comment-btn[title="Видалити"]:hover { background: #fee2e2 !important; color: #dc2626 !important; }
 .stats-comment-btn[title="Графік тренду"]:hover { background: #dbeafe !important; color: #3b82f6 !important; }
+
+/* Show delete button on row hover */
+.stats-table tbody tr:hover .stats-comment-btn[title="Видалити запис"] { opacity: 1 !important; }
+.stats-table tbody tr:hover .stats-comment-btn[title="Видалити запис"]:hover { color: #ef4444 !important; background: #fee2e2 !important; }
