@@ -999,8 +999,6 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
 
     .tools-menu {
         position: fixed;
-        top: 60px;
-        right: 120px;
         background: white;
         border: 1px solid var(--gray-200);
         border-radius: var(--border-radius);
@@ -4960,7 +4958,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
 
                 <!-- Tools Menu - об'єднує експорт, копіювання і т.д. -->
                 <div class="tools-dropdown">
-                    <button class="tool-btn" id="toolsMenuBtn" type="button" title="Інструменти" aria-haspopup="true" aria-expanded="false" onclick="event.stopPropagation(); var m=document.getElementById('toolsMenu'); if(!m) return; if(m.style.display==='block'){m.style.display='none';}else{m.style.display='block';} console.log('[MENU] display='+m.style.display);">
+                    <button class="tool-btn" id="toolsMenuBtn" type="button" title="Інструменти" aria-haspopup="true" aria-expanded="false" onclick="event.stopPropagation(); var m=document.getElementById('toolsMenu'); if(!m) return; if(m.style.display==='block'){m.style.display='none';}else{var r=this.getBoundingClientRect(); m.style.top=(r.bottom+4)+'px'; m.style.right=(window.innerWidth-r.right)+'px'; m.style.display='block';}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
                         </svg>
@@ -5047,7 +5045,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                                 <circle cx="16" cy="14" r="2"/>
                             </svg>
                         </span>
-                        <span data-text="toolbar.ai_structure">AI СТРУКТУРА</span>
+                        <span>AI СТРУКТУРА</span>
                 </a>
                 <div class="save-indicator-container">
                     <span class="save-indicator saved" id="saveIndicator">
