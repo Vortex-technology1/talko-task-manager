@@ -112,6 +112,9 @@
                 // Render My Day (головний екран)
                 renderMyDay();
                 
+                // Show Statistics tab if allowed (after users loaded)
+                if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
+                
                 // Render based on current view
                 if (currentCalendarView === 'list') {
                     renderTasks();

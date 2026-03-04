@@ -111,9 +111,9 @@
             return;
         }
 
-        const user = companyUsers.find(u => u.id === currentUser?.uid);
+        const user = users.find(u => u.id === currentUser?.uid);
         const userFuncIds = user?.functions ? Object.keys(user.functions) : [];
-        const funcs = (typeof companyFunctions !== 'undefined' ? companyFunctions : [])
+        const funcs = (typeof functions !== 'undefined' ? functions : [])
             .filter(f => getUserRole() === 'owner' || userFuncIds.includes(f.id));
 
         if (funcs.length === 0) {
@@ -147,7 +147,7 @@
     // P0-3: Get user IDs that belong to a specific function
     function getUsersInFunction(functionId) {
         if (!functionId) return [];
-        return companyUsers
+        return users
             .filter(u => u.functions && u.functions[functionId])
             .map(u => u.id);
     }
@@ -156,19 +156,19 @@
     //  ACCESS CONTROL
     // ========================
     function getUserRole() {
-        return (companyUsers.find(u => u.id === currentUser?.uid))?.role || 'employee';
+        return (users.find(u => u.id === currentUser?.uid))?.role || 'employee';
     }
 
     function canViewStats() {
         if (!currentUser || !currentCompany) return false;
-        const u = companyUsers.find(u => u.id === currentUser.uid);
+        const u = users.find(u => u.id === currentUser.uid);
         return u ? (u.role === 'owner' || u.canViewStatsTab !== false) : false;
     }
 
     // P1-2: Fixed whitelist logic
     function canViewMetric(m) {
         if (!currentUser) return false;
-        const u = companyUsers.find(u => u.id === currentUser.uid);
+        const u = users.find(u => u.id === currentUser.uid);
         if (!u) return false;
         if (u.role === 'owner') return true;
         if (m.privacy === 'owner_only') return false;
@@ -419,7 +419,7 @@
             // P0-2: function/company entries are explicit overrides
             isOverride: scope !== 'user',
             createdBy: currentUser.uid,
-            userName: companyUsers.find(u => u.id === currentUser.uid)?.name || currentUser.email,
+            userName: users.find(u => u.id === currentUser.uid)?.name || currentUser.email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
 
@@ -588,7 +588,7 @@
 
         const fl = document.getElementById('metricFunctionsList');
         if (fl) {
-            const fs = typeof companyFunctions !== 'undefined' ? companyFunctions : [];
+            const fs = typeof functions !== 'undefined' ? functions : [];
             fl.innerHTML = fs.map(f =>
                 '<label style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.6rem;background:#f3f4f6;border-radius:8px;font-size:0.8rem;cursor:pointer;">' +
                 '<input type="checkbox" value="' + f.id + '" class="metric-func-cb"> ' + esc(f.name || f.title || '') +
@@ -598,7 +598,7 @@
 
         const af = document.getElementById('autoSpecFunction');
         if (af) {
-            const fs = typeof companyFunctions !== 'undefined' ? companyFunctions : [];
+            const fs = typeof functions !== 'undefined' ? functions : [];
             af.innerHTML = '<option value="">' + (t('allFunctions') || 'Всі функції') + '</option>' +
                 fs.map(f => '<option value="' + f.id + '">' + esc(f.name || f.title || '') + '</option>').join('');
         }
@@ -722,7 +722,7 @@
             if (m.formula) badges.push('<span style="font-size:0.65rem;background:#f3e8ff;color:#7c3aed;padding:1px 6px;border-radius:4px;">ƒ</span>');
 
             const funcTags = m.boundFunctions ? Object.keys(m.boundFunctions).map(fid => {
-                const f = (typeof companyFunctions !== 'undefined' ? companyFunctions : []).find(x => x.id === fid);
+                const f = (typeof functions !== 'undefined' ? functions : []).find(x => x.id === fid);
                 return f ? '<span style="font-size:0.65rem;background:#f0fdf4;color:#16a34a;padding:1px 6px;border-radius:4px;">' + esc(f.name || f.title || '') + '</span>' : '';
             }).join('') : '';
 
@@ -758,7 +758,7 @@
             const tv = tg?.targetValue || 0;
             const pr = tv > 0 ? Math.round((v / tv) * 100) : null;
             const fn = m.boundFunctions ? Object.keys(m.boundFunctions).map(fid => {
-                const f = (typeof companyFunctions !== 'undefined' ? companyFunctions : []).find(x => x.id === fid);
+                const f = (typeof functions !== 'undefined' ? functions : []).find(x => x.id === fid);
                 return f ? (f.name || f.title || '') : '';
             }).filter(Boolean).join(', ') : '—';
 

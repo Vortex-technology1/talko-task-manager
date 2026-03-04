@@ -860,6 +860,30 @@
 
             <!-- ANALYTICS -->
             <div id="analyticsTab" class="tab-content">
+                <div class="controls" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <h2 style="font-size:1.2rem;margin:0;" data-i18n="analytics"><i data-lucide="trending-up" class="icon"></i> Аналітика</h2>
+                </div>
+                <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-top:1rem;">
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3 data-i18n="totalTasks">Всього завдань</h3>
+                            <div class="analytics-number" id="analyticsTotalTasks">0</div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3 data-i18n="completedTasks">Виконано</h3>
+                            <div class="analytics-number green" id="analyticsCompletedTasks">0</div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3 data-i18n="completionRate">Виконання %</h3>
+                            <div class="analytics-number blue" id="analyticsCompletionRate">0%</div>
+                        </div>
+                        <div class="analytics-card">
+                            <h3 data-i18n="avgTime">Сер. час</h3>
+                            <div class="analytics-number orange" id="analyticsAvgTime">-</div>
+                        </div>
+                    </div>
+                    <div id="analyticsContent" style="margin-top:1.5rem;"></div>
+                </div>
             </div>
 
             <!-- STATISTICS -->
@@ -899,31 +923,6 @@
                 <!-- Main content -->
                 <div id="statisticsContainer">
                     <div class="loading"><div class="spinner"></div></div>
-                </div>
-            </div>
-                <div class="controls" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
-                    <h2 style="font-size:1.2rem;margin:0;" data-i18n="analytics"><i data-lucide="trending-up" class="icon"></i> Аналітика</h2>
-                </div>
-                <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-top:1rem;">
-                    <div class="analytics-grid">
-                        <div class="analytics-card">
-                            <h3 data-i18n="totalTasks">Всього завдань</h3>
-                            <div class="analytics-number" id="analyticsTotalTasks">0</div>
-                        </div>
-                        <div class="analytics-card">
-                            <h3 data-i18n="completedTasks">Виконано</h3>
-                            <div class="analytics-number green" id="analyticsCompletedTasks">0</div>
-                        </div>
-                        <div class="analytics-card">
-                            <h3 data-i18n="completionRate">Виконання %</h3>
-                            <div class="analytics-number blue" id="analyticsCompletionRate">0%</div>
-                        </div>
-                        <div class="analytics-card">
-                            <h3 data-i18n="avgTime">Сер. час</h3>
-                            <div class="analytics-number orange" id="analyticsAvgTime">-</div>
-                        </div>
-                    </div>
-                    <div id="analyticsContent" style="margin-top:1.5rem;"></div>
                 </div>
             </div>
 
