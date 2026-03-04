@@ -886,6 +886,115 @@
     window.statsNavigatePeriod = statsNavigatePeriod;
     window.toggleAutoSpec = toggleAutoSpec;
     window.showStatsTabIfAllowed = showStatsTabIfAllowed;
+    // ========================
+    //  DEMO DATA GENERATOR
+    // ========================
+    async function generateStatsDemoData() {
+        if (!currentCompany || !currentUser) {
+            showToast('Спочатку увійдіть в компанію', 'error');
+            return;
+        }
+
+        if (!confirm('Згенерувати 5 демо-метрик з даними за 4 тижні? Існуючі метрики не будуть видалені.')) return;
+
+        const now = new Date();
+        const uid = currentUser.uid;
+        const userName = users.find(u => u.id === uid)?.name || currentUser.email;
+        const funcList = typeof functions !== 'undefined' ? functions : [];
+        const funcId = funcList.length > 0 ? funcList[0].id : null;
+
+        const demoMetrics = [
+            { name: 'Кількість лідів', unit: 'шт', frequency: 'weekly', privacy: 'public', inputType: 'manual', targets: [40, 45, 50, 55] },
+            { name: 'Виручка', unit: 'UAH', frequency: 'weekly', privacy: 'restricted', inputType: 'manual', targets: [100000, 110000, 120000, 130000] },
+            { name: 'Конверсія', unit: '%', frequency: 'weekly', privacy: 'public', inputType: 'manual', targets: [15, 16, 17, 18] },
+            { name: 'NPS клієнтів', unit: 'шт', frequency: 'monthly', privacy: 'owner_only', inputType: 'manual', targets: [70, 72, 75, 78] },
+            { name: 'Час відповіді', unit: 'хв', frequency: 'daily', privacy: 'public', inputType: 'manual', targets: [30, 25, 20, 15] },
+        ];
+
+        showToast('Генерую демо-дані...', 'info');
+
+        try {
+            for (const dm of demoMetrics) {
+                const metricData = {
+                    name: dm.name,
+                    unit: dm.unit,
+                    frequency: dm.frequency,
+                    privacy: dm.privacy,
+                    inputType: dm.inputType,
+                    formula: '',
+                    alertEnabled: dm.name === 'Конверсія',
+                    alertThreshold: 20,
+                    boundFunctions: funcId ? { [funcId]: true } : {},
+                    autoSpec: null,
+                    createdBy: uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                };
+
+                const metricRef = await metricsRef().add(metricData);
+                const metricId = metricRef.id;
+
+                // Generate entries for 4 periods back
+                for (let i = 0; i < 4; i++) {
+                    let pk;
+                    const offset = -(i);
+                    if (dm.frequency === 'daily') {
+                        const d = new Date(now);
+                        d.setDate(d.getDate() + offset);
+                        pk = d.toISOString().split('T')[0];
+                    } else if (dm.frequency === 'weekly') {
+                        const d = new Date(now);
+                        d.setDate(d.getDate() + offset * 7);
+                        pk = toWeekKey(d);
+                    } else {
+                        const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+                        pk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+                    }
+
+                    // Random value around target (±30%)
+                    const target = dm.targets[i] || dm.targets[0];
+                    const variance = target * 0.3;
+                    const value = Math.round(target + (Math.random() * 2 - 1) * variance);
+
+                    await entriesRef().add({
+                        metricId,
+                        periodType: dm.frequency,
+                        periodKey: pk,
+                        scope: 'user',
+                        scopeId: uid,
+                        date: new Date().toISOString().split('T')[0],
+                        value: Math.max(0, value),
+                        source: 'demo',
+                        isOverride: false,
+                        createdBy: uid,
+                        userName,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    });
+
+                    // Create target
+                    await targetsRef().add({
+                        metricId,
+                        periodKey: pk,
+                        periodType: dm.frequency,
+                        scope: 'company',
+                        scopeId: currentCompany,
+                        targetValue: target,
+                        setBy: uid,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    });
+                }
+            }
+
+            showToast('Демо-дані створені! Перейдіть на вкладку Метрики.', 'success');
+            await loadMetrics();
+            renderStatistics();
+        } catch (e) {
+            console.error('[STATS] generateDemoData:', e);
+            showToast('Помилка: ' + e.message, 'error');
+        }
+    }
+
     window.initStatistics = initStatistics;
+    window.generateStatsDemoData = generateStatsDemoData;
     window.onStatsFunctionChange = onStatsFunctionChange;
 })();

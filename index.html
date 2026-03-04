@@ -300,20 +300,20 @@
                 <span data-i18n="updating">Оновлення...</span>
             </div>
             <div class="tab-navigation">
-                <button class="tab-btn active" onclick="switchTab('myday')"><i data-lucide="sun" class="icon"></i> <span data-i18n="tabMyDay">Мій день</span></button>
-                <button class="tab-btn" onclick="switchTab('tasks')"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
-                <button class="tab-btn" onclick="switchTab('projects')"><i data-lucide="folder-kanban" class="icon"></i> <span data-i18n="tabProjects">Проєкти</span></button>
-                <button class="tab-btn" onclick="switchTab('control')"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
-                <button class="tab-btn" onclick="switchTab('processes')"><i data-lucide="git-branch" class="icon"></i> <span data-i18n="tabProcesses">Процеси</span></button>
-                <button class="tab-btn" onclick="switchTab('regular')"><i data-lucide="repeat" class="icon"></i> <span data-i18n="tabRegular">Регулярні</span></button>
-                <button class="tab-btn" onclick="switchTab('functions')"><i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span></button>
-                <button class="tab-btn" onclick="switchTab('users')"><i data-lucide="users" class="icon"></i> <span data-i18n="tabUsers">Співробітники</span></button>
-                <button class="tab-btn" onclick="switchTab('analytics')"><i data-lucide="bar-chart-3" class="icon"></i> <span data-i18n="tabAnalytics">Аналітика</span></button>
-                <button class="tab-btn" onclick="switchTab('statistics')" id="statisticsTabBtn" style="display:none;"><i data-lucide="trending-up" class="icon"></i> <span data-i18n="tabStatistics">Статистика</span></button>
-            <button class="tab-btn" onclick="switchTab('bizstructure')" data-tab="bizstructure">
+                <button class="tab-btn active" onclick="switchTab('myday')" title="Мій день"><i data-lucide="sun" class="icon"></i> <span data-i18n="tabMyDay">Мій день</span></button>
+                <button class="tab-btn" onclick="switchTab('tasks')" title="Завдання"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
+                <button class="tab-btn" onclick="switchTab('projects')" title="Проєкти"><i data-lucide="folder-kanban" class="icon"></i> <span data-i18n="tabProjects">Проєкти</span></button>
+                <button class="tab-btn" onclick="switchTab('control')" title="Контроль"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
+                <button class="tab-btn" onclick="switchTab('processes')" title="Процеси"><i data-lucide="git-branch" class="icon"></i> <span data-i18n="tabProcesses">Процеси</span></button>
+                <button class="tab-btn" onclick="switchTab('regular')" title="Регулярні завдання"><i data-lucide="repeat" class="icon"></i> <span data-i18n="tabRegular">Регулярні</span></button>
+                <button class="tab-btn" onclick="switchTab('functions')" title="Функції компанії"><i data-lucide="settings" class="icon"></i> <span data-i18n="tabFunctions">Функції</span></button>
+                <button class="tab-btn" onclick="switchTab('users')" title="Співробітники"><i data-lucide="users" class="icon"></i> <span data-i18n="tabUsers">Команда</span></button>
+                <button class="tab-btn" onclick="switchTab('analytics')" title="Аналітика завдань"><i data-lucide="bar-chart-3" class="icon"></i> <span data-i18n="tabAnalytics">Аналітика</span></button>
+                <button class="tab-btn" onclick="switchTab('statistics')" id="statisticsTabBtn" style="display:none;" title="Статистика та KPI"><i data-lucide="trending-up" class="icon"></i> <span data-i18n="tabStatistics">Метрики</span></button>
+            <button class="tab-btn" onclick="switchTab('bizstructure')" data-tab="bizstructure" title="Бізнес-структура">
                 <i data-lucide="network" class="icon"></i> <span data-i18n="tabStructure">Структура</span>
             </button>
-                <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;"><i data-lucide="shield" class="icon"></i> <span data-i18n="tabAdmin">Адмін</span></button>
+                <button class="tab-btn" onclick="switchTab('admin')" id="adminTabBtn" style="display:none;background:#fee2e2;color:#dc2626;" title="Адмін-панель"><i data-lucide="shield" class="icon"></i> <span data-i18n="tabAdmin">Адмін</span></button>
             </div>
 
             <!-- MY DAY TAB -->
@@ -940,6 +940,9 @@
                     <h3 style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;">
                         <span><i data-lucide="building-2" class="icon"></i> Компанії</span>
                         <div style="display:flex;gap:0.5rem;">
+                            <button onclick="generateStatsDemoData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f0fdf4;color:#16a34a;" title="Згенерувати демо-метрики для тестування">
+                                <i data-lucide="bar-chart-3" class="icon icon-sm"></i> Demo Stats
+                            </button>
                             <button onclick="openAiAssistantsModal()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f3e8ff;color:#7c3aed;">
                                 <i data-lucide="bot" class="icon icon-sm"></i> AI
                             </button>
