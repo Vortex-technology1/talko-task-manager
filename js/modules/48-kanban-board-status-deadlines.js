@@ -57,8 +57,8 @@
                     { id: 'review', title: t('statusReview'), color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
                     { id: 'done', title: t('statusDone'), color: '#22c55e', bg: '#f0fdf4', tasks: [] }
                 ];
-                filtered.forEach(t => {
-                    const col = columns.find(c => c.id === (t.status || 'new'));
+                filtered.forEach(tk => {
+                    const col = columns.find(c => c.id === (tk.status || 'new'));
                     if (col) col.tasks.push(t);
                     else columns[0].tasks.push(t);
                 });
@@ -85,8 +85,8 @@
                     { id: 'no_deadline', title: t('noDeadline'), color: '#6b7280', bg: '#f9fafb', tasks: [] }
                 ];
                 
-                filtered.filter(t => t.status !== 'done').forEach(t => {
-                    const dl = t.deadlineDate;
+                filtered.filter(tk => tk.status !== 'done').forEach(tk => {
+                    const dl = tk.deadlineDate;
                     if (!dl) { columns[5].tasks.push(t); return; }
                     if (dl < today) columns[0].tasks.push(t);
                     else if (dl === today) columns[1].tasks.push(t);
@@ -117,39 +117,39 @@
                 });
                 
                 const todayStr = getLocalDateStr();
-                col.tasks.forEach(t => {
-                    const assignee = users.find(u => u.id === t.assigneeId);
-                    const assigneeName = assignee ? (assignee.name || assignee.email || '').split(' ')[0] : (t.assigneeName || '').split(' ')[0];
-                    const funcName = t.function || '';
-                    const isOverdue = t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done';
-                    const isToday = t.deadlineDate === todayStr;
+                col.tasks.forEach(tk => {
+                    const assignee = users.find(u => u.id === tk.assigneeId);
+                    const assigneeName = assignee ? (assignee.name || assignee.email || '').split(' ')[0] : (tk.assigneeName || '').split(' ')[0];
+                    const funcName = tk.function || '';
+                    const isOverdue = tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done';
+                    const isToday = tk.deadlineDate === todayStr;
                     const escalation = getEscalationLevel(t);
                     
                     let deadlineHtml = '';
-                    if (t.deadlineDate) {
-                        const d = new Date(t.deadlineDate + 'T12:00:00');
+                    if (tk.deadlineDate) {
+                        const d = new Date(tk.deadlineDate + 'T12:00:00');
                         const dayMonth = d.toLocaleDateString('uk', {day:'numeric', month:'short'});
                         const color = isOverdue ? '#ef4444' : isToday ? '#f59e0b' : '#6b7280';
                         deadlineHtml = `<span style="color:${color}">${dayMonth}</span>`;
                     }
                     
                     let checkHtml = '';
-                    if (t.checklist?.length) {
-                        const done = t.checklist.filter(c => c.done).length;
-                        checkHtml = `<span> ${done}/${t.checklist.length}</span>`;
+                    if (tk.checklist?.length) {
+                        const done = tk.checklist.filter(c => c.done).length;
+                        checkHtml = `<span> ${done}/${tk.checklist.length}</span>`;
                     }
                     
                     let imgHtml = '';
-                    if (t.attachments?.length) {
-                        const img = t.attachments.find(a => a.type?.startsWith('image/'));
+                    if (tk.attachments?.length) {
+                        const img = tk.attachments.find(a => a.type?.startsWith('image/'));
                         if (img && img.url && (img.url.startsWith('https://') || img.url.startsWith('data:image/'))) {
                             imgHtml = `<img src="${escapeHtml(img.url)}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:0.3rem;" onerror="this.remove()">`;
                         }
                     }
                     
                     let prioHtml = '';
-                    if (t.priority === 'high') prioHtml = '<span class="kanban-card-badge" style="background:#fef2f2;color:#ef4444"></span>';
-                    else if (t.priority === 'medium') prioHtml = '<span class="kanban-card-badge" style="background:#fffbeb;color:#f59e0b"><i data-lucide="minus-circle" class="icon icon-sm"></i></span>';
+                    if (tk.priority === 'high') prioHtml = '<span class="kanban-card-badge" style="background:#fef2f2;color:#ef4444"></span>';
+                    else if (tk.priority === 'medium') prioHtml = '<span class="kanban-card-badge" style="background:#fffbeb;color:#f59e0b"><i data-lucide="minus-circle" class="icon icon-sm"></i></span>';
                     
                     let escalBadge = '';
                     if (escalation) {
@@ -161,15 +161,15 @@
                     if (mode === 'deadlines') {
                         const stColors = {new:'#eff6ff;color:#3b82f6', progress:'#fffbeb;color:#f59e0b', review:'#f5f3ff;color:#8b5cf6'};
                         const stLabels = {new:t('statusNewLabel'), progress:t('statusProgressLabel'), review:t('statusReviewLabel')};
-                        if (stColors[t.status]) statusBadge = `<span class="kanban-card-badge" style="background:${stColors[t.status]};font-size:0.65rem">${stLabels[t.status]}</span>`;
+                        if (stColors[tk.status]) statusBadge = `<span class="kanban-card-badge" style="background:${stColors[tk.status]};font-size:0.65rem">${stLabels[tk.status]}</span>`;
                     }
                     
                     html += `<div class="kanban-card ${isOverdue?'overdue':''} ${isToday?'today':''}" 
-                                  draggable="true" data-task-id="${t.id}"
+                                  draggable="true" data-task-id="${tk.id}"
                                   ondragstart="kanbanDragStart(event)" ondragend="kanbanDragEnd(event)"
-                                  onclick="kanbanCardClick(event,'${t.id}')">
+                                  onclick="kanbanCardClick(event,'${tk.id}')">
                         ${imgHtml}
-                        <div class="kanban-card-title">${escapeHtml(t.title)}</div>
+                        <div class="kanban-card-title">${escapeHtml(tk.title)}</div>
                         <div class="kanban-card-meta">
                             ${prioHtml}${escalBadge}${statusBadge}
                             ${deadlineHtml}${checkHtml}
@@ -293,7 +293,7 @@
             kanbanDropLock = true;
             
             const targetCol = e.currentTarget.dataset.col;
-            const task = tasks.find(t => t.id === kanbanDraggedId);
+            const task = tasks.find(t => tk.id === kanbanDraggedId);
             if (!task) { kanbanDropLock = false; return; }
             
             // Permission check: owner/admin/manager can move any, employee only own

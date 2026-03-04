@@ -768,9 +768,9 @@
             ${canEdit ? `<button class="btn btn-success" onclick="openMetricModal()" style="padding:0.6rem 1.5rem;border-radius:14px;font-size:0.95rem;">
                 ${SVG.plus} Додати перший показник
             </button>
-            <div style="margin-top:1rem;display:flex;justify-content:center;gap:0.5rem;">
+            ${typeof isSuperAdmin !== 'undefined' && isSuperAdmin ? `<div style="margin-top:1rem;display:flex;justify-content:center;gap:0.5rem;">
                 <button class="btn btn-small" onclick="generateStatsDemoData()" style="font-size:0.78rem;background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb;">Завантажити демо-дані</button>
-            </div>` : ''}
+            </div>` : ''}` : ''}
         </div>` : ''}`;
     }
 
@@ -1518,12 +1518,34 @@
     //  DEMO DATA GENERATOR
     // ========================
     async function generateStatsDemoData() {
+        // ── SUPERADMIN ONLY ──────────────────────────────────────────
+        if (typeof isSuperAdmin === 'undefined' || !isSuperAdmin) {
+            showToast('Демо-дані доступні тільки для адміністратора', 'error');
+            return;
+        }
         if (!currentCompany || !currentUser) {
-            showToast('Спочатку увійдіть в компанію', 'error'); return;
+            showToast('Спочатку оберіть компанію', 'error'); return;
         }
 
-        const niche = prompt('Виберіть нішу демо-даних:\n1 — Меблевий бізнес\n2 — Будівництво та ремонти\n3 — Медична клініка\n\nВведіть 1, 2 або 3:');
-        if (!niche || !['1','2','3'].includes(niche.trim())) { showToast('Виберіть 1, 2 або 3', 'error'); return; }
+        // ── ВИБІР НІШІ (кастомний overlay замість prompt) ────────────
+        const niche = await new Promise(resolve => {
+            const ov = document.createElement('div');
+            ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
+            ov.innerHTML = `<div style="background:white;border-radius:20px;padding:1.5rem;max-width:340px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
+                <div style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:#111;">Оберіть нішу для демо</div>
+                ${[['1','Меблевий бізнес','#f59e0b'],['2','Будівництво та ремонти','#3b82f6'],['3','Медична клініка','#22c55e']].map(([k,n,c])=>`
+                <button data-k="${k}" style="width:100%;text-align:left;padding:0.75rem 1rem;border:2px solid #e5e7eb;border-radius:12px;background:white;cursor:pointer;font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;transition:all 0.15s;"
+                    onmouseenter="this.style.borderColor='${c}';this.style.background='#f8fafc';"
+                    onmouseleave="this.style.borderColor='#e5e7eb';this.style.background='white';">
+                    <span style="width:26px;height:26px;background:${c}20;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:${c};font-size:0.85rem;flex-shrink:0;">${k}</span>${n}
+                </button>`).join('')}
+                <button id="_nc" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:10px;background:white;cursor:pointer;color:#9ca3af;font-size:0.85rem;margin-top:0.25rem;">Скасувати</button>
+            </div>`;
+            document.body.appendChild(ov);
+            ov.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { ov.remove(); resolve(b.dataset.k); });
+            ov.querySelector('#_nc').onclick = () => { ov.remove(); resolve(null); };
+        });
+        if (!niche) return;
 
         const now = new Date();
         const uid = currentUser.uid;
@@ -1531,112 +1553,168 @@
         const funcList = typeof functions !== 'undefined' ? functions : [];
         const funcIds = funcList.map(f => f.id);
 
+        // ── ДАНІ ПО НІШАХ ─────────────────────────────────────────
         const NICHES = {
             '1': { name: 'Меблевий бізнес', metrics: [
-                { name: 'Замовлення', unit: 'шт', freq: 'weekly', target: 28, privacy: 'public', v: 0.3 },
-                { name: 'Виготовлено', unit: 'шт', freq: 'weekly', target: 24, privacy: 'public', v: 0.2 },
-                { name: 'Виручка', unit: 'грн', freq: 'weekly', target: 320000, privacy: 'restricted', v: 0.25 },
-                { name: 'Середній чек', unit: 'грн', freq: 'weekly', target: 12500, privacy: 'restricted', v: 0.15 },
-                { name: 'Ліди з сайту', unit: 'шт', freq: 'weekly', target: 85, privacy: 'public', v: 0.35 },
-                { name: 'Конверсія лід-замовлення', unit: '%', freq: 'weekly', target: 33, privacy: 'public', v: 0.2 },
-                { name: 'Повернення', unit: 'шт', freq: 'weekly', target: 2, privacy: 'public', v: 0.6 },
-                { name: 'Витрати матеріали', unit: 'грн', freq: 'weekly', target: 145000, privacy: 'owner_only', v: 0.15 },
-                { name: 'Витрати реклама', unit: 'грн', freq: 'weekly', target: 18000, privacy: 'owner_only', v: 0.2 },
-                { name: 'Собівартість', unit: 'грн', freq: 'weekly', target: 7200, privacy: 'restricted', v: 0.12 },
-                { name: 'Простій', unit: 'год', freq: 'weekly', target: 4, privacy: 'public', v: 0.5 },
-                { name: 'Брак', unit: 'шт', freq: 'weekly', target: 1, privacy: 'public', v: 0.8 },
-                { name: 'Ефективність', unit: '%', freq: 'weekly', target: 87, privacy: 'public', v: 0.08 },
-                { name: 'NPS', unit: 'балів', freq: 'monthly', target: 74, privacy: 'public', v: 0.1 },
-                { name: 'Чистий прибуток', unit: 'грн', freq: 'monthly', target: 185000, privacy: 'owner_only', v: 0.2 },
-                { name: 'Виробіток/працівник', unit: 'грн', freq: 'monthly', target: 42000, privacy: 'restricted', v: 0.15 },
-                { name: 'План виробництва', unit: '%', freq: 'monthly', target: 92, privacy: 'public', v: 0.08 },
+                { name:'Нові замовлення',          unit:'шт',   freq:'weekly',  target:28,     imp:'critical', inv:false, v:0.28 },
+                { name:'Виготовлено одиниць',       unit:'шт',   freq:'weekly',  target:24,     imp:'critical', inv:false, v:0.20 },
+                { name:'Виручка',                   unit:'грн',  freq:'weekly',  target:320000, imp:'critical', inv:false, v:0.22 },
+                { name:'Середній чек',              unit:'грн',  freq:'weekly',  target:12500,  imp:'high',     inv:false, v:0.14 },
+                { name:'Ліди з сайту',              unit:'шт',   freq:'weekly',  target:85,     imp:'high',     inv:false, v:0.32 },
+                { name:'Конверсія лід→замовлення',  unit:'%',    freq:'weekly',  target:33,     imp:'critical', inv:false, v:0.16 },
+                { name:'Рекламації',                unit:'шт',   freq:'weekly',  target:2,      imp:'high',     inv:true,  v:0.55 },
+                { name:'Витрати матеріали',         unit:'грн',  freq:'weekly',  target:145000, imp:'high',     inv:false, v:0.14 },
+                { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:18000,  imp:'medium',   inv:false, v:0.18 },
+                { name:'Брак продукції',            unit:'шт',   freq:'weekly',  target:1,      imp:'high',     inv:true,  v:0.70 },
+                { name:'Ефективність виробництва',  unit:'%',    freq:'weekly',  target:87,     imp:'high',     inv:false, v:0.07 },
+                { name:'Простій обладнання',        unit:'год',  freq:'weekly',  target:4,      imp:'medium',   inv:true,  v:0.45 },
+                { name:'NPS клієнтів',              unit:'балів',freq:'monthly', target:74,     imp:'high',     inv:false, v:0.09 },
+                { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:185000, imp:'critical', inv:false, v:0.18 },
+                { name:'Маржинальність',            unit:'%',    freq:'monthly', target:38,     imp:'critical', inv:false, v:0.09 },
+                { name:'Виробіток/працівник',       unit:'грн',  freq:'monthly', target:42000,  imp:'medium',   inv:false, v:0.14 },
+                { name:'Відгуки Google',            unit:'шт',   freq:'monthly', target:6,      imp:'medium',   inv:false, v:0.38 },
+                { name:'Нові дзвінки',              unit:'шт',   freq:'daily',   target:12,     imp:'high',     inv:false, v:0.32 },
+                { name:'Відправлено КП',            unit:'шт',   freq:'daily',   target:5,      imp:'medium',   inv:false, v:0.38 },
+                { name:'Заміри/виїзди',             unit:'шт',   freq:'daily',   target:4,      imp:'medium',   inv:false, v:0.42 },
             ]},
             '2': { name: 'Будівництво та ремонти', metrics: [
-                { name: 'Нові заявки', unit: 'шт', freq: 'weekly', target: 35, privacy: 'public', v: 0.3 },
-                { name: 'Виїзди на обєкт', unit: 'шт', freq: 'weekly', target: 18, privacy: 'public', v: 0.25 },
-                { name: 'Підписані договори', unit: 'шт', freq: 'weekly', target: 8, privacy: 'restricted', v: 0.3 },
-                { name: 'Виручка', unit: 'грн', freq: 'weekly', target: 480000, privacy: 'restricted', v: 0.25 },
-                { name: 'Середній чек', unit: 'грн', freq: 'weekly', target: 62000, privacy: 'restricted', v: 0.15 },
-                { name: 'Конверсія заявка-договір', unit: '%', freq: 'weekly', target: 23, privacy: 'public', v: 0.2 },
-                { name: 'Активних обєктів', unit: 'шт', freq: 'weekly', target: 12, privacy: 'public', v: 0.15 },
-                { name: 'Завершено обєктів', unit: 'шт', freq: 'weekly', target: 3, privacy: 'public', v: 0.4 },
-                { name: 'Прострочені дедлайни', unit: 'шт', freq: 'weekly', target: 1, privacy: 'public', v: 0.7 },
-                { name: 'Витрати матеріали', unit: 'грн', freq: 'weekly', target: 210000, privacy: 'owner_only', v: 0.2 },
-                { name: 'Витрати субпідряд', unit: 'грн', freq: 'weekly', target: 95000, privacy: 'owner_only', v: 0.3 },
-                { name: 'Витрати реклама', unit: 'грн', freq: 'weekly', target: 22000, privacy: 'owner_only', v: 0.2 },
-                { name: 'Фото до/після', unit: 'шт', freq: 'weekly', target: 6, privacy: 'public', v: 0.35 },
-                { name: 'NPS', unit: 'балів', freq: 'monthly', target: 68, privacy: 'public', v: 0.12 },
-                { name: 'Чистий прибуток', unit: 'грн', freq: 'monthly', target: 320000, privacy: 'owner_only', v: 0.22 },
-                { name: 'Маржинальність', unit: '%', freq: 'monthly', target: 35, privacy: 'owner_only', v: 0.1 },
-                { name: 'Відгуки Google', unit: 'шт', freq: 'monthly', target: 8, privacy: 'public', v: 0.4 },
+                { name:'Нові заявки',               unit:'шт',   freq:'weekly',  target:35,     imp:'critical', inv:false, v:0.28 },
+                { name:"Виїзди на об'єкт",          unit:'шт',   freq:'weekly',  target:18,     imp:'high',     inv:false, v:0.24 },
+                { name:'Підписані договори',        unit:'шт',   freq:'weekly',  target:8,      imp:'critical', inv:false, v:0.28 },
+                { name:'Виручка',                   unit:'грн',  freq:'weekly',  target:480000, imp:'critical', inv:false, v:0.22 },
+                { name:'Середній чек договору',     unit:'грн',  freq:'weekly',  target:62000,  imp:'high',     inv:false, v:0.14 },
+                { name:'Конверсія заявка→договір',  unit:'%',    freq:'weekly',  target:23,     imp:'critical', inv:false, v:0.18 },
+                { name:"Активних об'єктів",         unit:'шт',   freq:'weekly',  target:12,     imp:'high',     inv:false, v:0.14 },
+                { name:"Завершено об'єктів",        unit:'шт',   freq:'weekly',  target:3,      imp:'high',     inv:false, v:0.38 },
+                { name:'Прострочені дедлайни',      unit:'шт',   freq:'weekly',  target:1,      imp:'critical', inv:true,  v:0.65 },
+                { name:'Витрати матеріали',         unit:'грн',  freq:'weekly',  target:210000, imp:'high',     inv:false, v:0.18 },
+                { name:'Витрати субпідряд',         unit:'грн',  freq:'weekly',  target:95000,  imp:'high',     inv:false, v:0.28 },
+                { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:22000,  imp:'medium',   inv:false, v:0.18 },
+                { name:'Фото до/після',             unit:'шт',   freq:'weekly',  target:6,      imp:'low',      inv:false, v:0.32 },
+                { name:'NPS клієнтів',              unit:'балів',freq:'monthly', target:68,     imp:'high',     inv:false, v:0.11 },
+                { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:320000, imp:'critical', inv:false, v:0.20 },
+                { name:'Маржинальність',            unit:'%',    freq:'monthly', target:35,     imp:'critical', inv:false, v:0.09 },
+                { name:'Відгуки Google',            unit:'шт',   freq:'monthly', target:8,      imp:'medium',   inv:false, v:0.38 },
+                { name:'Нові дзвінки',              unit:'шт',   freq:'daily',   target:8,      imp:'high',     inv:false, v:0.32 },
+                { name:'Виїзди на замір',           unit:'шт',   freq:'daily',   target:3,      imp:'medium',   inv:false, v:0.42 },
+                { name:'Відправлено КП',            unit:'шт',   freq:'daily',   target:4,      imp:'medium',   inv:false, v:0.38 },
             ]},
             '3': { name: 'Медична клініка', metrics: [
-                { name: 'Первинних пацієнтів', unit: 'шт', freq: 'weekly', target: 42, privacy: 'public', v: 0.25 },
-                { name: 'Повторних пацієнтів', unit: 'шт', freq: 'weekly', target: 65, privacy: 'public', v: 0.2 },
-                { name: 'Дзвінки вхідні', unit: 'шт', freq: 'weekly', target: 180, privacy: 'public', v: 0.2 },
-                { name: 'Конверсія дзвінок-запис', unit: '%', freq: 'weekly', target: 72, privacy: 'public', v: 0.1 },
-                { name: 'Конверсія запис-прихід', unit: '%', freq: 'weekly', target: 85, privacy: 'public', v: 0.08 },
-                { name: 'Виручка', unit: 'грн', freq: 'weekly', target: 520000, privacy: 'restricted', v: 0.2 },
-                { name: 'Середній чек', unit: 'грн', freq: 'weekly', target: 4800, privacy: 'restricted', v: 0.12 },
-                { name: 'Кількість послуг', unit: 'шт', freq: 'weekly', target: 285, privacy: 'public', v: 0.15 },
-                { name: 'Завантаженість', unit: '%', freq: 'weekly', target: 78, privacy: 'restricted', v: 0.1 },
-                { name: 'Скасовані записи', unit: 'шт', freq: 'weekly', target: 8, privacy: 'public', v: 0.4 },
-                { name: 'Час очікування', unit: 'хв', freq: 'weekly', target: 12, privacy: 'public', v: 0.3 },
-                { name: 'Витрати реклама', unit: 'грн', freq: 'weekly', target: 35000, privacy: 'owner_only', v: 0.2 },
-                { name: 'Вартість ліда', unit: 'грн', freq: 'weekly', target: 280, privacy: 'owner_only', v: 0.25 },
-                { name: 'Витрати матеріали', unit: 'грн', freq: 'weekly', target: 85000, privacy: 'owner_only', v: 0.15 },
-                { name: 'NPS', unit: 'балів', freq: 'monthly', target: 82, privacy: 'public', v: 0.08 },
-                { name: 'Чистий прибуток', unit: 'грн', freq: 'monthly', target: 380000, privacy: 'owner_only', v: 0.2 },
-                { name: 'Відгуки Google', unit: 'шт', freq: 'monthly', target: 12, privacy: 'public', v: 0.35 },
-                { name: 'Плинність персоналу', unit: '%', freq: 'monthly', target: 4, privacy: 'owner_only', v: 0.3 },
+                { name:'Первинних пацієнтів',       unit:'шт',   freq:'weekly',  target:42,     imp:'critical', inv:false, v:0.22 },
+                { name:'Повторних пацієнтів',       unit:'шт',   freq:'weekly',  target:65,     imp:'critical', inv:false, v:0.18 },
+                { name:'Дзвінки вхідні',            unit:'шт',   freq:'weekly',  target:180,    imp:'high',     inv:false, v:0.18 },
+                { name:'Конверсія дзвінок→запис',   unit:'%',    freq:'weekly',  target:72,     imp:'critical', inv:false, v:0.09 },
+                { name:'Конверсія запис→прихід',    unit:'%',    freq:'weekly',  target:85,     imp:'critical', inv:false, v:0.07 },
+                { name:'Виручка',                   unit:'грн',  freq:'weekly',  target:520000, imp:'critical', inv:false, v:0.18 },
+                { name:'Середній чек',              unit:'грн',  freq:'weekly',  target:4800,   imp:'high',     inv:false, v:0.11 },
+                { name:'Кількість послуг',          unit:'шт',   freq:'weekly',  target:285,    imp:'high',     inv:false, v:0.14 },
+                { name:'Завантаженість лікарів',    unit:'%',    freq:'weekly',  target:78,     imp:'high',     inv:false, v:0.09 },
+                { name:'Скасовані записи',          unit:'шт',   freq:'weekly',  target:8,      imp:'high',     inv:true,  v:0.38 },
+                { name:'Час очікування',            unit:'хв',   freq:'weekly',  target:12,     imp:'medium',   inv:true,  v:0.28 },
+                { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:35000,  imp:'high',     inv:false, v:0.18 },
+                { name:'Вартість ліда',             unit:'грн',  freq:'weekly',  target:280,    imp:'high',     inv:true,  v:0.22 },
+                { name:'Витрати матеріали',         unit:'грн',  freq:'weekly',  target:85000,  imp:'high',     inv:false, v:0.14 },
+                { name:'NPS пацієнтів',             unit:'балів',freq:'monthly', target:82,     imp:'high',     inv:false, v:0.07 },
+                { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:380000, imp:'critical', inv:false, v:0.18 },
+                { name:'Відгуки Google',            unit:'шт',   freq:'monthly', target:12,     imp:'medium',   inv:false, v:0.32 },
+                { name:'Плинність персоналу',       unit:'%',    freq:'monthly', target:4,      imp:'high',     inv:true,  v:0.28 },
+                { name:'Записів на день',           unit:'шт',   freq:'daily',   target:28,     imp:'high',     inv:false, v:0.22 },
+                { name:'Дзвінків на день',          unit:'шт',   freq:'daily',   target:35,     imp:'medium',   inv:false, v:0.28 },
             ]},
         };
 
-        const nicheData = NICHES[niche.trim()];
-        if (!await showConfirmModal('Згенерувати ' + nicheData.metrics.length + ' метрик для "' + nicheData.name + '" з даними за 10 тижнів?', { danger: true })) return;
+        const nicheData = NICHES[niche];
+        if (!nicheData) return;
 
-        showToast('Генерую "' + nicheData.name + '"...', 'info');
+        // 14 днів + 12 тижнів + 8 місяців — достатньо для AI аналізу і трендів
+        const PERIODS = { daily: 14, weekly: 12, monthly: 8 };
+
+        if (!await showConfirmModal(
+            nicheData.metrics.length + ' метрик для "' + nicheData.name + '"\n14 днів + 12 тижнів + 8 місяців\nЦе демо для показу клієнту.',
+            { danger: false }
+        )) return;
+
+        showToast('Генерую "' + nicheData.name + '"...', 'info', 20000);
+
         try {
-            const periodsMap = { daily: 10, weekly: 10, monthly: 6 };
             for (let mi = 0; mi < nicheData.metrics.length; mi++) {
                 const dm = nicheData.metrics[mi];
                 const funcBind = {};
-                const funcIdx = mi % Math.max(funcIds.length, 1);
-                if (funcIds.length > 0) funcBind[funcIds[funcIdx]] = true;
+                if (funcIds.length > 0) funcBind[funcIds[mi % funcIds.length]] = true;
+
                 const metricRef = await metricsRef().add({
                     name: dm.name, unit: dm.unit, frequency: dm.freq,
-                    privacy: dm.privacy, inputType: 'manual', formula: '',
-                    alertEnabled: dm.unit === '%', alertThreshold: 20,
-                    importance: dm.name.includes('Виручка') || dm.name.includes('Прибуток') || dm.name.includes('Конверсія') ? 'critical' : dm.name.includes('Витрати') || dm.name.includes('Середній') ? 'high' : dm.name.includes('NPS') || dm.name.includes('Відгуки') ? 'medium' : 'low',
-                    isInverse: dm.name.includes('Брак') || dm.name.includes('Простій') || dm.name.includes('Повернення') || dm.name.includes('Рекламації') || dm.name.includes('Прострочені') || dm.name.includes('Скасовані') || dm.name.includes('Плинність') || dm.name.includes('Час очікування') || dm.name.includes('Вартість ліда'),
-                    responsibleId: (typeof users !== 'undefined' && users.length > 0) ? users[mi % users.length]?.id || '' : '',
+                    privacy: (dm.name.includes('прибуток') || dm.name.includes('Витрат') || dm.name.includes('Виручка') || dm.name.includes('Вартість')) ? 'owner_only' : 'public',
+                    inputType: 'manual', formula: '',
+                    alertEnabled: dm.inv || dm.unit === '%', alertThreshold: 20,
+                    importance: dm.imp, isInverse: dm.inv,
+                    responsibleId: users.length > 0 ? (users[mi % users.length]?.id || '') : '',
                     boundFunctions: funcBind, autoSpec: null, createdBy: uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 });
+
                 const metricId = metricRef.id;
-                const periods = periodsMap[dm.freq] || 10;
+                const periods = PERIODS[dm.freq] || 12;
+
                 for (let i = 0; i < periods; i++) {
                     let pk;
-                    if (dm.freq === 'daily') { const d = new Date(now); d.setDate(d.getDate() - i); pk = d.toISOString().split('T')[0]; }
-                    else if (dm.freq === 'weekly') { const d = new Date(now); d.setDate(d.getDate() - i * 7); pk = toWeekKey(d); }
-                    else { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); pk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
-                    const age = (periods - i) / periods;
-                    const trend = 0.85 + age * 0.2;
-                    const noise = (Math.random() * 2 - 1) * (dm.v || 0.25);
-                    let value = Math.round(dm.target * trend * (1 + noise));
-                    if (dm.unit === '%' || dm.unit === 'балів') value = Math.max(1, Math.min(value, 98));
-                    value = Math.max(0, value);
-                    const tgtVar = dm.target * 0.05;
-                    const periodTarget = Math.round(dm.target + (Math.random() * 2 - 1) * tgtVar);
-                    await entriesRef().add({ metricId, periodType: dm.freq, periodKey: pk, scope: 'user', scopeId: uid, date: new Date().toISOString().split('T')[0], value, source: 'demo', isOverride: false, createdBy: uid, userName, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-                    await targetsRef().add({ metricId, periodKey: pk, periodType: dm.freq, scope: 'company', scopeId: currentCompany, targetValue: periodTarget, setBy: uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    if (dm.freq === 'daily') {
+                        const d = new Date(now); d.setDate(d.getDate() - i);
+                        pk = d.toISOString().split('T')[0];
+                    } else if (dm.freq === 'weekly') {
+                        const d = new Date(now); d.setDate(d.getDate() - i * 7);
+                        pk = toWeekKey(d);
+                    } else {
+                        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                        pk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+                    }
+
+                    // Реалістичний тренд: нові = кращі результати
+                    const progress = 1 - i / Math.max(periods - 1, 1);
+                    const trend = dm.inv
+                        ? 1.4 - progress * 0.45
+                        : 0.68 + progress * 0.38;
+                    const seasonal = 1 + Math.sin(i * 0.75 + mi * 0.3) * 0.05;
+                    const noise = 1 + (Math.random() * 2 - 1) * dm.v;
+                    let value = Math.round(dm.target * trend * seasonal * noise);
+                    if (dm.unit === '%') value = Math.max(8, Math.min(97, value));
+                    else if (dm.unit === 'балів') value = Math.max(35, Math.min(94, value));
+                    else value = Math.max(0, value);
+
+                    const targetValue = Math.round(dm.target * (0.94 + Math.random() * 0.12));
+
+                    const batch = db.batch();
+                    batch.set(entriesRef().doc(), {
+                        metricId, periodType: dm.freq, periodKey: pk,
+                        scope: 'user', scopeId: uid,
+                        date: new Date().toISOString().split('T')[0],
+                        value, source: 'demo', isOverride: false,
+                        createdBy: uid, userName,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    });
+                    batch.set(aggregatesRef().doc(), {
+                        metricId, periodKey: pk, periodType: dm.freq,
+                        scope: 'company', scopeId: currentCompany,
+                        sum: value, count: 1,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    });
+                    batch.set(targetsRef().doc(), {
+                        metricId, periodKey: pk, periodType: dm.freq,
+                        scope: 'company', scopeId: currentCompany,
+                        targetValue, setBy: uid,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    });
+                    await batch.commit();
                 }
             }
-            showToast(nicheData.name + ' — ' + nicheData.metrics.length + ' метрик створено!', 'success');
+            showToast('"' + nicheData.name + '" — ' + nicheData.metrics.length + ' метрик готово!', 'success');
             await loadMetrics();
             renderStatistics();
-        } catch (e) { console.error('[STATS] demo:', e); showToast('Помилка: ' + e.message, 'error'); }
+        } catch(e) {
+            console.error('[STATS] demo:', e);
+            showToast('Помилка: ' + e.message, 'error');
+        }
     }
 
     // ========================
@@ -1656,10 +1734,11 @@
     window.selectMetricSource = function(source) {
         document.querySelectorAll('.metric-source-btn').forEach(btn => {
             const active = btn.dataset.source === source;
-            btn.style.borderColor = active ? '#22c55e' : '#e5e7eb';
-            btn.style.background  = active ? '#f0fdf4' : 'white';
-            btn.style.color       = active ? '#16a34a' : '#374151';
-            btn.style.fontWeight  = active ? '600' : '400';
+            btn.style.borderColor  = active ? '#22c55e' : '#e5e7eb';
+            btn.style.background   = active ? '#f0fdf4' : 'white';
+            btn.style.color        = active ? '#16a34a' : '#374151';
+            btn.style.fontWeight   = active ? '600' : '500';
+            btn.style.boxShadow    = active ? '0 0 0 3px rgba(34,197,94,0.15)' : 'none';
         });
         document.getElementById('metricInputType').value = source === 'manual' ? 'manual' : 'auto';
         const autoBlock = document.getElementById('autoSpecBlock');

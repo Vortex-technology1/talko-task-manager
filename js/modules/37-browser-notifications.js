@@ -252,3 +252,6 @@
         function closeMobileMenu() {
             document.getElementById('mobileMenuModal').style.display = 'none';
         }
+        
+        window.openMobileMenu = openMobileMenu;
+        window.closeMobileMenu = closeMobileMenu;
