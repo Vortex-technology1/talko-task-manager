@@ -58,16 +58,15 @@
         }
 
         // More tabs dropdown
-        function toggleMoreTabs(e) {
+        // Nav dropdowns (Робота / Система)
+        function toggleNavDropdown(menuId, wrapperId, e) {
             if (e) e.stopPropagation();
-            const menu = document.getElementById('moreTabsMenu');
-            const btn = document.getElementById('moreTabsBtn');
+            const menu = document.getElementById(menuId);
+            const btn = document.getElementById(wrapperId)?.querySelector('button');
             if (!menu) return;
-            if (menu.style.display === 'block') {
-                menu.style.display = 'none';
-                return;
-            }
-            // Позиціонуємо відносно кнопки
+            const isOpen = menu.style.display === 'block';
+            closeNavDropdowns();
+            if (isOpen) return;
             if (btn) {
                 const rect = btn.getBoundingClientRect();
                 menu.style.top = (rect.bottom + 4) + 'px';
@@ -75,17 +74,26 @@
             }
             menu.style.display = 'block';
         }
-        function closeMoreTabs() {
-            const menu = document.getElementById('moreTabsMenu');
-            if (menu) menu.style.display = 'none';
+        function closeNavDropdowns() {
+            ['workTabMenu','sysTabMenu'].forEach(function(id) {
+                const m = document.getElementById(id);
+                if (m) m.style.display = 'none';
+            });
         }
+        // Закриваємо при кліку поза меню
+        document.addEventListener('click', function(e) {
+            const inWork = document.getElementById('workTabDropdown')?.contains(e.target);
+            const inSys = document.getElementById('sysTabDropdown')?.contains(e.target);
+            if (!inWork && !inSys) closeNavDropdowns();
+        });
+        window.toggleNavDropdown = toggleNavDropdown;
+        window.closeNavDropdowns = closeNavDropdowns;
+
+        // Зворотна сумісність (старі виклики)
+        function toggleMoreTabs(e) { }
+        function closeMoreTabs() { closeNavDropdowns(); }
         window.toggleMoreTabs = toggleMoreTabs;
         window.closeMoreTabs = closeMoreTabs;
-        // Close on outside click
-        document.addEventListener('click', function(e) {
-            const dd = document.getElementById('moreTabsDropdown');
-            if (dd && !dd.contains(e.target)) closeMoreTabs();
-        });
 
         function switchTab(tabName) {
             // Reset project detail when leaving projects tab
@@ -110,16 +118,20 @@
             }
             if (matchBtn) matchBtn.classList.add('active');
             // Highlight "Ще" if secondary tab is active
-            var secondaryTabs = ['processes','regular','functions','users','analytics','bizstructure','admin'];
-            var moreBtn = document.getElementById('moreTabsBtn');
-            if (moreBtn) { if (secondaryTabs.includes(tabName)) moreBtn.classList.add('active'); else moreBtn.classList.remove('active'); }
+            // Підсвічуємо кнопку групи якщо активна її вкладка
+            var workTabs = ['projects','processes','regular','users'];
+            var sysTabs = ['functions','bizstructure','analytics','admin'];
+            var workBtn = document.getElementById('workTabBtn');
+            var sysBtn = document.getElementById('sysTabBtn');
+            if (workBtn) workBtn.classList.toggle('active', workTabs.includes(tabName));
+            if (sysBtn) sysBtn.classList.toggle('active', sysTabs.includes(tabName));
             
             // Update bottom nav
             document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.dataset.tab === tabName) btn.classList.add('active');
                 // Підсвічуємо "Ще" якщо активна secondary вкладка
-                if (btn.dataset.tab === 'more' && secondaryTabs.includes(tabName)) {
+                if (btn.dataset.tab === 'more' && ['projects','processes','regular','users','functions','bizstructure','analytics','admin'].includes(tabName)) {
                     btn.classList.add('active');
                 }
             });

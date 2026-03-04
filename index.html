@@ -307,55 +307,49 @@
                 <button class="tab-btn" onclick="switchTab('control')" title="Контроль" aria-label="Контроль"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
                 <button class="tab-btn" onclick="switchTab('statistics')" id="statisticsTabBtn" style="display:none;" title="Статистика та KPI" aria-label="Статистика та KPI"><i data-lucide="trending-up" class="icon"></i> <span data-i18n="tabStatistics">Метрики</span></button>
                 <!-- More dropdown -->
-                <div style="position:relative;display:inline-block;" id="moreTabsDropdown">
-                    <button class="tab-btn" onclick="toggleMoreTabs(event)" title="Ще" aria-label="Ще" id="moreTabsBtn"><i data-lucide="more-horizontal" class="icon"></i> <span>Ще</span></button>
-                    <div id="moreTabsMenu" style="display:none;position:fixed;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.14);padding:0.6rem;width:232px;">
+                <!-- Робота dropdown -->
+                <div style="position:relative;display:inline-block;" id="workTabDropdown">
+                    <button class="tab-btn" onclick="toggleNavDropdown('workTabMenu', 'workTabDropdown', event)" id="workTabBtn" aria-label="Робота">
+                        <i data-lucide="briefcase" class="icon"></i>
+                        <span data-i18n="navWork">Робота</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.5;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+                    <div id="workTabMenu" style="display:none;position:fixed;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.13);min-width:190px;padding:0.35rem;">
+                        <button class="tab-btn _ntab" onclick="switchTab('projects');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="folder-kanban" class="icon icon-sm"></i><span data-i18n="tabProjects">Проєкти</span>
+                        </button>
+                        <button class="tab-btn _ntab" onclick="switchTab('processes');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="git-branch" class="icon icon-sm"></i><span data-i18n="tabProcesses">Процеси</span>
+                        </button>
+                        <button class="tab-btn _ntab" onclick="switchTab('regular');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="repeat" class="icon icon-sm"></i><span data-i18n="tabRegular">Регулярні</span>
+                        </button>
+                        <button class="tab-btn _ntab" onclick="switchTab('users');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="users" class="icon icon-sm"></i><span data-i18n="tabUsers">Команда</span>
+                        </button>
+                    </div>
+                </div>
 
-                        <!-- Група 1: Проєкти + Процеси -->
-                        <div style="font-size:0.68rem;font-weight:600;color:#9ca3af;letter-spacing:0.05em;padding:0 0.3rem 0.3rem;text-transform:uppercase;">Робота</div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;margin-bottom:0.5rem;">
-                            <button class="tab-btn _mtab" onclick="switchTab('projects');closeMoreTabs();" title="Проєкти" data-i18n="tabProjects"
-                                style="flex-direction:column;gap:3px;padding:0.55rem 0.4rem;border-radius:10px;font-size:0.75rem;font-weight:500;justify-content:center;">
-                                <i data-lucide="folder-kanban" class="icon icon-sm"></i><span>Проєкти</span>
-                            </button>
-                            <button class="tab-btn _mtab" onclick="switchTab('processes');closeMoreTabs();" title="Бізнес-процеси" data-i18n="tabProcesses"
-                                style="flex-direction:column;gap:3px;padding:0.55rem 0.4rem;border-radius:10px;font-size:0.75rem;font-weight:500;justify-content:center;">
-                                <i data-lucide="git-branch" class="icon icon-sm"></i><span>Процеси</span>
-                            </button>
-                            <button class="tab-btn _mtab" onclick="switchTab('regular');closeMoreTabs();" title="Регулярні задачі" data-i18n="tabRegular"
-                                style="flex-direction:column;gap:3px;padding:0.55rem 0.4rem;border-radius:10px;font-size:0.75rem;font-weight:500;justify-content:center;">
-                                <i data-lucide="repeat" class="icon icon-sm"></i><span>Регулярні</span>
-                            </button>
-                            <button class="tab-btn _mtab" onclick="switchTab('users');closeMoreTabs();" title="Команда / Співробітники" data-i18n="tabUsers"
-                                style="flex-direction:column;gap:3px;padding:0.55rem 0.4rem;border-radius:10px;font-size:0.75rem;font-weight:500;justify-content:center;">
-                                <i data-lucide="users" class="icon icon-sm"></i><span>Команда</span>
-                            </button>
-                        </div>
-
-                        <!-- Розділювач -->
-                        <div style="border-top:1px solid #f3f4f6;margin:0 0 0.5rem;"></div>
-
-                        <!-- Група 2: Функції + Структура -->
-                        <div style="font-size:0.68rem;font-weight:600;color:#9ca3af;letter-spacing:0.05em;padding:0 0.3rem 0.3rem;text-transform:uppercase;">Система</div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;margin-bottom:0.5rem;">
-                            <button class="tab-btn _mtab" onclick="switchTab('functions');closeMoreTabs();" title="Функції бізнесу" data-i18n="tabFunctions"
-                                style="flex-direction:column;gap:3px;padding:0.55rem 0.4rem;border-radius:10px;font-size:0.75rem;font-weight:500;justify-content:center;">
-                                <i data-lucide="settings" class="icon icon-sm"></i><span>Функції</span>
-                            </button>
-                            <button class="tab-btn _mtab" onclick="switchTab('bizstructure');closeMoreTabs();" title="Організаційна структура" data-i18n="tabStructure"
-                                style="flex-direction:column;gap:3px;padding:0.55rem 0.4rem;border-radius:10px;font-size:0.75rem;font-weight:500;justify-content:center;">
-                                <i data-lucide="network" class="icon icon-sm"></i><span>Структура</span>
-                            </button>
-                            <button class="tab-btn _mtab" onclick="switchTab('analytics');closeMoreTabs();" title="Аналітика та звіти" data-i18n="tabAnalytics"
-                                style="flex-direction:column;gap:3px;padding:0.55rem 0.4rem;border-radius:10px;font-size:0.75rem;font-weight:500;justify-content:center;">
-                                <i data-lucide="bar-chart-3" class="icon icon-sm"></i><span>Аналітика</span>
-                            </button>
-                        </div>
-
-                        <!-- Адмін (прихований для звичайних юзерів) -->
-                        <button class="tab-btn" onclick="switchTab('admin');closeMoreTabs();" id="adminTabBtn"
-                            style="display:none;width:100%;text-align:left;border-radius:8px;padding:0.45rem 0.75rem;background:#fee2e2;color:#dc2626;font-size:0.8rem;">
-                            <i data-lucide="shield" class="icon icon-sm"></i> <span data-i18n="tabAdmin">Адмін</span>
+                <!-- Система dropdown -->
+                <div style="position:relative;display:inline-block;" id="sysTabDropdown">
+                    <button class="tab-btn" onclick="toggleNavDropdown('sysTabMenu', 'sysTabDropdown', event)" id="sysTabBtn" aria-label="Система">
+                        <i data-lucide="settings-2" class="icon"></i>
+                        <span data-i18n="navSystem">Система</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.5;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+                    <div id="sysTabMenu" style="display:none;position:fixed;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.13);min-width:190px;padding:0.35rem;">
+                        <button class="tab-btn _ntab" onclick="switchTab('functions');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="settings" class="icon icon-sm"></i><span data-i18n="tabFunctions">Функції</span>
+                        </button>
+                        <button class="tab-btn _ntab" onclick="switchTab('bizstructure');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="network" class="icon icon-sm"></i><span data-i18n="tabStructure">Структура</span>
+                        </button>
+                        <button class="tab-btn _ntab" onclick="switchTab('analytics');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="bar-chart-3" class="icon icon-sm"></i><span data-i18n="tabAnalytics">Аналітика</span>
+                        </button>
+                        <button class="tab-btn _ntab" onclick="switchTab('admin');closeNavDropdowns();" id="adminTabBtn"
+                            style="display:none;width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;background:#fee2e2;color:#dc2626;">
+                            <i data-lucide="shield" class="icon icon-sm"></i><span data-i18n="tabAdmin">Адмін</span>
                         </button>
                     </div>
                 </div>
