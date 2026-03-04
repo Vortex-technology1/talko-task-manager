@@ -320,7 +320,7 @@
                 aiAssistants: 'AI Асистенти',
                 aiManager: 'Керівник',
                 aiTechnical: 'Технічний',
-                aiSupport: 'AI Помічник (Підтримка)',
+                aiSupport: 'AI Support 24/7',
                 profile: 'Профіль',
                 loadDemoData: 'Завантажити демо-дані',
                 // Review (перевірка)
@@ -1002,6 +1002,8 @@
                 doneAction: 'Виконано',
                 closeAction: 'Закрити',
                 stepNofTotal: 'крок {n}/{total}',
+
+                techLeadAI: 'Technisch',
 },
             ru: {
                 // Auth
