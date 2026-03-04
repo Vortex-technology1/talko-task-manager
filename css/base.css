@@ -25,7 +25,8 @@
             background: #f9fafb; 
             color: var(--dark);
             min-height: 100vh;
-            overflow-x: hidden;
+            min-width: 360px;
+            overflow-x: auto;
             -webkit-text-size-adjust: 100%;
         }
         
@@ -149,7 +150,7 @@
         
         .mobile-logout-btn { display: none; }
         
-        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; overflow-x: hidden; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
         
         .tab-navigation { 
             display: flex; 
