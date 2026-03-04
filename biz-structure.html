@@ -601,16 +601,16 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     }
 
     .ai-menu {
-        position: absolute;
-        top: calc(100% + 8px);
-        right: 0;
+        position: fixed;
+        top: 60px;
+        right: 10px;
         min-width: 280px;
         background: white;
         border: 1px solid var(--gray-200);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-lg);
         display: none;
-        z-index: 1001;
+        z-index: 99999;
         overflow: hidden;
     }
 
@@ -998,16 +998,15 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
     }
 
     .tools-menu {
-        position: absolute;
-        top: 100%;
-        right: 0;
+        position: fixed;
+        top: 60px;
+        right: 120px;
         background: white;
         border: 1px solid var(--gray-200);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-lg);
         display: none;
-        z-index: 1001;
-        margin-top: 8px;
+        z-index: 99999;
         min-width: 200px;
         padding: 8px 0;
     }
@@ -4961,7 +4960,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
 
                 <!-- Tools Menu - об'єднує експорт, копіювання і т.д. -->
                 <div class="tools-dropdown">
-                    <button class="tool-btn" id="toolsMenuBtn" type="button" title="Інструменти" aria-haspopup="true" aria-expanded="false" onclick="event.stopPropagation(); console.log('[MENU-CLICK]'); var m=document.getElementById('toolsMenu'); if(m){m.classList.toggle('show'); console.log('[MENU] show='+m.classList.contains('show'));} else {console.log('[MENU] toolsMenu NOT FOUND');}">
+                    <button class="tool-btn" id="toolsMenuBtn" type="button" title="Інструменти" aria-haspopup="true" aria-expanded="false" onclick="event.stopPropagation(); var m=document.getElementById('toolsMenu'); if(!m) return; if(m.style.display==='block'){m.style.display='none';}else{m.style.display='block';} console.log('[MENU] display='+m.style.display);">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
                         </svg>
@@ -5040,8 +5039,7 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                     </svg>
                 </button>
                 <!-- AI Assistants Dropdown -->
-                <div class="ai-dropdown">
-                    <button class="tool-btn ai-btn" id="aiAssistantsBtn" type="button" title="AI Асистенти" aria-haspopup="true" aria-expanded="false" onclick="event.stopPropagation(); console.log('[AI-CLICK]'); var m=document.getElementById('aiMenu'); if(m){m.classList.toggle('show'); console.log('[AI] show='+m.classList.contains('show'));} else {console.log('[AI] aiMenu NOT FOUND');}">
+                <a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-organizational-structure" target="_blank" rel="noopener noreferrer" class="tool-btn ai-btn" style="text-decoration:none;color:white;" title="AI Структура — розробка організаційної структури">
                         <span class="ai-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
@@ -5049,27 +5047,8 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
                                 <circle cx="16" cy="14" r="2"/>
                             </svg>
                         </span>
-                        <span data-text="toolbar.ai_assistants">AI АСИСТЕНТИ</span>
-                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="ai-menu" id="aiMenu" role="menu">
-                        <a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-organizational-structure" target="_blank" rel="noopener noreferrer" class="ai-menu-item" role="menuitem">
-                            <div class="ai-menu-icon">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                                    <path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/>
-                                </svg>
-                            </div>
-                            <div class="ai-menu-content">
-                                <div class="ai-menu-title" data-text="ai.structure">AI Структура</div>
-                                <div class="ai-menu-desc" data-text="ai.structure_desc">Розробка організаційної структури</div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                        <span data-text="toolbar.ai_structure">AI СТРУКТУРА</span>
+                </a>
                 <div class="save-indicator-container">
                     <span class="save-indicator saved" id="saveIndicator">
                         <svg class="save-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -9602,7 +9581,8 @@ console.log('[BIZ] Company from URL:', window._bizCompanyId);
             
             // Tools menu
             if (!e.target.closest('.tools-dropdown')) {
-                Utils.getElement('toolsMenu')?.classList.remove('show');
+                var tm = Utils.getElement('toolsMenu');
+                if (tm) { tm.classList.remove('show'); tm.style.display = ''; }
             }
             
             // Ecosystem menu
