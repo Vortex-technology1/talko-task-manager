@@ -1,0 +1,400 @@
+        /* Status multi-select dropdown */
+        .status-multiselect {
+            position: relative;
+            flex: 1;
+            min-width: 100px;
+        }
+        .status-multiselect-toggle {
+            padding: 0.6rem;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            font-size: 0.85rem;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            user-select: none;
+        }
+        .status-multiselect-toggle:hover { border-color: #bbb; }
+        .status-multiselect-toggle.open { border-color: var(--info); }
+        .status-multiselect-label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--dark);
+            font-size: 0.85rem;
+        }
+        .status-multiselect-label.placeholder { color: var(--gray); }
+        .status-multiselect-arrow { transition: transform 0.2s; flex-shrink: 0; }
+        .status-multiselect-toggle.open .status-multiselect-arrow { transform: rotate(180deg); }
+        .status-multiselect-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.1rem 0.45rem;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .status-multiselect-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            min-width: 180px;
+            background: var(--white);
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            z-index: 200;
+            padding: 0.35rem 0;
+            animation: statusDropFade 0.15s ease;
+        }
+        .status-multiselect-dropdown.show { display: block; }
+        @keyframes statusDropFade {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .status-multiselect-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.15s;
+            user-select: none;
+        }
+        .status-multiselect-item:hover { background: #f0fdf4; }
+        .status-multiselect-item input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .status-multiselect-all {
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 500;
+            padding-bottom: 0.6rem;
+            margin-bottom: 0.15rem;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .tasks-container, .cards-grid {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            padding: 1rem;
+        }
+        
+        /* Structure Board */
+        .struct-board {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding: 1rem;
+            min-height: 400px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .struct-column {
+            min-width: 220px;
+            max-width: 280px;
+            flex-shrink: 0;
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .struct-col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            min-height: 32px;
+        }
+        .struct-col-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #374151;
+            cursor: text;
+        }
+        .struct-col-stats {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.3rem 0;
+            margin-bottom: 0.5rem;
+        }
+        .struct-col-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            min-height: 60px;
+        }
+        .struct-func-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.6rem;
+            cursor: grab;
+            transition: all 0.15s;
+            font-size: 0.82rem;
+        }
+        .struct-func-card:active { cursor: grabbing; }
+        .struct-func-card.dragging { opacity: 0.5; transform: rotate(2deg); }
+        .struct-col-body.drag-over { background: #dcfce7; border-radius: 8px; }
+        .struct-add-col {
+            min-width: 180px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .struct-add-col:hover { background: #e5e7eb; color: #374151; }
+        
+        .task-card, .function-card, .user-card {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+        
+        .function-card, .user-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius);
+        }
+        
+        .task-card:last-child { border-bottom: none; }
+        .task-card:hover, .function-card:hover, .user-card:hover { background: #f9fafb; border-color: var(--primary); }
+        
+        /* Process Board Styles */
+        .process-board-container {
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        
+        .process-board {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            padding: 0;
+        }
+        
+        /* Pipeline row — один процес на рядок */
+        .process-pipeline-row {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .process-pipeline-row:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-color: #d1d5db;
+        }
+        
+        .process-pipeline-row.overdue {
+            border-left: 4px solid var(--danger);
+            background: #fef8f8;
+        }
+        
+        .process-pipeline-row.completed {
+            opacity: 0.7;
+            border-left: 4px solid var(--primary);
+            background: #f0fdf4;
+        }
+        
+        .process-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .process-row-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--dark);
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .process-row-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+            flex-shrink: 0;
+        }
+        
+        .process-row-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            white-space: nowrap;
+        }
+        
+        .process-row-meta .overdue-badge {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        
+        .process-row-percent {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--primary);
+            min-width: 36px;
+            text-align: right;
+        }
+        
+        .process-row-percent.complete {
+            color: var(--primary);
+        }
+        
+        /* Pipeline steps — горизонтальний рядок етапів */
+        .process-pipeline-steps {
+            display: flex;
+            gap: 2px;
+            align-items: stretch;
+            position: relative;
+        }
+        
+        .pipeline-step {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.4rem 0.25rem;
+            border-radius: 6px;
+            background: #f3f4f6;
+            transition: all 0.2s;
+            min-width: 0;
+        }
+        
+        .pipeline-step.done {
+            background: var(--primary);
+        }
+        
+        .pipeline-step.active {
+            background: #3b82f6;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #3b82f6;
+            z-index: 1;
+        }
+        
+        .pipeline-step.pending {
+            background: #e5e7eb;
+        }
+        
+        .pipeline-step-label {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: white;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            line-height: 1.2;
+        }
+        
+        .pipeline-step.pending .pipeline-step-label {
+            color: #9ca3af;
+        }
+        
+        .pipeline-step.done .pipeline-step-label,
+        .pipeline-step.active .pipeline-step-label {
+            color: white;
+        }
+        
+        /* Стрілки між кроками */
+        .pipeline-arrow {
+            flex-shrink: 0;
+            width: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d1d5db;
+            font-size: 0.7rem;
+        }
+        
+        /* Assignee badge */
+        .process-row-assignee {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Mobile: vertical stacked layout */
+        @media (max-width: 767px) {
+            .process-board {
+                flex-direction: column;
+                min-width: unset;
+                width: 100%;
+            }
+            .process-board-container {
+                overflow-x: hidden;
+            }
+            .process-pipeline-row {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+            .process-row-top {
+                flex-wrap: wrap;
+            }
+            .process-row-meta {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .pipeline-step-label {
+                font-size: 0.55rem;
+            }
+        }
+        

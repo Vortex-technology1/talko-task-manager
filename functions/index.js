@@ -1352,3 +1352,161 @@ exports.aiAssistant = functions
             throw new functions.https.HttpsError('internal', error.message);
         }
     });
+// ===========================
+// 13. ВЕЧІРНІЙ DIGEST (18:00) — Plan vs Fact
+// ===========================
+exports.eveningDigest = functions
+    .region(REGION)
+    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .pubsub.schedule('0 18 * * 1-5')
+    .timeZone('Europe/Kyiv')
+    .onRun(async (context) => {
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+        const day = now.getDay();
+        if (day === 0 || day === 6) return null;
+
+        const tmrw = new Date(now); tmrw.setDate(tmrw.getDate() + 1);
+        const tmrwStr = tmrw.toISOString().split('T')[0];
+
+        const companiesSnap = await db.collection('companies').get();
+
+        for (const companyDoc of companiesSnap.docs) {
+            const companyId = companyDoc.id;
+            if (companyDoc.data().eveningDigestEnabled === false) continue;
+
+            const usersSnap = await companyDoc.ref.collection('users').get();
+
+            for (const userDoc of usersSnap.docs) {
+                const ud = userDoc.data();
+                if (!ud.telegramChatId || ud.eveningDigestEnabled === false) continue;
+
+                const uid = userDoc.id;
+                const chatId = ud.telegramChatId;
+                const userName = ud.name || ud.email || '';
+
+                // Get all tasks for this user
+                const tasksSnap = await companyDoc.ref.collection('tasks')
+                    .where('assigneeId', '==', uid).get();
+
+                const tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                // Completed today
+                const doneToday = tasks.filter(t => t.status === 'done' && t.completedDate === todayStr);
+
+                // Due today but not done
+                const missedToday = tasks.filter(t =>
+                    t.deadlineDate === todayStr && t.status !== 'done'
+                );
+
+                // All overdue (before today)
+                const overdue = tasks.filter(t =>
+                    t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done'
+                );
+
+                // Tomorrow
+                const tomorrow = tasks.filter(t =>
+                    t.deadlineDate === tmrwStr && t.status !== 'done'
+                ).sort((a, b) => (a.deadlineTime || '').localeCompare(b.deadlineTime || ''));
+
+                // Skip if no activity
+                if (doneToday.length === 0 && missedToday.length === 0 && overdue.length === 0 && tomorrow.length === 0) {
+                    continue;
+                }
+
+                // Score
+                const planned = doneToday.length + missedToday.length;
+                const score = planned > 0 ? Math.round((doneToday.length / planned) * 100) : 100;
+                const emoji = score >= 80 ? '🟢' : score >= 50 ? '🟡' : '🔴';
+
+                let msg = `🌆 <b>Вечірній звіт</b>\n👤 ${userName}\n\n`;
+                msg += `${emoji} <b>План vs Факт: ${doneToday.length}/${planned} (${score}%)</b>\n\n`;
+
+                if (doneToday.length > 0) {
+                    msg += `✅ Виконано (${doneToday.length}):\n`;
+                    doneToday.slice(0, 5).forEach(t => { msg += `  • <s>${t.title}</s>\n`; });
+                    if (doneToday.length > 5) msg += `  ... ще ${doneToday.length - 5}\n`;
+                    msg += `\n`;
+                }
+
+                if (missedToday.length > 0) {
+                    msg += `❌ Не виконано (${missedToday.length}):\n`;
+                    missedToday.forEach(t => { msg += `  • ${t.title}\n`; });
+                    msg += `\n`;
+                }
+
+                if (overdue.length > 0) {
+                    msg += `⚠️ Прострочено (${overdue.length}):\n`;
+                    overdue.slice(0, 3).forEach(t => {
+                        msg += `  • ${t.title} (📅 ${t.deadlineDate})\n`;
+                    });
+                    if (overdue.length > 3) msg += `  ... ще ${overdue.length - 3}\n`;
+                    msg += `\n`;
+                }
+
+                if (tomorrow.length > 0) {
+                    msg += `📅 Завтра (${tomorrow.length}):\n`;
+                    tomorrow.slice(0, 5).forEach(t => {
+                        const tm = t.deadlineTime ? ` ⏰ ${t.deadlineTime}` : '';
+                        const pr = t.priority === 'high' ? '🔴' : t.priority === 'low' ? '🟢' : '🟡';
+                        msg += `  ${pr} ${t.title}${tm}\n`;
+                    });
+                    if (tomorrow.length > 5) msg += `  ... ще ${tomorrow.length - 5}\n`;
+                }
+
+                await sendTelegramMessage(chatId, msg);
+            }
+
+            // Manager summary
+            const allTasksSnap = await companyDoc.ref.collection('tasks').get();
+            const allTasks = allTasksSnap.docs.map(d => d.data());
+            
+            const totalDoneToday = allTasks.filter(t => t.status === 'done' && t.completedDate === todayStr).length;
+            const totalMissed = allTasks.filter(t => t.deadlineDate === todayStr && t.status !== 'done').length;
+            const totalOverdue = allTasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').length;
+            const totalTomorrow = allTasks.filter(t => t.deadlineDate === tmrwStr && t.status !== 'done').length;
+
+            const planned = totalDoneToday + totalMissed;
+            const score = planned > 0 ? Math.round((totalDoneToday / planned) * 100) : 100;
+            const emoji = score >= 80 ? '🟢' : score >= 50 ? '🟡' : '🔴';
+
+            // Per-person breakdown
+            const byPerson = {};
+            allTasks.forEach(t => {
+                const n = t.assigneeName || '—';
+                if (!byPerson[n]) byPerson[n] = { done: 0, missed: 0, overdue: 0 };
+                if (t.status === 'done' && t.completedDate === todayStr) byPerson[n].done++;
+                if (t.deadlineDate === todayStr && t.status !== 'done') byPerson[n].missed++;
+                if (t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done') byPerson[n].overdue++;
+            });
+
+            let mgrMsg = `🌆 <b>Вечірній звіт (компанія)</b>\n\n`;
+            mgrMsg += `${emoji} <b>План vs Факт: ${totalDoneToday}/${planned} (${score}%)</b>\n`;
+            mgrMsg += `⚠️ Прострочено загалом: ${totalOverdue}\n`;
+            mgrMsg += `📅 Завтра задач: ${totalTomorrow}\n\n`;
+
+            const sorted = Object.entries(byPerson)
+                .filter(([, s]) => s.done > 0 || s.missed > 0 || s.overdue > 0)
+                .sort((a, b) => (b[1].missed + b[1].overdue) - (a[1].missed + a[1].overdue));
+            
+            if (sorted.length > 0) {
+                mgrMsg += `👥 <b>По людях:</b>\n`;
+                sorted.forEach(([n, s]) => {
+                    const e = (s.missed + s.overdue) > 0 ? '⚠️' : '✅';
+                    mgrMsg += `${e} ${n}: ✅${s.done}`;
+                    if (s.missed > 0) mgrMsg += ` ❌${s.missed}`;
+                    if (s.overdue > 0) mgrMsg += ` ⏰${s.overdue}`;
+                    mgrMsg += `\n`;
+                });
+            }
+
+            const managersSnap = await companyDoc.ref.collection('users')
+                .where('role', 'in', ['owner', 'manager']).get();
+            for (const mDoc of managersSnap.docs) {
+                const d = mDoc.data();
+                if (d.eveningDigestEnabled === false) continue;
+                if (d.telegramChatId) await sendTelegramMessage(d.telegramChatId, mgrMsg);
+            }
+        }
+        return null;
+    });

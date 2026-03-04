@@ -1,0 +1,341 @@
+        /* MY DAY STYLES */
+        .myday-header {
+            background: linear-gradient(135deg, #fef3c7, #fef9c3);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .myday-date {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .myday-date h2 {
+            font-size: 1.25rem;
+            margin: 0;
+            color: var(--dark);
+        }
+        .myday-date-text {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        .myday-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .myday-progress-bar {
+            width: 120px;
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .myday-progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .myday-progress-text {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        .myday-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding-bottom: 100px; /* Space for bottom nav */
+        }
+        .myday-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+        }
+        .myday-section-title {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .myday-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            background: #f9fafb;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 60px; /* Touch-friendly height */
+            -webkit-tap-highlight-color: transparent;
+            border-left: 3px solid transparent;
+        }
+        .myday-item:last-child { margin-bottom: 0; }
+        .myday-item:hover { background: #f0fdf4; }
+        .myday-item:active { 
+            background: #dcfce7; 
+            transform: scale(0.98);
+        }
+        .myday-item.done {
+            background: #f0fdf4;
+            opacity: 0.7;
+        }
+        .myday-item.done .myday-item-title {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+        .myday-item.overdue {
+            background: #fef2f2;
+            border-left: 4px solid var(--danger);
+        }
+        .myday-checkbox {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .myday-checkbox:hover { border-color: var(--success); }
+        .myday-checkbox:active { 
+            transform: scale(0.9); 
+            background: #dcfce7;
+        }
+        .myday-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        .myday-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .myday-item-title {
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            line-height: 1.3;
+        }
+        .myday-item-meta {
+            font-size: 0.8rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .myday-item-time {
+            background: #e5e7eb;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .myday-item-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        .myday-item-tag.regular {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+        .myday-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray);
+        }
+        .myday-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .myday-all-done {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #dcfce7, #d1fae5);
+            border-radius: var(--radius);
+        }
+        .myday-all-done-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .myday-all-done h3 {
+            color: var(--success);
+            margin-bottom: 0.25rem;
+        }
+        .myday-refresh-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0,0,0,0.05);
+            color: var(--gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .myday-refresh-btn:hover {
+            background: rgba(0,0,0,0.1);
+            color: var(--dark);
+        }
+        .myday-refresh-btn:active {
+            transform: scale(0.9);
+        }
+        .myday-refresh-btn.spinning .icon {
+            animation: spin 0.5s linear;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile optimizations for My Day */
+        @media (max-width: 767px) {
+            .myday-header {
+                padding: 1rem;
+                margin: 0 -0.5rem 1rem -0.5rem;
+                border-radius: 0;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .myday-date h2 {
+                font-size: 1.1rem;
+            }
+            .myday-progress {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .myday-progress-bar {
+                flex: 1;
+                max-width: none;
+                width: auto;
+            }
+            .myday-section {
+                border-radius: var(--radius-sm);
+                padding: 0.75rem;
+            }
+            .myday-item {
+                padding: 1rem;
+                gap: 0.625rem;
+                margin-bottom: 0.35rem;
+            }
+            .myday-item:active { 
+                background: #dcfce7; 
+                transform: scale(0.98);
+                transition: all 0.1s;
+            }
+            .myday-item-title {
+                font-size: 0.9rem;
+            }
+            .myday-checkbox {
+                width: 36px;
+                height: 36px;
+                /* Expanded touch target */
+                position: relative;
+            }
+            .myday-checkbox::before {
+                content: '';
+                position: absolute;
+                top: -6px; right: -6px; bottom: -6px; left: -6px;
+            }
+        }
+        
+        .controls { 
+            background: var(--white); 
+            padding: 1rem; 
+            border-radius: 0 0 var(--radius) var(--radius); 
+            box-shadow: var(--shadow); 
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .controls-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        
+        .btn { 
+            background: var(--info); 
+            color: white; 
+            border: none; 
+            padding: 0.7rem 1rem; 
+            border-radius: var(--radius-sm); 
+            cursor: pointer; 
+            font-size: 0.85rem; 
+            font-weight: 500;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+        .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: var(--primary-dark); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-clear { background: var(--gray); color: white; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        .btn-dark { background: var(--dark); color: white; }
+        .btn-small { padding: 0.4rem 0.6rem; font-size: 0.8rem; min-height: 36px; }
+        
+        .btn-google {
+            background: white;
+            color: #444;
+            border: 2px solid #e5e7eb;
+            font-weight: 600;
+        }
+        
+        .btn-google:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+        
+        .btn-google img {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; width: 100%; }
+        
+        .filter-select { 
+            padding: 0.6rem; 
+            border: 2px solid #e5e7eb; 
+            border-radius: var(--radius-sm); 
+            background: var(--white); 
+            font-size: 0.85rem;
+            min-height: 44px;
+            flex: 1;
+            min-width: 100px;
+        }
+        
+        .filter-select:focus { outline: none; border-color: var(--info); }
+        

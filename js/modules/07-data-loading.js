@@ -1,0 +1,173 @@
+// =====================
+        // DATA LOADING
+        // =====================
+        async function loadAllData() {
+            if (!currentCompany) return;
+            if (isLoading) {
+                console.log('loadAllData: already loading, skipping...');
+                return;
+            }
+            
+            isLoading = true;
+            const thisLoadVersion = ++loadingVersion;
+            const startTime = performance.now();
+            
+            // Показуємо skeleton якщо контент ще порожній
+            showSkeletonLoading();
+            
+            try {
+                // Паралельне завантаження ВСЬОГО для швидкості (6 запитів одночасно замість 6 послідовних)
+                const base = db.collection('companies').doc(currentCompany);
+                
+                let processQuery = base.collection('processes');
+                if (!showCompletedProcesses) {
+                    processQuery = processQuery.where('status', '==', 'active');
+                }
+                
+                const TASKS_LOAD_LIMIT = 5000;
+                const isEmployeeRole = currentUserData?.role === 'employee';
+                const uid = currentUser.uid;
+                
+                // Employee: load only THEIR tasks (assigned + created + coExecutor + observer)
+                // Owner/Manager: load ALL tasks
+                let tasksPromise;
+                if (isEmployeeRole) {
+                    tasksPromise = Promise.all([
+                        base.collection('tasks').where('assigneeId', '==', uid).orderBy('createdAt', 'desc').limit(1000).get(),
+                        base.collection('tasks').where('creatorId', '==', uid).orderBy('createdAt', 'desc').limit(500).get(),
+                        base.collection('tasks').where('coExecutorIds', 'array-contains', uid).limit(500).get()
+                            .catch(() => ({ docs: [] })), // Fallback if index missing
+                        base.collection('tasks').where('observerIds', 'array-contains', uid).limit(500).get()
+                            .catch(() => ({ docs: [] }))  // Fallback if index missing
+                    ]).then(snaps => {
+                        const taskMap = new Map();
+                        snaps.forEach(snap => snap.docs.forEach(doc => {
+                            if (!taskMap.has(doc.id)) taskMap.set(doc.id, doc);
+                        }));
+                        return { docs: Array.from(taskMap.values()), size: taskMap.size, _merged: true };
+                    });
+                } else {
+                    tasksPromise = base.collection('tasks').orderBy('createdAt', 'desc').limit(TASKS_LOAD_LIMIT).get();
+                }
+                
+                const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap, projectsSnap] = await Promise.all([
+                    base.collection('users').get(),
+                    base.collection('functions').get(),
+                    tasksPromise,
+                    base.collection('regularTasks').get(),
+                    base.collection('processTemplates').orderBy('name').get(),
+                    processQuery.get(),
+                    base.collection('projects').orderBy('createdAt', 'desc').get()
+                ]);
+                
+                // Попередження якщо досягнуто ліміт
+                const taskCount = tasksSnap._merged ? tasksSnap.size : tasksSnap.docs.length;
+                if (!tasksSnap._merged && taskCount >= TASKS_LOAD_LIMIT) {
+                    console.warn(`[loadAllData] Task limit reached: ${taskCount}/${TASKS_LOAD_LIMIT}`);
+                    showToast(t('taskLimitWarning').replace('{n}', TASKS_LOAD_LIMIT), 'warning');
+                }
+                console.log(`[loadAllData] ${isEmployeeRole ? 'Employee' : 'Manager'} mode: ${taskCount} tasks`);
+                
+                // Перевіряємо чи це ще актуальний запит
+                if (thisLoadVersion !== loadingVersion) {
+                    console.log('loadAllData: newer load started, discarding results');
+                    return;
+                }
+                
+                // Атомарно оновлюємо всі дані
+                users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                functions = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                processTemplates = templatesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                processes = processesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                projects = projectsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                
+                updateSelects();
+                updateProcessTemplateFilter();
+                updateProjectSelects();
+                
+                // Sync functions to biz-structure canvas iframe
+                if (typeof sendFunctionsToIframe === 'function') sendFunctionsToIframe();
+                
+                // Авто-генерація регулярних завдань при вході
+                await autoGenerateRegularTasks();
+                
+                // Одноразова міграція: задачі з deadline (Timestamp) без deadlineDate
+                const migrateKey = `migrated_${currentCompany}`;
+                if (!localStorage.getItem(migrateKey)) {
+                    migrateDeadlineFields(base);
+                    localStorage.setItem(migrateKey, '1');
+                }
+                
+                // Ще раз перевіряємо актуальність
+                if (thisLoadVersion !== loadingVersion) return;
+                
+                // Employee: автоматично ставимо фільтр "Мої" при завантаженні
+                if (currentUserData?.role === 'employee' && currentUser) {
+                    const calAf = document.getElementById('calendarAssigneeFilter');
+                    if (calAf) calAf.value = currentUser.uid;
+                }
+                
+                // Render My Day (головний екран)
+                renderMyDay();
+                
+                // Render based on current view
+                if (currentCalendarView === 'list') {
+                    renderTasks();
+                } else if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') {
+                    renderKanbanBoard(currentCalendarView);
+                } else {
+                    renderCalendar();
+                }
+                
+                // Render regular tasks view
+                if (currentRegularView === 'list') {
+                    renderRegularTasks();
+                } else {
+                    renderRegularWeekView();
+                }
+                
+                // Показуємо попап "Мій день" при першому завантаженні
+                if (!sessionStorage.getItem('myDayShown')) {
+                    showMyDayPopup();
+                    sessionStorage.setItem('myDayShown', '1');
+                }
+                
+                // Update overdue badges
+                updateOverdueBadges();
+                
+                // Зберігаємо для offline — deferred to idle
+                if ('requestIdleCallback' in window) {
+                    requestIdleCallback(() => saveOfflineData(), { timeout: 5000 });
+                } else {
+                    setTimeout(saveOfflineData, 2000);
+                }
+                
+                // Архівація в фоні (non-blocking) — не чекаємо результату
+                autoArchiveDoneTasks().then(() => {
+                    // Якщо щось заархівувалось — перерендерити
+                    // (tasks[] вже оновлений всередині autoArchiveDoneTasks)
+                }).catch(() => {});
+                
+                console.log(`[loadAllData] Done in ${Math.round(performance.now() - startTime)}ms, tasks: ${tasks.length}`);
+                if (currentUserData?.role === 'employee') {
+                    const visible = tasks.filter(t => isTaskVisibleToUser(t)).length;
+                    console.log(`[Visibility] Employee "${currentUserData.name}" sees ${visible}/${tasks.length} tasks`);
+                }
+                
+            } catch (error) {
+                console.error('loadAllData error:', error);
+            } finally {
+                if (thisLoadVersion === loadingVersion) {
+                    isLoading = false;
+                    // Check escalations after data is loaded
+                    checkEscalations();
+                    // Load manual incidents for journal
+                    loadManualIncidents().catch(() => {});
+                    // Show morning start modal (once per day)
+                    setTimeout(() => { checkMorningStart(); startOnboarding(); saveDailySnapshot(); }, 1500);
+                }
+                hideSkeletonLoading();
+            }
+        }
