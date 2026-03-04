@@ -44,13 +44,36 @@
     function formatPeriodLabel(k) {
         if (!k) return '';
         if (k.includes('-W')) {
+            // Convert week key to date range: "02-08.03.26"
             const [y, w] = k.split('-W');
-            return (t('week') || 'Тиждень') + ' ' + parseInt(w) + ', ' + y;
+            const year = parseInt(y);
+            const week = parseInt(w);
+            // Get Monday of that week (ISO)
+            const jan1 = new Date(year, 0, 1);
+            const dayOfWeek = jan1.getDay() || 7; // Mon=1
+            const mondayOffset = (week - 1) * 7 - dayOfWeek + 2;
+            const monday = new Date(year, 0, 1 + mondayOffset);
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            const d1 = String(monday.getDate()).padStart(2, '0');
+            const m1 = String(monday.getMonth() + 1).padStart(2, '0');
+            const d2 = String(sunday.getDate()).padStart(2, '0');
+            const m2 = String(sunday.getMonth() + 1).padStart(2, '0');
+            const y2 = String(sunday.getFullYear()).slice(2);
+            if (m1 === m2) {
+                return d1 + '-' + d2 + '.' + m1 + '.' + y2;
+            }
+            return d1 + '.' + m1 + '-' + d2 + '.' + m2 + '.' + y2;
         }
         if (k.length === 7) {
-            const ms = ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'];
+            const ms = ['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
             const [y, m] = k.split('-');
             return ms[parseInt(m) - 1] + ' ' + y;
+        }
+        // Daily: 2026-03-04 → 04.03.26
+        if (k.length === 10) {
+            const [y, m, d] = k.split('-');
+            return d + '.' + m + '.' + y.slice(2);
         }
         return k;
     }
@@ -670,6 +693,7 @@
                 ${canEdit ? `<button class="stats-pill accent" onclick="openMetricModal()">${SVG.plus} ${t('addMetric') || 'Метрика'}</button>` : ''}
                 <button class="stats-pill" onclick="openQuickInputModal()">${SVG.edit} ${t('quickInput') || 'Внести дані'}</button>
                 <button class="stats-pill" onclick="runAIAnalysis()" style="color:#7c3aed;border-color:#e9d5ff;">${SVG.sparkles} AI</button>
+                <button class="stats-pill" onclick="openTrendsChart(statsMetrics[0]?.id || '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренди</button>
             </div>
         </div>`;
     }
@@ -818,17 +842,24 @@
                 <thead><tr>
                     <th style="min-width:150px;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</th>`;
 
-        // Column headers = metric names
+        // Column headers = metric names with actions
         metrics.forEach((m, mi) => {
             const color = METRIC_COLORS[mi % METRIC_COLORS.length];
             const privacy = m.privacy === 'owner_only' ? ` ${SVG.lock}` : m.privacy === 'restricted' ? ` ${SVG.eye}` : '';
             const unit = m.unit ? ` <span style="font-weight:400;opacity:0.6;">${m.unit}</span>` : '';
+            const role = getUserRole();
+            const canEdit = role === 'owner' || role === 'manager' || role === 'admin';
             html += `<th>
-                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
                     <span style="display:flex;align-items:center;gap:4px;">
                         <span class="stats-metric-dot" style="background:${color};"></span>
                         ${esc(m.name)}${unit}${privacy}
                     </span>
+                    <div style="display:flex;gap:2px;opacity:0.5;">
+                        ${canEdit ? `<button class="stats-comment-btn" onclick="openMetricModal('${m.id}')" title="Редагувати">${SVG.settings}</button>` : ''}
+                        ${canEdit ? `<button class="stats-comment-btn" onclick="deleteMetric('${m.id}')" title="Видалити" style="color:#ef4444;">${SVG.trash}</button>` : ''}
+                        <button class="stats-comment-btn" onclick="openTrendsChart('${m.id}')" title="Графік тренду">${SVG.barChart}</button>
+                    </div>
                 </div>
             </th>`;
         });
@@ -1162,6 +1193,193 @@
     // ========================
     //  GLOBAL EXPORTS
     // ========================
+    // ========================
+    //  TRENDS CHART
+    // ========================
+    let trendsSelectedMetrics = [];
+    let trendsChartType = 'line';
+
+    window.openTrendsChart = function(metricId) {
+        trendsSelectedMetrics = [metricId];
+        trendsChartType = 'line';
+        renderTrendsChart();
+        document.getElementById('trendsChartModal').style.display = 'flex';
+    };
+
+    window.setTrendsChartType = function(type) {
+        trendsChartType = type;
+        document.getElementById('trendsChartLine')?.classList.toggle('active', type === 'line');
+        document.getElementById('trendsChartBar')?.classList.toggle('active', type === 'bar');
+        renderTrendsChart();
+    };
+
+    window.toggleTrendsMetric = function(mid) {
+        const idx = trendsSelectedMetrics.indexOf(mid);
+        if (idx >= 0) {
+            if (trendsSelectedMetrics.length > 1) trendsSelectedMetrics.splice(idx, 1);
+        } else {
+            trendsSelectedMetrics.push(mid);
+        }
+        renderTrendsChart();
+    };
+
+    function renderTrendsChart() {
+        const pillsC = document.getElementById('trendsMetricPills');
+        const chartC = document.getElementById('trendsChartSvg');
+        const legendC = document.getElementById('trendsChartLegend');
+        if (!pillsC || !chartC) return;
+
+        // Render metric selection pills
+        const ms = statsMetrics.filter(m => canViewMetric(m));
+        pillsC.innerHTML = ms.map((m, mi) => {
+            const color = METRIC_COLORS[mi % METRIC_COLORS.length];
+            const sel = trendsSelectedMetrics.includes(m.id);
+            return `<button class="stats-pill ${sel ? '' : ''}" style="${sel ? 'background:' + color + ';color:white;border-color:' + color : ''}" onclick="toggleTrendsMetric('${m.id}')">${esc(m.name)}</button>`;
+        }).join('');
+
+        // Get data for selected metrics
+        const selectedMs = ms.filter(m => trendsSelectedMetrics.includes(m.id));
+        if (selectedMs.length === 0) { chartC.innerHTML = ''; return; }
+
+        // Determine periods (12 back)
+        const periodCount = 12;
+        const freq = selectedMs[0].frequency || 'weekly';
+        const periods = [];
+        for (let i = periodCount - 1; i >= 0; i--) {
+            periods.push(getStatsPeriodKey(-i, freq));
+        }
+
+        // Collect data series
+        const series = selectedMs.map((m, mi) => {
+            const color = METRIC_COLORS[statsMetrics.indexOf(m) % METRIC_COLORS.length];
+            const values = periods.map(pk => {
+                const e = getEntryForMetric(m.id, pk);
+                return e ? (e.value || 0) : null;
+            });
+            const targets = periods.map(pk => {
+                const t = getTargetForMetric(m.id, pk);
+                return t ? (t.targetValue || 0) : null;
+            });
+            return { name: m.name, color, values, targets, unit: m.unit || '' };
+        });
+
+        // Find max value for scale
+        let maxVal = 0;
+        series.forEach(s => {
+            s.values.forEach(v => { if (v !== null && v > maxVal) maxVal = v; });
+            s.targets.forEach(v => { if (v !== null && v > maxVal) maxVal = v; });
+        });
+        if (maxVal === 0) maxVal = 100;
+        maxVal = Math.ceil(maxVal * 1.15); // 15% headroom
+
+        // SVG dimensions
+        const W = 740, H = 320, PAD = { t: 20, r: 20, b: 40, l: 50 };
+        const plotW = W - PAD.l - PAD.r;
+        const plotH = H - PAD.t - PAD.b;
+
+        let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:Inter,sans-serif;">`;
+
+        // Grid lines + Y axis labels
+        const gridSteps = 5;
+        for (let i = 0; i <= gridSteps; i++) {
+            const y = PAD.t + (plotH / gridSteps) * i;
+            const val = Math.round(maxVal - (maxVal / gridSteps) * i);
+            svg += `<line x1="${PAD.l}" y1="${y}" x2="${W - PAD.r}" y2="${y}" stroke="#f0f1f3" stroke-width="1"/>`;
+            svg += `<text x="${PAD.l - 8}" y="${y + 4}" text-anchor="end" fill="#9ca3af" font-size="11">${val}</text>`;
+        }
+
+        // X axis labels
+        const xStep = plotW / (periods.length - 1 || 1);
+        periods.forEach((pk, pi) => {
+            const x = PAD.l + pi * xStep;
+            const label = pk.includes('-W') ? 'T' + pk.split('-W')[1] : pk.length === 7 ? pk.split('-')[1] : pk.split('-').slice(1).join('/');
+            svg += `<text x="${x}" y="${H - 10}" text-anchor="middle" fill="#9ca3af" font-size="10">${label}</text>`;
+        });
+
+        // Draw series
+        series.forEach((s, si) => {
+            if (trendsChartType === 'line') {
+                // Target area (semi-transparent)
+                const hasTargets = s.targets.some(t => t !== null);
+                if (hasTargets) {
+                    let areaPath = '';
+                    const tPoints = [];
+                    s.targets.forEach((t, ti) => {
+                        if (t !== null) {
+                            const x = PAD.l + ti * xStep;
+                            const y = PAD.t + plotH - (t / maxVal) * plotH;
+                            tPoints.push({ x, y });
+                        }
+                    });
+                    if (tPoints.length > 1) {
+                        areaPath = `M${tPoints[0].x},${PAD.t + plotH}`;
+                        tPoints.forEach(p => areaPath += ` L${p.x},${p.y}`);
+                        areaPath += ` L${tPoints[tPoints.length - 1].x},${PAD.t + plotH} Z`;
+                        svg += `<path d="${areaPath}" fill="${s.color}" opacity="0.08"/>`;
+                        // Target line (dashed)
+                        let tLine = '';
+                        tPoints.forEach((p, pi) => tLine += (pi === 0 ? 'M' : ' L') + p.x + ',' + p.y);
+                        svg += `<path d="${tLine}" fill="none" stroke="${s.color}" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.4"/>`;
+                    }
+                }
+
+                // Value line + area
+                const vPoints = [];
+                s.values.forEach((v, vi) => {
+                    if (v !== null) {
+                        const x = PAD.l + vi * xStep;
+                        const y = PAD.t + plotH - (v / maxVal) * plotH;
+                        vPoints.push({ x, y, val: v });
+                    }
+                });
+
+                if (vPoints.length > 1) {
+                    // Area fill
+                    let aPath = `M${vPoints[0].x},${PAD.t + plotH}`;
+                    vPoints.forEach(p => aPath += ` L${p.x},${p.y}`);
+                    aPath += ` L${vPoints[vPoints.length - 1].x},${PAD.t + plotH} Z`;
+                    svg += `<path d="${aPath}" fill="${s.color}" opacity="0.12"/>`;
+
+                    // Line
+                    let lPath = '';
+                    vPoints.forEach((p, pi) => lPath += (pi === 0 ? 'M' : ' L') + p.x + ',' + p.y);
+                    svg += `<path d="${lPath}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+                    // Dots
+                    vPoints.forEach(p => {
+                        svg += `<circle cx="${p.x}" cy="${p.y}" r="4" fill="white" stroke="${s.color}" stroke-width="2"/>`;
+                    });
+                }
+            } else {
+                // Bar chart
+                const barW = Math.max(8, (xStep * 0.6) / series.length);
+                const offset = si * barW - (series.length * barW) / 2 + barW / 2;
+                s.values.forEach((v, vi) => {
+                    if (v !== null) {
+                        const x = PAD.l + vi * xStep + offset;
+                        const barH = (v / maxVal) * plotH;
+                        const y = PAD.t + plotH - barH;
+                        svg += `<rect x="${x - barW / 2}" y="${y}" width="${barW}" height="${barH}" fill="${s.color}" rx="3" opacity="0.8"/>`;
+                    }
+                });
+            }
+        });
+
+        svg += '</svg>';
+        chartC.innerHTML = svg;
+
+        // Legend
+        if (legendC) {
+            legendC.innerHTML = series.map(s =>
+                `<span style="display:flex;align-items:center;gap:4px;">
+                    <span style="width:10px;height:10px;border-radius:3px;background:${s.color};"></span>
+                    ${esc(s.name)} ${s.unit ? '(' + esc(s.unit) + ')' : ''}
+                </span>`
+            ).join('') + (series.some(s => s.targets.some(t => t !== null)) ?
+                '<span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;border-top:2px dashed #9ca3af;"></span> План</span>' : '');
+        }
+    }
+
     window.renderStatistics = renderStatistics;
     window.openMetricModal = openMetricModal;
     window.saveMetric = saveMetric;
@@ -1183,37 +1401,48 @@
             return;
         }
 
-        if (!confirm('Згенерувати 5 демо-метрик з даними за 4 тижні? Існуючі метрики не будуть видалені.')) return;
+        if (!confirm('Згенерувати 15 демо-метрик з даними за 8 тижнів? Існуючі метрики не будуть видалені.')) return;
 
         const now = new Date();
         const uid = currentUser.uid;
         const userName = users.find(u => u.id === uid)?.name || currentUser.email;
         const funcList = typeof functions !== 'undefined' ? functions : [];
-        const funcId = funcList.length > 0 ? funcList[0].id : null;
+        const funcIds = funcList.map(f => f.id);
 
         const demoMetrics = [
-            { name: 'Кількість лідів', unit: 'шт', frequency: 'weekly', privacy: 'public', inputType: 'manual', targets: [40, 45, 50, 55] },
-            { name: 'Виручка', unit: 'UAH', frequency: 'weekly', privacy: 'restricted', inputType: 'manual', targets: [100000, 110000, 120000, 130000] },
-            { name: 'Конверсія', unit: '%', frequency: 'weekly', privacy: 'public', inputType: 'manual', targets: [15, 16, 17, 18] },
-            { name: 'NPS клієнтів', unit: 'шт', frequency: 'monthly', privacy: 'owner_only', inputType: 'manual', targets: [70, 72, 75, 78] },
-            { name: 'Час відповіді', unit: 'хв', frequency: 'daily', privacy: 'public', inputType: 'manual', targets: [30, 25, 20, 15] },
+            // WEEKLY — Marketing & Sales
+            { name: 'Ліди (вхідні)', unit: 'шт', frequency: 'weekly', privacy: 'public', target: 50, func: 0 },
+            { name: 'Дзвінки', unit: 'шт', frequency: 'weekly', privacy: 'public', target: 120, func: 0 },
+            { name: 'Записи на консультацію', unit: 'шт', frequency: 'weekly', privacy: 'public', target: 25, func: 0 },
+            { name: 'Продажі', unit: 'шт', frequency: 'weekly', privacy: 'restricted', target: 12, func: 1 },
+            { name: 'Виручка', unit: 'грн', frequency: 'weekly', privacy: 'restricted', target: 180000, func: 1 },
+            { name: 'Конверсія лід→запис', unit: '%', frequency: 'weekly', privacy: 'public', target: 35, func: 0 },
+            { name: 'Конверсія запис→продаж', unit: '%', frequency: 'weekly', privacy: 'restricted', target: 48, func: 1 },
+            { name: 'Середній чек', unit: 'грн', frequency: 'weekly', privacy: 'restricted', target: 15000, func: 1 },
+            { name: 'Повторні клієнти', unit: 'шт', frequency: 'weekly', privacy: 'public', target: 8, func: 2 },
+            { name: 'Витрати на рекламу', unit: 'грн', frequency: 'weekly', privacy: 'owner_only', target: 25000, func: 0 },
+            // MONTHLY — Operations & HR
+            { name: 'NPS клієнтів', unit: 'балів', frequency: 'monthly', privacy: 'public', target: 72, func: 2 },
+            { name: 'Плинність персоналу', unit: '%', frequency: 'monthly', privacy: 'owner_only', target: 5, func: 3 },
+            { name: 'Чистий прибуток', unit: 'грн', frequency: 'monthly', privacy: 'owner_only', target: 420000, func: 1 },
+            // DAILY — Operational
+            { name: 'Час відповіді клієнту', unit: 'хв', frequency: 'daily', privacy: 'public', target: 15, func: 2 },
+            { name: 'Виконано завдань', unit: 'шт', frequency: 'daily', privacy: 'public', target: 18, func: 3 },
         ];
 
-        showToast('Генерую демо-дані...', 'info');
+        showToast('Генерую 15 демо-метрик...', 'info');
 
         try {
+            const periodsMap = { daily: 7, weekly: 8, monthly: 4 };
             for (const dm of demoMetrics) {
+                const funcBind = {};
+                if (funcIds.length > 0 && dm.func < funcIds.length) funcBind[funcIds[dm.func]] = true;
+
                 const metricData = {
-                    name: dm.name,
-                    unit: dm.unit,
-                    frequency: dm.frequency,
-                    privacy: dm.privacy,
-                    inputType: dm.inputType,
-                    formula: '',
-                    alertEnabled: dm.name === 'Конверсія',
-                    alertThreshold: 20,
-                    boundFunctions: funcId ? { [funcId]: true } : {},
-                    autoSpec: null,
+                    name: dm.name, unit: dm.unit, frequency: dm.frequency,
+                    privacy: dm.privacy, inputType: 'manual', formula: '',
+                    alertEnabled: dm.name.includes('Конверсія'),
+                    alertThreshold: 20, boundFunctions: funcBind, autoSpec: null,
                     createdBy: uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1221,53 +1450,44 @@
 
                 const metricRef = await metricsRef().add(metricData);
                 const metricId = metricRef.id;
+                const periods = periodsMap[dm.frequency] || 8;
 
-                // Generate entries for 4 periods back
-                for (let i = 0; i < 4; i++) {
-                    let pk;
+                for (let i = 0; i < periods; i++) {
                     const offset = -(i);
+                    let pk;
                     if (dm.frequency === 'daily') {
-                        const d = new Date(now);
-                        d.setDate(d.getDate() + offset);
+                        const d = new Date(now); d.setDate(d.getDate() + offset);
                         pk = d.toISOString().split('T')[0];
                     } else if (dm.frequency === 'weekly') {
-                        const d = new Date(now);
-                        d.setDate(d.getDate() + offset * 7);
+                        const d = new Date(now); d.setDate(d.getDate() + offset * 7);
                         pk = toWeekKey(d);
                     } else {
                         const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
                         pk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
                     }
 
-                    // Random value around target (±30%)
-                    const target = dm.targets[i] || dm.targets[0];
-                    const variance = target * 0.3;
-                    const value = Math.round(target + (Math.random() * 2 - 1) * variance);
+                    // Realistic trend: recent periods slightly better
+                    const trendMult = 1 + (periods - i) * 0.02; // +2% per newer period
+                    const base = dm.target * trendMult;
+                    const variance = dm.target * 0.25;
+                    let value = Math.round(base + (Math.random() * 2 - 1) * variance);
+                    // Special: % metrics stay within range
+                    if (dm.unit === '%') value = Math.max(1, Math.min(value, 95));
+                    value = Math.max(0, value);
 
                     await entriesRef().add({
-                        metricId,
-                        periodType: dm.frequency,
-                        periodKey: pk,
-                        scope: 'user',
-                        scopeId: uid,
+                        metricId, periodType: dm.frequency, periodKey: pk,
+                        scope: 'user', scopeId: uid,
                         date: new Date().toISOString().split('T')[0],
-                        value: Math.max(0, value),
-                        source: 'demo',
-                        isOverride: false,
-                        createdBy: uid,
-                        userName,
+                        value, source: 'demo', isOverride: false,
+                        createdBy: uid, userName,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     });
 
-                    // Create target
                     await targetsRef().add({
-                        metricId,
-                        periodKey: pk,
-                        periodType: dm.frequency,
-                        scope: 'company',
-                        scopeId: currentCompany,
-                        targetValue: target,
-                        setBy: uid,
+                        metricId, periodKey: pk, periodType: dm.frequency,
+                        scope: 'company', scopeId: currentCompany,
+                        targetValue: dm.target, setBy: uid,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     });
                 }
@@ -1285,4 +1505,29 @@
     window.initStatistics = initStatistics;
     window.generateStatsDemoData = generateStatsDemoData;
     window.onStatsFunctionChange = onStatsFunctionChange;
+
+    // Clear all stats data (admin only)
+    window.clearAllStatsData = async function() {
+        if (!currentCompany || !currentUser) return;
+        if (!confirm('ВИДАЛИТИ ВСІ метрики, записи, цілі? Це незворотно!')) return;
+        if (!confirm('Точно видалити? Друге підтвердження.')) return;
+
+        showToast('Видаляю...', 'info');
+        try {
+            const collections = ['metrics', 'metricEntries', 'metricTargets', 'metricAggregates', 'metricInsights', 'metricAuditLog'];
+            for (const col of collections) {
+                const snap = await db.collection('companies').doc(currentCompany).collection(col).get();
+                const batch = db.batch();
+                let count = 0;
+                snap.docs.forEach(d => { batch.delete(d.ref); count++; });
+                if (count > 0) await batch.commit();
+            }
+            statsMetrics = []; statsEntries = []; statsTargets = []; statsAggregates = [];
+            showToast('Всі Stats дані видалені', 'success');
+            renderStatistics();
+        } catch (e) {
+            console.error('[STATS] clearAll:', e);
+            showToast('Помилка: ' + e.message, 'error');
+        }
+    };
 })();

@@ -913,7 +913,10 @@
                     <h3 style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;">
                         <span><i data-lucide="building-2" class="icon"></i> Компанії</span>
                         <div style="display:flex;gap:0.5rem;">
-                            <button onclick="generateStatsDemoData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f0fdf4;color:#16a34a;" title="Згенерувати демо-метрики для тестування">
+                            <button onclick="clearAllStatsData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#fee2e2;color:#dc2626;" title="Видалити ВСІ метрики та дані">
+                                <i data-lucide="trash-2" class="icon icon-sm"></i> Clear Stats
+                            </button>
+                            <button onclick="generateStatsDemoData()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f0fdf4;color:#16a34a;" title="Згенерувати 15 демо-метрик">
                                 <i data-lucide="bar-chart-3" class="icon icon-sm"></i> Demo Stats
                             </button>
                             <button onclick="openAiAssistantsModal()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#f3e8ff;color:#7c3aed;">
@@ -2542,6 +2545,27 @@
             <div id="aiAnalysisContent">
                 <div class="loading"><div class="spinner"></div></div>
             </div>
+        </div>
+    </div>
+
+    <!-- Trends Chart Modal -->
+    <div id="trendsChartModal" class="modal">
+        <div class="modal-content" style="max-width:800px;max-height:85vh;overflow-y:auto;">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('trendsChartModal')">&times;</span>
+                <h2 id="trendsChartTitle" style="display:flex;align-items:center;gap:0.5rem;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Графік трендів</h2>
+            </div>
+            <!-- Metric pills for multi-select -->
+            <div id="trendsMetricPills" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem;"></div>
+            <!-- Chart type toggle -->
+            <div style="display:flex;gap:0.4rem;margin-bottom:1rem;">
+                <button class="stats-pill active" id="trendsChartLine" onclick="setTrendsChartType('line')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Лінійний</button>
+                <button class="stats-pill" id="trendsChartBar" onclick="setTrendsChartType('bar')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Стовпчиковий</button>
+            </div>
+            <!-- SVG Chart -->
+            <div id="trendsChartSvg" style="width:100%;min-height:350px;background:#fafbfc;border-radius:12px;overflow:hidden;"></div>
+            <!-- Legend -->
+            <div id="trendsChartLegend" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;font-size:0.78rem;"></div>
         </div>
     </div>
 

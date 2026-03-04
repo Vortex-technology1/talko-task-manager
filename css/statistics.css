@@ -441,3 +441,9 @@
     .stats-bar-sep { display: none; }
     .stats-detail-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ---- Trends Chart ---- */
+#trendsChartSvg svg { display: block; }
+#trendsChartSvg text { pointer-events: none; }
+.stats-comment-btn[title="Видалити"]:hover { background: #fee2e2 !important; color: #dc2626 !important; }
+.stats-comment-btn[title="Графік тренду"]:hover { background: #dbeafe !important; color: #3b82f6 !important; }
