@@ -25,7 +25,7 @@
             background: #f9fafb; 
             color: var(--dark);
             min-height: 100vh;
-            min-width: 360px;
+            min-width: 1200px;
             overflow-x: auto;
             -webkit-text-size-adjust: 100%;
         }
