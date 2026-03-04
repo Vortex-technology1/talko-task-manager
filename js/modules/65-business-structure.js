@@ -16,7 +16,7 @@ function showBizStructureTab() {
         return;
     }
     var f = document.getElementById("bizIframe");
-    var expectedSrc = "biz-structure.html?company=" + encodeURIComponent(currentCompany);
+    var expectedSrc = "biz-structure.html?company=" + encodeURIComponent(currentCompany) + "&_v=" + Date.now();
     if (!f) {
         f = document.createElement("iframe");
         f.id = "bizIframe";
