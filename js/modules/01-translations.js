@@ -1003,7 +1003,7 @@
                 closeAction: 'Закрити',
                 stepNofTotal: 'крок {n}/{total}',
 
-                techLeadAI: 'Technisch',
+                techLeadAI: 'Техлід',
 },
             ru: {
                 // Auth
@@ -2005,6 +2005,8 @@
                 doneAction: 'Выполнено',
                 closeAction: 'Закрыть',
                 stepNofTotal: 'шаг {n}/{total}',
+
+                techLeadAI: 'Техлид',
 },
             pl: {
                 // Auth
@@ -3006,6 +3008,8 @@
                 doneAction: 'Wykonano',
                 closeAction: 'Zamknij',
                 stepNofTotal: 'krok {n}/{total}',
+
+                techLeadAI: 'Tech Lead',
 },
             en: {
                 // Auth
@@ -4015,6 +4019,8 @@
                 doneAction: 'Done',
                 closeAction: 'Close',
                 stepNofTotal: 'step {n}/{total}',
+
+                techLeadAI: 'Technical Lead',
 },
 
             de: {
@@ -5023,6 +5029,8 @@
                 doneAction: 'Erledigt',
                 closeAction: 'Schließen',
                 stepNofTotal: 'Schritt {n}/{total}',
+
+                techLeadAI: 'Technical Lead',
 },
 
         };
