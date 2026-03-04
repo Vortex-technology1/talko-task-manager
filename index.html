@@ -2716,5 +2716,21 @@
         });
     </script>
 
+    <script>
+        // Фіксуємо мінімальну ширину — при звуженні вікна з'являється горизонтальний скрол
+        (function() {
+            var MIN_WIDTH = 1200;
+            function applyMinWidth() {
+                if (window.innerWidth < MIN_WIDTH) {
+                    document.documentElement.style.minWidth = MIN_WIDTH + 'px';
+                } else {
+                    document.documentElement.style.minWidth = '';
+                }
+            }
+            applyMinWidth();
+            window.addEventListener('resize', applyMinWidth);
+        })();
+    </script>
+
 </body>
 </html>
