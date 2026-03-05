@@ -5417,3 +5417,5 @@
                 updateSelects(true);
             }
         }
+        // Виставляємо в window для виклику з header language dropdown
+        window.setLanguage = setLanguage;

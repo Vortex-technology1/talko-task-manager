@@ -12,26 +12,21 @@
 function toggleNavDropdown(menuId, wrapperId, e) {
     if (e) e.stopPropagation();
     var menu = document.getElementById(menuId);
-    var wrapper = document.getElementById(wrapperId);
-    var btn = wrapper ? wrapper.querySelector('button') : null;
     if (!menu) return;
     var isOpen = menu.style.display === 'block';
     closeNavDropdowns();
     if (!isOpen) {
-        // Переміщаємо меню в body — щоб position:fixed рахувалось від viewport
         if (menu.parentElement !== document.body) {
             document.body.appendChild(menu);
         }
+        // Беремо координати з кнопки по якій клікнули (e.currentTarget) або fallback на wrapperId
+        var btn = (e && e.currentTarget) || document.getElementById(wrapperId);
         menu.style.display = 'block';
         if (btn) {
             var rect = btn.getBoundingClientRect();
             var menuW = menu.offsetWidth || 180;
             var left = rect.left;
-            // Не виходимо за правий край viewport
-            if (left + menuW > window.innerWidth - 8) {
-                left = window.innerWidth - menuW - 8;
-            }
-            // Не виходимо за лівий край
+            if (left + menuW > window.innerWidth - 8) left = window.innerWidth - menuW - 8;
             if (left < 8) left = 8;
             menu.style.position = 'fixed';
             menu.style.top = (rect.bottom + 4) + 'px';

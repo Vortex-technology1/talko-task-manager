@@ -62,15 +62,14 @@
         function toggleNavDropdown(menuId, wrapperId, e) {
             if (e) e.stopPropagation();
             const menu = document.getElementById(menuId);
-            const btn = document.getElementById(wrapperId)?.querySelector('button');
             if (!menu) return;
             const isOpen = menu.style.display === 'block';
             closeNavDropdowns();
             if (isOpen) return;
-            // Переміщаємо в body — щоб position:fixed не залежало від батьківських transform/overflow
             if (menu.parentElement !== document.body) {
                 document.body.appendChild(menu);
             }
+            const btn = (e && e.currentTarget) || document.getElementById(wrapperId);
             menu.style.display = 'block';
             if (btn) {
                 const rect = btn.getBoundingClientRect();
