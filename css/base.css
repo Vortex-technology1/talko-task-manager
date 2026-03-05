@@ -154,9 +154,11 @@
         .mobile-logout-btn { display: none; }
         
         /* ===== LAYOUT ===== */
-        html, body {
-            overflow-x: hidden;
+        html {
+            overflow-x: clip; /* clip не створює stacking context — не ламає position:fixed */
         }
+
+
 
         .container { 
             max-width: 100%; 

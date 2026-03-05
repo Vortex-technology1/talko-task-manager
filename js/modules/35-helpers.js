@@ -67,12 +67,15 @@
             const isOpen = menu.style.display === 'block';
             closeNavDropdowns();
             if (isOpen) return;
+            // Переміщаємо в body — щоб position:fixed не залежало від батьківських transform/overflow
+            if (menu.parentElement !== document.body) {
+                document.body.appendChild(menu);
+            }
             if (btn) {
                 const rect = btn.getBoundingClientRect();
-                // position:absolute від body — не зависає при скролі viewport
-                menu.style.position = 'absolute';
-                menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
-                menu.style.left = (rect.left + window.scrollX) + 'px';
+                menu.style.position = 'fixed';
+                menu.style.top = (rect.bottom + 4) + 'px';
+                menu.style.left = rect.left + 'px';
             }
             menu.style.display = 'block';
         }

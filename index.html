@@ -18,12 +18,15 @@ function toggleNavDropdown(menuId, wrapperId, e) {
     var isOpen = menu.style.display === 'block';
     closeNavDropdowns();
     if (!isOpen) {
+        // Переміщаємо меню в body якщо ще не там — щоб position:fixed рахувалось від viewport правильно
+        if (menu.parentElement !== document.body) {
+            document.body.appendChild(menu);
+        }
         if (btn) {
             var rect = btn.getBoundingClientRect();
-            // Використовуємо position:absolute від body щоб меню не зависало при скролі
-            menu.style.position = 'absolute';
-            menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
-            menu.style.left = (rect.left + window.scrollX) + 'px';
+            menu.style.position = 'fixed';
+            menu.style.top = (rect.bottom + 4) + 'px';
+            menu.style.left = rect.left + 'px';
         }
         menu.style.display = 'block';
     }
