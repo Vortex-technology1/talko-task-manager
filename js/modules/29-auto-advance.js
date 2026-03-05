@@ -2,8 +2,14 @@
         // AUTO-ADVANCE: Завершення завдання → автопросування процесу
         // =====================
         async function advanceProcessIfLinked(taskId) {
+            // AUTO-ADVANCE вимкнено на фронті — обробляється тільки backend
+            // trigger onProcessTaskCompleted (транзакційно, без дублювань)
+            // Фронт лише показує toast якщо процес просунувся
             const task = tasks.find(t => t.id === taskId);
             if (!task?.processId) return;
+            // Просто логуємо для debug, не рухаємо процес
+            console.log('[Process] Task', taskId, 'done — waiting for backend trigger');
+            return;
             
             const process = processes.find(p => p.id === task.processId);
             if (!process || process.status !== 'active') return;

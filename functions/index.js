@@ -40,9 +40,19 @@ async function sendTelegramMessage(chatId, text, opts = {}) {
                 ...opts
             })
         });
-        return response.json();
+        // P2: перевіряємо HTTP статус — Telegram повертає 4xx/5xx при помилках
+        if (!response.ok) {
+            const errBody = await response.text().catch(() => '');
+            console.error(`[Telegram] HTTP ${response.status} for chat ${chatId}:`, errBody.slice(0, 200));
+            return null;
+        }
+        const json = await response.json();
+        if (!json.ok) {
+            console.error(`[Telegram] API error for chat ${chatId}:`, json.description || json.error_code);
+        }
+        return json;
     } catch (error) {
-        console.error('Telegram send error:', error);
+        console.error('[Telegram] Network error:', error.message);
         return null;
     }
 }
@@ -210,10 +220,20 @@ exports.onTaskCompleted = functions
 // ===========================
 exports.telegramWebhook = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_WEBHOOK_SECRET'] })
     .https.onRequest(async (req, res) => {
         if (req.method !== 'POST') {
             return res.status(200).send('TALKO Telegram Bot is running!');
+        }
+
+        // ── SECRET TOKEN VALIDATION ──────────────────────────
+        const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
+        if (secret) {
+            const incoming = req.headers['x-telegram-bot-api-secret-token'];
+            if (!incoming || incoming !== secret) {
+                console.warn('[Webhook] Invalid secret token from', req.ip);
+                return res.status(403).send('Forbidden');
+            }
         }
 
         const update = req.body;
@@ -223,8 +243,14 @@ exports.telegramWebhook = functions
             const cb = update.callback_query;
             const chatId = cb.message.chat.id;
             const messageId = cb.message.message_id;
-            const data = cb.data; // format: "action:companyId:taskId"
+            const data = cb.data || ''; // format: "action:companyId:taskId"
 
+            // Валідація callback_data — захист від injection/malformed input
+            if (!data || typeof data !== 'string' || data.length > 200) {
+                await answerCallbackQuery(cb.id, '❌ Невідомна дія');
+                return res.status(200).send('OK');
+            }
+            const ALLOWED_ACTIONS = ['done', 'postpone', 'progress', 'details'];
             const parts = data.split(':');
             if (parts.length < 3) {
                 await answerCallbackQuery(cb.id, '❌ Невідомна дія');
@@ -232,6 +258,17 @@ exports.telegramWebhook = functions
             }
 
             const [action, companyId, taskId] = parts;
+
+            // Перевіряємо action в whitelist
+            if (!ALLOWED_ACTIONS.includes(action)) {
+                await answerCallbackQuery(cb.id, '❌ Невідомна дія');
+                return res.status(200).send('OK');
+            }
+            // Перевіряємо companyId і taskId — тільки alphanumeric
+            if (!/^[a-zA-Z0-9_-]{1,128}$/.test(companyId) || !/^[a-zA-Z0-9_-]{1,128}$/.test(taskId)) {
+                await answerCallbackQuery(cb.id, '❌ Невірні параметри');
+                return res.status(200).send('OK');
+            }
 
             // Find user by telegramChatId
             let userId = null;
@@ -255,9 +292,39 @@ exports.telegramWebhook = functions
 
             const task = taskDoc.data();
 
+            // ── TASK-LEVEL AUTHORIZATION ─────────────────────
+            if (userId) {
+                const isAssignee = task.assigneeId === userId;
+                const isCreator = task.creatorId === userId;
+                const isCoExecutor = (task.coExecutorIds || []).includes(userId);
+                // Перевіряємо чи юзер manager/owner
+                const userDoc = await db.collection('companies').doc(companyId)
+                    .collection('users').doc(userId).get();
+                const userRole = userDoc.exists ? userDoc.data().role : null;
+                const isManager = userRole === 'owner' || userRole === 'manager';
+
+                if (!isAssignee && !isCreator && !isCoExecutor && !isManager) {
+                    console.warn('[Webhook] Unauthorized task action:', userId, '->', taskId);
+                    await answerCallbackQuery(cb.id, '❌ Немає прав на цю задачу');
+                    return res.status(200).send('OK');
+                }
+            }
+
             try {
                 if (action === 'done') {
-                    // ✅ Завершити задачу
+                    // ✅ Завершити задачу — з перевіркою requireReview
+                    if (task.requireReview && task.creatorId && task.creatorId !== userId) {
+                        await taskRef.update({
+                            status: 'review',
+                            completedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            completedBy: userId,
+                            completionSource: 'telegram'
+                        });
+                        await editMessageText(chatId, messageId,
+                            `🔍 <b>Відправлено на перевірку!</b>\n\n📌 ${task.title}`
+                        );
+                        await answerCallbackQuery(cb.id, '🔍 Відправлено на перевірку');
+                    } else {
                     await taskRef.update({
                         status: 'done',
                         completedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -269,6 +336,7 @@ exports.telegramWebhook = functions
                         `✅ <b>Виконано!</b>\n\n📌 ${task.title}\n⏰ ${new Date().toLocaleString('uk-UA')}`
                     );
                     await answerCallbackQuery(cb.id, '✅ Задачу завершено!');
+                    } // end else (no requireReview)
 
                 } else if (action === 'postpone') {
                     // 🔄 Перенести на +1 день
@@ -357,25 +425,24 @@ exports.telegramWebhook = functions
                 if (parts.length > 1) {
                     const registrationCode = parts[1];
 
-                    const companiesSnap = await db.collection('companies').limit(500).get(); // safety cap
+                    // БАГ 7 FIX: collectionGroup замість N+1 loop (500 компаній = 500 reads)
+                    // 1 запит замість 500
+                    const cgUsersSnap = await db.collectionGroup('users')
+                        .where('telegramCode', '==', registrationCode)
+                        .limit(1).get();
 
-                    for (const companyDoc of companiesSnap.docs) {
-                        const usersSnap = await companyDoc.ref.collection('users')
-                            .where('telegramCode', '==', registrationCode).get();
+                    if (!cgUsersSnap.empty) {
+                        const userDoc = cgUsersSnap.docs[0];
+                        await userDoc.ref.update({
+                            telegramChatId: chatId.toString(),
+                            telegramUserId: userId.toString(),
+                            telegramCode: null
+                        });
 
-                        if (!usersSnap.empty) {
-                            const userDoc = usersSnap.docs[0];
-                            await userDoc.ref.update({
-                                telegramChatId: chatId.toString(),
-                                telegramUserId: userId.toString(),
-                                telegramCode: null
-                            });
-
-                            await sendTelegramMessage(chatId,
-                                '✅ <b>Успішно підключено!</b>\n\nТепер ви отримуватимете сповіщення про нові завдання.\n\nКнопки під кожним завданням:\n✅ Готово — завершити\n🔄 +1 день — перенести\n🚀 В роботу — взяти\n📎 Деталі — побачити опис'
-                            );
-                            return res.status(200).send('OK');
-                        }
+                        await sendTelegramMessage(chatId,
+                            '✅ <b>Успішно підключено!</b>\n\nТепер ви отримуватимете сповіщення про нові завдання.\n\nКнопки під кожним завданням:\n✅ Готово — завершити\n🔄 +1 день — перенести\n🚀 В роботу — взяти\n📎 Деталі — побачити опис'
+                        );
+                        return res.status(200).send('OK');
                     }
 
                     await sendTelegramMessage(chatId,
@@ -389,15 +456,13 @@ exports.telegramWebhook = functions
                     );
                 }
             } else if (text === '/today' || text === '/overdue') {
-                // Знаходимо юзера по chatId
-                const companiesSnap = await db.collection('companies').limit(500).get(); // safety cap
-                for (const companyDoc of companiesSnap.docs) {
-                    const companyId = companyDoc.id;
-                    const uSnap = await companyDoc.ref.collection('users')
-                        .where('telegramChatId', '==', chatId.toString()).limit(1).get();
-                    if (uSnap.empty) continue;
-
-                    const uid = uSnap.docs[0].id;
+                // БАГ 2 FIX: collectionGroup замість N+1 loop по 500 компаніях
+                const cgUserSnap = await db.collectionGroup('users')
+                    .where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                if (!cgUserSnap.empty) {
+                    const companyId = cgUserSnap.docs[0].ref.parent.parent.id;
+                    const uid = cgUserSnap.docs[0].id;
+                    if (true) { // scope wrapper
                     const todayStr = new Date().toISOString().split('T')[0];
 
                     const tasksSnap = await db.collection('companies').doc(companyId)
@@ -431,8 +496,8 @@ exports.telegramWebhook = functions
                             await sendTelegramMessage(chatId, `... ще ${filtered.length - 10}`);
                         }
                     }
-                    break;
-                }
+                    } // end scope wrapper
+                } // end if cgUserSnap
             }
         }
 
@@ -951,12 +1016,19 @@ exports.checkScheduledTasks = functions
                 .where('activated', '==', false).get();
             for (const schedDoc of scheduledSnap.docs) {
                 const schedTask = schedDoc.data();
-                await companyDoc.ref.collection('tasks').add({
-                    ...schedTask.taskData,
-                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                    isAutoGenerated: true, scheduledTaskId: schedDoc.id
+                // Транзакція: create + activate атомарно — дубль неможливий
+                await db.runTransaction(async (tx) => {
+                    const fresh = await tx.get(schedDoc.ref);
+                    if (!fresh.exists || fresh.data().activated === true) return; // idempotent guard
+                    const newTaskRef = companyDoc.ref.collection('tasks').doc();
+                    tx.set(newTaskRef, {
+                        ...schedTask.taskData,
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                        isAutoGenerated: true,
+                        scheduledTaskId: schedDoc.id
+                    });
+                    tx.update(schedDoc.ref, { activated: true, activatedTaskId: newTaskRef.id });
                 });
-                await schedDoc.ref.update({ activated: true });
             }
         }
         return null;
@@ -1007,7 +1079,7 @@ exports.sendReminders = functions
                 if (minUntil < 0) continue;
 
                 const reminders = task.reminders || [60, 15];
-                const sent = task.sentReminders || [];
+                const sent = task.sentReminders || []; // для read-only перевірки
 
                 for (const rem of reminders) {
                     if (minUntil <= rem + 3 && minUntil >= rem - 3 && !sent.includes(rem)) {
@@ -1040,8 +1112,10 @@ exports.sendReminders = functions
                             }
                         }
 
-                        sent.push(rem);
-                        await taskDoc.ref.update({ sentReminders: sent });
+                        // arrayUnion — атомарно, safe при паралельних раннах
+                        await taskDoc.ref.update({
+                            sentReminders: admin.firestore.FieldValue.arrayUnion(rem)
+                        });
                     }
                 }
             }
@@ -1307,6 +1381,13 @@ exports.aiAssistant = functions
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError('unauthenticated', 'Login required');
+        }
+
+        const { companyId, assistantId, userMessage, contextData } = data;
+        if (!companyId || !assistantId || !userMessage) {
+            throw new functions.https.HttpsError('invalid-argument', 'Missing fields');
+        }
+
         // ─── AI KILL SWITCH + ЛІМІТИ ──────────────────────
         const today = new Date().toISOString().split('T')[0];
         const monthKey = today.slice(0, 7);
@@ -1319,7 +1400,7 @@ exports.aiAssistant = functions
             }
         } catch(e) { if (e.code) throw e; }
 
-        // Перевірка компанії
+        // Перевірка компанії — ліміти та статус
         const companyDoc2 = await db.collection('companies').doc(companyId).get();
         if (companyDoc2.exists) {
             const compData = companyDoc2.data();
@@ -1346,13 +1427,6 @@ exports.aiAssistant = functions
                         `Місячний ліміт AI вичерпано: ${tokensMonth}/${compData.aiMonthlyTokenLimit} токенів`);
                 }
             }
-        }
-
-        }
-
-        const { companyId, assistantId, userMessage, contextData } = data;
-        if (!companyId || !assistantId || !userMessage) {
-            throw new functions.https.HttpsError('invalid-argument', 'Missing fields');
         }
 
         try {
@@ -1601,7 +1675,10 @@ exports.onMetricEntryWrite = functions
 
         if (!after && !before) return null;
 
-        const entry = after || before;
+        // Пропускаємо DELETE — його обробляє onMetricEntryDelete (щоб не було подвійного recalc)
+        if (!after) return null;
+
+        const entry = after;
         const { metricId, periodKey, scope, scopeId } = entry;
         if (!metricId || !periodKey) return null;
 

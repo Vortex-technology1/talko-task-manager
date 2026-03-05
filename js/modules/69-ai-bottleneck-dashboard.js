@@ -397,6 +397,10 @@
 
     // Create tasks from bottleneck recommendations
     window.createTasksFromBottleneck = async function(entity, type) {
+        if (!currentUser || !currentCompany) {
+            typeof showToast === 'function' && showToast('Помилка: не авторизовано', 'error');
+            return;
+        }
         let title = '', description = '';
 
         if (type === 'function_overload') {

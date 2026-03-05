@@ -131,12 +131,12 @@
                 ${rows.map(([uid, data]) => `
                     <div style="background:#f9fafb;border-radius:10px;padding:0.75rem;margin-bottom:0.5rem;">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-                            <span style="font-weight:600;font-size:0.88rem;">${(data.name||'').replace(/</g,'&lt;')}</span>
+                            <span style="font-weight:600;font-size:0.88rem;">${esc(data.name||'')}</span>
                             <span style="font-size:0.88rem;color:#22c55e;font-weight:700;">${fmt(data.total)}</span>
                         </div>
                         ${Object.entries(data.byFunction).sort((a,b)=>b[1]-a[1]).map(([fn, mins]) => `
                             <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:#6b7280;padding:0.15rem 0;">
-                                <span>${fn.replace(/</g,'&lt;')}</span>
+                                <span>${esc(fn)}</span>
                                 <span>${fmt(mins)}</span>
                             </div>
                         `).join('')}

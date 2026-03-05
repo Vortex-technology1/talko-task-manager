@@ -103,6 +103,15 @@
         }
         
         function renderTasks() {
+        // O(1) subtask count — будуємо один раз на початку renderTasks
+        const subtaskCountMap = {};
+        if (Array.isArray(tasks)) {
+            tasks.forEach(function(task_) { // task_ щоб не shadow глобальну t() translation fn
+                if (task_.parentId) subtaskCountMap[task_.parentId] = (subtaskCountMap[task_.parentId] || 0) + 1;
+            });
+        }
+
+
             // If kanban view is active, render kanban instead
             if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') {
                 renderKanbanBoard(currentCalendarView);
@@ -251,6 +260,7 @@
                         </tr>
                     </thead>
                     <tbody>`;
+            
             
             f.forEach(task => {
                 const { date: taskDeadline, time: taskTime } = parseDeadline(task);

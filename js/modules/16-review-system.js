@@ -70,7 +70,7 @@
                     }).catch(() => {});
                 }
                 // AUDIT LOG
-                logTaskChange(taskId, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' });
+                logTaskChange(taskId, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' }).catch(err => console.warn("[AuditLog]", err));
                 // Автостатус проєкту
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
             } catch(e) {
@@ -124,7 +124,7 @@
                 const acceptedTask = tasks[taskIndex];
                 if (acceptedTask?.projectId) autoUpdateProjectStatus(acceptedTask.projectId);
                 // AUDIT LOG
-                logTaskChange(taskId, 'review', { status: 'done' }, { status: 'review' });
+                logTaskChange(taskId, 'review', { status: 'done' }, { status: 'review' }).catch(err => console.warn("[AuditLog]", err));
                 
                 showToast(t('taskAccepted'), 'success');
             } catch (e) {
@@ -173,7 +173,7 @@
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
                 // AUDIT LOG
-                logTaskChange(taskId, 'status', { status: updateData.status }, { status: 'review' });
+                logTaskChange(taskId, 'status', { status: updateData.status }, { status: 'review' }).catch(err => console.warn("[AuditLog]", err));
                 
                 showToast(t('taskRejected'), 'warning');
             } catch (e) {

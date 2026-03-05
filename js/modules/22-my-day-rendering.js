@@ -2,6 +2,8 @@
         // MY DAY RENDERING
         // =====================
         function renderMyDay() {
+        if (!currentUser) return; // auth guard — avoid crash before auth completes
+
             _visibleTaskIds = null; // Invalidate visibility cache
             const container = document.getElementById('mydayContent');
             if (!container) return;

@@ -34,8 +34,10 @@
                 let tasksPromise;
                 if (isEmployeeRole) {
                     tasksPromise = Promise.all([
-                        base.collection('tasks').where('assigneeId', '==', uid).orderBy('createdAt', 'desc').limit(1000).get(),
-                        base.collection('tasks').where('creatorId', '==', uid).orderBy('createdAt', 'desc').limit(500).get(),
+                        base.collection('tasks').where('assigneeId', '==', uid).orderBy('createdAt', 'desc').limit(1000).get()
+                            .catch(() => base.collection('tasks').where('assigneeId', '==', uid).limit(1000).get()),
+                        base.collection('tasks').where('creatorId', '==', uid).orderBy('createdAt', 'desc').limit(500).get()
+                            .catch(() => base.collection('tasks').where('creatorId', '==', uid).limit(500).get()),
                         base.collection('tasks').where('coExecutorIds', 'array-contains', uid).limit(500).get()
                             .catch(() => ({ docs: [] })), // Fallback if index missing
                         base.collection('tasks').where('observerIds', 'array-contains', uid).limit(500).get()
@@ -52,13 +54,21 @@
                 }
                 
                 const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap, projectsSnap] = await Promise.all([
-                    base.collection('users').get(),
-                    base.collection('functions').get(),
+                    base.collection('users').get()
+                        .catch(() => ({ docs: [] })),
+                    base.collection('functions').get()
+                        .catch(() => ({ docs: [] })),
                     tasksPromise,
-                    base.collection('regularTasks').get(),
-                    base.collection('processTemplates').orderBy('name').get(),
-                    processQuery.get(),
+                    base.collection('regularTasks').get()
+                        .catch(() => ({ docs: [] })),
+                    base.collection('processTemplates').orderBy('name').get()
+                        .catch(() => base.collection('processTemplates').get())
+                        .catch(() => ({ docs: [] })),
+                    processQuery.get()
+                        .catch(() => ({ docs: [] })),
                     base.collection('projects').orderBy('createdAt', 'desc').get()
+                        .catch(() => base.collection('projects').get())
+                        .catch(() => ({ docs: [] }))
                 ]);
 
                 // ─── FEATURE FLAGS ─────────────────────────────
@@ -109,8 +119,13 @@
                 // Одноразова міграція: задачі з deadline (Timestamp) без deadlineDate
                 const migrateKey = `migrated_${currentCompany}`;
                 if (!localStorage.getItem(migrateKey)) {
-                    migrateDeadlineFields(base);
-                    localStorage.setItem(migrateKey, '1');
+                    try {
+                        await migrateDeadlineFields(base);
+                        localStorage.setItem(migrateKey, '1');
+                    } catch(e) {
+                        console.warn('[Migration] failed, will retry next load:', e);
+                        // НЕ ставимо localStorage — спробує ще раз
+                    }
                 }
                 
                 // Ще раз перевіряємо актуальність

@@ -213,7 +213,7 @@
                     data.completedAt = null;
                 } else if (statusVal === 'done') {
                     data.completedAt = firebase.firestore.FieldValue.serverTimestamp();
-                    data.completedBy = currentUser.uid;
+                    data.completedBy = currentUser?.uid || null;
                     // БАГ 1 FIX: синхронізуємо completedDate для Telegram аналітики
                     data.completedDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
                 } else if (statusVal === 'review') {
@@ -267,7 +267,7 @@
                         }
                         if (Object.keys(changes).length > 0) {
                             const action = changes.status ? 'status' : changes.assigneeId ? 'reassign' : changes.deadlineDate || changes.deadlineTime ? 'deadline' : 'edit';
-                            logTaskChange(currentEditingId, action, changes, existingTask);
+                            logTaskChange(currentEditingId, action, changes, existingTask).catch(err => console.warn("[AuditLog]", err));
                             
                             // Decision log for AGI
                             if (changes.assigneeId) {
@@ -316,7 +316,7 @@
                     newDocRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(data);
                     
                     // AUDIT LOG — створення задачі
-                    logTaskChange(newDocRef.id, 'created', { title: data.title, assigneeId: data.assigneeId, deadlineDate: data.deadlineDate }, null);
+                    logTaskChange(newDocRef.id, 'created', { title: data.title, assigneeId: data.assigneeId, deadlineDate: data.deadlineDate }, null).catch(err => console.warn("[AuditLog]", err));
                     
                     // Sync with Google Calendar (only if date is set)
                     if (deadlineDate && googleAccessToken) {

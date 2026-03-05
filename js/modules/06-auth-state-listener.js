@@ -2,6 +2,7 @@
         // AUTH STATE LISTENER
         // =====================
         auth.onAuthStateChanged(async (user) => {
+            try {
             if (user) {
                 currentUser = user;
                 isSuperAdmin = user.email.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase();
@@ -137,6 +138,7 @@
                     showLoginForm();
                 }
             }
+            } catch(authErr) { console.error('[Auth] onAuthStateChanged error:', authErr); }
         });
 
         function showMainInterface() {

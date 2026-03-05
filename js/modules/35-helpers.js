@@ -641,6 +641,9 @@
                 try {
                     if (typeof lucide !== 'undefined' && lucide.createIcons) {
                         lucide.createIcons();
+                    } else {
+                        // lucide ще не завантажився — відкладаємо
+                        window._lucidePending = true;
                     }
                 } catch(e) {}
             });

@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-03-05-v7.2';
+const CACHE_VERSION = '2026-03-05-v7.7';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache
@@ -176,7 +176,24 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // App shell (HTML, JS, CSS) — network first, fallback to cache
+  // JS модулі — network-first з cache: 'no-store'
+  // Свіжий код після деплою без залежності від CACHE_VERSION bump
+  if (url.pathname.startsWith('/js/modules/') || url.pathname.startsWith('/js/vendor/')) {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' })
+        .then(function(response) {
+          if (response.ok) {
+            var clone = response.clone();
+            caches.open(CACHE_NAME).then(function(c) { c.put(event.request, clone); });
+          }
+          return response;
+        })
+        .catch(function() { return caches.match(event.request); })
+    );
+    return;
+  }
+
+  // App shell (HTML, CSS) — network first, fallback to cache
   event.respondWith(
     fetch(event.request)
       .then(response => {

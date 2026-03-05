@@ -327,7 +327,7 @@
                 // Автостатус проєкту
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
                 // AUDIT LOG
-                logTaskChange(id, 'complete', { status: newStatus }, { status: originalTask?.status || 'todo' });
+                logTaskChange(id, 'complete', { status: newStatus }, { status: originalTask?.status || 'todo' }).catch(err => console.warn("[AuditLog]", err));
                 
                 if (needsReview) {
                     showToast(t('taskSentForReview'), 'info');
@@ -372,7 +372,7 @@
                 // Автостатус проєкту (done→progress може змінити completed→active)
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
                 // AUDIT LOG
-                logTaskChange(id, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' });
+                logTaskChange(id, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' }).catch(err => console.warn("[AuditLog]", err));
                 showToast(t('taskReopened'), 'success');
                 // Re-create calendar event
                 if (googleAccessToken && originalTask?.deadlineDate) {
