@@ -973,7 +973,7 @@
         <div class="stats-table-wrap">
             <table class="stats-table">
                 <thead><tr>
-                    <th style="min-width:110px;"><div class="th-inner" style="writing-mode:horizontal-tb;transform:none;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</div></th>`;
+                    <th style="min-width:110px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</div></th>`;
 
         // Column headers = metric names with actions
         const impColors = { critical: '#ef4444', high: '#f97316', medium: '#f59e0b', low: '#22c55e' };
@@ -991,15 +991,15 @@
             }
             const role = getUserRole();
             const canEdit = role === 'owner' || role === 'manager' || role === 'admin';
-            html += `<th title="${esc(m.name)}${respName ? ' · ' + respName : ''}">
+            html += `<th title="${esc(m.name)}${respName ? ' · ' + respName : ''}" style="position:relative;">
                 <div class="th-inner">
-                    <span style="color:${impColor};">▸</span> ${esc(m.name)}${unit}${inverse}${privacy}
-                    ${respName ? ` <span style="font-weight:400;opacity:0.6;">· ${respName}</span>` : ''}
+                    <span style="color:${impColor};font-size:9px;">▸</span> ${esc(m.name)}${unit}${inverse}${privacy}
+                    ${respName ? ` <span style="font-weight:400;opacity:0.5;">· ${respName}</span>` : ''}
                 </div>
-                <div style="display:flex;justify-content:center;gap:2px;margin-top:3px;">
-                    ${canEdit ? `<button class="stats-comment-btn" onclick="openMetricModal('${m.id}')" title="Редагувати" style="opacity:0.5;padding:2px 4px;width:22px;height:22px;">${SVG.settings}</button>` : ''}
-                    ${canEdit ? `<button class="stats-comment-btn" onclick="deleteMetric('${m.id}')" title="Видалити" style="color:#ef4444;opacity:0.5;padding:2px 4px;width:22px;height:22px;">${SVG.trash}</button>` : ''}
-                    <button class="stats-comment-btn" onclick="openTrendsChart('${m.id}')" title="Графік" style="opacity:0.5;padding:2px 4px;width:22px;height:22px;">${SVG.barChart}</button>
+                <div class="th-actions" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);display:flex;gap:1px;opacity:0;transition:opacity 0.1s;">
+                    ${canEdit ? `<button class="stats-comment-btn" onclick="openMetricModal('${m.id}')" title="Редагувати" style="width:18px;height:18px;padding:1px;">${SVG.settings}</button>` : ''}
+                    ${canEdit ? `<button class="stats-comment-btn" onclick="deleteMetric('${m.id}')" title="Видалити" style="color:#e03e3e;width:18px;height:18px;padding:1px;">${SVG.trash}</button>` : ''}
+                    <button class="stats-comment-btn" onclick="openTrendsChart('${m.id}')" title="Графік" style="width:18px;height:18px;padding:1px;">${SVG.barChart}</button>
                 </div>
             </th>`;
         });

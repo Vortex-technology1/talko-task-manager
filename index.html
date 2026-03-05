@@ -41,6 +41,9 @@ document.addEventListener('click', function(e) {
     });
     if (!inside) closeNavDropdowns();
 });
+// Закриваємо при скролі — dropdown має position:fixed тому при скролі зависає
+document.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
+window.addEventListener('resize', function() { closeNavDropdowns(); });
 </script>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
