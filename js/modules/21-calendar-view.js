@@ -156,6 +156,11 @@
                 if (view === 'day' || view === 'week' || view === 'month') {
                     if (typeof handleDateFilter === 'function') handleDateFilter();
                 }
+                // Синхронізуємо таби
+                var tabVal = dateFilterEl ? dateFilterEl.value : '';
+                document.querySelectorAll('#dateTabs .task-type-tab').forEach(function(b) {
+                    b.classList.toggle('active', b.dataset.value === tabVal);
+                });
             }
 
             localStorage.setItem('calendarView', view);
@@ -918,6 +923,21 @@
             renderCalendar();
         }
 
+        // Обробник для нових tab-кнопок dateFilter
+        window.setDateFilter = function(btn, value) {
+            // Оновлюємо hidden input
+            const df = document.getElementById('dateFilter');
+            if (df) df.value = value;
+            
+            // Оновлюємо активний стан кнопок
+            document.querySelectorAll('#dateTabs .task-type-tab').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            
+            // Викликаємо стандартний обробник
+            handleDateFilter();
+            refreshCurrentView();
+        };
+        
         function handleDateFilter() {
             const df = document.getElementById('dateFilter').value;
             const customRange = document.getElementById('customDateRange');

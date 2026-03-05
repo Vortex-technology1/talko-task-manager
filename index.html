@@ -720,14 +720,14 @@ document.addEventListener('mousedown', function(e) {
                                 <i data-lucide="search" class="icon" style="width:13px;height:13px;position:absolute;left:8px;color:#9ca3af;pointer-events:none;"></i>
                                 <input type="text" class="tsearch" id="taskSearchInput" placeholder="Пошук..." data-i18n-placeholder="search" oninput="syncSearchInputs(this);debouncedRenderTasks()">
                             </div>
-                            <select class="tsel" id="dateFilter" onchange="handleDateFilter()">
-                                <option value="" data-i18n="allDates">Всі дати</option>
-                                <option value="today" data-i18n="today">Сьогодні</option>
-                                <option value="week" data-i18n="thisWeek">Тиждень</option>
-                                <option value="month" data-i18n="thisMonth">Місяць</option>
-                                <option value="overdue" data-i18n="overdue">Прострочені</option>
-                                <option value="custom" data-i18n="customPeriod">Період</option>
-                            </select>
+                            <div class="ttabs" id="dateTabs">
+                                <button class="task-type-tab active" data-value="" onclick="setDateFilter(this, '')">Всі</button>
+                                <button class="task-type-tab" data-value="today" onclick="setDateFilter(this, 'today')">День</button>
+                                <button class="task-type-tab" data-value="week" onclick="setDateFilter(this, 'week')">Тиждень</button>
+                                <button class="task-type-tab" data-value="month" onclick="setDateFilter(this, 'month')">Місяць</button>
+                                <button class="task-type-tab" data-value="overdue" onclick="setDateFilter(this, 'overdue')" style="color:#ef4444;">!</button>
+                            </div>
+                            <input type="hidden" id="dateFilter" value="">
                             <div id="customDateRange" style="display:none;gap:4px;align-items:center;">
                                 <input type="date" id="dateFrom" class="tsel" style="width:auto;" onchange="renderTasks()">
                                 <span>—</span>
@@ -2887,6 +2887,16 @@ document.addEventListener('mousedown', function(e) {
     <script>
     // Init lang label on load
     document.addEventListener('DOMContentLoaded', function() {
+        // Ініціалізуємо lucide іконки одразу після завантаження DOM
+        function initLucide() {
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            } else {
+                setTimeout(initLucide, 100);
+            }
+        }
+        initLucide();
+        
         var lang = localStorage.getItem('talko_lang') || 'ua';
         var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE' };
         var el = document.getElementById('currentLangLabel');
