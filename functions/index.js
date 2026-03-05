@@ -1307,6 +1307,47 @@ exports.aiAssistant = functions
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError('unauthenticated', 'Login required');
+        // ─── AI KILL SWITCH + ЛІМІТИ ──────────────────────
+        const today = new Date().toISOString().split('T')[0];
+        const monthKey = today.slice(0, 7);
+
+        // Глобальний kill switch
+        try {
+            const globalSettings = await db.collection('settings').doc('ai').get();
+            if (globalSettings.exists && globalSettings.data().globalAiEnabled === false) {
+                throw new functions.https.HttpsError('unavailable', 'AI тимчасово недоступний');
+            }
+        } catch(e) { if (e.code) throw e; }
+
+        // Перевірка компанії
+        const companyDoc2 = await db.collection('companies').doc(companyId).get();
+        if (companyDoc2.exists) {
+            const compData = companyDoc2.data();
+            if (compData.aiEnabled === false) {
+                throw new functions.https.HttpsError('permission-denied', 'AI вимкнено для вашої компанії');
+            }
+            // Денний ліміт
+            if (compData.aiDailyTokenLimit > 0) {
+                const todaySnap = await db.collection('companies').doc(companyId)
+                    .collection('aiUsageLog').where('date', '==', today).get();
+                const tokensToday = todaySnap.docs.reduce((s, d) => s + (d.data().tokens || 0), 0);
+                if (tokensToday >= compData.aiDailyTokenLimit) {
+                    throw new functions.https.HttpsError('resource-exhausted',
+                        `Денний ліміт AI вичерпано: ${tokensToday}/${compData.aiDailyTokenLimit} токенів`);
+                }
+            }
+            // Місячний ліміт
+            if (compData.aiMonthlyTokenLimit > 0) {
+                const monthSnap = await db.collection('companies').doc(companyId)
+                    .collection('aiUsageLog').where('month', '==', monthKey).get();
+                const tokensMonth = monthSnap.docs.reduce((s, d) => s + (d.data().tokens || 0), 0);
+                if (tokensMonth >= compData.aiMonthlyTokenLimit) {
+                    throw new functions.https.HttpsError('resource-exhausted',
+                        `Місячний ліміт AI вичерпано: ${tokensMonth}/${compData.aiMonthlyTokenLimit} токенів`);
+                }
+            }
+        }
+
         }
 
         const { companyId, assistantId, userMessage, contextData } = data;

@@ -225,6 +225,7 @@
     }
 
     function showStatsTabIfAllowed() {
+        if (typeof isFeatureEnabled === 'function' && !isFeatureEnabled('statistics')) return;
         const s = canViewStats();
         const tb = document.getElementById('statisticsTabBtn');
         const mb = document.getElementById('statsMobileBtn');
@@ -1397,21 +1398,58 @@
             md.map(m => '- ' + m.name + ': факт=' + m.value + ' ' + m.unit + (m.target > 0 ? ', ціль=' + m.target : '')).join('\n') +
             '\n\nЗадачі: 1) Вузькі місця 2) Причини 3) Рішення з +/- 4) План задач 5) Прогноз';
 
-        if (ct) {
-            ct.innerHTML = '<div style="padding:1rem;">' +
-                '<div style="background:#f0fdf4;padding:1rem;border-radius:12px;margin-bottom:1rem;">' +
-                '<h3 style="margin-bottom:0.5rem;">' + formatPeriodLabel(pk) + '</h3>' +
-                md.map(m =>
-                    '<div style="display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid #e5e7eb;">' +
-                    '<span>' + m.name + '</span>' +
-                    '<span style="font-weight:700;">' + m.value + ' ' + m.unit +
-                    (m.target > 0 ? ' / ' + m.target + ' (' + Math.round(m.value / m.target * 100) + '%)' : '') +
-                    '</span></div>'
-                ).join('') + '</div>' +
-                '<div style="background:#eff6ff;padding:1rem;border-radius:12px;">' +
-                '<h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><line x1="12" y1="7" x2="12" y2="11"/><line x1="8" y1="15" x2="8" y2="15"/><line x1="16" y1="15" x2="16" y2="15"/></svg> ' + (t('aiReady') || 'AI підключення') + '</h3>' +
-                '<details style="margin-top:0.5rem;"><summary style="cursor:pointer;font-size:0.8rem;color:var(--info);">' +
-                (t('showPrompt') || 'Промпт') + '</summary>' +
+        // Рендеримо метрики + запускаємо AI
+        const metricsHtml = '<div style="background:#f0fdf4;padding:1rem;border-radius:12px;margin-bottom:1rem;">' +
+            '<h3 style="margin:0 0 0.5rem;font-size:0.95rem;">' + formatPeriodLabel(pk) + '</h3>' +
+            md.map(m =>
+                '<div style="display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid #e5e7eb;font-size:0.85rem;">' +
+                '<span>' + esc(m.name) + '</span>' +
+                '<span style="font-weight:700;">' + m.value + ' ' + esc(m.unit) +
+                (m.target > 0 ? ' / ' + m.target + ' (' + Math.round(m.value / m.target * 100) + '%)' : '') +
+                '</span></div>'
+            ).join('') + '</div>';
+
+        if (ct) ct.innerHTML = '<div style="padding:1rem;">' + metricsHtml +
+            '<div style="text-align:center;padding:1.5rem 0;color:#6b7280;font-size:0.88rem;">' +
+            '<div class="spinner" style="margin:0 auto 0.75rem;"></div>AI аналізує метрики...</div></div>';
+
+        // Реальний API call через aiAssistant Cloud Function
+        try {
+            const aiAssistantFn = firebase.functions().httpsCallable('aiAssistant');
+            const result = await aiAssistantFn({
+                companyId: currentCompany,
+                assistantId: 'statistics-analyst',
+                userMessage: prompt,
+                contextData: { period: pk, metrics: md }
+            });
+
+            const aiText = result.data && result.data.content
+                ? result.data.content
+                : (result.data || 'Відповідь отримана');
+
+            if (ct) ct.innerHTML = '<div style="padding:1rem;">' + metricsHtml +
+                '<div style="background:white;padding:1rem;border-radius:12px;border:1px solid #e5e7eb;">' +
+                '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+                '<strong style="font-size:0.9rem;">AI Аналіз</strong></div>' +
+                '<div style="white-space:pre-wrap;font-size:0.88rem;line-height:1.6;color:#374151;">' +
+                esc(aiText) + '</div>' +
+                '<details style="margin-top:1rem;"><summary style="cursor:pointer;font-size:0.75rem;color:#9ca3af;">Промпт</summary>' +
+                '<pre style="font-size:0.7rem;white-space:pre-wrap;background:#f9fafb;padding:0.5rem;border-radius:8px;margin-top:0.5rem;max-height:150px;overflow-y:auto;">' +
+                esc(prompt) + '</pre></details></div></div>';
+
+        } catch(err) {
+            // Graceful fallback — показуємо промпт якщо AI недоступний
+            const errMsg = err.code === 'resource-exhausted'
+                ? 'Ліміт AI токенів вичерпано'
+                : err.code === 'permission-denied'
+                ? 'AI вимкнено для вашої компанії'
+                : (err.message || 'Помилка AI');
+
+            if (ct) ct.innerHTML = '<div style="padding:1rem;">' + metricsHtml +
+                '<div style="background:#fef2f2;padding:1rem;border-radius:12px;border:1px solid #fecaca;">' +
+                '<div style="color:#ef4444;font-weight:600;margin-bottom:0.5rem;">⚠ ' + esc(errMsg) + '</div>' +
+                '<details><summary style="cursor:pointer;font-size:0.8rem;color:#6b7280;">Показати промпт для ручного аналізу</summary>' +
                 '<pre style="font-size:0.7rem;white-space:pre-wrap;background:#f9fafb;padding:0.5rem;border-radius:8px;margin-top:0.5rem;max-height:200px;overflow-y:auto;">' +
                 esc(prompt) + '</pre></details></div></div>';
         }

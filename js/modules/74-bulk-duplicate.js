@@ -97,17 +97,30 @@
         }
         if (deletableIds.length === 0) return;
 
+        // Збираємо підзадачі батьківських задач — cascade delete (ТЗ БАГ 4)
+        const subtaskIds = tasks
+            .filter(t => t.parentId && deletableIds.includes(t.parentId))
+            .map(t => t.id);
+        const allDeleteIds = [...new Set([...deletableIds, ...subtaskIds])];
+        if (subtaskIds.length > 0) {
+            showToast && showToast(`Також видаляємо ${subtaskIds.length} підзадач`, 'info');
+        }
+
         let deleted = 0;
-        const batch = firebase.firestore().batch();
-        for (const id of deletableIds) {
-            const ref = firebase.firestore()
-                .collection('companies').doc(currentCompany)
-                .collection('tasks').doc(id);
-            batch.delete(ref);
+        // Батчимо по 450 — Firestore limit
+        for (let i = 0; i < allDeleteIds.length; i += 450) {
+            const chunk = allDeleteIds.slice(i, i + 450);
+            const batch = firebase.firestore().batch();
+            for (const id of chunk) {
+                const ref = firebase.firestore()
+                    .collection('companies').doc(currentCompany)
+                    .collection('tasks').doc(id);
+                batch.delete(ref);
+            }
+            try { await batch.commit(); deleted += chunk.length; } catch(e) { console.error('batch delete', e); }
         }
         try {
-            await batch.commit();
-            tasks = tasks.filter(t => !deletableIds.includes(t.id));
+            tasks = tasks.filter(t => !allDeleteIds.includes(t.id));
             deleted = deletableIds.length;
             renderMyDay();
             refreshCurrentView();

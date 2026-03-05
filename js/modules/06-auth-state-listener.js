@@ -10,6 +10,8 @@
                 cleanupAllListeners();
                 
                 if (isSuperAdmin) {
+                const superBtn = document.getElementById('superadminBtn');
+                if (superBtn) superBtn.style.display = '';
                     document.getElementById('adminTabBtn').style.display = 'block';
                 }
                 

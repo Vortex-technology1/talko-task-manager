@@ -120,6 +120,16 @@
                     // Не показуємо помилку тут - покажемо форму входу з підказкою
                     return 'already_used';
                 }
+
+                // Перевірка терміну дії
+                if (invite.expiresAt) {
+                    const expires = invite.expiresAt.toDate ? invite.expiresAt.toDate() : new Date(invite.expiresAt);
+                    if (new Date() > expires) {
+                        showAuthMessage && showAuthMessage('Посилання для запрошення застаріло. Попросіть менеджера надіслати нове.', 'error');
+                        currentInviteData = null;
+                        return false;
+                    }
+                }
                 
                 currentInviteData = { id: inviteId, ...invite };
                 return true;

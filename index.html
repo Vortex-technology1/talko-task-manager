@@ -105,13 +105,49 @@ document.addEventListener('mousedown', function(e) {
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
-    <script src="https://unpkg.com/lucide@0.263.1"></script>
+    <!-- Lucide icons — три CDN з fallback + retry -->
     <script>
-        // Резервний CDN якщо unpkg недоступний
-        if (typeof lucide === 'undefined') {
+    (function() {
+        var V = '0.263.1';
+        var CDNS = [
+            'https://unpkg.com/lucide@' + V,
+            'https://cdn.jsdelivr.net/npm/lucide@' + V + '/dist/umd/lucide.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js'
+        ];
+        var idx = 0;
+        function load() {
+            if (idx >= CDNS.length) return;
             var s = document.createElement('script');
-            s.src = 'https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js';
+            s.src = CDNS[idx];
+            s.onload = function() {
+                if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            };
+            s.onerror = function() { idx++; load(); };
             document.head.appendChild(s);
+        }
+        // Спочатку синхронно через тег (якщо CDN доступний — найшвидше)
+        document.write('<scr' + 'ipt src="' + CDNS[0] + '" onerror="window._lucideMainFailed=true"></scr' + 'ipt>');
+    })();
+    </script>
+    <script>
+        // Fallback якщо основний CDN впав
+        if (typeof lucide === 'undefined' || window._lucideMainFailed) {
+            (function() {
+                var cdns = [
+                    'https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js'
+                ];
+                var i = 0;
+                function tryNext() {
+                    if (i >= cdns.length) return;
+                    var s = document.createElement('script');
+                    s.src = cdns[i++];
+                    s.onload = function() { if (lucide) lucide.createIcons(); };
+                    s.onerror = tryNext;
+                    document.head.appendChild(s);
+                }
+                tryNext();
+            })();
         }
     </script>
     <script src="https://accounts.google.com/gsi/client"></script>
@@ -268,6 +304,7 @@ document.addEventListener('mousedown', function(e) {
                 </div>
                 <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;"><i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span></button>
                 <button class="header-btn" onclick="openDemoDataModal()" id="demoDataBtnDesktop" style="display:none;background:rgba(239,68,68,0.3);"><i data-lucide="database" class="icon"></i> Демо</button>
+                <button class="header-btn" onclick="openSuperadminPanel()" id="superadminBtn" style="display:none;background:rgba(139,92,246,0.3);"><i data-lucide="shield" class="icon"></i> Адмін</button>
                 <button class="mobile-logout-btn" onclick="logout()"><i data-lucide="log-out" class="icon" style="width:18px;height:18px;"></i></button>
             </div>
         </div>
@@ -2251,6 +2288,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/72-global-search.js" defer></script>
     <script src="js/modules/73-subtasks.js" defer></script>
     <script src="js/modules/74-bulk-duplicate.js" defer></script>
+    <script src="js/modules/75-superadmin-panel.js" defer></script>
 
     <!-- Bottom Navigation & Overlays -->
     <!-- Bottom Navigation for Mobile -->
@@ -3362,5 +3400,17 @@ document.addEventListener('mousedown', function(e) {
 
 
     </script>
+
+    <!-- SUPERADMIN PANEL -->
+    <div id="superadminModal" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width:900px;width:95vw;max-height:90vh;overflow-y:auto;">
+            <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;border-bottom:1px solid #e5e7eb;">
+                <h2 style="margin:0;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;">🔧 Адмін панель</h2>
+                <span class="close" onclick="closeModal('superadminModal')" style="font-size:1.5rem;cursor:pointer;color:#9ca3af;">&times;</span>
+            </div>
+            <div id="superadminContent" style="padding:1rem;"><div class="spinner"></div></div>
+        </div>
+    </div>
+
 </body>
 </html>

@@ -2,6 +2,24 @@
         // DATA LOADING
         // =====================
         async function loadAllData() {
+
+        // ─── FEATURE FLAGS ────────────────────────────────
+        window.companyFeatures = companyDoc.data().features || {};
+        window.isFeatureEnabled = function(key) {
+            return window.companyFeatures[key] !== false;
+        };
+        // Застосовуємо feature flags до навігації
+        const featureTabMap = {
+            statistics:       'analyticsTab',
+            processes:        'processesTab',
+            projects:         'projectsTab',
+            controlDashboard: 'controlTab',
+        };
+        Object.entries(featureTabMap).forEach(([feat, tabId]) => {
+            const el = document.getElementById(tabId);
+            if (el) el.style.display = isFeatureEnabled(feat) ? '' : 'none';
+        });
+
             if (!currentCompany) return;
             if (isLoading) {
                 console.log('loadAllData: already loading, skipping...');
@@ -118,6 +136,7 @@
                 // Render based on current view
                 if (currentCalendarView === 'list') {
                     renderTasks();
+        if (typeof restoreActiveTimer === 'function') restoreActiveTimer();
                 } else if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') {
                     renderKanbanBoard(currentCalendarView);
                 } else {

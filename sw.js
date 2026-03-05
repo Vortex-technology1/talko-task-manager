@@ -1,10 +1,11 @@
-const CACHE_VERSION = '2026-03-05-v6.1';
+const CACHE_VERSION = '2026-03-05-v7.1';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache
 const PRECACHE_URLS = [
   'index.html',
   'manifest.json',
+  'js/vendor/lucide-loader.js',
   'icons/icon-192x192.png',
   'icons/icon-512x512.png',
   'css/animations-misc.css',
@@ -34,6 +35,7 @@ const PRECACHE_URLS = [
     'js/modules/72-global-search.js',
     'js/modules/73-subtasks.js',
     'js/modules/74-bulk-duplicate.js',
+  'js/modules/75-superadmin-panel.js',
   'js/modules/10-auto-archive-done-tasks-30-days.js',
   'js/modules/11-archive-ui.js',
   'js/modules/12-my-day-popup.js',
@@ -116,6 +118,20 @@ self.addEventListener('activate', (event) => {
 
 // Fetch — strategy per request type
 self.addEventListener('fetch', (event) => {
+    // CDN бібліотеки — завжди network-first, не кешуємо
+    if (event.request.url.includes('unpkg.com') ||
+        event.request.url.includes('jsdelivr.net') ||
+        event.request.url.includes('cdnjs.cloudflare.com') ||
+        event.request.url.includes('accounts.google.com') ||
+        event.request.url.includes('apis.google.com')) {
+        event.respondWith(
+            fetch(event.request).catch(function() {
+                return caches.match(event.request);
+            })
+        );
+        return;
+    }
+
   const url = new URL(event.request.url);
 
   // Skip non-GET requests
