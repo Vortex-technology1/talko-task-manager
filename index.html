@@ -246,8 +246,6 @@ document.addEventListener('mousedown', function(e) {
         </div>
     </header>
 
-    <!-- ESCALATION STICKY BANNER -->
-    <div id="escalationBanner" style="display:none;"></div>
 
     <div class="container">
         <!-- LOADING -->
@@ -1034,7 +1032,7 @@ document.addEventListener('mousedown', function(e) {
                         </button>
                     </div>
                     <!-- Sub-tabs -->
-                    <div style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;">
+                    <div style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;flex-wrap:wrap;">
                         <button id="usersSubTab-list" onclick="switchUsersSubTab('list')" 
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:600;background:none;border:none;border-bottom:2px solid #22c55e;color:#16a34a;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
                             <i data-lucide="users" class="icon icon-sm"></i> Список
@@ -1046,6 +1044,11 @@ document.addEventListener('mousedown', function(e) {
                         <button id="usersSubTab-roles" onclick="switchUsersSubTab('roles')"
                             style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
                             <i data-lucide="key" class="icon icon-sm"></i> Ролі та дозволи
+                        </button>
+                        <button id="usersSubTab-company" onclick="switchUsersSubTab('company')"
+                            style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:none;align-items:center;gap:0.35rem;"
+                            class="owner-only-el">
+                            <i data-lucide="settings" class="icon icon-sm"></i> Компанія
                         </button>
                     </div>
                 </div>
@@ -1102,6 +1105,69 @@ document.addEventListener('mousedown', function(e) {
                             </button>
                         </div>
                         <div id="rolesPermissionsContainerUsers" style="padding:0;"></div>
+                    </div>
+                </div>
+
+                <!-- КОМПАНІЯ — тільки для owner -->
+                <div id="usersSubContent-company" style="display:none;">
+                    <div style="margin-top:1rem;display:flex;flex-direction:column;gap:1rem;">
+
+                        <!-- Налаштування компанії -->
+                        <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
+                            <div style="padding:1rem 1.25rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:0.5rem;">
+                                <i data-lucide="building-2" class="icon" style="color:#22c55e;"></i>
+                                <h3 style="margin:0;font-size:1rem;font-weight:600;">Налаштування компанії</h3>
+                            </div>
+                            <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
+                                <div>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Назва компанії</label>
+                                    <div style="display:flex;gap:0.5rem;">
+                                        <input id="settingCompanyName" type="text" placeholder="Назва компанії"
+                                            style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
+                                        <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">
+                                            <i data-lucide="save" class="icon icon-sm"></i> Зберегти
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Часовий пояс</label>
+                                    <select id="settingTimezone" onchange="saveCompanySetting('timezone')"
+                                        style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
+                                        <option value="Europe/Kyiv">Київ (UTC+2/+3)</option>
+                                        <option value="Europe/Warsaw">Варшава (UTC+1/+2)</option>
+                                        <option value="Europe/Prague">Прага (UTC+1/+2)</option>
+                                        <option value="Europe/Bucharest">Бухарест (UTC+2/+3)</option>
+                                        <option value="Europe/London">Лондон (UTC+0/+1)</option>
+                                        <option value="America/New_York">Нью-Йорк (UTC-5/-4)</option>
+                                    </select>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:0.75rem;">
+                                    <input type="checkbox" id="settingWeeklyReport" onchange="saveCompanySetting('weeklyReport')"
+                                        style="width:16px;height:16px;accent-color:#22c55e;">
+                                    <label for="settingWeeklyReport" style="font-size:0.9rem;color:#374151;cursor:pointer;">
+                                        Щотижневий звіт власнику
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Небезпечна зона -->
+                        <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;border:1px solid #fecaca;">
+                            <div style="padding:1rem 1.25rem;border-bottom:1px solid #fecaca;display:flex;align-items:center;gap:0.5rem;">
+                                <i data-lucide="alert-triangle" class="icon" style="color:#ef4444;"></i>
+                                <h3 style="margin:0;font-size:1rem;font-weight:600;color:#ef4444;">Небезпечна зона</h3>
+                            </div>
+                            <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
+                                <p style="margin:0;font-size:0.85rem;color:#6b7280;">Ці дії незворотні. Будьте обережні.</p>
+                                <button onclick="exportCompanyData()" class="btn" style="width:fit-content;padding:0.6rem 1rem;font-size:0.85rem;border:1px solid #d1d5db;">
+                                    <i data-lucide="download" class="icon icon-sm"></i> Експорт даних компанії
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="padding:0.75rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;font-size:0.8rem;color:#16a34a;">
+                            🚀 Незабаром: логотип компанії, теми оформлення, Telegram інтеграція
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3076,34 +3142,39 @@ document.addEventListener('mousedown', function(e) {
 
     // ---- USERS SUB-TABS ----
     function switchUsersSubTab(tab) {
-        ['list','invite','roles'].forEach(function(t) {
-            var c = document.getElementById('usersSubContent-' + t);
-            var b = document.getElementById('usersSubTab-' + t);
-            if (c) c.style.display = t === tab ? '' : 'none';
-            if (b) {
-                b.style.borderBottomColor = t === tab ? '#22c55e' : 'transparent';
-                b.style.color = t === tab ? '#16a34a' : '#6b7280';
-                b.style.fontWeight = t === tab ? '600' : '500';
+        ['list','invite','roles','company'].forEach(function(t) {
+            var cont = document.getElementById('usersSubContent-' + t);
+            var btn = document.getElementById('usersSubTab-' + t);
+            if (cont) cont.style.display = t === tab ? '' : 'none';
+            if (btn) {
+                btn.style.borderBottomColor = t === tab ? '#22c55e' : 'transparent';
+                btn.style.color = t === tab ? '#16a34a' : '#6b7280';
+                btn.style.fontWeight = t === tab ? '600' : '500';
             }
         });
         if (tab === 'roles') {
-            // Рендеримо в контейнер users-вкладки
             if (typeof renderRolesTab === 'function') {
-                var c = document.getElementById('rolesPermissionsContainerUsers');
-                if (c) {
-                    // Тимчасово підміняємо контейнер
-                    var orig = document.getElementById('rolesPermissionsContainer');
-                    var origParent = orig && orig.parentNode;
-                    if (origParent) {
-                        c.innerHTML = '';
-                        renderRolesTabInto(c);
-                    } else {
-                        renderRolesTab();
-                    }
+                var cont = document.getElementById('rolesPermissionsContainerUsers');
+                if (cont) {
+                    cont.innerHTML = '';
+                    renderRolesTabInto(cont);
                 }
             }
         }
+        if (tab === 'company') {
+            if (typeof loadCompanySettings === 'function') loadCompanySettings();
+        }
     }
+
+    // Показуємо таб Компанія тільки для owner
+    function initUsersTabVisibility() {
+        var role = typeof currentUserData !== 'undefined' ? currentUserData?.role : null;
+        var companyBtn = document.getElementById('usersSubTab-company');
+        if (companyBtn) {
+            companyBtn.style.display = (role === 'owner') ? 'flex' : 'none';
+        }
+    }
+    window.initUsersTabVisibility = initUsersTabVisibility;
 
     // Рендер таблиці ролей в довільний контейнер
     window.renderRolesTabInto = async function(container) {
