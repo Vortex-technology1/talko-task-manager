@@ -642,8 +642,11 @@
                     if (typeof lucide !== 'undefined' && lucide.createIcons) {
                         lucide.createIcons();
                     } else {
-                        // lucide ще не завантажився — відкладаємо
-                        window._lucidePending = true;
+                        // lucide ще не готовий — retry через 300ms
+                        setTimeout(function() {
+                            if (typeof window._initLucide === 'function') window._initLucide();
+                            else if (typeof lucide !== 'undefined') lucide.createIcons();
+                        }, 300);
                     }
                 } catch(e) {}
             });
