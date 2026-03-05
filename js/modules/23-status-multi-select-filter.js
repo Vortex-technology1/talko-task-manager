@@ -114,6 +114,15 @@
             const ff = document.getElementById('functionFilter')?.value;
             const af = document.getElementById('assigneeFilter')?.value;
             const df = document.getElementById('dateFilter')?.value;
+            // P2 FIX: зберігаємо фільтри в sessionStorage
+            try {
+                const ffEl = document.getElementById('functionFilter');
+                sessionStorage.setItem('talko_filters', JSON.stringify({
+                    assignee: af || '',
+                    date: df || '',
+                    function: ffEl?.value || ''
+                }));
+            } catch(e) {}
             const tf = document.getElementById('taskTypeFilter')?.value;
             const searchQuery = (document.getElementById('taskSearchInput')?.value || '').toLowerCase().trim();
             
@@ -253,9 +262,10 @@
                 const processIndicator = task.processId ? `<i data-lucide="git-branch" class="icon icon-sm" style="color:#8b5cf6;" title="${t('taskFromProcess')}"></i> ` : '';
                 
                 html += `
-                    <tr>
+                    <tr style="${typeof isTaskSelected === 'function' && isTaskSelected(task.id) ? 'background:#f0fdf4;' : ''}">
+                        ${typeof isBulkModeActive === 'function' && isBulkModeActive() ? `<td style="width:36px;padding:0 0.5rem;"><input type="checkbox" data-bulk-id="${task.id}" ${typeof isTaskSelected === 'function' && isTaskSelected(task.id) ? 'checked' : ''} onclick="toggleBulkSelect('${task.id}',event)" style="width:16px;height:16px;accent-color:#22c55e;cursor:pointer;"></td>` : ''}
                         <td class="task-title-cell">
-                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}" onclick="openTaskModal('${escId(task.id)}')">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${processIndicator}${esc(task.title)}</span>
+                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}" onclick="${typeof isBulkModeActive === 'function' && isBulkModeActive() ? `toggleBulkSelect('${escId(task.id)}',event)` : `openTaskModal('${escId(task.id)}')`}">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${processIndicator}${task.parentId ? '<span style="font-size:0.68rem;color:#6b7280;margin-right:3px;">↳</span>' : ''}${esc(task.title)}${!task.parentId && tasks.filter(t=>t.parentId===task.id).length > 0 ? '<span style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;margin-left:4px;border:1px solid #bbf7d0;">⊕'+tasks.filter(t=>t.parentId===task.id).length+'</span>' : ''}</span>
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td class="col-hide-md">${esc(task.creatorName) || '-'}</td>
@@ -357,7 +367,7 @@
                         <div class="mobile-task-content" onclick="openTaskModal('${escId(task.id)}')">
                             <div class="mobile-task-header">
                                 <div class="mobile-task-title ${task.status === 'done' ? 'mobile-task-title-done' : ''}">
-                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c;width:14px;height:14px;"></i> ' : ''}${esc(task.title)}
+                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c;width:14px;height:14px;"></i> ' : ''}${task.parentId ? '<span style="font-size:0.65rem;color:#9ca3af;">↳ </span>' : ''}${esc(task.title)}${!task.parentId && tasks.filter(t=>t.parentId===task.id).length > 0 ? ' <span style="font-size:0.65rem;color:#16a34a;">⊕'+tasks.filter(t=>t.parentId===task.id).length+'</span>' : ''}
                                 </div>
                                 ${(() => {
                                     if (!taskDeadline) return '';

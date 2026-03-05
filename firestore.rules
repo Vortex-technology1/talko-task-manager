@@ -98,7 +98,11 @@ service cloud.firestore {
         match /comments/{commentId} {
           allow read: if isCompanyMember(companyId);
           allow create: if isCompanyMember(companyId);
-          allow update, delete: if isManagerOrOwner(companyId);
+          // P2 FIX: автор може редагувати/видаляти власний коментар
+          allow update: if isManagerOrOwner(companyId) ||
+            (isAuthenticated() && isCompanyMember(companyId) && resource.data.authorId == userId());
+          allow delete: if isManagerOrOwner(companyId) ||
+            (isAuthenticated() && isCompanyMember(companyId) && resource.data.authorId == userId());
         }
         
         match /history/{historyId} {
@@ -315,7 +319,12 @@ service cloud.firestore {
     // INVITES
     // =====================
     match /invites/{inviteId} {
-      allow read: if isAuthenticated();
+      // P0 GDPR FIX: тільки власний invite, manager компанії або superadmin
+      allow read: if isAuthenticated() && (
+        isSuperAdmin() ||
+        request.auth.token.email == resource.data.email ||
+        isManagerOrOwner(resource.data.companyId)
+      );
       
       allow create: if isSuperAdmin() || (
         isAuthenticated() && 
@@ -348,12 +357,13 @@ service cloud.firestore {
     // SETTINGS (AI assistants, global config)
     // =====================
     match /settings/{doc} {
-      allow read: if isAuthenticated();
+      // P0 SEC FIX: openaiApiKey не має читати будь-який юзер
+      allow read: if isSuperAdmin();
       allow write: if isSuperAdmin();
     }
     
     match /settings/{doc}/{sub=**} {
-      allow read: if isAuthenticated();
+      allow read: if isSuperAdmin();
       allow write: if isSuperAdmin();
     }
   }

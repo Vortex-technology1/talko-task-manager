@@ -628,6 +628,16 @@
                         </div>
                     `).join('')}
                 `;
+            } else if (viewType === 'ownerreport') {
+                // ЗВІТ ВЛАСНИКА — тижневий/місячний зріз
+                if (typeof renderOwnerDashboard === 'function') {
+                    // Рендеримо в controlContent
+                    const origEl = document.getElementById('ownerDashboardContent');
+                    content.innerHTML = '';
+                    renderOwnerReportInto(content);
+                } else {
+                    content.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Завантаження...</div>';
+                }
             }
             
             refreshIcons();

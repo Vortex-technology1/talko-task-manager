@@ -89,6 +89,60 @@
             if (!task || !task.timeLog) return 0;
             return task.timeLog.reduce((sum, e) => sum + (e.minutes || 0), 0);
         }
+
+        // ========================
+        // ЗВЕДЕНИЙ ЗВІТ по людях
+        // ========================
+        window.renderTimeTrackingReport = function(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Збираємо timeLog по всіх задачах
+            const byUser = {};  // uid → { name, byFunction: { fn → minutes } }
+            tasks.forEach(task => {
+                if (!task.timeLog || !task.timeLog.length) return;
+                const uid = task.assigneeId || 'unknown';
+                if (!byUser[uid]) byUser[uid] = { name: task.assigneeName || uid, byFunction: {}, total: 0 };
+                task.timeLog.forEach(entry => {
+                    const fn = task.function || '—';
+                    byUser[uid].byFunction[fn] = (byUser[uid].byFunction[fn] || 0) + (entry.minutes || 0);
+                    byUser[uid].total += (entry.minutes || 0);
+                });
+            });
+
+            const rows = Object.entries(byUser)
+                .sort((a, b) => b[1].total - a[1].total);
+
+            if (!rows.length) {
+                container.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Немає даних трекінгу часу</div>';
+                return;
+            }
+
+            const fmt = (m) => {
+                if (m < 60) return m + ' хв';
+                return Math.floor(m/60) + 'г ' + (m%60 ? (m%60)+'хв' : '');
+            };
+
+            container.innerHTML = `
+                <div style="margin-bottom:1rem;">
+                    <h3 style="margin:0 0 0.5rem;font-size:0.95rem;color:#374151;">⏱ Трекінг часу по виконавцях</h3>
+                    <p style="margin:0;font-size:0.8rem;color:#9ca3af;">Загальний час за всі задачі з логом</p>
+                </div>
+                ${rows.map(([uid, data]) => `
+                    <div style="background:#f9fafb;border-radius:10px;padding:0.75rem;margin-bottom:0.5rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+                            <span style="font-weight:600;font-size:0.88rem;">${(data.name||'').replace(/</g,'&lt;')}</span>
+                            <span style="font-size:0.88rem;color:#22c55e;font-weight:700;">${fmt(data.total)}</span>
+                        </div>
+                        ${Object.entries(data.byFunction).sort((a,b)=>b[1]-a[1]).map(([fn, mins]) => `
+                            <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:#6b7280;padding:0.15rem 0;">
+                                <span>${fn.replace(/</g,'&lt;')}</span>
+                                <span>${fmt(mins)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('')}`;
+        };
         
         function formatTrackedTime(totalMinutes) {
             const h = Math.floor(totalMinutes / 60);

@@ -96,6 +96,7 @@
             // Оптимістичне оновлення
             tasks[taskIndex].status = 'done';
             tasks[taskIndex].completedAt = new Date().toISOString();
+            tasks[taskIndex].completedDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];  // P0 FIX
             tasks[taskIndex].reviewedAt = new Date().toISOString();
             tasks[taskIndex].reviewedBy = currentUser.uid;
             renderMyDay();
@@ -106,9 +107,11 @@
                     deleteCalendarEvent(originalTask.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
+                const _reviewDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
                     status: 'done',
                     completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    completedDate: _reviewDate,  // P0 FIX
                     reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     reviewedBy: currentUser.uid
                 });

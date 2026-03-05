@@ -172,6 +172,7 @@
                     // Check escalations after data is loaded
                     checkEscalations();
                     if (typeof initUsersTabVisibility === 'function') initUsersTabVisibility();
+                if (typeof initOwnerReportOption === 'function') initOwnerReportOption();
                 if (typeof initOwnerDashboardVisibility === 'function') initOwnerDashboardVisibility();
                     // Load manual incidents for journal
                     loadManualIncidents().catch(() => {});

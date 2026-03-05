@@ -50,6 +50,16 @@
             if (paf) paf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             const rta = document.getElementById('regularTaskAssignee');
             if (rta) rta.innerHTML = `<option value="">${t('fromFunctionAuto')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            // P2 FIX: відновлюємо збережені фільтри після заповнення selectів
+            try {
+                const saved = JSON.parse(sessionStorage.getItem('talko_filters') || '{}');
+                if (saved.assignee && af) af.value = saved.assignee;
+                if (saved.function && ff) ff.value = saved.function;
+                if (saved.date) {
+                    const dfEl = document.getElementById('dateFilter');
+                    if (dfEl) dfEl.value = saved.date;
+                }
+            } catch(e) {}
         }
 
         function formatDate(s) {
@@ -598,6 +608,12 @@
             ['functionModal', 'inviteModal', 'userModal', 'profileModal', 'processTemplatesModal', 'viewProcessModal', 'mergeFunctionsModal'].forEach(id => {
                 if (e.target === document.getElementById(id)) closeModal(id);
             });
+            // P2 FIX: taskModal закривається по overlay тільки якщо title порожній (новий)
+            const taskModal = document.getElementById('taskModal');
+            if (e.target === taskModal) {
+                const titleVal = document.getElementById('taskTitle')?.value?.trim();
+                if (!titleVal && !window.currentEditingId) closeModal('taskModal');
+            }
         }
 
         // Init language on load

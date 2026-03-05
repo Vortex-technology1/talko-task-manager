@@ -41,14 +41,21 @@
             const period = document.getElementById('regularTaskPeriod').value;
             const dayOfWeekGroup = document.getElementById('dayOfWeekGroup');
             const dayOfMonthGroup = document.getElementById('dayOfMonthGroup');
-            
-            if (period === 'weekly') {
+            const skipWeekendsGroup = document.getElementById('skipWeekendsGroup');
+
+            if (period === 'daily') {
+                dayOfWeekGroup.style.display = 'none';
+                dayOfMonthGroup.style.display = 'none';
+                if (skipWeekendsGroup) skipWeekendsGroup.style.display = 'block';
+            } else if (period === 'weekly') {
                 dayOfWeekGroup.style.display = 'block';
                 dayOfMonthGroup.style.display = 'none';
+                if (skipWeekendsGroup) skipWeekendsGroup.style.display = 'none';
             } else {
                 // monthly, quarterly
                 dayOfWeekGroup.style.display = 'none';
                 dayOfMonthGroup.style.display = 'block';
+                if (skipWeekendsGroup) skipWeekendsGroup.style.display = 'none';
             }
         }
         
@@ -122,6 +129,8 @@
                         selectAllDays(); // Вибираємо всі дні
                     } else {
                         document.getElementById('regularTaskPeriod').value = rt.period || 'weekly';
+                        const _swCb = document.getElementById('regularTaskSkipWeekends');
+                        if (_swCb) _swCb.checked = rt.skipWeekends || false;
                         updatePeriodOptions();
                         
                         // Встановлюємо вибрані дні
@@ -338,7 +347,8 @@
                 function: funcName,
                 period: period,
                 daysOfWeek: period === 'weekly' ? selectedDays : null,
-                dayOfMonth: period !== 'weekly' ? document.getElementById('regularTaskDayOfMonth').value : null,
+                dayOfMonth: period !== 'weekly' && period !== 'daily' ? document.getElementById('regularTaskDayOfMonth').value : null,
+                skipWeekends: period === 'daily' ? (document.getElementById('regularTaskSkipWeekends')?.checked || false) : false,
                 timeStart: document.getElementById('regularTaskTimeStart').value,
                 timeEnd: document.getElementById('regularTaskTimeMode').value === 'end' 
                     ? document.getElementById('regularTaskTimeEnd').value 

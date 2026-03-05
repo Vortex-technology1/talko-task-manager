@@ -461,7 +461,11 @@ exports.leadWebhook = functions
             if (!companyDoc.exists) return res.status(404).json({ error: 'Company not found' });
 
             const companyData = companyDoc.data();
-            if (companyData.webhookApiKey && companyData.webhookApiKey !== apiKey) {
+            // P0 SEC FIX: apiKey обов'язковий — якщо компанія не налаштувала webhook → 403
+            if (!companyData.webhookApiKey) {
+                return res.status(403).json({ error: 'Webhook not configured. Set webhookApiKey in company settings first.' });
+            }
+            if (companyData.webhookApiKey !== apiKey) {
                 return res.status(401).json({ error: 'Invalid API key' });
             }
 
@@ -616,6 +620,12 @@ exports.leadWebhook = functions
 // ===========================
 // 5. SCHEDULED: ПРОСТРОЧЕНІ + ЕСКАЛАЦІЯ
 // ===========================
+// ========================
+// P2 COST FIX: checkOverdueTasks
+// Замість full scan всіх companies — collectionGroup query тільки по задачах
+// де overdueNotified = false і deadline вже минув (індексовано)
+// Reads: ~O(overdue tasks) замість O(N×M all tasks)
+// ========================
 exports.checkOverdueTasks = functions
     .region(REGION)
     .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
@@ -623,17 +633,32 @@ exports.checkOverdueTasks = functions
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
         const now = new Date();
-        const companiesSnap = await db.collection('companies').get();
+        const nowTimestamp = admin.firestore.Timestamp.fromDate(now);
 
-        for (const companyDoc of companiesSnap.docs) {
-            const companyId = companyDoc.id;
+        // Один collectionGroup query замість N company loops
+        const tasksSnap = await db.collectionGroup('tasks')
+            .where('status', 'in', ['new', 'progress'])
+            .where('overdueNotified', '==', false)
+            .where('deadline', '<=', nowTimestamp)
+            .limit(200)  // Safety cap — не більше 200 за раз
+            .get();
 
-            const tasksSnap = await db.collection('companies').doc(companyId)
-                .collection('tasks')
-                .where('status', 'in', ['new', 'progress'])
-                .get();
+        // Групуємо по companyId для batch reads юзерів
+        const byCompany = {};
+        tasksSnap.docs.forEach(doc => {
+            // companyId з path: companies/{cid}/tasks/{tid}
+            const cid = doc.ref.path.split('/')[1];
+            if (!byCompany[cid]) byCompany[cid] = [];
+            byCompany[cid].push(doc);
+        });
 
-            for (const taskDoc of tasksSnap.docs) {
+        for (const [companyId, taskDocs] of Object.entries(byCompany)) {
+            // Завантажуємо менеджерів компанії один раз
+            const managersSnap = await db.collection('companies').doc(companyId)
+                .collection('users').where('role', 'in', ['owner', 'manager']).get();
+            const managers = managersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+            for (const taskDoc of taskDocs) {
                 const task = taskDoc.data();
                 if (!task.deadline) continue;
 
@@ -658,12 +683,10 @@ exports.checkOverdueTasks = functions
                     }
                 }
 
-                // Notify managers
-                const managersSnap = await db.collection('companies').doc(companyId)
-                    .collection('users').where('role', 'in', ['owner', 'manager']).get();
-                for (const managerDoc of managersSnap.docs) {
-                    if (managerDoc.id === task.assigneeId) continue;
-                    const d = managerDoc.data();
+                // Notify managers (завантажені раніше — без повторного read)
+                for (const managerData of managers) {
+                    if (managerData.id === task.assigneeId) continue;
+                    const d = managerData;
                     if (d.telegramChatId) {
                         await sendWithButtons(d.telegramChatId,
                             `⚠️ <b>Задача прострочена!</b>\n\n${taskType}\n📌 ${task.title}\n👤 ${task.assigneeName || '-'}\n⏰ +${overdueMinutes} хв`,
@@ -942,6 +965,11 @@ exports.checkScheduledTasks = functions
 // ===========================
 // 8. REMINDERS (з кнопками)
 // ===========================
+// ========================
+// P2 COST FIX: sendReminders
+// Замість full scan — collectionGroup query тільки задач де deadline в межах ±90 хв
+// Reads: ~O(upcoming tasks) замість O(N×M)
+// ========================
 exports.sendReminders = functions
     .region(REGION)
     .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
@@ -949,14 +977,28 @@ exports.sendReminders = functions
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
         const now = new Date();
-        const companiesSnap = await db.collection('companies').get();
+        const nowTimestamp = admin.firestore.Timestamp.fromDate(now);
+        // Вікно: задачі з дедлайном від зараз до +90 хвилин
+        const windowEnd = new Date(now.getTime() + 90 * 60 * 1000);
+        const windowEndTs = admin.firestore.Timestamp.fromDate(windowEnd);
 
-        for (const companyDoc of companiesSnap.docs) {
-            const companyId = companyDoc.id;
-            const tasksSnap = await companyDoc.ref.collection('tasks')
-                .where('status', 'in', ['new', 'progress']).get();
+        const tasksSnap = await db.collectionGroup('tasks')
+            .where('status', 'in', ['new', 'progress'])
+            .where('deadline', '>=', nowTimestamp)
+            .where('deadline', '<=', windowEndTs)
+            .limit(200)
+            .get();
 
-            for (const taskDoc of tasksSnap.docs) {
+        // Групуємо по companyId
+        const byCompany = {};
+        tasksSnap.docs.forEach(doc => {
+            const cid = doc.ref.path.split('/')[1];
+            if (!byCompany[cid]) byCompany[cid] = [];
+            byCompany[cid].push(doc);
+        });
+
+        for (const [companyId, taskDocs] of Object.entries(byCompany)) {
+            for (const taskDoc of taskDocs) {
                 const task = taskDoc.data();
                 if (!task.deadline) continue;
 
@@ -1261,7 +1303,7 @@ exports.weeklyReport = functions
 // ===========================
 exports.aiAssistant = functions
     .region(REGION)
-    .runWith({ timeoutSeconds: 120, memory: '256MB' })
+    .runWith({ timeoutSeconds: 120, memory: '256MB', secrets: ['OPENAI_API_KEY'] })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError('unauthenticated', 'Login required');
@@ -1297,21 +1339,12 @@ exports.aiAssistant = functions
             const assistant = aDoc.data();
             const model = assistant.model || 'gpt-4o-mini';
 
-            // Get API key: company → global settings
-            let apiKey = '';
-            const companyDoc = await db.collection('companies').doc(companyId).get();
-            if (companyDoc.exists && companyDoc.data().openaiApiKey) {
-                apiKey = companyDoc.data().openaiApiKey;
-            }
-            if (!apiKey) {
-                const settingsDoc = await db.collection('settings').doc('ai').get();
-                if (settingsDoc.exists && settingsDoc.data().openaiApiKey) {
-                    apiKey = settingsDoc.data().openaiApiKey;
-                }
-            }
+            // P1 SEC FIX: API key виключно з Firebase Secret (env var)
+            // НЕ читати з Firestore — company members мають read на /companies/{cid}
+            const apiKey = process.env.OPENAI_API_KEY || '';
             if (!apiKey) {
                 throw new functions.https.HttpsError('failed-precondition',
-                    'API key not configured. Set in AI Assistants settings.');
+                    'OpenAI API key not configured. Add OPENAI_API_KEY to Firebase Secrets via: firebase functions:secrets:set OPENAI_API_KEY');
             }
 
             // Build messages

@@ -22,8 +22,14 @@
         const myOverdue = myActive.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
         
         // This week
-        const thisWeekDone = myDone.filter(t => t.completedAt && getDateStr(t.completedAt) >= weekStartStr);
-        const lastWeekDone = myDone.filter(t => t.completedAt && getDateStr(t.completedAt) >= lastWeekStartStr && getDateStr(t.completedAt) < weekStartStr);
+        // БАГ 8 FIX: уніфікована функція — читає completedDate (string) або completedAt (Timestamp)
+        const getCompletedDate = (t) => {
+            if (t.completedDate) return t.completedDate;
+            if (t.completedAt) return (typeof getDateStr === 'function') ? getDateStr(t.completedAt) : '';
+            return '';
+        };
+        const thisWeekDone = myDone.filter(t => getCompletedDate(t) >= weekStartStr);
+        const lastWeekDone = myDone.filter(t => getCompletedDate(t) >= lastWeekStartStr && getCompletedDate(t) < weekStartStr);
         
         // Avg completion time from timeLog
         const trackedTasks = myDone.filter(t => t.timeLog?.length > 0);
@@ -31,15 +37,24 @@
             ? Math.round(trackedTasks.reduce((s, t) => s + t.timeLog.reduce((ss, e) => ss + (e.minutes || 0), 0), 0) / trackedTasks.length)
             : 0;
         
-        // Streak — consecutive days without overdue
+        // Streak — consecutive days without overdue (P2 FIX: рахуємо по completedDate)
         let streak = 0;
         const checkDate = new Date(now);
+        const todayForStreak = getLocalDateStr(new Date());
         for (let d = 0; d < 30; d++) {
             const dStr = getLocalDateStr(checkDate);
-            const hadOverdue = myTasks.some(t => 
-                t.deadlineDate === dStr && t.status !== 'done' && 
-                t.completedAt && getDateStr(t.completedAt) > dStr
-            );
+            // Завдання прострочене якщо: дедлайн у цей день І не виконане
+            // (для минулих днів — точна перевірка; для сьогодні — поточний статус)
+            const hadOverdue = myTasks.some(t => {
+                if (t.deadlineDate !== dStr) return false;
+                if (t.status === 'done') {
+                    // Виконане — перевіряємо чи вчасно (completedDate <= deadlineDate)
+                    const cd = t.completedDate || getCompletedDate(t);
+                    return cd && cd > dStr; // виконане після дедлайну = прострочення
+                }
+                // Ще не виконане
+                return dStr < todayForStreak; // прострочене тільки для минулих днів
+            });
             if (hadOverdue && d > 0) break;
             if (d > 0) streak++;
             checkDate.setDate(checkDate.getDate() - 1);
@@ -50,7 +65,7 @@
         for (let d = 13; d >= 0; d--) {
             const cd = new Date(now); cd.setDate(now.getDate() - d);
             const cdStr = getLocalDateStr(cd);
-            const dayDone = myDone.filter(t => t.completedAt && getDateStr(t.completedAt) === cdStr).length;
+            const dayDone = myDone.filter(t => getCompletedDate(t) === cdStr).length;
             const dayName = getDayNamesShort()[cd.getDay() === 0 ? 6 : cd.getDay() - 1];
             chartDays.push({ label: dayName, count: dayDone, date: cdStr });
         }

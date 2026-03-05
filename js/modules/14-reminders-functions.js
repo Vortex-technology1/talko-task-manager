@@ -119,6 +119,7 @@
             const originalText = submitBtn?.innerHTML;
             if (submitBtn) {
                 submitBtn.disabled = true;
+                submitBtn.dataset.origText = originalText; // ГЛЮК FIX: зберігаємо для відновлення
                 submitBtn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>';
             }
             
@@ -213,6 +214,8 @@
                 } else if (statusVal === 'done') {
                     data.completedAt = firebase.firestore.FieldValue.serverTimestamp();
                     data.completedBy = currentUser.uid;
+                    // БАГ 1 FIX: синхронізуємо completedDate для Telegram аналітики
+                    data.completedDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
                 } else if (statusVal === 'review') {
                     data.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
                     data.completedAt = null;

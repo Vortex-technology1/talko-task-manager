@@ -192,6 +192,11 @@
                 errors.push(t('descTooLong'));
             }
             
+            // P1 FIX: перевіряємо assigneeId
+            if (!data.assigneeId || data.assigneeId.trim().length === 0) {
+                errors.push(t('assigneeRequired') || 'Вкажіть виконавця');
+            }
+            
             return errors;
         }
         
@@ -304,7 +309,7 @@
             undoTimeout = setTimeout(() => {
                 hideUndoToast();
                 deletedItemsStack = [];
-            }, 5000);
+            }, 8000); // P2 FIX: 5→8 сек
         }
         
         function hideUndoToast() {
@@ -451,7 +456,27 @@
                     deleteCalendarEvent(taskCopy.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
-                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
+                // P1 FIX: cascade — видаляємо підзавдання разом з батьком через batch
+                const _subtasksSnap = await db.collection('companies').doc(currentCompany)
+                    .collection('tasks').where('parentId', '==', id).get();
+                
+                if (_subtasksSnap.empty) {
+                    // Немає підзавдань — просте видалення
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
+                } else {
+                    // Є підзавдання — batch delete (атомарно)
+                    const _batch = db.batch();
+                    _subtasksSnap.docs.forEach(d => {
+                        _batch.delete(d.ref);
+                        pendingDeleteIds.add(d.id);
+                    });
+                    _batch.delete(db.collection('companies').doc(currentCompany).collection('tasks').doc(id));
+                    await _batch.commit();
+                    // Видаляємо підзавдання з локального масиву
+                    const _subtaskIds = _subtasksSnap.docs.map(d => d.id);
+                    tasks = tasks.filter(t => !_subtaskIds.includes(t.id));
+                    _subtaskIds.forEach(sid => pendingDeleteIds.delete(sid));
+                }
                 pendingDeleteIds.delete(id);
                 // Автостатус проєкту після видалення задачі
                 if (taskCopy.projectId) autoUpdateProjectStatus(taskCopy.projectId);

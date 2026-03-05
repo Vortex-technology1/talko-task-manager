@@ -142,6 +142,22 @@
             }
             
             // Save preference
+            // Синхронізуємо dateFilter зі списком при перемиканні виду
+            const dateFilterEl = document.getElementById('dateFilter');
+            if (dateFilterEl) {
+                if (view === 'day') {
+                    dateFilterEl.value = 'today';
+                } else if (view === 'week') {
+                    dateFilterEl.value = 'week';
+                } else if (view === 'month') {
+                    dateFilterEl.value = 'month';
+                }
+                // Якщо list/kanban/deadlines — не чіпаємо фільтр
+                if (view === 'day' || view === 'week' || view === 'month') {
+                    if (typeof handleDateFilter === 'function') handleDateFilter();
+                }
+            }
+
             localStorage.setItem('calendarView', view);
         }
         
@@ -908,7 +924,6 @@
             
             if (df === 'custom') {
                 customRange.style.display = 'flex';
-                // Встановлюємо значення за замовчуванням
                 const today = getLocalDateStr();
                 const weekLater = new Date();
                 weekLater.setDate(weekLater.getDate() + 7);
@@ -917,5 +932,18 @@
             } else {
                 customRange.style.display = 'none';
             }
+
+            // Зворотній зв'язок: синхронізуємо кнопки перегляду
+            // Але тільки якщо поточний вид — список (щоб не ламати календар)
+            if (currentCalendarView === 'list' || currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') {
+                const viewBtns = document.querySelectorAll('.calendar-view-btn');
+                viewBtns.forEach(btn => {
+                    if (df === 'today' && btn.dataset.view === 'day') btn.classList.add('active');
+                    else if (df === 'week' && btn.dataset.view === 'week') btn.classList.add('active');
+                    else if (df === 'month' && btn.dataset.view === 'month') btn.classList.add('active');
+                    else if (['today','week','month'].includes(df)) btn.classList.remove('active');
+                });
+            }
+
             renderTasks();
         }

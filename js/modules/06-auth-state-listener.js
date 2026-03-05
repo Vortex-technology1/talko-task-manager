@@ -107,7 +107,7 @@
                 document.getElementById('mainInterface').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 document.getElementById('adminTabBtn').style.display = 'none';
-                document.getElementById('notificationBell').style.display = 'none';
+                // P3 FIX: bell завжди видимий — не ховаємо при логауті
                 notifications = [];
                 
                 // Hide FAB on logout

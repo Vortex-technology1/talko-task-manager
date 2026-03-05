@@ -105,7 +105,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.263.1"></script>
     <script src="https://accounts.google.com/gsi/client"></script>
     <script src="https://apis.google.com/js/api.js"></script>
 
@@ -164,6 +164,21 @@ document.addEventListener('mousedown', function(e) {
                 <i data-lucide="rocket" class="icon"></i> TALKO System
                 <span class="company-badge" id="companyBadge" style="display:none;"></span>
             </div>
+            <!-- GLOBAL SEARCH -->
+            <div id="globalSearchWrap" style="flex:1;max-width:380px;margin:0 0.75rem;position:relative;" class="hide-mobile">
+                <div style="display:flex;align-items:center;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:0 0.6rem;gap:0.4rem;transition:all 0.2s;" id="globalSearchBox">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input id="globalSearchInput" type="text" placeholder="Пошук по системі... (завдання, люди, функції)" autocomplete="off"
+                        style="flex:1;background:none;border:none;outline:none;color:white;font-size:0.82rem;padding:0.45rem 0;min-width:0;"
+                        oninput="globalSearch(this.value)"
+                        onfocus="this.parentElement.style.background='rgba(255,255,255,0.2)';this.parentElement.style.borderColor='rgba(255,255,255,0.5)'"
+                        onblur="setTimeout(()=>{hideGlobalSearch()},200);this.parentElement.style.background='rgba(255,255,255,0.12)';this.parentElement.style.borderColor='rgba(255,255,255,0.2)'"
+                    >
+                    <kbd style="font-size:0.65rem;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.1);border-radius:4px;padding:1px 5px;white-space:nowrap;">⌘K</kbd>
+                </div>
+                <div id="globalSearchResults" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);z-index:99999;max-height:420px;overflow-y:auto;border:1px solid #e5e7eb;"></div>
+            </div>
+
             <div class="header-actions">
                 <!-- 24/7 AI Support -->
                 <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="hdr-dropdown-btn hide-mobile" style="background:#22c55e;color:#fff;text-decoration:none;gap:0.35rem;padding:0.4rem 0.6rem;" title="AI Підтримка 24/7">
@@ -231,7 +246,11 @@ document.addEventListener('mousedown', function(e) {
                         </button>
                     </div>
                 </div>
-                <div class="notification-bell" id="notificationBell" onclick="toggleNotificationPanel()" style="position:relative;cursor:pointer;padding:0.4rem;border-radius:8px;display:none;" title="Сповіщення" data-i18n-title="notifications">
+                <!-- Mobile Search Button -->
+                <button id="mobileSearchBtn" class="header-btn show-mobile-only" onclick="toggleMobileSearch()" title="Пошук" style="display:none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </button>
+                <div class="notification-bell" id="notificationBell" onclick="toggleNotificationPanel()" style="position:relative;cursor:pointer;padding:0.4rem;border-radius:8px;display:flex;align-items:center;" title="Сповіщення" data-i18n-title="notifications">
                     <i data-lucide="bell" class="icon" style="width:20px;height:20px;"></i>
                     <span id="notificationBadge" style="position:absolute;top:0;right:0;width:18px;height:18px;background:#ef4444;color:white;font-size:0.65rem;font-weight:700;border-radius:50%;display:none;align-items:center;justify-content:center;line-height:1;">0</span>
                 </div>
@@ -386,6 +405,18 @@ document.addEventListener('mousedown', function(e) {
                 <div class="ptr-spinner"></div>
                 <span data-i18n="updating">Оновлення...</span>
             </div>
+            <!-- MOBILE SEARCH PANEL -->
+            <div id="mobileSearchPanel" style="display:none;background:var(--header-bg, #14532d);padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.1);">
+                <div style="display:flex;align-items:center;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:0 0.6rem;gap:0.4rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input id="mobileSearchInput" type="text" placeholder="Пошук завдань, людей, функцій..." autocomplete="off"
+                        style="flex:1;background:none;border:none;outline:none;color:white;font-size:0.85rem;padding:0.5rem 0;"
+                        oninput="globalSearch(this.value, 'mobile')">
+                    <button onclick="closeMobileSearch()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:0.2rem;font-size:1.1rem;">✕</button>
+                </div>
+                <div id="mobileSearchResults" style="display:none;background:white;border-radius:10px;margin-top:0.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.2);max-height:55vh;overflow-y:auto;"></div>
+            </div>
+
             <div class="tab-navigation">
 
                 <!-- 1. Мій день — без підменю -->
@@ -471,13 +502,7 @@ document.addEventListener('mousedown', function(e) {
                     </div>
                 </div>
 
-                <!-- 8. Панель власника — тільки для owner/manager -->
-                <div id="ownerDashboardNavBtn" style="display:none;">
-                    <button class="tab-btn" onclick="switchTab('ownerDashboard')" id="ownerDashboardTabBtn" aria-label="Панель власника" style="color:#16a34a;font-weight:600;">
-                        <i data-lucide="layout-dashboard" class="icon" style="color:#22c55e;"></i>
-                        <span>Власник</span>
-                    </button>
-                </div>
+
 
             </div>
 
@@ -823,6 +848,7 @@ document.addEventListener('mousedown', function(e) {
                                 <option value="functions" data-i18n="byFunctions">По функціях</option>
                                 <option value="pipeline" data-i18n="delegationPipeline">Воронка делегування</option>
                                 <option value="journal" data-i18n="failureJournal">Журнал збоїв</option>
+                                <option value="ownerreport" id="ownerReportOption" style="display:none;">📊 Звіт власника</option>
                             </select>
                         </div>
                     </div>
@@ -1210,15 +1236,7 @@ document.addEventListener('mousedown', function(e) {
             </div>
 
             <!-- OWNER DASHBOARD -->
-            <div id="ownerDashboardTab" class="tab-content">
-                <div class="controls" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
-                    <h2 style="font-size:1.2rem;margin:0;"><i data-lucide="layout-dashboard" class="icon" style="color:#22c55e;"></i> Панель власника</h2>
-                    <button onclick="renderOwnerDashboard()" class="btn" style="padding:0.4rem 0.9rem;font-size:0.82rem;">
-                        <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
-                    </button>
-                </div>
-                <div id="ownerDashboardContent" style="margin-top:1rem;"></div>
-            </div>
+
 
 
             <!-- STATISTICS -->
@@ -1446,7 +1464,10 @@ document.addEventListener('mousedown', function(e) {
     <!-- TASK MODAL -->
     <div id="taskModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
         <div class="modal-content">
-            <div class="modal-header"><button class="close" onclick="closeModal('taskModal')" aria-label="Закрити діалог">&times;</button><h2 id="taskModalTitle" data-i18n="newTask">Нове завдання</h2></div>
+            <div class="modal-header"><button class="close" onclick="closeModal('taskModal')" aria-label="Закрити діалог">&times;</button><h2 id="taskModalTitle" data-i18n="newTask">Нове завдання</h2>
+                <button id="duplicateTaskBtn" onclick="if(window.currentEditingId||editingId){duplicateTask(window.currentEditingId||editingId);}" title="Копіювати завдання" style="display:none;background:none;border:1px solid #e5e7eb;border-radius:8px;padding:0.3rem 0.55rem;cursor:pointer;font-size:0.78rem;color:#6b7280;margin-left:auto;margin-right:0.5rem;display:flex;align-items:center;gap:0.3rem;">
+                    <i data-lucide="copy" class="icon icon-sm"></i> Копіювати
+                </button></div>
             <div class="modal-body">
                 <form id="taskForm" onsubmit="saveTask(event)">
                     <div class="form-grid">
@@ -1620,6 +1641,24 @@ document.addEventListener('mousedown', function(e) {
                         <div id="taskActionsLabel" style="font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;"></div>
                         <div id="taskActionsButtons" style="display:flex;gap:0.5rem;flex-wrap:wrap;"></div>
                     </div>
+                    <!-- ПІДЗАВДАННЯ -->
+                    <div id="subtasksSection" style="display:none;margin:0.75rem 0;padding:1rem;background:#f8fafc;border-radius:12px;border:1px solid #e5e7eb;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+                            <label class="form-label" style="margin:0;display:flex;align-items:center;gap:0.4rem;">
+                                <i data-lucide="git-branch" class="icon icon-sm" style="color:#22c55e;"></i>
+                                <span>Підзавдання</span>
+                                <span id="subtasksBadge" style="display:none;background:#22c55e;color:white;border-radius:10px;font-size:0.68rem;padding:1px 6px;font-weight:700;"></span>
+                            </label>
+                            <button type="button" onclick="addSubtaskRow()" style="background:#22c55e;color:white;border:none;border-radius:8px;padding:0.3rem 0.7rem;font-size:0.78rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;">
+                                <i data-lucide="plus" class="icon icon-sm"></i> Додати
+                            </button>
+                        </div>
+                        <div id="subtasksList" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
+                        <div id="subtasksEmpty" style="text-align:center;color:#9ca3af;font-size:0.82rem;padding:0.75rem 0;">
+                            Натисніть "+ Додати" щоб розбити завдання на частини
+                        </div>
+                    </div>
+
                     <div class="form-actions"><button type="button" class="btn" onclick="closeModal('taskModal')" data-i18n="cancel">Скасувати</button><button type="submit" class="btn btn-success" data-i18n="save">Зберегти</button></div>
                 </form>
                 
@@ -1666,7 +1705,7 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                     </div>
                     <div class="comment-input-wrapper">
-                        <textarea id="commentInput" class="comment-input" placeholder="Написати коментар..." data-i18n-placeholder="writeComment" rows="1" onkeydown="handleCommentKeydown(event)"></textarea>
+                        <textarea id="commentInput" class="comment-input" placeholder="Написати коментар..." data-i18n-placeholder="writeComment" rows="1" onkeydown="handleCommentKeydown(event)" oninput="handleCommentInput(event)"></textarea>
                         <button type="button" class="comment-send-btn" onclick="sendComment()" id="sendCommentBtn">
                             <i data-lucide="send" class="icon"></i>
                         </button>
@@ -1858,7 +1897,13 @@ document.addEventListener('mousedown', function(e) {
                         <div class="form-group full-width"><label class="form-label" data-i18n="title">Назва *</label><input type="text" id="regularTaskTitle" class="form-input" required aria-required="true"></div>
                         <div class="form-group"><label class="form-label" data-i18n="function">Функція *</label><select id="regularTaskFunction" class="form-select" required><option value="" data-i18n="select">Оберіть</option></select></div>
                         <div class="form-group"><label class="form-label" data-i18n="assignee" data-i18n="assigneeLabel">Виконавець</label><select id="regularTaskAssignee" class="form-select"><option value="">З функції (авто)</option></select></div>
-                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
+                        <div class="form-group"><label class="form-label" data-i18n="periodicity">Періодичність *</label><select id="regularTaskPeriod" class="form-select" onchange="updatePeriodOptions()"><option value="daily" data-i18n="daily">Щодня</option><option value="weekly" data-i18n="weekly">Щотижня</option><option value="monthly" data-i18n="monthly">Щомісяця</option><option value="quarterly" data-i18n="quarterly">Щокварталу</option></select></div>
+                        <div class="form-group" id="skipWeekendsGroup" style="display:none;">
+                            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.88rem;color:#374151;">
+                                <input type="checkbox" id="regularTaskSkipWeekends" style="accent-color:var(--primary);width:16px;height:16px;">
+                                <span>Пропускати вихідні (сб/нд)</span>
+                            </label>
+                        </div>
                         <div class="form-group full-width" id="dayOfWeekGroup">
                             <label class="form-label" data-i18n="daysOfWeek">Дні тижня *</label>
                             <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
@@ -2124,77 +2169,80 @@ document.addEventListener('mousedown', function(e) {
 
 
     <!-- Scripts (modular) -->
-    <script src="js/modules/01-translations.js"></script>
-    <script src="js/modules/02-firebase-config.js"></script>
-    <script src="js/modules/03-app-state.js"></script>
-    <script src="js/modules/04-google-calendar-config.js"></script>
-    <script src="js/modules/05-auth-functions.js"></script>
-    <script src="js/modules/06-auth-state-listener.js"></script>
-    <script src="js/modules/07-data-loading.js"></script>
-    <script src="js/modules/08-notifications-sound-badge-title.js"></script>
-    <script src="js/modules/09-auto-generate-regular-tasks.js"></script>
-    <script src="js/modules/10-auto-archive-done-tasks-30-days.js"></script>
-    <script src="js/modules/11-archive-ui.js"></script>
-    <script src="js/modules/12-my-day-popup.js"></script>
-    <script src="js/modules/13-tasks.js"></script>
-    <script src="js/modules/14-reminders-functions.js"></script>
-    <script src="js/modules/15-validation-security.js"></script>
-    <script src="js/modules/16-review-system.js"></script>
-    <script src="js/modules/17-feat-006-time-tracking.js"></script>
-    <script src="js/modules/18-checklist.js"></script>
-    <script src="js/modules/19-user-checkboxes-co-executors-observers.js"></script>
-    <script src="js/modules/20-feat-007-deadline-change-validation.js"></script>
-    <script src="js/modules/21-calendar-view.js"></script>
-    <script src="js/modules/22-my-day-rendering.js"></script>
-    <script src="js/modules/23-status-multi-select-filter.js"></script>
-    <script src="js/modules/24-table-column-resize-sort.js"></script>
-    <script src="js/modules/25-functions.js"></script>
-    <script src="js/modules/26-functions-structure-view.js"></script>
-    <script src="js/modules/27-processes.js"></script>
-    <script src="js/modules/28-projects.js"></script>
-    <script src="js/modules/29-auto-advance.js"></script>
-    <script src="js/modules/30-regular-tasks.js"></script>
-    <script src="js/modules/31-regular-calendar-view.js"></script>
-    <script src="js/modules/32-users-invites.js"></script>
-    <script src="js/modules/33-control-dashboard.js"></script>
-    <script src="js/modules/34-admin-functions.js"></script>
-    <script src="js/modules/35-helpers.js"></script>
-    <script src="js/modules/36-swipe-to-complete-event-delegation.js"></script>
-    <script src="js/modules/37-browser-notifications.js"></script>
-    <script src="js/modules/38-google-calendar-integration.js"></script>
-    <script src="js/modules/39-telegram-integration.js"></script>
-    <script src="js/modules/40-calendar-quick-actions.js"></script>
-    <script src="js/modules/41-demo-data.js"></script>
-    <script src="js/modules/42-swipe-between-tabs.js"></script>
-    <script src="js/modules/43-pull-to-refresh-mobile.js"></script>
-    <script src="js/modules/44-offline-support.js"></script>
-    <script src="js/modules/45-comments-system.js"></script>
-    <script src="js/modules/46-audit-log.js"></script>
-    <script src="js/modules/47-cascading-escalation.js"></script>
-    <script src="js/modules/48-kanban-board-status-deadlines.js"></script>
-    <script src="js/modules/49-file-attachments.js"></script>
-    <script src="js/modules/50-next-task-ai-like-task-prioritization.js"></script>
-    <script src="js/modules/51-morning-start-auto-start-day.js"></script>
-    <script src="js/modules/52-task-timer-track-execution-time.js"></script>
-    <script src="js/modules/53-onboarding-hints-step-by-step-tooltips-for-new-use.js"></script>
-    <script src="js/modules/54-personal-analytics-employee-self-insight.js"></script>
-    <script src="js/modules/55-team-dashboard-manager-overview.js"></script>
-    <script src="js/modules/56-daily-snapshot-data-for-future-agi-analysis.js"></script>
-    <script src="js/modules/57-decision-log-track-manual-management-decisions-for.js"></script>
-    <script src="js/modules/58-ai-structure-generator-import-assistants-config.js"></script>
-    <script src="js/modules/59-ai-assistants-config-owner-panel.js"></script>
-    <script src="js/modules/60-manual-incidents-journal.js"></script>
-    <script src="js/modules/61-task-templates.js"></script>
-    <script src="js/modules/62-completion-report.js"></script>
-    <script src="js/modules/63-notification-center.js"></script>
-    <script src="js/modules/64-focus-mode.js"></script>
-    <script src="js/modules/65-business-structure.js"></script>
-    <script src="js/modules/66-statistics.js"></script>
-    <script src="js/modules/67-project-stages.js"></script>
-    <script src="js/modules/68-project-templates-qc.js"></script>
-    <script src="js/modules/69-ai-bottleneck-dashboard.js"></script>
-    <script src="js/modules/70-roles-permissions.js"></script>
-    <script src="/js/modules/71-owner-dashboard.js"></script>
+    <script src="js/modules/01-translations.js" defer></script>
+    <script src="js/modules/02-firebase-config.js" defer></script>
+    <script src="js/modules/03-app-state.js" defer></script>
+    <script src="js/modules/04-google-calendar-config.js" defer></script>
+    <script src="js/modules/05-auth-functions.js" defer></script>
+    <script src="js/modules/06-auth-state-listener.js" defer></script>
+    <script src="js/modules/07-data-loading.js" defer></script>
+    <script src="js/modules/08-notifications-sound-badge-title.js" defer></script>
+    <script src="js/modules/09-auto-generate-regular-tasks.js" defer></script>
+    <script src="js/modules/10-auto-archive-done-tasks-30-days.js" defer></script>
+    <script src="js/modules/11-archive-ui.js" defer></script>
+    <script src="js/modules/12-my-day-popup.js" defer></script>
+    <script src="js/modules/13-tasks.js" defer></script>
+    <script src="js/modules/14-reminders-functions.js" defer></script>
+    <script src="js/modules/15-validation-security.js" defer></script>
+    <script src="js/modules/16-review-system.js" defer></script>
+    <script src="js/modules/17-feat-006-time-tracking.js" defer></script>
+    <script src="js/modules/18-checklist.js" defer></script>
+    <script src="js/modules/19-user-checkboxes-co-executors-observers.js" defer></script>
+    <script src="js/modules/20-feat-007-deadline-change-validation.js" defer></script>
+    <script src="js/modules/21-calendar-view.js" defer></script>
+    <script src="js/modules/22-my-day-rendering.js" defer></script>
+    <script src="js/modules/23-status-multi-select-filter.js" defer></script>
+    <script src="js/modules/24-table-column-resize-sort.js" defer></script>
+    <script src="js/modules/25-functions.js" defer></script>
+    <script src="js/modules/26-functions-structure-view.js" defer></script>
+    <script src="js/modules/27-processes.js" defer></script>
+    <script src="js/modules/28-projects.js" defer></script>
+    <script src="js/modules/29-auto-advance.js" defer></script>
+    <script src="js/modules/30-regular-tasks.js" defer></script>
+    <script src="js/modules/31-regular-calendar-view.js" defer></script>
+    <script src="js/modules/32-users-invites.js" defer></script>
+    <script src="js/modules/33-control-dashboard.js" defer></script>
+    <script src="js/modules/34-admin-functions.js" defer></script>
+    <script src="js/modules/35-helpers.js" defer></script>
+    <script src="js/modules/36-swipe-to-complete-event-delegation.js" defer></script>
+    <script src="js/modules/37-browser-notifications.js" defer></script>
+    <script src="js/modules/38-google-calendar-integration.js" defer></script>
+    <script src="js/modules/39-telegram-integration.js" defer></script>
+    <script src="js/modules/40-calendar-quick-actions.js" defer></script>
+    <script src="js/modules/41-demo-data.js" defer></script>
+    <script src="js/modules/42-swipe-between-tabs.js" defer></script>
+    <script src="js/modules/43-pull-to-refresh-mobile.js" defer></script>
+    <script src="js/modules/44-offline-support.js" defer></script>
+    <script src="js/modules/45-comments-system.js" defer></script>
+    <script src="js/modules/46-audit-log.js" defer></script>
+    <script src="js/modules/47-cascading-escalation.js" defer></script>
+    <script src="js/modules/48-kanban-board-status-deadlines.js" defer></script>
+    <script src="js/modules/49-file-attachments.js" defer></script>
+    <script src="js/modules/50-next-task-ai-like-task-prioritization.js" defer></script>
+    <script src="js/modules/51-morning-start-auto-start-day.js" defer></script>
+    <script src="js/modules/52-task-timer-track-execution-time.js" defer></script>
+    <script src="js/modules/53-onboarding-hints-step-by-step-tooltips-for-new-use.js" defer></script>
+    <script src="js/modules/54-personal-analytics-employee-self-insight.js" defer></script>
+    <script src="js/modules/55-team-dashboard-manager-overview.js" defer></script>
+    <script src="js/modules/56-daily-snapshot-data-for-future-agi-analysis.js" defer></script>
+    <script src="js/modules/57-decision-log-track-manual-management-decisions-for.js" defer></script>
+    <script src="js/modules/58-ai-structure-generator-import-assistants-config.js" defer></script>
+    <script src="js/modules/59-ai-assistants-config-owner-panel.js" defer></script>
+    <script src="js/modules/60-manual-incidents-journal.js" defer></script>
+    <script src="js/modules/61-task-templates.js" defer></script>
+    <script src="js/modules/62-completion-report.js" defer></script>
+    <script src="js/modules/63-notification-center.js" defer></script>
+    <script src="js/modules/64-focus-mode.js" defer></script>
+    <script src="js/modules/65-business-structure.js" defer></script>
+    <script src="js/modules/66-statistics.js" defer></script>
+    <script src="js/modules/67-project-stages.js" defer></script>
+    <script src="js/modules/68-project-templates-qc.js" defer></script>
+    <script src="js/modules/69-ai-bottleneck-dashboard.js" defer></script>
+    <script src="js/modules/70-roles-permissions.js" defer></script>
+    <script src="js/modules/71-owner-dashboard.js" defer></script>
+    <script src="js/modules/72-global-search.js" defer></script>
+    <script src="js/modules/73-subtasks.js" defer></script>
+    <script src="js/modules/74-bulk-duplicate.js" defer></script>
 
     <!-- Bottom Navigation & Overlays -->
     <!-- Bottom Navigation for Mobile -->

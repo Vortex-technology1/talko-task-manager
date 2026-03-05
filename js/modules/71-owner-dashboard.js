@@ -2,8 +2,8 @@
 // MODULE 71 — OWNER DASHBOARD (Панель власника)
 // =============================================
 
-window.renderOwnerDashboard = function() {
-    const el = document.getElementById('ownerDashboardContent');
+window.renderOwnerDashboard = function(targetEl) {
+    const el = targetEl || document.getElementById('ownerDashboardContent');
     if (!el) return;
 
     const now = new Date();
@@ -165,8 +165,23 @@ window.renderOwnerDashboard = function() {
 };
 
 // Показуємо пункт меню тільки для owner/manager
-window.initOwnerDashboardVisibility = function() {
+// renderOwnerReportInto — рендерить звіт в переданий контейнер
+window.renderOwnerReportInto = function(el) {
+    if (!el) return;
+    renderOwnerDashboard(el);
+    // Додаємо time tracking звіт після основного дашборду
+    const timeSection = document.createElement('div');
+    timeSection.id = 'ownerTimeTrackingReport';
+    timeSection.style.marginTop = '1.5rem';
+    el.appendChild(timeSection);
+    if (typeof window.renderTimeTrackingReport === 'function') {
+        window.renderTimeTrackingReport('ownerTimeTrackingReport');
+    }
+};
+
+// Показуємо опцію "Звіт власника" в select тільки для owner/manager
+window.initOwnerReportOption = function() {
     const role = typeof currentUserData !== 'undefined' ? currentUserData?.role : null;
-    const btn = document.getElementById('ownerDashboardNavBtn');
-    if (btn) btn.style.display = (role === 'owner' || role === 'manager') ? 'block' : 'none';
+    const opt = document.getElementById('ownerReportOption');
+    if (opt) opt.style.display = (role === 'owner' || role === 'manager') ? '' : 'none';
 };

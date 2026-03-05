@@ -134,11 +134,17 @@
             }
             
             const canEdit = (typeof hasPermission === 'function' ? hasPermission('changeRoles') : false) || currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
+            const canViewEmails = (typeof hasPermission === 'function') ? hasPermission('viewColleagueEmails') : (currentUserData?.role !== 'employee');
+            const canViewTeam = (typeof hasPermission === 'function') ? hasPermission('viewTeamList') : true;
+            const canEditCards = (typeof hasPermission === 'function') ? hasPermission('editUserCards') : canEdit;
+
+            // Якщо немає дозволу бачити список — показуємо тільки себе
+            const visibleUsers = canViewTeam ? users : users.filter(u => u.id === currentUser?.uid);
             const todayStr = getLocalDateStr(new Date());
             const shortDays = getDayNamesShort();
             const jsDayToIdx = {1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6};
 
-            c.innerHTML = users.map(u => {
+            c.innerHTML = visibleUsers.map(u => {
                 const userFunctions = functions.filter(f => f.assigneeIds?.includes(u.id));
                 const isOwner = u.role === 'owner';
                 
@@ -284,7 +290,7 @@
                     <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
                         <div style="flex:1;">
                             <div class="user-name" style="margin-bottom:2px;">${esc(u.name || u.email)}</div>
-                            <div style="font-size:0.75rem;color:#6b7280;">${esc(u.email)}${u.position ? ` · ${esc(u.position)}` : ''}</div>
+                            <div style="font-size:0.75rem;color:#6b7280;">${canViewEmails ? esc(u.email) : '●●●@●●●●●●'}${u.position ? \` · ${esc(u.position)}\` : ''}</div>
                         </div>
                         <span class="role-badge ${u.role}" style="flex-shrink:0;">${getRoleText(u.role)}</span>
                     </div>
@@ -303,8 +309,8 @@
                             ${returned.length > 0 ? `<span style="color:#f59e0b;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>${returned.length}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.25rem;align-items:center;" onclick="event.stopPropagation();">
-                            ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserPermissionsModal('${u.id}')" title="Дозволи" style="background:#f0f9ff;color:#0369a1;"><i data-lucide="key" class="icon icon-sm"></i></button>` : ''}
-                            ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
+                            ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserPermissionsModal('${u.id}')" title="Дозволи" style="background:#f0f9ff;color:#0369a1;"><i data-lucide="key" class="icon icon-sm"></i></button>` : ''}
+                            ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
                             ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : ''}
                             <i data-lucide="chevron-down" class="icon icon-sm" style="color:#d1d5db;" id="userToggle_${u.id}"></i>
                         </div>

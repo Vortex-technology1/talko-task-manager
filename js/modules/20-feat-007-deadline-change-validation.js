@@ -294,6 +294,7 @@
             if (taskIndex >= 0 && !tasks[taskIndex]._prevStatus) {
                 tasks[taskIndex].status = newStatus;
                 tasks[taskIndex].completedAt = new Date().toISOString();
+                tasks[taskIndex].completedDate = newStatus === 'done' ? ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]) : null;
                 if (needsReview) tasks[taskIndex].sentForReviewAt = new Date().toISOString();
                 renderMyDay();
                 refreshCurrentView();
@@ -306,11 +307,16 @@
                     deleteCalendarEvent(originalTask.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
+                const _today = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
                 const updateData = { 
                     status: newStatus,
-                    completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                    completedDate: newStatus === 'done' ? _today : null,  // P0 FIX
                 };
-                if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
+                if (needsReview) {
+                    updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
+                    updateData.completedDate = null;
+                }
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update(updateData);
                 

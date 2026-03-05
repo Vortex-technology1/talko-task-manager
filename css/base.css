@@ -239,3 +239,27 @@
         .tab-content.active { display: block; }
         
 
+
+
+/* ---- GLOBAL SEARCH ---- */
+#globalSearchInput::placeholder, #mobileSearchInput::placeholder { color: rgba(255,255,255,0.45); }
+#globalSearchResults, #mobileSearchResults {
+    scrollbar-width: thin;
+    scrollbar-color: #e5e7eb transparent;
+}
+#globalSearchResults::-webkit-scrollbar,
+#mobileSearchResults::-webkit-scrollbar { width: 5px; }
+#globalSearchResults::-webkit-scrollbar-track,
+#mobileSearchResults::-webkit-scrollbar-track { background: transparent; }
+#globalSearchResults::-webkit-scrollbar-thumb,
+#mobileSearchResults::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+mark { background: #fef08a; border-radius: 2px; padding: 0 1px; }
+
+@media (max-width: 767px) {
+    #globalSearchWrap { display: none !important; }
+    #mobileSearchBtn { display: flex !important; }
+}
+@media (min-width: 768px) {
+    #mobileSearchBtn { display: none !important; }
+    #mobileSearchPanel { display: none !important; }
+}
