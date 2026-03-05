@@ -15,15 +15,20 @@ function toggleNavDropdown(menuId, wrapperId, e) {
     var wrapper = document.getElementById(wrapperId);
     var btn = wrapper ? wrapper.querySelector('button') : null;
     if (!menu) return;
+    // Запам'ятовуємо чи відкрите САМЕ ЦЕ меню до закриття всіх
     var isOpen = menu.style.display === 'block';
+    // Закриваємо ВСІ меню
     closeNavDropdowns();
-    if (isOpen) return;
-    if (btn) {
-        var rect = btn.getBoundingClientRect();
-        menu.style.top = (rect.bottom + 4) + 'px';
-        menu.style.left = rect.left + 'px';
+    // Якщо це меню було закрите — відкриваємо його
+    if (!isOpen) {
+        if (btn) {
+            var rect = btn.getBoundingClientRect();
+            menu.style.top = (rect.bottom + 4) + 'px';
+            menu.style.left = rect.left + 'px';
+        }
+        menu.style.display = 'block';
     }
-    menu.style.display = 'block';
+    // Якщо було відкрите — вже закрили вище, нічого не робимо
 }
 function closeNavDropdowns() {
     ['tasksTabMenu','analyticsTabMenu','sysTabMenu','workTabMenu'].forEach(function(id) {
@@ -41,9 +46,14 @@ document.addEventListener('click', function(e) {
     });
     if (!inside) closeNavDropdowns();
 });
-// Закриваємо при скролі — dropdown має position:fixed тому при скролі зависає
+// Закриваємо при будь-якому скролі — включно з внутрішніми контейнерами
 document.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
+window.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
 window.addEventListener('resize', function() { closeNavDropdowns(); });
+// Закриваємо при touchmove (мобайл + скрол всередині overflow:auto елементів)
+document.addEventListener('touchmove', function() { closeNavDropdowns(); }, true);
+// Закриваємо при будь-якому wheel event (скрол мишкою в таблиці)
+document.addEventListener('wheel', function() { closeNavDropdowns(); }, { passive: true, capture: true });
 </script>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
