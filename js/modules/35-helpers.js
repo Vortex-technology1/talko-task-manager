@@ -75,17 +75,22 @@
             menu.style.display = 'block';
         }
         function closeNavDropdowns() {
-            ['workTabMenu','sysTabMenu'].forEach(function(id) {
+            ['tasksTabMenu','workTabMenu','sysTabMenu','analyticsTabMenu'].forEach(function(id) {
                 const m = document.getElementById(id);
                 if (m) m.style.display = 'none';
             });
         }
         // Закриваємо при кліку поза меню
         document.addEventListener('click', function(e) {
-            const inWork = document.getElementById('workTabDropdown')?.contains(e.target);
-            const inSys = document.getElementById('sysTabDropdown')?.contains(e.target);
-            if (!inWork && !inSys) closeNavDropdowns();
+            const dropdowns = ['tasksTabDropdown','workTabDropdown','sysTabDropdown','analyticsTabDropdown'];
+            const inside = dropdowns.some(function(id) {
+                const el = document.getElementById(id);
+                return el && el.contains(e.target);
+            });
+            if (!inside) closeNavDropdowns();
         });
+        // Закриваємо при скролі
+        document.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
         window.toggleNavDropdown = toggleNavDropdown;
         window.closeNavDropdowns = closeNavDropdowns;
 

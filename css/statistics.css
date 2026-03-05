@@ -471,3 +471,17 @@
 .stats-table thead th:hover .th-actions { opacity: 1 !important; }
 .stats-table thead th { padding-bottom: 24px; } /* місце для абсолютних кнопок */
 .stats-table thead th:first-child { padding-bottom: 4px; } /* перший — без кнопок */
+
+/* ---- Кнопка видалення рядка (тільки для овнера) ---- */
+.stats-row-del {
+    opacity: 0;
+    transition: opacity 0.15s;
+    margin-left: 2px;
+}
+.stats-table tbody tr:hover .stats-row-del {
+    opacity: 0.4;
+}
+.stats-table tbody tr:hover .stats-row-del:hover {
+    opacity: 1 !important;
+    background: #fee2e2 !important;
+}

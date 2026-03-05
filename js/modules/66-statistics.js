@@ -1005,9 +1005,16 @@
         });
         html += `<th style="width:40px;"></th></tr></thead><tbody>`;
 
-        // Rows = periods
+        // Rows = periods (skip empty rows except current)
         periods.forEach((pk, pi) => {
             const isCurrent = pk === currentPk;
+            // Check if row has any data
+            const hasData = metrics.some(m => {
+                const entry = getEntryForMetric(m.id, pk);
+                return entry && (entry.value !== null && entry.value !== undefined);
+            });
+            // Skip empty rows that are not current
+            if (!isCurrent && !hasData) return;
             html += `<tr${isCurrent ? ' class="stats-period-row"' : ''}>`;
             html += `<td><span>${formatPeriodLabel(pk)}${isCurrent ? '<span class="stats-period-current">зараз</span>' : ''}</span></td>`;
 
@@ -1057,8 +1064,13 @@
                 html += `<td>${cellHtml}</td>`;
             });
 
-            // Row actions (comment)
-            html += `<td><button class="stats-comment-btn" onclick="openPeriodComment('${pk}')" title="Коментар">${SVG.comment}</button></td>`;
+            // Row actions (comment + delete row for owner)
+            const rowRole = getUserRole();
+            const isOwner = rowRole === 'owner';
+            html += `<td style="white-space:nowrap;">
+                <button class="stats-comment-btn" onclick="openPeriodComment('${pk}')" title="Коментар">${SVG.comment}</button>
+                ${isOwner ? `<button class="stats-comment-btn stats-row-del" onclick="deleteStatsPeriodRow('${pk}','${freq}')" title="Видалити рядок" style="color:#e03e3e;">${SVG.trash}</button>` : ''}
+            </td>`;
             html += `</tr>`;
         });
 
@@ -1358,6 +1370,33 @@
             await renderStatistics();
         } catch (e) {
             console.error('[STATS] deleteEntry:', e);
+            showToast('Помилка: ' + e.message, 'error');
+        }
+    };
+
+    // ========================
+    //  DELETE PERIOD ROW (all entries for a period key)
+    // ========================
+    window.deleteStatsPeriodRow = async function(pk, freq) {
+        if (!pk) return;
+        const label = formatPeriodLabel ? formatPeriodLabel(pk) : pk;
+        if (!await showConfirmModal(`Видалити всі записи за ${label}?`, { danger: true })) return;
+        try {
+            // Find all entries for this periodKey
+            const toDelete = statsEntries.filter(e => e.periodKey === pk);
+            if (toDelete.length === 0) {
+                showToast('Немає записів для видалення', 'info');
+                return;
+            }
+            const batch = firebase.firestore().batch();
+            toDelete.forEach(e => {
+                batch.delete(entriesRef().doc(e.id));
+            });
+            await batch.commit();
+            showToast(`Видалено ${toDelete.length} записів`, 'success');
+            await renderStatistics();
+        } catch (e) {
+            console.error('[STATS] deleteStatsPeriodRow:', e);
             showToast('Помилка: ' + e.message, 'error');
         }
     };
