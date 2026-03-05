@@ -43,8 +43,8 @@ function closeNavDropdowns() {
 function toggleMoreTabs(e) {}
 function closeMoreTabs() { closeNavDropdowns(); }
 document.addEventListener('click', function(e) {
-    var dropdowns = ['tasksTabDropdown','analyticsTabDropdown','sysTabDropdown'];
-    var inside = dropdowns.some(function(id) {
+    var zones = ['tasksTabDropdown','analyticsTabDropdown','sysTabDropdown','tasksTabMenu','analyticsTabMenu','sysTabMenu'];
+    var inside = zones.some(function(id) {
         var el = document.getElementById(id);
         return el && el.contains(e.target);
     });
