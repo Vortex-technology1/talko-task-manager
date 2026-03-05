@@ -105,50 +105,9 @@ document.addEventListener('mousedown', function(e) {
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
-    <!-- Lucide icons — три CDN з fallback + retry -->
-    <script>
-    (function() {
-        var V = '0.263.1';
-        var CDNS = [
-            'https://unpkg.com/lucide@' + V,
-            'https://cdn.jsdelivr.net/npm/lucide@' + V + '/dist/umd/lucide.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js'
-        ];
-        var idx = 0;
-        function load() {
-            if (idx >= CDNS.length) return;
-            var s = document.createElement('script');
-            s.src = CDNS[idx];
-            s.onload = function() {
-                if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-            };
-            s.onerror = function() { idx++; load(); };
-            document.head.appendChild(s);
-        }
-        // Спочатку синхронно через тег (якщо CDN доступний — найшвидше)
-        document.write('<scr' + 'ipt src="' + CDNS[0] + '" onerror="window._lucideMainFailed=true"></scr' + 'ipt>');
-    })();
-    </script>
-    <script>
-        // Fallback якщо основний CDN впав
-        if (typeof lucide === 'undefined' || window._lucideMainFailed) {
-            (function() {
-                var cdns = [
-                    'https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js',
-                    'https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js'
-                ];
-                var i = 0;
-                function tryNext() {
-                    if (i >= cdns.length) return;
-                    var s = document.createElement('script');
-                    s.src = cdns[i++];
-                    s.onload = function() { if (lucide) lucide.createIcons(); };
-                    s.onerror = tryNext;
-                    document.head.appendChild(s);
-                }
-                tryNext();
-            })();
-        }
+    <!-- Lucide icons — завантаження з CDN без document.write -->
+    <script src="https://unpkg.com/lucide@0.263.1" 
+            onerror="this.remove();var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js';s.onerror=function(){var s2=document.createElement('script');s2.src='https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js';document.head.appendChild(s2);};document.head.appendChild(s);">
     </script>
     <script src="https://accounts.google.com/gsi/client"></script>
     <script src="https://apis.google.com/js/api.js"></script>
