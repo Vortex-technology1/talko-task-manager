@@ -173,6 +173,9 @@
         }
 
         /* Статистика: таблиця скролиться горизонтально всередині, але обгортка — на всю ширину */
+        #statisticsTab {
+            padding: 0 1rem 1.5rem;
+        }
         #statisticsTab .stats-table-wrap {
             width: 100%;
             overflow-x: auto;

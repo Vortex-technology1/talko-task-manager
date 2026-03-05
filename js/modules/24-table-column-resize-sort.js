@@ -145,7 +145,12 @@
             dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
             if (dd.style.display === 'block') {
                 refreshIcons();
-                setTimeout(() => document.addEventListener('click', closeExportDropdown, { once: true }), 10);
+                const closeOnce = () => closeExportDropdown();
+                setTimeout(() => {
+                    document.addEventListener('click', closeOnce, { once: true });
+                    document.addEventListener('scroll', closeOnce, { once: true, capture: true });
+                    window.addEventListener('scroll', closeOnce, { once: true, capture: true });
+                }, 10);
             }
         }
         function closeExportDropdown() {
@@ -319,8 +324,12 @@
             timeInput.addEventListener('keydown', (e) => { if (e.key === 'Escape') td.innerHTML = originalHTML; });
         }
         
+        const cyclingTasks = new Set();
         async function cycleTaskStatus(taskId, e) {
             e.stopPropagation();
+            if (cyclingTasks.has(taskId)) return;
+            cyclingTasks.add(taskId);
+            try {
             const taskIndex = tasks.findIndex(t => t.id === taskId);
             if (taskIndex < 0) return;
             const task = tasks[taskIndex];
@@ -375,6 +384,9 @@
                 renderMyDay();
                 refreshCurrentView();
                 showToast(t('error') + ': ' + err.message, 'error');
+            }
+            } finally {
+                cyclingTasks.delete(taskId);
             }
         }
         

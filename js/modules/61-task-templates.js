@@ -9,7 +9,10 @@
         const isOpen = menu.style.display !== 'none';
         menu.style.display = isOpen ? 'none' : 'block';
         if (!isOpen) {
-            document.addEventListener('click', closeAddTaskMenu, { once: true });
+            const closeOnce = () => closeAddTaskMenu();
+            document.addEventListener('click', closeOnce, { once: true });
+            document.addEventListener('scroll', closeOnce, { once: true, capture: true });
+            window.addEventListener('scroll', closeOnce, { once: true, capture: true });
         }
         refreshIcons();
     }

@@ -58,7 +58,7 @@
         }
 
         // More tabs dropdown
-        // Nav dropdowns (Робота / Система)
+        // Nav dropdowns (Система / Аналітика / Завдання)
         function toggleNavDropdown(menuId, wrapperId, e) {
             if (e) e.stopPropagation();
             const menu = document.getElementById(menuId);
@@ -69,20 +69,22 @@
             if (isOpen) return;
             if (btn) {
                 const rect = btn.getBoundingClientRect();
-                menu.style.top = (rect.bottom + 4) + 'px';
-                menu.style.left = rect.left + 'px';
+                // position:absolute від body — не зависає при скролі viewport
+                menu.style.position = 'absolute';
+                menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+                menu.style.left = (rect.left + window.scrollX) + 'px';
             }
             menu.style.display = 'block';
         }
         function closeNavDropdowns() {
-            ['tasksTabMenu','workTabMenu','sysTabMenu','analyticsTabMenu'].forEach(function(id) {
+            ['tasksTabMenu','sysTabMenu','analyticsTabMenu'].forEach(function(id) {
                 const m = document.getElementById(id);
                 if (m) m.style.display = 'none';
             });
         }
         // Закриваємо при будь-якому кліку — якщо клік на toggle-кнопку, toggleNavDropdown сам відкриє
         document.addEventListener('click', function(e) {
-            const toggleBtns = ['tasksTabBtn','analyticsTabBtn','sysTabBtn','workTabBtn'];
+            const toggleBtns = ['tasksTabBtn','analyticsTabBtn','sysTabBtn'];
             const isToggle = toggleBtns.some(function(id) {
                 const el = document.getElementById(id);
                 return el && el.contains(e.target);

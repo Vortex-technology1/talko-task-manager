@@ -15,23 +15,21 @@ function toggleNavDropdown(menuId, wrapperId, e) {
     var wrapper = document.getElementById(wrapperId);
     var btn = wrapper ? wrapper.querySelector('button') : null;
     if (!menu) return;
-    // Запам'ятовуємо чи відкрите САМЕ ЦЕ меню до закриття всіх
     var isOpen = menu.style.display === 'block';
-    // Закриваємо ВСІ меню
     closeNavDropdowns();
-    // Якщо це меню було закрите — відкриваємо його
     if (!isOpen) {
         if (btn) {
             var rect = btn.getBoundingClientRect();
-            menu.style.top = (rect.bottom + 4) + 'px';
-            menu.style.left = rect.left + 'px';
+            // Використовуємо position:absolute від body щоб меню не зависало при скролі
+            menu.style.position = 'absolute';
+            menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+            menu.style.left = (rect.left + window.scrollX) + 'px';
         }
         menu.style.display = 'block';
     }
-    // Якщо було відкрите — вже закрили вище, нічого не робимо
 }
 function closeNavDropdowns() {
-    ['tasksTabMenu','analyticsTabMenu','sysTabMenu','workTabMenu'].forEach(function(id) {
+    ['tasksTabMenu','analyticsTabMenu','sysTabMenu'].forEach(function(id) {
         var m = document.getElementById(id);
         if (m) m.style.display = 'none';
     });
@@ -39,7 +37,7 @@ function closeNavDropdowns() {
 function toggleMoreTabs(e) {}
 function closeMoreTabs() { closeNavDropdowns(); }
 document.addEventListener('click', function(e) {
-    var dropdowns = ['tasksTabDropdown','analyticsTabDropdown','sysTabDropdown','workTabDropdown'];
+    var dropdowns = ['tasksTabDropdown','analyticsTabDropdown','sysTabDropdown'];
     var inside = dropdowns.some(function(id) {
         var el = document.getElementById(id);
         return el && el.contains(e.target);
@@ -47,58 +45,42 @@ document.addEventListener('click', function(e) {
     if (!inside) closeNavDropdowns();
 });
 // Закриваємо при будь-якому скролі (включно зі скролом всередині контейнерів)
-document.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
-window.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
-window.addEventListener('resize', function() { closeNavDropdowns(); });
-document.addEventListener('touchmove', function() { closeNavDropdowns(); }, { passive: true, capture: true });
-document.addEventListener('wheel', function() { closeNavDropdowns(); }, { passive: true, capture: true });
-// Закриваємо при switchTab — на випадок якщо меню лишилось відкритим після переходу
-document.addEventListener('DOMContentLoaded', function() {
-    var mainInterface = document.getElementById('mainInterface');
-    if (mainInterface) {
-        mainInterface.addEventListener('scroll', function() { closeNavDropdowns(); }, { passive: true, capture: true });
-    }
-    // Вішаємо на всі скролящі контейнери через делегацію
-    document.addEventListener('scroll', function() { closeNavDropdowns(); }, { passive: true, capture: true });
-});
-// Закриваємо при будь-якому русі мишки або touch поза кнопками dropdown
+// Закриваємо при будь-якому скролі — вішаємо на всі можливі targets
 (function() {
-    var dropdownBtnIds = ['tasksTabBtn','analyticsTabBtn','sysTabBtn','workTabBtn'];
-    var dropdownMenuIds = ['tasksTabMenu','analyticsTabMenu','sysTabMenu','workTabMenu'];
-
-    function isInsideDropdown(target) {
-        return dropdownBtnIds.concat(dropdownMenuIds).some(function(id) {
+    function closeAll() { closeNavDropdowns(); }
+    // Всі варіанти скролу
+    window.addEventListener('scroll', closeAll, true);
+    document.addEventListener('scroll', closeAll, true);
+    document.documentElement.addEventListener('scroll', closeAll, { passive: true });
+    document.addEventListener('wheel', closeAll, { passive: true, capture: true });
+    document.addEventListener('touchmove', closeAll, { passive: true, capture: true });
+    window.addEventListener('resize', closeAll);
+    // Закриваємо при pointerdown поза меню (найнадійніше для кліків)
+    document.addEventListener('pointerdown', function(e) {
+        var menuIds = ['tasksTabMenu','analyticsTabMenu','sysTabMenu'];
+        var btnIds  = ['tasksTabBtn','analyticsTabBtn','sysTabBtn'];
+        var allIds  = menuIds.concat(btnIds);
+        var inside  = allIds.some(function(id) {
             var el = document.getElementById(id);
-            return el && el.contains(target);
+            return el && el.contains(e.target);
         });
-    }
-
-    function anyMenuOpen() {
-        return dropdownMenuIds.some(function(id) {
-            var el = document.getElementById(id);
-            return el && el.style.display === 'block';
+        if (!inside) closeAll();
+    }, true);
+    // Закриваємо при switchTab — на випадок якщо меню лишилось відкритим
+    document.addEventListener('DOMContentLoaded', function() {
+        // Вішаємо scroll на всі дочірні контейнери що можуть скролитись
+        document.querySelectorAll('*').forEach(function(el) {
+            var style = window.getComputedStyle(el);
+            if (style.overflowY === 'auto' || style.overflowY === 'scroll' ||
+                style.overflow === 'auto' || style.overflow === 'scroll') {
+                el.addEventListener('scroll', closeAll, { passive: true });
+            }
         });
-    }
-
-    // Закриваємо при русі мишки поза dropdown (десктоп)
-    document.addEventListener('mousemove', function(e) {
-        if (!anyMenuOpen()) return;
-        if (!isInsideDropdown(e.target)) {
-            closeNavDropdowns();
-        }
-    }, { passive: true });
-
-    // Закриваємо при touch-move (мобільний скрол)
-    document.addEventListener('touchstart', function(e) {
-        if (!anyMenuOpen()) return;
-        if (!isInsideDropdown(e.target)) {
-            closeNavDropdowns();
-        }
-    }, { passive: true, capture: true });
+    });
 })();
-// Найнадійніше — закриваємо при натисканні кнопки миші поза dropdown
+// Закриваємо при натисканні кнопки миші поза dropdown
 document.addEventListener('mousedown', function(e) {
-    var dropdowns = ['tasksTabDropdown','analyticsTabDropdown','sysTabDropdown','workTabDropdown'];
+    var dropdowns = ['tasksTabDropdown','analyticsTabDropdown','sysTabDropdown'];
     var inside = dropdowns.some(function(id) {
         var el = document.getElementById(id);
         return el && el.contains(e.target);
