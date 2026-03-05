@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2026-03-05-notion-v5.1';
+const CACHE_VERSION = '2026-03-05-v6.0';
 const CACHE_NAME = `talko-tasks-${CACHE_VERSION}`;
 
 // Static assets to precache
