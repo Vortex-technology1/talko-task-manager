@@ -593,6 +593,17 @@
                             <select class="tsel" id="functionFilter" onchange="refreshCurrentView()"><option value="" data-i18n="functions">Всі функції</option></select>
                             <select class="tsel" id="assigneeFilter" onchange="refreshCurrentView()"><option value="" data-i18n="assignees">Всі виконавці</option></select>
                             <span class="tdiv"></span>
+                            <div class="density-toggle" title="Щільність рядків">
+                                <button class="density-btn" data-density="compact" onclick="setRowDensity('compact')" title="Компактний">
+                                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="0" y1="2" x2="12" y2="2"/><line x1="0" y1="5" x2="12" y2="5"/><line x1="0" y1="8" x2="12" y2="8"/><line x1="0" y1="11" x2="12" y2="11"/></svg>
+                                </button>
+                                <button class="density-btn active" data-density="normal" onclick="setRowDensity('normal')" title="Звичайний">
+                                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="0" y1="2.5" x2="12" y2="2.5"/><line x1="0" y1="6" x2="12" y2="6"/><line x1="0" y1="9.5" x2="12" y2="9.5"/></svg>
+                                </button>
+                                <button class="density-btn" data-density="spacious" onclick="setRowDensity('spacious')" title="Просторий">
+                                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="0" y1="1.5" x2="12" y2="1.5"/><line x1="0" y1="6" x2="12" y2="6"/><line x1="0" y1="10.5" x2="12" y2="10.5"/></svg>
+                                </button>
+                            </div>
                             <button class="tb tb-outline" id="hideCompletedBtn" onclick="toggleHideCompleted()"><i data-lucide="eye-off" class="icon" style="width:13px;height:13px;"></i> <span data-i18n="hideCompleted">Виконані</span></button>
                             <button class="tb tb-outline" onclick="clearTaskFilters()" style="padding:0 8px;"><i data-lucide="x" class="icon" style="width:13px;height:13px;"></i></button>
                         </div>
@@ -2716,5 +2727,32 @@
         });
     </script>
 
+<script>
+// ===== ROW DENSITY =====
+(function() {
+    const DENSITIES = ['compact', 'normal', 'spacious'];
+    const KEY = 'talko_row_density';
+
+    function setRowDensity(d) {
+        if (!DENSITIES.includes(d)) d = 'normal';
+        // Remove existing density classes
+        DENSITIES.forEach(function(c) { document.body.classList.remove('density-' + c); });
+        document.body.classList.add('density-' + d);
+        // Update button states
+        document.querySelectorAll('.density-btn').forEach(function(btn) {
+            btn.classList.toggle('active', btn.dataset.density === d);
+        });
+        try { localStorage.setItem(KEY, d); } catch(e) {}
+    }
+
+    // Expose globally
+    window.setRowDensity = setRowDensity;
+
+    // Init on load
+    var saved = 'normal';
+    try { saved = localStorage.getItem(KEY) || 'normal'; } catch(e) {}
+    setRowDensity(saved);
+})();
+</script>
 </body>
 </html>
