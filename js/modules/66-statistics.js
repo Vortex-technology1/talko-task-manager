@@ -1027,24 +1027,28 @@
                         const pct = Math.min(Math.round((val / tgt) * 100), 999);
                         // For inverse metrics (lower is better): flip colors
                         const isInv = m.isInverse || false;
-                        const pctColor = isInv
-                            ? (pct <= 100 ? '#22c55e' : pct <= 130 ? '#f59e0b' : '#ef4444')
-                            : (pct >= 90 ? '#22c55e' : pct >= 70 ? '#f59e0b' : '#ef4444');
+                        // Notion-style: нейтральний за замовчуванням, колір тільки при відхиленні
+                        const pctCls = isInv
+                            ? (pct <= 100 ? 'pct-ok' : pct <= 120 ? 'pct-warn' : 'pct-bad')
+                            : (pct >= 85  ? 'pct-ok' : pct >= 70  ? 'pct-warn' : 'pct-bad');
+                        const barCls = isInv
+                            ? (pct <= 100 ? 'bar-ok' : pct <= 120 ? 'bar-warn' : 'bar-bad')
+                            : (pct >= 85  ? 'bar-ok' : pct >= 70  ? 'bar-warn' : 'bar-bad');
                         cellHtml = `
-                        <div style="display:flex;flex-direction:column;align-items:center;gap:1px;padding:1px 0;" onclick="openMetricDetail('${m.id}','${pk}')">
-                            <div style="display:flex;align-items:center;gap:3px;width:100%;justify-content:center;">
-                                <span class="stats-val" style="font-size:0.78rem;font-weight:700;padding:0;cursor:pointer;">${formatted}</span>
-                                <span style="font-size:0.65rem;font-weight:700;color:${pctColor};">${pct}%</span>
-                                ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title="Видалити" style="color:#d1d5db;opacity:0;transition:opacity 0.15s;width:14px;height:14px;padding:0;">${SVG.trash}</button>` : ''}
+                        <div class="stats-cell-inner" onclick="openMetricDetail('${m.id}','${pk}')">
+                            <div class="stats-cell-row">
+                                <span class="stats-cell-val">${formatted}</span>
+                                <span class="stats-cell-pct ${pctCls}">${pct}%</span>
+                                ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title="Видалити">${SVG.trash}</button>` : ''}
                             </div>
-                            <div style="width:100%;height:3px;background:#f0f0f0;border-radius:99px;overflow:hidden;">
-                                <div style="height:100%;width:${Math.min(pct,100)}%;background:${pctColor};border-radius:99px;transition:width 0.3s;"></div>
+                            <div class="stats-mini-bar">
+                                <div class="stats-mini-bar-fill ${barCls}" style="width:${Math.min(pct,100)}%;"></div>
                             </div>
                         </div>`;
                     } else {
-                        cellHtml = `<div style="display:flex;align-items:center;gap:4px;justify-content:center;">
-                            <span class="stats-val" onclick="openMetricDetail('${m.id}','${pk}')">${formatted}</span>
-                            ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="deleteEntry('${entryId}')" title="Видалити запис" style="color:#d1d5db;opacity:0;transition:opacity 0.15s;">${SVG.trash}</button>` : ''}
+                        cellHtml = `<div class="stats-cell-row" onclick="openMetricDetail('${m.id}','${pk}')">
+                            <span class="stats-cell-val">${formatted}</span>
+                            ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title="Видалити">${SVG.trash}</button>` : ''}
                         </div>`;
                     }
                 } else {

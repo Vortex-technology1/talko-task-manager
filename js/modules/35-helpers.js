@@ -119,12 +119,26 @@
             if (matchBtn) matchBtn.classList.add('active');
             // Highlight "Ще" if secondary tab is active
             // Підсвічуємо кнопку групи якщо активна її вкладка
-            var workTabs = ['projects','processes','regular','users'];
-            var sysTabs = ['functions','bizstructure','analytics','admin'];
-            var workBtn = document.getElementById('workTabBtn');
-            var sysBtn = document.getElementById('sysTabBtn');
-            if (workBtn) workBtn.classList.toggle('active', workTabs.includes(tabName));
-            if (sysBtn) sysBtn.classList.toggle('active', sysTabs.includes(tabName));
+            // Підсвічування dropdown-батьків по новій структурі меню
+            var tasksTabs    = ['tasks','regular'];
+            var analyticsTabs = ['statistics','analytics'];
+            var sysTabs      = ['functions','bizstructure','users','admin'];
+
+            var tasksBtn     = document.getElementById('tasksTabBtn');
+            var analyticsBtn = document.getElementById('analyticsTabBtn');
+            var sysBtn       = document.getElementById('sysTabBtn');
+
+            if (tasksBtn)     tasksBtn.classList.toggle('active', tasksTabs.includes(tabName));
+            if (analyticsBtn) analyticsBtn.classList.toggle('active', analyticsTabs.includes(tabName));
+            if (sysBtn)       sysBtn.classList.toggle('active', sysTabs.includes(tabName));
+
+            // Пошук також через closeNavDropdowns (нова система)
+            if (!matchBtn) {
+                document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                    var oc = (btn.getAttribute('onclick') || '').replace(/\s/g,'');
+                    if (oc === \`switchTab('\${tabName}');closeNavDropdowns();\`) matchBtn = btn;
+                });
+            }
             
             // Update bottom nav
             document.querySelectorAll('.bottom-nav-btn').forEach(btn => {

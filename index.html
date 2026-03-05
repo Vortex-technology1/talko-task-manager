@@ -301,51 +301,81 @@
                 <span data-i18n="updating">Оновлення...</span>
             </div>
             <div class="tab-navigation">
-                <button class="tab-btn active" onclick="switchTab('myday')" title="Мій день" aria-label="Мій день"><i data-lucide="sun" class="icon"></i> <span data-i18n="tabMyDay">Мій день</span></button>
-                <button class="tab-btn" onclick="switchTab('tasks')" title="Завдання" aria-label="Завдання"><i data-lucide="clipboard-list" class="icon"></i> <span data-i18n="tabTasks">Завдання</span></button>
-                <button class="tab-btn" onclick="switchTab('projects')" title="Проєкти" aria-label="Проєкти"><i data-lucide="folder-kanban" class="icon"></i> <span data-i18n="tabProjects">Проєкти</span></button>
-                <button class="tab-btn" onclick="switchTab('control')" title="Контроль" aria-label="Контроль"><i data-lucide="layout-dashboard" class="icon"></i> <span data-i18n="tabControl">Контроль</span></button>
-                <button class="tab-btn" onclick="switchTab('statistics')" id="statisticsTabBtn" style="display:none;" title="Статистика та KPI" aria-label="Статистика та KPI"><i data-lucide="trending-up" class="icon"></i> <span data-i18n="tabStatistics">Метрики</span></button>
-                <!-- More dropdown -->
-                <!-- Робота dropdown -->
-                <div style="position:relative;display:inline-block;" id="workTabDropdown">
-                    <button class="tab-btn" onclick="toggleNavDropdown('workTabMenu', 'workTabDropdown', event)" id="workTabBtn" aria-label="Робота">
-                        <i data-lucide="briefcase" class="icon"></i>
-                        <span data-i18n="navWork">Робота</span>
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.5;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
+
+                <!-- 1. Мій день — без підменю -->
+                <button class="tab-btn active" onclick="switchTab('myday')" data-tab="myday" aria-label="Мій день">
+                    <i data-lucide="sun" class="icon"></i>
+                    <span data-i18n="tabMyDay">Мій день</span>
+                </button>
+
+                <!-- 2. Завдання — dropdown: Усі завдання, Регулярні -->
+                <div style="position:relative;display:inline-block;" id="tasksTabDropdown">
+                    <button class="tab-btn" onclick="toggleNavDropdown('tasksTabMenu','tasksTabDropdown',event)" id="tasksTabBtn" aria-label="Завдання">
+                        <i data-lucide="clipboard-list" class="icon"></i>
+                        <span data-i18n="tabTasks">Завдання</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.5;flex-shrink:0;margin-left:1px;"><path d="M7 10l5 5 5-5z"/></svg>
                     </button>
-                    <div id="workTabMenu" style="display:none;position:fixed;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.13);min-width:190px;padding:0.35rem;">
-                        <button class="tab-btn _ntab" onclick="switchTab('projects');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="folder-kanban" class="icon icon-sm"></i><span data-i18n="tabProjects">Проєкти</span>
-                        </button>
-                        <button class="tab-btn _ntab" onclick="switchTab('processes');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="git-branch" class="icon icon-sm"></i><span data-i18n="tabProcesses">Процеси</span>
+                    <div id="tasksTabMenu" style="display:none;position:fixed;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.13);min-width:180px;padding:0.35rem;">
+                        <button class="tab-btn _ntab" onclick="switchTab('tasks');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="list" class="icon icon-sm"></i><span data-i18n="tabTasks">Усі завдання</span>
                         </button>
                         <button class="tab-btn _ntab" onclick="switchTab('regular');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="repeat" class="icon icon-sm"></i><span data-i18n="tabRegular">Регулярні</span>
                         </button>
-                        <button class="tab-btn _ntab" onclick="switchTab('users');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="users" class="icon icon-sm"></i><span data-i18n="tabUsers">Команда</span>
+                    </div>
+                </div>
+
+                <!-- 3. Проекти — без підменю -->
+                <button class="tab-btn" onclick="switchTab('projects')" data-tab="projects" aria-label="Проекти">
+                    <i data-lucide="folder-kanban" class="icon"></i>
+                    <span data-i18n="tabProjects">Проекти</span>
+                </button>
+
+                <!-- 4. Процеси — без підменю -->
+                <button class="tab-btn" onclick="switchTab('processes')" data-tab="processes" aria-label="Процеси">
+                    <i data-lucide="git-branch" class="icon"></i>
+                    <span data-i18n="tabProcesses">Процеси</span>
+                </button>
+
+                <!-- 5. Контроль — без підменю -->
+                <button class="tab-btn" onclick="switchTab('control')" data-tab="control" aria-label="Контроль">
+                    <i data-lucide="layout-dashboard" class="icon"></i>
+                    <span data-i18n="tabControl">Контроль</span>
+                </button>
+
+                <!-- 6. Аналітика — dropdown: Статистика -->
+                <div style="position:relative;display:inline-block;" id="analyticsTabDropdown">
+                    <button class="tab-btn" onclick="toggleNavDropdown('analyticsTabMenu','analyticsTabDropdown',event)" id="analyticsTabBtn" aria-label="Аналітика">
+                        <i data-lucide="trending-up" class="icon"></i>
+                        <span>Аналітика</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.5;flex-shrink:0;margin-left:1px;"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+                    <div id="analyticsTabMenu" style="display:none;position:fixed;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.13);min-width:180px;padding:0.35rem;">
+                        <button class="tab-btn _ntab" onclick="switchTab('statistics');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="bar-chart-3" class="icon icon-sm"></i><span data-i18n="tabStatistics">Статистика</span>
+                        </button>
+                        <button class="tab-btn _ntab" onclick="switchTab('analytics');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="pie-chart" class="icon icon-sm"></i><span data-i18n="tabAnalytics">Аналітика AI</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Система dropdown -->
+                <!-- 7. Система — dropdown: Функції, Структура, Співробітники -->
                 <div style="position:relative;display:inline-block;" id="sysTabDropdown">
-                    <button class="tab-btn" onclick="toggleNavDropdown('sysTabMenu', 'sysTabDropdown', event)" id="sysTabBtn" aria-label="Система">
+                    <button class="tab-btn" onclick="toggleNavDropdown('sysTabMenu','sysTabDropdown',event)" id="sysTabBtn" aria-label="Система">
                         <i data-lucide="settings-2" class="icon"></i>
                         <span data-i18n="navSystem">Система</span>
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.5;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.5;flex-shrink:0;margin-left:1px;"><path d="M7 10l5 5 5-5z"/></svg>
                     </button>
-                    <div id="sysTabMenu" style="display:none;position:fixed;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.13);min-width:190px;padding:0.35rem;">
+                    <div id="sysTabMenu" style="display:none;position:fixed;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.13);min-width:180px;padding:0.35rem;">
                         <button class="tab-btn _ntab" onclick="switchTab('functions');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="settings" class="icon icon-sm"></i><span data-i18n="tabFunctions">Функції</span>
                         </button>
                         <button class="tab-btn _ntab" onclick="switchTab('bizstructure');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="network" class="icon icon-sm"></i><span data-i18n="tabStructure">Структура</span>
                         </button>
-                        <button class="tab-btn _ntab" onclick="switchTab('analytics');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="bar-chart-3" class="icon icon-sm"></i><span data-i18n="tabAnalytics">Аналітика</span>
+                        <button class="tab-btn _ntab" onclick="switchTab('users');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="users" class="icon icon-sm"></i><span data-i18n="tabUsers">Співробітники</span>
                         </button>
                         <button class="tab-btn _ntab" onclick="switchTab('admin');closeNavDropdowns();" id="adminTabBtn"
                             style="display:none;width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;background:#fee2e2;color:#dc2626;">
@@ -353,6 +383,7 @@
                         </button>
                     </div>
                 </div>
+
             </div>
 
             <!-- MY DAY TAB -->
