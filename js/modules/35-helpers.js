@@ -80,17 +80,18 @@
                 if (m) m.style.display = 'none';
             });
         }
-        // Закриваємо при кліку поза меню
+        // Закриваємо при будь-якому кліку — якщо клік на toggle-кнопку, toggleNavDropdown сам відкриє
         document.addEventListener('click', function(e) {
-            const dropdowns = ['tasksTabDropdown','workTabDropdown','sysTabDropdown','analyticsTabDropdown'];
-            const inside = dropdowns.some(function(id) {
+            const toggleBtns = ['tasksTabBtn','analyticsTabBtn','sysTabBtn','workTabBtn'];
+            const isToggle = toggleBtns.some(function(id) {
                 const el = document.getElementById(id);
                 return el && el.contains(e.target);
             });
-            if (!inside) closeNavDropdowns();
+            if (!isToggle) closeNavDropdowns();
         });
         // Закриваємо при скролі
         document.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
+        window.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
         window.toggleNavDropdown = toggleNavDropdown;
         window.closeNavDropdowns = closeNavDropdowns;
 
@@ -101,6 +102,8 @@
         window.closeMoreTabs = closeMoreTabs;
 
         function switchTab(tabName) {
+            // Закриваємо всі nav-dropdown при будь-якому переході
+            if (typeof closeNavDropdowns === 'function') closeNavDropdowns();
             // Reset project detail when leaving projects tab
             if (tabName !== 'projects' && openProjectId) {
                 openProjectId = null;
