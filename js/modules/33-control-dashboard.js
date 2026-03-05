@@ -6,17 +6,15 @@
             const ff = document.getElementById('controlFunctionFilter')?.value;
             const pf = document.getElementById('controlPeriodFilter')?.value;
             
-            // Завжди оновлюємо селекти — але зберігаємо поточне значення
+            // Оновлюємо селекти
             const assigneeSelect = document.getElementById('controlAssigneeFilter');
             const functionSelect = document.getElementById('controlFunctionFilter');
             const activeFunctions = functions.filter(f => f.status !== 'archived');
-            if (assigneeSelect) {
+            if (assigneeSelect && assigneeSelect.options.length <= 1) {
                 assigneeSelect.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
-                if (af) assigneeSelect.value = af; // відновлюємо вибір
             }
-            if (functionSelect) {
+            if (functionSelect && functionSelect.options.length <= 1) {
                 functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
-                if (ff) functionSelect.value = ff; // відновлюємо вибір
             }
             
             const now = new Date();
@@ -71,7 +69,7 @@
         }
         
         function renderControlContent() {
-            const viewType = document.getElementById('controlViewType')?.value || 'briefing';
+            const viewType = document.getElementById('controlViewType')?.value || 'workload';
             const af = document.getElementById('controlAssigneeFilter')?.value;
             const ff = document.getElementById('controlFunctionFilter')?.value;
             

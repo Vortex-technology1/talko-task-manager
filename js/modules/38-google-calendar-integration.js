@@ -54,7 +54,7 @@
         
         function connectGoogleCalendar() {
             if (!tokenClient) {
-                showAlertModal(t('googleApiNotLoaded'));
+                alert(t('googleApiNotLoaded'));
                 return;
             }
             
@@ -65,7 +65,7 @@
         function handleGoogleAuthResponse(response) {
             if (response.error) {
                 console.error('Google auth error:', response);
-                showAlertModal(t('googleAuthError') + ': ' + response.error);
+                alert(t('googleAuthError') + ': ' + response.error);
                 return;
             }
             
@@ -95,7 +95,7 @@
                     }, { merge: true })
                     .then(() => {
                         showCalendarConnected(email);
-                        showAlertModal(t('googleCalendarConnected'));
+                        alert(t('googleCalendarConnected'));
                     });
             })
             .catch(err => {
@@ -111,16 +111,16 @@
                     }, { merge: true })
                     .then(() => {
                         showCalendarConnected(currentUser.email || t('connected'));
-                        showAlertModal(t('googleCalendarConnected'));
+                        alert(t('googleCalendarConnected'));
                     })
                     .catch(err2 => {
-                        showAlertModal(t('saveError') + ': ' + err2.message);
+                        alert(t('saveError') + ': ' + err2.message);
                     });
             });
         }
         
-        async function disconnectGoogleCalendar() {
-            if (!await showConfirmModal(t('disconnectGoogleCalendar'), { danger: true })) {
+        function disconnectGoogleCalendar() {
+            if (!confirm(t('disconnectGoogleCalendar'))) {
                 return;
             }
             
@@ -142,10 +142,10 @@
                 .then(() => {
                     googleAccessToken = null;
                     showCalendarNotConnected();
-                    showAlertModal(t('googleCalendarDisconnected'));
+                    alert(t('googleCalendarDisconnected'));
                 })
                 .catch(err => {
                     console.error('Error disconnecting calendar:', err);
-                    showAlertModal(t('error') + ': ' + err.message);
+                    alert(t('error') + ': ' + err.message);
                 });
         }

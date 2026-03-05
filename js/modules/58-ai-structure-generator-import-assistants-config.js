@@ -122,7 +122,7 @@
             await importStructure(data);
             closeModal('importStructureModal');
         } catch (e) {
-            showAlertModal('JSON parse error: ' + e.message);
+            alert('JSON parse error: ' + e.message);
         }
     }
     

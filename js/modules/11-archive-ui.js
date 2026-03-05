@@ -176,7 +176,7 @@
         }
         
         async function restoreFromArchive(taskId) {
-            if (!await showConfirmModal(t('restoreFromArchive'), { danger: true })) return;
+            if (!confirm(t('restoreFromArchive'))) return;
             
             try {
                 const base = db.collection('companies').doc(currentCompany);

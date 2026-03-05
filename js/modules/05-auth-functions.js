@@ -26,13 +26,13 @@
 
         async function selfRegisterCompany() {
             const user = auth.currentUser;
-            if (!user) { showAlertModal(t('signInFirst')); return; }
+            if (!user) { alert(t('signInFirst')); return; }
             
             const companyName = document.getElementById('selfRegCompanyName')?.value?.trim();
             const ownerName = document.getElementById('selfRegOwnerName')?.value?.trim();
             
             if (!companyName || !ownerName) {
-                showAlertModal(t('fillAllFields'));
+                alert(t('fillAllFields'));
                 return;
             }
             
@@ -76,7 +76,7 @@
                 
             } catch (error) {
                 console.error('Self registration error:', error);
-                showAlertModal(t('createError') + ': ' + error.message);
+                alert(t('createError') + ': ' + error.message);
                 if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="rocket" class="icon"></i> Створити компанію'; }
             }
         }

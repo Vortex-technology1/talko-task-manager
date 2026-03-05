@@ -14,7 +14,7 @@
         
         async function connectTelegram() {
             if (!currentCompany || !currentUser) {
-                showAlertModal(t('notAuthorized'));
+                alert(t('notAuthorized'));
                 return;
             }
             
@@ -31,7 +31,7 @@
                 const botUrl = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${telegramCode}`;
                 
                 // Показуємо інструкцію
-                const proceed = await showConfirmModal(
+                const proceed = confirm(
                     'Підключення Telegram\n\n' +
                     '1. Зараз відкриється Telegram бот\n' +
                     '2. Натисніть "Start" або "Запустити"\n' +
@@ -49,12 +49,12 @@
                 }
             } catch (error) {
                 console.error('Error generating Telegram code:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                alert(t('error') + ': ' + error.message);
             }
         }
         
         async function disconnectTelegram() {
-            if (!await showConfirmModal(t('disconnectTelegram'), { danger: true })) {
+            if (!confirm(t('disconnectTelegram'))) {
                 return;
             }
             
@@ -68,10 +68,10 @@
                     }, { merge: true });
                 
                 showTelegramNotConnected();
-                showAlertModal(t('telegramDisconnected'));
+                alert(t('telegramDisconnected'));
             } catch (error) {
                 console.error('Error disconnecting Telegram:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                alert(t('error') + ': ' + error.message);
             }
         }
         

@@ -69,12 +69,12 @@
         
         async function loadDemoData(type) {
             if (!currentCompany) {
-                showAlertModal(t('createCompanyFirst'));
+                alert(t('createCompanyFirst'));
                 closeDemoDataModal();
                 return;
             }
             
-            if (!await showConfirmModal(t('loadDemoConfirm'), { danger: true })) {
+            if (!confirm(t('loadDemoConfirm'))) {
                 return;
             }
             
@@ -92,10 +92,10 @@
                 }
                 
                 await loadAllData();
-                showAlertModal(t('demoDataLoaded'));
+                alert(t('demoDataLoaded'));
             } catch (e) {
                 console.error('Error loading demo data:', e);
-                showAlertModal(t('loadError') + e.message);
+                alert(t('loadError') + e.message);
             }
         }
         

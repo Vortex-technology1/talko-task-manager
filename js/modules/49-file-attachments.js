@@ -106,7 +106,7 @@
         
         async function deleteTaskFile(fileIndex) {
             if (!editingId) return;
-            if (!await showConfirmModal(t('deleteFileConfirm'), { danger: true })) return;
+            if (!confirm(t('deleteFileConfirm'))) return;
             
             const task = tasks.find(t => t.id === editingId);
             if (!task || !task.files || !task.files[fileIndex]) return;

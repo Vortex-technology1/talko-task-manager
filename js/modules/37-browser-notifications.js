@@ -13,7 +13,7 @@
         // Request permission
         async function requestNotificationPermission() {
             if (!supportsNotifications()) {
-                showAlertModal(t('browserNoNotifications'));
+                alert(t('browserNoNotifications'));
                 return false;
             }
             
@@ -34,7 +34,7 @@
                 
                 return true;
             } else {
-                showAlertModal(t('notificationsDenied'));
+                alert(t('notificationsDenied'));
                 return false;
             }
         }
@@ -252,6 +252,3 @@
         function closeMobileMenu() {
             document.getElementById('mobileMenuModal').style.display = 'none';
         }
-        
-        window.openMobileMenu = openMobileMenu;
-        window.closeMobileMenu = closeMobileMenu;

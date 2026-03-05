@@ -92,7 +92,7 @@
     }
     
     async function deleteAiAssistant(id) {
-        if (!await showConfirmModal(t('deleteAssistant'), { danger: true })) return;
+        if (!confirm(t('deleteAssistant'))) return;
         await db.collection('settings').doc('ai')
             .collection('assistants').doc(id).delete();
         loadAiAssistants();
