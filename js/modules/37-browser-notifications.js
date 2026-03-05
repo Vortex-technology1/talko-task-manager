@@ -138,7 +138,7 @@
                     }
                     
                     // Notify manager/owner about critical overdue (7+ days)
-                    if (daysOverdue >= 7 && (currentUserData?.role === 'owner' || currentUserData?.role === 'manager')) {
+                    if (daysOverdue >= 7 && ((typeof hasPermission === 'function' && hasPermission('viewAllTasks')) || currentUserData?.role === 'owner' || currentUserData?.role === 'manager')) {
                         const mgrKey = `${task.id}-mgr-overdue-${today}`;
                         if (!notifiedTasks.has(mgrKey) && task.assigneeId !== currentUser?.uid && currentHour >= 9 && currentHour < 10) {
                             const assigneeName = task.assigneeName || '';

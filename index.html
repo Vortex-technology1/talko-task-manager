@@ -135,17 +135,15 @@ document.addEventListener('mousedown', function(e) {
     // Header dropdown toggle — must be early so onclick handlers work
     function toggleHdrDropdown(id) {
         var menu = document.querySelector('#' + id + ' .hdr-dropdown-menu');
-        if (!menu) { console.warn('[HDR] Menu not found:', id); return; }
+        if (!menu) return;
         var wasOpen = menu.classList.contains('show');
         document.querySelectorAll('.hdr-dropdown-menu').forEach(function(m) { m.classList.remove('show'); });
-        if (!wasOpen) {
-            menu.classList.add('show');
-            // Затримка 50ms — гарантовано після завершення поточного click event
-            setTimeout(function() {
-                document.addEventListener('click', closeAllHdrDropdowns, { once: true });
-            }, 50);
-        }
+        if (!wasOpen) menu.classList.add('show');
     }
+    document.addEventListener('click', function(e) {
+        var inside = e.target.closest('.hdr-dropdown');
+        if (!inside) closeAllHdrDropdowns();
+    });
     function closeAllHdrDropdowns() {
         document.querySelectorAll('.hdr-dropdown-menu').forEach(function(m) { m.classList.remove('show'); });
     }
@@ -216,19 +214,19 @@ document.addEventListener('mousedown', function(e) {
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.7"><path d="M7 10l5 5 5-5z"/></svg>
                     </button>
                     <div class="hdr-dropdown-menu" id="langDropdownMenu">
-                        <button class="hdr-dropdown-item lang-opt active" data-lang="ua" onclick="setLanguageFromDropdown('ua')">
+                        <button class="hdr-dropdown-item lang-opt active" data-lang="ua" onclick="event.stopPropagation();setLanguageFromDropdown('ua')">
                             <span class="lang-flag"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;background:#374151;color:white;font-size:0.6rem;font-weight:700;border-radius:3px;letter-spacing:0.03em;">UA</span></span> Українська
                         </button>
-                        <button class="hdr-dropdown-item lang-opt" data-lang="ru" onclick="setLanguageFromDropdown('ru')">
+                        <button class="hdr-dropdown-item lang-opt" data-lang="ru" onclick="event.stopPropagation();setLanguageFromDropdown('ru')">
                             <span class="lang-flag"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;background:#374151;color:white;font-size:0.6rem;font-weight:700;border-radius:3px;letter-spacing:0.03em;">RU</span></span> Русский
                         </button>
-                        <button class="hdr-dropdown-item lang-opt" data-lang="pl" onclick="setLanguageFromDropdown('pl')">
+                        <button class="hdr-dropdown-item lang-opt" data-lang="pl" onclick="event.stopPropagation();setLanguageFromDropdown('pl')">
                             <span class="lang-flag"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;background:#374151;color:white;font-size:0.6rem;font-weight:700;border-radius:3px;letter-spacing:0.03em;">PL</span></span> Polski
                         </button>
-                        <button class="hdr-dropdown-item lang-opt" data-lang="en" onclick="setLanguageFromDropdown('en')">
+                        <button class="hdr-dropdown-item lang-opt" data-lang="en" onclick="event.stopPropagation();setLanguageFromDropdown('en')">
                             <span class="lang-flag"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;background:#374151;color:white;font-size:0.6rem;font-weight:700;border-radius:3px;letter-spacing:0.03em;">EN</span></span> English
                         </button>
-                        <button class="hdr-dropdown-item lang-opt" data-lang="de" onclick="setLanguageFromDropdown('de')">
+                        <button class="hdr-dropdown-item lang-opt" data-lang="de" onclick="event.stopPropagation();setLanguageFromDropdown('de')">
                             <span class="lang-flag"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;background:#374151;color:white;font-size:0.6rem;font-weight:700;border-radius:3px;letter-spacing:0.03em;">DE</span></span> Deutsch
                         </button>
                     </div>
@@ -1025,11 +1023,83 @@ document.addEventListener('mousedown', function(e) {
 
             <!-- USERS -->
             <div id="usersTab" class="tab-content">
-                <div class="controls">
-                    <button class="btn btn-success" onclick="openInviteModal()" id="inviteBtn"><i data-lucide="user-plus" class="icon"></i> <span data-i18n="invite">Запросити</span></button>
+                <div class="controls" style="padding-bottom:0;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+                        <h2 style="font-size:1.1rem;margin:0;"><i data-lucide="users" class="icon"></i> Команда</h2>
+                        <button class="btn btn-success" onclick="openInviteModal()" id="inviteBtn" style="display:none;">
+                            <i data-lucide="user-plus" class="icon"></i> <span data-i18n="invite">Запросити</span>
+                        </button>
+                    </div>
+                    <!-- Sub-tabs -->
+                    <div style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;">
+                        <button id="usersSubTab-list" onclick="switchUsersSubTab('list')" 
+                            style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:600;background:none;border:none;border-bottom:2px solid #22c55e;color:#16a34a;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
+                            <i data-lucide="users" class="icon icon-sm"></i> Список
+                        </button>
+                        <button id="usersSubTab-invite" onclick="switchUsersSubTab('invite')"
+                            style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
+                            <i data-lucide="user-plus" class="icon icon-sm"></i> Запросити
+                        </button>
+                        <button id="usersSubTab-roles" onclick="switchUsersSubTab('roles')"
+                            style="padding:0.45rem 1rem;font-size:0.85rem;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;cursor:pointer;margin-bottom:-2px;display:flex;align-items:center;gap:0.35rem;">
+                            <i data-lucide="key" class="icon icon-sm"></i> Ролі та дозволи
+                        </button>
+                    </div>
                 </div>
-                <div id="usersContainer" class="cards-grid">
-                    <div class="loading"><div class="spinner"></div></div>
+
+                <!-- Список -->
+                <div id="usersSubContent-list">
+                    <div id="usersContainer" class="cards-grid">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+
+                <!-- Запросити -->
+                <div id="usersSubContent-invite" style="display:none;">
+                    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-top:1rem;max-width:480px;">
+                        <h3 style="margin:0 0 1rem;font-size:1rem;"><i data-lucide="user-plus" class="icon" style="color:#22c55e;"></i> Запросити співробітника</h3>
+                        <form onsubmit="sendInvite(event)">
+                            <div class="form-group" style="margin-bottom:1rem;">
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Email</label>
+                                <input type="email" id="inviteEmailDesktop" required placeholder="email@company.com"
+                                    style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
+                            </div>
+                            <div class="form-group" style="margin-bottom:1rem;">
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Роль</label>
+                                <select id="inviteRoleDesktop" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
+                                    <option value="employee">Співробітник</option>
+                                    <option value="manager">Менеджер</option>
+                                    <option value="admin">Адміністратор</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success" style="width:100%;padding:0.7rem;">
+                                <i data-lucide="send" class="icon"></i> Надіслати запрошення
+                            </button>
+                        </form>
+                        <div id="inviteLink" style="display:none;margin-top:1rem;padding:0.75rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;">
+                            <p style="font-size:0.8rem;color:#16a34a;margin:0 0 0.5rem;font-weight:600;">✓ Запрошення створено. Скопіюйте посилання:</p>
+                            <div style="display:flex;gap:0.5rem;">
+                                <input id="inviteLinkText" readonly style="flex:1;padding:0.5rem;border:1px solid #bbf7d0;border-radius:6px;font-size:0.78rem;background:white;">
+                                <button onclick="copyInviteLink()" class="btn btn-success" style="padding:0.5rem 0.75rem;white-space:nowrap;">Копіювати</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ролі та дозволи (inline в users) -->
+                <div id="usersSubContent-roles" style="display:none;">
+                    <div style="background:white;border-radius:12px;box-shadow:var(--shadow);margin-top:1rem;overflow:hidden;">
+                        <div style="padding:1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;">
+                            <div>
+                                <h3 style="margin:0;font-size:1rem;"><i data-lucide="key" class="icon" style="color:#f97316;"></i> Ролі та дозволи</h3>
+                                <p style="margin:0.25rem 0 0;font-size:0.8rem;color:#9ca3af;">Налаштуйте що може робити кожна роль</p>
+                            </div>
+                            <button onclick="renderRolesTab()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Завантажити
+                            </button>
+                        </div>
+                        <div id="rolesPermissionsContainerUsers" style="padding:0;"></div>
+                    </div>
                 </div>
             </div>
 
@@ -1173,6 +1243,68 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                     </details>
                 </div>
+                </div><!-- /adminSubContent-companies -->
+
+                <!-- SUB-TAB: Ролі та дозволи -->
+                <div id="adminSubContent-roles" style="display:none;">
+                    <div style="background:white;border-radius:12px;box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;">
+                        <div style="padding:1rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;">
+                            <div>
+                                <h3 style="margin:0;font-size:1rem;"><i data-lucide="key" class="icon" style="color:#f97316;"></i> Ролі та дозволи</h3>
+                                <p style="margin:0.25rem 0 0;font-size:0.8rem;color:#9ca3af;">Налаштуйте що може робити кожна роль в системі</p>
+                            </div>
+                            <button onclick="renderRolesTab()" class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                                <i data-lucide="refresh-cw" class="icon icon-sm"></i> Оновити
+                            </button>
+                        </div>
+                        <div id="rolesPermissionsContainer" style="padding:0;">
+                            <div style="text-align:center;padding:2rem;color:#9ca3af;">Завантаження...</div>
+                        </div>
+                    </div>
+                </div><!-- /adminSubContent-roles -->
+
+                <!-- SUB-TAB: Налаштування -->
+                <div id="adminSubContent-settings" style="display:none;">
+                    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-bottom:1rem;">
+                        <h3 style="margin:0 0 1.25rem;font-size:1rem;"><i data-lucide="settings" class="icon" style="color:#6b7280;"></i> Налаштування компанії</h3>
+                        <div style="display:grid;gap:1rem;max-width:560px;">
+                            <div class="form-group">
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Назва компанії</label>
+                                <div style="display:flex;gap:0.5rem;">
+                                    <input id="settingCompanyName" type="text" placeholder="Назва компанії"
+                                        style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
+                                    <button onclick="saveCompanySetting('name')" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">Зберегти</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Часовий пояс</label>
+                                <select id="settingTimezone" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem;">
+                                    <option value="Europe/Kyiv">Europe/Kyiv (UTC+2/+3)</option>
+                                    <option value="Europe/Warsaw">Europe/Warsaw (UTC+1/+2)</option>
+                                    <option value="Europe/Prague">Europe/Prague (UTC+1/+2)</option>
+                                    <option value="Europe/Bucharest">Europe/Bucharest (UTC+2/+3)</option>
+                                    <option value="Europe/London">Europe/London (UTC+0/+1)</option>
+                                    <option value="America/New_York">America/New_York (UTC-5/-4)</option>
+                                </select>
+                                <button onclick="saveCompanySetting('timezone')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Зберегти часовий пояс</button>
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">Тижневий звіт</label>
+                                <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                                    <input type="checkbox" id="settingWeeklyReport" style="width:18px;height:18px;accent-color:#22c55e;">
+                                    <span style="font-size:0.85rem;color:#374151;">Надсилати тижневий звіт власнику</span>
+                                </label>
+                                <button onclick="saveCompanySetting('weeklyReport')" class="btn" style="margin-top:0.5rem;padding:0.5rem 1rem;">Зберегти</button>
+                            </div>
+                            <div style="padding:0.75rem;background:#fef9c3;border-radius:8px;border-left:3px solid #f59e0b;">
+                                <p style="margin:0;font-size:0.8rem;color:#92400e;">
+                                    <strong>Незабаром:</strong> логотип компанії, кастомні теми, Telegram-повідомлення, інтеграції.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /adminSubContent-settings -->
+
             </div>
         </div>
     </div>
@@ -1733,11 +1865,11 @@ document.addEventListener('mousedown', function(e) {
                 <form id="inviteForm" onsubmit="sendInvite(event)">
                     <div class="form-group">
                         <label class="form-label" data-i18n="employeeEmail">Email співробітника *</label>
-                        <input type="email" id="inviteEmail" class="form-input" required aria-required="true">
+                        <input type="email" id="inviteEmailMobile" class="form-input" required aria-required="true">
                     </div>
                     <div class="form-group" style="margin-top:0.75rem;">
                         <label class="form-label" data-i18n="role" data-i18n="role" data-i18n="role">Роль</label>
-                        <select id="inviteRole" class="form-select"><option value="employee" data-i18n="roleEmployee">Співробітник</option><option value="manager" data-i18n="roleManager">Менеджер</option></select>
+                        <select id="inviteRoleMobile" class="form-select"><option value="employee" data-i18n="roleEmployee">Співробітник</option><option value="manager" data-i18n="roleManager">Менеджер</option><option value="admin">Адміністратор</option></select>
                     </div>
                     <div id="inviteLink" style="margin-top:1rem;padding:1rem;background:#e3f2fd;border-radius:8px;display:none;">
                         <p style="font-size:0.85rem;margin-bottom:0.5rem;"><strong data-i18n="inviteLinkLabel">Посилання для входу:</strong></p>
@@ -1971,6 +2103,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/67-project-stages.js"></script>
     <script src="js/modules/68-project-templates-qc.js"></script>
     <script src="js/modules/69-ai-bottleneck-dashboard.js"></script>
+    <script src="js/modules/70-roles-permissions.js"></script>
 
     <!-- Bottom Navigation & Overlays -->
     <!-- Bottom Navigation for Mobile -->
@@ -2713,10 +2846,46 @@ document.addEventListener('mousedown', function(e) {
 
             <!-- Hidden fields for backward compat -->
             <input type="hidden" id="metricInputType" value="manual">
-            <input type="hidden" id="metricPrivacy" value="public">
             <input type="hidden" id="metricFormula" value="">
             <input type="hidden" id="metricAlertEnabled" value="false">
             <input type="hidden" id="metricAlertThreshold" value="20">
+
+            <!-- PRIVACY -->
+            <div class="form-group" style="margin-top:0.85rem;">
+                <label style="font-size:0.78rem;font-weight:600;color:#6b7280;letter-spacing:0.02em;text-transform:uppercase;">Доступ до метрики</label>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.4rem;margin-top:0.5rem;" id="privacyButtons">
+                    <button type="button" class="metric-privacy-btn active" data-privacy="public"
+                        onclick="selectMetricPrivacy('public')"
+                        style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 0.75rem;border-radius:10px;font-size:0.8rem;font-weight:500;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;cursor:pointer;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        Публічна — всі
+                    </button>
+                    <button type="button" class="metric-privacy-btn" data-privacy="team"
+                        onclick="selectMetricPrivacy('team')"
+                        style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 0.75rem;border-radius:10px;font-size:0.8rem;font-weight:500;border:2px solid #e5e7eb;background:#f9fafb;color:#374151;cursor:pointer;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        Команда — менеджери+
+                    </button>
+                    <button type="button" class="metric-privacy-btn" data-privacy="owner_only"
+                        onclick="selectMetricPrivacy('owner_only')"
+                        style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 0.75rem;border-radius:10px;font-size:0.8rem;font-weight:500;border:2px solid #e5e7eb;background:#f9fafb;color:#374151;cursor:pointer;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        Тільки я (owner)
+                    </button>
+                    <button type="button" class="metric-privacy-btn" data-privacy="restricted"
+                        onclick="selectMetricPrivacy('restricted')"
+                        style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem 0.75rem;border-radius:10px;font-size:0.8rem;font-weight:500;border:2px solid #e5e7eb;background:#f9fafb;color:#374151;cursor:pointer;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Вибрані люди
+                    </button>
+                </div>
+                <input type="hidden" id="metricPrivacy" value="public">
+                <!-- Вибір людей — показується тільки для restricted -->
+                <div id="metricVisibleToBlock" style="display:none;margin-top:0.5rem;">
+                    <label style="font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;display:block;">Хто бачить цю метрику:</label>
+                    <div id="metricVisibleToList" style="display:flex;flex-wrap:wrap;gap:0.4rem;"></div>
+                </div>
+            </div>
 
             <!-- AUTO SOURCE — вибір типу джерела -->
             <div class="form-group" style="margin-top:0.85rem;">
@@ -2873,5 +3042,129 @@ document.addEventListener('mousedown', function(e) {
 })();
 </script>
 
+
+    <script>
+    // ---- ADMIN SUB-TABS ----
+    function switchAdminSubTab(tab) {
+        ['companies','roles','settings'].forEach(function(t) {
+            var content = document.getElementById('adminSubContent-' + t);
+            var btn = document.getElementById('adminSubTab-' + t);
+            if (content) content.style.display = t === tab ? 'block' : 'none';
+            if (btn) {
+                btn.style.borderBottomColor = t === tab ? '#dc2626' : 'transparent';
+                btn.style.color = t === tab ? '#dc2626' : '#6b7280';
+                btn.style.fontWeight = t === tab ? '600' : '500';
+            }
+        });
+        if (tab === 'roles') {
+            if (typeof renderRolesTab === 'function') renderRolesTab();
+        }
+    }
+
+    // Ініціалізуємо sub-tabs при відкритті адмін панелі
+    var _origRenderAdmin = window.renderAdminPanel;
+    window.renderAdminPanel = function() {
+        if (typeof _origRenderAdmin === 'function') _origRenderAdmin();
+        var activeTab = document.querySelector('[id^="adminSubContent-"][style*="block"]');
+        if (!activeTab) switchAdminSubTab('companies');
+        if (typeof initRolesPermissions === 'function') initRolesPermissions();
+        loadCompanySettings();
+    };
+
+    // ---- USERS SUB-TABS ----
+    function switchUsersSubTab(tab) {
+        ['list','invite','roles'].forEach(function(t) {
+            var c = document.getElementById('usersSubContent-' + t);
+            var b = document.getElementById('usersSubTab-' + t);
+            if (c) c.style.display = t === tab ? '' : 'none';
+            if (b) {
+                b.style.borderBottomColor = t === tab ? '#22c55e' : 'transparent';
+                b.style.color = t === tab ? '#16a34a' : '#6b7280';
+                b.style.fontWeight = t === tab ? '600' : '500';
+            }
+        });
+        if (tab === 'roles') {
+            // Рендеримо в контейнер users-вкладки
+            if (typeof renderRolesTab === 'function') {
+                var c = document.getElementById('rolesPermissionsContainerUsers');
+                if (c) {
+                    // Тимчасово підміняємо контейнер
+                    var orig = document.getElementById('rolesPermissionsContainer');
+                    var origParent = orig && orig.parentNode;
+                    if (origParent) {
+                        c.innerHTML = '';
+                        renderRolesTabInto(c);
+                    } else {
+                        renderRolesTab();
+                    }
+                }
+            }
+        }
+    }
+
+    // Рендер таблиці ролей в довільний контейнер
+    window.renderRolesTabInto = async function(container) {
+        if (!container) { if (typeof renderRolesTab === 'function') renderRolesTab(); return; }
+        var orig = document.getElementById('rolesPermissionsContainer');
+        if (orig) {
+            var savedId = orig.id;
+            orig.id = '__rolesTemp';
+            container.id = 'rolesPermissionsContainer';
+            await renderRolesTab();
+            container.id = 'rolesPermissionsContainerUsers';
+            orig.id = savedId;
+        } else {
+            container.id = 'rolesPermissionsContainer';
+            await renderRolesTab();
+            container.id = 'rolesPermissionsContainerUsers';
+        }
+    };
+
+    // ---- COMPANY SETTINGS ----
+    function loadCompanySettings() {
+        if (!window.currentCompany || !window.db) return;
+        window.db.collection('companies').doc(window.currentCompany).get().then(function(doc) {
+            if (!doc.exists) return;
+            var data = doc.data();
+            var nameEl = document.getElementById('settingCompanyName');
+            var tzEl = document.getElementById('settingTimezone');
+            var wrEl = document.getElementById('settingWeeklyReport');
+            if (nameEl && data.name) nameEl.value = data.name;
+            if (tzEl && data.timezone) tzEl.value = data.timezone;
+            if (wrEl) wrEl.checked = !!data.weeklyReport;
+        }).catch(function(){});
+    }
+
+    window.saveCompanySetting = async function(key) {
+        if (!window.currentCompany || !window.db) return;
+        var val;
+        if (key === 'name') val = document.getElementById('settingCompanyName')?.value?.trim();
+        else if (key === 'timezone') val = document.getElementById('settingTimezone')?.value;
+        else if (key === 'weeklyReport') val = document.getElementById('settingWeeklyReport')?.checked;
+        if (val === undefined || val === '') { if (typeof showToast === 'function') showToast('Введіть значення', 'error'); return; }
+        try {
+            await window.db.collection('companies').doc(window.currentCompany).set({ [key]: val }, { merge: true });
+            if (typeof showToast === 'function') showToast('Збережено', 'success');
+            // Оновлюємо badge якщо змінили назву
+            if (key === 'name') {
+                var badge = document.getElementById('companyBadge');
+                if (badge) badge.textContent = val;
+            }
+        } catch(e) {
+            if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        }
+    };
+    </script>
+
+    <!-- USER PERMISSIONS MODAL -->
+    <div id="userPermissionsModal" class="modal" onclick="if(event.target===this)closeModal('userPermissionsModal')">
+        <div class="modal-content" style="max-width:480px;width:95%;">
+            <div class="modal-header">
+                <h3 id="userPermissionsModalTitle" class="modal-title">Дозволи</h3>
+                <button class="close" onclick="closeModal('userPermissionsModal')">&times;</button>
+            </div>
+            <div id="userPermissionsModalBody" class="modal-body"></div>
+        </div>
+    </div>
 </body>
 </html>

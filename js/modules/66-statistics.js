@@ -177,6 +177,7 @@
 
     function canViewStats() {
         if (!currentUser || !currentCompany) return false;
+        if (typeof hasPermission === 'function') return hasPermission('viewStats');
         const u = users.find(u => u.id === currentUser.uid);
         return u ? (u.role === 'owner' || u.canViewStatsTab !== false) : false;
     }
@@ -186,11 +187,24 @@
         if (!currentUser) return false;
         const u = users.find(u => u.id === currentUser.uid);
         if (!u) return false;
+
+        // Owner — бачить все
         if (u.role === 'owner') return true;
+
+        // owner_only — тільки owner
         if (m.privacy === 'owner_only') return false;
 
-        // P1-2: If user has useMetricWhitelist flag or allowedMetricIds field exists,
-        // treat it as strict whitelist (even if empty = nothing visible)
+        // restricted — тільки ті хто в visibleTo
+        if (m.privacy === 'restricted') {
+            return Array.isArray(m.visibleTo) && m.visibleTo.includes(currentUser.uid);
+        }
+
+        // team — manager + owner
+        if (m.privacy === 'team') {
+            return u.role === 'manager' || u.role === 'admin';
+        }
+
+        // whitelist override
         if (u.useMetricWhitelist || (u.allowedMetricIds && typeof u.allowedMetricIds === 'object')) {
             return !!(u.allowedMetricIds && u.allowedMetricIds[m.id]);
         }
@@ -205,8 +219,9 @@
     }
 
     function canEditMetrics() {
+        if (typeof hasPermission === 'function') return hasPermission('editMetrics');
         const r = getUserRole();
-        return r === 'owner' || r === 'manager';
+        return r === 'owner';
     }
 
     function showStatsTabIfAllowed() {
@@ -368,6 +383,9 @@
             frequency: document.getElementById('metricFrequency')?.value || 'weekly',
             inputType: document.getElementById('metricInputType')?.value || 'manual',
             privacy: document.getElementById('metricPrivacy')?.value || 'public',
+            visibleTo: document.getElementById('metricPrivacy')?.value === 'restricted'
+                ? Array.from(document.querySelectorAll('.visible-to-cb:checked')).map(cb => cb.value)
+                : [],
             formula: document.getElementById('metricFormula')?.value?.trim() || '',
             alertEnabled: document.getElementById('metricAlertEnabled')?.value === 'true',
             alertThreshold: parseInt(document.getElementById('metricAlertThreshold')?.value) || 20,
@@ -709,7 +727,18 @@
                 document.getElementById('metricTarget').value = m.defaultTarget || '';
                 document.getElementById('metricFormula').value = m.formula || '';
                 document.getElementById('metricInputType').value = m.inputType || 'manual';
-                document.getElementById('metricPrivacy').value = m.privacy || 'public';
+                const privVal = m.privacy || 'public';
+                document.getElementById('metricPrivacy').value = privVal;
+                if (typeof window.selectMetricPrivacy === 'function') window.selectMetricPrivacy(privVal);
+                // visibleTo
+                if (privVal === 'restricted' && m.visibleTo) {
+                    setTimeout(() => {
+                        document.querySelectorAll('.visible-to-cb').forEach(cb => {
+                            cb.checked = m.visibleTo.includes(cb.value);
+                        });
+                        if (typeof renderVisibleToList === 'function') renderVisibleToList();
+                    }, 50);
+                }
                 document.getElementById('metricIsInverse').checked = m.isInverse || false;
                 // Set unit pills
                 selectMetricUnit(m.unit || 'шт');
@@ -735,6 +764,7 @@
             document.getElementById('metricFormula').value = '';
             document.getElementById('metricInputType').value = 'manual';
             document.getElementById('metricPrivacy').value = 'public';
+            if (typeof window.selectMetricPrivacy === 'function') window.selectMetricPrivacy('public');
             document.getElementById('metricIsInverse').checked = false;
             selectMetricUnit('грн');
             selectMetricImportance('critical');
@@ -743,6 +773,43 @@
 
         document.getElementById('metricModal').style.display = 'flex';
     }
+
+
+    window.selectMetricPrivacy = function(val) {
+        document.getElementById('metricPrivacy').value = val;
+        document.querySelectorAll('.metric-privacy-btn').forEach(btn => {
+            const active = btn.dataset.privacy === val;
+            btn.style.borderColor = active ? '#22c55e' : '#e5e7eb';
+            btn.style.background  = active ? '#f0fdf4' : '#f9fafb';
+            btn.style.color       = active ? '#16a34a' : '#374151';
+        });
+        const block = document.getElementById('metricVisibleToBlock');
+        if (block) block.style.display = val === 'restricted' ? 'block' : 'none';
+        if (val === 'restricted') renderVisibleToList();
+    };
+
+    function renderVisibleToList() {
+        const container = document.getElementById('metricVisibleToList');
+        if (!container) return;
+        const us = typeof users !== 'undefined' ? users : [];
+        const currentIds = getVisibleToIds();
+        container.innerHTML = us.map(u => {
+            const checked = currentIds.includes(u.id);
+            return `<label style="display:flex;align-items:center;gap:0.35rem;padding:0.3rem 0.6rem;background:${checked ? '#f0fdf4' : '#f3f4f6'};border:1px solid ${checked ? '#86efac' : '#e5e7eb'};border-radius:8px;font-size:0.8rem;cursor:pointer;">
+                <input type="checkbox" class="visible-to-cb" value="${u.id}" ${checked ? 'checked' : ''} 
+                    onchange="updateVisibleTo()" style="accent-color:#22c55e;">
+                ${esc(u.name || u.email || u.id)}
+            </label>`;
+        }).join('');
+    }
+
+    function getVisibleToIds() {
+        return Array.from(document.querySelectorAll('.visible-to-cb:checked')).map(cb => cb.value);
+    }
+
+    window.updateVisibleTo = function() {
+        renderVisibleToList();
+    };
 
     function toggleAutoSpec() {
         const b = document.getElementById('autoSpecBlock');
@@ -781,7 +848,7 @@
         const h = document.getElementById('statsHeaderBar');
         if (!h) return;
         const role = getUserRole();
-        const canEdit = role === 'owner' || role === 'manager' || role === 'admin';
+        const canEdit = (typeof hasPermission === 'function') ? hasPermission('editMetrics') : (role === 'owner' || role === 'admin' || role === 'manager');
         const metricCount = statsMetrics.length;
 
         h.innerHTML = `
@@ -971,9 +1038,9 @@
             <span class="stats-section-count">(${metrics.length})</span>
         </div>
         <div class="stats-table-wrap">
-            <table class="stats-table">
+            <table class="stats-table" style="table-layout:fixed;width:100%;">
                 <thead><tr>
-                    <th style="min-width:110px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</div></th>`;
+                    <th style="width:140px;min-width:140px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</div></th>`;
 
         // Column headers = metric names with actions
         const impColors = { critical: '#ef4444', high: '#f97316', medium: '#f59e0b', low: '#22c55e' };
@@ -990,7 +1057,7 @@
                 respName = ru ? esc(ru.name || ru.email || '').split(' ')[0] : '';
             }
             const role = getUserRole();
-            const canEdit = role === 'owner' || role === 'manager' || role === 'admin';
+            const canEdit = (typeof hasPermission === 'function') ? hasPermission('editMetrics') : (role === 'owner' || role === 'admin' || role === 'manager');
             html += `<th title="${esc(m.name)}${respName ? ' · ' + respName : ''}" style="position:relative;">
                 <div class="th-inner">
                     <span style="color:${impColor};font-size:9px;">▸</span> ${esc(m.name)}${unit}${inverse}${privacy}
@@ -1066,7 +1133,7 @@
 
             // Row actions (comment + delete row for owner)
             const rowRole = getUserRole();
-            const isOwner = rowRole === 'owner';
+            const isOwner = (typeof hasPermission === 'function') ? hasPermission('deleteMetricRows') : (rowRole === 'owner' || rowRole === 'admin' || rowRole === 'manager');
             html += `<td style="white-space:nowrap;">
                 <button class="stats-comment-btn" onclick="openPeriodComment('${pk}')" title="Коментар">${SVG.comment}</button>
                 ${isOwner ? `<button class="stats-comment-btn stats-row-del" onclick="deleteStatsPeriodRow('${pk}','${freq}')" title="Видалити рядок" style="color:#e03e3e;">${SVG.trash}</button>` : ''}
@@ -1144,7 +1211,7 @@
         const color = METRIC_COLORS[mi % METRIC_COLORS.length];
 
         const role = getUserRole();
-        const canEdit = role === 'owner' || role === 'manager' || role === 'admin';
+        const canEdit = (typeof hasPermission === 'function') ? hasPermission('editMetrics') : (role === 'owner' || role === 'admin' || role === 'manager');
 
         const html = `
         <div class="stats-detail-header">

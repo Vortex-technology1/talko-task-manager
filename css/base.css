@@ -40,7 +40,7 @@
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 10006;
             min-width: 0;
         }
         
@@ -105,7 +105,7 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.18);
             min-width: 200px;
             padding: 6px;
-            z-index: 9999;
+            z-index: 10005;
             animation: hdrFadeIn 0.15s ease;
         }
         .hdr-dropdown-menu.show { display: block; }

@@ -74,12 +74,24 @@ service cloud.firestore {
           resource.data.role != 'owner';
       }
       
+      // ROLE PERMISSIONS — тільки owner може редагувати
+      match /rolePermissions/{roleId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if isCompanyOwner(companyId);
+      }
+
       // TASKS
       match /tasks/{taskId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId) && 
           isValidString(request.resource.data.title, 500);
-        allow update: if isCompanyMember(companyId);
+        // BUG #2 fix: employee може редагувати тільки свої завдання
+        allow update: if isManagerOrOwner(companyId) || 
+          (isCompanyMember(companyId) && (
+            resource.data.assigneeId == userId() ||
+            resource.data.creatorId == userId() ||
+            (resource.data.coExecutorIds != null && resource.data.coExecutorIds.hasAny([userId()]))
+          ));
         allow delete: if isManagerOrOwner(companyId) || 
           (isCompanyMember(companyId) && resource.data.creatorId == userId());
         

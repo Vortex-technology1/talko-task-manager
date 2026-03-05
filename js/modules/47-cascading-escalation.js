@@ -47,7 +47,7 @@
             const level3 = overdueTasks.filter(t => getEscalationLevel(t)?.level === 3);
             
             // Показуємо сповіщення для менеджерів та овнерів
-            if (currentUserData?.role === 'owner' || currentUserData?.role === 'manager') {
+            if ((typeof hasPermission === 'function' && hasPermission('viewControl')) || currentUserData?.role === 'owner' || currentUserData?.role === 'manager') {
                 if (level3.length > 0) {
                     showToast(t('escalationCritical').replace('{n}', level3.length), 'error', 8000);
                 } else if (level2.length > 0) {

@@ -298,7 +298,7 @@
             
             // Permission check: owner/admin/manager can move any, employee only own
             const role = currentUserData?.role;
-            const canMove = role === 'owner' || role === 'admin' || role === 'manager' 
+            const canMove = (typeof hasPermission === 'function' && hasPermission('editAnyTask')) || role === 'owner' || role === 'admin' || role === 'manager' 
                 || task.assigneeId === currentUser.uid || task.creatorId === currentUser.uid;
             if (!canMove) {
                 showToast(t('noPermissionTask'), 'error');
@@ -307,7 +307,7 @@
             
             // FEAT-007: deadline drag перевіряє allowDeadlineChange
             if (mode === 'deadlines' && typeof canEditDeadline === 'function') {
-                const isPrivileged = role === 'owner' || role === 'admin' || role === 'manager';
+                const isPrivileged = (typeof hasPermission === 'function' && hasPermission('assignTasks')) || role === 'owner' || role === 'admin' || role === 'manager';
                 if (!isPrivileged && !canEditDeadline(task)) {
                     showToast(t('noPermissionDeadline') || 'Зміна строків заборонена власником', 'error');
                     kanbanDropLock = false; return;

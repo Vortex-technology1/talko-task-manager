@@ -158,6 +158,11 @@
                     const visible = tasks.filter(t => isTaskVisibleToUser(t)).length;
                     console.log(`[Visibility] Employee "${currentUserData.name}" sees ${visible}/${tasks.length} tasks`);
                 }
+                // BUG #1 fix: ініціалізуємо систему ролей після завантаження даних компанії
+                if (typeof window.initRolesPermissions === 'function') {
+                    window.initRolesPermissions().catch(e => console.warn('[Roles] init error:', e));
+                }
+                document.dispatchEvent(new CustomEvent('companyLoaded'));
                 
             } catch (error) {
                 console.error('loadAllData error:', error);

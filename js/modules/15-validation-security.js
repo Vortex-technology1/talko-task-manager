@@ -74,13 +74,14 @@
         function canEditTask(task) {
             if (!currentUserData || !currentUser) return false;
             const role = currentUserData.role;
-            if (role === 'owner' || role === 'admin' || role === 'manager') return true;
+            if ((typeof hasPermission === 'function' && hasPermission('editAnyTask')) || role === 'owner' || role === 'admin' || role === 'manager') return true;
             const uid = currentUser.uid;
             return task.assigneeId === uid || task.creatorId === uid;
         }
         
         function isManagerOrAbove() {
             const role = currentUserData?.role;
+            if (typeof hasPermission === 'function') return hasPermission('deleteAnyTask') || role === 'owner' || role === 'superadmin';
             return role === 'owner' || role === 'admin' || role === 'manager' || role === 'superadmin';
         }
         
@@ -103,7 +104,7 @@
         
         function _buildVisibleSet() {
             if (!currentUserData || !currentUser) return null;
-            if (currentUserData.role === 'owner' || currentUserData.role === 'manager') return null;
+            if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'manager') return null;
             const uid = currentUser.uid;
             const s = new Set();
             for (const t of tasks) {
@@ -118,7 +119,7 @@
         
         function isTaskVisibleToUser(task) {
             if (!currentUserData || !currentUser) return true;
-            if (currentUserData.role === 'owner' || currentUserData.role === 'manager') return true;
+            if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'manager') return true;
             if (_visibleTaskIds === null) _visibleTaskIds = _buildVisibleSet();
             if (_visibleTaskIds === null) return true;
             return _visibleTaskIds.has(task.id);

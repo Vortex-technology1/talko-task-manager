@@ -116,8 +116,8 @@
                     // Task actions — показуємо керівнику/постановнику дії залежно від статусу
                     const reviewActions = document.getElementById('taskReviewActions');
                     if (reviewActions) {
-                        const isOwnerOrAdmin = currentUserData?.role === 'owner' || currentUserData?.role === 'admin';
-                        const isManager = currentUserData?.role === 'manager';
+                        const isOwnerOrAdmin = (typeof hasPermission === 'function' ? hasPermission('editAnyTask') : false) || currentUserData?.role === 'owner' || currentUserData?.role === 'admin';
+                        const isManager = currentUserData?.role === 'manager' || (typeof hasPermission === 'function' && hasPermission('editAnyTask'));
                         const isCreator = task.creatorId === currentUser?.uid;
                         const canManage = isOwnerOrAdmin || isManager || isCreator;
                         const isAssignee = task.assigneeId === currentUser?.uid;

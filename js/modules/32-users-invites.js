@@ -10,8 +10,16 @@
         async function sendInvite(e) {
             e.preventDefault();
             if (currentUserData?.role === 'employee') { showToast(t('noPermissionTask'), 'error'); return; }
-            const email = document.getElementById('inviteEmail').value.trim().toLowerCase();
-            const role = document.getElementById('inviteRole').value;
+            // BUG #3 fix: визначаємо активну форму (desktop або mobile)
+            const emailDesktop = document.getElementById('inviteEmailDesktop');
+            const emailMobile = document.getElementById('inviteEmailMobile');
+            const roleDesktop = document.getElementById('inviteRoleDesktop');
+            const roleMobile = document.getElementById('inviteRoleMobile');
+            // Беремо з тієї форми яка видима і заповнена
+            const activeEmail = (emailDesktop?.offsetParent !== null ? emailDesktop : emailMobile);
+            const activeRole = (roleDesktop?.offsetParent !== null ? roleDesktop : roleMobile);
+            const email = (activeEmail?.value || '').trim().toLowerCase();
+            const role = activeRole?.value || 'employee';
             
             try {
                 const inviteRef = await db.collection('invites').add({
@@ -125,7 +133,7 @@
                 return;
             }
             
-            const canEdit = currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
+            const canEdit = (typeof hasPermission === 'function' ? hasPermission('changeRoles') : false) || currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
             const todayStr = getLocalDateStr(new Date());
             const shortDays = getDayNamesShort();
             const jsDayToIdx = {1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6};
@@ -141,7 +149,7 @@
                 const newTasks = userTasks.filter(tk => tk.status === 'new');
                 const inProgress = userTasks.filter(tk => tk.status === 'progress');
                 const onReview = userTasks.filter(tk => tk.status === 'review');
-                const overdue = activeTasks.filter(tk => tk.deadlineDate && t.deadlineDate < todayStr);
+                const overdue = activeTasks.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr);
                 const returned = userTasks.filter(tk => tk.reviewRejectedAt);
                 
                 // Autonomy index: % done without returns (from all done tasks)
@@ -295,6 +303,7 @@
                             ${returned.length > 0 ? `<span style="color:#f59e0b;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>${returned.length}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.25rem;align-items:center;" onclick="event.stopPropagation();">
+                            ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserPermissionsModal('${u.id}')" title="Дозволи" style="background:#f0f9ff;color:#0369a1;"><i data-lucide="key" class="icon icon-sm"></i></button>` : ''}
                             ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
                             ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : ''}
                             <i data-lucide="chevron-down" class="icon icon-sm" style="color:#d1d5db;" id="userToggle_${u.id}"></i>
@@ -426,3 +435,86 @@
                 showAlertModal(t('error') + ': ' + e.message);
             }
         }
+
+        // ---- USER PERMISSIONS MODAL ----
+        window.openUserPermissionsModal = function(userId) {
+            const u = users.find(x => x.id === userId);
+            if (!u) return;
+
+            const PERMISSION_GROUPS = [
+                { group: 'Статистика', items: [
+                    { key: 'viewStats',        label: 'Переглядати статистику' },
+                    { key: 'viewAllMetrics',   label: 'Бачити всі метрики' },
+                    { key: 'editMetrics',      label: 'Редагувати метрики' },
+                    { key: 'deleteMetricRows', label: 'Видаляти рядки' },
+                ]},
+                { group: 'Завдання', items: [
+                    { key: 'viewAllTasks',  label: 'Бачити всі завдання' },
+                    { key: 'assignTasks',   label: 'Призначати виконавців' },
+                    { key: 'editAnyTask',   label: 'Редагувати будь-яке завдання' },
+                    { key: 'deleteAnyTask', label: 'Видаляти завдання' },
+                ]},
+                { group: 'Контроль', items: [
+                    { key: 'viewControl',    label: 'Панель контролю' },
+                    { key: 'viewAiAnalysis', label: 'AI Аналіз' },
+                ]},
+                { group: 'Команда', items: [
+                    { key: 'inviteUsers', label: 'Запрошувати співробітників' },
+                    { key: 'changeRoles', label: 'Змінювати ролі' },
+                ]},
+            ];
+
+            const custom = u.customPermissions || {};
+            const rolePerms = (typeof DEFAULT_ROLE_PERMISSIONS !== 'undefined' && DEFAULT_ROLE_PERMISSIONS[u.role]) || {};
+
+            let html = `<div style="max-height:70vh;overflow-y:auto;padding:0.25rem;">
+                <p style="font-size:0.82rem;color:#6b7280;margin:0 0 1rem;">
+                    Базові права від ролі <strong>${u.role}</strong>. Перемикачі нижче — індивідуальні override.
+                </p>`;
+
+            PERMISSION_GROUPS.forEach(group => {
+                html += `<div style="margin-bottom:1rem;">
+                    <div style="font-size:0.75rem;font-weight:700;color:#16a34a;text-transform:uppercase;padding:0.4rem 0;border-bottom:1px solid #f0fdf4;margin-bottom:0.5rem;">${group.group}</div>`;
+                group.items.forEach(item => {
+                    const roleDefault = !!rolePerms[item.key];
+                    const override = custom[item.key];
+                    const effective = override !== undefined ? override : roleDefault;
+                    html += `<label style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;border-radius:8px;cursor:pointer;background:${effective ? '#f0fdf4' : '#f9fafb'};margin-bottom:0.3rem;border:1px solid ${effective ? '#bbf7d0' : '#e5e7eb'};">
+                        <span style="font-size:0.83rem;color:#374151;">${item.label}
+                            <span style="font-size:0.72rem;color:#9ca3af;margin-left:0.4rem;">(роль: ${roleDefault ? '✓' : '✗'})</span>
+                        </span>
+                        <input type="checkbox" data-perm="${item.key}" ${effective ? 'checked' : ''} 
+                            onchange="updateUserPermOverride('${userId}','${item.key}',this.checked)"
+                            style="width:18px;height:18px;accent-color:#22c55e;cursor:pointer;">
+                    </label>`;
+                });
+                html += '</div>';
+            });
+            html += '</div>';
+
+            const modal = document.getElementById('userPermissionsModal');
+            const body = document.getElementById('userPermissionsModalBody');
+            const title = document.getElementById('userPermissionsModalTitle');
+            if (title) title.textContent = `Дозволи: ${u.name || u.email}`;
+            if (body) body.innerHTML = html;
+            if (modal) { modal.style.display = 'flex'; }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.updateUserPermOverride = async function(userId, key, value) {
+            if (!currentCompany) return;
+            try {
+                await db.collection('companies').doc(currentCompany)
+                    .collection('users').doc(userId)
+                    .set({ customPermissions: { [key]: value } }, { merge: true });
+                // Оновлюємо локальний стейт
+                const u = users.find(x => x.id === userId);
+                if (u) {
+                    if (!u.customPermissions) u.customPermissions = {};
+                    u.customPermissions[key] = value;
+                }
+                showToast('Збережено', 'success');
+            } catch(e) {
+                showToast('Помилка: ' + e.message, 'error');
+            }
+        };
