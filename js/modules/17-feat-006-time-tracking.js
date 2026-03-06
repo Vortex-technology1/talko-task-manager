@@ -8,7 +8,7 @@
         function toggleTimeTracker() {
             if (!editingId) return;
             
-            if (timeTrackerInterval) {
+            if (window.timeTrackerInterval) {
                 // СТОП
                 stopTimeTracker();
             } else {
@@ -21,8 +21,8 @@
                 refreshIcons();
                 
                 window.timeTrackerInterval = setInterval(() => {
-                    if (!timeTrackerStart) return;
-                    const elapsed = Math.floor((Date.now() - timeTrackerStart) / 1000);
+                    if (!window.timeTrackerStart) return;
+                    const elapsed = Math.floor((Date.now() - window.timeTrackerStart) / 1000);
                     const mins = Math.floor(elapsed / 60);
                     const secs = elapsed % 60;
                     document.getElementById('timeTrackActual').textContent = formatTrackedTime(getTotalTrackedMinutes() + mins) + ':' + String(secs).padStart(2, '0').slice(-2);
@@ -33,9 +33,9 @@
         function stopTimeTracker() {
             if (!window.timeTrackerStart || !timeTrackerTaskId) return;
             
-            const elapsed = Math.round((Date.now() - timeTrackerStart) / 60000); // хвилини
-            clearInterval(timeTrackerInterval);
-            timeTrackerInterval = null;
+            const elapsed = Math.round((Date.now() - window.timeTrackerStart) / 60000); // хвилини
+            clearInterval(window.timeTrackerInterval);
+            window.timeTrackerInterval = null;
             
             const btn = document.getElementById('timeTrackBtn');
             btn.style.background = '#22c55e';
@@ -46,7 +46,7 @@
                 addTimeEntry(elapsed);
             }
             
-            timeTrackerStart = null;
+            window.timeTrackerStart = null;
         }
         
         function addManualTime() {

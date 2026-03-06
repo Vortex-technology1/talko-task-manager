@@ -150,7 +150,7 @@
             document.getElementById('notificationBell').style.display = 'flex';
             // Відновлюємо стан кнопки "Приховати виконані"
             const hideBtn = document.getElementById('hideCompletedBtn');
-            if (hideBtn && hideCompletedTasks) hideBtn.classList.add('active');
+            if (hideBtn && window.hideCompletedTasks) hideBtn.classList.add('active');
         }
 
         function getRoleText(role) {

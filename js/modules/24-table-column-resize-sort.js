@@ -3,7 +3,7 @@
         // =====================
         let taskSortField = localStorage.getItem('taskSortField') || '';
         let taskSortDir = localStorage.getItem('taskSortDir') || 'asc';
-        let hideCompletedTasks = localStorage.getItem('hideCompletedTasks') === 'true';
+        window.hideCompletedTasks = localStorage.getItem('hideCompletedTasks') === 'true';
         
         function sortTasksBy(field) {
             if (taskSortField === field) {
@@ -18,8 +18,8 @@
         }
         
         function toggleHideCompleted() {
-            hideCompletedTasks = !hideCompletedTasks;
-            localStorage.setItem('hideCompletedTasks', hideCompletedTasks);
+            window.hideCompletedTasks = !window.hideCompletedTasks;
+            localStorage.setItem('hideCompletedTasks', window.hideCompletedTasks);
             const btn = document.getElementById('hideCompletedBtn');
             if (btn) btn.classList.toggle('active', hideCompletedTasks);
             renderTasks();
