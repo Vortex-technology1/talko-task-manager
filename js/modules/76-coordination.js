@@ -23,6 +23,12 @@
     let currentProtocol = null;
     let editingCoordId = null;
 
+    const COORD_LUCIDE_ICONS = {
+        daily: 'sun', weekly: 'calendar', monthly: 'calendar-range',
+        council_rec: 'handshake', council_dir: 'target', council_exe: 'zap',
+        council_own: 'crown', oneoff: 'bell',
+    };
+
     const ESCALATION_CHAIN = {
         daily: 'weekly',
         weekly: 'council_rec',
@@ -189,7 +195,7 @@
         if (ce) ce.textContent = coordinations.length;
         if (!coordinations.length) {
             el.innerHTML = `<div style="text-align:center;padding:3rem 1rem;">
-              <div style="font-size:3rem;margin-bottom:.75rem;">📅</div>
+              <div style="display:flex;justify-content:center;margin-bottom:.75rem;"><i data-lucide="calendar-x" style="width:48px;height:48px;color:#d1d5db;"></i></div>
               <p style="color:#6b7280;margin:0 0 1rem;">Координацій ще немає</p>
               ${isManager()?'<button class="btn btn-success" onclick="openCoordModal()">+ Додати першу</button>':''}
             </div>`;
@@ -228,7 +234,9 @@
              onmouseenter="this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseleave="this.style.boxShadow='0 1px 4px rgba(0,0,0,.05)'">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.45rem;">
             <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:0;">
-              <span style="font-size:1.2rem;">${type.icon}</span>
+              <span style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:${type.color}18;flex-shrink:0;">
+                    <i data-lucide="${COORD_LUCIDE_ICONS[c.type]||'calendar'}" style="width:15px;height:15px;color:${type.color};"></i>
+                  </span>
               <span style="font-weight:700;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(c.name)}">${esc(c.name)}</span>
             </div>
             <div style="display:flex;align-items:center;gap:.25rem;flex-shrink:0;">
@@ -241,9 +249,9 @@
           <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.55rem;">
             <span style="background:${type.color}18;color:${type.color};padding:.1rem .4rem;border-radius:5px;font-size:.7rem;font-weight:600;">${type.label}</span>
             ${sched?`<span style="background:#f3f4f6;color:#6b7280;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;">🕐 ${esc(sched)}</span>`:''}
-            <span style="background:#f0fdf4;color:#16a34a;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;">👥 ${cnt}</span>
+            <span style="background:#f0fdf4;color:#16a34a;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><i data-lucide="users" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:2px;"></i>${cnt}</span>
             <span style="background:#f3f4f6;color:#6b7280;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;">⏱ ~${type.duration}хв</span>
-            ${(c.dynamicAgenda||[]).length?`<span style="background:#fef3c7;color:#d97706;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;">❓ ${c.dynamicAgenda.length}</span>`:''}
+            ${(c.dynamicAgenda||[]).length?`<span style="background:#fef3c7;color:#d97706;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><i data-lucide="help-circle" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:2px;"></i>${c.dynamicAgenda.length}</span>`:''}
           </div>
           <div style="font-size:.77rem;color:#6b7280;margin-bottom:.55rem;">
             Голова: <strong style="color:#374151;">${esc(chairName)}</strong>
@@ -253,7 +261,7 @@
             <button onclick="startCoordSession('${c.id}')" class="btn btn-success" style="flex:1;padding:.35rem;font-size:.78rem;border-radius:9px;">
               <i data-lucide="play" style="width:13px;height:13px;"></i> Розпочати
             </button>
-            <button onclick="openDynAgenda('${c.id}')" style="padding:.35rem .55rem;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.78rem;color:#6b7280;" title="Порядок денний">📋</button>
+            <button onclick="openDynAgenda('${c.id}')" style="padding:.35rem .55rem;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.78rem;color:#6b7280;" title="Порядок денний"><i data-lucide="list" style="width:14px;height:14px;"></i></button>
             <button onclick="viewCoordHistory('${c.id}')" style="padding:.35rem .55rem;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.78rem;color:#6b7280;" title="Протоколи">📄</button>
           </div>
         </div>`;
@@ -279,7 +287,7 @@
 
               <!-- Назва -->
               <div style="${sectionStyle}">
-                <label style="${labelStyle}">Назва координації</label>
+                <label style="${labelStyle}"><i data-lucide="pen-line" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Назва координації</label>
                 <input id="coordName" type="text" placeholder="Щоденна координація команди"
                   style="${fieldStyle}"
                   onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
@@ -288,23 +296,23 @@
               <!-- Тип + Статус -->
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                 <div style="${sectionStyle}">
-                  <label style="${labelStyle}">Тип</label>
+                  <label style="${labelStyle}"><i data-lucide="layout-grid" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Тип</label>
                   <select id="coordType" style="${fieldStyle}cursor:pointer;">
-                    ${Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v.icon} ${v.label}</option>`).join('')}
+                    ${Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}
                   </select>
                 </div>
                 <div style="${sectionStyle}">
-                  <label style="${labelStyle}">Статус</label>
+                  <label style="${labelStyle}"><i data-lucide="activity" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Статус</label>
                   <select id="coordStatus" style="${fieldStyle}cursor:pointer;">
-                    <option value="active">✅ Активна</option>
-                    <option value="paused">⏸ Призупинена</option>
+                    <option value="active">Активна</option>
+                    <option value="paused">Призупинена</option>
                   </select>
                 </div>
               </div>
 
               <!-- Голова -->
               <div style="${sectionStyle}">
-                <label style="${labelStyle}">Голова координації</label>
+                <label style="${labelStyle}"><i data-lucide="user-check" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Голова координації</label>
                 <select id="coordChairman" style="${fieldStyle}cursor:pointer;">
                   <option value="">— Оберіть відповідального —</option>${uOpts}
                 </select>
@@ -312,7 +320,7 @@
 
               <!-- Учасники -->
               <div style="${sectionStyle}">
-                <label style="${labelStyle}">Учасники</label>
+                <label style="${labelStyle}"><i data-lucide="users" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Учасники</label>
                 <div id="coordParticipants" style="display:flex;flex-wrap:wrap;gap:.5rem;padding:.75rem;border:1.5px solid #e5e7eb;border-radius:14px;min-height:52px;background:#fafafa;">
                   ${coordUsers.map(u=>`
                   <label style="display:flex;align-items:center;gap:.4rem;padding:.35rem .7rem;background:#fff;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:500;border:1.5px solid #e5e7eb;transition:all .15s;"
@@ -327,14 +335,14 @@
               <!-- День + Час -->
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                 <div style="${sectionStyle}">
-                  <label style="${labelStyle}">День тижня</label>
+                  <label style="${labelStyle}"><i data-lucide="calendar-days" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>День тижня</label>
                   <select id="coordDay" style="${fieldStyle}cursor:pointer;">
                     <option value="">— Будь-який —</option>
                     ${DAYS_UK.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}
                   </select>
                 </div>
                 <div style="${sectionStyle}">
-                  <label style="${labelStyle}">Час початку</label>
+                  <label style="${labelStyle}"><i data-lucide="clock" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Час початку</label>
                   <input id="coordTime" type="time" style="${fieldStyle}"
                     onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
@@ -342,7 +350,7 @@
 
               <!-- Фільтр завдань -->
               <div style="${sectionStyle}">
-                <label style="${labelStyle}">Фільтр завдань</label>
+                <label style="${labelStyle}"><i data-lucide="filter" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Фільтр завдань</label>
                 <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
                   ${[['filterFunctions','По функціях'],['filterProjects','По проектах'],
                      ['filterAssignees','По виконавцях'],['filterOverdue','Прострочені'],
@@ -355,7 +363,7 @@
 
               <!-- Ескалація -->
               <div style="${sectionStyle}">
-                <label style="${labelStyle}">Ескалація до</label>
+                <label style="${labelStyle}"><i data-lucide="arrow-up-circle" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Ескалація до</label>
                 <select id="coordEscalTarget" style="${fieldStyle}cursor:pointer;">
                   <option value="">— Авто по типу —</option>${cOpts}
                 </select>
@@ -364,7 +372,7 @@
 
               <!-- Telegram -->
               <div style="${sectionStyle}">
-                <label style="${labelStyle}">Telegram Chat ID</label>
+                <label style="${labelStyle}"><i data-lucide="send" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px;"></i>Telegram Chat ID</label>
                 <input id="coordTelegramChat" type="text" placeholder="-100xxxxxxxxxx"
                   style="${fieldStyle}"
                   onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
@@ -387,7 +395,7 @@
         <div id="coordDynAgendaModal" class="modal" role="dialog" style="display:none;z-index:10015;">
           <div class="modal-content" style="max-width:480px;max-height:80vh;overflow-y:auto;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem;">
-              <h2 id="dynAgendaTitle" style="margin:0;font-size:1rem;">📋 Порядок денний</h2>
+              <h2 id="dynAgendaTitle" style="margin:0;font-size:1rem;"><i data-lucide="list-checks" style="width:12px;height:12px;margin-right:4px;"></i>Порядок денний</h2>
               <button onclick="closeDynAgenda()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#9ca3af;">✕</button>
             </div>
             <div style="font-size:.78rem;color:#6b7280;margin-bottom:.65rem;">Учасники додають питання до початку координації</div>
@@ -412,7 +420,7 @@
               </div>
               <div style="display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;">
                 <span id="coordTimer" style="font-size:1.15rem;font-weight:700;color:#16a34a;font-variant-numeric:tabular-nums;background:#f0fdf4;padding:.18rem .55rem;border-radius:8px;">00:00</span>
-                <button onclick="finishCoordSession()" class="btn btn-success" style="padding:.38rem .9rem;font-size:.82rem;">✅ Завершити</button>
+                <button onclick="finishCoordSession()" class="btn btn-success" style="padding:.38rem .9rem;font-size:.82rem;"><i data-lucide="check-circle" style="width:14px;height:14px;margin-right:4px;"></i>Завершити</button>
                 <button onclick="closeCoordSession()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#9ca3af;" title="Закрити">✕</button>
               </div>
             </div>
@@ -420,25 +428,25 @@
             <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:1.1rem;">
               <!-- Left -->
               <div>
-                <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;">📋 Порядок денний</div>
+                <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="list-checks" style="width:12px;height:12px;margin-right:4px;"></i>Порядок денний</div>
                 <div id="coordAgenda" style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:1rem;"></div>
-                <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;">👥 Учасники</div>
+                <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="users" style="width:12px;height:12px;margin-right:4px;"></i>Учасники</div>
                 <div id="coordParticipantRatings" style="display:flex;flex-direction:column;gap:.35rem;"></div>
               </div>
               <!-- Right -->
               <div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
-                  <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;">📌 Завдання</div>
+                  <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;"><i data-lucide="check-square" style="width:12px;height:12px;margin-right:4px;"></i>Завдання</div>
                   <button onclick="openAddTaskFromCoord()" style="background:#f0fdf4;border:1.5px solid #22c55e;color:#16a34a;border-radius:7px;padding:.18rem .5rem;font-size:.72rem;cursor:pointer;">+ Завдання</button>
                 </div>
                 <div id="coordTaskList" style="display:flex;flex-direction:column;gap:.28rem;max-height:230px;overflow-y:auto;margin-bottom:.9rem;"></div>
-                <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;">📊 Метрики</div>
+                <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="bar-chart-2" style="width:12px;height:12px;margin-right:4px;"></i>Метрики</div>
                 <div id="coordMetricsList" style="display:flex;flex-direction:column;gap:.28rem;max-height:150px;overflow-y:auto;"></div>
               </div>
             </div>
             <!-- Decisions -->
             <div style="margin-top:.8rem;border-top:1px solid #f0f0f0;padding-top:.7rem;">
-              <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;">⚡ Рішення</div>
+              <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="zap" style="width:12px;height:12px;margin-right:4px;"></i>Рішення</div>
               <div id="coordDecisions" style="display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;"></div>
               <div style="display:flex;gap:.45rem;">
                 <input id="coordNewDecision" type="text" class="form-control" placeholder="Зафіксувати рішення..." style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addCoordDecision()">
@@ -447,7 +455,7 @@
             </div>
             <!-- Unresolved / Escalation -->
             <div style="margin-top:.8rem;border-top:1px solid #f0f0f0;padding-top:.7rem;">
-              <div style="font-weight:700;font-size:.78rem;color:#d97706;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;">🔺 Ескалація (невирішені питання)</div>
+              <div style="font-weight:700;font-size:.78rem;color:#d97706;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="arrow-up-circle" style="width:12px;height:12px;margin-right:4px;color:#d97706;"></i>Ескалація (невирішені питання)</div>
               <div id="coordUnresolved" style="display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;"></div>
               <div style="display:flex;gap:.45rem;">
                 <input id="coordNewUnresolved" type="text" class="form-control" placeholder="Питання що потребує ескалації вгору..." style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addUnresolved()">
@@ -456,7 +464,7 @@
             </div>
             <!-- Notes -->
             <div style="margin-top:.8rem;border-top:1px solid #f0f0f0;padding-top:.7rem;">
-              <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem;">📝 Нотатки голови</div>
+              <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem;"><i data-lucide="file-text" style="width:12px;height:12px;margin-right:4px;"></i>Нотатки голови</div>
               <textarea id="coordNotes" class="form-control" rows="2" placeholder="Нотатки..." style="width:100%;box-sizing:border-box;resize:vertical;font-size:.83rem;"></textarea>
             </div>
           </div>
@@ -589,7 +597,7 @@
         dynAgendaCoordId = coordId;
         const c = coordinations.find(x=>x.id===coordId);
         sessionDynamicAgenda = [...(c?.dynamicAgenda||[])];
-        document.getElementById('dynAgendaTitle').textContent = '📋 ' + (c?.name||'Порядок денний');
+        document.getElementById('dynAgendaTitle').textContent = '' + (c?.name||'Порядок денний');
         renderDynAgendaList();
         document.getElementById('coordDynAgendaModal').style.display='flex';
     };
@@ -765,7 +773,7 @@
                 <span style="font-size:.76rem;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(t.title)}">${esc(t.title)}</span>
                 <span style="background:${co}15;color:${co};padding:.06rem .3rem;border-radius:4px;font-size:.66rem;flex-shrink:0;">${sl[t.status]||t.status}</span>
               </div>
-              <div style="font-size:.68rem;color:#9ca3af;margin-top:1px;">${an?`👤${esc(an)}`:''}${t.deadlineDate?` · 📅${fmtDate(t.deadlineDate)}`:''}</div>
+              <div style="font-size:.68rem;color:#9ca3af;margin-top:1px;">${an?`${esc(an)}`:''}${t.deadlineDate?` · ${fmtDate(t.deadlineDate)}`:''}</div>
             </div>`;
         }).join('');
     }
@@ -785,7 +793,7 @@
               <div style="display:flex;align-items:center;gap:.35rem;flex-shrink:0;">
                 ${val!==undefined?`<span style="font-size:.8rem;font-weight:700;color:${ok===true?'#16a34a':ok===false?'#ef4444':'#374151'};">${val}${m.unit?' '+m.unit:''}</span>`:'<span style="color:#d1d5db;font-size:.72rem;">—</span>'}
                 ${tgt!==undefined?`<span style="font-size:.68rem;color:#9ca3af;">/${tgt}</span>`:''}
-                ${ok===true?'<span style="font-size:.76rem;">✅</span>':ok===false?'<span style="font-size:.76rem;">🔴</span>':''}
+                ${ok===true?'<i data-lucide="check-circle" style="width:13px;height:13px;color:#22c55e;"></i>':ok===false?'<i data-lucide="x-circle" style="width:13px;height:13px;color:#ef4444;"></i>':''}
               </div>
             </div>`;
         }).join('');
@@ -929,26 +937,26 @@
 
         content.innerHTML=`<div id="protocolPrintable">
           <div style="background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border-radius:12px;padding:1.1rem;margin-bottom:.9rem;">
-            <div style="font-size:.72rem;opacity:.8;margin-bottom:.2rem;">${type.icon} ${type.label}</div>
+            <div style="font-size:.72rem;opacity:.8;margin-bottom:.2rem;">${type.label}</div>
             <div style="font-weight:800;font-size:1.05rem;margin-bottom:.2rem;">${esc(session.coordName)}</div>
             <div style="font-size:.76rem;opacity:.9;">${startD?fmtDate(session.startedAt):''} · ${startD?fmtTime(session.startedAt):''} — ${endD?fmtTime(session.finishedAt):''}${dur?' · '+dur+' хв':''}</div>
           </div>
           ${decisions.length?`<div style="margin-bottom:.85rem;">
-            <div style="font-weight:700;font-size:.8rem;color:#374151;margin-bottom:.4rem;border-bottom:1.5px solid #f0fdf4;padding-bottom:.2rem;">⚡ Рішення (${decisions.length})</div>
+            <div style="font-weight:700;font-size:.8rem;color:#374151;margin-bottom:.4rem;border-bottom:1.5px solid #f0fdf4;padding-bottom:.2rem;"><i data-lucide="zap" style="width:12px;height:12px;margin-right:4px;"></i>Рішення (${decisions.length})</div>
             ${decisions.map((d,i)=>`<div style="display:flex;gap:.4rem;padding:.3rem 0;border-bottom:1px solid #f9fafb;">
               <span style="color:#16a34a;font-weight:700;">${i+1}.</span>
               <span style="font-size:.8rem;">${esc(d.text)}</span>
             </div>`).join('')}
           </div>`:''}
           ${unresolved.length?`<div style="margin-bottom:.85rem;">
-            <div style="font-weight:700;font-size:.8rem;color:#d97706;margin-bottom:.4rem;border-bottom:1.5px solid #fef9c3;padding-bottom:.2rem;">🔺 Ескальовані питання (${unresolved.length})</div>
+            <div style="font-weight:700;font-size:.8rem;color:#d97706;margin-bottom:.4rem;border-bottom:1.5px solid #fef9c3;padding-bottom:.2rem;"><i data-lucide="arrow-up-circle" style="width:12px;height:12px;margin-right:4px;color:#d97706;"></i>Ескальовані питання (${unresolved.length})</div>
             ${unresolved.map((d,i)=>`<div style="display:flex;gap:.4rem;padding:.3rem 0;border-bottom:1px solid #fef9c3;">
               <span style="color:#d97706;font-weight:700;">${i+1}.</span>
               <span style="font-size:.8rem;">${esc(d.text)}</span>
             </div>`).join('')}
           </div>`:''}
           ${session.taskSnapshot?.length?`<div style="margin-bottom:.85rem;">
-            <div style="font-weight:700;font-size:.8rem;color:#374151;margin-bottom:.4rem;border-bottom:1.5px solid #f0fdf4;padding-bottom:.2rem;">📌 Завдання (${session.taskSnapshot.length})</div>
+            <div style="font-weight:700;font-size:.8rem;color:#374151;margin-bottom:.4rem;border-bottom:1.5px solid #f0fdf4;padding-bottom:.2rem;"><i data-lucide="check-square" style="width:12px;height:12px;margin-right:4px;"></i>Завдання (${session.taskSnapshot.length})</div>
             <table style="width:100%;border-collapse:collapse;">
               <tr style="background:#f9fafb;">
                 <th style="padding:5px 7px;text-align:left;font-size:.72rem;color:#6b7280;">Завдання</th>
@@ -959,7 +967,7 @@
             </table>
           </div>`:''}
           ${session.notes?`<div style="margin-bottom:.85rem;">
-            <div style="font-weight:700;font-size:.8rem;color:#374151;margin-bottom:.35rem;">📝 Нотатки</div>
+            <div style="font-weight:700;font-size:.8rem;color:#374151;margin-bottom:.35rem;"><i data-lucide="file-text" style="width:12px;height:12px;margin-right:4px;"></i>Нотатки</div>
             <div style="font-size:.8rem;white-space:pre-wrap;background:#f9fafb;padding:.5rem;border-radius:8px;">${esc(session.notes)}</div>
           </div>`:''}
           <div style="margin-top:.85rem;padding-top:.6rem;border-top:1px solid #e5e7eb;font-size:.68rem;color:#9ca3af;">TALKO System · ${fmtDate(nowISO())}</div>
@@ -991,12 +999,12 @@
             const type=TYPES[session.coordType]||{icon:'📋'};
             const dec=session.decisions||[];
             const unr=session.unresolved||[];
-            const lines=[`${type.icon} *${session.coordName}*`,
-                `📅 ${fmtDate(session.startedAt)} ${fmtTime(session.startedAt)}—${fmtTime(session.finishedAt)}`,''];
-            if(dec.length){lines.push('⚡ *Рішення:*');dec.forEach((d,i)=>lines.push(`${i+1}. ${d.text}`));lines.push('');}
-            if(unr.length){lines.push('🔺 *Ескалація:*');unr.forEach((d,i)=>lines.push(`${i+1}. ${d.text}`));lines.push('');}
+            const lines=[`*${session.coordName}*`,
+                `${fmtDate(session.startedAt)} ${fmtTime(session.startedAt)}—${fmtTime(session.finishedAt)}`,''];
+            if(dec.length){lines.push('✦ *Рішення:*');dec.forEach((d,i)=>lines.push(`${i+1}. ${d.text}`));lines.push('');}
+            if(unr.length){lines.push('↑ *Ескалація:*');unr.forEach((d,i)=>lines.push(`${i+1}. ${d.text}`));lines.push('');}
             if(session.taskSnapshot?.length){
-                lines.push(`📌 *Завдань:* ${session.taskSnapshot.length}`);
+                lines.push(`*Завдань:* ${session.taskSnapshot.length}`);
                 session.taskSnapshot.slice(0,5).forEach(t=>{
                     const a=coordUsers.find(u=>u.id===t.assigneeId);
                     lines.push(`• ${t.title}${a?' — '+(a.name||a.email).split(' ')[0]:''}`);
@@ -1038,7 +1046,7 @@
                   onmouseenter="this.style.background='#f0fdf4'" onmouseleave="this.style.background='#f9fafb'">
                   <div style="font-weight:600;font-size:.82rem;">${fmtDate(s.startedAt)} ${fmtTime(s.startedAt)}</div>
                   <div style="font-size:.72rem;color:#6b7280;margin-top:2px;">
-                    ⚡${(s.decisions||[]).length} · 📌${(s.taskSnapshot||[]).length}${dur?' · '+dur+'хв':''}${(s.unresolved||[]).length?' · 🔺'+s.unresolved.length:''}
+                    ${(s.decisions||[]).length} рішень · ${(s.taskSnapshot||[]).length} завдань${dur?' · '+dur+'хв':''}${(s.unresolved||[]).length?' · '+s.unresolved.length+' ескал.':''}
                   </div>
                 </div>`;
             }).join('')}`;
@@ -1126,11 +1134,11 @@
           ${p.repD.map(([k,c])=>`<div style="font-size:.76rem;color:#374151;margin-top:2px;">• "${k}..." — ${c} рази</div>`).join('')}
         </div>`;
         if(p.repU.length) html+=`<div style="background:#fef2f2;border-radius:8px;padding:.6rem;margin-bottom:.5rem;">
-          <div style="font-weight:600;font-size:.8rem;color:#991b1b;margin-bottom:.3rem;">🔺 Повторювані невирішені питання → потрібне рішення власника</div>
+          <div style="font-weight:600;font-size:.8rem;color:#991b1b;margin-bottom:.3rem;"><i data-lucide="alert-triangle" style="width:12px;height:12px;margin-right:4px;"></i>Повторювані невирішені питання → потрібне рішення власника</div>
           ${p.repU.map(([k,c])=>`<div style="font-size:.76rem;color:#374151;margin-top:2px;">• "${k}..." — ${c} рази</div>`).join('')}
         </div>`;
         html+=`<div style="background:#f0fdf4;border-radius:8px;padding:.6rem;">
-          <div style="font-weight:600;font-size:.8rem;color:#166534;margin-bottom:.3rem;">📊 Загальна статистика</div>
+          <div style="font-weight:600;font-size:.8rem;color:#166534;margin-bottom:.3rem;"><i data-lucide="bar-chart-2" style="width:12px;height:12px;margin-right:4px;"></i>Загальна статистика</div>
           <div style="font-size:.76rem;color:#374151;">Координацій: ${p.total} · Рішень: ${p.totalDecisions} · Ескальовано: ${p.totalUnresolved} · Середня тривалість: ${p.avgDur}хв</div>
         </div>`;
         return html;
