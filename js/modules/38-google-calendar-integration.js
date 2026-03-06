@@ -2,7 +2,7 @@
         // GOOGLE CALENDAR INTEGRATION
         // =====================
         
-        function initGoogleCalendar() {
+        window.initGoogleCalendar = function initGoogleCalendar() {
             // Initialize token client for Google Identity Services
             if (typeof google === "undefined") return;
             tokenClient = google.accounts.oauth2.initTokenClient({

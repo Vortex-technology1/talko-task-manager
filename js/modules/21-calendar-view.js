@@ -828,7 +828,7 @@
         }
         
         // Initialize calendar
-        function initCalendar() {
+        window.initCalendar = function initCalendar() {
             // Load saved view preference
             const savedView = localStorage.getItem('calendarView') || 'day';
             setCalendarView(savedView);

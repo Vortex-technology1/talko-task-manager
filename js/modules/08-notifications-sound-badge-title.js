@@ -4,7 +4,7 @@
         window.tasksUnsubscribe = null;
         let lastTaskCount = 0;
         
-        function initTasksListener() {
+        window.initTasksListener = function initTasksListener() {
             if (!currentCompany || !currentUser) return;
             
             // Відписуємось від попереднього listener
