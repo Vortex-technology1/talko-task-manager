@@ -473,6 +473,10 @@ document.addEventListener('mousedown', function(e) {
                 </button>
 
                 <!-- 5. Контроль — без підменю -->
+                <button class="tab-btn" onclick="switchTab('coordination')" data-tab="coordination" aria-label="Координація">
+                    <i data-lucide="calendar-check" class="icon"></i>
+                    <span data-i18n="tabCoordination">Координація</span>
+                </button>
                 <button class="tab-btn" onclick="switchTab('control')" data-tab="control" aria-label="Контроль">
                     <i data-lucide="layout-dashboard" class="icon"></i>
                     <span data-i18n="tabControl">Контроль</span>
@@ -810,6 +814,9 @@ document.addEventListener('mousedown', function(e) {
             </div>
 
             <!-- CONTROL -->
+            <div id="coordinationTab" class="tab-content">
+                <div id="coordinationRoot"></div>
+            </div>
             <div id="controlTab" class="tab-content">
                 <!-- Owner Project Dashboard -->
                 <div id="ownerProjectDashboard" style="margin-bottom:1rem;"></div>
@@ -2253,6 +2260,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/64-focus-mode.js" defer></script>
     <script src="js/modules/65-business-structure.js" defer></script>
     <script src="js/modules/66-statistics.js" defer></script>
+    <script src="js/modules/76-coordination.js" defer></script>
     <script src="js/modules/67-project-stages.js" defer></script>
     <script src="js/modules/68-project-templates-qc.js" defer></script>
     <script src="js/modules/69-ai-bottleneck-dashboard.js" defer></script>
