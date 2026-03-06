@@ -263,87 +263,120 @@
     function htmlModal() {
         const uOpts = coordUsers.map(u=>`<option value="${u.id}">${esc(u.name||u.email)}</option>`).join('');
         const cOpts = coordinations.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+        const fieldStyle = 'width:100%;box-sizing:border-box;padding:.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:14px;font-size:.95rem;background:#fff;outline:none;color:#1a1a1a;';
+        const labelStyle = 'display:block;font-size:.82rem;font-weight:600;color:#6b7280;margin-bottom:.4rem;letter-spacing:.01em;';
+        const sectionStyle = 'display:flex;flex-direction:column;gap:0;';
         return `
         <div id="coordModal" class="modal" role="dialog" aria-modal="true" style="display:none;">
-          <div class="modal-content" style="max-width:580px;max-height:92vh;overflow-y:auto;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
-              <h2 id="coordModalTitle" style="margin:0;font-size:1.05rem;">Координація</h2>
-              <button onclick="closeCoordModal()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#9ca3af;">✕</button>
+          <div class="modal-content" style="max-width:560px;max-height:94vh;overflow-y:auto;padding:1.75rem;border-radius:24px;">
+            <!-- Header -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.75rem;">
+              <h2 id="coordModalTitle" style="margin:0;font-size:1.25rem;font-weight:700;color:#1a1a1a;">Нова координація</h2>
+              <button onclick="closeCoordModal()" style="background:#f3f4f6;border:none;cursor:pointer;width:32px;height:32px;border-radius:50%;font-size:1rem;color:#6b7280;display:flex;align-items:center;justify-content:center;">✕</button>
             </div>
-            <div style="display:grid;gap:.8rem;">
-              <div>
-                <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва *</label>
-                <input id="coordName" type="text" class="form-control" placeholder="Щоденна координація команди" style="width:100%;box-sizing:border-box;">
+
+            <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+              <!-- Назва -->
+              <div style="${sectionStyle}">
+                <label style="${labelStyle}">Назва координації</label>
+                <input id="coordName" type="text" placeholder="Щоденна координація команди"
+                  style="${fieldStyle}"
+                  onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;">
-                <div>
-                  <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Тип</label>
-                  <select id="coordType" class="form-control" style="width:100%;">
+
+              <!-- Тип + Статус -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div style="${sectionStyle}">
+                  <label style="${labelStyle}">Тип</label>
+                  <select id="coordType" style="${fieldStyle}cursor:pointer;">
                     ${Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v.icon} ${v.label}</option>`).join('')}
                   </select>
                 </div>
-                <div>
-                  <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Статус</label>
-                  <select id="coordStatus" class="form-control" style="width:100%;">
+                <div style="${sectionStyle}">
+                  <label style="${labelStyle}">Статус</label>
+                  <select id="coordStatus" style="${fieldStyle}cursor:pointer;">
                     <option value="active">✅ Активна</option>
                     <option value="paused">⏸ Призупинена</option>
                   </select>
                 </div>
               </div>
-              <div>
-                <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Голова</label>
-                <select id="coordChairman" class="form-control" style="width:100%;">
-                  <option value="">— Оберіть —</option>${uOpts}
+
+              <!-- Голова -->
+              <div style="${sectionStyle}">
+                <label style="${labelStyle}">Голова координації</label>
+                <select id="coordChairman" style="${fieldStyle}cursor:pointer;">
+                  <option value="">— Оберіть відповідального —</option>${uOpts}
                 </select>
               </div>
-              <div>
-                <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:5px;">Учасники</label>
-                <div id="coordParticipants" style="display:flex;flex-wrap:wrap;gap:.3rem;padding:.5rem;border:1.5px solid #e5e7eb;border-radius:10px;min-height:42px;">
+
+              <!-- Учасники -->
+              <div style="${sectionStyle}">
+                <label style="${labelStyle}">Учасники</label>
+                <div id="coordParticipants" style="display:flex;flex-wrap:wrap;gap:.5rem;padding:.75rem;border:1.5px solid #e5e7eb;border-radius:14px;min-height:52px;background:#fafafa;">
                   ${coordUsers.map(u=>`
-                  <label style="display:flex;align-items:center;gap:.28rem;padding:.18rem .45rem;background:#f9fafb;border-radius:6px;cursor:pointer;font-size:.77rem;border:1px solid #e5e7eb;">
-                    <input type="checkbox" class="coord-participant-cb" value="${u.id}" style="margin:0;">${esc(u.name||u.email)}
+                  <label style="display:flex;align-items:center;gap:.4rem;padding:.35rem .7rem;background:#fff;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:500;border:1.5px solid #e5e7eb;transition:all .15s;"
+                    onmouseenter="this.style.borderColor='#22c55e';this.style.background='#f0fdf4'"
+                    onmouseleave="this.style.borderColor='#e5e7eb';this.style.background='#fff'">
+                    <input type="checkbox" class="coord-participant-cb" value="${u.id}" style="width:16px;height:16px;accent-color:#22c55e;">
+                    ${esc(u.name||u.email)}
                   </label>`).join('')}
                 </div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;">
-                <div>
-                  <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">День тижня</label>
-                  <select id="coordDay" class="form-control" style="width:100%;">
+
+              <!-- День + Час -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div style="${sectionStyle}">
+                  <label style="${labelStyle}">День тижня</label>
+                  <select id="coordDay" style="${fieldStyle}cursor:pointer;">
                     <option value="">— Будь-який —</option>
                     ${DAYS_UK.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}
                   </select>
                 </div>
-                <div>
-                  <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Час</label>
-                  <input id="coordTime" type="time" class="form-control" style="width:100%;box-sizing:border-box;">
+                <div style="${sectionStyle}">
+                  <label style="${labelStyle}">Час початку</label>
+                  <input id="coordTime" type="time" style="${fieldStyle}"
+                    onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
               </div>
-              <div>
-                <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:5px;">Фільтр завдань</label>
-                <div style="display:flex;flex-wrap:wrap;gap:.35rem;">
+
+              <!-- Фільтр завдань -->
+              <div style="${sectionStyle}">
+                <label style="${labelStyle}">Фільтр завдань</label>
+                <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
                   ${[['filterFunctions','По функціях'],['filterProjects','По проектах'],
                      ['filterAssignees','По виконавцях'],['filterOverdue','Прострочені'],
                      ['filterReview','На перевірці']].map(([id,l])=>`
-                  <label style="display:flex;align-items:center;gap:.28rem;padding:.22rem .5rem;background:#f0fdf4;border-radius:7px;cursor:pointer;font-size:.77rem;border:1.5px solid #d1fae5;">
-                    <input type="checkbox" id="coord_${id}" style="margin:0;">${l}
+                  <label style="display:flex;align-items:center;gap:.4rem;padding:.4rem .75rem;background:#f0fdf4;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:500;border:1.5px solid #d1fae5;">
+                    <input type="checkbox" id="coord_${id}" style="width:15px;height:15px;accent-color:#22c55e;">${l}
                   </label>`).join('')}
                 </div>
               </div>
-              <div>
-                <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Ескалація до</label>
-                <select id="coordEscalTarget" class="form-control" style="width:100%;">
+
+              <!-- Ескалація -->
+              <div style="${sectionStyle}">
+                <label style="${labelStyle}">Ескалація до</label>
+                <select id="coordEscalTarget" style="${fieldStyle}cursor:pointer;">
                   <option value="">— Авто по типу —</option>${cOpts}
                 </select>
-                <div style="font-size:.7rem;color:#9ca3af;margin-top:3px;">Невирішені питання → наступна координація</div>
+                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">Невирішені питання автоматично потраплять вгору по ланцюжку</div>
               </div>
-              <div>
-                <label style="font-size:.79rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Telegram Chat ID</label>
-                <input id="coordTelegramChat" type="text" class="form-control" placeholder="-100xxxxxxxxxx" style="width:100%;box-sizing:border-box;">
+
+              <!-- Telegram -->
+              <div style="${sectionStyle}">
+                <label style="${labelStyle}">Telegram Chat ID</label>
+                <input id="coordTelegramChat" type="text" placeholder="-100xxxxxxxxxx"
+                  style="${fieldStyle}"
+                  onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">Протокол надсилається автоматично після завершення</div>
               </div>
-              <div style="display:flex;gap:.65rem;margin-top:.2rem;">
-                <button onclick="closeCoordModal()" class="btn" style="flex:1;">Скасувати</button>
-                <button onclick="saveCoord()" class="btn btn-success" style="flex:1;">Зберегти</button>
+
+              <!-- Buttons -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.5rem;">
+                <button onclick="closeCoordModal()" style="padding:.85rem;border-radius:14px;border:1.5px solid #e5e7eb;background:#fff;font-size:.95rem;font-weight:600;color:#6b7280;cursor:pointer;">Скасувати</button>
+                <button onclick="saveCoord()" style="padding:.85rem;border-radius:14px;border:none;background:#22c55e;font-size:.95rem;font-weight:700;color:#fff;cursor:pointer;">Зберегти</button>
               </div>
+
             </div>
           </div>
         </div>`;
