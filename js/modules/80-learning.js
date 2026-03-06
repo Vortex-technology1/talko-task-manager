@@ -167,6 +167,19 @@
                 materialsLink: null,
 
                 lessonContent: `
+<div style="margin-bottom:1.25rem;padding:1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;display:flex;align-items:flex-start;gap:0.9rem;">
+    <div style="width:40px;height:40px;background:#22c55e;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg>
+    </div>
+    <div>
+        <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">У вас є AI-асистент</div>
+        <div style="color:#15803d;font-size:0.85rem;line-height:1.6;">Якщо щось незрозуміло або виникнуть труднощі — напишіть асистенту суть завдання, і він проведе вас за руку крок за кроком.</div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.65rem;padding:0.4rem 0.85rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">
+            Відкрити AI-асистента →
+        </a>
+    </div>
+</div>
+
 <div class="lesson-block intro">
     <div class="lesson-block-header">
         <div class="lesson-block-title">Для чого це потрібно</div>
@@ -288,6 +301,19 @@
 </div>`,
 
                 lessonContent_ru: `
+<div style="margin-bottom:1.25rem;padding:1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;display:flex;align-items:flex-start;gap:0.9rem;">
+    <div style="width:40px;height:40px;background:#22c55e;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg>
+    </div>
+    <div>
+        <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">У вас есть AI-ассистент</div>
+        <div style="color:#15803d;font-size:0.85rem;line-height:1.6;">Если что-то непонятно или возникнут трудности — напишите ассистенту суть задания, и он проведёт вас за руку шаг за шагом.</div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.65rem;padding:0.4rem 0.85rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">
+            Открыть AI-ассистента →
+        </a>
+    </div>
+</div>
+
 <div class="lesson-block intro">
     <div class="lesson-block-header">
         <div class="lesson-block-title">Для чего это нужно</div>
