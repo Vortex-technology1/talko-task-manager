@@ -6,6 +6,7 @@
     // ── Course Data ──────────────────────────────────────────
         const AI_ASSISTANT_URL = 'https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead';
 
+    window.learningCourseData = window.learningCourseData || [];
     const learningCourseData = [
             {
                 id: 0,
@@ -9674,7 +9675,9 @@
     window.renderLearning = renderLearning;
 
 })();    // ── AI Assistant block ───────────────────────────────────
-    window._openAIAssistant = function(moduleTitle, homeworkText) {
+        window.learningCourseData = learningCourseData;
+
+window._openAIAssistant = function(moduleTitle, homeworkText) {
         const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? 'Домашнє завдання: ' + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
         navigator.clipboard.writeText(prompt).catch(() => {});
         window.open(AI_ASSISTANT_URL, '_blank');
