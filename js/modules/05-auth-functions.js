@@ -394,9 +394,9 @@
 
         // Централізована очистка всіх listeners та intervals
         function cleanupAllListeners() {
-            if (tasksUnsubscribe) {
-                tasksUnsubscribe();
-                tasksUnsubscribe = null;
+            if (window.tasksUnsubscribe) {
+                window.tasksUnsubscribe();
+                window.tasksUnsubscribe = null;
             }
             if (completedTasksUnsubscribe) {
                 completedTasksUnsubscribe();

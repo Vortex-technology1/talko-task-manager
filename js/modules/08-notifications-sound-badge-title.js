@@ -1,15 +1,15 @@
 // =====================
         // NOTIFICATIONS (Sound, Badge, Title)
         // =====================
-        let tasksUnsubscribe = null;
+        window.tasksUnsubscribe = null;
         let lastTaskCount = 0;
         
         function initTasksListener() {
             if (!currentCompany || !currentUser) return;
             
             // Відписуємось від попереднього listener
-            if (tasksUnsubscribe) {
-                tasksUnsubscribe();
+            if (window.tasksUnsubscribe) {
+                window.tasksUnsubscribe();
             }
             
             // Зберігаємо ID завдань які вже бачили
@@ -17,7 +17,7 @@
             let isFirstLoad = true;
             
             // Real-time listener на завдання користувача
-            tasksUnsubscribe = db.collection('companies').doc(currentCompany)
+            window.tasksUnsubscribe = db.collection('companies').doc(currentCompany)
                 .collection('tasks')
                 .where('assigneeId', '==', currentUser.uid)
                 .where('status', '==', 'new')
