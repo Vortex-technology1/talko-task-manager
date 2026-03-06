@@ -42,7 +42,7 @@
         }
         
         async function reopenTaskFromModal() {
-            if (!requireAuth()) return;
+            if (!window.requireAuth || !window.requireAuth()) return;
             if (!editingId) return;
             const taskId = editingId;
             const taskIndex = tasks.findIndex(t => t.id === taskId);
@@ -82,7 +82,7 @@
         }
         
         async function acceptReviewTask(taskId) {
-            if (!requireAuth()) return;
+            if (!window.requireAuth || !window.requireAuth()) return;
             const taskIndex = tasks.findIndex(t => t.id === taskId);
             if (taskIndex < 0) return;
             
@@ -137,7 +137,7 @@
         
         // Постановник повертає на доопрацювання
         async function rejectReviewTask(taskId) {
-            if (!requireAuth()) return;
+            if (!window.requireAuth || !window.requireAuth()) return;
             // Only creator or manager+ can reject review
             const taskForCheck = tasks.find(t => t.id === taskId);
             if (taskForCheck && taskForCheck.creatorId !== currentUser?.uid && !isManagerOrAbove()) {
