@@ -398,9 +398,9 @@
                 window.tasksUnsubscribe();
                 window.tasksUnsubscribe = null;
             }
-            if (completedTasksUnsubscribe) {
-                completedTasksUnsubscribe();
-                completedTasksUnsubscribe = null;
+            if (window.completedTasksUnsubscribe) {
+                window.completedTasksUnsubscribe();
+                window.completedTasksUnsubscribe = null;
             }
             if (window.reviewTasksUnsubscribe) {
                 window.reviewTasksUnsubscribe();
@@ -411,9 +411,9 @@
                 window.rejectedTasksUnsubscribe = null;
             }
             try {
-                if (commentsUnsubscribe) {
-                    commentsUnsubscribe();
-                    commentsUnsubscribe = null;
+                if (window.commentsUnsubscribe) {
+                    window.commentsUnsubscribe();
+                    window.commentsUnsubscribe = null;
                 }
             } catch(e) {}
             if (timeTrackerInterval) {

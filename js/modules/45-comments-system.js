@@ -3,7 +3,7 @@
         // =====================
         
         let currentTaskIdForComments = null;
-        let commentsUnsubscribe = null;
+        window.commentsUnsubscribe = null;
         
         // Initialize comments when opening task modal for editing
         function initTaskComments(taskId) {
@@ -37,14 +37,14 @@
             const countEl = document.getElementById('commentCount');
             
             // Unsubscribe from previous listener
-            if (commentsUnsubscribe) {
-                commentsUnsubscribe();
+            if (window.commentsUnsubscribe) {
+                window.commentsUnsubscribe();
             }
             
             listEl.innerHTML = '<div class="comments-loading" data-i18n="uploading">Завантаження...</div>';
             
             // Real-time listener for comments
-            commentsUnsubscribe = db.collection('companies').doc(currentCompany)
+            window.commentsUnsubscribe = db.collection('companies').doc(currentCompany)
                 .collection('tasks').doc(taskId)
                 .collection('comments')
                 .orderBy('createdAt', 'asc')

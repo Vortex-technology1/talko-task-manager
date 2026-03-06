@@ -108,14 +108,14 @@
             initRejectedTasksListener();
         }
         
-        let completedTasksUnsubscribe = null;
+        window.completedTasksUnsubscribe = null;
         let knownCompletedTaskIds = new Set();
         
         function initCompletedTasksListener() {
             if (!currentCompany || !currentUser) return;
             
-            if (completedTasksUnsubscribe) {
-                completedTasksUnsubscribe();
+            if (window.completedTasksUnsubscribe) {
+                window.completedTasksUnsubscribe();
             }
             
             let isFirstLoad = true;
@@ -123,7 +123,7 @@
             // Слухаємо завдання де поточний користувач в списку notifyOnComplete
             // УВАГА: Потрібен складений індекс в Firebase:
             // Collection: tasks, Fields: notifyOnComplete (Arrays), status (Ascending)
-            completedTasksUnsubscribe = db.collection('companies').doc(currentCompany)
+            window.completedTasksUnsubscribe = db.collection('companies').doc(currentCompany)
                 .collection('tasks')
                 .where('notifyOnComplete', 'array-contains', currentUser.uid)
                 .where('status', '==', 'done')
@@ -352,7 +352,7 @@
         // Cleanup при logout — зупиняємо interval
         window._cleanupNotifications = function() {
             if (_pageTitleInterval) { clearInterval(_pageTitleInterval); _pageTitleInterval = null; }
-            if (completedTasksUnsubscribe) { completedTasksUnsubscribe(); completedTasksUnsubscribe = null; }
+            if (window.completedTasksUnsubscribe) { window.completedTasksUnsubscribe(); window.completedTasksUnsubscribe = null; }
         };
         
         // Multi-tab sync: reload data when tab becomes visible after being hidden
