@@ -3983,1868 +3983,1933 @@
                 id: 10,
                 title: "ЦІЛЬ І ЗАДУМ",
                 title_ru: "ЦЕЛЬ И ЗАМЫСЕЛ",
-                subtitle: "Перегляньте відео та виконайте завдання",
-                subtitle_ru: "Прочитайте инструкцию и выполните задание в AI-ассистенте",
-                
+                subtitle: "Фундамент, на якому тримається управління, мотивація і розвиток бізнесу",
+                subtitle_ru: "Фундамент, на котором держится управление, мотивация и развитие бизнеса",
+                hideAiBlock: true,
+
                 videoLink: null,
-                materialsLink: "https://drive.google.com/drive/folders/1c--GPEXkBsH99Pt07LP5nGUed3Br0tid?usp=sharing",
-                
+                materialsLink: null,
+
                 lessonContent: `
-<div class="lesson-block intro" style="border-left: 4px solid #ef4444;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #ef4444;">Відео 1: Головна перешкода впровадження</div>
+<style>
+.l10-section { margin-bottom:1.75rem; }
+.l10-section:last-child { margin-bottom:0; }
+.l10-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l10-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l10-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l10-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l10-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l10-card p+p { margin-top:0.7rem; }
+.l10-situations { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-situation { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
+.l10-scale { display:grid; gap:0.4rem; margin-top:0.75rem; counter-reset:scalenum; }
+.l10-scale-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.7rem 0.9rem; background:#f8fafc; border-radius:9px; border:1px solid #e2e8f0; counter-increment:scalenum; }
+.l10-scale-num { width:26px; height:26px; background:#1a1a1a; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; }
+.l10-scale-title { font-weight:700; color:#1a1a1a; font-size:0.84rem; margin-bottom:0.15rem; }
+.l10-scale-text { font-size:0.78rem; color:#525252; line-height:1.4; }
+.l10-motivation { display:grid; gap:0.55rem; margin-top:0.75rem; }
+.l10-motiv-item { padding:0.8rem 0.95rem; border-radius:10px; border:1px solid; }
+.l10-motiv-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; }
+.l10-motiv-badge { font-size:0.68rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:4px; letter-spacing:0.04em; }
+.l10-motiv-title { font-weight:700; font-size:0.875rem; }
+.l10-motiv-text { font-size:0.82rem; line-height:1.5; }
+.l10-examples { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-example { display:flex; align-items:flex-start; gap:0.7rem; padding:0.7rem 0.9rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; }
+.l10-example-icon { width:30px; height:30px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l10-example-label { font-weight:700; color:#1a1a1a; font-size:0.8rem; margin-bottom:0.15rem; }
+.l10-example-text { font-size:0.82rem; color:#525252; line-height:1.45; }
+.l10-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l10-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l10-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l10-step-body { flex:1; }
+.l10-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l10-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l10-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l10-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l10-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l10-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l10-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l10-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l10-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l10-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.9rem; color:#166534; font-style:italic; line-height:1.6; }
+.l10-schema { display:flex; align-items:center; gap:0.4rem; padding:0.85rem 1rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; margin-top:0.75rem; flex-wrap:wrap; }
+.l10-schema-item { font-weight:700; color:#166534; font-size:0.85rem; }
+.l10-schema-arrow { color:#22c55e; font-weight:700; }
+.l10-bad-good { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
+.l10-bad-col { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
+.l10-good-col { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
+.l10-col-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.l10-col-items { display:grid; gap:0.35rem; }
+.l10-col-item { font-size:0.82rem; line-height:1.45; }
+</style>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 1</div>
+    <div class="l10-section-title">Головна перешкода впровадження: чому команда саботує зміни</div>
+    <div class="l10-card">
+        <p>Кожен власник, який намагається навести лад у бізнесі, стикається з одним і тим же: найближчі, найлояльніші співробітники раптом починають чинити опір. Людина, якій ви довіряли роками, раптом виявляє незадоволення. Хтось подає у відставку. Інші починають ставити під сумнів ваші рішення.</p>
+        <p>Здається, що це зрада. Але насправді — це закономірність.</p>
     </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 8px; font-weight: 600;">Чому співробітники саботують зміни і як цього уникнути.</p>
-        <p style="margin-bottom: 16px; color: #64748b;">Зрозумієте, чому команда чинить опір змінам. Навчитесь впроваджувати нове без втрати цінних людей.</p>
-        <div style="margin-bottom: 16px;">
-            <a href="https://youtu.be/bdbw9obbtMM" target="_blank" class="action-btn primary">
-                
-                Дивитись відео
-            </a>
-        </div>
-        <div style="padding: 16px; background: #fef2f2; border-radius: 10px; border: 1px solid #fecaca;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #dc2626;">Після перегляду дайте відповідь:</p>
-            <ol style="margin: 0 0 16px 0; padding-left: 20px; color: #991b1b;">
-                <li style="margin-bottom: 8px;">Напишіть <strong>три інсайти</strong> з відео, що вам запам'яталось</li>
-                <li>Яка <strong>основна перешкода</strong> у впровадженні інструментів управління?</li>
-            </ol>
-            <textarea placeholder="Ваші відповіді..." style="width: 100%; min-height: 120px; padding: 12px; border: 1px solid #fecaca; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
-        </div>
+
+    <div class="l10-section-label" style="margin-top:1rem;">Скільки коштує втрата одного співробітника</div>
+    <div class="l10-card">
+        <p>За міжнародними дослідженнями, втрата одного співробітника коштує від 6 до 12 місяців його зарплати. Якщо ваш керівник відділу отримує 40 000 грн на місяць — його звільнення обійдеться вам мінімум у 240 000 грн. Але це лише пряма, видима втрата.</p>
+    </div>
+    <div class="l10-situations">
+        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Людина, яка звільняється, активно критикує вас перед рештою команди</div>
+        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Інші співробітники починають сумніватися: «А може, він правий?»</div>
+        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Ваш час іде на вирішення конфліктів замість розвитку бізнесу</div>
+        <div class="l10-situation"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Пошук і адаптація нової людини займає від 2 до 6 місяців — і не гарантує результату</div>
+    </div>
+
+    <div class="l10-section-label" style="margin-top:1rem;">Чому люди опираються — справжня причина</div>
+    <div class="l10-card">
+        <p>Більшість власників думають, що опір — це нелояльність або лінь. Насправді причина набагато простіша: <strong>ви впроваджуєте зміни, бо бачите проблему. Але чи бачать її ваші співробітники?</strong></p>
+        <p>Щоб змінити поведінку людини — потрібно дати їй більшу, значущу мету, яка переважить бажання зберегти статус-кво. Цілі повинні бути справді великими — такими, що викликають ентузіазм і бажання бути частиною чогось більшого.</p>
     </div>
 </div>
 
-<div class="lesson-block step" style="border-left: 4px solid #3b82f6;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #3b82f6;">Відео 2: Політика компанії</div>
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 2</div>
+    <div class="l10-section-title">Мета і задум компанії — фундамент всього</div>
+    <div class="l10-card">
+        <p>Все у вашому бізнесі — структура, правила, мотивація команди, навіть конкретні рішення щодня — має спиратися на дві речі: мету і задум. Без них компанія схожа на корабель без компасу: рухається, але не знає куди.</p>
     </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 8px; font-weight: 600;">Не словами, а на папері.</p>
-        <p style="margin-bottom: 12px; color: #64748b;"><strong>Що ви отримаєте:</strong></p>
-        <ul style="margin-bottom: 16px; color: #64748b;">
-            <li>Зрозумієте, що таке політика і навіщо вона потрібна</li>
-            <li>Навчитесь створювати правила, які реально працюють</li>
-            <li>Дізнаєтесь, як зробити так, щоб співробітники їх виконували</li>
-        </ul>
-        <div style="margin-bottom: 16px;">
-            <a href="https://youtu.be/ZSFC1-PJvlk" target="_blank" class="action-btn secondary">
-                
-                Дивитись відео
-            </a>
+
+    <div class="l10-section-label" style="margin-top:1rem;">Що таке мета</div>
+    <div class="l10-card">
+        <p>Мета — це основна ідея компанії. Вона відповідає на питання: <strong>для чого ми існуємо? Що зміниться у світі, якщо ми будемо успішні?</strong></p>
+        <p>Типова помилка: «Моя мета — заробити гроші». Це все одно що сказати: «Мета мого існування — дихати». Технічно правда, але це не пояснює, навіщо ви обрали саме цей бізнес. Гроші — це енергія для досягнення мети. Але не сама мета.</p>
+    </div>
+    <div class="l10-examples">
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Консалтингова компанія</div><div class="l10-example-text">Зробити малий бізнес розумнішим, ефективнішим і незалежним від власника</div></div>
         </div>
-        <div style="padding: 16px; background: #eff6ff; border-radius: 10px; border: 1px solid #bfdbfe;">
-            <p style="margin: 0 0 8px 0; font-weight: 600; color: #1d4ed8;">Завдання:</p>
-            <p style="margin: 0 0 12px 0; color: #1e40af;">Напишіть приклади політик, які потрібно вам впровадити в першу чергу</p>
-            <textarea placeholder="Ваші приклади політик..." style="width: 100%; min-height: 120px; padding: 12px; border: 1px solid #bfdbfe; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Стоматологія</div><div class="l10-example-text">Зробити людей здоровими і впевненими у своїй посмішці</div></div>
         </div>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Будівельна компанія</div><div class="l10-example-text">Створювати комфортне та безпечне житло для сімей</div></div>
+        </div>
+    </div>
+    <div class="l10-quote">Запитайте себе: як змінюється життя людей завдяки моєму бізнесу? Що зникне зі світу, якщо моя компанія закриється?</div>
+
+    <div class="l10-section-label" style="margin-top:1rem;">Що таке задум</div>
+    <div class="l10-card">
+        <p>Якщо мета відповідає на питання «навіщо», то задум відповідає на питання «як». Задум — це ваш унікальний спосіб досягати мети. Те, що ви робите — і чого свідомо <strong>НЕ</strong> робите.</p>
+        <p>Важливо: задум не вигадують з нуля. Він відображає ваш реальний досвід і розуміння ринку. Він базується на тому, як ви вже досягаєте успіху — просто це ще не сформульовано.</p>
     </div>
 </div>
 
-<div class="lesson-block step" style="border-left: 4px solid #8b5cf6;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #8b5cf6;">Відео 3: Технологія бізнесу</div>
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 3</div>
+    <div class="l10-section-title">Адміністративна шкала — хребет бізнесу</div>
+    <div class="l10-card">
+        <p>Уявіть: у вас є нова ідея. Нова послуга, новий напрямок, нова акція. Як зрозуміти — це хороша ідея чи погана? Більшість власників вирішують «на відчуттях». Результат: витрачені гроші, час і розфокус.</p>
+        <p>Великі компанії мають інструмент для перевірки будь-якої ідеї. Coca-Cola не починає продавати ковбасу. McDonald's не відкриває автосалони. Вони знають свій шлях — і кожна нова ідея перевіряється: чи вона на цьому шляху? Цей інструмент називається <strong>адміністративна шкала</strong>.</p>
     </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px; font-weight: 600;">Чому ваш бізнес не росте, поки процеси "в голові"</p>
-        <div>
-            <a href="https://youtu.be/qMS_Wb8JkUQ" target="_blank" class="action-btn outline" style="border-color: #8b5cf6; color: #8b5cf6;">
-                
-                Дивитись відео
-            </a>
-        </div>
+    <div class="l10-section-label" style="margin-top:1rem;">10 рівнів шкали (від найвищого до найнижчого)</div>
+    <div class="l10-scale">
+        <div class="l10-scale-item"><div class="l10-scale-num">1</div><div><div class="l10-scale-title">Мета</div><div class="l10-scale-text">Навіщо ми існуємо</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">2</div><div><div class="l10-scale-title">Задум</div><div class="l10-scale-text">Як саме ми досягаємо мети</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">3</div><div><div class="l10-scale-title">Політика</div><div class="l10-scale-text">Письмові правила, в яких рамках діємо</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">4</div><div><div class="l10-scale-title">Плани</div><div class="l10-scale-text">Що ми робимо в найближчий горизонт</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">5</div><div><div class="l10-scale-title">Програми</div><div class="l10-scale-text">Конкретні ініціативи для досягнення планів</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">6</div><div><div class="l10-scale-title">Проекти</div><div class="l10-scale-text">Деталізація конкретних завдань</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">7</div><div><div class="l10-scale-title">Накази</div><div class="l10-scale-text">Конкретні вказівки конкретним людям</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">8</div><div><div class="l10-scale-title">Ідеальна картина</div><div class="l10-scale-text">Як виглядає успішний результат</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">9</div><div><div class="l10-scale-title">Статистика</div><div class="l10-scale-text">Метрики, які показують чи рухаємося до мети</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">10</div><div><div class="l10-scale-title">Кінцевий продукт</div><div class="l10-scale-text">Що конкретно виробляє компанія або відділ</div></div></div>
+    </div>
+    <div class="l10-quote">Головний принцип: кожен рівень має відповідати іншим. Якщо ваш наказ суперечить меті — щось піде не так. Якщо план суперечить задуму — зусилля витрачаються даремно.</div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 4</div>
+    <div class="l10-section-title">Політика компанії — правила, які рятують бізнес</div>
+    <div class="l10-card">
+        <p>Без чітких письмових правил кожен вирішує по-своєму. «Пацієнт просить знижку — давати?» «Клієнт залишив поганий відгук — як реагувати?» «Лікар запізнився — що говорити пацієнту?» І кожного разу — питання до вас.</p>
+        <p>Політика компанії — це письмові правила, які говорять співробітникам, як діяти в різних ситуаціях. Не «як хочеш», а «як правильно для нашої компанії».</p>
+    </div>
+    <div class="l10-card" style="margin-top:0.6rem;">
+        <p><strong>Класичний приклад з Apple:</strong> Стів Джобс мав чіткий задум — Apple контролює все: залізо, операційну систему і програмне забезпечення. Але він не записав це правило офіційно. Коли його звільнили, нове керівництво почало продавати ліцензії на macOS. Якість Apple впала, задум зруйнувався, компанія опинилася на межі банкрутства.</p>
+    </div>
+    <div class="l10-quote">Якщо немає письмових правил — ви самі стаєте заручником бізнесу. Вам доводиться особисто вирішувати кожну ситуацію і ви фізично не можете поїхати у відпустку.</div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 5</div>
+    <div class="l10-section-title">Технологія бізнесу — як вийти з пастки «незамінних»</div>
+    <div class="l10-card">
+        <p>Скільки разів ви пояснювали одне й те саме? Новому співробітнику. Потім ще одному. Кожен раз — як вперше. Тому що «як треба робити» — у вашій голові, а не на папері.</p>
+        <p>Технологія — це послідовність дій, яка дає передбачуваний результат. Не філософія. Не теорія. Чіткі кроки: роби так — отримаєш це.</p>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">Чотири наслідки роботи без описаних процесів</div>
+    <div class="l10-situations">
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо масштабувати.</strong> Хочете відкрити другу точку? Як ви передасте «як треба робити»? Ніяк — це тільки у вашій голові.</div></div>
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо навчати людей.</strong> Новий співробітник приходить, ви витрачаєте тижні на навчання, він звільняється — і все спочатку.</div></div>
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Неможливо контролювати якість.</strong> Як перевірити чи правильно зробили? Якщо немає стандарту — немає критерію.</div></div>
+        <div class="l10-situation" style="background:#fef2f2;border-color:#fecaca;color:#7f1d1d;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Ви стаєте заручником «незамінних».</strong> Є Петро, який «знає як». Без Петра — все зупиняється. Петро це знає. І користується цим.</div></div>
     </div>
 </div>
 
-<div class="lesson-block step" style="border-left: 4px solid #f59e0b;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #f59e0b;">Відео 4: Рівні мотивації</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px; font-weight: 600;">Чому одні горять роботою, а іншим — байдуже</p>
-        <div style="margin-bottom: 16px;">
-            <a href="https://youtu.be/_BhPtBD_CIM" target="_blank" class="action-btn outline" style="border-color: #f59e0b; color: #f59e0b;">
-                
-                Дивитись відео
-            </a>
-        </div>
-        <div style="padding: 16px; background: #fffbeb; border-radius: 10px; border: 1px solid #fde68a;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #92400e;">Завдання: Визначте рівні</p>
-            <p style="margin: 0 0 12px 0; color: #78350f;">Подумайте про своїх співробітників:</p>
-            <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #78350f;">
-                <li style="margin-bottom: 6px;">Наведіть по <strong>два приклади</strong> для кожного рівня</li>
-                <li>Поясніть, <strong>чому</strong> ви так вважаєте</li>
-            </ul>
-            <p style="margin: 0 0 12px 0; font-size: 13px; color: #92400e;">Це допоможе зрозуміти, як працювати з кожним з них.</p>
-            <textarea placeholder="Ваші приклади для кожного рівня..." style="width: 100%; min-height: 120px; padding: 12px; border: 1px solid #fde68a; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
-        </div>
-    </div>
-</div>
+<div class="l10-divider"></div>
 
-<div class="lesson-block step" style="border-left: 4px solid #ec4899;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #ec4899;">Відео 5: Як підвищувати мотивацію</div>
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 6</div>
+    <div class="l10-section-title">Рівні мотивації — чому одні горять роботою, а іншим байдуже</div>
+    <div class="l10-card">
+        <p>Мотивація — це внутрішнє бажання щось робити. Не тому що змушують або платять, а тому що людина сама хоче. І важливий нюанс: мотивований новачок часто цінніший, ніж досвідчений байдужий — бо мотивований <em>вчиться</em>.</p>
     </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px; font-weight: 600;">Єдиний інструмент, який працює завжди</p>
-        <div style="margin-bottom: 16px;">
-            <a href="https://youtu.be/5i8Vqud6DLQ" target="_blank" class="action-btn outline" style="border-color: #ec4899; color: #ec4899;">
-                
-                Дивитись відео
-            </a>
-        </div>
-        <div style="padding: 16px; background: #fdf2f8; border-radius: 10px; border: 1px solid #fbcfe8;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #9d174d;">Завдання 1: Коли востаннє?</p>
-            <p style="margin: 0 0 8px 0; color: #831843;">Згадайте: коли востаннє ви говорили команді про ідеологічні цілі компанії?</p>
-            <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #831843; font-size: 14px;">
-                <li>В якій обстановці?</li>
-                <li>З чим це було пов'язано?</li>
-                <li>Хто отримав цю інформацію?</li>
-            </ul>
-            <textarea placeholder="Ваша відповідь на завдання 1..." style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid #fbcfe8; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white; margin-bottom: 16px;"></textarea>
-            <p style="margin: 0 0 8px 0; font-weight: 600; color: #9d174d;">Завдання 2: Який відсоток?</p>
-            <p style="margin: 0 0 12px 0; color: #831843;">Для якого відсотка вашої команди реальне таке поняття, як ідеологічні цілі? Скільки людей дійсно бачать і поділяють цілі компанії?</p>
-            <textarea placeholder="Ваша відповідь на завдання 2..." style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid #fbcfe8; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block step" style="border-left: 4px solid #06b6d4;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #06b6d4;">Відео 6: Адміністративна шкала</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 8px; font-weight: 600;">Інструмент, який з'єднує все в одну систему.</p>
-        <p style="margin-bottom: 12px; color: #64748b;"><strong>Після цього модуля ви:</strong></p>
-        <ul style="margin-bottom: 16px; color: #64748b;">
-            <li>Зрозумієте, як приймати правильні рішення</li>
-            <li>Навчитесь перевіряти ідеї: робити чи ні?</li>
-            <li>Побудуєте систему, де все працює разом</li>
-        </ul>
-        <div style="margin-bottom: 16px;">
-            <a href="https://youtu.be/mEEQfHFFMAg" target="_blank" class="action-btn outline" style="border-color: #06b6d4; color: #06b6d4;">
-                
-                Дивитись відео
-            </a>
-        </div>
-        <div style="padding: 16px; background: #ecfeff; border-radius: 10px; border: 1px solid #a5f3fc;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #0e7490;">Практичне завдання: Зробіть прямо зараз</p>
-            <div style="display: grid; gap: 8px; color: #155e75; margin-bottom: 12px;">
-                <p style="margin: 0;"><strong>Крок 1:</strong> Запишіть мету вашого бізнесу (не «гроші»!)</p>
-                <p style="margin: 0;"><strong>Крок 2:</strong> Опишіть задум — як ви досягаєте мети</p>
-                <p style="margin: 0;"><strong>Крок 3:</strong> Згадайте останню «спокусу» — нову ідею, яка здавалась хорошою</p>
-                <p style="margin: 0;"><strong>Крок 4:</strong> Перевірте: чи вона відповідає меті і задуму?</p>
+    <div class="l10-motivation">
+        <div class="l10-motiv-item" style="background:#f0fdf4;border-color:#bbf7d0;">
+            <div class="l10-motiv-header">
+                <span class="l10-motiv-badge" style="background:#22c55e;color:white;">РІВЕНЬ 1</span>
+                <span class="l10-motiv-title" style="color:#166534;">Почуття обов'язку</span>
             </div>
-            <textarea placeholder="Ваші відповіді на 4 кроки..." style="width: 100%; min-height: 140px; padding: 12px; border: 1px solid #a5f3fc; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
+            <div class="l10-motiv-text" style="color:#166534;">Людина відчуває глибоку відповідальність за справу. Вона дбає про компанію більше, ніж про себе. Розуміє цілі компанії і відчуває: «Це — моя справа». Власники бізнесу і «старожили» часто перебувають на цьому рівні.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#eff6ff;border-color:#bfdbfe;">
+            <div class="l10-motiv-header">
+                <span class="l10-motiv-badge" style="background:#3b82f6;color:white;">РІВЕНЬ 2</span>
+                <span class="l10-motiv-title" style="color:#1e40af;">Особиста переконаність</span>
+            </div>
+            <div class="l10-motiv-text" style="color:#1e3a8a;">Людина вірить у свої принципи і в цінність своєї роботи. Лікар, який справді хоче допомагати людям. Програміст, який пишається якістю коду. Вони роблять добре, бо для них це питання особистої честі.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#fff7ed;border-color:#fed7aa;">
+            <div class="l10-motiv-header">
+                <span class="l10-motiv-badge" style="background:#f97316;color:white;">РІВЕНЬ 3</span>
+                <span class="l10-motiv-title" style="color:#c2410c;">Особиста вигода</span>
+            </div>
+            <div class="l10-motiv-text" style="color:#9a3412;">Людина шукає, що вона отримає особисто: бонус, кар'єрне зростання, нові навички. Це не погано — з цим можна і треба працювати. Але вона не буде «горіти» заради компанії.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#fef2f2;border-color:#fecaca;">
+            <div class="l10-motiv-header">
+                <span class="l10-motiv-badge" style="background:#ef4444;color:white;">РІВЕНЬ 4</span>
+                <span class="l10-motiv-title" style="color:#b91c1c;">Гроші</span>
+            </div>
+            <div class="l10-motiv-text" style="color:#991b1b;">Найнижчий рівень. Людину цікавить тільки зарплата. Плати — працює. Не платиш — не працює. Жодної ініціативи, жодного «понаднорми заради результату».</div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block step" style="border-left: 4px solid #10b981;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #10b981;">Відео 7: Мета та Задум</div>
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 7</div>
+    <div class="l10-section-title">Як підвищувати мотивацію — єдиний інструмент, який працює завжди</div>
+    <div class="l10-card">
+        <p>Мотивація залежить від того, що людина вважає реальним. Гроші — реальні для всіх. А велика місія компанії, вплив на суспільство? Для одних — реально. Для інших — пусті красиві слова.</p>
+        <p>Але ключовий момент: людина, яка чує тільки ритм, може навчитися чути більше — якщо буде слухати, аналізувати, тренуватися.</p>
     </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px; font-weight: 600;">Два головних елементи успішної компанії</p>
-        <div style="margin-bottom: 16px;">
-            <a href="https://youtu.be/XcdO_lVy5QY" target="_blank" class="action-btn outline" style="border-color: #10b981; color: #10b981;">
-                
-                Дивитись відео
-            </a>
+    <div class="l10-section-label" style="margin-top:1rem;">Формула підвищення мотивації</div>
+    <div class="l10-schema">
+        <span class="l10-schema-item">Показуєте ціль</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Утримуєте увагу</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Ціль стає реальною</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Людина мотивована</span>
+    </div>
+    <div class="l10-card" style="margin-top:0.75rem;">
+        <p>Утримувати увагу на великих цілях — важко. Коли є тиск і стрес — увага йде на виживання. Людина забуває про великі цілі, фокус — на рахунках і конфліктах. Рішення: <strong>постійно нагадувати</strong>. Регулярно розповідати про цілі. Показувати, як робота впливає на конкретних людей і клієнтів.</p>
+    </div>
+    <div class="l10-examples">
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+            <div><div class="l10-example-label">Шиномонтаж</div><div class="l10-example-text">«Твоя робота рятує життя на дорозі. Кожна правильно встановлена шина — це безпека сім'ї»</div></div>
         </div>
-        <div style="padding: 16px; background: #ecfdf5; border-radius: 10px; border: 1px solid #a7f3d0;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #047857;">Завдання: Сформулюйте мету і задум</p>
-            <p style="margin: 0 0 8px 0; color: #065f46;">Для вашої компанії:</p>
-            <ol style="margin: 0 0 12px 0; padding-left: 20px; color: #065f46;">
-                <li style="margin-bottom: 6px;"><strong>Мета</strong> — для чого ви існуєте? Що зміниться у світі?</li>
-                <li><strong>Задум</strong> — як ви це робите? Чим відрізняєтесь?</li>
-            </ol>
-            <p style="margin: 0 0 12px 0; font-size: 13px; color: #047857;">Якщо кілька напрямків — виберіть один і працюйте з ним.</p>
-            <textarea placeholder="Ваша мета і задум..." style="width: 100%; min-height: 120px; padding: 12px; border: 1px solid #a7f3d0; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+            <div><div class="l10-example-label">Стоматологія</div><div class="l10-example-text">«Ти повертаєш людям впевненість у собі. Це більше, ніж просто лікування зубів»</div></div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block step" style="border-left: 4px solid #6366f1;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #6366f1;">Відео 8: Як донести цілі та задум</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 8px; font-weight: 600;">Ви сформулювали мету і задум. Тепер — як зробити так, щоб команда їх знала і виконувала.</p>
-        <p style="margin-bottom: 12px; color: #64748b;"><strong>Після цього модуля ви:</strong></p>
-        <ul style="margin-bottom: 16px; color: #64748b;">
-            <li>Створите офіційний документ з цілями</li>
-            <li>Правильно презентуєте його команді</li>
-            <li>Зробите так, щоб люди не забували</li>
-        </ul>
-        <div style="margin-bottom: 16px;">
-            <a href="https://youtu.be/VCWc0blqokU" target="_blank" class="action-btn outline" style="border-color: #6366f1; color: #6366f1;">
-                
-                Дивитись відео
-            </a>
-        </div>
-        <div style="padding: 16px; background: #eef2ff; border-radius: 10px; border: 1px solid #c7d2fe;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #4338ca;">4 кроки донесення:</p>
-            <div style="display: grid; gap: 10px;">
-                <div style="display: flex; gap: 10px; align-items: flex-start;">
-                    <span style="background: #6366f1; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; flex-shrink: 0;">1</span>
-                    <div>
-                        <p style="margin: 0; font-weight: 600; color: #3730a3;">Створіть документ</p>
-                        <p style="margin: 2px 0 0 0; font-size: 13px; color: #4338ca;">Мета + Задум + Історія + Ідеальна картина. Підпис засновника.</p>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: flex-start;">
-                    <span style="background: #6366f1; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; flex-shrink: 0;">2</span>
-                    <div>
-                        <p style="margin: 0; font-weight: 600; color: #3730a3;">Презентуйте команді</p>
-                        <p style="margin: 2px 0 0 0; font-size: 13px; color: #4338ca;">Зберіть всіх. Розкажіть. Запишіть на відео.</p>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: flex-start;">
-                    <span style="background: #6366f1; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; flex-shrink: 0;">3</span>
-                    <div>
-                        <p style="margin: 0; font-weight: 600; color: #3730a3;">Нагадуйте регулярно</p>
-                        <p style="margin: 2px 0 0 0; font-size: 13px; color: #4338ca;">На зборах, при наймі, при успіхах. Спокійно, без напруги.</p>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: flex-start;">
-                    <span style="background: #6366f1; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; flex-shrink: 0;">4</span>
-                    <div>
-                        <p style="margin: 0; font-weight: 600; color: #3730a3;">Оновлюйте раз на рік</p>
-                        <p style="margin: 2px 0 0 0; font-size: 13px; color: #4338ca;">Перегляньте, додайте нове, захищайте від критиків.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="l10-divider"></div>
 
-<div class="lesson-block success" style="border-left: 4px solid #22c55e;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #22c55e;">Фінальне практичне завдання</div>
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 8</div>
+    <div class="l10-section-title">Як донести цілі та задум до команди</div>
+    <div class="l10-card">
+        <p>Ви сформулювали мету і задум. Але якщо про це знаєте тільки ви — це нічого не змінить. Завдання: зробити так, щоб кожен у команді знав, куди рухається компанія — і чому.</p>
     </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px; font-weight: 600;">Після перегляду всіх відео виконайте наступні кроки:</p>
-        <div style="display: grid; gap: 12px;">
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;">1</span>
-                <div>
-                    <p style="margin: 0; font-weight: 600;">Перейдіть до AI-асистента</p>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">Розробіть політику по цілях компанії</p>
-                </div>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;">2</span>
-                <div>
-                    <p style="margin: 0; font-weight: 600;">Завантажте матеріали</p>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">В папці знайдете презентацію та інструкцію як її провести</p>
-                </div>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;">3</span>
-                <div>
-                    <p style="margin: 0; font-weight: 600;">Відредагуйте презентацію під себе</p>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">Адаптуйте під специфіку вашого бізнесу</p>
-                </div>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;">4</span>
-                <div>
-                    <p style="margin: 0; font-weight: 600;">Проведіть презентацію для співробітників</p>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">Це ключовий елемент впровадження змін</p>
-                </div>
+    <div class="l10-section-label" style="margin-top:1rem;">Простий план з 4 кроків</div>
+    <div class="l10-steps">
+        <div class="l10-step">
+            <div class="l10-step-num">1</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Створіть офіційний письмовий документ</div>
+                <div class="l10-step-text">Не розмова, не «всі і так знають» — письмовий документ із підписом засновника. Три частини: мета компанії, задум і коротка історія. Підпис сигналізує команді: «Це серйозно. Це від першої особи».</div>
             </div>
         </div>
-        <div style="margin-top: 16px; padding: 12px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0;">
-            <p style="margin: 0; font-size: 13px;"><strong>Час на впровадження:</strong> ~3 години (1 год підготовка + 2 год проведення презентації)</p>
+        <div class="l10-step">
+            <div class="l10-step-num">2</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Офіційно презентуйте документ команді</div>
+                <div class="l10-step-text">Зберіть всіх разом — на планерці, окремій зустрічі або щомісячних зборах. Головне — щоб були всі ключові люди.</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">3</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Запишіть виступ на відео</div>
+                <div class="l10-step-text">Якщо хтось пропустив — надішліть відео. Новий співробітник — дайте подивитись у перший день. Через рік забули — можна переглянути і освіжити.</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">4</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Регулярно нагадуйте</div>
+                <div class="l10-step-text">Мета і задум — це не «сказав один раз і забув». Повертайтеся до них на зборах, при прийнятті рішень, при поясненні змін. Це тримає всю команду на одній хвилі.</div>
+            </div>
         </div>
     </div>
 </div>
-                `,
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Розділ 9</div>
+    <div class="l10-section-title">Як провести перше заняття — практичний алгоритм</div>
+    <div class="l10-card">
+        <p>Перше заняття, де ви презентуєте цілі і задум команді, задає тон всьому подальшому. Якщо зробите добре — співробітники підтримають зміни і почнуть рухатися разом. Якщо погано — сприймуть це як «чергову нісенітницю від шефа».</p>
+        <p>Більшість співробітників сприймають нові інструменти як «зайве навантаження». Вирішення — <strong>спочатку мета, потім інструменти</strong>. Ніяк не навпаки.</p>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">4 результати першого заняття</div>
+    <div class="l10-result-list" style="margin-top:0.5rem;">
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>«Ми — команда» — всі рухаються до спільної мети</div>
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Спільна мета — конкретна, з цифрами та ідеальною картиною</div>
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Навіщо вчитися — кожен розуміє, що це дасть особисто йому</div>
+        <div class="l10-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Реальна підтримка змін — не формальна, а щира</div>
+    </div>
+    <div class="l10-section-label" style="margin-top:1rem;">7 кроків підготовки</div>
+    <div class="l10-steps">
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">1</div><div class="l10-step-body"><div class="l10-step-title">Місце, час, список</div><div class="l10-step-text">Визначте де, коли і хто буде присутній. Повний список учасників.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">2</div><div class="l10-step-body"><div class="l10-step-title">Надішліть офіційне запрошення</div><div class="l10-step-text">Не «якщо зможете», а «обов'язково будьте». Це важливо для сприйняття серйозності.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">3</div><div class="l10-step-body"><div class="l10-step-title">Підготуйте тези</div><div class="l10-step-text">Запишіть тези для виступу, але не читайте з паперу. Має звучати природно, як ваші слова.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">4</div><div class="l10-step-body"><div class="l10-step-title">Створіть презентацію</div><div class="l10-step-text">Кілька слайдів з цілями та задумом, ідеальною картиною майбутнього і важливими фактами з історії компанії.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">5</div><div class="l10-step-body"><div class="l10-step-title">Відрепетируйте</div><div class="l10-step-text">Перед дзеркалом або перед довіреною людиною. Це допоможе почуватися впевнено.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">6</div><div class="l10-step-body"><div class="l10-step-title">Роздайте письмову політику</div><div class="l10-step-text">Всі учасники повинні отримати документ з цілями і задумом — на занятті або одразу після.</div></div></div>
+        <div class="l10-step"><div class="l10-step-num" style="background:#6b7280;">7</div><div class="l10-step-body"><div class="l10-step-title">Зберіть відгуки</div><div class="l10-step-text">Дайте можливість відповісти на кілька запитань після заняття. Хто підтримує? Хто сумнівається?</div></div></div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Завдання</div>
+    <div class="l10-section-title">Розробіть Політику цілей і задуму через AI-асистента</div>
+    <div class="l10-steps">
+        <div class="l10-step">
+            <div class="l10-step-num">1</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Пройдіть діалог з AI-коучем цілей</div>
+                <div class="l10-step-text">Асистент проведе вас через формулювання мети, задуму, ідеальної картини та історії бізнесу</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">2</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Збережіть результат у Google Docs</div>
+                <div class="l10-step-text">На виході — готова «Політика цілей і задуму компанії» з підписом засновника</div>
+            </div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">3</div>
+            <div class="l10-step-body">
+                <div class="l10-step-title">Проведіть презентацію для команди</div>
+                <div class="l10-step-text">Зберіть усіх, розкажіть про мету і задум, запишіть виступ на відео</div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
+        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
+        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку документа + 2 год на проведення презентації для команди</div>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Інструмент</div>
+    <div class="l10-tool">
+        <div class="l10-tool-header">
+            <div class="l10-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+                <div class="l10-tool-title">AI-коуч цілей і задуму</div>
+                <div class="l10-tool-desc">Асистент веде діалог і допомагає сформулювати мету, задум, ідеальну картину та історію компанії. На виході — готовий документ «Політика цілей і задуму» для підпису засновника і презентації команді.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Розробити ціль і задум компанії
+        </a>
+    </div>
+</div>`,
 
                 lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Суть задания</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Вам нужно пройти диалог с <strong>AI-коучем целей</strong>, чтобы:</p>
-        <ul>
-            <li>сформировать <strong>Цель, Замысел, Идеальную картину и Историю бизнеса</strong></li>
-            <li>на выходе получить <strong>Политику развития организации</strong> — документ, который определяет содержание и направление компании</li>
-        </ul>
+<style>
+.l10-section { margin-bottom:1.75rem; }
+.l10-section:last-child { margin-bottom:0; }
+.l10-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l10-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l10-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l10-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l10-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l10-card p+p { margin-top:0.7rem; }
+.l10-situations { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-situation { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
+.l10-scale { display:grid; gap:0.4rem; margin-top:0.75rem; }
+.l10-scale-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.7rem 0.9rem; background:#f8fafc; border-radius:9px; border:1px solid #e2e8f0; }
+.l10-scale-num { width:26px; height:26px; background:#1a1a1a; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; }
+.l10-scale-title { font-weight:700; color:#1a1a1a; font-size:0.84rem; margin-bottom:0.15rem; }
+.l10-scale-text { font-size:0.78rem; color:#525252; line-height:1.4; }
+.l10-motivation { display:grid; gap:0.55rem; margin-top:0.75rem; }
+.l10-motiv-item { padding:0.8rem 0.95rem; border-radius:10px; border:1px solid; }
+.l10-motiv-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; }
+.l10-motiv-badge { font-size:0.68rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:4px; letter-spacing:0.04em; }
+.l10-motiv-title { font-weight:700; font-size:0.875rem; }
+.l10-motiv-text { font-size:0.82rem; line-height:1.5; }
+.l10-examples { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-example { display:flex; align-items:flex-start; gap:0.7rem; padding:0.7rem 0.9rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; }
+.l10-example-icon { width:30px; height:30px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l10-example-label { font-weight:700; color:#1a1a1a; font-size:0.8rem; margin-bottom:0.15rem; }
+.l10-example-text { font-size:0.82rem; color:#525252; line-height:1.45; }
+.l10-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l10-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l10-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l10-step-body { flex:1; }
+.l10-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l10-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l10-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l10-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l10-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l10-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l10-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l10-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l10-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l10-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l10-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.9rem; color:#166534; font-style:italic; line-height:1.6; }
+.l10-schema { display:flex; align-items:center; gap:0.4rem; padding:0.85rem 1rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; margin-top:0.75rem; flex-wrap:wrap; }
+.l10-schema-item { font-weight:700; color:#166534; font-size:0.85rem; }
+.l10-schema-arrow { color:#22c55e; font-weight:700; }
+</style>
+
+<div class="l10-section">
+    <div class="l10-section-label">Раздел 1</div>
+    <div class="l10-section-title">Главное препятствие внедрения: почему команда саботирует изменения</div>
+    <div class="l10-card">
+        <p>Каждый владелец, который пытается навести порядок в бизнесе, сталкивается с одним и тем же: самые близкие, самые лояльные сотрудники вдруг начинают сопротивляться. Кажется, что это предательство. Но на самом деле — это закономерность.</p>
+        <p>По международным исследованиям, потеря одного сотрудника обходится от 6 до 12 месяцев его зарплаты. Причина сопротивления проста: <strong>вы внедряете изменения, потому что видите проблему. Но видят ли её ваши сотрудники?</strong></p>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Пройдите AI-ассистента</div>
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Раздел 2</div>
+    <div class="l10-section-title">Цель и замысел компании — фундамент всего</div>
+    <div class="l10-card">
+        <p>Цель — это основная идея компании. Она отвечает на вопрос: <strong>для чего мы существуем? Что изменится в мире, если мы будем успешны?</strong></p>
+        <p>Типичная ошибка: «Моя цель — заработать деньги». Деньги — это энергия для достижения цели. Но не сама цель.</p>
     </div>
-    <div class="lesson-block-content">
-        <p>Ассистент проведёт вас через формулировку целей и создаст черновик политики.</p>
+    <div class="l10-examples">
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Консалтинговая компания</div><div class="l10-example-text">Сделать малый бизнес умнее, эффективнее и независимым от владельца</div></div>
+        </div>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Стоматология</div><div class="l10-example-text">Сделать людей здоровыми и уверенными в своей улыбке</div></div>
+        </div>
+        <div class="l10-example">
+            <div class="l10-example-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div class="l10-example-label">Строительная компания</div><div class="l10-example-text">Создавать комфортное и безопасное жильё для семей</div></div>
+        </div>
+    </div>
+    <div class="l10-card" style="margin-top:0.75rem;">
+        <p>Замысел — это ваш уникальный способ достигать цели. То, что вы делаете — и чего сознательно <strong>НЕ</strong> делаете. Замысел не придумывают с нуля — он отражает ваш реальный опыт и понимание рынка.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Адаптируйте материалы</div>
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Раздел 3</div>
+    <div class="l10-section-title">Административная шкала — хребет бизнеса</div>
+    <div class="l10-card">
+        <p>Coca-Cola не начинает продавать колбасу. McDonald's не открывает автосалоны. Они знают свой путь — и каждая новая идея проверяется: она на этом пути? Этот инструмент называется <strong>административная шкала</strong>.</p>
     </div>
-    <div class="lesson-block-content">
-        <p>Используйте материалы из папки (презентация, тезисы, опросник) и адаптируйте под свой бизнес:</p>
-        <div style="margin-top: 12px;">
-            <a href="https://drive.google.com/drive/folders/1c--GPEXkBsH99Pt07LP5nGUed3Br0tid?usp=sharing" target="_blank" class="action-btn outline">
-                
-                Папка с материалами
-            </a>
+    <div class="l10-scale">
+        <div class="l10-scale-item"><div class="l10-scale-num">1</div><div><div class="l10-scale-title">Цель</div><div class="l10-scale-text">Зачем мы существуем</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">2</div><div><div class="l10-scale-title">Замысел</div><div class="l10-scale-text">Как именно мы достигаем цели</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">3</div><div><div class="l10-scale-title">Политика</div><div class="l10-scale-text">Письменные правила, в рамках которых действуем</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">4</div><div><div class="l10-scale-title">Планы</div><div class="l10-scale-text">Что делаем в ближайший горизонт</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">5</div><div><div class="l10-scale-title">Программы</div><div class="l10-scale-text">Конкретные инициативы для достижения планов</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">6</div><div><div class="l10-scale-title">Проекты</div><div class="l10-scale-text">Детализация конкретных задач</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">7</div><div><div class="l10-scale-title">Приказы</div><div class="l10-scale-text">Конкретные указания конкретным людям</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">8</div><div><div class="l10-scale-title">Идеальная картина</div><div class="l10-scale-text">Как выглядит успешный результат</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">9</div><div><div class="l10-scale-title">Статистика</div><div class="l10-scale-text">Метрики, которые показывают движемся ли к цели</div></div></div>
+        <div class="l10-scale-item"><div class="l10-scale-num">10</div><div><div class="l10-scale-title">Конечный продукт</div><div class="l10-scale-text">Что конкретно производит компания или отдел</div></div></div>
+    </div>
+    <div class="l10-quote">Главный принцип: каждый уровень должен соответствовать другим. Если ваш приказ противоречит цели — что-то пойдёт не так.</div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Разделы 4–5</div>
+    <div class="l10-section-title">Политика и технология бизнеса</div>
+    <div class="l10-card">
+        <p>Политика компании — это письменные правила, которые говорят сотрудникам, как действовать в разных ситуациях. Без них каждый решает по-своему — и вы становитесь заложником бизнеса.</p>
+        <p>Технология — это последовательность действий, которая даёт предсказуемый результат. Пока «как надо делать» живёт в вашей голове — бизнес невозможно масштабировать, обучать или контролировать по качеству.</p>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Разделы 6–7</div>
+    <div class="l10-section-title">Уровни мотивации и как её повышать</div>
+    <div class="l10-motivation">
+        <div class="l10-motiv-item" style="background:#f0fdf4;border-color:#bbf7d0;">
+            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#22c55e;color:white;">УРОВЕНЬ 1</span><span class="l10-motiv-title" style="color:#166534;">Чувство долга</span></div>
+            <div class="l10-motiv-text" style="color:#166534;">Человек чувствует глубокую ответственность за дело, заботится о компании больше, чем о себе.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#eff6ff;border-color:#bfdbfe;">
+            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#3b82f6;color:white;">УРОВЕНЬ 2</span><span class="l10-motiv-title" style="color:#1e40af;">Личная убеждённость</span></div>
+            <div class="l10-motiv-text" style="color:#1e3a8a;">Верит в ценность своей работы. Делает хорошо, потому что это вопрос личной чести.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#fff7ed;border-color:#fed7aa;">
+            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#f97316;color:white;">УРОВЕНЬ 3</span><span class="l10-motiv-title" style="color:#c2410c;">Личная выгода</span></div>
+            <div class="l10-motiv-text" style="color:#9a3412;">Ищет бонус, карьерный рост, новые навыки. С этим можно и нужно работать.</div>
+        </div>
+        <div class="l10-motiv-item" style="background:#fef2f2;border-color:#fecaca;">
+            <div class="l10-motiv-header"><span class="l10-motiv-badge" style="background:#ef4444;color:white;">УРОВЕНЬ 4</span><span class="l10-motiv-title" style="color:#b91c1c;">Деньги</span></div>
+            <div class="l10-motiv-text" style="color:#991b1b;">Только зарплата. Никакой инициативы, никакой сверхурочной работы ради результата.</div>
+        </div>
+    </div>
+    <div class="l10-schema">
+        <span class="l10-schema-item">Показываете цель</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Удерживаете внимание</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Цель становится реальной</span>
+        <span class="l10-schema-arrow">→</span>
+        <span class="l10-schema-item">Человек мотивирован</span>
+    </div>
+</div>
+
+<div class="l10-divider"></div>
+
+<div class="l10-section">
+    <div class="l10-section-label">Задание</div>
+    <div class="l10-section-title">Разработайте Политику целей и замысла через AI-ассистента</div>
+    <div class="l10-steps">
+        <div class="l10-step">
+            <div class="l10-step-num">1</div>
+            <div class="l10-step-body"><div class="l10-step-title">Пройдите диалог с AI-коучем целей</div><div class="l10-step-text">Ассистент проведёт вас через формулировку цели, замысла, идеальной картины и истории бизнеса</div></div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">2</div>
+            <div class="l10-step-body"><div class="l10-step-title">Сохраните результат в Google Docs</div><div class="l10-step-text">На выходе — готовый документ «Политика целей и замысла компании» с подписью основателя</div></div>
+        </div>
+        <div class="l10-step">
+            <div class="l10-step-num">3</div>
+            <div class="l10-step-body"><div class="l10-step-title">Проведите презентацию для команды</div><div class="l10-step-text">Соберите всех, расскажите о цели и замысле, запишите выступление на видео</div></div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 3. Проведите презентацию</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Представьте политику целей команде. Это важная часть технологии внедрения.</p>
-    </div>
-</div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдіть діалог із AI-коучем цілей</li>
-            <li>Створіть у Google Docs документ: <strong>Політика цілей і задуму компанії</strong></li>
-            <li>Вставте сформовані тези (ціль, задум, ідеальна картина, історія бізнесу)</li>
-            <li>Зайдіть в папку «Завантажити матеріали» → папка «Презентація», збережіть тезиси та презентацію і переробіть під себе</li>
-            <li>Проведіть презентацію впровадження — розкажіть команді та «продайте» ідею використання інструмента управління «Ціль і задум»</li>
-            <li>Прикріпіть посилання на документ</li>
-        </ol>
-    </div>
-</div>
-                `,
+<div class="l10-divider"></div>
 
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
+<div class="l10-section">
+    <div class="l10-section-label">Инструмент</div>
+    <div class="l10-tool">
+        <div class="l10-tool-header">
+            <div class="l10-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+                <div class="l10-tool-title">AI-коуч целей и замысла</div>
+                <div class="l10-tool-desc">Ассистент ведёт диалог и помогает сформулировать цель, замысел, идеальную картину и историю компании. На выходе — готовый документ «Политика целей и замысла» для подписи основателя и презентации команде.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b" target="_blank" class="l10-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Разработать цель и замысел компании
+        </a>
     </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдите диалог с AI-коучем целей</li>
-            <li>Создайте политику целей в Google Docs</li>
-            <li>Адаптируйте презентацию и тезисы из папки материалов</li>
-            <li>Проведите презентацию для команды</li>
-            <li>Прикрепите ссылку на документ</li>
-        </ol>
-    </div>
-</div>
-                `,
-                
+</div>`,
+
+                homework: `<ol><li>Пройдіть діалог з AI-коучем цілей</li><li>Створіть документ «Політика цілей і задуму компанії» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — розкажіть мету і задум, запишіть на відео</li><li>Напишіть у полі відповіді: яку мету ви сформулювали і яка була найскладніша частина діалогу з AI</li></ol>`,
+                homework_ru: `<ol><li>Пройдите диалог с AI-коучем целей</li><li>Создайте документ «Политика целей и замысла компании» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — расскажите цель и замысел, запишите на видео</li><li>Напишите в поле ответа: какую цель вы сформулировали и что было сложнее всего в диалоге с AI</li></ol>`,
+
                 homeworkLink: "https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b",
                 homeworkLinkName: "→ AI-коуч цілей",
                 homeworkLinkName_ru: "→ AI-коуч целей",
-                time: 120
+                time: 180
             },
             {
                 id: 11,
                 title: "ПРОДУКТ ОРГАНІЗАЦІЇ",
                 title_ru: "ПРОДУКТ ОРГАНИЗАЦИИ",
-                subtitle: "Як проходити урок: переглянути відео",
-                subtitle_ru: "Прочитайте инструкцию и выполните задание в AI-ассистенте",
-                
-                videoLink: "https://youtu.be/mVSxlbMoCFY",
-                materialsLink: "https://drive.google.com/drive/folders/1Ct2GBeRfXxxrzg0oJ8TjxaUQ1N12rcKD?usp=sharing",
-                
+                subtitle: "Що насправді виробляє ваш бізнес — і як це зробити зрозумілим для команди",
+                subtitle_ru: "Что на самом деле производит ваш бизнес — и как сделать это понятным для команды",
+                hideAiBlock: true,
+
+                videoLink: null,
+                materialsLink: null,
+
                 lessonContent: `
-<div class="lesson-block warning" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #92400e;">Як проходити цей урок</div>
+<style>
+.l11-section { margin-bottom:1.75rem; }
+.l11-section:last-child { margin-bottom:0; }
+.l11-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l11-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l11-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l11-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l11-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l11-card p+p { margin-top:0.7rem; }
+.l11-compare { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
+.l11-bad { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
+.l11-good { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
+.l11-compare-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.l11-compare-text { font-size:0.82rem; line-height:1.5; }
+.l11-rule { display:flex; align-items:flex-start; gap:0.85rem; padding:0.85rem 1rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; margin-bottom:0.5rem; }
+.l11-rule:last-child { margin-bottom:0; }
+.l11-rule-icon { width:34px; height:34px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l11-rule-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l11-rule-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l11-roles { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l11-role { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l11-role-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.5rem; }
+.l11-role-product { font-size:0.82rem; color:#16a34a; font-style:italic; }
+.l11-role-desc { font-size:0.78rem; color:#6b7280; margin-top:0.2rem; line-height:1.4; }
+.l11-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l11-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l11-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l11-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l11-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l11-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l11-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l11-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l11-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l11-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l11-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l11-step-text { font-size:0.875rem; color:#374151; line-height:1.5; }
+</style>
+
+<div class="l11-section">
+    <div class="l11-section-label">Проблема</div>
+    <div class="l11-section-title">Чому команда не розуміє, що від неї очікують</div>
+    <div class="l11-card">
+        <p>Більшість компаній можуть описати, що вони <em>роблять</em>. Але не можуть чітко відповісти, який <em>результат</em> вони створюють для клієнта.</p>
+        <p>Ця різниця критична. Коли команда розуміє процес, але не розуміє продукт — вона оцінює свою роботу через зусилля, а не через результат. «Я зателефонував 20 разів» замість «клієнт підписав контракт».</p>
+        <p>Відсутність чіткого продукту породжує головну управлінську проблему: <strong>неможливо оцінити, чи добре людина справляється зі своєю роллю</strong>.</p>
     </div>
-    <div class="lesson-block-content">
-        <div style="display: grid; gap: 12px;">
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #f59e0b; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">1</span>
-                <div>
-                    <p style="margin: 0; font-weight: 600;">Спочатку розробляємо інструмент</p>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #78716c;">Пройдіть AI-асистента і створіть документ</p>
-                </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Концепція</div>
+    <div class="l11-section-title">Що таке Продукт організації</div>
+    <div class="l11-card">
+        <p>Продукт організації — це цінний кінцевий результат, який отримує клієнт. Не дія, не процес, не послуга як абстракція — а конкретна зміна, яка відбувається в житті або бізнесі клієнта після взаємодії з вами.</p>
+    </div>
+    <div class="l11-compare">
+        <div class="l11-bad">
+            <div class="l11-compare-label" style="color:#dc2626;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                Процес
             </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #f59e0b; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">2</span>
-                <div>
-                    <p style="margin: 0; font-weight: 600;">Потім — впровадження</p>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #78716c;">В папці з матеріалами є інструкція як провести презентацію для співробітників</p>
-                </div>
-            </div>
+            <div class="l11-compare-text" style="color:#7f1d1d;">«Ми проводимо консультації», «Ми надаємо юридичні послуги», «Ми займаємося рекламою»</div>
         </div>
-        <div style="margin-top: 14px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #fde68a;">
-            <p style="margin: 0; font-size: 13px;"><strong>Час на впровадження:</strong> ~3 години (1 год підготовка + 2 год проведення презентації)</p>
+        <div class="l11-good">
+            <div class="l11-compare-label" style="color:#16a34a;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="12" height="12" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+                Продукт
+            </div>
+            <div class="l11-compare-text" style="color:#14532d;">«Власник бізнесу виходить з операційки за 65 днів», «Справа виграна в суді», «+40% заявок за місяць»</div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Завдання</div>
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">3 критерії</div>
+    <div class="l11-section-title">Яким має бути правильний продукт</div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Конкретний і вимірюваний</div>
+            <div class="l11-rule-text">Продукт можна побачити, перевірити, передати. «Звіт готовий» — не продукт. «Звіт з аналізом 5 конкурентів і рекомендаціями, затверджений керівником» — продукт.</div>
+        </div>
     </div>
-    <div class="lesson-block-content">
-        <p>Через діалог з <strong>AI-коучем продукту</strong> визначте:</p>
-        <ul>
-            <li><strong>головний продукт компанії</strong> — який цінний результат ви створюєте для клієнта</li>
-            <li><strong>продукти ролей</strong>, необхідні для створення цього результату</li>
-            <li>як продукти ролей пов'язані між собою та з цілями організації</li>
-        </ul>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Цінний для наступного в ланцюжку</div>
+            <div class="l11-rule-text">Кожна роль передає результат наступній ролі або клієнту. Продукт менеджера з продажів — підписаний договір. Продукт бухгалтера — здана вчасно звітність.</div>
+        </div>
+    </div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Закінчений — а не «у процесі»</div>
+            <div class="l11-rule-text">Продукт — це те, що можна здати і прийняти. Половина роботи — не продукт. «Заявка оброблена і передана у виробництво» — продукт.</div>
+        </div>
     </div>
 </div>
 
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Результат</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>На виході — <strong>Політика продукту організації</strong>, що описує:</p>
-        <ul>
-            <li>головний продукт компанії</li>
-            <li>продукти ключових ролей</li>
-            <li>як кожен продукт впливає на спільний результат</li>
-        </ul>
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Структура</div>
+    <div class="l11-section-title">Продукти ролей — як це виглядає на практиці</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Кожна роль у компанії має свій продукт. Разом вони створюють головний продукт організації.</p>
+    <div class="l11-roles">
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Менеджер з продажів
+            </div>
+            <div class="l11-role-product">Продукт: підписаний договір з новим клієнтом</div>
+            <div class="l11-role-desc">Не «провів зустрічі» і не «обробив заявки» — а конкретний підписаний договір</div>
+        </div>
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Адміністратор клініки
+            </div>
+            <div class="l11-role-product">Продукт: пацієнт записаний, прийшов і задоволений сервісом</div>
+            <div class="l11-role-desc">Не «відповів на дзвінки» — а заповнений запис і позитивний досвід пацієнта</div>
+        </div>
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Керівник відділу
+            </div>
+            <div class="l11-role-product">Продукт: відділ виконав план у встановлений термін</div>
+            <div class="l11-role-desc">Не «провів наради і поставив задачі» — а план виконано командою</div>
+        </div>
     </div>
 </div>
-                `,
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Навіщо це потрібно</div>
+    <div class="l11-section-title">Що змінюється, коли продукт визначений</div>
+    <div class="l11-result-list">
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Можна оцінювати роботу через результат, а не через присутність
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Кожен співробітник розуміє, що саме від нього очікується
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Легше делегувати — є чітке визначення «зроблено»
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Зникають суперечки «я ж старався» — важливий результат, а не зусилля
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            З'являється основа для системи мотивації через продукт
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Завдання</div>
+    <div class="l11-section-title">Розробіть Політику продукту організації через AI-асистента</div>
+    <div class="l11-steps">
+        <div class="l11-step">
+            <div class="l11-step-num">1</div>
+            <div class="l11-step-text">Відкрийте AI-асистента і пройдіть діалог — він проведе вас через визначення головного продукту компанії і продуктів ключових ролей</div>
+        </div>
+        <div class="l11-step">
+            <div class="l11-step-num">2</div>
+            <div class="l11-step-text">На виході ви отримаєте готовий документ «Політика продукту організації» — збережіть його в Google Docs</div>
+        </div>
+        <div class="l11-step">
+            <div class="l11-step-num">3</div>
+            <div class="l11-step-text">Проведіть коротку презентацію для команди — поясніть, що таке продукт ролі і чому це важливо для кожного</div>
+        </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
+        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
+        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку документа + 2 год на проведення презентації для команди</div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Інструмент</div>
+    <div class="l11-tool">
+        <div class="l11-tool-header">
+            <div class="l11-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+                <div class="l11-tool-title">AI-коуч продукту організації</div>
+                <div class="l11-tool-desc">Асистент веде діалог і допомагає сформулювати головний продукт компанії та продукти ключових ролей. На виході — готова Політика продукту організації.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Розробити продукт організації
+        </a>
+    </div>
+</div>`,
 
                 lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Через диалог с <strong>AI-коучем продукта</strong> определите главный продукт компании и продукты ключевых ролей.</p>
+<style>
+.l11-section { margin-bottom:1.75rem; }
+.l11-section:last-child { margin-bottom:0; }
+.l11-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l11-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l11-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l11-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l11-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l11-card p+p { margin-top:0.7rem; }
+.l11-compare { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
+.l11-bad { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
+.l11-good { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
+.l11-compare-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.l11-compare-text { font-size:0.82rem; line-height:1.5; }
+.l11-rule { display:flex; align-items:flex-start; gap:0.85rem; padding:0.85rem 1rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; margin-bottom:0.5rem; }
+.l11-rule:last-child { margin-bottom:0; }
+.l11-rule-icon { width:34px; height:34px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l11-rule-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l11-rule-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l11-roles { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l11-role { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l11-role-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.5rem; }
+.l11-role-product { font-size:0.82rem; color:#16a34a; font-style:italic; }
+.l11-role-desc { font-size:0.78rem; color:#6b7280; margin-top:0.2rem; line-height:1.4; }
+.l11-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l11-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l11-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l11-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l11-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l11-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l11-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l11-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l11-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l11-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l11-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l11-step-text { font-size:0.875rem; color:#374151; line-height:1.5; }
+</style>
+
+<div class="l11-section">
+    <div class="l11-section-label">Проблема</div>
+    <div class="l11-section-title">Почему команда не понимает, что от неё ожидают</div>
+    <div class="l11-card">
+        <p>Большинство компаний могут описать, что они <em>делают</em>. Но не могут чётко ответить, какой <em>результат</em> они создают для клиента.</p>
+        <p>Это различие критично. Когда команда понимает процесс, но не понимает продукт — она оценивает свою работу через усилия, а не через результат. «Я позвонил 20 раз» вместо «клиент подписал контракт».</p>
+        <p>Отсутствие чёткого продукта порождает главную управленческую проблему: <strong>невозможно оценить, хорошо ли человек справляется со своей ролью</strong>.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Пройдите AI-ассистента</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Ассистент поможет сформулировать продукт компании и продукты ролей.</p>
-    </div>
-</div>
+<div class="l11-divider"></div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Адаптируйте материалы</div>
+<div class="l11-section">
+    <div class="l11-section-label">Концепция</div>
+    <div class="l11-section-title">Что такое Продукт организации</div>
+    <div class="l11-card">
+        <p>Продукт организации — это ценный конечный результат, который получает клиент. Не действие, не процесс, не услуга как абстракция — а конкретное изменение, которое происходит в жизни или бизнесе клиента после взаимодействия с вами.</p>
     </div>
-    <div class="lesson-block-content">
-        <p>Используйте материалы из папки и адаптируйте под свой бизнес:</p>
-        <div style="margin-top: 12px;">
-            <a href="https://drive.google.com/drive/folders/1Ct2GBeRfXxxrzg0oJ8TjxaUQ1N12rcKD?usp=sharing" target="_blank" class="action-btn outline">
-                
-                Папка с материалами
-            </a>
+    <div class="l11-compare">
+        <div class="l11-bad">
+            <div class="l11-compare-label" style="color:#dc2626;">Процесс</div>
+            <div class="l11-compare-text" style="color:#7f1d1d;">«Мы проводим консультации», «Мы оказываем юридические услуги», «Мы занимаемся рекламой»</div>
+        </div>
+        <div class="l11-good">
+            <div class="l11-compare-label" style="color:#16a34a;">Продукт</div>
+            <div class="l11-compare-text" style="color:#14532d;">«Владелец выходит из операционки за 65 дней», «Дело выиграно в суде», «+40% заявок за месяц»</div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 3. Проведите презентацию</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Представьте политику продукта команде.</p>
-    </div>
-</div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдіть діалог із AI-коучем продукту</li>
-            <li>Створіть документ «Політика продукту організації» у Google Docs</li>
-            <li>Внесіть результати діалогу й прикріпіть посилання на документ</li>
-            <li>Зайдіть в папку «Завантажити матеріали» → папка «Презентація», збережіть тезиси та презентацію і переробіть під себе</li>
-            <li>Проведіть презентацію впровадження — розкажіть команді та «продайте» ідею використання інструмента управління «Продукт / ЦКП»</li>
-        </ol>
-    </div>
-</div>
-                `,
+<div class="l11-divider"></div>
 
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
+<div class="l11-section">
+    <div class="l11-section-label">3 критерия</div>
+    <div class="l11-section-title">Каким должен быть правильный продукт</div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Конкретный и измеримый</div>
+            <div class="l11-rule-text">Продукт можно увидеть, проверить, передать. «Отчёт готов» — не продукт. «Отчёт с анализом 5 конкурентов и рекомендациями, утверждённый руководителем» — продукт.</div>
+        </div>
     </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдите диалог с AI-коучем продукта</li>
-            <li>Создайте политику продукта в Google Docs</li>
-            <li>Адаптируйте материалы из папки</li>
-            <li>Проведите презентацию для команды</li>
-            <li>Прикрепите ссылку на документ</li>
-        </ol>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Ценный для следующего в цепочке</div>
+            <div class="l11-rule-text">Каждая роль передаёт результат следующей роли или клиенту. Продукт менеджера по продажам — подписанный договор. Продукт бухгалтера — сданная вовремя отчётность.</div>
+        </div>
+    </div>
+    <div class="l11-rule">
+        <div class="l11-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="17" height="17"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div>
+            <div class="l11-rule-title">Завершённый — а не «в процессе»</div>
+            <div class="l11-rule-text">Продукт — это то, что можно сдать и принять. Половина работы — не продукт. «Заявка обработана и передана в производство» — продукт.</div>
+        </div>
     </div>
 </div>
-                `,
-                
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Структура</div>
+    <div class="l11-section-title">Продукты ролей — как это выглядит на практике</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Каждая роль в компании имеет свой продукт. Вместе они создают главный продукт организации.</p>
+    <div class="l11-roles">
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Менеджер по продажам
+            </div>
+            <div class="l11-role-product">Продукт: подписанный договор с новым клиентом</div>
+            <div class="l11-role-desc">Не «провёл встречи» и не «обработал заявки» — а конкретный подписанный договор</div>
+        </div>
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Администратор клиники
+            </div>
+            <div class="l11-role-product">Продукт: пациент записан, пришёл и доволен сервисом</div>
+            <div class="l11-role-desc">Не «ответил на звонки» — а заполненная запись и положительный опыт пациента</div>
+        </div>
+        <div class="l11-role">
+            <div class="l11-role-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                Руководитель отдела
+            </div>
+            <div class="l11-role-product">Продукт: отдел выполнил план в установленный срок</div>
+            <div class="l11-role-desc">Не «провёл совещания и поставил задачи» — а план выполнен командой</div>
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Зачем это нужно</div>
+    <div class="l11-section-title">Что меняется, когда продукт определён</div>
+    <div class="l11-result-list">
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Можно оценивать работу через результат, а не через присутствие
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Каждый сотрудник понимает, что именно от него ожидается
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Легче делегировать — есть чёткое определение «сделано»
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Исчезают споры «я же старался» — важен результат, а не усилия
+        </div>
+        <div class="l11-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Появляется основа для системы мотивации через продукт
+        </div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Задание</div>
+    <div class="l11-section-title">Разработайте Политику продукта организации через AI-ассистента</div>
+    <div class="l11-steps">
+        <div class="l11-step">
+            <div class="l11-step-num">1</div>
+            <div class="l11-step-text">Откройте AI-ассистента и пройдите диалог — он проведёт вас через определение главного продукта компании и продуктов ключевых ролей</div>
+        </div>
+        <div class="l11-step">
+            <div class="l11-step-num">2</div>
+            <div class="l11-step-text">На выходе вы получите готовый документ «Политика продукта организации» — сохраните его в Google Docs</div>
+        </div>
+        <div class="l11-step">
+            <div class="l11-step-num">3</div>
+            <div class="l11-step-text">Проведите короткую презентацию для команды — объясните, что такое продукт роли и почему это важно для каждого</div>
+        </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
+        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Время на внедрение</div>
+        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 часа: 1 час на диалог с AI и подготовку документа + 2 часа на проведение презентации для команды</div>
+    </div>
+</div>
+
+<div class="l11-divider"></div>
+
+<div class="l11-section">
+    <div class="l11-section-label">Инструмент</div>
+    <div class="l11-tool">
+        <div class="l11-tool-header">
+            <div class="l11-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+                <div class="l11-tool-title">AI-коуч продукта организации</div>
+                <div class="l11-tool-desc">Ассистент ведёт диалог и помогает сформулировать главный продукт компании и продукты ключевых ролей. На выходе — готовая Политика продукта организации.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp" target="_blank" class="l11-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Разработать продукт организации
+        </a>
+    </div>
+</div>`,
+
+                homework: `<ol><li>Пройдіть діалог з AI-коучем продукту</li><li>Створіть документ «Політика продукту організації» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — поясніть продукт ролі кожному</li><li>Напишіть у полі відповіді: який головний продукт вашої компанії і продукт якої ролі виявився найскладнішим для формулювання</li></ol>`,
+                homework_ru: `<ol><li>Пройдите диалог с AI-коучем продукта</li><li>Создайте документ «Политика продукта организации» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — объясните продукт роли каждому</li><li>Напишите в поле ответа: какой главный продукт вашей компании и продукт какой роли оказался сложнее всего сформулировать</li></ol>`,
+
                 homeworkLink: "https://chatgpt.com/g/g-6851a1db22ac81918521e73ffdd1d6e2-ai-kouch-konsultant-alex-talko-produkt-tskp",
                 homeworkLinkName: "→ AI-коуч продукту",
                 homeworkLinkName_ru: "→ AI-коуч продукта",
-                time: 120
+                time: 180
             },
             {
                 id: 12,
                 title: "ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
                 title_ru: "ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
-                subtitle: "Як проходити урок: переглянути відео",
-                subtitle_ru: "Прочитайте инструкцию и выполните задание в AI-ассистенте",
-                
-                videoLink: "https://youtu.be/zFNsHtbRoVs",
-                materialsLink: "https://drive.google.com/drive/folders/1difvS_l0v_1RaOqte4zIvmdxR4jf-zEM?usp=sharing",
-                
+                subtitle: "Як організувати роботу так, щоб бізнес працював без вас",
+                subtitle_ru: "Как организовать работу так, чтобы бизнес работал без вас",
+                hideAiBlock: true,
+
+                videoLink: null,
+                materialsLink: null,
+
                 lessonContent: `
-<div class="lesson-block warning" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #92400e;">Як проходити цей урок</div>
+<style>
+.l12-section { margin-bottom:1.75rem; }
+.l12-section:last-child { margin-bottom:0; }
+.l12-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l12-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l12-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l12-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l12-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l12-card p+p { margin-top:0.7rem; }
+.l12-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.875rem; color:#166534; font-style:italic; line-height:1.6; }
+.l12-reasons { display:grid; gap:0.6rem; margin-top:0.75rem; }
+.l12-reason { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
+.l12-reason-header { display:flex; align-items:center; gap:0.7rem; padding:0.75rem 0.95rem; background:#f8fafc; }
+.l12-reason-num { width:28px; height:28px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; flex-shrink:0; }
+.l12-reason-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l12-reason-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; font-size:0.85rem; color:#525252; line-height:1.55; }
+.l12-problems { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l12-problem { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
+.l12-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l12-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l12-step-body { flex:1; }
+.l12-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l12-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-functions { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-fn { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l12-fn-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem; }
+.l12-fn-num { font-size:0.7rem; font-weight:700; color:#9ca3af; }
+.l12-fn-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l12-fn-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-fn-stat { display:inline-block; margin-top:0.4rem; padding:0.2rem 0.55rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; font-size:0.72rem; font-weight:600; color:#16a34a; }
+.l12-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l12-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l12-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l12-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l12-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l12-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l12-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l12-mgr { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-mgr-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; }
+.l12-mgr-icon { width:32px; height:32px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l12-mgr-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l12-mgr-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+</style>
+
+<div class="l12-section">
+    <div class="l12-section-label">Вступ</div>
+    <div class="l12-section-title">Чому при зростанні стає не легше, а важче</div>
+    <div class="l12-card">
+        <p>Є питання, з яким рано чи пізно стикається кожен власник малого бізнесу: чому при зростанні стає не легше, а важче? Більше людей — більше хаосу. Більше замовлень — більше помилок. Більше виручки — більше головного болю.</p>
+        <p>Відповідь, як правило, одна: бізнес не організований. Не в сенсі «зареєстрований» — а в сенсі «кожна робота закріплена за конкретною людиною, і всі частини взаємодіють між собою».</p>
+        <p>Функціональна структура — це фундамент, без якого будь-яка система, CRM, автоматизація чи мотивація — просто надбудова на піску.</p>
     </div>
-    <div class="lesson-block-content">
-        <div style="display: grid; gap: 12px;">
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #f59e0b; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">1</span>
-                <div>
-                    <p style="margin: 0; font-weight: 600;">Спочатку розробляємо інструмент</p>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #78716c;">Пройдіть AI-асистента і створіть документ</p>
-                </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 1</div>
+    <div class="l12-section-title">Що означає «організувати бізнес» — і чому більшість це розуміє неправильно</div>
+    <div class="l12-card">
+        <p>Організувати — це розкласти все по поличках і налагодити роботу так, щоб досягти того, чого хочеш. Як прибрати в кімнаті: кожна річ має своє місце. Не тому що так красиво, а тому що коли річ лежить на своєму місці — ти знаєш де вона і можеш нею скористатись.</p>
+        <p>Але більшість власників під «організувати» розуміють щось інше: «найняти більше людей», «купити CRM», «провести нараду», «написати регламент». Це все — інструменти. А організація — це принцип, який стоїть за ними.</p>
+        <p>У бізнесі те саме що з кімнатою: кожна категорія роботи — у своєму «відсіку». Кожна функція має своє місце, і всі знають де вона знаходиться.</p>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 2</div>
+    <div class="l12-section-title">Що таке «функція» — і чому це найважливіше слово в управлінні</div>
+    <div class="l12-card">
+        <p>«Функція» — це конкретна робота, яку хтось виконує. Простіше кажучи: «за що ти відповідаєш». Не посада. Не назва. Не запис у трудовій. А реальна відповідь на питання: <strong>що саме ти робиш і що після тебе залишається?</strong></p>
+        <p>У бізнесі функції — це аналоги позицій у футболі. Є той, хто знаходить клієнтів. Є той, хто продає. Є той, хто виробляє. Є той, хто доставляє. Є той, хто рахує гроші. Кожна з цих робіт — окрема функція.</p>
+    </div>
+    <div class="l12-quote">Бізнес — це пазл, де кожна частинка — окрема функція: продажі, реклама, гроші, виробництво, люди, доставка. Якщо хоча б одна частинка випала — картинка неповна. Пазл не складається.</div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 3</div>
+    <div class="l12-section-title">Чотири причини, чому треба ділити роботу на функції</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">«Навіщо все це ускладнювати? Просто найму людей і скажу: робіть що треба». Це найпоширеніша думка власника, який застряг. «Роби що треба» — це найдорожча команда, яку ви можете дати.</p>
+    <div class="l12-reasons">
+        <div class="l12-reason">
+            <div class="l12-reason-header">
+                <div class="l12-reason-num">1</div>
+                <div class="l12-reason-title">Маленьке завдання легше пояснити і передати</div>
             </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #f59e0b; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">2</span>
-                <div>
-                    <p style="margin: 0; font-weight: 600;">Потім — впровадження</p>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #78716c;">В папці з матеріалами є інструкція як провести презентацію для співробітників</p>
-                </div>
-            </div>
+            <div class="l12-reason-body">Коли робота не поділена — ви передаєте людині щось величезне і розмите. «Займися маркетингом». «Контролюй виробництво». Що це означає? З чого починати? Для більшості людей — це стрес і параліч. Вони або роблять що завгодно (не те, що потрібно), або не роблять нічого і чекають конкретики.</div>
         </div>
-        <div style="margin-top: 14px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #fde68a;">
-            <p style="margin: 0; font-size: 13px;"><strong>Час на впровадження:</strong> ~3 години (1 год підготовка + 2 год проведення презентації)</p>
+        <div class="l12-reason">
+            <div class="l12-reason-header">
+                <div class="l12-reason-num">2</div>
+                <div class="l12-reason-title">Легше побачити, що зроблено, а що ні</div>
+            </div>
+            <div class="l12-reason-body">Як список покупок: хліб — є, молоко — є, яйця — немає. Одразу видно чого не вистачає. Коли роботи не поділені — ви не можете зробити такий список. «Маркетинг» — він є чи немає? Щось робиться. А що саме? Достатньо? Правильно? Незрозуміло. І вам доводиться або довіряти наосліп, або контролювати кожен крок вручну.</div>
+        </div>
+        <div class="l12-reason">
+            <div class="l12-reason-header">
+                <div class="l12-reason-num">3</div>
+                <div class="l12-reason-title">Якщо щось не працює — можна замінити одну частину</div>
+            </div>
+            <div class="l12-reason-body">Зламалась лампочка в фарі — міняєте лампочку, не весь автомобіль. Коли є чіткі функції — ви точно знаєте де проблема. Функція «генерація лідів» — 50 заявок, добре. Функція «конверсія в угоду» — 5% при нормі 20%. Ось де зламалась лампочка. Міняємо лампочку — а не увесь відділ.</div>
+        </div>
+        <div class="l12-reason">
+            <div class="l12-reason-header">
+                <div class="l12-reason-num">4</div>
+                <div class="l12-reason-title">Люди стають майстрами</div>
+            </div>
+            <div class="l12-reason-body">Коли людина довго робить одну справу — вона в ній росте. Стає експертом. Робить швидше, краще, з меншою кількістю помилок. Хірург-кардіолог, який робить лише операції на серці — оперує набагато краще, ніж хірург-загальнопрактик, який робить все підряд. Спеціалізація — це не обмеження. Це шлях до майстерності.</div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Завдання</div>
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 4</div>
+    <div class="l12-section-title">Генрі Форд і революція функцій — як поділ роботи змінив світ</div>
+    <div class="l12-card">
+        <p>До Форда автомобіль був предметом розкоші — як сьогодні яхта або приватний літак. Один майстер робив автомобіль від початку до кінця: і болти закручував, і двигун збирав, і кузов підганяв. Майстер мав бути кваліфікованим у всьому — а значить, таких людей було мало і коштували вони дорого.</p>
+        <p>Форд зробив інакше: кожен робітник виконує одну просту операцію. Один закручує болти зліва. Інший — справа. Третій кріпить колеса. Четвертий встановлює сидіння. Один конкретний рух. Один конкретний результат.</p>
     </div>
-    <div class="lesson-block-content">
-        <p>Через діалог з <strong>AI-коучем структури</strong> визначте:</p>
-        <ul>
-            <li><strong>ключові функції організації</strong> (маркетинг, продажі, фінанси, адміністрування)</li>
-            <li>які ролі відповідають за виконання цих функцій</li>
-            <li>принцип: ми будуємо систему навколо функцій, а не людей</li>
-        </ul>
+    <div class="l12-quote">Поділ роботи на чіткі функції — це не бюрократія і не ускладнення. Це шлях до більшої продуктивності, нижчих витрат і кращої якості одночасно.</div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 5</div>
+    <div class="l12-section-title">Бізнес — це конвеєр. Як рухається робота від початку до кінця</div>
+    <div class="l12-card">
+        <p>Є одна ідея, яка повністю змінює погляд на бізнес: <strong>бізнес — це конвеєр</strong>. У будь-якому бізнесі є потік: щось приходить (замовлення, клієнт, запит) → з цим щось роблять (обробляють, перетворюють) → щось виходить (задоволений клієнт, оплачений рахунок). Між «приходить» і «виходить» — ланцюжок функцій. Кожна функція приймає щось від попередньої, робить свою частину і передає наступній.</p>
+    </div>
+    <div class="l12-card" style="margin-top:0.6rem;">
+        <p><strong>Реальний кейс:</strong> компанія відправила товар клієнту без документів. Клієнт сказав: «Терміново потрібно, оплачу завтра». Товар отримав — і відмовився платити. «Де документи? Нема документів — нема оплати». Одна пропущена ланка — не було функції контролю документів, ніхто за це не відповідав — обійшлась компанії в піврічний бюджет.</p>
+    </div>
+    <div class="l12-quote">Мало просто поділити роботу. Функції мають передавати роботу одна одній. Якщо між ними немає передачі — кожна функція живе у своєму «підводному човні».</div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 6</div>
+    <div class="l12-section-title">Пастка «зробити самому» — і чому вона руйнує бізнес</div>
+    <div class="l12-card">
+        <p>«Мої працівники не роблять як треба. Простіше зробити самому». Якщо ви хоч раз так думали — ви вже потрапили в пастку. Коли власник намагається замінити людей собою — він стає найдорожчим і найнезамінимішим виконавцем у своєму ж бізнесі.</p>
+        <p>Вихід — не «найняти кращих людей». Вихід — організувати роботу так, щоб звичайні люди давали передбачуваний результат. Це і є функціональна структура.</p>
+    </div>
+    <div class="l12-section-label" style="margin-top:1rem;">Дві дії, коли команда не справляється</div>
+    <div class="l12-steps">
+        <div class="l12-step">
+            <div class="l12-step-num" style="background:#ef4444;">1</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Погасити пожежу</div>
+                <div class="l12-step-text">Вирішити проблему, яка горить прямо зараз. Це вимушено, але необхідно. Але якщо зупинитись тут — пожежа спалахне знову.</div>
+            </div>
+        </div>
+        <div class="l12-step">
+            <div class="l12-step-num" style="background:#22c55e;">2</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Побудувати систему</div>
+                <div class="l12-step-text">Організувати роботу так, щоб такі пожежі більше не виникали. Визначити функції. Описати як вони взаємодіють. Поставити людей на свої місця. Перша дія — витрати. Друга — інвестиція.</div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Результат</div>
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 7</div>
+    <div class="l12-section-title">Пастка «багатоверстатника» — коли одна людина робить все</div>
+    <div class="l12-card">
+        <p>Малий бізнес часто виглядає так: є Сергій. Сергій — і продавець, і бухгалтер, і завгосп, і оператор соцмереж, і кур'єр при необхідності. Здається, це добре: одна людина, яка вміє все. Насправді — це катастрофа в уповільненому режимі.</p>
+        <p>Чим більше функцій у людини — тим складніше нею керувати. У неї завжди є відмазка: «Я іншим займався». І технічно вона права.</p>
     </div>
-    <div class="lesson-block-content">
-        <p>На виході — <strong>Політика функціональної структури</strong>, що описує:</p>
-        <ul>
-            <li>основні функції компанії</li>
-            <li>ролі, відповідальні за них</li>
-            <li>логіку взаємодії між зонами</li>
-            <li>підготовлений регламент функцій</li>
-        </ul>
+    <div class="l12-problems">
+        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко знайти.</strong> Де взяти людину, яка вміє і продавати, і рахувати, і з постачальниками, і в соцмережах? Таких або немає, або їм нудно і вони йдуть.</div></div>
+        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко навчити.</strong> Навчити людину 5 різним справам — у 5 разів довше і дорожче. І при цьому жодній вона не буде навчена добре.</div></div>
+        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Важко керувати.</strong> Завжди є причина чому конкретна робота не зроблена. Немає чіткої функції — немає чіткого KPI — немає об'єктивної оцінки.</div></div>
+    </div>
+    <div class="l12-card" style="margin-top:0.75rem;">
+        <p>Коли бізнес маленький — одна людина робить кілька функцій. Це нормально на старті. Але різниця між «так виходить» і «так і треба»: <strong>якщо ви знаєте всі функції і бачите їх на карті — ви керуєте усвідомлено</strong>. Ви знаєте, що Сергій зараз робить функцію продажів. І коли з'являться гроші — точно знаєте кого наймати першим.</p>
     </div>
 </div>
-                `,
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 8</div>
+    <div class="l12-section-title">Карта бізнесу — як побачити всі функції і знайти «діри»</div>
+    <div class="l12-card">
+        <p>Найнебезпечніший тип проблеми в бізнесі — та, яку ви не бачите. Не та, де горить і болить. А та, де тихо втрачаються гроші, і ви навіть не розумієте чому.</p>
+        <p>Власник добре знає своє ремесло: лікар чудово лікує, кравець чудово шиє. Але у бізнесу є десятки функцій, які ніяк не пов'язані з основним ремеслом — і власник просто не знає, що вони існують.</p>
+    </div>
+    <div class="l12-section-label" style="margin-top:1rem;">Приклад: звичайний роздрібний магазин — мінімум 6 функцій</div>
+    <div class="l12-functions">
+        <div class="l12-fn">
+            <div class="l12-fn-header"><span class="l12-fn-num">Функція 1</span><span class="l12-fn-title">Визначити що продаємо і кому</span></div>
+            <div class="l12-fn-text">Який товар? Хто покупець? Яка цінова категорія? Яка ніша? Це не разове рішення при відкритті — це регулярна робота. Ринок змінюється. Покупці змінюються.</div>
+        </div>
+        <div class="l12-fn">
+            <div class="l12-fn-header"><span class="l12-fn-num">Функція 2</span><span class="l12-fn-title">Як люди дізнаються про нас</span></div>
+            <div class="l12-fn-text">Реклама, вивіска, соцмережі, сарафанне радіо, партнерства. Якщо цього немає або це відбувається само собою — у вас немає функції маркетингу. Є лише удача.</div>
+        </div>
+        <div class="l12-fn">
+            <div class="l12-fn-header"><span class="l12-fn-num">Функція 3</span><span class="l12-fn-title">Як виглядає магазин</span></div>
+            <div class="l12-fn-text">Вітрина, оформлення, навігація, атмосфера.</div>
+            <div class="l12-fn-stat">+30–40% трафіку від привабливого зовнішнього вигляду</div>
+        </div>
+        <div class="l12-fn">
+            <div class="l12-fn-header"><span class="l12-fn-num">Функція 4</span><span class="l12-fn-title">Як розкладений товар</span></div>
+            <div class="l12-fn-text">Мерчандайзинг — це ціла наука. Де стоїть товар, як він підсвічений, що знаходиться поряд — все це впливає на середній чек.</div>
+            <div class="l12-fn-stat">+20–25% продажів при правильному мерчандайзингу</div>
+        </div>
+        <div class="l12-fn">
+            <div class="l12-fn-header"><span class="l12-fn-num">Функція 5</span><span class="l12-fn-title">Як продаємо</span></div>
+            <div class="l12-fn-text">Скрипти консультантів, робота на касі, як відповідаємо на питання, як пропонуємо супутні товари. Без цієї функції магазин — просто склад, з якого люди беруть те, за чим прийшли, і йдуть.</div>
+        </div>
+        <div class="l12-fn">
+            <div class="l12-fn-header"><span class="l12-fn-num">Функція 6</span><span class="l12-fn-title">Як повертаємо покупців</span></div>
+            <div class="l12-fn-text">Програми лояльності, розсилки, акції для постійних клієнтів, робота з відгуками.</div>
+            <div class="l12-fn-stat">Утримання клієнта в 5–7 разів дешевше ніж залучення нового</div>
+        </div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 9</div>
+    <div class="l12-section-title">Одна зламана ланка — і система стоїть. Роль керівника</div>
+    <div class="l12-card">
+        <p>Власники часто думають після побудови структури: «Все, розписав функції, призначив людей, тепер воно само їде». Ні. Після побудови структури з'являється нова критична роль: керівник, який стежить за тим, щоб всі ланки працювали.</p>
+        <p>Уявіть годинник. Десятки шестерень, кожна виконує свою функцію. Якщо хоча б одна зубчаста ланка зламалась — годинник зупиняється. Не важливо, що всі інші 99 шестерень в ідеальному стані.</p>
+    </div>
+    <div class="l12-section-label" style="margin-top:1rem;">Три завдання керівника в організованому бізнесі</div>
+    <div class="l12-mgr">
+        <div class="l12-mgr-item">
+            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div><div class="l12-mgr-title">Бачити</div><div class="l12-mgr-text">Мати інформацію про те, що відбувається в кожній функції — не через наради раз на тиждень, а через систему показників, яка дає сигнал в реальному часі.</div></div>
+        </div>
+        <div class="l12-mgr-item">
+            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div><div class="l12-mgr-title">Помічати</div><div class="l12-mgr-text">Бачити проблеми до того, як вони стали катастрофою. Якщо менеджер продав вдвічі менше цього тижня — це сигнал. Ранній сигнал коштує значно дешевше, ніж пізня реакція.</div></div>
+        </div>
+        <div class="l12-mgr-item">
+            <div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div><div class="l12-mgr-title">Виправляти</div><div class="l12-mgr-text">Швидко втручатися і вирішувати. Не «потім розберемось» — а зараз, поки мала проблема не стала великою.</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Розділ 10</div>
+    <div class="l12-section-title">Три кроки побудови функціональної структури — з чого починати</div>
+    <div class="l12-steps">
+        <div class="l12-step">
+            <div class="l12-step-num">1</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Розібратись із «сировиною»</div>
+                <div class="l12-step-text">Що приходить у ваш бізнес? Звідки беруться замовлення? Хто ваш клієнт? Що ви отримуєте на вході — і що має бути на виході? Більшість власників не можуть чітко відповісти. «Ну, клієнти звертаються...» Як? Звідки? Через що? Без відповіді на це — ви не можете побудувати конвеєр.</div>
+            </div>
+        </div>
+        <div class="l12-step">
+            <div class="l12-step-num">2</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Визначити всі кроки трансформації</div>
+                <div class="l12-step-text">Що треба зробити, щоб перетворити «сировину» на «готовий продукт»? Випишіть всі кроки — не думайте поки про людей, просто всі дії між «прийшло» і «вийшло». Кожна дія — потенційна функція. На цьому етапі ви знаходите кроки, яких зараз не робите взагалі: «Стоп, а хто у нас контролює якість перед відправкою?» — «Ніхто». Ось ваша «діра».</div>
+            </div>
+        </div>
+        <div class="l12-step">
+            <div class="l12-step-num">3</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Поставити людей на місця</div>
+                <div class="l12-step-text">До кожної функції — призначте відповідального. «Відповідальний» — не означає «виконує сам». Але він повинен знати, що ця функція — його зона відповідальності. І ви обидва маєте знати: ця робота зроблена або не зроблена.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Підсумок</div>
+    <div class="l12-section-title">Що таке функціональна структура і навіщо вона вам</div>
+    <div class="l12-card">
+        <p>Функціональна структура — це не оргструктура зі стрілочками і квадратиками. Це відповідь на питання: <strong>які роботи мають виконуватись у вашому бізнесі, хто за кожну відповідає і як вони передають роботу одна одній.</strong></p>
+        <p>Це фундамент. Без нього CRM — просто база даних, якою ніхто не користується. Регламенти — папери, які ніхто не читає. Мотивація — хаотичні бонуси, які нікого не мотивують.</p>
+    </div>
+    <div class="l12-result-list">
+        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Зрозумієте які функції є у вашому бізнесі — і яких немає</div>
+        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Знайдете «діри» — де тихо втрачаються гроші</div>
+        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Зможете осмислено ставити людей на конкретні ролі</div>
+        <div class="l12-result-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Перестанете бути «найнезамінимішим виконавцем» у власному бізнесі</div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Завдання</div>
+    <div class="l12-section-title">Розробіть функціональну структуру вашого бізнесу через AI-асистента</div>
+    <div class="l12-steps">
+        <div class="l12-step">
+            <div class="l12-step-num">1</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Пройдіть діалог з AI-коучем структури</div>
+                <div class="l12-step-text">Асистент проведе вас через визначення всіх функцій вашого бізнесу, знайде «діри» і допоможе розподілити ролі</div>
+            </div>
+        </div>
+        <div class="l12-step">
+            <div class="l12-step-num">2</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Збережіть результат у Google Docs</div>
+                <div class="l12-step-text">На виході — готова «Функціональна карта бізнесу» з переліком функцій і відповідальних</div>
+            </div>
+        </div>
+        <div class="l12-step">
+            <div class="l12-step-num">3</div>
+            <div class="l12-step-body">
+                <div class="l12-step-title">Проведіть презентацію для команди</div>
+                <div class="l12-step-text">Покажіть кожному його функцію і зону відповідальності — це ключовий момент впровадження</div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:1rem;padding:0.85rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;">
+        <div style="font-weight:700;color:#166534;font-size:0.875rem;margin-bottom:0.3rem;">Час на впровадження</div>
+        <div style="font-size:0.82rem;color:#15803d;line-height:1.5;">~3 години: 1 год на діалог з AI і підготовку карти + 2 год на презентацію команді</div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Інструмент</div>
+    <div class="l12-tool">
+        <div class="l12-tool-header">
+            <div class="l12-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </div>
+            <div>
+                <div class="l12-tool-title">AI-коуч функціональної структури</div>
+                <div class="l12-tool-desc">Асистент веде діалог і допомагає побудувати повну карту функцій вашого бізнесу: визначає всі роботи, знаходить «діри» і розподіляє відповідальність. На виході — готова Функціональна карта бізнесу.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Розробити функціональну структуру
+        </a>
+    </div>
+</div>`,
 
                 lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Определите ключевые функции организации и роли через <strong>AI-коуча структуры</strong>.</p>
+<style>
+.l12-section { margin-bottom:1.75rem; }
+.l12-section:last-child { margin-bottom:0; }
+.l12-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l12-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l12-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l12-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l12-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l12-card p+p { margin-top:0.7rem; }
+.l12-quote { margin:0.85rem 0; padding:0.9rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-left:3px solid #22c55e; border-radius:0 10px 10px 0; font-size:0.875rem; color:#166534; font-style:italic; line-height:1.6; }
+.l12-reasons { display:grid; gap:0.6rem; margin-top:0.75rem; }
+.l12-reason { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
+.l12-reason-header { display:flex; align-items:center; gap:0.7rem; padding:0.75rem 0.95rem; background:#f8fafc; }
+.l12-reason-num { width:28px; height:28px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; flex-shrink:0; }
+.l12-reason-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l12-reason-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; font-size:0.85rem; color:#525252; line-height:1.55; }
+.l12-problems { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l12-problem { display:flex; align-items:flex-start; gap:0.65rem; padding:0.65rem 0.9rem; background:#fef2f2; border:1px solid #fecaca; border-radius:9px; font-size:0.85rem; color:#7f1d1d; line-height:1.5; }
+.l12-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l12-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l12-step-body { flex:1; }
+.l12-step-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l12-step-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-functions { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-fn { padding:0.75rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l12-fn-header { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem; }
+.l12-fn-num { font-size:0.7rem; font-weight:700; color:#9ca3af; }
+.l12-fn-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l12-fn-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-fn-stat { display:inline-block; margin-top:0.4rem; padding:0.2rem 0.55rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:5px; font-size:0.72rem; font-weight:600; color:#16a34a; }
+.l12-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l12-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l12-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l12-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l12-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l12-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l12-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l12-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l12-mgr { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l12-mgr-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.9rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; }
+.l12-mgr-icon { width:32px; height:32px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l12-mgr-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l12-mgr-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+</style>
+
+<div class="l12-section">
+    <div class="l12-section-label">Введение</div>
+    <div class="l12-section-title">Почему при росте становится не легче, а тяжелее</div>
+    <div class="l12-card">
+        <p>Больше людей — больше хаоса. Больше заказов — больше ошибок. Больше выручки — больше головной боли. Ответ, как правило, один: бизнес не организован. Не в смысле «зарегистрирован» — а в смысле «каждая работа закреплена за конкретным человеком, и все части взаимодействуют между собой».</p>
+        <p>Функциональная структура — это фундамент, без которого любая система, CRM, автоматизация или мотивация — просто надстройка на песке.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Пройдите AI-ассистента</div>
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Разделы 1–2</div>
+    <div class="l12-section-title">Что такое «организовать» и что такое «функция»</div>
+    <div class="l12-card">
+        <p>Организовать — это разложить всё по полочкам так, чтобы достичь того, чего хочешь. Большинство владельцев под «организовать» понимают: «нанять больше людей», «купить CRM», «написать регламент». Это всё — инструменты. А организация — это принцип, который стоит за ними.</p>
+        <p>«Функция» — это конкретная работа, которую кто-то выполняет. <strong>Что именно ты делаешь и что после тебя остаётся?</strong> Не должность, не название — реальный ответ на этот вопрос.</p>
     </div>
-    <div class="lesson-block-content">
-        <p>Ассистент поможет определить функции и роли вашей организации.</p>
-    </div>
+    <div class="l12-quote">Бизнес — это пазл, где каждая частица — отдельная функция: продажи, реклама, деньги, производство, люди, доставка. Если хотя бы одна выпала — картинка неполная.</div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Адаптируйте материалы</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Используйте материалы из папки:</p>
-        <div style="margin-top: 12px;">
-            <a href="https://drive.google.com/drive/folders/1difvS_l0v_1RaOqte4zIvmdxR4jf-zEM?usp=sharing" target="_blank" class="action-btn outline">
-                
-                Папка с материалами
-            </a>
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Раздел 3</div>
+    <div class="l12-section-title">Четыре причины делить работу на функции</div>
+    <div class="l12-reasons">
+        <div class="l12-reason">
+            <div class="l12-reason-header"><div class="l12-reason-num">1</div><div class="l12-reason-title">Маленькое задание легче объяснить и передать</div></div>
+            <div class="l12-reason-body">«Займись маркетингом» — для большинства людей это стресс и паралич. Они либо делают что угодно (не то, что нужно), либо ждут конкретики.</div>
+        </div>
+        <div class="l12-reason">
+            <div class="l12-reason-header"><div class="l12-reason-num">2</div><div class="l12-reason-title">Легче увидеть, что сделано, а что нет</div></div>
+            <div class="l12-reason-body">Как список покупок: хлеб — есть, молоко — есть, яйца — нет. Без разделения функций вы не можете сделать такой список — и вам приходится контролировать каждый шаг вручную.</div>
+        </div>
+        <div class="l12-reason">
+            <div class="l12-reason-header"><div class="l12-reason-num">3</div><div class="l12-reason-title">Если что-то не работает — можно заменить одну часть</div></div>
+            <div class="l12-reason-body">Когда есть чёткие функции — вы точно знаете где проблема. Функция «конверсия в сделку» — 5% при норме 20%. Вот где сломалась лампочка. Меняем лампочку — а не весь отдел.</div>
+        </div>
+        <div class="l12-reason">
+            <div class="l12-reason-header"><div class="l12-reason-num">4</div><div class="l12-reason-title">Люди становятся мастерами</div></div>
+            <div class="l12-reason-body">Хирург-кардиолог, который делает только операции на сердце — оперирует намного лучше, чем хирург-общепрактик. Специализация — это не ограничение. Это путь к мастерству.</div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 3. Проведите презентацию</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Представьте структуру и роли команде.</p>
-    </div>
-</div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдіть діалог із AI-коучем структури</li>
-            <li>Створіть документ «Політика функціональної структури» у Google Docs</li>
-            <li>Внесіть результати діалогу (функції, ролі, регламент) і прикріпіть посилання</li>
-            <li>Зайдіть в папку «Завантажити матеріали», збережіть тезиси та презентацію і переробіть під себе</li>
-            <li>Проведіть презентацію впровадження — розкажіть команді та «продайте» ідею використання інструмента управління «Функціонально-організаційна структура»</li>
-        </ol>
-    </div>
-</div>
-                `,
+<div class="l12-divider"></div>
 
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдите диалог с AI-коучем структуры</li>
-            <li>Создайте политику структуры в Google Docs</li>
-            <li>Адаптируйте материалы из папки</li>
-            <li>Проведите презентацию для команды</li>
-            <li>Прикрепите ссылку на документ</li>
-        </ol>
+<div class="l12-section">
+    <div class="l12-section-label">Разделы 4–5</div>
+    <div class="l12-section-title">Генри Форд и бизнес-конвейер</div>
+    <div class="l12-card">
+        <p>До Форда один мастер делал автомобиль от начала до конца. Форд сделал иначе: каждый рабочий выполняет одну простую операцию. Один конкретный результат. Разделение работы на чёткие функции — это путь к большей производительности, меньшим затратам и лучшему качеству одновременно.</p>
+        <p>Бизнес — это конвейер. Между «пришло» и «вышло» — цепочка функций. Каждая функция принимает что-то от предыдущей, делает свою часть и передаёт следующей. Если хотя бы одно звено пропущено — система ломается.</p>
     </div>
 </div>
-                `,
-                
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Разделы 6–7</div>
+    <div class="l12-section-title">Ловушка «сделаю сам» и ловушка «многостаночника»</div>
+    <div class="l12-card">
+        <p>Когда владелец пытается заменить людей собой — он становится самым дорогим и самым незаменимым исполнителем в собственном бизнесе. Выход — не «нанять лучших людей». Выход — организовать работу так, чтобы обычные люди давали предсказуемый результат.</p>
+    </div>
+    <div class="l12-problems">
+        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Тяжело найти</strong> — таких людей либо нет, либо им скучно и они уходят</div></div>
+        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Тяжело обучить</strong> — 5 разным делам в 5 раз дольше, и ни одному не обучен хорошо</div></div>
+        <div class="l12-problem"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Тяжело управлять</strong> — нет чёткой функции, нет KPI, нет объективной оценки</div></div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Раздел 8</div>
+    <div class="l12-section-title">Карта бизнеса — как найти «дыры»</div>
+    <div class="l12-card">
+        <p>Самый опасный тип проблемы в бизнесе — та, которую вы не видите. Где тихо теряются деньги, и вы даже не понимаете почему. Пример: обычный розничный магазин — минимум 6 функций. Большинство владельцев работают только с 2–3.</p>
+    </div>
+    <div class="l12-functions">
+        <div class="l12-fn"><div class="l12-fn-header"><span class="l12-fn-num">Функция 1</span><span class="l12-fn-title">Определить что продаём и кому</span></div><div class="l12-fn-text">Регулярная работа — рынок и покупатели меняются</div></div>
+        <div class="l12-fn"><div class="l12-fn-header"><span class="l12-fn-num">Функция 2</span><span class="l12-fn-title">Как люди узнают о нас</span></div><div class="l12-fn-text">Реклама, соцсети, партнёрства. Если нет — у вас нет маркетинга. Есть только удача.</div></div>
+        <div class="l12-fn"><div class="l12-fn-header"><span class="l12-fn-num">Функция 3</span><span class="l12-fn-title">Как выглядит магазин</span></div><div class="l12-fn-text">Витрина, оформление, атмосфера.</div><div class="l12-fn-stat">+30–40% трафика от привлекательного вида</div></div>
+        <div class="l12-fn"><div class="l12-fn-header"><span class="l12-fn-num">Функция 4</span><span class="l12-fn-title">Мерчандайзинг</span></div><div class="l12-fn-text">Где стоит товар, как подсвечен — всё влияет на средний чек.</div><div class="l12-fn-stat">+20–25% продаж при правильном мерчандайзинге</div></div>
+        <div class="l12-fn"><div class="l12-fn-header"><span class="l12-fn-num">Функция 5</span><span class="l12-fn-title">Как продаём</span></div><div class="l12-fn-text">Скрипты, работа на кассе, предложение сопутствующих товаров. Без этого магазин — просто склад.</div></div>
+        <div class="l12-fn"><div class="l12-fn-header"><span class="l12-fn-num">Функция 6</span><span class="l12-fn-title">Как возвращаем покупателей</span></div><div class="l12-fn-text">Программы лояльности, рассылки, акции для постоянных.</div><div class="l12-fn-stat">Удержание в 5–7 раз дешевле привлечения</div></div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Разделы 9–10</div>
+    <div class="l12-section-title">Роль руководителя и три шага построения структуры</div>
+    <div class="l12-mgr">
+        <div class="l12-mgr-item"><div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><div class="l12-mgr-title">Видеть</div><div class="l12-mgr-text">Система показателей по каждой функции в реальном времени</div></div></div>
+        <div class="l12-mgr-item"><div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="l12-mgr-title">Замечать</div><div class="l12-mgr-text">Видеть проблемы до того, как они стали катастрофой</div></div></div>
+        <div class="l12-mgr-item"><div class="l12-mgr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="l12-mgr-title">Исправлять</div><div class="l12-mgr-text">Быстро вмешиваться — не «потом разберёмся», а сейчас</div></div></div>
+    </div>
+    <div class="l12-steps" style="margin-top:0.75rem;">
+        <div class="l12-step"><div class="l12-step-num">1</div><div class="l12-step-body"><div class="l12-step-title">Разобраться с «сырьём»</div><div class="l12-step-text">Что приходит в ваш бизнес? Откуда берутся заказы? Без ответа — нельзя построить конвейер</div></div></div>
+        <div class="l12-step"><div class="l12-step-num">2</div><div class="l12-step-body"><div class="l12-step-title">Определить все шаги трансформации</div><div class="l12-step-text">Что нужно сделать между «пришло» и «вышло»? Здесь вы найдёте шаги, которых сейчас нет вообще</div></div></div>
+        <div class="l12-step"><div class="l12-step-num">3</div><div class="l12-step-body"><div class="l12-step-title">Поставить людей на места</div><div class="l12-step-text">К каждой функции — назначить ответственного. Оба знают: эта работа сделана или нет</div></div></div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Задание</div>
+    <div class="l12-section-title">Разработайте функциональную структуру вашего бизнеса через AI-ассистента</div>
+    <div class="l12-steps">
+        <div class="l12-step"><div class="l12-step-num">1</div><div class="l12-step-body"><div class="l12-step-title">Пройдите диалог с AI-коучем структуры</div><div class="l12-step-text">Ассистент проведёт через определение всех функций бизнеса и поможет распределить роли</div></div></div>
+        <div class="l12-step"><div class="l12-step-num">2</div><div class="l12-step-body"><div class="l12-step-title">Сохраните результат в Google Docs</div><div class="l12-step-text">На выходе — готовая «Функциональная карта бизнеса» с перечнем функций и ответственных</div></div></div>
+        <div class="l12-step"><div class="l12-step-num">3</div><div class="l12-step-body"><div class="l12-step-title">Проведите презентацию для команды</div><div class="l12-step-text">Покажите каждому его функцию и зону ответственности</div></div></div>
+    </div>
+</div>
+
+<div class="l12-divider"></div>
+
+<div class="l12-section">
+    <div class="l12-section-label">Инструмент</div>
+    <div class="l12-tool">
+        <div class="l12-tool-header">
+            <div class="l12-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </div>
+            <div>
+                <div class="l12-tool-title">AI-коуч функциональной структуры</div>
+                <div class="l12-tool-desc">Ассистент ведёт диалог и помогает построить полную карту функций вашего бизнеса: определяет все работы, находит «дыры» и распределяет ответственность. На выходе — готовая Функциональная карта бизнеса.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura" target="_blank" class="l12-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Разработать функциональную структуру
+        </a>
+    </div>
+</div>`,
+
+                homework: `<ol><li>Пройдіть діалог з AI-коучем функціональної структури</li><li>Створіть «Функціональну карту бізнесу» у Google Docs і прикріпіть посилання</li><li>Проведіть презентацію для команди — покажіть кожному його функцію і зону відповідальності</li><li>Напишіть у полі відповіді: яку «діру» ви знайшли — функцію, за яку зараз ніхто не відповідає</li></ol>`,
+                homework_ru: `<ol><li>Пройдите диалог с AI-коучем функциональной структуры</li><li>Создайте «Функциональную карту бизнеса» в Google Docs и прикрепите ссылку</li><li>Проведите презентацию для команды — покажите каждому его функцию</li><li>Напишите в поле ответа: какую «дыру» вы нашли — функцию, за которую сейчас никто не отвечает</li></ol>`,
+
                 homeworkLink: "https://chatgpt.com/g/g-68584f3314848191b812f6c0abaaae9e-ai-kouch-konsultant-alex-talko-orgstruktura",
                 homeworkLinkName: "→ AI-коуч структури",
                 homeworkLinkName_ru: "→ AI-коуч структуры",
-                time: 120
+                time: 180
             },
             {
                 id: 13,
                 title: "СИСТЕМА СТАТИСТИК",
                 title_ru: "СИСТЕМА СТАТИСТИК",
-                subtitle: "Вимірювання продукту та щотижневий аналіз",
-                subtitle_ru: "Измерение продукта и еженедельный анализ",
-                
+                subtitle: "Як бачити бізнес у цифрах — і чому тиждень важливіший за місяць",
+                subtitle_ru: "Как видеть бизнес в цифрах — и почему неделя важнее месяца",
+                hideAiBlock: true,
+
                 videoLink: null,
                 materialsLink: null,
-                
+
                 lessonContent: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Що таке статистика?</div>
+<style>
+.l13-s{margin-bottom:1.75rem}.l13-s:last-child{margin-bottom:0}
+.l13-div{height:1px;background:#e2e8f0;margin:1.75rem 0}
+.l13-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}
+.l13-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l13-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}
+.l13-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.l13-card p+p{margin-top:.7rem}
+.l13-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;font-size:.875rem;color:#166534;font-style:italic;line-height:1.6}
+.l13-err{display:grid;gap:.5rem;margin-top:.75rem}
+.l13-err-item{padding:.8rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}
+.l13-err-title{font-weight:700;color:#dc2626;font-size:.875rem;margin-bottom:.3rem}
+.l13-err-text{font-size:.82rem;color:#7f1d1d;line-height:1.5}
+.l13-tw{overflow-x:auto;margin-top:.75rem}
+.l13-t{width:100%;border-collapse:collapse;font-size:.82rem}
+.l13-t th{background:#f0fdf4;color:#166534;font-weight:700;padding:.55rem .75rem;text-align:left;border:1px solid #bbf7d0;font-size:.75rem}
+.l13-t td{padding:.55rem .75rem;border:1px solid #e2e8f0;color:#374151;line-height:1.4}
+.l13-t tr:nth-child(even) td{background:#f8fafc}
+.l13-res{display:grid;gap:.45rem;margin-top:.75rem}
+.l13-res-item{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.875rem;color:#166534;font-weight:500}
+.l13-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l13-th{display:flex;align-items:flex-start;gap:.85rem}
+.l13-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l13-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l13-td{font-size:.82rem;color:#525252;line-height:1.5}
+.l13-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+</style>
+
+<div class="l13-s">
+    <div class="l13-lbl">Головна проблема</div>
+    <div class="l13-title">Без цифр ви бачите не реальність, а свою інтерпретацію</div>
+    <div class="l13-card">
+        <p>Більшість власників вважають, що добре розуміють свій бізнес. «Якщо записів багато — все добре. Якщо мало — треба рекламу». Здається логічним. Але якщо все так зрозуміло — чому щотижня є пожежі? Чому раптом падають продажі і незрозуміло чому? Чому в маркетинг вклали гроші, а результат «то є, то нема»?</p>
+        <p>Проблеми в бізнесі майже ніколи не виникають раптово. Вони накопичуються тижнями — повільно, непомітно. Людина бачить невелике погіршення, пояснює це «сезоном» або «особливим місяцем». Поки проблема не стала величезною — на неї не звертають уваги. Тоді вже важко щось виправити.</p>
     </div>
-    <div class="lesson-block-content">
-        <p style="font-size: 15px;"><strong>Статистика</strong> — це цифра, яка показує <strong>скільки продукту ви виробили</strong>.</p>
-        
-        <div style="margin-top: 16px; padding: 16px; background: #f0fdf4; border-radius: 12px; border: 2px solid #22c55e;">
-            <p style="margin: 0; font-size: 15px;"><strong>Простими словами:</strong></p>
-            <p style="margin: 8px 0 0 0; font-size: 14px;">Не "скільки годин працював", а <strong>"скільки зробив"</strong>.</p>
+    <div class="l13-quote">Статистики вирішують саме це: роблять невидиме — видимим.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Розділ 1</div>
+    <div class="l13-title">Що таке статистика — і чим вона відрізняється від «показника»</div>
+    <div class="l13-card">
+        <p>Статистика — це <strong>кількісний вимір результату конкретної функції, який проводиться щотижня і порівнюється з попереднім тижнем</strong>. Не раз на місяць. Не «приблизно». Щотижня, у цифрах, на графіку.</p>
+        <p>Різниця між статистикою і «показником» — у способі застосування. Показник — це просто число. Статистика — це число в динаміці. Вас цікавить не те, що продажі цього тижня склали 80 000 грн, а те, що минулого було 95 000. <strong>Тренд важливіший за точку.</strong></p>
+    </div>
+    <div class="l13-card" style="margin-top:.6rem">
+        <p><strong>Метафора — приладова дошка автомобіля.</strong> Ви не можете вести автомобіль із закритими очима, лише зрідка підглядаючи на дорогу. Але саме так керує бізнесом власник без статистик. Приладова дошка потрібна не щоб «відслідковувати», а щоб вчасно помітити: температура двигуна росте, пальне закінчується, тиск у шинах падає.</p>
+    </div>
+    <div class="l13-quote">Місяць — надто великий горизонт для управління. Якщо вранці взяли неправильний напрям — до вечора ви за кілька кілометрів від маршруту. Щотижневі статистики — це звіряння з компасом кожні кілька годин.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Розділ 2</div>
+    <div class="l13-title">Статистика і ЦКП — що і як вимірювати</div>
+    <div class="l13-card">
+        <p>Кожна функція має свій Цінний Кінцевий Продукт (ЦКП) — конкретний результат, який вона виробляє. Статистика — це кількісний вимір цього продукту.</p>
+    </div>
+    <div class="l13-tw">
+        <table class="l13-t">
+            <thead><tr><th>Функція</th><th>ЦКП</th><th>Статистика</th></tr></thead>
+            <tbody>
+                <tr><td>Секретар</td><td>Правильно спрямовані дзвінки</td><td>Кількість правильно спрямованих дзвінків</td></tr>
+                <tr><td>Продажі</td><td>Підписані договори</td><td>Сума замовлень за договорами (грн)</td></tr>
+                <tr><td>Фінанси</td><td>Отримані оплати</td><td>Сума отриманих оплат (грн)</td></tr>
+                <tr><td>Дизайн</td><td>Затверджені макети</td><td>Кількість макетів, схвалених клієнтом</td></tr>
+                <tr><td>Доставка</td><td>Вчасно доставлена продукція</td><td>Вартість доставленої продукції (грн)</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="l13-quote">Головна статистика компанії — не гроші. Гроші — результат. Наприклад, головна статистика TALKO — кількість компаній, у яких впроваджено систему управління.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Три помилки</div>
+    <div class="l13-title">Як не треба вибирати статистику</div>
+    <div class="l13-err">
+        <div class="l13-err-item">
+            <div class="l13-err-title">Помилка 1: відсотки замість кількості</div>
+            <div class="l13-err-text">«Секретар правильно спрямував 100% дзвінків» — якщо надійшло 2 дзвінки замість 40, статистика 100% нічого не покаже. ЦКП не виконано, але виглядає ідеально.</div>
         </div>
-        
-        <p style="margin-top: 16px; font-weight: 600;">Приклади статистик:</p>
-        <div style="margin-top: 10px; display: grid; gap: 8px;">
-            <div style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px;">
-                <strong>Продажі:</strong> скільки договорів підписали
-            </div>
-            <div style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px;">
-                <strong>Маркетинг:</strong> скільки заявок отримали
-            </div>
-            <div style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px;">
-                <strong>Виробництво:</strong> скільки замовлень виконали
-            </div>
-            <div style="padding: 12px; background: #f9fafb; border-radius: 8px; font-size: 14px;">
-                <strong>Гроші:</strong> скільки грошей заробили
-            </div>
+        <div class="l13-err-item">
+            <div class="l13-err-title">Помилка 2: зворотні статистики як головні</div>
+            <div class="l13-err-text">«Кількість незірваних замовлень» — якщо замовлень взагалі не було, статистика ідеальна. Зворотні показники можуть бути допоміжними, але головна — завжди про обсяг виробленого продукту.</div>
+        </div>
+        <div class="l13-err-item">
+            <div class="l13-err-title">Помилка 3: статистика «готовності», а не результату</div>
+            <div class="l13-err-text">«Я був доступний весь тиждень» — це не ЦКП. Статистика вимірює реальний продукт, а не наміри.</div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block warning">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Навіщо рахувати цифри кожен тиждень?</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="display: grid; gap: 10px;">
-            <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; font-size: 14px;">
-                <strong>Бачите правду</strong> — не здогадки, а реальні цифри
-            </div>
-            <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; font-size: 14px;">
-                <strong>Помічаєте проблеми рано</strong> — поки вони маленькі
-            </div>
-            <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; font-size: 14px;">
-                <strong>Приймаєте рішення</strong> — на основі фактів, а не емоцій
-            </div>
-        </div>
-        
-        <div style="margin-top: 16px; padding: 14px; background: #fef3c7; border-radius: 10px; border-left: 4px solid #f59e0b;">
-            <p style="margin: 0; font-size: 14px;"><strong>Без статистик</strong> — керуєте наосліп.<br><strong>Зі статистиками</strong> — бачите повну картину.</p>
-        </div>
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Результат уроку</div>
+    <div class="l13-res">
+        <div class="l13-res-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Розумієте різницю між статистикою і показником — тренд vs точка</div>
+        <div class="l13-res-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Вмієте пов'язати кожну функцію з її ЦКП і правильною статистикою</div>
+        <div class="l13-res-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Уникаєте трьох типових помилок при виборі метрики</div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #16a34a;">КРОК 1. Розробіть статистики</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-size: 14px; margin-bottom: 12px;">AI-асистент задасть вам питання і допоможе визначити <strong>які цифри відстежувати</strong> саме у вашому бізнесі.</p>
-        
-        <a href="https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 12px; text-decoration: none; color: white;">
-            
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600; font-size: 15px;">Натисніть сюди</p>
-                <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">AI-асистент розробки статистик</p>
-            </div>
-            
-        </a>
-        
-        <div style="margin-top: 12px; padding: 12px; background: #eff6ff; border-radius: 8px; font-size: 13px;">
-            <strong>Підказка:</strong> Напишіть асистенту "Які проблеми ти вирішуєш?" — він пояснить що робить.
-        </div>
-    </div>
-</div>
+<div class="l13-div"></div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #7c3aed;">КРОК 2. Отримайте доступ до платформи</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-size: 14px; margin-bottom: 12px;">Напишіть в бот підтримки і вкажіть:</p>
-        
-        <div style="padding: 14px; background: #faf5ff; border-radius: 10px; margin-bottom: 14px;">
-            <div style="display: grid; gap: 6px; font-size: 14px;">
-                <div><strong>1.</strong> Назву вашої організації</div>
-                <div><strong>2.</strong> Ваше ПІБ</div>
-                <div><strong>3.</strong> Номер телефону</div>
+<div class="l13-s">
+    <div class="l13-lbl">Інструмент</div>
+    <div class="l13-tool">
+        <div class="l13-th">
+            <div class="l13-ti">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+                <div class="l13-tt">AI-асистент системи статистик</div>
+                <div class="l13-td">Проведе вас через визначення ЦКП кожної функції і допоможе сформулювати правильні статистики. На виході — готовий перелік метрик для впровадження на платформі.</div>
             </div>
         </div>
-        
-        <a href="https://t.me/AlexEduPro_bot?start=68dcfbcd093bcfb4230b182e" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: white; border-radius: 12px; border: 2px solid #8b5cf6; text-decoration: none; color: inherit;">
-            
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600; font-size: 15px;">Натисніть сюди</p>
-                <p style="margin: 4px 0 0 0; font-size: 13px; color: #6b7280;">Запросити доступ в Telegram</p>
-            </div>
-            
-        </a>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #d97706;">КРОК 3. Внесіть дані в платформу</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-size: 14px; margin-bottom: 12px;">Коли отримаєте доступ — зайдіть на платформу:</p>
-        
-        <a href="https://alextalko.com/kpi" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 12px; text-decoration: none; color: white;">
-            
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600; font-size: 15px;">TALKO Statistics</p>
-                <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">alextalko.com/kpi</p>
-            </div>
-            
-        </a>
-    </div>
-</div>
-
-<div class="lesson-block warning">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Як налаштувати платформу? (5 простих кроків)</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="display: grid; gap: 10px;">
-            <div style="padding: 14px; background: white; border-radius: 10px; border-left: 4px solid #22c55e;">
-                <p style="margin: 0; font-weight: 600; color: #16a34a;">1. Оберіть 5-8 показників</p>
-                <p style="margin: 6px 0 0 0; font-size: 13px; color: #6b7280;">Не більше! Інакше важко буде вести.</p>
-            </div>
-            
-            <div style="padding: 14px; background: white; border-radius: 10px; border-left: 4px solid #3b82f6;">
-                <p style="margin: 0; font-weight: 600; color: #1e40af;">2. Створіть показники</p>
-                <p style="margin: 6px 0 0 0; font-size: 13px; color: #6b7280;">Назва + Хто відповідає + Як часто + Ціль</p>
-            </div>
-            
-            <div style="padding: 14px; background: white; border-radius: 10px; border-left: 4px solid #8b5cf6;">
-                <p style="margin: 0; font-weight: 600; color: #7c3aed;">3. Додайте команду (якщо є)</p>
-                <p style="margin: 6px 0 0 0; font-size: 13px; color: #6b7280;">Кожен бачитиме тільки свої цифри.</p>
-            </div>
-            
-            <div style="padding: 14px; background: white; border-radius: 10px; border-left: 4px solid #f59e0b;">
-                <p style="margin: 0; font-weight: 600; color: #d97706;">4. Вносьте дані регулярно</p>
-                <p style="margin: 6px 0 0 0; font-size: 13px; color: #6b7280;">Щодня або щотижня — як обрали. З коментарями!</p>
-            </div>
-            
-            <div style="padding: 14px; background: white; border-radius: 10px; border-left: 4px solid #ef4444;">
-                <p style="margin: 0; font-weight: 600; color: #dc2626;">5. AI-аналіз через 3-5 тижнів</p>
-                <p style="margin: 6px 0 0 0; font-size: 13px; color: #6b7280;">Коли буде достатньо даних — запустіть.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Потрібна допомога? Є AI-асистент!</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-size: 14px; margin-bottom: 12px;">На платформі є <strong>фіолетова кнопка</strong> — це AI-асистент, який допоможе налаштувати все правильно.</p>
-        
-        <a href="https://chatgpt.com/g/g-693bf67a13e48191940632f9d6bedb63-talko-statistics-ai-support" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: #8b5cf6; border-radius: 12px; text-decoration: none; color: white;">
-            
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600; font-size: 15px;">AI-підтримка платформи</p>
-                <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">Відповість на будь-які питання</p>
-            </div>
-            
+        <a href="https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics" target="_blank" class="l13-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Розробити систему статистик
         </a>
     </div>
-</div>
-
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Що зробити?</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="display: grid; gap: 10px;">
-            <div style="display: flex; gap: 10px; align-items: center; padding: 12px; background: #f9fafb; border-radius: 8px;">
-                <span style="background: #22c55e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;">1</span>
-                <span style="font-size: 14px;">Пройдіть AI-асистента і отримайте список статистик</span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: center; padding: 12px; background: #f9fafb; border-radius: 8px;">
-                <span style="background: #8b5cf6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;">2</span>
-                <span style="font-size: 14px;">Запросіть доступ до платформи в Telegram</span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: center; padding: 12px; background: #f9fafb; border-radius: 8px;">
-                <span style="background: #f59e0b; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;">3</span>
-                <span style="font-size: 14px;">Внесіть 5-8 показників на платформу</span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: center; padding: 12px; background: #f9fafb; border-radius: 8px;">
-                <span style="background: #ef4444; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;">4</span>
-                <span style="font-size: 14px;">Заповніть перші дані за цей тиждень</span>
-            </div>
-        </div>
-    </div>
-</div>
-                `,
+</div>`,
 
                 lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Что такое статистика?</div>
+<style>
+.l13-s{margin-bottom:1.75rem}.l13-s:last-child{margin-bottom:0}
+.l13-div{height:1px;background:#e2e8f0;margin:1.75rem 0}
+.l13-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}
+.l13-title{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}
+.l13-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}
+.l13-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.l13-card p+p{margin-top:.7rem}
+.l13-quote{margin:.85rem 0;padding:.9rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:3px solid #22c55e;border-radius:0 10px 10px 0;font-size:.875rem;color:#166534;font-style:italic;line-height:1.6}
+.l13-err{display:grid;gap:.5rem;margin-top:.75rem}
+.l13-err-item{padding:.8rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}
+.l13-err-title{font-weight:700;color:#dc2626;font-size:.875rem;margin-bottom:.3rem}
+.l13-err-text{font-size:.82rem;color:#7f1d1d;line-height:1.5}
+.l13-tw{overflow-x:auto;margin-top:.75rem}
+.l13-t{width:100%;border-collapse:collapse;font-size:.82rem}
+.l13-t th{background:#f0fdf4;color:#166534;font-weight:700;padding:.55rem .75rem;text-align:left;border:1px solid #bbf7d0;font-size:.75rem}
+.l13-t td{padding:.55rem .75rem;border:1px solid #e2e8f0;color:#374151;line-height:1.4}
+.l13-t tr:nth-child(even) td{background:#f8fafc}
+.l13-res{display:grid;gap:.45rem;margin-top:.75rem}
+.l13-res-item{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:.875rem;color:#166534;font-weight:500}
+.l13-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l13-th{display:flex;align-items:flex-start;gap:.85rem}
+.l13-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l13-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l13-td{font-size:.82rem;color:#525252;line-height:1.5}
+.l13-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+</style>
+
+<div class="l13-s">
+    <div class="l13-lbl">Главная проблема</div>
+    <div class="l13-title">Без цифр вы видите не реальность, а свою интерпретацию</div>
+    <div class="l13-card">
+        <p>Большинство владельцев считают, что хорошо понимают свой бизнес. «Если записей много — всё хорошо. Если мало — нужна реклама». Кажется логичным. Но если всё так понятно — почему каждую неделю пожары? Почему вдруг падают продажи и непонятно почему?</p>
+        <p>Проблемы в бизнесе почти никогда не возникают внезапно. Они накапливаются неделями — медленно, незаметно. Человек видит небольшое ухудшение, объясняет «сезоном». Пока проблема не стала огромной — на неё не обращают внимания.</p>
     </div>
-    <div class="lesson-block-content">
-        <p><strong>Статистика</strong> — это числовой показатель, измеряющий <strong>количество произведенного продукта</strong> за период.</p>
-        
-        <div style="margin-top: 14px; padding: 14px; background: #f0fdf4; border-radius: 10px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0; font-weight: 600;">Ключевая идея:</p>
-            <p style="margin: 6px 0 0 0;">Статистика измеряет <strong>РЕЗУЛЬТАТ</strong>, а не процесс.</p>
+    <div class="l13-quote">Статистики решают именно это: делают невидимое — видимым.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Раздел 1</div>
+    <div class="l13-title">Что такое статистика — и чем она отличается от «показателя»</div>
+    <div class="l13-card">
+        <p>Статистика — это <strong>количественное измерение результата конкретной функции, которое проводится еженедельно и сравнивается с предыдущей неделей</strong>. Не раз в месяц. Не «примерно». Каждую неделю, в цифрах, на графике.</p>
+        <p>Вас интересует не то, что продажи этой недели составили 80 000 грн, а то, что на прошлой было 95 000. <strong>Тренд важнее точки.</strong></p>
+    </div>
+    <div class="l13-quote">Месяц — слишком большой горизонт для управления. Если утром взяли неправильное направление — к вечеру вы в нескольких километрах от маршрута. Еженедельные статистики — это сверка с компасом каждые несколько часов.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Раздел 2</div>
+    <div class="l13-title">Статистика и ЦКП — что и как измерять</div>
+    <div class="l13-tw">
+        <table class="l13-t">
+            <thead><tr><th>Функция</th><th>ЦКП</th><th>Статистика</th></tr></thead>
+            <tbody>
+                <tr><td>Секретарь</td><td>Правильно направленные звонки</td><td>Количество правильно направленных звонков</td></tr>
+                <tr><td>Продажи</td><td>Подписанные договоры</td><td>Сумма заказов по договорам (грн)</td></tr>
+                <tr><td>Финансы</td><td>Полученные оплаты</td><td>Сумма полученных оплат (грн)</td></tr>
+                <tr><td>Дизайн</td><td>Утверждённые макеты</td><td>Количество макетов, одобренных клиентом</td></tr>
+                <tr><td>Доставка</td><td>Вовремя доставленная продукция</td><td>Стоимость доставленной продукции (грн)</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="l13-quote">Главная статистика компании — не деньги. Деньги — результат. Например, главная статистика TALKO — количество компаний, в которых внедрена система управления.</div>
+</div>
+
+<div class="l13-div"></div>
+
+<div class="l13-s">
+    <div class="l13-lbl">Три ошибки</div>
+    <div class="l13-title">Как не надо выбирать статистику</div>
+    <div class="l13-err">
+        <div class="l13-err-item">
+            <div class="l13-err-title">Ошибка 1: проценты вместо количества</div>
+            <div class="l13-err-text">«Секретарь направил 100% звонков правильно» — если поступило 2 звонка вместо 40, статистика 100% ничего не покажет. ЦКП не выполнен, но выглядит идеально.</div>
+        </div>
+        <div class="l13-err-item">
+            <div class="l13-err-title">Ошибка 2: обратные статистики как главные</div>
+            <div class="l13-err-text">«Количество несорванных заказов» — если заказов вообще не было, статистика идеальная. Обратные показатели могут быть вспомогательными, но главная — всегда об объёме произведённого продукта.</div>
+        </div>
+        <div class="l13-err-item">
+            <div class="l13-err-title">Ошибка 3: статистика «готовности», а не результата</div>
+            <div class="l13-err-text">«Я был доступен всю неделю» — это не ЦКП. Статистика измеряет реальный продукт, а не намерения.</div>
         </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Разработать статистики</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>AI-ассистент поможет определить ключевые показатели для вашего бизнеса.</p>
-        
-        <a href="https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 14px; margin-top: 14px; background: white; border-radius: 10px; border: 2px solid #22c55e; text-decoration: none; color: inherit;">
-            
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600;">AI-ассистент разработки статистик</p>
-                <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Определит ключевые показатели</p>
-            </div>
-            
-        </a>
-    </div>
-</div>
+<div class="l13-div"></div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Получить доступ к платформе</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Напишите в бот поддержки: название организации, ФИО, номер телефона.</p>
-        
-        <a href="https://t.me/AlexEduPro_bot?start=68dcfbcd093bcfb4230b182e" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 14px; margin-top: 14px; background: white; border-radius: 10px; border: 2px solid #8b5cf6; text-decoration: none; color: inherit;">
-            
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600;">Запросить доступ</p>
-                <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Telegram-бот поддержки</p>
+<div class="l13-s">
+    <div class="l13-lbl">Инструмент</div>
+    <div class="l13-tool">
+        <div class="l13-th">
+            <div class="l13-ti">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             </div>
-            
+            <div>
+                <div class="l13-tt">AI-ассистент системы статистик</div>
+                <div class="l13-td">Проведёт вас через определение ЦКП каждой функции и поможет сформулировать правильные статистики. На выходе — готовый перечень метрик для внедрения на платформе.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics" target="_blank" class="l13-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Разработать систему статистик
         </a>
     </div>
-</div>
+</div>`,
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 3. Внести данные в платформу</div>
-    </div>
-    <div class="lesson-block-content">
-        <a href="https://alextalko.com/kpi" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 14px; margin: 14px 0; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 10px; text-decoration: none; color: white;">
-            
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600;">TALKO Statistics</p>
-                <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.9;">alextalko.com/kpi</p>
-            </div>
-            
-        </a>
-        
-        <p>AI-поддержка платформы (фиолетовая кнопка):</p>
-        
-        <a href="https://chatgpt.com/g/g-693bf67a13e48191940632f9d6bedb63-talko-statistics-ai-support" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 14px; margin-top: 10px; background: white; border-radius: 10px; border: 2px solid #8b5cf6; text-decoration: none; color: inherit;">
-            
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600;">AI-поддержка TALKO Statistics</p>
-                <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Поможет настроить платформу</p>
-            </div>
-            
-        </a>
-    </div>
-</div>
-                `,
-                
+                homework: `<ol><li>Пройдіть діалог з AI-асистентом статистик</li><li>Для кожної функції визначте ЦКП і відповідну статистику</li><li>Напишіть у полі відповіді: яка головна статистика вашої компанії і чому саме вона</li></ol>`,
+                homework_ru: `<ol><li>Пройдите диалог с AI-ассистентом статистик</li><li>Для каждой функции определите ЦКП и соответствующую статистику</li><li>Напишите в поле ответа: какая главная статистика вашей компании и почему именно она</li></ol>`,
+
                 homeworkLink: "https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics",
                 homeworkLinkName: "→ AI-асистент статистик",
                 homeworkLinkName_ru: "→ AI-ассистент статистик",
-                time: 90
+                time: 60
             },
             {
                 id: 14,
-                title: "ОСВОЄННЯ ПЛАТФОРМИ TALKO STRUCTURE",
-                title_ru: "ОСВОЕНИЕ ПЛАТФОРМЫ TALKO STRUCTURE",
-                subtitle: "Побудова функціональної структури бізнесу",
-                subtitle_ru: "Построение функциональной структуры бизнеса",
-                
-                videoLink: "https://youtu.be/kfiFG5VMTY0?si=7nCKfpLKc7-EpFNR",
+                title: "ВПРОВАДЖЕННЯ НА ПЛАТФОРМІ",
+                title_ru: "ВНЕДРЕНИЕ НА ПЛАТФОРМЕ",
+                subtitle: "Запитайте AI-асистента — він пояснить що і як робити",
+                subtitle_ru: "Спросите AI-ассистента — он объяснит что и как делать",
+                hideAiBlock: true,
+
+                videoLink: null,
                 materialsLink: null,
-                
+
                 lessonContent: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Ціль уроку</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Створити візуальну функціональну структуру бізнесу на платформі <strong>TALKO Structure</strong> — основу системного управління.</p>
-        <div style="margin-top: 12px;">
-            <a href="https://alextalko.com/tms" target="_blank" class="action-btn primary">
-                
-                Відкрити платформу TALKO Structure
-            </a>
+<style>
+.l14-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l14-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.l14-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l14-th{display:flex;align-items:flex-start;gap:.85rem}
+.l14-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l14-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l14-td{font-size:.82rem;color:#525252;line-height:1.5}
+.l14-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+</style>
+
+<div class="l14-card">
+    <p>Це практичний урок — впровадження на платформі, на якій ви зараз знаходитесь. Запитайте AI-асистента: він пояснить що робити і в якому порядку.</p>
+</div>
+
+<div class="l14-tool">
+    <div class="l14-th">
+        <div class="l14-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div>
+            <div class="l14-tt">TALKO Task Manager Support</div>
+            <div class="l14-td">AI-асистент підкаже як користуватись платформою і що робити далі.</div>
         </div>
     </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 1. Реєстрація та вхід</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Увійдіть з email + пароль</li>
-            <li>Якщо забули пароль → зверніться до адміна</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 2. Створення базової структури</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Натисніть «+» на канвасі</li>
-            <li>Введіть: назву функції, відповідального, колір</li>
-            <li>Натисніть "Зберегти"</li>
-            <li>Перетягніть блок у потрібне місце (Drag & Drop)</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 3. Створення підфункцій</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Наведіть курсор на функцію → знизу з'явиться кнопка «+»</li>
-            <li>Натисніть — створиться підфункція</li>
-            <li>Так формується ієрархія: "Продажі" → "B2B", "B2C", "Онлайн"</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 4. KPI / Показники</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Відкрийте функцію (клік)</li>
-            <li>Перейдіть до вкладки «Статистика»</li>
-            <li>Натисніть «+» та введіть: назву показника, значення, колір</li>
-            <li>Можна додати до 4 KPI на одну функцію</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 5. Додавання співробітників</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Відкрийте функцію</li>
-            <li>Прокрутіть до блоку «Співробітники»</li>
-            <li>Введіть імена працівників</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 6. Зв'язки між функціями</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Натисніть «+» внизу функції</li>
-            <li>Оберіть або створіть нову функцію</li>
-            <li>Вони з'єднаються лінією</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 7. Експорт структури</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Іконка експорту праворуч зверху</li>
-            <li>JPEG — картинка структури</li>
-            <li>PDF — файл з клікабельними посиланнями</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Порада</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Створіть структуру як "бізнес на папері". Уявіть: ви у відпустці — а команда працює самостійно, бо все задокументовано.</p>
-    </div>
-</div>
-                `,
+    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="l14-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Запитати AI-асистента
+    </a>
+</div>`,
 
                 lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Цель урока</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Создать визуальную функциональную структуру бизнеса на платформе <strong>TALKO Structure</strong>.</p>
-        <div style="margin-top: 12px;">
-            <a href="https://alextalko.com/tms" target="_blank" class="action-btn primary">
-                
-                Открыть платформу TALKO Structure
-            </a>
+<style>
+.l14-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.l14-card p{font-size:.9rem;color:#374151;line-height:1.65}
+.l14-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}
+.l14-th{display:flex;align-items:flex-start;gap:.85rem}
+.l14-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.l14-tt{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}
+.l14-td{font-size:.82rem;color:#525252;line-height:1.5}
+.l14-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}
+</style>
+
+<div class="l14-card">
+    <p>Это практический урок — внедрение на платформе, на которой вы сейчас находитесь. Спросите AI-ассистента: он объяснит что делать и в каком порядке.</p>
+</div>
+
+<div class="l14-tool">
+    <div class="l14-th">
+        <div class="l14-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div>
+            <div class="l14-tt">TALKO Task Manager Support</div>
+            <div class="l14-td">AI-ассистент подскажет как пользоваться платформой и что делать дальше.</div>
         </div>
     </div>
-</div>
+    <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="l14-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Спросить AI-ассистента
+    </a>
+</div>`,
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Регистрация и вход</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Войдите с email + пароль</li>
-            <li>Если забыли пароль → обратитесь к админу</li>
-        </ul>
-    </div>
-</div>
+                homework: `<ol><li>Запитайте AI-асистента і розпочніть роботу на платформі</li></ol>`,
+                homework_ru: `<ol><li>Спросите AI-ассистента и начните работу на платформе</li></ol>`,
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Создание базовой структуры</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Нажмите «+» на канвасе</li>
-            <li>Введите: название функции, ответственного, цвет</li>
-            <li>Нажмите "Сохранить"</li>
-            <li>Перетащите блок в нужное место (Drag & Drop)</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 3. Создание подфункций</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Наведите курсор на функцию → снизу появится кнопка «+»</li>
-            <li>Нажмите — создастся подфункция</li>
-            <li>Так формируется иерархия: "Продажи" → "B2B", "B2C", "Онлайн"</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 4. KPI / Показатели</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Откройте функцию (клик)</li>
-            <li>Перейдите во вкладку «Статистика»</li>
-            <li>Нажмите «+» и введите: название показателя, значение, цвет</li>
-            <li>Можно добавить до 4 KPI на одну функцию</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 5. Добавление сотрудников</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Откройте функцию</li>
-            <li>Прокрутите до блока «Сотрудники»</li>
-            <li>Введите имена работников</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 6. Связи между функциями</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Нажмите «+» внизу функции</li>
-            <li>Выберите или создайте новую функцию</li>
-            <li>Они соединятся линией</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 7. Экспорт структуры</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Иконка экспорта справа сверху</li>
-            <li>JPEG — картинка структуры</li>
-            <li>PDF — файл с кликабельными ссылками</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Совет</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Создайте структуру как "бизнес на бумаге". Представьте: вы в отпуске — а команда работает самостоятельно, потому что всё задокументировано.</p>
-    </div>
-</div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Створіть функціональну структуру на платформі</li>
-            <li>Додайте всі функції бізнесу (адміністрація, маркетинг, продажі, фінанси)</li>
-            <li>Для кожної функції додайте: ЦКП, статистику, відповідального</li>
-            <li>Зробіть експорт (JPEG або PDF)</li>
-            <li>Прикріпіть посилання на документ</li>
-        </ol>
-    </div>
-</div>
-                `,
-
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Создайте функциональную структуру на платформе</li>
-            <li>Добавьте все функции бизнеса (администрация, маркетинг, продажи, финансы)</li>
-            <li>Для каждой функции добавьте: ЦКП, статистику, ответственного</li>
-            <li>Сделайте экспорт (JPEG или PDF)</li>
-            <li>Прикрепите ссылку на документ</li>
-        </ol>
-    </div>
-</div>
-                `,
-                
-                homeworkLink: "https://chatgpt.com/g/g-6870bc9f1658819192171561f5d8fe53-ai-consultant-talko-management-system",
-                homeworkLinkName: "→ AI-консультант платформи",
-                homeworkLinkName_ru: "→ AI-консультант платформы",
+                homeworkLink: "https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support",
+                homeworkLinkName: "→ TALKO Support",
+                homeworkLinkName_ru: "→ TALKO Support",
                 time: 30
-            },
-            {
-                id: 15,
-                title: "ЩО ДАЛІ? ВИБІР НАПРЯМКУ",
-                title_ru: "ЧТО ДАЛЬШЕ? ВЫБОР НАПРАВЛЕНИЯ",
-                subtitle: "Оберіть наступний етап розвитку вашого бізнесу",
-                subtitle_ru: "Выберите следующий этап развития вашего бизнеса",
-                
-                videoLink: null,
-                
-                lessonContent: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Вітаємо! Ви пройшли базову програму</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Тепер у вас є фундамент: термінологія, інструменти управління, структура, статистики. <strong>Але це тільки початок.</strong></p>
-        <p style="margin-top: 12px;">Далі ви можете поглибити роботу в одному з напрямків. Оберіть той, який найбільше резонує з вашою поточною ситуацією.</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">1. МАРКЕТИНГ І ПРОДАЖІ</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-weight: 600; color: #22c55e; margin-bottom: 12px;">Це для вас, якщо:</p>
-        <ul style="margin-bottom: 16px;">
-            <li>Клієнтів мало або потік нестабільний</li>
-            <li>Реклама "з'їдає" бюджет, але не дає результату</li>
-            <li>Менеджери не закривають угоди</li>
-            <li>Немає системи залучення клієнтів — все на "сарафані"</li>
-            <li>Не знаєте вартість залучення клієнта (CAC)</li>
-            <li>Конкуренти забирають ваших клієнтів</li>
-        </ul>
-        <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0;"><strong>Результат:</strong> Стабільний потік клієнтів, конверсія продажів, прогнозований дохід</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">2. НАЙМ І ВВЕДЕННЯ В ПОСАДУ</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-weight: 600; color: #22c55e; margin-bottom: 12px;">Це для вас, якщо:</p>
-        <ul style="margin-bottom: 16px;">
-            <li>Не можете знайти "нормальних" людей</li>
-            <li>Нові співробітники звільняються через 1-3 місяці</li>
-            <li>Навчання новачків забирає весь ваш час</li>
-            <li>Кожен раз "винаходите велосипед" при наймі</li>
-            <li>Немає чітких критеріїв відбору</li>
-            <li>Співробітники не виходять на продуктивність</li>
-        </ul>
-        <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0;"><strong>Результат:</strong> Система найму, онбординг, швидкий вихід на продуктивність</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">3. ДЕЛЕГУВАННЯ (ПЕРЕДАЧА ОБЛАСТІ)</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-weight: 600; color: #22c55e; margin-bottom: 12px;">Це для вас, якщо:</p>
-        <ul style="margin-bottom: 16px;">
-            <li>Ви — "вузьке місце" в компанії, все через вас</li>
-            <li>Делегуєте, але потім переробляєте</li>
-            <li>Боїтесь передати відповідальність — "зроблять не так"</li>
-            <li>Керівники є, але вони не керують</li>
-            <li>Хочете вирощувати виконавчого директора</li>
-            <li>Мрієте про відпустку без телефону</li>
-        </ul>
-        <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0;"><strong>Результат:</strong> Керівники, які реально керують, автономні підрозділи</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">4. СИСТЕМА ФІНАНСІВ</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-weight: 600; color: #22c55e; margin-bottom: 12px;">Це для вас, якщо:</p>
-        <ul style="margin-bottom: 16px;">
-            <li>Гроші є, а в кінці місяця — немає</li>
-            <li>Не знаєте реальну прибутковість бізнесу</li>
-            <li>Фінанси компанії і особисті — в одній купі</li>
-            <li>Немає резервів — кожна криза = стрес</li>
-            <li>Не розумієте, куди йдуть гроші</li>
-            <li>Рішення приймаєте "на око", а не на цифрах</li>
-        </ul>
-        <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0;"><strong>Результат:</strong> Фінансове планування, резерви, контроль грошового потоку</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block warning">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Напишіть у підтримку</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px;">Оберіть напрямок і напишіть нам — ми відкриємо вам доступ до наступного модуля.</p>
-        
-        <div style="margin: 16px 0;">
-            <a href="https://t.me/AlexEduPro_bot?start=68f4ac956d0d3141970a83e8" target="_blank" class="action-btn primary">
-                
-                Написати в підтримку
-            </a>
-        </div>
-        
-        <p style="font-weight: 600; margin-bottom: 8px;">Приклад повідомлення:</p>
-        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; font-family: monospace; font-size: 14px;">
-            Вітаю! Пройшов базову програму "Архітектура бізнесу".<br><br>
-            Хочу продовжити навчання.<br>
-            Обираю напрямок: <strong>[МАРКЕТИНГ / НАЙМ / ДЕЛЕГУВАННЯ / ФІНАНСИ]</strong><br><br>
-            Моя компанія: [назва, сфера]<br>
-            Головна проблема зараз: [опишіть коротко]
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Дякуємо за проходження програми!</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Ви зробили важливий крок до системного бізнесу. Тепер головне — впроваджувати та не зупинятися.</p>
-        <p style="margin-top: 12px;"><strong>До зустрічі на наступному етапі! </strong></p>
-    </div>
-</div>
-                `,
-
-                lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Поздравляем! Вы прошли базовую программу</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Теперь у вас есть фундамент: терминология, инструменты управления, структура, статистики. <strong>Но это только начало.</strong></p>
-        <p style="margin-top: 12px;">Далее вы можете углубить работу в одном из направлений. Выберите то, которое больше всего резонирует с вашей текущей ситуацией.</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">1. МАРКЕТИНГ И ПРОДАЖИ</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-weight: 600; color: #22c55e; margin-bottom: 12px;">Это для вас, если:</p>
-        <ul style="margin-bottom: 16px;">
-            <li>Клиентов мало или поток нестабильный</li>
-            <li>Реклама "съедает" бюджет, но не даёт результата</li>
-            <li>Менеджеры не закрывают сделки</li>
-            <li>Нет системы привлечения клиентов — всё на "сарафане"</li>
-            <li>Не знаете стоимость привлечения клиента (CAC)</li>
-            <li>Конкуренты забирают ваших клиентов</li>
-        </ul>
-        <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0;"><strong>Результат:</strong> Стабильный поток клиентов, конверсия продаж, прогнозируемый доход</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">2. НАЙМ И ВВОД В ДОЛЖНОСТЬ</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-weight: 600; color: #22c55e; margin-bottom: 12px;">Это для вас, если:</p>
-        <ul style="margin-bottom: 16px;">
-            <li>Не можете найти "нормальных" людей</li>
-            <li>Новые сотрудники увольняются через 1-3 месяца</li>
-            <li>Обучение новичков забирает всё ваше время</li>
-            <li>Каждый раз "изобретаете велосипед" при найме</li>
-            <li>Нет чётких критериев отбора</li>
-            <li>Сотрудники не выходят на продуктивность</li>
-        </ul>
-        <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0;"><strong>Результат:</strong> Система найма, онбординг, быстрый выход на продуктивность</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">3. ДЕЛЕГИРОВАНИЕ (ПЕРЕДАЧА ОБЛАСТИ)</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-weight: 600; color: #22c55e; margin-bottom: 12px;">Это для вас, если:</p>
-        <ul style="margin-bottom: 16px;">
-            <li>Вы — "узкое место" в компании, всё через вас</li>
-            <li>Делегируете, но потом переделываете</li>
-            <li>Боитесь передать ответственность — "сделают не так"</li>
-            <li>Руководители есть, но они не руководят</li>
-            <li>Хотите выращивать исполнительного директора</li>
-            <li>Мечтаете об отпуске без телефона</li>
-        </ul>
-        <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0;"><strong>Результат:</strong> Руководители, которые реально руководят, автономные подразделения</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">4. СИСТЕМА ФИНАНСОВ</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-weight: 600; color: #22c55e; margin-bottom: 12px;">Это для вас, если:</p>
-        <ul style="margin-bottom: 16px;">
-            <li>Деньги есть, а в конце месяца — нет</li>
-            <li>Не знаете реальную прибыльность бизнеса</li>
-            <li>Финансы компании и личные — в одной куче</li>
-            <li>Нет резервов — каждый кризис = стресс</li>
-            <li>Не понимаете, куда уходят деньги</li>
-            <li>Решения принимаете "на глаз", а не на цифрах</li>
-        </ul>
-        <div style="padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0;"><strong>Результат:</strong> Финансовое планирование, резервы, контроль денежного потока</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block warning">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Напишите в поддержку</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px;">Выберите направление и напишите нам — мы откроем вам доступ к следующему модулю.</p>
-        
-        <div style="margin: 16px 0;">
-            <a href="https://t.me/AlexEduPro_bot?start=68f4ac956d0d3141970a83e8" target="_blank" class="action-btn primary">
-                
-                Написать в поддержку
-            </a>
-        </div>
-        
-        <p style="font-weight: 600; margin-bottom: 8px;">Пример сообщения:</p>
-        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; font-family: monospace; font-size: 14px;">
-            Здравствуйте! Прошёл базовую программу "Архитектура бизнеса".<br><br>
-            Хочу продолжить обучение.<br>
-            Выбираю направление: <strong>[МАРКЕТИНГ / НАЙМ / ДЕЛЕГИРОВАНИЕ / ФИНАНСЫ]</strong><br><br>
-            Моя компания: [название, сфера]<br>
-            Главная проблема сейчас: [опишите кратко]
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Спасибо за прохождение программы!</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Вы сделали важный шаг к системному бизнесу. Теперь главное — внедрять и не останавливаться.</p>
-        <p style="margin-top: 12px;"><strong>До встречи на следующем этапе! </strong></p>
-    </div>
-</div>
-                `,
-                
-                homeworkLink: "https://t.me/AlexEduPro_bot?start=68f4ac956d0d3141970a83e8",
-                homeworkLinkName: "→ Написати в підтримку",
-                homeworkLinkName_ru: "→ Написать в поддержку",
-                time: 10
-            },
-            {
-                id: 16,
-                title: "АНАЛІЗ ВУЗЬКОГО МІСЦЯ",
-                title_ru: "АНАЛИЗ УЗКОГО МЕСТА",
-                subtitle: "AI-діагностика проблем бізнесу",
-                subtitle_ru: "AI-диагностика проблем бизнеса",
-                
-                videoLink: null,
-                materialsLink: null,
-                
-                lessonContent: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Чому статистик недостатньо?</div>
-    </div>
-    <div class="lesson-block-content">
-        <p><strong>Статистики — це градусник.</strong> Він тільки ПОКАЗУЄ проблему:</p>
-        <ul>
-            <li>Показник в нормі — все добре</li>
-            <li>Трохи впав — щось не так</li>
-            <li>Сильно впав — треба діяти</li>
-        </ul>
-        <p style="margin-top: 12px;">Але градусник не каже <strong>ЧОМУ</strong> впало і <strong>ЩО</strong> з цим робити.</p>
-        <p style="margin-top: 8px;">У попередньому уроці ми зробили "градусник" (систему статистик).<br>Тепер потрібен <strong>"лікар"</strong> — який скаже чому падає і як лікувати.</p>
-    </div>
-</div>
-
-<div class="lesson-block step" style="border-left: 4px solid #8b5cf6;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #8b5cf6;">Як працює AI-аналіз вузьких місць</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px; font-weight: 600;">7 кроків діагностики:</p>
-        <div style="display: grid; gap: 10px;">
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">1</span>
-                <div><strong>Бачить проблему</strong><br><span style="color: #64748b; font-size: 14px;">"Ось тут падає третій тиждень поспіль. Це не випадковість — це тренд."</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">2</span>
-                <div><strong>Шукає причину</strong><br><span style="color: #64748b; font-size: 14px;">Не просто "показник впав", а ЧОМУ впав</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">3</span>
-                <div><strong>Пропонує рішення</strong><br><span style="color: #64748b; font-size: 14px;">Три варіанти: А, В, С — з плюсами і мінусами кожного</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">4</span>
-                <div><strong>Рахує гроші</strong><br><span style="color: #64748b; font-size: 14px;">Скільки коштує впровадити, скільки принесе, яка рентабельність</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">5</span>
-                <div><strong>Показує пріоритет</strong><br><span style="color: #64748b; font-size: 14px;">"Ця проблема з'їдає 50 000 на місяць, а ота — 5 000. Почніть з першої."</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">6</span>
-                <div><strong>Складає план</strong><br><span style="color: #64748b; font-size: 14px;">Конкретні кроки що робити</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">7</span>
-                <div><strong>Створює задачі</strong><br><span style="color: #64748b; font-size: 14px;">Перетворює план на завдання для виконання</span></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block warning" style="background: #f0fdf4; border-left: 4px solid #22c55e;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #166534;">Результат AI-аналізу</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-size: 16px; font-weight: 600; color: #166534;">Бачить → Каже чому → Пропонує → Планує</p>
-        <p style="margin-top: 8px; color: #166534;">AI бачить де проблема → каже чому виникла → пропонує як вирішити → складає план дій</p>
-    </div>
-</div>
-
-<div class="lesson-block step" style="border-left: 4px solid #f59e0b;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #92400e;">Як це використовувати?</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 12px;"><strong>Варіант 1:</strong> Якщо у вас своя облікова система (Excel, 1C, CRM тощо)</p>
-        <p style="margin-bottom: 16px; color: #64748b;">→ Використовуйте AI-асистента нижче. Завантажте свої дані і отримайте аналіз.</p>
-        <p style="margin-bottom: 12px;"><strong>Варіант 2:</strong> Якщо ви користуєтесь платформою TALKO Статистики</p>
-        <p style="color: #64748b;">→ Аналіз вузьких місць вже вбудований в платформу.</p>
-    </div>
-</div>
-
-<div class="lesson-block step" style="border-left: 4px solid #22c55e;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #166534;">Як працювати з асистентом</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="display: grid; gap: 10px;">
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="background: #22c55e; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">1</span>
-                <span>Заходите в асистента</span>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="background: #22c55e; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">2</span>
-                <span>Обираєте мову спілкування</span>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="background: #22c55e; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">3</span>
-                <span>Асистент запитає ваші дані і статистики</span>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="background: #22c55e; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">4</span>
-                <span><strong>На виході отримаєте готовий план дій</strong></span>
-            </div>
-        </div>
-    </div>
-</div>
-                `,
-                
-                lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Почему статистик недостаточно?</div>
-    </div>
-    <div class="lesson-block-content">
-        <p><strong>Статистики — это градусник.</strong> Он только ПОКАЗЫВАЕТ проблему:</p>
-        <ul>
-            <li>Показатель в норме — всё хорошо</li>
-            <li>Немного упал — что-то не так</li>
-            <li>Сильно упал — нужно действовать</li>
-        </ul>
-        <p style="margin-top: 12px;">Но градусник не говорит <strong>ПОЧЕМУ</strong> упало и <strong>ЧТО</strong> с этим делать.</p>
-        <p style="margin-top: 8px;">В предыдущем уроке мы сделали "градусник" (систему статистик).<br>Теперь нужен <strong>"врач"</strong> — который скажет почему падает и как лечить.</p>
-    </div>
-</div>
-
-<div class="lesson-block step" style="border-left: 4px solid #8b5cf6;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #8b5cf6;">Как работает AI-анализ узких мест</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 16px; font-weight: 600;">7 шагов диагностики:</p>
-        <div style="display: grid; gap: 10px;">
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">1</span>
-                <div><strong>Видит проблему</strong><br><span style="color: #64748b; font-size: 14px;">"Вот тут падает третью неделю подряд. Это не случайность — это тренд."</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">2</span>
-                <div><strong>Ищет причину</strong><br><span style="color: #64748b; font-size: 14px;">Не просто "показатель упал", а ПОЧЕМУ упал</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">3</span>
-                <div><strong>Предлагает решения</strong><br><span style="color: #64748b; font-size: 14px;">Три варианта: А, В, С — с плюсами и минусами каждого</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">4</span>
-                <div><strong>Считает деньги</strong><br><span style="color: #64748b; font-size: 14px;">Сколько стоит внедрить, сколько принесёт, какая рентабельность</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">5</span>
-                <div><strong>Показывает приоритет</strong><br><span style="color: #64748b; font-size: 14px;">"Эта проблема съедает 50 000 в месяц, а та — 5 000. Начните с первой."</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">6</span>
-                <div><strong>Составляет план</strong><br><span style="color: #64748b; font-size: 14px;">Конкретные шаги что делать</span></div>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                <span style="background: #8b5cf6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">7</span>
-                <div><strong>Создаёт задачи</strong><br><span style="color: #64748b; font-size: 14px;">Превращает план в задачи для выполнения</span></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block warning" style="background: #f0fdf4; border-left: 4px solid #22c55e;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #166534;">Результат AI-анализа</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="font-size: 16px; font-weight: 600; color: #166534;">Видит → Говорит почему → Предлагает → Планирует</p>
-        <p style="margin-top: 8px; color: #166534;">AI видит где проблема → говорит почему возникла → предлагает как решить → составляет план действий</p>
-    </div>
-</div>
-
-<div class="lesson-block step" style="border-left: 4px solid #f59e0b;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #92400e;">Как это использовать?</div>
-    </div>
-    <div class="lesson-block-content">
-        <p style="margin-bottom: 12px;"><strong>Вариант 1:</strong> Если у вас своя учётная система (Excel, 1C, CRM и т.д.)</p>
-        <p style="margin-bottom: 16px; color: #64748b;">→ Используйте AI-ассистента ниже. Загрузите свои данные и получите анализ.</p>
-        <p style="margin-bottom: 12px;"><strong>Вариант 2:</strong> Если вы пользуетесь платформой TALKO Статистики</p>
-        <p style="color: #64748b;">→ Анализ узких мест уже встроен в платформу.</p>
-    </div>
-</div>
-
-<div class="lesson-block step" style="border-left: 4px solid #22c55e;">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title" style="color: #166534;">Как работать с ассистентом</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="display: grid; gap: 10px;">
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="background: #22c55e; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">1</span>
-                <span>Заходите в ассистента</span>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="background: #22c55e; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">2</span>
-                <span>Выбираете язык общения</span>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="background: #22c55e; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">3</span>
-                <span>Ассистент спросит ваши данные и статистики</span>
-            </div>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span style="background: #22c55e; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">4</span>
-                <span><strong>На выходе получите готовый план действий</strong></span>
-            </div>
-        </div>
-    </div>
-</div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдіть діалог з AI-асистентом аналізу</li>
-            <li>Завантажте свої статистики за останні 4-8 тижнів</li>
-            <li>Отримайте план дій по вузькому місцю</li>
-            <li>Збережіть план у Google Docs</li>
-            <li>Прикріпіть посилання на документ</li>
-        </ol>
-    </div>
-</div>
-                `,
-                
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдите диалог с AI-ассистентом анализа</li>
-            <li>Загрузите свои статистики за последние 4-8 недель</li>
-            <li>Получите план действий по узкому месту</li>
-            <li>Сохраните план в Google Docs</li>
-            <li>Прикрепите ссылку на документ</li>
-        </ol>
-    </div>
-</div>
-                `,
-                
-                homeworkLink: "https://chatgpt.com/g/g-690355c39cdc81919726ed1647aaae92-test-analiz-vuzkogo-mistsia",
-                homeworkLinkName: "→ AI-асистент аналізу вузьких місць",
-                homeworkLinkName_ru: "→ AI-ассистент анализа узких мест",
-                time: 60
             }
         ];
 
