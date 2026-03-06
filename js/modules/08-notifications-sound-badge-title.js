@@ -258,7 +258,7 @@
             toast.id = 'newTaskToast';
             toast.style.cssText = `
                 position: fixed;
-                top: 20px;
+                top: 70px;
                 right: 20px;
                 background: ${cfg.gradient};
                 color: white;
