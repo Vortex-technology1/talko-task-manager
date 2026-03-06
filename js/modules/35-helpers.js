@@ -634,7 +634,7 @@
         // Переініціалізація іконок після динамічного контенту
         // Debounced refreshIcons — замість 40+ повних DOM-парсингів за секунду
         let _refreshIconsTimer = null;
-        function refreshIcons() {
+        window.refreshIcons = function refreshIcons() {
             if (_refreshIconsTimer) return;
             _refreshIconsTimer = requestAnimationFrame(() => {
                 _refreshIconsTimer = null;
@@ -653,7 +653,7 @@
         }
         
         // Примусовий refresh (для модалок які потребують іконок зразу)
-        function refreshIconsNow() {
+        window.refreshIconsNow = function refreshIconsNow() {
             if (_refreshIconsTimer) {
                 cancelAnimationFrame(_refreshIconsTimer);
                 _refreshIconsTimer = null;
