@@ -12,127 +12,147 @@
                 id: 0,
                 title: "МАРШРУТ ПРОГРАМИ",
                 title_ru: "МАРШРУТ ПРОГРАММЫ",
-                subtitle: "Ознайомтесь з маршрутом систематизації",
-                subtitle_ru: "Ознакомьтесь с маршрутом систематизации",
-                
+                subtitle: "Покрокова карта переходу від хаотичного управління до системного бізнесу",
+                subtitle_ru: "Пошаговая карта перехода от хаотичного управления к системному бизнесу",
+                hideAiBlock: true,
+
                 videoLink: null,
                 materialsLink: null,
-                
-                lessonContent: `<div class="lesson-block intro">
+
+                lessonContent: `
+<div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">Що це</div>
+        <div class="lesson-block-title">Що це таке</div>
     </div>
     <div class="lesson-block-content">
-        <p>Це ваш <strong>маршрут систематизації бізнесу</strong> — повна карта всіх 100 кроків від хаосу до автопілоту.</p>
-        <p>Перегляньте маршрут щоб розуміти загальну картину і знати що вас чекає на кожному етапі.</p>
+        <p>Більшість власників намагаються навести порядок у бізнесі хаотично.</p>
+        <p style="margin-top:0.75rem;">Сьогодні займаються наймом.<br>Завтра — маркетингом.<br>Післязавтра — CRM або фінансами.</p>
+        <p style="margin-top:0.75rem;">У результаті робота ведеться у різних напрямках, але система так і не з'являється.</p>
+        <p style="margin-top:0.75rem;">Саме тому у програмі використовується <strong>маршрут систематизації бізнесу</strong>.</p>
+        <p style="margin-top:0.75rem;">Це покрокова карта, яка показує:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>що потрібно налаштувати</li>
+            <li>у якій послідовності це робити</li>
+            <li>який результат має бути на кожному етапі</li>
+        </ul>
+        <p style="margin-top:0.75rem;">Фактично це маршрут від хаосу до системного бізнесу.</p>
     </div>
 </div>
 
 <div class="lesson-block">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">КРОК 1. Відкрийте маршрут</div>
+        <div class="lesson-block-title">Як побудований маршрут</div>
     </div>
     <div class="lesson-block-content">
-        <p>Перегляньте повну карту програми — всі фази та їх послідовність:</p>
-        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;background:#22c55e;color:white;border-radius:10px;font-weight:600;font-size:0.875rem;text-decoration:none;margin-top:0.5rem;">
+        <p style="margin-bottom:1rem;">Маршрут складається з кількох ключових фаз.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">ФАЗА 1</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Архітектура бізнесу</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Структура компанії, ролі, функції та зони відповідальності.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">ФАЗА 2</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Найм і команда</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Формування команди та результати роботи кожної ролі.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">ФАЗА 3</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Маркетинг і продажі</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Стабільний та прогнозований потік клієнтів.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">ФАЗА 4</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Фінанси і масштабування</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Контроль прибутку та підготовка до масштабування.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="lesson-block" style="text-align:center;">
+    <div class="lesson-block-content" style="padding:1.25rem;">
+        <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">Щоб побачити повну структуру програми, відкрийте карту маршруту.</p>
+        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">
             Відкрити маршрут програми →
         </a>
     </div>
 </div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Фази програми</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li><strong>Фаза 1:</strong> Архітектура бізнесу — фундамент системи</li>
-            <li><strong>Фаза 2:</strong> Найм і команда — люди в системі</li>
-            <li><strong>Фаза 3:</strong> Маркетинг і продажі — потік клієнтів</li>
-            <li><strong>Фаза 4:</strong> Фінанси і масштабування</li>
-        </ul>
-    </div>
-</div>
-
 <div class="result-block">
-    <strong>Результат:</strong> Ви отримаєте повне розуміння програми і будете точно знати що робити далі на кожному етапі.
+    <strong>Результат.</strong> Після ознайомлення з маршрутом ви будете розуміти: які етапи проходить систематизація, що саме потрібно зробити на кожному етапі та як рухатися по програмі далі.
 </div>`,
 
-                lessonContent_ru: `<div class="lesson-block intro">
+                lessonContent_ru: `
+<div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">Что это</div>
+        <div class="lesson-block-title">Что это такое</div>
     </div>
     <div class="lesson-block-content">
-        <p>Это ваш <strong>маршрут систематизации бизнеса</strong> — полная карта всех 100 шагов от хаоса к автопилоту.</p>
-        <p>Просмотрите маршрут чтобы понять общую картину и знать что вас ждёт на каждом этапе.</p>
+        <p>Большинство владельцев пытаются навести порядок в бизнесе хаотично.</p>
+        <p style="margin-top:0.75rem;">Сегодня занимаются наймом.<br>Завтра — маркетингом.<br>Послезавтра — CRM или финансами.</p>
+        <p style="margin-top:0.75rem;">В итоге работа ведётся в разных направлениях, но система так и не появляется.</p>
+        <p style="margin-top:0.75rem;">Именно поэтому в программе используется <strong>маршрут систематизации бизнеса</strong>.</p>
+        <p style="margin-top:0.75rem;">Это пошаговая карта, которая показывает:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>что нужно настроить</li>
+            <li>в какой последовательности это делать</li>
+            <li>какой результат должен быть на каждом этапе</li>
+        </ul>
+        <p style="margin-top:0.75rem;">Фактически это маршрут от хаоса к системному бизнесу.</p>
     </div>
 </div>
 
 <div class="lesson-block">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">ШАГ 1. Откройте маршрут</div>
+        <div class="lesson-block-title">Как построен маршрут</div>
     </div>
     <div class="lesson-block-content">
-        <p>Просмотрите полную карту программы — все фазы и их последовательность:</p>
-        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;background:#22c55e;color:white;border-radius:10px;font-weight:600;font-size:0.875rem;text-decoration:none;margin-top:0.5rem;">
+        <p style="margin-bottom:1rem;">Маршрут состоит из нескольких ключевых фаз.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">ФАЗА 1</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Архитектура бизнеса</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Структура компании, роли, функции и зоны ответственности.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">ФАЗА 2</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Найм и команда</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Формирование команды и результаты работы каждой роли.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">ФАЗА 3</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Маркетинг и продажи</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Стабильный и прогнозируемый поток клиентов.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">ФАЗА 4</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Финансы и масштабирование</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Контроль прибыли и подготовка к масштабированию.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="lesson-block" style="text-align:center;">
+    <div class="lesson-block-content" style="padding:1.25rem;">
+        <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">Чтобы увидеть полную структуру программы, откройте карту маршрута.</p>
+        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">
             Открыть маршрут программы →
         </a>
     </div>
 </div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Фазы программы</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li><strong>Фаза 1:</strong> Архитектура бизнеса — фундамент системы</li>
-            <li><strong>Фаза 2:</strong> Найм и команда — люди в системе</li>
-            <li><strong>Фаза 3:</strong> Маркетинг и продажи — поток клиентов</li>
-            <li><strong>Фаза 4:</strong> Финансы и масштабирование</li>
-        </ul>
-    </div>
-</div>
-
 <div class="result-block">
-    <strong>Результат:</strong> Вы получите полное понимание программы и будете точно знать что делать дальше на каждом этапе.
+    <strong>Результат.</strong> После ознакомления с маршрутом вы будете понимать: какие этапы проходит систематизация, что именно нужно сделать на каждом этапе и как двигаться по программе дальше.
 </div>`,
-                
-                homework: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Відкрийте маршрут програми</li>
-            <li>Пройдіть AI-асистента</li>
-            <li>Напишіть у полі завдання: "Маршрут вивчено"</li>
-        </ol>
-    </div>
-</div>
-                `,
 
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Откройте маршрут программы</li>
-            <li>Пройдите AI-ассистента</li>
-            <li>Напишите в поле задания: "Маршрут изучен"</li>
-        </ol>
-    </div>
-</div>
-                `,
-                
-                homeworkLink: "https://chatgpt.com/g/g-68568e2561ac8191a0a71e31dc7cb74d-ai-kouch-konsultant-alex-talko-pidgotovka",
-                homeworkLinkName: "→ AI-асистент маршруту",
-                homeworkLinkName_ru: "→ AI-ассистент маршрута",
+                homework: `<ol><li>Відкрийте маршрут програми</li><li>Ознайомтесь із фазами систематизації</li><li>Поверніться до цього уроку</li></ol>`,
+                homework_ru: `<ol><li>Откройте маршрут программы</li><li>Ознакомьтесь с фазами систематизации</li><li>Вернитесь к этому уроку</li></ol>`,
+
+                homeworkLink: null,
+                homeworkLinkName: null,
+                homeworkLinkName_ru: null,
                 time: 15
             },
             {
@@ -9686,7 +9706,11 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
     function renderAIBlock(module, isRu) {
         const title = isRu ? (module.title_ru || module.title) : module.title;
         const hwRaw = isRu ? (module.homework_ru || module.homework || '') : (module.homework || '');
-        const hw = hwRaw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
+        // Витягуємо тільки текст з <li> елементів, ігноруємо заголовки блоку
+        const hwItems = [];
+        const liMatches = hwRaw.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
+        liMatches.forEach(li => hwItems.push(li.replace(/<[^>]*>/g, '').trim()));
+        const hw = hwItems.length ? hwItems.join('; ') : hwRaw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
         const prompt = isRu
             ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
             : `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
@@ -9763,16 +9787,27 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 </div>
 
                 <!-- AI Assistant block -->
-                ${renderAIBlock(module, isRu)}
+                ${module.hideAiBlock ? '' : renderAIBlock(module, isRu)}
 
                 <!-- Homework block -->
-                ${module.homework ? `
+                ${module.homework ? (() => {
+                    const hwHtml = isRu ? (module.homework_ru || module.homework) : module.homework;
+                    const liItems2 = [];
+                    const liM = hwHtml.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
+                    liM.forEach(li => liItems2.push(li.replace(/<[^>]*>/g, '').trim()));
+                    const hwLinkUrl = module.homeworkLink || null;
+                    const hwLinkName = isRu ? (module.homeworkLinkName_ru || module.homeworkLinkName || '') : (module.homeworkLinkName || '');
+                    return `
                 <div class="l-homework-block">
                     <div class="l-homework-title">
                         <i data-lucide="pencil" class="icon" style="width:16px;height:16px;color:#f59e0b;"></i>
                         ${isRu ? 'Домашнее задание' : 'Домашнє завдання'}
                     </div>
-                    <div class="l-homework-desc">${isRu ? (module.homework_ru || module.homework) : module.homework}</div>
+                    ${liItems2.length
+                        ? `<ol style="margin:0.5rem 0 0.75rem 1.2rem;padding:0;color:#374151;font-size:0.9rem;line-height:1.7;">${liItems2.map(t => `<li>${t}</li>`).join('')}</ol>`
+                        : `<div class="l-homework-desc">${hwHtml}</div>`
+                    }
+                    ${hwLinkUrl ? `<a href="${hwLinkUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.875rem;color:#16a34a;text-decoration:none;font-weight:600;margin-bottom:0.75rem;">${hwLinkName || '→ AI-асистент'}</a>` : ''}
                     <textarea class="l-homework-textarea" id="learningHwTextarea" placeholder="${isRu ? 'Введите ваш ответ...' : 'Введіть вашу відповідь...'}">${hwText}</textarea>
                     <div class="l-homework-actions">
                         ${hwDone ? `<span class="l-hw-done-badge"><i data-lucide="check" class="icon" style="width:14px;height:14px;"></i> ${isRu ? 'Выполнено' : 'Виконано'}</span>` : ''}
@@ -9780,7 +9815,8 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                             ${isRu ? 'Сохранить' : 'Зберегти'}
                         </button>
                     </div>
-                </div>` : ''}
+                </div>`;
+                })() : ''}
 
                 <!-- Complete button -->
                 <div class="l-complete-row">
