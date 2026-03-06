@@ -59,8 +59,8 @@
                 ];
                 filtered.forEach(tk => {
                     const col = columns.find(c => c.id === (tk.status || 'new'));
-                    if (col) col.tasks.push(t);
-                    else columns[0].tasks.push(t);
+                    if (col) col.tasks.push(tk);
+                    else columns[0].tasks.push(tk);
                 });
             } else {
                 // DEADLINE KANBAN
@@ -87,12 +87,12 @@
                 
                 filtered.filter(tk => tk.status !== 'done').forEach(tk => {
                     const dl = tk.deadlineDate;
-                    if (!dl) { columns[5].tasks.push(t); return; }
-                    if (dl < today) columns[0].tasks.push(t);
-                    else if (dl === today) columns[1].tasks.push(t);
-                    else if (dl <= endWeekStr) columns[2].tasks.push(t);
-                    else if (dl <= endNextWeekStr) columns[3].tasks.push(t);
-                    else columns[4].tasks.push(t);
+                    if (!dl) { columns[5].tasks.push(tk); return; }
+                    if (dl < today) columns[0].tasks.push(tk);
+                    else if (dl === today) columns[1].tasks.push(tk);
+                    else if (dl <= endWeekStr) columns[2].tasks.push(tk);
+                    else if (dl <= endNextWeekStr) columns[3].tasks.push(tk);
+                    else columns[4].tasks.push(tk);
                 });
             }
             
