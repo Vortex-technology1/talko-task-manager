@@ -18,9 +18,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Що це</div>
     </div>
     <div class="lesson-block-content">
@@ -31,16 +29,14 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 1. Відкрийте маршрут</div>
     </div>
     <div class="lesson-block-content">
         <p>Перегляньте повну карту програми — всі етапи та їх послідовність:</p>
         <div style="margin-top: 12px;">
             <a href="https://alextalko.com/algoritm" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+                
                 Відкрити маршрут програми
             </a>
         </div>
@@ -49,9 +45,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 2. Пройдіть AI-асистента</div>
     </div>
     <div class="lesson-block-content">
@@ -66,9 +60,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Результат</div>
     </div>
     <div class="lesson-block-content">
@@ -80,9 +72,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Что это</div>
     </div>
     <div class="lesson-block-content">
@@ -93,16 +83,14 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Откройте маршрут</div>
     </div>
     <div class="lesson-block-content">
         <p>Просмотрите полную карту программы:</p>
         <div style="margin-top: 12px;">
             <a href="https://alextalko.com/algoritm" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+                
                 Открыть маршрут программы
             </a>
         </div>
@@ -111,9 +99,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Пройдите AI-ассистента</div>
     </div>
     <div class="lesson-block-content">
@@ -128,9 +114,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Результат</div>
     </div>
     <div class="lesson-block-content">
@@ -142,9 +126,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -160,9 +142,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -193,9 +173,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Про що цей урок</div>
     </div>
     <div class="lesson-block-content">
@@ -212,9 +190,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 1. Перегляньте відео</div>
     </div>
     <div class="lesson-block-content">
@@ -224,9 +200,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 2. Створіть папку на Google Диску</div>
     </div>
     <div class="lesson-block-content">
@@ -237,9 +211,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 3. Створіть файли всередині папки</div>
     </div>
     <div class="lesson-block-content">
@@ -255,9 +227,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 4. Надайте доступ до папки</div>
     </div>
     <div class="lesson-block-content">
@@ -268,9 +238,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 5. Надішліть в бот підтримки</div>
     </div>
     <div class="lesson-block-content">
@@ -286,9 +254,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">О чём этот урок</div>
     </div>
     <div class="lesson-block-content">
@@ -305,9 +271,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Посмотрите видео</div>
     </div>
     <div class="lesson-block-content">
@@ -317,9 +281,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Создайте папку на Google Диске</div>
     </div>
     <div class="lesson-block-content">
@@ -330,9 +292,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Создайте файлы внутри папки</div>
     </div>
     <div class="lesson-block-content">
@@ -348,9 +308,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 4. Дайте доступ к папке</div>
     </div>
     <div class="lesson-block-content">
@@ -363,9 +321,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -389,9 +345,9 @@
         </div>
         <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                <svg style="width: 20px; height: 20px; color: #166534;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                
                 <span style="font-weight: 700; color: #166534; font-size: 15px;">ВСТАВТЕ ПОСИЛАННЯ СЮДИ</span>
-                <svg style="width: 20px; height: 20px; color: #166534;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                
             </div>
             <textarea placeholder="https://drive.google.com/drive/folders/..." style="width: 100%; min-height: 60px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
         </div>
@@ -402,9 +358,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -428,9 +382,9 @@
         </div>
         <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                <svg style="width: 20px; height: 20px; color: #166534;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                
                 <span style="font-weight: 700; color: #166534; font-size: 15px;">ВСТАВЬТЕ ССЫЛКУ СЮДА</span>
-                <svg style="width: 20px; height: 20px; color: #166534;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                
             </div>
             <textarea placeholder="https://drive.google.com/drive/folders/..." style="width: 100%; min-height: 60px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
         </div>
@@ -454,9 +408,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Суть уроку</div>
     </div>
     <div class="lesson-block-content">
@@ -472,9 +424,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 1. Створіть робочу папку</div>
     </div>
     <div class="lesson-block-content">
@@ -485,9 +435,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 2. Пройдіть AI-асистента термінології</div>
     </div>
     <div class="lesson-block-content">
@@ -501,9 +449,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 3. Завантажте матеріали</div>
     </div>
     <div class="lesson-block-content">
@@ -515,9 +461,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -534,9 +478,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -568,9 +510,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Навіщо цей урок</div>
     </div>
     <div class="lesson-block-content">
@@ -581,9 +521,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 1. Реєстрація в ChatGPT</div>
     </div>
     <div class="lesson-block-content">
@@ -596,7 +534,7 @@
         </ol>
         <div style="margin-top: 12px;">
             <a href="https://chat.openai.com" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                
                 Відкрити ChatGPT
             </a>
         </div>
@@ -605,9 +543,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 2. Реєстрація в Claude AI</div>
     </div>
     <div class="lesson-block-content">
@@ -620,7 +556,7 @@
         </ol>
         <div style="margin-top: 12px;">
             <a href="https://claude.ai" target="_blank" class="action-btn outline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                
                 Відкрити Claude AI
             </a>
         </div>
@@ -629,9 +565,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Важливо про VPN</div>
     </div>
     <div class="lesson-block-content">
@@ -642,9 +576,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Перевірка доступу</div>
     </div>
     <div class="lesson-block-content">
@@ -661,9 +593,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Зачем этот урок</div>
     </div>
     <div class="lesson-block-content">
@@ -674,9 +604,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Регистрация в ChatGPT</div>
     </div>
     <div class="lesson-block-content">
@@ -689,7 +617,7 @@
         </ol>
         <div style="margin-top: 12px;">
             <a href="https://chat.openai.com" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                
                 Открыть ChatGPT
             </a>
         </div>
@@ -698,9 +626,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Регистрация в Claude AI</div>
     </div>
     <div class="lesson-block-content">
@@ -713,7 +639,7 @@
         </ol>
         <div style="margin-top: 12px;">
             <a href="https://claude.ai" target="_blank" class="action-btn outline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                
                 Открыть Claude AI
             </a>
         </div>
@@ -722,9 +648,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Важно про VPN</div>
     </div>
     <div class="lesson-block-content">
@@ -735,9 +659,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Проверка доступа</div>
     </div>
     <div class="lesson-block-content">
@@ -754,9 +676,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -778,9 +698,9 @@
         </div>
         <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                <svg style="width: 20px; height: 20px; color: #166534;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                
                 <span style="font-weight: 700; color: #166534; font-size: 15px;">НАПИШІТЬ «ГОТОВО»</span>
-                <svg style="width: 20px; height: 20px; color: #166534;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                
             </div>
             <textarea placeholder="Готово" style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
         </div>
@@ -791,9 +711,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -815,9 +733,9 @@
         </div>
         <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                <svg style="width: 20px; height: 20px; color: #166534;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                
                 <span style="font-weight: 700; color: #166534; font-size: 15px;">НАПИШИТЕ «ГОТОВО»</span>
-                <svg style="width: 20px; height: 20px; color: #166534;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                
             </div>
             <textarea placeholder="Готово" style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
         </div>
@@ -843,9 +761,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Суть уроку</div>
     </div>
     <div class="lesson-block-content">
@@ -855,9 +771,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Без чітких розпоряджень</div>
     </div>
     <div class="lesson-block-content">
@@ -871,9 +785,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Що дає правильне розпорядження</div>
     </div>
     <div class="lesson-block-content">
@@ -887,9 +799,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 1. Подивіться відео</div>
     </div>
     <div class="lesson-block-content">
@@ -899,9 +809,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 2. Завантажте матеріали</div>
     </div>
     <div class="lesson-block-content">
@@ -911,9 +819,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 3. Генератор розпоряджень</div>
     </div>
     <div class="lesson-block-content">
@@ -929,9 +835,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 4. Познайомтесь з TALKO Task Manager</div>
     </div>
     <div class="lesson-block-content">
@@ -939,7 +843,7 @@
         <p style="margin-top: 8px;">Зайдіть в асистента підтримки та задайте йому питання: як він працює, які проблеми допоможе вирішити, як почати користуватись.</p>
         <div style="margin-top: 16px;">
             <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="action-btn outline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg>
+                
                 TALKO Task Manager Support
             </a>
         </div>
@@ -950,9 +854,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Суть урока</div>
     </div>
     <div class="lesson-block-content">
@@ -962,9 +864,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Без чётких распоряжений</div>
     </div>
     <div class="lesson-block-content">
@@ -978,9 +878,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Что даёт правильное распоряжение</div>
     </div>
     <div class="lesson-block-content">
@@ -994,9 +892,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Посмотрите видео</div>
     </div>
     <div class="lesson-block-content">
@@ -1006,9 +902,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Скачайте материалы</div>
     </div>
     <div class="lesson-block-content">
@@ -1018,9 +912,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Генератор распоряжений</div>
     </div>
     <div class="lesson-block-content">
@@ -1036,9 +928,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 4. Познакомьтесь с TALKO Task Manager</div>
     </div>
     <div class="lesson-block-content">
@@ -1046,7 +936,7 @@
         <p style="margin-top: 8px;">Зайдите в ассистента поддержки и задайте ему вопросы: как он работает, какие проблемы поможет решить, как начать пользоваться.</p>
         <div style="margin-top: 16px;">
             <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="action-btn outline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg>
+                
                 TALKO Task Manager Support
             </a>
         </div>
@@ -1057,9 +947,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -1077,9 +965,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -1112,9 +998,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Суть уроку</div>
     </div>
     <div class="lesson-block-content">
@@ -1124,9 +1008,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Типова проблема</div>
     </div>
     <div class="lesson-block-content">
@@ -1141,9 +1023,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Що дає система РАДАР</div>
     </div>
     <div class="lesson-block-content">
@@ -1158,9 +1038,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 1. Подивіться відео</div>
     </div>
     <div class="lesson-block-content">
@@ -1170,9 +1048,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 2. Розберіться з AI-асистентом РАДАР</div>
     </div>
     <div class="lesson-block-content">
@@ -1189,9 +1065,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 3. Передайте посилання команді</div>
     </div>
     <div class="lesson-block-content">
@@ -1203,9 +1077,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Суть урока</div>
     </div>
     <div class="lesson-block-content">
@@ -1215,9 +1087,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Типичная проблема</div>
     </div>
     <div class="lesson-block-content">
@@ -1232,9 +1102,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Что даёт система РАДАР</div>
     </div>
     <div class="lesson-block-content">
@@ -1249,9 +1117,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Посмотрите видео</div>
     </div>
     <div class="lesson-block-content">
@@ -1261,9 +1127,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Разберитесь с AI-ассистентом РАДАР</div>
     </div>
     <div class="lesson-block-content">
@@ -1280,9 +1144,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Передайте ссылку команде</div>
     </div>
     <div class="lesson-block-content">
@@ -1294,9 +1156,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -1313,9 +1173,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -1345,9 +1203,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Що це</div>
     </div>
     <div class="lesson-block-content">
@@ -1358,9 +1214,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Ваше завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -1375,9 +1229,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Для чого</div>
     </div>
     <div class="lesson-block-content">
@@ -1387,9 +1239,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Результат</div>
     </div>
     <div class="lesson-block-content">
@@ -1401,9 +1251,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -1415,9 +1263,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -1444,9 +1290,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Навіщо цей урок</div>
     </div>
     <div class="lesson-block-content">
@@ -1457,9 +1301,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">«Ой всьо…» — чому співробітники чинять опір?</div>
     </div>
     <div class="lesson-block-content">
@@ -1469,7 +1311,7 @@
         
         <details class="accordion-article" style="border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
             <summary style="padding: 16px; background: #f9fafb; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; list-style: none;">
-                <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; transition: transform 0.2s;"><polyline points="9 18 15 12 9 6"/></svg>
+                
                 Стаття: «Ой всьо…» або чому ваші співробітники не сприймають критику
             </summary>
             <div style="padding: 20px; background: white;">
@@ -1558,9 +1400,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 1. Підготуйтесь до розмови</div>
     </div>
     <div class="lesson-block-content">
@@ -1576,14 +1416,12 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 2. Скрипт розмови (читайте це співробітнику)</div>
     </div>
     <div class="lesson-block-content">
         <div style="padding: 16px; background: #f0fdf4; border-radius: 12px; border: 1px solid #22c55e; margin-bottom: 16px;">
-            <p style="font-style: italic; color: #166534; margin-bottom: 12px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> <strong>Приклад скрипту — адаптуйте під себе:</strong></p>
+            <p style="font-style: italic; color: #166534; margin-bottom: 12px;"> <strong>Приклад скрипту — адаптуйте під себе:</strong></p>
             
             <p style="margin-bottom: 12px;">«Вітаю! Наша компанія дійшла до певного рубежу. <strong>Ви — ключовий співробітник</strong>, підтримка та опора всієї компанії. Нам треба разом рухатись далі, розвивати діяльність.</p>
             
@@ -1596,62 +1434,14 @@
             <p style="margin-bottom: 12px;"><strong>Управління</strong> — це коли ми погоджуємо всі наші дії, щоб вони вели нас до однієї мети. Якщо в компанії добре налагоджено управління — дії кожного співробітника ведуть до загальної мети. Якщо погано — троє йдуть до мети, один йде в інший бік. В результаті рух сповільнюється.»</p>
         </div>
         
-        <p style="font-weight: 600; margin-bottom: 12px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg> Замальовка для пояснення (намалюйте на папері):</p>
-        <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb; text-align: center;">
-            <svg viewBox="0 0 400 200" style="max-width: 100%; height: auto;">
-                <!-- Good management -->
-                <text x="100" y="20" font-size="14" font-weight="bold" fill="#166534" text-anchor="middle">ДОБРЕ УПРАВЛІННЯ</text>
-                <circle cx="100" cy="100" r="8" fill="#22c55e"/>
-                <text x="100" y="130" font-size="10" fill="#374151" text-anchor="middle">МЕТА</text>
-                
-                <!-- Arrows pointing to goal -->
-                <line x1="40" y1="60" x2="85" y2="92" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow)"/>
-                <line x1="100" y1="50" x2="100" y2="85" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow)"/>
-                <line x1="160" y1="60" x2="115" y2="92" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow)"/>
-                
-                <!-- People icons good -->
-                <circle cx="40" cy="50" r="6" fill="#22c55e"/>
-                <circle cx="100" cy="40" r="6" fill="#22c55e"/>
-                <circle cx="160" cy="50" r="6" fill="#22c55e"/>
-                
-                <!-- Bad management -->
-                <text x="300" y="20" font-size="14" font-weight="bold" fill="#dc2626" text-anchor="middle">ПОГАНЕ УПРАВЛІННЯ</text>
-                <circle cx="300" cy="100" r="8" fill="#ef4444"/>
-                <text x="300" y="130" font-size="10" fill="#374151" text-anchor="middle">МЕТА</text>
-                
-                <!-- Arrows - some wrong direction -->
-                <line x1="240" y1="60" x2="285" y2="92" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow)"/>
-                <line x1="300" y1="50" x2="300" y2="85" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow)"/>
-                <line x1="360" y1="60" x2="380" y2="80" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowRed)"/>
-                
-                <!-- People icons bad -->
-                <circle cx="240" cy="50" r="6" fill="#22c55e"/>
-                <circle cx="300" cy="40" r="6" fill="#22c55e"/>
-                <circle cx="360" cy="50" r="6" fill="#ef4444"/>
-                
-                <!-- Arrow markers -->
-                <defs>
-                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                        <path d="M0,0 L0,6 L9,3 z" fill="#22c55e"/>
-                    </marker>
-                    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                        <path d="M0,0 L0,6 L9,3 z" fill="#ef4444"/>
-                    </marker>
-                </defs>
-                
-                <!-- Labels -->
-                <text x="100" y="180" font-size="11" fill="#166534" text-anchor="middle">Всі йдуть до мети </text>
-                <text x="300" y="180" font-size="11" fill="#dc2626" text-anchor="middle">Один йде в інший бік </text>
-            </svg>
-        </div>
+        <p style="font-weight: 600; margin-bottom: 12px;"> Замальовка для пояснення (намалюйте на папері):</p>
+        
     </div>
 </div>
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 3. Розкажіть план змін (продовження скрипту)</div>
     </div>
     <div class="lesson-block-content">
@@ -1711,9 +1501,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 4. Про навчання та час (продовження скрипту)</div>
     </div>
     <div class="lesson-block-content">
@@ -1739,9 +1527,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 5. Відповіді на типові питання</div>
     </div>
     <div class="lesson-block-content">
@@ -1766,9 +1552,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 6. Надішліть на навчання в Team Academy AI</div>
     </div>
     <div class="lesson-block-content">
@@ -1785,7 +1569,7 @@
         
         <div style="margin-top: 16px;">
             <a href="https://chatgpt.com/g/g-694ea789f6fc8191a90694aae93de819-team-academy-ai" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                
                 Team Academy AI — надішліть це посилання співробітникам
             </a>
         </div>
@@ -1794,9 +1578,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 7. Зберіть відповіді на тест</div>
     </div>
     <div class="lesson-block-content">
@@ -1828,17 +1610,15 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Результат уроку</div>
     </div>
     <div class="lesson-block-content">
         <ul>
-            <li><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> Ключові співробітники розуміють, що буде відбуватися</li>
-            <li><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> Вони пройшли навчання і здали тест</li>
-            <li><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> Вони готові підтримувати вас у змінах</li>
-            <li><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> Опір мінімізовано через розуміння</li>
+            <li> Ключові співробітники розуміють, що буде відбуватися</li>
+            <li> Вони пройшли навчання і здали тест</li>
+            <li> Вони готові підтримувати вас у змінах</li>
+            <li> Опір мінімізовано через розуміння</li>
         </ul>
         <p style="margin-top: 16px;">Якщо таким чином розповісти ключовим співробітникам про своє рішення проводити організаційні зміни, вони краще розберуться з цим і будуть до них готові. <strong>Завдяки готовності ключових співробітників подальші зміни пройдуть усвідомлено та гладко.</strong></p>
     </div>
@@ -1848,9 +1628,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Зачем этот урок</div>
     </div>
     <div class="lesson-block-content">
@@ -1861,9 +1639,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">«Ой всё…» — почему сотрудники сопротивляются?</div>
     </div>
     <div class="lesson-block-content">
@@ -1873,7 +1649,7 @@
         
         <details class="accordion-article" style="border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
             <summary style="padding: 16px; background: #f9fafb; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; list-style: none;">
-                <svg class="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; transition: transform 0.2s;"><polyline points="9 18 15 12 9 6"/></svg>
+                
                 Статья: «Ой всё…» или почему ваши сотрудники не воспринимают критику
             </summary>
             <div style="padding: 20px; background: white;">
@@ -1962,9 +1738,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Подготовьтесь к разговору</div>
     </div>
     <div class="lesson-block-content">
@@ -1980,14 +1754,12 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Скрипт разговора (читайте это сотруднику)</div>
     </div>
     <div class="lesson-block-content">
         <div style="padding: 16px; background: #f0fdf4; border-radius: 12px; border: 1px solid #22c55e; margin-bottom: 16px;">
-            <p style="font-style: italic; color: #166534; margin-bottom: 12px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> <strong>Пример скрипта — адаптируйте под себя:</strong></p>
+            <p style="font-style: italic; color: #166534; margin-bottom: 12px;"> <strong>Пример скрипта — адаптируйте под себя:</strong></p>
             
             <p style="margin-bottom: 12px;">«Приветствую! Наша компания дошла до определённого рубежа. <strong>Вы — ключевой сотрудник</strong>, поддержка и опора всей компании. Нам нужно вместе двигаться дальше, развивать деятельность.</p>
             
@@ -2000,62 +1772,14 @@
             <p style="margin-bottom: 12px;"><strong>Управление</strong> — это когда мы согласовываем все наши действия, чтобы они вели нас к одной цели. Если в компании хорошо налажено управление — действия каждого сотрудника ведут к общей цели. Если плохо — трое идут к цели, один идёт в другую сторону. В результате движение замедляется.»</p>
         </div>
         
-        <p style="font-weight: 600; margin-bottom: 12px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg> Зарисовка для объяснения (нарисуйте на бумаге):</p>
-        <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb; text-align: center;">
-            <svg viewBox="0 0 400 200" style="max-width: 100%; height: auto;">
-                <!-- Good management -->
-                <text x="100" y="20" font-size="14" font-weight="bold" fill="#166534" text-anchor="middle">ХОРОШЕЕ УПРАВЛЕНИЕ</text>
-                <circle cx="100" cy="100" r="8" fill="#22c55e"/>
-                <text x="100" y="130" font-size="10" fill="#374151" text-anchor="middle">ЦЕЛЬ</text>
-                
-                <!-- Arrows pointing to goal -->
-                <line x1="40" y1="60" x2="85" y2="92" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowRu)"/>
-                <line x1="100" y1="50" x2="100" y2="85" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowRu)"/>
-                <line x1="160" y1="60" x2="115" y2="92" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowRu)"/>
-                
-                <!-- People icons good -->
-                <circle cx="40" cy="50" r="6" fill="#22c55e"/>
-                <circle cx="100" cy="40" r="6" fill="#22c55e"/>
-                <circle cx="160" cy="50" r="6" fill="#22c55e"/>
-                
-                <!-- Bad management -->
-                <text x="300" y="20" font-size="14" font-weight="bold" fill="#dc2626" text-anchor="middle">ПЛОХОЕ УПРАВЛЕНИЕ</text>
-                <circle cx="300" cy="100" r="8" fill="#ef4444"/>
-                <text x="300" y="130" font-size="10" fill="#374151" text-anchor="middle">ЦЕЛЬ</text>
-                
-                <!-- Arrows - some wrong direction -->
-                <line x1="240" y1="60" x2="285" y2="92" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowRu)"/>
-                <line x1="300" y1="50" x2="300" y2="85" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowRu)"/>
-                <line x1="360" y1="60" x2="380" y2="80" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowRedRu)"/>
-                
-                <!-- People icons bad -->
-                <circle cx="240" cy="50" r="6" fill="#22c55e"/>
-                <circle cx="300" cy="40" r="6" fill="#22c55e"/>
-                <circle cx="360" cy="50" r="6" fill="#ef4444"/>
-                
-                <!-- Arrow markers -->
-                <defs>
-                    <marker id="arrowRu" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                        <path d="M0,0 L0,6 L9,3 z" fill="#22c55e"/>
-                    </marker>
-                    <marker id="arrowRedRu" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                        <path d="M0,0 L0,6 L9,3 z" fill="#ef4444"/>
-                    </marker>
-                </defs>
-                
-                <!-- Labels -->
-                <text x="100" y="180" font-size="11" fill="#166534" text-anchor="middle">Все идут к цели </text>
-                <text x="300" y="180" font-size="11" fill="#dc2626" text-anchor="middle">Один идёт в другую сторону </text>
-            </svg>
-        </div>
+        <p style="font-weight: 600; margin-bottom: 12px;"> Зарисовка для объяснения (нарисуйте на бумаге):</p>
+        
     </div>
 </div>
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Расскажите план изменений (продолжение скрипта)</div>
     </div>
     <div class="lesson-block-content">
@@ -2115,9 +1839,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 4. Об обучении и времени (продолжение скрипта)</div>
     </div>
     <div class="lesson-block-content">
@@ -2143,9 +1865,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 5. Ответы на типичные вопросы</div>
     </div>
     <div class="lesson-block-content">
@@ -2176,9 +1896,7 @@
         </div>
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 6. Отправьте на обучение в Team Academy AI</div>
     </div>
     <div class="lesson-block-content">
@@ -2195,7 +1913,7 @@
         
         <div style="margin-top: 16px;">
             <a href="https://chatgpt.com/g/g-694ea789f6fc8191a90694aae93de819-team-academy-ai" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                
                 Team Academy AI — отправьте эту ссылку сотрудникам
             </a>
         </div>
@@ -2204,9 +1922,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 7. Соберите ответы на тест</div>
     </div>
     <div class="lesson-block-content">
@@ -2238,17 +1954,15 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Вывод</div>
     </div>
     <div class="lesson-block-content">
         <ul>
-            <li><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> Ключевые сотрудники понимают, что будет происходить</li>
-            <li><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> Они прошли обучение и сдали тест</li>
-            <li><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> Они готовы поддерживать вас в изменениях</li>
-            <li><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg> Сопротивление минимизировано через понимание</li>
+            <li> Ключевые сотрудники понимают, что будет происходить</li>
+            <li> Они прошли обучение и сдали тест</li>
+            <li> Они готовы поддерживать вас в изменениях</li>
+            <li> Сопротивление минимизировано через понимание</li>
         </ul>
         <p style="margin-top: 16px;">Если таким образом рассказать ключевым сотрудникам о своём решении проводить организационные изменения, они лучше разберутся с этим и будут к ним готовы. <strong>Благодаря готовности ключевых сотрудников дальнейшие изменения пройдут осознанно и гладко.</strong></p>
     </div>
@@ -2258,9 +1972,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -2280,9 +1992,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -2317,9 +2027,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Що це</div>
     </div>
     <div class="lesson-block-content">
@@ -2330,9 +2038,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Ваше завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -2346,9 +2052,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Результат</div>
     </div>
     <div class="lesson-block-content">
@@ -2365,9 +2069,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Что это</div>
     </div>
     <div class="lesson-block-content">
@@ -2378,9 +2080,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Ваше задание</div>
     </div>
     <div class="lesson-block-content">
@@ -2394,9 +2094,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Результат</div>
     </div>
     <div class="lesson-block-content">
@@ -2413,9 +2111,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -2427,9 +2123,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -2455,9 +2149,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Ціль уроку</div>
     </div>
     <div class="lesson-block-content">
@@ -2474,9 +2166,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТИНА 1. ЦІЛЬ ОРГАНІЗАЦІЇ</div>
     </div>
     <div class="lesson-block-content">
@@ -2506,24 +2196,22 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Проблема більшості бізнесів</div>
     </div>
     <div class="lesson-block-content">
         <p>90% власників не можуть чітко сформулювати ціль своєї компанії. Вони кажуть:</p>
         <div style="display: grid; gap: 8px; margin: 12px 0;">
             <div style="display: flex; gap: 10px; padding: 10px; background: #fef2f2; border-radius: 8px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="width: 20px; height: 20px; flex-shrink: 0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                
                 <span>"Хочу більше заробляти" — це не ціль, це бажання</span>
             </div>
             <div style="display: flex; gap: 10px; padding: 10px; background: #fef2f2; border-radius: 8px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="width: 20px; height: 20px; flex-shrink: 0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                
                 <span>"Хочу розвиватись" — це не ціль, це напрямок</span>
             </div>
             <div style="display: flex; gap: 10px; padding: 10px; background: #fef2f2; border-radius: 8px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="width: 20px; height: 20px; flex-shrink: 0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                
                 <span>"Хочу вільний час" — це не ціль, це мрія</span>
             </div>
         </div>
@@ -2535,9 +2223,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТИНА 2. ЗАДУМ ОРГАНІЗАЦІЇ</div>
     </div>
     <div class="lesson-block-content">
@@ -2573,9 +2259,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТИНА 3. ПРОДУКТ ОРГАНІЗАЦІЇ</div>
     </div>
     <div class="lesson-block-content">
@@ -2621,9 +2305,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Ланцюжок: Ціль → Задум → Продукт</div>
     </div>
     <div class="lesson-block-content">
@@ -2653,9 +2335,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТИНА 4. ФУНКЦІОНАЛЬНА СТРУКТУРА</div>
     </div>
     <div class="lesson-block-content">
@@ -2724,9 +2404,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Чому структура від функцій, а не від людей?</div>
     </div>
     <div class="lesson-block-content">
@@ -2759,9 +2437,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТИНА 5. Ієрархія: від Функції до Операції</div>
     </div>
     <div class="lesson-block-content">
@@ -2800,9 +2476,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТИНА 6. ФУНКЦІЇ vs РОЛІ</div>
     </div>
     <div class="lesson-block-content">
@@ -2846,9 +2520,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Функції ВЛАСНИКА vs функції ДИРЕКТОРА</div>
     </div>
     <div class="lesson-block-content">
@@ -2888,9 +2560,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТИНА 7. ПОЛІТИКИ — правила гри</div>
     </div>
     <div class="lesson-block-content">
@@ -2932,9 +2602,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ПІДСУМОК: Як все пов'язано</div>
     </div>
     <div class="lesson-block-content">
@@ -2989,9 +2657,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Що далі?</div>
     </div>
     <div class="lesson-block-content">
@@ -3006,9 +2672,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Цель урока</div>
     </div>
     <div class="lesson-block-content">
@@ -3023,9 +2687,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТЬ 1. ЦЕЛЬ ОРГАНИЗАЦИИ</div>
     </div>
     <div class="lesson-block-content">
@@ -3039,9 +2701,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТЬ 2. ЗАМЫСЕЛ ОРГАНИЗАЦИИ</div>
     </div>
     <div class="lesson-block-content">
@@ -3055,9 +2715,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТЬ 3. ПРОДУКТ ОРГАНИЗАЦИИ</div>
     </div>
     <div class="lesson-block-content">
@@ -3071,9 +2729,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТЬ 4. ФУНКЦИОНАЛЬНАЯ СТРУКТУРА</div>
     </div>
     <div class="lesson-block-content">
@@ -3088,9 +2744,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ЧАСТЬ 5. ФУНКЦИЯ vs РОЛЬ</div>
     </div>
     <div class="lesson-block-content">
@@ -3110,9 +2764,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ИТОГ: Как всё связано</div>
     </div>
     <div class="lesson-block-content">
@@ -3142,9 +2794,7 @@
                 lessonContent: `
 <div class="lesson-block intro" style="border-left: 4px solid #ef4444;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #fef2f2;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #ef4444;">Відео 1: Головна перешкода впровадження</div>
     </div>
     <div class="lesson-block-content">
@@ -3152,12 +2802,12 @@
         <p style="margin-bottom: 16px; color: #64748b;">Зрозумієте, чому команда чинить опір змінам. Навчитесь впроваджувати нове без втрати цінних людей.</p>
         <div style="margin-bottom: 16px;">
             <a href="https://youtu.be/bdbw9obbtMM" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                
                 Дивитись відео
             </a>
         </div>
         <div style="padding: 16px; background: #fef2f2; border-radius: 10px; border: 1px solid #fecaca;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #dc2626;"><svg style="display: inline-block; vertical-align: middle; width: 16px; height: 16px; margin-right: 6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>Після перегляду дайте відповідь:</p>
+            <p style="margin: 0 0 12px 0; font-weight: 600; color: #dc2626;">Після перегляду дайте відповідь:</p>
             <ol style="margin: 0 0 16px 0; padding-left: 20px; color: #991b1b;">
                 <li style="margin-bottom: 8px;">Напишіть <strong>три інсайти</strong> з відео, що вам запам'яталось</li>
                 <li>Яка <strong>основна перешкода</strong> у впровадженні інструментів управління?</li>
@@ -3169,9 +2819,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #3b82f6;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #eff6ff;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #3b82f6;">Відео 2: Політика компанії</div>
     </div>
     <div class="lesson-block-content">
@@ -3184,12 +2832,12 @@
         </ul>
         <div style="margin-bottom: 16px;">
             <a href="https://youtu.be/ZSFC1-PJvlk" target="_blank" class="action-btn secondary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                
                 Дивитись відео
             </a>
         </div>
         <div style="padding: 16px; background: #eff6ff; border-radius: 10px; border: 1px solid #bfdbfe;">
-            <p style="margin: 0 0 8px 0; font-weight: 600; color: #1d4ed8;"><svg style="display: inline-block; vertical-align: middle; width: 16px; height: 16px; margin-right: 6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>Завдання:</p>
+            <p style="margin: 0 0 8px 0; font-weight: 600; color: #1d4ed8;">Завдання:</p>
             <p style="margin: 0 0 12px 0; color: #1e40af;">Напишіть приклади політик, які потрібно вам впровадити в першу чергу</p>
             <textarea placeholder="Ваші приклади політик..." style="width: 100%; min-height: 120px; padding: 12px; border: 1px solid #bfdbfe; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
         </div>
@@ -3198,16 +2846,14 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #8b5cf6;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #f5f3ff;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #8b5cf6;">Відео 3: Технологія бізнесу</div>
     </div>
     <div class="lesson-block-content">
         <p style="margin-bottom: 16px; font-weight: 600;">Чому ваш бізнес не росте, поки процеси "в голові"</p>
         <div>
             <a href="https://youtu.be/qMS_Wb8JkUQ" target="_blank" class="action-btn outline" style="border-color: #8b5cf6; color: #8b5cf6;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                
                 Дивитись відео
             </a>
         </div>
@@ -3216,21 +2862,19 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #f59e0b;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #fffbeb;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #f59e0b;">Відео 4: Рівні мотивації</div>
     </div>
     <div class="lesson-block-content">
         <p style="margin-bottom: 16px; font-weight: 600;">Чому одні горять роботою, а іншим — байдуже</p>
         <div style="margin-bottom: 16px;">
             <a href="https://youtu.be/_BhPtBD_CIM" target="_blank" class="action-btn outline" style="border-color: #f59e0b; color: #f59e0b;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                
                 Дивитись відео
             </a>
         </div>
         <div style="padding: 16px; background: #fffbeb; border-radius: 10px; border: 1px solid #fde68a;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #92400e;"><svg style="display: inline-block; vertical-align: middle; width: 16px; height: 16px; margin-right: 6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>Завдання: Визначте рівні</p>
+            <p style="margin: 0 0 12px 0; font-weight: 600; color: #92400e;">Завдання: Визначте рівні</p>
             <p style="margin: 0 0 12px 0; color: #78350f;">Подумайте про своїх співробітників:</p>
             <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #78350f;">
                 <li style="margin-bottom: 6px;">Наведіть по <strong>два приклади</strong> для кожного рівня</li>
@@ -3244,21 +2888,19 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #ec4899;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #fdf2f8;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #ec4899;">Відео 5: Як підвищувати мотивацію</div>
     </div>
     <div class="lesson-block-content">
         <p style="margin-bottom: 16px; font-weight: 600;">Єдиний інструмент, який працює завжди</p>
         <div style="margin-bottom: 16px;">
             <a href="https://youtu.be/5i8Vqud6DLQ" target="_blank" class="action-btn outline" style="border-color: #ec4899; color: #ec4899;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                
                 Дивитись відео
             </a>
         </div>
         <div style="padding: 16px; background: #fdf2f8; border-radius: 10px; border: 1px solid #fbcfe8;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #9d174d;"><svg style="display: inline-block; vertical-align: middle; width: 16px; height: 16px; margin-right: 6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>Завдання 1: Коли востаннє?</p>
+            <p style="margin: 0 0 12px 0; font-weight: 600; color: #9d174d;">Завдання 1: Коли востаннє?</p>
             <p style="margin: 0 0 8px 0; color: #831843;">Згадайте: коли востаннє ви говорили команді про ідеологічні цілі компанії?</p>
             <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #831843; font-size: 14px;">
                 <li>В якій обстановці?</li>
@@ -3266,7 +2908,7 @@
                 <li>Хто отримав цю інформацію?</li>
             </ul>
             <textarea placeholder="Ваша відповідь на завдання 1..." style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid #fbcfe8; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white; margin-bottom: 16px;"></textarea>
-            <p style="margin: 0 0 8px 0; font-weight: 600; color: #9d174d;"><svg style="display: inline-block; vertical-align: middle; width: 16px; height: 16px; margin-right: 6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>Завдання 2: Який відсоток?</p>
+            <p style="margin: 0 0 8px 0; font-weight: 600; color: #9d174d;">Завдання 2: Який відсоток?</p>
             <p style="margin: 0 0 12px 0; color: #831843;">Для якого відсотка вашої команди реальне таке поняття, як ідеологічні цілі? Скільки людей дійсно бачать і поділяють цілі компанії?</p>
             <textarea placeholder="Ваша відповідь на завдання 2..." style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid #fbcfe8; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
         </div>
@@ -3275,9 +2917,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #06b6d4;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #ecfeff;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #06b6d4;">Відео 6: Адміністративна шкала</div>
     </div>
     <div class="lesson-block-content">
@@ -3290,12 +2930,12 @@
         </ul>
         <div style="margin-bottom: 16px;">
             <a href="https://youtu.be/mEEQfHFFMAg" target="_blank" class="action-btn outline" style="border-color: #06b6d4; color: #06b6d4;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                
                 Дивитись відео
             </a>
         </div>
         <div style="padding: 16px; background: #ecfeff; border-radius: 10px; border: 1px solid #a5f3fc;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #0e7490;"><svg style="display: inline-block; vertical-align: middle; width: 16px; height: 16px; margin-right: 6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>Практичне завдання: Зробіть прямо зараз</p>
+            <p style="margin: 0 0 12px 0; font-weight: 600; color: #0e7490;">Практичне завдання: Зробіть прямо зараз</p>
             <div style="display: grid; gap: 8px; color: #155e75; margin-bottom: 12px;">
                 <p style="margin: 0;"><strong>Крок 1:</strong> Запишіть мету вашого бізнесу (не «гроші»!)</p>
                 <p style="margin: 0;"><strong>Крок 2:</strong> Опишіть задум — як ви досягаєте мети</p>
@@ -3309,21 +2949,19 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #10b981;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #ecfdf5;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #10b981;">Відео 7: Мета та Задум</div>
     </div>
     <div class="lesson-block-content">
         <p style="margin-bottom: 16px; font-weight: 600;">Два головних елементи успішної компанії</p>
         <div style="margin-bottom: 16px;">
             <a href="https://youtu.be/XcdO_lVy5QY" target="_blank" class="action-btn outline" style="border-color: #10b981; color: #10b981;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                
                 Дивитись відео
             </a>
         </div>
         <div style="padding: 16px; background: #ecfdf5; border-radius: 10px; border: 1px solid #a7f3d0;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #047857;"><svg style="display: inline-block; vertical-align: middle; width: 16px; height: 16px; margin-right: 6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>Завдання: Сформулюйте мету і задум</p>
+            <p style="margin: 0 0 12px 0; font-weight: 600; color: #047857;">Завдання: Сформулюйте мету і задум</p>
             <p style="margin: 0 0 8px 0; color: #065f46;">Для вашої компанії:</p>
             <ol style="margin: 0 0 12px 0; padding-left: 20px; color: #065f46;">
                 <li style="margin-bottom: 6px;"><strong>Мета</strong> — для чого ви існуєте? Що зміниться у світі?</li>
@@ -3337,9 +2975,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #6366f1;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #eef2ff;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #6366f1;">Відео 8: Як донести цілі та задум</div>
     </div>
     <div class="lesson-block-content">
@@ -3352,7 +2988,7 @@
         </ul>
         <div style="margin-bottom: 16px;">
             <a href="https://youtu.be/VCWc0blqokU" target="_blank" class="action-btn outline" style="border-color: #6366f1; color: #6366f1;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                
                 Дивитись відео
             </a>
         </div>
@@ -3394,9 +3030,7 @@
 
 <div class="lesson-block success" style="border-left: 4px solid #22c55e;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #f0fdf4;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #22c55e;">Фінальне практичне завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -3432,7 +3066,7 @@
             </div>
         </div>
         <div style="margin-top: 16px; padding: 12px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0;">
-            <p style="margin: 0; font-size: 13px;"><strong><svg style="display: inline-block; vertical-align: middle; width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Час на впровадження:</strong> ~3 години (1 год підготовка + 2 год проведення презентації)</p>
+            <p style="margin: 0; font-size: 13px;"><strong>Час на впровадження:</strong> ~3 години (1 год підготовка + 2 год проведення презентації)</p>
         </div>
     </div>
 </div>
@@ -3441,9 +3075,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Суть задания</div>
     </div>
     <div class="lesson-block-content">
@@ -3457,9 +3089,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Пройдите AI-ассистента</div>
     </div>
     <div class="lesson-block-content">
@@ -3469,16 +3099,14 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Адаптируйте материалы</div>
     </div>
     <div class="lesson-block-content">
         <p>Используйте материалы из папки (презентация, тезисы, опросник) и адаптируйте под свой бизнес:</p>
         <div style="margin-top: 12px;">
             <a href="https://drive.google.com/drive/folders/1c--GPEXkBsH99Pt07LP5nGUed3Br0tid?usp=sharing" target="_blank" class="action-btn outline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                
                 Папка с материалами
             </a>
         </div>
@@ -3487,9 +3115,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Проведите презентацию</div>
     </div>
     <div class="lesson-block-content">
@@ -3501,9 +3127,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -3522,9 +3146,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -3557,9 +3179,7 @@
                 lessonContent: `
 <div class="lesson-block warning" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #fef3c7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #92400e;">Як проходити цей урок</div>
     </div>
     <div class="lesson-block-content">
@@ -3587,9 +3207,7 @@
 
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -3604,9 +3222,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Результат</div>
     </div>
     <div class="lesson-block-content">
@@ -3623,9 +3239,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Задание</div>
     </div>
     <div class="lesson-block-content">
@@ -3635,9 +3249,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Пройдите AI-ассистента</div>
     </div>
     <div class="lesson-block-content">
@@ -3647,16 +3259,14 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Адаптируйте материалы</div>
     </div>
     <div class="lesson-block-content">
         <p>Используйте материалы из папки и адаптируйте под свой бизнес:</p>
         <div style="margin-top: 12px;">
             <a href="https://drive.google.com/drive/folders/1Ct2GBeRfXxxrzg0oJ8TjxaUQ1N12rcKD?usp=sharing" target="_blank" class="action-btn outline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                
                 Папка с материалами
             </a>
         </div>
@@ -3665,9 +3275,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Проведите презентацию</div>
     </div>
     <div class="lesson-block-content">
@@ -3679,9 +3287,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -3699,9 +3305,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -3734,9 +3338,7 @@
                 lessonContent: `
 <div class="lesson-block warning" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #fef3c7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #92400e;">Як проходити цей урок</div>
     </div>
     <div class="lesson-block-content">
@@ -3764,9 +3366,7 @@
 
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -3781,9 +3381,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Результат</div>
     </div>
     <div class="lesson-block-content">
@@ -3801,9 +3399,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Задание</div>
     </div>
     <div class="lesson-block-content">
@@ -3813,9 +3409,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Пройдите AI-ассистента</div>
     </div>
     <div class="lesson-block-content">
@@ -3825,16 +3419,14 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Адаптируйте материалы</div>
     </div>
     <div class="lesson-block-content">
         <p>Используйте материалы из папки:</p>
         <div style="margin-top: 12px;">
             <a href="https://drive.google.com/drive/folders/1difvS_l0v_1RaOqte4zIvmdxR4jf-zEM?usp=sharing" target="_blank" class="action-btn outline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                
                 Папка с материалами
             </a>
         </div>
@@ -3843,9 +3435,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Проведите презентацию</div>
     </div>
     <div class="lesson-block-content">
@@ -3857,9 +3447,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -3877,9 +3465,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -3912,9 +3498,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Що таке статистика?</div>
     </div>
     <div class="lesson-block-content">
@@ -3945,9 +3529,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Навіщо рахувати цифри кожен тиждень?</div>
     </div>
     <div class="lesson-block-content">
@@ -3971,23 +3553,19 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #dcfce7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #16a34a;">КРОК 1. Розробіть статистики</div>
     </div>
     <div class="lesson-block-content">
         <p style="font-size: 14px; margin-bottom: 12px;">AI-асистент задасть вам питання і допоможе визначити <strong>які цифри відстежувати</strong> саме у вашому бізнесі.</p>
         
         <a href="https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 12px; text-decoration: none; color: white;">
-            <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 24px; height: 24px;"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-            </div>
+            
             <div style="flex: 1;">
                 <p style="margin: 0; font-weight: 600; font-size: 15px;">Натисніть сюди</p>
                 <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">AI-асистент розробки статистик</p>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 24px; height: 24px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            
         </a>
         
         <div style="margin-top: 12px; padding: 12px; background: #eff6ff; border-radius: 8px; font-size: 13px;">
@@ -3998,9 +3576,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #faf5ff;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #7c3aed;">КРОК 2. Отримайте доступ до платформи</div>
     </div>
     <div class="lesson-block-content">
@@ -4015,46 +3591,38 @@
         </div>
         
         <a href="https://t.me/AlexEduPro_bot?start=68dcfbcd093bcfb4230b182e" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: white; border-radius: 12px; border: 2px solid #8b5cf6; text-decoration: none; color: inherit;">
-            <div style="width: 48px; height: 48px; background: #8b5cf6; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 24px; height: 24px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
+            
             <div style="flex: 1;">
                 <p style="margin: 0; font-weight: 600; font-size: 15px;">Натисніть сюди</p>
                 <p style="margin: 4px 0 0 0; font-size: 13px; color: #6b7280;">Запросити доступ в Telegram</p>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="width: 24px; height: 24px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            
         </a>
     </div>
 </div>
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #fef3c7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #d97706;">КРОК 3. Внесіть дані в платформу</div>
     </div>
     <div class="lesson-block-content">
         <p style="font-size: 14px; margin-bottom: 12px;">Коли отримаєте доступ — зайдіть на платформу:</p>
         
         <a href="https://alextalko.com/kpi" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 12px; text-decoration: none; color: white;">
-            <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 24px; height: 24px;"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-            </div>
+            
             <div style="flex: 1;">
                 <p style="margin: 0; font-weight: 600; font-size: 15px;">TALKO Statistics</p>
                 <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">alextalko.com/kpi</p>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 24px; height: 24px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            
         </a>
     </div>
 </div>
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Як налаштувати платформу? (5 простих кроків)</div>
     </div>
     <div class="lesson-block-content">
@@ -4089,32 +3657,26 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Потрібна допомога? Є AI-асистент!</div>
     </div>
     <div class="lesson-block-content">
         <p style="font-size: 14px; margin-bottom: 12px;">На платформі є <strong>фіолетова кнопка</strong> — це AI-асистент, який допоможе налаштувати все правильно.</p>
         
         <a href="https://chatgpt.com/g/g-693bf67a13e48191940632f9d6bedb63-talko-statistics-ai-support" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: #8b5cf6; border-radius: 12px; text-decoration: none; color: white;">
-            <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 24px; height: 24px;"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg>
-            </div>
+            
             <div style="flex: 1;">
                 <p style="margin: 0; font-weight: 600; font-size: 15px;">AI-підтримка платформи</p>
                 <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">Відповість на будь-які питання</p>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 24px; height: 24px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            
         </a>
     </div>
 </div>
 
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Що зробити?</div>
     </div>
     <div class="lesson-block-content">
@@ -4143,9 +3705,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Что такое статистика?</div>
     </div>
     <div class="lesson-block-content">
@@ -4160,80 +3720,66 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Разработать статистики</div>
     </div>
     <div class="lesson-block-content">
         <p>AI-ассистент поможет определить ключевые показатели для вашего бизнеса.</p>
         
         <a href="https://chatgpt.com/g/g-6851a70e282481918ad5c2894ff30b13-statistics" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 14px; margin-top: 14px; background: white; border-radius: 10px; border: 2px solid #22c55e; text-decoration: none; color: inherit;">
-            <div style="width: 44px; height: 44px; background: #f0fdf4; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" style="width: 22px; height: 22px;"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-            </div>
+            
             <div style="flex: 1;">
                 <p style="margin: 0; font-weight: 600;">AI-ассистент разработки статистик</p>
                 <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Определит ключевые показатели</p>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" style="width: 20px; height: 20px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            
         </a>
     </div>
 </div>
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Получить доступ к платформе</div>
     </div>
     <div class="lesson-block-content">
         <p>Напишите в бот поддержки: название организации, ФИО, номер телефона.</p>
         
         <a href="https://t.me/AlexEduPro_bot?start=68dcfbcd093bcfb4230b182e" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 14px; margin-top: 14px; background: white; border-radius: 10px; border: 2px solid #8b5cf6; text-decoration: none; color: inherit;">
-            <div style="width: 44px; height: 44px; background: #faf5ff; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="width: 22px; height: 22px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
+            
             <div style="flex: 1;">
                 <p style="margin: 0; font-weight: 600;">Запросить доступ</p>
                 <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Telegram-бот поддержки</p>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="width: 20px; height: 20px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            
         </a>
     </div>
 </div>
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Внести данные в платформу</div>
     </div>
     <div class="lesson-block-content">
         <a href="https://alextalko.com/kpi" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 14px; margin: 14px 0; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 10px; text-decoration: none; color: white;">
-            <div style="width: 44px; height: 44px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 22px; height: 22px;"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-            </div>
+            
             <div style="flex: 1;">
                 <p style="margin: 0; font-weight: 600;">TALKO Statistics</p>
                 <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.9;">alextalko.com/kpi</p>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 20px; height: 20px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            
         </a>
         
         <p>AI-поддержка платформы (фиолетовая кнопка):</p>
         
         <a href="https://chatgpt.com/g/g-693bf67a13e48191940632f9d6bedb63-talko-statistics-ai-support" target="_blank" style="display: flex; align-items: center; gap: 12px; padding: 14px; margin-top: 10px; background: white; border-radius: 10px; border: 2px solid #8b5cf6; text-decoration: none; color: inherit;">
-            <div style="width: 44px; height: 44px; background: #8b5cf6; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width: 22px; height: 22px;"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg>
-            </div>
+            
             <div style="flex: 1;">
                 <p style="margin: 0; font-weight: 600;">AI-поддержка TALKO Statistics</p>
                 <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">Поможет настроить платформу</p>
             </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" style="width: 20px; height: 20px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            
         </a>
     </div>
 </div>
@@ -4257,16 +3803,14 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Ціль уроку</div>
     </div>
     <div class="lesson-block-content">
         <p>Створити візуальну функціональну структуру бізнесу на платформі <strong>TALKO Structure</strong> — основу системного управління.</p>
         <div style="margin-top: 12px;">
             <a href="https://alextalko.com/tms" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                
                 Відкрити платформу TALKO Structure
             </a>
         </div>
@@ -4275,9 +3819,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 1. Реєстрація та вхід</div>
     </div>
     <div class="lesson-block-content">
@@ -4290,9 +3832,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 2. Створення базової структури</div>
     </div>
     <div class="lesson-block-content">
@@ -4307,9 +3847,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 3. Створення підфункцій</div>
     </div>
     <div class="lesson-block-content">
@@ -4323,9 +3861,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 4. KPI / Показники</div>
     </div>
     <div class="lesson-block-content">
@@ -4340,9 +3876,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 5. Додавання співробітників</div>
     </div>
     <div class="lesson-block-content">
@@ -4356,9 +3890,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 6. Зв'язки між функціями</div>
     </div>
     <div class="lesson-block-content">
@@ -4372,9 +3904,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">КРОК 7. Експорт структури</div>
     </div>
     <div class="lesson-block-content">
@@ -4388,9 +3918,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Порада</div>
     </div>
     <div class="lesson-block-content">
@@ -4402,16 +3930,14 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Цель урока</div>
     </div>
     <div class="lesson-block-content">
         <p>Создать визуальную функциональную структуру бизнеса на платформе <strong>TALKO Structure</strong>.</p>
         <div style="margin-top: 12px;">
             <a href="https://alextalko.com/tms" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                
                 Открыть платформу TALKO Structure
             </a>
         </div>
@@ -4420,9 +3946,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 1. Регистрация и вход</div>
     </div>
     <div class="lesson-block-content">
@@ -4435,9 +3959,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 2. Создание базовой структуры</div>
     </div>
     <div class="lesson-block-content">
@@ -4452,9 +3974,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 3. Создание подфункций</div>
     </div>
     <div class="lesson-block-content">
@@ -4468,9 +3988,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 4. KPI / Показатели</div>
     </div>
     <div class="lesson-block-content">
@@ -4485,9 +4003,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 5. Добавление сотрудников</div>
     </div>
     <div class="lesson-block-content">
@@ -4501,9 +4017,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 6. Связи между функциями</div>
     </div>
     <div class="lesson-block-content">
@@ -4517,9 +4031,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title">ШАГ 7. Экспорт структуры</div>
     </div>
     <div class="lesson-block-content">
@@ -4533,9 +4045,7 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Совет</div>
     </div>
     <div class="lesson-block-content">
@@ -4547,9 +4057,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -4567,9 +4075,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -4601,9 +4107,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Вітаємо! Ви пройшли базову програму</div>
     </div>
     <div class="lesson-block-content">
@@ -4614,9 +4118,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
+        
         <div class="lesson-block-title">1. МАРКЕТИНГ І ПРОДАЖІ</div>
     </div>
     <div class="lesson-block-content">
@@ -4637,9 +4139,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
+        
         <div class="lesson-block-title">2. НАЙМ І ВВЕДЕННЯ В ПОСАДУ</div>
     </div>
     <div class="lesson-block-content">
@@ -4660,9 +4160,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">3. ДЕЛЕГУВАННЯ (ПЕРЕДАЧА ОБЛАСТІ)</div>
     </div>
     <div class="lesson-block-content">
@@ -4683,9 +4181,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
+        
         <div class="lesson-block-title">4. СИСТЕМА ФІНАНСІВ</div>
     </div>
     <div class="lesson-block-content">
@@ -4706,9 +4202,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Напишіть у підтримку</div>
     </div>
     <div class="lesson-block-content">
@@ -4716,7 +4210,7 @@
         
         <div style="margin: 16px 0;">
             <a href="https://t.me/AlexEduPro_bot?start=68f4ac956d0d3141970a83e8" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                
                 Написати в підтримку
             </a>
         </div>
@@ -4734,14 +4228,12 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Дякуємо за проходження програми!</div>
     </div>
     <div class="lesson-block-content">
         <p>Ви зробили важливий крок до системного бізнесу. Тепер головне — впроваджувати та не зупинятися.</p>
-        <p style="margin-top: 12px;"><strong>До зустрічі на наступному етапі! <svg style="display: inline-block; vertical-align: middle; width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></strong></p>
+        <p style="margin-top: 12px;"><strong>До зустрічі на наступному етапі! </strong></p>
     </div>
 </div>
                 `,
@@ -4749,9 +4241,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Поздравляем! Вы прошли базовую программу</div>
     </div>
     <div class="lesson-block-content">
@@ -4762,9 +4252,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
+        
         <div class="lesson-block-title">1. МАРКЕТИНГ И ПРОДАЖИ</div>
     </div>
     <div class="lesson-block-content">
@@ -4785,9 +4273,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
+        
         <div class="lesson-block-title">2. НАЙМ И ВВОД В ДОЛЖНОСТЬ</div>
     </div>
     <div class="lesson-block-content">
@@ -4808,9 +4294,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">3. ДЕЛЕГИРОВАНИЕ (ПЕРЕДАЧА ОБЛАСТИ)</div>
     </div>
     <div class="lesson-block-content">
@@ -4831,9 +4315,7 @@
 
 <div class="lesson-block step">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
+        
         <div class="lesson-block-title">4. СИСТЕМА ФИНАНСОВ</div>
     </div>
     <div class="lesson-block-content">
@@ -4854,9 +4336,7 @@
 
 <div class="lesson-block warning">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Напишите в поддержку</div>
     </div>
     <div class="lesson-block-content">
@@ -4864,7 +4344,7 @@
         
         <div style="margin: 16px 0;">
             <a href="https://t.me/AlexEduPro_bot?start=68f4ac956d0d3141970a83e8" target="_blank" class="action-btn primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                
                 Написать в поддержку
             </a>
         </div>
@@ -4882,14 +4362,12 @@
 
 <div class="lesson-block success">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Спасибо за прохождение программы!</div>
     </div>
     <div class="lesson-block-content">
         <p>Вы сделали важный шаг к системному бизнесу. Теперь главное — внедрять и не останавливаться.</p>
-        <p style="margin-top: 12px;"><strong>До встречи на следующем этапе! <svg style="display: inline-block; vertical-align: middle; width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></strong></p>
+        <p style="margin-top: 12px;"><strong>До встречи на следующем этапе! </strong></p>
     </div>
 </div>
                 `,
@@ -4912,9 +4390,7 @@
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Чому статистик недостатньо?</div>
     </div>
     <div class="lesson-block-content">
@@ -4931,9 +4407,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #8b5cf6;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #f3e8ff;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #8b5cf6;">Як працює AI-аналіз вузьких місць</div>
     </div>
     <div class="lesson-block-content">
@@ -4973,9 +4447,7 @@
 
 <div class="lesson-block warning" style="background: #f0fdf4; border-left: 4px solid #22c55e;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #dcfce7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #166534;">Результат AI-аналізу</div>
     </div>
     <div class="lesson-block-content">
@@ -4986,9 +4458,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #f59e0b;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #fef3c7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #92400e;">Як це використовувати?</div>
     </div>
     <div class="lesson-block-content">
@@ -5001,9 +4471,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #22c55e;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #dcfce7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #166534;">Як працювати з асистентом</div>
     </div>
     <div class="lesson-block-content">
@@ -5032,9 +4500,7 @@
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Почему статистик недостаточно?</div>
     </div>
     <div class="lesson-block-content">
@@ -5051,9 +4517,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #8b5cf6;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #f3e8ff;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #8b5cf6;">Как работает AI-анализ узких мест</div>
     </div>
     <div class="lesson-block-content">
@@ -5093,9 +4557,7 @@
 
 <div class="lesson-block warning" style="background: #f0fdf4; border-left: 4px solid #22c55e;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #dcfce7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #166534;">Результат AI-анализа</div>
     </div>
     <div class="lesson-block-content">
@@ -5106,9 +4568,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #f59e0b;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #fef3c7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #92400e;">Как это использовать?</div>
     </div>
     <div class="lesson-block-content">
@@ -5121,9 +4581,7 @@
 
 <div class="lesson-block step" style="border-left: 4px solid #22c55e;">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon" style="background: #dcfce7;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
+        
         <div class="lesson-block-title" style="color: #166534;">Как работать с ассистентом</div>
     </div>
     <div class="lesson-block-content">
@@ -5152,9 +4610,7 @@
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
@@ -5172,9 +4628,7 @@
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
-        <div class="lesson-block-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        </div>
+        
         <div class="lesson-block-title">Домашнее задание</div>
     </div>
     <div class="lesson-block-content">
@@ -5300,7 +4754,7 @@
                     <div class="learning-stat-label">${isRu ? 'Модулей' : 'Модулів'}</div>
                 </div>
                 <div class="learning-progress-bar-wrap">
-                    <div class="learning-progress-bar" style="width:${stats.pct}%"></div>
+                    
                 </div>
             </div>
 
