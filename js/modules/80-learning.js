@@ -9,119 +9,91 @@
                 id: 0,
                 title: "МАРШРУТ ПРОГРАМИ",
                 title_ru: "МАРШРУТ ПРОГРАММЫ",
-                subtitle: "AI-асистент розкаже що далі",
-                subtitle_ru: "AI-ассистент расскажет что дальше",
+                subtitle: "Ознайомтесь з маршрутом систематизації",
+                subtitle_ru: "Ознакомьтесь с маршрутом систематизации",
                 
                 videoLink: null,
                 materialsLink: null,
                 
-                lessonContent: `
-<div class="lesson-block intro">
+                lessonContent: `<div class="lesson-block intro">
     <div class="lesson-block-header">
-        
         <div class="lesson-block-title">Що це</div>
     </div>
     <div class="lesson-block-content">
-        <p>Це ваш <strong>маршрут програми</strong> — повна карта всіх етапів систематизації бізнесу.</p>
-        <p style="margin-top: 12px;">AI-асистент проведе вас через кожен крок і розкаже, що потрібно зробити далі.</p>
+        <p>Це ваш <strong>маршрут систематизації бізнесу</strong> — повна карта всіх 100 кроків від хаосу до автопілоту.</p>
+        <p>Перегляньте маршрут щоб розуміти загальну картину і знати що вас чекає на кожному етапі.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
         <div class="lesson-block-title">КРОК 1. Відкрийте маршрут</div>
     </div>
     <div class="lesson-block-content">
-        <p>Перегляньте повну карту програми — всі етапи та їх послідовність:</p>
-        <div style="margin-top: 12px;">
-            <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="cursor:pointer;" target="_blank" class="action-btn primary">
-                
-                Відкрити маршрут програми
-            </a>
-        </div>
+        <p>Перегляньте повну карту програми — всі фази та їх послідовність:</p>
+        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;background:#22c55e;color:white;border-radius:10px;font-weight:600;font-size:0.875rem;text-decoration:none;margin-top:0.5rem;">
+            Відкрити маршрут програми →
+        </a>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 2. Пройдіть AI-асистента</div>
+        <div class="lesson-block-title">Фази програми</div>
     </div>
     <div class="lesson-block-content">
-        <p>Асистент розкаже:</p>
         <ul>
-            <li>Які етапи вас чекають</li>
-            <li>Що потрібно зробити на кожному</li>
-            <li>Як підготуватись до наступних кроків</li>
+            <li><strong>Фаза 1:</strong> Архітектура бізнесу — фундамент системи</li>
+            <li><strong>Фаза 2:</strong> Найм і команда — люди в системі</li>
+            <li><strong>Фаза 3:</strong> Маркетинг і продажі — потік клієнтів</li>
+            <li><strong>Фаза 4:</strong> Фінанси і масштабування</li>
         </ul>
     </div>
 </div>
 
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Результат</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Ви отримаєте повне розуміння програми і будете точно знати, що робити далі на кожному етапі.</p>
-    </div>
-</div>
-                `,
+<div class="result-block">
+    <strong>Результат:</strong> Ви отримаєте повне розуміння програми і будете точно знати що робити далі на кожному етапі.
+</div>`,
 
-                lessonContent_ru: `
-<div class="lesson-block intro">
+                lessonContent_ru: `<div class="lesson-block intro">
     <div class="lesson-block-header">
-        
         <div class="lesson-block-title">Что это</div>
     </div>
     <div class="lesson-block-content">
-        <p>Это ваш <strong>маршрут программы</strong> — полная карта всех этапов систематизации бизнеса.</p>
-        <p style="margin-top: 12px;">AI-ассистент проведёт вас через каждый шаг и расскажет, что нужно делать дальше.</p>
+        <p>Это ваш <strong>маршрут систематизации бизнеса</strong> — полная карта всех 100 шагов от хаоса к автопилоту.</p>
+        <p>Просмотрите маршрут чтобы понять общую картину и знать что вас ждёт на каждом этапе.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
         <div class="lesson-block-title">ШАГ 1. Откройте маршрут</div>
     </div>
     <div class="lesson-block-content">
-        <p>Просмотрите полную карту программы:</p>
-        <div style="margin-top: 12px;">
-            <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="cursor:pointer;" target="_blank" class="action-btn primary">
-                
-                Открыть маршрут программы
-            </a>
-        </div>
+        <p>Просмотрите полную карту программы — все фазы и их последовательность:</p>
+        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;background:#22c55e;color:white;border-radius:10px;font-weight:600;font-size:0.875rem;text-decoration:none;margin-top:0.5rem;">
+            Открыть маршрут программы →
+        </a>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Пройдите AI-ассистента</div>
+        <div class="lesson-block-title">Фазы программы</div>
     </div>
     <div class="lesson-block-content">
-        <p>Ассистент расскажет:</p>
         <ul>
-            <li>Какие этапы вас ждут</li>
-            <li>Что нужно сделать на каждом</li>
-            <li>Как подготовиться к следующим шагам</li>
+            <li><strong>Фаза 1:</strong> Архитектура бизнеса — фундамент системы</li>
+            <li><strong>Фаза 2:</strong> Найм и команда — люди в системе</li>
+            <li><strong>Фаза 3:</strong> Маркетинг и продажи — поток клиентов</li>
+            <li><strong>Фаза 4:</strong> Финансы и масштабирование</li>
         </ul>
     </div>
 </div>
 
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Результат</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Вы получите полное понимание программы и будете точно знать, что делать дальше на каждом этапе.</p>
-    </div>
-</div>
-                `,
+<div class="result-block">
+    <strong>Результат:</strong> Вы получите полное понимание программы и будете точно знать что делать дальше на каждом этапе.
+</div>`,
                 
                 homework: `
 <div class="lesson-block homework">
@@ -5581,7 +5553,7 @@
                     План впровадження
                 </div>
                 <div class="table-actions">
-                    <button class="btn btn-outline-light" onclick="exportToExcel()">
+                    <button class="btn btn-outline-light" style="display:none">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         Експорт в Excel
                     </button>
