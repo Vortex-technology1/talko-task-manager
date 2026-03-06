@@ -148,7 +148,7 @@
             // Підсвічування dropdown-батьків по новій структурі меню
             var tasksTabs    = ['tasks','regular'];
             var analyticsTabs = ['statistics','analytics','ownerDashboard'];
-            var sysTabs      = ['functions','bizstructure','users','admin'];
+            var sysTabs      = ['functions','bizstructure','users','admin','learning'];
 
             var tasksBtn     = document.getElementById('tasksTabBtn');
             var analyticsBtn = document.getElementById('analyticsTabBtn');
@@ -198,6 +198,7 @@
                 case 'admin': renderAdminPanel(); break;
                 case 'bizstructure': if (typeof showBizStructureTab === 'function') showBizStructureTab(); break;
                 case 'ownerDashboard': if (typeof renderOwnerDashboard === 'function') renderOwnerDashboard(); break;
+                case 'learning': if (typeof window.initLearning === 'function') window.initLearning(); break;
             }
             
             updateOverdueBadges();

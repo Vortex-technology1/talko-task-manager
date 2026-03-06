@@ -146,6 +146,7 @@ document.addEventListener('mousedown', function(e) {
     <link rel="stylesheet" href="css/focus-mode.css">
     <link rel="stylesheet" href="css/undo-toast.css">
     <link rel="stylesheet" href="css/statistics.css">
+    <link rel="stylesheet" href="css/learning.css">
     </head>
 <body>
     <script>
@@ -517,6 +518,9 @@ document.addEventListener('mousedown', function(e) {
                         <button class="tab-btn _ntab" onclick="event.stopPropagation();switchTab('users');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="users" class="icon icon-sm"></i><span data-i18n="tabUsers">Співробітники</span>
                         </button>
+                        <button class="tab-btn _ntab" onclick="event.stopPropagation();switchTab('learning');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
+                            <i data-lucide="graduation-cap" class="icon icon-sm"></i><span>Навчання</span>
+                        </button>
                         <button class="tab-btn _ntab" onclick="event.stopPropagation();switchTab('admin');closeNavDropdowns();" id="adminTabBtn"
                             style="display:none;width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;background:#fee2e2;color:#dc2626;">
                             <i data-lucide="shield" class="icon icon-sm"></i><span data-i18n="tabAdmin">Адмін</span>
@@ -816,6 +820,9 @@ document.addEventListener('mousedown', function(e) {
             <!-- CONTROL -->
             <div id="coordinationTab" class="tab-content">
                 <div id="coordinationRoot"></div>
+            </div>
+            <div id="learningTab" class="tab-content">
+                <!-- rendered by 80-learning.js -->
             </div>
             <div id="controlTab" class="tab-content">
                 <!-- Owner Project Dashboard -->
@@ -2292,6 +2299,10 @@ document.addEventListener('mousedown', function(e) {
                 <i data-lucide="folder" class="icon"></i>
                 <span data-i18n="tabProjects">Проєкти</span>
             </button>
+            <button class="bottom-nav-btn" onclick="switchTab('learning')" data-tab="learning" role="tab" aria-label="Навчання">
+                <i data-lucide="graduation-cap" class="icon"></i>
+                <span>Навчання</span>
+            </button>
             <button class="bottom-nav-btn" onclick="openMobileMenu()" data-tab="more" role="tab" aria-label="Більше опцій">
                 <i data-lucide="more-horizontal" class="icon"></i>
                 <span data-i18n="more">Ще</span>
@@ -3407,5 +3418,6 @@ document.addEventListener('mousedown', function(e) {
         </div>
     </div>
 
+    <script src="js/modules/80-learning.js" defer></script>
 </body>
 </html>
