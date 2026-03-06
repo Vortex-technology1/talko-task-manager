@@ -1,8 +1,8 @@
 // =====================
         // FEAT-006: TIME TRACKING
         // =====================
-        let timeTrackerInterval = null;
-        let timeTrackerStart = null;
+        window.timeTrackerInterval = null;
+        window.timeTrackerStart = null;
         let timeTrackerTaskId = null;
         
         function toggleTimeTracker() {
@@ -13,14 +13,14 @@
                 stopTimeTracker();
             } else {
                 // СТАРТ
-                timeTrackerStart = Date.now();
+                window.timeTrackerStart = Date.now();
                 timeTrackerTaskId = editingId;
                 const btn = document.getElementById('timeTrackBtn');
                 btn.style.background = '#ef4444';
                 btn.innerHTML = '<i data-lucide="square" class="icon icon-sm"></i> <span>' + t('btnStop') + '</span>';
                 refreshIcons();
                 
-                timeTrackerInterval = setInterval(() => {
+                window.timeTrackerInterval = setInterval(() => {
                     if (!timeTrackerStart) return;
                     const elapsed = Math.floor((Date.now() - timeTrackerStart) / 1000);
                     const mins = Math.floor(elapsed / 60);
@@ -31,7 +31,7 @@
         }
         
         function stopTimeTracker() {
-            if (!timeTrackerStart || !timeTrackerTaskId) return;
+            if (!window.timeTrackerStart || !timeTrackerTaskId) return;
             
             const elapsed = Math.round((Date.now() - timeTrackerStart) / 60000); // хвилини
             clearInterval(timeTrackerInterval);

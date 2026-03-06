@@ -416,10 +416,10 @@
                     window.commentsUnsubscribe = null;
                 }
             } catch(e) {}
-            if (timeTrackerInterval) {
-                clearInterval(timeTrackerInterval);
-                timeTrackerInterval = null;
-                timeTrackerStart = null;
+            if (window.timeTrackerInterval) {
+                clearInterval(window.timeTrackerInterval);
+                window.timeTrackerInterval = null;
+                window.timeTrackerStart = null;
             }
             if (typeof notificationCheckInterval !== 'undefined' && notificationCheckInterval) {
                 clearInterval(notificationCheckInterval);
