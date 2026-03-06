@@ -103,6 +103,15 @@
         }
         
         function renderTasks() {
+        // O(1) subtask count — будуємо один раз на початку renderTasks
+        const subtaskCountMap = {};
+        if (Array.isArray(tasks)) {
+            tasks.forEach(function(task_) { // task_ щоб не shadow глобальну t() translation fn
+                if (task_.parentId) subtaskCountMap[task_.parentId] = (subtaskCountMap[task_.parentId] || 0) + 1;
+            });
+        }
+
+
             // If kanban view is active, render kanban instead
             if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') {
                 renderKanbanBoard(currentCalendarView);
@@ -114,6 +123,15 @@
             const ff = document.getElementById('functionFilter')?.value;
             const af = document.getElementById('assigneeFilter')?.value;
             const df = document.getElementById('dateFilter')?.value;
+            // P2 FIX: зберігаємо фільтри в sessionStorage
+            try {
+                const ffEl = document.getElementById('functionFilter');
+                sessionStorage.setItem('talko_filters', JSON.stringify({
+                    assignee: af || '',
+                    date: df || '',
+                    function: ffEl?.value || ''
+                }));
+            } catch(e) {}
             const tf = document.getElementById('taskTypeFilter')?.value;
             const searchQuery = (document.getElementById('taskSearchInput')?.value || '').toLowerCase().trim();
             
@@ -195,7 +213,18 @@
             document.getElementById('totalTimeInfo').innerHTML = totalTimeStr ? `<span class="total-time-badge">${totalTimeStr} (${f.filter(x=>x.status!=='done').length} ${t('tasks')})</span>` : '';
             
             if (f.length === 0) {
-                c.innerHTML = `<div class="empty-table"><h3>${t('noTasksFound')}</h3><p>${t('changeFilters')}</p></div>`;
+                const hasFilters = selectedStatuses.length > 0 || ff || af || df || tf || (document.getElementById('taskSearchInput')?.value || '').trim();
+                const isEmptyAll = tasks.filter(t => isTaskVisibleToUser(t)).length === 0;
+                if (isEmptyAll) {
+                    c.innerHTML = `<div class="empty-table" style="text-align:center;padding:3rem 1rem;">
+                        <div style="margin-bottom:0.75rem;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg></div>
+                        <h3 style="margin-bottom:0.5rem;">${t('noTasks') || 'Задач ще немає'}</h3>
+                        <p style="color:#6b7280;margin-bottom:1rem;">${t('createFirstTask') || 'Створіть першу задачу для команди'}</p>
+                        <button class="btn btn-success" onclick="openTaskModal()">+ ${t('newTask') || 'Нова задача'}</button>
+                    </div>`;
+                } else {
+                    c.innerHTML = `<div class="empty-table"><h3>${t('noTasksFound') || 'Нічого не знайдено'}</h3><p>${t('changeFilters') || 'Спробуйте змінити фільтри'}</p></div>`;
+                }
                 return;
             }
             
@@ -209,19 +238,29 @@
             const sortClass = (field) => taskSortField === field ? 'sortable sort-active' : 'sortable';
             
             let html = `
-                <table class="tasks-table" style="table-layout:fixed;">
+                <table class="tasks-table" style="table-layout:auto;width:100%;">
+                    <colgroup>
+                        <col class="col-title"    style="width:35%;"><!-- Назва завдання — завжди видима -->
+                        <col class="col-assignee" style="width:14%;"><!-- Виконавець -->
+                        <col class="col-creator"  style="width:13%;"><!-- Автор — ховається при звуженні -->
+                        <col class="col-deadline" style="width:12%;"><!-- Дедлайн -->
+                        <col class="col-status"   style="width:10%;"><!-- Статус -->
+                        <col class="col-function" style="width:11%;"><!-- Функція — ховається при звуженні -->
+                        <col class="col-actions"  style="width:5%;" ><!-- Дії -->
+                    </colgroup>
                     <thead>
                         <tr>
-                            <th class="${sortClass('title')}" onclick="sortTasksBy('title')">${t('task')}${sortIcon('title')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('title')}"    onclick="sortTasksBy('title')"   >${t('task')}${sortIcon('title')}<div class="col-resize-handle"></div></th>
                             <th class="${sortClass('assignee')}" onclick="sortTasksBy('assignee')">${t('assignee')}${sortIcon('assignee')}<div class="col-resize-handle"></div></th>
-                            <th class="${sortClass('creator')}" onclick="sortTasksBy('creator')">${t('createdBy')}${sortIcon('creator')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('creator')}  col-hide-md" onclick="sortTasksBy('creator')">${t('createdBy')}${sortIcon('creator')}<div class="col-resize-handle"></div></th>
                             <th class="${sortClass('deadline')}" onclick="sortTasksBy('deadline')">${t('deadline')}${sortIcon('deadline')}<div class="col-resize-handle"></div></th>
-                            <th class="${sortClass('status')}" onclick="sortTasksBy('status')">${t('status')}${sortIcon('status')}<div class="col-resize-handle"></div></th>
-                            <th class="${sortClass('function')}" onclick="sortTasksBy('function')">${t('type')}${sortIcon('function')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('status')}"   onclick="sortTasksBy('status')"  >${t('status')}${sortIcon('status')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('function')}  col-hide-sm" onclick="sortTasksBy('function')">${t('type')}${sortIcon('function')}<div class="col-resize-handle"></div></th>
                             <th>${t('actions')}</th>
                         </tr>
                     </thead>
                     <tbody>`;
+            
             
             f.forEach(task => {
                 const { date: taskDeadline, time: taskTime } = parseDeadline(task);
@@ -233,15 +272,16 @@
                 const processIndicator = task.processId ? `<i data-lucide="git-branch" class="icon icon-sm" style="color:#8b5cf6;" title="${t('taskFromProcess')}"></i> ` : '';
                 
                 html += `
-                    <tr>
+                    <tr style="${typeof isTaskSelected === 'function' && isTaskSelected(task.id) ? 'background:#f0fdf4;' : ''}">
+                        ${typeof isBulkModeActive === 'function' && isBulkModeActive() ? `<td style="width:36px;padding:0 0.5rem;"><input type="checkbox" data-bulk-id="${task.id}" ${typeof isTaskSelected === 'function' && isTaskSelected(task.id) ? 'checked' : ''} onclick="toggleBulkSelect('${task.id}',event)" style="width:16px;height:16px;accent-color:#22c55e;cursor:pointer;"></td>` : ''}
                         <td class="task-title-cell">
-                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}" onclick="openTaskModal('${escId(task.id)}')">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${processIndicator}${esc(task.title)}</span>
+                            <span class="task-title-text ${task.pinned ? 'pinned' : ''}" onclick="${typeof isBulkModeActive === 'function' && isBulkModeActive() ? `toggleBulkSelect('${escId(task.id)}',event)` : `openTaskModal('${escId(task.id)}')`}">${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c"></i> ' : ''}${processIndicator}${task.parentId ? '<span style="font-size:0.68rem;color:#6b7280;margin-right:3px;">↳</span>' : ''}${esc(task.title)}${!task.parentId && (subtaskCountMap[task.id] || 0) > 0 ? '<span style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;margin-left:4px;border:1px solid #bbf7d0;">⊕'+(subtaskCountMap[task.id] || 0)+'</span>' : ''}</span>
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
-                        <td>${esc(task.creatorName) || '-'}</td>
+                        <td class="col-hide-md">${esc(task.creatorName) || '-'}</td>
                         <td class="deadline-text ${deadlineClass}" onclick="inlineEditDeadline(event, '${escId(task.id)}', '${task.deadlineDate || ''}')" style="cursor:pointer;" title="${t('clickToChangeDate')}">${taskDeadline ? formatDateShort(taskDeadline) : '-'}${task.timeEnd ? ' ' + task.timeEnd : ''}</td>
                         <td><span class="status-badge status-${task.status}" style="cursor:pointer;" onclick="cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status}</span></td>
-                        <td>${esc(task.function) || '-'}</td>
+                        <td class="col-hide-sm">${esc(task.function) || '-'}</td>
                         <td>
                             <div class="action-btns">
                                 ${task.status === 'review' && task.creatorId === currentUser?.uid && task.assigneeId !== currentUser?.uid ? `
@@ -337,7 +377,7 @@
                         <div class="mobile-task-content" onclick="openTaskModal('${escId(task.id)}')">
                             <div class="mobile-task-header">
                                 <div class="mobile-task-title ${task.status === 'done' ? 'mobile-task-title-done' : ''}">
-                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c;width:14px;height:14px;"></i> ' : ''}${esc(task.title)}
+                                    ${task.pinned ? '<i data-lucide="pin" class="icon icon-sm" style="color:#e74c3c;width:14px;height:14px;"></i> ' : ''}${task.parentId ? '<span style="font-size:0.65rem;color:#9ca3af;">↳ </span>' : ''}${esc(task.title)}${!task.parentId && (subtaskCountMap[task.id] || 0) > 0 ? ' <span style="font-size:0.65rem;color:#16a34a;">⊕'+(subtaskCountMap[task.id] || 0)+'</span>' : ''}
                                 </div>
                                 ${(() => {
                                     if (!taskDeadline) return '';
@@ -419,7 +459,7 @@
                                 <button class="mobile-action-btn edit" onclick="openTaskModal('${escId(task.id)}')">
                                     <i data-lucide="pencil" class="icon icon-sm"></i>
                                 </button>
-                                <button class="mobile-action-btn delete" onclick="if(confirm(t('deleteConfirm')))deleteTask('${escId(task.id)}')">
+                                <button class="mobile-action-btn delete" onclick="showConfirmModal(t('deleteConfirm'),{danger:true}).then(ok=>ok&&deleteTask('${escId(task.id)}'))">
                                     <i data-lucide="trash-2" class="icon icon-sm"></i>
                                 </button>
                             </div>

@@ -20,12 +20,14 @@
         .btn .icon, .tab-btn .icon { margin-right: 6px; }
         .action-btn .icon { margin: 0; }
         
+        html {
+            overflow-x: auto;
+        }
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
             background: #f9fafb; 
             color: var(--dark);
             min-height: 100vh;
-            overflow-x: hidden;
             -webkit-text-size-adjust: 100%;
         }
         
@@ -38,21 +40,23 @@
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 10006;
+            min-width: 0;
         }
         
         .header-content { 
-            max-width: 1400px; 
-            margin: 0 auto; 
+            max-width: 100%;
+            margin: 0 auto;
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 0.5rem;
+            min-width: 0;
         }
         
-        .logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-        .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+        .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: nowrap; flex-shrink: 0; }
         .notification-bell:hover { background: #f3f4f6 !important; }
         
         .header-btn {
@@ -101,7 +105,7 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.18);
             min-width: 200px;
             padding: 6px;
-            z-index: 9999;
+            z-index: 10005;
             animation: hdrFadeIn 0.15s ease;
         }
         .hdr-dropdown-menu.show { display: block; }
@@ -149,7 +153,57 @@
         
         .mobile-logout-btn { display: none; }
         
-        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; overflow-x: hidden; }
+        /* ===== LAYOUT ===== */
+        /* Горизонтальний скрол блокується на рівні контейнера, не html/body — 
+           overflow на html/body ламає position:fixed для dropdown меню */
+
+
+
+        .container { 
+            max-width: 100%; 
+            width: 100%;
+            margin: 0 auto; 
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        /* Всі вкладки — повна ширина, без обмежень */
+        .tab-content {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Статистика: таблиця скролиться горизонтально всередині, але обгортка — на всю ширину */
+        #statisticsTab {
+            padding: 0 1rem 1.5rem;
+        }
+        #statisticsTab .stats-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            box-sizing: border-box;
+        }
+
+        /* Мій день: картки завдань на всю ширину */
+        #mydayTab {
+            width: 100%;
+        }
+
+        /* Tasks та Regular: таблиця без скролу, колонки стискаються */
+        #tasksTab,
+        #regularTab {
+            max-width: 100%;
+            width: 100%;
+        }
+        #tasksTab .table-container,
+        #regularTab .table-container {
+            overflow-x: auto;
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+        #tasksTab .tasks-table,
+        #regularTab .tasks-table {
+            min-width: unset;
+            width: 100%;
+        }
         
         .tab-navigation { 
             display: flex; 
@@ -158,6 +212,9 @@
             box-shadow: var(--shadow);
             overflow-x: auto;
             scrollbar-width: none;
+            position: sticky;
+            top: 0;
+            z-index: 200;
         }
         
         .tab-navigation::-webkit-scrollbar { display: none; }
@@ -181,3 +238,28 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
+
+
+
+/* ---- GLOBAL SEARCH ---- */
+#globalSearchInput::placeholder, #mobileSearchInput::placeholder { color: rgba(255,255,255,0.45); }
+#globalSearchResults, #mobileSearchResults {
+    scrollbar-width: thin;
+    scrollbar-color: #e5e7eb transparent;
+}
+#globalSearchResults::-webkit-scrollbar,
+#mobileSearchResults::-webkit-scrollbar { width: 5px; }
+#globalSearchResults::-webkit-scrollbar-track,
+#mobileSearchResults::-webkit-scrollbar-track { background: transparent; }
+#globalSearchResults::-webkit-scrollbar-thumb,
+#mobileSearchResults::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+mark { background: #fef08a; border-radius: 2px; padding: 0 1px; }
+
+@media (max-width: 767px) {
+    #globalSearchWrap { display: none !important; }
+    #mobileSearchBtn { display: flex !important; }
+}
+@media (min-width: 768px) {
+    #mobileSearchBtn { display: none !important; }
+    #mobileSearchPanel { display: none !important; }
+}

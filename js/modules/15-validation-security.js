@@ -74,13 +74,14 @@
         function canEditTask(task) {
             if (!currentUserData || !currentUser) return false;
             const role = currentUserData.role;
-            if (role === 'owner' || role === 'admin' || role === 'manager') return true;
+            if ((typeof hasPermission === 'function' && hasPermission('editAnyTask')) || role === 'owner' || role === 'admin' || role === 'manager') return true;
             const uid = currentUser.uid;
             return task.assigneeId === uid || task.creatorId === uid;
         }
         
         function isManagerOrAbove() {
             const role = currentUserData?.role;
+            if (typeof hasPermission === 'function') return hasPermission('deleteAnyTask') || role === 'owner' || role === 'superadmin';
             return role === 'owner' || role === 'admin' || role === 'manager' || role === 'superadmin';
         }
         
@@ -103,7 +104,7 @@
         
         function _buildVisibleSet() {
             if (!currentUserData || !currentUser) return null;
-            if (currentUserData.role === 'owner' || currentUserData.role === 'manager') return null;
+            if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'manager') return null;
             const uid = currentUser.uid;
             const s = new Set();
             for (const t of tasks) {
@@ -118,7 +119,7 @@
         
         function isTaskVisibleToUser(task) {
             if (!currentUserData || !currentUser) return true;
-            if (currentUserData.role === 'owner' || currentUserData.role === 'manager') return true;
+            if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'manager') return true;
             if (_visibleTaskIds === null) _visibleTaskIds = _buildVisibleSet();
             if (_visibleTaskIds === null) return true;
             return _visibleTaskIds.has(task.id);
@@ -189,6 +190,11 @@
             
             if (data.description && data.description.length > 10000) {
                 errors.push(t('descTooLong'));
+            }
+            
+            // P1 FIX: перевіряємо assigneeId
+            if (!data.assigneeId || data.assigneeId.trim().length === 0) {
+                errors.push(t('assigneeRequired') || 'Вкажіть виконавця');
             }
             
             return errors;
@@ -303,7 +309,7 @@
             undoTimeout = setTimeout(() => {
                 hideUndoToast();
                 deletedItemsStack = [];
-            }, 5000);
+            }, 8000); // P2 FIX: 5→8 сек
         }
         
         function hideUndoToast() {
@@ -375,6 +381,22 @@
                         if (!functions.find(f => f.id === item.id)) {
                             functions.unshift(item);
                         }
+                        // Відновлюємо ownerFunctionId в stages що були очищені при deleteFunction
+                        if (typeof window.projectStages !== 'undefined') {
+                            const stagesToRestore = window.projectStages.filter(s => s._prevOwnerFunctionId === item.id);
+                            if (stagesToRestore.length > 0) {
+                                const rb = db.batch();
+                                stagesToRestore.forEach(s => {
+                                    s.ownerFunctionId = item.id;
+                                    delete s._prevOwnerFunctionId;
+                                    rb.update(
+                                        db.collection('companies').doc(currentCompany).collection('projectStages').doc(s.id),
+                                        { ownerFunctionId: item.id }
+                                    );
+                                });
+                                await rb.commit();
+                            }
+                        }
                     }
                     restored++;
                 } catch (error) {
@@ -399,7 +421,7 @@
             affectedProjects.forEach(pid => autoUpdateProjectStatus(pid));
             
             if (failed > 0) {
-                alert(t('restorePartial').replace('{ok}', restored).replace('{total}', restored + failed).replace('{fail}', failed));
+                showAlertModal(t('restorePartial').replace('{ok}', restored).replace('{total}', restored + failed).replace('{fail}', failed));
             } else if (restored > 0) {
                 showToast(t('restoreSuccess').replace('{n}', restored), 'success');
             }
@@ -434,7 +456,27 @@
                     deleteCalendarEvent(taskCopy.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
-                await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
+                // P1 FIX: cascade — видаляємо підзавдання разом з батьком через batch
+                const _subtasksSnap = await db.collection('companies').doc(currentCompany)
+                    .collection('tasks').where('parentId', '==', id).get();
+                
+                if (_subtasksSnap.empty) {
+                    // Немає підзавдань — просте видалення
+                    await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).delete();
+                } else {
+                    // Є підзавдання — batch delete (атомарно)
+                    const _batch = db.batch();
+                    _subtasksSnap.docs.forEach(d => {
+                        _batch.delete(d.ref);
+                        pendingDeleteIds.add(d.id);
+                    });
+                    _batch.delete(db.collection('companies').doc(currentCompany).collection('tasks').doc(id));
+                    await _batch.commit();
+                    // Видаляємо підзавдання з локального масиву
+                    const _subtaskIds = _subtasksSnap.docs.map(d => d.id);
+                    tasks = tasks.filter(t => !_subtaskIds.includes(t.id));
+                    _subtaskIds.forEach(sid => pendingDeleteIds.delete(sid));
+                }
                 pendingDeleteIds.delete(id);
                 // Автостатус проєкту після видалення задачі
                 if (taskCopy.projectId) autoUpdateProjectStatus(taskCopy.projectId);
@@ -451,7 +493,7 @@
                 refreshCurrentView();
                 hideUndoToast();
                 console.error('deleteTask error:', error);
-                alert(t('error') + ': ' + error.message);
+                showAlertModal(t('error') + ': ' + error.message);
             }
         }
 

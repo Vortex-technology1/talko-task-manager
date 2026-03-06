@@ -2,6 +2,7 @@
         // DATA LOADING
         // =====================
         async function loadAllData() {
+
             if (!currentCompany) return;
             if (isLoading) {
                 console.log('loadAllData: already loading, skipping...');
@@ -33,8 +34,10 @@
                 let tasksPromise;
                 if (isEmployeeRole) {
                     tasksPromise = Promise.all([
-                        base.collection('tasks').where('assigneeId', '==', uid).orderBy('createdAt', 'desc').limit(1000).get(),
-                        base.collection('tasks').where('creatorId', '==', uid).orderBy('createdAt', 'desc').limit(500).get(),
+                        base.collection('tasks').where('assigneeId', '==', uid).orderBy('createdAt', 'desc').limit(1000).get()
+                            .catch(() => base.collection('tasks').where('assigneeId', '==', uid).limit(1000).get()),
+                        base.collection('tasks').where('creatorId', '==', uid).orderBy('createdAt', 'desc').limit(500).get()
+                            .catch(() => base.collection('tasks').where('creatorId', '==', uid).limit(500).get()),
                         base.collection('tasks').where('coExecutorIds', 'array-contains', uid).limit(500).get()
                             .catch(() => ({ docs: [] })), // Fallback if index missing
                         base.collection('tasks').where('observerIds', 'array-contains', uid).limit(500).get()
@@ -51,14 +54,34 @@
                 }
                 
                 const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap, projectsSnap] = await Promise.all([
-                    base.collection('users').get(),
-                    base.collection('functions').get(),
+                    base.collection('users').get()
+                        .catch(() => ({ docs: [] })),
+                    base.collection('functions').get()
+                        .catch(() => ({ docs: [] })),
                     tasksPromise,
-                    base.collection('regularTasks').get(),
-                    base.collection('processTemplates').orderBy('name').get(),
-                    processQuery.get(),
+                    base.collection('regularTasks').get()
+                        .catch(() => ({ docs: [] })),
+                    base.collection('processTemplates').orderBy('name').get()
+                        .catch(() => base.collection('processTemplates').get())
+                        .catch(() => ({ docs: [] })),
+                    processQuery.get()
+                        .catch(() => ({ docs: [] })),
                     base.collection('projects').orderBy('createdAt', 'desc').get()
+                        .catch(() => base.collection('projects').get())
+                        .catch(() => ({ docs: [] }))
                 ]);
+
+                // ─── FEATURE FLAGS ─────────────────────────────
+                try {
+                    const compDoc = await base.get();
+                    if (compDoc.exists) {
+                        window.companyFeatures = compDoc.data().features || {};
+                    }
+                } catch(e) {}
+                window.isFeatureEnabled = window.isFeatureEnabled || function(key) {
+                    return !window.companyFeatures || window.companyFeatures[key] !== false;
+                };
+
                 
                 // Попередження якщо досягнуто ліміт
                 const taskCount = tasksSnap._merged ? tasksSnap.size : tasksSnap.docs.length;
@@ -96,8 +119,13 @@
                 // Одноразова міграція: задачі з deadline (Timestamp) без deadlineDate
                 const migrateKey = `migrated_${currentCompany}`;
                 if (!localStorage.getItem(migrateKey)) {
-                    migrateDeadlineFields(base);
-                    localStorage.setItem(migrateKey, '1');
+                    try {
+                        await migrateDeadlineFields(base);
+                        localStorage.setItem(migrateKey, '1');
+                    } catch(e) {
+                        console.warn('[Migration] failed, will retry next load:', e);
+                        // НЕ ставимо localStorage — спробує ще раз
+                    }
                 }
                 
                 // Ще раз перевіряємо актуальність
@@ -112,9 +140,13 @@
                 // Render My Day (головний екран)
                 renderMyDay();
                 
+                // Show Statistics tab if allowed (after users loaded)
+                if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
+                
                 // Render based on current view
                 if (currentCalendarView === 'list') {
                     renderTasks();
+        if (typeof restoreActiveTimer === 'function') restoreActiveTimer();
                 } else if (currentCalendarView === 'kanban' || currentCalendarView === 'deadlines') {
                     renderKanbanBoard(currentCalendarView);
                 } else {
@@ -155,6 +187,11 @@
                     const visible = tasks.filter(t => isTaskVisibleToUser(t)).length;
                     console.log(`[Visibility] Employee "${currentUserData.name}" sees ${visible}/${tasks.length} tasks`);
                 }
+                // BUG #1 fix: ініціалізуємо систему ролей після завантаження даних компанії
+                if (typeof window.initRolesPermissions === 'function') {
+                    window.initRolesPermissions().catch(e => console.warn('[Roles] init error:', e));
+                }
+                document.dispatchEvent(new CustomEvent('companyLoaded'));
                 
             } catch (error) {
                 console.error('loadAllData error:', error);
@@ -163,8 +200,22 @@
                     isLoading = false;
                     // Check escalations after data is loaded
                     checkEscalations();
+                    if (typeof initUsersTabVisibility === 'function') initUsersTabVisibility();
+                if (typeof initOwnerReportOption === 'function') initOwnerReportOption();
+                if (typeof initOwnerDashboardVisibility === 'function') initOwnerDashboardVisibility();
                     // Load manual incidents for journal
                     loadManualIncidents().catch(() => {});
+                    // Load project-driven data (stages, materials, QC) for owner dashboard
+                    if (currentUserData?.role !== 'employee') {
+                        Promise.all([
+                            typeof window.loadProjectStages === 'function' ? window.loadProjectStages() : Promise.resolve([]),
+                            typeof window.loadProjectMaterials === 'function' ? window.loadProjectMaterials() : Promise.resolve([]),
+                            typeof window.loadQualityChecks === 'function' ? window.loadQualityChecks() : Promise.resolve([]),
+                            typeof window.loadWorkStandards === 'function' ? window.loadWorkStandards() : Promise.resolve([]),
+                        ]).then(() => {
+                            if (typeof window.renderOwnerProjectDashboard === 'function') window.renderOwnerProjectDashboard();
+                        }).catch(e => console.warn('[loadAllData] project extras:', e));
+                    }
                     // Show morning start modal (once per day)
                     setTimeout(() => { checkMorningStart(); startOnboarding(); saveDailySnapshot(); }, 1500);
                 }

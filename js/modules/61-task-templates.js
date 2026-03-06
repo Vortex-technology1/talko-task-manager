@@ -9,7 +9,10 @@
         const isOpen = menu.style.display !== 'none';
         menu.style.display = isOpen ? 'none' : 'block';
         if (!isOpen) {
-            document.addEventListener('click', closeAddTaskMenu, { once: true });
+            const closeOnce = () => closeAddTaskMenu();
+            document.addEventListener('click', closeOnce, { once: true });
+            document.addEventListener('scroll', closeOnce, { once: true, capture: true });
+            window.addEventListener('scroll', closeOnce, { once: true, capture: true });
         }
         refreshIcons();
     }
@@ -178,7 +181,7 @@
     
     async function saveTemplate(id) {
         const title = document.getElementById('tplTitle').value.trim();
-        if (!title) { alert(t('enterName')); return; }
+        if (!title) { showAlertModal(t('enterName')); return; }
         
         const data = {
             title,
@@ -206,12 +209,12 @@
             showToast(t('saved'), 'success', 2000);
         } catch(e) {
             console.error('saveTemplate:', e);
-            alert(t('error') + ': ' + e.message);
+            showAlertModal(t('error') + ': ' + e.message);
         }
     }
     
     async function deleteTemplate(id) {
-        if (!confirm(t('confirmDelete'))) return;
+        if (!await showConfirmModal(t('confirmDelete'), { danger: true })) return;
         try {
             await db.collection('companies').doc(currentCompany).collection('taskTemplates').doc(id).delete();
             taskTemplates = taskTemplates.filter(t => t.id !== id);

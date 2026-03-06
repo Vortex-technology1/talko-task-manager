@@ -50,6 +50,16 @@
             if (paf) paf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             const rta = document.getElementById('regularTaskAssignee');
             if (rta) rta.innerHTML = `<option value="">${t('fromFunctionAuto')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            // P2 FIX: відновлюємо збережені фільтри після заповнення selectів
+            try {
+                const saved = JSON.parse(sessionStorage.getItem('talko_filters') || '{}');
+                if (saved.assignee && af) af.value = saved.assignee;
+                if (saved.function && ff) ff.value = saved.function;
+                if (saved.date) {
+                    const dfEl = document.getElementById('dateFilter');
+                    if (dfEl) dfEl.value = saved.date;
+                }
+            } catch(e) {}
         }
 
         function formatDate(s) {
@@ -57,7 +67,61 @@
             return d.toLocaleDateString(getLocale(), { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
+        // More tabs dropdown
+        // Nav dropdowns (Система / Аналітика / Завдання)
+        function toggleNavDropdown(menuId, wrapperId, e) {
+            if (e) e.stopPropagation();
+            const menu = document.getElementById(menuId);
+            if (!menu) return;
+            const isOpen = menu.style.display === 'block';
+            closeNavDropdowns();
+            if (isOpen) return;
+            if (menu.parentElement !== document.body) {
+                document.body.appendChild(menu);
+            }
+            const btn = (e && e.currentTarget) || document.getElementById(wrapperId);
+            menu.style.display = 'block';
+            if (btn) {
+                const rect = btn.getBoundingClientRect();
+                const menuW = menu.offsetWidth || 180;
+                let left = rect.left;
+                if (left + menuW > window.innerWidth - 8) left = window.innerWidth - menuW - 8;
+                if (left < 8) left = 8;
+                menu.style.position = 'fixed';
+                menu.style.top = (rect.bottom + 4) + 'px';
+                menu.style.left = left + 'px';
+            }
+        }
+        function closeNavDropdowns() {
+            ['tasksTabMenu','sysTabMenu','analyticsTabMenu'].forEach(function(id) {
+                const m = document.getElementById(id);
+                if (m) m.style.display = 'none';
+            });
+        }
+        // Закриваємо при будь-якому кліку — якщо клік на toggle-кнопку, toggleNavDropdown сам відкриє
+        document.addEventListener('click', function(e) {
+            const toggleBtns = ['tasksTabBtn','analyticsTabBtn','sysTabBtn'];
+            const isToggle = toggleBtns.some(function(id) {
+                const el = document.getElementById(id);
+                return el && el.contains(e.target);
+            });
+            if (!isToggle) closeNavDropdowns();
+        });
+        // Закриваємо при скролі
+        document.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
+        window.addEventListener('scroll', function() { closeNavDropdowns(); }, true);
+        window.toggleNavDropdown = toggleNavDropdown;
+        window.closeNavDropdowns = closeNavDropdowns;
+
+        // Зворотна сумісність (старі виклики)
+        function toggleMoreTabs(e) { }
+        function closeMoreTabs() { closeNavDropdowns(); }
+        window.toggleMoreTabs = toggleMoreTabs;
+        window.closeMoreTabs = closeMoreTabs;
+
         function switchTab(tabName) {
+            // Закриваємо всі nav-dropdown при будь-якому переході
+            if (typeof closeNavDropdowns === 'function') closeNavDropdowns();
             // Reset project detail when leaving projects tab
             if (tabName !== 'projects' && openProjectId) {
                 openProjectId = null;
@@ -66,12 +130,50 @@
             document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
             var tabEl = document.getElementById(tabName + 'Tab'); if (tabEl) tabEl.classList.add('active');
-            document.querySelector(`[onclick="switchTab('${tabName}')"]`)?.classList.add('active');
+            // Find matching tab button (including inside dropdown)
+            // Find matching tab button — нормалізуємо пробіли в onclick для надійності
+            var matchBtn = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+            if (!matchBtn) {
+                // Шукаємо серед всіх tab-btn з closeMoreTabs (dropdown)
+                document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                    var oc = (btn.getAttribute('onclick') || '').replace(/\s/g, '');
+                    if (oc === `switchTab('${tabName}');closeMoreTabs();` || oc === `switchTab('${tabName}');closeMoreTabs()`) {
+                        matchBtn = btn;
+                    }
+                });
+            }
+            if (matchBtn) matchBtn.classList.add('active');
+            // Highlight "Ще" if secondary tab is active
+            // Підсвічуємо кнопку групи якщо активна її вкладка
+            // Підсвічування dropdown-батьків по новій структурі меню
+            var tasksTabs    = ['tasks','regular'];
+            var analyticsTabs = ['statistics','analytics','ownerDashboard'];
+            var sysTabs      = ['functions','bizstructure','users','admin'];
+
+            var tasksBtn     = document.getElementById('tasksTabBtn');
+            var analyticsBtn = document.getElementById('analyticsTabBtn');
+            var sysBtn       = document.getElementById('sysTabBtn');
+
+            if (tasksBtn)     tasksBtn.classList.toggle('active', tasksTabs.includes(tabName));
+            if (analyticsBtn) analyticsBtn.classList.toggle('active', analyticsTabs.includes(tabName));
+            if (sysBtn)       sysBtn.classList.toggle('active', sysTabs.includes(tabName));
+
+            // Пошук також через closeNavDropdowns (нова система)
+            if (!matchBtn) {
+                document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                    var oc = (btn.getAttribute('onclick') || '').replace(/\s/g,'');
+                    if (oc === 'switchTab(\'' + tabName + '\');closeNavDropdowns();') matchBtn = btn;
+                });
+            }
             
             // Update bottom nav
             document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.dataset.tab === tabName) btn.classList.add('active');
+                // Підсвічуємо "Ще" якщо активна secondary вкладка
+                if (btn.dataset.tab === 'more' && ['projects','processes','regular','users','functions','bizstructure','analytics','admin'].includes(tabName)) {
+                    btn.classList.add('active');
+                }
             });
             
             // Update FAB
@@ -92,8 +194,10 @@
                 case 'functions': renderFunctions(); if (currentFunctionsView === 'structure') renderFunctionsStructure(); break;
                 case 'users': renderUsers(); break;
                 case 'analytics': renderAnalytics(); break;
+                case 'statistics': renderStatistics(); break;
                 case 'admin': renderAdminPanel(); break;
                 case 'bizstructure': if (typeof showBizStructureTab === 'function') showBizStructureTab(); break;
+                case 'ownerDashboard': if (typeof renderOwnerDashboard === 'function') renderOwnerDashboard(); break;
             }
             
             updateOverdueBadges();
@@ -156,18 +260,39 @@
             const fab = document.getElementById('fabAdd');
             if (!fab) return;
             
-            if (tabName === 'tasks') {
+            if (tabName === 'tasks' || tabName === 'myday') {
                 fab.style.display = 'flex';
+                fab.setAttribute('aria-label', 'Додати задачу');
+                fab.setAttribute('title', 'Додати задачу');
                 fab.onclick = () => openTaskModal();
             } else if (tabName === 'regular') {
                 fab.style.display = 'flex';
+                fab.setAttribute('aria-label', 'Додати регулярну задачу');
+                fab.setAttribute('title', 'Додати регулярну задачу');
                 fab.onclick = () => openRegularTaskModal();
             } else if (tabName === 'projects') {
                 fab.style.display = 'flex';
+                fab.setAttribute('aria-label', 'Новий проєкт');
+                fab.setAttribute('title', 'Новий проєкт');
                 fab.onclick = () => openProjectModal();
             } else {
                 fab.style.display = 'none';
             }
+        }
+        
+        // Дефолтний FAB обробник при завантаженні (до першого switchTab)
+        (function initFabDefault() {
+            const fab = document.getElementById('fabAdd');
+            if (fab && !fab.onclick) fab.onclick = () => openTaskModal();
+        })();
+
+        function toggleTaskAdvanced() {
+            const panel = document.getElementById('taskAdvancedPanel');
+            const arrow = document.getElementById('taskAdvancedArrow');
+            if (!panel) return;
+            const isOpen = panel.style.display !== 'none';
+            panel.style.display = isOpen ? 'none' : 'contents';
+            if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
         }
         
         function renderAnalytics() {
@@ -414,11 +539,19 @@
             </div>`;
         }
 
+        // Модалки що мають власний editingId/editingUserId — скидаємо тільки їх
+        const PRIMARY_MODALS = ['taskModal', 'userModal', 'regularTaskModal'];
+
         function closeModal(id) {
             const el = document.getElementById(id);
             if (el) el.style.display = 'none';
-            editingId = null;
-            editingUserId = null;
+            // Скидаємо editing state тільки якщо закривається primary модалка.
+            // Вторинні модалки (materialQuickModal, stageModal, qcModal тощо)
+            // не повинні скидати editingId — інакше відкрита задача губиться.
+            if (PRIMARY_MODALS.includes(id)) {
+                editingId = null;
+                editingUserId = null;
+            }
             checkModalState();
         }
         
@@ -475,6 +608,12 @@
             ['functionModal', 'inviteModal', 'userModal', 'profileModal', 'processTemplatesModal', 'viewProcessModal', 'mergeFunctionsModal'].forEach(id => {
                 if (e.target === document.getElementById(id)) closeModal(id);
             });
+            // P2 FIX: taskModal закривається по overlay тільки якщо title порожній (новий)
+            const taskModal = document.getElementById('taskModal');
+            if (e.target === taskModal) {
+                const titleVal = document.getElementById('taskTitle')?.value?.trim();
+                if (!titleVal && !window.currentEditingId) closeModal('taskModal');
+            }
         }
 
         // Init language on load
@@ -488,7 +627,7 @@
             setLanguage(currentLang);
             // Ініціалізуємо Lucide іконки
             if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
+                refreshIcons();
             }
         });
         
@@ -499,19 +638,46 @@
             if (_refreshIconsTimer) return;
             _refreshIconsTimer = requestAnimationFrame(() => {
                 _refreshIconsTimer = null;
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
+                try {
+                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                        lucide.createIcons();
+                    } else {
+                        // lucide ще не готовий — retry через 300ms
+                        setTimeout(function() {
+                            if (typeof window._initLucide === 'function') window._initLucide();
+                            else if (typeof lucide !== 'undefined') lucide.createIcons();
+                        }, 300);
+                    }
+                } catch(e) {}
             });
         }
         
         // Примусовий refresh (для модалок які потребують іконок зразу)
         function refreshIconsNow() {
             if (_refreshIconsTimer) {
-                clearTimeout(_refreshIconsTimer);
+                cancelAnimationFrame(_refreshIconsTimer);
                 _refreshIconsTimer = null;
             }
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
+            try {
+                if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                    lucide.createIcons();
+                }
+            } catch(e) {}
+        // =====================
+        // AUTH SAFETY HELPERS
+        // =====================
+        // Безпечний доступ до currentUser.uid — null якщо не авторизований
+        window.getCurrentUid = function() {
+            return (typeof currentUser !== 'undefined' && currentUser) ? currentUser.uid : null;
+        };
+        
+        // Guard для функцій що потребують auth — повертає true якщо можна виконувати
+        window.requireAuth = function(silent) {
+            if (!currentUser || !currentCompany) {
+                if (!silent) console.warn('[AUTH] Action blocked: user not authenticated');
+                return false;
             }
+            return true;
+        };
+
         }

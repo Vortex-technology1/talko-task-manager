@@ -180,10 +180,9 @@
                         e.preventDefault();
                         openTaskModal();
                         break;
-                    case 'k': // Пошук
-                        e.preventDefault();
-                        const searchInp = document.getElementById('taskSearchInput');
-                        if (searchInp) { switchTab('tasks'); setTimeout(() => searchInp.focus(), 100); }
+                    case 'k': // P1 FIX: Ctrl+K обробляє module 72 (global search)
+                        // НЕ обробляємо тут — module 72 має пріоритет
+                        // Видалено: switchTab + taskSearchInput focus (конфлікт)
                         break;
                     case 's': // Зберегти (prevent default browser save)
                         e.preventDefault();
@@ -218,14 +217,20 @@
                     if (si) { switchTab('tasks'); setTimeout(() => si.focus(), 100); }
                     break;
                 case '?':
-                    // Показати shortcuts help
-                    alert(`Гарячі клавіші:
-                    
-Escape - закрити модалку
-Ctrl+N - нове завдання
-Ctrl+K або / - пошук завдань
-1-5 - переключити вкладки
-? - показати цю довідку`);
+                    // P2 FIX: кастомний modal замість alert
+                    e.preventDefault();
+                    if (typeof showAlertModal === 'function') {
+                        showAlertModal(
+                            '<b>⌨️ Гарячі клавіші</b><br><br>' +
+                            '<b>Ctrl+K</b> — глобальний пошук<br>' +
+                            '<b>Ctrl+N</b> — нове завдання<br>' +
+                            '<b>Ctrl+S</b> — заблоковано (збереження форми)<br>' +
+                            '<b>1–5</b> — перемикання вкладок<br>' +
+                            '<b>Escape</b> — закрити модалку<br>' +
+                            '<b>/</b> — пошук у списку завдань<br>' +
+                            '<b>?</b> — ця довідка'
+                        );
+                    }
                     break;
             }
         });

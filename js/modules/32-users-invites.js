@@ -10,8 +10,16 @@
         async function sendInvite(e) {
             e.preventDefault();
             if (currentUserData?.role === 'employee') { showToast(t('noPermissionTask'), 'error'); return; }
-            const email = document.getElementById('inviteEmail').value.trim().toLowerCase();
-            const role = document.getElementById('inviteRole').value;
+            // BUG #3 fix: визначаємо активну форму (desktop або mobile)
+            const emailDesktop = document.getElementById('inviteEmailDesktop');
+            const emailMobile = document.getElementById('inviteEmailMobile');
+            const roleDesktop = document.getElementById('inviteRoleDesktop');
+            const roleMobile = document.getElementById('inviteRoleMobile');
+            // Беремо з тієї форми яка видима і заповнена
+            const activeEmail = (emailDesktop?.offsetParent !== null ? emailDesktop : emailMobile);
+            const activeRole = (roleDesktop?.offsetParent !== null ? roleDesktop : roleMobile);
+            const email = (activeEmail?.value || '').trim().toLowerCase();
+            const role = activeRole?.value || 'employee';
             
             try {
                 const inviteRef = await db.collection('invites').add({
@@ -20,6 +28,7 @@
                     role: role,
                     invitedBy: currentUser.uid,
                     accepted: false,
+                    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
@@ -28,9 +37,9 @@
                 document.getElementById('inviteLinkText').value = link;
                 document.getElementById('inviteLink').style.display = 'block';
                 
-                alert(t('inviteCreated'));
+                showAlertModal(t('inviteCreated'));
             } catch (e) {
-                alert(t('error') + ': ' + e.message);
+                showAlertModal(t('error') + ': ' + e.message);
             }
         }
 
@@ -38,32 +47,33 @@
             const input = document.getElementById('inviteLinkText');
             input.select();
             document.execCommand('copy');
-            alert(t('copied'));
+            showAlertModal(t('copied'));
         }
 
         async function deleteUser(id) {
             const u = users.find(x => x.id === id);
-            if (u?.role === 'owner') { alert(t('cannotDeleteOwner')); return; }
-            if (!confirm(t('deleteConfirm'))) return;
+            if (u?.role === 'owner') { showAlertModal(t('cannotDeleteOwner')); return; }
+            if (!await showConfirmModal(t('deleteConfirm'), { danger: true })) return;
             
             const base = db.collection('companies').doc(currentCompany);
-            await base.collection('users').doc(id).delete();
             
-            // Cascade cleanup (batch for atomicity)
+            // Cascade cleanup (chunked batch для атомарності + Firestore limit 500)
+            // ВАЖЛИВО: спочатку cascade, потім user.delete()
+            // Якщо cascade впаде — юзер залишається, задачі не залишаться orphaned
             try {
-                const cascadeBatch = db.batch();
-                let batchOps = 0;
+                const base2 = db.collection('companies').doc(currentCompany);
+                const allOps = []; // { ref, type: 'update'|'delete', data? }
                 
                 functions.forEach(f => {
                     if (f.assigneeIds?.includes(id) || f.headId === id) {
                         const upd = {};
                         if (f.assigneeIds?.includes(id)) { f.assigneeIds = f.assigneeIds.filter(uid => uid !== id); upd.assigneeIds = f.assigneeIds; }
                         if (f.headId === id) { f.headId = f.assigneeIds?.[0] || ''; upd.headId = f.headId; }
-                        cascadeBatch.update(base.collection('functions').doc(f.id), upd);
-                        batchOps++;
+                        allOps.push({ type: 'update', ref: base2.collection('functions').doc(f.id), data: upd });
                     }
                 });
-                // FIX: Reassign tasks assigned to deleted user → fallback assignee
+                
+                // Fallback assignee для задач видаленого юзера
                 const fallbackAssignee = users.find(u => u.role === 'owner' && u.id !== id) 
                     || users.find(u => u.role === 'manager' && u.id !== id);
                 const fallbackId = fallbackAssignee?.id || '';
@@ -71,7 +81,6 @@
                 
                 tasks.forEach(tk => {
                     const upd = {}; let need = false;
-                    // Reassign primary assignee
                     if (tk.assigneeId === id) {
                         tk.assigneeId = fallbackId;
                         tk.assigneeName = fallbackName;
@@ -79,37 +88,35 @@
                         upd.assigneeName = fallbackName;
                         need = true;
                     }
-                    // Clean up array fields
                     ['coExecutorIds','observerIds','notifyOnComplete'].forEach(fld => {
                         if (tk[fld]?.includes(id)) { tk[fld] = tk[fld].filter(uid => uid !== id); upd[fld] = tk[fld]; need = true; }
                     });
-                    if (need) { cascadeBatch.update(base.collection('tasks').doc(tk.id), upd); batchOps++; }
+                    if (need) allOps.push({ type: 'update', ref: base2.collection('tasks').doc(tk.id), data: upd });
                 });
                 
-                // FIX: Firestore batch limit = 500 ops — use chunked writes
-                if (batchOps > 0) {
-                    if (batchOps <= 450) {
-                        await cascadeBatch.commit();
-                    } else {
-                        // Rebuild in chunks of 450
-                        let chunkBatch = db.batch(); let chunkCount = 0;
-                        const allUpdates = [];
-                        tasks.forEach(tk => {
-                            const upd = {};
-                            if (tk.assigneeId === fallbackId && tk._justReassigned) { upd.assigneeId = fallbackId; upd.assigneeName = fallbackName; }
-                            ['coExecutorIds','observerIds','notifyOnComplete'].forEach(fld => {
-                                if (tk[fld] && !tk[fld].includes(id) && tk['_cleaned_' + fld]) upd[fld] = tk[fld];
-                            });
-                            if (Object.keys(upd).length > 0) allUpdates.push({ id: tk.id, upd });
-                        });
-                        for (const item of allUpdates) {
-                            chunkBatch.update(base.collection('tasks').doc(item.id), item.upd);
-                            if (++chunkCount >= 450) { await chunkBatch.commit(); chunkBatch = db.batch(); chunkCount = 0; }
-                        }
-                        if (chunkCount > 0) await chunkBatch.commit();
+                // Chunked commits — Firestore limit 500 ops/batch
+                const CHUNK = 450;
+                for (let i = 0; i < allOps.length; i += CHUNK) {
+                    const batch = db.batch();
+                    allOps.slice(i, i + CHUNK).forEach(op => {
+                        if (op.type === 'delete') batch.delete(op.ref);
+                        else batch.update(op.ref, op.data);
+                    });
+                    try {
+                    await batch.commit();
+                    } catch(err) {
+                        console.error('[Batch] commit failed:', err);
+                        showToast && showToast('Помилка збереження. Спробуйте ще раз.', 'error');
                     }
                 }
-            } catch (e) { console.warn('[deleteUser] cascade:', e); }
+            } catch (e) {
+                console.error('[deleteUser] cascade failed:', e);
+                showToast('Помилка при очищенні задач: ' + e.message, 'error');
+                return; // cascade впала — НЕ видаляємо юзера, дані цілі
+            }
+            
+            // Видаляємо юзера тільки після успішного cascade
+            await base.collection('users').doc(id).delete();
             
             const idx = users.findIndex(x => x.id === id);
             if (idx >= 0) users.splice(idx, 1);
@@ -120,16 +127,30 @@
         function renderUsers() {
             const c = document.getElementById('usersContainer');
             if (users.length === 0) {
-                c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>${t('noUsers')}</h3></div>`;
+                c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:3rem 1rem;">
+                    <div style="margin-bottom:0.75rem;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                    <h3 style="margin-bottom:0.5rem;">${t('noUsers') || 'Немає користувачів'}</h3>
+                    <p style="color:#6b7280;margin-bottom:1rem;">${t('inviteFirst') || 'Запросіть першого співробітника в команду'}</p>
+                    <button class="btn btn-success" onclick="openInviteModal()">
+                        <i data-lucide="user-plus" class="icon"></i> ${t('invite') || 'Запросити'}
+                    </button>
+                </div>`;
+                if (typeof lucide !== 'undefined') refreshIcons();
                 return;
             }
             
-            const canEdit = currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
+            const canEdit = (typeof hasPermission === 'function' ? hasPermission('changeRoles') : false) || currentUserData?.role === 'owner' || currentUserData?.role === 'manager';
+            const canViewEmails = (typeof hasPermission === 'function') ? hasPermission('viewColleagueEmails') : (currentUserData?.role !== 'employee');
+            const canViewTeam = (typeof hasPermission === 'function') ? hasPermission('viewTeamList') : true;
+            const canEditCards = (typeof hasPermission === 'function') ? hasPermission('editUserCards') : canEdit;
+
+            // Якщо немає дозволу бачити список — показуємо тільки себе
+            const visibleUsers = canViewTeam ? users : users.filter(u => u.id === currentUser?.uid);
             const todayStr = getLocalDateStr(new Date());
             const shortDays = getDayNamesShort();
             const jsDayToIdx = {1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6};
 
-            c.innerHTML = users.map(u => {
+            c.innerHTML = visibleUsers.map(u => {
                 const userFunctions = functions.filter(f => f.assigneeIds?.includes(u.id));
                 const isOwner = u.role === 'owner';
                 
@@ -140,7 +161,7 @@
                 const newTasks = userTasks.filter(tk => tk.status === 'new');
                 const inProgress = userTasks.filter(tk => tk.status === 'progress');
                 const onReview = userTasks.filter(tk => tk.status === 'review');
-                const overdue = activeTasks.filter(tk => tk.deadlineDate && t.deadlineDate < todayStr);
+                const overdue = activeTasks.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr);
                 const returned = userTasks.filter(tk => tk.reviewRejectedAt);
                 
                 // Autonomy index: % done without returns (from all done tasks)
@@ -275,7 +296,7 @@
                     <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
                         <div style="flex:1;">
                             <div class="user-name" style="margin-bottom:2px;">${esc(u.name || u.email)}</div>
-                            <div style="font-size:0.75rem;color:#6b7280;">${esc(u.email)}${u.position ? ` · ${esc(u.position)}` : ''}</div>
+                            <div style="font-size:0.75rem;color:#6b7280;">${canViewEmails ? esc(u.email) : '●●●@●●●●●●'}${u.position ? ' · ' + esc(u.position) : ''}</div>
                         </div>
                         <span class="role-badge ${u.role}" style="flex-shrink:0;">${getRoleText(u.role)}</span>
                     </div>
@@ -294,7 +315,8 @@
                             ${returned.length > 0 ? `<span style="color:#f59e0b;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>${returned.length}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.25rem;align-items:center;" onclick="event.stopPropagation();">
-                            ${canEdit && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
+                            ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserPermissionsModal('${u.id}')" title="Дозволи" style="background:#f0f9ff;color:#0369a1;"><i data-lucide="key" class="icon icon-sm"></i></button>` : ''}
+                            ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
                             ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : ''}
                             <i data-lucide="chevron-down" class="icon icon-sm" style="color:#d1d5db;" id="userToggle_${u.id}"></i>
                         </div>
@@ -422,6 +444,89 @@
                 renderFunctions();
                 updateSelects();
             } catch (e) {
-                alert(t('error') + ': ' + e.message);
+                showAlertModal(t('error') + ': ' + e.message);
             }
         }
+
+        // ---- USER PERMISSIONS MODAL ----
+        window.openUserPermissionsModal = function(userId) {
+            const u = users.find(x => x.id === userId);
+            if (!u) return;
+
+            const PERMISSION_GROUPS = [
+                { group: 'Статистика', items: [
+                    { key: 'viewStats',        label: 'Переглядати статистику' },
+                    { key: 'viewAllMetrics',   label: 'Бачити всі метрики' },
+                    { key: 'editMetrics',      label: 'Редагувати метрики' },
+                    { key: 'deleteMetricRows', label: 'Видаляти рядки' },
+                ]},
+                { group: 'Завдання', items: [
+                    { key: 'viewAllTasks',  label: 'Бачити всі завдання' },
+                    { key: 'assignTasks',   label: 'Призначати виконавців' },
+                    { key: 'editAnyTask',   label: 'Редагувати будь-яке завдання' },
+                    { key: 'deleteAnyTask', label: 'Видаляти завдання' },
+                ]},
+                { group: 'Контроль', items: [
+                    { key: 'viewControl',    label: 'Панель контролю' },
+                    { key: 'viewAiAnalysis', label: 'AI Аналіз' },
+                ]},
+                { group: 'Команда', items: [
+                    { key: 'inviteUsers', label: 'Запрошувати співробітників' },
+                    { key: 'changeRoles', label: 'Змінювати ролі' },
+                ]},
+            ];
+
+            const custom = u.customPermissions || {};
+            const rolePerms = (typeof DEFAULT_ROLE_PERMISSIONS !== 'undefined' && DEFAULT_ROLE_PERMISSIONS[u.role]) || {};
+
+            let html = `<div style="max-height:70vh;overflow-y:auto;padding:0.25rem;">
+                <p style="font-size:0.82rem;color:#6b7280;margin:0 0 1rem;">
+                    Базові права від ролі <strong>${u.role}</strong>. Перемикачі нижче — індивідуальні override.
+                </p>`;
+
+            PERMISSION_GROUPS.forEach(group => {
+                html += `<div style="margin-bottom:1rem;">
+                    <div style="font-size:0.75rem;font-weight:700;color:#16a34a;text-transform:uppercase;padding:0.4rem 0;border-bottom:1px solid #f0fdf4;margin-bottom:0.5rem;">${group.group}</div>`;
+                group.items.forEach(item => {
+                    const roleDefault = !!rolePerms[item.key];
+                    const override = custom[item.key];
+                    const effective = override !== undefined ? override : roleDefault;
+                    html += `<label style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;border-radius:8px;cursor:pointer;background:${effective ? '#f0fdf4' : '#f9fafb'};margin-bottom:0.3rem;border:1px solid ${effective ? '#bbf7d0' : '#e5e7eb'};">
+                        <span style="font-size:0.83rem;color:#374151;">${item.label}
+                            <span style="font-size:0.72rem;color:#9ca3af;margin-left:0.4rem;">(роль: ${roleDefault ? '✓' : '✗'})</span>
+                        </span>
+                        <input type="checkbox" data-perm="${item.key}" ${effective ? 'checked' : ''} 
+                            onchange="updateUserPermOverride('${userId}','${item.key}',this.checked)"
+                            style="width:18px;height:18px;accent-color:#22c55e;cursor:pointer;">
+                    </label>`;
+                });
+                html += '</div>';
+            });
+            html += '</div>';
+
+            const modal = document.getElementById('userPermissionsModal');
+            const body = document.getElementById('userPermissionsModalBody');
+            const title = document.getElementById('userPermissionsModalTitle');
+            if (title) title.textContent = `Дозволи: ${u.name || u.email}`;
+            if (body) body.innerHTML = html;
+            if (modal) { modal.style.display = 'flex'; }
+            if (typeof lucide !== 'undefined') refreshIcons();
+        };
+
+        window.updateUserPermOverride = async function(userId, key, value) {
+            if (!currentCompany) return;
+            try {
+                await db.collection('companies').doc(currentCompany)
+                    .collection('users').doc(userId)
+                    .set({ customPermissions: { [key]: value } }, { merge: true });
+                // Оновлюємо локальний стейт
+                const u = users.find(x => x.id === userId);
+                if (u) {
+                    if (!u.customPermissions) u.customPermissions = {};
+                    u.customPermissions[key] = value;
+                }
+                showToast('Збережено', 'success');
+            } catch(e) {
+                showToast('Помилка: ' + e.message, 'error');
+            }
+        };

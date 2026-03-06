@@ -41,14 +41,21 @@
             const period = document.getElementById('regularTaskPeriod').value;
             const dayOfWeekGroup = document.getElementById('dayOfWeekGroup');
             const dayOfMonthGroup = document.getElementById('dayOfMonthGroup');
-            
-            if (period === 'weekly') {
+            const skipWeekendsGroup = document.getElementById('skipWeekendsGroup');
+
+            if (period === 'daily') {
+                dayOfWeekGroup.style.display = 'none';
+                dayOfMonthGroup.style.display = 'none';
+                if (skipWeekendsGroup) skipWeekendsGroup.style.display = 'block';
+            } else if (period === 'weekly') {
                 dayOfWeekGroup.style.display = 'block';
                 dayOfMonthGroup.style.display = 'none';
+                if (skipWeekendsGroup) skipWeekendsGroup.style.display = 'none';
             } else {
                 // monthly, quarterly
                 dayOfWeekGroup.style.display = 'none';
                 dayOfMonthGroup.style.display = 'block';
+                if (skipWeekendsGroup) skipWeekendsGroup.style.display = 'none';
             }
         }
         
@@ -122,6 +129,8 @@
                         selectAllDays(); // Вибираємо всі дні
                     } else {
                         document.getElementById('regularTaskPeriod').value = rt.period || 'weekly';
+                        const _swCb = document.getElementById('regularTaskSkipWeekends');
+                        if (_swCb) _swCb.checked = rt.skipWeekends || false;
                         updatePeriodOptions();
                         
                         // Встановлюємо вибрані дні
@@ -291,7 +300,7 @@
             
             // Rate limiting
             if (!rateLimiter.check('saveRegularTask')) {
-                alert(t('tooManyRequests'));
+                showAlertModal(t('tooManyRequests'));
                 return;
             }
             
@@ -300,7 +309,7 @@
             const directAssignee = document.getElementById('regularTaskAssignee').value;
             
             if (!directAssignee && (!func || !func.assigneeIds?.length)) {
-                alert(t('selectAssigneeOrFunction'));
+                showAlertModal(t('selectAssigneeOrFunction'));
                 return;
             }
             
@@ -309,7 +318,7 @@
             
             // Перевірка що вибраний хоча б один день для weekly
             if (period === 'weekly' && selectedDays.length === 0) {
-                alert(t('selectAtLeastOneDay'));
+                showAlertModal(t('selectAtLeastOneDay'));
                 return;
             }
             
@@ -322,7 +331,7 @@
             
             const errors = validateRegularTaskData(taskData);
             if (errors.length > 0) {
-                alert(errors.join('\n'));
+                showAlertModal(errors.join('\n'));
                 return;
             }
             
@@ -338,7 +347,8 @@
                 function: funcName,
                 period: period,
                 daysOfWeek: period === 'weekly' ? selectedDays : null,
-                dayOfMonth: period !== 'weekly' ? document.getElementById('regularTaskDayOfMonth').value : null,
+                dayOfMonth: period !== 'weekly' && period !== 'daily' ? document.getElementById('regularTaskDayOfMonth').value : null,
+                skipWeekends: period === 'daily' ? (document.getElementById('regularTaskSkipWeekends')?.checked || false) : false,
                 timeStart: document.getElementById('regularTaskTimeStart').value,
                 timeEnd: document.getElementById('regularTaskTimeMode').value === 'end' 
                     ? document.getElementById('regularTaskTimeEnd').value 
@@ -380,7 +390,7 @@
                 renderMyDay();
             } catch (error) {
                 console.error('saveRegularTask error:', error);
-                alert(t('error') + ': ' + error.message);
+                showAlertModal(t('error') + ': ' + error.message);
             } finally {
                 isSaving = false;
                 if (submitBtn) submitBtn.disabled = false;
@@ -394,7 +404,7 @@
             // Беремо виконавців з функції
             const func = functions.find(f => f.name === rt.function);
             if (!func || !func.assigneeIds?.length) {
-                alert(t('noExecutorsInFunction'));
+                showAlertModal(t('noExecutorsInFunction'));
                 return;
             }
             
@@ -449,7 +459,12 @@
                 });
             });
             
+            try {
             await batch.commit();
+            } catch(err) {
+                console.error('[Batch] commit failed:', err);
+                showToast && showToast('Помилка збереження. Спробуйте ще раз.', 'error');
+            }
             
             // Локальне оновлення з реальними ID
             generatedRefs.forEach(({ ref, assigneeId }) => {
@@ -469,7 +484,7 @@
                 });
             });
             
-            alert(`${t('createdLabel')} ${assigneeIds.length} ${t('tasksWord')}`);
+            showAlertModal(`${t('createdLabel')} ${assigneeIds.length} ${t('tasksWord')}`);
             renderMyDay();
             refreshCurrentView();
         }
@@ -490,7 +505,7 @@
                 // Generate task and open it
                 const func = functions.find(f => f.name === rt.function);
                 if (!func || !func.assigneeIds?.length) {
-                    alert(t('noExecutorsInFunction'));
+                    showAlertModal(t('noExecutorsInFunction'));
                     return;
                 }
                 const assigneeId = func.assigneeIds[0];
@@ -539,10 +554,17 @@
             
             try {
                 await db.collection('companies').doc(currentCompany).collection('regularTasks').doc(id).delete();
-                // Cleanup orphaned generated tasks
+                // Cleanup orphaned generated tasks — batch замість fire-and-forget
                 const orphanTasks = tasks.filter(tk => tk.regularTaskId === id && tk.status !== 'done');
-                for (const tk of orphanTasks) {
-                    db.collection('companies').doc(currentCompany).collection('tasks').doc(tk.id).delete().catch(() => {});
+                if (orphanTasks.length > 0) {
+                    const CHUNK = 450;
+                    for (let i = 0; i < orphanTasks.length; i += CHUNK) {
+                        const b = db.batch();
+                        orphanTasks.slice(i, i + CHUNK).forEach(tk =>
+                            b.delete(db.collection('companies').doc(currentCompany).collection('tasks').doc(tk.id))
+                        );
+                        await b.commit();
+                    }
                 }
                 tasks = tasks.filter(tk => !(tk.regularTaskId === id && tk.status !== 'done'));
                 renderMyDay(); refreshCurrentView();
@@ -556,7 +578,7 @@
                 else renderRegularWeekView();
                 hideUndoToast();
                 console.error('deleteRegularTask error:', error);
-                alert(t('error') + ': ' + error.message);
+                showAlertModal(t('error') + ': ' + error.message);
             }
         }
         
@@ -567,7 +589,7 @@
             
             const func = functions.find(f => f.name === rt.function);
             if (!func || !func.assigneeIds?.length) {
-                alert(t('noExecutorsInFunction'));
+                showAlertModal(t('noExecutorsInFunction'));
                 return;
             }
             
@@ -919,6 +941,6 @@
         function showInstruction(id) {
             const rt = regularTasks.find(r => r.id === id);
             if (rt && rt.instruction) {
-                alert(`${t('instructionLabel')}:\n\n${rt.instruction}`);
+                showAlertModal(`${t('instructionLabel')}:\n\n${rt.instruction}`);
             }
         }

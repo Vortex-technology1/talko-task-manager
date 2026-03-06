@@ -129,7 +129,7 @@ const i18n = {
 
         // Help
         help: '📖 <b>Команди:</b>\n\n' +
-            '<b>📋 Завдання:</b>\n/today — мої на сьогодні\n/overdue — прострочені\n/evening — вечірній звіт (План vs Факт)\n\n' +
+            '<b>📋 Завдання:</b>\n/today — мої на сьогодні\n/overdue — прострочені\n/evening — вечірній звіт\n/ai-digest — AI-підсумок дня 🤖\n\n' +
             '<b>👥 Команда:</b>\n/team — стан команди\n/weekly — тижневий звіт\n\n' +
             '<b>✏️ Створити завдання:</b>\n<code>Текст @Виконавець до ДД.ММ</code>\n\n' +
             '<b>Приклади:</b>\n• <code>Звіт @Олена до 25.03</code>\n• <code>Матеріали @Сергій завтра !!!</code>\n• <code>Перевірка сьогодні о 14:00</code>\n\n' +
@@ -223,7 +223,7 @@ const i18n = {
         dashDoneTotal: 'Выполнено всего',
 
         help: '📖 <b>Команды:</b>\n\n' +
-            '<b>📋 Задачи:</b>\n/today — мои на сегодня\n/overdue — просроченные\n/evening — вечерний отчёт (План vs Факт)\n\n' +
+            '<b>📋 Задачи:</b>\n/today — мои на сегодня\n/overdue — просроченные\n/evening — вечерний отчёт\n/ai-digest — AI-итог дня 🤖\n\n' +
             '<b>👥 Команда:</b>\n/team — состояние команды\n/weekly — недельный отчёт\n\n' +
             '<b>✏️ Создать задачу:</b>\n<code>Текст @Исполнитель до ДД.ММ</code>\n\n' +
             '<b>Примеры:</b>\n• <code>Отчёт @Елена до 25.03</code>\n• <code>Материалы @Сергей завтра !!!</code>\n• <code>Проверка сегодня в 14:00</code>\n\n' +
@@ -498,12 +498,28 @@ async function findByChatId(chatId) {
 }
 
 async function findByCode(code) {
+    // БАГ 7 FIX: спочатку шукаємо в глобальному індексі telegramCodeIndex
+    const indexDoc = await db.collection('telegramCodeIndex').doc(code).get().catch(() => null);
+    if (indexDoc && indexDoc.exists) {
+        const { companyId, userId } = indexDoc.data();
+        const userDoc = await db.collection('companies').doc(companyId)
+            .collection('users').doc(userId).get().catch(() => null);
+        if (userDoc && userDoc.exists) {
+            return { uid: userId, cid: companyId, data: userDoc.data(), ref: userDoc.ref };
+        }
+    }
+    // Fallback: full scan (для старих записів без індексу)
     const companies = await db.collection('companies').get();
     for (const c of companies.docs) {
         const snap = await c.ref.collection('users')
             .where('telegramCode', '==', code).limit(1).get();
         if (!snap.empty) {
             const d = snap.docs[0];
+            // Записуємо в індекс для наступного разу
+            await db.collection('telegramCodeIndex').doc(code).set({
+                companyId: c.id, userId: d.id,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            }).catch(() => {});
             return { uid: d.id, cid: c.id, data: d.data(), ref: d.ref };
         }
     }
@@ -511,12 +527,28 @@ async function findByCode(code) {
 }
 
 async function findByEmail(email) {
+    const emailLow = email.toLowerCase();
+    // БАГ 7 FIX: спочатку шукаємо в глобальному індексі telegramEmailIndex
+    const indexDoc = await db.collection('telegramEmailIndex').doc(emailLow.replace(/[.]/g,'_')).get().catch(() => null);
+    if (indexDoc && indexDoc.exists) {
+        const { companyId, userId } = indexDoc.data();
+        const userDoc = await db.collection('companies').doc(companyId)
+            .collection('users').doc(userId).get().catch(() => null);
+        if (userDoc && userDoc.exists) {
+            return { uid: userId, cid: companyId, data: userDoc.data(), ref: userDoc.ref };
+        }
+    }
+    // Fallback: full scan
     const companies = await db.collection('companies').get();
     for (const c of companies.docs) {
         const snap = await c.ref.collection('users')
-            .where('email', '==', email.toLowerCase()).limit(1).get();
+            .where('email', '==', emailLow).limit(1).get();
         if (!snap.empty) {
             const d = snap.docs[0];
+            await db.collection('telegramEmailIndex').doc(emailLow.replace(/[.]/g,'_')).set({
+                companyId: c.id, userId: d.id,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            }).catch(() => {});
             return { uid: d.id, cid: c.id, data: d.data(), ref: d.ref };
         }
     }
@@ -547,28 +579,105 @@ async function updateTelegramIndex(chatId, companyId, userId) {
 // ========================
 //  PARSE TASK
 // ========================
-function parseTask(text) {
+// ========================
+//  ПАРСИНГ ДАТИ/ЧАСУ (базові утиліти)
+// ========================
+function extractDateTimePrio(text) {
     let msg = text.replace(/@\w+bot\b/gi, '').trim();
-    let who = null;
+    let who = null, date = null, time = '18:00', prio = 'medium';
     const wm = msg.match(/@([А-Яа-яІіЇїЄєҐґA-Za-z_]+)/);
     if (wm) { who = wm[1]; msg = msg.replace(wm[0], '').trim(); }
-    let date = null;
     const dd = [
-        { r: /(?:до|by|до)\s+(\d{1,2})\.(\d{1,2})\.(\d{4})/i, f: m => `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}` },
-        { r: /(?:до|by|до)\s+(\d{1,2})\.(\d{1,2})/i, f: m => { const y = new Date().getFullYear(); return `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`; }},
-        { r: /завтра|tomorrow|jutro/i, f: () => { const d = new Date(); d.setDate(d.getDate()+1); return d.toISOString().split('T')[0]; }},
-        { r: /сьогодні|сегодня|today|dziś|dzis/i, f: () => new Date().toISOString().split('T')[0] },
-        { r: /післязавтра|послезавтра|pojutrze/i, f: () => { const d = new Date(); d.setDate(d.getDate()+2); return d.toISOString().split('T')[0]; }},
+        { r: /(?:до|by)\s+(\d{1,2})\.(\d{1,2})\.(\d{4})/i, f: m => `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}` },
+        { r: /(?:до|by)\s+(\d{1,2})\.(\d{1,2})/i,           f: m => { const y=new Date().getFullYear(); return `${y}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`; }},
+        { r: /завтра|tomorrow/i,        f: () => { const d=new Date(); d.setDate(d.getDate()+1); return d.toISOString().split('T')[0]; }},
+        { r: /сьогодні|сегодня|today/i, f: () => new Date().toISOString().split('T')[0] },
+        { r: /післязавтра|послезавтра/i, f: () => { const d=new Date(); d.setDate(d.getDate()+2); return d.toISOString().split('T')[0]; }},
     ];
-    for (const p of dd) { const m = msg.match(p.r); if (m) { date = p.f(m); msg = msg.replace(m[0], '').trim(); break; }}
-    let prio = 'medium';
-    if (msg.includes('!!!')) { prio = 'high'; msg = msg.replace('!!!','').trim(); }
-    else if (msg.includes('!')) { prio = 'low'; msg = msg.replace(/!+/g,'').trim(); }
-    let time = '18:00';
-    const tm = msg.match(/[ов]\s*(\d{1,2}):(\d{2})/);
+    for (const p of dd) { const m = msg.match(p.r); if (m) { date = p.f(m); msg = msg.replace(m[0],'').trim(); break; }}
+    const tm = msg.match(/[ово]\s*(\d{1,2}):(\d{2})/);
     if (tm) { time = `${tm[1].padStart(2,'0')}:${tm[2]}`; msg = msg.replace(tm[0],'').trim(); }
-    return { title: msg.replace(/\s+/g,' ').trim(), who, date, time, prio };
+    if (msg.includes('!!!'))      { prio = 'high'; msg = msg.replace(/!!!+/g,'').trim(); }
+    else if (msg.includes('!!'))  { prio = 'high'; msg = msg.replace(/!!+/g,'').trim(); }
+    else if (msg.includes('!'))   { prio = 'low';  msg = msg.replace(/!+/g,'').trim(); }
+    return { msg: msg.trim(), date, time, prio, who };
 }
+
+// ========================
+//  AI-ПАРСЕР: розкладає довгий текст по блоках завдання
+// ========================
+async function parseTaskSmart(text) {
+    const { msg, date, time, prio, who } = extractDateTimePrio(text);
+
+    // Короткий текст — без AI
+    if (msg.length < 80) {
+        return { title: msg.replace(/\s+/g,' ').trim(), description:'', expectedResult:'', reportFormat:'', who, date, time, prio };
+    }
+
+    try {
+        const prompt = `Розбий текст завдання на JSON поля. Відповідай ТІЛЬКИ JSON без пояснень і без markdown.
+
+Текст: ${JSON.stringify(msg)}
+
+Поля JSON:
+- title: коротка назва (до 100 символів), перша фраза або суть
+- description: детальний опис що треба зробити
+- expectedResult: очікуваний результат — що буде на виході (документ, рішення, файл)
+- reportFormat: як звітувати — фото, відео, посилання, повідомлення
+
+Правила:
+- title завжди заповнений
+- Якщо є мітки "результат:", "очікуваний результат:", "результат завдання:" — це expectedResult
+- Якщо є "форма звіту:", "звіт:", "звітувати:" — це reportFormat
+- Якщо є "опис:", "деталі:", "завдання:" — це description
+- Без явних міток: перший рядок = title, наступні = description
+- Порожні поля = ""`;
+
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+                'anthropic-version': '2023-06-01',
+            },
+            body: JSON.stringify({
+                model: 'claude-haiku-4-5-20251001',
+                max_tokens: 400,
+                messages: [{ role: 'user', content: prompt }]
+            })
+        });
+
+        if (!resp.ok) throw new Error(`API ${resp.status}`);
+        const data = await resp.json();
+        const raw = (data.content?.[0]?.text || '').replace(/```json|```/g,'').trim();
+        const parsed = JSON.parse(raw);
+
+        return {
+            title:          (parsed.title          || msg.substring(0, 100)).trim(),
+            description:    (parsed.description    || '').trim(),
+            expectedResult: (parsed.expectedResult || '').trim(),
+            reportFormat:   (parsed.reportFormat   || '').trim(),
+            who, date, time, prio,
+        };
+    } catch(err) {
+        console.warn('[parseTaskSmart] fallback:', err.message);
+        const lines = msg.split('\n').map(l => l.trim()).filter(Boolean);
+        return {
+            title:          lines[0]?.substring(0, 150) || msg.substring(0, 150),
+            description:    lines.slice(1).join('\n').trim(),
+            expectedResult: '',
+            reportFormat:   '',
+            who, date, time, prio,
+        };
+    }
+}
+
+// Синхронний parseTask — для коротких/сумісності
+function parseTask(text) {
+    const { msg, date, time, prio, who } = extractDateTimePrio(text);
+    return { title: msg.replace(/\s+/g,' ').trim(), description:'', expectedResult:'', reportFormat:'', who, date, time, prio };
+}
+
 
 // ========================
 //  INLINE КНОПКИ
@@ -610,11 +719,23 @@ async function handleCallback(cbQuery) {
     switch (action) {
         case 'done': {
             if (task.status === 'done') return answerCallback(cbId, t('taskAlreadyDone', lang));
+            // БАГ 2 FIX: перевіряємо requireReview перед закриттям
+            if (task.requireReview) {
+                await taskRef.update({
+                    status: 'review',
+                    sentForReviewAt: admin.firestore.FieldValue.serverTimestamp(),
+                });
+                await editMsg(chatId, msgId,
+                    `🔍 ${t('sentForReview', lang) || 'Завдання відправлено на перевірку'}\n\n${task.title}\n👤 ${task.assigneeName || '—'}`
+                );
+                return answerCallback(cbId, t('sentForReview', lang) || 'Відправлено на перевірку');
+            }
             await taskRef.update({
                 status: 'done',
                 completedAt: admin.firestore.FieldValue.serverTimestamp(),
                 completedDate: new Date().toISOString().split('T')[0],
                 completionSource: 'telegram',
+                completedBy: task.assigneeId || '',
             });
             await editMsg(chatId, msgId,
                 `${t('taskDone', lang)}\n\n<s>${task.title}</s>\n👤 ${task.assigneeName || '—'}`
@@ -742,13 +863,47 @@ async function cmdVerify(chatId, tgId, tgUser, code, tgLang) {
     return send(chatId, t('verifyWrong', lang));
 }
 
+async function cmdFocus(chatId, u, lang) {
+    // БАГ 4 FIX: реалізація /focus — найважливіше завдання зараз
+    const today = new Date().toISOString().split('T')[0];
+    const snap = await db.collection('companies').doc(u.cid)
+        .collection('tasks')
+        .where('assigneeId', '==', u.uid)
+        .where('status', 'in', ['new', 'progress'])
+        .get();
+    const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Пріоритет: прострочені > сьогодні > high priority > решта
+    const overdue = tasks.filter(t => t.deadlineDate && t.deadlineDate < today);
+    const todayTasks = tasks.filter(t => t.deadlineDate === today);
+    const highPriority = tasks.filter(t => t.priority === 'high' && !t.deadlineDate);
+
+    const focusTask = overdue[0] || todayTasks[0] || highPriority[0] || tasks[0];
+    if (!focusTask) return send(chatId, t('todayClean', lang));
+
+    const pr = focusTask.priority === 'high' ? '🔴' : focusTask.priority === 'low' ? '🟢' : '🟡';
+    const dl = focusTask.deadlineDate ? `\n📅 ${focusTask.deadlineDate}` : '';
+    const isOverdue = focusTask.deadlineDate && focusTask.deadlineDate < today;
+    const prefix = isOverdue ? '⚠️ Прострочено! ' : '🎯 Фокус зараз: ';
+
+    await sendButtons(chatId,
+        `${prefix}\n\n${pr} <b>${focusTask.title}</b>${dl}\n👤 ${focusTask.assigneeName || '—'}`,
+        taskButtons(focusTask.id, u.cid)
+    );
+}
+
 async function cmdToday(chatId, u, lang) {
     const today = new Date().toISOString().split('T')[0];
     const snap = await db.collection('companies').doc(u.cid)
         .collection('tasks').where('assigneeId','==',u.uid).where('status','in',['new','progress']).get();
     const list = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-        .filter(t2 => t2.deadlineDate === today || !t2.deadlineDate)
-        .sort((a,b) => (a.deadlineTime||'').localeCompare(b.deadlineTime||''));
+        .filter(t2 => t2.deadlineDate === today) // БАГ 6 FIX: прибрано завдання без дедлайну
+        .sort((a,b) => {
+            // БАГ 10 FIX: завдання без дедлайну завжди в кінець
+            if (!a.deadlineTime && b.deadlineTime) return 1;
+            if (a.deadlineTime && !b.deadlineTime) return -1;
+            return (a.deadlineTime||'').localeCompare(b.deadlineTime||'');
+        });
     if (!list.length) return send(chatId, t('todayClean', lang));
     for (const tk of list) {
         const tm = tk.deadlineTime ? ` ⏰ ${tk.deadlineTime}` : '';
@@ -816,6 +971,100 @@ async function cmdWeekly(chatId, u, lang) {
         });
     }
     return send(chatId, msg);
+}
+
+// ========================
+//  /ai-digest — AI-аналіз дня для власника
+// ========================
+async function cmdAIDigest(chatId, u, lang) {
+    const isOwnerOrMgr = u.data?.role === 'owner' || u.data?.role === 'manager';
+    if (!isOwnerOrMgr) {
+        await send(chatId, '❌ Digest доступний тільки власнику або менеджеру');
+        return;
+    }
+
+    await send(chatId, '🤖 Аналізую день...');
+
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+        // Збираємо задачі за сьогодні
+        const [doneSnap, overdueSnap, reviewSnap] = await Promise.all([
+            db.collection('companies').doc(u.cid).collection('tasks')
+                .where('completedDate', '==', today).limit(50).get(),
+            db.collection('companies').doc(u.cid).collection('tasks')
+                .where('deadlineDate', '<', today).where('status', 'in', ['new','progress']).limit(30).get(),
+            db.collection('companies').doc(u.cid).collection('tasks')
+                .where('status', '==', 'review').limit(20).get(),
+        ]);
+
+        const done = doneSnap.docs.map(d => d.data());
+        const overdue = overdueSnap.docs.map(d => d.data());
+        const review = reviewSnap.docs.map(d => d.data());
+
+        if (done.length === 0 && overdue.length === 0 && review.length === 0) {
+            await send(chatId, '📊 За сьогодні даних немає.');
+            return;
+        }
+
+        // Готуємо дані для AI
+        const summary = {
+            date: today,
+            done: done.map(t => ({ title: t.title, assignee: t.assigneeName, fn: t.function })),
+            overdue: overdue.map(t => ({ title: t.title, assignee: t.assigneeName, deadline: t.deadlineDate, days: Math.floor((new Date() - new Date(t.deadlineDate)) / 86400000) })),
+            review: review.map(t => ({ title: t.title, assignee: t.assigneeName })),
+        };
+
+        const prompt = `Ти аналізуєш робочий день компанії. Дай короткий підсумок (3-6 речень) у форматі Telegram без markdown.
+
+Дані дня (${today}):
+- Виконано задач: ${done.length} (${done.map(t=>t.title).slice(0,5).join(', ')}${done.length>5?'...':''})
+- Прострочено: ${overdue.length} задач (${overdue.map(t=>t.title+' ('+t.assigneeName+', '+t.days+'д)').slice(0,3).join(', ')}${overdue.length>3?'...':''})
+- На перевірці: ${review.length} задач
+
+Структура відповіді:
+1. Коротко про результат дня (1 речення)
+2. Головний ризик або проблема (1-2 речення, якщо є)
+3. Рекомендація власнику що зробити завтра вранці (1-2 речення)
+
+Пиши по-українськи, коротко і конкретно.`;
+
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+                'anthropic-version': '2023-06-01',
+            },
+            body: JSON.stringify({
+                model: 'claude-haiku-4-5-20251001',
+                max_tokens: 500,
+                messages: [{ role: 'user', content: prompt }]
+            })
+        });
+
+        if (!resp.ok) throw new Error(`API ${resp.status}`);
+        const data = await resp.json();
+        const analysis = data.content?.[0]?.text || 'Не вдалося отримати аналіз.';
+
+        const msg = `📊 *AI-Дайджест дня* (${today})
+
+` +
+            `✅ Виконано: ${done.length}
+` +
+            `🔴 Прострочено: ${overdue.length}
+` +
+            `🔍 На перевірці: ${review.length}
+
+` +
+            `🤖 ${analysis}`;
+
+        await send(chatId, msg);
+    } catch(err) {
+        console.error('[ai-digest]', err);
+        await send(chatId, '❌ Помилка: ' + err.message);
+    }
 }
 
 async function cmdEvening(chatId, u, lang) {
@@ -886,17 +1135,32 @@ async function createTask(u, p) {
         if (a) { aId = a.id; aName = a.name || a.email; }
     }
     const dt = p.date || new Date().toISOString().split('T')[0];
+    // БАГ 9 FIX: отримуємо налаштування компанії для дефолтних полів
+    let companyDefaults = {};
+    try {
+        const companyDoc = await db.collection('companies').doc(u.cid).get();
+        if (companyDoc.exists) companyDefaults = companyDoc.data() || {};
+    } catch(e) {}
+
     const data = {
         title: p.title, function: '', projectId: '',
         assigneeId: aId, assigneeName: aName,
         deadlineDate: dt, deadlineTime: p.time, deadline: dt+'T'+p.time,
         estimatedTime: '', priority: p.prio, status: 'new',
-        expectedResult: '', reportFormat: '', description: '',
+        expectedResult: p.expectedResult || '',   // AI-розпізнане
+        reportFormat:   p.reportFormat   || '',   // AI-розпізнане
+        description:    p.description    || '',   // AI-розпізнане
         notifyOnComplete: [u.uid], notifyOnReminder: [u.uid],
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         createdDate: new Date().toISOString().split('T')[0],
         creatorId: u.uid, creatorName: u.data.name || u.data.email,
         pinned: false, source: 'telegram',
+        // БАГ 9 FIX: обов'язкові поля для сумісності з веб
+        requireReview: companyDefaults.defaultRequireReview || false,
+        checklist: [],
+        coExecutorIds: [],
+        coExecutorNames: [],
+        observerIds: [],
     };
     const ref = await db.collection('companies').doc(u.cid).collection('tasks').add(data);
     return { id: ref.id, aId, aName, ...data };
@@ -1024,8 +1288,22 @@ async function handleQuery(chatId, u, text, lang) {
 // ========================
 //  WEBHOOK HANDLER
 // ========================
+// БАГ 5 FIX: dedup захист від дублікатів Telegram webhook
+const _processedUpdates = new Set();
+
 module.exports = async function handler(req, res) {
     if (req.method === 'GET') return res.status(200).json({ ok: true, bot: 'TALKO' });
+
+    // Перевірка Telegram webhook secret token
+    // Встановлюється через setWebhook з параметром secret_token
+    const WEBHOOK_SECRET = process.env.TELEGRAM_WEBHOOK_SECRET;
+    if (WEBHOOK_SECRET) {
+        const incomingSecret = req.headers['x-telegram-bot-api-secret-token'];
+        if (incomingSecret !== WEBHOOK_SECRET) {
+            console.warn('[TG] Webhook secret mismatch — rejected');
+            return res.status(403).json({ ok: false });
+        }
+    }
 
     if (req.query?.action === 'notify') {
         try {
@@ -1038,6 +1316,16 @@ module.exports = async function handler(req, res) {
 
     try {
         const body = req.body || {};
+        // БАГ 5 FIX: ігноруємо дублікати
+        if (body.update_id) {
+            if (_processedUpdates.has(body.update_id)) {
+                return res.status(200).json({ ok: true, dedup: true });
+            }
+            _processedUpdates.add(body.update_id);
+            if (_processedUpdates.size > 1000) {
+                _processedUpdates.delete(_processedUpdates.values().next().value);
+            }
+        }
         if (body.callback_query) {
             await handleCallback(body.callback_query);
             return res.status(200).json({ ok: true });
@@ -1070,11 +1358,13 @@ module.exports = async function handler(req, res) {
             const lang = detectLang(u.data, tgLang);
 
             if (cmd === '/help') { await send(chatId, t('help', lang)); }
-            else if (cmd === '/today') await cmdToday(chatId, u, lang);
+            else if (cmd === '/focus') await cmdFocus(chatId, u, lang);
+        else if (cmd === '/today') await cmdToday(chatId, u, lang);
             else if (cmd === '/overdue') await cmdOverdue(chatId, u, lang);
             else if (cmd === '/team') await cmdTeam(chatId, u, lang);
             else if (cmd === '/weekly') await cmdWeekly(chatId, u, lang);
             else if (cmd === '/evening') await cmdEvening(chatId, u, lang);
+            else if (cmd === '/ai-digest' || cmd === '/digest') await cmdAIDigest(chatId, u, lang);
             else await send(chatId, t('unknownCmd', lang));
 
             return res.status(200).json({ ok: true });
@@ -1096,7 +1386,7 @@ module.exports = async function handler(req, res) {
             if (queryResult) return res.status(200).json({ ok: true });
         }
 
-        const p = parseTask(text);
+        const p = await parseTaskSmart(text);  // AI розкладає по блоках
         if (!p.title || p.title.length < 2) {
             await send(chatId, t('cantUnderstand', lang));
             return res.status(200).json({ ok: true });
@@ -1106,9 +1396,14 @@ module.exports = async function handler(req, res) {
         const dl = task.deadlineDate ? ` 📅 ${task.deadlineDate}` : '';
         const tm = task.deadlineTime !== '18:00' ? ` ⏰ ${task.deadlineTime}` : '';
         const pr = task.priority==='high'?'🔴':task.priority==='low'?'🟢':'🟡';
+        // Показуємо що AI розклав, якщо заповнені блоки
+        const extras = [
+            p.expectedResult ? `📋 ${p.expectedResult.substring(0,60)}${p.expectedResult.length>60?'…':''}` : '',
+            p.reportFormat   ? `📝 Звіт: ${p.reportFormat.substring(0,40)}${p.reportFormat.length>40?'…':''}` : '',
+        ].filter(Boolean).join('\n');
 
         await sendButtons(chatId,
-            `${t('taskCreated', lang)}\n\n${pr} ${task.title}\n👤 ${task.aName}${dl}${tm}`,
+            `${t('taskCreated', lang)}\n\n${pr} ${task.title}\n👤 ${task.aName}${dl}${tm}${extras ? '\n\n' + extras : ''}`,
             taskButtons(task.id, u.cid)
         );
 

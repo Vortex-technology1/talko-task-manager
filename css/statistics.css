@@ -1,0 +1,523 @@
+/* =============================================
+   STATISTICS MODULE — css/statistics.css
+   v2.3 — Production dashboard design
+   ============================================= */
+
+/* ---- Layout ---- */
+.stats-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0.75rem 0;
+}
+.stats-header-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+.stats-header-actions {
+    display: flex;
+    gap: 0.4rem;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+
+/* ---- Pill Buttons ---- */
+.stats-pill {
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1px solid #e5e7eb;
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--gray);
+    white-space: nowrap;
+}
+.stats-pill:hover { border-color: var(--primary); color: var(--primary); }
+.stats-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
+.stats-pill.accent { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; }
+.stats-pill.accent:hover { opacity: 0.9; }
+.stats-pill svg { width: 14px; height: 14px; }
+
+/* ---- Scope & Period Bar ---- */
+.stats-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    flex-wrap: wrap;
+}
+.stats-bar-sep {
+    width: 1px;
+    height: 24px;
+    background: #e5e7eb;
+    margin: 0 0.25rem;
+}
+.stats-period-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 2px;
+}
+.stats-period-nav button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: var(--gray);
+    transition: all 0.15s;
+}
+.stats-period-nav button:hover { background: white; color: var(--dark); }
+.stats-period-nav span {
+    font-weight: 600;
+    font-size: 0.85rem;
+    min-width: 140px;
+    text-align: center;
+    color: var(--dark);
+}
+.stats-period-select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: white;
+    color: var(--dark);
+    cursor: pointer;
+}
+.stats-func-select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: #f0fdf4;
+    color: #16a34a;
+    cursor: pointer;
+}
+
+/* ---- KPI Debt Banner ---- */
+.stats-debt-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border: 1px solid #fbbf24;
+    border-radius: 12px;
+    padding: 0.65rem 1rem;
+    margin-bottom: 0.75rem;
+}
+.stats-debt-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #fbbf24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.stats-debt-icon svg { width: 18px; height: 18px; color: white; }
+.stats-debt-text { flex: 1; }
+.stats-debt-text strong { font-size: 0.85rem; color: #92400e; }
+.stats-debt-text span { font-size: 0.75rem; color: #b45309; display: block; margin-top: 2px; }
+
+/* ============================================
+   NOTION-STYLE TABLE — чисто, вилизано
+   Принципи: рядки 32px, шрифт 13px, кольори
+   тільки в бейджах, решта чорно-біле
+   ============================================ */
+
+/* ---- Обгортка таблиці ---- */
+.stats-table-wrap {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e9e9e7;
+    overflow-x: auto;
+    overflow-y: visible;
+    margin-bottom: 0.5rem;
+    box-shadow: none;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.stats-table-wrap + .stats-section { margin-top: 1rem; }
+
+/* ---- Таблиця ---- */
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: inherit;
+    table-layout: fixed;
+}
+
+/* ---- Заголовки — Notion style ---- */
+.stats-table thead th {
+    height: auto;
+    min-height: 64px;
+    padding: 8px 6px 26px;
+    background: #fbfbfa;
+    font-size: 11px;
+    font-weight: 500;
+    color: #9b9a97;
+    text-transform: none;
+    letter-spacing: 0;
+    border-bottom: 2px solid #e9e9e7;
+    text-align: center;
+    vertical-align: bottom;
+    white-space: normal;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Контейнер заголовку — 2 чіткі рядки */
+.stats-table thead th .th-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    min-height: 48px;
+    overflow: hidden;
+}
+
+/* Рядок 1: НАЗВА метрики — темна, жирна */
+.stats-table thead th .th-metric-name {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #2d2d2b;
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
+    letter-spacing: -0.01em;
+}
+
+/* Рядок 2: ОДИНИЦЯ + ВІДПОВІДАЛЬНИЙ — окремий рядок, дрібніший */
+.stats-table thead th .th-metric-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+    min-height: 16px;
+    padding-top: 1px;
+    border-top: 1px solid #f0eeec;
+    width: 100%;
+}
+.stats-table thead th .th-unit {
+    font-size: 10px;
+    font-weight: 500;
+    color: #9b9a97;
+    background: #f3f2f0;
+    border-radius: 3px;
+    padding: 0 4px;
+    line-height: 1.5;
+}
+.stats-table thead th .th-resp {
+    font-size: 10px;
+    font-weight: 500;
+    color: #22c55e;
+    line-height: 1.5;
+}
+
+/* Перший стовпець (дата) — горизонтальний */
+.stats-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: #fbfbfa;
+    width: 140px;
+    min-width: 140px;
+    text-align: left;
+    padding: 0 12px;
+    vertical-align: middle;
+}
+.stats-table thead th:first-child .th-inner {
+    display: block;
+    min-height: 0;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #4b4b48;
+}
+
+/* Ширина колонок метрик — рівномірно заповнюють простір */
+.stats-table thead th:not(:first-child):not(:last-child) {
+    width: auto;
+    min-width: 90px;
+    max-width: 140px;
+}
+
+/* Кнопки дій у заголовку */
+.stats-table thead th .stats-comment-btn {
+    opacity: 0;
+    width: 18px !important;
+    height: 18px !important;
+    padding: 2px !important;
+    border-radius: 3px;
+}
+.stats-table thead th:hover .stats-comment-btn { opacity: 0.5 !important; }
+.stats-table thead th:hover .stats-comment-btn:hover { opacity: 1 !important; background: #efefee; }
+
+/* ---- Рядки — 32px висота ---- */
+.stats-table tbody tr {
+    height: 32px;
+    transition: background 0.08s;
+    cursor: pointer;
+}
+.stats-table tbody tr:hover { background: #f7f7f5 !important; }
+
+/* ---- Комірки ---- */
+.stats-table tbody td {
+    height: 32px;
+    padding: 0 10px;
+    border-bottom: 1px solid #f0f0ee;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 13px;
+    color: #37352f;
+    white-space: nowrap;
+}
+
+/* Перший стовпець (дата) — заморожений, лівий */
+.stats-table tbody td:first-child {
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 1;
+    width: 140px;
+    min-width: 140px;
+    text-align: left;
+    padding: 0 12px;
+    font-weight: 500;
+    color: #37352f;
+    font-size: 13px;
+    border-right: 1px solid #e9e9e7;
+}
+.stats-table tbody tr:hover td:first-child { background: #f7f7f5; }
+
+/* ---- Поточний рядок — тільки лівий акцент ---- */
+.stats-period-row td {
+    background: #f7f7f5 !important;
+    font-weight: 500;
+}
+.stats-period-row td:first-child {
+    border-left: 2px solid #37352f;
+    padding-left: 10px;
+}
+.stats-period-row td { border-bottom: 1px solid #e9e9e7 !important; }
+
+/* ---- Бейджик "зараз" ---- */
+.stats-period-current {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    padding: 1px 6px !important;
+    border-radius: 3px !important;
+    background: #e3e2e0 !important;
+    color: #37352f !important;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* ---- Значення в комірці — Notion style ---- */
+.stats-val {
+    font-size: 13px;
+    font-weight: 400;
+    color: #37352f;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 3px;
+    transition: background 0.08s;
+    display: inline;
+}
+.stats-val:hover { background: #efefee; }
+
+/* Порожня комірка */
+.stats-val-empty {
+    font-size: 13px;
+    color: #d3d1cb;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: none;
+    background: none;
+    font-style: normal;
+}
+.stats-val-empty:hover { background: #efefee; color: #9b9a97; }
+
+/* ---- Відсоток + мікро-бар (Notion-compact) ---- */
+.stats-cell-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+.stats-cell-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+}
+.stats-cell-val {
+    font-size: 13px;
+    font-weight: 400;
+    color: #37352f;
+}
+.stats-cell-pct {
+    font-size: 11px;
+    font-weight: 500;
+}
+.stats-mini-bar {
+    width: 100%;
+    max-width: 56px;
+    height: 2px;
+    background: #efefee;
+    border-radius: 99px;
+    overflow: hidden;
+}
+.stats-mini-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.3s;
+}
+
+/* Кольори % — нейтральний за замовчуванням */
+.pct-ok    { color: #9b9a97; }   /* ≥85% — сірий, норма */
+.pct-warn  { color: #cb912f; }   /* 70–84% — жовтий */
+.pct-bad   { color: #e03e3e; }   /* <70%  — червоний */
+
+/* Bar кольори — пастельні */
+.bar-ok    { background: #d3e5ef; }   /* норма — блакитний */
+.bar-warn  { background: #fdecc8; }   /* попередження — кремовий */
+.bar-bad   { background: #ffe2dd; }   /* критично — рожевий */
+
+/* ---- Прогрес (залишаємо клас але ховаємо — тепер inline) ---- */
+.stats-prog-wrap { display: none; }
+
+/* ---- Кнопка видалити рядок ---- */
+.stats-entry-del {
+    opacity: 0;
+    width: 18px !important;
+    height: 18px !important;
+    padding: 2px !important;
+    border-radius: 3px;
+    color: #9b9a97;
+    transition: opacity 0.1s;
+}
+.stats-table tbody tr:hover .stats-entry-del { opacity: 0.5 !important; }
+.stats-entry-del:hover { opacity: 1 !important; color: #e03e3e !important; background: #ffe2dd; }
+
+/* ---- Inline редагування ---- */
+.stats-inline-input {
+    width: 72px;
+    padding: 2px 6px;
+    border: 1.5px solid #2383e2;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: 400;
+    text-align: center;
+    outline: none;
+    background: #fff;
+    color: #37352f;
+    box-shadow: 0 0 0 2px rgba(35,131,226,0.15);
+}
+
+/* ---- Коментар кнопка ---- */
+.stats-comment-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #9b9a97;
+    transition: all 0.08s;
+}
+.stats-comment-btn:hover { background: #efefee; color: #37352f; }
+.stats-comment-btn.has-comment { color: #2383e2; }
+
+/* ---- Рядок розділювач між секціями ---- */
+.stats-period-row td {
+    padding: 0 12px;
+    font-size: 12px;
+    color: #9b9a97;
+    font-weight: 500;
+}
+.stats-period-row td:first-child { font-size: 13px; color: #37352f; }
+
+/* ---- Секція заголовок ---- */
+.stats-section { padding: 0.5rem 0 0.35rem; }
+.stats-section-title { font-size: 13px; font-weight: 600; color: #37352f; }
+.stats-section-count { font-size: 12px; color: #9b9a97; }
+.stats-section-icon { width: 22px; height: 22px; border-radius: 4px; }
+
+/* ---- Порожній стан ---- */
+.stats-empty { padding: 3rem 1rem; }
+.stats-empty h3 { font-size: 14px; color: #37352f; font-weight: 500; }
+.stats-empty p { font-size: 13px; color: #9b9a97; }
+
+/* ---- Модальне вікно деталей ---- */
+.stats-detail-title { font-size: 16px; font-weight: 600; color: #37352f; }
+.stats-detail-sub { font-size: 13px; color: #9b9a97; }
+.stats-detail-card { background: #fbfbfa; border-radius: 6px; border: 1px solid #e9e9e7; }
+.stats-detail-card-label { font-size: 11px; color: #9b9a97; text-transform: uppercase; letter-spacing: 0.04em; }
+.stats-detail-card-value { font-size: 20px; font-weight: 600; color: #37352f; }
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .stats-header { flex-direction: column; align-items: flex-start; }
+    .stats-header-actions { margin-left: 0; width: 100%; overflow-x: auto; }
+    .stats-bar { flex-direction: column; align-items: flex-start; }
+    .stats-bar-sep { display: none; }
+    .stats-detail-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-table { font-size: 12px; }
+    .stats-table tbody td { height: 28px; padding: 0 6px; }
+}
+
+/* ---- Trends ---- */
+#trendsChartSvg svg { display: block; }
+#trendsChartSvg text { pointer-events: none; }
+
+/* th-actions — absolute, з'являються при hover */
+.stats-table thead th:hover .th-actions { opacity: 1 !important; }
+.stats-table thead th { padding-bottom: 24px; } /* місце для абсолютних кнопок */
+.stats-table thead th:first-child { padding-bottom: 4px; } /* перший — без кнопок */
+
+/* ---- Кнопка видалення рядка (тільки для овнера) ---- */
+.stats-row-del {
+    opacity: 0;
+    transition: opacity 0.15s;
+    margin-left: 2px;
+}
+.stats-table tbody tr:hover .stats-row-del {
+    opacity: 0.4;
+}
+.stats-table tbody tr:hover .stats-row-del:hover {
+    opacity: 1 !important;
+    background: #fee2e2 !important;
+}

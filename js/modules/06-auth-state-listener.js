@@ -2,6 +2,7 @@
         // AUTH STATE LISTENER
         // =====================
         auth.onAuthStateChanged(async (user) => {
+            try {
             if (user) {
                 currentUser = user;
                 isSuperAdmin = user.email.toLowerCase() === SUPERADMIN_EMAIL.toLowerCase();
@@ -10,6 +11,8 @@
                 cleanupAllListeners();
                 
                 if (isSuperAdmin) {
+                const superBtn = document.getElementById('superadminBtn');
+                if (superBtn) superBtn.style.display = '';
                     document.getElementById('adminTabBtn').style.display = 'block';
                 }
                 
@@ -57,7 +60,7 @@
                 }
                 
                 document.getElementById('currentUserName').textContent = currentUserData.name || user.displayName || user.email;
-                document.getElementById('currentUserRole').textContent = `(${getRoleText(currentUserData.role)})`;
+                document.getElementById('currentUserRole').textContent = currentUserData ? `(${getRoleText(currentUserData.role)})` : '';
                 document.getElementById('companyBadge').textContent = companyData?.name || '';
                 document.getElementById('companyBadge').style.display = 'inline';
                 
@@ -81,7 +84,7 @@
                 }
                 
                 // AI buttons: Generator + Import = owner only, AI config = admin/superadmin only
-                const isOwnerRole = currentUserData.role === 'owner';
+                const isOwnerRole = currentUserData?.role === 'owner';
                 document.getElementById('ownerAiButtons').style.display = (isOwnerRole || isSuperAdmin) ? 'grid' : 'none';
                 document.getElementById('aiAssistantsBtnMenu').style.display = isSuperAdmin ? 'flex' : 'none';
                 document.getElementById('aiStructureBtnDesktop').style.display = 'none'; // temporarily disabled
@@ -91,6 +94,9 @@
                 initRegularView();
                 initGoogleCalendar();
                 loadAllData();
+                // Синхронізуємо обидва stats tab buttons (desktop + mobile) одразу після login
+                if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
+                if (typeof initStatistics === 'function') initStatistics();
                 
                 // Show FAB (було окремим onAuthStateChanged — об'єднано)
                 const fab = document.getElementById('fabAdd');
@@ -104,7 +110,7 @@
                 document.getElementById('mainInterface').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 document.getElementById('adminTabBtn').style.display = 'none';
-                document.getElementById('notificationBell').style.display = 'none';
+                // P3 FIX: bell завжди видимий — не ховаємо при логауті
                 notifications = [];
                 
                 // Hide FAB on logout
@@ -132,6 +138,7 @@
                     showLoginForm();
                 }
             }
+            } catch(authErr) { console.error('[Auth] onAuthStateChanged error:', authErr); }
         });
 
         function showMainInterface() {

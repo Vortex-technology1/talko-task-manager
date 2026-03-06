@@ -3,8 +3,18 @@
         // =====================
         function openTaskModal(id = null) {
             document.getElementById('taskModal').style.display = 'block';
+            // ГЛЮК FIX: скидаємо isSaving при кожному відкритті — захист від зависання spinner
+            isSaving = false;
+            const _sb = document.querySelector('#taskModal button[type="submit"]');
+            if (_sb) { _sb.disabled = false; _sb.innerHTML = _sb.dataset.origText || _sb.innerHTML; }
             updateSelects();
             updateProjectSelects();
+            
+            // Accordion: закриваємо при новій задачі, розкриваємо при редагуванні
+            const advPanel = document.getElementById('taskAdvancedPanel');
+            const advArrow = document.getElementById('taskAdvancedArrow');
+            if (advPanel) advPanel.style.display = id ? 'contents' : 'none';
+            if (advArrow) advArrow.style.transform = id ? 'rotate(180deg)' : '';
             
             // Initialize comments section
             initTaskComments(id);
@@ -19,10 +29,21 @@
                 const task = tasks.find(x => x.id === id);
                 if (task) {
                     document.getElementById('taskModalTitle').textContent = t('editTask');
+                    // Показуємо кнопку Duplicate для існуючих задач
+                    const _dupBtn = document.getElementById('duplicateTaskBtn');
+                    if (_dupBtn) _dupBtn.style.display = 'flex';
+                    // Підзавдання — показуємо тільки для існуючих завдань
+                    const subtasksSect = document.getElementById('subtasksSection');
+                    if (subtasksSect) {
+                        subtasksSect.style.display = 'block';
+                        if (typeof renderSubtasks === 'function') renderSubtasks(id);
+                    }
                     document.getElementById('taskTitle').value = task.title || '';
                     document.getElementById('taskFunction').value = task.function || '';
                     updateProjectSelects(task.projectId);
                     document.getElementById('taskProject').value = task.projectId || '';
+                    // Load stages for this project
+                    updateTaskStageSelect(task.projectId, task.stageId);
                     document.getElementById('taskAssignee').value = task.assigneeId || '';
                     // Розбиваємо deadline на дату і час
                     const dl = parseDeadline(task);
@@ -108,8 +129,8 @@
                     // Task actions — показуємо керівнику/постановнику дії залежно від статусу
                     const reviewActions = document.getElementById('taskReviewActions');
                     if (reviewActions) {
-                        const isOwnerOrAdmin = currentUserData?.role === 'owner' || currentUserData?.role === 'admin';
-                        const isManager = currentUserData?.role === 'manager';
+                        const isOwnerOrAdmin = (typeof hasPermission === 'function' ? hasPermission('editAnyTask') : false) || currentUserData?.role === 'owner' || currentUserData?.role === 'admin';
+                        const isManager = currentUserData?.role === 'manager' || (typeof hasPermission === 'function' && hasPermission('editAnyTask'));
                         const isCreator = task.creatorId === currentUser?.uid;
                         const canManage = isOwnerOrAdmin || isManager || isCreator;
                         const isAssignee = task.assigneeId === currentUser?.uid;
@@ -198,6 +219,12 @@
             } else {
                 editingId = null;
                 document.getElementById('taskModalTitle').textContent = t('newTask');
+                const _dupBtnN = document.getElementById('duplicateTaskBtn');
+                if (_dupBtnN) _dupBtnN.style.display = 'none';
+                const _subtasksSect = document.getElementById('subtasksSection');
+                if (_subtasksSect) _subtasksSect.style.display = 'none';
+                const _subList = document.getElementById('subtasksList');
+                if (_subList) _subList.innerHTML = '';
                 document.getElementById('taskForm').reset();
                 // Hide review actions
                 const reviewActions = document.getElementById('taskReviewActions');

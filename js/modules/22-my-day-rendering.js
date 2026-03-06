@@ -2,6 +2,8 @@
         // MY DAY RENDERING
         // =====================
         function renderMyDay() {
+        if (!currentUser) return; // auth guard — avoid crash before auth completes
+
             _visibleTaskIds = null; // Invalidate visibility cache
             const container = document.getElementById('mydayContent');
             if (!container) return;
@@ -170,7 +172,7 @@
                         <h3>${t('noTasksForToday')}</h3>
                         <p style="color:var(--gray);margin-top:0.5rem;">${t('timeToRest')}</p>
                     </div>`;
-                lucide.createIcons();
+                refreshIcons();
                 return;
             }
             
@@ -189,7 +191,7 @@
                         </div>
                         ${myTasks.map(t => renderMyDayItem(t)).join('')}
                     </div>`;
-                lucide.createIcons();
+                refreshIcons();
                 return;
             }
             
@@ -250,7 +252,7 @@
             }
             
             container.innerHTML = html;
-            lucide.createIcons();
+            refreshIcons();
             updateOverdueBadge();
             renderMyAnalytics();
         }
@@ -288,6 +290,21 @@
                 reviewBadge = `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:#f3e8ff;color:#7c3aed;font-weight:500;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${t('reviewLabel')}</span>`;
             }
             
+            // Project/stage context
+            let projectBadge = '';
+            const ot = task.originalTask || {};
+            if (ot.projectId) {
+                const proj = projects.find(p => p.id === ot.projectId);
+                if (proj) {
+                    let badge = esc(proj.name);
+                    if (ot.stageId && typeof window.projectStages !== 'undefined') {
+                        const st = window.projectStages.find(s => s.id === ot.stageId);
+                        if (st) badge += ' → ' + esc(st.name);
+                    }
+                    projectBadge = `<span style="font-size:0.65rem;padding:1px 5px;border-radius:4px;background:#eff6ff;color:#3b82f6;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${badge}</span>`;
+                }
+            }
+            
             return `
                 <div class="myday-item ${itemClass}" onclick="openMyDayTask('${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}')">
                     <div class="myday-checkbox ${checkClass}" ${!task.review ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}', ${task.done || task.review})"` : ''} ${task.review ? 'style="background:#8b5cf6;border-color:#8b5cf6;"' : ''}>
@@ -301,6 +318,7 @@
                             ${task.function ? `<span>${esc(task.function)}</span>` : ''}
                             <span class="myday-item-tag ${tagClass}">${tagText}</span>
                             ${reviewBadge}
+                            ${projectBadge}
                             ${!task.done ? getAiHelpButton(task.title, task.originalTask?.description || task.originalTask?.instruction || '', task.function, 'small') : ''}
                         </div>
                         ${reviewActionsHtml}
@@ -322,7 +340,7 @@
             if (checkbox && !currentDone) {
                 checkbox.classList.add('checked');
                 checkbox.innerHTML = '<i data-lucide="check" class="icon icon-sm"></i>';
-                lucide.createIcons();
+                refreshIcons();
             }
             if (item && !currentDone) {
                 item.style.transform = 'scale(0.98)';
@@ -358,7 +376,8 @@
                         const newStatus = currentDone ? 'new' : 'done';
                         await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).update({
                             status: newStatus,
-                            completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null
+                            completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                            completedDate: newStatus === 'done' ? ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]) : null,  // P0 FIX
                         });
                         // AUDIT LOG
                         logTaskChange(taskToUpdate.id, newStatus === 'done' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
@@ -377,7 +396,8 @@
                             const existingDoc = existCheck.docs[0];
                             await existingDoc.ref.update({
                                 status: 'done',
-                                completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                completedDate: ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]),  // P0 FIX
                             });
                         } else {
                         // Створюємо нове
@@ -402,7 +422,8 @@
                                 creatorName: t('systemUser'),
                                 regularTaskId: id,
                                 autoGenerated: true,
-                                completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                completedDate: ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]),  // P0 FIX
                             });
                         } else {
                             console.error('Could not find regular task template:', id);
@@ -419,9 +440,11 @@
                     const needsReview = !currentDone && shouldSendForReview(taskObj);
                     const newStatus = currentDone ? 'new' : (needsReview ? 'review' : 'done');
                     
+                    const _cd = ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]);
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
                         status: newStatus,
-                        completedAt: newStatus === 'done' || newStatus === 'review' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                        completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                        completedDate: newStatus === 'done' ? _cd : null,  // P0 FIX
                         ...(needsReview ? { sentForReviewAt: firebase.firestore.FieldValue.serverTimestamp() } : {})
                     });
                     // AUDIT LOG
@@ -463,7 +486,7 @@
                 renderMyDay();
             } catch (error) {
                 console.error('Error toggling task:', error);
-                alert(t('error') + ': ' + error.message);
+                showAlertModal(t('error') + ': ' + error.message);
                 // Відновлюємо UI при помилці
                 if (checkbox && !currentDone) {
                     checkbox.classList.remove('checked');

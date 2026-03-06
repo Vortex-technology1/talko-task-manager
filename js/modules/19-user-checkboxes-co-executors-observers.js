@@ -136,7 +136,21 @@
                 };
                 setTimeout(() => {
                     document.addEventListener('click', closeHandler);
-                    if (!isMobile) document.addEventListener('scroll', scrollHandler, true);
+                    if (!isMobile) {
+                        document.addEventListener('scroll', scrollHandler, true);
+                        // Додатково вішаємо на scroll модального контейнера
+                        const modalScroller = dd.closest('.modal-body, .modal-content, .task-modal-body') ||
+                            (() => {
+                                let el = dd.parentElement;
+                                while (el && el !== document.body) {
+                                    const s = window.getComputedStyle(el);
+                                    if (s.overflowY === 'auto' || s.overflowY === 'scroll') return el;
+                                    el = el.parentElement;
+                                }
+                                return null;
+                            })();
+                        if (modalScroller) modalScroller.addEventListener('scroll', scrollHandler, { passive: true });
+                    }
                 }, 10);
             }
         }

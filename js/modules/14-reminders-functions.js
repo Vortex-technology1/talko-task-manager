@@ -91,7 +91,7 @@
             
             // Rate limiting
             if (!rateLimiter.check('saveTask')) {
-                alert(t('tooManyRequests'));
+                showAlertModal(t('tooManyRequests'));
                 return;
             }
             
@@ -106,7 +106,7 @@
             // Валідація
             const errors = validateTaskData(taskData);
             if (errors.length > 0) {
-                alert(errors.join('\n'));
+                showAlertModal(errors.join('\n'));
                 return;
             }
             
@@ -119,6 +119,7 @@
             const originalText = submitBtn?.innerHTML;
             if (submitBtn) {
                 submitBtn.disabled = true;
+                submitBtn.dataset.origText = originalText; // ГЛЮК FIX: зберігаємо для відновлення
                 submitBtn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>';
             }
             
@@ -138,7 +139,7 @@
                     );
                     if (criticalOverdue.length >= 3) {
                         const name = assignee?.name || assignee?.email || '';
-                        const proceed = confirm(
+                        const proceed = await showConfirmModal(
                             `${name}: ${criticalOverdue.length} ${t('criticalOverdueWarning')}\n\n${t('criticalOverdueAdvice')}\n\n${t('continueAnyway')}`
                         );
                         if (!proceed) {
@@ -162,7 +163,14 @@
                 const data = {
                     title: document.getElementById('taskTitle').value.trim(),
                     function: document.getElementById('taskFunction').value,
+                    ownerFunctionId: (() => {
+                        const fname = document.getElementById('taskFunction').value;
+                        if (!fname || typeof functions === 'undefined') return '';
+                        const f = functions.find(fn => fn.name === fname);
+                        return f?.id || '';
+                    })(),
                     projectId: document.getElementById('taskProject')?.value || '',
+                    stageId: document.getElementById('taskStage')?.value || '',
                     assigneeId: assigneeId,
                     assigneeName: assignee?.name || assignee?.email || '',
                     deadlineDate: deadlineDate,
@@ -205,7 +213,9 @@
                     data.completedAt = null;
                 } else if (statusVal === 'done') {
                     data.completedAt = firebase.firestore.FieldValue.serverTimestamp();
-                    data.completedBy = currentUser.uid;
+                    data.completedBy = currentUser?.uid || null;
+                    // БАГ 1 FIX: синхронізуємо completedDate для Telegram аналітики
+                    data.completedDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
                 } else if (statusVal === 'review') {
                     data.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
                     data.completedAt = null;
@@ -235,7 +245,7 @@
                             const freshDoc = await db.collection('companies').doc(currentCompany).collection('tasks').doc(currentEditingId).get();
                             const freshUpdated = freshDoc.data()?.updatedAt;
                             if (freshUpdated?.toMillis && freshUpdated.toMillis() > existingTask._openedAt) {
-                                if (!confirm(t('taskModifiedByOther'))) {
+                                if (!await showConfirmModal(t('taskModifiedByOther'), { danger: true })) {
                                     isSaving = false;
                                     if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
                                     return;
@@ -257,7 +267,7 @@
                         }
                         if (Object.keys(changes).length > 0) {
                             const action = changes.status ? 'status' : changes.assigneeId ? 'reassign' : changes.deadlineDate || changes.deadlineTime ? 'deadline' : 'edit';
-                            logTaskChange(currentEditingId, action, changes, existingTask);
+                            logTaskChange(currentEditingId, action, changes, existingTask).catch(err => console.warn("[AuditLog]", err));
                             
                             // Decision log for AGI
                             if (changes.assigneeId) {
@@ -306,7 +316,7 @@
                     newDocRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(data);
                     
                     // AUDIT LOG — створення задачі
-                    logTaskChange(newDocRef.id, 'created', { title: data.title, assigneeId: data.assigneeId, deadlineDate: data.deadlineDate }, null);
+                    logTaskChange(newDocRef.id, 'created', { title: data.title, assigneeId: data.assigneeId, deadlineDate: data.deadlineDate }, null).catch(err => console.warn("[AuditLog]", err));
                     
                     // Sync with Google Calendar (only if date is set)
                     if (deadlineDate && googleAccessToken) {
@@ -378,9 +388,27 @@
                     autoUpdateProjectStatus(_prevProjectId);
                 }
                 
+                // Auto-update stage progress
+                if (data.stageId && typeof window.autoUpdateStageProgress === 'function') {
+                    window.autoUpdateStageProgress(data.stageId);
+                }
+                
+                // Emit events
+                if (typeof window.createProjectEvent === 'function') {
+                    const prevStatus = existingTask?.status || '';
+                    // task_done — тільки якщо статус реально змінився на done
+                    if (data.status === 'done' && prevStatus !== 'done' && data.projectId) {
+                        window.createProjectEvent('task_done', {
+                            projectId: data.projectId, stageId: data.stageId || '',
+                            taskId: currentEditingId || (newDocRef ? newDocRef.id : ''),
+                            functionId: data.function || '',
+                        });
+                    }
+                }
+                
             } catch (error) {
                 console.error('saveTask error:', error);
-                alert(t('error') + ': ' + error.message);
+                showAlertModal(t('error') + ': ' + error.message);
             } finally {
                 isSaving = false;
                 if (submitBtn) {

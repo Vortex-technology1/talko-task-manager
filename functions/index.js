@@ -40,9 +40,19 @@ async function sendTelegramMessage(chatId, text, opts = {}) {
                 ...opts
             })
         });
-        return response.json();
+        // P2: перевіряємо HTTP статус — Telegram повертає 4xx/5xx при помилках
+        if (!response.ok) {
+            const errBody = await response.text().catch(() => '');
+            console.error(`[Telegram] HTTP ${response.status} for chat ${chatId}:`, errBody.slice(0, 200));
+            return null;
+        }
+        const json = await response.json();
+        if (!json.ok) {
+            console.error(`[Telegram] API error for chat ${chatId}:`, json.description || json.error_code);
+        }
+        return json;
     } catch (error) {
-        console.error('Telegram send error:', error);
+        console.error('[Telegram] Network error:', error.message);
         return null;
     }
 }
@@ -210,10 +220,20 @@ exports.onTaskCompleted = functions
 // ===========================
 exports.telegramWebhook = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_WEBHOOK_SECRET'] })
     .https.onRequest(async (req, res) => {
         if (req.method !== 'POST') {
             return res.status(200).send('TALKO Telegram Bot is running!');
+        }
+
+        // ── SECRET TOKEN VALIDATION ──────────────────────────
+        const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
+        if (secret) {
+            const incoming = req.headers['x-telegram-bot-api-secret-token'];
+            if (!incoming || incoming !== secret) {
+                console.warn('[Webhook] Invalid secret token from', req.ip);
+                return res.status(403).send('Forbidden');
+            }
         }
 
         const update = req.body;
@@ -223,8 +243,14 @@ exports.telegramWebhook = functions
             const cb = update.callback_query;
             const chatId = cb.message.chat.id;
             const messageId = cb.message.message_id;
-            const data = cb.data; // format: "action:companyId:taskId"
+            const data = cb.data || ''; // format: "action:companyId:taskId"
 
+            // Валідація callback_data — захист від injection/malformed input
+            if (!data || typeof data !== 'string' || data.length > 200) {
+                await answerCallbackQuery(cb.id, '❌ Невідомна дія');
+                return res.status(200).send('OK');
+            }
+            const ALLOWED_ACTIONS = ['done', 'postpone', 'progress', 'details'];
             const parts = data.split(':');
             if (parts.length < 3) {
                 await answerCallbackQuery(cb.id, '❌ Невідомна дія');
@@ -232,6 +258,17 @@ exports.telegramWebhook = functions
             }
 
             const [action, companyId, taskId] = parts;
+
+            // Перевіряємо action в whitelist
+            if (!ALLOWED_ACTIONS.includes(action)) {
+                await answerCallbackQuery(cb.id, '❌ Невідомна дія');
+                return res.status(200).send('OK');
+            }
+            // Перевіряємо companyId і taskId — тільки alphanumeric
+            if (!/^[a-zA-Z0-9_-]{1,128}$/.test(companyId) || !/^[a-zA-Z0-9_-]{1,128}$/.test(taskId)) {
+                await answerCallbackQuery(cb.id, '❌ Невірні параметри');
+                return res.status(200).send('OK');
+            }
 
             // Find user by telegramChatId
             let userId = null;
@@ -255,9 +292,39 @@ exports.telegramWebhook = functions
 
             const task = taskDoc.data();
 
+            // ── TASK-LEVEL AUTHORIZATION ─────────────────────
+            if (userId) {
+                const isAssignee = task.assigneeId === userId;
+                const isCreator = task.creatorId === userId;
+                const isCoExecutor = (task.coExecutorIds || []).includes(userId);
+                // Перевіряємо чи юзер manager/owner
+                const userDoc = await db.collection('companies').doc(companyId)
+                    .collection('users').doc(userId).get();
+                const userRole = userDoc.exists ? userDoc.data().role : null;
+                const isManager = userRole === 'owner' || userRole === 'manager';
+
+                if (!isAssignee && !isCreator && !isCoExecutor && !isManager) {
+                    console.warn('[Webhook] Unauthorized task action:', userId, '->', taskId);
+                    await answerCallbackQuery(cb.id, '❌ Немає прав на цю задачу');
+                    return res.status(200).send('OK');
+                }
+            }
+
             try {
                 if (action === 'done') {
-                    // ✅ Завершити задачу
+                    // ✅ Завершити задачу — з перевіркою requireReview
+                    if (task.requireReview && task.creatorId && task.creatorId !== userId) {
+                        await taskRef.update({
+                            status: 'review',
+                            completedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            completedBy: userId,
+                            completionSource: 'telegram'
+                        });
+                        await editMessageText(chatId, messageId,
+                            `🔍 <b>Відправлено на перевірку!</b>\n\n📌 ${task.title}`
+                        );
+                        await answerCallbackQuery(cb.id, '🔍 Відправлено на перевірку');
+                    } else {
                     await taskRef.update({
                         status: 'done',
                         completedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -269,6 +336,7 @@ exports.telegramWebhook = functions
                         `✅ <b>Виконано!</b>\n\n📌 ${task.title}\n⏰ ${new Date().toLocaleString('uk-UA')}`
                     );
                     await answerCallbackQuery(cb.id, '✅ Задачу завершено!');
+                    } // end else (no requireReview)
 
                 } else if (action === 'postpone') {
                     // 🔄 Перенести на +1 день
@@ -357,25 +425,24 @@ exports.telegramWebhook = functions
                 if (parts.length > 1) {
                     const registrationCode = parts[1];
 
-                    const companiesSnap = await db.collection('companies').get();
+                    // БАГ 7 FIX: collectionGroup замість N+1 loop (500 компаній = 500 reads)
+                    // 1 запит замість 500
+                    const cgUsersSnap = await db.collectionGroup('users')
+                        .where('telegramCode', '==', registrationCode)
+                        .limit(1).get();
 
-                    for (const companyDoc of companiesSnap.docs) {
-                        const usersSnap = await companyDoc.ref.collection('users')
-                            .where('telegramCode', '==', registrationCode).get();
+                    if (!cgUsersSnap.empty) {
+                        const userDoc = cgUsersSnap.docs[0];
+                        await userDoc.ref.update({
+                            telegramChatId: chatId.toString(),
+                            telegramUserId: userId.toString(),
+                            telegramCode: null
+                        });
 
-                        if (!usersSnap.empty) {
-                            const userDoc = usersSnap.docs[0];
-                            await userDoc.ref.update({
-                                telegramChatId: chatId.toString(),
-                                telegramUserId: userId.toString(),
-                                telegramCode: null
-                            });
-
-                            await sendTelegramMessage(chatId,
-                                '✅ <b>Успішно підключено!</b>\n\nТепер ви отримуватимете сповіщення про нові завдання.\n\nКнопки під кожним завданням:\n✅ Готово — завершити\n🔄 +1 день — перенести\n🚀 В роботу — взяти\n📎 Деталі — побачити опис'
-                            );
-                            return res.status(200).send('OK');
-                        }
+                        await sendTelegramMessage(chatId,
+                            '✅ <b>Успішно підключено!</b>\n\nТепер ви отримуватимете сповіщення про нові завдання.\n\nКнопки під кожним завданням:\n✅ Готово — завершити\n🔄 +1 день — перенести\n🚀 В роботу — взяти\n📎 Деталі — побачити опис'
+                        );
+                        return res.status(200).send('OK');
                     }
 
                     await sendTelegramMessage(chatId,
@@ -389,15 +456,13 @@ exports.telegramWebhook = functions
                     );
                 }
             } else if (text === '/today' || text === '/overdue') {
-                // Знаходимо юзера по chatId
-                const companiesSnap = await db.collection('companies').get();
-                for (const companyDoc of companiesSnap.docs) {
-                    const companyId = companyDoc.id;
-                    const uSnap = await companyDoc.ref.collection('users')
-                        .where('telegramChatId', '==', chatId.toString()).limit(1).get();
-                    if (uSnap.empty) continue;
-
-                    const uid = uSnap.docs[0].id;
+                // БАГ 2 FIX: collectionGroup замість N+1 loop по 500 компаніях
+                const cgUserSnap = await db.collectionGroup('users')
+                    .where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                if (!cgUserSnap.empty) {
+                    const companyId = cgUserSnap.docs[0].ref.parent.parent.id;
+                    const uid = cgUserSnap.docs[0].id;
+                    if (true) { // scope wrapper
                     const todayStr = new Date().toISOString().split('T')[0];
 
                     const tasksSnap = await db.collection('companies').doc(companyId)
@@ -431,8 +496,8 @@ exports.telegramWebhook = functions
                             await sendTelegramMessage(chatId, `... ще ${filtered.length - 10}`);
                         }
                     }
-                    break;
-                }
+                    } // end scope wrapper
+                } // end if cgUserSnap
             }
         }
 
@@ -461,7 +526,11 @@ exports.leadWebhook = functions
             if (!companyDoc.exists) return res.status(404).json({ error: 'Company not found' });
 
             const companyData = companyDoc.data();
-            if (companyData.webhookApiKey && companyData.webhookApiKey !== apiKey) {
+            // P0 SEC FIX: apiKey обов'язковий — якщо компанія не налаштувала webhook → 403
+            if (!companyData.webhookApiKey) {
+                return res.status(403).json({ error: 'Webhook not configured. Set webhookApiKey in company settings first.' });
+            }
+            if (companyData.webhookApiKey !== apiKey) {
                 return res.status(401).json({ error: 'Invalid API key' });
             }
 
@@ -616,6 +685,12 @@ exports.leadWebhook = functions
 // ===========================
 // 5. SCHEDULED: ПРОСТРОЧЕНІ + ЕСКАЛАЦІЯ
 // ===========================
+// ========================
+// P2 COST FIX: checkOverdueTasks
+// Замість full scan всіх companies — collectionGroup query тільки по задачах
+// де overdueNotified = false і deadline вже минув (індексовано)
+// Reads: ~O(overdue tasks) замість O(N×M all tasks)
+// ========================
 exports.checkOverdueTasks = functions
     .region(REGION)
     .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
@@ -623,17 +698,32 @@ exports.checkOverdueTasks = functions
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
         const now = new Date();
-        const companiesSnap = await db.collection('companies').get();
+        const nowTimestamp = admin.firestore.Timestamp.fromDate(now);
 
-        for (const companyDoc of companiesSnap.docs) {
-            const companyId = companyDoc.id;
+        // Один collectionGroup query замість N company loops
+        const tasksSnap = await db.collectionGroup('tasks')
+            .where('status', 'in', ['new', 'progress'])
+            .where('overdueNotified', '==', false)
+            .where('deadline', '<=', nowTimestamp)
+            .limit(200)  // Safety cap — не більше 200 за раз
+            .get();
 
-            const tasksSnap = await db.collection('companies').doc(companyId)
-                .collection('tasks')
-                .where('status', 'in', ['new', 'progress'])
-                .get();
+        // Групуємо по companyId для batch reads юзерів
+        const byCompany = {};
+        tasksSnap.docs.forEach(doc => {
+            // companyId з path: companies/{cid}/tasks/{tid}
+            const cid = doc.ref.path.split('/')[1];
+            if (!byCompany[cid]) byCompany[cid] = [];
+            byCompany[cid].push(doc);
+        });
 
-            for (const taskDoc of tasksSnap.docs) {
+        for (const [companyId, taskDocs] of Object.entries(byCompany)) {
+            // Завантажуємо менеджерів компанії один раз
+            const managersSnap = await db.collection('companies').doc(companyId)
+                .collection('users').where('role', 'in', ['owner', 'manager']).get();
+            const managers = managersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+            for (const taskDoc of taskDocs) {
                 const task = taskDoc.data();
                 if (!task.deadline) continue;
 
@@ -658,12 +748,10 @@ exports.checkOverdueTasks = functions
                     }
                 }
 
-                // Notify managers
-                const managersSnap = await db.collection('companies').doc(companyId)
-                    .collection('users').where('role', 'in', ['owner', 'manager']).get();
-                for (const managerDoc of managersSnap.docs) {
-                    if (managerDoc.id === task.assigneeId) continue;
-                    const d = managerDoc.data();
+                // Notify managers (завантажені раніше — без повторного read)
+                for (const managerData of managers) {
+                    if (managerData.id === task.assigneeId) continue;
+                    const d = managerData;
                     if (d.telegramChatId) {
                         await sendWithButtons(d.telegramChatId,
                             `⚠️ <b>Задача прострочена!</b>\n\n${taskType}\n📌 ${task.title}\n👤 ${task.assigneeName || '-'}\n⏰ +${overdueMinutes} хв`,
@@ -920,7 +1008,7 @@ exports.checkScheduledTasks = functions
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
         const now = new Date();
-        const companiesSnap = await db.collection('companies').get();
+        const companiesSnap = await db.collection('companies').limit(500).get(); // safety cap
         for (const companyDoc of companiesSnap.docs) {
             const scheduledSnap = await companyDoc.ref
                 .collection('scheduledTasks')
@@ -928,12 +1016,19 @@ exports.checkScheduledTasks = functions
                 .where('activated', '==', false).get();
             for (const schedDoc of scheduledSnap.docs) {
                 const schedTask = schedDoc.data();
-                await companyDoc.ref.collection('tasks').add({
-                    ...schedTask.taskData,
-                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                    isAutoGenerated: true, scheduledTaskId: schedDoc.id
+                // Транзакція: create + activate атомарно — дубль неможливий
+                await db.runTransaction(async (tx) => {
+                    const fresh = await tx.get(schedDoc.ref);
+                    if (!fresh.exists || fresh.data().activated === true) return; // idempotent guard
+                    const newTaskRef = companyDoc.ref.collection('tasks').doc();
+                    tx.set(newTaskRef, {
+                        ...schedTask.taskData,
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                        isAutoGenerated: true,
+                        scheduledTaskId: schedDoc.id
+                    });
+                    tx.update(schedDoc.ref, { activated: true, activatedTaskId: newTaskRef.id });
                 });
-                await schedDoc.ref.update({ activated: true });
             }
         }
         return null;
@@ -942,6 +1037,11 @@ exports.checkScheduledTasks = functions
 // ===========================
 // 8. REMINDERS (з кнопками)
 // ===========================
+// ========================
+// P2 COST FIX: sendReminders
+// Замість full scan — collectionGroup query тільки задач де deadline в межах ±90 хв
+// Reads: ~O(upcoming tasks) замість O(N×M)
+// ========================
 exports.sendReminders = functions
     .region(REGION)
     .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
@@ -949,14 +1049,28 @@ exports.sendReminders = functions
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
         const now = new Date();
-        const companiesSnap = await db.collection('companies').get();
+        const nowTimestamp = admin.firestore.Timestamp.fromDate(now);
+        // Вікно: задачі з дедлайном від зараз до +90 хвилин
+        const windowEnd = new Date(now.getTime() + 90 * 60 * 1000);
+        const windowEndTs = admin.firestore.Timestamp.fromDate(windowEnd);
 
-        for (const companyDoc of companiesSnap.docs) {
-            const companyId = companyDoc.id;
-            const tasksSnap = await companyDoc.ref.collection('tasks')
-                .where('status', 'in', ['new', 'progress']).get();
+        const tasksSnap = await db.collectionGroup('tasks')
+            .where('status', 'in', ['new', 'progress'])
+            .where('deadline', '>=', nowTimestamp)
+            .where('deadline', '<=', windowEndTs)
+            .limit(200)
+            .get();
 
-            for (const taskDoc of tasksSnap.docs) {
+        // Групуємо по companyId
+        const byCompany = {};
+        tasksSnap.docs.forEach(doc => {
+            const cid = doc.ref.path.split('/')[1];
+            if (!byCompany[cid]) byCompany[cid] = [];
+            byCompany[cid].push(doc);
+        });
+
+        for (const [companyId, taskDocs] of Object.entries(byCompany)) {
+            for (const taskDoc of taskDocs) {
                 const task = taskDoc.data();
                 if (!task.deadline) continue;
 
@@ -965,7 +1079,7 @@ exports.sendReminders = functions
                 if (minUntil < 0) continue;
 
                 const reminders = task.reminders || [60, 15];
-                const sent = task.sentReminders || [];
+                const sent = task.sentReminders || []; // для read-only перевірки
 
                 for (const rem of reminders) {
                     if (minUntil <= rem + 3 && minUntil >= rem - 3 && !sent.includes(rem)) {
@@ -998,8 +1112,10 @@ exports.sendReminders = functions
                             }
                         }
 
-                        sent.push(rem);
-                        await taskDoc.ref.update({ sentReminders: sent });
+                        // arrayUnion — атомарно, safe при паралельних раннах
+                        await taskDoc.ref.update({
+                            sentReminders: admin.firestore.FieldValue.arrayUnion(rem)
+                        });
                     }
                 }
             }
@@ -1021,7 +1137,7 @@ exports.dailyReport = functions
         const yesterday = new Date(now); yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-        const companiesSnap = await db.collection('companies').get();
+        const companiesSnap = await db.collection('companies').limit(500).get(); // safety cap
 
         for (const companyDoc of companiesSnap.docs) {
             const companyId = companyDoc.id;
@@ -1102,7 +1218,7 @@ exports.personalDailyTasks = functions
         const day = now.getDay();
         if (day === 0 || day === 6) return null;
 
-        const companiesSnap = await db.collection('companies').get();
+        const companiesSnap = await db.collection('companies').limit(500).get(); // safety cap
         for (const companyDoc of companiesSnap.docs) {
             const companyId = companyDoc.id;
             if (companyDoc.data().personalDailyEnabled === false) continue;
@@ -1171,7 +1287,7 @@ exports.weeklyReport = functions
         const now = new Date();
         const weekAgo = new Date(now); weekAgo.setDate(weekAgo.getDate() - 7);
 
-        const companiesSnap = await db.collection('companies').get();
+        const companiesSnap = await db.collection('companies').limit(500).get(); // safety cap
         for (const companyDoc of companiesSnap.docs) {
             const companyId = companyDoc.id;
             if (companyDoc.data().weeklyReportEnabled === false) continue;
@@ -1261,7 +1377,7 @@ exports.weeklyReport = functions
 // ===========================
 exports.aiAssistant = functions
     .region(REGION)
-    .runWith({ timeoutSeconds: 120, memory: '256MB' })
+    .runWith({ timeoutSeconds: 120, memory: '256MB', secrets: ['OPENAI_API_KEY'] })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError('unauthenticated', 'Login required');
@@ -1270,6 +1386,47 @@ exports.aiAssistant = functions
         const { companyId, assistantId, userMessage, contextData } = data;
         if (!companyId || !assistantId || !userMessage) {
             throw new functions.https.HttpsError('invalid-argument', 'Missing fields');
+        }
+
+        // ─── AI KILL SWITCH + ЛІМІТИ ──────────────────────
+        const today = new Date().toISOString().split('T')[0];
+        const monthKey = today.slice(0, 7);
+
+        // Глобальний kill switch
+        try {
+            const globalSettings = await db.collection('settings').doc('ai').get();
+            if (globalSettings.exists && globalSettings.data().globalAiEnabled === false) {
+                throw new functions.https.HttpsError('unavailable', 'AI тимчасово недоступний');
+            }
+        } catch(e) { if (e.code) throw e; }
+
+        // Перевірка компанії — ліміти та статус
+        const companyDoc2 = await db.collection('companies').doc(companyId).get();
+        if (companyDoc2.exists) {
+            const compData = companyDoc2.data();
+            if (compData.aiEnabled === false) {
+                throw new functions.https.HttpsError('permission-denied', 'AI вимкнено для вашої компанії');
+            }
+            // Денний ліміт
+            if (compData.aiDailyTokenLimit > 0) {
+                const todaySnap = await db.collection('companies').doc(companyId)
+                    .collection('aiUsageLog').where('date', '==', today).get();
+                const tokensToday = todaySnap.docs.reduce((s, d) => s + (d.data().tokens || 0), 0);
+                if (tokensToday >= compData.aiDailyTokenLimit) {
+                    throw new functions.https.HttpsError('resource-exhausted',
+                        `Денний ліміт AI вичерпано: ${tokensToday}/${compData.aiDailyTokenLimit} токенів`);
+                }
+            }
+            // Місячний ліміт
+            if (compData.aiMonthlyTokenLimit > 0) {
+                const monthSnap = await db.collection('companies').doc(companyId)
+                    .collection('aiUsageLog').where('month', '==', monthKey).get();
+                const tokensMonth = monthSnap.docs.reduce((s, d) => s + (d.data().tokens || 0), 0);
+                if (tokensMonth >= compData.aiMonthlyTokenLimit) {
+                    throw new functions.https.HttpsError('resource-exhausted',
+                        `Місячний ліміт AI вичерпано: ${tokensMonth}/${compData.aiMonthlyTokenLimit} токенів`);
+                }
+            }
         }
 
         try {
@@ -1297,21 +1454,12 @@ exports.aiAssistant = functions
             const assistant = aDoc.data();
             const model = assistant.model || 'gpt-4o-mini';
 
-            // Get API key: company → global settings
-            let apiKey = '';
-            const companyDoc = await db.collection('companies').doc(companyId).get();
-            if (companyDoc.exists && companyDoc.data().openaiApiKey) {
-                apiKey = companyDoc.data().openaiApiKey;
-            }
-            if (!apiKey) {
-                const settingsDoc = await db.collection('settings').doc('ai').get();
-                if (settingsDoc.exists && settingsDoc.data().openaiApiKey) {
-                    apiKey = settingsDoc.data().openaiApiKey;
-                }
-            }
+            // P1 SEC FIX: API key виключно з Firebase Secret (env var)
+            // НЕ читати з Firestore — company members мають read на /companies/{cid}
+            const apiKey = process.env.OPENAI_API_KEY || '';
             if (!apiKey) {
                 throw new functions.https.HttpsError('failed-precondition',
-                    'API key not configured. Set in AI Assistants settings.');
+                    'OpenAI API key not configured. Add OPENAI_API_KEY to Firebase Secrets via: firebase functions:secrets:set OPENAI_API_KEY');
             }
 
             // Build messages
@@ -1369,7 +1517,7 @@ exports.eveningDigest = functions
         const tmrw = new Date(now); tmrw.setDate(tmrw.getDate() + 1);
         const tmrwStr = tmrw.toISOString().split('T')[0];
 
-        const companiesSnap = await db.collection('companies').get();
+        const companiesSnap = await db.collection('companies').limit(500).get(); // safety cap
 
         for (const companyDoc of companiesSnap.docs) {
             const companyId = companyDoc.id;
@@ -1508,5 +1656,169 @@ exports.eveningDigest = functions
                 if (d.telegramChatId) await sendTelegramMessage(d.telegramChatId, mgrMsg);
             }
         }
+        return null;
+    });
+
+
+// ============================================================
+// STATISTICS: Aggregates + Audit Log
+// ============================================================
+
+// Trigger: when metricEntry is created or updated → update aggregate
+exports.onMetricEntryWrite = functions
+    .region(REGION)
+    .firestore.document('companies/{companyId}/metricEntries/{entryId}')
+    .onWrite(async (change, context) => {
+        const { companyId, entryId } = context.params;
+        const after = change.after.exists ? change.after.data() : null;
+        const before = change.before.exists ? change.before.data() : null;
+
+        if (!after && !before) return null;
+
+        // Пропускаємо DELETE — його обробляє onMetricEntryDelete (щоб не було подвійного recalc)
+        if (!after) return null;
+
+        const entry = after;
+        const { metricId, periodKey, scope, scopeId } = entry;
+        if (!metricId || !periodKey) return null;
+
+        // 1) AUDIT LOG: track value changes
+        if (before && after && before.value !== after.value) {
+            await db.collection('companies').doc(companyId)
+                .collection('metricAuditLog').add({
+                    metricId,
+                    entryId,
+                    periodKey,
+                    scope: scope || 'user',
+                    scopeId: scopeId || '',
+                    oldValue: before.value,
+                    newValue: after.value,
+                    changedBy: after.createdBy || '',
+                    changedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    reason: 'value_update'
+                });
+        }
+
+        // 2) AGGREGATE: recalculate for this metric+period+scope
+        await recalcAggregate(companyId, metricId, periodKey);
+
+        return null;
+    });
+
+// Recalculate aggregate for a metric+period across all scopes
+async function recalcAggregate(companyId, metricId, periodKey) {
+    const entriesSnap = await db.collection('companies').doc(companyId)
+        .collection('metricEntries')
+        .where('metricId', '==', metricId)
+        .where('periodKey', '==', periodKey)
+        .get();
+
+    const entries = entriesSnap.docs.map(d => d.data());
+
+    // Group by scope+scopeId
+    const groups = {};
+    // Also track company-wide totals
+    let companySum = 0;
+    let companyCount = 0;
+
+    for (const e of entries) {
+        const key = `${e.scope || 'user'}:${e.scopeId || e.createdBy || ''}`;
+        if (!groups[key]) groups[key] = { scope: e.scope || 'user', scopeId: e.scopeId || e.createdBy || '', sum: 0, count: 0, values: [] };
+        groups[key].sum += (e.value || 0);
+        groups[key].count++;
+        groups[key].values.push(e.value || 0);
+        companySum += (e.value || 0);
+        companyCount++;
+    }
+
+    const batch = db.batch();
+    const aggRef = db.collection('companies').doc(companyId).collection('metricAggregates');
+
+    // Write per-scope aggregates
+    for (const g of Object.values(groups)) {
+        const aggId = `${metricId}_${periodKey}_${g.scope}_${g.scopeId}`;
+        const values = g.values;
+        batch.set(aggRef.doc(aggId), {
+            metricId,
+            periodKey,
+            scope: g.scope,
+            scopeId: g.scopeId,
+            sum: g.sum,
+            avg: values.length > 0 ? Math.round((g.sum / values.length) * 100) / 100 : 0,
+            count: g.count,
+            min: values.length > 0 ? Math.min(...values) : 0,
+            max: values.length > 0 ? Math.max(...values) : 0,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+    }
+
+    // Write company-wide aggregate
+    const compAggId = `${metricId}_${periodKey}_company_${companyId}`;
+    batch.set(aggRef.doc(compAggId), {
+        metricId,
+        periodKey,
+        scope: 'company',
+        scopeId: companyId,
+        sum: companySum,
+        avg: companyCount > 0 ? Math.round((companySum / companyCount) * 100) / 100 : 0,
+        count: companyCount,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    await batch.commit();
+}
+
+// Trigger: when metricEntry is deleted → update aggregate + log
+exports.onMetricEntryDelete = functions
+    .region(REGION)
+    .firestore.document('companies/{companyId}/metricEntries/{entryId}')
+    .onDelete(async (snap, context) => {
+        const { companyId } = context.params;
+        const data = snap.data();
+        if (!data.metricId || !data.periodKey) return null;
+
+        // Audit log
+        await db.collection('companies').doc(companyId)
+            .collection('metricAuditLog').add({
+                metricId: data.metricId,
+                entryId: context.params.entryId,
+                periodKey: data.periodKey,
+                oldValue: data.value,
+                newValue: null,
+                changedBy: data.createdBy || '',
+                changedAt: admin.firestore.FieldValue.serverTimestamp(),
+                reason: 'entry_deleted'
+            });
+
+        // Recalc
+        await recalcAggregate(companyId, data.metricId, data.periodKey);
+        return null;
+    });
+
+// Metric limit check: max 50 metrics per company
+exports.onMetricCreate = functions
+    .region(REGION)
+    .firestore.document('companies/{companyId}/metrics/{metricId}')
+    .onCreate(async (snap, context) => {
+        const { companyId, metricId } = context.params;
+        const metricsSnap = await db.collection('companies').doc(companyId)
+            .collection('metrics').get();
+
+        if (metricsSnap.size > 50) {
+            console.warn(`[STATS] Company ${companyId} exceeded 50 metrics limit. Deleting ${metricId}`);
+            await snap.ref.delete();
+            return null;
+        }
+
+        // Log creation
+        await db.collection('companies').doc(companyId)
+            .collection('metricAuditLog').add({
+                metricId,
+                action: 'metric_created',
+                name: snap.data().name || '',
+                createdBy: snap.data().createdBy || '',
+                createdAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+
         return null;
     });

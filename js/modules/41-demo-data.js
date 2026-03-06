@@ -68,13 +68,18 @@
         }
         
         async function loadDemoData(type) {
+            if (!window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+                showToast && showToast('Demo data — тільки для localhost', 'error');
+                return;
+            }
+
             if (!currentCompany) {
-                alert(t('createCompanyFirst'));
+                showAlertModal(t('createCompanyFirst'));
                 closeDemoDataModal();
                 return;
             }
             
-            if (!confirm(t('loadDemoConfirm'))) {
+            if (!await showConfirmModal(t('loadDemoConfirm'), { danger: true })) {
                 return;
             }
             
@@ -92,10 +97,10 @@
                 }
                 
                 await loadAllData();
-                alert(t('demoDataLoaded'));
+                showAlertModal(t('demoDataLoaded'));
             } catch (e) {
                 console.error('Error loading demo data:', e);
-                alert(t('loadError') + e.message);
+                showAlertModal(t('loadError') + e.message);
             }
         }
         

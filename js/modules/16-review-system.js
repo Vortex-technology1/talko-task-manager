@@ -42,6 +42,7 @@
         }
         
         async function reopenTaskFromModal() {
+            if (!requireAuth()) return;
             if (!editingId) return;
             const taskId = editingId;
             const taskIndex = tasks.findIndex(t => t.id === taskId);
@@ -69,18 +70,19 @@
                     }).catch(() => {});
                 }
                 // AUDIT LOG
-                logTaskChange(taskId, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' });
+                logTaskChange(taskId, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' }).catch(err => console.warn("[AuditLog]", err));
                 // Автостатус проєкту
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
             } catch(e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
                 refreshCurrentView();
-                alert(t('error') + ': ' + e.message);
+                showAlertModal(t('error') + ': ' + e.message);
             }
         }
         
         async function acceptReviewTask(taskId) {
+            if (!requireAuth()) return;
             const taskIndex = tasks.findIndex(t => t.id === taskId);
             if (taskIndex < 0) return;
             
@@ -96,6 +98,7 @@
             // Оптимістичне оновлення
             tasks[taskIndex].status = 'done';
             tasks[taskIndex].completedAt = new Date().toISOString();
+            tasks[taskIndex].completedDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];  // P0 FIX
             tasks[taskIndex].reviewedAt = new Date().toISOString();
             tasks[taskIndex].reviewedBy = currentUser.uid;
             renderMyDay();
@@ -106,9 +109,11 @@
                     deleteCalendarEvent(originalTask.calendarEventId).catch(err => console.warn("[Calendar] Delete sync failed:", err));
                 }
                 
+                const _reviewDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
                     status: 'done',
                     completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    completedDate: _reviewDate,  // P0 FIX
                     reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     reviewedBy: currentUser.uid
                 });
@@ -119,19 +124,20 @@
                 const acceptedTask = tasks[taskIndex];
                 if (acceptedTask?.projectId) autoUpdateProjectStatus(acceptedTask.projectId);
                 // AUDIT LOG
-                logTaskChange(taskId, 'review', { status: 'done' }, { status: 'review' });
+                logTaskChange(taskId, 'review', { status: 'done' }, { status: 'review' }).catch(err => console.warn("[AuditLog]", err));
                 
                 showToast(t('taskAccepted'), 'success');
             } catch (e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
                 refreshCurrentView();
-                alert(t('error') + ': ' + e.message);
+                showAlertModal(t('error') + ': ' + e.message);
             }
         }
         
         // Постановник повертає на доопрацювання
         async function rejectReviewTask(taskId) {
+            if (!requireAuth()) return;
             // Only creator or manager+ can reject review
             const taskForCheck = tasks.find(t => t.id === taskId);
             if (taskForCheck && taskForCheck.creatorId !== currentUser?.uid && !isManagerOrAbove()) {
@@ -167,13 +173,13 @@
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(updateData);
                 // AUDIT LOG
-                logTaskChange(taskId, 'status', { status: updateData.status }, { status: 'review' });
+                logTaskChange(taskId, 'status', { status: updateData.status }, { status: 'review' }).catch(err => console.warn("[AuditLog]", err));
                 
                 showToast(t('taskRejected'), 'warning');
             } catch (e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
                 refreshCurrentView();
-                alert(t('error') + ': ' + e.message);
+                showAlertModal(t('error') + ': ' + e.message);
             }
         }

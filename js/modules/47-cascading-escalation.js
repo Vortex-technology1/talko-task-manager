@@ -33,7 +33,7 @@
         
         async function checkEscalations() {
             if (!currentCompany) return;
-            
+
             const overdueTasks = tasks.filter(t => {
                 if (t.status === 'done') return false;
                 const level = getEscalationLevel(t);
@@ -45,15 +45,6 @@
             // Групуємо по рівнях
             const level2 = overdueTasks.filter(t => getEscalationLevel(t)?.level === 2);
             const level3 = overdueTasks.filter(t => getEscalationLevel(t)?.level === 3);
-            
-            // Показуємо сповіщення для менеджерів та овнерів
-            if (currentUserData?.role === 'owner' || currentUserData?.role === 'manager') {
-                if (level3.length > 0) {
-                    showToast(t('escalationCritical').replace('{n}', level3.length), 'error', 8000);
-                } else if (level2.length > 0) {
-                    showToast(t('escalationWarning').replace('{n}', level2.length), 'warning', 5000);
-                }
-            }
             
             // Логуємо ескалації які ще не логувались сьогодні
             const today = getLocalDateStr();

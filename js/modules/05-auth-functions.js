@@ -26,13 +26,13 @@
 
         async function selfRegisterCompany() {
             const user = auth.currentUser;
-            if (!user) { alert(t('signInFirst')); return; }
+            if (!user) { showAlertModal(t('signInFirst')); return; }
             
             const companyName = document.getElementById('selfRegCompanyName')?.value?.trim();
             const ownerName = document.getElementById('selfRegOwnerName')?.value?.trim();
             
             if (!companyName || !ownerName) {
-                alert(t('fillAllFields'));
+                showAlertModal(t('fillAllFields'));
                 return;
             }
             
@@ -69,14 +69,19 @@
                     role: 'owner'
                 });
                 
+                try {
                 await batch.commit();
+                } catch(err) {
+                    console.error('[Batch] commit failed:', err);
+                    showToast && showToast('Помилка збереження. Спробуйте ще раз.', 'error');
+                }
                 
                 // Reload — onAuthStateChanged знайде companyId і зайде
                 window.location.reload();
                 
             } catch (error) {
                 console.error('Self registration error:', error);
-                alert(t('createError') + ': ' + error.message);
+                showAlertModal(t('createError') + ': ' + error.message);
                 if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="rocket" class="icon"></i> Створити компанію'; }
             }
         }
@@ -114,6 +119,16 @@
                     currentInviteData = null;
                     // Не показуємо помилку тут - покажемо форму входу з підказкою
                     return 'already_used';
+                }
+
+                // Перевірка терміну дії
+                if (invite.expiresAt) {
+                    const expires = invite.expiresAt.toDate ? invite.expiresAt.toDate() : new Date(invite.expiresAt);
+                    if (new Date() > expires) {
+                        showAuthMessage && showAuthMessage('Посилання для запрошення застаріло. Попросіть менеджера надіслати нове.', 'error');
+                        currentInviteData = null;
+                        return false;
+                    }
                 }
                 
                 currentInviteData = { id: inviteId, ...invite };
@@ -203,10 +218,10 @@
                 
                 // КРОК 1: Спочатку створюємо Auth акаунт
                 // (потрібен для доступу до Firestore — invites вимагають авторизацію)
-                console.log('[Register] Creating auth account for:', email);
+                console.log('[Register] Creating auth account...');
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
-                console.log('[Register] Auth account created, UID:', user.uid);
+                console.log('[Register] Auth account created.');
                 
                 // КРОК 2: Тепер авторизовані — шукаємо invite
                 // (onAuthStateChanged спрацює автоматично і викличе findUserCompany,
@@ -359,7 +374,12 @@
                     });
                     
                     // Один запит — все атомарно
+                    try {
                     await batch.commit();
+                    } catch(err) {
+                        console.error('[Batch] commit failed:', err);
+                        showToast && showToast('Помилка збереження. Спробуйте ще раз.', 'error');
+                    }
                     console.log('[findUserCompany] Batch commit success, role:', inviteData.role);
                     
                     return companyId;
@@ -426,6 +446,7 @@
         }
         
         function logout() {
+            if (window._cleanupNotifications) window._cleanupNotifications();
             cleanupAllListeners();
             
             // Очищаємо стан
