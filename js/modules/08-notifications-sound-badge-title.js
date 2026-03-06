@@ -353,7 +353,6 @@
         window._cleanupNotifications = function() {
             if (_pageTitleInterval) { clearInterval(_pageTitleInterval); _pageTitleInterval = null; }
             if (completedTasksUnsubscribe) { completedTasksUnsubscribe(); completedTasksUnsubscribe = null; }
-            if (newTasksUnsubscribe) { newTasksUnsubscribe(); newTasksUnsubscribe = null; }
         };
         
         // Multi-tab sync: reload data when tab becomes visible after being hidden
