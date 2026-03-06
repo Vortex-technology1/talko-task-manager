@@ -185,11 +185,13 @@
     // P1-2: Fixed whitelist logic
     function canViewMetric(m) {
         if (!currentUser) return false;
+        // SuperAdmin бачить все
+        if (currentUser.email === 'management.talco@gmail.com') return true;
         const u = users.find(u => u.id === currentUser.uid);
         if (!u) return false;
 
-        // Owner — бачить все
-        if (u.role === 'owner') return true;
+        // Owner/admin — бачить все
+        if (u.role === 'owner' || u.role === 'admin') return true;
 
         // owner_only — тільки owner
         if (m.privacy === 'owner_only') return false;
@@ -262,6 +264,7 @@
                 results.push(...s.docs.map(d => ({ id: d.id, ...d.data() })));
             }
             statsEntries = results;
+            window._statsAllEntries = results;
         } catch (e) { console.error('[STATS] loadEntriesMulti:', e); }
     }
 
@@ -860,6 +863,10 @@
                 <button class="stats-pill" onclick="openQuickInputModal()" style="font-weight:600;">${SVG.edit} Внести дані</button>
                 <button class="stats-pill" onclick="runAIAnalysis()" style="color:#7c3aed;border-color:#e9d5ff;">${SVG.sparkles} AI</button>
                 <button class="stats-pill" onclick="openTrendsChart(statsMetrics[0]?.id || '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренди</button>
+                <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title="Експорт CSV">⬇ CSV</button>
+                <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title="Експорт Excel">⬇ Excel</button>
+                <button class="stats-pill" onclick="statsExportPDF()" style="color:#dc2626;border-color:#fecaca;" title="Вивантажити PDF">⬇ PDF</button>
+                ${canEdit ? `<button class="stats-pill" onclick="statsImportCSV()" style="color:#d97706;border-color:#fde68a;" title="Імпорт CSV">⬆ Імпорт</button>` : ''}
             </div>
         </div>
         ${metricCount === 0 && canEdit ? `
@@ -1692,6 +1699,188 @@
                 '<span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;border-top:2px dashed #9ca3af;"></span> План</span>' : '');
         }
     }
+
+
+    // ========================
+    //  EXPORT / IMPORT
+    // ========================
+
+    function statsGetTableData() {
+        const ms = statsMetrics.filter(m => canViewMetric(m));
+        const entries = window._statsAllEntries || [];
+        const rows = [];
+        ms.forEach(m => {
+            const mEntries = entries.filter(e => e.metricId === m.id);
+            mEntries.forEach(e => {
+                rows.push({
+                    metric: m.name,
+                    unit: m.unit || '',
+                    period: e.period || e.date || '',
+                    value: e.value ?? '',
+                    target: m.target ?? '',
+                    note: e.note || ''
+                });
+            });
+        });
+        return { ms, rows };
+    }
+
+    function statsExportCSV() {
+        const { rows } = statsGetTableData();
+        if (!rows.length) { showToast('Немає даних для експорту', 'error'); return; }
+        const header = ['Метрика','Одиниця','Період','Значення','Ціль','Примітка'];
+        const csv = [header, ...rows.map(r => [r.metric, r.unit, r.period, r.value, r.target, r.note])]
+            .map(row => row.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))
+            .join('\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `TALKO_statistics_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        showToast('CSV експортовано', 'success');
+    }
+
+    async function statsExportExcel() {
+        const { rows } = statsGetTableData();
+        if (!rows.length) { showToast('Немає даних для експорту', 'error'); return; }
+        // Load SheetJS
+        if (!window.XLSX) {
+            await new Promise((res, rej) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+                s.onload = res; s.onerror = rej;
+                document.head.appendChild(s);
+            });
+        }
+        const wsData = [
+            ['Метрика','Одиниця','Період','Значення','Ціль','Примітка'],
+            ...rows.map(r => [r.metric, r.unit, r.period, r.value, r.target, r.note])
+        ];
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        ws['!cols'] = [{ wch: 25 }, { wch: 10 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 30 }];
+        XLSX.utils.book_append_sheet(wb, ws, 'Статистика');
+        XLSX.writeFile(wb, `TALKO_statistics_${new Date().toISOString().slice(0,10)}.xlsx`);
+        showToast('Excel експортовано', 'success');
+    }
+
+    async function statsExportPDF() {
+        const { ms } = statsGetTableData();
+        if (!ms.length) { showToast('Немає даних для PDF', 'error'); return; }
+        showToast('Формуємо PDF...', 'info');
+        // Build HTML for print
+        const entries = window._statsAllEntries || [];
+        let html = `<html><head><meta charset="utf-8">
+            <style>
+                body { font-family: Arial, sans-serif; font-size: 12px; color: #1a1a1a; }
+                h1 { color: #16a34a; font-size: 18px; margin-bottom: 4px; }
+                h2 { font-size: 13px; color: #374151; margin: 16px 0 4px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+                th { background: #16a34a; color: #fff; padding: 6px 8px; text-align: left; font-size: 11px; }
+                td { padding: 5px 8px; border-bottom: 1px solid #f0f0f0; }
+                tr:nth-child(even) td { background: #f9fafb; }
+                .meta { color: #6b7280; font-size: 11px; margin-bottom: 16px; }
+            </style></head><body>
+            <h1>TALKO System — Статистика</h1>
+            <div class="meta">Вивантажено: ${new Date().toLocaleDateString('uk-UA')} | Метрик: ${ms.length}</div>`;
+        ms.forEach(m => {
+            const mEntries = entries.filter(e => e.metricId === m.id).slice(0, 20);
+            html += `<h2>${m.name}${m.unit ? ' (' + m.unit + ')' : ''}${m.target ? ' | Ціль: ' + m.target : ''}</h2>`;
+            if (mEntries.length) {
+                html += `<table><tr><th>Період</th><th>Значення</th><th>Примітка</th></tr>`;
+                mEntries.forEach(e => {
+                    html += `<tr><td>${e.period || e.date || ''}</td><td>${e.value ?? ''}</td><td>${e.note || ''}</td></tr>`;
+                });
+                html += `</table>`;
+            } else {
+                html += `<p style="color:#9ca3af;font-size:11px;">Даних немає</p>`;
+            }
+        });
+        html += '</body></html>';
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        setTimeout(() => { w.print(); }, 500);
+    }
+
+    function statsImportCSV() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.csv,.xlsx,.xls';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'csv') {
+                await statsImportFromCSV(file);
+            } else {
+                await statsImportFromExcel(file);
+            }
+        };
+        input.click();
+    }
+
+    async function statsImportFromCSV(file) {
+        const text = await file.text();
+        const lines = text.split('\n').filter(l => l.trim());
+        if (lines.length < 2) { showToast('CSV порожній або некоректний', 'error'); return; }
+        const rows = lines.slice(1).map(l => {
+            const cols = l.match(/(".*?"|[^,]+)/g) || [];
+            return cols.map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"').trim());
+        });
+        await statsImportRows(rows);
+    }
+
+    async function statsImportFromExcel(file) {
+        if (!window.XLSX) {
+            await new Promise((res, rej) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+                s.onload = res; s.onerror = rej;
+                document.head.appendChild(s);
+            });
+        }
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        const rows = data.slice(1).map(r => r.map(v => String(v || '')));
+        await statsImportRows(rows);
+    }
+
+    async function statsImportRows(rows) {
+        if (!currentCompany) return;
+        let imported = 0, skipped = 0;
+        for (const row of rows) {
+            const [metricName, , period, valueStr] = row;
+            if (!metricName || !period || valueStr === undefined || valueStr === '') { skipped++; continue; }
+            const metric = statsMetrics.find(m => m.name.trim() === metricName.trim());
+            if (!metric) { skipped++; continue; }
+            const value = parseFloat(valueStr.replace(',', '.'));
+            if (isNaN(value)) { skipped++; continue; }
+            try {
+                const db = firebase.firestore();
+                await db.collection('companies').doc(currentCompany)
+                    .collection('metricEntries').add({
+                        metricId: metric.id,
+                        value,
+                        period,
+                        date: period,
+                        note: row[5] || '',
+                        createdBy: currentUser.uid,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                imported++;
+            } catch(err) { skipped++; }
+        }
+        showToast(`Імпортовано: ${imported} записів${skipped ? ', пропущено: ' + skipped : ''}`, imported > 0 ? 'success' : 'error');
+        if (imported > 0) renderStatistics();
+    }
+
+    window.statsExportCSV = statsExportCSV;
+    window.statsExportExcel = statsExportExcel;
+    window.statsExportPDF = statsExportPDF;
+    window.statsImportCSV = statsImportCSV;
 
     window.renderStatistics = renderStatistics;
     window.openMetricModal = openMetricModal;
