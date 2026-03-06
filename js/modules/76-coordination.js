@@ -479,6 +479,7 @@
               <h2 style="margin:0;font-size:1rem;">📄 Протокол координації</h2>
               <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
                 <button onclick="sendProtocolToTelegram()" style="padding:.3rem .65rem;font-size:.76rem;background:#2b9ef4;color:#fff;border:none;border-radius:7px;cursor:pointer;">✈️ Telegram</button>
+                <button onclick="exportCoordHistoryExcel()" style="padding:.3rem .65rem;font-size:.76rem;background:#16a34a;color:#fff;border:none;border-radius:7px;cursor:pointer;">📊 Excel</button>
                 <button onclick="printProtocol()" style="padding:.3rem .65rem;font-size:.76rem;background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:7px;cursor:pointer;">🖨 PDF</button>
                 <button onclick="closeProtocolModal()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#9ca3af;">✕</button>
               </div>
