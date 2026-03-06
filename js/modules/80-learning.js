@@ -976,537 +976,1225 @@
                 id: 4,
                 title: "СИСТЕМА РОЗПОРЯДЖЕНЬ",
                 title_ru: "СИСТЕМА РАСПОРЯЖЕНИЙ",
-                subtitle: "Як проходити урок: переглянути відео",
-                subtitle_ru: "Прочитайте инструкцию и выполните задание в AI-ассистенте",
-                
-                videoLink: "https://youtu.be/wroQPSBgAn0",
-                materialsLink: "https://drive.google.com/drive/folders/1BNSRJePCQG0UgcFC399GQcAInS44YZvJ?usp=sharing",
-                
-                lessonContent: `<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Чому більшість розпоряджень не виконується</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Ви даєте завдання щодня. Через тиждень половина не виконана. Ви самі забуваєте що просили — співробітники теж.</p>
-        <p style="margin-top:8px;">У команді живе негласне правило: <strong>"Сказали раз і не нагадали — значить неважливо".</strong> Це не зла воля — це нормальна реакція людини на яку звалюється купа задач.</p>
-        <p style="margin-top:8px;">Результат: невиконання → ви втрачаєте контроль над бізнесом.</p>
+                subtitle: "Як ставити завдання так, щоб їх виконували",
+                subtitle_ru: "Как ставить задачи так, чтобы их выполняли",
+                hideAiBlock: true,
+
+                videoLink: null,
+                materialsLink: null,
+
+                lessonContent: `
+<style>
+.l4-section { margin-bottom:1.75rem; }
+.l4-section:last-child { margin-bottom:0; }
+.l4-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l4-rule { display:flex; align-items:flex-start; gap:0.85rem; padding:0.85rem 1rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; margin-bottom:0.5rem; }
+.l4-rule:last-child { margin-bottom:0; }
+.l4-rule-icon { width:36px; height:36px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.1rem; }
+.l4-rule-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l4-rule-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l4-grid7 { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+.l4-cell { padding:0.7rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; }
+.l4-cell-label { font-size:0.68rem; font-weight:700; color:#16a34a; letter-spacing:0.07em; margin-bottom:0.2rem; }
+.l4-cell-text { font-size:0.82rem; color:#374151; line-height:1.4; }
+.l4-example { border-radius:10px; padding:0.9rem 1rem; }
+.l4-example-bad { background:#fef2f2; border:1px solid #fecaca; margin-bottom:0.5rem; }
+.l4-example-good { background:#f0fdf4; border:1px solid #bbf7d0; }
+.l4-example-label { display:flex; align-items:center; gap:0.45rem; margin-bottom:0.5rem; font-weight:700; font-size:0.8rem; }
+.l4-example-text { font-size:0.875rem; color:#374151; line-height:1.55; }
+.l4-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l4-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l4-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l4-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l4-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l4-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l4-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l4-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.75rem; }
+.l4-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.6rem; }
+.l4-power { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6rem; margin-top:0.85rem; }
+.l4-power-card { border-radius:11px; padding:0.9rem 0.6rem; text-align:center; }
+.l4-power-num { font-size:1.5rem; font-weight:900; line-height:1.1; }
+.l4-power-desc { font-size:0.75rem; color:#6b7280; margin-top:0.35rem; line-height:1.35; }
+</style>
+
+<div class="l4-section">
+    <div class="l4-section-label">Вступ</div>
+    <div class="l4-section-title">Чому більшість розпоряджень не виконується</div>
+    <div class="l4-card">
+        <p style="font-size:0.9rem;color:#374151;line-height:1.65;">Ви даєте завдання щодня. Через тиждень половина не виконана. Ви самі забуваєте що просили — співробітники теж.</p>
+        <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">У команді живе негласне правило: <strong>«Сказали раз і не нагадали — значить неважливо».</strong> Це не зла воля — це нормальна реакція людини, на яку звалюється купа задач.</p>
+        <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">Причина не в людях. Причина — у слабкій формі постановки задачі.</p>
     </div>
 </div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Рівні влади: чому одних слухають, а інших ігнорують</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Є керівники які кажуть "тут душно" — і хтось відразу йде відкривати вікно. Є інші, які 10 разів нагадують "прибрати офіс" — і їх ігнорують. <strong>Різниця — рівень влади.</strong></p>
-        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
-            <div style="flex:1;min-width:100px;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;text-align:center;">
-                <div style="font-size:1.5rem;font-weight:900;color:#ef4444;">1–10</div>
-                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Нагадуєте 10+ разів</div>
-            </div>
-            <div style="flex:1;min-width:100px;padding:12px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:10px;text-align:center;">
-                <div style="font-size:1.5rem;font-weight:900;color:#f97316;">40–60</div>
-                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Нагадуєте 2–3 рази</div>
-            </div>
-            <div style="flex:1;min-width:100px;padding:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:10px;text-align:center;">
-                <div style="font-size:1.5rem;font-weight:900;color:#22c55e;">80+</div>
-                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Сказали раз — виконали</div>
-            </div>
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Принцип</div>
+    <div class="l4-section-title">Рівень влади визначає рівень виконання</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;">Є керівники, яким кажуть «тут душно» — і хтось одразу йде відкривати вікно. Є інші, які 10 разів нагадують «прибрати офіс» — і їх ігнорують. Різниця — не характер, а рівень влади.</p>
+    <div class="l4-power">
+        <div class="l4-power-card" style="background:#fef2f2;border:1px solid #fecaca;">
+            <div class="l4-power-num" style="color:#ef4444;">1–10</div>
+            <div class="l4-power-desc">Нагадуєте 10+ разів</div>
         </div>
-        <p style="margin-top:10px;">Більшість власників зараз на рівні 20–30. Єдиний спосіб піднятися — систематично домагатися виконання кожного розпорядження. <strong>Кожне непроконтрольоване завдання = мінус до влади.</strong></p>
+        <div class="l4-power-card" style="background:#fff7ed;border:1px solid #fed7aa;">
+            <div class="l4-power-num" style="color:#f97316;">40–60</div>
+            <div class="l4-power-desc">Нагадуєте 2–3 рази</div>
+        </div>
+        <div class="l4-power-card" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+            <div class="l4-power-num" style="color:#22c55e;">80+</div>
+            <div class="l4-power-desc">Сказали раз — виконали</div>
+        </div>
     </div>
+    <p style="font-size:0.82rem;color:#525252;line-height:1.55;margin-top:0.85rem;">Більшість власників зараз на рівні 20–30. Єдиний спосіб піднятися — систематично домагатися виконання кожного розпорядження. Кожне непроконтрольоване завдання — мінус до влади.</p>
 </div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">4 правила системи</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">01 — Тільки письмово</div>
-            <p style="font-size:0.85rem;color:#94a3b8;">Усних розпоряджень не існує. Якщо сказали на нараді — одразу дублюйте письмово. Навіть якщо треба взяти паузу.</p>
-        </div>
-        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">02 — Конкретна дата і час</div>
-            <p style="font-size:0.85rem;color:#94a3b8;">"Скоро" і "пізніше" не існує. Без дедлайну завдання не буде виконано ніколи.</p>
-        </div>
-        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">03 — Список усіх розпоряджень</div>
-            <p style="font-size:0.85rem;color:#94a3b8;">Google таблиця або Excel: кому, що, термін, виконано. Без списку ви забуваєте контролювати — і руйнуєте свою владу.</p>
-        </div>
-        <div style="padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">04 — Контроль на кожній зустрічі</div>
-            <p style="font-size:0.85rem;color:#94a3b8;">Кожна зустріч зі співробітником — відкриваєте список і проходите по кожному пункту. Не кричіть — спокійно нагадуйте поки не зрозуміють: ви НЕ забудете.</p>
-        </div>
-    </div>
-</div>
+<div class="l4-divider"></div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Шаблон правильного розпорядження (7 елементів)</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">КОМУ</span><br><span style="color:#94a3b8;">Конкретна посада + ПІБ. Не "відділу".</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ТЕРМІН</span><br><span style="color:#94a3b8;">Конкретна дата і час.</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">КОНТЕКСТ</span><br><span style="color:#94a3b8;">Чому, що змінилось, кого стосується.</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ЗАВДАННЯ</span><br><span style="color:#94a3b8;">Дія + конкретний результат.</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ПРОДУКТ</span><br><span style="color:#94a3b8;">Що має бути готовим: документ, фото, звіт.</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ЗВІТ</span><br><span style="color:#94a3b8;">Дедлайн звіту, формат, куди надсилати.</span></div>
-        </div>
-        <div style="padding:12px;background:rgba(239,68,68,0.08);border-radius:8px;border-left:3px solid #ef4444;">
-            <p style="font-size:0.82rem;color:#94a3b8;"><strong style="color:#ef4444;">❌ Погано:</strong> "Прослідкуй щоб усе було в порядку. Якось повідом якщо будуть проблеми."</p>
-            <p style="font-size:0.82rem;color:#94a3b8;margin-top:6px;"><strong style="color:#22c55e;">✅ Добре:</strong> "До 13.12 о 18:00: провести брифінг (фото присутніх), перевірити кабінети 1–5 (фото кожного), надіслати звіт у Telegram до 19:00."</p>
-        </div>
-        <p style="font-size:0.82rem;color:#94a3b8;margin-top:10px;"><strong style="color:#ffffff;">Правило доказів:</strong> Купити квиток → "Зроблено" + файл. Розробити дизайн → "Зроблено" + скрін. Зателефонувати → "Зроблено" + скрін дзвінка. Без доказу — не виконано.</p>
-    </div>
-</div>
-
-
-<div class="l-ai-block" style="margin:1.25rem 0 0;">
-    <div class="l-ai-block-header">
-        <div class="l-ai-icon">📋</div>
+<div class="l4-section">
+    <div class="l4-section-label">Правила</div>
+    <div class="l4-section-title">4 правила системи</div>
+    <div class="l4-rule">
+        <div class="l4-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
         <div>
-            <div class="l-ai-title">AI Генератор розпоряджень</div>
-            <div class="l-ai-desc">Опишіть завдання яке хочете поставити — асистент складе правильне розпорядження за шаблоном TALKO з усіма 7 елементами.</div>
+            <div class="l4-rule-title">Тільки письмово</div>
+            <div class="l4-rule-text">Усних розпоряджень не існує. Якщо сказали на нараді — одразу дублюйте письмово, навіть якщо треба взяти паузу.</div>
         </div>
     </div>
-    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator','_blank')">
-        📋 Скласти розпорядження через AI →
-    </button>
-</div>
-
-<div class="result-block" style="margin-top:1rem;">
-    <strong>Результат через 2–4 тижні:</strong> співробітники звикнуть виконувати без суперечок. Замість 10 нагадувань — скажете раз і отримаєте результат. Перевірено на 150+ бізнесах.
-</div>`,
-                
-                lessonContent_ru: `<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Чому більшість розпоряджень не виконується</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Ви даєте завдання щодня. Через тиждень половина не виконана. Ви самі забуваєте що просили — співробітники теж.</p>
-        <p style="margin-top:8px;">У команді живе негласне правило: <strong>"Сказали раз і не нагадали — значить неважливо".</strong> Це не зла воля — це нормальна реакція людини на яку звалюється купа задач.</p>
-        <p style="margin-top:8px;">Результат: невиконання → ви втрачаєте контроль над бізнесом.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Рівні влади: чому одних слухають, а інших ігнорують</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Є керівники які кажуть "тут душно" — і хтось відразу йде відкривати вікно. Є інші, які 10 разів нагадують "прибрати офіс" — і їх ігнорують. <strong>Різниця — рівень влади.</strong></p>
-        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
-            <div style="flex:1;min-width:100px;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;text-align:center;">
-                <div style="font-size:1.5rem;font-weight:900;color:#ef4444;">1–10</div>
-                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Нагадуєте 10+ разів</div>
-            </div>
-            <div style="flex:1;min-width:100px;padding:12px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:10px;text-align:center;">
-                <div style="font-size:1.5rem;font-weight:900;color:#f97316;">40–60</div>
-                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Нагадуєте 2–3 рази</div>
-            </div>
-            <div style="flex:1;min-width:100px;padding:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:10px;text-align:center;">
-                <div style="font-size:1.5rem;font-weight:900;color:#22c55e;">80+</div>
-                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Сказали раз — виконали</div>
-            </div>
-        </div>
-        <p style="margin-top:10px;">Більшість власників зараз на рівні 20–30. Єдиний спосіб піднятися — систематично домагатися виконання кожного розпорядження. <strong>Кожне непроконтрольоване завдання = мінус до влади.</strong></p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">4 правила системи</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">01 — Тільки письмово</div>
-            <p style="font-size:0.85rem;color:#94a3b8;">Усних розпоряджень не існує. Якщо сказали на нараді — одразу дублюйте письмово. Навіть якщо треба взяти паузу.</p>
-        </div>
-        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">02 — Конкретна дата і час</div>
-            <p style="font-size:0.85rem;color:#94a3b8;">"Скоро" і "пізніше" не існує. Без дедлайну завдання не буде виконано ніколи.</p>
-        </div>
-        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">03 — Список усіх розпоряджень</div>
-            <p style="font-size:0.85rem;color:#94a3b8;">Google таблиця або Excel: кому, що, термін, виконано. Без списку ви забуваєте контролювати — і руйнуєте свою владу.</p>
-        </div>
-        <div style="padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">04 — Контроль на кожній зустрічі</div>
-            <p style="font-size:0.85rem;color:#94a3b8;">Кожна зустріч зі співробітником — відкриваєте список і проходите по кожному пункту. Не кричіть — спокійно нагадуйте поки не зрозуміють: ви НЕ забудете.</p>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Шаблон правильного розпорядження (7 елементів)</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">КОМУ</span><br><span style="color:#94a3b8;">Конкретна посада + ПІБ. Не "відділу".</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ТЕРМІН</span><br><span style="color:#94a3b8;">Конкретна дата і час.</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">КОНТЕКСТ</span><br><span style="color:#94a3b8;">Чому, що змінилось, кого стосується.</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ЗАВДАННЯ</span><br><span style="color:#94a3b8;">Дія + конкретний результат.</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ПРОДУКТ</span><br><span style="color:#94a3b8;">Що має бути готовим: документ, фото, звіт.</span></div>
-            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ЗВІТ</span><br><span style="color:#94a3b8;">Дедлайн звіту, формат, куди надсилати.</span></div>
-        </div>
-        <div style="padding:12px;background:rgba(239,68,68,0.08);border-radius:8px;border-left:3px solid #ef4444;">
-            <p style="font-size:0.82rem;color:#94a3b8;"><strong style="color:#ef4444;">❌ Погано:</strong> "Прослідкуй щоб усе було в порядку. Якось повідом якщо будуть проблеми."</p>
-            <p style="font-size:0.82rem;color:#94a3b8;margin-top:6px;"><strong style="color:#22c55e;">✅ Добре:</strong> "До 13.12 о 18:00: провести брифінг (фото присутніх), перевірити кабінети 1–5 (фото кожного), надіслати звіт у Telegram до 19:00."</p>
-        </div>
-        <p style="font-size:0.82rem;color:#94a3b8;margin-top:10px;"><strong style="color:#ffffff;">Правило доказів:</strong> Купити квиток → "Зроблено" + файл. Розробити дизайн → "Зроблено" + скрін. Зателефонувати → "Зроблено" + скрін дзвінка. Без доказу — не виконано.</p>
-    </div>
-</div>
-
-
-<div class="l-ai-block" style="margin:1.25rem 0 0;">
-    <div class="l-ai-block-header">
-        <div class="l-ai-icon">📋</div>
+    <div class="l4-rule">
+        <div class="l4-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
         <div>
-            <div class="l-ai-title">AI Генератор розпоряджень</div>
-            <div class="l-ai-desc">Опишіть завдання яке хочете поставити — асистент складе правильне розпорядження за шаблоном TALKO з усіма 7 елементами.</div>
+            <div class="l4-rule-title">Конкретна дата і час</div>
+            <div class="l4-rule-text">«Скоро» і «пізніше» не існує. Без дедлайну завдання не буде виконано ніколи.</div>
         </div>
     </div>
-    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator','_blank')">
-        📋 Скласти розпорядження через AI →
-    </button>
+    <div class="l4-rule">
+        <div class="l4-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div>
+            <div class="l4-rule-title">Список усіх розпоряджень</div>
+            <div class="l4-rule-text">Google таблиця: кому, що, термін, виконано. Без списку ви забуваєте контролювати — і руйнуєте свою владу.</div>
+        </div>
+    </div>
+    <div class="l4-rule">
+        <div class="l4-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div>
+            <div class="l4-rule-title">Контроль на кожній зустрічі</div>
+            <div class="l4-rule-text">Відкриваєте список і проходите по кожному пункту. Спокійно, без крику — поки не зрозуміють що ви не забудете.</div>
+        </div>
+    </div>
 </div>
 
-<div class="result-block" style="margin-top:1rem;">
-    <strong>Результат через 2–4 тижні:</strong> співробітники звикнуть виконувати без суперечок. Замість 10 нагадувань — скажете раз і отримаєте результат. Перевірено на 150+ бізнесах.
-</div>`,
-                
-                homework: `<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Зайдіть в AI Генератор розпоряджень (кнопка вище)</li>
-            <li>Складіть одне реальне розпорядження для вашого співробітника</li>
-            <li>Перевірте: чи є всі 7 елементів шаблону</li>
-            <li>Відправте це розпорядження реальному співробітнику</li>
-            <li>Напишіть у полі відповіді: кому відправили і яке завдання</li>
-        </ol>
-    </div>
-</div>`,
-                
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Создайте таблицу распоряжений (шаблон в материалах)</li>
-            <li>Сгенерируйте через ассистента 2-3 реальных распоряжения</li>
-            <li>Добавьте их в таблицу</li>
-            <li>Пообщайтесь с ассистентом TALKO Task Manager</li>
-            <li>Прикрепите ссылку на таблицу</li>
-        </ol>
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Шаблон</div>
+    <div class="l4-section-title">7 елементів правильного розпорядження</div>
+    <div class="l4-grid7">
+        <div class="l4-cell"><div class="l4-cell-label">КОМУ</div><div class="l4-cell-text">Конкретна посада + ПІБ. Не «відділу».</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">ТЕРМІН</div><div class="l4-cell-text">Конкретна дата і час виконання</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">КОНТЕКСТ</div><div class="l4-cell-text">Чому, що змінилось, кого стосується</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">ЗАВДАННЯ</div><div class="l4-cell-text">Конкретна дія + очікуваний результат</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">ПРОДУКТ</div><div class="l4-cell-text">Що має бути готовим: документ, фото, звіт</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">ЗВІТ</div><div class="l4-cell-text">Дедлайн звіту, формат, куди надсилати</div></div>
+        <div class="l4-cell" style="grid-column:1/-1;"><div class="l4-cell-label">ДОКАЗ</div><div class="l4-cell-text">Скрін, файл або фото. Без доказу — не виконано.</div></div>
     </div>
 </div>
-                `,
-                
-                homeworkLink: "https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-ai-alex-talko-generator-rozporiadzhen-dlia-biznesu",
-                homeworkLinkName: "→ AI-генератор розпоряджень",
-                homeworkLinkName_ru: "→ AI-генератор распоряжений",
+
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Приклад</div>
+    <div class="l4-section-title">Неправильно vs Правильно</div>
+    <div class="l4-example l4-example-bad">
+        <div class="l4-example-label" style="color:#dc2626;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Неправильно
+        </div>
+        <div class="l4-example-text" style="color:#7f1d1d;font-style:italic;">«Прослідкуй, щоб усе було в порядку. Якщо будуть проблеми — повідом.»</div>
+    </div>
+    <div class="l4-example l4-example-good">
+        <div class="l4-example-label" style="color:#16a34a;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+            Правильно
+        </div>
+        <div class="l4-example-text" style="color:#14532d;font-style:italic;">«До 13:00 перевірити 4 фото продукту, передати дизайнеру 5 банерів 1:5, надіслати звіт у Telegram до 19:00.»</div>
+    </div>
+</div>
+
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Інструмент</div>
+    <div class="l4-tool">
+        <div class="l4-tool-header">
+            <div class="l4-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div>
+                <div class="l4-tool-title">AI-генератор розпоряджень</div>
+                <div class="l4-tool-desc">Опишіть завдання простими словами — система збере правильне розпорядження за шаблоном TALKO із 7 елементів.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="l4-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Відкрити генератор
+        </a>
+    </div>
+</div>`,
+
+                lessonContent_ru: `
+<style>
+.l4-section { margin-bottom:1.75rem; }
+.l4-section:last-child { margin-bottom:0; }
+.l4-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l4-rule { display:flex; align-items:flex-start; gap:0.85rem; padding:0.85rem 1rem; background:#f8fafc; border-radius:10px; border-left:3px solid #22c55e; margin-bottom:0.5rem; }
+.l4-rule:last-child { margin-bottom:0; }
+.l4-rule-icon { width:36px; height:36px; background:#f0fdf4; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.1rem; }
+.l4-rule-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l4-rule-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l4-grid7 { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+.l4-cell { padding:0.7rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; }
+.l4-cell-label { font-size:0.68rem; font-weight:700; color:#16a34a; letter-spacing:0.07em; margin-bottom:0.2rem; }
+.l4-cell-text { font-size:0.82rem; color:#374151; line-height:1.4; }
+.l4-example { border-radius:10px; padding:0.9rem 1rem; }
+.l4-example-bad { background:#fef2f2; border:1px solid #fecaca; margin-bottom:0.5rem; }
+.l4-example-good { background:#f0fdf4; border:1px solid #bbf7d0; }
+.l4-example-label { display:flex; align-items:center; gap:0.45rem; margin-bottom:0.5rem; font-weight:700; font-size:0.8rem; }
+.l4-example-text { font-size:0.875rem; color:#374151; line-height:1.55; }
+.l4-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l4-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l4-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l4-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l4-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l4-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l4-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l4-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.75rem; }
+.l4-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.6rem; }
+.l4-power { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6rem; margin-top:0.85rem; }
+.l4-power-card { border-radius:11px; padding:0.9rem 0.6rem; text-align:center; }
+.l4-power-num { font-size:1.5rem; font-weight:900; line-height:1.1; }
+.l4-power-desc { font-size:0.75rem; color:#6b7280; margin-top:0.35rem; line-height:1.35; }
+</style>
+
+<div class="l4-section">
+    <div class="l4-section-label">Введение</div>
+    <div class="l4-section-title">Почему большинство распоряжений не выполняется</div>
+    <div class="l4-card">
+        <p style="font-size:0.9rem;color:#374151;line-height:1.65;">Вы даёте задания каждый день. Через неделю половина не выполнена. Вы сами забываете что просили — сотрудники тоже.</p>
+        <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">В команде живёт негласное правило: <strong>«Сказали раз и не напомнили — значит неважно».</strong> Это не злой умысел — это нормальная реакция человека, на которого валится куча задач.</p>
+        <p style="font-size:0.9rem;color:#374151;line-height:1.65;margin-top:0.7rem;">Причина не в людях. Причина — в слабой форме постановки задачи.</p>
+    </div>
+</div>
+
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Принцип</div>
+    <div class="l4-section-title">Уровень власти определяет уровень выполнения</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;">Есть руководители, которым говорят «здесь душно» — и кто-то сразу идёт открывать окно. Есть другие, которые 10 раз напоминают «убрать офис» — и их игнорируют. Разница — не характер, а уровень власти.</p>
+    <div class="l4-power">
+        <div class="l4-power-card" style="background:#fef2f2;border:1px solid #fecaca;">
+            <div class="l4-power-num" style="color:#ef4444;">1–10</div>
+            <div class="l4-power-desc">Напоминаете 10+ раз</div>
+        </div>
+        <div class="l4-power-card" style="background:#fff7ed;border:1px solid #fed7aa;">
+            <div class="l4-power-num" style="color:#f97316;">40–60</div>
+            <div class="l4-power-desc">Напоминаете 2–3 раза</div>
+        </div>
+        <div class="l4-power-card" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+            <div class="l4-power-num" style="color:#22c55e;">80+</div>
+            <div class="l4-power-desc">Сказали раз — выполнили</div>
+        </div>
+    </div>
+    <p style="font-size:0.82rem;color:#525252;line-height:1.55;margin-top:0.85rem;">Большинство владельцев сейчас на уровне 20–30. Единственный способ подняться — систематически добиваться выполнения каждого распоряжения. Каждое неконтролируемое задание — минус к власти.</p>
+</div>
+
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Правила</div>
+    <div class="l4-section-title">4 правила системы</div>
+    <div class="l4-rule">
+        <div class="l4-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+        <div>
+            <div class="l4-rule-title">Только письменно</div>
+            <div class="l4-rule-text">Устных распоряжений не существует. Если сказали на совещании — сразу дублируйте письменно, даже если нужно взять паузу.</div>
+        </div>
+    </div>
+    <div class="l4-rule">
+        <div class="l4-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div>
+            <div class="l4-rule-title">Конкретная дата и время</div>
+            <div class="l4-rule-text">«Скоро» и «потом» не существует. Без дедлайна задание не будет выполнено никогда.</div>
+        </div>
+    </div>
+    <div class="l4-rule">
+        <div class="l4-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div>
+            <div class="l4-rule-title">Список всех распоряжений</div>
+            <div class="l4-rule-text">Google таблица: кому, что, срок, выполнено. Без списка вы забываете контролировать — и разрушаете свою власть.</div>
+        </div>
+    </div>
+    <div class="l4-rule">
+        <div class="l4-rule-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div>
+            <div class="l4-rule-title">Контроль на каждой встрече</div>
+            <div class="l4-rule-text">Открываете список и проходите по каждому пункту. Спокойно, без крика — пока не поймут, что вы не забудете.</div>
+        </div>
+    </div>
+</div>
+
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Шаблон</div>
+    <div class="l4-section-title">7 элементов правильного распоряжения</div>
+    <div class="l4-grid7">
+        <div class="l4-cell"><div class="l4-cell-label">КОМУ</div><div class="l4-cell-text">Конкретная должность + ФИО. Не «отделу».</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">СРОК</div><div class="l4-cell-text">Конкретная дата и время выполнения</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">КОНТЕКСТ</div><div class="l4-cell-text">Почему, что изменилось, кого касается</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">ЗАДАНИЕ</div><div class="l4-cell-text">Конкретное действие + ожидаемый результат</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">ПРОДУКТ</div><div class="l4-cell-text">Что должно быть готово: документ, фото, отчёт</div></div>
+        <div class="l4-cell"><div class="l4-cell-label">ОТЧЁТ</div><div class="l4-cell-text">Дедлайн отчёта, формат, куда отправлять</div></div>
+        <div class="l4-cell" style="grid-column:1/-1;"><div class="l4-cell-label">ДОКАЗАТЕЛЬСТВО</div><div class="l4-cell-text">Скрин, файл или фото. Без доказательства — не выполнено.</div></div>
+    </div>
+</div>
+
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Пример</div>
+    <div class="l4-section-title">Неправильно vs Правильно</div>
+    <div class="l4-example l4-example-bad">
+        <div class="l4-example-label" style="color:#dc2626;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Неправильно
+        </div>
+        <div class="l4-example-text" style="color:#7f1d1d;font-style:italic;">«Проследи, чтобы всё было в порядке. Если будут проблемы — сообщи.»</div>
+    </div>
+    <div class="l4-example l4-example-good">
+        <div class="l4-example-label" style="color:#16a34a;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+            Правильно
+        </div>
+        <div class="l4-example-text" style="color:#14532d;font-style:italic;">«До 13:00 проверить 4 фото продукта, передать дизайнеру 5 баннеров 1:5, отправить отчёт в Telegram до 19:00.»</div>
+    </div>
+</div>
+
+<div class="l4-divider"></div>
+
+<div class="l4-section">
+    <div class="l4-section-label">Инструмент</div>
+    <div class="l4-tool">
+        <div class="l4-tool-header">
+            <div class="l4-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div>
+                <div class="l4-tool-title">AI-генератор распоряжений</div>
+                <div class="l4-tool-desc">Опишите задание простыми словами — система составит правильное распоряжение по шаблону TALKO с 7 элементами.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="l4-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Открыть генератор
+        </a>
+    </div>
+</div>`,
+
+                homework: `<ol><li>Складіть одне реальне розпорядження для співробітника</li><li>Перевірте, чи є всі 7 елементів</li><li>Відправте його реальному співробітнику</li><li>Напишіть, кому і яке розпорядження ви відправили</li></ol>`,
+                homework_ru: `<ol><li>Составьте одно реальное распоряжение для сотрудника</li><li>Проверьте, есть ли все 7 элементов</li><li>Отправьте его реальному сотруднику</li><li>Напишите, кому и какое распоряжение вы отправили</li></ol>`,
+
+                homeworkLink: null,
+                homeworkLinkName: null,
+                homeworkLinkName_ru: null,
                 time: 15
+
             },
             {
                 id: 5,
                 title: "СИСТЕМА РАДАР",
                 title_ru: "СИСТЕМА РАДАР",
-                subtitle: "Як проходити урок: переглянути відео",
-                subtitle_ru: "Прочитайте инструкцию и выполните задание в AI-ассистенте",
-                
-                videoLink: "https://youtu.be/nX5xaLqeeSs",
-                materialsLink: "https://drive.google.com/drive/folders/1z1vFSjzGNb-RYd2WdB3TxwmMb9CKN5vG?usp=sharing",
-                
+                subtitle: "Як перестати бути «пожежником» для власної команди",
+                subtitle_ru: "Как перестать быть «пожарным» для собственной команды",
+                hideAiBlock: true,
+
+                videoLink: null,
+                materialsLink: null,
+
                 lessonContent: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Суть уроку</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Коли співробітник приходить до вас з питанням "Що робити?" — він перекладає свою роботу на вас. Правильний підхід: співробітник приходить з <strong>готовим рішенням</strong>, а ви тільки погоджуєте.</p>
+<style>
+.l5-section { margin-bottom:1.75rem; }
+.l5-section:last-child { margin-bottom:0; }
+.l5-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l5-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l5-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l5-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l5-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l5-card p+p { margin-top:0.7rem; }
+.l5-flow { display:flex; align-items:center; gap:0; border-radius:10px; overflow:hidden; margin:0.85rem 0; }
+.l5-flow-item { flex:1; text-align:center; padding:0.75rem 0.4rem; background:#f0fdf4; border:1px solid #bbf7d0; }
+.l5-flow-item.active { background:#22c55e; border-color:#22c55e; }
+.l5-flow-item span { display:block; font-weight:700; font-size:0.8rem; }
+.l5-flow-item.active span { color:white; }
+.l5-flow-item span { color:#166534; }
+.l5-flow-arrow { padding:0 0.2rem; color:#22c55e; font-weight:700; font-size:1rem; flex-shrink:0; }
+.l5-block-list { display:grid; gap:0.55rem; margin-top:0.75rem; }
+.l5-block-item { display:flex; align-items:flex-start; gap:0.8rem; padding:0.8rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l5-block-icon { width:34px; height:34px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l5-block-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l5-block-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l5-before-after { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
+.l5-before { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
+.l5-after { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
+.l5-ba-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.l5-ba-text { font-size:0.82rem; line-height:1.5; }
+.l5-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l5-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l5-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l5-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l5-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l5-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l5-steps { display:grid; gap:0.5rem; margin-top:0.75rem; counter-reset:l5step; }
+.l5-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.95rem; background:#f8fafc; border-radius:10px; counter-increment:l5step; }
+.l5-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; }
+.l5-step-text { font-size:0.875rem; color:#374151; line-height:1.5; padding-top:0.1rem; }
+.l5-rule-box { margin-top:1rem; padding:1rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border:1px solid #bbf7d0; border-radius:12px; }
+.l5-rule-title { font-weight:700; color:#166534; font-size:0.875rem; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem; }
+.l5-rule-text { font-size:0.85rem; color:#15803d; line-height:1.6; }
+</style>
+
+<div class="l5-section">
+    <div class="l5-section-label">Проблема</div>
+    <div class="l5-section-title">Керівник, який вирішує все сам — найдорожчий виконавець у компанії</div>
+    <div class="l5-card">
+        <p>У більшості компаній одна і та сама проблема повторюється щодня. Співробітник приходить до керівника не з рішенням, а з питанням:</p>
+        <div style="margin:0.85rem 0;display:grid;gap:0.4rem;">
+            <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Клієнт просить знижку. Що робити?</div>
+            <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Постачальник затримує. Як бути?</div>
+            <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Треба щось купити. Можна?</div>
+            <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Хочу у відпустку. Погодьте.</div>
+        </div>
+        <p>На перший погляд здається — нормально. Але саме тут починається перевантаження керівника. Коли він постійно приймає чужі проблеми і сам їх вирішує, він перестає бути керівником і стає просто найдорожчим виконавцем у компанії.</p>
     </div>
 </div>
 
-<div class="lesson-block warning">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Типова проблема</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Співробітник ставить питання без готової пропозиції</li>
-            <li>Формулює ідею нечітко — отримує "відбій"</li>
-            <li>Сумнівається, що саме запропонувати</li>
-            <li>Ви витрачаєте час на обдумування замість нього</li>
-        </ul>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Помилка</div>
+    <div class="l5-section-title">Основна помилка — приймати проблему в чистому вигляді</div>
+    <div class="l5-card">
+        <p>Коли підлеглий приносить проблему без аналізу, без даних і без запропонованого рішення — він фактично перекладає відповідальність наверх.</p>
+        <p>Якщо керівник у цей момент одразу відповідає, що робити, відбуваються дві речі: керівник ще більше перевантажує себе, а співробітник стає менш відповідальним.</p>
+        <p>Кожен раз, коли керівник вирішує проблему <em>за</em> співробітника, він знижує його рівень відповідальності.</p>
     </div>
 </div>
 
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Що дає система РАДАР</div>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Рішення</div>
+    <div class="l5-section-title">Що таке ЗРС — Закінчена робота співробітника</div>
+    <div class="l5-card">
+        <p>ЗРС — це принцип, за яким співробітник несе до керівника вже не «сиру проблему», а підготовлену управлінську одиницю.</p>
     </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Співробітник сам аналізує ситуацію</li>
-            <li>Готує 3 варіанти рішення з плюсами/мінусами</li>
-            <li>Пропонує оптимальний варіант</li>
-            <li>Ви тільки кажете "так" або "ні"</li>
-        </ul>
+    <div class="l5-flow" style="margin-top:0.85rem;">
+        <div class="l5-flow-item"><span>Ситуація</span><span style="font-size:0.72rem;color:#6b7280;font-weight:400;margin-top:0.2rem;">що сталося</span></div>
+        <div class="l5-flow-arrow">→</div>
+        <div class="l5-flow-item"><span>Дані</span><span style="font-size:0.72rem;color:#6b7280;font-weight:400;margin-top:0.2rem;">факти і цифри</span></div>
+        <div class="l5-flow-arrow">→</div>
+        <div class="l5-flow-item active"><span>Рішення</span><span style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:400;margin-top:0.2rem;">пропозиція</span></div>
+    </div>
+    <p style="font-size:0.82rem;color:#525252;margin-top:0.75rem;line-height:1.5;">ЗРС = проблема, яку вже пропрацювали до рівня рішення. Не питання до керівника, а готова пропозиція на схвалення або відхилення.</p>
+</div>
+
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Методологія</div>
+    <div class="l5-section-title">З чого складається ЗРС</div>
+    <div class="l5-block-list">
+        <div class="l5-block-item">
+            <div class="l5-block-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div>
+                <div class="l5-block-title">Ситуація</div>
+                <div class="l5-block-text">Не «щось не так», а конкретне відхилення від норми. Наприклад: «підйомник зламався, а сьогодні має бути відвантаження» або «клієнт просить знижку і є ризик втрати контракту».</div>
+            </div>
+        </div>
+        <div class="l5-block-item">
+            <div class="l5-block-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div>
+                <div class="l5-block-title">Дані</div>
+                <div class="l5-block-text">Вся інформація, якої достатньо для прийняття рішення без додаткового допиту. Цифри, альтернативи, строки, наслідки, порівняння, вартість — все що прибирає туман.</div>
+            </div>
+        </div>
+        <div class="l5-block-item">
+            <div class="l5-block-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div>
+                <div class="l5-block-title">Рішення</div>
+                <div class="l5-block-text">Не «що робити?», а «я пропоную зробити ось так». Конкретно: що саме, хто робить, коли, за які гроші, на яких умовах.</div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 1. Подивіться відео</div>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Ефект</div>
+    <div class="l5-section-title">Що ЗРС змінює в команді</div>
+    <div class="l5-before-after">
+        <div class="l5-before">
+            <div class="l5-ba-label" style="color:#dc2626;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="13" height="13" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                БЕЗ ЗРС
+            </div>
+            <div class="l5-ba-text" style="color:#7f1d1d;">
+                Один запит — 10–15 хвилин уточнень, розмов, перепитувань. Керівник думає за співробітника.
+            </div>
+        </div>
+        <div class="l5-after">
+            <div class="l5-ba-label" style="color:#16a34a;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="13" height="13" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+                З ЗРС
+            </div>
+            <div class="l5-ba-text" style="color:#14532d;">
+                1 хвилина: схвалити / відхилити / повернути на доопрацювання. Рішення задокументоване.
+            </div>
+        </div>
     </div>
-    <div class="lesson-block-content">
-        <p>Розбір системи РАДАР з реальними прикладами.</p>
+    <div style="display:grid;gap:0.5rem;margin-top:0.75rem;">
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;background:#f8fafc;border-radius:9px;font-size:0.85rem;color:#374151;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Знімає перевантаження з керівника
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;background:#f8fafc;border-radius:9px;font-size:0.85rem;color:#374151;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Підвищує відповідальність співробітників
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;background:#f8fafc;border-radius:9px;font-size:0.85rem;color:#374151;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Формує управлінське мислення в команді
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;background:#f8fafc;border-radius:9px;font-size:0.85rem;color:#374151;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Захищає обидві сторони — рішення задокументоване
+        </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 2. Розберіться з AI-асистентом РАДАР</div>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">AI-асистент</div>
+    <div class="l5-section-title">Чому AI повинен стояти між співробітником і керівником</div>
+    <div class="l5-card">
+        <p>Навіть якщо ти пояснив методологію, співробітники ще якийсь час будуть приносити «сире». Не тому що погані — а тому що не звикли думати в цьому форматі.</p>
+        <p>Саме тут потрібен AI-асистент. Його роль — не замінити керівника. Його роль — не пустити до керівника сире питання.</p>
     </div>
-    <div class="lesson-block-content">
-        <p>Цей інструмент — <strong>для ваших співробітників</strong>. Розберіться самі, як він працює, а потім дайте посилання команді.</p>
-        <p style="margin-top: 12px;"><strong>Як працює:</strong></p>
-        <ol>
-            <li>Співробітник описує ситуацію</li>
-            <li>Асистент запитує деталі та дані</li>
-            <li>Формує 3 варіанти рішення</li>
-            <li>Готує оформлену пропозицію для керівника</li>
-        </ol>
+    <div class="l5-before-after" style="margin-top:0.85rem;">
+        <div class="l5-before" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0.3rem;">
+            <div class="l5-ba-label" style="color:#dc2626;">Було</div>
+            <div style="font-size:0.82rem;color:#7f1d1d;line-height:1.5;">Співробітник → Керівник</div>
+        </div>
+        <div class="l5-after" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0.3rem;">
+            <div class="l5-ba-label" style="color:#16a34a;">Стає</div>
+            <div style="font-size:0.82rem;color:#14532d;line-height:1.6;">Співробітник → AI → ЗРС → Керівник</div>
+        </div>
+    </div>
+    <p style="font-size:0.82rem;color:#525252;margin-top:0.75rem;line-height:1.5;">AI веде людину поетапно: виявляє ситуацію → добирає відсутні дані → змушує сформулювати рішення → збирає все у готову ЗРС. На виході — готовий текст: Ситуація / Дані / Рішення.</p>
+</div>
+
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Інструмент підготовки управлінського рішення</div>
+    <div class="l5-tool">
+        <div class="l5-tool-header">
+            <div class="l5-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg>
+            </div>
+            <div>
+                <div class="l5-tool-title">AI-асистент ЗРС</div>
+                <div class="l5-tool-desc">Цей асистент працює за методологією «Закінчена робота співробітника». Перед тим як звернутися до керівника з питанням, співробітник проходить через асистента — описує ситуацію, збирає дані, формулює рішення.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="l5-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Відкрити AI-асистента ЗРС
+        </a>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 3. Передайте посилання команді</div>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Тестування</div>
+    <div class="l5-section-title">Як протестувати інструмент самому</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Перш ніж дати це команді — протестуйте самі. Візьміть 5–10 реальних ситуацій, які зазвичай летять до вас:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.85rem;">
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Клієнт просить знижку</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Співробітник хоче у відпустку</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Треба закупити матеріали</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Зірвався дедлайн</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Потрібен новий співробітник</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Обладнання зламалось</div>
     </div>
-    <div class="lesson-block-content">
-        <p><strong>Правило:</strong> Тепер кожного разу, коли у співробітника питання — він спочатку звертається до цього асистента, а потім приходить до вас з готовим рішенням.</p>
-    </div>
+    <p style="font-size:0.82rem;color:#525252;line-height:1.5;">Асистент хороший, якщо після нього у вас не виникає 10 додаткових запитань. Якщо він не вимагає цифр і фактів — він поганий.</p>
 </div>
-                `,
-                
+
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Впровадження</div>
+    <div class="l5-section-title">Як дати команді на використання</div>
+    <div class="l5-steps">
+        <div class="l5-step">
+            <div class="l5-step-num">1</div>
+            <div class="l5-step-text">Поясніть команді логіку: відтепер ми не носимо проблеми в сирому вигляді — ми носимо ЗРС. AI допомагає зробити це правильно.</div>
+        </div>
+        <div class="l5-step">
+            <div class="l5-step-num">2</div>
+            <div class="l5-step-text">Визначте, для яких типів запитів це обов'язково: знижки, закупівлі, відпустки, найм, нестандартні ситуації, зміни в процесах.</div>
+        </div>
+        <div class="l5-step">
+            <div class="l5-step-num">3</div>
+            <div class="l5-step-text">Введіть стандарт відповіді: якщо співробітник приходить без ЗРС — ви не вирішуєте питання. Відповідаєте: «Оформи через ЗРС і повернись з готовою пропозицією».</div>
+        </div>
+        <div class="l5-step">
+            <div class="l5-step-num">4</div>
+            <div class="l5-step-text">На старті перевіряйте жорстко. Перші 2–3 тижні система ламається якщо ви почнете «ну окей, цього разу скажу усно». Або ЗРС — або повернення на доопрацювання.</div>
+        </div>
+    </div>
+    <div class="l5-rule-box">
+        <div class="l5-rule-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            Правило для команди
+        </div>
+        <div class="l5-rule-text">Будь-яке питання, проблема, запит на погодження, закупівлю, найм, відпустку або нестандартна ситуація — спочатку проходить через AI-асистента ЗРС. До керівника ви приходите вже не з проблемою, а з готовою ЗРС.</div>
+    </div>
+</div>`,
+
                 lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Суть урока</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Когда сотрудник приходит к вам с вопросом "Что делать?" — он перекладывает свою работу на вас. Правильный подход: сотрудник приходит с <strong>готовым решением</strong>, а вы только согласовываете.</p>
+<style>
+.l5-section { margin-bottom:1.75rem; }
+.l5-section:last-child { margin-bottom:0; }
+.l5-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l5-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l5-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l5-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l5-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l5-card p+p { margin-top:0.7rem; }
+.l5-flow { display:flex; align-items:center; gap:0; border-radius:10px; overflow:hidden; margin:0.85rem 0; }
+.l5-flow-item { flex:1; text-align:center; padding:0.75rem 0.4rem; background:#f0fdf4; border:1px solid #bbf7d0; }
+.l5-flow-item.active { background:#22c55e; border-color:#22c55e; }
+.l5-flow-item span { display:block; font-weight:700; font-size:0.8rem; color:#166534; }
+.l5-flow-item.active span { color:white; }
+.l5-flow-arrow { padding:0 0.2rem; color:#22c55e; font-weight:700; font-size:1rem; flex-shrink:0; }
+.l5-block-list { display:grid; gap:0.55rem; margin-top:0.75rem; }
+.l5-block-item { display:flex; align-items:flex-start; gap:0.8rem; padding:0.8rem 0.95rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l5-block-icon { width:34px; height:34px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l5-block-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; margin-bottom:0.2rem; }
+.l5-block-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l5-before-after { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem; }
+.l5-before { padding:0.85rem 0.95rem; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; }
+.l5-after { padding:0.85rem 0.95rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; }
+.l5-ba-label { font-size:0.7rem; font-weight:700; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.l5-ba-text { font-size:0.82rem; line-height:1.5; }
+.l5-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l5-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l5-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l5-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l5-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l5-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l5-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l5-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l5-step-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; }
+.l5-step-text { font-size:0.875rem; color:#374151; line-height:1.5; padding-top:0.1rem; }
+.l5-rule-box { margin-top:1rem; padding:1rem 1.1rem; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border:1px solid #bbf7d0; border-radius:12px; }
+.l5-rule-title { font-weight:700; color:#166534; font-size:0.875rem; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem; }
+.l5-rule-text { font-size:0.85rem; color:#15803d; line-height:1.6; }
+</style>
+
+<div class="l5-section">
+    <div class="l5-section-label">Проблема</div>
+    <div class="l5-section-title">Руководитель, который решает всё сам — самый дорогой исполнитель в компании</div>
+    <div class="l5-card">
+        <p>В большинстве компаний одна и та же проблема повторяется каждый день. Сотрудник приходит к руководителю не с решением, а с вопросом:</p>
+        <div style="margin:0.85rem 0;display:grid;gap:0.4rem;">
+            <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Клиент просит скидку. Что делать?</div>
+            <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Поставщик задерживает. Как быть?</div>
+            <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Нужно что-то купить. Можно?</div>
+            <div style="padding:0.55rem 0.85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:0.85rem;color:#374151;">— Хочу в отпуск. Согласуйте.</div>
+        </div>
+        <p>На первый взгляд кажется — нормально. Но именно здесь начинается перегрузка руководителя. Когда он постоянно принимает чужие проблемы и сам их решает, он перестаёт быть руководителем и становится просто самым дорогим исполнителем в компании.</p>
     </div>
 </div>
 
-<div class="lesson-block warning">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Типичная проблема</div>
-    </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Сотрудник задаёт вопрос без готового предложения</li>
-            <li>Формулирует идею нечётко — получает "отказ"</li>
-            <li>Сомневается, что именно предложить</li>
-            <li>Вы тратите время на обдумывание вместо него</li>
-        </ul>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Ошибка</div>
+    <div class="l5-section-title">Основная ошибка — принимать проблему в чистом виде</div>
+    <div class="l5-card">
+        <p>Когда подчинённый приносит проблему без анализа, без данных и без предложенного решения — он фактически перекладывает ответственность наверх.</p>
+        <p>Если руководитель в этот момент сразу отвечает, что делать, происходят две вещи: руководитель ещё больше перегружает себя, а сотрудник становится менее ответственным.</p>
+        <p>Каждый раз, когда руководитель решает проблему <em>за</em> сотрудника, он снижает его уровень ответственности.</p>
     </div>
 </div>
 
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Что даёт система РАДАР</div>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Решение</div>
+    <div class="l5-section-title">Что такое ЗРС — Законченная работа сотрудника</div>
+    <div class="l5-card">
+        <p>ЗРС — это принцип, по которому сотрудник несёт к руководителю уже не «сырую проблему», а подготовленную управленческую единицу.</p>
     </div>
-    <div class="lesson-block-content">
-        <ul>
-            <li>Сотрудник сам анализирует ситуацию</li>
-            <li>Готовит 3 варианта решения с плюсами/минусами</li>
-            <li>Предлагает оптимальный вариант</li>
-            <li>Вы только говорите "да" или "нет"</li>
-        </ul>
+    <div class="l5-flow" style="margin-top:0.85rem;">
+        <div class="l5-flow-item"><span>Ситуация</span><span style="font-size:0.72rem;color:#6b7280;font-weight:400;margin-top:0.2rem;">что случилось</span></div>
+        <div class="l5-flow-arrow">→</div>
+        <div class="l5-flow-item"><span>Данные</span><span style="font-size:0.72rem;color:#6b7280;font-weight:400;margin-top:0.2rem;">факты и цифры</span></div>
+        <div class="l5-flow-arrow">→</div>
+        <div class="l5-flow-item active"><span>Решение</span><span style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:400;margin-top:0.2rem;">предложение</span></div>
+    </div>
+    <p style="font-size:0.82rem;color:#525252;margin-top:0.75rem;line-height:1.5;">ЗРС = проблема, которую уже проработали до уровня решения. Не вопрос к руководителю, а готовое предложение на утверждение или отклонение.</p>
+</div>
+
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Методология</div>
+    <div class="l5-section-title">Из чего состоит ЗРС</div>
+    <div class="l5-block-list">
+        <div class="l5-block-item">
+            <div class="l5-block-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div>
+                <div class="l5-block-title">Ситуация</div>
+                <div class="l5-block-text">Не «что-то не так», а конкретное отклонение от нормы. Например: «подъёмник сломался, а сегодня должна быть отгрузка» или «клиент просит скидку и есть риск потери контракта».</div>
+            </div>
+        </div>
+        <div class="l5-block-item">
+            <div class="l5-block-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div>
+                <div class="l5-block-title">Данные</div>
+                <div class="l5-block-text">Вся информация, которой достаточно для принятия решения без дополнительных вопросов. Цифры, альтернативы, сроки, последствия, сравнения, стоимость — всё что убирает туман.</div>
+            </div>
+        </div>
+        <div class="l5-block-item">
+            <div class="l5-block-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div>
+                <div class="l5-block-title">Решение</div>
+                <div class="l5-block-text">Не «что делать?», а «я предлагаю сделать вот так». Конкретно: что именно, кто делает, когда, за какие деньги, на каких условиях.</div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Посмотрите видео</div>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Эффект</div>
+    <div class="l5-section-title">Что ЗРС меняет в команде</div>
+    <div class="l5-before-after">
+        <div class="l5-before">
+            <div class="l5-ba-label" style="color:#dc2626;">БЕЗ ЗРС</div>
+            <div class="l5-ba-text" style="color:#7f1d1d;">Один запрос — 10–15 минут уточнений, разговоров, переспрашиваний. Руководитель думает за сотрудника.</div>
+        </div>
+        <div class="l5-after">
+            <div class="l5-ba-label" style="color:#16a34a;">С ЗРС</div>
+            <div class="l5-ba-text" style="color:#14532d;">1 минута: утвердить / отклонить / вернуть на доработку. Решение задокументировано.</div>
+        </div>
     </div>
-    <div class="lesson-block-content">
-        <p>Разбор системы РАДАР с реальными примерами.</p>
+    <div style="display:grid;gap:0.5rem;margin-top:0.75rem;">
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;background:#f8fafc;border-radius:9px;font-size:0.85rem;color:#374151;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Снимает перегрузку с руководителя
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;background:#f8fafc;border-radius:9px;font-size:0.85rem;color:#374151;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Повышает ответственность сотрудников
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;background:#f8fafc;border-radius:9px;font-size:0.85rem;color:#374151;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Формирует управленческое мышление в команде
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;background:#f8fafc;border-radius:9px;font-size:0.85rem;color:#374151;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Защищает обе стороны — решение задокументировано
+        </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Разберитесь с AI-ассистентом РАДАР</div>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">AI-ассистент</div>
+    <div class="l5-section-title">Почему AI должен стоять между сотрудником и руководителем</div>
+    <div class="l5-card">
+        <p>Даже если вы объяснили методологию, сотрудники ещё какое-то время будут приносить «сырое». Не потому что плохие — а потому что не привыкли думать в этом формате.</p>
+        <p>Именно здесь нужен AI-ассистент. Его роль — не заменить руководителя. Его роль — не пустить к руководителю сырой вопрос.</p>
     </div>
-    <div class="lesson-block-content">
-        <p>Этот инструмент — <strong>для ваших сотрудников</strong>. Разберитесь сами, как он работает, а потом дайте ссылку команде.</p>
-        <p style="margin-top: 12px;"><strong>Как работает:</strong></p>
-        <ol>
-            <li>Сотрудник описывает ситуацию</li>
-            <li>Ассистент спрашивает детали и данные</li>
-            <li>Формирует 3 варианта решения</li>
-            <li>Готовит оформленное предложение для руководителя</li>
-        </ol>
+    <div class="l5-before-after" style="margin-top:0.85rem;">
+        <div class="l5-before" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0.3rem;">
+            <div class="l5-ba-label" style="color:#dc2626;">Было</div>
+            <div style="font-size:0.82rem;color:#7f1d1d;line-height:1.5;">Сотрудник → Руководитель</div>
+        </div>
+        <div class="l5-after" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0.3rem;">
+            <div class="l5-ba-label" style="color:#16a34a;">Стало</div>
+            <div style="font-size:0.82rem;color:#14532d;line-height:1.6;">Сотрудник → AI → ЗРС → Руководитель</div>
+        </div>
+    </div>
+    <p style="font-size:0.82rem;color:#525252;margin-top:0.75rem;line-height:1.5;">AI ведёт человека поэтапно: выявляет ситуацию → добирает недостающие данные → заставляет сформулировать решение → собирает всё в готовую ЗРС. На выходе — готовый текст: Ситуация / Данные / Решение.</p>
+</div>
+
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Инструмент подготовки управленческого решения</div>
+    <div class="l5-tool">
+        <div class="l5-tool-header">
+            <div class="l5-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg>
+            </div>
+            <div>
+                <div class="l5-tool-title">AI-ассистент ЗРС</div>
+                <div class="l5-tool-desc">Этот ассистент работает по методологии «Законченная работа сотрудника». Перед тем как обратиться к руководителю с вопросом, сотрудник проходит через ассистента — описывает ситуацию, собирает данные, формулирует решение.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="l5-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Открыть AI-ассистента ЗРС
+        </a>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 3. Передайте ссылку команде</div>
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Тестирование</div>
+    <div class="l5-section-title">Как протестировать инструмент самому</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Прежде чем дать это команде — протестируйте сами. Возьмите 5–10 реальных ситуаций, которые обычно летят к вам:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.85rem;">
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Клиент просит скидку</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Сотрудник хочет в отпуск</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Нужно закупить материалы</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Сорвался дедлайн</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Нужен новый сотрудник</div>
+        <div style="padding:0.5rem 0.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#374151;">Оборудование сломалось</div>
     </div>
-    <div class="lesson-block-content">
-        <p><strong>Правило:</strong> Теперь каждый раз, когда у сотрудника вопрос — он сначала обращается к этому ассистенту, а потом приходит к вам с готовым решением.</p>
-    </div>
+    <p style="font-size:0.82rem;color:#525252;line-height:1.5;">Ассистент хороший, если после него у вас не возникает 10 дополнительных вопросов. Если он не требует цифр и фактов — он плохой.</p>
 </div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
+
+<div class="l5-divider"></div>
+
+<div class="l5-section">
+    <div class="l5-section-label">Внедрение</div>
+    <div class="l5-section-title">Как дать команде на использование</div>
+    <div class="l5-steps">
+        <div class="l5-step">
+            <div class="l5-step-num">1</div>
+            <div class="l5-step-text">Объясните команде логику: отныне мы не носим проблемы в сыром виде — мы носим ЗРС. AI помогает сделать это правильно.</div>
+        </div>
+        <div class="l5-step">
+            <div class="l5-step-num">2</div>
+            <div class="l5-step-text">Определите, для каких типов запросов это обязательно: скидки, закупки, отпуска, найм, нестандартные ситуации, изменения в процессах.</div>
+        </div>
+        <div class="l5-step">
+            <div class="l5-step-num">3</div>
+            <div class="l5-step-text">Введите стандарт ответа: если сотрудник приходит без ЗРС — вы не решаете вопрос. Отвечаете: «Оформи через ЗРС и вернись с готовым предложением».</div>
+        </div>
+        <div class="l5-step">
+            <div class="l5-step-num">4</div>
+            <div class="l5-step-text">На старте проверяйте жёстко. Первые 2–3 недели система ломается если вы начнёте «ну окей, на этот раз скажу устно». Или ЗРС — или возврат на доработку.</div>
+        </div>
     </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдіть асистента самі — змоделюйте будь-яку робочу ситуацію</li>
-            <li>Скопіюйте посилання на асистента</li>
-            <li>Відправте 2-3 співробітникам з інструкцією: "Тепер перед тим як підходити з питанням — спочатку сюди"</li>
-            <li>Прикріпіть посилання на документ з описом впровадження</li>
-        </ol>
+    <div class="l5-rule-box">
+        <div class="l5-rule-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            Правило для команды
+        </div>
+        <div class="l5-rule-text">Любой вопрос, проблема, запрос на согласование, закупку, найм, отпуск или нестандартная ситуация — сначала проходит через AI-ассистента ЗРС. К руководителю вы приходите уже не с проблемой, а с готовой ЗРС.</div>
     </div>
-</div>
-                `,
-                
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройдите ассистента сами — смоделируйте любую рабочую ситуацию</li>
-            <li>Скопируйте ссылку на ассистента</li>
-            <li>Отправьте 2-3 сотрудникам с инструкцией: "Теперь перед тем как подходить с вопросом — сначала сюда"</li>
-            <li>Прикрепите ссылку на документ с описанием внедрения</li>
-        </ol>
-    </div>
-</div>
-                `,
-                
+</div>`,
+
+                homework: `<ol><li>Протестуйте AI-асистента на 3–5 реальних ситуаціях з вашого бізнесу</li><li>Оберіть 1 підлеглого і дайте йому інструмент у роботу</li><li>Попросіть перед наступним питанням пройти через AI</li><li>Напишіть у полі відповіді: для якої ролі впровадили і в яких ситуаціях будете використовувати</li></ol>`,
+                homework_ru: `<ol><li>Протестируйте AI-ассистента на 3–5 реальных ситуациях из вашего бизнеса</li><li>Выберите 1 подчинённого и дайте ему инструмент в работу</li><li>Попросите перед следующим вопросом пройти через AI</li><li>Напишите в поле ответа: для какой роли внедрили и в каких ситуациях будете использовать</li></ol>`,
+
                 homeworkLink: "https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko",
-                homeworkLinkName: "→ AI-асистент РАДАР",
-                homeworkLinkName_ru: "→ AI-ассистент РАДАР",
-                time: 15
+                homeworkLinkName: "→ AI-асистент ЗРС",
+                homeworkLinkName_ru: "→ AI-ассистент ЗРС",
+                time: 20
+
             },
             {
                 id: 6,
                 title: "ТЕХНІЧНИЙ ПРОВІДНИК",
-                subtitle: "AI-асистент для покрокового налаштування систем",
-                
+                title_ru: "ТЕХНИЧЕСКИЙ ПРОВОДНИК",
+                subtitle: "AI-інструмент для покрокового налаштування технічних рішень",
+                subtitle_ru: "AI-инструмент для пошагового внедрения технических решений",
+                hideAiBlock: true,
+
                 videoLink: null,
                 materialsLink: null,
-                
+
                 lessonContent: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Що це</div>
+<style>
+.l6-section { margin-bottom:1.75rem; }
+.l6-section:last-child { margin-bottom:0; }
+.l6-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l6-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l6-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l6-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l6-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l6-card p+p { margin-top:0.7rem; }
+.l6-use-grid { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l6-use-item { display:flex; align-items:flex-start; gap:0.7rem; padding:0.75rem 0.9rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l6-use-icon { width:32px; height:32px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l6-use-text { font-size:0.875rem; color:#374151; line-height:1.5; padding-top:0.1rem; }
+.l6-task-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l6-task-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l6-task-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l6-task-text { font-size:0.875rem; color:#374151; line-height:1.5; }
+.l6-task-example { margin-top:0.5rem; padding:0.5rem 0.75rem; background:white; border:1px solid #e2e8f0; border-radius:7px; font-size:0.8rem; color:#6b7280; font-style:italic; }
+.l6-instead { display:grid; gap:0.4rem; margin-top:0.75rem; }
+.l6-instead-item { display:flex; align-items:center; gap:0.6rem; padding:0.55rem 0.85rem; background:#fef2f2; border-radius:8px; font-size:0.85rem; color:#7f1d1d; }
+.l6-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l6-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l6-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l6-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l6-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l6-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l6-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l6-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f8fafc; border-radius:9px; font-size:0.875rem; color:#374151; }
+</style>
+
+<div class="l6-section">
+    <div class="l6-section-label">Що це</div>
+    <div class="l6-section-title">Технічний провідник — покроково до готового результату</div>
+    <div class="l6-card">
+        <p>Технічний провідник — це AI-інструмент, який допомагає налаштовувати типові технічні рішення для бізнесу без плутанини і хаосу.</p>
+        <p>Ви просто описуєте, який результат хочете отримати — і провідник веде вас крок за кроком: що зробити, куди натиснути, що перевірити, що виправити якщо щось не працює.</p>
     </div>
-    <div class="lesson-block-content">
-        <p><strong>Технічний провідник</strong> — це AI-інструмент, який допомагає покроково налаштовувати будь-яку систему: CRM, таблицю, бот чи інструмент управління.</p>
-        <p style="margin-top: 12px;">Ви просто описуєте, <strong>що хочете отримати в результаті</strong>, і він проведе вас через усі кроки.</p>
+    <div class="l6-use-grid">
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+            <div class="l6-use-text">Налаштування CRM та воронки продажів</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <div class="l6-use-text">Створення таблиць і дашбордів у Google Sheets</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div>
+            <div class="l6-use-text">Базові автоматизації і організація робочих інструментів</div>
+        </div>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Ваше завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Зайдіть у <strong>Технічного провідника</strong></li>
-            <li>Вкажіть мету (наприклад: "налаштувати CRM для продажів" або "створити дашборд у Google Sheets")</li>
-            <li>Якщо потрібно — <strong>додайте скрін</strong>, і провідник покаже, куди натискати або що виправити</li>
-            <li>Пройдіть покрокову інструкцію до готового результату</li>
-        </ol>
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Коли відкривати</div>
+    <div class="l6-section-title">Коли використовувати Технічного провідника</div>
+    <div class="l6-use-grid">
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg></div>
+            <div class="l6-use-text">Потрібно швидко налаштувати інструмент і не знаєте, з чого почати</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <div class="l6-use-text">Не хочеться витрачати час на пошук інструкцій у Google і YouTube</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+            <div class="l6-use-text">Потрібно дійти до робочого результату без залучення технічного спеціаліста</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div class="l6-use-text">Щось не працює і незрозуміло, де саме проблема</div>
+        </div>
     </div>
 </div>
 
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Для чого</div>
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Для чого</div>
+    <div class="l6-section-title">Щоб технічні налаштування не зупиняли вашу роботу</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.65rem;">Замість того щоб:</p>
+    <div class="l6-instead">
+        <div class="l6-instead-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Шукати рішення в Google і дивитися випадкові відео
+        </div>
+        <div class="l6-instead-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Писати технічним спеціалістам і чекати відповіді
+        </div>
+        <div class="l6-instead-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Відкладати задачу «на потім» бо не розумієте, що робити
+        </div>
     </div>
-    <div class="lesson-block-content">
-        <p>Щоб будь-яке технічне налаштування проходило <strong>без плутанини, пошуку в Google і звернень до фахівців</strong> — все під контролем системи.</p>
+    <p style="font-size:0.875rem;color:#374151;line-height:1.6;margin-top:0.85rem;">Ви просто відкриваєте інструмент і рухаєтесь до результату по кроках. Без зависань на технічних деталях.</p>
+</div>
+
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Інструмент</div>
+    <div class="l6-tool">
+        <div class="l6-tool-header">
+            <div class="l6-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <div>
+                <div class="l6-tool-title">Технічний провідник</div>
+                <div class="l6-tool-desc">AI-асистент для покрокового налаштування технічних рішень. Опишіть, що хочете отримати — і провідник проведе вас від старту до готового робочого результату.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-tekhnichnii-providnik" target="_blank" class="l6-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Відкрити Технічного провідника
+        </a>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Результат</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Ви протестували інструмент і маєте <strong>особистого технічного асистента</strong>, який допомагає реалізувати будь-яку ідею до робочого результату.</p>
-    </div>
-</div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Оберіть одну технічну задачу (налаштування CRM, створення таблиці, налаштування автоматизації) і пройдіть покрокову інструкцію з Технічним провідником до готового результату.</p>
-    </div>
-</div>
-                `,
-                
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Выберите одну техническую задачу (настройка CRM, создание таблицы, настройка автоматизации) и пройдите пошаговую инструкцию с Техническим проводником до готового результата.</p>
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Ваше завдання</div>
+    <div class="l6-section-title">Пройдіть реальну задачу до готового результату</div>
+    <div class="l6-task-steps">
+        <div class="l6-task-step">
+            <div class="l6-task-num">1</div>
+            <div class="l6-task-text">
+                Відкрийте Технічного провідника і опишіть, що хочете отримати в результаті
+                <div class="l6-task-example">«Налаштувати CRM для продажів» / «Створити дашборд у Google Sheets» / «Налаштувати просту автоматизацію для заявок»</div>
+            </div>
+        </div>
+        <div class="l6-task-step">
+            <div class="l6-task-num">2</div>
+            <div class="l6-task-text">Якщо потрібно — додайте скрін. Провідник покаже, куди натискати або що виправити.</div>
+        </div>
+        <div class="l6-task-step">
+            <div class="l6-task-num">3</div>
+            <div class="l6-task-text">Пройдіть усі кроки до готового робочого результату.</div>
+        </div>
     </div>
 </div>
-                `,
-                
+
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Результат</div>
+    <div class="l6-section-title">Після цього уроку у вас буде</div>
+    <div class="l6-result-list">
+        <div class="l6-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Протестований інструмент на реальній задачі
+        </div>
+        <div class="l6-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Розуміння, як швидко запускати технічні рішення без зависань
+        </div>
+        <div class="l6-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Інструмент, який можна використовувати для будь-якої наступної технічної задачі
+        </div>
+    </div>
+</div>`,
+
+                lessonContent_ru: `
+<style>
+.l6-section { margin-bottom:1.75rem; }
+.l6-section:last-child { margin-bottom:0; }
+.l6-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l6-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l6-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l6-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l6-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l6-card p+p { margin-top:0.7rem; }
+.l6-use-grid { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l6-use-item { display:flex; align-items:flex-start; gap:0.7rem; padding:0.75rem 0.9rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+.l6-use-icon { width:32px; height:32px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l6-use-text { font-size:0.875rem; color:#374151; line-height:1.5; padding-top:0.1rem; }
+.l6-task-steps { display:grid; gap:0.5rem; margin-top:0.75rem; }
+.l6-task-step { display:flex; align-items:flex-start; gap:0.75rem; padding:0.8rem 0.95rem; background:#f8fafc; border-radius:10px; }
+.l6-task-num { width:24px; height:24px; background:#22c55e; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:0.05rem; }
+.l6-task-text { font-size:0.875rem; color:#374151; line-height:1.5; }
+.l6-task-example { margin-top:0.5rem; padding:0.5rem 0.75rem; background:white; border:1px solid #e2e8f0; border-radius:7px; font-size:0.8rem; color:#6b7280; font-style:italic; }
+.l6-instead { display:grid; gap:0.4rem; margin-top:0.75rem; }
+.l6-instead-item { display:flex; align-items:center; gap:0.6rem; padding:0.55rem 0.85rem; background:#fef2f2; border-radius:8px; font-size:0.85rem; color:#7f1d1d; }
+.l6-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l6-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l6-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l6-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l6-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l6-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+.l6-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l6-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f8fafc; border-radius:9px; font-size:0.875rem; color:#374151; }
+</style>
+
+<div class="l6-section">
+    <div class="l6-section-label">Что это</div>
+    <div class="l6-section-title">Технический проводник — пошагово до готового результата</div>
+    <div class="l6-card">
+        <p>Технический проводник — это AI-инструмент, который помогает настраивать типовые технические решения для бизнеса без путаницы и хаоса.</p>
+        <p>Вы просто описываете, какой результат хотите получить — и проводник ведёт вас шаг за шагом: что сделать, куда нажать, что проверить, что исправить если что-то не работает.</p>
+    </div>
+    <div class="l6-use-grid">
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+            <div class="l6-use-text">Настройка CRM и воронки продаж</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <div class="l6-use-text">Создание таблиц и дашбордов в Google Sheets</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div>
+            <div class="l6-use-text">Базовые автоматизации и организация рабочих инструментов</div>
+        </div>
+    </div>
+</div>
+
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Когда открывать</div>
+    <div class="l6-section-title">Когда использовать Технического проводника</div>
+    <div class="l6-use-grid">
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg></div>
+            <div class="l6-use-text">Нужно быстро настроить инструмент и непонятно, с чего начать</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <div class="l6-use-text">Не хочется тратить время на поиск инструкций в Google и YouTube</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+            <div class="l6-use-text">Нужно дойти до рабочего результата без привлечения технического специалиста</div>
+        </div>
+        <div class="l6-use-item">
+            <div class="l6-use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div class="l6-use-text">Что-то не работает и непонятно, где именно проблема</div>
+        </div>
+    </div>
+</div>
+
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Для чего</div>
+    <div class="l6-section-title">Чтобы технические настройки не останавливали вашу работу</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.65rem;">Вместо того чтобы:</p>
+    <div class="l6-instead">
+        <div class="l6-instead-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Искать решения в Google и смотреть случайные видео
+        </div>
+        <div class="l6-instead-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Писать техническим специалистам и ждать ответа
+        </div>
+        <div class="l6-instead-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Откладывать задачу «на потом» потому что не понятно, что делать
+        </div>
+    </div>
+    <p style="font-size:0.875rem;color:#374151;line-height:1.6;margin-top:0.85rem;">Вы просто открываете инструмент и двигаетесь к результату по шагам. Без зависания на технических деталях.</p>
+</div>
+
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Инструмент</div>
+    <div class="l6-tool">
+        <div class="l6-tool-header">
+            <div class="l6-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <div>
+                <div class="l6-tool-title">Технический проводник</div>
+                <div class="l6-tool-desc">AI-ассистент для пошагового внедрения технических решений. Опишите, что хотите получить — и проводник проведёт вас от старта до готового рабочего результата.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-tekhnichnii-providnik" target="_blank" class="l6-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Открыть Технического проводника
+        </a>
+    </div>
+</div>
+
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Ваше задание</div>
+    <div class="l6-section-title">Пройдите реальную задачу до готового результата</div>
+    <div class="l6-task-steps">
+        <div class="l6-task-step">
+            <div class="l6-task-num">1</div>
+            <div class="l6-task-text">
+                Откройте Технического проводника и опишите, что хотите получить в результате
+                <div class="l6-task-example">«Настроить CRM для продаж» / «Создать дашборд в Google Sheets» / «Настроить простую автоматизацию для заявок»</div>
+            </div>
+        </div>
+        <div class="l6-task-step">
+            <div class="l6-task-num">2</div>
+            <div class="l6-task-text">Если нужно — добавьте скрин. Проводник покажет, куда нажимать или что исправить.</div>
+        </div>
+        <div class="l6-task-step">
+            <div class="l6-task-num">3</div>
+            <div class="l6-task-text">Пройдите все шаги до готового рабочего результата.</div>
+        </div>
+    </div>
+</div>
+
+<div class="l6-divider"></div>
+
+<div class="l6-section">
+    <div class="l6-section-label">Результат</div>
+    <div class="l6-section-title">После этого урока у вас будет</div>
+    <div class="l6-result-list">
+        <div class="l6-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Протестированный инструмент на реальной задаче
+        </div>
+        <div class="l6-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Понимание, как быстро запускать технические решения без зависаний
+        </div>
+        <div class="l6-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Инструмент, который можно использовать для любой следующей технической задачи
+        </div>
+    </div>
+</div>`,
+
+                homework: `<ol><li>Оберіть одну реальну технічну задачу і пройдіть її через Технічного провідника до готового результату</li><li>Напишіть у полі відповіді: яку задачу обрали, що вдалося налаштувати, який результат отримали</li></ol>`,
+                homework_ru: `<ol><li>Выберите одну реальную техническую задачу и пройдите её через Технического проводника до готового результата</li><li>Напишите в поле ответа: какую задачу выбрали, что удалось настроить, какой результат получили</li></ol>`,
+
                 homeworkLink: "https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-tekhnichnii-providnik",
                 homeworkLinkName: "→ Технічний провідник",
                 homeworkLinkName_ru: "→ Технический проводник",
-                time: 15
+                time: 20
             },
             {
                 id: 7,
@@ -2247,165 +2935,404 @@
             },
             {
                 id: 8,
-                title: "АНАЛІЗ ТОЧОК РОСТУ ТА МИСЛЕННЯ",
-                title_ru: "АНАЛИЗ ТОЧЕК РОСТА И МЫШЛЕНИЯ",
-                subtitle: "Інструмент самоаналізу для визначення справжніх причин проблем",
-                subtitle_ru: "Инструмент самоанализа для определения настоящих причин проблем",
-                
+                title: "АНАЛІЗ ВУЗЬКОГО МІСЦЯ БІЗНЕСУ",
+                title_ru: "АНАЛИЗ УЗКОГО МЕСТА БИЗНЕСА",
+                subtitle: "5 шарів, де насправді ховається проблема",
+                subtitle_ru: "5 слоёв, где на самом деле скрывается проблема",
+                hideAiBlock: true,
+
                 videoLink: null,
                 materialsLink: null,
-                
-                lessonContent: `<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Чому одні бізнеси ростуть, а інші застигають</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Маючи крутий продукт, команду і бажання — бізнес все одно не рухається. Причина завжди в одному: <strong>не знайдено справжнє вузьке місце</strong>.</p>
-        <p style="margin-top:8px;">Більшість власників шукають рішення на рівні дій — більше реклами, більше продажів, більше контролю. Але проблема може бути глибше — в інструментах, бізнес-моделі, цілях або особистих переконаннях.</p>
+
+                lessonContent: `
+<style>
+.l8-section { margin-bottom:1.75rem; }
+.l8-section:last-child { margin-bottom:0; }
+.l8-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l8-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l8-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l8-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l8-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l8-card p+p { margin-top:0.7rem; }
+.l8-symptoms { display:grid; gap:0.4rem; margin-top:0.75rem; }
+.l8-symptom { display:flex; align-items:center; gap:0.6rem; padding:0.55rem 0.85rem; background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; font-size:0.85rem; color:#92400e; }
+.l8-layers { display:grid; gap:0.55rem; margin-top:0.75rem; }
+.l8-layer { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
+.l8-layer-header { display:flex; align-items:center; gap:0.65rem; padding:0.75rem 0.95rem; background:#f8fafc; }
+.l8-layer-num { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; color:white; flex-shrink:0; }
+.l8-layer-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l8-layer-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; }
+.l8-layer-sub { font-size:0.78rem; color:#6b7280; margin-bottom:0.35rem; }
+.l8-layer-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l8-layer-tag { display:inline-block; margin-top:0.45rem; padding:0.2rem 0.55rem; border-radius:5px; font-size:0.72rem; font-weight:600; }
+.l8-beliefs { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l8-belief { padding:0.7rem 0.9rem; background:#f8fafc; border-radius:9px; border-left:3px solid #e2e8f0; }
+.l8-belief-quote { font-size:0.85rem; color:#374151; font-style:italic; margin-bottom:0.25rem; }
+.l8-belief-result { font-size:0.78rem; color:#ef4444; }
+.l8-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l8-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l8-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l8-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l8-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l8-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l8-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l8-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+</style>
+
+<div class="l8-section">
+    <div class="l8-section-label">Проблема</div>
+    <div class="l8-section-title">Чому ви робите більше, а результат не змінюється</div>
+    <div class="l8-card">
+        <p>Багато власників працюють більше і більше — але результат майже не змінюється. З'являється відчуття: команда є, клієнти є, роботи багато. Але бізнес не росте.</p>
+        <p>Причина не в зусиллях. Причина в тому, що <strong>зусилля спрямовані не туди</strong>. Більшість власників шукають рішення на рівні дій — більше реклами, більше продажів, більше контролю. Але справжня проблема може знаходитись набагато глибше.</p>
     </div>
 </div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">5 шарів бізнесу — де шукати точку росту</div>
+<div class="l8-divider"></div>
+
+<div class="l8-section">
+    <div class="l8-section-label">Чому стандартні рішення не працюють</div>
+    <div class="l8-section-title">Симптоми, які показують що проблема глибша ніж здається</div>
+    <div class="l8-symptoms">
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>«У мене немає часу»</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Команда не бере відповідальність</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Продажі нестабільні</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Низька рентабельність</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Люди часто звільняються або втрачають мотивацію</div>
     </div>
-    <div class="lesson-block-content">
-        <p>Кожен бізнес має 5 шарів. Проблема завжди в одному з них — і рішення треба шукати саме там, а не зверху:</p>
-        <ul style="margin-top:8px;">
-            <li><strong>1. Дії</strong> — що робите зараз: продажі, зустрічі, маркетинг</li>
-            <li><strong>2. Інструменти</strong> — структура, делегування, статистики, фінплан</li>
-            <li><strong>3. Бізнес-модель</strong> — як заробляєте, чи достатня маржа, чи масштабується</li>
-            <li><strong>4. Цілі та партнерства</strong> — чи надихають цілі, чи є спільне бачення з партнерами</li>
-            <li><strong>5. Особистість</strong> — обмежуючі переконання та гординя що блокують ріст</li>
-        </ul>
-        <p style="margin-top:8px;">Тригери які кажуть "спускайся глибше": немає часу, люди саботують, продажі нестабільні, низька рентабельність, висока плинність, відсутність мотивації в команді.</p>
-    </div>
+    <p style="font-size:0.82rem;color:#525252;line-height:1.5;margin-top:0.75rem;">Якщо у вас є хоча б один з цих симптомів — проблема не на поверхні. Її треба шукати глибше.</p>
 </div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Найглибший шар — переконання та гординя</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Це шар який найважче побачити самостійно. Переконання формують рішення — а рішення формують результат.</p>
-        <p style="margin-top:8px;">Приклади що блокують ріст:</p>
-        <ul style="margin-top:6px;">
-            <li>"Якщо хочеш зробити добре — зроби сам" → власник стає вузьким місцем</li>
-            <li>"Консультант не знає мого бізнесу" → закритість до нових рішень</li>
-            <li>"Клієнти не готові платити більше" → підсвідомо занижуєте ціни</li>
-            <li>"Я завжди правий" → не вчитесь на помилках</li>
-        </ul>
-        <p style="margin-top:8px;">Гординя — невидимий бар'єр: блокує делегування, руйнує команду, зупиняє ріст. Найуспішніші власники — ті хто залишається відкритим і вдячним.</p>
-    </div>
-</div>
+<div class="l8-divider"></div>
 
-<div class="result-block">
-    <strong>Результат уроку:</strong> ви визначите в якому з 5 шарів зараз знаходиться ваше вузьке місце — і зрозумієте де шукати рішення.
-</div>
-
-<div class="l-ai-block" style="margin:1.25rem 0 0;">
-    <div class="l-ai-block-header">
-        <div class="l-ai-icon">🔍</div>
-        <div>
-            <div class="l-ai-title">AI Аналіз — 5 шарів бізнесу</div>
-            <div class="l-ai-desc">Зайдіть в асистента і пройдіть аналіз своєї ситуації. Він задасть питання по кожному шару і визначить де ваше вузьке місце прямо зараз.</div>
+<div class="l8-section">
+    <div class="l8-section-label">Методологія</div>
+    <div class="l8-section-title">5 шарів бізнесу — де насправді ваше вузьке місце</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Кожен бізнес має 5 рівнів. Проблема завжди знаходиться тільки на одному з них.</p>
+    <div class="l8-layers">
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#22c55e;">1</div>
+                <div class="l8-layer-title">Дії</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Що ви робите щодня: продажі, маркетинг, переговори, зустрічі</div>
+                <div class="l8-layer-text">Якщо проблема тут — просто недостатньо активності. Рішення на поверхні.</div>
+                <span class="l8-layer-tag" style="background:#f0fdf4;color:#16a34a;">Найлегше побачити</span>
+            </div>
+        </div>
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#3b82f6;">2</div>
+                <div class="l8-layer-title">Інструменти</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Система управління, делегування, статистики, планування</div>
+                <div class="l8-layer-text">Якщо проблема тут — люди працюють хаотично, навіть якщо їх вистачає.</div>
+            </div>
+        </div>
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#8b5cf6;">3</div>
+                <div class="l8-layer-title">Бізнес-модель</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Як саме бізнес заробляє: маржа, масштабованість, структура продуктів</div>
+                <div class="l8-layer-text">Якщо проблема тут — навіть при хорошій роботі грошей буде мало.</div>
+            </div>
+        </div>
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#f97316;">4</div>
+                <div class="l8-layer-title">Цілі та партнерства</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Чіткість мети, напрямок команди, конфлікти з партнерами</div>
+                <div class="l8-layer-text">Якщо проблема тут — команда розфокусована і рухається в різні сторони.</div>
+            </div>
+        </div>
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#ef4444;">5</div>
+                <div class="l8-layer-title">Особистість власника</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Переконання, які впливають на всі рішення</div>
+                <div class="l8-layer-text">Найглибший рівень. Саме тут часто ховається справжня причина проблем.</div>
+                <span class="l8-layer-tag" style="background:#fef2f2;color:#dc2626;">Найважче побачити самостійно</span>
+            </div>
         </div>
     </div>
-    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-pie-analysis-methodology-5-layers-of-business','_blank')">
-        🔍 Пройти аналіз 5 шарів →
-    </button>
-</div>`,
-                
-                lessonContent_ru: `<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Почему одни бизнесы растут, а другие застывают</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Имея крутой продукт, команду и желание — бизнес всё равно не двигается. Причина всегда одна: <strong>не найдено настоящее узкое место</strong>.</p>
-        <p style="margin-top:8px;">Большинство владельцев ищут решение на уровне действий — больше рекламы, больше продаж, больше контроля. Но проблема может быть глубже — в инструментах, бизнес-модели, целях или личных убеждениях.</p>
-    </div>
 </div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">5 слоёв бизнеса — где искать точку роста</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Каждый бизнес имеет 5 слоёв. Проблема всегда в одном из них — и решение нужно искать именно там, а не сверху:</p>
-        <ul style="margin-top:8px;">
-            <li><strong>1. Действия</strong> — что делаете сейчас: продажи, встречи, маркетинг</li>
-            <li><strong>2. Инструменты</strong> — структура, делегирование, статистики, финплан</li>
-            <li><strong>3. Бизнес-модель</strong> — как зарабатываете, достаточна ли маржа, масштабируется ли</li>
-            <li><strong>4. Цели и партнёрства</strong> — вдохновляют ли цели, есть ли общее видение с партнёрами</li>
-            <li><strong>5. Личность</strong> — ограничивающие убеждения и гордыня, блокирующие рост</li>
-        </ul>
-        <p style="margin-top:8px;">Триггеры "спускайся глубже": нет времени, люди саботируют, нестабильные продажи, низкая рентабельность, высокая текучка, отсутствие мотивации в команде.</p>
-    </div>
-</div>
+<div class="l8-divider"></div>
 
-<div class="lesson-block">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Самый глубокий слой — убеждения и гордыня</div>
+<div class="l8-section">
+    <div class="l8-section-label">Найглибший шар</div>
+    <div class="l8-section-title">Переконання власника формують результат бізнесу</div>
+    <div class="l8-card">
+        <p>Переконання — це те, що формує рішення, а рішення формують результат. Цей шар найважче побачити самостійно, бо ці думки здаються «очевидними» і «правильними».</p>
     </div>
-    <div class="lesson-block-content">
-        <p>Это слой который сложнее всего увидеть самостоятельно. Убеждения формируют решения — а решения формируют результат.</p>
-        <p style="margin-top:8px;">Примеры что блокируют рост:</p>
-        <ul style="margin-top:6px;">
-            <li>"Хочешь сделать хорошо — сделай сам" → владелец становится узким местом</li>
-            <li>"Консультант не знает мой бизнес" → закрытость к новым решениям</li>
-            <li>"Клиенты не готовы платить больше" → подсознательно занижаете цены</li>
-            <li>"Я всегда прав" → не учитесь на ошибках</li>
-        </ul>
-        <p style="margin-top:8px;">Гордыня — невидимый барьер: блокирует делегирование, разрушает команду, останавливает рост. Самые успешные владельцы — те кто остаётся открытым и благодарным.</p>
-    </div>
-</div>
-
-<div class="result-block">
-    <strong>Результат урока:</strong> вы определите в каком из 5 слоёв сейчас находится ваше узкое место — и поймёте где искать решение.
-</div>
-
-<div class="l-ai-block" style="margin:1.25rem 0 0;">
-    <div class="l-ai-block-header">
-        <div class="l-ai-icon">🔍</div>
-        <div>
-            <div class="l-ai-title">AI Анализ — 5 слоёв бизнеса</div>
-            <div class="l-ai-desc">Зайдите в ассистента и пройдите анализ своей ситуации. Он задаст вопросы по каждому слою и определит где ваше узкое место прямо сейчас.</div>
+    <div class="l8-beliefs">
+        <div class="l8-belief">
+            <div class="l8-belief-quote">«Якщо хочеш зробити добре — зроби сам»</div>
+            <div class="l8-belief-result">→ власник стає вузьким місцем, делегування не відбувається</div>
+        </div>
+        <div class="l8-belief">
+            <div class="l8-belief-quote">«Консультант не знає мого бізнесу»</div>
+            <div class="l8-belief-result">→ закритість до нових рішень і зовнішнього погляду</div>
+        </div>
+        <div class="l8-belief">
+            <div class="l8-belief-quote">«Клієнти не готові платити більше»</div>
+            <div class="l8-belief-result">→ підсвідомо занижуються ціни, маржа залишається низькою</div>
+        </div>
+        <div class="l8-belief">
+            <div class="l8-belief-quote">«Я завжди правий»</div>
+            <div class="l8-belief-result">→ помилки не аналізуються, зростання блокується</div>
         </div>
     </div>
-    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-pie-analysis-methodology-5-layers-of-business','_blank')">
-        🔍 Пройти анализ 5 слоёв →
-    </button>
-</div>`,
-                
-                homework: `<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        <div class="lesson-block-title">Домашнє завдання</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Зайдіть в AI асистента (кнопка вище)</li>
-            <li>Пройдіть аналіз — відповідайте чесно на питання</li>
-            <li>Запишіть: в якому шарі ваше вузьке місце зараз</li>
-            <li>Напишіть у полі відповіді назву шару і 1-2 речення про свою ситуацію</li>
-        </ol>
-    </div>
-</div>`,
-                
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Пройдите диалог с ассистентом и определите вашу точку роста.</p>
+    <p style="font-size:0.82rem;color:#525252;line-height:1.5;margin-top:0.85rem;">Найуспішніші власники — ті, хто залишається відкритим до зворотного зв'язку і готовим переглядати свої переконання.</p>
+</div>
+
+<div class="l8-divider"></div>
+
+<div class="l8-section">
+    <div class="l8-section-label">Результат уроку</div>
+    <div class="l8-result-list">
+        <div class="l8-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Визначите шар, де зараз ваше вузьке місце
+        </div>
+        <div class="l8-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Зрозумієте де шукати рішення — а не симптоми
+        </div>
+        <div class="l8-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Перестанете витрачати зусилля на поверхневі зміни
+        </div>
     </div>
 </div>
-                `,
-                
-                homeworkLink: "https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-ai-kouch-konsultant-alex-talko-5-shariv",
-                homeworkLinkName: "→ Асистент 5 шарів",
-                time: 15
+
+<div class="l8-divider"></div>
+
+<div class="l8-section">
+    <div class="l8-section-label">AI-діагностика</div>
+    <div class="l8-tool">
+        <div class="l8-tool-header">
+            <div class="l8-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div>
+                <div class="l8-tool-title">AI Аналіз бізнесу — 5 шарів</div>
+                <div class="l8-tool-desc">Самостійно визначити шар проблеми буває складно. AI-інструмент проводить коротку діагностику: задає питання по кожному шару і допомагає визначити, де зараз знаходиться ваше вузьке місце.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-pie-analysis-methodology-5-layers-of-business" target="_blank" class="l8-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Пройти аналіз 5 шарів
+        </a>
+    </div>
+</div>`,
+
+                lessonContent_ru: `
+<style>
+.l8-section { margin-bottom:1.75rem; }
+.l8-section:last-child { margin-bottom:0; }
+.l8-divider { height:1px; background:#e2e8f0; margin:1.75rem 0; }
+.l8-section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.09em; color:#9ca3af; text-transform:uppercase; margin-bottom:0.65rem; }
+.l8-section-title { font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:0.65rem; }
+.l8-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1rem 1.1rem; }
+.l8-card p { font-size:0.9rem; color:#374151; line-height:1.65; }
+.l8-card p+p { margin-top:0.7rem; }
+.l8-symptoms { display:grid; gap:0.4rem; margin-top:0.75rem; }
+.l8-symptom { display:flex; align-items:center; gap:0.6rem; padding:0.55rem 0.85rem; background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; font-size:0.85rem; color:#92400e; }
+.l8-layers { display:grid; gap:0.55rem; margin-top:0.75rem; }
+.l8-layer { border-radius:11px; overflow:hidden; border:1px solid #e2e8f0; }
+.l8-layer-header { display:flex; align-items:center; gap:0.65rem; padding:0.75rem 0.95rem; background:#f8fafc; }
+.l8-layer-num { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; color:white; flex-shrink:0; }
+.l8-layer-title { font-weight:700; color:#1a1a1a; font-size:0.875rem; }
+.l8-layer-body { padding:0.65rem 0.95rem 0.8rem; background:white; border-top:1px solid #f1f5f9; }
+.l8-layer-sub { font-size:0.78rem; color:#6b7280; margin-bottom:0.35rem; }
+.l8-layer-text { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l8-layer-tag { display:inline-block; margin-top:0.45rem; padding:0.2rem 0.55rem; border-radius:5px; font-size:0.72rem; font-weight:600; }
+.l8-beliefs { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l8-belief { padding:0.7rem 0.9rem; background:#f8fafc; border-radius:9px; border-left:3px solid #e2e8f0; }
+.l8-belief-quote { font-size:0.85rem; color:#374151; font-style:italic; margin-bottom:0.25rem; }
+.l8-belief-result { font-size:0.78rem; color:#ef4444; }
+.l8-result-list { display:grid; gap:0.45rem; margin-top:0.75rem; }
+.l8-result-item { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; font-size:0.875rem; color:#166534; font-weight:500; }
+.l8-tool { background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.25rem; }
+.l8-tool-header { display:flex; align-items:flex-start; gap:0.85rem; }
+.l8-tool-icon { width:40px; height:40px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.l8-tool-title { font-weight:700; color:#1a1a1a; font-size:0.95rem; margin-bottom:0.25rem; }
+.l8-tool-desc { font-size:0.82rem; color:#525252; line-height:1.5; }
+.l8-btn { display:inline-flex; align-items:center; gap:0.4rem; margin-top:0.85rem; padding:0.5rem 1.05rem; background:#22c55e; color:white; border-radius:9px; font-size:0.85rem; font-weight:700; text-decoration:none; }
+</style>
+
+<div class="l8-section">
+    <div class="l8-section-label">Проблема</div>
+    <div class="l8-section-title">Почему вы делаете больше, а результат не меняется</div>
+    <div class="l8-card">
+        <p>Многие владельцы работают всё больше и больше — но результат почти не меняется. Появляется ощущение: команда есть, клиенты есть, работы много. Но бизнес не растёт.</p>
+        <p>Причина не в усилиях. Причина в том, что <strong>усилия направлены не туда</strong>. Большинство владельцев ищут решение на уровне действий — больше рекламы, больше продаж, больше контроля. Но настоящая проблема может находиться намного глубже.</p>
+    </div>
+</div>
+
+<div class="l8-divider"></div>
+
+<div class="l8-section">
+    <div class="l8-section-label">Почему стандартные решения не работают</div>
+    <div class="l8-section-title">Симптомы, которые показывают что проблема глубже чем кажется</div>
+    <div class="l8-symptoms">
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>«У меня нет времени»</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Команда не берёт ответственность</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Продажи нестабильны</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Низкая рентабельность</div>
+        <div class="l8-symptom"><svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.75" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Люди часто увольняются или теряют мотивацию</div>
+    </div>
+    <p style="font-size:0.82rem;color:#525252;line-height:1.5;margin-top:0.75rem;">Если у вас есть хотя бы один из этих симптомов — проблема не на поверхности. Её нужно искать глубже.</p>
+</div>
+
+<div class="l8-divider"></div>
+
+<div class="l8-section">
+    <div class="l8-section-label">Методология</div>
+    <div class="l8-section-title">5 слоёв бизнеса — где на самом деле ваше узкое место</div>
+    <p style="font-size:0.875rem;color:#525252;line-height:1.6;margin-bottom:0.75rem;">Каждый бизнес имеет 5 уровней. Проблема всегда находится только на одном из них.</p>
+    <div class="l8-layers">
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#22c55e;">1</div>
+                <div class="l8-layer-title">Действия</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Что вы делаете каждый день: продажи, маркетинг, переговоры, встречи</div>
+                <div class="l8-layer-text">Если проблема здесь — просто недостаточно активности. Решение на поверхности.</div>
+                <span class="l8-layer-tag" style="background:#f0fdf4;color:#16a34a;">Легче всего увидеть</span>
+            </div>
+        </div>
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#3b82f6;">2</div>
+                <div class="l8-layer-title">Инструменты</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Система управления, делегирование, статистики, планирование</div>
+                <div class="l8-layer-text">Если проблема здесь — люди работают хаотично, даже если их достаточно.</div>
+            </div>
+        </div>
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#8b5cf6;">3</div>
+                <div class="l8-layer-title">Бизнес-модель</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Как именно бизнес зарабатывает: маржа, масштабируемость, структура продуктов</div>
+                <div class="l8-layer-text">Если проблема здесь — даже при хорошей работе денег будет мало.</div>
+            </div>
+        </div>
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#f97316;">4</div>
+                <div class="l8-layer-title">Цели и партнёрства</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Чёткость цели, направление команды, конфликты с партнёрами</div>
+                <div class="l8-layer-text">Если проблема здесь — команда расфокусирована и движется в разные стороны.</div>
+            </div>
+        </div>
+        <div class="l8-layer">
+            <div class="l8-layer-header">
+                <div class="l8-layer-num" style="background:#ef4444;">5</div>
+                <div class="l8-layer-title">Личность владельца</div>
+            </div>
+            <div class="l8-layer-body">
+                <div class="l8-layer-sub">Убеждения, которые влияют на все решения</div>
+                <div class="l8-layer-text">Самый глубокий уровень. Именно здесь часто скрывается настоящая причина проблем.</div>
+                <span class="l8-layer-tag" style="background:#fef2f2;color:#dc2626;">Сложнее всего увидеть самостоятельно</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="l8-divider"></div>
+
+<div class="l8-section">
+    <div class="l8-section-label">Самый глубокий слой</div>
+    <div class="l8-section-title">Убеждения владельца формируют результат бизнеса</div>
+    <div class="l8-card">
+        <p>Убеждения — это то, что формирует решения, а решения формируют результат. Этот слой сложнее всего увидеть самостоятельно, потому что эти мысли кажутся «очевидными» и «правильными».</p>
+    </div>
+    <div class="l8-beliefs">
+        <div class="l8-belief">
+            <div class="l8-belief-quote">«Хочешь сделать хорошо — сделай сам»</div>
+            <div class="l8-belief-result">→ владелец становится узким местом, делегирование не происходит</div>
+        </div>
+        <div class="l8-belief">
+            <div class="l8-belief-quote">«Консультант не знает мой бизнес»</div>
+            <div class="l8-belief-result">→ закрытость к новым решениям и внешнему взгляду</div>
+        </div>
+        <div class="l8-belief">
+            <div class="l8-belief-quote">«Клиенты не готовы платить больше»</div>
+            <div class="l8-belief-result">→ подсознательно занижаются цены, маржа остаётся низкой</div>
+        </div>
+        <div class="l8-belief">
+            <div class="l8-belief-quote">«Я всегда прав»</div>
+            <div class="l8-belief-result">→ ошибки не анализируются, рост блокируется</div>
+        </div>
+    </div>
+    <p style="font-size:0.82rem;color:#525252;line-height:1.5;margin-top:0.85rem;">Самые успешные владельцы — те, кто остаётся открытым к обратной связи и готов пересматривать свои убеждения.</p>
+</div>
+
+<div class="l8-divider"></div>
+
+<div class="l8-section">
+    <div class="l8-section-label">Результат урока</div>
+    <div class="l8-result-list">
+        <div class="l8-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Определите слой, где сейчас ваше узкое место
+        </div>
+        <div class="l8-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Поймёте где искать решение — а не симптомы
+        </div>
+        <div class="l8-result-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+            Перестанете тратить усилия на поверхностные изменения
+        </div>
+    </div>
+</div>
+
+<div class="l8-divider"></div>
+
+<div class="l8-section">
+    <div class="l8-section-label">AI-диагностика</div>
+    <div class="l8-tool">
+        <div class="l8-tool-header">
+            <div class="l8-tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div>
+                <div class="l8-tool-title">AI Анализ бизнеса — 5 слоёв</div>
+                <div class="l8-tool-desc">Самостоятельно определить слой проблемы бывает сложно. AI-инструмент проводит короткую диагностику: задаёт вопросы по каждому слою и помогает определить, где сейчас находится ваше узкое место.</div>
+            </div>
+        </div>
+        <a href="https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-pie-analysis-methodology-5-layers-of-business" target="_blank" class="l8-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Пройти анализ 5 слоёв
+        </a>
+    </div>
+</div>`,
+
+                homework: `<ol><li>Пройдіть аналіз в AI-асистенті</li><li>Напишіть у полі відповіді:<br>— в якому шарі зараз ваше вузьке місце<br>— чому ви так вважаєте<br>— яку проблему це створює у вашому бізнесі</li></ol>`,
+                homework_ru: `<ol><li>Пройдите анализ в AI-ассистенте</li><li>Напишите в поле ответа:<br>— в каком слое сейчас ваше узкое место<br>— почему вы так считаете<br>— какую проблему это создаёт в вашем бизнесе</li></ol>`,
+
+                homeworkLink: "https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-pie-analysis-methodology-5-layers-of-business",
+                homeworkLinkName: "→ AI Аналіз 5 шарів",
+                homeworkLinkName_ru: "→ AI Анализ 5 слоёв",
+                time: 20
             },
             {
                 id: 9,
