@@ -4,6 +4,7 @@
         
         function initGoogleCalendar() {
             // Initialize token client for Google Identity Services
+            if (typeof google === "undefined") return;
             tokenClient = google.accounts.oauth2.initTokenClient({
                 client_id: GOOGLE_CLIENT_ID,
                 scope: GOOGLE_SCOPES,
