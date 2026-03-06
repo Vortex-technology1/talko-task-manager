@@ -185,11 +185,13 @@
     // P1-2: Fixed whitelist logic
     function canViewMetric(m) {
         if (!currentUser) return false;
+        // SuperAdmin бачить все
+        if (currentUser.email === 'management.talco@gmail.com') return true;
         const u = users.find(u => u.id === currentUser.uid);
         if (!u) return false;
 
-        // Owner — бачить все
-        if (u.role === 'owner') return true;
+        // Owner/admin — бачить все
+        if (u.role === 'owner' || u.role === 'admin') return true;
 
         // owner_only — тільки owner
         if (m.privacy === 'owner_only') return false;
@@ -262,6 +264,7 @@
                 results.push(...s.docs.map(d => ({ id: d.id, ...d.data() })));
             }
             statsEntries = results;
+            window._statsAllEntries = results;
         } catch (e) { console.error('[STATS] loadEntriesMulti:', e); }
     }
 
@@ -860,6 +863,10 @@
                 <button class="stats-pill" onclick="openQuickInputModal()" style="font-weight:600;">${SVG.edit} Внести дані</button>
                 <button class="stats-pill" onclick="runAIAnalysis()" style="color:#7c3aed;border-color:#e9d5ff;">${SVG.sparkles} AI</button>
                 <button class="stats-pill" onclick="openTrendsChart(statsMetrics[0]?.id || '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренди</button>
+                <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title="Експорт CSV">⬇ CSV</button>
+                <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title="Експорт Excel">⬇ Excel</button>
+                <button class="stats-pill" onclick="statsExportPDF()" style="color:#dc2626;border-color:#fecaca;" title="Вивантажити PDF">⬇ PDF</button>
+                ${canEdit ? `<button class="stats-pill" onclick="statsImportCSV()" style="color:#d97706;border-color:#fde68a;" title="Імпорт CSV">⬆ Імпорт</button>` : ''}
             </div>
         </div>
         ${metricCount === 0 && canEdit ? `
@@ -1034,7 +1041,7 @@
             <span class="stats-section-count">(${metrics.length})</span>
         </div>
         <div class="stats-table-wrap">
-            <table class="stats-table" style="table-layout:fixed;width:100%;">
+            <table class="stats-table">
                 <thead><tr>
                     <th style="width:140px;min-width:140px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</div></th>`;
 
@@ -1692,6 +1699,260 @@
                 '<span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;border-top:2px dashed #9ca3af;"></span> План</span>' : '');
         }
     }
+
+
+    // ========================
+    //  EXPORT / IMPORT
+    // ========================
+
+    // Будує матрицю: рядки = звітні періоди, колонки = метрики
+    function statsGetMatrix() {
+        const ms = statsMetrics.filter(m => canViewMetric(m));
+        const entries = window._statsAllEntries || [];
+
+        // Збираємо всі унікальні звітні періоди відсортовано
+        const periodsSet = new Set();
+        entries.forEach(e => {
+            const p = e.period || e.periodKey || e.date || '';
+            if (p) periodsSet.add(p);
+        });
+        const periods = Array.from(periodsSet).sort();
+
+        // Рядок 1: заголовки — "Звітний період" + назви метрик (з одиницями)
+        const header1 = ['Звітний період', ...ms.map(m => m.name + (m.unit ? ' (' + m.unit + ')' : ''))];
+        // Рядок 2: цілі
+        const header2 = ['Ціль', ...ms.map(m => m.target ?? '')];
+
+        // Будуємо lookup: metricId → period → value
+        const lookup = {};
+        entries.forEach(e => {
+            const p = e.period || e.periodKey || e.date || '';
+            if (!lookup[e.metricId]) lookup[e.metricId] = {};
+            lookup[e.metricId][p] = e.value ?? '';
+        });
+
+        const dataRows = periods.map(p => {
+            return [p, ...ms.map(m => {
+                const v = lookup[m.id]?.[p];
+                return v !== undefined && v !== '' ? v : '';
+            })];
+        });
+
+        return { ms, periods, header1, header2, dataRows };
+    }
+
+    function statsExportCSV() {
+        const { header1, header2, dataRows } = statsGetMatrix();
+        if (!dataRows.length) { showToast('Немає даних для експорту', 'error'); return; }
+        const escape = v => `"${String(v ?? '').replace(/"/g,'""')}"`;
+        const csv = [header1, header2, ...dataRows]
+            .map(row => row.map(escape).join(','))
+            .join('\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `TALKO_statistics_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        showToast('CSV експортовано', 'success');
+    }
+
+    async function statsExportExcel() {
+        const { ms, header1, header2, dataRows } = statsGetMatrix();
+        if (!dataRows.length) { showToast('Немає даних для експорту', 'error'); return; }
+        if (!window.XLSX) {
+            await new Promise((res, rej) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+                s.onload = res; s.onerror = rej;
+                document.head.appendChild(s);
+            });
+        }
+        const wb = XLSX.utils.book_new();
+        const wsData = [header1, header2, ...dataRows];
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+        // Ширини колонок
+        ws['!cols'] = [{ wch: 18 }, ...ms.map(() => ({ wch: 14 }))];
+
+        // Заморожуємо перший рядок і першу колонку
+        ws['!freeze'] = { xSplit: 1, ySplit: 2, topLeftCell: 'B3', activePane: 'bottomRight' };
+
+        // Стилі для заголовка (рядок 1 — жовтий)
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let C = range.s.c; C <= range.e.c; C++) {
+            const h1 = XLSX.utils.encode_cell({ r: 0, c: C });
+            const h2 = XLSX.utils.encode_cell({ r: 1, c: C });
+            if (!ws[h1]) continue;
+            ws[h1].s = { font: { bold: true }, fill: { fgColor: { rgb: 'FFD700' } }, alignment: { wrapText: true, vertical: 'top' } };
+            if (ws[h2]) ws[h2].s = { font: { bold: true, italic: true }, fill: { fgColor: { rgb: 'FFF9C4' } } };
+        }
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Статистика');
+        XLSX.writeFile(wb, `TALKO_statistics_${new Date().toISOString().slice(0,10)}.xlsx`);
+        showToast('Excel експортовано', 'success');
+    }
+
+    async function statsExportPDF() {
+        const { ms, header1, header2, dataRows } = statsGetMatrix();
+        if (!ms.length || !dataRows.length) { showToast('Немає даних для PDF', 'error'); return; }
+        showToast('Формуємо PDF...', 'info');
+
+        const thStyle = 'background:#16a34a;color:#fff;padding:5px 7px;font-size:10px;text-align:center;border:1px solid #e5e7eb;white-space:nowrap;';
+        const thGoalStyle = 'background:#fef9c3;color:#854d0e;padding:4px 7px;font-size:9px;text-align:center;border:1px solid #e5e7eb;';
+        const tdStyle = 'padding:4px 7px;font-size:10px;text-align:center;border:1px solid #f0f0f0;';
+        const tdPeriodStyle = 'padding:4px 7px;font-size:10px;font-weight:600;border:1px solid #e5e7eb;white-space:nowrap;background:#f9fafb;';
+
+        let headerHtml = '<tr><th style="' + thStyle + '">Звітний період</th>';
+        header1.slice(1).forEach(h => { headerHtml += `<th style="${thStyle}">${h}</th>`; });
+        headerHtml += '</tr>';
+
+        let goalHtml = '<tr><td style="' + thGoalStyle + '">Ціль</td>';
+        header2.slice(1).forEach(g => { goalHtml += `<td style="${thGoalStyle}">${g ?? ''}</td>`; });
+        goalHtml += '</tr>';
+
+        let bodyHtml = '';
+        dataRows.forEach((row, i) => {
+            const bg = i % 2 === 0 ? '#ffffff' : '#f0fdf4';
+            bodyHtml += '<tr>';
+            bodyHtml += `<td style="${tdPeriodStyle}">${row[0]}</td>`;
+            row.slice(1).forEach(v => {
+                bodyHtml += `<td style="${tdStyle}background:${bg};">${v !== '' ? v : '—'}</td>`;
+            });
+            bodyHtml += '</tr>';
+        });
+
+        const companyName = window.currentCompanyData?.name || 'TALKO System';
+        const html = `<html><head><meta charset="utf-8">
+            <style>
+                @page { size: landscape; margin: 10mm; }
+                body { font-family: Arial, sans-serif; font-size: 10px; color: #1a1a1a; }
+                h1 { color: #16a34a; font-size: 16px; margin: 0 0 4px; }
+                .meta { color: #6b7280; font-size: 10px; margin-bottom: 12px; }
+                table { width: 100%; border-collapse: collapse; }
+            </style></head><body>
+            <h1>${companyName} — Статистика</h1>
+            <div class="meta">Вивантажено: ${new Date().toLocaleDateString('uk-UA')} | Метрик: ${ms.length} | Періодів: ${dataRows.length}</div>
+            <table>${headerHtml}${goalHtml}${bodyHtml}</table>
+            </body></html>`;
+
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        setTimeout(() => { w.print(); }, 600);
+    }
+
+    function statsImportCSV() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.csv,.xlsx,.xls';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'csv') {
+                await statsImportFromCSV(file);
+            } else {
+                await statsImportFromExcel(file);
+            }
+        };
+        input.click();
+    }
+
+    async function statsImportFromCSV(file) {
+        const text = await file.text();
+        const lines = text.split('\n').filter(l => l.trim());
+        if (lines.length < 2) { showToast('CSV порожній або некоректний', 'error'); return; }
+        const parseRow = l => {
+            const cols = []; let cur = ''; let inQ = false;
+            for (let i = 0; i < l.length; i++) {
+                if (l[i] === '"') { inQ = !inQ; continue; }
+                if (l[i] === ',' && !inQ) { cols.push(cur.trim()); cur = ''; continue; }
+                cur += l[i];
+            }
+            cols.push(cur.trim());
+            return cols;
+        };
+        const allRows = lines.map(parseRow);
+        await statsImportMatrix(allRows);
+    }
+
+    async function statsImportFromExcel(file) {
+        if (!window.XLSX) {
+            await new Promise((res, rej) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+                s.onload = res; s.onerror = rej;
+                document.head.appendChild(s);
+            });
+        }
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        await statsImportMatrix(data.map(r => r.map(v => String(v ?? ''))));
+    }
+
+    // Матричний імпорт: рядок 1 = заголовки (Звітний період | Метрика1 | Метрика2 ...)
+    // рядок 2 = цілі (пропускається), далі рядки = дані
+    async function statsImportMatrix(allRows) {
+        if (!currentCompany || allRows.length < 2) { showToast('Файл порожній або некоректний', 'error'); return; }
+        const header = allRows[0];
+        // Знаходимо індекс колонки "Звітний період" (або першої колонки)
+        const periodColIdx = 0;
+        // Рядок 2 — цілі (пропускаємо)
+        const dataStartRow = header[1] && isNaN(parseFloat(allRows[1]?.[1])) ? 2 : 1;
+        
+        let imported = 0, skipped = 0;
+        const db = firebase.firestore();
+        const batch = db.batch();
+        let batchCount = 0;
+
+        for (let ri = dataStartRow; ri < allRows.length; ri++) {
+            const row = allRows[ri];
+            const period = row[periodColIdx]?.toString().trim();
+            if (!period) continue;
+
+            for (let ci = 1; ci < header.length; ci++) {
+                const metricHeader = header[ci]?.toString().trim();
+                if (!metricHeader) continue;
+                // Знаходимо метрику по назві (може бути "Назва (одиниця)")
+                const metricName = metricHeader.replace(/\s*\([^)]*\)\s*$/, '').trim();
+                const metric = statsMetrics.find(m => m.name.trim() === metricName);
+                if (!metric) { skipped++; continue; }
+
+                const rawVal = row[ci]?.toString().trim();
+                if (!rawVal || rawVal === '—' || rawVal === '') { skipped++; continue; }
+                const value = parseFloat(rawVal.replace(',', '.'));
+                if (isNaN(value)) { skipped++; continue; }
+
+                const ref = db.collection('companies').doc(currentCompany).collection('metricEntries').doc();
+                batch.set(ref, {
+                    metricId: metric.id,
+                    value,
+                    period,
+                    date: period,
+                    createdBy: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                imported++;
+                batchCount++;
+
+                // Firebase batch limit = 500
+                if (batchCount >= 490) {
+                    await batch.commit();
+                    batchCount = 0;
+                }
+            }
+        }
+        if (batchCount > 0) await batch.commit();
+        showToast(`Імпортовано: ${imported} записів${skipped ? ', пропущено: ' + skipped : ''}`, imported > 0 ? 'success' : 'error');
+        if (imported > 0) renderStatistics();
+    }
+
+    window.statsExportCSV = statsExportCSV;
+    window.statsExportExcel = statsExportExcel;
+    window.statsExportPDF = statsExportPDF;
+    window.statsImportCSV = statsImportCSV;
 
     window.renderStatistics = renderStatistics;
     window.openMetricModal = openMetricModal;

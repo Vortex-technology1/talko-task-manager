@@ -394,32 +394,32 @@
 
         // Централізована очистка всіх listeners та intervals
         function cleanupAllListeners() {
-            if (tasksUnsubscribe) {
-                tasksUnsubscribe();
-                tasksUnsubscribe = null;
+            if (window.tasksUnsubscribe) {
+                window.tasksUnsubscribe();
+                window.tasksUnsubscribe = null;
             }
-            if (completedTasksUnsubscribe) {
-                completedTasksUnsubscribe();
-                completedTasksUnsubscribe = null;
+            if (window.completedTasksUnsubscribe) {
+                window.completedTasksUnsubscribe();
+                window.completedTasksUnsubscribe = null;
             }
-            if (reviewTasksUnsubscribe) {
-                reviewTasksUnsubscribe();
-                reviewTasksUnsubscribe = null;
+            if (window.reviewTasksUnsubscribe) {
+                window.reviewTasksUnsubscribe();
+                window.reviewTasksUnsubscribe = null;
             }
-            if (rejectedTasksUnsubscribe) {
-                rejectedTasksUnsubscribe();
-                rejectedTasksUnsubscribe = null;
+            if (window.rejectedTasksUnsubscribe) {
+                window.rejectedTasksUnsubscribe();
+                window.rejectedTasksUnsubscribe = null;
             }
             try {
-                if (commentsUnsubscribe) {
-                    commentsUnsubscribe();
-                    commentsUnsubscribe = null;
+                if (window.commentsUnsubscribe) {
+                    window.commentsUnsubscribe();
+                    window.commentsUnsubscribe = null;
                 }
             } catch(e) {}
-            if (timeTrackerInterval) {
-                clearInterval(timeTrackerInterval);
-                timeTrackerInterval = null;
-                timeTrackerStart = null;
+            if (window.timeTrackerInterval) {
+                clearInterval(window.timeTrackerInterval);
+                window.timeTrackerInterval = null;
+                window.timeTrackerStart = null;
             }
             if (typeof notificationCheckInterval !== 'undefined' && notificationCheckInterval) {
                 clearInterval(notificationCheckInterval);

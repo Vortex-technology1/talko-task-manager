@@ -482,7 +482,7 @@
             `;
         }
         
-        function initRegularView() {
+        window.initRegularView = function initRegularView() {
             const savedView = localStorage.getItem('regularView') || 'week';
             setRegularView(savedView);
             

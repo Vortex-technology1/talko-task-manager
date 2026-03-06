@@ -68,11 +68,6 @@
         }
         
         async function loadDemoData(type) {
-            if (!window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
-                showToast && showToast('Demo data — тільки для localhost', 'error');
-                return;
-            }
-
             if (!currentCompany) {
                 showAlertModal(t('createCompanyFirst'));
                 closeDemoDataModal();

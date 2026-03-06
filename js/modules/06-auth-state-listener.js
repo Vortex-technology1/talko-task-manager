@@ -97,7 +97,27 @@
                 // Синхронізуємо обидва stats tab buttons (desktop + mobile) одразу після login
                 if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
                 if (typeof initStatistics === 'function') initStatistics();
-                
+
+                // FIX БАГ 4: event-driven замість setTimeout(500)
+                // Гарантує що companyFeatures вже встановлені в loadAllData
+                window.addEventListener('talko:featuresLoaded', function _onFeatures() {
+                    window.removeEventListener('talko:featuresLoaded', _onFeatures);
+                    if (window.isFeatureEnabled && window.isFeatureEnabled('crm')) {
+                        const crmBtn = document.getElementById('crmNavBtn');
+                        if (crmBtn) crmBtn.style.display = '';
+                        if (typeof initCRMModule === 'function') initCRMModule();
+                    }
+                    if (window.isFeatureEnabled && window.isFeatureEnabled('marketing')) {
+                        const mktBtn = document.getElementById('marketingNavBtn');
+                        if (mktBtn) mktBtn.style.display = '';
+                    }
+                    if (window.isFeatureEnabled && window.isFeatureEnabled('bots')) {
+                        const botsBtn = document.getElementById('botsNavBtn');
+                        if (botsBtn) botsBtn.style.display = '';
+                        if (typeof initBotsModule === 'function') initBotsModule();
+                    }
+                });
+
                 // Show FAB (було окремим onAuthStateChanged — об'єднано)
                 const fab = document.getElementById('fabAdd');
                 if (fab) fab.style.display = 'flex';
@@ -150,7 +170,7 @@
             document.getElementById('notificationBell').style.display = 'flex';
             // Відновлюємо стан кнопки "Приховати виконані"
             const hideBtn = document.getElementById('hideCompletedBtn');
-            if (hideBtn && hideCompletedTasks) hideBtn.classList.add('active');
+            if (hideBtn && window.hideCompletedTasks) hideBtn.classList.add('active');
         }
 
         function getRoleText(role) {

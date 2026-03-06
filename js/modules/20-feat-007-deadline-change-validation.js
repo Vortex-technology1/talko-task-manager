@@ -30,7 +30,7 @@
             const toast = document.createElement('div');
             toast.id = 'simpleToast';
             toast.style.cssText = `
-                position:fixed;top:20px;right:20px;background:${c.bg};color:white;
+                position:fixed;top:70px;right:20px;background:${c.bg};color:white;
                 padding:1rem 1.5rem;border-radius:12px;box-shadow:0 10px 40px ${c.shadow};
                 z-index:10001;animation:slideInRight 0.3s ease;cursor:pointer;
                 max-width:350px;font-weight:500;font-size:0.9rem;

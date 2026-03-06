@@ -16,7 +16,7 @@
         list.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;padding:0.5rem;">Завантаження...</div>';
 
         try {
-            const cid = currentUserData?.companyId || currentCompanyId;
+            const cid = currentUserData?.companyId || currentCompany;
             const snap = await firebase.firestore()
                 .collection('companies').doc(cid)
                 .collection('tasks')
@@ -28,7 +28,7 @@
             renderSubtasksList(subtasks, parentTaskId);
         } catch(e) {
             // Якщо немає індексу — fallback через tasks масив
-            const cid = currentUserData?.companyId || currentCompanyId;
+            const cid = currentUserData?.companyId || currentCompany;
             const subtasks = (typeof tasks !== 'undefined')
                 ? tasks.filter(t => t.parentId === parentTaskId)
                 : [];
@@ -185,7 +185,7 @@
         const assigneeName = assigneeUser ? (assigneeUser.name || assigneeUser.email) : '';
 
         const parentTask = (typeof tasks !== 'undefined') ? tasks.find(t => t.id === parentId) : null;
-        const cid = currentUserData?.companyId || currentCompanyId;
+        const cid = currentUserData?.companyId || currentCompany;
 
         const subtaskData = {
             title,
@@ -240,7 +240,7 @@
     // ---- ВИДАЛЕННЯ підзавдання ----
     window.deleteSubtask = async function(subtaskId, parentId) {
         if (!confirm('Видалити підзавдання?')) return;
-        const cid = currentUserData?.companyId || currentCompanyId;
+        const cid = currentUserData?.companyId || currentCompany;
         try {
             await firebase.firestore()
                 .collection('companies').doc(cid)

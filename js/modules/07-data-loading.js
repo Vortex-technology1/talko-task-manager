@@ -218,6 +218,10 @@
                     }
                     // Show morning start modal (once per day)
                     setTimeout(() => { checkMorningStart(); startOnboarding(); saveDailySnapshot(); }, 1500);
+
+                    // FIX: Dispatch event so feature-dependent modules initialize
+                    // AFTER companyFeatures is guaranteed to be set
+                    window.dispatchEvent(new CustomEvent('talko:featuresLoaded'));
                 }
                 hideSkeletonLoading();
             }

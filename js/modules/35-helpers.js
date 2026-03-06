@@ -148,7 +148,7 @@
             // Підсвічування dropdown-батьків по новій структурі меню
             var tasksTabs    = ['tasks','regular'];
             var analyticsTabs = ['statistics','analytics','ownerDashboard'];
-            var sysTabs      = ['functions','bizstructure','users','admin'];
+            var sysTabs      = ['functions','bizstructure','users','admin','learning'];
 
             var tasksBtn     = document.getElementById('tasksTabBtn');
             var analyticsBtn = document.getElementById('analyticsTabBtn');
@@ -198,6 +198,7 @@
                 case 'admin': renderAdminPanel(); break;
                 case 'bizstructure': if (typeof showBizStructureTab === 'function') showBizStructureTab(); break;
                 case 'ownerDashboard': if (typeof renderOwnerDashboard === 'function') renderOwnerDashboard(); break;
+                case 'learning': if (typeof window.initLearning === 'function') window.initLearning(); break;
             }
             
             updateOverdueBadges();
@@ -634,7 +635,7 @@
         // Переініціалізація іконок після динамічного контенту
         // Debounced refreshIcons — замість 40+ повних DOM-парсингів за секунду
         let _refreshIconsTimer = null;
-        function refreshIcons() {
+        window.refreshIcons = function refreshIcons() {
             if (_refreshIconsTimer) return;
             _refreshIconsTimer = requestAnimationFrame(() => {
                 _refreshIconsTimer = null;
@@ -653,7 +654,7 @@
         }
         
         // Примусовий refresh (для модалок які потребують іконок зразу)
-        function refreshIconsNow() {
+        window.refreshIconsNow = function refreshIconsNow() {
             if (_refreshIconsTimer) {
                 cancelAnimationFrame(_refreshIconsTimer);
                 _refreshIconsTimer = null;

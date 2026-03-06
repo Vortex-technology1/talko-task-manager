@@ -313,6 +313,67 @@ service cloud.firestore {
       match /metricAuditLog/{logId} {
         allow read: if isManagerOrOwner(companyId);
       }
+
+      // CRM — CONTACTS
+      match /contacts/{contactId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isCompanyMember(companyId);
+        allow update: if isCompanyMember(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // CRM — DEALS
+      match /deals/{dealId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isCompanyMember(companyId);
+        allow update: if isCompanyMember(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      match /deals/{dealId}/history/{histId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isCompanyMember(companyId);
+      }
+
+      // CRM — PIPELINES
+      match /pipelines/{pipelineId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isManagerOrOwner(companyId);
+        allow update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // MARKETING — LANDING PAGES
+      match /landingPages/{pageId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // MARKETING — FUNNELS
+      match /funnels/{funnelId} {
+        allow read: if isCompanyMember(companyId) || true; // public read for widget
+        allow create, update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // BOTS — FLOWS
+      match /flows/{flowId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // BOTS — SESSIONS
+      match /sessions/{sessionId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if isCompanyMember(companyId);
+      }
+
+      // BOTS — CALLBACK CACHE (Admin SDK only)
+      match /cbCache/{cbId} {
+        allow read, write: if false;
+      }
     }
     
     // =====================

@@ -1,28 +1,28 @@
 // =====================
         // FEAT-006: TIME TRACKING
         // =====================
-        let timeTrackerInterval = null;
-        let timeTrackerStart = null;
+        window.timeTrackerInterval = null;
+        window.timeTrackerStart = null;
         let timeTrackerTaskId = null;
         
         function toggleTimeTracker() {
             if (!editingId) return;
             
-            if (timeTrackerInterval) {
+            if (window.timeTrackerInterval) {
                 // СТОП
                 stopTimeTracker();
             } else {
                 // СТАРТ
-                timeTrackerStart = Date.now();
+                window.timeTrackerStart = Date.now();
                 timeTrackerTaskId = editingId;
                 const btn = document.getElementById('timeTrackBtn');
                 btn.style.background = '#ef4444';
                 btn.innerHTML = '<i data-lucide="square" class="icon icon-sm"></i> <span>' + t('btnStop') + '</span>';
                 refreshIcons();
                 
-                timeTrackerInterval = setInterval(() => {
-                    if (!timeTrackerStart) return;
-                    const elapsed = Math.floor((Date.now() - timeTrackerStart) / 1000);
+                window.timeTrackerInterval = setInterval(() => {
+                    if (!window.timeTrackerStart) return;
+                    const elapsed = Math.floor((Date.now() - window.timeTrackerStart) / 1000);
                     const mins = Math.floor(elapsed / 60);
                     const secs = elapsed % 60;
                     document.getElementById('timeTrackActual').textContent = formatTrackedTime(getTotalTrackedMinutes() + mins) + ':' + String(secs).padStart(2, '0').slice(-2);
@@ -31,11 +31,11 @@
         }
         
         function stopTimeTracker() {
-            if (!timeTrackerStart || !timeTrackerTaskId) return;
+            if (!window.timeTrackerStart || !timeTrackerTaskId) return;
             
-            const elapsed = Math.round((Date.now() - timeTrackerStart) / 60000); // хвилини
-            clearInterval(timeTrackerInterval);
-            timeTrackerInterval = null;
+            const elapsed = Math.round((Date.now() - window.timeTrackerStart) / 60000); // хвилини
+            clearInterval(window.timeTrackerInterval);
+            window.timeTrackerInterval = null;
             
             const btn = document.getElementById('timeTrackBtn');
             btn.style.background = '#22c55e';
@@ -46,7 +46,7 @@
                 addTimeEntry(elapsed);
             }
             
-            timeTrackerStart = null;
+            window.timeTrackerStart = null;
         }
         
         function addManualTime() {

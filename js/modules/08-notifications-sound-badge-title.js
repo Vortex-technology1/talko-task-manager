@@ -1,15 +1,15 @@
 // =====================
         // NOTIFICATIONS (Sound, Badge, Title)
         // =====================
-        let tasksUnsubscribe = null;
+        window.tasksUnsubscribe = null;
         let lastTaskCount = 0;
         
-        function initTasksListener() {
+        window.initTasksListener = function initTasksListener() {
             if (!currentCompany || !currentUser) return;
             
             // Відписуємось від попереднього listener
-            if (tasksUnsubscribe) {
-                tasksUnsubscribe();
+            if (window.tasksUnsubscribe) {
+                window.tasksUnsubscribe();
             }
             
             // Зберігаємо ID завдань які вже бачили
@@ -17,7 +17,7 @@
             let isFirstLoad = true;
             
             // Real-time listener на завдання користувача
-            tasksUnsubscribe = db.collection('companies').doc(currentCompany)
+            window.tasksUnsubscribe = db.collection('companies').doc(currentCompany)
                 .collection('tasks')
                 .where('assigneeId', '==', currentUser.uid)
                 .where('status', '==', 'new')
@@ -108,14 +108,14 @@
             initRejectedTasksListener();
         }
         
-        let completedTasksUnsubscribe = null;
+        window.completedTasksUnsubscribe = null;
         let knownCompletedTaskIds = new Set();
         
         function initCompletedTasksListener() {
             if (!currentCompany || !currentUser) return;
             
-            if (completedTasksUnsubscribe) {
-                completedTasksUnsubscribe();
+            if (window.completedTasksUnsubscribe) {
+                window.completedTasksUnsubscribe();
             }
             
             let isFirstLoad = true;
@@ -123,7 +123,7 @@
             // Слухаємо завдання де поточний користувач в списку notifyOnComplete
             // УВАГА: Потрібен складений індекс в Firebase:
             // Collection: tasks, Fields: notifyOnComplete (Arrays), status (Ascending)
-            completedTasksUnsubscribe = db.collection('companies').doc(currentCompany)
+            window.completedTasksUnsubscribe = db.collection('companies').doc(currentCompany)
                 .collection('tasks')
                 .where('notifyOnComplete', 'array-contains', currentUser.uid)
                 .where('status', '==', 'done')
@@ -258,7 +258,7 @@
             toast.id = 'newTaskToast';
             toast.style.cssText = `
                 position: fixed;
-                top: 20px;
+                top: 70px;
                 right: 20px;
                 background: ${cfg.gradient};
                 color: white;
@@ -352,8 +352,7 @@
         // Cleanup при logout — зупиняємо interval
         window._cleanupNotifications = function() {
             if (_pageTitleInterval) { clearInterval(_pageTitleInterval); _pageTitleInterval = null; }
-            if (completedTasksUnsubscribe) { completedTasksUnsubscribe(); completedTasksUnsubscribe = null; }
-            if (newTasksUnsubscribe) { newTasksUnsubscribe(); newTasksUnsubscribe = null; }
+            if (window.completedTasksUnsubscribe) { window.completedTasksUnsubscribe(); window.completedTasksUnsubscribe = null; }
         };
         
         // Multi-tab sync: reload data when tab becomes visible after being hidden
