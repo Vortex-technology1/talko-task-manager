@@ -60,6 +60,13 @@
     const isSA = () => (window.currentUser?.email || '') === 'management.talco@gmail.com';
     const isManager = () => {
         if (isSA()) return true;
+        // Read role from DOM element filled by auth listener
+        const roleEl = document.getElementById('currentUserRole');
+        const roleText = roleEl ? roleEl.textContent : '';
+        if (roleText.includes('Власник') || roleText.includes('owner') ||
+            roleText.includes('Адмін') || roleText.includes('admin') ||
+            roleText.includes('Менеджер') || roleText.includes('manager')) return true;
+        // Fallback: coordUsers array (available after load)
         const u = coordUsers.find(x => x.id === uid());
         return u && ['owner','admin','manager'].includes(u.role);
     };
@@ -171,7 +178,7 @@
           <div id="coordList"></div>
         </div>
         ${htmlModal()}${htmlSession()}${htmlProtocol()}${htmlAnalysis()}${htmlDynAgenda()}`;
-        if (window.lucide) lucide.createIcons();
+        setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 50);
         renderCoordList();
     }
 
@@ -203,7 +210,7 @@
               </div></div>`;
         });
         el.innerHTML = html;
-        if (window.lucide) lucide.createIcons();
+        setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 50);
     }
 
     function coordCard(c) {
