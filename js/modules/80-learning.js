@@ -5199,7 +5199,10 @@
     // ── State ─────────────────────────────────────────────────
     let learningProgress = {};     // { moduleId: { completed, homeworkDone, homeworkText } }
     let currentLearningModule = null;
-    let learningLang = 'ua';
+    // Use TALKO main lang - read from localStorage key used by translations module
+    function getLearningLang() {
+        return localStorage.getItem('talko_lang') || 'ua';
+    }
 
     // ── Firestore helpers ─────────────────────────────────────
     // Use same pattern as 76-coordination: firebase.firestore() + window.currentCompany
@@ -5273,7 +5276,7 @@
         if (!root) return;
 
         const stats = getLearningStats();
-        const isRu = learningLang === 'ru';
+        const isRu = getLearningLang() === 'ru';
 
         root.innerHTML = `
         <div class="learning-wrap">
@@ -5283,10 +5286,7 @@
                     <i data-lucide="graduation-cap" class="icon" style="color:#22c55e;width:24px;height:24px;"></i>
                     <span>${isRu ? 'Программа обучения' : 'Програма навчання'}</span>
                 </div>
-                <div class="learning-lang-switch">
-                    <button class="l-lang-btn ${!isRu ? 'active' : ''}" onclick="window._learningSetLang('ua')">UA</button>
-                    <button class="l-lang-btn ${isRu ? 'active' : ''}" onclick="window._learningSetLang('ru')">RU</button>
-                </div>
+    
             </div>
 
             <!-- Stats bar -->
@@ -5347,7 +5347,7 @@
         const module = learningCourseData.find(m => m.id === moduleId);
         if (!module) return;
         currentLearningModule = module;
-        const isRu = learningLang === 'ru';
+        const isRu = getLearningLang() === 'ru';
 
         const title = isRu ? (module.title_ru || module.title) : module.title;
         const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
@@ -5364,10 +5364,7 @@
                     <i data-lucide="arrow-left" class="icon" style="width:18px;height:18px;"></i>
                     ${isRu ? 'Назад' : 'Назад'}
                 </button>
-                <div class="learning-lang-switch">
-                    <button class="l-lang-btn ${!isRu ? 'active' : ''}" onclick="window._learningSetLang('ua');window._openLearningModule(${moduleId})">UA</button>
-                    <button class="l-lang-btn ${isRu ? 'active' : ''}" onclick="window._learningSetLang('ru');window._openLearningModule(${moduleId})">RU</button>
-                </div>
+
             </div>
 
             <div class="l-module-detail">
@@ -5438,11 +5435,7 @@
         renderLearning();
     };
 
-    // ── Lang switch ───────────────────────────────────────────
-    window._learningSetLang = function(lang) {
-        learningLang = lang;
-        localStorage.setItem('talko-learning-lang', lang);
-    };
+
 
     // ── Mark complete ─────────────────────────────────────────
     window._toggleLearningComplete = function(moduleId, done) {
@@ -5466,7 +5459,6 @@
 
     // ── Init (called when tab opens) ──────────────────────────
     window.initLearning = function() {
-        learningLang = localStorage.getItem('talko-learning-lang') || 'ua';
         loadLearningProgress();
     };
 
