@@ -448,107 +448,309 @@
                 title_ru: "СЛОВАРЬ ТЕРМИНОВ + ЭФФЕКТИВНОЕ ОБУЧЕНИЕ",
                 subtitle: "Технологія навчання + прояснення 13 термінів",
                 subtitle_ru: "Технология обучения + прояснение 13 терминов",
-                
+                hideAiBlock: true,
+
                 videoLink: null,
                 materialsLink: null,
-                
-                lessonContent: `<div class="lesson-block intro">
+
+                lessonContent: `
+<div class="lesson-block intro">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">Чому це важливо перш за все</div>
+        <div class="lesson-block-title">Чому більшість навчання не працює</div>
     </div>
     <div class="lesson-block-content">
-        <p>90% навчання не працює — не тому що люди тупі, а тому що відсутня технологія.</p>
-        <p style="margin-top:8px;">Автошкола: кілька тижнів → людина їде. Університет: 5 років → людина не може працювати за спеціальністю. <strong>В чому різниця?</strong> Технологія — це послідовність дій, яка дає передбачуваний результат.</p>
+        <p>Більшість людей витрачають роки на навчання, але не можуть застосувати знання на практиці.</p>
+        <p style="margin-top:0.75rem;">Наприклад: університет — 5 років, тисячі годин лекцій, диплом. Але при цьому більшість випускників не працюють за спеціальністю.</p>
+        <p style="margin-top:0.75rem;">Проблема не в людях. Проблема в тому, що в освіті відсутня <strong>технологія навчання</strong>.</p>
     </div>
 </div>
 
 <div class="lesson-block">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">Закон навчання: відтворення → розуміння → результат</div>
+        <div class="lesson-block-title">Що таке технологія</div>
     </div>
     <div class="lesson-block-content">
-        <p><strong>Запам'ятати ≠ зрозуміти.</strong> Справжнє знання не потребує згадування — ви просто знаєте, як знаєте що вогонь гарячий.</p>
-        <p style="margin-top:8px;">Головна причина невдач у навчанні — <strong>незрозуміле слово</strong>. Одне пропущене слово зупиняє розуміння всієї теми. Як дірка в стіні — можна фарбувати шар за шаром, але дірка нікуди не дінеться.</p>
-        <ul style="margin-top:8px;">
-            <li>Нудно і хочеться відволіктись → є незрозуміле слово</li>
-            <li>Відчуття "щось не вкладається" → є незрозуміле слово</li>
-            <li>Проблема завжди <strong>раніше</strong> — в попередньому матеріалі</li>
+        <p>Технологія — це послідовність дій, яка дає передбачуваний результат.</p>
+        <p style="margin-top:0.75rem;">Наприклад, щоб приготувати яєчню:</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;color:#1a1a1a;">
+                <span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">1</span>
+                Увімкнути плиту
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;color:#1a1a1a;">
+                <span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">2</span>
+                Поставити сковорідку
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;color:#1a1a1a;">
+                <span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">3</span>
+                Розбити яйця
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;color:#1a1a1a;">
+                <span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">4</span>
+                Почекати кілька хвилин
+            </div>
+        </div>
+        <p style="margin-top:0.75rem;">Якщо виконати ці дії — результат гарантований. <strong>Навчання має працювати так само.</strong></p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Як працює правильне навчання</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Ефективне навчання складається з трьох етапів:</p>
+        <div style="margin-top:0.85rem;display:flex;align-items:center;gap:0;border-radius:10px;overflow:hidden;">
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;">
+                <div style="font-weight:700;color:#166534;font-size:0.875rem;">Зрозуміти</div>
+            </div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;">
+                <div style="font-weight:700;color:#166534;font-size:0.875rem;">Застосувати</div>
+            </div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#22c55e;">
+                <div style="font-weight:700;color:white;font-size:0.875rem;">Навичка</div>
+            </div>
+        </div>
+        <p style="margin-top:0.75rem;">Просто знати щось — недостатньо. Справжнє навчання завершується тоді, коли людина може <strong>застосувати знання у роботі</strong>.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Головна причина проблем у навчанні</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Основна причина проблем у навчанні — <strong>незрозуміле слово</strong>.</p>
+        <p style="margin-top:0.75rem;">Коли людина зустрічає слово, яке вона не розуміє:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>вона перестає розуміти матеріал</li>
+            <li>починає втрачати інтерес</li>
+            <li>намагається запам'ятати замість зрозуміти</li>
         </ul>
+        <p style="margin-top:0.75rem;">У результаті знання не застосовуються.</p>
     </div>
 </div>
 
 <div class="lesson-block">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">Що таке концепт і чому він важливіший за визначення</div>
+        <div class="lesson-block-title">Що таке концепт</div>
     </div>
     <div class="lesson-block-content">
-        <p>Концепт — це ідея в вашому розумі, а не запам'ятоване визначення. <strong>Концепт не можна запам'ятати — його можна тільки створити.</strong></p>
-        <p style="margin-top:8px;">Приклад: "план" для керівника продажів = цифра яку хочу досягнути. Для власника = послідовність конкретних дій. Одне слово — два різних концепти — повна відсутність взаєморозуміння.</p>
-        <p style="margin-top:8px;"><strong>Правило:</strong> ніколи не питайте значення слів у людей — вони дають хибні визначення. Використовуйте словник або AI.</p>
+        <p>Концепт — це ідея або уявлення про щось у вашому розумі. Концепт не можна просто запам'ятати. Його можна тільки <strong>сформувати через розуміння</strong>.</p>
+        <p style="margin-top:0.75rem;">Наприклад, якщо у вас є концепт "стілець" — ви легко визначите, стілець це чи ні. Вам не потрібно згадувати визначення.</p>
     </div>
 </div>
 
 <div class="lesson-block">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">Навичка = автоматизм через повторення</div>
+        <div class="lesson-block-title">Чому це важливо у бізнесі</div>
     </div>
     <div class="lesson-block-content">
-        <p>Розуміння — це ще не навичка. Знати граматику ≠ говорити мовою.</p>
-        <p style="margin-top:8px;">Навичка — це автоматизм: перші 30 годин за кермом — стрес і увага на педалях. Після — слухаєш музику і їдеш. Так само з управлінням: перший раз віддати розпорядження — страшно. Після 100 разів — природно.</p>
-        <p style="margin-top:8px;"><strong>Важливо вчитись одразу правильно</strong> — неправильний автоматизм заважатиме все життя.</p>
+        <p>У бізнесі нерозуміння термінів часто створює проблеми.</p>
+        <p style="margin-top:0.75rem;">Наприклад, ви говорите співробітнику: <em>"Підготуй план продажів"</em>. Але у вас різні концепти слова «план»:</p>
+        <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <div style="padding:0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;">
+                <div style="font-size:0.72rem;font-weight:700;color:#16a34a;letter-spacing:0.06em;margin-bottom:0.3rem;">ДЛЯ ВАС</div>
+                <div style="font-size:0.875rem;color:#1a1a1a;">Конкретні кроки та дії</div>
+            </div>
+            <div style="padding:0.75rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;">
+                <div style="font-size:0.72rem;font-weight:700;color:#dc2626;letter-spacing:0.06em;margin-bottom:0.3rem;">ДЛЯ СПІВРОБІТНИКА</div>
+                <div style="font-size:0.875rem;color:#1a1a1a;">Бажаний результат у цифрах</div>
+            </div>
+        </div>
+        <p style="margin-top:0.75rem;">У результаті виникає нерозуміння. Одне слово — два різних концепти.</p>
     </div>
 </div>
 
+<div class="result-block">
+    <strong>Висновок.</strong> Щоб навчатися швидко й ефективно — потрібно розуміти ключові терміни, формувати правильні концепти та використовувати їх у роботі. Саме для цього у програмі є словник термінів TALKO.
+</div>
 
-<div class="l-ai-block" style="margin:1.25rem 0 0;">
-    <div class="l-ai-block-header">
-        <div class="l-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="28" height="28"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
-        <div>
-            <div class="l-ai-title">AI Асистент Термінології</div>
-            <div class="l-ai-desc">Зайдіть в асистента і напишіть: <em>"Поясни мені перші 13 термінів програми TALKO"</em>. Зупиніться на 13-му терміні.</div>
+<div class="lesson-block" style="margin-top:1.25rem;">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Завдання</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>У програмі є список ключових термінів. У цьому уроці потрібно:</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">1</span>
+                <span style="font-size:0.875rem;">Пройти перші 13 термінів через асистента</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">2</span>
+                <span style="font-size:0.875rem;">Зрозуміти їх значення</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">3</span>
+                <span style="font-size:0.875rem;">Подумати, як вони використовуються у вашому бізнесі</span>
+            </div>
         </div>
     </div>
-    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant','_blank')">
-        Відкрити асистента термінології →
-    </button>
 </div>
+
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;">
+    <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">Асистент термінології</div>
+    <div style="color:#15803d;font-size:0.85rem;line-height:1.5;margin-bottom:0.75rem;">Щоб швидко розібратися з термінами програми — скористайтесь асистентом. Він пояснить кожне поняття простими словами.</div>
+    <a href="https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#22c55e;color:white;border-radius:9px;font-size:0.875rem;font-weight:700;text-decoration:none;">
+        Відкрити асистента термінів →
+    </a>
+</div>`,
+
+                lessonContent_ru: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Почему большинство обучения не работает</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Большинство людей тратят годы на обучение, но не могут применить знания на практике.</p>
+        <p style="margin-top:0.75rem;">Например: университет — 5 лет, тысячи часов лекций, диплом. Но при этом большинство выпускников не работают по специальности.</p>
+        <p style="margin-top:0.75rem;">Проблема не в людях. Проблема в том, что в образовании отсутствует <strong>технология обучения</strong>.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Что такое технология</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Технология — это последовательность действий, которая даёт предсказуемый результат.</p>
+        <p style="margin-top:0.75rem;">Например, чтобы приготовить яичницу:</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;color:#1a1a1a;">
+                <span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">1</span>
+                Включить плиту
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;color:#1a1a1a;">
+                <span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">2</span>
+                Поставить сковородку
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;color:#1a1a1a;">
+                <span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">3</span>
+                Разбить яйца
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;color:#1a1a1a;">
+                <span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">4</span>
+                Подождать несколько минут
+            </div>
+        </div>
+        <p style="margin-top:0.75rem;">Если выполнить эти действия — результат гарантирован. <strong>Обучение должно работать так же.</strong></p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Как работает правильное обучение</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Эффективное обучение состоит из трёх этапов:</p>
+        <div style="margin-top:0.85rem;display:flex;align-items:center;gap:0;border-radius:10px;overflow:hidden;">
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;">
+                <div style="font-weight:700;color:#166534;font-size:0.875rem;">Понять</div>
+            </div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;">
+                <div style="font-weight:700;color:#166534;font-size:0.875rem;">Применить</div>
+            </div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#22c55e;">
+                <div style="font-weight:700;color:white;font-size:0.875rem;">Навык</div>
+            </div>
+        </div>
+        <p style="margin-top:0.75rem;">Просто знать что-то — недостаточно. Настоящее обучение завершается тогда, когда человек может <strong>применить знания в работе</strong>.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Главная причина проблем в обучении</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Основная причина проблем в обучении — <strong>непонятное слово</strong>.</p>
+        <p style="margin-top:0.75rem;">Когда человек встречает слово, которое он не понимает:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>он перестаёт понимать материал</li>
+            <li>начинает терять интерес</li>
+            <li>пытается запомнить вместо того, чтобы понять</li>
+        </ul>
+        <p style="margin-top:0.75rem;">В результате знания не применяются.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Что такое концепт</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Концепт — это идея или представление о чём-то в вашем уме. Концепт нельзя просто запомнить. Его можно только <strong>сформировать через понимание</strong>.</p>
+        <p style="margin-top:0.75rem;">Например, если у вас есть концепт "стул" — вы легко определите, стул это или нет. Вам не нужно вспоминать определение.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Почему это важно в бизнесе</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>В бизнесе непонимание терминов часто создаёт проблемы.</p>
+        <p style="margin-top:0.75rem;">Например, вы говорите сотруднику: <em>"Подготовь план продаж"</em>. Но у вас разные концепты слова «план»:</p>
+        <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <div style="padding:0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;">
+                <div style="font-size:0.72rem;font-weight:700;color:#16a34a;letter-spacing:0.06em;margin-bottom:0.3rem;">ДЛЯ ВАС</div>
+                <div style="font-size:0.875rem;color:#1a1a1a;">Конкретные шаги и действия</div>
+            </div>
+            <div style="padding:0.75rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;">
+                <div style="font-size:0.72rem;font-weight:700;color:#dc2626;letter-spacing:0.06em;margin-bottom:0.3rem;">ДЛЯ СОТРУДНИКА</div>
+                <div style="font-size:0.875rem;color:#1a1a1a;">Желаемый результат в цифрах</div>
+            </div>
+        </div>
+        <p style="margin-top:0.75rem;">В результате возникает недопонимание. Одно слово — два разных концепта.</p>
+    </div>
+</div>
+
 <div class="result-block">
-    <strong>Ваше завдання зараз:</strong> прояснити перші 13 термінів програми через AI асистента нижче. Тільки 13 — не більше. Асистент може запропонувати йти далі — зупиніться на 13-му.
-</div>`,
-                
-                homework: `<div class="lesson-block homework">
+    <strong>Вывод.</strong> Чтобы учиться быстро и эффективно — нужно понимать ключевые термины, формировать правильные концепты и использовать их в работе. Именно для этого в программе есть словарь терминов TALKO.
+</div>
+
+<div class="lesson-block" style="margin-top:1.25rem;">
     <div class="lesson-block-header">
-        <div class="lesson-block-title">Домашнє завдання</div>
+        <div class="lesson-block-title">Задание</div>
     </div>
     <div class="lesson-block-content">
-        <ol>
-            <li>Зайдіть в AI асистента термінології</li>
-            <li>Пройдіть перші 13 термінів — зупиніться на 13-му</li>
-            <li>Використовуйте ці терміни в роботі з наступного дня</li>
-        </ol>
-    </div>
-</div>`,
-                
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <ol>
-            <li>Пройти ассистента в режиме обучения</li>
-            <li>Выписать 20 ключевых терминов с определениями</li>
-            <li>Добавить их в Google-документ в своей папке</li>
-            <li>Прикрепить ссылку на документ</li>
-        </ol>
+        <p>В программе есть список ключевых терминов. В этом уроке нужно:</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">1</span>
+                <span style="font-size:0.875rem;">Пройти первые 13 терминов через ассистента</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">2</span>
+                <span style="font-size:0.875rem;">Понять их значение</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">3</span>
+                <span style="font-size:0.875rem;">Подумать, как они применяются в вашем бизнесе</span>
+            </div>
+        </div>
     </div>
 </div>
-                `,
-                
-                homeworkLink: "https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-asistent-navchannia-strukturi-upravlinnia-biznesom",
-                homeworkLinkName: "→ Асистент термінології",
-                homeworkLinkName_ru: "→ Ассистент терминологии",
+
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;">
+    <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">Ассистент терминологии</div>
+    <div style="color:#15803d;font-size:0.85rem;line-height:1.5;margin-bottom:0.75rem;">Чтобы быстро разобраться с терминами программы — воспользуйтесь ассистентом. Он объяснит каждое понятие простыми словами.</div>
+    <a href="https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#22c55e;color:white;border-radius:9px;font-size:0.875rem;font-weight:700;text-decoration:none;">
+        Открыть ассистента терминов →
+    </a>
+</div>`,
+
+                homework: `<ol><li>Відкрийте асистента термінів</li><li>Пройдіть перші 13 термінів</li><li>Подумайте, як вони застосовуються у вашому бізнесі</li></ol>`,
+                homework_ru: `<ol><li>Откройте ассистента терминов</li><li>Пройдите первые 13 терминов</li><li>Подумайте, как они применяются в вашем бизнесе</li></ol>`,
+
+                homeworkLink: null,
+                homeworkLinkName: null,
+                homeworkLinkName_ru: null,
                 time: 15
             },
             {
@@ -9838,8 +10040,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     ${content}
                 </div>
 
-                <!-- AI Assistant block -->
-                ${module.hideAiBlock ? '' : renderAIBlock(module, isRu)}
+                <!-- AI Assistant block — disabled globally -->
 
                 <!-- Homework block -->
                 ${module.homework ? (() => {
