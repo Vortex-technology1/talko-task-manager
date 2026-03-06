@@ -5202,16 +5202,28 @@
     let learningLang = 'ua';
 
     // ── Firestore helpers ─────────────────────────────────────
+    // Use same pattern as 76-coordination: firebase.firestore() + window.currentCompany
+    function _db() { return firebase.firestore(); }
+    function _companyId() { return typeof currentCompany !== 'undefined' ? currentCompany : null; }
+    function _uid() { return typeof currentUser !== 'undefined' && currentUser ? currentUser.uid : null; }
+
     function lProgressRef() {
-        if (!window.db || !window.currentCompany || !window.currentUser) return null;
-        return window.db
-            .collection('companies').doc(window.currentCompany)
-            .collection('users').doc(window.currentUser.uid);
+        const cid = _companyId();
+        const uid = _uid();
+        if (!cid || !uid) return null;
+        return _db()
+            .collection('companies').doc(cid)
+            .collection('users').doc(uid);
     }
 
     async function loadLearningProgress() {
         const ref = lProgressRef();
-        if (!ref) return;
+        if (!ref) {
+            // No Firestore access - just render with empty progress
+            updateModulesFromLearningProgress();
+            renderLearning();
+            return;
+        }
         try {
             const snap = await ref.get();
             if (snap.exists) {
