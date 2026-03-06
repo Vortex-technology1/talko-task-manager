@@ -1041,7 +1041,7 @@
             <span class="stats-section-count">(${metrics.length})</span>
         </div>
         <div class="stats-table-wrap">
-            <table class="stats-table" style="table-layout:fixed;width:100%;">
+            <table class="stats-table">
                 <thead><tr>
                     <th style="width:140px;min-width:140px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</div></th>`;
 
