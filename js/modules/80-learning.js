@@ -9674,7 +9674,7 @@
     // ── Re-render on tab switch ───────────────────────────────
     window.renderLearning = renderLearning;
 
-})();    // ── AI Assistant block ───────────────────────────────────
+    // ── AI Assistant block ───────────────────────────────────
         window.learningCourseData = learningCourseData;
 
 window._openAIAssistant = function(moduleTitle, homeworkText) {
@@ -9808,3 +9808,5 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
 
 
+
+})(); // END IIFE
