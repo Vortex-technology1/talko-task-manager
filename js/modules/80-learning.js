@@ -371,81 +371,91 @@
                 id: 2,
                 title: "СЛОВНИК ТЕРМІНІВ + ЕФЕКТИВНЕ НАВЧАННЯ",
                 title_ru: "СЛОВАРЬ ТЕРМИНОВ + ЭФФЕКТИВНОЕ ОБУЧЕНИЕ",
-                subtitle: "Говоримо однією мовою",
-                subtitle_ru: "Говорим на одном языке",
+                subtitle: "Технологія навчання + прояснення 13 термінів",
+                subtitle_ru: "Технология обучения + прояснение 13 терминов",
                 
                 videoLink: "https://youtu.be/NsI4kEuT6Z8",
                 materialsLink: null,
                 
-                lessonContent: `
-<div class="lesson-block intro">
+                lessonContent: `<div class="lesson-block intro">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Суть уроку</div>
+        <div class="lesson-block-title">Чому це важливо перш за все</div>
     </div>
     <div class="lesson-block-content">
-        <p>Перш ніж будувати систему — потрібно говорити однією мовою. Коли ви кажете "функція", а співробітник розуміє "задача" — виникає хаос.</p>
-        <p style="margin-top: 12px;"><strong>Без єдиної термінології:</strong></p>
-        <ul>
-            <li>Ви просите "результат" — вам приносять "звіт про активність"</li>
-            <li>Ви питаєте "скільки заробили" — вам кажуть "скільки дзвінків зробили"</li>
-            <li>Неможливо делегувати, контролювати, масштабуватись</li>
+        <p>90% навчання не працює — не тому що люди тупі, а тому що відсутня технологія.</p>
+        <p style="margin-top:8px;">Автошкола: кілька тижнів → людина їде. Університет: 5 років → людина не може працювати за спеціальністю. <strong>В чому різниця?</strong> Технологія — це послідовність дій, яка дає передбачуваний результат.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Закон навчання: відтворення → розуміння → результат</div>
+    </div>
+    <div class="lesson-block-content">
+        <p><strong>Запам'ятати ≠ зрозуміти.</strong> Справжнє знання не потребує згадування — ви просто знаєте, як знаєте що вогонь гарячий.</p>
+        <p style="margin-top:8px;">Головна причина невдач у навчанні — <strong>незрозуміле слово</strong>. Одне пропущене слово зупиняє розуміння всієї теми. Як дірка в стіні — можна фарбувати шар за шаром, але дірка нікуди не дінеться.</p>
+        <ul style="margin-top:8px;">
+            <li>Нудно і хочеться відволіктись → є незрозуміле слово</li>
+            <li>Відчуття "щось не вкладається" → є незрозуміле слово</li>
+            <li>Проблема завжди <strong>раніше</strong> — в попередньому матеріалі</li>
         </ul>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 1. Створіть робочу папку</div>
+        <div class="lesson-block-title">Що таке концепт і чому він важливіший за визначення</div>
     </div>
     <div class="lesson-block-content">
-        <p><strong>Назва:</strong> СИСТЕМАТИЗАЦІЯ TALKO</p>
-        <p>Зберігайте тут всі матеріали та домашні завдання курсу.</p>
+        <p>Концепт — це ідея в вашому розумі, а не запам'ятоване визначення. <strong>Концепт не можна запам'ятати — його можна тільки створити.</strong></p>
+        <p style="margin-top:8px;">Приклад: "план" для керівника продажів = цифра яку хочу досягнути. Для власника = послідовність конкретних дій. Одне слово — два різних концепти — повна відсутність взаєморозуміння.</p>
+        <p style="margin-top:8px;"><strong>Правило:</strong> ніколи не питайте значення слів у людей — вони дають хибні визначення. Використовуйте словник або AI.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 2. Пройдіть AI-асистента термінології</div>
+        <div class="lesson-block-title">Навичка = автоматизм через повторення</div>
     </div>
     <div class="lesson-block-content">
-        <p>Асистент працює в 2 режимах:</p>
-        <ul>
-            <li><strong>Режим НАВЧАННЯ</strong> — проведе вас через 13 ключових понять з прикладами саме для вашої ніші</li>
-            <li><strong>Режим КОНСУЛЬТАЦІЇ</strong> — ви описуєте ситуацію зі свого бізнесу, асистент "перекладає" її в правильну управлінську мову</li>
-        </ul>
+        <p>Розуміння — це ще не навичка. Знати граматику ≠ говорити мовою.</p>
+        <p style="margin-top:8px;">Навичка — це автоматизм: перші 30 годин за кермом — стрес і увага на педалях. Після — слухаєш музику і їдеш. Так само з управлінням: перший раз віддати розпорядження — страшно. Після 100 разів — природно.</p>
+        <p style="margin-top:8px;"><strong>Важливо вчитись одразу правильно</strong> — неправильний автоматизм заважатиме все життя.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 3. Завантажте матеріали</div>
+
+<div class="l-ai-block" style="margin:1.25rem 0 0;">
+    <div class="l-ai-block-header">
+        <div class="l-ai-icon">📚</div>
+        <div>
+            <div class="l-ai-title">AI Асистент Термінології</div>
+            <div class="l-ai-desc">Зайдіть в асистента і напишіть: <em>"Поясни мені перші 13 термінів програми TALKO"</em>. Зупиніться на 13-му терміні.</div>
+        </div>
     </div>
-    <div class="lesson-block-content">
-        <p>Всі необхідні файли та шаблони для роботи.</p>
-    </div>
+    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant','_blank')">
+        📚 Відкрити асистента термінології →
+    </button>
 </div>
-                `,
+<div class="result-block">
+    <strong>Ваше завдання зараз:</strong> прояснити перші 13 термінів програми через AI асистента нижче. Тільки 13 — не більше. Асистент може запропонувати йти далі — зупиніться на 13-му.
+</div>`,
                 
-                homework: `
-<div class="lesson-block homework">
+                homework: `<div class="lesson-block homework">
     <div class="lesson-block-header">
-        
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
         <ol>
-            <li>Пройти асистента в режимі навчання</li>
-            <li>Виписати 20 ключових термінів з визначеннями</li>
-            <li>Додати їх у Google-документ у своїй папці</li>
-            <li>Прикріпити посилання на документ</li>
+            <li>Зайдіть в AI асистента термінології (кнопка нижче)</li>
+            <li>Попросіть пояснити перші 13 термінів програми</li>
+            <li>Зупиніться на 13-му — не йдіть далі навіть якщо асистент запропонує</li>
+            <li>Для кожного терміну: переконайтесь що можете пояснити своїми словами</li>
+            <li>Напишіть у полі відповіді: "13 термінів прояснено"</li>
         </ol>
+        <p style="margin-top:8px;color:#ef4444;font-weight:600;">⚠️ Важливо: тільки 13. Зупиніться. Решта — в наступних уроках.</p>
     </div>
-</div>
-                `,
+</div>`,
                 
                 homework_ru: `
 <div class="lesson-block homework">
@@ -562,88 +572,56 @@
 </div>
                 `,
 
-                lessonContent_ru: `
-<div class="lesson-block intro">
+                lessonContent_ru: `<div class="lesson-block intro">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Зачем этот урок</div>
+        <div class="lesson-block-title">Почему это важно прежде всего</div>
     </div>
     <div class="lesson-block-content">
-        <p>Все AI-ассистенты программы работают на базе <strong>ChatGPT</strong> и <strong>Claude AI</strong>. Чтобы проходить уроки, вам нужен доступ к этим платформам.</p>
-        <p style="margin-top: 12px;">Этот урок поможет настроить аккаунты и авторизоваться.</p>
+        <p>90% обучения не работает — не потому что люди глупые, а потому что отсутствует технология.</p>
+        <p style="margin-top:8px;">Автошкола: несколько недель → человек едет. Университет: 5 лет → человек не может работать по специальности. <strong>В чём разница?</strong> Технология — это последовательность действий, которая даёт предсказуемый результат.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Регистрация в ChatGPT</div>
+        <div class="lesson-block-title">Закон обучения: воспроизведение → понимание → результат</div>
     </div>
     <div class="lesson-block-content">
-        <p>ChatGPT — основная платформа для AI-ассистентов программы.</p>
-        <ol>
-            <li>Перейдите на <a href="https://chat.openai.com" target="_blank" style="color: var(--primary); font-weight: 600;">chat.openai.com</a></li>
-            <li>Нажмите <strong>"Sign up"</strong> (или "Log in" если уже есть аккаунт)</li>
-            <li>Зарегистрируйтесь через Google, Microsoft или email</li>
-            <li>Подтвердите email если нужно</li>
-        </ol>
-        <div style="margin-top: 12px;">
-            <a href="https://chat.openai.com" target="_blank" class="action-btn primary">
-                
-                Открыть ChatGPT
-            </a>
-        </div>
+        <p><strong>Запомнить ≠ понять.</strong> Настоящее знание не требует вспоминания — вы просто знаете, как знаете что огонь горячий.</p>
+        <p style="margin-top:8px;">Главная причина неудач в обучении — <strong>непонятное слово</strong>. Одно пропущенное слово останавливает понимание всей темы. Как дырка в стене — можно красить слой за слоем, но дырка никуда не денется.</p>
+        <ul style="margin-top:8px;">
+            <li>Скучно и хочется отвлечься → есть непонятное слово</li>
+            <li>Ощущение "что-то не укладывается" → есть непонятное слово</li>
+            <li>Проблема всегда <strong>раньше</strong> — в предыдущем материале</li>
+        </ul>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Регистрация в Claude AI</div>
+        <div class="lesson-block-title">Что такое концепт и почему он важнее определения</div>
     </div>
     <div class="lesson-block-content">
-        <p>Claude AI — дополнительный инструмент для сложных задач.</p>
-        <ol>
-            <li>Перейдите на <a href="https://claude.ai" target="_blank" style="color: var(--primary); font-weight: 600;">claude.ai</a></li>
-            <li>Нажмите <strong>"Sign up"</strong></li>
-            <li>Зарегистрируйтесь через Google или email</li>
-            <li>Подтвердите номер телефона (одноразово)</li>
-        </ol>
-        <div style="margin-top: 12px;">
-            <a href="https://claude.ai" target="_blank" class="action-btn outline">
-                
-                Открыть Claude AI
-            </a>
-        </div>
+        <p>Концепт — это идея в вашем уме, а не запомненное определение. <strong>Концепт нельзя запомнить — его можно только создать.</strong></p>
+        <p style="margin-top:8px;">Пример: "план" для руководителя продаж = цифра которую хочу достичь. Для владельца = последовательность конкретных действий. Одно слово — два разных концепта — полное непонимание.</p>
+        <p style="margin-top:8px;"><strong>Правило:</strong> никогда не спрашивайте значение слов у людей — они дают ложные определения. Используйте словарь или AI.</p>
     </div>
 </div>
 
-<div class="lesson-block warning">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Важно про VPN</div>
+        <div class="lesson-block-title">Навык = автоматизм через повторение</div>
     </div>
     <div class="lesson-block-content">
-        <p>Если сайты не открываются — включите <strong>VPN</strong> (США, Европа, Канада).</p>
-        <p style="margin-top: 8px;">Рекомендуемые VPN: NordVPN, ExpressVPN, Surfshark или бесплатные расширения для браузера.</p>
+        <p>Понимание — это ещё не навык. Знать грамматику ≠ говорить на языке.</p>
+        <p style="margin-top:8px;">Навык — это автоматизм: первые 30 часов за рулём — стресс и внимание на педалях. После — слушаешь музыку и едешь. Так же с управлением: первый раз отдать распоряжение — страшно. После 100 раз — естественно.</p>
+        <p style="margin-top:8px;"><strong>Важно учиться сразу правильно</strong> — неправильный автоматизм будет мешать всю жизнь.</p>
     </div>
 </div>
 
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Проверка доступа</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>После регистрации проверьте, что всё работает:</p>
-        <ol>
-            <li>Откройте любого AI-ассистента из программы</li>
-            <li>Если открывается диалог — всё готово!</li>
-            <li>Если просит авторизацию — войдите в аккаунт</li>
-        </ol>
-    </div>
-</div>
-                `,
+<div class="result-block">
+    <strong>Ваше задание сейчас:</strong> прояснить первые 13 терминов программы через AI ассистента ниже. Только 13 — не больше. Ассистент может предложить идти дальше — остановитесь на 13-м.
+</div>`,
                 
                 homework: `
 <div class="lesson-block homework">
@@ -4820,6 +4798,9 @@
                     ${content}
                 </div>
 
+                <!-- AI Assistant block -->
+                $\{renderAIBlock(module, isRu)\}
+
                 <!-- Homework block -->
                 ${module.homework ? `
                 <div class="l-homework-block">
@@ -4860,6 +4841,41 @@
         currentLearningModule = null;
         renderLearning();
     };
+
+    // ── AI Assistant block ───────────────────────────────────
+    const AI_ASSISTANT_URL = 'https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead';
+
+    window._openAIAssistant = function(moduleTitle, homeworkText) {
+        const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? 'Домашнє завдання: ' + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
+        navigator.clipboard.writeText(prompt).catch(() => {});
+        window.open(AI_ASSISTANT_URL, '_blank');
+    };
+
+    function renderAIBlock(module, isRu) {
+        const title = isRu ? (module.title_ru || module.title) : module.title;
+        const hw = isRu ? (module.homework_ru || module.homework || '') : (module.homework || '');
+        const prompt = isRu
+            ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
+            : `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
+        const btnText = isRu ? 'Запитати AI асистента' : 'Запитати AI асистента';
+        const descText = isRu
+            ? 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.'
+            : 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.';
+        return `
+        <div class="l-ai-block">
+            <div class="l-ai-block-header">
+                <div class="l-ai-icon">🤖</div>
+                <div>
+                    <div class="l-ai-title">AI Технічний провідник</div>
+                    <div class="l-ai-desc">${descText}</div>
+                </div>
+            </div>
+            <div class="l-ai-prompt-preview">${prompt.replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</div>
+            <button class="l-ai-btn" onclick="navigator.clipboard.writeText(\`${prompt}\`).catch(()=>{});window.open('${AI_ASSISTANT_URL}','_blank')">
+                🤖 ${btnText} →
+            </button>
+        </div>`;
+    }
 
     // ── Algoritm Route (Module 0 special view) ────────────────
     window._openAlgoritm = function() {
