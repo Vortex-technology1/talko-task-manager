@@ -4,6 +4,8 @@
 (function() {
 
     // ── Course Data ──────────────────────────────────────────
+        const AI_ASSISTANT_URL = 'https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead';
+
     const learningCourseData = [
             {
                 id: 0,
@@ -374,7 +376,7 @@
                 subtitle: "Технологія навчання + прояснення 13 термінів",
                 subtitle_ru: "Технология обучения + прояснение 13 терминов",
                 
-                videoLink: "https://youtu.be/NsI4kEuT6Z8",
+                videoLink: null,
                 materialsLink: null,
                 
                 lessonContent: `<div class="lesson-block intro">
@@ -427,14 +429,14 @@
 
 <div class="l-ai-block" style="margin:1.25rem 0 0;">
     <div class="l-ai-block-header">
-        <div class="l-ai-icon">📚</div>
+        <div class="l-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="28" height="28"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
         <div>
             <div class="l-ai-title">AI Асистент Термінології</div>
             <div class="l-ai-desc">Зайдіть в асистента і напишіть: <em>"Поясни мені перші 13 термінів програми TALKO"</em>. Зупиніться на 13-му терміні.</div>
         </div>
     </div>
     <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant','_blank')">
-        📚 Відкрити асистента термінології →
+        Відкрити асистента термінології →
     </button>
 </div>
 <div class="result-block">
@@ -447,13 +449,10 @@
     </div>
     <div class="lesson-block-content">
         <ol>
-            <li>Зайдіть в AI асистента термінології (кнопка нижче)</li>
-            <li>Попросіть пояснити перші 13 термінів програми</li>
-            <li>Зупиніться на 13-му — не йдіть далі навіть якщо асистент запропонує</li>
-            <li>Для кожного терміну: переконайтесь що можете пояснити своїми словами</li>
-            <li>Напишіть у полі відповіді: "13 термінів прояснено"</li>
+            <li>Зайдіть в AI асистента термінології</li>
+            <li>Пройдіть перші 13 термінів — зупиніться на 13-му</li>
+            <li>Використовуйте ці терміни в роботі з наступного дня</li>
         </ol>
-        <p style="margin-top:8px;color:#ef4444;font-weight:600;">⚠️ Важливо: тільки 13. Зупиніться. Решта — в наступних уроках.</p>
     </div>
 </div>`,
                 
@@ -708,209 +707,216 @@
                 videoLink: "https://youtu.be/wroQPSBgAn0",
                 materialsLink: "https://drive.google.com/drive/folders/1BNSRJePCQG0UgcFC399GQcAInS44YZvJ?usp=sharing",
                 
-                lessonContent: `
-<div class="lesson-block intro">
+                lessonContent: `<div class="lesson-block intro">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Суть уроку</div>
+        <div class="lesson-block-title">Чому більшість розпоряджень не виконується</div>
     </div>
     <div class="lesson-block-content">
-        <p>Чому люди не виконують завдання як слід? Бо ви нечітко формулюєте. "Забезпечити порядок" — це що конкретно? "До кінця дня" — це 14:00 чи 20:00?</p>
+        <p>Ви даєте завдання щодня. Через тиждень половина не виконана. Ви самі забуваєте що просили — співробітники теж.</p>
+        <p style="margin-top:8px;">У команді живе негласне правило: <strong>"Сказали раз і не нагадали — значить неважливо".</strong> Це не зла воля — це нормальна реакція людини на яку звалюється купа задач.</p>
+        <p style="margin-top:8px;">Результат: невиконання → ви втрачаєте контроль над бізнесом.</p>
     </div>
 </div>
 
-<div class="lesson-block warning">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Без чітких розпоряджень</div>
+        <div class="lesson-block-title">Рівні влади: чому одних слухають, а інших ігнорують</div>
     </div>
     <div class="lesson-block-content">
-        <ul>
-            <li>Підлеглі постійно перепитують "а що конкретно робити?"</li>
-            <li>Завдання переробляються по 3-4 рази</li>
-            <li>Ви витрачаєте 15 хвилин на пояснення замість 30 секунд</li>
-        </ul>
+        <p>Є керівники які кажуть "тут душно" — і хтось відразу йде відкривати вікно. Є інші, які 10 разів нагадують "прибрати офіс" — і їх ігнорують. <strong>Різниця — рівень влади.</strong></p>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:100px;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;text-align:center;">
+                <div style="font-size:1.5rem;font-weight:900;color:#ef4444;">1–10</div>
+                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Нагадуєте 10+ разів</div>
+            </div>
+            <div style="flex:1;min-width:100px;padding:12px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:10px;text-align:center;">
+                <div style="font-size:1.5rem;font-weight:900;color:#f97316;">40–60</div>
+                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Нагадуєте 2–3 рази</div>
+            </div>
+            <div style="flex:1;min-width:100px;padding:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:10px;text-align:center;">
+                <div style="font-size:1.5rem;font-weight:900;color:#22c55e;">80+</div>
+                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Сказали раз — виконали</div>
+            </div>
+        </div>
+        <p style="margin-top:10px;">Більшість власників зараз на рівні 20–30. Єдиний спосіб піднятися — систематично домагатися виконання кожного розпорядження. <strong>Кожне непроконтрольоване завдання = мінус до влади.</strong></p>
     </div>
 </div>
 
-<div class="lesson-block success">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Що дає правильне розпорядження</div>
+        <div class="lesson-block-title">4 правила системи</div>
     </div>
     <div class="lesson-block-content">
-        <ul>
-            <li>Працівник розуміє ЩО, ДО КОЛИ і ЯК зробити</li>
-            <li>Все виконується з першого разу</li>
-            <li>Контроль, прозорість, порядок</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 1. Подивіться відео</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Розбір системи розпоряджень з реальними прикладами.</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 2. Завантажте матеріали</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Шаблони та приклади правильних розпоряджень.</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 3. Генератор розпоряджень</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Цей інструмент ви будете використовувати <strong>постійно</strong>. Перед тим як дати будь-яке завдання — закиньте його в генератор. За 30 секунд отримаєте чітке розпорядження.</p>
-        <p style="margin-top: 12px;"><strong>Як працювати:</strong></p>
-        <ol>
-            <li>Опишіть завдання своїми словами</li>
-            <li>Асистент переформулює його в правильний формат</li>
-            <li>Скопіюйте та відправте виконавцю</li>
-        </ol>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 4. Познайомтесь з TALKO Task Manager</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Це платформа для управління завданнями, яку ми будемо використовувати далі в курсі.</p>
-        <p style="margin-top: 8px;">Зайдіть в асистента підтримки та задайте йому питання: як він працює, які проблеми допоможе вирішити, як почати користуватись.</p>
-        <div style="margin-top: 16px;">
-            <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="action-btn outline">
-                
-                TALKO Task Manager Support
-            </a>
+        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
+            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">01 — Тільки письмово</div>
+            <p style="font-size:0.85rem;color:#94a3b8;">Усних розпоряджень не існує. Якщо сказали на нараді — одразу дублюйте письмово. Навіть якщо треба взяти паузу.</p>
+        </div>
+        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
+            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">02 — Конкретна дата і час</div>
+            <p style="font-size:0.85rem;color:#94a3b8;">"Скоро" і "пізніше" не існує. Без дедлайну завдання не буде виконано ніколи.</p>
+        </div>
+        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
+            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">03 — Список усіх розпоряджень</div>
+            <p style="font-size:0.85rem;color:#94a3b8;">Google таблиця або Excel: кому, що, термін, виконано. Без списку ви забуваєте контролювати — і руйнуєте свою владу.</p>
+        </div>
+        <div style="padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
+            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">04 — Контроль на кожній зустрічі</div>
+            <p style="font-size:0.85rem;color:#94a3b8;">Кожна зустріч зі співробітником — відкриваєте список і проходите по кожному пункту. Не кричіть — спокійно нагадуйте поки не зрозуміють: ви НЕ забудете.</p>
         </div>
     </div>
 </div>
-                `,
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Шаблон правильного розпорядження (7 елементів)</div>
+    </div>
+    <div class="lesson-block-content">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">КОМУ</span><br><span style="color:#94a3b8;">Конкретна посада + ПІБ. Не "відділу".</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ТЕРМІН</span><br><span style="color:#94a3b8;">Конкретна дата і час.</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">КОНТЕКСТ</span><br><span style="color:#94a3b8;">Чому, що змінилось, кого стосується.</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ЗАВДАННЯ</span><br><span style="color:#94a3b8;">Дія + конкретний результат.</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ПРОДУКТ</span><br><span style="color:#94a3b8;">Що має бути готовим: документ, фото, звіт.</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ЗВІТ</span><br><span style="color:#94a3b8;">Дедлайн звіту, формат, куди надсилати.</span></div>
+        </div>
+        <div style="padding:12px;background:rgba(239,68,68,0.08);border-radius:8px;border-left:3px solid #ef4444;">
+            <p style="font-size:0.82rem;color:#94a3b8;"><strong style="color:#ef4444;">❌ Погано:</strong> "Прослідкуй щоб усе було в порядку. Якось повідом якщо будуть проблеми."</p>
+            <p style="font-size:0.82rem;color:#94a3b8;margin-top:6px;"><strong style="color:#22c55e;">✅ Добре:</strong> "До 13.12 о 18:00: провести брифінг (фото присутніх), перевірити кабінети 1–5 (фото кожного), надіслати звіт у Telegram до 19:00."</p>
+        </div>
+        <p style="font-size:0.82rem;color:#94a3b8;margin-top:10px;"><strong style="color:#ffffff;">Правило доказів:</strong> Купити квиток → "Зроблено" + файл. Розробити дизайн → "Зроблено" + скрін. Зателефонувати → "Зроблено" + скрін дзвінка. Без доказу — не виконано.</p>
+    </div>
+</div>
+
+
+<div class="l-ai-block" style="margin:1.25rem 0 0;">
+    <div class="l-ai-block-header">
+        <div class="l-ai-icon">📋</div>
+        <div>
+            <div class="l-ai-title">AI Генератор розпоряджень</div>
+            <div class="l-ai-desc">Опишіть завдання яке хочете поставити — асистент складе правильне розпорядження за шаблоном TALKO з усіма 7 елементами.</div>
+        </div>
+    </div>
+    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator','_blank')">
+        📋 Скласти розпорядження через AI →
+    </button>
+</div>
+
+<div class="result-block" style="margin-top:1rem;">
+    <strong>Результат через 2–4 тижні:</strong> співробітники звикнуть виконувати без суперечок. Замість 10 нагадувань — скажете раз і отримаєте результат. Перевірено на 150+ бізнесах.
+</div>`,
                 
-                lessonContent_ru: `
-<div class="lesson-block intro">
+                lessonContent_ru: `<div class="lesson-block intro">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Суть урока</div>
+        <div class="lesson-block-title">Чому більшість розпоряджень не виконується</div>
     </div>
     <div class="lesson-block-content">
-        <p>Почему люди не выполняют задачи как надо? Потому что вы нечётко формулируете. "Обеспечить порядок" — это что конкретно? "До конца дня" — это 14:00 или 20:00?</p>
+        <p>Ви даєте завдання щодня. Через тиждень половина не виконана. Ви самі забуваєте що просили — співробітники теж.</p>
+        <p style="margin-top:8px;">У команді живе негласне правило: <strong>"Сказали раз і не нагадали — значить неважливо".</strong> Це не зла воля — це нормальна реакція людини на яку звалюється купа задач.</p>
+        <p style="margin-top:8px;">Результат: невиконання → ви втрачаєте контроль над бізнесом.</p>
     </div>
 </div>
 
-<div class="lesson-block warning">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Без чётких распоряжений</div>
+        <div class="lesson-block-title">Рівні влади: чому одних слухають, а інших ігнорують</div>
     </div>
     <div class="lesson-block-content">
-        <ul>
-            <li>Подчинённые постоянно переспрашивают "а что конкретно делать?"</li>
-            <li>Задачи переделываются по 3-4 раза</li>
-            <li>Вы тратите 15 минут на объяснения вместо 30 секунд</li>
-        </ul>
+        <p>Є керівники які кажуть "тут душно" — і хтось відразу йде відкривати вікно. Є інші, які 10 разів нагадують "прибрати офіс" — і їх ігнорують. <strong>Різниця — рівень влади.</strong></p>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:100px;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;text-align:center;">
+                <div style="font-size:1.5rem;font-weight:900;color:#ef4444;">1–10</div>
+                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Нагадуєте 10+ разів</div>
+            </div>
+            <div style="flex:1;min-width:100px;padding:12px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:10px;text-align:center;">
+                <div style="font-size:1.5rem;font-weight:900;color:#f97316;">40–60</div>
+                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Нагадуєте 2–3 рази</div>
+            </div>
+            <div style="flex:1;min-width:100px;padding:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:10px;text-align:center;">
+                <div style="font-size:1.5rem;font-weight:900;color:#22c55e;">80+</div>
+                <div style="font-size:0.78rem;color:#94a3b8;margin-top:4px;">Сказали раз — виконали</div>
+            </div>
+        </div>
+        <p style="margin-top:10px;">Більшість власників зараз на рівні 20–30. Єдиний спосіб піднятися — систематично домагатися виконання кожного розпорядження. <strong>Кожне непроконтрольоване завдання = мінус до влади.</strong></p>
     </div>
 </div>
 
-<div class="lesson-block success">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Что даёт правильное распоряжение</div>
+        <div class="lesson-block-title">4 правила системи</div>
     </div>
     <div class="lesson-block-content">
-        <ul>
-            <li>Работник понимает ЧТО, ДО КОГДА и КАК сделать</li>
-            <li>Всё выполняется с первого раза</li>
-            <li>Контроль, прозрачность, порядок</li>
-        </ul>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Посмотрите видео</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Разбор системы распоряжений с реальными примерами.</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Скачайте материалы</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Шаблоны и примеры правильных распоряжений.</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 3. Генератор распоряжений</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Этот инструмент вы будете использовать <strong>постоянно</strong>. Перед тем как дать любую задачу — закиньте её в генератор. За 30 секунд получите чёткое распоряжение.</p>
-        <p style="margin-top: 12px;"><strong>Как работать:</strong></p>
-        <ol>
-            <li>Опишите задачу своими словами</li>
-            <li>Ассистент переформулирует её в правильный формат</li>
-            <li>Скопируйте и отправьте исполнителю</li>
-        </ol>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 4. Познакомьтесь с TALKO Task Manager</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Это платформа для управления задачами, которую мы будем использовать далее в курсе.</p>
-        <p style="margin-top: 8px;">Зайдите в ассистента поддержки и задайте ему вопросы: как он работает, какие проблемы поможет решить, как начать пользоваться.</p>
-        <div style="margin-top: 16px;">
-            <a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" class="action-btn outline">
-                
-                TALKO Task Manager Support
-            </a>
+        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
+            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">01 — Тільки письмово</div>
+            <p style="font-size:0.85rem;color:#94a3b8;">Усних розпоряджень не існує. Якщо сказали на нараді — одразу дублюйте письмово. Навіть якщо треба взяти паузу.</p>
+        </div>
+        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
+            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">02 — Конкретна дата і час</div>
+            <p style="font-size:0.85rem;color:#94a3b8;">"Скоро" і "пізніше" не існує. Без дедлайну завдання не буде виконано ніколи.</p>
+        </div>
+        <div style="margin-bottom:12px;padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
+            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">03 — Список усіх розпоряджень</div>
+            <p style="font-size:0.85rem;color:#94a3b8;">Google таблиця або Excel: кому, що, термін, виконано. Без списку ви забуваєте контролювати — і руйнуєте свою владу.</p>
+        </div>
+        <div style="padding:12px;background:rgba(34,197,94,0.06);border-radius:10px;border-left:3px solid #22c55e;">
+            <div style="font-weight:700;color:#22c55e;margin-bottom:4px;font-size:0.9rem;">04 — Контроль на кожній зустрічі</div>
+            <p style="font-size:0.85rem;color:#94a3b8;">Кожна зустріч зі співробітником — відкриваєте список і проходите по кожному пункту. Не кричіть — спокійно нагадуйте поки не зрозуміють: ви НЕ забудете.</p>
         </div>
     </div>
 </div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
+
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
+        <div class="lesson-block-title">Шаблон правильного розпорядження (7 елементів)</div>
+    </div>
+    <div class="lesson-block-content">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">КОМУ</span><br><span style="color:#94a3b8;">Конкретна посада + ПІБ. Не "відділу".</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ТЕРМІН</span><br><span style="color:#94a3b8;">Конкретна дата і час.</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">КОНТЕКСТ</span><br><span style="color:#94a3b8;">Чому, що змінилось, кого стосується.</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ЗАВДАННЯ</span><br><span style="color:#94a3b8;">Дія + конкретний результат.</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ПРОДУКТ</span><br><span style="color:#94a3b8;">Що має бути готовим: документ, фото, звіт.</span></div>
+            <div style="padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;"><span style="color:#22c55e;font-weight:700;">ЗВІТ</span><br><span style="color:#94a3b8;">Дедлайн звіту, формат, куди надсилати.</span></div>
+        </div>
+        <div style="padding:12px;background:rgba(239,68,68,0.08);border-radius:8px;border-left:3px solid #ef4444;">
+            <p style="font-size:0.82rem;color:#94a3b8;"><strong style="color:#ef4444;">❌ Погано:</strong> "Прослідкуй щоб усе було в порядку. Якось повідом якщо будуть проблеми."</p>
+            <p style="font-size:0.82rem;color:#94a3b8;margin-top:6px;"><strong style="color:#22c55e;">✅ Добре:</strong> "До 13.12 о 18:00: провести брифінг (фото присутніх), перевірити кабінети 1–5 (фото кожного), надіслати звіт у Telegram до 19:00."</p>
+        </div>
+        <p style="font-size:0.82rem;color:#94a3b8;margin-top:10px;"><strong style="color:#ffffff;">Правило доказів:</strong> Купити квиток → "Зроблено" + файл. Розробити дизайн → "Зроблено" + скрін. Зателефонувати → "Зроблено" + скрін дзвінка. Без доказу — не виконано.</p>
+    </div>
+</div>
+
+
+<div class="l-ai-block" style="margin:1.25rem 0 0;">
+    <div class="l-ai-block-header">
+        <div class="l-ai-icon">📋</div>
+        <div>
+            <div class="l-ai-title">AI Генератор розпоряджень</div>
+            <div class="l-ai-desc">Опишіть завдання яке хочете поставити — асистент складе правильне розпорядження за шаблоном TALKO з усіма 7 елементами.</div>
+        </div>
+    </div>
+    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator','_blank')">
+        📋 Скласти розпорядження через AI →
+    </button>
+</div>
+
+<div class="result-block" style="margin-top:1rem;">
+    <strong>Результат через 2–4 тижні:</strong> співробітники звикнуть виконувати без суперечок. Замість 10 нагадувань — скажете раз і отримаєте результат. Перевірено на 150+ бізнесах.
+</div>`,
+                
+                homework: `<div class="lesson-block homework">
+    <div class="lesson-block-header">
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
         <ol>
-            <li>Створіть таблицю розпоряджень (шаблон у матеріалах)</li>
-            <li>Згенеруйте через асистента 2-3 реальні розпорядження</li>
-            <li>Додайте їх у таблицю</li>
-            <li>Поспілкуйтесь з асистентом TALKO Task Manager</li>
-            <li>Прикріпіть посилання на таблицю</li>
+            <li>Зайдіть в AI Генератор розпоряджень (кнопка вище)</li>
+            <li>Складіть одне реальне розпорядження для вашого співробітника</li>
+            <li>Перевірте: чи є всі 7 елементів шаблону</li>
+            <li>Відправте це розпорядження реальному співробітнику</li>
+            <li>Напишіть у полі відповіді: кому відправили і яке завдання</li>
         </ol>
     </div>
-</div>
-                `,
+</div>`,
                 
                 homework_ru: `
 <div class="lesson-block homework">
@@ -1974,101 +1980,141 @@
                 videoLink: null,
                 materialsLink: null,
                 
-                lessonContent: `
-<div class="lesson-block intro">
+                lessonContent: `<div class="lesson-block intro">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Що це</div>
+        <div class="lesson-block-title">Чому одні бізнеси ростуть, а інші застигають</div>
     </div>
     <div class="lesson-block-content">
-        <p><strong>Асистент розвитку та мислення</strong> — це інструмент для самоаналізу, який допомагає в будь-який момент протестувати, де саме зараз ваша точка росту.</p>
-        <p style="margin-top: 12px;">Він допомагає зрозуміти, чи справжня причина уповільнення у інструментах, бізнес-моделі, цілях, чи у власних переконаннях.</p>
+        <p>Маючи крутий продукт, команду і бажання — бізнес все одно не рухається. Причина завжди в одному: <strong>не знайдено справжнє вузьке місце</strong>.</p>
+        <p style="margin-top:8px;">Більшість власників шукають рішення на рівні дій — більше реклами, більше продажів, більше контролю. Але проблема може бути глибше — в інструментах, бізнес-моделі, цілях або особистих переконаннях.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Ваше завдання</div>
+        <div class="lesson-block-title">5 шарів бізнесу — де шукати точку росту</div>
     </div>
     <div class="lesson-block-content">
-        <ol>
-            <li>Пройдіть діалог із асистентом</li>
-            <li>Ставте питання типу: "Для чого мені це потрібно?", "Що заважає мені рухатись далі?"</li>
-            <li>Не бійтеся "завантажити" асистента своїми питаннями</li>
-        </ol>
-    </div>
-</div>
-
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Результат</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Ви визначите:</p>
-        <ul>
-            <li>на якому рівні знаходиться ваша головна проблема</li>
-            <li>які обмежуючі переконання її підтримують</li>
-            <li>свою ключову ціль на рік у цифрах</li>
+        <p>Кожен бізнес має 5 шарів. Проблема завжди в одному з них — і рішення треба шукати саме там, а не зверху:</p>
+        <ul style="margin-top:8px;">
+            <li><strong>1. Дії</strong> — що робите зараз: продажі, зустрічі, маркетинг</li>
+            <li><strong>2. Інструменти</strong> — структура, делегування, статистики, фінплан</li>
+            <li><strong>3. Бізнес-модель</strong> — як заробляєте, чи достатня маржа, чи масштабується</li>
+            <li><strong>4. Цілі та партнерства</strong> — чи надихають цілі, чи є спільне бачення з партнерами</li>
+            <li><strong>5. Особистість</strong> — обмежуючі переконання та гординя що блокують ріст</li>
         </ul>
-    </div>
-</div>
-                `,
-                
-                lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Что это</div>
-    </div>
-    <div class="lesson-block-content">
-        <p><strong>Ассистент развития и мышления</strong> — это инструмент для самоанализа, который помогает в любой момент протестировать, где именно сейчас ваша точка роста.</p>
-        <p style="margin-top: 12px;">Он помогает понять, настоящая ли причина замедления в инструментах, бизнес-модели, целях или в собственных убеждениях.</p>
+        <p style="margin-top:8px;">Тригери які кажуть "спускайся глибше": немає часу, люди саботують, продажі нестабільні, низька рентабельність, висока плинність, відсутність мотивації в команді.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Ваше задание</div>
+        <div class="lesson-block-title">Найглибший шар — переконання та гординя</div>
     </div>
     <div class="lesson-block-content">
-        <ol>
-            <li>Пройдите диалог с ассистентом</li>
-            <li>Задавайте вопросы типа: "Для чего мне это нужно?", "Что мешает мне двигаться дальше?"</li>
-            <li>Не бойтесь "загрузить" ассистента своими вопросами</li>
-        </ol>
-    </div>
-</div>
-
-<div class="lesson-block success">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Результат</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Вы определите:</p>
-        <ul>
-            <li>на каком уровне находится ваша главная проблема</li>
-            <li>какие ограничивающие убеждения её поддерживают</li>
-            <li>свою ключевую цель на год в цифрах</li>
+        <p>Це шар який найважче побачити самостійно. Переконання формують рішення — а рішення формують результат.</p>
+        <p style="margin-top:8px;">Приклади що блокують ріст:</p>
+        <ul style="margin-top:6px;">
+            <li>"Якщо хочеш зробити добре — зроби сам" → власник стає вузьким місцем</li>
+            <li>"Консультант не знає мого бізнесу" → закритість до нових рішень</li>
+            <li>"Клієнти не готові платити більше" → підсвідомо занижуєте ціни</li>
+            <li>"Я завжди правий" → не вчитесь на помилках</li>
         </ul>
+        <p style="margin-top:8px;">Гординя — невидимий бар'єр: блокує делегування, руйнує команду, зупиняє ріст. Найуспішніші власники — ті хто залишається відкритим і вдячним.</p>
     </div>
 </div>
-                `,
+
+<div class="result-block">
+    <strong>Результат уроку:</strong> ви визначите в якому з 5 шарів зараз знаходиться ваше вузьке місце — і зрозумієте де шукати рішення.
+</div>
+
+<div class="l-ai-block" style="margin:1.25rem 0 0;">
+    <div class="l-ai-block-header">
+        <div class="l-ai-icon">🔍</div>
+        <div>
+            <div class="l-ai-title">AI Аналіз — 5 шарів бізнесу</div>
+            <div class="l-ai-desc">Зайдіть в асистента і пройдіть аналіз своєї ситуації. Він задасть питання по кожному шару і визначить де ваше вузьке місце прямо зараз.</div>
+        </div>
+    </div>
+    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-pie-analysis-methodology-5-layers-of-business','_blank')">
+        🔍 Пройти аналіз 5 шарів →
+    </button>
+</div>`,
                 
-                homework: `
-<div class="lesson-block homework">
+                lessonContent_ru: `<div class="lesson-block intro">
     <div class="lesson-block-header">
-        
+        <div class="lesson-block-title">Почему одни бизнесы растут, а другие застывают</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Имея крутой продукт, команду и желание — бизнес всё равно не двигается. Причина всегда одна: <strong>не найдено настоящее узкое место</strong>.</p>
+        <p style="margin-top:8px;">Большинство владельцев ищут решение на уровне действий — больше рекламы, больше продаж, больше контроля. Но проблема может быть глубже — в инструментах, бизнес-модели, целях или личных убеждениях.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">5 слоёв бизнеса — где искать точку роста</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Каждый бизнес имеет 5 слоёв. Проблема всегда в одном из них — и решение нужно искать именно там, а не сверху:</p>
+        <ul style="margin-top:8px;">
+            <li><strong>1. Действия</strong> — что делаете сейчас: продажи, встречи, маркетинг</li>
+            <li><strong>2. Инструменты</strong> — структура, делегирование, статистики, финплан</li>
+            <li><strong>3. Бизнес-модель</strong> — как зарабатываете, достаточна ли маржа, масштабируется ли</li>
+            <li><strong>4. Цели и партнёрства</strong> — вдохновляют ли цели, есть ли общее видение с партнёрами</li>
+            <li><strong>5. Личность</strong> — ограничивающие убеждения и гордыня, блокирующие рост</li>
+        </ul>
+        <p style="margin-top:8px;">Триггеры "спускайся глубже": нет времени, люди саботируют, нестабильные продажи, низкая рентабельность, высокая текучка, отсутствие мотивации в команде.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Самый глубокий слой — убеждения и гордыня</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Это слой который сложнее всего увидеть самостоятельно. Убеждения формируют решения — а решения формируют результат.</p>
+        <p style="margin-top:8px;">Примеры что блокируют рост:</p>
+        <ul style="margin-top:6px;">
+            <li>"Хочешь сделать хорошо — сделай сам" → владелец становится узким местом</li>
+            <li>"Консультант не знает мой бизнес" → закрытость к новым решениям</li>
+            <li>"Клиенты не готовы платить больше" → подсознательно занижаете цены</li>
+            <li>"Я всегда прав" → не учитесь на ошибках</li>
+        </ul>
+        <p style="margin-top:8px;">Гордыня — невидимый барьер: блокирует делегирование, разрушает команду, останавливает рост. Самые успешные владельцы — те кто остаётся открытым и благодарным.</p>
+    </div>
+</div>
+
+<div class="result-block">
+    <strong>Результат урока:</strong> вы определите в каком из 5 слоёв сейчас находится ваше узкое место — и поймёте где искать решение.
+</div>
+
+<div class="l-ai-block" style="margin:1.25rem 0 0;">
+    <div class="l-ai-block-header">
+        <div class="l-ai-icon">🔍</div>
+        <div>
+            <div class="l-ai-title">AI Анализ — 5 слоёв бизнеса</div>
+            <div class="l-ai-desc">Зайдите в ассистента и пройдите анализ своей ситуации. Он задаст вопросы по каждому слою и определит где ваше узкое место прямо сейчас.</div>
+        </div>
+    </div>
+    <button class="l-ai-btn" onclick="window.open('https://chatgpt.com/g/g-6856d5ef91608191918552480e1018eb-pie-analysis-methodology-5-layers-of-business','_blank')">
+        🔍 Пройти анализ 5 слоёв →
+    </button>
+</div>`,
+                
+                homework: `<div class="lesson-block homework">
+    <div class="lesson-block-header">
         <div class="lesson-block-title">Домашнє завдання</div>
     </div>
     <div class="lesson-block-content">
-        <p>Пройдіть діалог з асистентом і визначте вашу точку росту.</p>
+        <ol>
+            <li>Зайдіть в AI асистента (кнопка вище)</li>
+            <li>Пройдіть аналіз — відповідайте чесно на питання</li>
+            <li>Запишіть: в якому шарі ваше вузьке місце зараз</li>
+            <li>Напишіть у полі відповіді назву шару і 1-2 речення про свою ситуацію</li>
+        </ol>
     </div>
-</div>
-                `,
+</div>`,
                 
                 homework_ru: `
 <div class="lesson-block homework">
@@ -4747,136 +4793,6 @@
     }
 
     // ── Open Module Detail ────────────────────────────────────
-    window._openLearningModule = function(moduleId) {
-        const module = learningCourseData.find(m => m.id === moduleId);
-        if (!module) return;
-        currentLearningModule = module;
-        const isRu = getLearningLang() === 'ru';
-
-        const title = isRu ? (module.title_ru || module.title) : module.title;
-        const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
-        const content = isRu ? (module.lessonContent_ru || module.lessonContent || '') : (module.lessonContent || '');
-        const isCompleted = module.completed;
-        const hwText = (learningProgress[moduleId] || {}).homeworkText || '';
-        const hwDone = (learningProgress[moduleId] || {}).homeworkDone || false;
-
-        const root = document.getElementById('learningTab');
-        root.innerHTML = `
-        <div class="learning-wrap">
-            <div class="learning-module-nav">
-                <button class="l-back-btn" onclick="window._closeLearningModule()">
-                    <i data-lucide="arrow-left" class="icon" style="width:18px;height:18px;"></i>
-                    ${isRu ? 'Назад' : 'Назад'}
-                </button>
-
-            </div>
-
-            <div class="l-module-detail">
-                <div class="l-detail-header">
-                    <div class="l-detail-num">${moduleId}</div>
-                    <div>
-                        <div class="l-detail-title">${title}</div>
-                        ${subtitle ? `<div class="l-detail-subtitle">${subtitle}</div>` : ''}
-                        ${module.time ? `<div class="l-module-time" style="margin-top:4px;"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} хв</div>` : ''}
-                    </div>
-                </div>
-
-                ${module.videoLink ? `
-                <div class="l-links-row">
-                    <a href="${module.videoLink}" target="_blank" class="l-link-btn video">
-                        <i data-lucide="play-circle" class="icon" style="width:16px;height:16px;"></i>
-                        ${isRu ? 'Видео' : 'Відео'}
-                    </a>
-                    ${module.materialsLink ? `<a href="${module.materialsLink}" target="_blank" class="l-link-btn materials">
-                        <i data-lucide="file-text" class="icon" style="width:16px;height:16px;"></i>
-                        ${isRu ? 'Материалы' : 'Матеріали'}
-                    </a>` : ''}
-                </div>` : ''}
-
-                <!-- Lesson content -->
-                <div class="l-lesson-content">
-                    ${content}
-                </div>
-
-                <!-- AI Assistant block -->
-                $\{renderAIBlock(module, isRu)\}
-
-                <!-- Homework block -->
-                ${module.homework ? `
-                <div class="l-homework-block">
-                    <div class="l-homework-title">
-                        <i data-lucide="pencil" class="icon" style="width:16px;height:16px;color:#f59e0b;"></i>
-                        ${isRu ? 'Домашнее задание' : 'Домашнє завдання'}
-                    </div>
-                    <div class="l-homework-desc">${isRu ? (module.homework_ru || module.homework) : module.homework}</div>
-                    <textarea class="l-homework-textarea" id="learningHwTextarea" placeholder="${isRu ? 'Введите ваш ответ...' : 'Введіть вашу відповідь...'}">${hwText}</textarea>
-                    <div class="l-homework-actions">
-                        ${hwDone ? `<span class="l-hw-done-badge"><i data-lucide="check" class="icon" style="width:14px;height:14px;"></i> ${isRu ? 'Выполнено' : 'Виконано'}</span>` : ''}
-                        <button class="l-btn-save-hw" onclick="window._saveLearningHomework(${moduleId})">
-                            ${isRu ? 'Сохранить' : 'Зберегти'}
-                        </button>
-                    </div>
-                </div>` : ''}
-
-                <!-- Complete button -->
-                <div class="l-complete-row">
-                    ${isCompleted
-                        ? `<button class="l-btn-completed" onclick="window._toggleLearningComplete(${moduleId}, false)">
-                            <i data-lucide="check-circle" class="icon" style="width:18px;height:18px;"></i>
-                            ${isRu ? 'Пройден ✓' : 'Пройдено ✓'}
-                           </button>`
-                        : `<button class="l-btn-complete" onclick="window._toggleLearningComplete(${moduleId}, true)">
-                            ${isRu ? 'Отметить как пройденный' : 'Позначити як пройдений'}
-                           </button>`
-                    }
-                </div>
-            </div>
-        </div>`;
-
-        if (window.refreshIcons) window.refreshIcons();
-    };
-
-    // ── Back ──────────────────────────────────────────────────
-    window._closeLearningModule = function() {
-        currentLearningModule = null;
-        renderLearning();
-    };
-
-    // ── AI Assistant block ───────────────────────────────────
-    const AI_ASSISTANT_URL = 'https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead';
-
-    window._openAIAssistant = function(moduleTitle, homeworkText) {
-        const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? 'Домашнє завдання: ' + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
-        navigator.clipboard.writeText(prompt).catch(() => {});
-        window.open(AI_ASSISTANT_URL, '_blank');
-    };
-
-    function renderAIBlock(module, isRu) {
-        const title = isRu ? (module.title_ru || module.title) : module.title;
-        const hw = isRu ? (module.homework_ru || module.homework || '') : (module.homework || '');
-        const prompt = isRu
-            ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
-            : `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
-        const btnText = isRu ? 'Запитати AI асистента' : 'Запитати AI асистента';
-        const descText = isRu
-            ? 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.'
-            : 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.';
-        return `
-        <div class="l-ai-block">
-            <div class="l-ai-block-header">
-                <div class="l-ai-icon">🤖</div>
-                <div>
-                    <div class="l-ai-title">AI Технічний провідник</div>
-                    <div class="l-ai-desc">${descText}</div>
-                </div>
-            </div>
-            <div class="l-ai-prompt-preview">${prompt.replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</div>
-            <button class="l-ai-btn" onclick="navigator.clipboard.writeText(\`${prompt}\`).catch(()=>{});window.open('${AI_ASSISTANT_URL}','_blank')">
-                🤖 ${btnText} →
-            </button>
-        </div>`;
-    }
-
     // ── Algoritm Route (Module 0 special view) ────────────────
     window._openAlgoritm = function() {
         const root = document.getElementById('learningTab');
@@ -9757,4 +9673,135 @@
     // ── Re-render on tab switch ───────────────────────────────
     window.renderLearning = renderLearning;
 
-})();
+})();    // ── AI Assistant block ───────────────────────────────────
+    window._openAIAssistant = function(moduleTitle, homeworkText) {
+        const prompt = `У мене завдання з програми навчання TALKO:\n\nМодуль: ${moduleTitle}\n${homeworkText ? 'Домашнє завдання: ' + homeworkText + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
+        navigator.clipboard.writeText(prompt).catch(() => {});
+        window.open(AI_ASSISTANT_URL, '_blank');
+    };
+
+    function renderAIBlock(module, isRu) {
+        const title = isRu ? (module.title_ru || module.title) : module.title;
+        const hwRaw = isRu ? (module.homework_ru || module.homework || '') : (module.homework || '');
+        const hw = hwRaw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
+        const prompt = isRu
+            ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
+            : `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
+        const btnText = isRu ? 'Запитати AI асистента' : 'Запитати AI асистента';
+        const descText = isRu
+            ? 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.'
+            : 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.';
+        return `
+        <div class="l-ai-block">
+            <div class="l-ai-block-header">
+                <div class="l-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="26" height="26"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg></div>
+                <div>
+                    <div class="l-ai-title">AI Технічний провідник</div>
+                    <div class="l-ai-desc">${descText}</div>
+                </div>
+            </div>
+            <div class="l-ai-prompt-preview">${prompt.replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</div>
+            <button class="l-ai-btn" onclick="navigator.clipboard.writeText(\`${prompt}\`).catch(()=>{});window.open('${AI_ASSISTANT_URL}','_blank')">
+                ${btnText} →
+            </button>
+        </div>`;
+    }
+
+
+    window._openLearningModule = function(moduleId) {
+        const module = learningCourseData.find(m => m.id === moduleId);
+        if (!module) return;
+        currentLearningModule = module;
+        const isRu = getLearningLang() === 'ru';
+
+        const title = isRu ? (module.title_ru || module.title) : module.title;
+        const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
+        const content = isRu ? (module.lessonContent_ru || module.lessonContent || '') : (module.lessonContent || '');
+        const isCompleted = module.completed;
+        const hwText = (learningProgress[moduleId] || {}).homeworkText || '';
+        const hwDone = (learningProgress[moduleId] || {}).homeworkDone || false;
+
+        const root = document.getElementById('learningTab');
+        root.innerHTML = `
+        <div class="learning-wrap">
+            <div class="learning-module-nav">
+                <button class="l-back-btn" onclick="window._closeLearningModule()">
+                    <i data-lucide="arrow-left" class="icon" style="width:18px;height:18px;"></i>
+                    ${isRu ? 'Назад' : 'Назад'}
+                </button>
+
+            </div>
+
+            <div class="l-module-detail">
+                <div class="l-detail-header">
+                    <div class="l-detail-num">${moduleId}</div>
+                    <div>
+                        <div class="l-detail-title">${title}</div>
+                        ${subtitle ? `<div class="l-detail-subtitle">${subtitle}</div>` : ''}
+                        ${module.time ? `<div class="l-module-time" style="margin-top:4px;"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} хв</div>` : ''}
+                    </div>
+                </div>
+
+                ${module.videoLink ? `
+                <div class="l-links-row">
+                    <a href="${module.videoLink}" target="_blank" class="l-link-btn video">
+                        <i data-lucide="play-circle" class="icon" style="width:16px;height:16px;"></i>
+                        ${isRu ? 'Видео' : 'Відео'}
+                    </a>
+                    ${module.materialsLink ? `<a href="${module.materialsLink}" target="_blank" class="l-link-btn materials">
+                        <i data-lucide="file-text" class="icon" style="width:16px;height:16px;"></i>
+                        ${isRu ? 'Материалы' : 'Матеріали'}
+                    </a>` : ''}
+                </div>` : ''}
+
+                <!-- Lesson content -->
+                <div class="l-lesson-content">
+                    ${content}
+                </div>
+
+                <!-- AI Assistant block -->
+                ${renderAIBlock(module, isRu)}
+
+                <!-- Homework block -->
+                ${module.homework ? `
+                <div class="l-homework-block">
+                    <div class="l-homework-title">
+                        <i data-lucide="pencil" class="icon" style="width:16px;height:16px;color:#f59e0b;"></i>
+                        ${isRu ? 'Домашнее задание' : 'Домашнє завдання'}
+                    </div>
+                    <div class="l-homework-desc">${isRu ? (module.homework_ru || module.homework) : module.homework}</div>
+                    <textarea class="l-homework-textarea" id="learningHwTextarea" placeholder="${isRu ? 'Введите ваш ответ...' : 'Введіть вашу відповідь...'}">${hwText}</textarea>
+                    <div class="l-homework-actions">
+                        ${hwDone ? `<span class="l-hw-done-badge"><i data-lucide="check" class="icon" style="width:14px;height:14px;"></i> ${isRu ? 'Выполнено' : 'Виконано'}</span>` : ''}
+                        <button class="l-btn-save-hw" onclick="window._saveLearningHomework(${moduleId})">
+                            ${isRu ? 'Сохранить' : 'Зберегти'}
+                        </button>
+                    </div>
+                </div>` : ''}
+
+                <!-- Complete button -->
+                <div class="l-complete-row">
+                    ${isCompleted
+                        ? `<button class="l-btn-completed" onclick="window._toggleLearningComplete(${moduleId}, false)">
+                            <i data-lucide="check-circle" class="icon" style="width:18px;height:18px;"></i>
+                            ${isRu ? 'Пройден ✓' : 'Пройдено ✓'}
+                           </button>`
+                        : `<button class="l-btn-complete" onclick="window._toggleLearningComplete(${moduleId}, true)">
+                            ${isRu ? 'Отметить как пройденный' : 'Позначити як пройдений'}
+                           </button>`
+                    }
+                </div>
+            </div>
+        </div>`;
+
+        if (window.refreshIcons) window.refreshIcons();
+    };
+
+    // ── Back ──────────────────────────────────────────────────
+    window._closeLearningModule = function() {
+        currentLearningModule = null;
+        renderLearning();
+    };
+
+
+
