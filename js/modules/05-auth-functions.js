@@ -402,13 +402,13 @@
                 completedTasksUnsubscribe();
                 completedTasksUnsubscribe = null;
             }
-            if (reviewTasksUnsubscribe) {
-                reviewTasksUnsubscribe();
-                reviewTasksUnsubscribe = null;
+            if (window.reviewTasksUnsubscribe) {
+                window.reviewTasksUnsubscribe();
+                window.reviewTasksUnsubscribe = null;
             }
-            if (rejectedTasksUnsubscribe) {
-                rejectedTasksUnsubscribe();
-                rejectedTasksUnsubscribe = null;
+            if (window.rejectedTasksUnsubscribe) {
+                window.rejectedTasksUnsubscribe();
+                window.rejectedTasksUnsubscribe = null;
             }
             try {
                 if (commentsUnsubscribe) {
