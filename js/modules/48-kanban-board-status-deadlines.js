@@ -216,7 +216,7 @@
         function kanbanCardClick(e, taskId) {
             if (kanbanWasDragged) { e.stopPropagation(); return; }
             if (kanbanTouchMoved) { e.stopPropagation(); return; }
-            openEditTask(taskId);
+            window.openTaskModal ? window.openTaskModal(taskId) : null;
         }
         function kanbanDragOver(e) {
             e.preventDefault();
