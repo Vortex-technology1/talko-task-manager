@@ -159,235 +159,261 @@
                 id: 1,
                 title: "ЯК ПРАЦЮВАТИ З GOOGLE ДИСКОМ",
                 title_ru: "КАК РАБОТАТЬ С GOOGLE ДИСКОМ",
-                subtitle: "Google Диск, Таблиці та Telegram Web",
-                subtitle_ru: "Google Диск, Таблицы и Telegram Web",
-                
-                videoLink: "https://youtu.be/sbsgKYlPuqw?si=Oei3lJ72PZctvtzz",
+                subtitle: "Підготовка робочого середовища програми",
+                subtitle_ru: "Подготовка рабочей среды программы",
+                hideAiBlock: true,
+
+                videoLink: null,
                 materialsLink: null,
-                
+
                 lessonContent: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Про що цей урок</div>
+        <div class="lesson-block-title">Для чого це потрібно</div>
     </div>
     <div class="lesson-block-content">
-        <p>Урок показує, як працювати з <strong>Google Диском</strong>: створювати папки, документи й таблиці, завантажувати файли, давати доступ за посиланням та надсилати ці матеріали через <strong>Telegram Web</strong>.</p>
-        <p style="margin-top: 12px;"><strong>Ви навчитесь:</strong></p>
-        <ul>
-            <li>Створювати папки та організовувати файли</li>
-            <li>Працювати з Google Документами та Таблицями</li>
-            <li>Налаштовувати доступ за посиланням</li>
-            <li>Надсилати матеріали через Telegram Web</li>
+        <p>У програмі всі матеріали систематизації бізнесу зберігаються у Google Диску.</p>
+        <p style="margin-top:0.75rem;">Це дозволяє:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>зберігати всі документи в одному місці</li>
+            <li>легко ділитися матеріалами з командою</li>
+            <li>працювати з файлами з будь-якого пристрою</li>
         </ul>
+        <p style="margin-top:0.75rem;">Фактично Google Диск буде вашим <strong>центром робочих документів</strong> у програмі.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 1. Перегляньте відео</div>
+        <div class="lesson-block-title">Що потрібно зробити</div>
     </div>
     <div class="lesson-block-content">
-        <p>У відео покроково показано весь процес роботи з Google Диском — від створення папки до надсилання посилання.</p>
+        <p>У цьому уроці потрібно:</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.6rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">1</span>
+                <span style="font-size:0.9rem;color:#1a1a1a;">Створити робочу папку програми</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">2</span>
+                <span style="font-size:0.9rem;color:#1a1a1a;">Створити у ній документи для роботи</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">3</span>
+                <span style="font-size:0.9rem;color:#1a1a1a;">Налаштувати доступ</span>
+            </div>
+        </div>
+        <p style="margin-top:0.9rem;color:#525252;font-size:0.875rem;">Це займе приблизно 5–10 хвилин.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 2. Створіть папку на Google Диску</div>
-    </div>
-    <div class="lesson-block-content">
-        <p><strong>Назва папки:</strong> <code>Систематизація TALKO – Ім'я Прізвище</code></p>
-        <p style="margin-top: 8px;">Це буде ваша основна робоча папка для всіх матеріалів програми.</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 3. Створіть файли всередині папки</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Створіть 3 файли:</p>
-        <ul>
-            <li>Google Документ — <code>Документ 1</code></li>
-            <li>Google Документ — <code>Документ 2</code></li>
-            <li>Google Таблицю — <code>Таблиця 1</code></li>
-        </ul>
-        <p style="margin-top: 8px; color: #64748b; font-size: 14px;">Вміст не важливий — можна написати «тест».</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 4. Надайте доступ до папки</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Налаштуйте доступ: <strong>Усі, хто має посилання → Коментувати</strong></p>
-        <p style="margin-top: 8px;">Скопіюйте посилання на папку.</p>
-    </div>
-</div>
-
-<div class="lesson-block step">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">КРОК 5. Надішліть в бот підтримки</div>
-    </div>
-    <div class="lesson-block-content">
-        <p>Надішліть посилання на папку в бот підтримки у форматі:</p>
-        <div style="margin-top: 12px; padding: 12px; background: #f1f5f9; border-radius: 8px; font-family: monospace; font-size: 14px;">
-            Моє ДЗ:<br>
-            Папка: &lt;посилання&gt;
+        <div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</span>
+            Створіть папку програми
         </div>
     </div>
+    <div class="lesson-block-content">
+        <p>У Google Диску створіть нову папку з назвою:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:0.9rem;color:#1a1a1a;">
+            Систематизація TALKO — Ваше Ім'я
+        </div>
+        <p style="margin-top:0.6rem;color:#525252;font-size:0.875rem;">Це буде ваша основна папка для матеріалів програми.</p>
+    </div>
 </div>
-                `,
-                
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</span>
+            Створіть документи у папці
+        </div>
+    </div>
+    <div class="lesson-block-content">
+        <p>У папці потрібно створити:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>2 Google Документи</li>
+            <li>1 Google Таблицю</li>
+        </ul>
+        <p style="margin-top:0.5rem;color:#525252;font-size:0.875rem;">Назви документів можна залишити будь-які.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</span>
+            Налаштуйте доступ до папки
+        </div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Натисніть <strong>«Поділитися»</strong>. В налаштуваннях оберіть:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.875rem;color:#166534;font-weight:600;">
+            Усі, хто має посилання — можуть коментувати
+        </div>
+        <p style="margin-top:0.6rem;color:#525252;font-size:0.875rem;">Після цього скопіюйте посилання на папку.</p>
+    </div>
+</div>
+
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">4</span>
+            Додайте посилання у систему
+        </div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Вставте посилання на папку у поле домашнього завдання нижче.</p>
+    </div>
+</div>
+
+<div class="result-block">
+    <strong>Результат.</strong> Ваше робоче середовище готове — всі матеріали програми зберігатимуться в одному місці з правильним доступом.
+</div>
+
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;">
+    <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+        <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </div>
+        <div>
+            <div style="font-weight:700;color:#1a1a1a;font-size:0.9rem;margin-bottom:0.3rem;">Потрібна допомога?</div>
+            <div style="color:#525252;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">Якщо під час виконання виникнуть питання, скористайтесь технічним помічником. Він проведе вас через виконання крок за кроком.</div>
+            <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">
+                Отримати допомогу →
+            </a>
+        </div>
+    </div>
+</div>`,
+
                 lessonContent_ru: `
 <div class="lesson-block intro">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">О чём этот урок</div>
+        <div class="lesson-block-title">Для чего это нужно</div>
     </div>
     <div class="lesson-block-content">
-        <p>Урок показывает, как работать с <strong>Google Диском</strong>: создавать папки, документы и таблицы, загружать файлы, давать доступ по ссылке и отправлять эти материалы через <strong>Telegram Web</strong>.</p>
-        <p style="margin-top: 12px;"><strong>Вы научитесь:</strong></p>
-        <ul>
-            <li>Создавать папки и организовывать файлы</li>
-            <li>Работать с Google Документами и Таблицами</li>
-            <li>Настраивать доступ по ссылке</li>
-            <li>Отправлять материалы через Telegram Web</li>
+        <p>В программе все материалы систематизации бизнеса хранятся в Google Диске.</p>
+        <p style="margin-top:0.75rem;">Это позволяет:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>хранить все документы в одном месте</li>
+            <li>легко делиться материалами с командой</li>
+            <li>работать с файлами с любого устройства</li>
         </ul>
+        <p style="margin-top:0.75rem;">Фактически Google Диск будет вашим <strong>центром рабочих документов</strong> в программе.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 1. Посмотрите видео</div>
+        <div class="lesson-block-title">Что нужно сделать</div>
     </div>
     <div class="lesson-block-content">
-        <p>В видео пошагово показан весь процесс работы с Google Диском — от создания папки до отправки ссылки.</p>
+        <p>В этом уроке нужно:</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.6rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">1</span>
+                <span style="font-size:0.9rem;color:#1a1a1a;">Создать рабочую папку программы</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">2</span>
+                <span style="font-size:0.9rem;color:#1a1a1a;">Создать в ней документы для работы</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;">
+                <span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">3</span>
+                <span style="font-size:0.9rem;color:#1a1a1a;">Настроить доступ</span>
+            </div>
+        </div>
+        <p style="margin-top:0.9rem;color:#525252;font-size:0.875rem;">Это займёт около 5–10 минут.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 2. Создайте папку на Google Диске</div>
+        <div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</span>
+            Создайте папку программы
+        </div>
     </div>
     <div class="lesson-block-content">
-        <p><strong>Название папки:</strong> <code>Систематизация TALKO – Ваше Имя</code></p>
-        <p style="margin-top: 8px;">Это будет ваша основная рабочая папка для всех материалов программы.</p>
+        <p>В Google Диске создайте новую папку с названием:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:0.9rem;color:#1a1a1a;">
+            Систематизация TALKO — Ваше Имя
+        </div>
+        <p style="margin-top:0.6rem;color:#525252;font-size:0.875rem;">Это будет ваша основная папка для материалов программы.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 3. Создайте файлы внутри папки</div>
+        <div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</span>
+            Создайте документы в папке
+        </div>
     </div>
     <div class="lesson-block-content">
-        <p>Создайте 3 файла:</p>
-        <ul>
-            <li>Google Документ — <code>Документ 1</code></li>
-            <li>Google Документ — <code>Документ 2</code></li>
-            <li>Google Таблицу — <code>Таблица 1</code></li>
+        <p>В папке нужно создать:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>2 Google Документа</li>
+            <li>1 Google Таблицу</li>
         </ul>
-        <p style="margin-top: 8px; color: #64748b; font-size: 14px;">Содержимое не важно — можно написать «тест».</p>
+        <p style="margin-top:0.5rem;color:#525252;font-size:0.875rem;">Названия документов могут быть любыми.</p>
     </div>
 </div>
 
-<div class="lesson-block step">
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">ШАГ 4. Дайте доступ к папке</div>
+        <div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</span>
+            Настройте доступ к папке
+        </div>
     </div>
     <div class="lesson-block-content">
-        <p>Настройте доступ: <strong>Все, у кого есть ссылка → Комментировать</strong></p>
-        <p style="margin-top: 8px;">Скопируйте ссылку на папку.</p>
+        <p>Нажмите <strong>«Поделиться»</strong>. В настройках выберите:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.875rem;color:#166534;font-weight:600;">
+            Все, у кого есть ссылка — могут комментировать
+        </div>
+        <p style="margin-top:0.6rem;color:#525252;font-size:0.875rem;">После этого скопируйте ссылку на папку.</p>
     </div>
 </div>
-                `,
-                
-                homework: `
-<div class="lesson-block homework">
+
+<div class="lesson-block">
     <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнє завдання</div>
+        <div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">4</span>
+            Добавьте ссылку в систему
+        </div>
     </div>
     <div class="lesson-block-content">
-        <div style="display: grid; gap: 12px; margin-bottom: 20px;">
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">1</span>
-                <span>Створіть папку <code>Систематизація TALKO – Ваше Ім'я</code></span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">2</span>
-                <span>Всередині створіть 2 документи і 1 таблицю</span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">3</span>
-                <span>Натисніть «Поділитися» → «Усі, хто має посилання»</span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">4</span>
-                <span>Скопіюйте посилання на папку</span>
-            </div>
-        </div>
-        <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                
-                <span style="font-weight: 700; color: #166534; font-size: 15px;">ВСТАВТЕ ПОСИЛАННЯ СЮДИ</span>
-                
-            </div>
-            <textarea placeholder="https://drive.google.com/drive/folders/..." style="width: 100%; min-height: 60px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
-        </div>
+        <p>Вставьте ссылку на папку в поле домашнего задания ниже.</p>
     </div>
 </div>
-                `,
-                
-                homework_ru: `
-<div class="lesson-block homework">
-    <div class="lesson-block-header">
-        
-        <div class="lesson-block-title">Домашнее задание</div>
-    </div>
-    <div class="lesson-block-content">
-        <div style="display: grid; gap: 12px; margin-bottom: 20px;">
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">1</span>
-                <span>Создайте папку <code>Систематизация TALKO – Ваше Имя</code></span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">2</span>
-                <span>Внутри создайте 2 документа и 1 таблицу</span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">3</span>
-                <span>Нажмите «Поделиться» → «Все, у кого есть ссылка»</span>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">4</span>
-                <span>Скопируйте ссылку на папку</span>
-            </div>
-        </div>
-        <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                
-                <span style="font-weight: 700; color: #166534; font-size: 15px;">ВСТАВЬТЕ ССЫЛКУ СЮДА</span>
-                
-            </div>
-            <textarea placeholder="https://drive.google.com/drive/folders/..." style="width: 100%; min-height: 60px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
-        </div>
-    </div>
+
+<div class="result-block">
+    <strong>Результат.</strong> Ваша рабочая среда готова — все материалы программы будут храниться в одном месте с правильным доступом.
 </div>
-                `,
-                
+
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;">
+    <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+        <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </div>
+        <div>
+            <div style="font-weight:700;color:#1a1a1a;font-size:0.9rem;margin-bottom:0.3rem;">Нужна помощь?</div>
+            <div style="color:#525252;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">Если во время выполнения возникнут вопросы, воспользуйтесь техническим помощником. Он проведёт вас через выполнение шаг за шагом.</div>
+            <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">
+                Получить помощь →
+            </a>
+        </div>
+    </div>
+</div>`,
+
+                homework: `<ol><li>Створіть папку <strong>Систематизація TALKO — Ваше Ім'я</strong></li><li>Створіть у ній 2 Google Документи та 1 Google Таблицю</li><li>Налаштуйте доступ: <em>Усі, хто має посилання — можуть коментувати</em></li><li>Вставте посилання на папку у поле нижче</li></ol>`,
+                homework_ru: `<ol><li>Создайте папку <strong>Систематизация TALKO — Ваше Имя</strong></li><li>Создайте в ней 2 Google Документа и 1 Google Таблицу</li><li>Настройте доступ: <em>Все, у кого есть ссылка — могут комментировать</em></li><li>Вставьте ссылку на папку в поле ниже</li></ol>`,
+
                 homeworkLink: null,
+                homeworkLinkName: null,
+                homeworkLinkName_ru: null,
                 time: 15
             },
             {
