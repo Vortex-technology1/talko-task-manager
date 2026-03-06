@@ -523,3 +523,120 @@
     opacity: 1 !important;
     background: #fee2e2 !important;
 }
+
+/* ══════════════════════════════════════════
+   MOBILE STATISTICS — повний рестайл
+   ══════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+    /* Обгортка таблиці — скрол з тінями */
+    .stats-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+        margin: 0 -0.25rem;
+        /* Тінь щоб показати що є скрол */
+        background:
+            linear-gradient(to right, white 30%, rgba(255,255,255,0)) left center,
+            linear-gradient(to left, white 30%, rgba(255,255,255,0)) right center,
+            radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.08), transparent) left center,
+            radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.08), transparent) right center;
+        background-repeat: no-repeat;
+        background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+        background-attachment: local, local, scroll, scroll;
+    }
+
+    /* Таблиця — фіксована ширина колонок */
+    .stats-table {
+        font-size: 11px;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    /* Перша колонка ЗАВЖДИ заморожена */
+    .stats-table thead th:first-child,
+    .stats-table tbody td:first-child {
+        position: sticky !important;
+        left: 0 !important;
+        z-index: 4 !important;
+        background: #fbfbfa !important;
+        min-width: 90px !important;
+        max-width: 90px !important;
+        width: 90px !important;
+        box-shadow: 2px 0 6px rgba(0,0,0,0.06);
+    }
+
+    .stats-table tbody td:first-child {
+        background: #fff !important;
+        font-size: 10px;
+        font-weight: 600;
+        color: #4b4b48;
+        white-space: nowrap;
+    }
+
+    /* Колонки метрик — компактні */
+    .stats-table thead th:not(:first-child):not(:last-child) {
+        min-width: 72px !important;
+        max-width: 90px !important;
+        width: 80px !important;
+        padding: 6px 3px 22px !important;
+    }
+
+    /* Назва метрики в заголовку — менша */
+    .stats-table thead th .th-metric-name {
+        font-size: 10px !important;
+        max-width: 80px !important;
+        line-height: 1.2 !important;
+    }
+
+    .stats-table thead th .th-metric-meta {
+        font-size: 9px !important;
+    }
+
+    .stats-table thead th .th-inner {
+        min-height: 40px !important;
+        gap: 3px !important;
+    }
+
+    /* Комірки даних */
+    .stats-table tbody td {
+        padding: 6px 3px !important;
+        font-size: 11px !important;
+    }
+
+    /* Ховер кнопки в заголовку — на мобільному завжди видимі */
+    .stats-table thead th .stats-comment-btn {
+        opacity: 0.4 !important;
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    /* Фільтри статистики */
+    .stats-filters-row,
+    .stats-controls {
+        flex-wrap: wrap !important;
+        gap: 0.4rem !important;
+    }
+
+    .stats-pill {
+        font-size: 0.75rem !important;
+        padding: 0.3rem 0.55rem !important;
+    }
+
+    /* Секція заголовок */
+    .stats-section-header {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    /* Хінт про скрол */
+    .stats-table-wrap::after {
+        content: '← скролл →';
+        display: block;
+        text-align: center;
+        font-size: 10px;
+        color: #c0bebb;
+        padding: 4px 0 2px;
+        letter-spacing: 0.05em;
+    }
+}
