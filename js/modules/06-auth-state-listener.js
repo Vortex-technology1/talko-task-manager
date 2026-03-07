@@ -117,6 +117,22 @@
                         if (botsBtn) botsBtn.style.display = '';
                         if (typeof initBotsModule === 'function') initBotsModule();
                     }
+
+                    // Відновлюємо останній активний таб після F5
+                    try {
+                        const lastTab = sessionStorage.getItem('talko_last_tab');
+                        const safeTabs = ['tasks','myDay','projects','processes','statistics',
+                            'analytics','ownerDashboard','functions','bizstructure','users',
+                            'learning','admin','crm','marketing','bots','coordination',
+                            'regular','incidents'];
+                        if (lastTab && safeTabs.includes(lastTab) && typeof switchTab === 'function') {
+                            // Перевіряємо що таб доступний (кнопка є і не прихована)
+                            const tabEl = document.getElementById(lastTab + 'Tab');
+                            if (tabEl) {
+                                switchTab(lastTab);
+                            }
+                        }
+                    } catch(e) {}
                 });
 
                 // Show FAB (було окремим onAuthStateChanged — об'єднано)

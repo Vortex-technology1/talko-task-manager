@@ -120,6 +120,8 @@
         window.closeMoreTabs = closeMoreTabs;
 
         function switchTab(tabName) {
+            // Зберігаємо активний таб для відновлення після F5
+            try { sessionStorage.setItem('talko_last_tab', tabName); } catch(e) {}
             // Закриваємо всі nav-dropdown при будь-якому переході
             if (typeof closeNavDropdowns === 'function') closeNavDropdowns();
             // Reset project detail when leaving projects tab
