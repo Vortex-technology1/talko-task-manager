@@ -118,17 +118,17 @@ self.addEventListener('activate', (event) => {
 
 // Fetch — strategy per request type
 self.addEventListener('fetch', (event) => {
-    // CDN бібліотеки — завжди network-first, не кешуємо
-    if (event.request.url.includes('unpkg.com') ||
-        event.request.url.includes('jsdelivr.net') ||
-        event.request.url.includes('cdnjs.cloudflare.com') ||
-        event.request.url.includes('accounts.google.com') ||
-        event.request.url.includes('apis.google.com')) {
-        event.respondWith(
-            fetch(event.request).catch(function() {
-                return caches.match(event.request);
-            })
-        );
+    // Зовнішні API і CDN — bypass SW повністю
+    const bypassHosts = [
+        'unpkg.com', 'jsdelivr.net', 'cdnjs.cloudflare.com',
+        'accounts.google.com', 'apis.google.com',
+        'api.telegram.org', 'api.anthropic.com',
+        'fonts.gstatic.com', 'fonts.googleapis.com',
+        'www.gstatic.com', 'api.qrserver.com',
+        'firebaseio.com', 'googleapis.com', 'firebase.google.com',
+    ];
+    if (bypassHosts.some(h => event.request.url.includes(h))) {
+        // Let browser handle it directly — no SW interception
         return;
     }
 
@@ -137,15 +137,7 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
 
-  // Firebase/Google API — network only (no cache)
-  if (url.hostname.includes('firebaseio.com') ||
-      url.hostname.includes('googleapis.com') ||
-      url.hostname.includes('firebase.google.com') ||
-      url.hostname.includes('accounts.google.com') ||
-      url.hostname.includes('gstatic.com/firebasejs') ||
-      url.hostname.includes('firestore.googleapis.com')) {
-    return;
-  }
+  // Firebase/Google API — handled by bypass above
 
   // Fonts — cache first (rarely change)
   if (url.hostname.includes('fonts.googleapis.com') ||
