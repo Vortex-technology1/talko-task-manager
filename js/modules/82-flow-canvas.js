@@ -365,8 +365,8 @@ function buildNodeEl(node) {
         `top:${node.y}px`,
         `width:${W}px`,
         `border-radius:10px`,
-        `background:${node.type === 'start' ? '#f0fdf4' : 'white'}`,
-        `border:2px solid ${node.type === 'start' ? cfg.color : (isSelected ? cfg.color : '#e2e8f0')}`,
+        `background:${node.type === 'start' ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)' : 'white'}`,
+        `border:2px solid ${node.type === 'start' ? '#22c55e' : (isSelected ? cfg.color : '#e2e8f0')}`,
         `box-shadow:${(isSelected || node.type === 'start') ? `0 0 0 3px ${cfg.color}33,` : ''}0 4px 16px rgba(0,0,0,0.12)`,
         `cursor:pointer`,
         `transition:border-color 0.15s,box-shadow 0.15s`,
@@ -436,7 +436,8 @@ function buildNodeEl(node) {
         <!-- BODY -->
         <div style="padding:10px 12px;min-height:40px;">
             ${preview
-                ? `<div style="font-size:11px;color:#475569;line-height:1.4;
+                ? `<div style="font-size:11px;color:${node.type==='start'?'#16a34a':'#475569'};line-height:1.4;
+                    font-weight:${node.type==='start'?'600':'400'};
                     overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;
                     -webkit-box-orient:vertical;">${esc(preview)}</div>`
                 : `<div style="font-size:11px;color:#94a3b8;font-style:italic;">
