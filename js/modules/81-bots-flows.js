@@ -220,7 +220,7 @@
         const flowData = { id: doc.id, ...doc.data() };
         botsFlowNodes = JSON.parse(JSON.stringify(flowData.nodes || []));
 
-        renderFlowEditorPanel(flowData);
+        openFlowCanvas(flowData.id);
     };
 
     function renderFlowEditorPanel(flowData) {
