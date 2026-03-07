@@ -259,34 +259,48 @@ function closeCanvas() {
 function buildSidebar() {
     const sb = document.getElementById('fcSidebar');
     if (!sb) return;
-    const items = [
-        ['message','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>','Повідом.'],
-        ['action','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>','Дія'],
-        ['filter','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg></span>','Фільтр'],
-        ['pause','⏸','Пауза'],
-        ['ai','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>','ШІ Агент'],
-        ['api','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></span>','API'],
-        ['sheets','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>','Sheets'],
-        ['random','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>','Випадк.'],
-        ['repeat','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>','Повтор'],
-        ['crm','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>','CRM'],
-        ['end','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span>','Кінець'],
-    ];
-    sb.innerHTML = items.map(([type, icon, label]) => {
-        const cfg = NODES[type];
-        return `<div draggable="true" data-sbtype="${type}"
-            title="${cfg.label}"
-            style="width:56px;display:flex;flex-direction:column;align-items:center;
-            gap:3px;padding:8px 4px;border-radius:8px;cursor:grab;
-            transition:background 0.15s;"
-            onmouseenter="this.style.background='#334155'"
-            onmouseleave="this.style.background='transparent'">
-            <div style="font-size:18px;line-height:1;">${icon}</div>
-            <div style="font-size:9px;color:#94a3b8;text-align:center;line-height:1.2;">${label}</div>
-        </div>`;
-    }).join('');
 
-    // Drag from sidebar <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span> canvas
+    // Apple-style: кольорові іконки в SF-style квадратах
+    sb.style.width = '88px';
+    sb.style.minWidth = '88px';
+    sb.style.background = '#0f172a';
+    sb.style.borderRight = '1px solid #1e293b';
+    sb.style.padding = '10px 6px';
+    sb.style.gap = '2px';
+
+    const items = [
+        ['message', '#3b82f6', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`, 'Повідом.'],
+        ['action',  '#f59e0b', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`, 'Дія'],
+        ['filter',  '#8b5cf6', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg>`, 'Фільтр'],
+        ['pause',   '#64748b', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`, 'Пауза'],
+        ['ai',      '#22c55e', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg>`, 'ШІ Агент'],
+        ['api',     '#06b6d4', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>`, 'API'],
+        ['sheets',  '#16a34a', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`, 'Sheets'],
+        ['random',  '#ec4899', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>`, 'Випадк.'],
+        ['repeat',  '#f97316', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`, 'Повтор'],
+        ['crm',     '#6366f1', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>`, 'CRM'],
+        ['end',     '#ef4444', `<svg width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="none"><rect x="4" y="4" width="16" height="16" rx="3"/></svg>`, 'Кінець'],
+    ];
+
+    sb.innerHTML = items.map(([type, color, svg, label]) => `
+        <div draggable="true" data-sbtype="${type}"
+            title="${NODES[type]?.label || label}"
+            style="width:76px;display:flex;flex-direction:column;align-items:center;
+            gap:5px;padding:8px 4px 7px;border-radius:12px;cursor:grab;
+            transition:background 0.12s;"
+            onmouseenter="this.style.background='rgba(255,255,255,0.07)'"
+            onmouseleave="this.style.background='transparent'">
+            <div style="width:40px;height:40px;border-radius:10px;background:${color};
+                display:flex;align-items:center;justify-content:center;
+                box-shadow:0 2px 8px ${color}55;flex-shrink:0;">
+                ${svg}
+            </div>
+            <div style="font-size:10px;color:#94a3b8;text-align:center;
+                line-height:1.2;font-weight:500;letter-spacing:0.01em;">${label}</div>
+        </div>`
+    ).join('');
+
+    // Drag from sidebar → canvas
     sb.querySelectorAll('[data-sbtype]').forEach(el => {
         el.addEventListener('dragstart', e => {
             e.dataTransfer.setData('nodeType', el.dataset.sbtype);
@@ -304,7 +318,6 @@ function buildSidebar() {
         addNode(type, snap(cx - W/2), snap(cy - 40));
     });
 }
-
 // ── Render All ─────────────────────────────────────────────
 function renderAll() {
     renderNodes();
@@ -480,17 +493,24 @@ function renderEdges() {
         hit.setAttribute('d', path);
         hit.setAttribute('fill','none');
         hit.setAttribute('stroke','transparent');
-        hit.setAttribute('stroke-width','12');
+        hit.setAttribute('stroke-width','16');
         hit.style.cursor = 'pointer';
         hit.style.pointerEvents = 'stroke';
-        hit.title = 'Клікни для видалення';
+        hit.title = 'Клікни щоб видалити';
+        // Підсвітка при наведенні
+        hit.addEventListener('mouseenter', () => {
+            line.setAttribute('stroke', '#ef4444');
+            line.setAttribute('stroke-width', '2.5');
+        });
+        hit.addEventListener('mouseleave', () => {
+            line.setAttribute('stroke', color);
+            line.setAttribute('stroke-width', '2');
+        });
         hit.addEventListener('click', e => {
             e.stopPropagation();
-            if (confirm('Видалити з\'єднання?')) {
-                pushHistory();
-                fc.edges = fc.edges.filter(ed => ed.id !== edge.id);
-                renderEdges();
-            }
+            pushHistory();
+            fc.edges = fc.edges.filter(ed => ed.id !== edge.id);
+            renderEdges();
         });
 
         const line = document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -789,6 +809,51 @@ function addNode(type, x, y) {
 }
 window.fcAddNode = addNode;
 
+// ── Керування кнопками в повідомленні ──────────────────────
+window.fcAddButton = function() {
+    const node = fc.nodes.find(n => n.id === fc.selected);
+    if (!node) return;
+    const label = prompt('Текст кнопки:');
+    if (!label?.trim()) return;
+    pushHistory();
+    if (!node.config.buttons) node.config.buttons = [];
+    node.config.buttons.push({ id: `btn_${node.config.buttons.length}`, label: label.trim() });
+    node.outputs = ['out', ...node.config.buttons.map((_,i) => `btn_${i}`)];
+    renderPropPanel();
+    renderNodes();
+    renderEdges();
+};
+
+window.fcEditButton = function(idx) {
+    const node = fc.nodes.find(n => n.id === fc.selected);
+    if (!node || !node.config.buttons?.[idx]) return;
+    const newLabel = prompt('Текст кнопки:', node.config.buttons[idx].label);
+    if (newLabel === null) return;
+    if (!newLabel.trim()) return;
+    pushHistory();
+    node.config.buttons[idx].label = newLabel.trim();
+    renderPropPanel();
+    renderNodes();
+};
+
+window.fcRemoveButton = function(idx) {
+    const node = fc.nodes.find(n => n.id === fc.selected);
+    if (!node || !node.config.buttons) return;
+    pushHistory();
+    // Видаляємо з'єднання цього порту
+    const portId = `btn_${idx}`;
+    fc.edges = fc.edges.filter(e => !(e.fromNode === node.id && e.fromPort === portId));
+    node.config.buttons.splice(idx, 1);
+    // Перенумеровуємо
+    node.config.buttons = node.config.buttons.map((b,i) => ({...b, id:`btn_${i}`}));
+    node.outputs = node.config.buttons.length > 0
+        ? ['out', ...node.config.buttons.map((_,i) => `btn_${i}`)]
+        : ['out'];
+    renderPropPanel();
+    renderNodes();
+    renderEdges();
+};
+
 window.fcSetAiProvider = function(provider) {
     if (!fc.selectedNode) return;
     // Зберігаємо поточний ключ перед перемалюванням
@@ -846,11 +911,48 @@ function renderPropPanel() {
         case 'start':
             fields = fld('Тригер (ключове слово)', inp('triggerKeyword', d.triggerKeyword, '/start'));
             break;
-        case 'message':
-            fields = fld('Текст повідомлення', ta('text', d.text, 'Введіть текст...'))
-                + fld('Кнопки (кожна з нового рядка)', ta('buttonsRaw', (d.buttons||[]).map(b=>b.label).join('\n'), 'Варіант 1\nВаріант 2', 3))
-                + fld('Зберегти відповідь у змінну', inp('saveAs', d.saveAs, 'напр: phone'));
+        case 'message': {
+            const btns = d.buttons || [];
+            const btnRows = btns.map((b,i) => `
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+                    <div style="flex:1;padding:8px 12px;background:#f0f9ff;border:1px solid #bae6fd;
+                        border-radius:8px;font-size:12px;color:#0369a1;cursor:text;min-height:32px;
+                        display:flex;align-items:center;justify-content:space-between;">
+                        <span>${b.label || 'Кнопка'}</span>
+                        <span style="color:#94a3b8;font-size:10px;">🚩</span>
+                    </div>
+                    <button onclick="fcEditButton(${i})"
+                        style="padding:6px 8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:11px;color:#475569;">✎</button>
+                    <button onclick="fcRemoveButton(${i})"
+                        style="padding:6px 8px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;cursor:pointer;font-size:11px;color:#ef4444;">✕</button>
+                </div>`).join('');
+
+            fields = `
+                <div style="margin-bottom:12px;">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">ПОВІДОМЛЕННЯ</div>
+                    <textarea id="fcp_text" rows="5" placeholder="Введіть текст повідомлення..."
+                        style="width:100%;padding:10px;background:#0f172a;border:1px solid #334155;
+                        border-radius:7px;color:white;font-size:13px;resize:vertical;box-sizing:border-box;
+                        line-height:1.5;">${escAttr(d.text||'')}</textarea>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">КНОПКИ</div>
+                    <div id="fcBtnList">${btnRows}</div>
+                    <button onclick="fcAddButton()"
+                        style="width:100%;padding:8px;background:transparent;border:1px dashed #334155;
+                        border-radius:8px;color:#64748b;font-size:12px;cursor:pointer;
+                        transition:all 0.15s;"
+                        onmouseover="this.style.borderColor='#22c55e';this.style.color='#22c55e';"
+                        onmouseout="this.style.borderColor='#334155';this.style.color='#64748b';">
+                        + Додати кнопку
+                    </button>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">ЗБЕРЕГТИ ВІДПОВІДЬ У ЗМІННУ</div>
+                    ${inp('saveAs', d.saveAs, 'напр: phone')}
+                </div>`;
             break;
+        }
         case 'action':
             fields = fld('Тип дії', sel('actionType',
                 [['set_var','Встановити змінну'],['set_tag','Додати тег'],
@@ -1034,11 +1136,10 @@ window.fcApplyNodeData = function(nodeId) {
         case 'message':
             node.config.text = get('text');
             node.config.saveAs = get('saveAs') || null;
-            const rawBtns = get('buttonsRaw').split('\n').map(s=>s.trim()).filter(Boolean);
-            node.config.buttons = rawBtns.map((l,i)=>({id:`btn_${i}`,label:l}));
+            // Кнопки вже в node.config.buttons через fcAddButton/fcRemoveButton/fcEditButton
             // Rebuild outputs: out + one per button
-            node.outputs = rawBtns.length > 0
-                ? ['out', ...rawBtns.map((_,i)=>`btn_${i}`)]
+            node.outputs = (node.config.buttons||[]).length > 0
+                ? ['out', ...(node.config.buttons||[]).map((_,i)=>`btn_${i}`)]
                 : ['out'];
             break;
         case 'action':
