@@ -204,32 +204,146 @@
 
     window.openGlobalAISettings = async function() {
         try {
-            const doc = await firebase.firestore().collection('settings').doc('ai').get();
-            const s = doc.exists ? doc.data() : {};
+            const [aiDoc, modelsDoc] = await Promise.all([
+                firebase.firestore().collection('settings').doc('ai').get(),
+                firebase.firestore().collection('settings').doc('aiModels').get()
+            ]);
+            const s = aiDoc.exists ? aiDoc.data() : {};
+
+            // Дефолтні моделі якщо ще немає в Firebase
+            const defaultModels = {
+                openai: [
+                    ['gpt-5.4',      'GPT-5.4 (флагман)'],
+                    ['gpt-5.2',      'GPT-5.2'],
+                    ['gpt-5',        'GPT-5'],
+                    ['gpt-5-mini',   'GPT-5 mini'],
+                    ['gpt-4.1',      'GPT-4.1'],
+                    ['gpt-4.1-mini', 'GPT-4.1 mini'],
+                    ['gpt-4.1-nano', 'GPT-4.1 nano'],
+                    ['o4-mini',      'o4-mini'],
+                    ['o3',           'o3'],
+                    ['gpt-4o',       'GPT-4o'],
+                    ['gpt-4o-mini',  'GPT-4o mini'],
+                ],
+                anthropic: [
+                    ['claude-opus-4-5',          'Claude Opus 4.5'],
+                    ['claude-sonnet-4-5',         'Claude Sonnet 4.5'],
+                    ['claude-haiku-4-5-20251001', 'Claude Haiku 4.5'],
+                ],
+                google: [
+                    ['gemini-2.5-pro',   'Gemini 2.5 Pro'],
+                    ['gemini-2.0-flash', 'Gemini 2.0 Flash'],
+                    ['gemini-1.5-pro',   'Gemini 1.5 Pro'],
+                    ['gemini-1.5-flash', 'Gemini 1.5 Flash'],
+                ]
+            };
+            const m = modelsDoc.exists ? modelsDoc.data() : defaultModels;
+            // Зберігаємо в глобальну змінну для доступу з функцій
+            window._editingModels = JSON.parse(JSON.stringify(m));
+
             document.getElementById('globalAIOverlay')?.remove();
             const overlay = document.createElement('div');
             overlay.id = 'globalAIOverlay';
             overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999999;display:flex;align-items:center;justify-content:center;padding:1rem;';
+
+            const renderModelsTab = (provider) => {
+                const list = (window._editingModels[provider] || []);
+                return `<div id="modelsTabContent">
+                    <div style="display:flex;gap:6px;margin-bottom:10px;">
+                        ${['openai','anthropic','google'].map(p => `
+                            <button onclick="window._switchModelsProvider('${p}')"
+                                id="mtp_${p}"
+                                style="flex:1;padding:6px 4px;border:1px solid ${provider===p?'#22c55e':'#e5e7eb'};
+                                border-radius:8px;background:${provider===p?'#f0fdf4':'white'};
+                                color:${provider===p?'#16a34a':'#374151'};font-size:11px;font-weight:600;cursor:pointer;">
+                                ${p==='openai'?'OpenAI':p==='anthropic'?'Anthropic':'Google'}
+                            </button>`).join('')}
+                    </div>
+                    <div id="modelsList" style="max-height:220px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px;padding:6px;">
+                        ${list.map((m,i) => `
+                            <div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;">
+                                <input value="${m[0]}" placeholder="model-id"
+                                    onchange="window._editingModels[window._currentModelProvider][${i}][0]=this.value"
+                                    style="flex:1;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;font-family:monospace;">
+                                <input value="${m[1]}" placeholder="Назва"
+                                    onchange="window._editingModels[window._currentModelProvider][${i}][1]=this.value"
+                                    style="flex:1.5;padding:5px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:11px;">
+                                <button onclick="window._removeModel(${i})"
+                                    style="padding:4px 8px;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;border-radius:6px;cursor:pointer;font-size:12px;">✕</button>
+                            </div>`).join('')}
+                    </div>
+                    <button onclick="window._addModel()"
+                        style="width:100%;margin-top:8px;padding:6px;background:#f0fdf4;color:#16a34a;
+                        border:1px solid #bbf7d0;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">
+                        + Додати модель
+                    </button>
+                </div>`;
+            };
+
+            window._currentModelProvider = 'openai';
+            window._switchModelsProvider = (p) => {
+                window._currentModelProvider = p;
+                document.getElementById('modelsTabContent').outerHTML = renderModelsTab(p);
+                // Перевішуємо функції після rerenderу
+                window._switchModelsProvider = window._switchModelsProvider; // keep ref
+            };
+            window._addModel = () => {
+                if (!window._editingModels[window._currentModelProvider]) window._editingModels[window._currentModelProvider] = [];
+                window._editingModels[window._currentModelProvider].push(['', 'Нова модель']);
+                document.getElementById('modelsTabContent').outerHTML = renderModelsTab(window._currentModelProvider);
+            };
+            window._removeModel = (i) => {
+                window._editingModels[window._currentModelProvider].splice(i, 1);
+                document.getElementById('modelsTabContent').outerHTML = renderModelsTab(window._currentModelProvider);
+            };
+
             overlay.innerHTML = `
-                <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-                    <h3 style="margin:0 0 1rem;font-size:1rem;font-weight:700;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Глобальні AI налаштування</h3>
-                    <label style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;cursor:pointer;">
-                        <input type="checkbox" id="globalAiEnabled" ${s.globalAiEnabled !== false ? 'checked' : ''} style="width:16px;height:16px;accent-color:#22c55e;">
-                        <span style="font-weight:600;">AI увімкнено глобально</span>
-                    </label>
-                    <div style="margin-bottom:0.75rem;">
-                        <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Ліміт/день по замовчуванню (токени)</label>
-                        <input type="number" id="globalDailyLimit" value="${s.defaultDailyLimit || ''}" placeholder="Без ліміту" min="0" step="1000"
-                            style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
+                <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <h3 style="margin:0 0 1rem;font-size:1rem;font-weight:700;">⚙️ Глобальні AI налаштування</h3>
+
+                    <!-- TABS -->
+                    <div style="display:flex;gap:4px;background:#f3f4f6;border-radius:10px;padding:3px;margin-bottom:1rem;">
+                        <button onclick="document.getElementById('aiTab_general').style.display='';document.getElementById('aiTab_models').style.display='none';this.style.background='white';this.style.color='#111';document.getElementById('aiTabBtn_models').style.background='transparent';document.getElementById('aiTabBtn_models').style.color='#6b7280';"
+                            id="aiTabBtn_general"
+                            style="flex:1;padding:6px;background:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                            Загальні
+                        </button>
+                        <button onclick="document.getElementById('aiTab_models').style.display='';document.getElementById('aiTab_general').style.display='none';this.style.background='white';this.style.color='#111';document.getElementById('aiTabBtn_general').style.background='transparent';document.getElementById('aiTabBtn_general').style.color='#6b7280';"
+                            id="aiTabBtn_models"
+                            style="flex:1;padding:6px;background:transparent;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#6b7280;">
+                            🤖 Моделі AI
+                        </button>
                     </div>
-                    <div style="margin-bottom:1rem;">
-                        <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Ліміт/місяць по замовчуванню (токени)</label>
-                        <input type="number" id="globalMonthlyLimit" value="${s.defaultMonthlyLimit || ''}" placeholder="Без ліміту" min="0" step="10000"
-                            style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
+
+                    <!-- TAB: GENERAL -->
+                    <div id="aiTab_general">
+                        <label style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;cursor:pointer;">
+                            <input type="checkbox" id="globalAiEnabled" ${s.globalAiEnabled !== false ? 'checked' : ''} style="width:16px;height:16px;accent-color:#22c55e;">
+                            <span style="font-weight:600;">AI увімкнено глобально</span>
+                        </label>
+                        <div style="margin-bottom:0.75rem;">
+                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Ліміт/день по замовчуванню (токени)</label>
+                            <input type="number" id="globalDailyLimit" value="${s.defaultDailyLimit || ''}" placeholder="Без ліміту" min="0" step="1000"
+                                style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Ліміт/місяць по замовчуванню (токени)</label>
+                            <input type="number" id="globalMonthlyLimit" value="${s.defaultMonthlyLimit || ''}" placeholder="Без ліміту" min="0" step="10000"
+                                style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
+                        </div>
                     </div>
-                    <div style="display:flex;gap:0.5rem;">
+
+                    <!-- TAB: MODELS -->
+                    <div id="aiTab_models" style="display:none;">
+                        <div style="font-size:11px;color:#6b7280;margin-bottom:8px;">
+                            Редагуй список моделей — зміни одразу видні всім клієнтам без деплою коду.
+                        </div>
+                        ${renderModelsTab('openai')}
+                    </div>
+
+                    <div style="display:flex;gap:0.5rem;margin-top:1rem;">
                         <button onclick="document.getElementById('globalAIOverlay').remove()" style="flex:1;padding:0.55rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;">Скасувати</button>
-                        <button onclick="saveGlobalAISettings()" style="flex:2;padding:0.55rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Зберегти</button>
+                        <button onclick="saveGlobalAISettings()" style="flex:2;padding:0.55rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Зберегти все</button>
                     </div>
                 </div>`;
             document.body.appendChild(overlay);
@@ -237,16 +351,29 @@
     };
 
     window.saveGlobalAISettings = async function() {
-        const enabled = document.getElementById('globalAiEnabled').checked;
-        const daily = parseInt(document.getElementById('globalDailyLimit').value) || 0;
-        const monthly = parseInt(document.getElementById('globalMonthlyLimit').value) || 0;
+        const enabled = document.getElementById('globalAiEnabled')?.checked ?? true;
+        const daily = parseInt(document.getElementById('globalDailyLimit')?.value) || 0;
+        const monthly = parseInt(document.getElementById('globalMonthlyLimit')?.value) || 0;
         try {
-            await firebase.firestore().collection('settings').doc('ai').set(
+            const batch = firebase.firestore().batch();
+            // Загальні налаштування
+            batch.set(
+                firebase.firestore().collection('settings').doc('ai'),
                 { globalAiEnabled: enabled, defaultDailyLimit: daily, defaultMonthlyLimit: monthly },
                 { merge: true }
             );
+            // Моделі — якщо є що зберігати
+            if (window._editingModels) {
+                batch.set(
+                    firebase.firestore().collection('settings').doc('aiModels'),
+                    window._editingModels
+                );
+            }
+            await batch.commit();
             document.getElementById('globalAIOverlay')?.remove();
-            showToast && showToast('Глобальні налаштування збережено ✓', 'success');
+            // Оновлюємо кеш моделей для canvas
+            window._cachedAiModels = window._editingModels || null;
+            showToast && showToast('Збережено ✓', 'success');
         } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
     };
 
