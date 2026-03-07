@@ -789,6 +789,15 @@ function addNode(type, x, y) {
 }
 window.fcAddNode = addNode;
 
+window.fcSetAiProvider = function(provider) {
+    if (!fc.selectedNode) return;
+    // Зберігаємо поточний ключ перед перемалюванням
+    const currentKey = document.getElementById('fcp_aiApiKey')?.value || '';
+    fc.selectedNode.config.aiProvider = provider;
+    fc.selectedNode.config.aiApiKey = currentKey;
+    renderPropsPanel(fc.selectedNode);
+};
+
 // ── Property Panel ─────────────────────────────────────────
 function renderPropPanel() {
     const panel = document.getElementById('fcPropPanel');
@@ -871,13 +880,58 @@ function renderPropPanel() {
                 + `<div style="font-size:10px;color:#64748b;margin-top:4px;">
                     Продовжувати ланцюжок: Завжди</div>`;
             break;
-        case 'ai':
-            fields = fld('Системний промпт', ta('aiSystem', d.aiSystem, 'Ти — помічник компанії...', 4))
-                + fld('Модель', sel('aiModel',
-                    [['gpt-4o-mini','GPT-4o mini'],['gpt-4o','GPT-4o'],['claude-sonnet-4-5','Claude Sonnet']], d.aiModel||'gpt-4o-mini'))
+        case 'ai': {
+            const aiProvider = d.aiProvider || 'openai';
+            const modelOptions = aiProvider === 'openai'
+                ? [['gpt-4o-mini','GPT-4o mini (швидкий)'],['gpt-4o','GPT-4o (розумний)'],['gpt-4-turbo','GPT-4 Turbo']]
+                : aiProvider === 'anthropic'
+                ? [['claude-sonnet-4-5','Claude Sonnet 4.5'],['claude-opus-4-5','Claude Opus 4.5'],['claude-haiku-4-5-20251001','Claude Haiku (швидкий)']]
+                : [['gemini-1.5-flash','Gemini 1.5 Flash'],['gemini-1.5-pro','Gemini 1.5 Pro']];
+
+            // Спробуємо підтягнути збережений ключ компанії
+            const savedKey = d.aiApiKey || '';
+
+            fields = `<div style="background:#0f172a;border:1px solid #22c55e33;border-radius:10px;padding:10px;margin-bottom:10px;">
+                <div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">🔑 AI Провайдер</div>
+                <div style="display:flex;gap:6px;margin-bottom:8px;">
+                    ${['openai','anthropic','google'].map(p => `
+                        <button onclick="fcSetAiProvider('${p}')"
+                            style="flex:1;padding:5px 4px;border:1px solid ${aiProvider===p?'#22c55e':'#334155'};
+                            border-radius:7px;background:${aiProvider===p?'#22c55e22':'transparent'};
+                            color:${aiProvider===p?'#22c55e':'#94a3b8'};font-size:10px;font-weight:600;cursor:pointer;">
+                            ${p==='openai'?'OpenAI':p==='anthropic'?'Anthropic':'Google'}
+                        </button>`).join('')}
+                </div>
+                <div style="margin-bottom:6px;">
+                    <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;">
+                        API Ключ
+                        <a href="${aiProvider==='openai'?'https://platform.openai.com/api-keys':aiProvider==='anthropic'?'https://console.anthropic.com/settings/keys':'https://aistudio.google.com/app/apikey'}"
+                            target="_blank" style="color:#3b82f6;margin-left:4px;font-size:9px;">Отримати ключ →</a>
+                    </div>
+                    <input id="fcp_aiApiKey" type="password" value="${savedKey}"
+                        placeholder="${aiProvider==='openai'?'sk-...':aiProvider==='anthropic'?'sk-ant-...':'AIza...'}"
+                        style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
+                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;">
+                    <div style="font-size:9px;color:#475569;margin-top:3px;">
+                        Зберігається тільки для цього ланцюга
+                    </div>
+                </div>
+            </div>`
+                + fld('Системний промпт', ta('aiSystem', d.aiSystem, 'Ти — помічник компанії {{company_name}}. Відповідай коротко та по суті українською мовою.', 4))
+                + fld('Модель', sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0]))
                 + fld('Зберегти відповідь у змінну', inp('saveAs', d.saveAs, 'ai_response'))
-                + fld('Запасна відповідь', inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'));
+                + fld('Запасна відповідь', inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'))
+                + `<div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px;margin-top:8px;">
+                    <div style="font-size:10px;color:#64748b;line-height:1.5;">
+                        <b style="color:#94a3b8;">Як використати:</b><br>
+                        1. Обери провайдера (OpenAI / Anthropic / Google)<br>
+                        2. Вставте API ключ з сайту провайдера<br>
+                        3. Напиши системний промпт — хто цей бот<br>
+                        4. Обери модель — mini/haiku для швидких відповідей
+                    </div>
+                </div>`;
             break;
+        }
         case 'api':
             fields = fld('Метод + URL', `<div style="display:flex;gap:6px;">
                 ${sel('apiMethod',[['POST','POST'],['GET','GET'],['PUT','PUT'],['PATCH','PATCH'],['DELETE','DELETE']], d.apiMethod||'POST')}
@@ -987,6 +1041,8 @@ window.fcApplyNodeData = function(nodeId) {
         case 'ai':
             node.config.aiSystem = get('aiSystem');
             node.config.aiModel = get('aiModel');
+            node.config.aiApiKey = get('aiApiKey') || null;
+            node.config.aiProvider = get('aiProvider') || fc.selectedNode?.config?.aiProvider || 'openai';
             node.config.saveAs = get('saveAs') || null;
             node.config.fallback = get('fallback');
             break;
