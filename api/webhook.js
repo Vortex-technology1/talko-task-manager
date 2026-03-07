@@ -287,7 +287,10 @@ async function sendTg(token, chatId, text, buttons) {
     const payload = { chat_id: chatId, text: (text||' ').trim(), parse_mode: 'HTML' };
     if (buttons?.length) {
         payload.reply_markup = { inline_keyboard: [
-            buttons.map(b => ({ text: b.label||b.text||'?', callback_data: b.value||b.label||b.id||'?' }))
+            buttons.map(b => b.url
+                ? { text: b.label||b.text||'?', url: b.url }
+                : { text: b.label||b.text||'?', callback_data: b.value||b.label||b.id||'?' }
+            )
         ]};
     }
     try {

@@ -51,6 +51,8 @@ const PORT_LABELS = {
 window.openFlowCanvas = async function(flowId, botId) {
     fc.flowId = flowId;
     fc.botId = botId || window._currentBotId || null;
+    // Зберігаємо стан canvas для відновлення після рефрешу
+    try { localStorage.setItem('talko_canvas_state', JSON.stringify({ flowId, botId: fc.botId })); } catch(e) {}
     const flowRef = fc.botId
         ? firebase.firestore().collection('companies').doc(window.currentCompanyId).collection('bots').doc(fc.botId).collection('flows').doc(flowId)
         : firebase.firestore().collection('companies').doc(window.currentCompanyId).collection('flows').doc(flowId);
@@ -63,14 +65,17 @@ window.openFlowCanvas = async function(flowId, botId) {
     if (stored) {
         // canvasData.nodes зберігається як {...config, _x, _y, outputs, id, type}
         // Треба відновити структуру {id, type, x, y, config, outputs}
-        fc.nodes = (stored.nodes || []).map(n => ({
-            id: n.id,
-            type: n.type || 'message',
-            x: n._x !== undefined ? n._x : (n.x !== undefined ? n.x : 80),
-            y: n._y !== undefined ? n._y : (n.y !== undefined ? n.y : 200),
-            outputs: n.outputs || NODES[n.type]?.outputs || ['out'],
-            config: n,
-        }));
+        fc.nodes = (stored.nodes || []).map(n => {
+            const nodeType = n.type || 'message';
+            return {
+                id: n.id,
+                type: nodeType,
+                x: n._x !== undefined ? n._x : (n.x !== undefined ? n.x : 80),
+                y: n._y !== undefined ? n._y : (n.y !== undefined ? n.y : 200),
+                outputs: n.outputs || NODES[nodeType]?.outputs || ['out'],
+                config: { ...n, type: nodeType, id: n.id },
+            };
+        });
         fc.edges = stored.edges || [];
     } else {
         // Migrate old linear nodes or fresh start
@@ -259,6 +264,7 @@ function mountCanvas() {
 }
 
 function closeCanvas() {
+    try { localStorage.removeItem('talko_canvas_state'); } catch(e) {}
     document.getElementById('fcRoot')?.remove();
     document.removeEventListener('keydown', onKeyDown);
     window.removeEventListener('resize', drawBg);
@@ -436,6 +442,16 @@ function buildNodeEl(node) {
                 : `<div style="font-size:11px;color:#94a3b8;font-style:italic;">
                     Клікніть для налаштування</div>`
             }
+            ${(node.config?.buttons?.length) ? `
+            <div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">
+                ${(node.config.buttons).map(b => `
+                    <div style="padding:4px 8px;background:#f0f9ff;border:1px solid #bae6fd;
+                        border-radius:6px;font-size:10px;color:#0369a1;
+                        display:flex;align-items:center;gap:4px;overflow:hidden;">
+                        ${b.url ? `<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>` : `<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>`}
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(b.label||'Кнопка')}</span>
+                    </div>`).join('')}
+            </div>` : ''}
         </div>
         <!-- OUT PORTS -->
         ${outPortsHTML}
@@ -834,9 +850,10 @@ window.fcAddButton = function() {
     if (!node) return;
     const label = prompt('Текст кнопки:');
     if (!label?.trim()) return;
+    const url = prompt('URL посилання (залиш порожнім якщо не потрібно):') || '';
     pushHistory();
     if (!node.config.buttons) node.config.buttons = [];
-    node.config.buttons.push({ id: `btn_${node.config.buttons.length}`, label: label.trim() });
+    node.config.buttons.push({ id: `btn_${node.config.buttons.length}`, label: label.trim(), url: url.trim() || null });
     node.outputs = ['out', ...node.config.buttons.map((_,i) => `btn_${i}`)];
     renderPropPanel();
     renderNodes();
@@ -846,11 +863,15 @@ window.fcAddButton = function() {
 window.fcEditButton = function(idx) {
     const node = fc.nodes.find(n => n.id === fc.selected);
     if (!node || !node.config.buttons?.[idx]) return;
-    const newLabel = prompt('Текст кнопки:', node.config.buttons[idx].label);
+    const b = node.config.buttons[idx];
+    const newLabel = prompt('Текст кнопки:', b.label);
     if (newLabel === null) return;
     if (!newLabel.trim()) return;
+    const newUrl = prompt('URL посилання (залиш порожнім щоб видалити):', b.url || '');
+    if (newUrl === null) return;
     pushHistory();
     node.config.buttons[idx].label = newLabel.trim();
+    node.config.buttons[idx].url = newUrl.trim() || null;
     renderPropPanel();
     renderNodes();
 };
@@ -933,17 +954,20 @@ function renderPropPanel() {
         case 'message': {
             const btns = d.buttons || [];
             const btnRows = btns.map((b,i) => `
-                <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-                    <div style="flex:1;padding:8px 12px;background:#f0f9ff;border:1px solid #bae6fd;
-                        border-radius:8px;font-size:12px;color:#0369a1;cursor:text;min-height:32px;
-                        display:flex;align-items:center;justify-content:space-between;">
-                        <span>${b.label || 'Кнопка'}</span>
-                        <span style="color:#94a3b8;font-size:10px;">🚩</span>
+                <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:8px;">
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <div style="flex:1;padding:7px 10px;background:#f0f9ff;border:1px solid #bae6fd;
+                            border-radius:8px;font-size:12px;color:#0369a1;
+                            display:flex;align-items:center;gap:6px;">
+                            ${b.url ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>` : `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>`}
+                            <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.label || 'Кнопка'}</span>
+                        </div>
+                        <button onclick="fcEditButton(${i})"
+                            style="padding:5px 7px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:11px;color:#475569;">✎</button>
+                        <button onclick="fcRemoveButton(${i})"
+                            style="padding:5px 7px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;cursor:pointer;font-size:11px;color:#ef4444;">✕</button>
                     </div>
-                    <button onclick="fcEditButton(${i})"
-                        style="padding:6px 8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:11px;color:#475569;">✎</button>
-                    <button onclick="fcRemoveButton(${i})"
-                        style="padding:6px 8px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;cursor:pointer;font-size:11px;color:#ef4444;">✕</button>
+                    ${b.url ? `<div style="font-size:10px;color:#64748b;padding:0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🔗 ${b.url}</div>` : ''}
                 </div>`).join('');
 
             fields = `
@@ -1237,7 +1261,7 @@ async function saveFlow() {
 
     // Build canvasData (source of truth)
     const canvasData = {
-        nodes: fc.nodes.map(n => ({ id:n.id, type:n.type, ...n.config, _x:n.x, _y:n.y, outputs:n.outputs })),
+        nodes: fc.nodes.map(n => ({ ...n.config, id:n.id, type:n.type, _x:n.x, _y:n.y, outputs:n.outputs })),
         edges: fc.edges,
         version: Date.now(),
     };
@@ -1333,8 +1357,8 @@ function onKeyDown(e) {
 // ── Preview ────────────────────────────────────────────────
 function getPreview(node) {
     const d = node.config||{};
-    if (d.text) return d.text.slice(0,80);
     if (d.triggerKeyword) return 'Тригер: ' + d.triggerKeyword;
+    if (d.text) return d.text.slice(0,80);
     if (d.aiSystem) return 'AI: ' + d.aiSystem.slice(0,60);
     if (d.apiUrl) return d.apiMethod+' '+d.apiUrl.slice(0,40);
     if (d.dealTitle) return d.dealTitle;
