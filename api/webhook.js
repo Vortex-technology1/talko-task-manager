@@ -41,9 +41,15 @@ module.exports = async (req, res) => {
 
         // Знаходимо бот по каналу
         let botToken = null, botDocId = null;
-        const botsSnap = await compRef.collection('bots')
+        let botsSnap = await compRef.collection('bots')
             .where('channel', '==', channel)
             .where('status', '==', 'active').limit(5).get();
+
+        // Fallback: якщо бот без status поля (старі боти) — беремо будь-який бот цього каналу
+        if (botsSnap.empty) {
+            botsSnap = await compRef.collection('bots')
+                .where('channel', '==', channel).limit(5).get();
+        }
 
         if (!botsSnap.empty) {
             const bd = botsSnap.docs[0];

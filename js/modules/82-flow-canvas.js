@@ -848,32 +848,32 @@ window.fcAddNode = addNode;
 window.fcAddButton = function() {
     const node = fc.nodes.find(n => n.id === fc.selected);
     if (!node) return;
-    const label = prompt('Текст кнопки:');
-    if (!label?.trim()) return;
-    const url = prompt('URL посилання (залиш порожнім якщо не потрібно):') || '';
     pushHistory();
     if (!node.config.buttons) node.config.buttons = [];
-    node.config.buttons.push({ id: `btn_${node.config.buttons.length}`, label: label.trim(), url: url.trim() || null });
+    node.config.buttons.push({ id: `btn_${node.config.buttons.length}`, label: '', url: null });
     node.outputs = ['out', ...node.config.buttons.map((_,i) => `btn_${i}`)];
     renderPropPanel();
     renderNodes();
     renderEdges();
+    // Фокус на нове поле
+    setTimeout(() => {
+        const inp = document.getElementById(`fcp_btn_label_${node.config.buttons.length - 1}`);
+        if (inp) inp.focus();
+    }, 50);
+};
+
+window.fcUpdateButton = function(idx) {
+    const node = fc.nodes.find(n => n.id === fc.selected);
+    if (!node || !node.config.buttons?.[idx]) return;
+    const labelEl = document.getElementById(`fcp_btn_label_${idx}`);
+    const urlEl = document.getElementById(`fcp_btn_url_${idx}`);
+    node.config.buttons[idx].label = labelEl?.value || '';
+    node.config.buttons[idx].url = urlEl?.value?.trim() || null;
+    renderNodes(); // оновити картку без повного перемальовування панелі
 };
 
 window.fcEditButton = function(idx) {
-    const node = fc.nodes.find(n => n.id === fc.selected);
-    if (!node || !node.config.buttons?.[idx]) return;
-    const b = node.config.buttons[idx];
-    const newLabel = prompt('Текст кнопки:', b.label);
-    if (newLabel === null) return;
-    if (!newLabel.trim()) return;
-    const newUrl = prompt('URL посилання (залиш порожнім щоб видалити):', b.url || '');
-    if (newUrl === null) return;
-    pushHistory();
-    node.config.buttons[idx].label = newLabel.trim();
-    node.config.buttons[idx].url = newUrl.trim() || null;
-    renderPropPanel();
-    renderNodes();
+    // Більше не потрібен — редагування inline
 };
 
 window.fcRemoveButton = function(idx) {
@@ -954,20 +954,32 @@ function renderPropPanel() {
         case 'message': {
             const btns = d.buttons || [];
             const btnRows = btns.map((b,i) => `
-                <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:8px;">
-                    <div style="display:flex;gap:6px;align-items:center;">
-                        <div style="flex:1;padding:7px 10px;background:#f0f9ff;border:1px solid #bae6fd;
-                            border-radius:8px;font-size:12px;color:#0369a1;
-                            display:flex;align-items:center;gap:6px;">
-                            ${b.url ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>` : `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>`}
-                            <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.label || 'Кнопка'}</span>
+                <div style="background:#0f172a;border:1px solid #334155;border-radius:8px;
+                    padding:8px;margin-bottom:8px;">
+                    <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+                        <div style="flex:1;">
+                            <div style="font-size:9px;color:#64748b;margin-bottom:3px;">ТЕКСТ КНОПКИ</div>
+                            <input id="fcp_btn_label_${i}" value="${escAttr(b.label||'')}"
+                                placeholder="Наприклад: Продовжити"
+                                style="width:100%;padding:6px 8px;background:#1e293b;border:1px solid #475569;
+                                border-radius:6px;color:white;font-size:12px;box-sizing:border-box;"
+                                oninput="fcUpdateButton(${i})">
                         </div>
-                        <button onclick="fcEditButton(${i})"
-                            style="padding:5px 7px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:11px;color:#475569;">✎</button>
                         <button onclick="fcRemoveButton(${i})"
-                            style="padding:5px 7px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;cursor:pointer;font-size:11px;color:#ef4444;">✕</button>
+                            style="padding:6px 8px;background:#fef2f2;border:1px solid #fecaca;
+                            border-radius:6px;cursor:pointer;font-size:11px;color:#ef4444;
+                            flex-shrink:0;margin-top:16px;">✕</button>
                     </div>
-                    ${b.url ? `<div style="font-size:10px;color:#64748b;padding:0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🔗 ${b.url}</div>` : ''}
+                    <div>
+                        <div style="font-size:9px;color:#64748b;margin-bottom:3px;">
+                            URL ПОСИЛАННЯ <span style="color:#475569;">(необов'язково — для кнопки-посилання)</span>
+                        </div>
+                        <input id="fcp_btn_url_${i}" value="${escAttr(b.url||'')}"
+                            placeholder="https://..."
+                            style="width:100%;padding:6px 8px;background:#1e293b;border:1px solid #475569;
+                            border-radius:6px;color:#38bdf8;font-size:12px;box-sizing:border-box;"
+                            oninput="fcUpdateButton(${i})">
+                    </div>
                 </div>`).join('');
 
             fields = `
@@ -1179,8 +1191,14 @@ window.fcApplyNodeData = function(nodeId) {
         case 'message':
             node.config.text = get('text');
             node.config.saveAs = get('saveAs') || null;
-            // Кнопки вже в node.config.buttons через fcAddButton/fcRemoveButton/fcEditButton
-            // Rebuild outputs: out + one per button
+            // Читаємо кнопки з inline полів
+            if (node.config.buttons?.length) {
+                node.config.buttons = node.config.buttons.map((b, i) => ({
+                    ...b,
+                    label: document.getElementById(`fcp_btn_label_${i}`)?.value || b.label || '',
+                    url: document.getElementById(`fcp_btn_url_${i}`)?.value?.trim() || null,
+                }));
+            }
             node.outputs = (node.config.buttons||[]).length > 0
                 ? ['out', ...(node.config.buttons||[]).map((_,i)=>`btn_${i}`)]
                 : ['out'];

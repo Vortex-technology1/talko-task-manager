@@ -444,6 +444,7 @@ window.createAndConnectBot = async function() {
                 username,
                 webhookUrl,
                 connected,
+                status: connected ? 'active' : 'draft',
                 flowCount: 0,
                 contactCount: 0,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
