@@ -204,9 +204,9 @@ function mountCanvas() {
                         <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
                     </marker>
                 </defs>
-                <g id="fcEdgesGroup"></g>
+                <g id="fcEdgesGroup" style="pointer-events:all;"></g>
                 <path id="fcTempEdge" fill="none" stroke="#22c55e" stroke-width="2"
-                    stroke-dasharray="6,4" style="display:none;" marker-end="url(#arrowHeadGreen)"/>
+                    stroke-dasharray="6,4" style="display:none;pointer-events:none;" marker-end="url(#arrowHeadGreen)"/>
             </svg>
             <!-- nodes layer -->
             <div id="fcNodesLayer" style="position:absolute;inset:0;z-index:2;"></div>
@@ -382,7 +382,13 @@ function buildNodeEl(node) {
 
     // OUT ports (right side)
     const outPortsHTML = outputs.map((portId, i) => {
-        const label = PORT_LABELS[portId] || portId;
+        // Для кнопок — показуємо текст кнопки
+        let label = PORT_LABELS[portId];
+        if (!label && portId.startsWith('btn_')) {
+            const btnIdx = parseInt(portId.replace('btn_', ''), 10);
+            label = node.config?.buttons?.[btnIdx]?.label || `Кнопка ${btnIdx + 1}`;
+        }
+        if (!label) label = portId;
         const connected = fc.edges.some(e => e.fromNode === node.id && e.fromPort === portId);
         const portColor = portId === 'yes' || portId === 'ok' || portId === 'out' ? cfg.color :
                           portId === 'no' || portId === 'err' ? '#ef4444' : '#94a3b8';
@@ -530,7 +536,11 @@ function renderEdges() {
         line.setAttribute('marker-end', `url(#${markerId})`);
 
         // Port label on edge
-        const portLabel = PORT_LABELS[edge.fromPort];
+        let portLabel = PORT_LABELS[edge.fromPort];
+        if (!portLabel && edge.fromPort?.startsWith('btn_')) {
+            const btnIdx = parseInt(edge.fromPort.replace('btn_', ''), 10);
+            portLabel = fromNode.config?.buttons?.[btnIdx]?.label || `Кнопка ${btnIdx + 1}`;
+        }
         if (portLabel && fromNode.outputs?.length > 1) {
             const mx = (from.x + to.x) / 2;
             const my = (from.y + to.y) / 2 - 8;
@@ -1227,7 +1237,7 @@ async function saveFlow() {
 
     // Build canvasData (source of truth)
     const canvasData = {
-        nodes: fc.nodes.map(n => ({...n.config, _x:n.x, _y:n.y, outputs:n.outputs})),
+        nodes: fc.nodes.map(n => ({ id:n.id, type:n.type, ...n.config, _x:n.x, _y:n.y, outputs:n.outputs })),
         edges: fc.edges,
         version: Date.now(),
     };
