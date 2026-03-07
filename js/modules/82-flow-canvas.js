@@ -61,7 +61,16 @@ window.openFlowCanvas = async function(flowId, botId) {
     // Load nodes/edges from stored JSON
     const stored = fc.flowData.canvasData || null;
     if (stored) {
-        fc.nodes = stored.nodes || [];
+        // canvasData.nodes зберігається як {...config, _x, _y, outputs, id, type}
+        // Треба відновити структуру {id, type, x, y, config, outputs}
+        fc.nodes = (stored.nodes || []).map(n => ({
+            id: n.id,
+            type: n.type || 'message',
+            x: n._x !== undefined ? n._x : (n.x !== undefined ? n.x : 80),
+            y: n._y !== undefined ? n._y : (n.y !== undefined ? n.y : 200),
+            outputs: n.outputs || NODES[n.type]?.outputs || ['out'],
+            config: n,
+        }));
         fc.edges = stored.edges || [];
     } else {
         // Migrate old linear nodes or fresh start

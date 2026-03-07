@@ -1,7 +1,7 @@
 // ============================================================
-// TALKO Universal Webhook — Vercel Serverless
-// Підтримує: Telegram, Instagram, Facebook
-// POST /api/webhook/:companyId/:channel
+// TALKO Universal Webhook — Vercel Serverless v2
+// POST /api/webhook?companyId=X&channel=telegram
+// Flows: companies/{id}/bots/{botId}/flows/{flowId}
 // ============================================================
 
 const admin = require('firebase-admin');
@@ -9,7 +9,7 @@ const admin = require('firebase-admin');
 if (!admin.apps.length) {
     let pk = process.env.FIREBASE_PRIVATE_KEY || '';
     if (pk && !pk.includes('-----BEGIN')) {
-        try { pk = Buffer.from(pk, 'base64').toString('utf8'); } catch(e) {} 
+        try { pk = Buffer.from(pk, 'base64').toString('utf8'); } catch(e) {}
     }
     if (pk && pk.includes('\\n')) pk = pk.replace(/\\n/g, '\n');
     admin.initializeApp({
@@ -23,294 +23,297 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 module.exports = async (req, res) => {
-    // Telegram webhook verification
-    if (req.method === 'GET') {
-        const { 'hub.mode': mode, 'hub.verify_token': token, 'hub.challenge': challenge } = req.query;
-        if (mode === 'subscribe') {
-            const { companyId, channel } = req.query;
-            if (companyId && channel) {
-                const compDoc = await db.collection('companies').doc(companyId).get();
-                const verifyToken = compDoc.data()?.integrations?.[channel]?.verifyToken;
-                if (token === verifyToken) {
-                    return res.status(200).send(challenge);
-                }
-            }
-            return res.status(403).send('Forbidden');
-        }
-        return res.status(200).json({ ok: true });
-    }
-
+    if (req.method === 'GET') return res.status(200).json({ ok: true, service: 'TALKO Webhook v2' });
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     const { companyId, channel } = req.query;
-    if (!companyId || !channel) return res.status(400).json({ error: 'Missing companyId or channel' });
+    if (!companyId || !channel) return res.status(400).json({ error: 'Missing params' });
 
     try {
         const body = req.body;
-        let normalized = null;
+        let normalized = channel === 'telegram' ? normalizeTelegram(body) :
+                         (channel === 'instagram' || channel === 'facebook') ? normalizeMeta(body) : null;
 
-        // ── Normalize by channel ──────────────────────────
-        if (channel === 'telegram') {
-            normalized = normalizeTelegram(body);
-        } else if (channel === 'instagram' || channel === 'facebook') {
-            normalized = normalizeMeta(body, channel);
-        } else if (channel === 'viber') {
-            normalized = normalizeViber(body);
+        if (!normalized) return res.status(200).json({ ok: true, skipped: 'no message' });
+        console.log(`[webhook] ${channel} from ${normalized.senderId}: "${normalized.text}"`);
+
+        const compRef = db.collection('companies').doc(companyId);
+
+        // Знаходимо бот по каналу
+        let botToken = null, botDocId = null;
+        const botsSnap = await compRef.collection('bots')
+            .where('channel', '==', channel)
+            .where('status', '==', 'active').limit(5).get();
+
+        if (!botsSnap.empty) {
+            const bd = botsSnap.docs[0];
+            botDocId = bd.id;
+            botToken = bd.data().token || bd.data().botToken;
+        } else {
+            const compDoc = await compRef.get();
+            botToken = compDoc.data()?.integrations?.telegram?.botToken;
         }
 
-        if (!normalized) return res.status(200).json({ ok: true, skipped: true });
+        if (!botToken) {
+            console.log('[webhook] No bot token');
+            return res.status(200).json({ ok: true, skipped: 'no token' });
+        }
 
-        // ── Load company integrations & flows ─────────────
-        const compRef = db.collection('companies').doc(companyId);
-        const [compDoc, flowsSnap] = await Promise.all([
-            compRef.get(),
-            compRef.collection('flows')
-                .where('channel', '==', channel)
-                .where('active', '==', true)
-                .limit(10).get()
-        ]);
-
-        if (!compDoc.exists) return res.status(404).json({ error: 'Company not found' });
-        const compData = compDoc.data();
-
-        // ── Find or create session ────────────────────────
+        // Сесія
         const sessionId = `${channel}_${normalized.senderId}`;
         const sessionRef = compRef.collection('sessions').doc(sessionId);
         const sessionDoc = await sessionRef.get();
-
         let session = sessionDoc.exists ? sessionDoc.data() : {
-            senderId: normalized.senderId,
-            channel,
-            senderName: normalized.senderName || '',
-            currentFlowId: null,
-            currentNodeIndex: 0,
-            data: {},
+            senderId: normalized.senderId, senderName: normalized.senderName || '',
+            channel, currentFlowId: null, currentBotId: null,
+            currentNodeId: null, waitingForInput: null,
+            data: {}, tags: [],
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         };
 
-        // ── Pick flow ─────────────────────────────────────
+        const isStart = /^\/start/.test(normalized.text) || normalized.text === 'start';
+        if (isStart) {
+            session.currentFlowId = null; session.currentNodeId = null;
+            session.waitingForInput = null; session.data = {};
+        }
+
+        const currentBotId = botDocId || session.currentBotId;
+
+        // Знаходимо флоу
         let flow = null;
-        if (session.currentFlowId) {
-            flow = flowsSnap.docs.find(d => d.id === session.currentFlowId);
-            if (flow) flow = { id: flow.id, ...flow.data() };
-        }
-        if (!flow && flowsSnap.docs.length > 0) {
-            // Start first active flow
-            const fd = flowsSnap.docs[0];
-            flow = { id: fd.id, ...fd.data() };
-            session.currentFlowId = flow.id;
-            session.currentNodeIndex = 0;
-        }
-
-        // ── Process flow node ─────────────────────────────
-        let reply = null;
-        if (flow && flow.nodes && flow.nodes.length > 0) {
-            const nodeIdx = session.currentNodeIndex || 0;
-            const node = flow.nodes[nodeIdx];
-
-            if (node) {
-                // Save user answer to previous node
-                if (nodeIdx > 0) {
-                    const prevNode = flow.nodes[nodeIdx - 1];
-                    if (prevNode?.saveAs) {
-                        session.data[prevNode.saveAs] = normalized.text;
+        if (currentBotId) {
+            const flowsRef = compRef.collection('bots').doc(currentBotId).collection('flows');
+            if (session.currentFlowId && !isStart) {
+                const fd = await flowsRef.doc(session.currentFlowId).get();
+                if (fd.exists) flow = { id: fd.id, botId: currentBotId, ...fd.data() };
+            }
+            if (!flow) {
+                const allFlows = await flowsRef.limit(20).get();
+                for (const fd of allFlows.docs) {
+                    const trigger = fd.data().triggerKeyword || '/start';
+                    if (isStart || normalized.text === trigger) {
+                        flow = { id: fd.id, botId: currentBotId, ...fd.data() };
+                        break;
                     }
                 }
-
-                reply = await processNode(node, normalized, session, compData, compRef, channel);
-
-                // Advance to next node
-                session.currentNodeIndex = nodeIdx + 1;
-
-                // If last node — create CRM lead
-                if (session.currentNodeIndex >= flow.nodes.length) {
-                    await createCRMLead(compRef, session, flow, channel, normalized);
-                    session.currentFlowId = null;
-                    session.currentNodeIndex = 0;
-                    session.data = {};
+                if (!flow && allFlows.docs.length > 0) {
+                    const fd = allFlows.docs[0];
+                    flow = { id: fd.id, botId: currentBotId, ...fd.data() };
                 }
             }
-        } else {
-            // No flow — just save as lead directly
-            await createCRMLead(compRef, session, null, channel, normalized);
-            reply = { text: 'Дякуємо! Ми з вами зв\'яжемось.' };
         }
 
-        // ── Save session ──────────────────────────────────
+        if (!flow) {
+            if (isStart) await sendTg(botToken, normalized.senderId, 'Вітаємо! Бот активний ✅');
+            return res.status(200).json({ ok: true, skipped: 'no flow' });
+        }
+
+        console.log(`[webhook] Flow: ${flow.id}, nodes: ${flow.nodes?.length || 0}`);
+
+        // Будуємо map вузлів
+        const nodeMap = {};
+        (flow.nodes || []).forEach(n => { if (n.id) nodeMap[n.id] = n; });
+
+        // Визначаємо поточний вузол
+        let nodeId = (!isStart && session.currentNodeId) ? session.currentNodeId : (flow.nodes?.[0]?.id || null);
+
+        // Обробляємо відповідь якщо чекали
+        if (!isStart && session.waitingForInput) {
+            const waitNode = nodeMap[session.waitingForInput];
+            if (waitNode) {
+                if (waitNode.saveAs) session.data[waitNode.saveAs] = normalized.text;
+                nodeId = resolveNext(waitNode, normalized.text);
+                session.waitingForInput = null;
+                if (!nodeId) {
+                    await finish(session, flow, compRef, channel);
+                    Object.assign(session, { currentFlowId:null, currentNodeId:null, waitingForInput:null });
+                    await sessionRef.set(session, { merge:true });
+                    return res.status(200).json({ ok: true });
+                }
+            }
+        }
+
+        // Виконуємо ланцюг вузлів
+        let safety = 0;
+        while (nodeId && safety++ < 30) {
+            const n = nodeMap[nodeId];
+            if (!n) break;
+            console.log(`[webhook] Node ${nodeId} type=${n.type}`);
+
+            if (n.type === 'message') {
+                const text = interp(n.text || n.config?.text || '', session.data);
+                const btns = n.options?.length ? n.options : (n.buttons?.length ? n.buttons : null);
+                await sendTg(botToken, normalized.senderId, text, btns);
+                if (btns?.length) {
+                    // Чекаємо відповідь на кнопку
+                    Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
+                        currentNodeId: nodeId, waitingForInput: nodeId });
+                    await sessionRef.set(session, { merge: true });
+                    return res.status(200).json({ ok: true });
+                }
+                nodeId = n.nextNode || null;
+
+            } else if (n.type === 'pause') {
+                Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
+                    currentNodeId: n.nextNode || null, waitingForInput: nodeId });
+                await sessionRef.set(session, { merge: true });
+                return res.status(200).json({ ok: true });
+
+            } else if (n.type === 'ai' || n.type === 'ai_response') {
+                const reply = await callAI(n, normalized.text, session, compRef);
+                await sendTg(botToken, normalized.senderId, reply);
+                nodeId = n.nextNode || null;
+
+            } else if (n.type === 'action') {
+                await doAction(n, session);
+                nodeId = n.nextNode || null;
+
+            } else if (n.type === 'filter') {
+                nodeId = evalFilter(n, session.data) ? n.trueNode : n.falseNode;
+
+            } else if (n.type === 'end' || n.type === 'finish') {
+                if (n.text) await sendTg(botToken, normalized.senderId, interp(n.text, session.data));
+                await finish(session, flow, compRef, channel);
+                nodeId = null;
+                break;
+
+            } else if (n.type === 'api') {
+                try {
+                    const r = await fetch(n.url, { method: n.method||'GET',
+                        headers:{'Content-Type':'application/json'},
+                        ...(n.body?{body:interp(n.body,session.data)}:{}) });
+                    session.data._apiResponse = await r.text();
+                } catch(e) { session.data._apiError = e.message; }
+                nodeId = n.nextNode || null;
+
+            } else {
+                nodeId = n.nextNode || null;
+            }
+        }
+
+        if (!nodeId) {
+            Object.assign(session, { currentFlowId:null, currentNodeId:null, waitingForInput:null });
+        } else {
+            Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId, currentNodeId: nodeId });
+        }
+
         session.updatedAt = admin.firestore.FieldValue.serverTimestamp();
         await sessionRef.set(session, { merge: true });
-
-        // ── Send reply ────────────────────────────────────
-        if (reply) {
-            await sendReply(channel, normalized.senderId, reply, compData);
-        }
-
-        // Log incoming message
-        await compRef.collection('sessions').doc(sessionId)
-            .collection('messages').add({
-                direction: 'in',
-                text: normalized.text,
-                timestamp: admin.firestore.FieldValue.serverTimestamp(),
-            }).catch(() => {});
-
-        res.status(200).json({ ok: true });
+        await logMsg(compRef, sessionId, 'in', normalized.text);
+        return res.status(200).json({ ok: true });
 
     } catch (err) {
-        console.error('[webhook] error:', err);
-        res.status(200).json({ ok: true }); // Always 200 to Telegram
+        console.error('[webhook] ERROR:', err.message, err.stack);
+        return res.status(200).json({ ok: true });
     }
 };
 
-// ── Normalizers ───────────────────────────────────────────
+// ── Utils ─────────────────────────────────────────────────
+
 function normalizeTelegram(body) {
-    const msg = body?.message || body?.callback_query?.message;
-    if (!msg) return null;
-    const from = body?.message?.from || body?.callback_query?.from;
+    const msg = body?.message, cb = body?.callback_query;
+    if (!msg && !cb) return null;
+    const from = msg?.from || cb?.from;
+    if (!from) return null;
     return {
-        senderId: String(from?.id || ''),
-        senderName: [from?.first_name, from?.last_name].filter(Boolean).join(' ') || from?.username || '',
-        text: body?.message?.text || body?.callback_query?.data || '',
-        raw: body,
+        senderId: String(from.id),
+        senderName: [from.first_name, from.last_name].filter(Boolean).join(' ') || from.username || '',
+        text: msg?.text || cb?.data || '',
     };
 }
 
-function normalizeMeta(body, channel) {
+function normalizeMeta(body) {
     try {
-        const entry = body?.entry?.[0];
-        const messaging = entry?.messaging?.[0] || entry?.changes?.[0]?.value?.messages?.[0];
+        const messaging = body?.entry?.[0]?.messaging?.[0];
         if (!messaging) return null;
-        return {
-            senderId: messaging.sender?.id || messaging.from || '',
-            senderName: '',
-            text: messaging.message?.text || messaging.text?.body || '',
-            raw: body,
-        };
+        return { senderId: messaging.sender?.id || '', senderName: '', text: messaging.message?.text || '' };
     } catch { return null; }
 }
 
-function normalizeViber(body) {
-    if (body?.event !== 'message') return null;
-    return {
-        senderId: body?.sender?.id || '',
-        senderName: body?.sender?.name || '',
-        text: body?.message?.text || '',
-        raw: body,
-    };
+function resolveNext(node, userText) {
+    if (node.options?.length) {
+        const m = node.options.find(o => o.label===userText || o.value===userText || o.id===userText);
+        if (m?.nextNode) return m.nextNode;
+    }
+    return node.nextNode || null;
 }
 
-// ── Process Flow Node ─────────────────────────────────────
-async function processNode(node, msg, session, compData, compRef, channel) {
-    switch (node.type) {
-        case 'message':
-            return { text: node.text || '' };
-        case 'buttons':
-            return { text: node.text || '', buttons: node.buttons || [] };
-        case 'question':
-            if (node.saveAs) session.data[node.saveAs] = msg.text;
-            return { text: node.text || '' };
-        case 'ai_response': {
-            const apiKey = compData.openaiApiKey;
-            if (!apiKey) return { text: node.fallback || 'Дякуємо!' };
-            try {
-                const r = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [
-                            { role: 'system', content: node.systemPrompt || 'You are a helpful assistant.' },
-                            { role: 'user', content: msg.text }
-                        ],
-                        max_tokens: 300,
-                    })
-                });
-                const data = await r.json();
-                return { text: data.choices?.[0]?.message?.content || node.fallback || '' };
-            } catch { return { text: node.fallback || 'Дякуємо!' }; }
-        }
-        case 'phone':
-            session.data.phone = msg.text;
-            return { text: node.text || 'Дякуємо! Ваш номер збережено.' };
-        case 'email':
-            session.data.email = msg.text;
-            return { text: node.text || 'Дякуємо! Ваш email збережено.' };
-        default:
-            return null;
+function interp(text, data) {
+    return (text||'').replace(/\{\{(\w+)\}\}/g, (_, k) => data[k] || '');
+}
+
+function evalFilter(node, data) {
+    const val = data[node.variable] || '';
+    switch(node.operator) {
+        case 'eq': return val === node.value;
+        case 'neq': return val !== node.value;
+        case 'contains': return String(val).includes(node.value);
+        case 'gt': return parseFloat(val) > parseFloat(node.value);
+        case 'lt': return parseFloat(val) < parseFloat(node.value);
+        default: return !!val;
     }
 }
 
-// ── Create CRM Lead ───────────────────────────────────────
-async function createCRMLead(compRef, session, flow, channel, msg) {
-    const channelLabels = { telegram: 'Telegram', instagram: 'Instagram', facebook: 'Facebook', viber: 'Viber' };
-
-    // Create or update contact
-    const contactData = {
-        name: session.data.name || session.senderName || msg.senderName || `${channelLabels[channel]} ${msg.senderId}`,
-        phone: session.data.phone || '',
-        email: session.data.email || '',
-        source: channel,
-        externalId: `${channel}_${msg.senderId}`,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        notes: session.data.notes || '',
-        tags: [channel],
-    };
-
-    // Check if contact exists
-    const existingContacts = await compRef.collection('contacts')
-        .where('externalId', '==', contactData.externalId).limit(1).get();
-
-    let contactId;
-    if (!existingContacts.empty) {
-        contactId = existingContacts.docs[0].id;
-        await compRef.collection('contacts').doc(contactId).update({
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-    } else {
-        const contactRef = await compRef.collection('contacts').add(contactData);
-        contactId = contactRef.id;
+async function doAction(node, session) {
+    if (node.actionType === 'set_var') {
+        try {
+            const p = typeof node.actionPayload === 'string' ? JSON.parse(node.actionPayload) : node.actionPayload;
+            if (p?.variable) session.data[p.variable] = p.value || '';
+        } catch {}
+    } else if (node.actionType === 'set_tag' || node.actionType === 'add_tag') {
+        if (!session.tags) session.tags = [];
+        if (node.actionPayload) session.tags.push(node.actionPayload);
     }
-
-    // Get first pipeline
-    const pipelinesSnap = await compRef.collection('pipelines').limit(1).get();
-    const pipelineId = pipelinesSnap.empty ? 'default' : pipelinesSnap.docs[0].id;
-    const firstStage = pipelinesSnap.empty ? 'Новий лід' : (pipelinesSnap.docs[0].data().stages?.[0]?.name || 'Новий лід');
-
-    // Create deal
-    await compRef.collection('deals').add({
-        title: `${channelLabels[channel]}: ${contactData.name}`,
-        contactId,
-        contactName: contactData.name,
-        pipelineId,
-        stage: firstStage,
-        source: channel,
-        flowId: flow?.id || null,
-        flowName: flow?.name || null,
-        collectedData: session.data || {},
-        amount: 0,
-        status: 'open',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
 }
 
-// ── Send Reply ─────────────────────────────────────────────
-async function sendReply(channel, senderId, reply, compData) {
-    if (channel === 'telegram') {
-        const token = compData?.integrations?.telegram?.botToken;
-        if (!token) return;
-        const payload = { chat_id: senderId, text: reply.text, parse_mode: 'HTML' };
-        if (reply.buttons?.length) {
-            payload.reply_markup = {
-                inline_keyboard: [reply.buttons.map(b => ({ text: b.label, callback_data: b.value || b.label }))]
-            };
-        }
-        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+async function callAI(node, userText, session, compRef) {
+    try {
+        const compDoc = await compRef.get();
+        const apiKey = node.aiApiKey || compDoc.data()?.openaiApiKey || process.env.OPENAI_API_KEY;
+        if (!apiKey) return node.fallback || 'Дякуємо!';
+        const r = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+            body: JSON.stringify({ model: node.model||'gpt-4o-mini', max_tokens:500,
+                messages:[{role:'system',content:node.systemPrompt||'You are helpful.'},{role:'user',content:userText}] })
         });
+        const d = await r.json();
+        return d.choices?.[0]?.message?.content || node.fallback || 'Дякуємо!';
+    } catch { return node.fallback || 'Виникла помилка.'; }
+}
+
+async function sendTg(token, chatId, text, buttons) {
+    if (!token || !chatId) return;
+    const payload = { chat_id: chatId, text: (text||' ').trim(), parse_mode: 'HTML' };
+    if (buttons?.length) {
+        payload.reply_markup = { inline_keyboard: [
+            buttons.map(b => ({ text: b.label||b.text||'?', callback_data: b.value||b.label||b.id||'?' }))
+        ]};
     }
-    // Instagram/Facebook — через Graph API (потребує page access token)
-    // Viber — через Viber API
+    try {
+        const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+        });
+        const result = await r.json();
+        if (!result.ok) console.error('[sendTg]', result.description);
+    } catch(e) { console.error('[sendTg] error:', e.message); }
+}
+
+async function finish(session, flow, compRef, channel) {
+    try {
+        await compRef.collection('leads').add({
+            senderId: session.senderId, senderName: session.senderName||'',
+            channel, flowId: flow?.id||null, flowName: flow?.name||null,
+            data: session.data||{}, tags: session.tags||[],
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+    } catch(e) { console.error('[finish]', e.message); }
+}
+
+async function logMsg(compRef, sessionId, dir, text) {
+    try {
+        await compRef.collection('sessions').doc(sessionId).collection('messages').add({
+            direction: dir, text: text||'', timestamp: admin.firestore.FieldValue.serverTimestamp()
+        });
+    } catch {}
 }
