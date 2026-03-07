@@ -1,807 +1,1156 @@
 // ============================================================
-// TALKO Flow Canvas Builder v2.0
-// Visual drag&drop flow editor (SVG canvas, SendPulse style)
-// Вбудовується в 81-bots-flows.js
+// TALKO Flow Canvas Builder v3.0
+// Div-based canvas (не SVG foreignObject)
+// Архітектура: SendPulse-style
 // ============================================================
-
-(function() {
+(function () {
 'use strict';
 
-// ── Canvas State ───────────────────────────────────────────
-let fcNodes = [];       // [{id, type, x, y, data, outputs:[{id,label,targetId}]}]
-let fcEdges = [];       // [{id, fromNode, fromPort, toNode}]
-let fcDragging = null;  // {nodeId, startX, startY, origX, origY}
-let fcConnecting = null;// {fromNode, fromPort, x, y}
-let fcSelected = null;  // nodeId
-let fcPan = {x: 0, y: 0};
-let fcPanning = false;
-let fcPanStart = null;
-let fcFlowId = null;
-let fcFlowData = null;
-let fcScale = 1;
-let fcSVG = null;
-let fcCanvas = null;
-
-const FC_NODE_WIDTH = 220;
-const FC_NODE_MIN_H = 80;
-
-const NODE_TYPES = {
-    start:      { label: 'Старт',           color: '#22c55e', dark: '#16a34a', icon: 'play' },
-    message:    { label: 'Повідомлення',    color: '#3b82f6', dark: '#2563eb', icon: 'message' },
-    question:   { label: 'Питання',         color: '#8b5cf6', dark: '#7c3aed', icon: 'help' },
-    buttons:    { label: 'Кнопки',          color: '#f59e0b', dark: '#d97706', icon: 'grid' },
-    condition:  { label: 'Умова',           color: '#ef4444', dark: '#dc2626', icon: 'split' },
-    ai:         { label: 'AI відповідь',    color: '#06b6d4', dark: '#0891b2', icon: 'bot' },
-    delay:      { label: 'Затримка',        color: '#6b7280', dark: '#4b5563', icon: 'clock' },
-    talko_task: { label: 'Задача TALKO',    color: '#22c55e', dark: '#16a34a', icon: 'check' },
-    talko_deal: { label: 'Угода CRM',       color: '#10b981', dark: '#059669', icon: 'briefcase' },
-    tag:        { label: 'Тег контакту',    color: '#f97316', dark: '#ea580c', icon: 'tag' },
-    human:      { label: 'Менеджер',        color: '#ec4899', dark: '#db2777', icon: 'user' },
-    end:        { label: 'Завершення',      color: '#64748b', dark: '#475569', icon: 'flag' },
+// ── State ──────────────────────────────────────────────────
+let fc = {
+    flowId: null,
+    flowData: null,
+    nodes: [],      // [{id,type,x,y,config,outputs}]
+    edges: [],      // [{id,fromNode,fromPort,toNode,toPort}]
+    selected: null,
+    pan: {x:80, y:60},
+    scale: 1,
+    dragging: null, // {nodeId,startMX,startMY,origX,origY}
+    connecting: null, // {fromNode,fromPort,startX,startY}
+    panning: false,
+    panStart: null,
+    history: [],
+    historyIdx: -1,
 };
 
-const SVG_ICONS = {
-    play:      '<polygon points="5,3 19,12 5,21" fill="currentColor"/>',
-    message:   '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    help:      '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 9a3 3 0 1 1 6 0c0 2-3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="currentColor"/>',
-    grid:      '<rect x="3" y="3" width="7" height="7" rx="1" fill="currentColor" opacity=".8"/><rect x="14" y="3" width="7" height="7" rx="1" fill="currentColor" opacity=".8"/><rect x="3" y="14" width="7" height="7" rx="1" fill="currentColor" opacity=".8"/><rect x="14" y="14" width="7" height="7" rx="1" fill="currentColor" opacity=".5"/>',
-    split:     '<path d="M16 3l4 4-4 4M8 21l-4-4 4-4M20 7H9a4 4 0 0 0-4 4v2a4 4 0 0 0 4 4h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    bot:       '<rect x="3" y="11" width="18" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/>',
-    clock:     '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="12,6 12,12 16,14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    check:     '<polyline points="20,6 9,17 4,12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>',
-    briefcase: '<rect x="2" y="7" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" fill="none" stroke="currentColor" stroke-width="2"/>',
-    tag:       '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/>',
-    user:      '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/>',
-    flag:      '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="4" y1="22" x2="4" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    trash:     '<polyline points="3,6 5,6 21,6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" fill="none" stroke="currentColor" stroke-width="2"/>',
-    plus:      '<line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>',
-    save:      '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="17,21 17,13 7,13 7,21" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="7,3 7,8 15,8" fill="none" stroke="currentColor" stroke-width="2"/>',
-    zoomin:    '<circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="8" x2="11" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="11" x2="14" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    zoomout:   '<circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="11" x2="14" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    fit:       '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    back:      '<polyline points="15,18 9,12 15,6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>',
-    edit:      '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+const W = 220; // node width
+
+// ── Node config ────────────────────────────────────────────
+const NODES = {
+    start:      {label:'Старт',       color:'#22c55e', border:'#16a34a', icon:'▶',  outputs:['out']},
+    message:    {label:'Повідомлення',color:'#6366f1', border:'#4f46e5', icon:'💬', outputs:['out','btn']},
+    action:     {label:'Дія',         color:'#f59e0b', border:'#d97706', icon:'⚡', outputs:['out']},
+    filter:     {label:'Фільтр',      color:'#f97316', border:'#ea580c', icon:'⟨⟩', outputs:['yes','no']},
+    pause:      {label:'Пауза',       color:'#64748b', border:'#475569', icon:'⏸',  outputs:['out']},
+    ai:         {label:'ШІ Агент',    color:'#8b5cf6', border:'#7c3aed', icon:'🤖', outputs:['out','err']},
+    api:        {label:'Запит API',   color:'#0ea5e9', border:'#0284c7', icon:'⟳',  outputs:['ok','err']},
+    sheets:     {label:'Google Sheets',color:'#10b981',border:'#059669', icon:'📊', outputs:['out']},
+    random:     {label:'Випадково',   color:'#ec4899', border:'#db2777', icon:'⁇',  outputs:['a','b']},
+    repeat:     {label:'Повтор',      color:'#14b8a6', border:'#0d9488', icon:'↺',  outputs:['out','end']},
+    crm:        {label:'Угода CRM',   color:'#22c55e', border:'#16a34a', icon:'💼', outputs:['out']},
+    end:        {label:'Кінець',      color:'#94a3b8', border:'#64748b', icon:'■',  outputs:[]},
 };
 
-function icon(name, size=16, color='currentColor') {
-    return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" style="display:inline-block;vertical-align:middle;color:${color}">${SVG_ICONS[name]||''}</svg>`;
-}
+const PORT_LABELS = {
+    out:'Продовжити', btn:'Кнопка', yes:'Так', no:'Ні',
+    ok:'Успішно', err:'Помилка', a:'Гілка А', b:'Гілка Б',
+    end:'Завершити',
+};
 
-// ── Open Canvas Editor ─────────────────────────────────────
+// ── Open ───────────────────────────────────────────────────
 window.openFlowCanvas = async function(flowId) {
-    fcFlowId = flowId;
-    const db = firebase.firestore();
-    const doc = await db.collection('companies').doc(window.currentCompanyId)
+    fc.flowId = flowId;
+    const snap = await firebase.firestore()
+        .collection('companies').doc(window.currentCompanyId)
         .collection('flows').doc(flowId).get();
-    if (!doc.exists) return;
-    fcFlowData = { id: doc.id, ...doc.data() };
+    if (!snap.exists) return;
+    fc.flowData = {id: snap.id, ...snap.data()};
 
-    // Convert stored nodes → canvas nodes
-    const stored = fcFlowData.nodes || [];
-    fcNodes = [];
-    fcEdges = [];
-
-    if (stored.length === 0) {
-        // Fresh flow — add start node
-        fcNodes = [{ id: 'start_0', type: 'start', x: 80, y: 180,
-            data: { label: 'Старт' }, outputs: [{ id: 'out_0', label: '', targetId: null }] }];
+    // Load nodes/edges from stored JSON
+    const stored = fc.flowData.canvasData || null;
+    if (stored) {
+        fc.nodes = stored.nodes || [];
+        fc.edges = stored.edges || [];
     } else {
-        // Restore positions or auto-layout
-        stored.forEach((n, i) => {
-            const cfg = NODE_TYPES[n.type] || NODE_TYPES.message;
-            fcNodes.push({
+        // Migrate old linear nodes or fresh start
+        const oldNodes = fc.flowData.nodes || [];
+        if (oldNodes.length === 0) {
+            fc.nodes = [{id:'start_0', type:'start', x:80, y:200,
+                config:{triggerKeyword: fc.flowData.triggerKeyword || '/start'},
+                outputs: ['out']}];
+        } else {
+            fc.nodes = oldNodes.map((n,i) => ({
                 id: n.id,
-                type: n.type,
-                x: n._x !== undefined ? n._x : 80 + i * 280,
-                y: n._y !== undefined ? n._y : 180,
-                data: n,
-                outputs: buildOutputPorts(n),
-            });
-        });
-        // Rebuild edges from nextNode / branches
-        stored.forEach(n => {
-            if (n.nextNode) {
-                fcEdges.push({ id: `e_${n.id}_next`, fromNode: n.id, fromPort: 'out_0', toNode: n.nextNode });
-            }
-            if (n.options) {
-                n.options.forEach((opt, i) => {
-                    if (opt.nextNode) {
-                        fcEdges.push({ id: `e_${n.id}_opt${i}`, fromNode: n.id, fromPort: `opt_${i}`, toNode: opt.nextNode });
-                    }
+                type: n.type || 'message',
+                x: n._x !== undefined ? n._x : 80 + i*280,
+                y: n._y !== undefined ? n._y : 200,
+                config: n,
+                outputs: NODES[n.type]?.outputs || ['out'],
+            }));
+            fc.edges = oldNodes.flatMap(n => {
+                const edges = [];
+                if (n.nextNode) edges.push({id:`e_${n.id}_out`, fromNode:n.id, fromPort:'out', toNode:n.nextNode, toPort:'in'});
+                (n.options||[]).forEach((o,i) => {
+                    if (o.nextNode) edges.push({id:`e_${n.id}_btn${i}`, fromNode:n.id, fromPort:`btn_${i}`, toNode:o.nextNode, toPort:'in'});
                 });
-            }
-        });
+                return edges;
+            });
+        }
     }
 
-    fcSelected = null;
-    fcPan = { x: 0, y: 0 };
-    fcScale = 1;
+    fc.selected = null;
+    fc.pan = {x:80, y:60};
+    fc.scale = 1;
+    fc.history = [];
+    fc.historyIdx = -1;
 
-    renderCanvasOverlay();
+    mountCanvas();
+    renderAll();
+    setTimeout(fitView, 100);
 };
 
-function buildOutputPorts(node) {
-    if (node.type === 'buttons' && node.options?.length) {
-        return node.options.map((o, i) => ({ id: `opt_${i}`, label: o.label || `Варіант ${i+1}`, targetId: o.nextNode || null }));
-    }
-    if (node.type === 'condition') {
-        return [
-            { id: 'yes', label: 'Так', targetId: node.trueNode || null },
-            { id: 'no',  label: 'Ні',  targetId: node.falseNode || null },
-        ];
-    }
-    if (node.type === 'end') return [];
-    return [{ id: 'out_0', label: '', targetId: node.nextNode || null }];
-}
+// ── Mount DOM ──────────────────────────────────────────────
+function mountCanvas() {
+    document.getElementById('fcRoot')?.remove();
 
-// ── Render Overlay ─────────────────────────────────────────
-function renderCanvasOverlay() {
-    document.getElementById('fcOverlay')?.remove();
+    const root = document.createElement('div');
+    root.id = 'fcRoot';
+    root.style.cssText = [
+        'position:fixed;inset:0;z-index:10002',
+        'display:flex;flex-direction:column',
+        'background:#f1f5f9;font-family:system-ui,sans-serif',
+        'user-select:none',
+    ].join(';');
 
-    const overlay = document.createElement('div');
-    overlay.id = 'fcOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:10002;display:flex;flex-direction:column;background:#0f172a;';
+    root.innerHTML = `
+    <!-- TOOLBAR -->
+    <div id="fcToolbar" style="height:52px;background:#1e293b;display:flex;align-items:center;
+        gap:8px;padding:0 12px;flex-shrink:0;border-bottom:2px solid #334155;z-index:10;">
 
-    overlay.innerHTML = `
-        <!-- Toolbar -->
-        <div style="height:52px;background:#1e293b;border-bottom:1px solid #334155;display:flex;align-items:center;gap:0.5rem;padding:0 1rem;flex-shrink:0;">
-            <button id="fcBtnBack" style="padding:0.35rem 0.65rem;background:#334155;border:none;border-radius:8px;color:white;cursor:pointer;display:flex;align-items:center;gap:0.35rem;font-size:0.82rem;">
-                ${icon('back',16,'white')} Назад
-            </button>
-            <div style="width:1px;height:24px;background:#334155;margin:0 0.25rem;"></div>
-            <div style="color:white;font-weight:700;font-size:0.9rem;">${escH(fcFlowData.name)}</div>
-            <span style="background:#334155;color:#94a3b8;font-size:0.72rem;padding:2px 8px;border-radius:4px;">${fcFlowData.channel}</span>
-            <div style="flex:1;"></div>
-            <!-- Node palette -->
-            <div style="display:flex;gap:0.3rem;flex-wrap:wrap;justify-content:center;">
-                ${Object.entries(NODE_TYPES).filter(([k])=>k!=='start').map(([type, cfg]) => `
-                    <button onclick="fcAddNode('${type}')" title="${cfg.label}"
-                        style="padding:0.3rem 0.55rem;background:${cfg.color}22;border:1px solid ${cfg.color}44;border-radius:6px;color:${cfg.color};cursor:pointer;font-size:0.72rem;font-weight:600;display:flex;align-items:center;gap:0.25rem;white-space:nowrap;transition:all 0.15s;"
-                        onmouseenter="this.style.background='${cfg.color}44'" onmouseleave="this.style.background='${cfg.color}22'">
-                        ${icon(cfg.icon,13,cfg.color)} ${cfg.label}
-                    </button>`).join('')}
-            </div>
-            <div style="flex:1;"></div>
-            <!-- Zoom controls -->
-            <div style="display:flex;gap:0.25rem;margin-right:0.5rem;">
-                <button id="fcBtnZoomOut" style="padding:0.35rem;background:#334155;border:none;border-radius:6px;color:white;cursor:pointer;">${icon('zoomout',16,'white')}</button>
-                <span id="fcZoomLabel" style="color:#94a3b8;font-size:0.78rem;min-width:38px;text-align:center;padding-top:0.35rem;">100%</span>
-                <button id="fcBtnZoomIn" style="padding:0.35rem;background:#334155;border:none;border-radius:6px;color:white;cursor:pointer;">${icon('zoomin',16,'white')}</button>
-                <button id="fcBtnFit" style="padding:0.35rem;background:#334155;border:none;border-radius:6px;color:white;cursor:pointer;">${icon('fit',16,'white')}</button>
-            </div>
-            <button id="fcBtnSave" style="padding:0.4rem 1rem;background:#22c55e;border:none;border-radius:8px;color:white;cursor:pointer;font-weight:700;font-size:0.85rem;display:flex;align-items:center;gap:0.35rem;">
-                ${icon('save',16,'white')} Зберегти
-            </button>
+        <button id="fcBtnBack" title="Назад до списку"
+            style="padding:6px 12px;background:#334155;border:none;border-radius:8px;color:white;
+            cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;">
+            ← Назад
+        </button>
+
+        <div style="width:1px;height:28px;background:#334155;"></div>
+
+        <div style="color:white;font-weight:700;font-size:14px;max-width:200px;
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="fcFlowTitle"></div>
+        <span id="fcChannelBadge" style="background:#334155;color:#94a3b8;
+            font-size:11px;padding:2px 8px;border-radius:4px;"></span>
+
+        <div style="flex:1;"></div>
+
+        <!-- Undo/Redo -->
+        <button id="fcBtnUndo" title="Скасувати (Ctrl+Z)"
+            style="padding:6px 10px;background:#334155;border:none;border-radius:7px;
+            color:#94a3b8;cursor:pointer;font-size:14px;">↩</button>
+        <button id="fcBtnRedo" title="Повторити (Ctrl+Y)"
+            style="padding:6px 10px;background:#334155;border:none;border-radius:7px;
+            color:#94a3b8;cursor:pointer;font-size:14px;">↪</button>
+
+        <div style="width:1px;height:28px;background:#334155;"></div>
+
+        <!-- Zoom -->
+        <button id="fcBtnZoomOut" style="padding:6px 10px;background:#334155;border:none;
+            border-radius:7px;color:white;cursor:pointer;font-size:16px;">−</button>
+        <span id="fcZoomPct" style="color:#94a3b8;font-size:12px;min-width:40px;text-align:center;">100%</span>
+        <button id="fcBtnZoomIn" style="padding:6px 10px;background:#334155;border:none;
+            border-radius:7px;color:white;cursor:pointer;font-size:16px;">+</button>
+        <button id="fcBtnFit" title="По екрану" style="padding:6px 10px;background:#334155;
+            border:none;border-radius:7px;color:white;cursor:pointer;font-size:12px;">⤢</button>
+
+        <div style="width:1px;height:28px;background:#334155;"></div>
+
+        <button id="fcBtnSave"
+            style="padding:7px 18px;background:#22c55e;border:none;border-radius:8px;
+            color:white;cursor:pointer;font-weight:700;font-size:13px;">
+            Зберегти
+        </button>
+        <button id="fcBtnClose" title="Закрити"
+            style="padding:6px 10px;background:#334155;border:none;border-radius:7px;
+            color:#94a3b8;cursor:pointer;font-size:18px;line-height:1;">✕</button>
+    </div>
+
+    <!-- BODY -->
+    <div style="flex:1;display:flex;min-height:0;overflow:hidden;">
+
+        <!-- LEFT SIDEBAR -->
+        <div id="fcSidebar" style="width:72px;background:#1e293b;border-right:1px solid #334155;
+            overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column;
+            align-items:center;padding:8px 0;gap:4px;z-index:5;">
         </div>
 
-        <!-- Main area -->
-        <div style="flex:1;display:flex;min-height:0;overflow:hidden;">
-            <!-- Canvas -->
-            <div id="fcCanvasWrap" style="flex:1;position:relative;overflow:hidden;cursor:grab;">
-                <svg id="fcSVG" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="fcGrid" width="24" height="24" patternUnits="userSpaceOnUse">
-                            <circle cx="1" cy="1" r="1" fill="#1e293b"/>
-                        </pattern>
-                        <marker id="fcArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
-                            <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
-                        </marker>
-                        <marker id="fcArrowActive" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
-                            <path d="M0,0 L0,6 L8,3 z" fill="#22c55e"/>
-                        </marker>
-                    </defs>
-                    <!-- Background dots -->
-                    <rect width="10000" height="10000" x="-5000" y="-5000" fill="url(#fcGrid)"/>
-                    <!-- Edges group -->
-                    <g id="fcEdgesGroup"></g>
-                    <!-- Connecting line -->
-                    <path id="fcConnectingLine" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3" style="display:none;pointer-events:none;"/>
-                    <!-- Nodes group (HTML foreignObject per node) -->
-                    <g id="fcNodesGroup"></g>
-                </svg>
-            </div>
+        <!-- CANVAS AREA -->
+        <div id="fcCanvasWrap" style="flex:1;position:relative;overflow:hidden;cursor:grab;">
+            <!-- dot grid bg -->
+            <canvas id="fcBgCanvas" style="position:absolute;inset:0;pointer-events:none;z-index:0;"></canvas>
+            <!-- edges SVG -->
+            <svg id="fcEdgesSVG" style="position:absolute;inset:0;width:100%;height:100%;
+                overflow:visible;pointer-events:none;z-index:1;">
+                <defs>
+                    <marker id="arrowHead" markerWidth="10" markerHeight="7"
+                        refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+                    </marker>
+                    <marker id="arrowHeadGreen" markerWidth="10" markerHeight="7"
+                        refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e"/>
+                    </marker>
+                    <marker id="arrowHeadBlue" markerWidth="10" markerHeight="7"
+                        refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+                    </marker>
+                </defs>
+                <g id="fcEdgesGroup"></g>
+                <path id="fcTempEdge" fill="none" stroke="#22c55e" stroke-width="2"
+                    stroke-dasharray="6,4" style="display:none;" marker-end="url(#arrowHeadGreen)"/>
+            </svg>
+            <!-- nodes layer -->
+            <div id="fcNodesLayer" style="position:absolute;inset:0;z-index:2;"></div>
+        </div>
 
-            <!-- Right panel: node editor -->
-            <div id="fcRightPanel" style="width:320px;flex-shrink:0;background:#1e293b;border-left:1px solid #334155;overflow-y:auto;display:flex;flex-direction:column;">
-                <div id="fcNodeEditorInner" style="padding:1rem;flex:1;">
-                    <div style="text-align:center;padding:3rem 1rem;color:#475569;">
-                        <div style="margin-bottom:0.75rem;">${icon('edit',32,'#475569')}</div>
-                        <div style="font-size:0.85rem;">Клікніть на вузол для редагування</div>
-                    </div>
+        <!-- RIGHT PANEL -->
+        <div id="fcRightPanel" style="width:300px;background:#1e293b;border-left:1px solid #334155;
+            overflow-y:auto;flex-shrink:0;z-index:5;">
+            <div id="fcPropPanel" style="padding:16px;">
+                <div style="text-align:center;padding:48px 16px;color:#475569;">
+                    <div style="font-size:32px;margin-bottom:8px;">⬆</div>
+                    <div style="font-size:13px;">Клікніть на вузол<br>для редагування</div>
                 </div>
             </div>
-        </div>
-    `;
-
-    document.body.appendChild(overlay);
-
-    fcSVG = document.getElementById('fcSVG');
-    fcCanvas = document.getElementById('fcCanvasWrap');
-
-    // Initial render
-    renderAllNodes();
-    renderAllEdges();
-    fcFitView();
-
-    // Events
-    bindCanvasEvents();
-    document.getElementById('fcBtnBack').onclick = () => { overlay.remove(); };
-    document.getElementById('fcBtnSave').onclick = fcSave;
-    document.getElementById('fcBtnZoomIn').onclick = () => fcZoom(0.15);
-    document.getElementById('fcBtnZoomOut').onclick = () => fcZoom(-0.15);
-    document.getElementById('fcBtnFit').onclick = fcFitView;
-}
-
-// ── Render All Nodes ───────────────────────────────────────
-function renderAllNodes() {
-    const g = document.getElementById('fcNodesGroup');
-    if (!g) return;
-    g.innerHTML = '';
-    fcNodes.forEach(n => renderNode(n, g));
-    applyTransform();
-}
-
-function renderNode(node, group) {
-    const cfg = NODE_TYPES[node.type] || NODE_TYPES.message;
-    const isSelected = fcSelected === node.id;
-    const nodeH = getNodeHeight(node);
-
-    const fo = document.createElementNS('http://www.w3.org/2000/svg','foreignObject');
-    fo.setAttribute('x', node.x);
-    fo.setAttribute('y', node.y);
-    fo.setAttribute('width', FC_NODE_WIDTH);
-    fo.setAttribute('height', nodeH);
-    fo.setAttribute('data-nid', node.id);
-    fo.style.cursor = 'pointer';
-    fo.style.userSelect = 'none';
-
-    const div = document.createElement('div');
-    div.style.cssText = `width:${FC_NODE_WIDTH}px;font-family:system-ui,sans-serif;`;
-    div.innerHTML = buildNodeHTML(node, cfg, isSelected, nodeH);
-    fo.appendChild(div);
-
-    // Drag
-    fo.addEventListener('mousedown', (e) => {
-        if (e.target.closest('[data-port]') || e.target.closest('[data-del]')) return;
-        e.stopPropagation();
-        fcSelected = node.id;
-        renderNodeEditor(node.id);
-        // re-render all to update selection
-        renderAllNodes();
-        renderAllEdges();
-
-        const rect = fcCanvas.getBoundingClientRect();
-        fcDragging = {
-            nodeId: node.id,
-            startMouseX: e.clientX,
-            startMouseY: e.clientY,
-            origX: node.x,
-            origY: node.y,
-        };
-    });
-
-    group.appendChild(fo);
-
-    // Port click events (after DOM insertion)
-    setTimeout(() => {
-        div.querySelectorAll('[data-port]').forEach(portEl => {
-            portEl.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                const portId = portEl.dataset.port;
-                const portPos = getPortPos(node, portId, 'out');
-                fcConnecting = { fromNode: node.id, fromPort: portId, x: portPos.x, y: portPos.y };
-            });
-        });
-        div.querySelectorAll('[data-del]').forEach(delEl => {
-            delEl.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                if (confirm('Видалити вузол?')) {
-                    fcNodes = fcNodes.filter(n => n.id !== node.id);
-                    fcEdges = fcEdges.filter(e => e.fromNode !== node.id && e.toNode !== node.id);
-                    if (fcSelected === node.id) { fcSelected = null; renderNodeEditorEmpty(); }
-                    renderAllNodes(); renderAllEdges();
-                }
-            });
-        });
-        // Input port click — disconnect incoming edge
-        div.querySelectorAll('[data-inport]').forEach(portEl => {
-            portEl.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-            });
-        });
-    }, 0);
-}
-
-function buildNodeHTML(node, cfg, isSelected, nodeH) {
-    const border = isSelected ? `2px solid ${cfg.color}` : '2px solid #334155';
-    const shadow = isSelected ? `0 0 0 3px ${cfg.color}33, 0 4px 24px rgba(0,0,0,0.5)` : '0 4px 16px rgba(0,0,0,0.4)';
-    const preview = getNodePreview(node);
-    const hasOutPorts = node.outputs && node.outputs.length > 0;
-
-    let portsHTML = '';
-    if (hasOutPorts) {
-        portsHTML = node.outputs.map((out, i) => {
-            const isConnected = fcEdges.some(e => e.fromNode === node.id && e.fromPort === out.id);
-            return `<div style="display:flex;align-items:center;justify-content:space-between;margin-top:${i===0?'0.5rem':'0.25rem'};">
-                ${out.label ? `<span style="font-size:0.68rem;color:#94a3b8;flex:1;">${escH(out.label)}</span>` : '<span style="flex:1;"></span>'}
-                <div data-port="${out.id}" title="З\'єднати" style="width:14px;height:14px;border-radius:50%;background:${isConnected?cfg.color:'#475569'};border:2px solid ${isConnected?cfg.dark:'#64748b'};cursor:crosshair;flex-shrink:0;transition:all 0.15s;"
-                    onmouseenter="this.style.background='${cfg.color}';this.style.transform='scale(1.3)'" onmouseleave="this.style.background='${isConnected?cfg.color:'#475569'}';this.style.transform='scale(1)'">
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    return `
-    <div style="background:#1e293b;border-radius:12px;border:${border};box-shadow:${shadow};overflow:hidden;position:relative;">
-        <!-- Input port (top center) -->
-        ${node.type !== 'start' ? `
-        <div data-inport="in" style="position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;background:#334155;border:2px solid #64748b;z-index:1;cursor:default;"></div>
-        ` : ''}
-        <!-- Header -->
-        <div style="background:${cfg.color};padding:0.5rem 0.75rem;display:flex;align-items:center;gap:0.4rem;position:relative;">
-            <svg width="14" height="14" viewBox="0 0 24 24" style="flex-shrink:0;color:white;">${SVG_ICONS[cfg.icon]||''}</svg>
-            <span style="font-size:0.75rem;font-weight:700;color:white;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${cfg.label}</span>
-            ${node.type !== 'start' ? `<div data-del="1" style="width:18px;height:18px;background:rgba(0,0,0,0.25);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;" title="Видалити" onmouseenter="this.style.background='rgba(239,68,68,0.8)'" onmouseleave="this.style.background='rgba(0,0,0,0.25)'">
-                <svg width="10" height="10" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
-            </div>` : ''}
-        </div>
-        <!-- Body -->
-        <div style="padding:0.6rem 0.75rem;">
-            ${preview ? `<div style="font-size:0.75rem;color:#94a3b8;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">${escH(preview)}</div>` : `<div style="font-size:0.72rem;color:#475569;font-style:italic;">Натисніть для редагування</div>`}
-            <!-- Output ports -->
-            ${portsHTML}
         </div>
     </div>`;
+
+    document.body.appendChild(root);
+
+    // Fill sidebar
+    buildSidebar();
+
+    // Toolbar events
+    document.getElementById('fcBtnBack').onclick = closeCanvas;
+    document.getElementById('fcBtnClose').onclick = closeCanvas;
+    document.getElementById('fcBtnSave').onclick = saveFlow;
+    document.getElementById('fcBtnZoomIn').onclick = () => doZoom(0.15);
+    document.getElementById('fcBtnZoomOut').onclick = () => doZoom(-0.15);
+    document.getElementById('fcBtnFit').onclick = fitView;
+    document.getElementById('fcBtnUndo').onclick = undo;
+    document.getElementById('fcBtnRedo').onclick = redo;
+    document.getElementById('fcFlowTitle').textContent = fc.flowData.name || 'Без назви';
+    document.getElementById('fcChannelBadge').textContent = fc.flowData.channel || 'telegram';
+
+    // Canvas events
+    const wrap = document.getElementById('fcCanvasWrap');
+    wrap.addEventListener('mousedown', onWrapMouseDown);
+    wrap.addEventListener('mousemove', onWrapMouseMove);
+    wrap.addEventListener('mouseup', onWrapMouseUp);
+    wrap.addEventListener('mouseleave', onWrapMouseUp);
+    wrap.addEventListener('wheel', onWrapWheel, {passive:false});
+    wrap.addEventListener('dblclick', onWrapDblClick);
+
+    // Keyboard
+    document.addEventListener('keydown', onKeyDown);
+
+    // Draw BG
+    drawBg();
+    window.addEventListener('resize', drawBg);
+}
+
+function closeCanvas() {
+    document.getElementById('fcRoot')?.remove();
+    document.removeEventListener('keydown', onKeyDown);
+    window.removeEventListener('resize', drawBg);
+}
+
+// ── Sidebar ────────────────────────────────────────────────
+function buildSidebar() {
+    const sb = document.getElementById('fcSidebar');
+    if (!sb) return;
+    const items = [
+        ['message','💬','Повідом.'],
+        ['action','⚡','Дія'],
+        ['filter','⟨⟩','Фільтр'],
+        ['pause','⏸','Пауза'],
+        ['ai','🤖','ШІ Агент'],
+        ['api','⟳','API'],
+        ['sheets','📊','Sheets'],
+        ['random','⁇','Випадк.'],
+        ['repeat','↺','Повтор'],
+        ['crm','💼','CRM'],
+        ['end','■','Кінець'],
+    ];
+    sb.innerHTML = items.map(([type, icon, label]) => {
+        const cfg = NODES[type];
+        return `<div draggable="true" data-sbtype="${type}"
+            title="${cfg.label}"
+            style="width:56px;display:flex;flex-direction:column;align-items:center;
+            gap:3px;padding:8px 4px;border-radius:8px;cursor:grab;
+            transition:background 0.15s;"
+            onmouseenter="this.style.background='#334155'"
+            onmouseleave="this.style.background='transparent'">
+            <div style="font-size:18px;line-height:1;">${icon}</div>
+            <div style="font-size:9px;color:#94a3b8;text-align:center;line-height:1.2;">${label}</div>
+        </div>`;
+    }).join('');
+
+    // Drag from sidebar → canvas
+    sb.querySelectorAll('[data-sbtype]').forEach(el => {
+        el.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('nodeType', el.dataset.sbtype);
+        });
+    });
+    const wrap = document.getElementById('fcCanvasWrap');
+    wrap.addEventListener('dragover', e => { e.preventDefault(); });
+    wrap.addEventListener('drop', e => {
+        e.preventDefault();
+        const type = e.dataTransfer.getData('nodeType');
+        if (!type) return;
+        const rect = wrap.getBoundingClientRect();
+        const cx = (e.clientX - rect.left - fc.pan.x) / fc.scale;
+        const cy = (e.clientY - rect.top - fc.pan.y) / fc.scale;
+        addNode(type, snap(cx - W/2), snap(cy - 40));
+    });
+}
+
+// ── Render All ─────────────────────────────────────────────
+function renderAll() {
+    renderNodes();
+    renderEdges();
+}
+
+// ── Nodes ──────────────────────────────────────────────────
+function renderNodes() {
+    const layer = document.getElementById('fcNodesLayer');
+    if (!layer) return;
+    layer.innerHTML = '';
+    fc.nodes.forEach(n => {
+        const el = buildNodeEl(n);
+        layer.appendChild(el);
+    });
+    applyTransformToNodes();
+}
+
+function buildNodeEl(node) {
+    const cfg = NODES[node.type] || NODES.message;
+    const isSelected = fc.selected === node.id;
+    const d = node.config || {};
+
+    const el = document.createElement('div');
+    el.id = `fcn_${node.id}`;
+    el.dataset.nid = node.id;
+    el.style.cssText = [
+        `position:absolute`,
+        `left:${node.x}px`,
+        `top:${node.y}px`,
+        `width:${W}px`,
+        `border-radius:10px`,
+        `background:white`,
+        `border:2px solid ${isSelected ? cfg.color : '#e2e8f0'}`,
+        `box-shadow:${isSelected ? `0 0 0 3px ${cfg.color}33,` : ''}0 4px 16px rgba(0,0,0,0.12)`,
+        `cursor:pointer`,
+        `transition:border-color 0.15s,box-shadow 0.15s`,
+        `overflow:visible`,
+    ].join(';');
+
+    const preview = getPreview(node);
+    const outputs = node.outputs || cfg.outputs || ['out'];
+
+    // IN port (left center) — except start
+    const inPortHTML = node.type !== 'start' ? `
+        <div data-port-in="${node.id}"
+            style="position:absolute;left:-8px;top:50%;transform:translateY(-50%);
+            width:14px;height:14px;border-radius:50%;background:#94a3b8;
+            border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.2);
+            cursor:crosshair;z-index:3;"
+            title="Вхід"></div>
+    ` : '';
+
+    // OUT ports (right side)
+    const outPortsHTML = outputs.map((portId, i) => {
+        const label = PORT_LABELS[portId] || portId;
+        const connected = fc.edges.some(e => e.fromNode === node.id && e.fromPort === portId);
+        const portColor = portId === 'yes' || portId === 'ok' || portId === 'out' ? cfg.color :
+                          portId === 'no' || portId === 'err' ? '#ef4444' : '#94a3b8';
+        const totalPorts = outputs.length;
+        const topPct = totalPorts === 1 ? 50 : 25 + (i / (totalPorts-1)) * 50;
+        return `
+        <div style="position:absolute;right:-70px;top:${topPct}%;transform:translateY(-50%);
+            display:flex;align-items:center;gap:4px;z-index:3;">
+            <span style="font-size:9px;color:#64748b;white-space:nowrap;">${label}</span>
+            <div data-port-out="${node.id}" data-port-id="${portId}"
+                style="width:14px;height:14px;border-radius:50%;
+                background:${connected ? portColor : '#e2e8f0'};
+                border:2px solid ${connected ? portColor : '#94a3b8'};
+                cursor:crosshair;transition:all 0.15s;flex-shrink:0;"
+                title="Перетягни щоб з'єднати"
+                onmouseenter="this.style.transform='scale(1.4)';this.style.background='${portColor}'"
+                onmouseleave="this.style.transform='scale(1)';this.style.background='${connected?portColor:'#e2e8f0'}'"
+            ></div>
+        </div>`;
+    }).join('');
+
+    el.innerHTML = `
+        ${inPortHTML}
+        <!-- HEADER -->
+        <div style="background:${cfg.color};border-radius:8px 8px 0 0;
+            padding:8px 12px;display:flex;align-items:center;gap:6px;position:relative;">
+            <span style="font-size:14px;">${cfg.icon}</span>
+            <span style="font-weight:700;font-size:12px;color:white;flex:1;
+                overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${cfg.label}</span>
+            ${node.type !== 'start' ? `
+            <div data-del="${node.id}" title="Видалити"
+                style="width:18px;height:18px;background:rgba(0,0,0,0.25);border-radius:4px;
+                display:flex;align-items:center;justify-content:center;cursor:pointer;
+                font-size:11px;color:white;flex-shrink:0;"
+                onmouseenter="this.style.background='rgba(239,68,68,0.8)'"
+                onmouseleave="this.style.background='rgba(0,0,0,0.25)'">✕</div>
+            ` : ''}
+        </div>
+        <!-- BODY -->
+        <div style="padding:10px 12px;min-height:40px;">
+            ${preview
+                ? `<div style="font-size:11px;color:#475569;line-height:1.4;
+                    overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;
+                    -webkit-box-orient:vertical;">${esc(preview)}</div>`
+                : `<div style="font-size:11px;color:#94a3b8;font-style:italic;">
+                    Клікніть для налаштування</div>`
+            }
+        </div>
+        <!-- OUT PORTS -->
+        ${outPortsHTML}
+    `;
+
+    // Events
+    el.addEventListener('mousedown', e => onNodeMouseDown(e, node.id));
+
+    el.querySelectorAll('[data-port-out]').forEach(portEl => {
+        portEl.addEventListener('mousedown', e => {
+            e.stopPropagation();
+            onPortMouseDown(e, node.id, portEl.dataset.portId);
+        });
+    });
+
+    el.querySelectorAll('[data-del]').forEach(delEl => {
+        delEl.addEventListener('mousedown', e => {
+            e.stopPropagation();
+            e.preventDefault();
+            if (confirm(`Видалити вузол "${cfg.label}"?`)) {
+                pushHistory();
+                fc.nodes = fc.nodes.filter(n => n.id !== node.id);
+                fc.edges = fc.edges.filter(ed => ed.fromNode !== node.id && ed.toNode !== node.id);
+                if (fc.selected === node.id) { fc.selected = null; renderPropPanel(); }
+                renderAll();
+            }
+        });
+    });
+
+    return el;
+}
+
+function applyTransformToNodes() {
+    const layer = document.getElementById('fcNodesLayer');
+    if (!layer) return;
+    layer.style.transform = `translate(${fc.pan.x}px,${fc.pan.y}px) scale(${fc.scale})`;
+    layer.style.transformOrigin = '0 0';
+}
+
+// ── Edges (SVG) ────────────────────────────────────────────
+function renderEdges() {
+    const g = document.getElementById('fcEdgesGroup');
+    if (!g) return;
+    const svg = document.getElementById('fcEdgesSVG');
+
+    // Apply same transform to SVG edges group
+    g.setAttribute('transform', `translate(${fc.pan.x},${fc.pan.y}) scale(${fc.scale})`);
+
+    g.innerHTML = '';
+    fc.edges.forEach(edge => {
+        const fromNode = fc.nodes.find(n => n.id === edge.fromNode);
+        const toNode = fc.nodes.find(n => n.id === edge.toNode);
+        if (!fromNode || !toNode) return;
+
+        const from = getOutPortPos(fromNode, edge.fromPort);
+        const to = getInPortPos(toNode);
+
+        const isSelected = fc.selected === edge.fromNode || fc.selected === edge.toNode;
+        const portColor = edge.fromPort === 'no' || edge.fromPort === 'err' ? '#ef4444' :
+                          edge.fromPort === 'yes' || edge.fromPort === 'ok' ? '#22c55e' : '#3b82f6';
+        const color = isSelected ? portColor : '#94a3b8';
+        const markerId = isSelected
+            ? (portColor === '#22c55e' ? 'arrowHeadGreen' : 'arrowHeadBlue')
+            : 'arrowHead';
+
+        const path = bezier(from.x, from.y, to.x, to.y);
+
+        // Hit area
+        const hit = document.createElementNS('http://www.w3.org/2000/svg','path');
+        hit.setAttribute('d', path);
+        hit.setAttribute('fill','none');
+        hit.setAttribute('stroke','transparent');
+        hit.setAttribute('stroke-width','12');
+        hit.style.cursor = 'pointer';
+        hit.style.pointerEvents = 'stroke';
+        hit.title = 'Клікни для видалення';
+        hit.addEventListener('click', e => {
+            e.stopPropagation();
+            if (confirm('Видалити з\'єднання?')) {
+                pushHistory();
+                fc.edges = fc.edges.filter(ed => ed.id !== edge.id);
+                renderEdges();
+            }
+        });
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg','path');
+        line.setAttribute('d', path);
+        line.setAttribute('fill','none');
+        line.setAttribute('stroke', color);
+        line.setAttribute('stroke-width','2');
+        line.setAttribute('marker-end', `url(#${markerId})`);
+
+        // Port label on edge
+        const portLabel = PORT_LABELS[edge.fromPort];
+        if (portLabel && fromNode.outputs?.length > 1) {
+            const mx = (from.x + to.x) / 2;
+            const my = (from.y + to.y) / 2 - 8;
+            const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+            txt.setAttribute('x', mx);
+            txt.setAttribute('y', my);
+            txt.setAttribute('text-anchor','middle');
+            txt.setAttribute('fill', color);
+            txt.setAttribute('font-size','10');
+            txt.setAttribute('font-family','system-ui,sans-serif');
+            txt.textContent = portLabel;
+            g.appendChild(txt);
+        }
+
+        g.appendChild(hit);
+        g.appendChild(line);
+    });
+}
+
+function getOutPortPos(node, portId) {
+    const outputs = node.outputs || NODES[node.type]?.outputs || ['out'];
+    const idx = outputs.indexOf(portId);
+    const total = outputs.length;
+    const topPct = total === 1 ? 0.5 : 0.25 + (idx / (total-1)) * 0.5;
+    const h = getNodeHeight(node);
+    return { x: node.x + W, y: node.y + h * topPct };
+}
+
+function getInPortPos(node) {
+    const h = getNodeHeight(node);
+    return { x: node.x, y: node.y + h * 0.5 };
 }
 
 function getNodeHeight(node) {
-    const hasPreview = !!getNodePreview(node);
-    const portCount = node.outputs?.length || 0;
-    return FC_NODE_MIN_H + (hasPreview ? 20 : 0) + portCount * 22;
+    const preview = getPreview(node);
+    const outputCount = (node.outputs || NODES[node.type]?.outputs || ['out']).length;
+    return 36 + 40 + (preview ? Math.ceil(preview.length/28)*16 : 0) + Math.max(0,(outputCount-1)*10);
 }
 
-function getNodePreview(node) {
-    const d = node.data;
-    if (!d) return '';
-    if (d.text) return d.text.slice(0, 80);
-    if (d.label) return d.label.slice(0, 80);
-    if (d.taskTitle) return d.taskTitle.slice(0, 60);
-    if (d.dealTitle) return d.dealTitle.slice(0, 60);
-    if (d.aiPrompt) return 'AI: ' + d.aiPrompt.slice(0, 60);
-    if (d.delay) return `Затримка: ${d.delay}с`;
-    return '';
-}
-
-// ── Render Edges ───────────────────────────────────────────
-function renderAllEdges() {
-    const g = document.getElementById('fcEdgesGroup');
-    if (!g) return;
-    g.innerHTML = '';
-    fcEdges.forEach(edge => renderEdge(edge, g));
-    applyTransform();
-}
-
-function renderEdge(edge, group) {
-    const fromNode = fcNodes.find(n => n.id === edge.fromNode);
-    const toNode   = fcNodes.find(n => n.id === edge.toNode);
-    if (!fromNode || !toNode) return;
-
-    const from = getPortPos(fromNode, edge.fromPort, 'out');
-    const to   = getNodeInPos(toNode);
-
-    const path = bezierPath(from.x, from.y, to.x, to.y);
-    const isActive = fcSelected === edge.fromNode || fcSelected === edge.toNode;
-
-    const pathEl = document.createElementNS('http://www.w3.org/2000/svg','path');
-    pathEl.setAttribute('d', path);
-    pathEl.setAttribute('fill', 'none');
-    pathEl.setAttribute('stroke', isActive ? '#22c55e' : '#475569');
-    pathEl.setAttribute('stroke-width', '2');
-    pathEl.setAttribute('marker-end', isActive ? 'url(#fcArrowActive)' : 'url(#fcArrow)');
-    pathEl.style.transition = 'stroke 0.2s';
-
-    // Click to delete edge
-    const hitPath = document.createElementNS('http://www.w3.org/2000/svg','path');
-    hitPath.setAttribute('d', path);
-    hitPath.setAttribute('fill', 'none');
-    hitPath.setAttribute('stroke', 'transparent');
-    hitPath.setAttribute('stroke-width', '12');
-    hitPath.style.cursor = 'pointer';
-    hitPath.addEventListener('click', () => {
-        if (confirm('Видалити з\'єднання?')) {
-            fcEdges = fcEdges.filter(e => e.id !== edge.id);
-            renderAllEdges();
-        }
-    });
-
-    group.appendChild(pathEl);
-    group.appendChild(hitPath);
-}
-
-function bezierPath(x1, y1, x2, y2) {
-    const dx = Math.abs(x2 - x1);
-    const cp = Math.max(60, dx * 0.5);
+function bezier(x1, y1, x2, y2) {
+    const dx = Math.abs(x2-x1);
+    const cp = Math.max(60, dx*0.55);
     return `M${x1},${y1} C${x1+cp},${y1} ${x2-cp},${y2} ${x2},${y2}`;
 }
 
-function getPortPos(node, portId, dir) {
-    const h = getNodeHeight(node);
-    if (dir === 'in') return { x: node.x + FC_NODE_WIDTH/2, y: node.y };
-    // Output ports: right side
-    const idx = node.outputs?.findIndex(o => o.id === portId) ?? 0;
-    const portCount = node.outputs?.length || 1;
-    const bodyStart = 36; // header height
-    const portAreaH = h - bodyStart;
-    const spacing = portAreaH / (portCount + 1);
-    return {
-        x: node.x + FC_NODE_WIDTH,
-        y: node.y + bodyStart + spacing * (idx + 1),
-    };
-}
-
-function getNodeInPos(node) {
-    return { x: node.x, y: node.y + getNodeHeight(node)/2 };
-}
-
-// ── Transform (pan + zoom) ─────────────────────────────────
-function applyTransform() {
-    const g1 = document.getElementById('fcEdgesGroup');
-    const g2 = document.getElementById('fcNodesGroup');
-    const bg = fcSVG?.querySelector('rect[fill="url(#fcGrid)"]');
-    const transform = `translate(${fcPan.x},${fcPan.y}) scale(${fcScale})`;
-    if (g1) g1.setAttribute('transform', transform);
-    if (g2) g2.setAttribute('transform', transform);
-    if (bg) bg.setAttribute('transform', `translate(${fcPan.x % 24 - 24},${fcPan.y % 24 - 24})`);
-    const label = document.getElementById('fcZoomLabel');
-    if (label) label.textContent = Math.round(fcScale*100) + '%';
-}
-
-function fcZoom(delta) {
-    const rect = fcCanvas.getBoundingClientRect();
-    const cx = rect.width/2, cy = rect.height/2;
-    const oldScale = fcScale;
-    fcScale = Math.max(0.3, Math.min(2, fcScale + delta));
-    const ds = fcScale/oldScale - 1;
-    fcPan.x -= (cx - fcPan.x) * ds;
-    fcPan.y -= (cy - fcPan.y) * ds;
-    applyTransform();
-}
-
-function fcFitView() {
-    if (fcNodes.length === 0) return;
-    const rect = fcCanvas.getBoundingClientRect();
-    const minX = Math.min(...fcNodes.map(n=>n.x)) - 40;
-    const minY = Math.min(...fcNodes.map(n=>n.y)) - 40;
-    const maxX = Math.max(...fcNodes.map(n=>n.x+FC_NODE_WIDTH)) + 40;
-    const maxY = Math.max(...fcNodes.map(n=>n.y+getNodeHeight(n))) + 40;
-    const scaleX = rect.width / (maxX - minX);
-    const scaleY = rect.height / (maxY - minY);
-    fcScale = Math.min(scaleX, scaleY, 1.2);
-    fcPan.x = -minX * fcScale + (rect.width - (maxX-minX)*fcScale)/2;
-    fcPan.y = -minY * fcScale + (rect.height - (maxY-minY)*fcScale)/2;
-    applyTransform();
-}
-
-// ── Canvas Mouse Events ────────────────────────────────────
-function bindCanvasEvents() {
-    fcCanvas.addEventListener('mousedown', onCanvasMouseDown);
-    window.addEventListener('mousemove', onCanvasMouseMove);
-    window.addEventListener('mouseup', onCanvasMouseUp);
-    fcCanvas.addEventListener('wheel', onCanvasWheel, { passive: false });
-}
-
-function onCanvasMouseDown(e) {
-    if (e.button === 1 || (e.button === 0 && !e.target.closest('[data-nid]') && !e.target.closest('[data-port]'))) {
-        if (!e.target.closest('[data-nid]')) {
-            fcPanning = true;
-            fcPanStart = { x: e.clientX - fcPan.x, y: e.clientY - fcPan.y };
-            fcCanvas.style.cursor = 'grabbing';
-            if (fcSelected) { fcSelected = null; renderAllNodes(); renderAllEdges(); renderNodeEditorEmpty(); }
+// ── Background Dots ────────────────────────────────────────
+function drawBg() {
+    const cnv = document.getElementById('fcBgCanvas');
+    if (!cnv) return;
+    const wrap = document.getElementById('fcCanvasWrap');
+    if (!wrap) return;
+    const rect = wrap.getBoundingClientRect();
+    cnv.width = rect.width;
+    cnv.height = rect.height;
+    const ctx = cnv.getContext('2d');
+    ctx.clearRect(0,0,cnv.width,cnv.height);
+    ctx.fillStyle = '#cbd5e1';
+    const spacing = 24 * fc.scale;
+    const offsetX = fc.pan.x % spacing;
+    const offsetY = fc.pan.y % spacing;
+    const r = Math.max(1, fc.scale * 1.2);
+    for (let x = offsetX; x < cnv.width + spacing; x += spacing) {
+        for (let y = offsetY; y < cnv.height + spacing; y += spacing) {
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI*2);
+            ctx.fill();
         }
     }
 }
 
-function onCanvasMouseMove(e) {
-    if (fcPanning && fcPanStart) {
-        fcPan.x = e.clientX - fcPanStart.x;
-        fcPan.y = e.clientY - fcPanStart.y;
+// ── Transform ──────────────────────────────────────────────
+function applyTransform() {
+    applyTransformToNodes();
+    renderEdges();
+    drawBg();
+    const pct = document.getElementById('fcZoomPct');
+    if (pct) pct.textContent = Math.round(fc.scale*100)+'%';
+}
+
+function doZoom(delta, cx, cy) {
+    const wrap = document.getElementById('fcCanvasWrap');
+    if (!wrap) return;
+    const rect = wrap.getBoundingClientRect();
+    cx = cx ?? rect.width/2;
+    cy = cy ?? rect.height/2;
+    const oldScale = fc.scale;
+    fc.scale = Math.max(0.25, Math.min(2, fc.scale + delta));
+    const ds = fc.scale/oldScale - 1;
+    fc.pan.x -= (cx - fc.pan.x) * ds;
+    fc.pan.y -= (cy - fc.pan.y) * ds;
+    applyTransform();
+}
+
+function fitView() {
+    if (!fc.nodes.length) return;
+    const wrap = document.getElementById('fcCanvasWrap');
+    if (!wrap) return;
+    const rect = wrap.getBoundingClientRect();
+    const pad = 80;
+    const minX = Math.min(...fc.nodes.map(n=>n.x));
+    const minY = Math.min(...fc.nodes.map(n=>n.y));
+    const maxX = Math.max(...fc.nodes.map(n=>n.x+W));
+    const maxY = Math.max(...fc.nodes.map(n=>n.y+getNodeHeight(n)));
+    const scaleX = (rect.width-pad*2) / (maxX-minX||1);
+    const scaleY = (rect.height-pad*2) / (maxY-minY||1);
+    fc.scale = Math.min(scaleX, scaleY, 1.3);
+    fc.pan.x = -minX*fc.scale + (rect.width-(maxX-minX)*fc.scale)/2;
+    fc.pan.y = -minY*fc.scale + (rect.height-(maxY-minY)*fc.scale)/2;
+    applyTransform();
+}
+
+// ── Mouse Events ───────────────────────────────────────────
+function onNodeMouseDown(e, nodeId) {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+
+    // Select
+    if (fc.selected !== nodeId) {
+        fc.selected = nodeId;
+        renderAll();
+        renderPropPanel();
+    }
+
+    // Start drag
+    fc.dragging = {
+        nodeId,
+        startMX: e.clientX,
+        startMY: e.clientY,
+        origX: fc.nodes.find(n=>n.id===nodeId)?.x || 0,
+        origY: fc.nodes.find(n=>n.id===nodeId)?.y || 0,
+    };
+}
+
+function onPortMouseDown(e, nodeId, portId) {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+    const wrap = document.getElementById('fcCanvasWrap');
+    const rect = wrap.getBoundingClientRect();
+    const node = fc.nodes.find(n=>n.id===nodeId);
+    if (!node) return;
+    const pos = getOutPortPos(node, portId);
+    const sx = pos.x * fc.scale + fc.pan.x;
+    const sy = pos.y * fc.scale + fc.pan.y;
+    fc.connecting = {fromNode:nodeId, fromPort:portId, startX:sx, startY:sy};
+}
+
+function onWrapMouseDown(e) {
+    if (e.button !== 0) return;
+    if (e.target.closest('[data-nid]')) return;
+    if (e.target.closest('[data-port-out]')) return;
+    if (e.target.closest('[data-port-in]')) return;
+
+    // Deselect
+    if (fc.selected) {
+        fc.selected = null;
+        renderAll();
+        renderPropPanel();
+    }
+
+    // Pan
+    fc.panning = true;
+    fc.panStart = { x: e.clientX - fc.pan.x, y: e.clientY - fc.pan.y };
+    const wrap = document.getElementById('fcCanvasWrap');
+    if (wrap) wrap.style.cursor = 'grabbing';
+}
+
+function onWrapMouseMove(e) {
+    if (fc.panning && fc.panStart) {
+        fc.pan.x = e.clientX - fc.panStart.x;
+        fc.pan.y = e.clientY - fc.panStart.y;
         applyTransform();
         return;
     }
-    if (fcDragging) {
-        const dx = (e.clientX - fcDragging.startMouseX) / fcScale;
-        const dy = (e.clientY - fcDragging.startMouseY) / fcScale;
-        const node = fcNodes.find(n => n.id === fcDragging.nodeId);
+
+    if (fc.dragging) {
+        const dx = (e.clientX - fc.dragging.startMX) / fc.scale;
+        const dy = (e.clientY - fc.dragging.startMY) / fc.scale;
+        const node = fc.nodes.find(n=>n.id===fc.dragging.nodeId);
         if (node) {
-            node.x = Math.round((fcDragging.origX + dx) / 20) * 20;
-            node.y = Math.round((fcDragging.origY + dy) / 20) * 20;
-            renderAllNodes();
-            renderAllEdges();
+            node.x = snap(fc.dragging.origX + dx);
+            node.y = snap(fc.dragging.origY + dy);
+            // Move only the specific node div (perf)
+            const el = document.getElementById(`fcn_${node.id}`);
+            if (el) { el.style.left = node.x+'px'; el.style.top = node.y+'px'; }
+            renderEdges();
         }
         return;
     }
-    if (fcConnecting) {
-        // Convert mouse to SVG coords
-        const rect = fcCanvas.getBoundingClientRect();
-        const svgX = (e.clientX - rect.left - fcPan.x) / fcScale;
-        const svgY = (e.clientY - rect.top - fcPan.y) / fcScale;
-        const from = fcConnecting;
-        const fromNode = fcNodes.find(n => n.id === from.fromNode);
-        if (fromNode) {
-            const fp = getPortPos(fromNode, from.fromPort, 'out');
-            const line = document.getElementById('fcConnectingLine');
-            if (line) {
-                line.style.display = '';
-                line.setAttribute('d', bezierPath(fp.x, fp.y, svgX, svgY));
-                line.setAttribute('transform', `translate(${fcPan.x},${fcPan.y}) scale(${fcScale})`);
-            }
+
+    if (fc.connecting) {
+        const wrap = document.getElementById('fcCanvasWrap');
+        const rect = wrap.getBoundingClientRect();
+        const tx = (e.clientX - rect.left - fc.pan.x) / fc.scale;
+        const ty = (e.clientY - rect.top - fc.pan.y) / fc.scale;
+        const from = getOutPortPos(fc.nodes.find(n=>n.id===fc.connecting.fromNode), fc.connecting.fromPort);
+        const tempEdge = document.getElementById('fcTempEdge');
+        if (tempEdge) {
+            tempEdge.style.display = '';
+            tempEdge.setAttribute('d', bezier(from.x, from.y, tx, ty));
+            tempEdge.setAttribute('transform', `translate(${fc.pan.x},${fc.pan.y}) scale(${fc.scale})`);
         }
         return;
     }
 }
 
-function onCanvasMouseUp(e) {
-    fcCanvas.style.cursor = 'grab';
-    if (fcPanning) { fcPanning = false; fcPanStart = null; return; }
-    if (fcDragging) { fcDragging = null; return; }
-    if (fcConnecting) {
-        const line = document.getElementById('fcConnectingLine');
-        if (line) line.style.display = 'none';
-        // Check if dropped on input port
-        const rect = fcCanvas.getBoundingClientRect();
-        const svgX = (e.clientX - rect.left - fcPan.x) / fcScale;
-        const svgY = (e.clientY - rect.top - fcPan.y) / fcScale;
-        const targetNode = fcNodes.find(n => {
-            const inp = getNodeInPos(n);
-            return n.id !== fcConnecting.fromNode && Math.abs(inp.x - svgX) < 30 && Math.abs(inp.y - svgY) < 30;
+function onWrapMouseUp(e) {
+    const wrap = document.getElementById('fcCanvasWrap');
+    if (wrap) wrap.style.cursor = 'grab';
+
+    if (fc.panning) { fc.panning = false; fc.panStart = null; return; }
+
+    if (fc.dragging) {
+        pushHistory();
+        fc.dragging = null;
+        return;
+    }
+
+    if (fc.connecting) {
+        const tempEdge = document.getElementById('fcTempEdge');
+        if (tempEdge) tempEdge.style.display = 'none';
+
+        // Find target node under mouse
+        const wrap = document.getElementById('fcCanvasWrap');
+        const rect = wrap.getBoundingClientRect();
+        const mx = (e.clientX - rect.left - fc.pan.x) / fc.scale;
+        const my = (e.clientY - rect.top - fc.pan.y) / fc.scale;
+
+        const target = fc.nodes.find(n => {
+            if (n.id === fc.connecting.fromNode) return false;
+            const h = getNodeHeight(n);
+            return mx >= n.x-20 && mx <= n.x+W+20 && my >= n.y-20 && my <= n.y+h+20;
         });
-        if (targetNode) {
+
+        if (target) {
             // Remove existing edge from same port
-            fcEdges = fcEdges.filter(e => !(e.fromNode === fcConnecting.fromNode && e.fromPort === fcConnecting.fromPort));
-            fcEdges.push({
-                id: `e_${fcConnecting.fromNode}_${fcConnecting.fromPort}_${Date.now()}`,
-                fromNode: fcConnecting.fromNode,
-                fromPort: fcConnecting.fromPort,
-                toNode: targetNode.id,
+            pushHistory();
+            fc.edges = fc.edges.filter(ed => !(ed.fromNode===fc.connecting.fromNode && ed.fromPort===fc.connecting.fromPort));
+            fc.edges.push({
+                id: `e_${fc.connecting.fromNode}_${fc.connecting.fromPort}_${Date.now()}`,
+                fromNode: fc.connecting.fromNode,
+                fromPort: fc.connecting.fromPort,
+                toNode: target.id,
+                toPort: 'in',
             });
-            renderAllEdges();
+            renderAll();
         }
-        fcConnecting = null;
+
+        fc.connecting = null;
     }
 }
 
-function onCanvasWheel(e) {
+function onWrapWheel(e) {
     e.preventDefault();
-    const delta = e.deltaY > 0 ? -0.08 : 0.08;
-    const rect = fcCanvas.getBoundingClientRect();
-    const cx = e.clientX - rect.left;
-    const cy = e.clientY - rect.top;
-    const oldScale = fcScale;
-    fcScale = Math.max(0.3, Math.min(2, fcScale + delta));
-    const ds = fcScale/oldScale - 1;
-    fcPan.x -= (cx - fcPan.x) * ds;
-    fcPan.y -= (cy - fcPan.y) * ds;
-    applyTransform();
+    const wrap = document.getElementById('fcCanvasWrap');
+    const rect = wrap.getBoundingClientRect();
+    doZoom(e.deltaY > 0 ? -0.08 : 0.08, e.clientX-rect.left, e.clientY-rect.top);
+}
+
+function onWrapDblClick(e) {
+    // Dblclick empty canvas → add message node
+    if (e.target.closest('[data-nid]')) return;
+    const wrap = document.getElementById('fcCanvasWrap');
+    const rect = wrap.getBoundingClientRect();
+    const cx = (e.clientX - rect.left - fc.pan.x) / fc.scale;
+    const cy = (e.clientY - rect.top - fc.pan.y) / fc.scale;
+    addNode('message', snap(cx - W/2), snap(cy - 40));
 }
 
 // ── Add Node ───────────────────────────────────────────────
-window.fcAddNode = function(type) {
-    const id = 'node_' + Date.now();
-    const cfg = NODE_TYPES[type];
-    const names = { message:'Повідомлення', question:'Питання', buttons:'Кнопки', condition:'Умова', ai:'AI відповідь', delay:'Затримка', talko_task:'Задача', talko_deal:'Угода', tag:'Тег', human:'Менеджер', end:'Завершення' };
-    // Place in visible center
-    const rect = fcCanvas?.getBoundingClientRect() || {width:800,height:600};
-    const cx = (rect.width/2 - fcPan.x) / fcScale;
-    const cy = (rect.height/2 - fcPan.y) / fcScale;
-    const snap = v => Math.round(v/20)*20;
-    const newNode = {
+function addNode(type, x, y) {
+    pushHistory();
+    const id = `node_${Date.now()}`;
+    const cfg = NODES[type] || NODES.message;
+    const node = {
         id, type,
-        x: snap(cx - FC_NODE_WIDTH/2),
-        y: snap(cy - 40),
-        data: { id, type, name: names[type]||type, text:'', options:[] },
-        outputs: buildOutputPorts({ type, options: [] }),
+        x: x ?? 200,
+        y: y ?? 200,
+        config: {id, type, name: cfg.label},
+        outputs: [...(cfg.outputs || ['out'])],
     };
-    fcNodes.push(newNode);
-    fcSelected = id;
-    renderAllNodes();
-    renderAllEdges();
-    renderNodeEditor(id);
-};
+    fc.nodes.push(node);
+    fc.selected = id;
+    renderAll();
+    renderPropPanel();
+}
+window.fcAddNode = addNode;
 
-// ── Node Editor Panel ──────────────────────────────────────
-function renderNodeEditor(nodeId) {
-    const node = fcNodes.find(n => n.id === nodeId);
-    if (!node) return;
-    const cfg = NODE_TYPES[node.type] || NODE_TYPES.message;
-    const d = node.data || {};
-    const panel = document.getElementById('fcNodeEditorInner');
+// ── Property Panel ─────────────────────────────────────────
+function renderPropPanel() {
+    const panel = document.getElementById('fcPropPanel');
     if (!panel) return;
 
-    const fields = buildEditorFields(node, cfg, d);
+    if (!fc.selected) {
+        panel.innerHTML = `<div style="text-align:center;padding:48px 16px;color:#475569;">
+            <div style="font-size:32px;margin-bottom:8px;">⬆</div>
+            <div style="font-size:13px;">Клікніть на вузол<br>для редагування</div>
+        </div>`;
+        return;
+    }
+
+    const node = fc.nodes.find(n=>n.id===fc.selected);
+    if (!node) return;
+    const cfg = NODES[node.type] || NODES.message;
+    const d = node.config || {};
+
+    const fld = (label, html) => `
+        <div style="margin-bottom:12px;">
+            <div style="font-size:10px;font-weight:700;color:#64748b;
+                text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">${label}</div>
+            ${html}
+        </div>`;
+
+    const inp = (id, val, ph='') => `<input id="fcp_${id}"
+        value="${escAttr(val||'')}" placeholder="${ph}"
+        style="width:100%;padding:8px;background:#0f172a;border:1px solid #334155;
+        border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">`;
+
+    const ta = (id, val, ph='', rows=4) => `<textarea id="fcp_${id}"
+        placeholder="${ph}" rows="${rows}"
+        style="width:100%;padding:8px;background:#0f172a;border:1px solid #334155;
+        border-radius:7px;color:white;font-size:12px;box-sizing:border-box;resize:vertical;"
+        >${esc(val||'')}</textarea>`;
+
+    const sel = (id, options, cur) => `<select id="fcp_${id}"
+        style="width:100%;padding:8px;background:#0f172a;border:1px solid #334155;
+        border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">
+        ${options.map(([v,l])=>`<option value="${v}" ${cur===v?'selected':''}>${l}</option>`).join('')}
+    </select>`;
+
+    let fields = '';
+
+    switch (node.type) {
+        case 'start':
+            fields = fld('Тригер (ключове слово)', inp('triggerKeyword', d.triggerKeyword, '/start'));
+            break;
+        case 'message':
+            fields = fld('Текст повідомлення', ta('text', d.text, 'Введіть текст...'))
+                + fld('Кнопки (кожна з нового рядка)', ta('buttonsRaw', (d.buttons||[]).map(b=>b.label).join('\n'), 'Варіант 1\nВаріант 2', 3))
+                + fld('Зберегти відповідь у змінну', inp('saveAs', d.saveAs, 'напр: phone'));
+            break;
+        case 'action':
+            fields = fld('Тип дії', sel('actionType',
+                [['set_var','Встановити змінну'],['set_tag','Додати тег'],
+                 ['remove_tag','Видалити тег'],['notify_admin','Сповістити менеджера'],
+                 ['start_flow','Запустити інший флоу'],['stop_flow','Зупинити флоу']],
+                d.actionType||'set_var'))
+                + fld('Параметри (JSON)', ta('actionPayload', d.actionPayload, '{"variable":"phone","value":"{{input}}"}', 3));
+            break;
+        case 'filter':
+            fields = fld('Змінна', inp('condVar', d.condVar, 'phone'))
+                + fld('Оператор', sel('condOp',
+                    [['=','= Дорівнює'],['!=','≠ Не дорівнює'],
+                     ['contains','Містить'],['exists','Існує'],['!exists','Не існує'],
+                     ['>','> Більше'],['<','< Менше']], d.condOp||'='))
+                + fld('Значення', inp('condVal', d.condVal, ''))
+                + `<div style="font-size:10px;color:#64748b;margin-top:4px;">
+                    ● Вихід "Так" → умова виконується<br>
+                    ● Вихід "Ні" → умова не виконується</div>`;
+            break;
+        case 'pause':
+            fields = fld('Затримка', `<div style="display:flex;gap:6px;">
+                <input id="fcp_delay" type="number" value="${d.delay||5}" min="1"
+                    style="flex:1;padding:8px;background:#0f172a;border:1px solid #334155;
+                    border-radius:7px;color:white;font-size:12px;">
+                ${sel('delayUnit',[['seconds','секунд'],['minutes','хвилин'],['hours','годин'],['days','днів']], d.delayUnit||'seconds')}
+                </div>`)
+                + `<div style="font-size:10px;color:#64748b;margin-top:4px;">
+                    Продовжувати ланцюжок: Завжди</div>`;
+            break;
+        case 'ai':
+            fields = fld('Системний промпт', ta('aiSystem', d.aiSystem, 'Ти — помічник компанії...', 4))
+                + fld('Модель', sel('aiModel',
+                    [['gpt-4o-mini','GPT-4o mini'],['gpt-4o','GPT-4o'],['claude-sonnet-4-5','Claude Sonnet']], d.aiModel||'gpt-4o-mini'))
+                + fld('Зберегти відповідь у змінну', inp('saveAs', d.saveAs, 'ai_response'))
+                + fld('Запасна відповідь', inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'));
+            break;
+        case 'api':
+            fields = fld('Метод + URL', `<div style="display:flex;gap:6px;">
+                ${sel('apiMethod',[['POST','POST'],['GET','GET'],['PUT','PUT'],['PATCH','PATCH'],['DELETE','DELETE']], d.apiMethod||'POST')}
+                ${inp('apiUrl', d.apiUrl, 'https://api.example.com/lead')}
+                </div>`)
+                + fld('Headers (JSON)', ta('apiHeaders', d.apiHeaders, '{"Content-Type":"application/json"}', 2))
+                + fld('Body (JSON шаблон)', ta('apiBody', d.apiBody, '{"phone":"{{phone}}","name":"{{name}}"}', 3))
+                + fld('Зберегти response у змінну', inp('saveAs', d.saveAs, 'api_response'));
+            break;
+        case 'sheets':
+            fields = fld('Spreadsheet ID', inp('sheetsId', d.sheetsId, '1BxiMV...'))
+                + fld('Назва листа', inp('sheetsName', d.sheetsName, 'Leads'))
+                + fld('Маппінг колонок (JSON)', ta('sheetsMapping', d.sheetsMapping,
+                    '{"A":"{{name}}","B":"{{phone}}","C":"{{date}}"}', 3));
+            break;
+        case 'random':
+            fields = fld('Розподіл %', `<div style="display:flex;gap:6px;align-items:center;">
+                <span style="color:#94a3b8;font-size:12px;">А:</span>
+                <input id="fcp_splitA" type="number" value="${d.splitA||50}" min="1" max="99"
+                    style="width:60px;padding:8px;background:#0f172a;border:1px solid #334155;
+                    border-radius:7px;color:white;font-size:12px;">
+                <span style="color:#94a3b8;font-size:12px;">% · Б:</span>
+                <input id="fcp_splitB" type="number" value="${d.splitB||50}" min="1" max="99"
+                    style="width:60px;padding:8px;background:#0f172a;border:1px solid #334155;
+                    border-radius:7px;color:white;font-size:12px;">
+                <span style="color:#94a3b8;font-size:12px;">%</span>
+                </div>`);
+            break;
+        case 'repeat':
+            fields = fld('Кількість повторів', inp('repeatCount', d.repeatCount, '3'))
+                + fld('Інтервал (секунди)', inp('repeatInterval', d.repeatInterval, '60'))
+                + fld('Умова виходу (змінна)', inp('exitVar', d.exitVar, 'confirmed'));
+            break;
+        case 'crm':
+            fields = fld('Назва угоди', inp('dealTitle', d.dealTitle, 'Новий лід з бота'))
+                + fld('Сума', inp('amount', d.amount, '0'))
+                + fld('Воронка (pipeline ID)', inp('pipelineId', d.pipelineId, 'default'));
+            break;
+        case 'end':
+            fields = fld('Фінальне повідомлення', ta('text', d.text, 'Дякуємо! Ми зв\'яжемось.', 2));
+            break;
+        default:
+            fields = fld('Текст', ta('text', d.text, ''));
+    }
 
     panel.innerHTML = `
         <div>
-            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid #334155;">
-                <div style="width:32px;height:32px;border-radius:8px;background:${cfg.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" style="color:white;">${SVG_ICONS[cfg.icon]||''}</svg>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;
+                padding-bottom:12px;border-bottom:1px solid #334155;">
+                <div style="width:36px;height:36px;border-radius:8px;background:${cfg.color};
+                    display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">
+                    ${cfg.icon}
                 </div>
                 <div>
-                    <div style="color:white;font-weight:700;font-size:0.9rem;">${cfg.label}</div>
-                    <div style="color:#64748b;font-size:0.72rem;">${node.id}</div>
+                    <div style="color:white;font-weight:700;font-size:14px;">${cfg.label}</div>
+                    <div style="color:#475569;font-size:10px;">${node.id}</div>
                 </div>
             </div>
             ${fields}
-            <button onclick="fcSaveNodeData('${node.id}')"
-                style="width:100%;margin-top:1rem;padding:0.6rem;background:#22c55e;border:none;border-radius:8px;color:white;cursor:pointer;font-weight:700;font-size:0.85rem;">
-                Застосувати
+            <button onclick="fcApplyNodeData('${node.id}')"
+                style="width:100%;padding:10px;background:#22c55e;border:none;border-radius:8px;
+                color:white;cursor:pointer;font-weight:700;font-size:13px;margin-top:4px;">
+                ✓ Застосувати
             </button>
+            ${node.type !== 'start' ? `
+            <button onclick="fcDeleteNode('${node.id}')"
+                style="width:100%;padding:8px;background:transparent;border:1px solid #334155;
+                border-radius:8px;color:#ef4444;cursor:pointer;font-size:12px;margin-top:6px;">
+                Видалити вузол
+            </button>` : ''}
         </div>`;
 }
 
-function buildEditorFields(node, cfg, d) {
-    const inp = (id, val, ph) => `<input id="fc_${id}" value="${escAttr(val||'')}" placeholder="${ph||''}" style="width:100%;padding:0.5rem 0.65rem;background:#0f172a;border:1px solid #334155;border-radius:7px;color:white;font-size:0.82rem;box-sizing:border-box;margin-bottom:0.5rem;">`;
-    const ta = (id, val, ph, rows=3) => `<textarea id="fc_${id}" placeholder="${ph||''}" rows="${rows}" style="width:100%;padding:0.5rem 0.65rem;background:#0f172a;border:1px solid #334155;border-radius:7px;color:white;font-size:0.82rem;box-sizing:border-box;resize:vertical;margin-bottom:0.5rem;">${escH(val||'')}</textarea>`;
-    const lbl = (t) => `<div style="font-size:0.72rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem;">${t}</div>`;
+window.fcApplyNodeData = function(nodeId) {
+    const node = fc.nodes.find(n=>n.id===nodeId);
+    if (!node) return;
+    pushHistory();
+    const get = id => document.getElementById(`fcp_${id}`)?.value?.trim()||'';
 
     switch(node.type) {
         case 'start':
-            return `${lbl('Тригер (ключове слово)')}${inp('triggerKeyword', d.triggerKeyword||fcFlowData.triggerKeyword, '/start або слово')}`;
-        case 'message':
-            return `${lbl('Текст повідомлення')}${ta('text', d.text, 'Введіть текст...')}${lbl('Зберегти відповідь як')}${inp('saveAs', d.saveAs, 'змінна (необов\'язково)')}`;
-        case 'question':
-            return `${lbl('Питання')}${ta('text', d.text, 'Введіть питання...')}${lbl('Зберегти відповідь у змінну')}${inp('saveAs', d.saveAs, 'напр: phone, name, email')}`;
-        case 'buttons': {
-            const opts = d.options || [{ label: 'Варіант 1' }, { label: 'Варіант 2' }];
-            return `${lbl('Текст перед кнопками')}${ta('text', d.text, 'Виберіть варіант...')}
-                ${lbl('Кнопки')}
-                <div id="fc_optsList">${opts.map((o,i)=>`
-                    <div style="display:flex;gap:0.4rem;margin-bottom:0.35rem;">
-                        <input id="fc_opt_${i}" value="${escAttr(o.label||'')}" placeholder="Кнопка ${i+1}"
-                            style="flex:1;padding:0.45rem;background:#0f172a;border:1px solid #334155;border-radius:6px;color:white;font-size:0.8rem;">
-                        <button onclick="fcRemoveOption(${i})" style="padding:0.4rem;background:#334155;border:none;border-radius:6px;color:#ef4444;cursor:pointer;font-size:0.8rem;">✕</button>
-                    </div>`).join('')}
-                </div>
-                <button onclick="fcAddOption()" style="width:100%;padding:0.4rem;background:#334155;border:none;border-radius:7px;color:#22c55e;cursor:pointer;font-size:0.8rem;margin-top:0.25rem;">+ Додати кнопку</button>`;
-        }
-        case 'ai':
-            return `${lbl('Системний промпт')}${ta('aiPrompt', d.aiPrompt, 'Ти — помічник компанії...', 5)}${lbl('Зберегти відповідь як')}${inp('saveAs', d.saveAs, 'ai_response')}${lbl('Запасна відповідь (якщо немає ключа)')}${ta('fallback', d.fallback, 'Вибачте, сталась помилка...')}`;
-        case 'delay':
-            return `${lbl('Затримка (секунди)')}${inp('delay', d.delay||5, '5')}`;
-        case 'talko_task':
-            return `${lbl('Назва завдання')}${inp('taskTitle', d.taskTitle, 'Зв\'язатись з клієнтом...')}${lbl('Відповідальний (email)')}${inp('assignee', d.assignee, 'manager@company.com')}`;
-        case 'talko_deal':
-            return `${lbl('Назва угоди')}${inp('dealTitle', d.dealTitle, 'Новий лід з бота')}${lbl('Сума')}${inp('amount', d.amount||0, '0')}`;
-        case 'tag':
-            return `${lbl('Тег')}${inp('tagName', d.tagName, 'новий-клієнт')}`;
-        case 'condition':
-            return `${lbl('Умова (змінна)')}${inp('condVar', d.condVar, 'name')}${lbl('Оператор')}
-                <select id="fc_condOp" style="width:100%;padding:0.5rem;background:#0f172a;border:1px solid #334155;border-radius:7px;color:white;margin-bottom:0.5rem;">
-                    ${['=','!=','contains','>','<'].map(op=>`<option value="${op}" ${d.condOp===op?'selected':''}>${op}</option>`).join('')}
-                </select>
-                ${lbl('Значення')}${inp('condVal', d.condVal, 'очікуване значення')}
-                <div style="font-size:0.72rem;color:#64748b;margin-top:0.25rem;">Вихід "Так" → якщо умова виконується<br>Вихід "Ні" → якщо ні</div>`;
-        case 'human':
-            return `${lbl('Повідомлення менеджеру')}${ta('text', d.text, 'Клієнт очікує відповіді...')}`;
-        case 'end':
-            return `${lbl('Фінальне повідомлення (опц.)')}${ta('text', d.text, 'Дякуємо! Ми зв\'яжемось з вами.')}`;
-        default:
-            return `${lbl('Текст')}${ta('text', d.text, '')}`;
-    }
-}
-
-window.fcSaveNodeData = function(nodeId) {
-    const node = fcNodes.find(n => n.id === nodeId);
-    if (!node) return;
-    const get = id => document.getElementById(`fc_${id}`)?.value?.trim() || '';
-
-    switch(node.type) {
-        case 'start':    node.data.triggerKeyword = get('triggerKeyword'); break;
-        case 'message':  node.data.text = get('text'); node.data.saveAs = get('saveAs')||null; break;
-        case 'question': node.data.text = get('text'); node.data.saveAs = get('saveAs')||null; break;
-        case 'buttons': {
-            const opts = [];
-            let i = 0;
-            while(document.getElementById(`fc_opt_${i}`)) {
-                const v = document.getElementById(`fc_opt_${i}`).value.trim();
-                if (v) opts.push({ label: v, nextNode: (node.data.options?.[i]?.nextNode)||null });
-                i++;
-            }
-            node.data.text = get('text');
-            node.data.options = opts;
-            node.outputs = opts.map((o,i2)=>({ id:`opt_${i2}`, label: o.label, targetId: o.nextNode||null }));
+            node.config.triggerKeyword = get('triggerKeyword') || '/start';
             break;
-        }
-        case 'ai':       node.data.aiPrompt = get('aiPrompt'); node.data.saveAs = get('saveAs')||null; node.data.fallback = get('fallback'); break;
-        case 'delay':    node.data.delay = parseInt(get('delay'))||5; break;
-        case 'talko_task': node.data.taskTitle = get('taskTitle'); node.data.assignee = get('assignee'); break;
-        case 'talko_deal': node.data.dealTitle = get('dealTitle'); node.data.amount = parseFloat(get('amount'))||0; break;
-        case 'tag':      node.data.tagName = get('tagName'); break;
-        case 'condition': node.data.condVar = get('condVar'); node.data.condOp = get('condOp'); node.data.condVal = get('condVal'); break;
-        case 'human':    node.data.text = get('text'); break;
-        case 'end':      node.data.text = get('text'); break;
+        case 'message':
+            node.config.text = get('text');
+            node.config.saveAs = get('saveAs') || null;
+            const rawBtns = get('buttonsRaw').split('\n').map(s=>s.trim()).filter(Boolean);
+            node.config.buttons = rawBtns.map((l,i)=>({id:`btn_${i}`,label:l}));
+            // Rebuild outputs: out + one per button
+            node.outputs = rawBtns.length > 0
+                ? ['out', ...rawBtns.map((_,i)=>`btn_${i}`)]
+                : ['out'];
+            break;
+        case 'action':
+            node.config.actionType = get('actionType');
+            node.config.actionPayload = get('actionPayload');
+            break;
+        case 'filter':
+            node.config.condVar = get('condVar');
+            node.config.condOp = get('condOp');
+            node.config.condVal = get('condVal');
+            break;
+        case 'pause':
+            node.config.delay = parseInt(get('delay'))||5;
+            node.config.delayUnit = get('delayUnit');
+            break;
+        case 'ai':
+            node.config.aiSystem = get('aiSystem');
+            node.config.aiModel = get('aiModel');
+            node.config.saveAs = get('saveAs') || null;
+            node.config.fallback = get('fallback');
+            break;
+        case 'api':
+            node.config.apiMethod = get('apiMethod');
+            node.config.apiUrl = get('apiUrl');
+            node.config.apiHeaders = get('apiHeaders');
+            node.config.apiBody = get('apiBody');
+            node.config.saveAs = get('saveAs') || null;
+            break;
+        case 'sheets':
+            node.config.sheetsId = get('sheetsId');
+            node.config.sheetsName = get('sheetsName');
+            node.config.sheetsMapping = get('sheetsMapping');
+            break;
+        case 'random':
+            node.config.splitA = parseInt(get('splitA'))||50;
+            node.config.splitB = parseInt(get('splitB'))||50;
+            break;
+        case 'repeat':
+            node.config.repeatCount = parseInt(get('repeatCount'))||3;
+            node.config.repeatInterval = parseInt(get('repeatInterval'))||60;
+            node.config.exitVar = get('exitVar');
+            break;
+        case 'crm':
+            node.config.dealTitle = get('dealTitle');
+            node.config.amount = parseFloat(get('amount'))||0;
+            node.config.pipelineId = get('pipelineId');
+            break;
+        case 'end':
+            node.config.text = get('text');
+            break;
+        default:
+            node.config.text = get('text');
     }
 
-    renderAllNodes();
-    renderAllEdges();
-    if (typeof showToast === 'function') showToast('Вузол збережено', 'success');
+    renderAll();
+    renderPropPanel();
+    if (typeof showToast === 'function') showToast('Вузол збережено ✓', 'success');
 };
 
-window.fcAddOption = function() {
-    const node = fcNodes.find(n => n.id === fcSelected);
-    if (!node) return;
-    if (!node.data.options) node.data.options = [];
-    node.data.options.push({ label: `Варіант ${node.data.options.length+1}` });
-    renderNodeEditor(fcSelected);
+window.fcDeleteNode = function(nodeId) {
+    if (!confirm('Видалити вузол?')) return;
+    pushHistory();
+    fc.nodes = fc.nodes.filter(n=>n.id!==nodeId);
+    fc.edges = fc.edges.filter(e=>e.fromNode!==nodeId&&e.toNode!==nodeId);
+    fc.selected = null;
+    renderAll();
+    renderPropPanel();
 };
-
-window.fcRemoveOption = function(idx) {
-    const node = fcNodes.find(n => n.id === fcSelected);
-    if (!node?.data?.options) return;
-    node.data.options.splice(idx, 1);
-    renderNodeEditor(fcSelected);
-};
-
-function renderNodeEditorEmpty() {
-    const panel = document.getElementById('fcNodeEditorInner');
-    if (!panel) return;
-    panel.innerHTML = `<div style="text-align:center;padding:3rem 1rem;color:#475569;"><div style="margin-bottom:0.75rem;">${icon('edit',32,'#475569')}</div><div style="font-size:0.85rem;">Клікніть на вузол для редагування</div></div>`;
-}
 
 // ── Save ───────────────────────────────────────────────────
-window.fcSave = async function() {
-    // Build edges map
+async function saveFlow() {
+    const btn = document.getElementById('fcBtnSave');
+    if (btn) btn.textContent = 'Збереження...';
+
+    // Build canvasData (source of truth)
+    const canvasData = {
+        nodes: fc.nodes.map(n => ({...n.config, _x:n.x, _y:n.y, outputs:n.outputs})),
+        edges: fc.edges,
+        version: Date.now(),
+    };
+
+    // Also build runtime nodes array (for webhook.js)
     const edgeMap = {};
-    fcEdges.forEach(e => {
+    fc.edges.forEach(e => {
         if (!edgeMap[e.fromNode]) edgeMap[e.fromNode] = {};
         edgeMap[e.fromNode][e.fromPort] = e.toNode;
     });
 
-    // Build nodes array for Firestore (skip 'start' pseudo-node)
-    const nodes = fcNodes
-        .filter(n => n.type !== 'start')
+    const startNode = fc.nodes.find(n=>n.type==='start');
+    const triggerKeyword = startNode?.config?.triggerKeyword || '/start';
+    const firstNodeId = startNode ? (edgeMap[startNode.id]?.out || null) : null;
+
+    const runtimeNodes = fc.nodes
+        .filter(n=>n.type!=='start')
         .map(n => {
-            const d = { ...n.data };
-            d._x = n.x;
-            d._y = n.y;
-            // Resolve next nodes
             const ports = edgeMap[n.id] || {};
-            if (n.type === 'buttons' && d.options) {
-                d.options = d.options.map((o, i) => ({ ...o, nextNode: ports[`opt_${i}`]||null }));
-            } else if (n.type === 'condition') {
-                d.trueNode = ports['yes']||null;
-                d.falseNode = ports['no']||null;
-            } else {
-                d.nextNode = ports['out_0']||null;
-            }
+            const d = {...n.config, _x:n.x, _y:n.y};
+            if (n.type==='filter') { d.trueNode=ports.yes||null; d.falseNode=ports.no||null; }
+            else if (n.type==='random') { d.branchA=ports.a||null; d.branchB=ports.b||null; }
+            else if (n.type==='ai'||n.type==='api') { d.nextNode=ports.ok||ports.out||null; d.errorNode=ports.err||null; }
+            else if (n.type==='message'&&n.config.buttons?.length) {
+                d.nextNode = ports.out || null;
+                d.options = (n.config.buttons||[]).map((b,i)=>({...b, nextNode:ports[`btn_${i}`]||null}));
+            } else { d.nextNode=ports.out||null; }
             return d;
         });
 
-    // Start node: set trigger keyword
-    const startNode = fcNodes.find(n=>n.type==='start');
-    const triggerKeyword = startNode?.data?.triggerKeyword || fcFlowData.triggerKeyword || '/start';
-    const firstRealNode = edgeMap[startNode?.id]?.['out_0'] || null;
-    // Reorder so first node is the one connected to start
-    const ordered = firstRealNode ? [
-        ...nodes.filter(n=>n.id===firstRealNode),
-        ...nodes.filter(n=>n.id!==firstRealNode)
-    ] : nodes;
+    // Sort: first node connected to start goes first
+    const ordered = firstNodeId
+        ? [runtimeNodes.find(n=>n.id===firstNodeId), ...runtimeNodes.filter(n=>n.id!==firstNodeId)].filter(Boolean)
+        : runtimeNodes;
 
     try {
         await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-            .collection('flows').doc(fcFlowId).update({
+            .collection('flows').doc(fc.flowId).update({
+                canvasData,
                 nodes: ordered,
                 triggerKeyword,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
+        if (btn) btn.textContent = 'Зберегти';
         if (typeof showToast === 'function') showToast('Флоу збережено ✓', 'success');
     } catch(e) {
-        alert('Помилка збереження: ' + e.message);
+        if (btn) btn.textContent = 'Зберегти';
+        alert('Помилка: ' + e.message);
     }
-};
+}
+
+// ── Undo/Redo ──────────────────────────────────────────────
+function pushHistory() {
+    const state = JSON.stringify({nodes:fc.nodes, edges:fc.edges});
+    fc.history = fc.history.slice(0, fc.historyIdx+1);
+    fc.history.push(state);
+    if (fc.history.length > 50) fc.history.shift();
+    fc.historyIdx = fc.history.length - 1;
+}
+
+function undo() {
+    if (fc.historyIdx <= 0) return;
+    fc.historyIdx--;
+    const state = JSON.parse(fc.history[fc.historyIdx]);
+    fc.nodes = state.nodes; fc.edges = state.edges;
+    renderAll();
+}
+
+function redo() {
+    if (fc.historyIdx >= fc.history.length-1) return;
+    fc.historyIdx++;
+    const state = JSON.parse(fc.history[fc.historyIdx]);
+    fc.nodes = state.nodes; fc.edges = state.edges;
+    renderAll();
+}
+
+// ── Keyboard ───────────────────────────────────────────────
+function onKeyDown(e) {
+    if (!document.getElementById('fcRoot')) return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if ((e.ctrlKey||e.metaKey) && e.key==='z') { e.preventDefault(); undo(); }
+    if ((e.ctrlKey||e.metaKey) && e.key==='y') { e.preventDefault(); redo(); }
+    if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveFlow(); }
+    if (e.key==='Escape') { fc.selected=null; renderAll(); renderPropPanel(); }
+    if ((e.key==='Delete'||e.key==='Backspace') && fc.selected) {
+        const node = fc.nodes.find(n=>n.id===fc.selected);
+        if (node && node.type!=='start') window.fcDeleteNode(fc.selected);
+    }
+}
+
+// ── Preview ────────────────────────────────────────────────
+function getPreview(node) {
+    const d = node.config||{};
+    if (d.text) return d.text.slice(0,80);
+    if (d.triggerKeyword) return 'Тригер: ' + d.triggerKeyword;
+    if (d.aiSystem) return 'AI: ' + d.aiSystem.slice(0,60);
+    if (d.apiUrl) return d.apiMethod+' '+d.apiUrl.slice(0,40);
+    if (d.dealTitle) return d.dealTitle;
+    if (d.delay) return `${d.delay} ${d.delayUnit||'секунд'}`;
+    if (d.condVar) return `${d.condVar} ${d.condOp||'='} ${d.condVal||'?'}`;
+    if (d.splitA) return `А: ${d.splitA}% / Б: ${d.splitB||50}%`;
+    return '';
+}
 
 // ── Helpers ────────────────────────────────────────────────
-function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function snap(v) { return Math.round(v/20)*20; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function escAttr(s) { return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 })();
