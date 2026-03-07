@@ -106,7 +106,7 @@ function mountCanvas() {
     const root = document.createElement('div');
     root.id = 'fcRoot';
     root.style.cssText = [
-        'position:fixed;inset:0;z-index:10002',
+        'position:fixed;inset:0;z-index:10010',
         'display:flex;flex-direction:column',
         'background:#f1f5f9;font-family:system-ui,sans-serif',
         'user-select:none',
