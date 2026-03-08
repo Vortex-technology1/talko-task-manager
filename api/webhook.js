@@ -142,12 +142,53 @@ module.exports = async (req, res) => {
             return res.status(200).json({ ok: true, skipped: 'no flow' });
         }
 
-        console.log(`[webhook] Flow: ${flow.id}, nodes: ${flow.nodes?.length || 0}`);
-        console.log(`[webhook] Node types:`, (flow.nodes||[]).map(n=>n.id+':'+n.type).join(', '));
+        // Мержимо nodes: canvasData.nodes (canvas формат) + flow.nodes (лінійний формат)
+        // Canvas зберігає runtime nodes в canvasData.nodes з полями {id, type, text, nextNode, buttons, ...}
+        let runtimeNodes = flow.nodes || [];
+        if (flow.canvasData?.nodes?.length) {
+            // canvasData.nodes мають формат {...config, id, type, _x, _y}
+            // Конвертуємо в runtime формат
+            const canvasNodes = flow.canvasData.nodes
+                .filter(n => n.id && n.type !== 'start')
+                .map(n => ({
+                    id: n.id,
+                    type: n.type || 'message',
+                    text: n.text || n.config?.text || '',
+                    nextNode: n.nextNode || n.config?.nextNode || null,
+                    buttons: n.buttons || n.config?.buttons || [],
+                    options: n.options || n.config?.options || [],
+                    systemPrompt: n.systemPrompt || n.config?.systemPrompt || '',
+                    model: n.model || n.config?.model || 'gpt-4o-mini',
+                    saveAs: n.saveAs || n.config?.saveAs || null,
+                    aiProvider: n.aiProvider || n.config?.aiProvider || 'openai',
+                    apiKey: n.apiKey || n.config?.apiKey || null,
+                }));
+            // Будуємо nextNode з canvasData.edges
+            const edges = flow.canvasData.edges || [];
+            canvasNodes.forEach(n => {
+                const outEdge = edges.find(e => e.fromNode === n.id && e.fromPort === 'out');
+                if (outEdge) n.nextNode = outEdge.toNode;
+                // Кнопки — порти btn_0, btn_1...
+                if (n.buttons?.length) {
+                    n.buttons = n.buttons.map((b, i) => {
+                        const btnEdge = edges.find(e => e.fromNode === n.id && e.fromPort === `btn_${i}`);
+                        return { ...b, nextNode: btnEdge?.toNode || null };
+                    });
+                    // options для сумісності
+                    n.options = n.buttons.map(b => ({ label: b.label, nextNode: b.nextNode }));
+                }
+            });
+            if (canvasNodes.length > 0) runtimeNodes = canvasNodes;
+        }
+
+        console.log(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
+        console.log(`[webhook] Node types:`, runtimeNodes.map(n=>n.id+':'+n.type).join(', '));
 
         // Будуємо map вузлів
         const nodeMap = {};
-        (flow.nodes || []).forEach(n => { if (n.id) nodeMap[n.id] = n; });
+        runtimeNodes.forEach(n => { if (n.id) nodeMap[n.id] = n; });
+        // Підміняємо flow.nodes на runtime
+        flow.nodes = runtimeNodes;
 
         // Визначаємо поточний вузол — пропускаємо вузли без id та start/trigger
         const firstRealNode = (flow.nodes || []).find(n => n.id && n.type !== 'start' && n.type !== 'trigger');
