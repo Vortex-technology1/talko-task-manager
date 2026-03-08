@@ -315,8 +315,24 @@ function normalizeMeta(body) {
 
 function resolveNext(node, userText) {
     if (node.options?.length) {
+        // Спочатку шукаємо по btn_N індексу (новий формат callback_data)
+        const btnMatch = userText?.match(/^btn_(\d+)/);
+        if (btnMatch) {
+            const idx = parseInt(btnMatch[1]);
+            const opt = node.options[idx];
+            if (opt?.nextNode) return opt.nextNode;
+        }
+        // Потім по label/value/id
         const m = node.options.find(o => o.label===userText || o.value===userText || o.id===userText);
         if (m?.nextNode) return m.nextNode;
+    }
+    if (node.buttons?.length) {
+        const btnMatch = userText?.match(/^btn_(\d+)/);
+        if (btnMatch) {
+            const idx = parseInt(btnMatch[1]);
+            const btn = node.buttons[idx];
+            if (btn?.nextNode) return btn.nextNode;
+        }
     }
     return node.nextNode || null;
 }
@@ -373,7 +389,7 @@ async function sendTg(token, chatId, text, buttons) {
         payload.reply_markup = { inline_keyboard: [
             buttons.map(b => b.url
                 ? { text: b.label||b.text||'?', url: b.url }
-                : { text: b.label||b.text||'?', callback_data: String(b.value||b.label||b.id||'btn').slice(0,60) }
+                : { text: b.label||b.text||'?', callback_data: `btn_${i}_${String(b.id||b.value||i).replace(/[^a-zA-Z0-9_]/g,'').slice(0,50)||i}` }
             )
         ]};
     }
