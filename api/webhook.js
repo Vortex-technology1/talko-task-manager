@@ -1,7 +1,5 @@
 // ============================================================
-// TALKO Universal Webhook — Vercel Serverless v3
-// POST /api/webhook?companyId=X&channel=telegram
-// Flows: companies/{id}/bots/{botId}/flows/{flowId}
+// TALKO Universal Webhook — Vercel Serverless v4 FINAL
 // ============================================================
 
 const admin = require('firebase-admin');
@@ -11,9 +9,6 @@ if (!admin.apps.length) {
     try {
         let pk = process.env.FIREBASE_PRIVATE_KEY || '';
         pk = pk.replace(/\\n/g, '\n');
-        if (!pk.includes('-----BEGIN') && pk.length > 100) {
-            try { pk = Buffer.from(pk, 'base64').toString('utf8'); } catch(e) {}
-        }
         admin.initializeApp({
             credential: admin.credential.cert({
                 projectId: process.env.FIREBASE_PROJECT_ID || 'task-manager-44e84',
@@ -21,79 +16,85 @@ if (!admin.apps.length) {
                 privateKey: pk || undefined,
             }),
         });
-    } catch(e) {
-        initError = e.message;
-    }
+    } catch(e) { initError = e.message; }
 }
 const db = initError ? null : admin.firestore();
 
 module.exports = async (req, res) => {
+    // ── GET: діагностика ─────────────────────────────────────
     if (req.method === 'GET') {
-        // Діагностика — перевіряємо env та Firebase
-        const diag = {
-            ok: true,
-            service: 'TALKO Webhook v2',
-            initError: initError || null,
-            env: {
-                hasProjectId: !!process.env.FIREBASE_PROJECT_ID,
-                hasClientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
-                hasPrivateKey: !!process.env.FIREBASE_PRIVATE_KEY,
-                projectId: process.env.FIREBASE_PROJECT_ID || 'NOT SET',
-            },
-            query: req.query,
-        };
-        // Спробуємо підключитись до Firebase
+        const diag = { ok: true, initError: initError || null, env: {
+            hasProjectId: !!process.env.FIREBASE_PROJECT_ID,
+            hasClientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
+            hasPrivateKey: !!process.env.FIREBASE_PRIVATE_KEY,
+        }};
         try {
-            if (!db) throw new Error('DB not initialized: ' + initError);
+            if (!db) throw new Error('DB not initialized');
             await db.collection('companies').limit(1).get();
             diag.firebase = 'connected';
-        } catch(e) {
-            diag.firebase = 'ERROR: ' + e.message;
-        }
+        } catch(e) { diag.firebase = 'ERROR: ' + e.message; }
         return res.status(200).json(diag);
     }
-    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+    if (req.method !== 'POST') return res.status(405).end();
 
     const { companyId, channel } = req.query;
     if (!companyId || !channel) return res.status(400).json({ error: 'Missing params' });
 
     try {
         const body = req.body;
-        let normalized = channel === 'telegram' ? normalizeTelegram(body) :
-                         (channel === 'instagram' || channel === 'facebook') ? normalizeMeta(body) : null;
 
-        if (!normalized) return res.status(200).json({ ok: true, skipped: 'no message' });
+        // ── Нормалізація повідомлення ────────────────────────
+        let normalized = null;
+        let callbackQueryId = null; // для answerCallbackQuery
+
+        if (channel === 'telegram') {
+            const msg = body?.message;
+            const cb = body?.callback_query;
+            if (!msg && !cb) return res.status(200).json({ ok: true, skipped: 'no message' });
+            const from = msg?.from || cb?.from;
+            if (!from) return res.status(200).json({ ok: true, skipped: 'no from' });
+            normalized = {
+                senderId: String(from.id),
+                senderName: [from.first_name, from.last_name].filter(Boolean).join(' ') || from.username || '',
+                text: msg?.text || cb?.data || '',
+            };
+            if (cb) callbackQueryId = cb.id;
+        } else if (channel === 'facebook' || channel === 'instagram') {
+            const messaging = body?.entry?.[0]?.messaging?.[0];
+            if (!messaging) return res.status(200).json({ ok: true, skipped: 'no messaging' });
+            normalized = { senderId: messaging.sender?.id || '', senderName: '', text: messaging.message?.text || '' };
+        }
+
+        if (!normalized) return res.status(200).json({ ok: true, skipped: 'unsupported channel' });
+
         console.log(`[webhook] ${channel} from ${normalized.senderId}: "${normalized.text}"`);
 
         const compRef = db.collection('companies').doc(companyId);
 
-        // Знаходимо бот по каналу
+        // ── Знаходимо бот токен ──────────────────────────────
         let botToken = null, botDocId = null;
-        let botsSnap = await compRef.collection('bots')
-            .where('channel', '==', channel)
-            .where('status', '==', 'active').limit(5).get();
-
-        // Fallback: якщо бот без status поля (старі боти) — беремо будь-який бот цього каналу
-        if (botsSnap.empty) {
-            botsSnap = await compRef.collection('bots')
-                .where('channel', '==', channel).limit(5).get();
-        }
-
+        let botsSnap = await compRef.collection('bots').where('channel', '==', channel).limit(5).get();
         if (!botsSnap.empty) {
             const bd = botsSnap.docs[0];
             botDocId = bd.id;
             botToken = bd.data().token || bd.data().botToken;
-        } else {
+        }
+        if (!botToken) {
             const compDoc = await compRef.get();
             botToken = compDoc.data()?.integrations?.telegram?.botToken;
         }
+        if (!botToken) return res.status(200).json({ ok: true, skipped: 'no token' });
 
-        if (!botToken) {
-            console.log('[webhook] No bot token');
-            return res.status(200).json({ ok: true, skipped: 'no token' });
+        // Підтверджуємо callback_query одразу (прибирає "годинник" на кнопці)
+        if (callbackQueryId && botToken) {
+            fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ callback_query_id: callbackQueryId })
+            }).catch(() => {});
         }
 
-        // Сесія
+        // ── Сесія ─────────────────────────────────────────────
         const sessionId = `${channel}_${normalized.senderId}`;
         const sessionRef = compRef.collection('sessions').doc(sessionId);
         const sessionDoc = await sessionRef.get();
@@ -102,27 +103,29 @@ module.exports = async (req, res) => {
             channel, currentFlowId: null, currentBotId: null,
             currentNodeId: null, waitingForInput: null,
             data: {}, tags: [],
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
         };
 
         const isStart = /^\/start/.test(normalized.text) || normalized.text === 'start';
         if (isStart) {
-            session.currentFlowId = null; session.currentNodeId = null;
-            session.waitingForInput = null; session.data = {};
+            Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null, data: {} });
         }
 
+        // ── Знаходимо флоу ───────────────────────────────────
         const currentBotId = botDocId || session.currentBotId;
-
-        // Знаходимо флоу
         let flow = null;
+
         if (currentBotId) {
             const flowsRef = compRef.collection('bots').doc(currentBotId).collection('flows');
+
+            // Якщо є активна сесія — продовжуємо той самий флоу
             if (session.currentFlowId && !isStart) {
                 const fd = await flowsRef.doc(session.currentFlowId).get();
                 if (fd.exists) flow = { id: fd.id, botId: currentBotId, ...fd.data() };
             }
+
+            // Шукаємо по тригеру
             if (!flow) {
-                const allFlows = await flowsRef.limit(20).get();
+                const allFlows = await flowsRef.where('status', '==', 'active').limit(20).get();
                 for (const fd of allFlows.docs) {
                     const trigger = fd.data().triggerKeyword || '/start';
                     if (isStart || normalized.text === trigger) {
@@ -130,9 +133,9 @@ module.exports = async (req, res) => {
                         break;
                     }
                 }
-                if (!flow && allFlows.docs.length > 0) {
-                    const fd = allFlows.docs[0];
-                    flow = { id: fd.id, botId: currentBotId, ...fd.data() };
+                // Fallback — перший активний флоу
+                if (!flow && !allFlows.empty) {
+                    flow = { id: allFlows.docs[0].id, botId: currentBotId, ...allFlows.docs[0].data() };
                 }
             }
         }
@@ -142,37 +145,27 @@ module.exports = async (req, res) => {
             return res.status(200).json({ ok: true, skipped: 'no flow' });
         }
 
-        // flow.nodes — лінійний масив з повним текстом, nextNode, buttons
-        // canvasData.edges — з'єднання між вузлами (для кнопок)
+        // ── Будуємо runtime nodes ─────────────────────────────
+        // flow.nodes — лінійний масив (зберігається при saveFlow)
+        // flow.canvasData.edges — з'єднання між вузлами
         let runtimeNodes = (flow.nodes || []).filter(n => n.id && n.type !== 'start' && n.type !== 'trigger');
 
-        // Якщо flow.nodes порожній — fallback на canvasData.nodes
+        // Fallback: якщо flow.nodes порожній — беремо з canvasData
         if (runtimeNodes.length === 0 && flow.canvasData?.nodes?.length) {
             runtimeNodes = flow.canvasData.nodes
                 .filter(n => n.id && n.type !== 'start')
-                .map(n => ({
-                    id: n.id,
-                    type: n.type || 'message',
-                    text: n.text || '',
-                    nextNode: n.nextNode || null,
-                    buttons: n.buttons || [],
-                    options: n.options || [],
-                    systemPrompt: n.systemPrompt || '',
-                    model: n.model || 'gpt-4o-mini',
-                    saveAs: n.saveAs || null,
-                    aiProvider: n.aiProvider || 'openai',
-                    apiKey: n.apiKey || null,
-                }));
+                .map(n => ({ id: n.id, type: n.type || 'message', text: n.text || '',
+                    nextNode: n.nextNode || null, buttons: n.buttons || [], options: n.options || [],
+                    systemPrompt: n.systemPrompt || '', model: n.model || 'gpt-4o-mini',
+                    saveAs: n.saveAs || null, aiApiKey: n.apiKey || null }));
         }
 
-        // Патчимо nextNode кнопок з canvasData.edges
+        // Патчимо nextNode з canvasData.edges
         const edges = flow.canvasData?.edges || [];
         if (edges.length > 0) {
             runtimeNodes.forEach(n => {
-                // out порт
                 const outEdge = edges.find(e => e.fromNode === n.id && e.fromPort === 'out');
                 if (outEdge && !n.nextNode) n.nextNode = outEdge.toNode;
-                // кнопки btn_0, btn_1...
                 if (n.buttons?.length) {
                     n.buttons = n.buttons.map((b, i) => {
                         if (b.nextNode) return b;
@@ -185,50 +178,45 @@ module.exports = async (req, res) => {
         }
 
         console.log(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
-        console.log(`[webhook] Node types:`, runtimeNodes.map(n=>n.id+':'+n.type).join(', '));
+        console.log(`[webhook] Nodes:`, runtimeNodes.map(n => `${n.id}:${n.type}`).join(', '));
 
-        // Будуємо map вузлів
         const nodeMap = {};
         runtimeNodes.forEach(n => { if (n.id) nodeMap[n.id] = n; });
-        // Підміняємо flow.nodes на runtime
-        flow.nodes = runtimeNodes;
 
-        // Визначаємо поточний вузол — пропускаємо вузли без id та start/trigger
-        const firstRealNode = (flow.nodes || []).find(n => n.id && n.type !== 'start' && n.type !== 'trigger');
-        let nodeId = (!isStart && session.currentNodeId) ? session.currentNodeId : (firstRealNode?.id || null);
-        console.log(`[webhook] firstRealNode: ${firstRealNode?.id}, nodeId: ${nodeId}, isStart: ${isStart}`);
+        // ── Визначаємо стартовий вузол ───────────────────────
+        const firstNode = runtimeNodes[0];
+        let nodeId = (isStart || !session.currentNodeId) ? firstNode?.id : null;
 
-        // Обробляємо відповідь якщо чекали
+        // ── Обробка кнопки або вводу ─────────────────────────
         if (!isStart && session.waitingForInput) {
             const waitNode = nodeMap[session.waitingForInput];
             if (waitNode) {
                 if (waitNode.saveAs) session.data[waitNode.saveAs] = normalized.text;
                 nodeId = resolveNext(waitNode, normalized.text);
                 session.waitingForInput = null;
-                if (!nodeId) {
-                    await finish(session, flow, compRef, channel);
-                    Object.assign(session, { currentFlowId:null, currentNodeId:null, waitingForInput:null });
-                    await sessionRef.set(session, { merge:true });
-                    return res.status(200).json({ ok: true });
-                }
+            } else {
+                nodeId = session.currentNodeId || firstNode?.id;
             }
         }
 
-        // Виконуємо ланцюг вузлів
+        if (!nodeId) {
+            await sessionRef.set(session, { merge: true });
+            return res.status(200).json({ ok: true });
+        }
+
+        // ── Виконуємо ланцюг вузлів ──────────────────────────
         let safety = 0;
         while (nodeId && safety++ < 30) {
             const n = nodeMap[nodeId];
-            if (!n) break;
-            console.log(`[webhook] Node ${nodeId} type=${n.type}`);
+            if (!n) { console.log(`[webhook] Node not found: ${nodeId}`); break; }
+            console.log(`[webhook] Executing node ${nodeId} type=${n.type}`);
 
             if (n.type === 'message') {
-                const text = interp(n.text || n.config?.text || '', session.data);
-                // Пропускаємо порожні вузли (наприклад start-тригер збережений як message)
+                const text = interp(n.text || '', session.data);
                 if (!text.trim()) { nodeId = n.nextNode || null; continue; }
-                const btns = n.options?.length ? n.options : (n.buttons?.length ? n.buttons : null);
+                const btns = n.buttons?.length ? n.buttons : (n.options?.length ? n.options : null);
                 await sendTg(botToken, normalized.senderId, text, btns);
                 if (btns?.length) {
-                    // Чекаємо відповідь на кнопку
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                         currentNodeId: nodeId, waitingForInput: nodeId });
                     await sessionRef.set(session, { merge: true });
@@ -236,23 +224,40 @@ module.exports = async (req, res) => {
                 }
                 nodeId = n.nextNode || null;
 
+            } else if (n.type === 'ai' || n.type === 'ai_response') {
+                // AI вузол — відповідає на поточне повідомлення і чекає наступного
+                const reply = await callAI(n, normalized.text, session, compRef);
+                await sendTg(botToken, normalized.senderId, reply);
+                if (n.nextNode) {
+                    // Якщо є наступний вузол — чекаємо відповідь користувача
+                    Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
+                        currentNodeId: n.nextNode, waitingForInput: nodeId });
+                    await sessionRef.set(session, { merge: true });
+                    return res.status(200).json({ ok: true });
+                }
+                nodeId = null;
+
             } else if (n.type === 'pause') {
                 Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                     currentNodeId: n.nextNode || null, waitingForInput: nodeId });
                 await sessionRef.set(session, { merge: true });
                 return res.status(200).json({ ok: true });
 
-            } else if (n.type === 'ai' || n.type === 'ai_response') {
-                const reply = await callAI(n, normalized.text, session, compRef);
-                await sendTg(botToken, normalized.senderId, reply);
-                nodeId = n.nextNode || null;
+            } else if (n.type === 'filter') {
+                nodeId = evalFilter(n, session.data) ? n.trueNode : n.falseNode;
 
             } else if (n.type === 'action') {
                 await doAction(n, session);
                 nodeId = n.nextNode || null;
 
-            } else if (n.type === 'filter') {
-                nodeId = evalFilter(n, session.data) ? n.trueNode : n.falseNode;
+            } else if (n.type === 'api') {
+                try {
+                    const r = await fetch(n.url, { method: n.method || 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                        ...(n.body ? { body: interp(n.body, session.data) } : {}) });
+                    session.data._apiResponse = await r.text();
+                } catch(e) { session.data._apiError = e.message; }
+                nodeId = n.nextNode || null;
 
             } else if (n.type === 'end' || n.type === 'finish') {
                 if (n.text) await sendTg(botToken, normalized.senderId, interp(n.text, session.data));
@@ -260,85 +265,49 @@ module.exports = async (req, res) => {
                 nodeId = null;
                 break;
 
-            } else if (n.type === 'api') {
-                try {
-                    const r = await fetch(n.url, { method: n.method||'GET',
-                        headers:{'Content-Type':'application/json'},
-                        ...(n.body?{body:interp(n.body,session.data)}:{}) });
-                    session.data._apiResponse = await r.text();
-                } catch(e) { session.data._apiError = e.message; }
-                nodeId = n.nextNode || null;
-
             } else {
                 nodeId = n.nextNode || null;
             }
         }
 
+        // ── Зберігаємо сесію ─────────────────────────────────
         if (!nodeId) {
-            Object.assign(session, { currentFlowId:null, currentNodeId:null, waitingForInput:null });
+            Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null });
         } else {
             Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId, currentNodeId: nodeId });
         }
-
         session.updatedAt = admin.firestore.FieldValue.serverTimestamp();
         await sessionRef.set(session, { merge: true });
-        await logMsg(compRef, sessionId, 'in', normalized.text);
         return res.status(200).json({ ok: true });
 
-    } catch (err) {
+    } catch(err) {
         console.error('[webhook] ERROR:', err.message, err.stack);
-        return res.status(200).json({ ok: true });
+        return res.status(200).json({ ok: true }); // завжди 200 щоб Telegram не ретраїв
     }
 };
 
-// ── Utils ─────────────────────────────────────────────────
-
-function normalizeTelegram(body) {
-    const msg = body?.message, cb = body?.callback_query;
-    if (!msg && !cb) return null;
-    const from = msg?.from || cb?.from;
-    if (!from) return null;
-    return {
-        senderId: String(from.id),
-        senderName: [from.first_name, from.last_name].filter(Boolean).join(' ') || from.username || '',
-        text: msg?.text || cb?.data || '',
-    };
-}
-
-function normalizeMeta(body) {
-    try {
-        const messaging = body?.entry?.[0]?.messaging?.[0];
-        if (!messaging) return null;
-        return { senderId: messaging.sender?.id || '', senderName: '', text: messaging.message?.text || '' };
-    } catch { return null; }
-}
+// ── Helpers ───────────────────────────────────────────────
 
 function resolveNext(node, userText) {
-    if (node.options?.length) {
-        // Спочатку шукаємо по btn_N індексу (новий формат callback_data)
-        const btnMatch = userText?.match(/^btn_(\d+)/);
-        if (btnMatch) {
-            const idx = parseInt(btnMatch[1]);
-            const opt = node.options[idx];
-            if (opt?.nextNode) return opt.nextNode;
-        }
-        // Потім по label/value/id
-        const m = node.options.find(o => o.label===userText || o.value===userText || o.id===userText);
-        if (m?.nextNode) return m.nextNode;
-    }
+    // Пошук по btn_N індексу (формат callback_data)
+    const btnMatch = String(userText || '').match(/^btn_(\d+)/);
+    const idx = btnMatch ? parseInt(btnMatch[1]) : -1;
+
     if (node.buttons?.length) {
-        const btnMatch = userText?.match(/^btn_(\d+)/);
-        if (btnMatch) {
-            const idx = parseInt(btnMatch[1]);
-            const btn = node.buttons[idx];
-            if (btn?.nextNode) return btn.nextNode;
-        }
+        if (idx >= 0 && node.buttons[idx]?.nextNode) return node.buttons[idx].nextNode;
+        const b = node.buttons.find(b => b.label === userText || b.value === userText);
+        if (b?.nextNode) return b.nextNode;
+    }
+    if (node.options?.length) {
+        if (idx >= 0 && node.options[idx]?.nextNode) return node.options[idx].nextNode;
+        const o = node.options.find(o => o.label === userText || o.value === userText);
+        if (o?.nextNode) return o.nextNode;
     }
     return node.nextNode || null;
 }
 
 function interp(text, data) {
-    return (text||'').replace(/\{\{(\w+)\}\}/g, (_, k) => data[k] || '');
+    return (text || '').replace(/\{\{(\w+)\}\}/g, (_, k) => data[k] || '');
 }
 
 function evalFilter(node, data) {
@@ -369,54 +338,48 @@ async function callAI(node, userText, session, compRef) {
     try {
         const compDoc = await compRef.get();
         const apiKey = node.aiApiKey || compDoc.data()?.openaiApiKey || process.env.OPENAI_API_KEY;
-        if (!apiKey) return node.fallback || 'Дякуємо!';
-        const sysPrompt = (node.systemPrompt||'You are helpful.') + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
+        if (!apiKey) return node.fallback || 'Вибачте, AI недоступний.';
+        const sysPrompt = (node.systemPrompt || 'You are helpful.') + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
         const r = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-            body: JSON.stringify({ model: node.model||'gpt-4o-mini', max_tokens:500,
-                messages:[{role:'system',content:sysPrompt},{role:'user',content:userText}] })
+            body: JSON.stringify({ model: node.model || 'gpt-4o-mini', max_tokens: 500,
+                messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: userText }] })
         });
         const d = await r.json();
         return d.choices?.[0]?.message?.content || node.fallback || 'Дякуємо!';
-    } catch { return node.fallback || 'Виникла помилка.'; }
+    } catch(e) {
+        console.error('[callAI]', e.message);
+        return node.fallback || 'Виникла помилка.';
+    }
 }
 
 async function sendTg(token, chatId, text, buttons) {
     if (!token || !chatId) return;
-    const payload = { chat_id: chatId, text: (text||' ').trim(), parse_mode: 'HTML' };
+    const payload = { chat_id: chatId, text: (text || ' ').trim(), parse_mode: 'HTML' };
     if (buttons?.length) {
         payload.reply_markup = { inline_keyboard: [
-            buttons.map(b => b.url
-                ? { text: b.label||b.text||'?', url: b.url }
-                : { text: b.label||b.text||'?', callback_data: `btn_${i}_${String(b.id||b.value||i).replace(/[^a-zA-Z0-9_]/g,'').slice(0,50)||i}` }
+            buttons.map((b, i) => b.url
+                ? { text: b.label || b.text || '?', url: b.url }
+                : { text: b.label || b.text || '?', callback_data: `btn_${i}` }
             )
         ]};
     }
     try {
         const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
         const result = await r.json();
-        if (!result.ok) console.error('[sendTg]', result.description);
-    } catch(e) { console.error('[sendTg] error:', e.message); }
+        if (!result.ok) console.error('[sendTg] Error:', result.description, JSON.stringify(payload).slice(0, 200));
+    } catch(e) { console.error('[sendTg] fetch error:', e.message); }
 }
 
 async function finish(session, flow, compRef, channel) {
     try {
         await compRef.collection('leads').add({
-            senderId: session.senderId, senderName: session.senderName||'',
-            channel, flowId: flow?.id||null, flowName: flow?.name||null,
-            data: session.data||{}, tags: session.tags||[],
+            senderId: session.senderId, senderName: session.senderName || '',
+            channel, flowId: flow?.id || null, data: session.data || {}, tags: session.tags || [],
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
     } catch(e) { console.error('[finish]', e.message); }
-}
-
-async function logMsg(compRef, sessionId, dir, text) {
-    try {
-        await compRef.collection('sessions').doc(sessionId).collection('messages').add({
-            direction: dir, text: text||'', timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-    } catch {}
 }
