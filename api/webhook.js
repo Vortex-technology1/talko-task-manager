@@ -142,43 +142,46 @@ module.exports = async (req, res) => {
             return res.status(200).json({ ok: true, skipped: 'no flow' });
         }
 
-        // Мержимо nodes: canvasData.nodes (canvas формат) + flow.nodes (лінійний формат)
-        // Canvas зберігає runtime nodes в canvasData.nodes з полями {id, type, text, nextNode, buttons, ...}
-        let runtimeNodes = flow.nodes || [];
-        if (flow.canvasData?.nodes?.length) {
-            // canvasData.nodes мають формат {...config, id, type, _x, _y}
-            // Конвертуємо в runtime формат
-            const canvasNodes = flow.canvasData.nodes
+        // flow.nodes — лінійний масив з повним текстом, nextNode, buttons
+        // canvasData.edges — з'єднання між вузлами (для кнопок)
+        let runtimeNodes = (flow.nodes || []).filter(n => n.id && n.type !== 'start' && n.type !== 'trigger');
+
+        // Якщо flow.nodes порожній — fallback на canvasData.nodes
+        if (runtimeNodes.length === 0 && flow.canvasData?.nodes?.length) {
+            runtimeNodes = flow.canvasData.nodes
                 .filter(n => n.id && n.type !== 'start')
                 .map(n => ({
                     id: n.id,
                     type: n.type || 'message',
-                    text: n.text || n.config?.text || '',
-                    nextNode: n.nextNode || n.config?.nextNode || null,
-                    buttons: n.buttons || n.config?.buttons || [],
-                    options: n.options || n.config?.options || [],
-                    systemPrompt: n.systemPrompt || n.config?.systemPrompt || '',
-                    model: n.model || n.config?.model || 'gpt-4o-mini',
-                    saveAs: n.saveAs || n.config?.saveAs || null,
-                    aiProvider: n.aiProvider || n.config?.aiProvider || 'openai',
-                    apiKey: n.apiKey || n.config?.apiKey || null,
+                    text: n.text || '',
+                    nextNode: n.nextNode || null,
+                    buttons: n.buttons || [],
+                    options: n.options || [],
+                    systemPrompt: n.systemPrompt || '',
+                    model: n.model || 'gpt-4o-mini',
+                    saveAs: n.saveAs || null,
+                    aiProvider: n.aiProvider || 'openai',
+                    apiKey: n.apiKey || null,
                 }));
-            // Будуємо nextNode з canvasData.edges
-            const edges = flow.canvasData.edges || [];
-            canvasNodes.forEach(n => {
+        }
+
+        // Патчимо nextNode кнопок з canvasData.edges
+        const edges = flow.canvasData?.edges || [];
+        if (edges.length > 0) {
+            runtimeNodes.forEach(n => {
+                // out порт
                 const outEdge = edges.find(e => e.fromNode === n.id && e.fromPort === 'out');
-                if (outEdge) n.nextNode = outEdge.toNode;
-                // Кнопки — порти btn_0, btn_1...
+                if (outEdge && !n.nextNode) n.nextNode = outEdge.toNode;
+                // кнопки btn_0, btn_1...
                 if (n.buttons?.length) {
                     n.buttons = n.buttons.map((b, i) => {
+                        if (b.nextNode) return b;
                         const btnEdge = edges.find(e => e.fromNode === n.id && e.fromPort === `btn_${i}`);
-                        return { ...b, nextNode: btnEdge?.toNode || null };
+                        return btnEdge ? { ...b, nextNode: btnEdge.toNode } : b;
                     });
-                    // options для сумісності
                     n.options = n.buttons.map(b => ({ label: b.label, nextNode: b.nextNode }));
                 }
             });
-            if (canvasNodes.length > 0) runtimeNodes = canvasNodes;
         }
 
         console.log(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
