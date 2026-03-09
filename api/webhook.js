@@ -107,7 +107,7 @@ module.exports = async (req, res) => {
 
         const isStart = /^\/start/.test(normalized.text) || normalized.text === 'start';
         if (isStart) {
-            Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null, data: {} });
+            Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null, data: {}, aiHistory: [] });
         }
 
         // ── Знаходимо флоу ───────────────────────────────────
@@ -154,10 +154,20 @@ module.exports = async (req, res) => {
         if (runtimeNodes.length === 0 && flow.canvasData?.nodes?.length) {
             runtimeNodes = flow.canvasData.nodes
                 .filter(n => n.id && n.type !== 'start')
-                .map(n => ({ id: n.id, type: n.type || 'message', text: n.text || '',
-                    nextNode: n.nextNode || null, buttons: n.buttons || [], options: n.options || [],
-                    systemPrompt: n.systemPrompt || '', model: n.model || 'gpt-4o-mini',
-                    saveAs: n.saveAs || null, aiApiKey: n.apiKey || null }));
+                .map(n => ({
+                    id: n.id, type: n.type || 'message',
+                    text: n.text || '',
+                    nextNode: n.nextNode || null,
+                    buttons: n.buttons || [],
+                    options: n.options || [],
+                    config: n.config || n,  // зберігаємо весь об'єкт як config
+                    // top-level для сумісності
+                    aiSystem: n.config?.aiSystem || n.aiSystem || n.systemPrompt || '',
+                    aiApiKey: n.config?.aiApiKey || n.aiApiKey || n.apiKey || null,
+                    aiModel: n.config?.aiModel || n.aiModel || n.model || 'gpt-4o-mini',
+                    saveAs: n.config?.saveAs || n.saveAs || null,
+                    fallback: n.config?.fallback || n.fallback || null,
+                }));
         }
 
         // Патчимо nextNode з canvasData.edges
@@ -191,19 +201,24 @@ module.exports = async (req, res) => {
         if (!isStart && session.waitingForInput) {
             const waitNode = nodeMap[session.waitingForInput];
             if (waitNode) {
-                // Якщо прийшов btn_N — знаходимо реальний текст кнопки
-                let userInput = normalized.text;
-                const btnMatch = userInput.match(/^btn_(\d+)/);
-                if (btnMatch) {
-                    const btnIdx = parseInt(btnMatch[1]);
-                    const btn = waitNode.buttons?.[btnIdx] || waitNode.options?.[btnIdx];
-                    if (btn) userInput = btn.label || btn.text || userInput;
+                if (waitNode.type === 'ai' || waitNode.type === 'ai_response') {
+                    // AI вузол — просто продовжуємо, текст вже нормалізований
+                    nodeId = waitNode.id;
+                    session.waitingForInput = null;
+                } else {
+                    // Якщо прийшов btn_N — знаходимо реальний текст кнопки
+                    let userInput = normalized.text;
+                    const btnMatch = userInput.match(/^btn_(\d+)/);
+                    if (btnMatch) {
+                        const btnIdx = parseInt(btnMatch[1]);
+                        const btn = waitNode.buttons?.[btnIdx] || waitNode.options?.[btnIdx];
+                        if (btn) userInput = btn.label || btn.text || userInput;
+                    }
+                    if (waitNode.saveAs) session.data[waitNode.saveAs] = userInput;
+                    normalized.text = userInput;
+                    nodeId = resolveNext(waitNode, normalized.text);
+                    session.waitingForInput = null;
                 }
-                if (waitNode.saveAs) session.data[waitNode.saveAs] = userInput;
-                // Зберігаємо людський текст для AI
-                normalized.text = userInput;
-                nodeId = resolveNext(waitNode, normalized.text);
-                session.waitingForInput = null;
             } else {
                 nodeId = session.currentNodeId || firstNode?.id;
             }
@@ -357,12 +372,13 @@ async function callAI(node, userText, session, compRef) {
     try {
         const compDoc = await compRef.get();
         const apiKey = node.config?.aiApiKey || node.aiApiKey || compDoc.data()?.openaiApiKey || process.env.OPENAI_API_KEY;
+        console.log('[callAI] apiKey exists:', !!apiKey, 'aiSystem:', (node.config?.aiSystem || node.aiSystem || '').slice(0,50));
         if (!apiKey) return node.fallback || 'Вибачте, AI недоступний.';
-        const sysPrompt = (node.config?.aiSystem || node.systemPrompt || 'You are helpful.') + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
+        const sysPrompt = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.') + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
         const r = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-            body: JSON.stringify({ model: node.model || 'gpt-4o-mini', max_tokens: 500,
+            body: JSON.stringify({ model: node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini', max_tokens: 1500,
                 messages: [
                     { role: 'system', content: sysPrompt },
                     ...(session.aiHistory || []),
@@ -379,7 +395,17 @@ async function callAI(node, userText, session, compRef) {
 
 async function sendTg(token, chatId, text, buttons) {
     if (!token || !chatId) return;
-    const payload = { chat_id: chatId, text: (text || ' ').trim(), parse_mode: 'HTML' };
+    // Конвертуємо markdown bold/italic в HTML для Telegram
+    let safeText = (text || ' ').trim()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    // Відновлюємо тільки базові теги які Telegram підтримує
+    safeText = safeText
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+        .replace(/\*(.*?)\*/g, '<i>$1</i>')
+        .replace(/`(.*?)`/g, '<code>$1</code>');
+    const payload = { chat_id: chatId, text: safeText, parse_mode: 'HTML' };
     if (buttons?.length) {
         payload.reply_markup = { inline_keyboard: [
             buttons.map((b, i) => b.url

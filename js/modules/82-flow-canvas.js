@@ -1361,7 +1361,7 @@ async function saveFlow() {
 
     // Build canvasData (source of truth)
     const canvasData = {
-        nodes: fc.nodes.map(n => ({ ...n.config, id:n.id, type:n.type, _x:n.x, _y:n.y, outputs:n.outputs })),
+        nodes: fc.nodes.map(n => ({ ...n.config, id:n.id, type:n.type, _x:n.x, _y:n.y, outputs:n.outputs, config:n.config||{} })),
         edges: fc.edges,
         version: Date.now(),
     };
@@ -1381,7 +1381,7 @@ async function saveFlow() {
         .filter(n=>n.type!=='start')
         .map(n => {
             const ports = edgeMap[n.id] || {};
-            const d = {...n.config, id:n.id, type:n.type, _x:n.x, _y:n.y};
+            const d = {...n.config, id:n.id, type:n.type, _x:n.x, _y:n.y, config:n.config||{}};
             if (n.type==='filter') { d.trueNode=ports.yes||null; d.falseNode=ports.no||null; }
             else if (n.type==='random') { d.branchA=ports.a||null; d.branchB=ports.b||null; }
             else if (n.type==='ai'||n.type==='api') { d.nextNode=ports.ok||ports.out||null; d.errorNode=ports.err||null; }
@@ -1412,7 +1412,7 @@ async function saveFlow() {
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
         if (btn) btn.textContent = 'Зберегти';
-        if (typeof showToast === 'function') showToast('Флоу збережено <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>', 'success');
+        if (typeof showToast === 'function') showToast('✅ Флоу збережено', 'success');
     } catch(e) {
         if (btn) btn.textContent = 'Зберегти';
         alert('Помилка: ' + e.message);
