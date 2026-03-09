@@ -371,26 +371,79 @@ async function doAction(node, session) {
 async function callAI(node, userText, session, compRef) {
     try {
         const compDoc = await compRef.get();
-        const apiKey = node.config?.aiApiKey || node.aiApiKey || compDoc.data()?.openaiApiKey || process.env.OPENAI_API_KEY;
-        console.log('[callAI] apiKey exists:', !!apiKey, 'aiSystem:', (node.config?.aiSystem || node.aiSystem || '').slice(0,50));
-        if (!apiKey) return node.fallback || 'Вибачте, AI недоступний.';
-        const sysPrompt = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.') + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
-        const r = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-            body: JSON.stringify({ model: node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini', max_tokens: 1500,
-                messages: [
-                    { role: 'system', content: sysPrompt },
-                    ...(session.aiHistory || []),
-                    { role: 'user', content: userText }
-                ] })
-        });
-        const d = await r.json();
-        console.log('[callAI] OpenAI status:', r.status, 'error:', d.error?.message || 'none', 'model:', node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini');
-        return d.choices?.[0]?.message?.content || node.fallback || 'Дякуємо!';
+        const compData = compDoc.data() || {};
+        const provider = node.config?.aiProvider || node.aiProvider || 'openai';
+        const model = node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini';
+        const apiKey = node.config?.aiApiKey || node.aiApiKey
+            || compData[provider + 'ApiKey']
+            || compData.openaiApiKey
+            || process.env.OPENAI_API_KEY;
+
+        console.log('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
+        if (!apiKey) return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний.';
+
+        const sysPrompt = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.')
+            + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
+        const messages = [
+            { role: 'system', content: sysPrompt },
+            ...(session.aiHistory || []),
+            { role: 'user', content: userText }
+        ];
+
+        let responseText = null;
+
+        // ── OpenAI / Deepseek (same API format) ──────────────
+        if (provider === 'openai' || provider === 'deepseek' || model.startsWith('gpt-') || model.startsWith('o3') || model.startsWith('o4') || model.startsWith('deepseek')) {
+            const baseUrl = (provider === 'deepseek' || model.startsWith('deepseek'))
+                ? 'https://api.deepseek.com/v1/chat/completions'
+                : 'https://api.openai.com/v1/chat/completions';
+            const r = await fetch(baseUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                body: JSON.stringify({ model, max_tokens: 1500, messages })
+            });
+            const d = await r.json();
+            console.log('[callAI] status:', r.status, 'error:', d.error?.message || 'none');
+            responseText = d.choices?.[0]?.message?.content || null;
+
+        // ── Anthropic Claude ──────────────────────────────────
+        } else if (provider === 'anthropic' || model.startsWith('claude')) {
+            const r = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                    'anthropic-version': '2023-06-01'
+                },
+                body: JSON.stringify({
+                    model, max_tokens: 1500,
+                    system: sysPrompt,
+                    messages: (session.aiHistory || []).concat([{ role: 'user', content: userText }])
+                })
+            });
+            const d = await r.json();
+            console.log('[callAI] Anthropic status:', r.status, 'error:', d.error?.message || 'none');
+            responseText = d.content?.[0]?.text || null;
+
+        // ── Google Gemini ─────────────────────────────────────
+        } else if (provider === 'google' || model.startsWith('gemini')) {
+            const geminiModel = model || 'gemini-2.0-flash';
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ role: 'user', parts: [{ text: sysPrompt + '\n\n' + userText }] }]
+                })
+            });
+            const d = await r.json();
+            console.log('[callAI] Google status:', r.status, 'error:', d.error?.message || 'none');
+            responseText = d.candidates?.[0]?.content?.parts?.[0]?.text || null;
+        }
+
+        return responseText || node.config?.fallback || node.fallback || 'Дякуємо!';
     } catch(e) {
         console.error('[callAI]', e.message);
-        return node.fallback || 'Виникла помилка.';
+        return node.config?.fallback || node.fallback || 'Виникла помилка.';
     }
 }
 

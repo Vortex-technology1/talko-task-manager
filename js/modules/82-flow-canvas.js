@@ -1123,9 +1123,30 @@ function renderPropPanel() {
 
             // Тільки синхронне читання кешу (await заборонено в switch/case)
             const fallbackModels = {
-                openai:    [['gpt-4o-mini','GPT-4o mini (швидкий ⚡)'],['gpt-4o','GPT-4o (розумний 🧠)'],['gpt-4.1-mini','GPT-4.1 mini (новий ⚡)'],['gpt-4.1','GPT-4.1 (новий 🧠)'],['o4-mini','o4-mini (думає 💭)']],
-                anthropic: [['claude-opus-4-5','Claude Opus 4.5'],['claude-sonnet-4-5','Claude Sonnet 4.5'],['claude-haiku-4-5-20251001','Claude Haiku 4.5']],
-                google:    [['gemini-2.5-pro','Gemini 2.5 Pro'],['gemini-2.0-flash','Gemini 2.0 Flash'],['gemini-1.5-pro','Gemini 1.5 Pro']],
+                openai:    [
+                    ['gpt-4.1-mini','GPT-4.1 mini ⚡ NEW'],
+                    ['gpt-4.1','GPT-4.1 🧠 NEW'],
+                    ['gpt-4.1-nano','GPT-4.1 nano 🔥 NEW'],
+                    ['gpt-5-mini','GPT-5 mini ⚡ NEW'],
+                    ['gpt-5','GPT-5 🧠 NEW'],
+                    ['gpt-4o-mini','GPT-4o mini ⚡'],
+                    ['gpt-4o','GPT-4o 🧠'],
+                    ['o4-mini','o4-mini 💭'],
+                    ['o3','o3 🔬'],
+                    ['deepseek-chat','Deepseek Chat 💬'],
+                ],
+                anthropic: [
+                    ['claude-sonnet-4-6','Claude Sonnet 4.6 NEW 🧠'],
+                    ['claude-opus-4-6','Claude Opus 4.6 NEW 🔬'],
+                    ['claude-haiku-4-5-20251001','Claude Haiku 4.5 ⚡'],
+                    ['claude-sonnet-4-5','Claude Sonnet 4.5'],
+                    ['claude-opus-4-5','Claude Opus 4.5'],
+                ],
+                google:    [
+                    ['gemini-2.5-pro','Gemini 2.5 Pro 🧠 NEW'],
+                    ['gemini-2.0-flash','Gemini 2.0 Flash ⚡'],
+                    ['gemini-1.5-pro','Gemini 1.5 Pro'],
+                ],
             };
             const allModels = window._cachedAiModels || fallbackModels;
             const modelOptions = allModels[aiProvider] || fallbackModels[aiProvider] || fallbackModels.openai;
