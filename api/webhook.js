@@ -235,17 +235,26 @@ module.exports = async (req, res) => {
                 nodeId = n.nextNode || null;
 
             } else if (n.type === 'ai' || n.type === 'ai_response') {
-                // AI вузол — відповідає на поточне повідомлення і чекає наступного
+                // AI вузол з пам'яттю — зберігаємо історію, loop поки AI веде діалог
+                if (!session.aiHistory) session.aiHistory = [];
+                // Додаємо повідомлення юзера в історію
+                session.aiHistory.push({ role: 'user', content: normalized.text });
+                // Обрізаємо до 20 повідомлень (10 пар)
+                if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
+
                 const reply = await callAI(n, normalized.text, session, compRef);
+
+                // Додаємо відповідь AI в історію
+                session.aiHistory.push({ role: 'assistant', content: reply });
+
                 await sendTg(botToken, normalized.senderId, reply);
-                if (n.nextNode) {
-                    // Якщо є наступний вузол — чекаємо відповідь користувача
-                    Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
-                        currentNodeId: n.nextNode, waitingForInput: nodeId });
-                    await sessionRef.set(session, { merge: true });
-                    return res.status(200).json({ ok: true });
-                }
-                nodeId = null;
+
+                // AI loop — залишаємось у тому ж вузлі, чекаємо наступного повідомлення
+                Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
+                    currentNodeId: nodeId, waitingForInput: nodeId,
+                    aiHistory: session.aiHistory });
+                await sessionRef.set(session, { merge: true });
+                return res.status(200).json({ ok: true });
 
             } else if (n.type === 'pause') {
                 Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
@@ -347,14 +356,18 @@ async function doAction(node, session) {
 async function callAI(node, userText, session, compRef) {
     try {
         const compDoc = await compRef.get();
-        const apiKey = node.aiApiKey || compDoc.data()?.openaiApiKey || process.env.OPENAI_API_KEY;
+        const apiKey = node.config?.aiApiKey || node.aiApiKey || compDoc.data()?.openaiApiKey || process.env.OPENAI_API_KEY;
         if (!apiKey) return node.fallback || 'Вибачте, AI недоступний.';
-        const sysPrompt = (node.systemPrompt || 'You are helpful.') + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
+        const sysPrompt = (node.config?.aiSystem || node.systemPrompt || 'You are helpful.') + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
         const r = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
             body: JSON.stringify({ model: node.model || 'gpt-4o-mini', max_tokens: 500,
-                messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: userText }] })
+                messages: [
+                    { role: 'system', content: sysPrompt },
+                    ...(session.aiHistory || []),
+                    { role: 'user', content: userText }
+                ] })
         });
         const d = await r.json();
         return d.choices?.[0]?.message?.content || node.fallback || 'Дякуємо!';
