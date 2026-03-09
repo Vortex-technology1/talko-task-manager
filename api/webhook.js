@@ -191,7 +191,17 @@ module.exports = async (req, res) => {
         if (!isStart && session.waitingForInput) {
             const waitNode = nodeMap[session.waitingForInput];
             if (waitNode) {
-                if (waitNode.saveAs) session.data[waitNode.saveAs] = normalized.text;
+                // Якщо прийшов btn_N — знаходимо реальний текст кнопки
+                let userInput = normalized.text;
+                const btnMatch = userInput.match(/^btn_(\d+)/);
+                if (btnMatch) {
+                    const btnIdx = parseInt(btnMatch[1]);
+                    const btn = waitNode.buttons?.[btnIdx] || waitNode.options?.[btnIdx];
+                    if (btn) userInput = btn.label || btn.text || userInput;
+                }
+                if (waitNode.saveAs) session.data[waitNode.saveAs] = userInput;
+                // Зберігаємо людський текст для AI
+                normalized.text = userInput;
                 nodeId = resolveNext(waitNode, normalized.text);
                 session.waitingForInput = null;
             } else {
