@@ -386,6 +386,7 @@ async function callAI(node, userText, session, compRef) {
                 ] })
         });
         const d = await r.json();
+        console.log('[callAI] OpenAI status:', r.status, 'error:', d.error?.message || 'none', 'model:', node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini');
         return d.choices?.[0]?.message?.content || node.fallback || 'Дякуємо!';
     } catch(e) {
         console.error('[callAI]', e.message);
