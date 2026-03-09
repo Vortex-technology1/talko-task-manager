@@ -950,6 +950,14 @@ function addNode(type, x, y) {
 window.fcAddNode = addNode;
 
 // ── AI Воронка Modal ───────────────────────────────────────
+window.fcSetActionType = function(val) {
+    if (!fc.selected) return;
+    const node = fc.nodes.find(n => n.id === fc.selected);
+    if (!node) return;
+    node.config.actionType = val;
+    renderPropPanel();
+};
+
 window.fcOpenAiFunnelModal = function() {
     if (document.getElementById('fcAiFunnelModal')) return;
     const modal = document.createElement('div');
@@ -1252,12 +1260,16 @@ function renderPropPanel() {
                         style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
                         border-radius:7px;color:white;font-size:11px;box-sizing:border-box;resize:vertical;">${d.notifyText||'🔔 Новий лід: {{senderName}}\nКанал: {{channel}}\nДані: {{ai_response}}'}</textarea>
                 </div>` : fld('Параметри (JSON)', ta('actionPayload', d.actionPayload, '{"variable":"phone","value":"{{input}}"}', 3));
-            fields = fld('Тип дії', sel('actionType',
-                [['set_var','Встановити змінну'],['set_tag','Додати тег'],
-                 ['remove_tag','Видалити тег'],['notify_admin','Сповістити менеджера'],
-                 ['start_flow','Запустити інший флоу'],['stop_flow','Зупинити флоу']],
-                aType))
-                + notifyFields;
+            const actionSel = `<select id="fcp_actionType"
+                onchange="fcSetActionType(this.value)"
+                style="width:100%;padding:8px;background:#0f172a;border:1px solid #334155;
+                border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">
+                ${[['set_var','Встановити змінну'],['set_tag','Додати тег'],
+                   ['remove_tag','Видалити тег'],['notify_admin','Сповістити менеджера'],
+                   ['start_flow','Запустити інший флоу'],['stop_flow','Зупинити флоу']]
+                   .map(([v,l])=>`<option value="${v}" ${aType===v?'selected':''}>${l}</option>`).join('')}
+            </select>`;
+            fields = fld('Тип дії', actionSel) + notifyFields;
             break;
         }
         case 'filter':
