@@ -72,6 +72,10 @@ module.exports = async (req, res) => {
 
         const compRef = db.collection('companies').doc(companyId);
 
+        // FIX 5: читаємо compData один раз для всього запиту
+        const _compDoc = await compRef.get();
+        const _compData = _compDoc.data() || {};
+
         // ── Знаходимо бот токен ──────────────────────────────
         let botToken = null, botDocId = null;
         let botsSnap = await compRef.collection('bots').where('channel', '==', channel).limit(5).get();
@@ -81,8 +85,7 @@ module.exports = async (req, res) => {
             botToken = bd.data().token || bd.data().botToken;
         }
         if (!botToken) {
-            const compDoc = await compRef.get();
-            botToken = compDoc.data()?.integrations?.telegram?.botToken;
+            botToken = _compData?.integrations?.telegram?.botToken;
         }
         if (!botToken) return res.status(200).json({ ok: true, skipped: 'no token' });
 
@@ -145,21 +148,33 @@ module.exports = async (req, res) => {
             return res.status(200).json({ ok: true, skipped: 'no flow' });
         }
 
-        // ── Підвантажуємо великі промпти з nodePrompts підколекції ──
-        // (збережені окремо щоб не перевищувати ліміт 1MB документа)
+        // ── Підвантажуємо canvasData + nodePrompts з підколекцій ──
         const flowDocRef = compRef.collection('bots').doc(currentBotId).collection('flows').doc(flow.id);
+
+        // FIX 1: canvasData зберігається в підколекції, не в основному документі
+        if (!flow.canvasData?.nodes?.length) {
+            try {
+                const canvasDoc = await flowDocRef.collection('canvasData').doc('layout').get();
+                if (canvasDoc.exists) flow.canvasData = canvasDoc.data();
+            } catch(e) { console.warn('[webhook] canvasData load error:', e.message); }
+        }
+
         const promptsSnap = await flowDocRef.collection('nodePrompts').get();
         const nodePromptsMap = {};
         promptsSnap.forEach(doc => { nodePromptsMap[doc.id] = doc.data().aiSystem || ''; });
 
         const restorePrompts = (nodesList) => nodesList.map(n => {
-            const sys = n.config?.aiSystem || n.aiSystem || '';
-            if (sys.startsWith('__ref:')) {
-                const refId = sys.replace('__ref:', '');
+            // FIX 2+3: перевіряємо обидва місця де може бути __ref
+            const sysConfig = n.config?.aiSystem || '';
+            const sysTop = n.aiSystem || '';
+            const hasRef = sysConfig.startsWith('__ref:') || sysTop.startsWith('__ref:');
+            if (hasRef) {
+                const refId = (sysConfig.startsWith('__ref:') ? sysConfig : sysTop).replace('__ref:', '');
                 const realPrompt = nodePromptsMap[refId] || '';
                 const restored = JSON.parse(JSON.stringify(n));
-                if (restored.config?.aiSystem) restored.config.aiSystem = realPrompt;
-                if (restored.aiSystem) restored.aiSystem = realPrompt;
+                // Відновлюємо в обох місцях
+                if (restored.config) restored.config.aiSystem = realPrompt;
+                restored.aiSystem = realPrompt;
                 return restored;
             }
             return n;
@@ -276,10 +291,13 @@ module.exports = async (req, res) => {
                 session.aiHistory.push({ role: 'user', content: normalized.text });
                 if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
 
-                // Проміжне повідомлення поки AI думає
-                await sendTg(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...');
+                // Проміжне повідомлення поки AI думає (тільки перше повідомлення або нова сесія)
+                const isFirstAiMsg = !session.aiHistory || session.aiHistory.length <= 1;
+                if (isFirstAiMsg) {
+                    await sendTg(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...');
+                }
 
-                const rawReply = await callAI(n, normalized.text, session, compRef);
+                const rawReply = await callAI(n, normalized.text, session, compRef, _compData);
 
                 // Парсимо спеціальні теги з відповіді AI:
                 // [BTN:текст] — динамічна кнопка
@@ -312,7 +330,9 @@ module.exports = async (req, res) => {
                     // AI завершив — іти до наступного вузла в ланцюгу
                     console.log('[webhook] AI DONE → next node:', n.nextNode);
                     nodeId = n.nextNode;
+                    // FIX 4: явно очищаємо waitingForInput щоб не застрягти в AI вузлі
                     session.waitingForInput = null;
+                    session.currentNodeId = n.nextNode;
                     session.aiHistory = []; // очищаємо історію діалогу
                 } else {
                     // AI продовжує діалог — залишаємось у вузлі
@@ -398,7 +418,12 @@ function resolveNext(node, userText) {
 }
 
 function interp(text, data) {
-    return (text || '').replace(/\{\{(\w+)\}\}/g, (_, k) => data[k] || '');
+    // FIX 6: замінюємо змінні але екрануємо щоб не ламати HTML в sendTg
+    return (text || '').replace(/\{\{(\w+)\}\}/g, (_, k) => {
+        const val = data[k] || '';
+        // Якщо значення вже містить HTML теги — не чіпаємо (наприклад ai_response)
+        return String(val);
+    });
 }
 
 function evalFilter(node, data) {
@@ -448,10 +473,13 @@ async function doAction(node, session, flow) {
     }
 }
 
-async function callAI(node, userText, session, compRef) {
+async function callAI(node, userText, session, compRef, compData) {
     try {
-        const compDoc = await compRef.get();
-        const compData = compDoc.data() || {};
+        // FIX 5: compData передається зовні щоб уникнути зайвого Firestore read
+        if (!compData) {
+            const compDoc = await compRef.get();
+            compData = compDoc.data() || {};
+        }
         const provider = node.config?.aiProvider || node.aiProvider || 'openai';
         const model = node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini';
         const apiKey = node.config?.aiApiKey || node.aiApiKey

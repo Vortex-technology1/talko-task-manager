@@ -1720,8 +1720,9 @@ async function saveFlow() {
                 nextNode: n.nextNode || null,
                 buttons: n.config?.buttons || n.buttons || [],
                 options: n.options || [],
-                // AI поля
-                aiSystem: n.aiSystem || '',
+                // AI поля — FIX: читаємо з config (там реальний промпт або __ref для підколекції)
+                // Webhook сам відновить __ref через nodePrompts підколекцію
+                aiSystem: n.config?.aiSystem || n.aiSystem || '',
                 aiApiKey: n.config?.aiApiKey || null,
                 aiModel: n.config?.aiModel || null,
                 aiProvider: n.config?.aiProvider || null,
