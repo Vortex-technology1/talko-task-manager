@@ -589,12 +589,7 @@ function buildNodeEl(node) {
         const portColor = isErr ? '#ef4444' : cfg.color;
         const topPct = totalPorts === 1 ? 50 : 20 + (i / (totalPorts - 1)) * 60;
         return `
-        <div style="position:absolute;right:-7px;top:${topPct}%;transform:translateY(-50%);z-index:3;display:flex;align-items:center;">
-            ${totalPorts > 1 ? `<span style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:9px;
-                color:${isErr ? '#ef4444' : '#6b7280'};white-space:nowrap;font-weight:500;
-                background:white;padding:1px 5px;border-radius:4px;
-                border:1px solid ${isErr ? '#fca5a5' : '#e5e7eb'};
-                pointer-events:none;user-select:none;">${label}</span>` : ''}
+        <div style="position:absolute;right:-7px;top:${topPct}%;transform:translateY(-50%);z-index:3;">
             <div data-port-out="${node.id}" data-port-id="${portId}"
                 style="width:14px;height:14px;border-radius:50%;
                 background:${connected ? portColor : 'white'};
@@ -649,11 +644,11 @@ function buildNodeEl(node) {
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </div>
         </div>
-        <div style="padding:10px 12px 12px;min-height:44px;background:#f8fafc;border-radius:0 0 14px 14px;border-top:1px solid #f1f5f9;">
+        <div style="padding:10px 12px 12px;min-height:44px;background:#f8fafc;border-radius:0 0 14px 14px;border-top:1px solid #f1f5f9;overflow:hidden;max-width:220px;">
             ${preview
-                ? `<div style="font-size:11.5px;color:#374151;line-height:1.6;
-                    overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;
-                    -webkit-box-orient:vertical;">${esc(preview)}</div>`
+                ? `<div style="font-size:11.5px;color:#374151;line-height:1.5;
+                    max-height:56px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;
+                    -webkit-box-orient:vertical;word-break:break-word;">${esc(preview)}</div>`
                 : `<div style="font-size:11px;color:#94a3b8;font-style:italic;display:flex;align-items:center;gap:5px;padding:4px 0;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                     Клікніть для налаштування</div>`
@@ -766,29 +761,33 @@ function renderEdges() {
             portLabel = fromNode.config?.buttons?.[btnIdx]?.label || `Кнопка ${btnIdx + 1}`;
         }
         if (portLabel) {
-            const lx = from.x + 16;
-            const ly = from.y - 8;
+            // Label на 1/4 шляху від source (не на середині — щоб не заважало)
+            const t = 0.25;
+            // Приблизна точка на кривій (лінійна інтерполяція)
+            const lx = from.x + (to.x - from.x) * t;
+            const ly = from.y + (to.y - from.y) * t;
             const fontSize = 9;
-            const approxW = portLabel.length * 5.4 + 10;
+            const approxW = portLabel.length * 5.2 + 14;
 
             const pill = document.createElementNS('http://www.w3.org/2000/svg','rect');
             pill.setAttribute('x', lx - approxW/2);
-            pill.setAttribute('y', ly - fontSize - 1);
+            pill.setAttribute('y', ly - fontSize - 2);
             pill.setAttribute('width', approxW);
-            pill.setAttribute('height', fontSize + 6);
-            pill.setAttribute('rx', '4');
-            pill.setAttribute('fill', 'white');
+            pill.setAttribute('height', fontSize + 7);
+            pill.setAttribute('rx', '5');
+            pill.setAttribute('fill', isError ? '#fff1f2' : '#f0fdf4');
             pill.setAttribute('stroke', color);
             pill.setAttribute('stroke-width', '1');
             pill.style.pointerEvents = 'none';
 
             const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
             txt.setAttribute('x', lx);
-            txt.setAttribute('y', ly);
+            txt.setAttribute('y', ly + 1);
             txt.setAttribute('text-anchor','middle');
+            txt.setAttribute('dominant-baseline','middle');
             txt.setAttribute('fill', color);
             txt.setAttribute('font-size', String(fontSize));
-            txt.setAttribute('font-weight', '600');
+            txt.setAttribute('font-weight', '700');
             txt.setAttribute('font-family','system-ui,sans-serif');
             txt.style.pointerEvents = 'none';
             txt.textContent = portLabel;
@@ -802,23 +801,47 @@ function renderEdges() {
 }
 
 function getOutPortPos(node, portId) {
+    // Start вузол має спеціальні розміри
+    if (node.type === 'start') {
+        return { x: node.x + 110, y: node.y + 19 };
+    }
     const outputs = node.outputs || NODES[node.type]?.outputs || ['out'];
     const idx = outputs.indexOf(portId);
     const total = outputs.length;
-    const topPct = total === 1 ? 0.5 : 0.25 + (idx / (total-1)) * 0.5;
+    // Синхронізовано з renderNode: topPct = total===1 ? 50 : 20 + (i/(total-1))*60 (у %)
+    const topPct = total === 1 ? 0.5 : (20 + (idx / Math.max(1, total-1)) * 60) / 100;
     const h = getNodeHeight(node);
     return { x: node.x + W, y: node.y + h * topPct };
 }
 
 function getInPortPos(node) {
+    if (node.type === 'start') {
+        return { x: node.x, y: node.y + 19 };
+    }
     const h = getNodeHeight(node);
     return { x: node.x, y: node.y + h * 0.5 };
 }
 
 function getNodeHeight(node) {
+    // Реальна висота: header ~48px + body
+    // body: padding 22px + preview text + buttons
     const preview = getPreview(node);
-    const outputCount = (node.outputs || NODES[node.type]?.outputs || ['out']).length;
-    return 36 + 40 + (preview ? Math.ceil(preview.length/28)*16 : 0) + Math.max(0,(outputCount-1)*10);
+    const cfg = NODES[node.type] || NODES.message;
+    const outputs = node.outputs || cfg.outputs || ['out'];
+    const outputCount = outputs.length;
+    const buttons = node.config?.buttons || [];
+
+    const headerH = 48;
+    const bodyPad = 22;
+    // Preview text: 3 рядки макс, ~18px на рядок
+    const previewLines = preview ? Math.min(3, Math.ceil(preview.length / 26)) : 1;
+    const previewH = preview ? previewLines * 18 : 24; // "Клікніть для налаштування" ~24px
+    // AI snippet extra
+    const aiH = (node.type === 'ai' && node.config?.systemPrompt) ? 38 : 0;
+    // Buttons list
+    const btnH = buttons.length > 0 ? Math.min(buttons.length, 4) * 26 + 8 : 0;
+
+    return headerH + bodyPad + previewH + aiH + btnH;
 }
 
 function bezier(x1, y1, x2, y2) {
@@ -827,20 +850,32 @@ function bezier(x1, y1, x2, y2) {
     const absDx = Math.abs(dx);
     const absDy = Math.abs(dy);
 
-    if (dx >= 40) {
+    if (dx >= 60) {
         // Ціль справа — стандартна S-крива
-        const cp = Math.max(60, dx * 0.5);
+        const cp = Math.max(80, dx * 0.45);
         return `M${x1},${y1} C${x1+cp},${y1} ${x2-cp},${y2} ${x2},${y2}`;
-    } else if (dx >= -40) {
-        // Ціль майже по вертикалі — пряма з невеликим відхиленням
-        const cpY = Math.max(60, absDy * 0.5);
-        return `M${x1},${y1} C${x1},${y1+cpY} ${x2},${y2-cpY} ${x2},${y2}`;
+    } else if (dx >= -30) {
+        // Ціль майже по вертикалі або трохи зліва — використовуємо вертикальні control points
+        const cpY = Math.max(80, absDy * 0.6);
+        if (absDy > absDx) {
+            // Переважно вертикально
+            return `M${x1},${y1} C${x1},${y1+cpY} ${x2},${y2-cpY} ${x2},${y2}`;
+        }
+        const cpX = Math.max(60, absDx * 0.6 + 40);
+        return `M${x1},${y1} C${x1+cpX},${y1} ${x2-cpX},${y2} ${x2},${y2}`;
     } else {
-        // Ціль зліва — обгинаємо через зовнішній бік (не через вузли)
-        const offsetX = Math.min(120, absDx * 0.6 + 60);
-        const offsetY = Math.max(80, absDy * 0.3 + 60);
-        // Виходимо вправо від source, заходимо вправо до target
-        return `M${x1},${y1} C${x1+offsetX},${y1} ${x1+offsetX},${y2+offsetY} ${(x1+x2)/2},${y2+offsetY} C${x2-offsetX},${y2+offsetY} ${x2-offsetX},${y2} ${x2},${y2}`;
+        // Ціль зліва — обгинаємо праворуч і зверху/знизу
+        const offsetX = Math.max(100, absDx * 0.5 + 80);
+        // Напрямок обгину — якщо source нижче target, йдемо зверху
+        if (y1 >= y2) {
+            // source нижче або на рівні — обгин зверху
+            const topY = Math.min(y1, y2) - Math.max(60, absDy * 0.4 + 40);
+            return `M${x1},${y1} C${x1+offsetX},${y1} ${x1+offsetX},${topY} ${(x1+x2)/2},${topY} C${x2-offsetX},${topY} ${x2-offsetX},${y2} ${x2},${y2}`;
+        } else {
+            // source вище — обгин знизу
+            const botY = Math.max(y1, y2) + Math.max(60, absDy * 0.3 + 40);
+            return `M${x1},${y1} C${x1+offsetX},${y1} ${x1+offsetX},${botY} ${(x1+x2)/2},${botY} C${x2-offsetX},${botY} ${x2-offsetX},${y2} ${x2},${y2}`;
+        }
     }
 }
 
