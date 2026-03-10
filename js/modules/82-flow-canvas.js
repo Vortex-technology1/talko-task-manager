@@ -1666,15 +1666,20 @@ async function saveFlow() {
         // щоб не перевищувати ліміт 1MB на документ флоу
         const promptsRef = saveRef.collection('nodePrompts');
         const stripPrompts = (nodesList) => nodesList.map(n => {
+            // Беремо промпт з будь-якого місця де він може бути
             const aiText = n.config?.aiSystem || n.aiSystem || '';
-            if (aiText && aiText.length > 300) {
+            const stripped = JSON.parse(JSON.stringify(n));
+            if (aiText && aiText.length > 100) {
+                // Зберігаємо в підколекцію
                 promptsRef.doc(n.id).set({ aiSystem: aiText, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-                const stripped = JSON.parse(JSON.stringify(n));
-                if (stripped.config?.aiSystem) stripped.config.aiSystem = '__ref:' + n.id;
-                if (stripped.aiSystem) stripped.aiSystem = '__ref:' + n.id;
-                return stripped;
+                // Замінюємо на __ref в обох місцях
+                if (stripped.config) stripped.config.aiSystem = '__ref:' + n.id;
+                stripped.aiSystem = '__ref:' + n.id;
+            } else {
+                // Маленький промпт — видаляємо дублікат з верхнього рівня (лишаємо тільки в config)
+                if (stripped.config?.aiSystem) delete stripped.aiSystem;
             }
-            return n;
+            return stripped;
         });
 
         const strippedCanvas = { ...canvasData, nodes: stripPrompts(canvasData.nodes) };
