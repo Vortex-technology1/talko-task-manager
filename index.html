@@ -35,7 +35,7 @@ function toggleNavDropdown(menuId, wrapperId, e) {
     }
 }
 function closeNavDropdowns() {
-    ['tasksTabMenu','analyticsTabMenu','sysTabMenu'].forEach(function(id) {
+    ['tasksTabMenu','analyticsTabMenu','sysTabMenu','bizTabMenu'].forEach(function(id) {
         var m = document.getElementById(id);
         if (m) m.style.display = 'none';
     });
@@ -43,7 +43,7 @@ function closeNavDropdowns() {
 function toggleMoreTabs(e) {}
 function closeMoreTabs() { closeNavDropdowns(); }
 document.addEventListener('mousedown', function(e) {
-    var zones = ['tasksTabDropdown','analyticsTabDropdown','sysTabDropdown','tasksTabMenu','analyticsTabMenu','sysTabMenu','tasksTabBtn','analyticsTabBtn','sysTabBtn'];
+    var zones = ['tasksTabDropdown','analyticsTabDropdown','sysTabDropdown','bizTabDropdown','tasksTabMenu','analyticsTabMenu','sysTabMenu','bizTabMenu','tasksTabBtn','analyticsTabBtn','sysTabBtn','bizNavBtn'];
     var inside = zones.some(function(id) {
         var el = document.getElementById(id);
         return el && el.contains(e.target);
