@@ -94,12 +94,17 @@ window.openFlowCanvas = async function(flowId, botId) {
         // Треба відновити структуру {id, type, x, y, config, outputs}
         fc.nodes = restoreNodePrompts(stored.nodes || []).map(n => {
             const nodeType = n.type || 'message';
+            // MIGRATION: старі AI вузли зберігались з outputs:['ok','err'] — приводимо до актуального
+            let outputs = n.outputs || NODES[nodeType]?.outputs || ['out'];
+            if (nodeType === 'ai' && JSON.stringify(outputs) === JSON.stringify(['ok','err'])) {
+                outputs = ['out']; // AI вузол завжди має 1 вихід 'out'
+            }
             return {
                 id: n.id,
                 type: nodeType,
                 x: n._x !== undefined ? n._x : (n.x !== undefined ? n.x : 80),
                 y: n._y !== undefined ? n._y : (n.y !== undefined ? n.y : 200),
-                outputs: n.outputs || NODES[nodeType]?.outputs || ['out'],
+                outputs: outputs,
                 config: { ...n, type: nodeType, id: n.id },
             };
         });
@@ -176,7 +181,7 @@ function mountCanvas() {
     <div id="fcToolbar" style="height:48px;background:#1e293b;display:flex;align-items:center;
         gap:8px;padding:0 12px;flex-shrink:0;border-bottom:2px solid #334155;z-index:10;">
 
-        <button id="fcBtnBack" title="Назад до списку"
+        <button id="fcBtnBack" title="${t('botsFlowBack')}"
             style="padding:6px 12px;background:#334155;border:none;border-radius:8px;color:white;
             cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;">
             <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></span> Назад
@@ -192,10 +197,10 @@ function mountCanvas() {
         <div style="flex:1;"></div>
 
         <!-- Undo/Redo -->
-        <button id="fcBtnUndo" title="Скасувати (Ctrl+Z)"
+        <button id="fcBtnUndo" title="${t('botsCanvasUndo')}"
             style="padding:6px 10px;background:#334155;border:none;border-radius:7px;
             color:#94a3b8;cursor:pointer;font-size:14px;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span></button>
-        <button id="fcBtnRedo" title="Повторити (Ctrl+Y)"
+        <button id="fcBtnRedo" title="${t('botsCanvasRedo')}"
             style="padding:6px 10px;background:#334155;border:none;border-radius:7px;
             color:#94a3b8;cursor:pointer;font-size:14px;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5V17"/></svg></span></button>
 
@@ -207,7 +212,7 @@ function mountCanvas() {
         <span id="fcZoomPct" style="color:#94a3b8;font-size:12px;min-width:40px;text-align:center;">100%</span>
         <button id="fcBtnZoomIn" style="padding:6px 10px;background:#334155;border:none;
             border-radius:7px;color:white;cursor:pointer;font-size:16px;">+</button>
-        <button id="fcBtnFit" title="По екрану" style="padding:6px 10px;background:#334155;
+        <button id="fcBtnFit" title="${t('botsCanvasFit')}" style="padding:6px 10px;background:#334155;
             border:none;border-radius:7px;color:white;cursor:pointer;font-size:12px;">⤢</button>
 
         <div style="width:1px;height:28px;background:#334155;"></div>
@@ -1641,7 +1646,7 @@ window.fcDeleteNode = function(nodeId) {
 // ── Save ───────────────────────────────────────────────────
 async function saveFlow() {
     const btn = document.getElementById('fcBtnSave');
-    if (btn) btn.textContent = 'Збереження...';
+    if (btn) btn.textContent = t('botsFlowSaving');
 
     // Build canvasData (source of truth)
     const canvasData = {
@@ -1754,7 +1759,9 @@ async function saveFlow() {
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
         if (btn) btn.textContent = 'Зберегти';
-        if (typeof showToast === 'function') showToast('✅ Флоу збережено', 'success');
+        if (typeof showToast === 'function') showToast(t('botsFlowSaved'), 'success');
+        // Перемальовуємо canvas після збереження — preview на вузлах оновлюється
+        renderAll();
     } catch(e) {
         if (btn) btn.textContent = 'Зберегти';
         alert('Помилка: ' + e.message);
@@ -1805,12 +1812,36 @@ function getPreview(node) {
     const d = node.config||{};
     if (d.triggerKeyword) return 'Тригер: ' + d.triggerKeyword;
     if (d.text) return d.text.slice(0,80);
+    // AI вузол — показуємо назву або початок промпту
+    if (node.type === 'ai') {
+        if (d.name) return '🤖 ' + d.name;
+        const prompt = d.aiSystem || d.systemPrompt || '';
+        if (prompt && !prompt.startsWith('__ref:')) return 'AI: ' + prompt.slice(0,60);
+        if (prompt.startsWith('__ref:')) return '🤖 Промпт завантажено';
+        return '';
+    }
+    // Action вузол — показуємо тип дії
+    if (node.type === 'action') {
+        const typeMap = {
+            notify_admin: '🔔 Сповістити менеджера',
+            set_var: '📝 Встановити змінну',
+            set_tag: '🏷 Додати тег',
+            remove_tag: '🗑 Видалити тег',
+            start_flow: '▶ Запустити флоу',
+            stop_flow: '⏹ Зупинити флоу',
+        };
+        const label = typeMap[d.actionType] || d.actionType;
+        if (label) return label + (d.notifyFlowName ? ': ' + d.notifyFlowName : '');
+        return '';
+    }
     if (d.aiSystem) return 'AI: ' + d.aiSystem.slice(0,60);
     if (d.apiUrl) return d.apiMethod+' '+d.apiUrl.slice(0,40);
     if (d.dealTitle) return d.dealTitle;
-    if (d.delay) return `${d.delay} ${d.delayUnit||'секунд'}`;
+    if (d.delay) return `⏸ ${d.delay} ${d.delayUnit||'секунд'}`;
     if (d.condVar) return `${d.condVar} ${d.condOp||'='} ${d.condVal||'?'}`;
     if (d.splitA) return `А: ${d.splitA}% / Б: ${d.splitB||50}%`;
+    if (node.type === 'repeat' && d.maxRepeats) return `🔁 Макс. ${d.maxRepeats} разів`;
+    if (node.type === 'end') return '🔴 Кінець ланцюга';
     return '';
 }
 

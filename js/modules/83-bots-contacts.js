@@ -410,7 +410,7 @@ window.createAndConnectBot = async function() {
     if (!token) { alert('Введіть токен'); return; }
 
     const btn = document.querySelector('[onclick="createAndConnectBot()"]');
-    if (btn) { btn.textContent = 'Підключення...'; }
+    if (btn) { btn.textContent = t('botsLoading'); }
 
     try {
         let username = '';
@@ -577,7 +577,7 @@ window.deleteFlow = function(flowId) {
 async function renderContactsTab() {
     const c = document.getElementById('bpViewContacts');
     if (!c) return;
-    c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;">Завантаження...</div>';
+    c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;">'+t('botsLoading')+'</div>';
 
     try {
         const snap = await firebase.firestore()
@@ -589,8 +589,7 @@ async function renderContactsTab() {
         renderContactsList(c);
     } catch(e) {
         c.innerHTML = `<div style="color:#ef4444;padding:1rem;">Помилка: ${e.message}</div>`;
-    lcIcons(c);
-    lcIcons(c);
+        lcIcons(c);
     }
 }
 
@@ -617,7 +616,7 @@ function renderContactsList(c) {
         </div>
         <div style="display:flex;flex-direction:column;gap:0.35rem;">
             ${filtered.length===0
-              ? '<div style="text-align:center;padding:1.5rem;background:white;border-radius:10px;color:#9ca3af;font-size:0.82rem;">Контактів немає</div>'
+              ? '<div style="text-align:center;padding:1.5rem;background:white;border-radius:10px;color:#9ca3af;font-size:0.82rem;">'+t('botsNoContacts')+'</div>'
               : filtered.map(ct=>{
                 const blocked=ct.botStatus==='blocked', unsub=ct.botStatus==='unsubscribed';
                 const col=blocked?'#ef4444':unsub?'#f97316':'#22c55e';
@@ -733,7 +732,7 @@ window.bpOpenChat = async function(contactId) {
             const msgsDiv = document.getElementById('bpChatMsgs');
             if (!msgsDiv) return;
             if (!msgs.length) {
-                msgsDiv.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.8rem;">Повідомлень немає</div>';
+                msgsDiv.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.8rem;">'+t('botsNoMessages')+'</div>';
                 return;
             }
             msgsDiv.innerHTML = msgs.map(m=>{
@@ -823,7 +822,7 @@ async function renderBroadcastTab() {
         </div>
         <div style="font-weight:700;font-size:0.84rem;margin-bottom:0.4rem;color:#374151;">Історія</div>
         ${history.length===0
-          ? '<div style="text-align:center;padding:1.25rem;background:white;border-radius:10px;color:#9ca3af;font-size:0.8rem;">Розсилок ще не було</div>'
+          ? '<div style="text-align:center;padding:1.25rem;background:white;border-radius:10px;color:#9ca3af;font-size:0.8rem;">'+t('botsNoBroadcasts')+'</div>'
           : history.map(b=>`<div style="background:white;border-radius:9px;padding:0.7rem;box-shadow:var(--shadow);margin-bottom:0.35rem;display:flex;justify-content:space-between;align-items:center;">
                 <div>
                     <div style="font-size:0.82rem;font-weight:600;">${escH(b.text?.slice(0,50)||b.flowName||'Розсилка')}</div>
@@ -888,7 +887,7 @@ async function renderSettingsTab() {
     const c = document.getElementById('bpViewSettings');
     if (!c) return;
     const bot = bp.bots.find(b=>b.id===bp.activeBotId);
-    if (!bot) { c.innerHTML = '<div style="padding:1rem;color:#9ca3af;">Оберіть бота</div>'; return; }
+    if (!bot) { c.innerHTML = '<div style="padding:1rem;color:#9ca3af;">'+t('botsNoBot')+'</div>'; return; }
 
     const compDoc = await firebase.firestore().collection('companies').doc(window.currentCompanyId).get();
     const compData = compDoc.data()||{};
@@ -938,7 +937,6 @@ async function renderSettingsTab() {
                 </div>
             </div>
         </div>`;
-    lcIcons(c);
     lcIcons(c);
 }
 
