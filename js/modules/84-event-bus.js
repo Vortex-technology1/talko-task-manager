@@ -246,7 +246,7 @@ async function _runAutomationRules(event) {
         try {
             const params = rule.actionParams ? rule.actionParams(event) : {};
             await rule.action(event, params);
-            console.log(`[Automation] Rule fired: ${rule.id}`);
+            window.dbg&&dbg(`[Automation] Rule fired: ${rule.id}`);
         } catch (err) {
             console.error(`[Automation] Rule failed: ${rule.id}`, err);
         }
@@ -661,7 +661,7 @@ async function _cleanupExpiredEvents() {
         const batch = db.batch();
         snap.docs.forEach(doc => batch.delete(doc.ref));
         await batch.commit();
-        console.log(`[EventBus] Cleaned ${snap.size} expired events`);
+        window.dbg&&dbg(`[EventBus] Cleaned ${snap.size} expired events`);
     } catch {
         // Ігноруємо помилки cleanup — не критично
     }

@@ -71,7 +71,7 @@
             await db.collection('companies').doc(currentCompany)
                 .collection('snapshots').doc(todayStr).set(snapshot);
             localStorage.setItem(key, '1');
-            console.log('[Snapshot] Daily snapshot saved for', todayStr);
+            window.dbg&&dbg('[Snapshot] Daily snapshot saved for', todayStr);
         } catch (e) {
             console.warn('[Snapshot] Failed:', e.message);
         }

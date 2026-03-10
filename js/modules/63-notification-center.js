@@ -169,7 +169,7 @@
         deferredInstallPrompt.prompt();
         deferredInstallPrompt.userChoice.then(result => {
             if (result.outcome === 'accepted') {
-                console.log('[PWA] Installed');
+                window.dbg&&dbg('[PWA] Installed');
             }
             deferredInstallPrompt = null;
             dismissInstallBanner();
@@ -224,11 +224,11 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').then(reg => {
-                console.log('[SW] Registered:', reg.scope);
+                window.dbg&&dbg('[SW] Registered:', reg.scope);
                 // Перевірка оновлень кожні 30 хвилин
                 setInterval(() => reg.update(), 30 * 60 * 1000);
             }).catch(err => {
-                console.log('[SW] Registration skipped:', err.message);
+                window.dbg&&dbg('[SW] Registration skipped:', err.message);
             });
             
             // iOS hint disabled

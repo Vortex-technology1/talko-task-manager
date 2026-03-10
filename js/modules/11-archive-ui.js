@@ -326,7 +326,7 @@
                     localTasks.forEach(t => tasks.unshift(t));
                 }
                 
-                console.log(`[AutoGenerate] Created ${tasksToCreate.length} tasks in batch`);
+                window.dbg&&dbg(`[AutoGenerate] Created ${tasksToCreate.length} tasks in batch`);
                 localStorage.setItem(autoGenKey, todayStr);
             } catch (err) {
                 console.error('[AutoGenerate] Batch error:', err);

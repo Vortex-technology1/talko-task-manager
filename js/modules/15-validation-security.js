@@ -130,7 +130,7 @@
             const toMigrate = tasks.filter(t => !t.deadlineDate && t.deadline);
             if (toMigrate.length === 0) return;
             
-            console.log(`[Migration] ${toMigrate.length} tasks need deadlineDate migration`);
+            window.dbg&&dbg(`[Migration] ${toMigrate.length} tasks need deadlineDate migration`);
             
             const batch = db.batch();
             let count = 0;
@@ -164,7 +164,7 @@
             if (count > 0) {
                 try {
                     await batch.commit();
-                    console.log(`[Migration] Done: ${count} tasks migrated`);
+                    window.dbg&&dbg(`[Migration] Done: ${count} tasks migrated`);
                 } catch(e) {
                     console.warn('[Migration] Failed:', e);
                 }

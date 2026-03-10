@@ -20,11 +20,11 @@
         // Постановник приймає завдання
         // Review з модалки
         async function acceptReviewFromModal() {
-            console.log('[acceptReview] editingId:', editingId);
+            window.dbg&&dbg('[acceptReview] editingId:', editingId);
             if (!editingId) { console.error('[acceptReview] No editingId!'); return; }
             const taskId = editingId;
             closeModal('taskModal');
-            console.log('[acceptReview] calling acceptReviewTask:', taskId);
+            window.dbg&&dbg('[acceptReview] calling acceptReviewTask:', taskId);
             await acceptReviewTask(taskId);
         }
         

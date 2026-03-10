@@ -90,7 +90,7 @@
 
         try {
             const ref = await stagesRef().add(stage);
-            console.log('[STAGES] Created stage:', ref.id);
+            window.dbg&&dbg('[STAGES] Created stage:', ref.id);
             return ref.id;
         } catch (e) {
             console.error('[STAGES] createStage:', e);

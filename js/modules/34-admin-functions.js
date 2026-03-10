@@ -166,7 +166,7 @@
                 
                 // Chunked commit (auto-splits at 450)
                 await safeBatchCommit(deleteOps);
-                console.log(`[deleteCompany] Deleted ${deleteOps.length} documents in chunks`);
+                window.dbg&&dbg(`[deleteCompany] Deleted ${deleteOps.length} documents in chunks`);
                 
                 // Видаляємо саму компанію
                 await db.collection('companies').doc(companyId).delete();

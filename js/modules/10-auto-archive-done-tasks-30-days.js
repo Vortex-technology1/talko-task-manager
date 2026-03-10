@@ -70,7 +70,7 @@
                 }
                 
                 if (committedIds.size > 0) {
-                    console.log(`[autoArchive] Archived ${committedIds.size} done tasks older than 30 days`);
+                    window.dbg&&dbg(`[autoArchive] Archived ${committedIds.size} done tasks older than 30 days`);
                     tasks = tasks.filter(t => !committedIds.has(t.id));
                 }
                 

@@ -9,7 +9,7 @@
             const task = tasks.find(t => t.id === taskId);
             if (!task?.processId) return;
             // Просто логуємо для debug, не рухаємо процес
-            console.log('[Process] Task', taskId, 'done — waiting for backend trigger');
+            window.dbg&&dbg('[Process] Task', taskId, 'done — waiting for backend trigger');
             return;
             
             const process = processes.find(p => p.id === task.processId);
@@ -20,7 +20,7 @@
             
             const currentStepIndex = process.currentStep || 0;
             if (task.processStep !== currentStepIndex) {
-                console.log('[Process] Task step', task.processStep, '!= current step', currentStepIndex, '— skip');
+                window.dbg&&dbg('[Process] Task step', task.processStep, '!= current step', currentStepIndex, '— skip');
                 return;
             }
             
@@ -83,7 +83,7 @@
                     if (!processDoc.exists) return true;
                     const serverStep = processDoc.data().currentStep || 0;
                     if (serverStep !== currentStepIndex) {
-                        console.log('[Process] Race detected: server step', serverStep, '!= local', currentStepIndex);
+                        window.dbg&&dbg('[Process] Race detected: server step', serverStep, '!= local', currentStepIndex);
                         return true;
                     }
                     tx.update(processRef, updateData);

@@ -332,7 +332,7 @@
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + 0.3);
             } catch (e) {
-                console.log('Sound not supported');
+                window.dbg&&dbg('Sound not supported');
             }
         }
         
@@ -364,7 +364,7 @@
             _lastVisibleTime = Date.now();
             // If tab was hidden for >60s and user is logged in, refresh data
             if (elapsed > 60000 && currentUser && currentCompany) {
-                console.log('[MultiTab] Tab restored after', Math.round(elapsed/1000), 's — refreshing');
+                window.dbg&&dbg('[MultiTab] Tab restored after', Math.round(elapsed/1000), 's — refreshing');
                 loadAllData();
             }
         });
