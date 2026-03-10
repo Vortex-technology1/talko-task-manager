@@ -38,6 +38,18 @@ module.exports = async (req, res) => {
 
     if (req.method !== 'POST') return res.status(405).end();
 
+    // ── POST /api/webhook?action=send-message ────────────────
+    // Відправка повідомлення від менеджера через бота
+    if (req.query.action === 'send-message') {
+        return handleSendMessage(req, res);
+    }
+
+    // ── POST /api/webhook?action=mark-read ──────────────────
+    // Позначити повідомлення як прочитані
+    if (req.query.action === 'mark-read') {
+        return handleMarkRead(req, res);
+    }
+
     const { companyId, channel } = req.query;
     if (!companyId || !channel) return res.status(400).json({ error: 'Missing params' });
 
@@ -692,29 +704,167 @@ async function editTg(token, chatId, messageId, text, buttons) {
 
 async function finish(session, flow, compRef, channel) {
     try {
-        // Зберігаємо лід
+        const d = session.data || {};
+
+        // Зберігаємо лід (audit trail)
         await compRef.collection('leads').add({
             senderId: session.senderId, senderName: session.senderName || '',
-            channel, flowId: flow?.id || null, data: session.data || {}, tags: session.tags || [],
+            channel, flowId: flow?.id || null, flowName: flow?.name || '',
+            data: d, tags: session.tags || [],
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
-        // FIX 4: Upsert контакт по senderId (не дублюємо при повторних проходах)
+        // Upsert контакт по senderId — всі поля по ТЗ
         const contactId = `${channel}_${session.senderId}`;
-        await compRef.collection('contacts').doc(contactId).set({
-            senderId: session.senderId,
-            senderName: session.senderName || '',
+        const contactData = {
+            senderId:      session.senderId,
+            senderName:    session.senderName || '',
+            username:      session.username   || '',
             channel,
-            lastFlowId: flow?.id || null,
-            lastData: session.data || {},
-            tags: session.tags || [],
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
+            botId:         session.botId      || null,
+            flowId:        flow?.id           || null,
+            flowName:      flow?.name         || '',
+            // Поля зібрані через [SAVE:key=value] в флоу
+            phone:         d.phone            || '',
+            role:          d.role             || '',
+            business_type: d.business_type    || d.niche || '',
+            main_problem:  d.main_problem     || '',
+            main_goal:     d.main_goal        || '',
+            search_time:   d.search_time      || '',
+            ai_response:   d.ai_response      || session.aiSummary || '',
+            tags:          session.tags       || [],
+            unreadCount:   0,
+            lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
+        };
 
-        // Якщо перший раз — додаємо createdAt
-        await compRef.collection('contacts').doc(contactId).set({
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true }).catch(() => {});
+        await compRef.collection('contacts').doc(contactId).set(
+            contactData, { merge: true }
+        );
+
+        // createdAt тільки при першому записі
+        const contactRef = compRef.collection('contacts').doc(contactId);
+        const existing = await contactRef.get();
+        if (!existing.exists || !existing.data().createdAt) {
+            await contactRef.set(
+                { createdAt: admin.firestore.FieldValue.serverTimestamp() },
+                { merge: true }
+            );
+        }
 
     } catch(e) { console.error('[finish]', e.message); }
+}
+
+// ─────────────────────────────────────────
+// HANDLER: відправка повідомлення від менеджера
+// POST /api/webhook?action=send-message
+// Body: { companyId, contactId, text, botToken }
+// ─────────────────────────────────────────
+async function handleSendMessage(req, res) {
+    const { companyId, contactId, text, botToken } = req.body || {};
+    if (!companyId || !contactId || !text) {
+        return res.status(400).json({ error: 'Missing: companyId, contactId, text' });
+    }
+    if (!db) return res.status(500).json({ error: 'DB not initialized' });
+
+    try {
+        const compRef = db.collection('companies').doc(companyId);
+
+        // Отримуємо контакт щоб дізнатись senderId і канал
+        const contactDoc = await compRef.collection('contacts').doc(contactId).get();
+        if (!contactDoc.exists) return res.status(404).json({ error: 'Contact not found' });
+        const contact = contactDoc.data();
+
+        // Зберігаємо повідомлення в messages підколекцію
+        const msgRef = await compRef.collection('contacts').doc(contactId)
+            .collection('messages').add({
+                text,
+                from: 'bot',       // від менеджера/бота
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                read: true,        // менеджер бачить одразу
+                sentBy: 'operator',
+            });
+
+        // Оновлюємо lastMessage в контакті
+        await compRef.collection('contacts').doc(contactId).update({
+            lastMessage: text.slice(0, 100),
+            lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
+            lastMessageFrom: 'bot',
+        });
+
+        // Відправляємо в Telegram
+        let telegramOk = false;
+        const token = botToken || contact.botToken;
+        const senderId = contact.senderId;
+
+        if (token && senderId && contact.channel === 'telegram') {
+            try {
+                const tgRes = await fetch(
+                    `https://api.telegram.org/bot${token}/sendMessage`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: senderId, text, parse_mode: 'HTML' }),
+                    }
+                );
+                const tgData = await tgRes.json();
+                telegramOk = tgData.ok;
+                if (!tgData.ok) {
+                    console.error('[send-message] Telegram error:', tgData.description);
+                    // Якщо заблокував — позначаємо
+                    if (tgData.error_code === 403) {
+                        await compRef.collection('contacts').doc(contactId).update({
+                            botStatus: 'blocked',
+                        });
+                    }
+                }
+            } catch(e) {
+                console.error('[send-message] fetch error:', e.message);
+            }
+        }
+
+        return res.status(200).json({ ok: true, msgId: msgRef.id, telegramOk });
+
+    } catch(e) {
+        console.error('[send-message]', e.message);
+        return res.status(500).json({ error: e.message });
+    }
+}
+
+// ─────────────────────────────────────────
+// HANDLER: позначити повідомлення як прочитані
+// POST /api/webhook?action=mark-read
+// Body: { companyId, contactId }
+// ─────────────────────────────────────────
+async function handleMarkRead(req, res) {
+    const { companyId, contactId } = req.body || {};
+    if (!companyId || !contactId) return res.status(400).json({ error: 'Missing params' });
+    if (!db) return res.status(500).json({ error: 'DB not initialized' });
+
+    try {
+        const compRef = db.collection('companies').doc(companyId);
+
+        // Скидаємо лічильник непрочитаних
+        await compRef.collection('contacts').doc(contactId).update({
+            unreadCount: 0,
+        });
+
+        // Позначаємо непрочитані повідомлення від юзера
+        const unread = await compRef.collection('contacts').doc(contactId)
+            .collection('messages')
+            .where('read', '==', false)
+            .where('from', '==', 'user')
+            .limit(50).get();
+
+        if (!unread.empty) {
+            const batch = db.batch();
+            unread.docs.forEach(doc => batch.update(doc.ref, { read: true }));
+            await batch.commit();
+        }
+
+        return res.status(200).json({ ok: true, marked: unread.size });
+
+    } catch(e) {
+        return res.status(500).json({ error: e.message });
+    }
 }

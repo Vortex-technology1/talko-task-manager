@@ -1291,139 +1291,489 @@ window.bpFilterContacts = function(f) {
     ctsLoad(true);
 };
 
-// ══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
 // 6. ЧАТ
-
 // ══════════════════════════════════════════════════════════
+// Месенджер-стиль: ліва колонка контактів + права переписка.
+// Дані: contacts/{id}/messages/ (не sessions/).
+// Відправка через POST /api/webhook?action=send-message
+// Непрочитані: unreadCount в контакті + mark-read при відкритті
+// ══════════════════════════════════════════════════════════
+
+// State чату
+let chat = {
+    contacts: [],        // список контактів для лівої колонки
+    lastContactDoc: null,
+    hasMoreContacts: false,
+    activeId: null,      // поточний contactId
+    msgsUnsub: null,     // onSnapshot на messages
+    contactsUnsub: null, // onSnapshot на unreadCount
+    search: '',
+    sendingBotToken: null, // токен бота поточного контакту
+};
+
 async function renderChatTab() {
     const c = document.getElementById('bpViewChat');
     if (!c) return;
 
-    if (!bp.contacts.length) {
-        const snap = await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-            .collection('contacts').orderBy('createdAt','desc').limit(50).get();
-        bp.contacts = snap.docs.map(d=>({id:d.id,...d.data()}));
-    }
-
     c.innerHTML = `
-        <div style="display:flex;gap:0.5rem;height:520px;">
-            <div style="width:130px;flex-shrink:0;background:white;border-radius:12px;
-                box-shadow:var(--shadow);overflow-y:auto;display:flex;flex-direction:column;">
-                <div style="padding:0.5rem 0.6rem;font-size:0.7rem;font-weight:700;color:#6b7280;
-                    text-transform:uppercase;border-bottom:1px solid #f0f0f0;flex-shrink:0;">Контакти</div>
-                <div style="flex:1;overflow-y:auto;">
-                    ${bp.contacts.map(ct=>`
-                        <div onclick="bpOpenChat('${ct.id}')"
-                            style="padding:0.5rem 0.6rem;cursor:pointer;border-bottom:1px solid #f9fafb;
-                            background:${ct.id===bp.activeChatContactId?'#f0fdf4':'transparent'};"
-                            onmouseenter="this.style.background='#f0fdf4'"
-                            onmouseleave="this.style.background='${ct.id===bp.activeChatContactId?'#f0fdf4':'transparent'}'">
-                            <div style="font-size:0.76rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                ${escH(ct.name||'Анонім')}
-                            </div>
-                            <div style="font-size:0.63rem;color:#9ca3af;">${ct.source||'tg'}</div>
-                        </div>`).join('')}
-                </div>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;background:white;
-                border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
-                <div id="bpChatHeader" style="padding:0.7rem 0.85rem;border-bottom:1px solid #f0f0f0;
-                    font-size:0.84rem;font-weight:600;color:#374151;flex-shrink:0;">
-                    Оберіть контакт <i data-lucide="arrow-left" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i>
-                </div>
-                <div id="bpChatMsgs" style="flex:1;overflow-y:auto;padding:0.75rem;
-                    display:flex;flex-direction:column;gap:0.4rem;background:#f8fafc;"></div>
-                <div style="padding:0.5rem;border-top:1px solid #f0f0f0;display:flex;gap:0.35rem;flex-shrink:0;">
-                    <input id="bpChatInput" placeholder="Повідомлення..."
-                        style="flex:1;padding:0.48rem 0.65rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.83rem;"
-                        onkeydown="if(event.key==='Enter')bpSendMsg()">
-                    <button onclick="bpSendMsg()"
-                        style="padding:0.48rem 0.9rem;background:#22c55e;color:white;border:none;
-                        border-radius:8px;cursor:pointer;font-weight:600;font-size:0.84rem;"><i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i></button>
-                </div>
-            </div>
-        </div>`;
-    lcIcons(c);
+    <div style="display:flex;gap:0;height:calc(100vh - 180px);min-height:500px;
+        background:white;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;">
 
-    if (bp.activeChatContactId) bpOpenChat(bp.activeChatContactId);
+        <!-- ЛІВА КОЛОНКА: список контактів -->
+        <div style="width:260px;flex-shrink:0;display:flex;flex-direction:column;
+            border-right:1px solid #f1f5f9;">
+
+            <!-- Хедер + пошук -->
+            <div style="padding:0.75rem;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
+                <div style="font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.5rem;">
+                    Повідомлення
+                </div>
+                <div style="position:relative;">
+                    <svg style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;"
+                        width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input id="chatSearch" type="text" placeholder="Пошук..."
+                        value="${escH(chat.search)}"
+                        oninput="chatOnSearch(this.value)"
+                        style="width:100%;padding:0.38rem 0.5rem 0.38rem 1.8rem;border:1.5px solid #e5e7eb;
+                        border-radius:8px;font-size:0.78rem;box-sizing:border-box;outline:none;"
+                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+            </div>
+
+            <!-- Список -->
+            <div id="chatContactsList" style="flex:1;overflow-y:auto;"></div>
+        </div>
+
+        <!-- ПРАВА КОЛОНКА: переписка -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+
+            <!-- Хедер контакту -->
+            <div id="chatMsgHeader"
+                style="padding:0.65rem 1rem;border-bottom:1px solid #f1f5f9;
+                flex-shrink:0;display:flex;align-items:center;gap:0.6rem;min-height:54px;">
+                <div style="color:#9ca3af;font-size:0.82rem;">Оберіть контакт зліва</div>
+            </div>
+
+            <!-- Повідомлення -->
+            <div id="chatMsgs"
+                style="flex:1;overflow-y:auto;padding:1rem;
+                display:flex;flex-direction:column;gap:0.5rem;background:#f8fafc;">
+            </div>
+
+            <!-- Поле вводу -->
+            <div id="chatInputArea"
+                style="padding:0.6rem;border-top:1px solid #f1f5f9;flex-shrink:0;display:none;">
+                <div style="display:flex;gap:0.4rem;align-items:flex-end;">
+                    <textarea id="chatInput" rows="1" placeholder="Написати повідомлення... (Enter — відправити)"
+                        style="flex:1;padding:0.5rem 0.65rem;border:1.5px solid #e5e7eb;
+                        border-radius:10px;font-size:0.83rem;resize:none;font-family:inherit;
+                        max-height:100px;overflow-y:auto;outline:none;line-height:1.4;"
+                        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"
+                        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend();}"
+                        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'">
+                    </textarea>
+                    <button onclick="chatSend()" id="chatSendBtn"
+                        style="padding:0.5rem 0.75rem;background:#22c55e;color:white;border:none;
+                        border-radius:10px;cursor:pointer;flex-shrink:0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    await chatLoadContacts();
+
+    // Real-time: оновлення unreadCount в лівій колонці
+    _chatStartUnreadListener();
+
+    // Якщо є активний контакт — відкриваємо
+    if (chat.activeId) bpOpenChat(chat.activeId);
 }
 
-window.bpOpenChat = async function(contactId) {
-    bp.activeChatContactId = contactId;
-    if (bp.subTab !== 'chat') { bpSwitch('chat'); await new Promise(r=>setTimeout(r,150)); }
-
-    const ct = bp.contacts.find(c=>c.id===contactId);
-    const header = document.getElementById('bpChatHeader');
-    if (header && ct) {
-        header.innerHTML = `<div style="display:flex;align-items:center;gap:0.5rem;">
-            <div style="width:26px;height:26px;border-radius:50%;background:#22c55e22;
-                display:flex;align-items:center;justify-content:center;font-weight:700;color:#22c55e;font-size:0.75rem;">
-                ${(ct.name||'?').charAt(0).toUpperCase()}
-            </div>
-            <div>
-                <div style="font-weight:700;font-size:0.84rem;">${escH(ct.name||'Анонім')}</div>
-                <div style="font-size:0.68rem;color:#6b7280;">${ct.externalId||''} · ${ct.source||'telegram'}</div>
-            </div>
-            ${ct.botStatus==='blocked'?'<span style="margin-left:auto;font-size:0.68rem;color:#ef4444;background:#fee2e2;padding:2px 6px;border-radius:4px;"><i data-lucide="ban" style="width:16px;height:16px;display:inline-block;vertical-align:middle;color:#ef4444;"></i> Заблокував</span>':''}
-        </div>`;
+// ─────────────────────────────────────────
+// ЗАВАНТАЖЕННЯ КОНТАКТІВ (ліва колонка)
+// ─────────────────────────────────────────
+async function chatLoadContacts(reset = true) {
+    if (reset) {
+        chat.contacts = [];
+        chat.lastContactDoc = null;
     }
 
-    if (bp.chatUnsub) bp.chatUnsub();
-    const sessionId = `telegram_${ct?.externalId?.replace('telegram_','')||contactId}`;
-    bp.chatUnsub = firebase.firestore()
-        .collection('companies').doc(window.currentCompanyId)
-        .collection('sessions').doc(sessionId)
-        .collection('messages').orderBy('timestamp','asc').limit(100)
-        .onSnapshot(snap => {
-            const msgs = snap.docs.map(d=>({id:d.id,...d.data()}));
-            const msgsDiv = document.getElementById('bpChatMsgs');
-            if (!msgsDiv) return;
-            if (!msgs.length) {
-                msgsDiv.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.8rem;">'+t('botsNoMessages')+'</div>';
-                return;
-            }
-            msgsDiv.innerHTML = msgs.map(m=>{
-                const out=m.direction==='out';
-                return `<div style="display:flex;justify-content:${out?'flex-end':'flex-start'};">
-                    <div style="max-width:78%;padding:0.45rem 0.7rem;border-radius:${out?'10px 10px 2px 10px':'10px 10px 10px 2px'};
-                        background:${out?'#22c55e':'white'};color:${out?'white':'#374151'};
-                        font-size:0.8rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);line-height:1.4;">
-                        ${escH(m.text||'')}
+    try {
+        let q = firebase.firestore()
+            .collection(`companies/${window.currentCompanyId}/contacts`)
+            .orderBy('lastMessageAt', 'desc');
+
+        if (chat.lastContactDoc) q = q.startAfter(chat.lastContactDoc);
+        q = q.limit(31);
+
+        const snap = await q.get();
+        const docs = snap.docs.slice(0, 30);
+        chat.hasMoreContacts = snap.docs.length > 30;
+        chat.lastContactDoc = docs[docs.length - 1] || null;
+
+        const items = docs.map(d => ({ id: d.id, ...d.data() }));
+        const filtered = chat.search
+            ? items.filter(ct => _chatMatchSearch(ct, chat.search))
+            : items;
+
+        if (reset) chat.contacts = filtered;
+        else chat.contacts = [...chat.contacts, ...filtered];
+
+        _chatRenderContactsList();
+    } catch(e) {
+        console.error('[chat] loadContacts:', e);
+    }
+}
+
+function _chatMatchSearch(ct, q) {
+    const s = q.toLowerCase();
+    return (ct.senderName||'').toLowerCase().includes(s) || (ct.phone||'').includes(s);
+}
+
+function _chatRenderContactsList() {
+    const list = document.getElementById('chatContactsList');
+    if (!list) return;
+
+    if (!chat.contacts.length) {
+        list.innerHTML = `<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.78rem;">
+            Контактів немає.<br>Очікуйте нових лідів.
+        </div>`;
+        return;
+    }
+
+    list.innerHTML = chat.contacts.map(ct => {
+        const name = ct.senderName || ct.name || 'Анонім';
+        const initial = name.charAt(0).toUpperCase();
+        const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
+        const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
+        const isActive = ct.id === chat.activeId;
+        const unread = ct.unreadCount || 0;
+        const lastMsg = ct.lastMessage || '';
+        const lastTime = ct.lastMessageAt?.toDate ? relTime(ct.lastMessageAt.toDate()) : '';
+
+        return `
+        <div onclick="bpOpenChat('${ct.id}')" data-chatid="${ct.id}"
+            style="padding:0.65rem 0.75rem;cursor:pointer;border-bottom:1px solid #f9fafb;
+            background:${isActive ? '#f0fdf4' : 'transparent'};
+            transition:background 0.15s;"
+            onmouseenter="if('${ct.id}'!=='${chat.activeId}')this.style.background='#f8fafc'"
+            onmouseleave="this.style.background='${isActive ? '#f0fdf4' : 'transparent'}'">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+                <div style="position:relative;flex-shrink:0;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:${avatarColor};
+                        display:flex;align-items:center;justify-content:center;
+                        font-weight:700;color:white;font-size:0.88rem;">
+                        ${initial}
                     </div>
-                </div>`;
-            }).join('');
-            msgsDiv.scrollTop = msgsDiv.scrollHeight;
+                    ${unread > 0 ? `
+                    <div style="position:absolute;top:-2px;right:-2px;
+                        width:16px;height:16px;border-radius:50%;background:#ef4444;
+                        display:flex;align-items:center;justify-content:center;
+                        font-size:0.6rem;font-weight:700;color:white;border:2px solid white;">
+                        ${unread > 9 ? '9+' : unread}
+                    </div>` : ''}
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1px;">
+                        <span style="font-weight:${unread>0?'700':'600'};font-size:0.82rem;
+                            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px;">
+                            ${escH(name)}
+                        </span>
+                        <span style="font-size:0.65rem;color:#9ca3af;flex-shrink:0;margin-left:4px;">${lastTime}</span>
+                    </div>
+                    <div style="font-size:0.72rem;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+                        font-weight:${unread>0?'600':'400'};color:${unread>0?'#374151':'#9ca3af'};">
+                        ${escH(lastMsg.slice(0, 45) || 'Немає повідомлень')}
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join('') + (chat.hasMoreContacts ? `
+        <div style="padding:0.5rem;text-align:center;">
+            <button onclick="chatLoadContacts(false)"
+                style="font-size:0.74rem;color:#6b7280;background:none;border:none;cursor:pointer;">
+                Завантажити ще
+            </button>
+        </div>` : '');
+}
+
+// ─────────────────────────────────────────
+// ВІДКРИТИ ЧАТ З КОНТАКТОМ
+// ─────────────────────────────────────────
+window.bpOpenChat = async function(contactId) {
+    // Якщо не на вкладці chat — переходимо
+    if (bp.subTab !== 'chat') {
+        bpSwitch('chat');
+        await new Promise(r => setTimeout(r, 100));
+    }
+
+    chat.activeId = contactId;
+    bp.activeChatContactId = contactId;
+
+    // Знаходимо контакт
+    let ct = chat.contacts.find(c => c.id === contactId);
+    if (!ct) {
+        // Завантажуємо якщо не в списку
+        const doc = await firebase.firestore()
+            .doc(`companies/${window.currentCompanyId}/contacts/${contactId}`).get();
+        if (doc.exists) {
+            ct = { id: doc.id, ...doc.data() };
+            chat.contacts.unshift(ct);
+        }
+    }
+
+    // Оновлюємо лівий список (підсвічуємо активний)
+    _chatRenderContactsList();
+
+    // Рендеримо хедер
+    _chatRenderHeader(ct);
+
+    // Показуємо поле вводу
+    const inputArea = document.getElementById('chatInputArea');
+    if (inputArea) inputArea.style.display = '';
+
+    // Зупиняємо попередній listener
+    if (chat.msgsUnsub) { chat.msgsUnsub(); chat.msgsUnsub = null; }
+
+    // Підписуємось на messages цього контакту
+    chat.msgsUnsub = firebase.firestore()
+        .collection(`companies/${window.currentCompanyId}/contacts/${contactId}/messages`)
+        .orderBy('timestamp', 'asc')
+        .limitToLast(100)
+        .onSnapshot(snap => {
+            _chatRenderMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
         });
+
+    // Отримуємо токен бота для відправки
+    chat.sendingBotToken = await _chatGetBotToken(ct);
+
+    // Позначаємо прочитаними
+    _chatMarkRead(contactId);
 };
 
-window.bpSendMsg = async function() {
-    const input = document.getElementById('bpChatInput');
-    const text = input?.value.trim();
-    if (!text || !bp.activeChatContactId) return;
-    const ct = bp.contacts.find(c=>c.id===bp.activeChatContactId);
-    const sessionId = `telegram_${ct?.externalId?.replace('telegram_','')||bp.activeChatContactId}`;
-    input.value = '';
+function _chatRenderHeader(ct) {
+    const header = document.getElementById('chatMsgHeader');
+    if (!header || !ct) return;
+    const name = ct.senderName || ct.name || 'Анонім';
+    const initial = name.charAt(0).toUpperCase();
+    const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
+    const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
 
-    await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-        .collection('sessions').doc(sessionId)
-        .collection('messages').add({
-            direction:'out', text, sentBy:'operator',
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        });
+    header.innerHTML = `
+        <div style="width:36px;height:36px;border-radius:50%;background:${avatarColor};
+            display:flex;align-items:center;justify-content:center;
+            font-weight:700;color:white;font-size:0.9rem;flex-shrink:0;">
+            ${initial}
+        </div>
+        <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:0.88rem;">${escH(name)}</div>
+            <div style="font-size:0.7rem;color:#6b7280;">
+                ${ct.senderId ? 'ID: '+ct.senderId : ''}
+                ${ct.phone ? ' · 📞 '+ct.phone : ''}
+                ${ct.business_type ? ' · '+ct.business_type : ''}
+            </div>
+        </div>
+        ${ct.botStatus === 'blocked' ? `
+        <span style="font-size:0.7rem;color:#ef4444;background:#fee2e2;
+            padding:2px 8px;border-radius:6px;font-weight:600;flex-shrink:0;">
+            🚫 Заблокував
+        </span>` : ''}
+        <button onclick="ctsOpenCard('${ct.id}')"
+            title="Картка контакту"
+            style="padding:0.35rem 0.5rem;background:#f9fafb;border:1px solid #e5e7eb;
+            border-radius:8px;cursor:pointer;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+        </button>`;
+}
 
-    const compDoc = await firebase.firestore().collection('companies').doc(window.currentCompanyId).get();
-    const token = compDoc.data()?.integrations?.telegram?.botToken;
-    const telegramId = ct?.externalId?.replace('telegram_','');
-    if (token && telegramId) {
-        fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ chat_id: telegramId, text }),
-        });
+function _chatRenderMessages(msgs) {
+    const div = document.getElementById('chatMsgs');
+    if (!div) return;
+
+    if (!msgs.length) {
+        div.innerHTML = `
+            <div style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">
+                <svg style="margin-bottom:0.5rem;opacity:0.4;" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <div>Повідомлень поки немає</div>
+                <div style="font-size:0.74rem;margin-top:4px;">Напишіть першим або дочекайтесь відповіді</div>
+            </div>`;
+        return;
     }
+
+    const wasAtBottom = div.scrollHeight - div.scrollTop - div.clientHeight < 50;
+
+    div.innerHTML = msgs.map(m => {
+        const isBot = m.from === 'bot' || m.direction === 'out';
+        const time = m.timestamp?.toDate ? m.timestamp.toDate().toLocaleTimeString('uk-UA', {hour:'2-digit',minute:'2-digit'}) : '';
+
+        return `
+        <div style="display:flex;justify-content:${isBot ? 'flex-end' : 'flex-start'};">
+            <div style="max-width:72%;display:flex;flex-direction:column;align-items:${isBot ? 'flex-end' : 'flex-start'};">
+                <div style="padding:0.5rem 0.75rem;
+                    border-radius:${isBot ? '14px 14px 4px 14px' : '14px 14px 14px 4px'};
+                    background:${isBot ? '#22c55e' : 'white'};
+                    color:${isBot ? 'white' : '#1a1a1a'};
+                    font-size:0.82rem;line-height:1.45;
+                    box-shadow:${isBot ? '0 1px 4px rgba(34,197,94,0.3)' : '0 1px 4px rgba(0,0,0,0.08)'};
+                    word-break:break-word;">
+                    ${escH(m.text || '')}
+                </div>
+                <div style="font-size:0.62rem;color:#9ca3af;margin-top:2px;
+                    display:flex;align-items:center;gap:3px;">
+                    ${time}
+                    ${isBot ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${m.read ? '#22c55e' : '#9ca3af'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    if (wasAtBottom) div.scrollTop = div.scrollHeight;
+}
+
+// ─────────────────────────────────────────
+// ВІДПРАВКА ПОВІДОМЛЕННЯ
+// ─────────────────────────────────────────
+window.chatSend = window.bpSendMsg = async function() {
+    const input = document.getElementById('chatInput') || document.getElementById('bpChatInput');
+    const text = input?.value.trim();
+    if (!text || !chat.activeId) return;
+
+    const btn = document.getElementById('chatSendBtn');
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+    input.value = '';
+    if (input.tagName === 'TEXTAREA') { input.style.height = 'auto'; }
+
+    try {
+        // Відправляємо через webhook endpoint (він сам пише в Firestore + Telegram)
+        const webhookBase = window.location.origin.includes('localhost')
+            ? 'https://test-talko-task-manager-test-production.up.railway.app'
+            : 'https://test-talko-task-manager-test-production.up.railway.app';
+
+        const res = await fetch(`${webhookBase}/api/webhook?action=send-message`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                companyId: window.currentCompanyId,
+                contactId: chat.activeId,
+                text,
+                botToken: chat.sendingBotToken || null,
+            }),
+        });
+
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || 'Send failed');
+
+        // Оновлюємо lastMessage в локальному стані
+        const ct = chat.contacts.find(c => c.id === chat.activeId);
+        if (ct) { ct.lastMessage = text; ct.lastMessageAt = { toDate: () => new Date() }; }
+        _chatRenderContactsList();
+
+    } catch(e) {
+        console.error('[chat] send:', e);
+        // Fallback: пишемо напряму в Firestore (без Telegram)
+        await firebase.firestore()
+            .collection(`companies/${window.currentCompanyId}/contacts/${chat.activeId}/messages`)
+            .add({
+                text, from: 'bot', direction: 'out',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                read: true, sentBy: 'operator',
+            });
+    }
+
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+};
+
+// ─────────────────────────────────────────
+// MARK READ
+// ─────────────────────────────────────────
+async function _chatMarkRead(contactId) {
+    try {
+        // Обнуляємо лічильник локально одразу
+        const ct = chat.contacts.find(c => c.id === contactId);
+        if (ct) ct.unreadCount = 0;
+        _chatRenderContactsList();
+
+        // Відправляємо на сервер
+        const webhookBase = 'https://test-talko-task-manager-test-production.up.railway.app';
+        fetch(`${webhookBase}/api/webhook?action=mark-read`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ companyId: window.currentCompanyId, contactId }),
+        }).catch(() => {
+            // Fallback: пишемо напряму
+            firebase.firestore()
+                .doc(`companies/${window.currentCompanyId}/contacts/${contactId}`)
+                .update({ unreadCount: 0 }).catch(() => {});
+        });
+    } catch(e) { /* не критично */ }
+}
+
+// ─────────────────────────────────────────
+// ТОКЕН БОТА
+// ─────────────────────────────────────────
+async function _chatGetBotToken(ct) {
+    if (!ct) return null;
+    // Токен зберігається в боті по botId
+    const botId = ct.botId || bp.activeBotId;
+    if (!botId) return null;
+    const bot = bp.bots.find(b => b.id === botId);
+    if (bot?.token) return bot.token;
+    // Завантажуємо якщо немає в cache
+    try {
+        const doc = await firebase.firestore()
+            .doc(`companies/${window.currentCompanyId}/bots/${botId}`).get();
+        return doc.data()?.token || null;
+    } catch { return null; }
+}
+
+// ─────────────────────────────────────────
+// REAL-TIME: лічильник непрочитаних
+// ─────────────────────────────────────────
+function _chatStartUnreadListener() {
+    if (chat.contactsUnsub) { chat.contactsUnsub(); chat.contactsUnsub = null; }
+
+    // Слухаємо тільки контакти з unreadCount > 0
+    chat.contactsUnsub = firebase.firestore()
+        .collection(`companies/${window.currentCompanyId}/contacts`)
+        .where('unreadCount', '>', 0)
+        .onSnapshot(snap => {
+            snap.docs.forEach(doc => {
+                const idx = chat.contacts.findIndex(c => c.id === doc.id);
+                if (idx >= 0) {
+                    chat.contacts[idx].unreadCount = doc.data().unreadCount;
+                } else {
+                    // Новий контакт з непрочитаними — додаємо на початок
+                    chat.contacts.unshift({ id: doc.id, ...doc.data() });
+                }
+            });
+            _chatRenderContactsList();
+        });
+}
+
+// ─────────────────────────────────────────
+// ПОШУК
+// ─────────────────────────────────────────
+let _chatSearchTimer = null;
+window.chatOnSearch = function(val) {
+    chat.search = val;
+    clearTimeout(_chatSearchTimer);
+    _chatSearchTimer = setTimeout(() => chatLoadContacts(true), 300);
 };
 
 // ══════════════════════════════════════════════════════════
-// 7. РОЗСИЛКА
+// 7. РОЗСИЛКА// 7. РОЗСИЛКА
 // ══════════════════════════════════════════════════════════
 async function renderBroadcastTab() {
     const c = document.getElementById('bpViewBroadcast');
