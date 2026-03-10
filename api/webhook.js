@@ -381,6 +381,8 @@ async function doAction(node, session) {
                 .replace(/\{\{senderName\}\}/g, session.senderName || '')
                 .replace(/\{\{senderId\}\}/g, session.senderId || '')
                 .replace(/\{\{channel\}\}/g, session.channel || '')
+                .replace(/\{\{flowName\}\}/g, node.config?.notifyFlowName || flow?.name || flow?.title || session.currentFlowId || '')
+                .replace(/\{\{flowId\}\}/g, session.currentFlowId || '')
                 .replace(/\{\{(\w+)\}\}/g, (_, k) => session.data?.[k] || '');
             await sendTg(adminToken, chatId, text).catch(() => {});
         }

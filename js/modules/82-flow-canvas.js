@@ -709,9 +709,11 @@ function bezier(x1, y1, x2, y2) {
         const cp = Math.max(60, dx * 0.55);
         return `M${x1},${y1} C${x1+cp},${y1} ${x2-cp},${y2} ${x2},${y2}`;
     } else {
-        // Ціль зліва — робимо петлю через низ/верх
-        const offset = Math.max(80, Math.abs(dy) * 0.4 + 80);
-        return `M${x1},${y1} C${x1+offset},${y1} ${x1+offset},${y2} ${x2-offset},${y2} S${x2},${y2} ${x2},${y2}`;
+        // Ціль зліва — петля через низ
+        const pad = 60;
+        const midY = Math.max(y1, y2) + pad;
+        const midX = (x1 + x2) / 2;
+        return `M${x1},${y1} C${x1+pad},${y1} ${x1+pad},${midY} ${midX},${midY} C${x2-pad},${midY} ${x2-pad},${y2} ${x2},${y2}`;
     }
 }
 
@@ -1262,11 +1264,16 @@ function renderPropPanel() {
                         placeholder="123456789"
                         style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
                         border-radius:7px;color:white;font-size:11px;box-sizing:border-box;margin-bottom:6px;">
+                    <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;">Назва воронки</div>
+                    <input id="fcp_notifyFlowName" type="text" value="${d.notifyFlowName||''}"
+                        placeholder="напр: МК Бізнес 60 хвилин"
+                        style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
+                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;margin-bottom:6px;">
                     <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;">Текст повідомлення</div>
                     <textarea id="fcp_notifyText" rows="3"
                         placeholder="Новий лід: {{senderName}} розпочав діалог"
                         style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
-                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;resize:vertical;">${d.notifyText||'🔔 Новий лід: {{senderName}}\nКанал: {{channel}}\nДані: {{ai_response}}'}</textarea>
+                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;resize:vertical;">${d.notifyText||'🔔 Новий лід: {{senderName}}\nКанал: {{channel}}\nВоронка: {{flowName}}\nДані: {{ai_response}}'}</textarea>
                 </div>` : fld('Параметри (JSON)', ta('actionPayload', d.actionPayload, '{"variable":"phone","value":"{{input}}"}', 3));
             const actionSel = `<select id="fcp_actionType"
                 onchange="fcSetActionType(this.value)"
@@ -1493,6 +1500,7 @@ window.fcApplyNodeData = function(nodeId) {
             node.config.actionPayload = get('actionPayload');
             node.config.notifyChatId = document.getElementById('fcp_notifyChatId')?.value?.trim() || null;
             node.config.notifyText = document.getElementById('fcp_notifyText')?.value || null;
+            node.config.notifyFlowName = document.getElementById('fcp_notifyFlowName')?.value?.trim() || null;
             break;
         case 'filter':
             node.config.condVar = get('condVar');
