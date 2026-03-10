@@ -373,15 +373,16 @@ async function doAction(node, session) {
         if (node.actionPayload) session.tags.push(node.actionPayload);
     } else if (node.actionType === 'notify_admin') {
         const chatId = node.config?.notifyChatId || node.notifyChatId;
-        const token = session._botToken; // передається нижче
-        if (chatId && token) {
+        // Використовуємо окремий адмін бот для сповіщень
+        const adminToken = process.env.ADMIN_BOT_TOKEN || session._botToken;
+        if (chatId && adminToken) {
             let text = node.config?.notifyText || node.notifyText || '🔔 Новий лід: {{senderName}}';
             text = text
                 .replace(/\{\{senderName\}\}/g, session.senderName || '')
                 .replace(/\{\{senderId\}\}/g, session.senderId || '')
                 .replace(/\{\{channel\}\}/g, session.channel || '')
                 .replace(/\{\{(\w+)\}\}/g, (_, k) => session.data?.[k] || '');
-            await sendTg(token, chatId, text).catch(() => {});
+            await sendTg(adminToken, chatId, text).catch(() => {});
         }
     }
 }
