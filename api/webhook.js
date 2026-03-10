@@ -108,6 +108,14 @@ module.exports = async (req, res) => {
             data: {}, tags: [],
         };
 
+        // FIX 1: Deduplication — ігноруємо повторний update_id від Telegram
+        const updateId = body?.update_id || body?.entry?.[0]?.id || null;
+        if (updateId && session.lastUpdateId === updateId) {
+            console.log('[webhook] Duplicate update_id, skipping:', updateId);
+            return res.status(200).json({ ok: true, skipped: 'duplicate' });
+        }
+        if (updateId) session.lastUpdateId = updateId;
+
         const isStart = /^\/start/.test(normalized.text) || normalized.text === 'start';
         if (isStart) {
             Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null, data: {}, aiHistory: [] });
@@ -265,7 +273,8 @@ module.exports = async (req, res) => {
         }
 
         // ── Виконуємо ланцюг вузлів ──────────────────────────
-        session._botToken = botToken; // для notify_admin
+        // FIX 3: _botToken НЕ зберігаємо в сесії (security) — передаємо через env
+        // session._botToken = botToken; — ВИДАЛЕНО
         let safety = 0;
         while (nodeId && safety++ < 30) {
             const n = nodeMap[nodeId];
@@ -291,10 +300,11 @@ module.exports = async (req, res) => {
                 session.aiHistory.push({ role: 'user', content: normalized.text });
                 if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
 
-                // Проміжне повідомлення поки AI думає (тільки перше повідомлення або нова сесія)
+                // FIX 6: відправляємо ⏳ і зберігаємо message_id щоб потім відредагувати
                 const isFirstAiMsg = !session.aiHistory || session.aiHistory.length <= 1;
+                let thinkingMsgId = null;
                 if (isFirstAiMsg) {
-                    await sendTg(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...');
+                    thinkingMsgId = await sendTgGetId(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...');
                 }
 
                 const rawReply = await callAI(n, normalized.text, session, compRef, _compData);
@@ -323,7 +333,12 @@ module.exports = async (req, res) => {
                 session.data.ai_response = cleanReply;
 
                 if (cleanReply) {
-                    await sendTg(botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null);
+                    // FIX 6: редагуємо ⏳ повідомлення якщо є message_id, інакше новим
+                    if (thinkingMsgId) {
+                        await editTg(botToken, normalized.senderId, thinkingMsgId, cleanReply, aiBtns.length ? aiBtns : null);
+                    } else {
+                        await sendTg(botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null);
+                    }
                 }
 
                 if (isDone && n.nextNode) {
@@ -358,7 +373,7 @@ module.exports = async (req, res) => {
                     const lastAI = [...session.aiHistory].reverse().find(m => m.role === 'assistant');
                     if (lastAI) session.data.ai_response = lastAI.content;
                 }
-                await doAction(n, session, flow);
+                await doAction(n, session, flow, botToken);
                 nodeId = n.nextNode || null;
 
             } else if (n.type === 'api') {
@@ -383,12 +398,18 @@ module.exports = async (req, res) => {
 
         // ── Зберігаємо сесію ─────────────────────────────────
         if (!nodeId) {
-            Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null });
+            // FIX 5: очищаємо дані сесії після завершення флоу
+            Object.assign(session, {
+                currentFlowId: null, currentNodeId: null, waitingForInput: null,
+                data: {}, aiHistory: [], tags: [],
+            });
         } else {
             Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId, currentNodeId: nodeId });
         }
         session.updatedAt = admin.firestore.FieldValue.serverTimestamp();
-        await sessionRef.set(session, { merge: true });
+        // FIX 3: видаляємо технічні поля перед збереженням
+        const { _botToken, ...sessionToSave } = session;
+        await sessionRef.set(sessionToSave, { merge: true });
         return res.status(200).json({ ok: true });
 
     } catch(err) {
@@ -445,7 +466,7 @@ function evalFilter(node, data) {
     }
 }
 
-async function doAction(node, session, flow) {
+async function doAction(node, session, flow, botToken) {
     if (node.actionType === 'set_var') {
         try {
             const p = typeof node.actionPayload === 'string' ? JSON.parse(node.actionPayload) : node.actionPayload;
@@ -457,7 +478,7 @@ async function doAction(node, session, flow) {
     } else if (node.actionType === 'notify_admin') {
         const chatId = node.config?.notifyChatId || node.notifyChatId;
         // Використовуємо окремий адмін бот для сповіщень
-        const adminToken = process.env.ADMIN_BOT_TOKEN || session._botToken;
+        const adminToken = process.env.ADMIN_BOT_TOKEN || botToken;
         if (chatId && adminToken) {
             const flowDisplayName = node.config?.notifyFlowName || flow?.name || flow?.title || '';
         let text = node.config?.notifyText || node.notifyText || '🔔 Новий лід: {{senderName}}';
@@ -467,7 +488,13 @@ async function doAction(node, session, flow) {
                 .replace(/\{\{channel\}\}/g, session.channel || '')
                 .replace(/\{\{flowName\}\}/g, flowDisplayName || session.currentFlowId || '')
                 .replace(/\{\{flowId\}\}/g, session.currentFlowId || '')
-                .replace(/\{\{(\w+)\}\}/g, (_, k) => session.data?.[k] || '');
+                .replace(/\{\{(\w+)\}\}/g, (_, k) => {
+                    const val = session.data?.[k] || '';
+                    // FIX 8: truncate великі значення щоб не перевищити ліміт Telegram 4096 символів
+                    return String(val).slice(0, 800);
+                });
+            // Загальний truncate повідомлення
+            if (text.length > 4000) text = text.slice(0, 4000) + '...';
             await sendTg(adminToken, chatId, text).catch(() => {});
         }
     }
@@ -500,6 +527,10 @@ async function callAI(node, userText, session, compRef, compData) {
 
         let responseText = null;
 
+        // FIX 2: Timeout 25 сек щоб не зависнути
+        const aiAbort = new AbortController();
+        const aiTimeout = setTimeout(() => aiAbort.abort(), 25000);
+
         // ── OpenAI / Deepseek (same API format) ──────────────
         if (provider === 'openai' || provider === 'deepseek' || model.startsWith('gpt-') || model.startsWith('o3') || model.startsWith('o4') || model.startsWith('o1') || model.startsWith('deepseek')) {
             const baseUrl = (provider === 'deepseek' || model.startsWith('deepseek'))
@@ -508,6 +539,7 @@ async function callAI(node, userText, session, compRef, compData) {
             const r = await fetch(baseUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                signal: aiAbort.signal,
                 body: JSON.stringify({
                     model,
                     ...(model.startsWith('o3') || model.startsWith('o4') || model.startsWith('gpt-5')
@@ -516,6 +548,7 @@ async function callAI(node, userText, session, compRef, compData) {
                     messages
                 })
             });
+            clearTimeout(aiTimeout);
             const d = await r.json();
             console.log('[callAI] status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.choices?.[0]?.message?.content || null;
@@ -529,12 +562,14 @@ async function callAI(node, userText, session, compRef, compData) {
                     'x-api-key': apiKey,
                     'anthropic-version': '2023-06-01'
                 },
+                signal: aiAbort.signal,
                 body: JSON.stringify({
                     model, max_tokens: 1500,
                     system: sysPrompt,
                     messages: (session.aiHistory || []).concat([{ role: 'user', content: userText }])
                 })
             });
+            clearTimeout(aiTimeout);
             const d = await r.json();
             console.log('[callAI] Anthropic status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.content?.[0]?.text || null;
@@ -556,6 +591,11 @@ async function callAI(node, userText, session, compRef, compData) {
 
         return responseText || node.config?.fallback || node.fallback || 'Дякуємо!';
     } catch(e) {
+        clearTimeout(aiTimeout);
+        if (e.name === 'AbortError') {
+            console.error('[callAI] TIMEOUT after 25s');
+            return node.config?.fallback || node.fallback || 'Вибачте, відповідь зайняла надто довго. Спробуйте ще раз.';
+        }
         console.error('[callAI]', e.message);
         return node.config?.fallback || node.fallback || 'Виникла помилка.';
     }
@@ -591,12 +631,67 @@ async function sendTg(token, chatId, text, buttons) {
     } catch(e) { console.error('[sendTg] fetch error:', e.message); }
 }
 
+// Відправляє повідомлення і повертає message_id
+async function sendTgGetId(token, chatId, text) {
+    if (!token || !chatId) return null;
+    let safeText = (text || ' ').trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    try {
+        const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chatId, text: safeText, parse_mode: 'HTML' })
+        });
+        const result = await r.json();
+        return result.ok ? result.result?.message_id : null;
+    } catch(e) { return null; }
+}
+
+// Редагує існуюче повідомлення
+async function editTg(token, chatId, messageId, text, buttons) {
+    if (!token || !chatId || !messageId) return;
+    let safeText = (text || ' ').trim()
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')
+        .replace(/\*(.*?)\*/g,'<i>$1</i>')
+        .replace(/`(.*?)`/g,'<code>$1</code>');
+    const payload = { chat_id: chatId, message_id: messageId, text: safeText, parse_mode: 'HTML' };
+    if (buttons?.length) {
+        payload.reply_markup = { inline_keyboard: buttons.map((b,i) => [
+            b.url ? { text: b.label||b.text||'?', url: b.url }
+                  : { text: b.label||b.text||'?', callback_data: `btn_${i}` }
+        ])};
+    }
+    try {
+        await fetch(`https://api.telegram.org/bot${token}/editMessageText`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+    } catch(e) { console.error('[editTg]', e.message); }
+}
+
 async function finish(session, flow, compRef, channel) {
     try {
+        // Зберігаємо лід
         await compRef.collection('leads').add({
             senderId: session.senderId, senderName: session.senderName || '',
             channel, flowId: flow?.id || null, data: session.data || {}, tags: session.tags || [],
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
+
+        // FIX 4: Upsert контакт по senderId (не дублюємо при повторних проходах)
+        const contactId = `${channel}_${session.senderId}`;
+        await compRef.collection('contacts').doc(contactId).set({
+            senderId: session.senderId,
+            senderName: session.senderName || '',
+            channel,
+            lastFlowId: flow?.id || null,
+            lastData: session.data || {},
+            tags: session.tags || [],
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+
+        // Якщо перший раз — додаємо createdAt
+        await compRef.collection('contacts').doc(contactId).set({
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true }).catch(() => {});
+
     } catch(e) { console.error('[finish]', e.message); }
 }
