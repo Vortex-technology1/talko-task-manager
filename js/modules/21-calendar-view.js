@@ -576,22 +576,26 @@
                 alldayEl.style.display = 'none';
             }
             
+            // Calculate overlap positions (like iOS/Google Calendar)
+            const timedPositions = _calcOverlapPositions(timedTasks);
+
             // Render timed events
-            timedTasks.forEach(task => {
+            timedPositions.forEach(pos => {
+                const task = pos.task;
                 const deadline = task.deadlineDate;
                 const startHour = deadline.getHours();
                 const startMinute = deadline.getMinutes();
-                
-                // Calculate duration (use estimatedTime or default to 60 min)
                 const durationMinutes = task.estimatedTime ? parseInt(task.estimatedTime) : 60;
-                
-                // Calculate position and height
+
+                const widthPct  = 100 / pos.totalColumns;
+                const leftPct   = pos.column * widthPct;
                 const topOffset = startHour * 60 + startMinute;
-                const height = Math.max(durationMinutes, 20); // Minimum 20px height
-                
+                const height    = Math.max(durationMinutes, 20);
+
                 const eventHTML = `
                     <div class="calendar-event status-${task.status}" 
-                         style="top: ${topOffset}px; height: ${height}px;"
+                         style="top: ${topOffset}px; height: ${height}px;
+                                left: calc(2px + ${leftPct}%); width: calc(${widthPct}% - 4px); right: auto;"
                          onclick="showTaskQuickMenu(event, '${escId(task.id)}')"
                          draggable="true"
                          ondragstart="onTaskDragStart(event, '${escId(task.id)}')"
@@ -610,6 +614,69 @@
             }
         }
         
+        // Overlap для week view (deadline поле замість deadlineDate)
+        function _calcOverlapPositionsWeek(tasks) {
+            if (!tasks.length) return [];
+            const items = tasks.map(task => {
+                const d = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
+                const start = d.getHours() * 60 + d.getMinutes();
+                const dur   = task.estimatedTime ? parseInt(task.estimatedTime) : 60;
+                return { task, start, end: start + dur, column: 0, totalColumns: 1 };
+            });
+            items.sort((a, b) => a.start - b.start);
+            const groups = [];
+            items.forEach(item => {
+                let grp = null;
+                for (const g of groups) {
+                    if (g.some(t => item.start < t.end && item.end > t.start)) { grp = g; break; }
+                }
+                if (grp) {
+                    const used = new Set(grp.filter(t => item.start < t.end && item.end > t.start).map(t => t.column));
+                    let col = 0; while (used.has(col)) col++;
+                    item.column = col;
+                    grp.push(item);
+                } else { item.column = 0; groups.push([item]); }
+            });
+            groups.forEach(g => {
+                const maxCol = Math.max(...g.map(t => t.column)) + 1;
+                g.forEach(t => t.totalColumns = maxCol);
+            });
+            return items;
+        }
+
+        // Overlap detection — як iOS/Google Calendar
+        function _calcOverlapPositions(tasks) {
+            if (!tasks.length) return [];
+            const items = tasks.map(task => {
+                const d = task.deadlineDate;
+                const start = d.getHours() * 60 + d.getMinutes();
+                const dur   = task.estimatedTime ? parseInt(task.estimatedTime) : 60;
+                return { task, start, end: start + dur, column: 0, totalColumns: 1 };
+            });
+            items.sort((a, b) => a.start - b.start);
+            const groups = [];
+            items.forEach(item => {
+                let grp = null;
+                for (const g of groups) {
+                    if (g.some(t => item.start < t.end && item.end > t.start)) { grp = g; break; }
+                }
+                if (grp) {
+                    const used = new Set(grp.filter(t => item.start < t.end && item.end > t.start).map(t => t.column));
+                    let col = 0; while (used.has(col)) col++;
+                    item.column = col;
+                    grp.push(item);
+                } else {
+                    item.column = 0;
+                    groups.push([item]);
+                }
+            });
+            groups.forEach(g => {
+                const maxCol = Math.max(...g.map(t => t.column)) + 1;
+                g.forEach(t => t.totalColumns = maxCol);
+            });
+            return items;
+        }
+
         function formatDuration(minutes) {
             if (minutes < 60) return `${minutes} хв`;
             const hours = Math.floor(minutes / 60);
@@ -698,19 +765,24 @@
                 // Get tasks for this day (O(1) lookup)
                 const dayTasks = weekTasksByDate[dayStr] || [];
                 
-                // Render events
-                dayTasks.forEach(task => {
+                // Render events with overlap detection
+                const weekDayPositions = _calcOverlapPositionsWeek(dayTasks);
+                weekDayPositions.forEach(pos => {
+                    const task = pos.task;
                     const deadline = task.deadline.toDate ? task.deadline.toDate() : new Date(task.deadline);
                     const startHour = deadline.getHours();
                     const startMinute = deadline.getMinutes();
                     const durationMinutes = task.estimatedTime ? parseInt(task.estimatedTime) : 60;
-                    
-                    const topOffset = startHour * 60 + startMinute;
-                    const height = Math.max(durationMinutes, 20);
-                    
+
+                    const topOffset  = startHour * 60 + startMinute;
+                    const height     = Math.max(durationMinutes, 20);
+                    const widthPct   = 100 / pos.totalColumns;
+                    const leftPct    = pos.column * widthPct;
+
                     bodyHTML += `
                         <div class="calendar-event status-${task.status}" 
-                             style="position:absolute; top:${topOffset}px; height:${height}px; left:2px; right:2px;"
+                             style="position:absolute; top:${topOffset}px; height:${height}px;
+                                    left:calc(2px + ${leftPct}%); width:calc(${widthPct}% - 4px); right:auto;"
                              onclick="showTaskQuickMenu(event, '${escId(task.id)}')"
                              draggable="true"
                              ondragstart="onTaskDragStart(event, '${escId(task.id)}')"
