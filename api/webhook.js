@@ -276,6 +276,9 @@ module.exports = async (req, res) => {
                 session.aiHistory.push({ role: 'user', content: normalized.text });
                 if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
 
+                // Проміжне повідомлення поки AI думає
+                await sendTg(botToken, normalized.senderId, '⏳');
+
                 const rawReply = await callAI(n, normalized.text, session, compRef);
 
                 // Парсимо спеціальні теги з відповіді AI:
