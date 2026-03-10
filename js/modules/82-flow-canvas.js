@@ -1690,16 +1690,46 @@ async function saveFlow() {
             return stripped;
         });
 
-        const strippedNodes = stripPrompts(ordered);
-
-        // canvasData зберігаємо окремо в підколекцію щоб не перевищувати 1MB ліміт
-        // Основний документ містить тільки nodes (для webhook) — мінімальний розмір
+        // canvasData (повні дані + позиції) — окремо в підколекцію
         const canvasRef = saveRef.collection('canvasData').doc('layout');
         const strippedCanvas = { ...canvasData, nodes: stripPrompts(canvasData.nodes) };
         await canvasRef.set(sanitize(strippedCanvas));
 
+        // nodes для webhook — тільки мінімальні поля (без _x/_y/config дублювання)
+        const minimalNodes = stripPrompts(ordered).map(n => {
+            const m = {
+                id: n.id,
+                type: n.type,
+                text: n.config?.text || n.text || '',
+                nextNode: n.nextNode || null,
+                buttons: n.config?.buttons || n.buttons || [],
+                options: n.options || [],
+                // AI поля
+                aiSystem: n.aiSystem || '',
+                aiApiKey: n.config?.aiApiKey || null,
+                aiModel: n.config?.aiModel || null,
+                aiProvider: n.config?.aiProvider || null,
+                saveAs: n.config?.saveAs || null,
+                fallback: n.config?.fallback || null,
+                // Action поля
+                actionType: n.config?.actionType || null,
+                notifyChatId: n.config?.notifyChatId || null,
+                notifyText: n.config?.notifyText || null,
+                notifyFlowName: n.config?.notifyFlowName || null,
+                // Filter поля
+                trueNode: n.trueNode || null,
+                falseNode: n.falseNode || null,
+                condVar: n.config?.condVar || null,
+                condOp: n.config?.condOp || null,
+                condVal: n.config?.condVal || null,
+            };
+            // Прибираємо null поля щоб зменшити розмір
+            Object.keys(m).forEach(k => { if (m[k] === null || m[k] === '') delete m[k]; });
+            return m;
+        });
+
         await saveRef.update({
-                nodes: sanitize(strippedNodes),
+                nodes: sanitize(minimalNodes),
                 triggerKeyword: triggerKeyword || '/start',
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
