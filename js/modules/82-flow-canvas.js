@@ -61,10 +61,10 @@ window.openFlowCanvas = async function(flowId, botId) {
     fc.flowData = {id: snap.id, ...snap.data()};
 
     // Підвантажуємо canvasData з підколекції (якщо немає в основному документі)
-    if (!flowData.canvasData || !flowData.canvasData.nodes?.length) {
+    if (!fc.flowData.canvasData || !fc.flowData.canvasData.nodes?.length) {
         try {
             const canvasDoc = await flowRef.collection('canvasData').doc('layout').get();
-            if (canvasDoc.exists) flowData.canvasData = canvasDoc.data();
+            if (canvasDoc.exists) fc.flowData.canvasData = canvasDoc.data();
         } catch(e) { console.warn('canvasData load:', e.message); }
     }
 
