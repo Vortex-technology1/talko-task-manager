@@ -493,14 +493,16 @@ function buildNodeEl(node) {
         `left:${node.x}px`,
         `top:${node.y}px`,
         `width:${W}px`,
-        `border-radius:12px`,
+        `border-radius:16px`,
         `background:white`,
-        `border:2px solid ${isSelected ? cfg.color : '#e5e7eb'}`,
-        `box-shadow:${isSelected ? `0 0 0 3px ${cfg.color}30,0 8px 24px rgba(0,0,0,0.12)` : '0 2px 12px rgba(0,0,0,0.08),0 1px 3px rgba(0,0,0,0.06)'}`,
+        `border:2px solid ${isSelected ? cfg.color : 'transparent'}`,
+        `box-shadow:${isSelected
+            ? `0 0 0 3px ${cfg.color}25, 0 12px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)`
+            : `0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)`}`,
         `cursor:pointer`,
-        `transition:border-color 0.15s,box-shadow 0.15s,transform 0.1s`,
+        `transition:border-color 0.15s, box-shadow 0.2s, transform 0.1s`,
         `overflow:visible`,
-        `font-family:system-ui,sans-serif`,
+        `font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif`,
         `z-index:${isSelected ? 10 : 2}`,
     ].join(';');
 
@@ -570,32 +572,31 @@ function buildNodeEl(node) {
     const nodeName = node.config?.name || node.name || '';
     el.innerHTML = `
         ${inPortHTML}
-        <div style="background:linear-gradient(135deg,${cfg.color} 0%,${cfg.color}dd 100%);border-radius:10px 10px 0 0;
-            padding:9px 13px;display:flex;align-items:center;gap:8px;">
-            <span style="display:flex;align-items:center;color:white;flex-shrink:0;
-                background:rgba(255,255,255,0.2);border-radius:6px;padding:4px;">${cfg.icon}</span>
+        <div style="background:linear-gradient(135deg,${cfg.color} 0%,${cfg.border} 100%);border-radius:14px 14px 0 0;
+            padding:10px 12px;display:flex;align-items:center;gap:8px;">
+            <span style="display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;
+                background:rgba(255,255,255,0.22);border-radius:8px;padding:5px;width:28px;height:28px;">${cfg.icon}</span>
             <div style="flex:1;min-width:0;">
-                <div style="font-weight:700;font-size:12px;color:white;letter-spacing:0.01em;
-                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${cfg.label}</div>
-                ${nodeName ? `<div style="font-size:10px;color:rgba(255,255,255,0.75);
-                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px;">${esc(nodeName)}</div>` : ''}
+                <div style="font-weight:700;font-size:11px;color:rgba(255,255,255,0.75);letter-spacing:0.06em;text-transform:uppercase;">${cfg.label}</div>
+                <div style="font-size:12px;color:white;font-weight:600;margin-top:1px;
+                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${nodeName || cfg.label}</div>
             </div>
             <div data-del="${node.id}" title="Видалити"
-                style="width:20px;height:20px;border-radius:5px;background:rgba(0,0,0,0.18);
+                style="width:22px;height:22px;border-radius:6px;background:rgba(0,0,0,0.15);
                 display:flex;align-items:center;justify-content:center;cursor:pointer;
                 flex-shrink:0;transition:background 0.15s;"
-                onmouseenter="this.style.background='rgba(239,68,68,0.75)'"
-                onmouseleave="this.style.background='rgba(0,0,0,0.18)'">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                onmouseenter="this.style.background='rgba(239,68,68,0.8)'"
+                onmouseleave="this.style.background='rgba(0,0,0,0.15)'">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </div>
         </div>
-        <div style="padding:10px 13px 12px;min-height:44px;background:#fafafa;border-radius:0 0 10px 10px;">
+        <div style="padding:10px 12px 12px;min-height:44px;background:#f8fafc;border-radius:0 0 14px 14px;border-top:1px solid #f1f5f9;">
             ${preview
-                ? `<div style="font-size:11px;color:#374151;line-height:1.55;
+                ? `<div style="font-size:11.5px;color:#374151;line-height:1.6;
                     overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;
                     -webkit-box-orient:vertical;">${esc(preview)}</div>`
-                : `<div style="font-size:11px;color:#9ca3af;font-style:italic;display:flex;align-items:center;gap:4px;">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                : `<div style="font-size:11px;color:#94a3b8;font-style:italic;display:flex;align-items:center;gap:5px;padding:4px 0;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                     Клікніть для налаштування</div>`
             }
             ${node.type === 'ai' ? aiSnippet : btnsHTML}
