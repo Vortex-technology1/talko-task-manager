@@ -2420,4 +2420,18 @@
             showToast('Помилка: ' + e.message, 'error');
         }
     };
+    // ── Register in TALKO namespace ──────────────────────────
+    if (window.TALKO) {
+        window.TALKO.stats = {
+            init: window.initStatistics,
+            render: window.renderStatistics,
+            exportCSV: window.statsExportCSV,
+            exportExcel: window.statsExportExcel,
+            exportPDF: window.statsExportPDF,
+            setPeriodType: window.setStatsPeriodType,
+            setScope: window.setStatsScope,
+            navigate: window.statsNavigatePeriod,
+        };
+    }
+
 })();

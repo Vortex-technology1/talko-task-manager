@@ -761,7 +761,22 @@ window.sbBuildPublicHtml = function(site, blocksHtml) {
 };
 
 function _esc(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    // Shared via TALKO.utils.esc — local fallback for load order safety
+    if (window.TALKO?.utils?.esc) return window.TALKO.utils.esc(s);
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+
+    // ── TALKO namespace ───────────────────────────────────────
+    if (window.TALKO) {
+        window.TALKO.sites = Object.assign(window.TALKO.sites||{}, {
+            initBuilder: window.initSitesBuilder,
+            save: window.sbSave,
+            saveSeo: window.sbSaveSeo,
+            addBlock: window.sbAddBlock,
+            removeBlock: window.sbRemoveBlock,
+            panelTab: window.sbPanelTab,
+            buildHtml: window.sbBuildPublicHtml,
+        });
+    }
 
 })();

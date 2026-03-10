@@ -1158,7 +1158,9 @@ window.crmStageDrop = function(e, targetId) {
 // HELPERS
 // ══════════════════════════════════════════════════════════
 function _esc(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // Shared via TALKO.utils.esc — local fallback for load order safety
+    if (window.TALKO?.utils?.esc) return window.TALKO.utils.esc(s);
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function _fmt(n) {
     const num = parseFloat(n) || 0;
@@ -1184,5 +1186,25 @@ window.onSwitchTab && window.onSwitchTab('crm', function() {
     if (!crm.pipeline) window.initCRMModule();
     else if (crm.subTab === 'kanban') _renderKanban();
 });
+
+    // ── Register in TALKO namespace ──────────────────────────
+    if (window.TALKO) {
+        window.TALKO.crm = {
+            init:           window.initCRMModule,
+            selectPipeline: window.crmSelectPipeline,
+            createPipeline: window.crmCreatePipeline,
+            deletePipeline: window.crmDeletePipeline,
+            openDeal:       window.crmOpenDeal,
+            createDeal:     window.crmOpenCreateDeal,
+            saveDeal:       window.crmSaveDeal,
+            deleteDeal:     window.crmDeleteDeal,
+            runAI:          window.crmRunAI,
+            switchTab:      window.crmSwitchTab,
+            saveStages:     window.crmSaveStages,
+            addStage:       window.crmAddStage,
+            removeStage:    window.crmRemoveStage,
+            filterClients:  window.crmFilterClients,
+        };
+    }
 
 })();

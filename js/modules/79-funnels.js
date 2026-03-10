@@ -570,12 +570,12 @@
                 }
 
                 // Get default pipeline
-                const pipeSnap = await base.collection('pipelines').where('isDefault', '==', true).limit(1).get();
+                const pipeSnap = await base.collection('crm_pipeline').where('isDefault', '==', true).limit(1).get();
                 const pipelineId = pipeSnap.empty ? null : pipeSnap.docs[0].id;
 
                 // Create deal
                 if (pipelineId) {
-                    await base.collection('deals').add({
+                    await base.collection('crm_deals').add({
                         title: (leadData.name || leadData.phone || 'Новий лід') + ' — ' + (funnelData.name || 'Сайт'),
                         contactId,
                         pipelineId,

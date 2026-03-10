@@ -443,6 +443,21 @@
                 clearTimeout(undoTimeout);
                 undoTimeout = null;
             }
+            // ── Очищаємо switchTab handlers (memory leak prevention) ───
+            if (typeof window.clearSwitchTabHandlers === 'function') {
+                window.clearSwitchTabHandlers();
+            }
+            // ── Скидаємо модулі при logout (для re-login іншого юзера) ────
+            if (typeof window.destroyBotsModule === 'function') {
+                window.destroyBotsModule();
+            }
+            // Reset TALKO domain caches
+            if (window.TALKO) {
+                if (window.TALKO.crm)   window.TALKO.crm._initialized   = false;
+                if (window.TALKO.bots)  window.TALKO.bots._initialized  = false;
+                if (window.TALKO.sites) window.TALKO.sites._initialized = false;
+                if (window.TALKO.learn) window.TALKO.learn._initialized = false;
+            }
         }
         
         function logout() {

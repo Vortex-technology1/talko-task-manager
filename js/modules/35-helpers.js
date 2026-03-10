@@ -123,9 +123,32 @@
         window._tabHandlers = window._tabHandlers || {};
         window.onSwitchTab = function(tabName, fn) {
             if (!window._tabHandlers[tabName]) window._tabHandlers[tabName] = [];
-            window._tabHandlers[tabName].push(fn);
+            // Запобігаємо дублікатам одного і того ж handler
+            if (!window._tabHandlers[tabName].includes(fn)) {
+                window._tabHandlers[tabName].push(fn);
+            }
         };
 
+        // Видаляє конкретний handler
+        window.offSwitchTab = function(tabName, fn) {
+            if (!window._tabHandlers[tabName]) return;
+            window._tabHandlers[tabName] = window._tabHandlers[tabName].filter(f => f !== fn);
+        };
+
+        // Очищає ВСІ handlers — викликати при logout для запобігання memory leak
+        window.clearSwitchTabHandlers = function() {
+            window._tabHandlers = {};
+        };
+
+        // ── TALKO.nav namespace ──────────────────────────────────
+        if (window.TALKO) {
+            window.TALKO.nav = {
+                switchTab:       switchTab,
+                onSwitchTab:     window.onSwitchTab,
+                closeDropdowns:  closeNavDropdowns,
+            };
+        }
+        
         function switchTab(tabName) {
             // Зберігаємо активний таб для відновлення після F5
             try { sessionStorage.setItem('talko_last_tab', tabName); } catch(e) {}

@@ -385,7 +385,9 @@ window.sitesOpenForms = function (siteId) {
 
 // ── Helper ─────────────────────────────────────────────────
 function _esc(s) {
-    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // Shared via TALKO.utils.esc — local fallback for load order safety
+    if (window.TALKO?.utils?.esc) return window.TALKO.utils.esc(s);
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 window.onSwitchTab && window.onSwitchTab('sites', function() {
@@ -400,5 +402,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }, 1500);
 });
+
+    // ── Register in TALKO namespace ──────────────────────────
+    if (window.TALKO) {
+        window.TALKO.sites = {
+            init: window.initSitesModule,
+            create: window.sitesCreate,
+            delete: window.sitesDelete,
+            openBuilder: window.sitesOpenBuilder,
+            openForms: window.sitesOpenForms,
+            togglePublish: window.sitesTogglePublish,
+        };
+    }
 
 })();

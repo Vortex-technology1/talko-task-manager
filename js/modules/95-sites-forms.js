@@ -515,10 +515,22 @@ window.sfHandleSubmit = async function (siteId, formId, fieldsData) {
 };
 
 function _esc(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    // Shared via TALKO.utils.esc — local fallback for load order safety
+    if (window.TALKO?.utils?.esc) return window.TALKO.utils.esc(s);
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 // expose _renderView for inline onclick
 window._sfRenderView = function() { _renderView(); };
+
+    // ── TALKO namespace ───────────────────────────────────────
+    if (window.TALKO) {
+        window.TALKO.sites = Object.assign(window.TALKO.sites||{}, {
+            initForms: window.initSitesForms,
+            openForms: window.sfOpenEditor,
+            saveForm: window.sfSaveForm,
+            handleSubmit: window.sfHandleSubmit,
+        });
+    }
 
 })();

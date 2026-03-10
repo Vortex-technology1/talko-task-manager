@@ -33,6 +33,19 @@ window.initBotsModule = async function () {
     loadBots();
 };
 
+window.destroyBotsModule = function() {
+    // Відписуємо всі Firestore listeners
+    if (bp.botsUnsub)    { bp.botsUnsub();    bp.botsUnsub    = null; }
+    if (bp.flowsUnsub)   { bp.flowsUnsub();   bp.flowsUnsub   = null; }
+    if (bp.chatUnsub)    { bp.chatUnsub();     bp.chatUnsub    = null; }
+    // Скидаємо guard для re-init при наступному login
+    bp._initializedFor  = null;
+    bp.activeBotId      = null;
+    bp.bots             = [];
+    bp.contacts         = [];
+    bp.flows            = [];
+};
+
 function loadBots() {
     if (bp.botsUnsub) bp.botsUnsub();
     bp.botsUnsub = firebase.firestore()
@@ -2689,5 +2702,18 @@ function relTime(d) {
 window.onSwitchTab && window.onSwitchTab('bots', function() {
     if (window.isFeatureEnabled?.('bots')) window.initBotsModule();
 });
+
+    // ── Register in TALKO namespace ──────────────────────────
+    if (window.TALKO) {
+        window.TALKO.bots = {
+            init: window.initBotsModule,
+            destroy: window.destroyBotsModule,
+            openChat: window.bpOpenChat,
+            sendMsg: window.bpSendMsg,
+            switchTab: window.botsSwitchTab,
+            filterContacts: window.bpFilterContacts,
+            sendBroadcast: window.bpSendBroadcast,
+        };
+    }
 
 })();

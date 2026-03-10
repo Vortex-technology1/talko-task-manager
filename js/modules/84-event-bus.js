@@ -668,3 +668,11 @@ async function _cleanupExpiredEvents() {
 
 // Запускаємо cleanup через 30 сек після старту (не блокуємо UI)
 setTimeout(_cleanupExpiredEvents, 30000);
+
+// ── TALKO namespace registration ───────────────────────────
+if (window.TALKO) {
+    window.TALKO.events = {
+        emit: typeof emitTalkoEvent !== 'undefined' ? emitTalkoEvent : window.emitTalkoEvent,
+        on:   typeof onTalkoEvent   !== 'undefined' ? onTalkoEvent   : window.onTalkoEvent,
+    };
+}

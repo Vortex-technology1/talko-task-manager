@@ -283,4 +283,15 @@ window.onSwitchTab && window.onSwitchTab('integrations', function() {
     window.initIntegrationsModule();
 });
 
+    // ── Register in TALKO namespace ──────────────────────────
+    if (window.TALKO) {
+        window.TALKO.intg = {
+            init: window.initIntegrationsModule,
+            save: window.intgSave,
+            saveTelegram: window.intgSaveTelegram,
+            testTelegram: window.intgTestTelegram,
+            copy: window.intgCopy,
+        };
+    }
+
 })();
