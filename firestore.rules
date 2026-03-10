@@ -373,6 +373,12 @@ service cloud.firestore {
             allow read: if isCompanyMember(companyId);
             allow write: if isManagerOrOwner(companyId);
           }
+
+          // Canvas layout окремо
+          match /canvasData/{docId} {
+            allow read: if isCompanyMember(companyId);
+            allow write: if isManagerOrOwner(companyId);
+          }
         }
       }
 
@@ -393,6 +399,12 @@ service cloud.firestore {
           allow read: if isCompanyMember(companyId);
           allow write: if isManagerOrOwner(companyId);
         }
+      }
+
+      // BOTS — LEADS (збираються після завершення флоу)
+      match /leads/{leadId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId);
       }
 
       // BOTS — SESSIONS
