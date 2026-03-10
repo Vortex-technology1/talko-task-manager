@@ -66,5 +66,18 @@
       "source": "/api/funnel-ai",
       "destination": "/api/funnel-ai"
     }
+  ],
+  "functions": {
+    "api/webhook.js": {
+      "maxDuration": 30,
+      "memory": 512
+    },
+    "api/ping.js": {
+      "maxDuration": 5,
+      "memory": 128
+    }
+  },
+  "regions": [
+    "fra1"
   ]
 }
