@@ -1,962 +1,771 @@
 // ============================================================
-// 77-crm.js — TALKO CRM Module v1.0
-// Kanban воронка угод + Контакти + Налаштування
+// 77-crm.js — TALKO CRM v2.0
+// Колекції: crm_deals, crm_clients, crm_pipeline, crm_activities, crm_stats
+// Event Bus інтеграція для автоматичного створення угод з ботів
+// Kanban з Drag&Drop, картка угоди, AI Summary, активності
 // ============================================================
 (function () {
-    'use strict';
+'use strict';
 
-    // ── State ──────────────────────────────────────────────
-    let crmContacts = [];
-    let crmDeals = [];
-    let crmPipelines = [];
-    let crmUnsubscribes = [];
-    let crmCurrentPipelineId = null;
-    let crmCurrentSubTab = 'pipeline'; // pipeline | contacts | settings
-    let crmDragDeal = null;
-    let crmEditingDealId = null;
-    let crmEditingContactId = null;
-    let crmEditingPipelineId = null;
+// ── State ──────────────────────────────────────────────────
+let crm = {
+    deals:     [],
+    clients:   [],
+    pipeline:  null,
+    pipelines: [],
+    stats:     null,
+    unsubs:    [],
+    subTab:    'kanban',
+    activeDealId: null,
+    dragDealId:   null,
+    loading:   true,
+};
 
-    // ── Init ───────────────────────────────────────────────
-    window.initCRMModule = async function () {
-        if (!window.currentCompanyId) return;
-        renderCRMShell();
-        await loadCRMData();
-    };
+// ── Init ───────────────────────────────────────────────────
+window.initCRMModule = async function () {
+    if (!window.currentCompanyId) return;
+    _renderShell();
+    await _loadAll();
+    _listenEventBus();
+};
 
-    function renderCRMShell() {
-        const container = document.getElementById('crmContainer');
-        if (!container) return;
-        container.innerHTML = `
-            <div id="crmModule" style="padding:0.75rem;">
+function _renderShell() {
+    const container = document.getElementById('crmContainer');
+    if (!container) return;
+    container.innerHTML = `
+    <div style="padding:0.75rem;">
+        <div style="display:flex;gap:0.3rem;margin-bottom:0.75rem;background:white;
+            border-radius:12px;padding:0.3rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            ${[
+                ['kanban',    'Воронка',   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>'],
+                ['clients',   'Клієнти',   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'],
+                ['analytics', 'Аналітика', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'],
+            ].map(([id, label, icon]) => `
+                <button id="crmTab_${id}" onclick="crmSwitch('${id}')"
+                    style="flex:1;padding:0.42rem 0.5rem;border:none;border-radius:8px;cursor:pointer;
+                    font-size:0.78rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:4px;
+                    background:${id==='kanban'?'#22c55e':'transparent'};
+                    color:${id==='kanban'?'white':'#525252'};transition:all 0.2s;">
+                    ${icon} ${label}
+                </button>`).join('')}
+        </div>
+        <div id="crmViewKanban"></div>
+        <div id="crmViewClients" style="display:none;"></div>
+        <div id="crmViewAnalytics" style="display:none;"></div>
+    </div>`;
+}
 
-                <!-- Sub-tabs -->
-                <div style="display:flex;gap:0.5rem;margin-bottom:1rem;background:white;border-radius:12px;padding:0.4rem;box-shadow:var(--shadow);">
-                    <button onclick="crmSwitchSubTab('pipeline')" id="crmTabPipeline"
-                        style="flex:1;padding:0.5rem;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;background:#22c55e;color:white;transition:all 0.2s;">
-                        <i data-lucide="layout-dashboard" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>Воронка
-                    </button>
-                    <button onclick="crmSwitchSubTab('contacts')" id="crmTabContacts"
-                        style="flex:1;padding:0.5rem;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;background:transparent;color:#525252;transition:all 0.2s;">
-                        <i data-lucide="users" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>Контакти
-                    </button>
-                    <button onclick="crmSwitchSubTab('settings')" id="crmTabSettings"
-                        style="flex:1;padding:0.5rem;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;background:transparent;color:#525252;transition:all 0.2s;">
-                        <i data-lucide="settings" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>Налаштування
-                    </button>
-                </div>
+window.crmSwitch = function(tab) {
+    crm.subTab = tab;
+    ['kanban','clients','analytics'].forEach(t => {
+        const btn  = document.getElementById('crmTab_' + t);
+        const view = document.getElementById('crmView' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn)  { btn.style.background = t===tab?'#22c55e':'transparent'; btn.style.color = t===tab?'white':'#525252'; }
+        if (view) view.style.display = t===tab ? '' : 'none';
+    });
+    if (tab==='kanban')    _renderKanban();
+    if (tab==='clients')   _renderClients();
+    if (tab==='analytics') _renderAnalytics();
+};
 
-                <!-- Content areas -->
-                <div id="crmPipelineView"></div>
-                <div id="crmContactsView" style="display:none;"></div>
-                <div id="crmSettingsView" style="display:none;"></div>
-            </div>
-        `;
-        if (window.lucide) lucide.createIcons();
-    }
+// ── Завантаження ───────────────────────────────────────────
+async function _loadAll() {
+    const base = firebase.firestore().collection('companies').doc(window.currentCompanyId);
+    crm.unsubs.forEach(u => u && u());
+    crm.unsubs = [];
 
-    window.crmSwitchSubTab = function (tab) {
-        crmCurrentSubTab = tab;
-        ['pipeline', 'contacts', 'settings'].forEach(t => {
-            const btn = document.getElementById('crmTab' + t.charAt(0).toUpperCase() + t.slice(1));
-            const view = document.getElementById('crm' + t.charAt(0).toUpperCase() + t.slice(1) + 'View');
-            if (btn) {
-                btn.style.background = t === tab ? '#22c55e' : 'transparent';
-                btn.style.color = t === tab ? 'white' : '#525252';
-            }
-            if (view) view.style.display = t === tab ? '' : 'none';
+    const pipSnap = await base.collection('crm_pipeline').orderBy('createdAt').get();
+    crm.pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (crm.pipelines.length === 0) await _createDefaultPipeline();
+    crm.pipeline = crm.pipelines.find(p => p.isDefault) || crm.pipelines[0];
+
+    const dealUnsub = base.collection('crm_deals')
+        .where('pipelineId', '==', crm.pipeline.id)
+        .orderBy('createdAt', 'desc').limit(200)
+        .onSnapshot(snap => {
+            crm.deals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            crm.loading = false;
+            if (crm.subTab === 'kanban') _renderKanban();
+            _updateNavBadge();
         });
-        if (tab === 'pipeline') renderPipelineView();
-        if (tab === 'contacts') renderContactsView();
-        if (tab === 'settings') renderSettingsView();
-        if (window.lucide) lucide.createIcons();
-    };
+    crm.unsubs.push(dealUnsub);
 
-    // ── Firebase Loaders ───────────────────────────────────
-    async function loadCRMData() {
-        if (!window.currentCompanyId) return;
-        crmUnsubscribes.forEach(u => u && u());
-        crmUnsubscribes = [];
+    const clientSnap = await base.collection('crm_clients')
+        .orderBy('createdAt', 'desc').limit(100).get();
+    crm.clients = clientSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
 
-        const base = firebase.firestore().collection('companies').doc(window.currentCompanyId);
+async function _createDefaultPipeline() {
+    const base = firebase.firestore().collection('companies').doc(window.currentCompanyId);
+    const stages = [
+        { id: 'new',         label: 'Новий лід',  color: '#6b7280', order: 0 },
+        { id: 'contact',     label: 'Контакт',    color: '#3b82f6', order: 1 },
+        { id: 'negotiation', label: 'Переговори', color: '#f97316', order: 2 },
+        { id: 'proposal',    label: 'Пропозиція', color: '#8b5cf6', order: 3 },
+        { id: 'closing',     label: 'Закриття',   color: '#f59e0b', order: 4 },
+        { id: 'won',         label: 'Виграно',    color: '#22c55e', order: 5 },
+        { id: 'lost',        label: 'Програно',   color: '#ef4444', order: 6 },
+    ];
+    const ref = await base.collection('crm_pipeline').add({
+        name: 'Основна воронка', isDefault: true, stages,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    crm.pipelines = [{ id: ref.id, name: 'Основна воронка', isDefault: true, stages }];
+    crm.pipeline  = crm.pipelines[0];
+}
 
-        // Load pipelines
-        const pipSnap = await base.collection('pipelines').get();
-        crmPipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+function _updateNavBadge() {
+    const badge = document.getElementById('crmNavBadge');
+    if (!badge) return;
+    const n = crm.deals.filter(d => d.stage === 'new').length;
+    badge.textContent = n;
+    badge.style.display = n > 0 ? 'flex' : 'none';
+}
 
-        // Create default pipeline if none
-        if (crmPipelines.length === 0) {
-            await createDefaultPipeline();
-        }
+function _listenEventBus() {
+    if (typeof onTalkoEvent !== 'function') return;
+    onTalkoEvent(window.TALKO_EVENTS && window.TALKO_EVENTS.DEAL_CREATED, function() {
+        if (typeof showToast === 'function') showToast('Новий лід у CRM', 'success');
+    });
+}
 
-        crmCurrentPipelineId = (crmPipelines.find(p => p.isDefault) || crmPipelines[0])?.id;
+// ══════════════════════════════════════════════════════════
+// KANBAN
+// ══════════════════════════════════════════════════════════
+function _renderKanban() {
+    const c = document.getElementById('crmViewKanban');
+    if (!c) return;
 
-        // Live contacts
-        const contUnsub = base.collection('contacts')
-            .orderBy('lastActivity', 'desc').limit(500)
-            .onSnapshot(snap => {
-                crmContacts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                if (crmCurrentSubTab === 'contacts') renderContactsView();
-                updateCRMBadge();
-            });
-        crmUnsubscribes.push(contUnsub);
-
-        // Live deals
-        const dealUnsub = base.collection('deals')
-            .orderBy('createdAt', 'desc').limit(500)
-            .onSnapshot(snap => {
-                crmDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                if (crmCurrentSubTab === 'pipeline') renderPipelineView();
-                updateCRMBadge();
-            });
-        crmUnsubscribes.push(dealUnsub);
-
-        renderPipelineView();
+    if (crm.loading) {
+        c.innerHTML = '<div style="text-align:center;padding:3rem;color:#9ca3af;">Завантаження...</div>';
+        return;
     }
 
-    async function createDefaultPipeline() {
-        const base = firebase.firestore().collection('companies').doc(window.currentCompanyId);
-        const ref = await base.collection('pipelines').add({
-            name: 'Основна воронка',
-            isDefault: true,
-            stages: [
-                { id: 'new',         label: 'Новий лід',      color: '#6b7280', order: 0 },
-                { id: 'qualified',   label: 'Кваліфікований', color: '#3b82f6', order: 1 },
-                { id: 'negotiation', label: 'Переговори',      color: '#f97316', order: 2 },
-                { id: 'proposal',    label: 'Пропозиція',      color: '#8b5cf6', order: 3 },
-                { id: 'won',         label: 'Виграно',         color: '#22c55e', order: 4 },
-                { id: 'lost',        label: 'Програно',        color: '#ef4444', order: 5 },
-            ],
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    const stages   = (crm.pipeline && crm.pipeline.stages ? [...crm.pipeline.stages] : []).sort(function(a,b){ return a.order-b.order; });
+    const visStages = stages.filter(function(s){ return s.id !== 'lost'; });
+    const lostStage = stages.find(function(s){ return s.id === 'lost'; });
+
+    const total   = crm.deals.length;
+    const won     = crm.deals.filter(function(d){ return d.stage==='won'; }).length;
+    const active  = crm.deals.filter(function(d){ return d.stage!=='won' && d.stage!=='lost'; }).length;
+    const revenue = crm.deals.filter(function(d){ return d.stage==='won'; }).reduce(function(s,d){ return s+(d.amount||0); }, 0);
+    const pipeline = crm.deals.filter(function(d){ return d.stage!=='won' && d.stage!=='lost'; }).reduce(function(s,d){ return s+(d.amount||0); }, 0);
+
+    var headerCards = [
+        ['Всього угод', total,         '#374151', '📋'],
+        ['Активних',   active,         '#3b82f6', '🔄'],
+        ['Виграно',    won,            '#22c55e', '🏆'],
+        ['Revenue',    _fmt(revenue),  '#16a34a', '💰'],
+        ['Pipeline',   _fmt(pipeline), '#8b5cf6', '📈'],
+    ];
+
+    c.innerHTML =
+        '<div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">' +
+        headerCards.map(function(item){
+            return '<div style="flex:1;min-width:90px;background:white;border-radius:12px;' +
+                'padding:0.6rem 0.75rem;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-top:3px solid ' + item[2] + ';">' +
+                '<div style="font-size:0.95rem;font-weight:700;color:' + item[2] + ';">' + item[3] + ' ' + item[1] + '</div>' +
+                '<div style="font-size:0.67rem;color:#9ca3af;margin-top:1px;">' + item[0] + '</div>' +
+                '</div>';
+        }).join('') +
+        '<button onclick="crmOpenCreateDeal()" style="padding:0.6rem 1rem;background:#22c55e;color:white;' +
+        'border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:0.82rem;white-space:nowrap;">' +
+        '+ Угода</button>' +
+        '</div>' +
+        '<div style="overflow-x:auto;padding-bottom:0.5rem;">' +
+        '<div style="display:flex;gap:0.6rem;min-width:max-content;align-items:flex-start;">' +
+        visStages.map(function(stage){ return _kanbanCol(stage); }).join('') +
+        _kanbanColLost(lostStage) +
+        '</div></div>';
+}
+
+function _kanbanCol(stage) {
+    var deals = crm.deals.filter(function(d){ return d.stage === stage.id; });
+    var amt   = deals.reduce(function(s,d){ return s+(d.amount||0); }, 0);
+
+    return '<div data-stage="' + stage.id + '" ' +
+        'style="width:230px;background:#f8fafc;border-radius:14px;padding:0.65rem;' +
+        'min-height:150px;flex-shrink:0;border-top:3px solid ' + stage.color + ';" ' +
+        'ondragover="crmDragOver(event)" ondragleave="crmDragLeave(event)" ondrop="crmDrop(event,\'' + stage.id + '\')">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">' +
+        '<div>' +
+        '<div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;">' + _esc(stage.label) + '</div>' +
+        '<div style="font-size:0.68rem;color:#9ca3af;">' + deals.length + ' угод' + (amt > 0 ? ' · ' + _fmt(amt) : '') + '</div>' +
+        '</div>' +
+        '<button onclick="crmOpenCreateDeal(\'' + stage.id + '\')" ' +
+        'style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px;font-size:1rem;">+</button>' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:0.45rem;" id="crmCol_' + stage.id + '">' +
+        (deals.length > 0 ? deals.map(function(d){ return _dealCard(d); }).join('') :
+            '<div style="text-align:center;padding:1.5rem 0.5rem;color:#d1d5db;font-size:0.74rem;' +
+            'border:2px dashed #e5e7eb;border-radius:10px;">Перетягни сюди</div>') +
+        '</div></div>';
+}
+
+function _kanbanColLost(stage) {
+    if (!stage) return '';
+    var deals = crm.deals.filter(function(d){ return d.stage === 'lost'; });
+    return '<div data-stage="lost" ' +
+        'style="width:150px;background:#fff5f5;border-radius:14px;padding:0.65rem;' +
+        'min-height:80px;flex-shrink:0;border-top:3px solid #ef4444;opacity:0.85;" ' +
+        'ondragover="crmDragOver(event)" ondragleave="crmDragLeave(event)" ondrop="crmDrop(event,\'lost\')">' +
+        '<div style="font-weight:700;font-size:0.78rem;color:#ef4444;margin-bottom:0.4rem;">' +
+        'x Програно (' + deals.length + ')</div>' +
+        '<div style="display:flex;flex-direction:column;gap:0.35rem;">' +
+        deals.slice(0,5).map(function(d){
+            return '<div onclick="crmOpenDeal(\'' + d.id + '\')" ' +
+                'style="background:white;border-radius:8px;padding:0.45rem 0.5rem;cursor:pointer;' +
+                'font-size:0.72rem;color:#6b7280;border-left:3px solid #ef4444;">' +
+                _esc((d.clientName||d.title||'').slice(0,22)) + '</div>';
+        }).join('') +
+        (deals.length > 5 ? '<div style="font-size:0.68rem;color:#9ca3af;text-align:center;">+' + (deals.length-5) + ' ще</div>' : '') +
+        '</div></div>';
+}
+
+function _dealCard(deal) {
+    var avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
+    var avatarColor  = avatarColors[(deal.clientName||'').charCodeAt(0) % 6 || 0];
+    var initial      = (deal.clientName||deal.title||'?').charAt(0).toUpperCase();
+    var date         = deal.updatedAt && deal.updatedAt.toDate ? _relTime(deal.updatedAt.toDate()) : '';
+    var sourceIcon   = {telegram:'📱',instagram:'📷',site_form:'🌐',manual:'👤'}[deal.source] || '📋';
+
+    return '<div draggable="true" data-deal-id="' + deal.id + '" ' +
+        'ondragstart="crmDragStart(event,\'' + deal.id + '\')" ' +
+        'onclick="crmOpenDeal(\'' + deal.id + '\')" ' +
+        'style="background:white;border-radius:10px;padding:0.65rem;cursor:pointer;' +
+        'box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1.5px solid #f1f5f9;transition:all 0.15s;" ' +
+        'onmouseenter="this.style.boxShadow=\'0 4px 14px rgba(34,197,94,0.15)\';this.style.borderColor=\'#bbf7d0\';this.style.transform=\'translateY(-1px)\'" ' +
+        'onmouseleave="this.style.boxShadow=\'0 1px 4px rgba(0,0,0,0.07)\';this.style.borderColor=\'#f1f5f9\';this.style.transform=\'\'">' +
+        '<div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.4rem;' +
+        'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+        _esc(deal.title || deal.clientName || 'Угода') + '</div>' +
+        '<div style="display:flex;align-items:center;gap:0.35rem;margin-bottom:0.4rem;">' +
+        '<div style="width:20px;height:20px;border-radius:50%;background:' + avatarColor + ';' +
+        'display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.65rem;flex-shrink:0;">' +
+        initial + '</div>' +
+        '<span style="font-size:0.74rem;color:#525252;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">' +
+        _esc(deal.clientName || '—') + '</span>' +
+        '<span style="font-size:0.78rem;">' + sourceIcon + '</span>' +
+        '</div>' +
+        (deal.clientNiche ? '<div style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;padding:1px 6px;' +
+        'border-radius:8px;display:inline-block;margin-bottom:0.35rem;font-weight:600;">' +
+        _esc(deal.clientNiche) + '</div>' : '') +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.2rem;">' +
+        '<span style="font-size:0.8rem;font-weight:700;color:' + (deal.amount?'#16a34a':'#d1d5db') + ';">' +
+        (deal.amount ? _fmt(deal.amount) : '—') + '</span>' +
+        '<span style="font-size:0.65rem;color:#9ca3af;">' + date + '</span>' +
+        '</div></div>';
+}
+
+// ── Drag & Drop ────────────────────────────────────────────
+window.crmDragStart = function(e, dealId) {
+    crm.dragDealId = dealId;
+    e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.style.opacity = '0.5';
+};
+
+window.crmDragOver = function(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.style.background = '#f0fdf4';
+};
+
+window.crmDragLeave = function(e) {
+    var stage = e.currentTarget.dataset.stage;
+    e.currentTarget.style.background = stage === 'lost' ? '#fff5f5' : '#f8fafc';
+};
+
+window.crmDrop = async function(e, newStage) {
+    e.preventDefault();
+    var stage = e.currentTarget.dataset.stage;
+    e.currentTarget.style.background = stage === 'lost' ? '#fff5f5' : '#f8fafc';
+    if (!crm.dragDealId) return;
+    var deal = crm.deals.find(function(d){ return d.id === crm.dragDealId; });
+    crm.dragDealId = null;
+    if (!deal || deal.stage === newStage) return;
+    var oldStage = deal.stage;
+    deal.stage = newStage;
+    _renderKanban();
+    try {
+        var dealRef = firebase.firestore().doc('companies/' + window.currentCompanyId + '/crm_deals/' + deal.id);
+        await dealRef.update({ stage: newStage, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await dealRef.collection('history').add({
+            type: 'stage_changed', from: oldStage, to: newStage,
+            by: (window.currentUser && window.currentUser.email) || 'manager',
+            at: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        crmPipelines = [{ id: ref.id, name: 'Основна воронка', isDefault: true, stages: [
-            { id: 'new', label: 'Новий лід', color: '#6b7280', order: 0 },
-            { id: 'qualified', label: 'Кваліфікований', color: '#3b82f6', order: 1 },
-            { id: 'negotiation', label: 'Переговори', color: '#f97316', order: 2 },
-            { id: 'proposal', label: 'Пропозиція', color: '#8b5cf6', order: 3 },
-            { id: 'won', label: 'Виграно', color: '#22c55e', order: 4 },
-            { id: 'lost', label: 'Програно', color: '#ef4444', order: 5 },
-        ]}];
-        crmCurrentPipelineId = ref.id;
-    }
-
-    function updateCRMBadge() {
-        const badge = document.getElementById('crmNavBadge');
-        if (!badge) return;
-        const newCount = crmDeals.filter(d => d.stage === 'new').length;
-        if (newCount > 0) {
-            badge.textContent = newCount;
-            badge.style.display = '';
-        } else {
-            badge.style.display = 'none';
+        if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
+            await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
+                dealId: deal.id, clientName: deal.clientName,
+                fromStage: oldStage, toStage: newStage,
+                pipelineId: deal.pipelineId, amount: deal.amount,
+            });
         }
+        if (typeof showToast === 'function') showToast('Стадію змінено → ' + _stageLabel(newStage), 'success');
+    } catch(err) {
+        console.error('[CRM] drop:', err);
+        deal.stage = oldStage;
+        _renderKanban();
     }
+};
 
-    // ── Pipeline / Kanban View ─────────────────────────────
-    function renderPipelineView() {
-        const container = document.getElementById('crmPipelineView');
-        if (!container || crmCurrentSubTab !== 'pipeline') return;
+function _stageLabel(stageId) {
+    var stages = crm.pipeline && crm.pipeline.stages ? crm.pipeline.stages : [];
+    var s = stages.find(function(s){ return s.id === stageId; });
+    return s ? s.label : stageId;
+}
 
-        const pipeline = crmPipelines.find(p => p.id === crmCurrentPipelineId);
-        if (!pipeline) {
-            container.innerHTML = '<p style="color:#6b7280;text-align:center;padding:2rem;">Воронку не знайдено</p>';
+// ══════════════════════════════════════════════════════════
+// КАРТКА УГОДИ
+// ══════════════════════════════════════════════════════════
+window.crmOpenDeal = function(dealId) {
+    crm.activeDealId = dealId;
+    var deal = crm.deals.find(function(d){ return d.id === dealId; });
+    if (!deal) return;
+    document.getElementById('crmDealOverlay') && document.getElementById('crmDealOverlay').remove();
+
+    document.body.insertAdjacentHTML('beforeend',
+        '<div id="crmDealOverlay" onclick="if(event.target===this)crmCloseDeal()" ' +
+        'style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10020;' +
+        'display:flex;align-items:center;justify-content:center;padding:1rem;">' +
+        '<div style="background:white;border-radius:16px;width:100%;max-width:580px;' +
+        'max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2);">' +
+        '<div style="padding:1rem 1.25rem 0.75rem;border-bottom:1px solid #f1f5f9;' +
+        'display:flex;justify-content:space-between;align-items:flex-start;' +
+        'position:sticky;top:0;background:white;z-index:1;">' +
+        '<div>' +
+        '<div style="font-weight:700;font-size:1rem;color:#1a1a1a;">' + _esc(deal.title||deal.clientName||'Угода') + '</div>' +
+        '<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">' + _esc(deal.clientName||'') +
+        (deal.clientNiche ? ' · <span style="color:#16a34a;">' + _esc(deal.clientNiche) + '</span>' : '') +
+        ' · ' + (deal.source||'manual') + '</div>' +
+        '</div>' +
+        '<button onclick="crmCloseDeal()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">x</button>' +
+        '</div>' +
+        '<div style="display:flex;border-bottom:1px solid #f1f5f9;">' +
+        [['details','Деталі'],['activity','Активності'],['ai','AI Аналіз']].map(function(item, i){
+            return '<button id="crmDT_' + item[0] + '" onclick="crmDealTab(\'' + item[0] + '\')" ' +
+                'style="flex:1;padding:0.55rem;border:none;border-bottom:2px solid ' + (i===0?'#22c55e':'transparent') + ';' +
+                'background:none;cursor:pointer;font-size:0.8rem;font-weight:' + (i===0?'700':'500') + ';' +
+                'color:' + (i===0?'#22c55e':'#6b7280') + ';transition:all 0.15s;">' + item[1] + '</button>';
+        }).join('') +
+        '</div>' +
+        '<div id="crmDealContent" style="padding:1.25rem;">' + _dealDetailsHTML(deal) + '</div>' +
+        '<div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;' +
+        'display:flex;justify-content:space-between;align-items:center;' +
+        'position:sticky;bottom:0;background:white;">' +
+        '<button onclick="crmDeleteDeal(\'' + dealId + '\')" ' +
+        'style="padding:0.45rem 0.85rem;background:#fff5f5;color:#ef4444;' +
+        'border:1.5px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.78rem;">Видалити</button>' +
+        '<div style="display:flex;gap:0.4rem;">' +
+        '<button onclick="crmCloseDeal()" style="padding:0.45rem 0.85rem;background:#f9fafb;color:#525252;' +
+        'border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.78rem;">Закрити</button>' +
+        '<button onclick="crmSaveDeal(\'' + dealId + '\')" style="padding:0.45rem 1rem;background:#22c55e;color:white;' +
+        'border:none;border-radius:8px;cursor:pointer;font-size:0.78rem;font-weight:700;">Зберегти</button>' +
+        '</div></div></div></div>');
+};
+
+window.crmCloseDeal = function() {
+    var el = document.getElementById('crmDealOverlay');
+    if (el) el.remove();
+    crm.activeDealId = null;
+};
+
+window.crmDealTab = function(tab) {
+    ['details','activity','ai'].forEach(function(t) {
+        var btn = document.getElementById('crmDT_' + t);
+        if (btn) {
+            btn.style.borderBottomColor = t===tab ? '#22c55e' : 'transparent';
+            btn.style.fontWeight = t===tab ? '700' : '500';
+            btn.style.color = t===tab ? '#22c55e' : '#6b7280';
+        }
+    });
+    var deal = crm.deals.find(function(d){ return d.id === crm.activeDealId; });
+    if (!deal) return;
+    var content = document.getElementById('crmDealContent');
+    if (!content) return;
+    if (tab === 'details')  content.innerHTML = _dealDetailsHTML(deal);
+    if (tab === 'activity') _loadActivityTab(deal);
+    if (tab === 'ai')       _loadAITab(deal);
+};
+
+function _dealDetailsHTML(deal) {
+    var stages = crm.pipeline && crm.pipeline.stages ? crm.pipeline.stages : [];
+    var inp = 'width:100%;padding:0.48rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:9px;font-size:0.83rem;box-sizing:border-box;font-family:inherit;';
+    var lbl = 'font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;';
+
+    return '<div style="display:flex;flex-direction:column;gap:0.85rem;">' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">' +
+        '<div><label style="' + lbl + '">Назва угоди</label>' +
+        '<input id="df_title" value="' + _esc(deal.title||'') + '" style="' + inp + '"></div>' +
+        '<div><label style="' + lbl + '">Стадія</label>' +
+        '<select id="df_stage" style="' + inp + 'background:white;cursor:pointer;">' +
+        stages.map(function(s){ return '<option value="' + s.id + '" ' + (deal.stage===s.id?'selected':'') + '>' + _esc(s.label) + '</option>'; }).join('') +
+        '</select></div></div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">' +
+        '<div><label style="' + lbl + '">Сума</label>' +
+        '<input id="df_amount" type="number" value="' + (deal.amount||'') + '" placeholder="0" style="' + inp + '"></div>' +
+        '<div><label style="' + lbl + '">Очікуване закриття</label>' +
+        '<input id="df_expectedClose" type="date" value="' + (deal.expectedClose||'') + '" style="' + inp + 'cursor:pointer;"></div></div>' +
+        '<div style="background:#f8fafc;border-radius:10px;padding:0.75rem;">' +
+        '<label style="' + lbl + '">Клієнт</label>' +
+        '<div style="display:flex;align-items:center;gap:0.5rem;">' +
+        '<div style="width:32px;height:32px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.8rem;flex-shrink:0;">' +
+        (deal.clientName||'?').charAt(0).toUpperCase() + '</div>' +
+        '<div style="flex:1;"><div style="font-weight:700;font-size:0.85rem;">' + _esc(deal.clientName||'—') + '</div>' +
+        '<div style="font-size:0.72rem;color:#6b7280;">' + (deal.clientNiche?_esc(deal.clientNiche)+' · ':'') + (deal.source||'manual') + '</div></div>' +
+        (deal.botContactId ? '<button onclick="bpSwitch && bpSwitch(\'chat\')" style="padding:0.3rem 0.55rem;background:#eff6ff;color:#3b82f6;border:none;border-radius:7px;cursor:pointer;font-size:0.72rem;">Чат</button>' : '') +
+        '</div></div>' +
+        (deal.leadData ? '<div><label style="' + lbl + '">Дані з воронки</label>' +
+        '<div style="background:#f0fdf4;border-radius:10px;padding:0.75rem;border-left:3px solid #22c55e;display:flex;flex-direction:column;gap:0.4rem;">' +
+        (deal.leadData.role ? '<div style="font-size:0.78rem;"><b>Роль:</b> ' + _esc(deal.leadData.role) + '</div>' : '') +
+        (deal.leadData.mainProblem ? '<div style="font-size:0.78rem;"><b>Проблема:</b> ' + _esc(deal.leadData.mainProblem) + '</div>' : '') +
+        (deal.leadData.mainGoal ? '<div style="font-size:0.78rem;"><b>Ціль:</b> ' + _esc(deal.leadData.mainGoal) + '</div>' : '') +
+        (deal.leadData.aiSummary ? '<div style="font-size:0.78rem;color:#16a34a;font-style:italic;">"' + _esc(deal.leadData.aiSummary.slice(0,200)) + '"</div>' : '') +
+        '</div></div>' : '') +
+        '<div><label style="' + lbl + '">Нотатка менеджера</label>' +
+        '<textarea id="df_note" rows="3" style="' + inp + 'resize:vertical;" placeholder="Нотатки...">' + _esc(deal.note||'') + '</textarea></div>' +
+        '</div>';
+}
+
+window.crmSaveDeal = async function(dealId) {
+    var deal = crm.deals.find(function(d){ return d.id === dealId; });
+    if (!deal) return;
+    var title    = document.getElementById('df_title') && document.getElementById('df_title').value.trim();
+    var stage    = document.getElementById('df_stage') && document.getElementById('df_stage').value;
+    var amount   = parseFloat(document.getElementById('df_amount') && document.getElementById('df_amount').value) || 0;
+    var note     = document.getElementById('df_note') && document.getElementById('df_note').value.trim();
+    var expClose = document.getElementById('df_expectedClose') && document.getElementById('df_expectedClose').value;
+    var updates  = { title: title||deal.title, stage: stage||deal.stage, amount: amount, note: note, expectedClose: expClose||null, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    try {
+        await firebase.firestore().doc('companies/' + window.currentCompanyId + '/crm_deals/' + dealId).update(updates);
+        if (stage !== deal.stage && typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
+            await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, { dealId: dealId, fromStage: deal.stage, toStage: stage, clientName: deal.clientName, amount: amount });
+        }
+        Object.assign(deal, updates);
+        crmCloseDeal();
+        if (typeof showToast === 'function') showToast('Угоду збережено', 'success');
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+window.crmDeleteDeal = async function(dealId) {
+    if (!confirm('Видалити угоду?')) return;
+    try {
+        await firebase.firestore().doc('companies/' + window.currentCompanyId + '/crm_deals/' + dealId).delete();
+        crmCloseDeal();
+        if (typeof showToast === 'function') showToast('Угоду видалено', 'success');
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+// ── Активності ─────────────────────────────────────────────
+async function _loadActivityTab(deal) {
+    var content = document.getElementById('crmDealContent');
+    if (!content) return;
+    content.innerHTML = '<div style="color:#9ca3af;text-align:center;padding:1rem;">Завантаження...</div>';
+    try {
+        var snap = await firebase.firestore()
+            .collection('companies/' + window.currentCompanyId + '/crm_deals/' + deal.id + '/history')
+            .orderBy('at', 'desc').limit(30).get();
+        var events = snap.docs.map(function(d){ return Object.assign({ id: d.id }, d.data()); });
+        content.innerHTML =
+            '<div style="display:flex;flex-direction:column;gap:0.5rem;">' +
+            '<div style="background:#f8fafc;border-radius:10px;padding:0.75rem;margin-bottom:0.5rem;">' +
+            '<div style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">Додати запис</div>' +
+            '<div style="display:flex;gap:0.4rem;">' +
+            '<select id="actType" style="padding:0.4rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.78rem;background:white;">' +
+            '<option value="note">Нотатка</option><option value="call">Дзвінок</option>' +
+            '<option value="meeting">Зустріч</option><option value="email">Email</option>' +
+            '</select>' +
+            '<input id="actText" placeholder="Опис..." onkeydown="if(event.key===\'Enter\')crmAddActivity(\'' + deal.id + '\')" ' +
+            'style="flex:1;padding:0.4rem 0.5rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.78rem;">' +
+            '<button onclick="crmAddActivity(\'' + deal.id + '\')" style="padding:0.4rem 0.65rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.78rem;">+</button>' +
+            '</div></div>' +
+            (events.length === 0 ? '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.8rem;">Активностей ще немає</div>' :
+            events.map(function(ev) {
+                var icons = { stage_changed:'🔄', note:'📝', call:'📞', meeting:'🤝', email:'✉️', created:'🎯' };
+                var icon = icons[ev.type] || '📌';
+                var time = ev.at && ev.at.toDate ? ev.at.toDate().toLocaleDateString('uk-UA', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+                var text = ev.text || '';
+                if (ev.type === 'stage_changed') text = _stageLabel(ev.from) + ' → ' + _stageLabel(ev.to);
+                if (ev.type === 'created') text = 'Угоду створено';
+                return '<div style="display:flex;gap:0.6rem;align-items:flex-start;">' +
+                    '<div style="width:28px;height:28px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:0.82rem;flex-shrink:0;">' + icon + '</div>' +
+                    '<div style="flex:1;"><div style="font-size:0.8rem;color:#374151;">' + _esc(text) + '</div>' +
+                    '<div style="font-size:0.68rem;color:#9ca3af;">' + _esc(ev.by||'') + ' · ' + time + '</div></div>' +
+                    '</div>';
+            }).join('')) +
+            '</div>';
+    } catch(e) {
+        content.innerHTML = '<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ' + _esc(e.message) + '</div>';
+    }
+}
+
+window.crmAddActivity = async function(dealId) {
+    var type = document.getElementById('actType') && document.getElementById('actType').value || 'note';
+    var textEl = document.getElementById('actText');
+    var text = textEl && textEl.value.trim();
+    if (!text) return;
+    if (textEl) textEl.value = '';
+    try {
+        await firebase.firestore()
+            .collection('companies/' + window.currentCompanyId + '/crm_deals/' + dealId + '/history')
+            .add({ type: type, text: text, by: (window.currentUser && window.currentUser.email)||'manager', at: firebase.firestore.FieldValue.serverTimestamp() });
+        var deal = crm.deals.find(function(d){ return d.id === dealId; });
+        if (deal) _loadActivityTab(deal);
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+// ── AI Аналіз ──────────────────────────────────────────────
+async function _loadAITab(deal) {
+    var content = document.getElementById('crmDealContent');
+    if (!content) return;
+    if (deal.aiAnalysis) {
+        content.innerHTML =
+            '<div style="background:#f0fdf4;border-radius:12px;padding:1rem;border-left:3px solid #22c55e;">' +
+            '<div style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.5rem;">AI Аналіз угоди</div>' +
+            '<div style="font-size:0.83rem;color:#374151;line-height:1.6;white-space:pre-wrap;">' + _esc(deal.aiAnalysis) + '</div>' +
+            '</div>' +
+            '<button onclick="crmRunAI(\'' + deal.id + '\')" style="margin-top:0.75rem;width:100%;padding:0.5rem;' +
+            'background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0;border-radius:9px;cursor:pointer;font-size:0.8rem;font-weight:600;">Оновити аналіз</button>';
+        return;
+    }
+    content.innerHTML =
+        '<div style="text-align:center;padding:1.5rem;">' +
+        '<div style="font-size:2rem;margin-bottom:0.5rem;">🤖</div>' +
+        '<div style="font-weight:700;font-size:0.88rem;margin-bottom:0.35rem;">AI Аналіз угоди</div>' +
+        '<div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;">Ймовірність закриття, ризики, наступний крок</div>' +
+        '<button onclick="crmRunAI(\'' + deal.id + '\')" ' +
+        'style="padding:0.6rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;">Запустити аналіз</button>' +
+        '</div>';
+}
+
+window.crmRunAI = async function(dealId) {
+    var deal = crm.deals.find(function(d){ return d.id === dealId; });
+    if (!deal) return;
+    var content = document.getElementById('crmDealContent');
+    if (content) content.innerHTML = '<div style="text-align:center;padding:2rem;color:#6b7280;">⏳ AI аналізує угоду...</div>';
+    try {
+        var compDoc = await firebase.firestore().collection('companies').doc(window.currentCompanyId).get();
+        var apiKey = compDoc.data() && (compDoc.data().openaiApiKey || compDoc.data().anthropicApiKey);
+        if (!apiKey) {
+            if (content) content.innerHTML = '<div style="color:#ef4444;padding:1rem;text-align:center;font-size:0.82rem;">API ключ не встановлений. Додайте в Налаштуваннях ботів.</div>';
             return;
         }
-
-        const stages = [...(pipeline.stages || [])].sort((a, b) => a.order - b.order);
-
-        // Stats
-        const totalDeals = crmDeals.filter(d => d.pipelineId === crmCurrentPipelineId).length;
-        const wonDeals = crmDeals.filter(d => d.pipelineId === crmCurrentPipelineId && d.stage === 'won').length;
-        const totalAmount = crmDeals
-            .filter(d => d.pipelineId === crmCurrentPipelineId && d.stage !== 'lost')
-            .reduce((s, d) => s + (d.amount || 0), 0);
-
-        container.innerHTML = `
-            <!-- Header -->
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;margin-bottom:1rem;">
-                <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-                    <div style="background:white;border-radius:10px;padding:0.6rem 1rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:0.5rem;">
-                        <i data-lucide="briefcase" style="width:16px;height:16px;color:#22c55e;"></i>
-                        <span style="font-size:0.8rem;color:#6b7280;">Угод:</span>
-                        <span style="font-weight:700;color:#1a1a1a;">${totalDeals}</span>
-                    </div>
-                    <div style="background:white;border-radius:10px;padding:0.6rem 1rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:0.5rem;">
-                        <i data-lucide="trophy" style="width:16px;height:16px;color:#22c55e;"></i>
-                        <span style="font-size:0.8rem;color:#6b7280;">Закрито:</span>
-                        <span style="font-weight:700;color:#22c55e;">${wonDeals}</span>
-                    </div>
-                    <div style="background:white;border-radius:10px;padding:0.6rem 1rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:0.5rem;">
-                        <i data-lucide="banknote" style="width:16px;height:16px;color:#3b82f6;"></i>
-                        <span style="font-size:0.8rem;color:#6b7280;">Сума:</span>
-                        <span style="font-weight:700;color:#1a1a1a;">${formatAmount(totalAmount)}</span>
-                    </div>
-                </div>
-                <button onclick="openCreateDealModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                    <i data-lucide="plus" style="width:16px;height:16px;"></i> Нова угода
-                </button>
-            </div>
-
-            <!-- Kanban Board -->
-            <div style="overflow-x:auto;padding-bottom:0.5rem;">
-                <div id="crmKanbanBoard" style="display:flex;gap:0.75rem;min-width:max-content;align-items:flex-start;">
-                    ${stages.map(stage => renderKanbanColumn(stage, pipeline.id)).join('')}
-                </div>
-            </div>
-        `;
-
-        if (window.lucide) lucide.createIcons();
-        initDragDrop();
-    }
-
-    function renderKanbanColumn(stage, pipelineId) {
-        const deals = crmDeals.filter(d => d.pipelineId === pipelineId && d.stage === stage.id);
-        const stageAmount = deals.reduce((s, d) => s + (d.amount || 0), 0);
-
-        return `
-            <div class="crm-kanban-col" data-stage="${stage.id}"
-                style="width:240px;background:#f9fafb;border-radius:12px;padding:0.75rem;min-height:200px;flex-shrink:0;"
-                ondragover="crmDragOver(event)" ondrop="crmDrop(event,'${stage.id}')">
-                <!-- Column Header -->
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:3px solid ${stage.color};">
-                    <div>
-                        <div style="font-weight:700;font-size:0.85rem;color:#1a1a1a;">${stage.label}</div>
-                        <div style="font-size:0.75rem;color:#6b7280;">${deals.length} угод${stageAmount > 0 ? ' · ' + formatAmount(stageAmount) : ''}</div>
-                    </div>
-                    <button onclick="openCreateDealModal('${stage.id}')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px;border-radius:6px;display:flex;align-items:center;" title="Додати угоду">
-                        <i data-lucide="plus" style="width:16px;height:16px;"></i>
-                    </button>
-                </div>
-                <!-- Cards -->
-                <div style="display:flex;flex-direction:column;gap:0.5rem;" id="stage-${stage.id}">
-                    ${deals.map(deal => renderDealCard(deal)).join('')}
-                </div>
-            </div>
-        `;
-    }
-
-    function renderDealCard(deal) {
-        const contact = crmContacts.find(c => c.id === deal.contactId);
-        const initials = getInitials(deal.title || contact?.name || '?');
-        const sourceIcon = { telegram: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19 2c-2-2-4-2-5.5-.5L10 5 1.8 6.2c-.5.1-.9.5-1 1-.1.4.1.9.4 1.2l4 4L4 15l-2 1 1 2 2-1 3.8 1.2 4 4c.3.3.8.5 1.2.4.5-.1.9-.5 1-1z"/></svg></span>', instagram: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="15" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M8 6V4h8v2"/></svg></span>', web: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>', direct: '👤' }[deal.source] || '📋';
-        const relDate = deal.updatedAt?.toDate ? relativeTime(deal.updatedAt.toDate()) : '';
-
-        return `
-            <div class="crm-deal-card" draggable="true" data-deal-id="${deal.id}"
-                ondragstart="crmDragStart(event,'${deal.id}')"
-                onclick="openDealModal('${deal.id}')"
-                style="background:white;border-radius:10px;padding:0.75rem;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #f0fdf4;transition:box-shadow 0.15s,transform 0.15s;"
-                onmouseenter="this.style.boxShadow='0 4px 12px rgba(34,197,94,0.15)';this.style.transform='translateY(-1px)'"
-                onmouseleave="this.style.boxShadow='0 1px 4px rgba(0,0,0,0.07)';this.style.transform=''">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
-                    <div style="font-weight:600;font-size:0.85rem;color:#1a1a1a;line-height:1.3;flex:1;margin-right:0.5rem;">${escHtml(deal.title || 'Без назви')}</div>
-                    <span style="font-size:0.8rem;">${sourceIcon}</span>
-                </div>
-                ${contact ? `<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.4rem;">
-                    <div style="width:20px;height:20px;border-radius:50%;background:#22c55e;color:white;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${initials}</div>
-                    <span style="font-size:0.78rem;color:#525252;">${escHtml(contact.name || contact.phone || '')}</span>
-                </div>` : ''}
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    ${deal.amount ? `<span style="font-size:0.8rem;font-weight:700;color:#16a34a;">${formatAmount(deal.amount)}</span>` : '<span></span>'}
-                    ${relDate ? `<span style="font-size:0.72rem;color:#9ca3af;">${relDate}</span>` : ''}
-                </div>
-            </div>
-        `;
-    }
-
-    // ── Drag & Drop ────────────────────────────────────────
-    function initDragDrop() {
-        // handled via inline handlers
-    }
-
-    window.crmDragStart = function (e, dealId) {
-        crmDragDeal = dealId;
-        e.dataTransfer.effectAllowed = 'move';
-    };
-
-    window.crmDragOver = function (e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        const col = e.currentTarget;
-        col.style.background = '#f0fdf4';
-    };
-
-    window.crmDrop = async function (e, newStage) {
-        e.preventDefault();
-        e.currentTarget.style.background = '#f9fafb';
-        if (!crmDragDeal) return;
-        const deal = crmDeals.find(d => d.id === crmDragDeal);
-        if (!deal || deal.stage === newStage) { crmDragDeal = null; return; }
-
-        try {
-            await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-                .collection('deals').doc(crmDragDeal)
-                .update({ stage: newStage, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            if (typeof showToast === 'function') showToast('Стадію оновлено', 'success');
-        } catch (err) {
-            console.error('CRM drop error:', err);
-        }
-        crmDragDeal = null;
-    };
-
-    // ── Deal Modal ─────────────────────────────────────────
-    window.openDealModal = function (dealId) {
-        const deal = crmDeals.find(d => d.id === dealId);
-        if (!deal) return;
-        crmEditingDealId = dealId;
-        const contact = crmContacts.find(c => c.id === deal.contactId);
-        const pipeline = crmPipelines.find(p => p.id === deal.pipelineId);
-        const stages = pipeline?.stages || [];
-
-        const html = `
-            <div id="crmDealOverlay" onclick="if(event.target===this)closeCRMDealModal()"
-                style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;">
-                <div style="background:white;border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2);">
-                    <!-- Header -->
-                    <div style="padding:1.25rem 1.25rem 0.75rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:flex-start;">
-                        <div>
-                            <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:0.2rem;">${escHtml(deal.title || 'Угода')}</div>
-                            <div style="font-size:0.8rem;color:#9ca3af;">ID: ${dealId.slice(0,8)}</div>
-                        </div>
-                        <button onclick="closeCRMDealModal()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;line-height:1;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
-                    </div>
-                    <!-- Sub tabs -->
-                    <div style="display:flex;gap:0;border-bottom:1px solid #f0f0f0;">
-                        ${['overview','contact','notes'].map((t,i) => `
-                            <button onclick="crmDealTab('${t}')" id="crmDT_${t}"
-                                style="flex:1;padding:0.6rem;border:none;border-bottom:2px solid ${i===0?'#22c55e':'transparent'};background:none;cursor:pointer;font-size:0.82rem;font-weight:${i===0?'700':'500'};color:${i===0?'#22c55e':'#6b7280'};transition:all 0.2s;">
-                                ${{ overview:'Огляд', contact:'Контакт', notes:'Нотатки' }[t]}
-                            </button>`).join('')}
-                    </div>
-                    <!-- Tab content -->
-                    <div id="crmDealTabContent" style="padding:1.25rem;">
-                        ${renderDealOverviewTab(deal, contact, stages)}
-                    </div>
-                    <!-- Footer -->
-                    <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
-                        <button onclick="confirmDeleteDeal('${dealId}')" style="padding:0.5rem 1rem;background:#fee2e2;color:#ef4444;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">Видалити</button>
-                        <button onclick="closeCRMDealModal()" style="padding:0.5rem 1rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">Закрити</button>
-                    </div>
-                </div>
-            </div>`;
-
-        document.body.insertAdjacentHTML('beforeend', html);
-        if (window.lucide) lucide.createIcons();
-    };
-
-    window.crmDealTab = function (tab) {
-        const deal = crmDeals.find(d => d.id === crmEditingDealId);
-        if (!deal) return;
-        const contact = crmContacts.find(c => c.id === deal.contactId);
-        const pipeline = crmPipelines.find(p => p.id === deal.pipelineId);
-        const stages = pipeline?.stages || [];
-
-        ['overview','contact','notes'].forEach(t => {
-            const btn = document.getElementById('crmDT_' + t);
-            if (btn) {
-                btn.style.borderBottomColor = t === tab ? '#22c55e' : 'transparent';
-                btn.style.fontWeight = t === tab ? '700' : '500';
-                btn.style.color = t === tab ? '#22c55e' : '#6b7280';
-            }
+        var prompt = 'Ти CRM аналітик. Проаналізуй угоду:\n' +
+            'Клієнт: ' + (deal.clientName||'—') + '\n' +
+            'Ніша: ' + (deal.clientNiche||'—') + '\n' +
+            'Стадія: ' + _stageLabel(deal.stage) + '\n' +
+            'Сума: ' + (deal.amount ? _fmt(deal.amount) : 'не вказана') + '\n' +
+            (deal.leadData && deal.leadData.role ? 'Роль: ' + deal.leadData.role + '\n' : '') +
+            (deal.leadData && deal.leadData.mainProblem ? 'Проблема: ' + deal.leadData.mainProblem + '\n' : '') +
+            (deal.leadData && deal.leadData.mainGoal ? 'Ціль: ' + deal.leadData.mainGoal + '\n' : '') +
+            'Нотатка: ' + (deal.note||'—') + '\n\n' +
+            'Дай: 1) Оцінку ймовірності закриття (0-100%) 2) Ключовий ризик 3) Наступний конкретний крок 4) Рекомендований текст повідомлення клієнту\n' +
+            'Відповідь: лаконічно, 150-200 слів, українською.';
+        var response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 600, messages: [{ role: 'user', content: prompt }] }),
         });
-
-        const content = document.getElementById('crmDealTabContent');
-        if (!content) return;
-        if (tab === 'overview') content.innerHTML = renderDealOverviewTab(deal, contact, stages);
-        if (tab === 'contact') content.innerHTML = renderDealContactTab(deal, contact);
-        if (tab === 'notes') content.innerHTML = renderDealNotesTab(deal);
-        if (window.lucide) lucide.createIcons();
-    };
-
-    function renderDealOverviewTab(deal, contact, stages) {
-        return `
-            <div style="display:flex;flex-direction:column;gap:1rem;">
-                <div>
-                    <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА УГОДИ</label>
-                    <input id="crmDealTitleInput" value="${escHtml(deal.title || '')}"
-                        style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;"
-                        onblur="saveDealField('title',this.value)">
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-                    <div>
-                        <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">СТАДІЯ</label>
-                        <select onchange="updateDealStage(this.value)"
-                            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;box-sizing:border-box;">
-                            ${stages.map(s => `<option value="${s.id}" ${deal.stage === s.id ? 'selected' : ''}>${s.label}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">СУМА</label>
-                        <input type="number" value="${deal.amount || ''}" placeholder="0"
-                            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;"
-                            onblur="saveDealField('amount',parseFloat(this.value)||0)">
-                    </div>
-                </div>
-                ${contact ? `
-                <div style="background:#f0fdf4;border-radius:10px;padding:0.75rem;display:flex;align-items:center;gap:0.75rem;">
-                    <div style="width:36px;height:36px;border-radius:50%;background:#22c55e;color:white;font-size:0.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${getInitials(contact.name || contact.phone || '?')}</div>
-                    <div>
-                        <div style="font-weight:600;font-size:0.88rem;">${escHtml(contact.name || contact.phone || '')}</div>
-                        <div style="font-size:0.78rem;color:#6b7280;">${escHtml(contact.phone || '')} ${contact.email ? '· ' + escHtml(contact.email) : ''}</div>
-                    </div>
-                </div>` : ''}
-                <div>
-                    <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ДЖЕРЕЛО</label>
-                    <div style="font-size:0.88rem;color:#1a1a1a;">${deal.source || '—'}</div>
-                </div>
-                <div>
-                    <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ДАТА СТВОРЕННЯ</label>
-                    <div style="font-size:0.88rem;color:#1a1a1a;">${deal.createdAt?.toDate ? deal.createdAt.toDate().toLocaleDateString('uk-UA') : '—'}</div>
-                </div>
-            </div>`;
+        var data = await response.json();
+        var analysis = (data.content && data.content[0] && data.content[0].text) || 'Не вдалось отримати аналіз';
+        await firebase.firestore().doc('companies/' + window.currentCompanyId + '/crm_deals/' + dealId)
+            .update({ aiAnalysis: analysis, aiAnalyzedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        deal.aiAnalysis = analysis;
+        _loadAITab(deal);
+    } catch(e) {
+        if (content) content.innerHTML = '<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ' + _esc(e.message) + '</div>';
     }
+};
 
-    function renderDealContactTab(deal, contact) {
-        if (!contact) return '<p style="color:#6b7280;text-align:center;padding:2rem;">Контакт не прив\'язаний</p>';
-        const vars = contact.variables || {};
-        return `
-            <div style="display:flex;flex-direction:column;gap:0.75rem;">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-                    <div>
-                        <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ІМ'Я</label>
-                        <div style="font-size:0.9rem;font-weight:600;">${escHtml(contact.name || '—')}</div>
-                    </div>
-                    <div>
-                        <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТЕЛЕФОН</label>
-                        <a href="tel:${contact.phone}" style="font-size:0.9rem;color:#22c55e;text-decoration:none;font-weight:600;">${escHtml(contact.phone || '—')}</a>
-                    </div>
-                </div>
-                ${contact.email ? `<div>
-                    <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">EMAIL</label>
-                    <div style="font-size:0.9rem;">${escHtml(contact.email)}</div>
-                </div>` : ''}
-                ${Object.keys(vars).length > 0 ? `
-                <div>
-                    <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.5rem;">ДАНІ З ВОРОНКИ</label>
-                    <div style="background:#f9fafb;border-radius:8px;padding:0.75rem;display:flex;flex-direction:column;gap:0.4rem;">
-                        ${Object.entries(vars).map(([k,v]) => `
-                            <div style="display:flex;gap:0.5rem;">
-                                <span style="font-size:0.78rem;color:#6b7280;min-width:100px;">${escHtml(k)}:</span>
-                                <span style="font-size:0.78rem;color:#1a1a1a;font-weight:500;">${escHtml(String(v))}</span>
-                            </div>`).join('')}
-                    </div>
-                </div>` : ''}
-                <div>
-                    <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТЕГИ</label>
-                    <div style="display:flex;flex-wrap:wrap;gap:0.35rem;">
-                        ${(contact.tags || []).map(tag => `<span style="background:#f0fdf4;color:#16a34a;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;">${escHtml(tag)}</span>`).join('')}
-                        ${(contact.tags || []).length === 0 ? '<span style="color:#9ca3af;font-size:0.82rem;">Немає тегів</span>' : ''}
-                    </div>
-                </div>
-            </div>`;
-    }
+// ══════════════════════════════════════════════════════════
+// СТВОРЕННЯ УГОДИ
+// ══════════════════════════════════════════════════════════
+window.crmOpenCreateDeal = function(defaultStage) {
+    var el = document.getElementById('crmCreateDealOverlay');
+    if (el) el.remove();
+    var stages = crm.pipeline && crm.pipeline.stages ? crm.pipeline.stages : [];
+    var inp = 'width:100%;padding:0.5rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:9px;font-size:0.83rem;box-sizing:border-box;font-family:inherit;';
+    var lbl = 'font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;';
+    document.body.insertAdjacentHTML('beforeend',
+        '<div id="crmCreateDealOverlay" onclick="if(event.target===this)this.remove()" ' +
+        'style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10025;' +
+        'display:flex;align-items:center;justify-content:center;padding:1rem;">' +
+        '<div style="background:white;border-radius:16px;width:100%;max-width:440px;">' +
+        '<div style="padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;' +
+        'display:flex;justify-content:space-between;align-items:center;">' +
+        '<div style="font-weight:700;font-size:0.95rem;">Нова угода</div>' +
+        '<button onclick="document.getElementById(\'crmCreateDealOverlay\').remove()" ' +
+        'style="background:none;border:none;cursor:pointer;color:#9ca3af;">x</button></div>' +
+        '<div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">' +
+        '<div><label style="' + lbl + '">Назва угоди</label>' +
+        '<input id="nd_title" placeholder="Консультація, Проект..." style="' + inp + '" autofocus></div>' +
+        '<div><label style="' + lbl + '">Клієнт</label>' +
+        '<input id="nd_client" placeholder="Ім\'я або компанія..." style="' + inp + '"></div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">' +
+        '<div><label style="' + lbl + '">Стадія</label>' +
+        '<select id="nd_stage" style="' + inp + 'background:white;cursor:pointer;">' +
+        stages.map(function(s){ return '<option value="' + s.id + '" ' + ((defaultStage||'new')===s.id?'selected':'') + '>' + _esc(s.label) + '</option>'; }).join('') +
+        '</select></div>' +
+        '<div><label style="' + lbl + '">Сума</label>' +
+        '<input id="nd_amount" type="number" placeholder="0" style="' + inp + '"></div></div>' +
+        '<div><label style="' + lbl + '">Ніша / Тип бізнесу</label>' +
+        '<input id="nd_niche" placeholder="Стоматологія, Будівництво..." style="' + inp + '"></div>' +
+        '</div>' +
+        '<div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;display:flex;justify-content:flex-end;gap:0.4rem;">' +
+        '<button onclick="document.getElementById(\'crmCreateDealOverlay\').remove()" ' +
+        'style="padding:0.5rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">Скасувати</button>' +
+        '<button onclick="crmCreateDeal()" ' +
+        'style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">Створити</button>' +
+        '</div></div></div>');
+    var nd = document.getElementById('nd_title');
+    if (nd) nd.focus();
+};
 
-    function renderDealNotesTab(deal) {
-        const notes = deal.notes || [];
-        return `
-            <div style="display:flex;flex-direction:column;gap:0.75rem;">
-                <div style="display:flex;gap:0.5rem;">
-                    <textarea id="crmNoteInput" placeholder="Додати нотатку..."
-                        style="flex:1;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;resize:vertical;min-height:60px;font-family:inherit;"></textarea>
-                    <button onclick="addDealNote()" style="padding:0.5rem 0.75rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;align-self:flex-end;white-space:nowrap;">+ Додати</button>
-                </div>
-                <div id="crmNotesList" style="display:flex;flex-direction:column;gap:0.5rem;">
-                    ${notes.length === 0 ? '<p style="color:#9ca3af;text-align:center;font-size:0.85rem;padding:1rem;">Нотаток поки немає</p>' :
-                        notes.slice().reverse().map(n => `
-                            <div style="background:#f9fafb;border-radius:8px;padding:0.65rem 0.75rem;">
-                                <div style="font-size:0.85rem;color:#1a1a1a;margin-bottom:0.3rem;">${escHtml(n.text)}</div>
-                                <div style="font-size:0.72rem;color:#9ca3af;">${n.createdAt?.toDate ? n.createdAt.toDate().toLocaleDateString('uk-UA', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : ''}</div>
-                            </div>`).join('')}
-                </div>
-            </div>`;
-    }
-
-    window.closeCRMDealModal = function () {
-        document.getElementById('crmDealOverlay')?.remove();
-        crmEditingDealId = null;
-    };
-
-    window.saveDealField = async function (field, value) {
-        if (!crmEditingDealId) return;
-        try {
-            await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-                .collection('deals').doc(crmEditingDealId)
-                .update({ [field]: value, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        } catch (e) { console.error(e); }
-    };
-
-    window.updateDealStage = async function (stage) {
-        if (!crmEditingDealId) return;
-        try {
-            await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-                .collection('deals').doc(crmEditingDealId)
-                .update({ stage, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            if (typeof showToast === 'function') showToast('Стадію оновлено', 'success');
-        } catch (e) { console.error(e); }
-    };
-
-    window.addDealNote = async function () {
-        const input = document.getElementById('crmNoteInput');
-        if (!input || !input.value.trim() || !crmEditingDealId) return;
-        try {
-            await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-                .collection('deals').doc(crmEditingDealId)
-                .update({
-                    notes: firebase.firestore.FieldValue.arrayUnion({
-                        text: input.value.trim(),
-                        createdAt: firebase.firestore.Timestamp.now()
-                    }),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            input.value = '';
-            if (typeof showToast === 'function') showToast('Нотатку додано', 'success');
-        } catch (e) { console.error(e); }
-    };
-
-    window.confirmDeleteDeal = function (dealId) {
-        if (!confirm('Видалити угоду? Це незворотно.')) return;
-        firebase.firestore().collection('companies').doc(window.currentCompanyId)
-            .collection('deals').doc(dealId).delete()
-            .then(() => {
-                closeCRMDealModal();
-                if (typeof showToast === 'function') showToast('Угоду видалено', 'success');
-            }).catch(e => console.error(e));
-    };
-
-    // ── Create Deal Modal ──────────────────────────────────
-    window.openCreateDealModal = function (preStage) {
-        const pipeline = crmPipelines.find(p => p.id === crmCurrentPipelineId);
-        const stages = pipeline?.stages || [];
-
-        const html = `
-            <div id="crmCreateDealOverlay" onclick="if(event.target===this)closeCreateDealModal()"
-                style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;">
-                <div style="background:white;border-radius:16px;width:100%;max-width:440px;box-shadow:0 24px 64px rgba(0,0,0,0.2);">
-                    <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-                        <div style="font-weight:700;font-size:1rem;">Нова угода</div>
-                        <button onclick="closeCreateDealModal()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
-                    </div>
-                    <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА УГОДИ *</label>
-                            <input id="newDealTitle" placeholder="Наприклад: Імплантація — Іван Петренко"
-                                style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-                            <div>
-                                <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ІМ'Я КЛІЄНТА</label>
-                                <input id="newDealContactName" placeholder="Ім'я"
-                                    style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТЕЛЕФОН</label>
-                                <input id="newDealPhone" placeholder="+380..."
-                                    style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
-                            </div>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-                            <div>
-                                <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">СУМА</label>
-                                <input id="newDealAmount" type="number" placeholder="0"
-                                    style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
-                            </div>
-                            <div>
-                                <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">СТАДІЯ</label>
-                                <select id="newDealStage"
-                                    style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;box-sizing:border-box;">
-                                    ${stages.map(s => `<option value="${s.id}" ${s.id === preStage ? 'selected' : ''}>${s.label}</option>`).join('')}
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ДЖЕРЕЛО</label>
-                            <select id="newDealSource" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;box-sizing:border-box;">
-                                <option value="direct">Прямий контакт</option>
-                                <option value="web">Сайт</option>
-                                <option value="telegram">Telegram</option>
-                                <option value="instagram">Instagram</option>
-                                <option value="referral">Рекомендація</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
-                        <button onclick="closeCreateDealModal()" style="padding:0.55rem 1rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Скасувати</button>
-                        <button onclick="saveNewDeal()" style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Створити</button>
-                    </div>
-                </div>
-            </div>`;
-
-        document.body.insertAdjacentHTML('beforeend', html);
-        document.getElementById('newDealTitle')?.focus();
-    };
-
-    window.closeCreateDealModal = function () {
-        document.getElementById('crmCreateDealOverlay')?.remove();
-    };
-
-    window.saveNewDeal = async function () {
-        const title = document.getElementById('newDealTitle')?.value.trim();
-        if (!title) { alert('Введіть назву угоди'); return; }
-
-        const contactName = document.getElementById('newDealContactName')?.value.trim();
-        const phone = document.getElementById('newDealPhone')?.value.trim();
-        const amount = parseFloat(document.getElementById('newDealAmount')?.value) || 0;
-        const stage = document.getElementById('newDealStage')?.value || 'new';
-        const source = document.getElementById('newDealSource')?.value || 'direct';
-
-        try {
-            const base = firebase.firestore().collection('companies').doc(window.currentCompanyId);
-            const now = firebase.firestore.FieldValue.serverTimestamp();
-            const nowTs = firebase.firestore.Timestamp.now();
-
-            // Create or find contact
-            let contactId = null;
-            if (contactName || phone) {
-                // Check if contact exists by phone
-                if (phone) {
-                    const existing = await base.collection('contacts').where('phone', '==', phone).limit(1).get();
-                    if (!existing.empty) {
-                        contactId = existing.docs[0].id;
-                    }
-                }
-                if (!contactId) {
-                    const cRef = await base.collection('contacts').add({
-                        name: contactName || '',
-                        phone: phone || '',
-                        source,
-                        tags: [],
-                        variables: {},
-                        status: 'active',
-                        lastActivity: nowTs,
-                        createdAt: now
-                    });
-                    contactId = cRef.id;
-                }
-            }
-
-            await base.collection('deals').add({
-                title,
-                contactId,
-                pipelineId: crmCurrentPipelineId,
-                stage,
-                amount,
-                currency: 'UAH',
-                source,
-                notes: [],
-                createdAt: now,
-                updatedAt: now
-            });
-
-            closeCreateDealModal();
-            if (typeof showToast === 'function') showToast('Угоду створено ✓', 'success');
-        } catch (err) {
-            console.error('saveNewDeal error:', err);
-            alert('Помилка збереження: ' + err.message);
-        }
-    };
-
-    // ── Contacts View ──────────────────────────────────────
-    let crmContactsSearch = '';
-
-    function renderContactsView() {
-        const container = document.getElementById('crmContactsView');
-        if (!container || crmCurrentSubTab !== 'contacts') return;
-
-        const filtered = crmContacts.filter(c => {
-            if (!crmContactsSearch) return true;
-            const q = crmContactsSearch.toLowerCase();
-            return (c.name || '').toLowerCase().includes(q) ||
-                   (c.phone || '').includes(q) ||
-                   (c.email || '').toLowerCase().includes(q);
+window.crmCreateDeal = async function() {
+    var title  = document.getElementById('nd_title') && document.getElementById('nd_title').value.trim();
+    var client = document.getElementById('nd_client') && document.getElementById('nd_client').value.trim();
+    var stage  = document.getElementById('nd_stage') && document.getElementById('nd_stage').value || 'new';
+    var amount = parseFloat(document.getElementById('nd_amount') && document.getElementById('nd_amount').value) || 0;
+    var niche  = document.getElementById('nd_niche') && document.getElementById('nd_niche').value.trim();
+    if (!title && !client) { alert('Введіть назву або ім\'я клієнта'); return; }
+    try {
+        var db = firebase.firestore();
+        var dealRef = await db.collection('companies/' + window.currentCompanyId + '/crm_deals').add({
+            title: title||client, clientName: client||title, clientNiche: niche||'',
+            stage: stage, pipelineId: crm.pipeline && crm.pipeline.id || '',
+            amount: amount, source: 'manual',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-
-        container.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;">
-                <input type="search" placeholder="Пошук за ім'ям, телефоном..."
-                    value="${escHtml(crmContactsSearch)}"
-                    oninput="crmContactsSearch=this.value;renderContactsFromGlobal()"
-                    style="flex:1;min-width:200px;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:10px;font-size:0.85rem;background:white;">
-                <button onclick="openCreateContactModal()" style="padding:0.55rem 1rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">
-                    + Контакт
-                </button>
-            </div>
-
-            ${filtered.length === 0 ? `
-                <div style="text-align:center;padding:3rem;color:#9ca3af;">
-                    <div style="font-size:2rem;margin-bottom:0.5rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
-                    <div>${crmContactsSearch ? 'Нічого не знайдено' : 'Контактів поки немає'}</div>
-                </div>` : `
-                <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
-                    ${filtered.map((c, i) => `
-                        <div onclick="openContactModal('${c.id}')"
-                            style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;cursor:pointer;border-bottom:${i < filtered.length-1 ? '1px solid #f0f0f0' : 'none'};transition:background 0.15s;"
-                            onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background=''">
-                            <div style="width:36px;height:36px;border-radius:50%;background:#22c55e;color:white;font-size:0.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${getInitials(c.name || c.phone || '?')}</div>
-                            <div style="flex:1;min-width:0;">
-                                <div style="font-weight:600;font-size:0.88rem;color:#1a1a1a;">${escHtml(c.name || c.phone || 'Без імені')}</div>
-                                <div style="font-size:0.78rem;color:#6b7280;">${escHtml(c.phone || '')}${c.email ? ' · ' + escHtml(c.email) : ''}</div>
-                            </div>
-                            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
-                                ${(c.tags||[]).slice(0,2).map(t => `<span style="background:#f0fdf4;color:#16a34a;padding:0.1rem 0.45rem;border-radius:20px;font-size:0.7rem;font-weight:600;">${escHtml(t)}</span>`).join('')}
-                                <span style="font-size:0.7rem;color:#9ca3af;">${c.source || ''}</span>
-                            </div>
-                        </div>`).join('')}
-                </div>`}
-        `;
-    }
-
-    window.renderContactsFromGlobal = function () {
-        renderContactsView();
-    };
-
-    window.openCreateContactModal = function () {
-        const html = `
-            <div id="crmCreateContactOverlay" onclick="if(event.target===this)closeCreateContactModal()"
-                style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;">
-                <div style="background:white;border-radius:16px;width:100%;max-width:400px;box-shadow:0 24px 64px rgba(0,0,0,0.2);">
-                    <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-                        <div style="font-weight:700;">Новий контакт</div>
-                        <button onclick="closeCreateContactModal()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
-                    </div>
-                    <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ІМ'Я</label>
-                            <input id="newContactName" placeholder="Ім'я та прізвище" style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
-                        </div>
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТЕЛЕФОН</label>
-                            <input id="newContactPhone" placeholder="+380..." style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
-                        </div>
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">EMAIL</label>
-                            <input id="newContactEmail" placeholder="email@example.com" style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
-                        </div>
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ДЖЕРЕЛО</label>
-                            <select id="newContactSource" style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;box-sizing:border-box;">
-                                <option value="direct">Прямий контакт</option>
-                                <option value="web">Сайт</option>
-                                <option value="telegram">Telegram</option>
-                                <option value="instagram">Instagram</option>
-                                <option value="referral">Рекомендація</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
-                        <button onclick="closeCreateContactModal()" style="padding:0.55rem 1rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Скасувати</button>
-                        <button onclick="saveNewContact()" style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Зберегти</button>
-                    </div>
-                </div>
-            </div>`;
-        document.body.insertAdjacentHTML('beforeend', html);
-        document.getElementById('newContactName')?.focus();
-    };
-
-    window.closeCreateContactModal = function () {
-        document.getElementById('crmCreateContactOverlay')?.remove();
-    };
-
-    window.saveNewContact = async function () {
-        const name = document.getElementById('newContactName')?.value.trim();
-        const phone = document.getElementById('newContactPhone')?.value.trim();
-        if (!name && !phone) { alert('Введіть ім\'я або телефон'); return; }
-        try {
-            await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-                .collection('contacts').add({
-                    name: name || '',
-                    phone: phone || '',
-                    email: document.getElementById('newContactEmail')?.value.trim() || '',
-                    source: document.getElementById('newContactSource')?.value || 'direct',
-                    tags: [], variables: {}, status: 'active',
-                    lastActivity: firebase.firestore.Timestamp.now(),
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            closeCreateContactModal();
-            if (typeof showToast === 'function') showToast('Контакт створено ✓', 'success');
-        } catch (err) {
-            alert('Помилка: ' + err.message);
+        await dealRef.collection('history').add({ type: 'created', by: (window.currentUser && window.currentUser.email)||'manager', at: firebase.firestore.FieldValue.serverTimestamp() });
+        db.doc('companies/' + window.currentCompanyId + '/crm_stats/main').set({ totalDeals: firebase.firestore.FieldValue.increment(1) }, { merge: true }).catch(function(){});
+        var el = document.getElementById('crmCreateDealOverlay');
+        if (el) el.remove();
+        if (typeof showToast === 'function') showToast('Угоду створено', 'success');
+        if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
+            emitTalkoEvent(window.TALKO_EVENTS.DEAL_CREATED, { dealId: dealRef.id, clientName: client||title, stage: stage, amount: amount });
         }
-    };
+    } catch(e) { alert('Помилка: ' + e.message); }
+};
 
-    window.openContactModal = function (contactId) {
-        const contact = crmContacts.find(c => c.id === contactId);
-        if (!contact) return;
-        const contactDeals = crmDeals.filter(d => d.contactId === contactId);
+// ══════════════════════════════════════════════════════════
+// КЛІЄНТИ
+// ══════════════════════════════════════════════════════════
+function _renderClients() {
+    var c = document.getElementById('crmViewClients');
+    if (!c) return;
+    c.innerHTML =
+        '<div style="margin-bottom:0.6rem;display:flex;gap:0.4rem;">' +
+        '<div style="position:relative;flex:1;">' +
+        '<input id="crmClientSearch" type="text" placeholder="Пошук клієнта..." ' +
+        'oninput="crmFilterClients(this.value)" ' +
+        'style="width:100%;padding:0.45rem 0.5rem 0.45rem 1.8rem;border:1.5px solid #e5e7eb;border-radius:9px;font-size:0.82rem;box-sizing:border-box;">' +
+        '</div></div>' +
+        '<div id="crmClientList" style="display:flex;flex-direction:column;gap:0.4rem;">' +
+        _clientListHTML(crm.clients) + '</div>';
+}
 
-        const html = `
-            <div id="crmContactOverlay" onclick="if(event.target===this)document.getElementById('crmContactOverlay').remove()"
-                style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;">
-                <div style="background:white;border-radius:16px;width:100%;max-width:460px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2);">
-                    <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-                        <div style="display:flex;align-items:center;gap:0.75rem;">
-                            <div style="width:44px;height:44px;border-radius:50%;background:#22c55e;color:white;font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;">${getInitials(contact.name || contact.phone || '?')}</div>
-                            <div>
-                                <div style="font-weight:700;font-size:1rem;">${escHtml(contact.name || 'Без імені')}</div>
-                                <div style="font-size:0.8rem;color:#6b7280;">${escHtml(contact.phone || '')} ${contact.email ? '· ' + escHtml(contact.email) : ''}</div>
-                            </div>
-                        </div>
-                        <button onclick="document.getElementById('crmContactOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
-                    </div>
-                    <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
-                        <div>
-                            <div style="font-size:0.78rem;color:#6b7280;font-weight:600;margin-bottom:0.5rem;">УГОДИ (${contactDeals.length})</div>
-                            ${contactDeals.length === 0 ? '<p style="color:#9ca3af;font-size:0.85rem;">Немає угод</p>' :
-                                contactDeals.map(d => {
-                                    const pipeline = crmPipelines.find(p => p.id === d.pipelineId);
-                                    const stage = pipeline?.stages?.find(s => s.id === d.stage);
-                                    return `<div onclick="document.getElementById('crmContactOverlay').remove();openDealModal('${d.id}')"
-                                        style="background:#f9fafb;border-radius:8px;padding:0.65rem 0.75rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;"
-                                        onmouseenter="this.style.background='#f0fdf4'" onmouseleave="this.style.background='#f9fafb'">
-                                        <span style="font-size:0.85rem;font-weight:600;">${escHtml(d.title)}</span>
-                                        <span style="font-size:0.75rem;background:${stage?.color||'#6b7280'}22;color:${stage?.color||'#6b7280'};padding:0.2rem 0.6rem;border-radius:20px;font-weight:600;">${stage?.label||d.stage}</span>
-                                    </div>`;
-                                }).join('')}
-                        </div>
-                        <button onclick="document.getElementById('crmContactOverlay').remove();openCreateDealModal('new')" style="width:100%;padding:0.55rem;background:#f0fdf4;color:#16a34a;border:1px dashed #bbf7d0;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                            + Створити угоду для цього контакту
-                        </button>
-                    </div>
-                </div>
-            </div>`;
-        document.body.insertAdjacentHTML('beforeend', html);
-    };
+window.crmFilterClients = function(q) {
+    var list = document.getElementById('crmClientList');
+    if (!list) return;
+    var filtered = q ? crm.clients.filter(function(c){
+        return (c.name||'').toLowerCase().includes(q.toLowerCase()) || (c.phone||'').includes(q);
+    }) : crm.clients;
+    list.innerHTML = _clientListHTML(filtered);
+};
 
-    // ── Settings View ──────────────────────────────────────
-    function renderSettingsView() {
-        const container = document.getElementById('crmSettingsView');
-        if (!container || crmCurrentSubTab !== 'settings') return;
-        const pipeline = crmPipelines.find(p => p.id === crmCurrentPipelineId);
-        const stages = [...(pipeline?.stages || [])].sort((a, b) => a.order - b.order);
+function _clientListHTML(clients) {
+    if (!clients.length) return '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.8rem;">Клієнтів не знайдено</div>';
+    var avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b'];
+    return clients.map(function(cl) {
+        var dealCount = crm.deals.filter(function(d){ return d.clientId===cl.id || d.clientName===cl.name; }).length;
+        var avatarColor = avatarColors[(cl.name||'').charCodeAt(0) % 4 || 0];
+        return '<div style="background:white;border-radius:12px;padding:0.75rem;' +
+            'box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;gap:0.6rem;">' +
+            '<div style="width:36px;height:36px;border-radius:50%;background:' + avatarColor + ';' +
+            'display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.9rem;flex-shrink:0;">' +
+            (cl.name||'?').charAt(0).toUpperCase() + '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+            '<div style="font-weight:700;font-size:0.85rem;">' + _esc(cl.name||'Без імені') + '</div>' +
+            '<div style="font-size:0.72rem;color:#6b7280;">' + (cl.phone?_esc(cl.phone)+' · ':'') + (cl.niche?_esc(cl.niche):'—') + '</div>' +
+            '</div>' +
+            (dealCount > 0 ? '<span style="background:#f0fdf4;color:#16a34a;font-size:0.7rem;padding:2px 7px;border-radius:8px;font-weight:700;">' + dealCount + ' угод</span>' : '') +
+            '</div>';
+    }).join('');
+}
 
-        container.innerHTML = `
-            <div style="background:white;border-radius:12px;padding:1.25rem;box-shadow:var(--shadow);margin-bottom:1rem;">
-                <h3 style="font-size:0.95rem;font-weight:700;color:#1a1a1a;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
-                    <i data-lucide="sliders" style="width:16px;height:16px;color:#22c55e;"></i> Стадії воронки
-                </h3>
-                <div id="crmStagesList" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;">
-                    ${stages.map((s, i) => `
-                        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.6rem;background:#f9fafb;border-radius:8px;border-left:3px solid ${s.color};">
-                            <input type="color" value="${s.color}" onchange="updateStageColor('${s.id}',this.value)"
-                                style="width:28px;height:28px;border:none;border-radius:4px;cursor:pointer;padding:0;background:none;">
-                            <input value="${escHtml(s.label)}" onblur="updateStageLabel('${s.id}',this.value)"
-                                style="flex:1;padding:0.35rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
-                            <span style="font-size:0.75rem;color:#9ca3af;min-width:20px;text-align:center;">${crmDeals.filter(d=>d.stage===s.id).length}</span>
-                            ${['won','lost'].includes(s.id) ? '' : `<button onclick="deleteStage('${s.id}')" style="background:none;border:none;cursor:pointer;color:#ef4444;padding:2px;" title="Видалити"><i data-lucide="x" style="width:14px;height:14px;"></i></button>`}
-                        </div>`).join('')}
-                </div>
-                <button onclick="addNewStage()" style="width:100%;padding:0.55rem;background:#f0fdf4;color:#16a34a;border:1px dashed #bbf7d0;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                    + Додати стадію
-                </button>
-            </div>
-        `;
-        if (window.lucide) lucide.createIcons();
-    }
+// ══════════════════════════════════════════════════════════
+// АНАЛІТИКА
+// ══════════════════════════════════════════════════════════
+function _renderAnalytics() {
+    var c = document.getElementById('crmViewAnalytics');
+    if (!c) return;
+    var stages  = crm.pipeline && crm.pipeline.stages ? crm.pipeline.stages : [];
+    var total   = crm.deals.length;
+    var won     = crm.deals.filter(function(d){ return d.stage==='won'; }).length;
+    var lost    = crm.deals.filter(function(d){ return d.stage==='lost'; }).length;
+    var revenue = crm.deals.filter(function(d){ return d.stage==='won'; }).reduce(function(s,d){ return s+(d.amount||0); }, 0);
+    var avgDeal = won > 0 ? Math.round(revenue/won) : 0;
+    var convRate = total > 0 ? Math.round(won/total*100) : 0;
+    var kpis = [['Конверсія', convRate+'%', '#22c55e'],['Revenue', _fmt(revenue), '#16a34a'],['Avg Deal', _fmt(avgDeal), '#3b82f6'],['Програно', lost, '#ef4444']];
+    var byStage = stages.map(function(s){ return Object.assign({}, s, { count: crm.deals.filter(function(d){ return d.stage===s.id; }).length, amount: crm.deals.filter(function(d){ return d.stage===s.id; }).reduce(function(sm,d){ return sm+(d.amount||0); }, 0) }); });
+    var sources = crm.deals.reduce(function(acc, d){ var src=d.source||'manual'; acc[src]=(acc[src]||0)+1; return acc; }, {});
+    c.innerHTML =
+        '<div style="display:flex;flex-direction:column;gap:0.65rem;">' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">' +
+        kpis.map(function(k){ return '<div style="background:white;border-radius:12px;padding:0.75rem;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-top:3px solid ' + k[2] + ';"><div style="font-size:1.1rem;font-weight:700;color:' + k[2] + ';">' + k[1] + '</div><div style="font-size:0.7rem;color:#9ca3af;">' + k[0] + '</div></div>'; }).join('') +
+        '</div>' +
+        '<div style="background:white;border-radius:14px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,0.06);">' +
+        '<div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">Розподіл по стадіях</div>' +
+        byStage.filter(function(s){ return s.count>0; }).map(function(s){ var pct=total>0?Math.round(s.count/total*100):0; return '<div style="margin-bottom:0.5rem;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:0.76rem;font-weight:600;">' + _esc(s.label) + '</span><span style="font-size:0.72rem;color:#6b7280;">' + s.count + ' · ' + _fmt(s.amount) + '</span></div><div style="background:#f1f5f9;border-radius:4px;height:8px;overflow:hidden;"><div style="height:100%;background:' + s.color + ';width:' + pct + '%;border-radius:4px;"></div></div></div>'; }).join('') +
+        '</div>' +
+        '<div style="background:white;border-radius:14px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,0.06);">' +
+        '<div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">Джерела лідів</div>' +
+        (Object.keys(sources).length > 0 ? Object.entries(sources).map(function(e){ var icons={telegram:'📱',instagram:'📷',site_form:'🌐',manual:'👤'}; return '<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.8rem;"><span>' + (icons[e[0]]||'📋') + ' ' + e[0] + '</span><span style="font-weight:700;color:#22c55e;">' + e[1] + '</span></div>'; }).join('') : '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>') +
+        '</div></div>';
+}
 
-    window.updateStageLabel = async function (stageId, label) {
-        if (!label.trim()) return;
-        await updatePipelineStage(stageId, { label: label.trim() });
-    };
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
+function _esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function _fmt(n) {
+    var num = parseFloat(n) || 0;
+    if (num === 0) return '0';
+    if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num/1000).toFixed(0) + 'k';
+    return num.toLocaleString('uk-UA');
+}
+function _relTime(d) {
+    var diff = Date.now() - d.getTime(), m = Math.floor(diff/60000);
+    if (m < 1)  return 'щойно';
+    if (m < 60) return m + 'хв';
+    var h = Math.floor(m/60);
+    if (h < 24) return h + 'год';
+    return Math.floor(h/24) + 'дн';
+}
 
-    window.updateStageColor = async function (stageId, color) {
-        await updatePipelineStage(stageId, { color });
-    };
-
-    window.deleteStage = async function (stageId) {
-        const count = crmDeals.filter(d => d.stage === stageId).length;
-        if (count > 0) { alert(`Неможливо видалити: в цій стадії є ${count} угод`); return; }
-        if (!confirm('Видалити стадію?')) return;
-        const pipeline = crmPipelines.find(p => p.id === crmCurrentPipelineId);
-        if (!pipeline) return;
-        const newStages = pipeline.stages.filter(s => s.id !== stageId);
-        await savePipelineStages(newStages);
-        renderSettingsView();
-    };
-
-    window.addNewStage = async function () {
-        const label = prompt('Назва нової стадії:');
-        if (!label?.trim()) return;
-        const pipeline = crmPipelines.find(p => p.id === crmCurrentPipelineId);
-        if (!pipeline) return;
-        const maxOrder = Math.max(...(pipeline.stages || []).map(s => s.order), -1);
-        const newStages = [...(pipeline.stages || []), {
-            id: 'stage_' + Date.now(),
-            label: label.trim(),
-            color: '#6b7280',
-            order: maxOrder + 1
-        }];
-        await savePipelineStages(newStages);
-        renderSettingsView();
-    };
-
-    async function updatePipelineStage(stageId, updates) {
-        const pipeline = crmPipelines.find(p => p.id === crmCurrentPipelineId);
-        if (!pipeline) return;
-        const newStages = pipeline.stages.map(s => s.id === stageId ? { ...s, ...updates } : s);
-        await savePipelineStages(newStages);
-    }
-
-    async function savePipelineStages(stages) {
-        try {
-            await firebase.firestore().collection('companies').doc(window.currentCompanyId)
-                .collection('pipelines').doc(crmCurrentPipelineId)
-                .update({ stages });
-            // Update local
-            const idx = crmPipelines.findIndex(p => p.id === crmCurrentPipelineId);
-            if (idx >= 0) crmPipelines[idx].stages = stages;
-            if (typeof showToast === 'function') showToast('Збережено', 'success');
-        } catch (err) { console.error(err); }
-    }
-
-    // ── Utilities ──────────────────────────────────────────
-    function escHtml(str) {
-        if (str === null || str === undefined) return '';
-        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    function getInitials(name) {
-        const parts = (name || '').trim().split(/\s+/);
-        if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-        return (name || '?').slice(0, 2).toUpperCase();
-    }
-
-    function formatAmount(n) {
-        if (!n) return '0 ₴';
-        if (n >= 1000000) return (n / 1000000).toFixed(1) + 'М ₴';
-        if (n >= 1000) return (n / 1000).toFixed(0) + 'К ₴';
-        return n.toLocaleString('uk-UA') + ' ₴';
-    }
-
-    function relativeTime(date) {
-        const diff = Date.now() - date.getTime();
-        const m = Math.floor(diff / 60000);
-        if (m < 1) return 'щойно';
-        if (m < 60) return m + ' хв';
-        const h = Math.floor(m / 60);
-        if (h < 24) return h + ' год';
-        const d = Math.floor(h / 24);
-        if (d < 30) return d + ' дн';
-        return date.toLocaleDateString('uk-UA');
-    }
-
-    // ── Cleanup ────────────────────────────────────────────
-    window.destroyCRMModule = function () {
-        crmUnsubscribes.forEach(u => u && u());
-        crmUnsubscribes = [];
-    };
-
-    // ── Tab Switch Hook ────────────────────────────────────
-    const _origST = window.switchTab;
-    window.switchTab = function (tab) {
-        if (_origST) _origST(tab);
-        if (tab === 'crm') {
-            if (window.isFeatureEnabled && window.isFeatureEnabled('crm')) {
-                if (typeof initCRMModule === 'function' && crmPipelines.length === 0) {
-                    initCRMModule();
-                } else {
-                    renderPipelineView();
-                }
+// ── switchTab hook ─────────────────────────────────────────
+var _origST = window.switchTab;
+window.switchTab = function(tab) {
+    if (_origST) _origST(tab);
+    if (tab === 'crm') {
+        if (window.isFeatureEnabled && window.isFeatureEnabled('crm')) {
+            if (!crm.pipeline) {
+                window.initCRMModule();
+            } else if (crm.subTab === 'kanban') {
+                _renderKanban();
             }
         }
-    };
+    }
+};
 
 })();
