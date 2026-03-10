@@ -387,6 +387,12 @@ service cloud.firestore {
           allow read: if isCompanyMember(companyId);
           allow write: if isManagerOrOwner(companyId);
         }
+
+        // Canvas layout (позиції вузлів) зберігається окремо від основного документу
+        match /canvasData/{docId} {
+          allow read: if isCompanyMember(companyId);
+          allow write: if isManagerOrOwner(companyId);
+        }
       }
 
       // BOTS — SESSIONS

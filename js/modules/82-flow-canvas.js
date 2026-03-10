@@ -60,6 +60,14 @@ window.openFlowCanvas = async function(flowId, botId) {
     if (!snap.exists) return;
     fc.flowData = {id: snap.id, ...snap.data()};
 
+    // Підвантажуємо canvasData з підколекції (якщо немає в основному документі)
+    if (!flowData.canvasData || !flowData.canvasData.nodes?.length) {
+        try {
+            const canvasDoc = await flowRef.collection('canvasData').doc('layout').get();
+            if (canvasDoc.exists) flowData.canvasData = canvasDoc.data();
+        } catch(e) { console.warn('canvasData load:', e.message); }
+    }
+
     // Підвантажуємо великі AI промпти з nodePrompts підколекції
     const promptsSnap = await flowRef.collection('nodePrompts').get();
     const nodePromptsMap = {};
@@ -1682,11 +1690,15 @@ async function saveFlow() {
             return stripped;
         });
 
-        const strippedCanvas = { ...canvasData, nodes: stripPrompts(canvasData.nodes) };
         const strippedNodes = stripPrompts(ordered);
 
+        // canvasData зберігаємо окремо в підколекцію щоб не перевищувати 1MB ліміт
+        // Основний документ містить тільки nodes (для webhook) — мінімальний розмір
+        const canvasRef = saveRef.collection('canvasData').doc('layout');
+        const strippedCanvas = { ...canvasData, nodes: stripPrompts(canvasData.nodes) };
+        await canvasRef.set(sanitize(strippedCanvas));
+
         await saveRef.update({
-                canvasData: sanitize(strippedCanvas),
                 nodes: sanitize(strippedNodes),
                 triggerKeyword: triggerKeyword || '/start',
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
