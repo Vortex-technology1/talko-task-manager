@@ -803,16 +803,6 @@
       ]
     },
     {
-      "collectionGroup": "coordinations",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "tasks",
       "queryScope": "COLLECTION",
       "fields": [
