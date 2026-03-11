@@ -43,6 +43,24 @@
                 window.currentCompany = companyId;    // аліас для IIFE модулів (76-coordination та ін.)
                 
                 const userDoc = await db.collection('companies').doc(companyId).collection('users').doc(user.uid).get();
+                if (!userDoc.exists) {
+                    // Користувач є в Auth і має companyId, але профілю в компанії немає.
+                    // Це трапляється якщо Google Sign-In не завершив прив'язку через invite.
+                    // Автоматично створюємо профіль з роллю employee щоб уникнути мовчазних помилок прав.
+                    console.warn('[Auth] User doc missing in company — auto-creating with role:employee', user.uid);
+                    try {
+                        await db.collection('companies').doc(companyId).collection('users').doc(user.uid).set({
+                            name: user.displayName || user.email.split('@')[0],
+                            email: user.email.toLowerCase(),
+                            role: 'employee',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            autoCreated: true
+                        });
+                        console.log('[Auth] Auto-created user doc for', user.email);
+                    } catch(e) {
+                        console.error('[Auth] Failed to auto-create user doc:', e.message);
+                    }
+                }
                 currentUserData = userDoc.exists ? { id: user.uid, ...userDoc.data() } : { id: user.uid, email: user.email, role: 'employee' };
                 
                 const companyDoc = await db.collection('companies').doc(companyId).get();
