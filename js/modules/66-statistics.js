@@ -1054,7 +1054,7 @@
         <div class="stats-table-wrap">
             <table class="stats-table">
                 <thead><tr>
-                    <th style="width:140px;min-width:140px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? 'День' : freq === 'weekly' ? 'Тиждень' : 'Місяць'}</div></th>`;
+                    <th style="width:140px;min-width:140px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? t('day') : freq === 'weekly' ? t('week') : t('month')}</div></th>`;
 
         // Column headers = metric names with actions
         const impColors = { critical: '#ef4444', high: '#f97316', medium: '#f59e0b', low: '#22c55e' };

@@ -109,7 +109,7 @@
                     <div class="kanban-column-body" data-col="${col.id}" 
                          ondragover="kanbanDragOver(event)" ondragleave="kanbanDragLeave(event)" ondrop="kanbanDrop(event,'${mode}')">
                         <div class="kanban-add-btn" onclick="openTaskModalForKanban('${col.id}','${mode}')" 
-                             style="text-align:center;padding:0.4rem;color:#9ca3af;cursor:pointer;font-size:0.8rem;border:1px dashed #d1d5db;border-radius:8px;">+ Додати</div>`;
+                             style="text-align:center;padding:0.4rem;color:#9ca3af;cursor:pointer;font-size:0.8rem;border:1px dashed #d1d5db;border-radius:8px;">+ ${t('add')}</div>`;
                 
                 // Sort tasks: overdue first, then by deadline
                 col.tasks.sort((a, b) => {
@@ -130,7 +130,7 @@
                     let deadlineHtml = '';
                     if (tk.deadlineDate) {
                         const d = new Date(tk.deadlineDate + 'T12:00:00');
-                        const dayMonth = d.toLocaleDateString('uk', {day:'numeric', month:'short'});
+                        const dayMonth = d.toLocaleDateString(getLocale(), {day:'numeric', month:'short'});
                         const color = isOverdue ? '#ef4444' : isToday ? '#f59e0b' : '#6b7280';
                         deadlineHtml = `<span style="color:${color}">${dayMonth}</span>`;
                     }

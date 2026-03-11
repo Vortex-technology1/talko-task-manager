@@ -186,7 +186,7 @@ document.addEventListener('mousedown', function(e) {
             <div id="globalSearchWrap" style="flex:1;max-width:380px;margin:0 0.75rem;position:relative;" class="hide-mobile">
                 <div style="display:flex;align-items:center;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:0 0.6rem;gap:0.4rem;transition:all 0.2s;" id="globalSearchBox">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input id="globalSearchInput" type="text" placeholder="Пошук по системі... (завдання, люди, функції)" autocomplete="off"
+                    <input id="globalSearchInput" type="text" placeholder="Пошук по системі... (завдання, люди, функції)" data-i18n-placeholder="searchSystemPh" autocomplete="off"
                         style="flex:1;background:none;border:none;outline:none;color:white;font-size:0.82rem;padding:0.45rem 0;min-width:0;"
                         oninput="globalSearch(this.value)"
                         onfocus="this.parentElement.style.background='rgba(255,255,255,0.2)';this.parentElement.style.borderColor='rgba(255,255,255,0.5)'"
@@ -428,7 +428,7 @@ document.addEventListener('mousedown', function(e) {
             <div id="mobileSearchPanel" style="display:none;background:var(--header-bg, #14532d);padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.1);">
                 <div style="display:flex;align-items:center;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:0 0.6rem;gap:0.4rem;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input id="mobileSearchInput" type="text" placeholder="Пошук завдань, людей, функцій..." autocomplete="off"
+                    <input id="mobileSearchInput" type="text" placeholder="Пошук завдань, людей, функцій..." data-i18n-placeholder="searchSystemMobilePh" autocomplete="off"
                         style="flex:1;background:none;border:none;outline:none;color:white;font-size:0.85rem;padding:0.5rem 0;"
                         oninput="globalSearch(this.value, 'mobile')">
                     <button onclick="closeMobileSearch()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:0.2rem;font-size:1.1rem;">✕</button>
