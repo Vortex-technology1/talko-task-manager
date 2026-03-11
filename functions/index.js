@@ -143,7 +143,7 @@ async function getSmartAssignee(companyId, funcData) {
 // ===========================
 exports.onNewTask = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .firestore.document('companies/{companyId}/tasks/{taskId}')
     .onCreate(async (snap, context) => {
         const task = snap.data();
@@ -176,7 +176,7 @@ ${task.description ? `\n📝 Опис:\n${task.description.substring(0, 500)}` :
 // ===========================
 exports.onTaskCompleted = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .firestore.document('companies/{companyId}/tasks/{taskId}')
     .onUpdate(async (change, context) => {
         const before = change.before.data();
@@ -216,7 +216,7 @@ exports.onTaskCompleted = functions
 // ===========================
 exports.telegramWebhook = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_WEBHOOK_SECRET'] })
+    .runWith({})
     .https.onRequest(async (req, res) => {
         if (req.method !== 'POST') {
             return res.status(200).send('TALKO Telegram Bot is running!');
@@ -628,7 +628,7 @@ exports.telegramWebhook = functions
 // ===========================
 exports.leadWebhook = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .https.onRequest(async (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -889,7 +889,7 @@ exports.leadWebhook = functions
 // ========================
 exports.checkOverdueTasks = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .pubsub.schedule('every 5 minutes')
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
@@ -1000,7 +1000,7 @@ exports.checkOverdueTasks = functions
 // ===========================
 exports.onProcessTaskCompleted = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .firestore.document('companies/{companyId}/tasks/{taskId}')
     .onUpdate(async (change, context) => {
         const before = change.before.data();
@@ -1243,7 +1243,7 @@ exports.checkScheduledTasks = functions
 // ========================
 exports.sendReminders = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .pubsub.schedule('every 5 minutes')
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
@@ -1327,7 +1327,7 @@ exports.sendReminders = functions
 // ===========================
 exports.dailyReport = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .pubsub.schedule('0 9 * * *')
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
@@ -1408,7 +1408,7 @@ exports.dailyReport = functions
 // ===========================
 exports.personalDailyTasks = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .pubsub.schedule('5 9 * * *')
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
@@ -1479,7 +1479,7 @@ exports.personalDailyTasks = functions
 // ===========================
 exports.weeklyReport = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .pubsub.schedule('0 9 * * 1')
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
@@ -1704,7 +1704,7 @@ exports.aiAssistant = functions
 // ===========================
 exports.eveningDigest = functions
     .region(REGION)
-    .runWith({ secrets: ['TELEGRAM_BOT_TOKEN'] })
+    .runWith({})
     .pubsub.schedule('0 18 * * 1-5')
     .timeZone('Europe/Kyiv')
     .onRun(async (context) => {
