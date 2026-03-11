@@ -356,8 +356,13 @@
             const originalTask = deepCloneTask(tasks[taskIndex]);
             
             tasks[taskIndex].status = newStatus;
-            if (newStatus === 'done') tasks[taskIndex].completedAt = new Date().toISOString();
-            else tasks[taskIndex].completedAt = null;
+            if (newStatus === 'done') {
+                tasks[taskIndex].completedAt = new Date().toISOString();
+                tasks[taskIndex].completedDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
+            } else {
+                tasks[taskIndex].completedAt = null;
+                tasks[taskIndex].completedDate = null;
+            }
             
             renderMyDay();
             refreshCurrentView();
@@ -366,9 +371,11 @@
                 const update = { status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                 if (newStatus === 'done') {
                     update.completedAt = firebase.firestore.FieldValue.serverTimestamp();
+                    update.completedDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
                     update.completedBy = currentUser?.uid || '';
                 } else {
                     update.completedAt = null;
+                    update.completedDate = null;
                 }
                 if (newStatus === 'review') {
                     update.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();

@@ -17,8 +17,10 @@
             const ut = tasks.filter(t => t.assigneeId === u.id);
             const active = ut.filter(t => t.status !== 'done');
             const overdue = active.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
-            const weekDone = ut.filter(t => t.status === 'done' && t.completedAt && getDateStr(t.completedAt) >= weekStartStr);
-            const todayDone = ut.filter(t => t.status === 'done' && t.completedAt && getDateStr(t.completedAt) === todayStr);
+            // FIX: support both completedDate (string, set by newer code) and completedAt (Timestamp, legacy)
+            const _getDoneDate = t => t.completedDate || (t.completedAt ? getDateStr(t.completedAt) : null);
+            const weekDone = ut.filter(t => t.status === 'done' && _getDoneDate(t) >= weekStartStr);
+            const todayDone = ut.filter(t => t.status === 'done' && _getDoneDate(t) === todayStr);
             
             let status = 'normal';
             if (overdue.length >= 3) status = 'critical';
