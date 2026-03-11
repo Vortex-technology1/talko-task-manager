@@ -127,6 +127,7 @@
                         const tb = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
                         return tb - ta;
                     });
+                window._coordinations = coordinations; // global for search
                 renderCoordList();
             }, err => {
                 console.error('[Coordination] snapshot error:', err.code, err.message);

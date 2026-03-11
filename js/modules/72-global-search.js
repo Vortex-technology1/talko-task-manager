@@ -255,7 +255,8 @@
         }
 
         // РЕГУЛЯРНІ ЗАВДАННЯ
-        if (typeof regularTasks !== 'undefined') {
+        const regularTasks = window._regularTasks || [];
+        if (regularTasks.length) {
             regularTasks.filter(t =>
                 (t.title||'').toLowerCase().includes(q)||(t.description||'').toLowerCase().includes(q)
             ).slice(0, 3).forEach(t => {
@@ -271,8 +272,9 @@
         }
 
         // КООРДИНАЦІЇ (наради)
-        if (window.coordinations && window.coordinations.length) {
-            window.coordinations.filter(c =>
+        const _coords = window._coordinations || [];
+        if (_coords.length) {
+            _coords.filter(c =>
                 (c.name||'').toLowerCase().includes(q)||(c.description||'').toLowerCase().includes(q)
             ).slice(0, 3).forEach(c => {
                 results.push({
@@ -290,8 +292,9 @@
         }
 
         // МЕТРИКИ
-        if (typeof metrics !== 'undefined' && metrics.length) {
-            metrics.filter(m =>
+        const _metrics = window._metrics || [];
+        if (_metrics.length) {
+            _metrics.filter(m =>
                 (m.name||'').toLowerCase().includes(q)
             ).slice(0, 3).forEach(m => {
                 results.push({

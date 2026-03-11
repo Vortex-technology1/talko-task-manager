@@ -103,6 +103,7 @@
                 functions = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                window._regularTasks = regularTasks; // global for search
                 processTemplates = templatesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 processes = processesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 projects = projectsSnap.docs.map(d => ({ id: d.id, ...d.data() }));

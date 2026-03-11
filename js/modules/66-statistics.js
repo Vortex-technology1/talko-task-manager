@@ -295,6 +295,7 @@
         try {
             const s = await metricsRef().orderBy('createdAt', 'desc').get();
             statsMetrics = s.docs.map(d => ({ id: d.id, ...d.data() }));
+            window._metrics = statsMetrics; // global for search
         } catch (e) { console.error('[STATS] loadMetrics:', e); }
     }
 
