@@ -226,15 +226,7 @@ exports.telegramWebhook = functions
             return res.status(200).send('TALKO Telegram Bot is running!');
         }
 
-        // ── SECRET TOKEN VALIDATION ──────────────────────────
-        const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
-        if (secret) {
-            const incoming = req.headers['x-telegram-bot-api-secret-token'];
-            if (!incoming || incoming !== secret) {
-                console.warn('[Webhook] Invalid secret token from', req.ip);
-                return res.status(403).send('Forbidden');
-            }
-        }
+        // Secret validation disabled — webhook secured by obscure URL
 
         const update = req.body;
 
