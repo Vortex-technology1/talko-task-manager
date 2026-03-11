@@ -66,6 +66,8 @@ window.initCRMModule = async function () {
     crm._initializingFor = window.currentCompanyId;
     crm.saving = false; // FIX: скидаємо saving guard при реініціалізації
     crm._remindersChecked = false;
+    // FIX: очищаємо попередній інтервал нагадувань
+    if (crm._remindersInterval) { clearInterval(crm._remindersInterval); crm._remindersInterval = null; }
     _renderShell();
     try {
         await _loadAll();
@@ -239,7 +241,10 @@ async function _loadAll() {
         .onSnapshot(snap => {
             crm.clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             if (crm.subTab === 'clients') _renderClients();
-            if (!crm._remindersChecked) { crm._remindersChecked = true; setTimeout(_checkContactReminders, 1000); }
+            if (!crm._remindersChecked) {
+                crm._remindersChecked = true;
+                setTimeout(() => { _checkContactReminders(); _startRemindersScheduler(); }, 1000);
+            }
         }, err => console.error('[CRM clients]', err));
 }
 
@@ -1341,7 +1346,8 @@ function _renderDealDetails(deal) {
             ${(deal.tags||[]).map(tag =>
             `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">
                 ${_esc(tag)}
-                <button onclick="crmRemoveTag('${deal.id}','${_esc(tag).replace(/'/g,'\\x27')}')" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;padding:0;">×</button>
+                <button data-tag="${tag.replace(/"/g,'&quot;')}" data-dealid="${deal.id}"
+                class="crm-tag-remove" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;padding:0;">×</button>
             </span>`).join('')}
         </div>
         <div style="display:flex;gap:0.3rem;">
@@ -1362,6 +1368,14 @@ function _renderDealDetails(deal) {
             <div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;top:2px;left:${deal.isHot?'16px':'2px'};"></div>
         </div>
     </div>`;
+    // FIX: event delegation для кнопок видалення тегів (XSS safe)
+    const tagsList = content.querySelector('#dealTagsList');
+    if (tagsList) {
+        tagsList.onclick = function(e) {
+            const btn = e.target.closest('.crm-tag-remove');
+            if (btn) window.crmRemoveTag(btn.dataset.dealid, btn.dataset.tag);
+        };
+    }
 }
 
 window.crmCloseDeal = function() {
@@ -1444,6 +1458,21 @@ window.crmDeleteDeal = async function(dealId) {
 };
 
 // ── Теги ───────────────────────────────────────────────────
+// FIX: безпечний рендер тегів — event delegation, без inline onclick (XSS fix)
+function _renderTagsList(dealId, tags, listEl) {
+    if (!listEl) return;
+    listEl.innerHTML = tags.map(t =>
+        '<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">' +
+        _esc(t) + '<button data-tag="' + t.replace(/"/g,'&quot;') + '" data-dealid="' + dealId + '" ' +
+        'style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;padding:0;" ' +
+        'class="crm-tag-remove">×</button></span>'
+    ).join('');
+    listEl.onclick = function(e) {
+        const btn = e.target.closest('.crm-tag-remove');
+        if (btn) window.crmRemoveTag(btn.dataset.dealid, btn.dataset.tag);
+    };
+}
+
 window.crmAddTag = async function(dealId) {
     const inp = document.getElementById('dd_tagInput');
     const tag = inp?.value.trim();
@@ -1456,17 +1485,7 @@ window.crmAddTag = async function(dealId) {
             .update({ tags, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         deal.tags = tags;
         if (inp) inp.value = '';
-        // Оновлюємо список тегів в DOM без повного ре-рендеру
-        const list = document.getElementById('dealTagsList');
-        if (list) {
-            const lbl = 'font-size:0.68rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.25rem;letter-spacing:0.03em;';
-            const inp2 = 'width:100%;padding:0.45rem 0.55rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.82rem;box-sizing:border-box;font-family:inherit;background:white;';
-            list.innerHTML = tags.map(t =>
-                `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">
-                    ${t}<button onclick="crmRemoveTag('${dealId}','${t.replace(/'/g,"\'")}')"
-                    style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;padding:0;">×</button></span>`
-            ).join('');
-        }
+        _renderTagsList(dealId, tags, document.getElementById('dealTagsList'));
     } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
 };
 
@@ -1478,15 +1497,9 @@ window.crmRemoveTag = async function(dealId, tag) {
         await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
             .update({ tags, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         deal.tags = tags;
-        const list = document.getElementById('dealTagsList');
-        if (list) list.innerHTML = tags.map(t =>
-            `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">
-                ${t}<button onclick="crmRemoveTag('${dealId}','${t.replace(/'/g,"\'")}')"
-                style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;padding:0;">×</button></span>`
-        ).join('');
+        _renderTagsList(dealId, tags, document.getElementById('dealTagsList'));
     } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
 };
-
 window.crmToggleHot = async function(dealId) {
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
@@ -2225,8 +2238,8 @@ function _renderAnalytics() {
     // KPI картки
     const kpis = [
         [window.t('crmConversion'), conv+'%', '#22c55e'],
-        ['Revenue', _fmt(revenue), '#16a34a'],
-        ['Avg Deal', _fmt(avgDeal), '#3b82f6'],
+        ['Revenue', _fmt(revenue, true), '#16a34a'],
+        ['Avg Deal', _fmt(avgDeal, true), '#3b82f6'],
         [window.t('crmStageLost'), lost, '#ef4444'],
     ];
 
@@ -2864,9 +2877,9 @@ function _esc(s) {
     if (window.TALKO?.utils?.esc) return window.TALKO.utils.esc(s);
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-function _fmt(n) {
+function _fmt(n, zeroDash) {
     const num = parseFloat(n) || 0;
-    if (!num) return '0';
+    if (!num) return zeroDash ? '—' : '0';
     if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
     if (num >= 1000) return (num/1000).toFixed(0) + 'k';
     return num.toLocaleString('uk-UA');
@@ -2880,7 +2893,18 @@ function _relTime(d) {
     return Math.floor(h/24) + 'дн';
 }
 function _stageLabel(id) {
-    return crm.pipeline?.stages?.find(s => s.id === id)?.label || id;
+    if (!id) return '—';
+    // Шукаємо в поточній pipeline
+    const inCurrent = crm.pipeline?.stages?.find(s => s.id === id)?.label;
+    if (inCurrent) return inCurrent;
+    // FIX: fallback — шукаємо в усіх pipeline
+    for (const p of (crm.pipelines || [])) {
+        const found = (p.stages || []).find(s => s.id === id)?.label;
+        if (found) return found;
+    }
+    // FIX: якщо це технічний id типу 'stage_1710000000' — показуємо 'Стадія' замість сирого id
+    if (/^stage_\d+/.test(id)) return 'Стадія';
+    return id;
 }
 
 // ── Tab hook (через централізований registry) ──────────────
@@ -3026,6 +3050,14 @@ function _checkContactReminders() {
         : `📅 ${count} угод потребують контакту сьогодні`;
 
     if (typeof showToast === 'function') showToast(msg, 'warning');
+}
+
+// FIX: запускаємо нагадування при завантаженні і кожні 30 хв (не тільки раз за сесію)
+function _startRemindersScheduler() {
+    if (crm._remindersInterval) clearInterval(crm._remindersInterval);
+    crm._remindersInterval = setInterval(() => {
+        if (crm.deals.length) _checkContactReminders();
+    }, 30 * 60 * 1000); // кожні 30 хвилин
 }
 
     // ── Register in TALKO namespace ──────────────────────────
