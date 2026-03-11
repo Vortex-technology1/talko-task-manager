@@ -671,6 +671,83 @@ exports.leadWebhook = functions
                 }
             }
 
+            // ── CRM: створити клієнта + угоду ──────────────────
+            try {
+                const companyRef = db.collection('companies').doc(companyId);
+
+                // 1. Знайти або створити клієнта в crm_clients
+                let crmClientId = null;
+                const clientQuery = phone
+                    ? companyRef.collection('crm_clients').where('phone', '==', phone).limit(1)
+                    : email
+                        ? companyRef.collection('crm_clients').where('email', '==', email).limit(1)
+                        : null;
+
+                if (clientQuery) {
+                    const existingSnap = await clientQuery.get();
+                    if (!existingSnap.empty) {
+                        crmClientId = existingSnap.docs[0].id;
+                        // Оновити якщо є нові дані
+                        await companyRef.collection('crm_clients').doc(crmClientId).set({
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            ...(name && { name }),
+                            ...(phone && { phone }),
+                            ...(email && { email }),
+                        }, { merge: true });
+                    }
+                }
+
+                if (!crmClientId) {
+                    const newClient = await companyRef.collection('crm_clients').add({
+                        name: name || phone || email || 'Новий лід',
+                        phone: phone || '',
+                        email: email || '',
+                        source: source || 'Сайт',
+                        leadId: leadRef.id,
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                    crmClientId = newClient.id;
+                }
+
+                // 2. Отримати першу воронку компанії (або дефолтну)
+                let pipelineId = null, firstStageId = null;
+                const pipesSnap = await companyRef.collection('settings').doc('crm').get();
+                const crmSettings = pipesSnap.exists ? pipesSnap.data() : {};
+                if (crmSettings.pipelines && crmSettings.pipelines.length > 0) {
+                    const pipe = crmSettings.pipelines[0];
+                    pipelineId = pipe.id;
+                    firstStageId = pipe.stages?.[0]?.id || null;
+                }
+
+                // 3. Створити угоду в crm_deals
+                const dealTitle = name
+                    ? `${name}${source ? ' — ' + source : ''}`
+                    : `Новий лід${source ? ' — ' + source : ''}`;
+
+                await companyRef.collection('crm_deals').add({
+                    title: dealTitle,
+                    clientName: name || phone || email || 'Невідомий',
+                    clientId: crmClientId,
+                    phone: phone || '',
+                    email: email || '',
+                    source: source || 'Сайт',
+                    message: message || '',
+                    stage: firstStageId || 'lead',
+                    pipelineId: pipelineId,
+                    amount: 0,
+                    leadId: leadRef.id,
+                    processId: processId,
+                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    createdBy: 'webhook',
+                });
+            } catch (crmErr) {
+                // Не ламаємо основний флоу — лід вже збережений
+                console.error('[leadWebhook] CRM write error:', crmErr.message);
+            }
+            // ────────────────────────────────────────────────────
+
             return res.status(200).json({
                 success: true, leadId: leadRef.id, processId,
                 message: 'Lead received and process started'

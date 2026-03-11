@@ -120,46 +120,88 @@ function _renderAll() {
         </div>
     </div>
 
-    <!-- Webhook -->
+    <!-- Webhook / Ліди з лендингів -->
     <div style="${card}">
-        <div style="${sTitle}">${I.webhook} Webhook (вхідні події) ${badge(!!s.webhookSecret)}</div>
-        <div style="margin-bottom:0.6rem;">
-            <label style="${lbl}">Webhook URL (для зовнішніх сервісів)</label>
-            <div style="display:flex;gap:0.4rem;">
-                <input readonly value="https://test-talko-task-manager-test-production.up.railway.app/webhook/${window.currentCompanyId||'YOUR_COMPANY_ID'}"
-                    style="${inp}flex:1;background:#f9fafb;cursor:pointer;"
-                    onclick="this.select()">
-                <button onclick="intgCopy(this.previousElementSibling.value)"
-                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;"
-                    title=window.t('botsCopy')>${I.copy}</button>
-            </div>
-        </div>
+        <div style="${sTitle}">${I.webhook} Ліди з лендингів → CRM ${badge(!!(s.webhookApiKey))}</div>
+
+        <!-- API Key -->
         <div style="margin-bottom:0.75rem;">
-            <label style="${lbl}">Webhook Secret (підпис запитів)</label>
+            <label style="${lbl}">API Key (для підключення форм)</label>
             <div style="display:flex;gap:0.4rem;">
-                <input id="intg_secret" type="password" value="${s.webhookSecret||''}"
-                    placeholder="my_secret_key" style="${inp}flex:1;">
-                <button onclick="intgToggleVisibility('intg_secret')"
+                <input id="intg_apikey" type="password" value="${s.webhookApiKey||''}"
+                    placeholder="Згенеруйте ключ →" style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_apikey')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+                <button onclick="intgGenerateApiKey()"
+                    style="padding:0.45rem 0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;color:#16a34a;font-size:0.72rem;font-weight:600;white-space:nowrap;">
+                    Згенерувати
+                </button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
+                Цей ключ вставляється у форму на лендингу. Зберігайте в таємниці.
             </div>
         </div>
-        <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;border:1px solid #e8eaed;">
-            <div style="font-size:0.7rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Підтримувані події</div>
-            ${[
-                ['new_lead',window.t('intgEventNewLead')],
-                ['deal_won',window.t('intgEventDealWon')],
-                ['form_submit',window.t('intgEventFormSubmit')],
-                ['task_done',window.t('intgEventTaskDone')],
-            ].map(([ev, desc]) => `
-            <div style="display:flex;gap:0.5rem;align-items:center;padding:0.2rem 0;font-size:0.78rem;">
-                <code style="background:#e8eaed;padding:1px 5px;border-radius:3px;font-size:0.7rem;color:#374151;">${ev}</code>
-                <span style="color:#6b7280;">${desc}</span>
-            </div>`).join('')}
+
+        <!-- Endpoint URL -->
+        <div style="margin-bottom:0.75rem;">
+            <label style="${lbl}">Endpoint URL</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input readonly
+                    value="https://europe-west1-task-manager-44e84.cloudfunctions.net/leadWebhook"
+                    style="${inp}flex:1;background:#f9fafb;cursor:pointer;font-size:0.75rem;"
+                    onclick="this.select()">
+                <button onclick="intgCopy('https://europe-west1-task-manager-44e84.cloudfunctions.net/leadWebhook')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
+            </div>
         </div>
-        <button onclick="intgSave('webhookSecret','intg_secret')"
-            style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            ${I.save} Зберегти
+
+        <!-- Зберегти ключ -->
+        <button onclick="intgSave('webhookApiKey','intg_apikey')"
+            style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;margin-bottom:1rem;">
+            ${I.save} Зберегти ключ
         </button>
+
+        <!-- Готовий код форми -->
+        <div style="border-top:1px solid #f1f5f9;padding-top:0.85rem;">
+            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.5rem;">Готовий код для лендингу</div>
+            <div style="position:relative;">
+                <pre id="intg_form_code" style="background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:0.85rem 1rem;font-size:0.68rem;overflow-x:auto;margin:0;line-height:1.6;">&lt;form id="talko-lead-form"&gt;
+  &lt;input name="name" placeholder="Ваше ім'я" required&gt;
+  &lt;input name="phone" placeholder="Телефон" required&gt;
+  &lt;input name="email" placeholder="Email"&gt;
+  &lt;textarea name="message" placeholder="Повідомлення"&gt;&lt;/textarea&gt;
+  &lt;button type="submit"&gt;Відправити&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;script&gt;
+document.getElementById('talko-lead-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(this));
+  await fetch('https://europe-west1-task-manager-44e84.cloudfunctions.net/leadWebhook', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      companyId: '${window.currentCompanyId||"YOUR_COMPANY_ID"}',
+      apiKey:    '${s.webhookApiKey||"YOUR_API_KEY"}',
+      source:    'Сайт',
+      ...data
+    })
+  });
+  alert('Дякуємо! Ми зв\'яжемося з вами найближчим часом.');
+  this.reset();
+});
+&lt;/script&gt;</pre>
+                <button onclick="intgCopyFormCode()"
+                    style="position:absolute;top:0.5rem;right:0.5rem;padding:0.3rem 0.6rem;
+                    background:#313244;border:1px solid #45475a;border-radius:5px;
+                    cursor:pointer;color:#cdd6f4;font-size:0.68rem;display:flex;align-items:center;gap:4px;">
+                    ${I.copy} Копіювати
+                </button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.5rem;line-height:1.5;">
+                Вставте на лендинг. Ліди автоматично потраплять в CRM і створиться завдання для менеджера.
+            </div>
+        </div>
     </div>
 
     <!-- Zapier / Make -->
@@ -218,6 +260,31 @@ window.intgCopy = function(text) {
         if (typeof showToast === 'function') showToast(window.t('botsCopied'), 'success');
     });
 };
+
+window.intgCopyFormCode = function() {
+    const el = document.getElementById('intg_form_code');
+    if (!el) return;
+    // Copy visible text (HTML entities decoded)
+    const text = el.innerText || el.textContent;
+    navigator.clipboard?.writeText(text).then(() => {
+        if (typeof showToast === 'function') showToast(window.t('botsCopied'), 'success');
+    });
+};
+
+window.intgGenerateApiKey = async function() {
+    const arr = new Uint8Array(24);
+    crypto.getRandomValues(arr);
+    const key = 'talko_' + Array.from(arr).map(b => b.toString(16).padStart(2,'0')).join('').slice(0,32);
+    const inp = document.getElementById('intg_apikey');
+    if (inp) {
+        inp.value = key;
+        inp.type = 'text';
+        setTimeout(() => { if (inp) inp.type = 'password'; }, 3000);
+    }
+    if (typeof showToast === 'function') showToast('Ключ згенеровано — натисніть «Зберегти»', 'info');
+};
+
+
 
 window.intgSave = async function(field, inputId, isSecret = true) {
     const val = document.getElementById(inputId)?.value.trim();
