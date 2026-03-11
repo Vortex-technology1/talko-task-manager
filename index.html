@@ -3339,20 +3339,22 @@ document.addEventListener('mousedown', function(e) {
     <!-- ERROR BOUNDARY: перехоплюємо JS-краші — показуємо toast замість білого екрану -->
     <script>
         window.onerror = function(msg, src, line, col, err) {
+            const shortSrc = (src || '').split('/').pop();
+            const detail = shortSrc + ':' + line + ' — ' + msg;
+            console.error('[APP CRASH]', detail, err);
             if (typeof showToast === 'function') {
-                showToast('Помилка застосунку. Спробуйте перезавантажити сторінку.', 'error', 10000);
+                showToast('Помилка: ' + detail, 'error', 15000);
             }
-            console.error('[APP CRASH]', msg, src + ':' + line, err);
-            return false; // не блокуємо стандартну обробку
+            return false;
         };
         window.addEventListener('unhandledrejection', function(e) {
             const code = e.reason?.code || '';
-            // Ігноруємо Firestore permission-denied (штатна ситуація)
             if (code.includes('permission') || code === 'PERMISSION_DENIED') return;
-            if (typeof showToast === 'function') {
-                showToast('Мережева помилка. Перевірте підключення.', 'error', 8000);
-            }
+            const detail = (e.reason && e.reason.message) ? e.reason.message : String(e.reason);
             console.error('[UNHANDLED REJECTION]', e.reason);
+            if (typeof showToast === 'function') {
+                showToast('Мережева помилка: ' + detail, 'error', 8000);
+            }
         });
     </script>
 
