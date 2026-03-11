@@ -115,6 +115,7 @@
                     status: 'done',
                     completedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     completedDate: _reviewDate,  // P0 FIX
+                    completedBy: task.assigneeId || currentUser.uid, // для backend stepResult
                     reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     reviewedBy: currentUser.uid
                 });

@@ -104,6 +104,7 @@
         }
         
         function renderTasks() {
+        _visibleTaskIds = null; // Invalidate visibility cache on each render
         // O(1) subtask count — будуємо один раз на початку renderTasks
         const subtaskCountMap = {};
         if (Array.isArray(tasks)) {

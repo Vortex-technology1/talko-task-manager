@@ -812,7 +812,10 @@ exports.onProcessTaskCompleted = functions
         const { companyId, taskId } = context.params;
 
         if (!after.processId) return null;
+        // Тригеримо при: будь-який статус → done (включаючи review → done)
         if (before.status === after.status || after.status !== 'done') return null;
+        // NOTE: review→done handled here — якщо requireReview=true, задача йде review→done
+        // через acceptReviewTask, і тільки тоді просуваємо процес
 
         const processRef = db.collection('companies').doc(companyId)
             .collection('processes').doc(after.processId);

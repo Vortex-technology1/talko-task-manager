@@ -105,7 +105,7 @@
         
         function _buildVisibleSet() {
             if (!currentUserData || !currentUser) return null;
-            if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'manager') return null;
+            if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'admin' || currentUserData.role === 'manager') return null;
             const uid = currentUser.uid;
             const s = new Set();
             for (const t of tasks) {
@@ -120,7 +120,7 @@
         
         function isTaskVisibleToUser(task) {
             if (!currentUserData || !currentUser) return true;
-            if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'manager') return true;
+            if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'admin' || currentUserData.role === 'manager') return true;
             if (_visibleTaskIds === null) _visibleTaskIds = _buildVisibleSet();
             if (_visibleTaskIds === null) return true;
             return _visibleTaskIds.has(task.id);
@@ -193,10 +193,9 @@
                 errors.push(t('descTooLong'));
             }
             
-            // assigneeId — не блокуємо збереження, автопідстановка в 13-tasks.js
-            // якщо прийшов порожнім — warning в console, не error
+            // assigneeId — обов'язкове поле. Якщо порожнє — showToast, не зберігаємо
             if (!data.assigneeId || data.assigneeId.trim().length === 0) {
-                console.warn('[Validation] assigneeId empty — will fallback to currentUser');
+                errors.push(t('assigneeRequired') || 'Вкажіть виконавця');
             }
             
             return errors;
