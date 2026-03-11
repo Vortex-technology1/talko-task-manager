@@ -329,12 +329,16 @@
                 
                 try {
                     const ref = db.collection(`companies/${currentCompany}/tasks`).doc(task.id);
+                    const _today = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
                     const upd = { status: effectiveTarget, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                     if (effectiveTarget === 'done') {
                         upd.completedAt = firebase.firestore.FieldValue.serverTimestamp();
                         upd.completedBy = currentUser?.uid || '';
+                        upd.completedDate = _today; // FIX: needed for analytics
                     } else {
                         upd.completedAt = null;
+                        upd.completedDate = null; // FIX: clear when moved away from done
+                        upd.completedBy = null;
                     }
                     if (effectiveTarget === 'review') {
                         upd.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
@@ -342,18 +346,23 @@
                     await ref.update(upd);
                     await logTaskChange(task.id, 'status', { from: oldStatus, to: effectiveTarget });
                     task.status = effectiveTarget;
-                    if (effectiveTarget === 'done') { 
-                        task.completedAt = new Date(); 
+                    if (effectiveTarget === 'done') {
+                        task.completedAt = new Date();
+                        task.completedDate = _today;
                         task.completedBy = currentUser?.uid || '';
                         advanceProcessIfLinked(task.id);
                         if (task.projectId) autoUpdateProjectStatus(task.projectId);
+                    } else {
+                        task.completedDate = null;
+                        task.completedBy = null;
                     }
                     if (effectiveTarget === 'review') {
                         task.sentForReviewAt = new Date().toISOString();
-                        showToast(t('taskSentForReview'), 'info');
+                        showToast(t('taskSentForReview'), 'info'); // FIX: only one toast for review redirect
+                    } else {
+                        if (effectiveTarget === 'progress' && task.projectId) autoUpdateProjectStatus(task.projectId);
+                        showToast(`${t('statusesLabel')} → ${effectiveTarget === 'done' ? t('statusDone') : effectiveTarget === 'progress' ? t('statusProgress') : t('statusNew')}`, 'success');
                     }
-                    if (effectiveTarget === 'progress' && task.projectId) autoUpdateProjectStatus(task.projectId);
-                    showToast(`${t('statusesLabel')} → ${effectiveTarget === 'done' ? t('statusDone') : effectiveTarget === 'review' ? t('statusReview') : effectiveTarget === 'progress' ? t('statusProgress') : t('statusNew')}`, 'success');
                 } catch(err) {
                     console.error('Kanban status drop error:', err);
                     showToast(t('error'), 'error');
@@ -404,42 +413,51 @@
                 }
             }
             
-            renderKanbanBoard(mode);
-            // Оновлюємо MyDay і Control — вони залежать від task.status/deadlineDate
-            if (typeof renderMyDay === 'function') renderMyDay();
-            const controlTab = document.getElementById('controlTab');
-            if (controlTab?.classList.contains('active') && typeof renderControl === 'function') renderControl();
-            kanbanDropLock = false;
+            try {
+                renderKanbanBoard(mode);
+                // Оновлюємо MyDay і Control — вони залежать від task.status/deadlineDate
+                if (typeof renderMyDay === 'function') renderMyDay();
+                const controlTab = document.getElementById('controlTab');
+                if (controlTab?.classList.contains('active') && typeof renderControl === 'function') renderControl();
+            } finally {
+                kanbanDropLock = false; // FIX: always release lock even if render throws
+            }
         }
         
         function openTaskModalForKanban(colId, mode) {
             openTaskModal(); // відкриває форму нового завдання
-            // Pre-set based on column
+            // Pre-set deadline based on column (deadline mode only)
             setTimeout(() => {
-                if (mode === 'kanban') {
-                    // set status after save? Not needed — new tasks always 'new'
-                } else {
-                    const today = getLocalDateStr();
-                    const todayD = new Date(today);
-                    let dl = '';
-                    if (colId === 'today') dl = today;
-                    else if (colId === 'this_week') {
-                        const fri = new Date(todayD);
-                        fri.setDate(fri.getDate() + (5 - fri.getDay() + 7) % 7);
-                        dl = fri.toISOString().split('T')[0];
-                    } else if (colId === 'next_week') {
-                        // Find next Monday, then +4 for Friday
-                        const nextMon = new Date(todayD);
-                        nextMon.setDate(nextMon.getDate() + (8 - nextMon.getDay()) % 7);
-                        if (nextMon <= todayD) nextMon.setDate(nextMon.getDate() + 7);
-                        const nextFri = new Date(nextMon);
-                        nextFri.setDate(nextFri.getDate() + 4);
-                        dl = nextFri.toISOString().split('T')[0];
-                    }
-                    if (dl) {
-                        const deadlineInput = document.getElementById('taskDeadlineDate');
-                        if (deadlineInput) deadlineInput.value = dl;
-                    }
+                if (mode !== 'deadlines') return;
+                const today = getLocalDateStr();
+                const todayD = new Date(today);
+                let dl = '';
+                if (colId === 'today') {
+                    dl = today;
+                } else if (colId === 'this_week') {
+                    // Find end of THIS week (Sunday) — use closest upcoming day within week
+                    const fri = new Date(todayD);
+                    const delta = (5 - fri.getDay() + 7) % 7 || 7; // FIX: always forward (+7 if already Friday)
+                    fri.setDate(fri.getDate() + delta);
+                    dl = fri.toISOString().split('T')[0];
+                } else if (colId === 'next_week') {
+                    // Monday of next week + 4 = Friday of next week
+                    const nextMon = new Date(todayD);
+                    const daysToMon = (8 - nextMon.getDay()) % 7 || 7;
+                    nextMon.setDate(nextMon.getDate() + daysToMon);
+                    const nextFri = new Date(nextMon);
+                    nextFri.setDate(nextFri.getDate() + 4);
+                    dl = nextFri.toISOString().split('T')[0];
+                } else if (colId === 'later') {
+                    // 2 weeks from today
+                    const later = new Date(todayD);
+                    later.setDate(later.getDate() + 14);
+                    dl = later.toISOString().split('T')[0];
+                }
+                // 'no_deadline' and 'overdue' → leave empty
+                if (dl) {
+                    const deadlineInput = document.getElementById('taskDeadlineDate');
+                    if (deadlineInput) deadlineInput.value = dl;
                 }
             }, 100);
         }
