@@ -420,6 +420,11 @@ exports.telegramWebhook = functions
                         const uDoc = await db.collection('companies').doc(cId).collection('users').doc(uId).get();
                         if (uDoc.exists) cgUsersSnap = { empty: false, docs: [uDoc] };
                     }
+                    // Fallback: collectionGroup query if telegramIndex not found
+                    if (cgUsersSnap.empty) {
+                        cgUsersSnap = await db.collectionGroup('users')
+                            .where('telegramCode', '==', registrationCode).limit(1).get();
+                    }
 
                     if (!cgUsersSnap.empty) {
                         const userDoc = cgUsersSnap.docs[0];

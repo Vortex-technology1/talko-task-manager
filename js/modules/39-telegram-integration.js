@@ -29,11 +29,15 @@
                     .set({ telegramCode: telegramCode }, { merge: true });
                 
                 // Записуємо в telegramIndex для швидкого lookup без collectionGroup
-                await db.collection('telegramIndex').doc('code_' + telegramCode).set({
-                    companyId: currentCompany,
-                    userId: currentUser.uid,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                try {
+                    await db.collection('telegramIndex').doc('code_' + telegramCode).set({
+                        companyId: currentCompany,
+                        userId: currentUser.uid,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch(idxErr) {
+                    console.warn('telegramIndex write failed, fallback to collectionGroup:', idxErr.message);
+                }
                 
                 // Відкриваємо Telegram бота з кодом
                 const botUrl = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${telegramCode}`;

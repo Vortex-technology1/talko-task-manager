@@ -26,12 +26,12 @@
                     processQuery = processQuery.where('status', '==', 'active');
                 }
                 
-                const TASKS_LOAD_LIMIT = 500; // P3 FIX: 5000→2000 (cursor pagination TODO)
+                const TASKS_LOAD_LIMIT = 2000; // raised from 500
                 const isEmployeeRole = currentUserData?.role === 'employee';
                 const uid = currentUser.uid;
                 
                 // Employee: load only THEIR tasks (assigned + created + coExecutor + observer)
-                // Owner/Manager: load ALL tasks
+                // Owner/Manager: load ALL tasks in parallel batches (up to TASKS_LOAD_LIMIT)
                 let tasksPromise;
                 if (isEmployeeRole) {
                     tasksPromise = Promise.all([
@@ -51,7 +51,25 @@
                         return { docs: Array.from(taskMap.values()), size: taskMap.size, _merged: true };
                     });
                 } else {
-                    tasksPromise = base.collection('tasks').orderBy('createdAt', 'desc').limit(TASKS_LOAD_LIMIT).get();
+                    // Owner/Manager: load up to TASKS_LOAD_LIMIT using cursor pagination
+                    tasksPromise = (async () => {
+                        const BATCH = 500;
+                        const allDocs = [];
+                        let lastDoc = null;
+                        let batchNum = 0;
+                        while (allDocs.length < TASKS_LOAD_LIMIT) {
+                            let q = base.collection('tasks').orderBy('createdAt', 'desc').limit(BATCH);
+                            if (lastDoc) q = q.startAfter(lastDoc);
+                            const snap = await q.get().catch(() => null);
+                            if (!snap || snap.empty) break;
+                            allDocs.push(...snap.docs);
+                            lastDoc = snap.docs[snap.docs.length - 1];
+                            batchNum++;
+                            if (snap.docs.length < BATCH) break; // last batch
+                            if (batchNum >= 4) break; // safety cap at 4*500=2000
+                        }
+                        return { docs: allDocs, size: allDocs.length, _merged: true };
+                    })();
                 }
                 
                 const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap, projectsSnap] = await Promise.all([
