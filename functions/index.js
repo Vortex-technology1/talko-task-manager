@@ -501,22 +501,76 @@ exports.telegramWebhook = functions
                         if (text === '/overdue' && t.deadlineDate && t.deadlineDate < todayStr) filtered.push(t);
                     });
 
-                    if (filtered.length === 0) {
+                    // ── CRM: угоди на сьогоднішній контакт ──────────────
+                    let crmDealsToday = [];
+                    if (text === '/today') {
+                        try {
+                            const crmSnap = await db.collection('companies').doc(companyId)
+                                .collection('crm_deals')
+                                .where('nextContactDate', '==', todayStr)
+                                .where('assigneeId', '==', uid)
+                                .get();
+                            // Також додаємо прострочені nextContactDate за останні 3 дні
+                            const yesterday = new Date();
+                            yesterday.setDate(yesterday.getDate() - 1);
+                            const yesterdayStr = yesterday.toISOString().split('T')[0];
+                            const overdueSnap = await db.collection('companies').doc(companyId)
+                                .collection('crm_deals')
+                                .where('nextContactDate', '>=', yesterdayStr)
+                                .where('nextContactDate', '<', todayStr)
+                                .where('assigneeId', '==', uid)
+                                .get();
+                            const allDealDocs = [...crmSnap.docs, ...overdueSnap.docs];
+                            crmDealsToday = allDealDocs
+                                .map(d => ({ id: d.id, ...d.data() }))
+                                .filter(d => d.stage !== 'won' && d.stage !== 'lost');
+                        } catch(crmErr) {
+                            console.warn('[TG /today] CRM fetch error:', crmErr.message);
+                        }
+                    }
+
+                    if (filtered.length === 0 && crmDealsToday.length === 0) {
                         await sendTelegramMessage(chatId, text === '/today'
-                            ? '✅ На сьогодні завдань немає!'
+                            ? '✅ На сьогодні завдань і угод немає!'
                             : '✅ Прострочених немає!');
                     } else {
-                        await sendTelegramMessage(chatId,
-                            `📋 ${text === '/today' ? 'Сьогодні' : 'Прострочені'}: <b>${filtered.length}</b>`);
-                        for (const t of filtered.slice(0, 10)) {
-                            const pr = t.priority === 'high' ? '🔴' : t.priority === 'low' ? '🟢' : '🟡';
-                            await sendWithButtons(chatId,
-                                `${pr} <b>${t.title}</b>\n📅 ${t.deadlineDate} ${t.deadlineTime || ''}`,
-                                taskButtons(t.id, companyId)
-                            );
+                        // Задачі
+                        if (filtered.length > 0) {
+                            await sendTelegramMessage(chatId,
+                                `📋 ${text === '/today' ? 'Задачі на сьогодні' : 'Прострочені'}: <b>${filtered.length}</b>`);
+                            for (const t of filtered.slice(0, 10)) {
+                                const pr = t.priority === 'high' ? '🔴' : t.priority === 'low' ? '🟢' : '🟡';
+                                await sendWithButtons(chatId,
+                                    `${pr} <b>${t.title}</b>\n📅 ${t.deadlineDate} ${t.deadlineTime || ''}`,
+                                    taskButtons(t.id, companyId)
+                                );
+                            }
+                            if (filtered.length > 10) {
+                                await sendTelegramMessage(chatId, `... ще ${filtered.length - 10}`);
+                            }
+                        } else if (text === '/today') {
+                            await sendTelegramMessage(chatId, '✅ Задач на сьогодні немає');
                         }
-                        if (filtered.length > 10) {
-                            await sendTelegramMessage(chatId, `... ще ${filtered.length - 10}`);
+
+                        // CRM угоди
+                        if (crmDealsToday.length > 0) {
+                            await sendTelegramMessage(chatId,
+                                `📞 <b>Потрібен контакт сьогодні: ${crmDealsToday.length} угод</b>`);
+                            for (const deal of crmDealsToday.slice(0, 8)) {
+                                const isOverdue = deal.nextContactDate < todayStr;
+                                const amountStr = deal.amount ? ` · ${Number(deal.amount).toLocaleString()} €` : '';
+                                const overdueStr = isOverdue ? `\n⚠️ Прострочено (мав бути ${deal.nextContactDate})` : '';
+                                await sendTelegramMessage(chatId,
+                                    `${isOverdue ? '🔴' : '🟡'} <b>${deal.clientName || deal.title || 'Угода'}</b>${amountStr}` +
+                                    `\n📊 Стадія: ${deal.stage}` +
+                                    `\n📅 Контакт: ${deal.nextContactDate}` +
+                                    `${deal.note ? '\n📝 ' + deal.note.slice(0, 80) : ''}` +
+                                    overdueStr
+                                );
+                            }
+                            if (crmDealsToday.length > 8) {
+                                await sendTelegramMessage(chatId, `... ще ${crmDealsToday.length - 8} угод`);
+                            }
                         }
                     }
                     } // end scope wrapper

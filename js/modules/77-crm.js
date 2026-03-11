@@ -54,6 +54,8 @@ let crm = {
     viewMode: 'kanban',
     // Сортування list view
     listSort: { field: 'updatedAt', dir: 'desc' },
+    // Bulk selection
+    selectedIds: new Set(),
 };
 
 // ── Init ───────────────────────────────────────────────────
@@ -418,6 +420,9 @@ function _renderListView() {
         return dir === 'asc' ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
     });
 
+    // Скидаємо вибір при кожному ре-рендері якщо не в bulk режимі
+    if (!crm._bulkMode) crm.selectedIds = new Set();
+
     const colHdr = (label, f) => {
         const active = crm.listSort.field === f;
         const arrow = active ? (crm.listSort.dir === 'asc' ? '↑' : '↓') : '';
@@ -427,6 +432,32 @@ function _renderListView() {
             ${label} ${arrow}
         </th>`;
     };
+
+    const bulkBar = crm.selectedIds.size > 0 ? `
+    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;
+        background:#1f2937;border-radius:8px;margin-bottom:0.5rem;flex-wrap:wrap;">
+        <span style="font-size:0.8rem;font-weight:600;color:white;">
+            Обрано: ${crm.selectedIds.size}
+        </span>
+        <div style="display:flex;gap:0.35rem;margin-left:0.5rem;flex-wrap:wrap;">
+            <button onclick="crmBulkStage()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
+                Змінити стадію
+            </button>
+            <button onclick="crmBulkAssign()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
+                Призначити
+            </button>
+            <button onclick="crmBulkTag()" style="padding:0.3rem 0.7rem;background:#374151;color:white;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
+                Додати тег
+            </button>
+            <button onclick="crmBulkDelete()" style="padding:0.3rem 0.7rem;background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;">
+                Видалити
+            </button>
+        </div>
+        <button onclick="crm.selectedIds=new Set();crm._bulkMode=false;crmSetViewMode('list')"
+            style="margin-left:auto;padding:0.3rem 0.6rem;background:none;color:#9ca3af;border:1px solid #4b5563;border-radius:6px;cursor:pointer;font-size:0.72rem;">
+            Скасувати
+        </button>
+    </div>` : '';
 
     const stages = crm.pipeline?.stages || [];
     const today = new Date().toISOString().split('T')[0];
@@ -453,11 +484,17 @@ function _renderListView() {
             <div style="margin-left:auto;font-size:0.78rem;color:#9ca3af;">${deals.length} угод</div>
         </div>
 
+        ${bulkBar}
+
         <!-- Таблиця -->
         <div style="background:white;border-radius:10px;border:1px solid #e8eaed;overflow:hidden;">
             <table style="width:100%;border-collapse:collapse;">
                 <thead>
                     <tr>
+                        <th style="width:36px;padding:0.5rem 0.5rem 0.5rem 0.75rem;border-bottom:2px solid #e8eaed;background:white;">
+                            <input type="checkbox" id="crmBulkAll" onchange="crmBulkSelectAll(this.checked)"
+                                style="cursor:pointer;width:14px;height:14px;accent-color:#22c55e;">
+                        </th>
                         ${colHdr('Угода','title')}
                         ${colHdr('Клієнт','clientName')}
                         ${colHdr('Стадія','stage')}
@@ -470,7 +507,7 @@ function _renderListView() {
                 </thead>
                 <tbody>
                     ${deals.length === 0 ? `
-                    <tr><td colspan="8" style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">
+                    <tr><td colspan="9" style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">
                         Угод не знайдено
                     </td></tr>` :
                     deals.map((d,i) => {
@@ -478,36 +515,42 @@ function _renderListView() {
                         const assignee = (typeof users!=='undefined'?users:[]).find(u=>u.id===d.assigneeId);
                         const isOverdue = d.nextContactDate && d.nextContactDate < today && d.stage!=='won' && d.stage!=='lost';
                         const upd = d.updatedAt?.toDate ? _relTime(d.updatedAt.toDate()) : '—';
+                        const isSelected = crm.selectedIds.has(d.id);
                         return `
-                        <tr onclick="crmOpenDeal('${d.id}')" style="cursor:pointer;background:${i%2===0?'white':'#fafafa'};
-                            transition:background 0.1s;" onmouseenter="this.style.background='#f0fdf4'"
-                            onmouseleave="this.style.background='${i%2===0?'white':'#fafafa'}'">
-                            <td style="padding:0.6rem 0.75rem;font-size:0.8rem;font-weight:600;color:#111827;
+                        <tr style="cursor:pointer;background:${isSelected?'#f0fdf4':i%2===0?'white':'#fafafa'};
+                            transition:background 0.1s;border-left:3px solid ${isSelected?'#22c55e':'transparent'};"
+                            onmouseenter="if(!crm.selectedIds.has('${d.id}'))this.style.background='#f0fdf4'"
+                            onmouseleave="if(!crm.selectedIds.has('${d.id}'))this.style.background='${i%2===0?'white':'#fafafa'}'">
+                            <td style="padding:0.6rem 0.5rem 0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;" onclick="event.stopPropagation()">
+                                <input type="checkbox" data-id="${d.id}" onchange="crmBulkToggle('${d.id}',this.checked)"
+                                    ${isSelected?'checked':''} style="cursor:pointer;width:14px;height:14px;accent-color:#22c55e;">
+                            </td>
+                            <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;font-size:0.8rem;font-weight:600;color:#111827;
                                 max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-bottom:1px solid #f3f4f6;">
                                 ${d.isHot ? `<span style="color:#f97316;margin-right:4px;">${I.hot}</span>` : ''}
                                 ${_esc(d.title||d.clientName||'—')}
                             </td>
-                            <td style="padding:0.6rem 0.75rem;font-size:0.78rem;color:#6b7280;border-bottom:1px solid #f3f4f6;
+                            <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;font-size:0.78rem;color:#6b7280;border-bottom:1px solid #f3f4f6;
                                 max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                                 ${_esc(d.clientName||'—')}
                             </td>
-                            <td style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;">
+                            <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;">
                                 ${stage ? `<span style="font-size:0.72rem;font-weight:600;padding:2px 8px;border-radius:20px;
                                     background:${stage.color}18;color:${stage.color};">${_esc(stage.label)}</span>` : '—'}
                             </td>
-                            <td style="padding:0.6rem 0.75rem;font-size:0.8rem;font-weight:700;
+                            <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;font-size:0.8rem;font-weight:700;
                                 color:${d.amount?'#16a34a':'#d1d5db'};border-bottom:1px solid #f3f4f6;white-space:nowrap;">
                                 ${d.amount ? _fmt(d.amount) : '—'}
                             </td>
-                            <td style="padding:0.6rem 0.75rem;font-size:0.75rem;color:#6b7280;border-bottom:1px solid #f3f4f6;">
+                            <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;font-size:0.75rem;color:#6b7280;border-bottom:1px solid #f3f4f6;">
                                 ${_esc(assignee?.name || assignee?.email || '—')}
                             </td>
-                            <td style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;">
+                            <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;">
                                 ${d.nextContactDate ? `<span style="font-size:0.72rem;padding:2px 7px;border-radius:10px;font-weight:600;
                                     background:${isOverdue?'#fef2f2':'#eff6ff'};color:${isOverdue?'#ef4444':'#3b82f6'};">
                                     ${d.nextContactDate}</span>` : '—'}
                             </td>
-                            <td style="padding:0.6rem 0.75rem;font-size:0.72rem;color:#9ca3af;border-bottom:1px solid #f3f4f6;white-space:nowrap;">
+                            <td onclick="crmOpenDeal('${d.id}')" style="padding:0.6rem 0.75rem;font-size:0.72rem;color:#9ca3af;border-bottom:1px solid #f3f4f6;white-space:nowrap;">
                                 ${upd}
                             </td>
                             <td style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;" onclick="event.stopPropagation()">
@@ -536,6 +579,180 @@ window.crmListSort = function(field) {
     }
     _renderListView();
 };
+
+// ── Bulk Actions ───────────────────────────────────────────
+window.crmBulkSelectAll = function(checked) {
+    crm._bulkMode = true;
+    if (checked) {
+        _filteredDeals().forEach(function(d) { crm.selectedIds.add(d.id); });
+    } else {
+        crm.selectedIds = new Set();
+        crm._bulkMode = false;
+    }
+    _renderListView();
+};
+
+window.crmBulkToggle = function(dealId, checked) {
+    crm._bulkMode = true;
+    if (checked) {
+        crm.selectedIds.add(dealId);
+    } else {
+        crm.selectedIds.delete(dealId);
+        if (crm.selectedIds.size === 0) crm._bulkMode = false;
+    }
+    // Оновлюємо bulk bar без повного ре-рендеру
+    _renderListView();
+};
+
+window.crmBulkStage = function() {
+    if (crm.selectedIds.size === 0) return;
+    document.getElementById('crmBulkActionMenu')?.remove();
+    const stages = (crm.pipeline?.stages || []).slice().sort(function(a,b){ return a.order-b.order; });
+    const menu = document.createElement('div');
+    menu.id = 'crmBulkActionMenu';
+    menu.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    menu.innerHTML = '<div style="background:white;border-radius:12px;padding:1.25rem;width:320px;max-width:95vw;">' +
+        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Змінити стадію (' + crm.selectedIds.size + ' угод)</div>' +
+        '<div style="display:flex;flex-direction:column;gap:0.3rem;" id="bulkStageList">' +
+        stages.map(function(s) {
+            return '<button data-sid="' + s.id + '" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.65rem;' +
+                'border:1px solid #e8eaed;border-radius:7px;background:white;cursor:pointer;font-size:0.8rem;text-align:left;">' +
+                '<span style="width:8px;height:8px;border-radius:50%;background:' + s.color + ';flex-shrink:0;"></span>' +
+                s.label + '</button>';
+        }).join('') +
+        '</div>' +
+        '<button id="bulkStageCancelBtn" style="margin-top:0.75rem;width:100%;padding:0.45rem;background:#f3f4f6;color:#374151;border:none;border-radius:7px;cursor:pointer;font-size:0.8rem;">Скасувати</button>' +
+        '</div>';
+    document.body.appendChild(menu);
+    menu.querySelector('#bulkStageList').addEventListener('click', async function(e) {
+        const btn = e.target.closest('button[data-sid]');
+        if (!btn) return;
+        menu.remove();
+        const newStage = btn.dataset.sid;
+        if (newStage === 'lost') {
+            if (typeof showToast === 'function') showToast('Для стадії "Програно" використовуйте індивідуальну зміну', 'error');
+            return;
+        }
+        await _bulkUpdateDeals({ stage: newStage });
+    });
+    menu.querySelector('#bulkStageCancelBtn').addEventListener('click', function() { menu.remove(); });
+};
+
+window.crmBulkAssign = function() {
+    if (crm.selectedIds.size === 0) return;
+    document.getElementById('crmBulkActionMenu')?.remove();
+    const userList = typeof users !== 'undefined' ? users : [];
+    if (userList.length === 0) {
+        if (typeof showToast === 'function') showToast('Немає доступних користувачів', 'error');
+        return;
+    }
+    const menu = document.createElement('div');
+    menu.id = 'crmBulkActionMenu';
+    menu.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    menu.innerHTML = '<div style="background:white;border-radius:12px;padding:1.25rem;width:300px;max-width:95vw;">' +
+        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Призначити відповідального (' + crm.selectedIds.size + ')</div>' +
+        '<div style="display:flex;flex-direction:column;gap:0.3rem;" id="bulkAssignList">' +
+        userList.map(function(u) {
+            return '<button data-uid="' + u.id + '" style="padding:0.5rem 0.65rem;border:1px solid #e8eaed;border-radius:7px;background:white;cursor:pointer;font-size:0.8rem;text-align:left;">' +
+                (u.name || u.email) + '</button>';
+        }).join('') +
+        '</div>' +
+        '<button id="bulkAssignCancel" style="margin-top:0.75rem;width:100%;padding:0.45rem;background:#f3f4f6;color:#374151;border:none;border-radius:7px;cursor:pointer;font-size:0.8rem;">Скасувати</button>' +
+        '</div>';
+    document.body.appendChild(menu);
+    menu.querySelector('#bulkAssignList').addEventListener('click', async function(e) {
+        const btn = e.target.closest('button[data-uid]');
+        if (!btn) return;
+        menu.remove();
+        await _bulkUpdateDeals({ assigneeId: btn.dataset.uid });
+    });
+    menu.querySelector('#bulkAssignCancel').addEventListener('click', function() { menu.remove(); });
+};
+
+window.crmBulkTag = function() {
+    if (crm.selectedIds.size === 0) return;
+    document.getElementById('crmBulkActionMenu')?.remove();
+    const menu = document.createElement('div');
+    menu.id = 'crmBulkActionMenu';
+    menu.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    menu.innerHTML = '<div style="background:white;border-radius:12px;padding:1.25rem;width:300px;max-width:95vw;">' +
+        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Додати тег (' + crm.selectedIds.size + ' угод)</div>' +
+        '<input id="bulkTagInput" placeholder="Введіть тег..." autofocus ' +
+        'style="width:100%;padding:0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;box-sizing:border-box;margin-bottom:0.5rem;">' +
+        '<div style="display:flex;gap:0.5rem;">' +
+        '<button id="bulkTagCancel" style="flex:1;padding:0.45rem;background:#f3f4f6;color:#374151;border:none;border-radius:7px;cursor:pointer;font-size:0.8rem;">Скасувати</button>' +
+        '<button id="bulkTagConfirm" style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">Додати</button>' +
+        '</div>' +
+        '</div>';
+    document.body.appendChild(menu);
+    menu.querySelector('#bulkTagCancel').addEventListener('click', function() { menu.remove(); });
+    menu.querySelector('#bulkTagConfirm').addEventListener('click', async function() {
+        const tag = menu.querySelector('#bulkTagInput').value.trim();
+        if (!tag) return;
+        menu.remove();
+        const ids = Array.from(crm.selectedIds);
+        let done = 0;
+        for (const dealId of ids) {
+            const deal = crm.deals.find(function(d){ return d.id === dealId; });
+            if (!deal) continue;
+            const tags = [...new Set([...(deal.tags||[]), tag])];
+            try {
+                await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+                    .update({ tags, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                deal.tags = tags;
+                done++;
+            } catch(e) { console.error('[Bulk tag]', e); }
+        }
+        if (typeof showToast === 'function') showToast('Тег додано до ' + done + ' угод', 'success');
+        crm.selectedIds = new Set();
+        crm._bulkMode = false;
+        _renderListView();
+    });
+    menu.querySelector('#bulkTagInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') menu.querySelector('#bulkTagConfirm').click();
+    });
+};
+
+window.crmBulkDelete = async function() {
+    if (crm.selectedIds.size === 0) return;
+    const count = crm.selectedIds.size;
+    const confirmed = await (window.showConfirmModal
+        ? showConfirmModal('Видалити ' + count + ' угод? Цю дію не можна скасувати.', { danger: true })
+        : Promise.resolve(confirm('Видалити ' + count + ' угод?')));
+    if (!confirmed) return;
+    const ids = Array.from(crm.selectedIds);
+    let done = 0;
+    for (const dealId of ids) {
+        try {
+            await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).delete();
+            crm.deals = crm.deals.filter(function(d){ return d.id !== dealId; });
+            done++;
+        } catch(e) { console.error('[Bulk delete]', e); }
+    }
+    if (typeof showToast === 'function') showToast('Видалено ' + done + ' угод', 'success');
+    crm.selectedIds = new Set();
+    crm._bulkMode = false;
+    _renderKanban();
+};
+
+async function _bulkUpdateDeals(updates) {
+    const ids = Array.from(crm.selectedIds);
+    updates.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+    let done = 0;
+    for (const dealId of ids) {
+        const deal = crm.deals.find(function(d){ return d.id === dealId; });
+        if (!deal) continue;
+        try {
+            await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).update(updates);
+            Object.assign(deal, updates);
+            done++;
+        } catch(e) { console.error('[Bulk update]', dealId, e); }
+    }
+    if (typeof showToast === 'function') showToast('Оновлено ' + done + ' угод', 'success');
+    crm.selectedIds = new Set();
+    crm._bulkMode = false;
+    _renderListView();
+}
 
 // ── Дублювання угоди ──
 window.crmDuplicateDeal = async function(dealId) {
