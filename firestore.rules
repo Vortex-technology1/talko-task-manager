@@ -619,4 +619,12 @@ service cloud.firestore {
       allow write: if isSuperAdmin() || (doc == 'onboarding' && isManagerOrOwner(companyId));
     }
   }
+
+  // =====================
+  // TELEGRAM INDEX (fast lookup без collectionGroup)
+  // =====================
+  match /telegramIndex/{doc} {
+    allow read: if isAuthenticated();
+    allow write: if isAuthenticated();
+  }
 }
