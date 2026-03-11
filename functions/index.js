@@ -458,24 +458,33 @@ exports.telegramWebhook = functions
                     );
                 }
             } else if (text === '/today' || text === '/overdue') {
-                // Lookup via telegramIndex for fast O(1) access
+                // Lookup user by telegramChatId
+                let userCompanyId = null;
+                let userUid = null;
+
+                // 1. Try telegramIndex first
                 const chatIdxDoc = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
-                let cgUserSnap = { empty: true, docs: [] };
                 if (chatIdxDoc.exists) {
-                    const { companyId: cId2, userId: uId2 } = chatIdxDoc.data();
-                    if (cId2 && uId2) {
-                        const uDoc2 = await db.collection('companies').doc(cId2).collection('users').doc(uId2).get();
-                        if (uDoc2.exists) cgUserSnap = { empty: false, docs: [{ ...uDoc2, ref: uDoc2.ref }] };
+                    const d = chatIdxDoc.data();
+                    if (d.companyId && d.userId) {
+                        userCompanyId = d.companyId;
+                        userUid = d.userId;
                     }
                 }
-                // Fallback: знайти по telegramChatId
-                if (cgUserSnap.empty) {
-                    cgUserSnap = await db.collectionGroup('users')
+                // 2. Fallback: collectionGroup by telegramChatId
+                if (!userCompanyId || !userUid) {
+                    const snap = await db.collectionGroup('users')
                         .where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                    if (!snap.empty) {
+                        const doc = snap.docs[0];
+                        userUid = doc.id;
+                        userCompanyId = doc.ref.parent.parent.id;
+                    }
                 }
-                if (!cgUserSnap.empty) {
-                    const companyId = cgUserSnap.docs[0].ref.parent.parent.id;
-                    const uid = cgUserSnap.docs[0].id;
+
+                if (userCompanyId && userUid) {
+                    const companyId = userCompanyId;
+                    const uid = userUid;
                     if (true) { // scope wrapper
                     const todayStr = new Date().toISOString().split('T')[0];
 
