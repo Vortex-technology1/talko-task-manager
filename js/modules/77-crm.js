@@ -144,8 +144,15 @@ async function _loadAll() {
 
     _subscribeDeals(); // централізований — без дублікатів
 
-    const clientSnap = await base.collection('crm_clients').limit(100).get();
-    crm.clients = clientSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // Real-time clients listener — no 100 limit, auto-updates
+    const clientUnsub = base.collection('crm_clients').orderBy('createdAt', 'desc').limit(500)
+        .onSnapshot(snap => {
+            crm.clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (crm.subTab === 'clients') _renderClients();
+            // Check reminders once on first load
+            if (!crm._remindersChecked) { crm._remindersChecked = true; setTimeout(_checkContactReminders, 1500); }
+        }, err => console.error('[CRM clients]', err));
+    crm.unsubs.push(clientUnsub);
 }
 
 async function _createDefaultPipeline() {
@@ -264,7 +271,7 @@ function _kanbanCol(stage) {
 }
 
 function _kanbanColLost(stage) {
-    const deals = crm.deals.filter(d => d.stage === 'lost');
+    const deals = _getFilteredDeals().filter(d => d.stage === 'lost');
     return `
     <div data-stage="lost"
         style="width:160px;flex-shrink:0;background:#fef2f2;border-left:1px solid #e8eaed;
@@ -334,6 +341,7 @@ function _dealCard(deal) {
             </span>
             <span style="font-size:0.62rem;color:#d1d5db;">${date}</span>
         </div>
+        ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#3b82f6'};">📅 ${deal.nextContactDate}</div>` : ''}
     </div>`;
 }
 
@@ -417,6 +425,7 @@ window.crmOpenDeal = function(dealId) {
                     <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">
                         ${_esc(deal.clientName || '')}
                         ${deal.clientNiche ? ` · ${_esc(deal.clientNiche)}` : ''}
+                        ${deal.nextContactDate ? `<span style="margin-left:6px;padding:1px 7px;border-radius:8px;font-size:0.68rem;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#f0fdf4'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#16a34a'};">📅 ${deal.nextContactDate}</span>` : ''}
                     </div>
                 </div>
                 <div style="display:flex;gap:0.4rem;align-items:center;">
@@ -446,6 +455,12 @@ window.crmOpenDeal = function(dealId) {
             <!-- Footer -->
             <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;flex-shrink:0;
                 display:flex;gap:0.5rem;justify-content:flex-end;">
+                <button onclick="crmCreateTaskFromDeal('${deal.id}')"
+                    style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
+                    border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
+                    title="Створити задачу в Task Manager">
+                    ${I.check} Задача
+                </button>
                 <button onclick="crmSaveDeal('${deal.id}')"
                     style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
                     border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
@@ -509,9 +524,22 @@ function _renderDealDetails(deal) {
             <input id="dd_niche" value="${_esc(deal.clientNiche||'')}" style="${inp}">
         </div>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
+        <div>
+            <label style="${lbl}">Дата закриття</label>
+            <input id="dd_close" type="date" value="${deal.expectedClose||''}" style="${inp}">
+        </div>
+        <div>
+            <label style="${lbl}">Наступний контакт</label>
+            <input id="dd_nextContact" type="date" value="${deal.nextContactDate||''}" style="${inp}${deal.nextContactDate && deal.nextContactDate < new Date().toISOString().split('T')[0] ? 'border-color:#ef4444;' : ''}">
+        </div>
+    </div>
     <div style="${row}">
-        <label style="${lbl}">Дедлайн</label>
-        <input id="dd_close" type="date" value="${deal.expectedClose||''}" style="${inp}">
+        <label style="${lbl}">Відповідальний</label>
+        <select id="dd_assignee" style="${inp}background:white;cursor:pointer;">
+            <option value="">— не призначено —</option>
+            ${(typeof users !== 'undefined' ? users : []).map(u => '<option value="' + u.id + '" ' + (deal.assigneeId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>').join('')}
+        </select>
     </div>
     <div style="${row}">
         <label style="${lbl}">Нотатка</label>
@@ -542,10 +570,12 @@ window.crmSaveDeal = async function(dealId) {
     const client = document.getElementById('dd_client')?.value.trim();
     const niche  = document.getElementById('dd_niche')?.value.trim();
     const note   = document.getElementById('dd_note')?.value.trim();
-    const expClose = document.getElementById('dd_close')?.value || null;
+    const expClose    = document.getElementById('dd_close')?.value || null;
+    const nextContact = document.getElementById('dd_nextContact')?.value || null;
+    const assigneeId  = document.getElementById('dd_assignee')?.value || null;
 
     try {
-        const updates = { title:title||deal.title, stage:stage||deal.stage, amount, clientName:client||deal.clientName, clientNiche:niche, note, expectedClose:expClose||null, updatedAt:firebase.firestore.FieldValue.serverTimestamp() };
+        const updates = { title:title||deal.title, stage:stage||deal.stage, amount, clientName:client||deal.clientName, clientNiche:niche, note, expectedClose:expClose||null, nextContactDate:nextContact||null, assigneeId:assigneeId||deal.assigneeId||null, updatedAt:firebase.firestore.FieldValue.serverTimestamp() };
         await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).update(updates);
         if (stage !== deal.stage && typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
             await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, { dealId, fromStage:deal.stage, toStage:stage, clientName:deal.clientName, amount });
@@ -960,7 +990,7 @@ window.crmOpenClient = function(clientId) {
 
         <!-- Кнопки дій -->
         <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
-            <button onclick="crmNewDealFromClient('${_esc(cl.name||'')}')"
+            <button onclick="crmNewDealFromClient('${_esc(cl.name||'')}','${cl.id}')"
                 style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;
                 border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">
                 + Угода
@@ -974,12 +1004,16 @@ window.crmOpenClient = function(clientId) {
     </div>`;
 };
 
-window.crmNewDealFromClient = function(clientName) {
+window.crmNewDealFromClient = function(clientName, clientId) {
     crmOpenCreateDeal();
     setTimeout(() => {
-        const inp = document.getElementById('crmDealClient');
-        if (inp) inp.value = clientName;
-    }, 150);
+        const inp = document.getElementById('nd_client');
+        if (inp) { inp.value = clientName; inp.focus(); }
+        if (clientId) {
+            const ov = document.getElementById('crmCreateDealOverlay');
+            if (ov) ov.dataset.clientId = clientId;
+        }
+    }, 50);
 };
 
 window.crmDeleteClient = async function(clientId) {
@@ -1066,18 +1100,24 @@ async function _renderActivitiesTab() {
     if (!c) return;
     c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
 
-    // Завантажуємо з усіх угод
+    // Завантажуємо паралельно (Promise.all замість sequential loop — N+1 fix)
     let allActivities = [];
     try {
         const snap = await window.companyRef().collection('crm_deals').get();
-        for (const dealDoc of snap.docs) {
-            const histSnap = await dealDoc.ref.collection('history').orderBy('at','desc').limit(50).get();
-            const deal = { id: dealDoc.id, ...dealDoc.data() };
-            histSnap.docs.forEach(h => {
-                allActivities.push({ ...h.data(), id: h.id, dealId: deal.id, dealTitle: deal.title || deal.clientName || window.t('crmDeal') });
-            });
-        }
-    } catch(e) { /* тихо */ }
+        const deals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const histResults = await Promise.all(
+            deals.map(deal =>
+                window.companyRef().collection('crm_deals').doc(deal.id)
+                    .collection('history').orderBy('at','desc').limit(30).get()
+                    .then(hs => hs.docs.map(h => ({
+                        ...h.data(), id: h.id, dealId: deal.id,
+                        dealTitle: deal.title || deal.clientName || window.t('crmDeal')
+                    })))
+                    .catch(() => [])
+            )
+        );
+        allActivities = histResults.flat();
+    } catch(e) { console.warn('[CRM activities]', e.message); }
 
     allActivities.sort((a,b) => {
         const ta = a.at?.seconds || 0, tb = b.at?.seconds || 0;
@@ -1658,6 +1698,145 @@ window.onSwitchTab && window.onSwitchTab('crm', function() {
     else if (crm.subTab === 'kanban') _renderKanban();
 });
 
+// ══════════════════════════════════════════════════════════
+// ЗАДАЧА З УГОДИ → TASK MANAGER
+// ══════════════════════════════════════════════════════════
+window.crmCreateTaskFromDeal = function(dealId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+
+    // Відкриваємо стандартну модалку таск-менеджера якщо вона є
+    if (typeof openAddTask === 'function') {
+        crmCloseDeal();
+        // Передаємо контекст угоди через глобальний стейт
+        window._crmTaskContext = {
+            dealId:     deal.id,
+            dealTitle:  deal.title || deal.clientName || '',
+            clientName: deal.clientName || '',
+        };
+        openAddTask();
+        // Заповнюємо поля через setTimeout після рендеру модалки
+        setTimeout(() => {
+            const titleEl = document.getElementById('taskTitle') || document.getElementById('newTaskTitle');
+            if (titleEl && !titleEl.value) {
+                titleEl.value = `[CRM] ${deal.clientName || deal.title || ''} — ${(crm.pipeline?.stages||[]).find(s=>s.id===deal.stage)?.label||deal.stage}`;
+            }
+            const noteEl = document.getElementById('taskNote') || document.getElementById('taskDescription');
+            if (noteEl && !noteEl.value && deal.note) noteEl.value = deal.note;
+        }, 200);
+        return;
+    }
+
+    // Fallback: створюємо задачу напряму в Firestore
+    const modal = document.createElement('div');
+    modal.id = 'crmTaskModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10030;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    const inp = 'width:100%;padding:0.5rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.82rem;box-sizing:border-box;font-family:inherit;';
+    modal.innerHTML = `
+    <div style="background:white;border-radius:12px;padding:1.5rem;width:420px;max-width:95vw;">
+        <div style="font-weight:700;font-size:0.95rem;margin-bottom:1rem;color:#111827;">
+            Нова задача по угоді: <span style="color:#22c55e;">${_esc(deal.clientName||deal.title||'')}</span>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:4px;">Назва задачі</label>
+            <input id="crmT_title" style="${inp}" value="${_esc('[CRM] ' + (deal.clientName||deal.title||''))}">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
+            <div>
+                <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:4px;">Виконавець</label>
+                <select id="crmT_assignee" style="${inp}background:white;cursor:pointer;">
+                    <option value="${window.currentUser?.uid||''}">${_esc((typeof users!=='undefined'?users.find(u=>u.id===window.currentUser?.uid):null)?.name||'Я')}</option>
+                    ${(typeof users!=='undefined'?users:[]).filter(u=>u.id!==window.currentUser?.uid).map(u=>`<option value="${u.id}">${_esc(u.name||u.email||u.id)}</option>`).join('')}
+                </select>
+            </div>
+            <div>
+                <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:4px;">Дедлайн</label>
+                <input id="crmT_deadline" type="date" style="${inp}" value="${deal.nextContactDate||deal.expectedClose||''}">
+            </div>
+        </div>
+        <div style="margin-bottom:1rem;">
+            <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:4px;">Опис</label>
+            <textarea id="crmT_note" rows="2" style="${inp}resize:vertical;">${_esc(deal.note||'')}</textarea>
+        </div>
+        <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+            <button onclick="document.getElementById('crmTaskModal').remove()"
+                style="padding:0.5rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">
+                Скасувати
+            </button>
+            <button onclick="crmSaveTaskFromDeal('${deal.id}')"
+                style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">
+                Створити задачу
+            </button>
+        </div>
+    </div>`;
+    document.body.appendChild(modal);
+};
+
+window.crmSaveTaskFromDeal = async function(dealId) {
+    const title    = document.getElementById('crmT_title')?.value.trim();
+    const assignee = document.getElementById('crmT_assignee')?.value;
+    const deadline = document.getElementById('crmT_deadline')?.value || null;
+    const note     = document.getElementById('crmT_note')?.value.trim();
+    const deal     = crm.deals.find(d => d.id === dealId);
+
+    if (!title) { if(window.showToast) showToast('Вкажіть назву задачі','error'); return; }
+    try {
+        const taskData = {
+            title, note: note||'',
+            assigneeId: assignee || window.currentUser?.uid || '',
+            creatorId:  window.currentUser?.uid || '',
+            status:     'new',
+            deadlineDate: deadline || null,
+            deadlineTime: null,
+            crmDealId:  dealId,
+            crmClientName: deal?.clientName || '',
+            createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt:  firebase.firestore.FieldValue.serverTimestamp(),
+        };
+        const ref = await window.companyRef().collection('tasks').add(taskData);
+
+        // Логуємо в history угоди
+        await window.companyRef().collection('crm_deals').doc(dealId)
+            .collection('history').add({
+                type: 'task', text: title, taskId: ref.id,
+                by: window.currentUser?.email || 'manager',
+                at: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+
+        document.getElementById('crmTaskModal')?.remove();
+        if(window.showToast) showToast('Задачу створено в Task Manager ✓', 'success');
+
+        // Оновлюємо локальний tasks масив якщо доступний
+        if (typeof tasks !== 'undefined') {
+            tasks.unshift({ id: ref.id, ...taskData, createdAt: new Date() });
+            if (typeof scheduleRender === 'function') scheduleRender();
+        }
+    } catch(e) {
+        if(window.showToast) showToast('Помилка: ' + e.message, 'error');
+        console.error('[CRM] crmSaveTaskFromDeal:', e.message);
+    }
+};
+
+// ══════════════════════════════════════════════════════════
+// НАГАДУВАННЯ ПО nextContactDate — перевірка при відкритті CRM
+// ══════════════════════════════════════════════════════════
+function _checkContactReminders() {
+    const today = new Date().toISOString().split('T')[0];
+    const overdue = crm.deals.filter(d =>
+        d.nextContactDate && d.nextContactDate <= today &&
+        d.stage !== 'won' && d.stage !== 'lost'
+    );
+    if (!overdue.length) return;
+
+    const count = overdue.length;
+    const label = overdue[0].clientName || overdue[0].title || window.t('crmDeal');
+    const msg = count === 1
+        ? `📅 Потрібен контакт: ${label}`
+        : `📅 ${count} угод потребують контакту сьогодні`;
+
+    if (typeof showToast === 'function') showToast(msg, 'warning');
+}
+
     // ── Register in TALKO namespace ──────────────────────────
     if (window.TALKO) {
         window.TALKO.crm = {
@@ -1675,6 +1854,7 @@ window.onSwitchTab && window.onSwitchTab('crm', function() {
             addStage:       window.crmAddStage,
             removeStage:    window.crmRemoveStage,
             filterClients:  window.crmFilterClients,
+            createTask:     window.crmCreateTaskFromDeal,
         };
     }
 
