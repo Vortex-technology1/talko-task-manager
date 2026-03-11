@@ -1729,43 +1729,33 @@ window.chatSend = window.bpSendMsg = async function() {
     if (input.tagName === 'TEXTAREA') { input.style.height = 'auto'; }
 
     try {
-        // Відправляємо через webhook endpoint (він сам пише в Firestore + Telegram)
-        const webhookBase = window.location.origin.includes('localhost')
-            ? 'https://europe-west1-task-manager-44e84.cloudfunctions.net'
-            : 'https://europe-west1-task-manager-44e84.cloudfunctions.net';
+        // 1. Пишемо повідомлення в Firestore
+        await window.companyRef().collection('contacts').doc(chat.activeId).collection('messages')
+            .add({
+                text, from: 'bot', direction: 'out',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                read: true, sentBy: 'operator',
+            });
 
-        const res = await fetch(`https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                companyId: window.currentCompanyId,
-                contactId: chat.activeId,
-                text,
-                botToken: chat.sendingBotToken || null,
-            }),
-        });
+        // 2. Ставимо завдання для Functions: відправити в Telegram
+        // Functions підхоплять через Firestore trigger (якщо налаштований)
+        // або через окрему чергу
+        await window.companyRef().collection('contacts').doc(chat.activeId)
+            .update({
+                pendingOutMessage: text,
+                pendingOutAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMessage: text,
+                lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
 
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error || 'Send failed');
-
-        // Оновлюємо lastMessage в локальному стані
+        // 3. Оновлюємо локальний стан
         const ct = chat.contacts.find(c => c.id === chat.activeId);
         if (ct) { ct.lastMessage = text; ct.lastMessageAt = { toDate: () => new Date() }; }
         _chatRenderContactsList();
 
     } catch(e) {
         console.error('[chat] send:', e);
-        // Fallback: пишемо напряму в Firestore (без Telegram)
-        try {
-            if (window.companyRef()) {
-                await window.companyRef().collection('contacts').doc(chat.activeId).collection('messages')
-                    .add({
-                        text, from: 'bot', direction: 'out',
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        read: true, sentBy: 'operator',
-                    });
-            }
-        } catch(e2) { console.error('[chat] fallback send:', e2); }
+        if (typeof showToast === 'function') showToast('Помилка відправки: ' + e.message, 'error');
     } finally {
         if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
     }

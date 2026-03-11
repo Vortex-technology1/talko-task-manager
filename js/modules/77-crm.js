@@ -298,24 +298,41 @@ function _renderKanban() {
     const revenue  = crm.deals.filter(d => d.stage === 'won').reduce((s,d) => s+(d.amount||0), 0);
     const pipeline = crm.deals.filter(d => d.stage !== 'won' && d.stage !== 'lost').reduce((s,d) => s+(d.amount||0), 0);
 
+    // Висота kanban board залежить від наявності switcher рядка
+    const switcherHeight = crm.pipelines.length > 1 ? 89 : 57;
+
     c.innerHTML = `
-    <!-- Stats row -->
-    <div style="display:flex;gap:1px;background:#e8eaed;border-bottom:1px solid #e8eaed;">
-        ${[
-            [window.t('crmDealsCount'), total],
-            [window.t('crmActiveCount'), active],
-            [window.t('crmStageWon'), won],
-            ['Revenue', _fmt(revenue)],
-            ['Pipeline', _fmt(pipeline)],
-        ].map(([l,v]) => `
-        <div style="flex:1;background:white;padding:0.65rem 1rem;">
-            <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${v}</div>
-            <div style="font-size:0.68rem;color:#9ca3af;margin-top:1px;">${l}</div>
-        </div>`).join('')}
+    <!-- Pipeline switcher + Stats row -->
+    <div style="background:white;border-bottom:1px solid #e8eaed;">
+        ${crm.pipelines.length > 1 ? `
+        <div style="display:flex;gap:0.3rem;padding:0.4rem 0.75rem;background:#f8fafc;border-bottom:1px solid #f1f5f9;overflow-x:auto;flex-wrap:nowrap;">
+            ${crm.pipelines.map(p => `
+            <button onclick="crmSelectPipeline('${p.id}')"
+                style="padding:0.2rem 0.65rem;border-radius:5px;border:1px solid ${p.id === crm.pipeline?.id ? '#22c55e' : '#e8eaed'};
+                background:${p.id === crm.pipeline?.id ? '#f0fdf4' : 'white'};
+                color:${p.id === crm.pipeline?.id ? '#16a34a' : '#6b7280'};
+                font-size:0.72rem;font-weight:${p.id === crm.pipeline?.id ? '700' : '500'};
+                cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                ${_esc(p.name)}
+            </button>`).join('')}
+        </div>` : ''}
+        <div style="display:flex;gap:1px;background:#e8eaed;">
+            ${[
+                [window.t('crmDealsCount'), total],
+                [window.t('crmActiveCount'), active],
+                [window.t('crmStageWon'), won],
+                ['Revenue', _fmt(revenue)],
+                ['Pipeline', _fmt(pipeline)],
+            ].map(([l,v]) => `
+            <div style="flex:1;background:white;padding:0.65rem 1rem;">
+                <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${v}</div>
+                <div style="font-size:0.68rem;color:#9ca3af;margin-top:1px;">${l}</div>
+            </div>`).join('')}
+        </div>
     </div>
 
     <!-- Kanban board -->
-    <div style="display:flex;gap:0;height:calc(100% - 57px);overflow-x:auto;">
+    <div style="display:flex;gap:0;height:calc(100% - ${switcherHeight}px);overflow-x:auto;">
         ${mainStages.map(s => _kanbanCol(s)).join('')}
         ${lostStage ? _kanbanColLost(lostStage) : ''}
     </div>`;
