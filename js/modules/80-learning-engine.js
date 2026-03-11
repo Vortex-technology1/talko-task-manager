@@ -113,7 +113,7 @@
                     <div class="learning-stat-label">${isRu ? 'Модулей' : 'Модулів'}</div>
                 </div>
                 <div class="learning-progress-bar-wrap">
-                    <div class="progress-fill" style="width:${stats.pct}%"></div>
+                    <div class="learning-progress-bar" style="width:${stats.pct}%"></div>
                 </div>
             </div>
 
