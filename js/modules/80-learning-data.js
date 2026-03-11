@@ -10,251 +10,6 @@
     const learningCourseData = [
             {
                 id: 0,
-                title: "БІЗНЕС — ЦЕ ГРА",
-                title_ru: "БИЗНЕС — ЭТО ИГРА",
-                subtitle: "Чому без системи власник завжди програє — навіть якщо багато працює",
-                subtitle_ru: "Почему без системы владелец всегда проигрывает — даже если много работает",
-                hideAiBlock: false,
-
-                videoLink: null,
-                materialsLink: null,
-
-                lessonContent: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header"><div class="lesson-block-title">Уяви таку картину</div></div>
-    <div class="lesson-block-content">
-        <p>Пятниця, 19:30. Ти сидиш в офісі — всі вже пішли додому. На телефоні 14 непрочитаних повідомлень. Три від клієнтів, решта — від співробітників з питаннями які вони «не могли вирішити без тебе».</p>
-        <p>Завтра вихідний. Але ти вже знаєш, що о 10 ранку хтось напише знову. Так було кожні вихідні останні два роки.</p>
-        <p>Бізнес працює. Гроші є. Але ти не можеш взяти відпустку без страху що все розсиплеться. Не можеш делегувати — тому що швидше зробити самому. Не можеш зупинитись — тому що якщо зупинишся ти, зупиниться все.</p>
-        <p>Де ти зробив помилку? Відповідь більшості — <em>«треба краще найняти»</em> або <em>«треба більше контролювати»</em>. Але справжня відповідь інша.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Бізнес — це не робота. Це гра</div></div>
-    <div class="lesson-block-content">
-        <p>Уяви: ти збираєш футбольну команду. 11 найкращих гравців у місті. Всі підготовлені, всі хочуть перемогти.</p>
-        <p>Але ти не кажеш їм хто де стоїть. Не пояснюєш хто атакує, а хто захищає. Не ведеш рахунок. Просто кажеш: «Виходьте на поле і грайте добре».</p>
-        <p>Що відбудеться? Хаос. Не тому що люди погані. А тому що без структури навіть найкращі гравці не можуть грати як команда.</p>
-        <p>Тепер подивись на свій бізнес. Ти наймаєш людей і кажеш: «Розберіться». Щомісяця вирішуєш одні й ті самі проблеми. Причина не в людях — причина в тому що ти ніколи не побудував правила гри, за якими команда може грати без тебе.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Що робить гру грою</div></div>
-    <div class="lesson-block-content">
-        <p>Чому людина грає в комп'ютерну гру годинами не помічаючи часу — але на роботі «не може зосередитись»? Тому що в грі є чотири речі яких немає в більшості бізнесів.</p>
-        <div style="display:grid;gap:0.55rem;margin-top:0.75rem;">
-            <div style="padding:0.75rem 0.9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.2rem;">Мета</div><p style="font-size:0.78rem;color:#525252;line-height:1.6;">Ти знаєш куди рухатись. Без мети немає гри — є просто рух заради руху.</p></div>
-            <div style="padding:0.75rem 0.9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.2rem;">Правила</div><p style="font-size:0.78rem;color:#525252;line-height:1.6;">Чіткі межі того що можна і не можна. Без правил — кожен грає по-своєму і виграє той хто голосніше кричить.</p></div>
-            <div style="padding:0.75rem 0.9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.2rem;">Ролі</div><p style="font-size:0.78rem;color:#525252;line-height:1.6;">Кожен знає свою позицію. Воротар не бігає атакувати. Коли всі роблять «всього потроху» — результату немає.</p></div>
-            <div style="padding:0.75rem 0.9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.2rem;">Рахунок</div><p style="font-size:0.78rem;color:#525252;line-height:1.6;">Ти бачиш результат у реальному часі. Без рахунку немає напруги і немає мотивації виграти.</p></div>
-        </div>
-        <p style="margin-top:0.85rem;">Чи знають твої співробітники чітку мету компанії? Чи є в них ролі? Чи є рахунок — метрики які показують іде гра добре чи погано? Якщо «ні» — це не їхня гра. Вони просто приходять отримати зарплату.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Чому люди не грають у твою гру</div></div>
-    <div class="lesson-block-content">
-        <p>Запитай прямо зараз будь-якого свого співробітника: <em>«Яка головна мета нашої компанії?»</em></p>
-        <p>З досвіду 150+ кейсів відповідь майже завжди одна з двох: <strong>«Заробити гроші»</strong> або <strong>«Не знаю»</strong>.</p>
-        <p>Людина яка відповідає «заробити гроші» вважає що сенс існування твоєї компанії — зробити тебе багатшим. Навіщо їй старатись більше мінімуму? Навіщо брати відповідальність за результат?</p>
-        <p>Вона не погана людина. Вона просто грає в єдину гру яку розуміє — «відпрацювати і отримати зарплату».</p>
-        <p>Та сама людина може щиро вболівати за футбольну команду і добровільно витрачати вихідні на волонтерство. Тому що там є справжня гра — з метою, роллю і рахунком. Проблема не в людях. Проблема в тому що ніхто не побудував для них гру всередині бізнесу.</p>
-    </div>
-</div>
-
-<div class="lesson-block" style="border-left:3px solid #f59e0b;background:#fffbeb;">
-    <div class="lesson-block-header"><div class="lesson-block-title">Найбільше непорозуміння власників МСБ</div></div>
-    <div class="lesson-block-content">
-        <p>Коли я говорю про систему — більшість власників думають: більше контролю, більше звітів, більше правил. Це не так.</p>
-        <p>Система — це не про контроль. Система — це про те, щоб гра відбувалась <strong>без тебе</strong>.</p>
-        <p>В футболі є суддя — але суддя не грає. Є тренер — але тренер не виходить на поле. Є правила — але правила дають свободу грати, а не обмежують.</p>
-        <p><strong>Власник з системою — тренер і автор правил. Власник без системи — гравець, тренер, суддя і прибиральник стадіону одночасно.</strong></p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Технологія і адміністрування — два рівні кожного бізнесу</div></div>
-    <div class="lesson-block-content">
-        <p><strong>Технологія</strong> — як саме робиться робота: як лікар приймає пацієнта, як менеджер веде переговори. Знання конкретної справи.</p>
-        <p><strong>Адміністрування</strong> — як організована гра: хто за що відповідає, які правила, як вимірюється результат.</p>
-        <p>Більшість власників МСБ — відмінні технологи. Але є пастка: коли ти найкращий технолог — всі складні ситуації летять до тебе. Ти незамінний. І це не перевага — це в'язниця.</p>
-        <div style="margin:0.85rem 0;padding:0.9rem;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
-                <div>
-                    <div style="font-size:0.67rem;font-weight:700;color:#6b7280;letter-spacing:0.08em;margin-bottom:0.45rem;">ТЕХНОЛОГІЯ</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f3f4f6;border-radius:6px;margin-bottom:0.25rem;">Як продавати</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f3f4f6;border-radius:6px;margin-bottom:0.25rem;">Як виробляти</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f3f4f6;border-radius:6px;">Як надавати сервіс</div>
-                    <div style="font-size:0.73rem;color:#9ca3af;padding:0.2rem 0.55rem;font-style:italic;">Знають виконавці</div>
-                </div>
-                <div>
-                    <div style="font-size:0.67rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.45rem;">АДМІНІСТРУВАННЯ</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;margin-bottom:0.25rem;">Цілі компанії</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;margin-bottom:0.25rem;">Ролі і функції</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;">Метрики і рахунок</div>
-                    <div style="font-size:0.73rem;color:#16a34a;padding:0.2rem 0.55rem;font-weight:600;">Зона власника</div>
-                </div>
-            </div>
-        </div>
-        <p>Більшість власників роками вдосконалюють технологію — і залишають адміністрування на рівні «якось само складеться». Результат — бізнес що повністю залежить від присутності власника.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Три стани — де ти зараз?</div></div>
-    <div class="lesson-block-content">
-        <p>За 10 років консалтингу я бачив три стани в яких знаходяться власники МСБ. Визнач де ти зараз.</p>
-        <div style="display:grid;gap:0.6rem;margin-top:0.75rem;">
-            <div style="padding:0.85rem;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;"><div style="font-weight:700;font-size:0.82rem;color:#991b1b;margin-bottom:0.3rem;">Стан 1 — Самозайнятість</div><p style="font-size:0.78rem;color:#7f1d1d;line-height:1.6;">Власник є головним виконавцем. Без нього нічого не рухається. Відпустка — привілей якого немає. Це не бізнес — це робота на себе.</p></div>
-            <div style="padding:0.85rem;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;"><div style="font-weight:700;font-size:0.82rem;color:#92400e;margin-bottom:0.3rem;">Стан 2 — Пожежник</div><p style="font-size:0.78rem;color:#78350f;line-height:1.6;">Команда є, процеси є — але щось постійно ламається. Власник вирішує кризи замість того щоб розвивати бізнес.</p></div>
-            <div style="padding:0.85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;"><div style="font-weight:700;font-size:0.82rem;color:#166534;margin-bottom:0.3rem;">Стан 3 — Системний бізнес</div><p style="font-size:0.78rem;color:#14532d;line-height:1.6;">Команда знає мету, ролі, правила і рахунок. Власник приймає стратегічні рішення. Бізнес росте коли власника немає поряд.</p></div>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Що відбувається коли з'являється система</div></div>
-    <div class="lesson-block-content">
-        <p>Власник меблевої компанії — назвемо його Андрій — проводив на роботі 10–12 годин щодня. Команда 23 людини, але виручка не росла два роки. Думав що проблема в менеджерах.</p>
-        <p>Перше що ми зробили — не наймали нових людей. Ми побудували функціональну структуру: розписали хто за що відповідає і який результат виробляє кожна роль. Потім метрики. Потім процеси рішень без власника.</p>
-        <p>Через чотири місяці Андрій поїхав у відпустку на 12 днів. Перший раз за шість років. Коли повернувся — виручка за цей час була на 8% вищою ніж коли він був присутній. Тому що без його постійного втручання менеджери нарешті почали приймати рішення самостійно.</p>
-    </div>
-</div>
-
-<div class="result-block">
-    <strong>Головний висновок.</strong> Бізнес — це командна гра. Щоб команда грала без тебе, потрібна система: чітка мета, розподілені ролі, правила і рахунок. Саме це ми будуємо в програмі — крок за кроком. У наступному уроці побачиш як виглядає маршрут цього шляху.
-</div>`,
-
-                lessonContent_ru: `
-<div class="lesson-block intro">
-    <div class="lesson-block-header"><div class="lesson-block-title">Представь такую картину</div></div>
-    <div class="lesson-block-content">
-        <p>Пятница, 19:30. Ты сидишь в офисе — все уже ушли домой. На телефоне 14 непрочитанных сообщений. Три от клиентов, остальные — от сотрудников с вопросами которые они «не могли решить без тебя».</p>
-        <p>Завтра выходной. Но ты уже знаешь, что в 10 утра кто-то напишет снова. Так было каждые выходные последние два года.</p>
-        <p>Бизнес работает. Деньги есть. Но ты не можешь взять отпуск без страха что всё рассыплется. Не можешь делегировать — потому что быстрее сделать самому. Не можешь остановиться — потому что если остановишься ты, остановится всё.</p>
-        <p>Где ты допустил ошибку? Ответ большинства — <em>«нужно лучше нанять»</em> или <em>«нужно больше контролировать»</em>. Но настоящий ответ другой.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Бизнес — это не работа. Это игра</div></div>
-    <div class="lesson-block-content">
-        <p>Представь: ты собираешь футбольную команду. 11 лучших игроков в городе. Все подготовлены, все хотят победить.</p>
-        <p>Но ты не говоришь им кто где стоит. Не объясняешь кто атакует, а кто защищает. Просто говоришь: «Выходите на поле и играйте хорошо».</p>
-        <p>Что произойдёт? Хаос. Не потому что люди плохие. А потому что без структуры даже лучшие игроки не могут играть как команда.</p>
-        <p>Теперь посмотри на свой бизнес. Ты нанимаешь людей и говоришь: «Разберитесь». Каждый месяц решаешь одни и те же проблемы. Причина не в людях — причина в том что ты никогда не построил правила игры, по которым команда может играть без тебя.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Что делает игру игрой</div></div>
-    <div class="lesson-block-content">
-        <p>Почему человек играет в компьютерную игру часами не замечая времени — но на работе «не может сосредоточиться»? Потому что в игре есть четыре вещи которых нет в большинстве бизнесов.</p>
-        <div style="display:grid;gap:0.55rem;margin-top:0.75rem;">
-            <div style="padding:0.75rem 0.9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.2rem;">Цель</div><p style="font-size:0.78rem;color:#525252;line-height:1.6;">Ты знаешь куда двигаться. Без цели нет игры — есть просто движение ради движения.</p></div>
-            <div style="padding:0.75rem 0.9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.2rem;">Правила</div><p style="font-size:0.78rem;color:#525252;line-height:1.6;">Чёткие границы того что можно и нельзя. Без правил — каждый играет по-своему.</p></div>
-            <div style="padding:0.75rem 0.9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.2rem;">Роли</div><p style="font-size:0.78rem;color:#525252;line-height:1.6;">Каждый знает свою позицию. Вратарь не бегает атаковать. Когда все делают «всего понемногу» — результата нет.</p></div>
-            <div style="padding:0.75rem 0.9rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><div style="font-weight:700;font-size:0.82rem;color:#1a1a1a;margin-bottom:0.2rem;">Счёт</div><p style="font-size:0.78rem;color:#525252;line-height:1.6;">Ты видишь результат в реальном времени. Без счёта нет мотивации победить.</p></div>
-        </div>
-        <p style="margin-top:0.85rem;">Знают ли твои сотрудники чёткую цель? Есть ли у них роли? Есть ли счёт? Если «нет» — это не их игра. Они просто приходят получить зарплату.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Почему люди не играют в твою игру</div></div>
-    <div class="lesson-block-content">
-        <p>Спроси прямо сейчас любого своего сотрудника: <em>«Какая главная цель нашей компании?»</em></p>
-        <p>Из опыта 150+ кейсов ответ почти всегда один из двух: <strong>«Заработать деньги»</strong> или <strong>«Не знаю»</strong>.</p>
-        <p>Человек который отвечает «заработать деньги» считает что смысл существования твоей компании — сделать тебя богаче. Зачем ему стараться больше минимума?</p>
-        <p>Он не плохой человек. Он просто играет в единственную игру которую понимает — «отработать и получить зарплату».</p>
-        <p>Тот же человек может искренне болеть за футбольную команду и добровольно тратить выходные на волонтёрство. Потому что там есть настоящая игра. Проблема не в людях — проблема в том что никто не построил для них игру внутри бизнеса.</p>
-    </div>
-</div>
-
-<div class="lesson-block" style="border-left:3px solid #f59e0b;background:#fffbeb;">
-    <div class="lesson-block-header"><div class="lesson-block-title">Главное заблуждение владельцев МСБ</div></div>
-    <div class="lesson-block-content">
-        <p>Когда я говорю о системе — большинство владельцев думают: больше контроля, больше отчётов, больше правил. Это не так.</p>
-        <p>Система — это не про контроль. Система — это про то, чтобы игра происходила <strong>без тебя</strong>.</p>
-        <p>В футболе есть судья — но судья не играет. Есть тренер — но тренер не выходит на поле.</p>
-        <p><strong>Владелец с системой — тренер и автор правил. Владелец без системы — игрок, тренер, судья и уборщик стадиона одновременно.</strong></p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Технология и администрирование — два уровня каждого бизнеса</div></div>
-    <div class="lesson-block-content">
-        <p><strong>Технология</strong> — как именно делается работа: как врач принимает пациента, как менеджер ведёт переговоры.</p>
-        <p><strong>Администрирование</strong> — как организована игра: кто за что отвечает, какие правила, как измеряется результат.</p>
-        <p>Большинство владельцев МСБ — отличные технологи. Но есть ловушка: когда ты лучший технолог — все сложные ситуации летят к тебе. Ты незаменим. И это не преимущество — это тюрьма.</p>
-        <div style="margin:0.85rem 0;padding:0.9rem;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
-                <div>
-                    <div style="font-size:0.67rem;font-weight:700;color:#6b7280;letter-spacing:0.08em;margin-bottom:0.45rem;">ТЕХНОЛОГИЯ</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f3f4f6;border-radius:6px;margin-bottom:0.25rem;">Как продавать</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f3f4f6;border-radius:6px;margin-bottom:0.25rem;">Как производить</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f3f4f6;border-radius:6px;">Как оказывать сервис</div>
-                    <div style="font-size:0.73rem;color:#9ca3af;padding:0.2rem 0.55rem;font-style:italic;">Знают исполнители</div>
-                </div>
-                <div>
-                    <div style="font-size:0.67rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.45rem;">АДМИНИСТРИРОВАНИЕ</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;margin-bottom:0.25rem;">Цели компании</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;margin-bottom:0.25rem;">Роли и функции</div>
-                    <div style="font-size:0.77rem;color:#374151;padding:0.3rem 0.55rem;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;">Метрики и счёт</div>
-                    <div style="font-size:0.73rem;color:#16a34a;padding:0.2rem 0.55rem;font-weight:600;">Зона владельца</div>
-                </div>
-            </div>
-        </div>
-        <p>Большинство владельцев годами совершенствуют технологию — и оставляют администрирование на уровне «как-нибудь само сложится». Результат — бизнес полностью зависящий от присутствия владельца.</p>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Три состояния — где ты сейчас?</div></div>
-    <div class="lesson-block-content">
-        <p>За 10 лет консалтинга я видел три состояния в которых находятся владельцы МСБ. Определи где ты сейчас.</p>
-        <div style="display:grid;gap:0.6rem;margin-top:0.75rem;">
-            <div style="padding:0.85rem;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;"><div style="font-weight:700;font-size:0.82rem;color:#991b1b;margin-bottom:0.3rem;">Состояние 1 — Самозанятость</div><p style="font-size:0.78rem;color:#7f1d1d;line-height:1.6;">Владелец — главный исполнитель. Без него ничего не движется. Отпуск — привилегия которой нет. Это не бизнес — это работа на себя.</p></div>
-            <div style="padding:0.85rem;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;"><div style="font-weight:700;font-size:0.82rem;color:#92400e;margin-bottom:0.3rem;">Состояние 2 — Пожарный</div><p style="font-size:0.78rem;color:#78350f;line-height:1.6;">Команда есть, процессы есть — но что-то постоянно ломается. Владелец решает кризисы вместо того чтобы развивать бизнес.</p></div>
-            <div style="padding:0.85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;"><div style="font-weight:700;font-size:0.82rem;color:#166534;margin-bottom:0.3rem;">Состояние 3 — Системный бизнес</div><p style="font-size:0.78rem;color:#14532d;line-height:1.6;">Команда знает цель, роли, правила и счёт. Владелец принимает стратегические решения. Бизнес растёт когда владельца нет рядом.</p></div>
-        </div>
-    </div>
-</div>
-
-<div class="lesson-block">
-    <div class="lesson-block-header"><div class="lesson-block-title">Что происходит когда появляется система</div></div>
-    <div class="lesson-block-content">
-        <p>Владелец мебельной компании — назовём его Андрей — проводил на работе 10–12 часов в день. Команда 23 человека, но выручка не росла два года.</p>
-        <p>Первое что мы сделали — не нанимали новых людей. Мы построили функциональную структуру: прописали кто за что отвечает и какой результат производит каждая роль. Потом метрики. Потом процессы решений без владельца.</p>
-        <p>Через четыре месяца Андрей уехал в отпуск на 12 дней. Первый раз за шесть лет. Когда вернулся — выручка за это время была на 8% выше. Потому что без его постоянного вмешательства менеджеры наконец начали принимать решения самостоятельно.</p>
-    </div>
-</div>
-
-<div class="result-block">
-    <strong>Главный вывод.</strong> Бизнес — это командная игра. Чтобы команда играла без тебя, нужна система: чёткая цель, распределённые роли, правила и счёт. Именно это мы строим в программе — шаг за шагом. В следующем уроке увидишь как выглядит маршрут этого пути.
-</div>`,
-
-                homework: `<ol>
-<li>Визначте в якому стані зараз ваш бізнес (1, 2 або 3) і запишіть чому</li>
-<li>Пройдіть асистента термінів — <strong>перші 13 термінів</strong>, не більше</li>
-<li>Пройдіть AI-коуча підготовки (мінімум 3 кроки)</li>
-</ol>`,
-                homework_ru: `<ol>
-<li>Определите в каком состоянии сейчас ваш бизнес (1, 2 или 3) и запишите почему</li>
-<li>Пройдите ассистента терминов — <strong>первые 13 терминов</strong>, не больше</li>
-<li>Пройдите AI-коуча подготовки (минимум 3 шага)</li>
-</ol>`,
-
-                homeworkLink: null,
-                homeworkLinkName: null,
-                homeworkLinkName_ru: null,
-                time: 25
-            },
-            {
-                id: 1,
                 title: "МАРШРУТ ПРОГРАМИ",
                 title_ru: "МАРШРУТ ПРОГРАММЫ",
                 subtitle: "Покрокова карта переходу від хаотичного управління до системного бізнесу",
@@ -270,10 +25,10 @@
         <div class="lesson-block-title">Що це таке</div>
     </div>
     <div class="lesson-block-content">
-        <p>У попередньому уроці ми з'ясували головне: бізнес — це командна гра. І щоб команда грала без тебе, потрібна система.</p>
-        <p style="margin-top:0.75rem;">Але як саме будується ця система? З чого починати? В якій послідовності рухатись?</p>
-        <p style="margin-top:0.75rem;">Більшість власників намагаються навести порядок хаотично. Сьогодні — найм, завтра — маркетинг, післязавтра — CRM. Результату немає — тому що порядок має значення.</p>
-        <p style="margin-top:0.75rem;">Саме тому у програмі є <strong>маршрут систематизації бізнесу</strong> — покрокова карта яка веде від хаосу до системи в правильному порядку.</p>
+        <p>Більшість власників намагаються навести порядок у бізнесі хаотично.</p>
+        <p style="margin-top:0.75rem;">Сьогодні займаються наймом.<br>Завтра — маркетингом.<br>Післязавтра — CRM або фінансами.</p>
+        <p style="margin-top:0.75rem;">У результаті робота ведеться у різних напрямках, але система так і не з'являється.</p>
+        <p style="margin-top:0.75rem;">Саме тому у програмі використовується <strong>маршрут систематизації бізнесу</strong>.</p>
         <p style="margin-top:0.75rem;">Це покрокова карта, яка показує:</p>
         <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
             <li>що потрібно налаштувати</li>
@@ -334,10 +89,10 @@
         <div class="lesson-block-title">Что это такое</div>
     </div>
     <div class="lesson-block-content">
-        <p>В предыдущем уроке мы выяснили главное: бизнес — это командная игра. И чтобы команда играла без тебя, нужна система.</p>
-        <p style="margin-top:0.75rem;">Но как именно строится эта система? С чего начинать? В какой последовательности двигаться?</p>
-        <p style="margin-top:0.75rem;">Большинство владельцев пытаются навести порядок хаотично. Сегодня — найм, завтра — маркетинг, послезавтра — CRM. Результата нет — потому что порядок имеет значение.</p>
-        <p style="margin-top:0.75rem;">Именно поэтому в программе есть <strong>маршрут систематизации бизнеса</strong> — пошаговая карта которая ведёт от хаоса к системе в правильном порядке.</p>
+        <p>Большинство владельцев пытаются навести порядок в бизнесе хаотично.</p>
+        <p style="margin-top:0.75rem;">Сегодня занимаются наймом.<br>Завтра — маркетингом.<br>Послезавтра — CRM или финансами.</p>
+        <p style="margin-top:0.75rem;">В итоге работа ведётся в разных направлениях, но система так и не появляется.</p>
+        <p style="margin-top:0.75rem;">Именно поэтому в программе используется <strong>маршрут систематизации бизнеса</strong>.</p>
         <p style="margin-top:0.75rem;">Это пошаговая карта, которая показывает:</p>
         <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
             <li>что нужно настроить</li>
@@ -401,7 +156,7 @@
                 time: 15
             },
             {
-                id: 2,
+                id: 1,
                 title: "ЯК ПРАЦЮВАТИ З GOOGLE ДИСКОМ",
                 title_ru: "КАК РАБОТАТЬ С GOOGLE ДИСКОМ",
                 subtitle: "Підготовка робочого середовища програми",
@@ -688,7 +443,7 @@
                 time: 15
             },
             {
-                id: 3,
+                id: 2,
                 title: "СЛОВНИК ТЕРМІНІВ + ЕФЕКТИВНЕ НАВЧАННЯ",
                 title_ru: "СЛОВАРЬ ТЕРМИНОВ + ЭФФЕКТИВНОЕ ОБУЧЕНИЕ",
                 subtitle: "Технологія навчання + прояснення 13 термінів",
@@ -999,7 +754,7 @@
                 time: 15
             },
             {
-                id: 4,
+                id: 3,
                 title: "НАЛАШТУВАННЯ ДОСТУПУ ДО AI",
                 title_ru: "НАСТРОЙКА ДОСТУПА К AI",
                 subtitle: "ChatGPT та Claude AI — ваші робочі інструменти",
@@ -1218,7 +973,7 @@
                 time: 10
             },
             {
-                id: 5,
+                id: 4,
                 title: "СИСТЕМА РОЗПОРЯДЖЕНЬ",
                 title_ru: "СИСТЕМА РАСПОРЯЖЕНИЙ",
                 subtitle: "Як ставити завдання так, щоб їх виконували",
@@ -1558,7 +1313,7 @@
 
             },
             {
-                id: 6,
+                id: 5,
                 title: "СИСТЕМА РАДАР",
                 title_ru: "СИСТЕМА РАДАР",
                 subtitle: "Як перестати бути «пожежником» для власної команди",
@@ -2087,7 +1842,7 @@
 
             },
             {
-                id: 7,
+                id: 6,
                 title: "ТЕХНІЧНИЙ ПРОВІДНИК",
                 title_ru: "ТЕХНИЧЕСКИЙ ПРОВОДНИК",
                 subtitle: "AI-інструмент для покрокового налаштування технічних рішень",
@@ -2442,7 +2197,7 @@
                 time: 20
             },
             {
-                id: 8,
+                id: 7,
                 title: "ПІДГОТОВКА КОМАНДИ ДО ЗМІН",
                 title_ru: "ПОДГОТОВКА КОМАНДЫ К ИЗМЕНЕНИЯМ",
                 subtitle: "Як познайомити співробітників з проектом систематизації",
@@ -3179,7 +2934,7 @@
                 time: 60
             },
             {
-                id: 9,
+                id: 8,
                 title: "АНАЛІЗ ВУЗЬКОГО МІСЦЯ БІЗНЕСУ",
                 title_ru: "АНАЛИЗ УЗКОГО МЕСТА БИЗНЕСА",
                 subtitle: "5 шарів, де насправді ховається проблема",
@@ -3580,7 +3335,7 @@
                 time: 20
             },
             {
-                id: 10,
+                id: 9,
                 title: "ЦІЛЬ, ЗАДУМ, ПРОДУКТ ОРГАНІЗАЦІЇ. ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
                 title_ru: "ЦЕЛЬ, ЗАМЫСЕЛ, ПРОДУКТ ОРГАНИЗАЦИИ. ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
                 subtitle: "Фундамент системного бізнесу",
@@ -4225,7 +3980,7 @@
                 time: 15
             },
             {
-                id: 11,
+                id: 10,
                 title: "ЦІЛЬ І ЗАДУМ",
                 title_ru: "ЦЕЛЬ И ЗАМЫСЕЛ",
                 subtitle: "Фундамент, на якому тримається управління, мотивація і розвиток бізнесу",
@@ -4812,7 +4567,7 @@
                 time: 180
             },
             {
-                id: 12,
+                id: 11,
                 title: "ПРОДУКТ ОРГАНІЗАЦІЇ",
                 title_ru: "ПРОДУКТ ОРГАНИЗАЦИИ",
                 subtitle: "Що насправді виробляє ваш бізнес — і як це зробити зрозумілим для команди",
@@ -5249,7 +5004,7 @@
                 time: 180
             },
             {
-                id: 13,
+                id: 12,
                 title: "ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
                 title_ru: "ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
                 subtitle: "Як організувати роботу так, щоб бізнес працював без вас",
@@ -5816,7 +5571,7 @@
                 time: 180
             },
             {
-                id: 14,
+                id: 13,
                 title: "СИСТЕМА СТАТИСТИК",
                 title_ru: "СИСТЕМА СТАТИСТИК",
                 subtitle: "Як бачити бізнес у цифрах — і чому тиждень важливіший за місяць",
@@ -6078,7 +5833,7 @@
                 time: 60
             },
             {
-                id: 15,
+                id: 14,
                 title: "ВПРОВАДЖЕННЯ НА ПЛАТФОРМІ",
                 title_ru: "ВНЕДРЕНИЕ НА ПЛАТФОРМЕ",
                 subtitle: "Запитайте AI-асистента — він пояснить що і як робити",
