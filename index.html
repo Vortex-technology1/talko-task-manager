@@ -978,17 +978,51 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                     </div>
                     <div style="margin-top:1rem;padding:1rem;background:#f8f9fa;border-radius:8px;">
-                        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-                            <span data-i18n="viewLabel">Перегляд:</span>
-                            <select class="filter-select" id="controlViewType" onchange="renderControlContent()" style="min-width:150px;">
-                                <option value="briefing" data-i18n="morningBriefing">Брифінг</option>
-                                <option value="workload" data-i18n="workload">Навантаження</option>
-                                <option value="functions" data-i18n="byFunctions">По функціях</option>
-                                <option value="pipeline" data-i18n="delegationPipeline">Воронка делегування</option>
-                                <option value="journal" data-i18n="failureJournal">Журнал збоїв</option>
-                                <option value="ownerreport" id="ownerReportOption" style="display:none;">📊 Звіт власника</option>
-                            </select>
+                        <!-- Режими перегляду як кнопки -->
+                        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem;" id="controlViewButtons">
+                            <button onclick="setControlView('briefing')" data-view="briefing"
+                                class="ctrl-view-btn ctrl-view-active"
+                                style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:7px;border:1px solid #e8eaed;background:#22c55e;color:white;cursor:pointer;font-size:0.78rem;font-weight:600;position:relative;"
+                                onmouseenter="showCtrlTooltip(this,'briefing')" onmouseleave="hideCtrlTooltip()">
+                                🔥 Брифінг
+                            </button>
+                            <button onclick="setControlView('people')" data-view="people"
+                                class="ctrl-view-btn"
+                                style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:7px;border:1px solid #e8eaed;background:white;color:#374151;cursor:pointer;font-size:0.78rem;font-weight:600;"
+                                onmouseenter="showCtrlTooltip(this,'people')" onmouseleave="hideCtrlTooltip()">
+                                👥 По людях
+                            </button>
+                            <button onclick="setControlView('functions')" data-view="functions"
+                                class="ctrl-view-btn"
+                                style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:7px;border:1px solid #e8eaed;background:white;color:#374151;cursor:pointer;font-size:0.78rem;font-weight:600;"
+                                onmouseenter="showCtrlTooltip(this,'functions')" onmouseleave="hideCtrlTooltip()">
+                                ⚙️ По функціях
+                            </button>
+                            <button onclick="setControlView('journal')" data-view="journal"
+                                class="ctrl-view-btn"
+                                style="display:flex;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:7px;border:1px solid #e8eaed;background:white;color:#374151;cursor:pointer;font-size:0.78rem;font-weight:600;"
+                                onmouseenter="showCtrlTooltip(this,'journal')" onmouseleave="hideCtrlTooltip()">
+                                📋 Журнал збоїв
+                            </button>
+                            <button onclick="setControlView('ownerreport')" data-view="ownerreport" id="ownerReportOption" style="display:none;align-items:center;gap:0.3rem;padding:0.35rem 0.75rem;border-radius:7px;border:1px solid #e8eaed;background:white;color:#374151;cursor:pointer;font-size:0.78rem;font-weight:600;"
+                                class="ctrl-view-btn"
+                                onmouseenter="showCtrlTooltip(this,'ownerreport')" onmouseleave="hideCtrlTooltip()">
+                                📊 Звіт власника
+                            </button>
                         </div>
+                        <!-- Tooltip підказка -->
+                        <div id="ctrlTooltip" style="display:none;background:#1f2937;color:white;border-radius:8px;padding:0.6rem 0.85rem;font-size:0.76rem;line-height:1.45;max-width:320px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-bottom:0.5rem;position:relative;">
+                            <div id="ctrlTooltipText"></div>
+                        </div>
+                        <!-- Прихований select для сумісності з js -->
+                        <select id="controlViewType" style="display:none;">
+                            <option value="briefing">Брифінг</option>
+                            <option value="people">По людях</option>
+                            <option value="functions">По функціях</option>
+                            <option value="pipeline">Воронка делегування</option>
+                            <option value="journal">Журнал збоїв</option>
+                            <option value="ownerreport">Звіт власника</option>
+                        </select>
                     </div>
                     <div id="controlContent" style="margin-top:1rem;"></div>
                 </div>
