@@ -43,8 +43,7 @@ function _renderShell() {
 
 async function _loadSettings() {
     try {
-        const doc = await firebase.firestore()
-            window.companyRef().get();
+        const doc = await window.companyRef().get();
         intg.settings = doc.data() || {};
     } catch(e) {
         intg.settings = {};

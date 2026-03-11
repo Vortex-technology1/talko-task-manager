@@ -130,6 +130,7 @@ window.crmSwitchTab = function(tab) {
 // ── Load ───────────────────────────────────────────────────
 async function _loadAll() {
     const base = window.companyRef();
+    if (!base) throw new Error('companyRef not ready');
     crm.unsubs.forEach(u => u && u());
     crm.unsubs = [];
 
@@ -1506,8 +1507,7 @@ function _subscribeDeals() {
     crm.unsubs = [];
     crm.loading = true;
     if (!crm.pipeline) return;
-    const dealUnsub = firebase.firestore()
-        window.companyRef().collection(window.DB_COLS.CRM_DEALS)
+    const dealUnsub = window.companyRef().collection(window.DB_COLS.CRM_DEALS)
         .where('pipelineId','==', crm.pipeline.id).limit(200)
         .onSnapshot(snap => {
             crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}))
@@ -1533,8 +1533,7 @@ async function _doCreatePipeline(name) {
         {id:'lost',               label:'Програно',   color:'#ef4444', order:4},
     ];
     try {
-        const ref = await firebase.firestore()
-            window.companyRef().collection(window.DB_COLS.CRM_PIPELINE)
+        const ref = await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE)
             .add({ name, isDefault:false, stages, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         crm.pipelines.push({ id:ref.id, name, isDefault:false, stages });
         if (typeof showToast === 'function') showToast('Воронку створено', 'success');
