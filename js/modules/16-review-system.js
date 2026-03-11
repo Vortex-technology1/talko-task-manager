@@ -145,7 +145,8 @@
         // Постановник повертає на доопрацювання
         async function rejectReviewTask(taskId) {
             if (!currentUser) return;
-            // Only creator or manager+ can reject review
+            if (reviewingTasks.has(taskId)) return; // lock for double-click
+            reviewingTasks.add(taskId);
             const taskForCheck = tasks.find(t => t.id === taskId);
             if (taskForCheck && taskForCheck.creatorId !== currentUser?.uid && !isManagerOrAbove()) {
                 showToast(t('noPermissionTask'), 'error');
@@ -188,5 +189,7 @@
                 renderMyDay();
                 refreshCurrentView();
                 showAlertModal(t('error') + ': ' + e.message);
+            } finally {
+                reviewingTasks.delete(taskId);
             }
         }

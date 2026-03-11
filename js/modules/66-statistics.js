@@ -371,7 +371,11 @@
     // ========================
     //  SAVE METRIC
     // ========================
+    let _saveMetricLock = false; // lock for double-submit
     async function saveMetric() {
+        if (_saveMetricLock) return;
+        _saveMetricLock = true;
+        try {
         if (!canEditMetrics()) { showToast(t('noPermission') || 'Немає доступу', 'error'); return; }
         const name = document.getElementById('metricName')?.value?.trim();
         if (!name) { showToast(t('enterName') || 'Введіть назву', 'error'); return; }
@@ -450,6 +454,7 @@
             console.error('[STATS] saveMetric:', e);
             showToast(t('error') || 'Помилка', 'error');
         }
+        } finally { _saveMetricLock = false; }
     }
 
     async function deleteMetric(mid) {
@@ -648,7 +653,11 @@
         openModal('quickInputModal');
     }
 
+    let _saveQuickInputLock = false; // lock for double-submit
     async function saveQuickInput() {
+        if (_saveQuickInputLock) return;
+        _saveQuickInputLock = true;
+        try {
         const date = document.getElementById('quickInputDatePicker')?.value;
         const inputs = document.querySelectorAll('.quick-input-value');
         let saved = 0;
@@ -666,6 +675,7 @@
             await loadEntries(getStatsPeriodKey(statsPeriodOffset));
             renderStatistics();
         }
+        } finally { _saveQuickInputLock = false; }
     }
 
     // ========================
