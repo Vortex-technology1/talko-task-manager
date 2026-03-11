@@ -18,7 +18,7 @@
             document.getElementById('taskAssignee').value = '';
             document.getElementById('taskFunction').value = '';
             
-            document.getElementById('taskModal').style.display = 'flex';
+            const _modal = document.getElementById('taskModal'); if (!_modal) return; _modal.style.display = 'flex';
             refreshIcons();
         }
         

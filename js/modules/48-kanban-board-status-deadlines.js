@@ -125,7 +125,7 @@
                     const funcName = tk.function || '';
                     const isOverdue = tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done';
                     const isToday = tk.deadlineDate === todayStr;
-                    const escalation = getEscalationLevel(t);
+                    const escalation = getEscalationLevel(tk);
                     
                     let deadlineHtml = '';
                     if (tk.deadlineDate) {
@@ -295,7 +295,7 @@
             kanbanDropLock = true;
             
             const targetCol = e.currentTarget.dataset.col;
-            const task = tasks.find(t => tk.id === kanbanDraggedId);
+            const task = tasks.find(t => t.id === kanbanDraggedId);
             if (!task) { kanbanDropLock = false; return; }
             
             // Permission check: owner/admin/manager can move any, employee only own

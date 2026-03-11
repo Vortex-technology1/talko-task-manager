@@ -3,7 +3,7 @@
         // =====================
 'use strict';
         function openTaskModal(id = null) {
-            document.getElementById('taskModal').style.display = 'block';
+            const _modal = document.getElementById('taskModal'); if (!_modal) return; _modal.style.display = 'block';
             // ГЛЮК FIX: скидаємо isSaving при кожному відкритті — захист від зависання spinner
             isSaving = false;
             const _sb = document.querySelector('#taskModal button[type="submit"]');
