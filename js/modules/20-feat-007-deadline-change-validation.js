@@ -284,8 +284,7 @@
         }
 
         // Mobile quick complete
-        const completingTaskIds = new Set();
-        const pendingDeleteIds = new Set(); // Prevent snapshot re-inserting during delete
+        // completingTaskIds and pendingDeleteIds declared in 03-app-state.js (loaded first)
         
         async function quickCompleteTask(id) {
             const taskForQC = tasks.find(t => t.id === id);

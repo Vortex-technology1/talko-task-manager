@@ -102,6 +102,8 @@
         // Race condition protection
         let isLoading = false;
         let isSaving = false;
+        const pendingDeleteIds = new Set(); // Prevent snapshot re-inserting during delete
+        const completingTaskIds = new Set(); // Prevent double-tap complete
         let loadingVersion = 0; // Tracks which load operation is current
         
         // Debounce utility

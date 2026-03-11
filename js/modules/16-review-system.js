@@ -150,14 +150,15 @@
             const taskForCheck = tasks.find(t => t.id === taskId);
             if (taskForCheck && taskForCheck.creatorId !== currentUser?.uid && !isManagerOrAbove()) {
                 showToast(t('noPermissionTask'), 'error');
+                reviewingTasks.delete(taskId); // lock cleanup
                 return;
             }
             
             const reason = await (window.showInputModal ? showInputModal(t('rejectReasonPlaceholder'), '', {placeholder: 'Причина відхилення', multiline: true}) : (async()=>prompt(t('rejectReasonPlaceholder')))());
-            if (reason === null) return;
+            if (reason === null) { reviewingTasks.delete(taskId); return; }
             
             const taskIndex = tasks.findIndex(t => t.id === taskId);
-            if (taskIndex < 0) return;
+            if (taskIndex < 0) { reviewingTasks.delete(taskId); return; }
             
             const originalTask = deepCloneTask(tasks[taskIndex]);
             
