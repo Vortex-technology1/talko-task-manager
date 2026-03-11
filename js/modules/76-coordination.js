@@ -188,9 +188,7 @@
               <button class="btn btn-success" onclick="openCoordModal()" style="padding:.42rem 1rem;font-size:.83rem;">
                 <i data-lucide="plus" class="icon"></i> Нова координація
               </button>
-              <button class="btn" onclick="openCoordAnalysis()" style="padding:.42rem 1rem;font-size:.83rem;background:#7c3aed;color:#fff;border:none;">
-                <i data-lucide="sparkles" class="icon"></i> AI Аналіз
-              </button>`:''}
+`:''}
             </div>
           </div>
           <div id="coordList"></div>
