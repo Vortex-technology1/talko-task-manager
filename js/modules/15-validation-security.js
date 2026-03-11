@@ -83,9 +83,12 @@
         }
         
         function isManagerOrAbove() {
+            if (!currentUserData || !currentUser) return true; // not blocking while data loads
             const role = currentUserData?.role;
-            if (typeof hasPermission === 'function') return hasPermission('deleteAnyTask') || role === 'owner' || role === 'superadmin';
-            return role === 'owner' || role === 'admin' || role === 'manager' || role === 'superadmin';
+            // FIX: include admin/manager in hasPermission branch (was missing before)
+            if (role === 'owner' || role === 'admin' || role === 'manager' || role === 'superadmin') return true;
+            if (typeof hasPermission === 'function') return hasPermission('deleteAnyTask') || hasPermission('editAnyTask') || hasPermission('assignTasks');
+            return false;
         }
         
         // Safe batch wrapper — auto-splits at 450 operations (Firestore limit is 500)
