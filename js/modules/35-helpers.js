@@ -339,7 +339,7 @@
             const arrow = document.getElementById('taskAdvancedArrow');
             if (!panel) return;
             const isOpen = panel.style.display !== 'none';
-            panel.style.display = isOpen ? 'none' : 'contents';
+            panel.style.display = isOpen ? 'none' : 'grid';
             if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
         }
         

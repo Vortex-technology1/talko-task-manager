@@ -14,7 +14,7 @@
             // Accordion: закриваємо при новій задачі, розкриваємо при редагуванні
             const advPanel = document.getElementById('taskAdvancedPanel');
             const advArrow = document.getElementById('taskAdvancedArrow');
-            if (advPanel) advPanel.style.display = id ? 'contents' : 'none';
+            if (advPanel) advPanel.style.display = id ? 'grid' : 'none';
             if (advArrow) advArrow.style.transform = id ? 'rotate(180deg)' : '';
             
             // Initialize comments section
@@ -49,7 +49,7 @@
                     // Розбиваємо deadline на дату і час
                     const dl = parseDeadline(task);
                     document.getElementById('taskDeadlineDate').value = dl.date;
-                    document.getElementById('taskDeadlineTime').value = dl.time || '18:00';
+                    document.getElementById('taskDeadlineTime').value = dl.time || '';
                     
                     // Час закінчення / тривалість
                     if (task.timeEnd) {
