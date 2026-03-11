@@ -89,7 +89,7 @@
         if (!root) return;
 
         const stats = getLearningStats();
-        const isRu = getLearningLang() === 'ru';
+        const lang = getLearningLang();
 
         root.innerHTML = `
         <div class="learning-wrap">
@@ -97,7 +97,7 @@
             <div class="learning-header">
                 <div class="learning-header-title">
                     <i data-lucide="graduation-cap" class="icon" style="color:#22c55e;width:24px;height:24px;"></i>
-                    <span>${isRu ? 'Программа обучения' : 'Програма навчання'}</span>
+                    <span>${t('learningTitle')}</span>
                 </div>
     
             </div>
@@ -106,11 +106,11 @@
             <div class="learning-stats">
                 <div class="learning-stat">
                     <div class="learning-stat-value">${stats.pct}%</div>
-                    <div class="learning-stat-label">${isRu ? 'Прогресс' : 'Прогрес'}</div>
+                    <div class="learning-stat-label">${t('learningProgress')}</div>
                 </div>
                 <div class="learning-stat">
                     <div class="learning-stat-value">${stats.completed}/${stats.total}</div>
-                    <div class="learning-stat-label">${isRu ? 'Модулей' : 'Модулів'}</div>
+                    <div class="learning-stat-label">${t('learningModules')}</div>
                 </div>
                 <div class="learning-progress-bar-wrap">
                     <div class="learning-progress-bar" style="width:${stats.pct}%"></div>
@@ -119,16 +119,17 @@
 
             <!-- Modules list -->
             <div class="learning-modules-list" id="learningModulesList">
-                ${learningCourseData.map(module => renderModuleCard(module, isRu)).join('')}
+                ${learningCourseData.map(module => renderModuleCard(module)).join('')}
             </div>
         </div>`;
 
         if (window.refreshIcons) window.refreshIcons();
     }
 
-    function renderModuleCard(module, isRu) {
-        const title = isRu ? (module.title_ru || module.title) : module.title;
-        const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
+    function renderModuleCard(module) {
+        const lang = getLearningLang();
+        const title = lang === 'ru' ? (module.title_ru || module.title) : module.title;
+        const subtitle = lang === 'ru' ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
         const isCompleted = module.completed;
         const moduleIndex = learningCourseData.findIndex(m => m.id === module.id);
         // Перші 3 модулі (індекси 0,1,2) — завжди доступні; далі — тільки після завершення попереднього
@@ -149,7 +150,7 @@
             <div class="l-module-info">
                 <div class="l-module-title">${title}</div>
                 ${subtitle ? `<div class="l-module-subtitle">${subtitle}</div>` : ''}
-                ${module.time ? `<div class="l-module-time"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} хв</div>` : ''}
+                ${module.time ? `<div class="l-module-time"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} ${t('learningMin')}</div>` : ''}
             </div>
             <div class="l-module-arrow">
                 <i data-lucide="${isCompleted ? 'check' : 'chevron-right'}" class="icon" style="width:18px;height:18px;color:${isCompleted ? '#22c55e' : '#9ca3af'};"></i>
@@ -5034,8 +5035,8 @@
         const wasHomeworkDone = learningProgress[moduleId] && learningProgress[moduleId].homeworkDone;
         const newHomeworkDone = ta.value.trim().length > 0;
         if (wasHomeworkDone && !newHomeworkDone) {
-            const isRu = getLearningLang() === 'ru';
-            const msg = isRu ? 'Очистить домашнее задание и снять статус "Выполнено"?' : 'Очистити домашнє завдання та зняти статус "Виконано"?';
+            const isRu = getLearningLang() === 'ru'; // kept for context only
+            const msg = t('learningClearConfirm');
             if (!confirm(msg)) return;
         }
 
@@ -5044,7 +5045,7 @@
         if (btn) {
             btn.disabled = true;
             const origText = btn.innerHTML;
-            btn.innerHTML = '✓ ' + (getLearningLang() === 'ru' ? 'Сохранено' : 'Збережено');
+            btn.innerHTML = t('learningSaved');
             setTimeout(() => {
                 btn.disabled = false;
                 btn.innerHTML = origText;
@@ -5076,20 +5077,19 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
     };
 
     function renderAIBlock(module, isRu) {
-        const title = isRu ? (module.title_ru || module.title) : module.title;
-        const hwRaw = isRu ? (module.homework_ru || module.homework || '') : (module.homework || '');
+        const lang = getLearningLang();
+        const title = lang === 'ru' ? (module.title_ru || module.title) : module.title;
+        const hwRaw = lang === 'ru' ? (module.homework_ru || module.homework || '') : (module.homework || '');
         // Витягуємо тільки текст з <li> елементів, ігноруємо заголовки блоку
         const hwItems = [];
         const liMatches = hwRaw.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
         liMatches.forEach(li => hwItems.push(li.replace(/<[^>]*>/g, '').trim()));
         const hw = hwItems.length ? hwItems.join('; ') : hwRaw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
-        const prompt = isRu
+        const prompt = lang === 'ru'
             ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
             : `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
-        const btnText = isRu ? 'Запитати AI асистента' : 'Запитати AI асистента';
-        const descText = isRu
-            ? 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.'
-            : 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.';
+        const btnText = 'Запитати AI асистента';
+        const descText = 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.';
         return `
         <div class="l-ai-block">
             <div class="l-ai-block-header">
@@ -5111,7 +5111,8 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         const module = learningCourseData.find(m => m.id === moduleId);
         if (!module) return;
         currentLearningModule = module;
-        const isRu = getLearningLang() === 'ru';
+        const lang = getLearningLang();
+        const isRu = lang === 'ru';
 
         const title = isRu ? (module.title_ru || module.title) : module.title;
         const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
@@ -5126,7 +5127,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
             <div class="learning-module-nav">
                 <button class="l-back-btn" onclick="window._closeLearningModule()">
                     <i data-lucide="arrow-left" class="icon" style="width:18px;height:18px;"></i>
-                    ${isRu ? 'Назад' : 'Назад'}
+                    ${t('learningBack')}
                 </button>
 
             </div>
@@ -5137,7 +5138,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     <div>
                         <div class="l-detail-title">${title}</div>
                         ${subtitle ? `<div class="l-detail-subtitle">${subtitle}</div>` : ''}
-                        ${module.time ? `<div class="l-module-time" style="margin-top:4px;"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} хв</div>` : ''}
+                        ${module.time ? `<div class="l-module-time" style="margin-top:4px;"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} ${t('learningMin')}</div>` : ''}
                     </div>
                 </div>
 
@@ -5145,11 +5146,11 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 <div class="l-links-row">
                     <a href="${module.videoLink}" target="_blank" class="l-link-btn video">
                         <i data-lucide="play-circle" class="icon" style="width:16px;height:16px;"></i>
-                        ${isRu ? 'Видео' : 'Відео'}
+                        ${t('learningVideo')}
                     </a>
                     ${module.materialsLink ? `<a href="${module.materialsLink}" target="_blank" class="l-link-btn materials">
                         <i data-lucide="file-text" class="icon" style="width:16px;height:16px;"></i>
-                        ${isRu ? 'Материалы' : 'Матеріали'}
+                        ${t('learningMaterials')}
                     </a>` : ''}
                 </div>` : ''}
 
@@ -5172,18 +5173,18 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 <div class="l-homework-block">
                     <div class="l-homework-title">
                         <i data-lucide="pencil" class="icon" style="width:16px;height:16px;color:#f59e0b;"></i>
-                        ${isRu ? 'Домашнее задание' : 'Домашнє завдання'}
+                        ${t('learningHomework')}
                     </div>
                     ${liItems2.length
-                        ? `<ol style="margin:0.5rem 0 0.75rem 1.2rem;padding:0;color:#374151;font-size:0.9rem;line-height:1.7;">${liItems2.map(t => `<li>${t}</li>`).join('')}</ol>`
+                        ? `<ol style="margin:0.5rem 0 0.75rem 1.2rem;padding:0;color:#374151;font-size:0.9rem;line-height:1.7;">${liItems2.map(item => `<li>${item}</li>`).join('')}</ol>`
                         : `<div class="l-homework-desc">${hwHtml}</div>`
                     }
                     ${hwLinkUrl ? `<a href="${hwLinkUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.875rem;color:#16a34a;text-decoration:none;font-weight:600;margin-bottom:0.75rem;">${hwLinkName || '→ AI-асистент'}</a>` : ''}
-                    <textarea class="l-homework-textarea" id="learningHwTextarea" placeholder="${isRu ? 'Введите ваш ответ...' : 'Введіть вашу відповідь...'}">${hwText}</textarea>
+                    <textarea class="l-homework-textarea" id="learningHwTextarea" placeholder="${t('learningHwPlaceholder')}">${hwText}</textarea>
                     <div class="l-homework-actions">
-                        ${hwDone ? `<span class="l-hw-done-badge"><i data-lucide="check" class="icon" style="width:14px;height:14px;"></i> ${isRu ? 'Выполнено' : 'Виконано'}</span>` : ''}
+                        ${hwDone ? `<span class="l-hw-done-badge"><i data-lucide="check" class="icon" style="width:14px;height:14px;"></i> ${t('learningDone')}</span>` : ''}
                         <button class="l-btn-save-hw" onclick="window._saveLearningHomework(${moduleId})">
-                            ${isRu ? 'Сохранить' : 'Зберегти'}
+                            ${t('learningSave')}
                         </button>
                     </div>
                 </div>`;
@@ -5194,10 +5195,10 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     ${isCompleted
                         ? `<button class="l-btn-completed" onclick="window._toggleLearningComplete(${moduleId}, false)">
                             <i data-lucide="check-circle" class="icon" style="width:18px;height:18px;"></i>
-                            ${isRu ? 'Пройден ✓' : 'Пройдено ✓'}
+                            ${t('learningCompleted')}
                            </button>`
                         : `<button class="l-btn-complete" onclick="window._toggleLearningComplete(${moduleId}, true)">
-                            ${isRu ? 'Отметить как пройденный' : 'Позначити як пройдений'}
+                            ${t('learningMarkDone')}
                            </button>`
                     }
                 </div>
