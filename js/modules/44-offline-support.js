@@ -244,8 +244,8 @@
         // Check on load
         document.addEventListener('DOMContentLoaded', updateOnlineStatus);
         
-        // Periodic save (every 30 seconds)
-        setInterval(() => {
+        // Periodic save (every 30 seconds) — tracked for cleanup on logout
+        window._offlineSaveInterval = setInterval(() => {
             if (isOnline() && tasks.length > 0) {
                 saveOfflineData();
             }

@@ -181,7 +181,7 @@
             // Підсвічування dropdown-батьків по новій структурі меню
             var tasksTabs    = ['tasks','regular'];
             var analyticsTabs = ['statistics','analytics','ownerDashboard'];
-            var sysTabs      = ['functions','bizstructure','users','admin','learning'];
+            var sysTabs      = ['functions','bizstructure','users','admin','learning','onboarding'];
 
             var tasksBtn     = document.getElementById('tasksTabBtn');
             var analyticsBtn = document.getElementById('analyticsTabBtn');

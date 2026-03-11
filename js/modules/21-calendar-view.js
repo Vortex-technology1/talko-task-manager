@@ -915,8 +915,9 @@
             // Generate time slots
             renderCalendar();
             
-            // Update current time line every minute
-            setInterval(updateCurrentTimeLine, 60000);
+            // Update current time line every minute — tracked for cleanup
+            if (window._calendarTimeLineInterval) clearInterval(window._calendarTimeLineInterval);
+            window._calendarTimeLineInterval = setInterval(updateCurrentTimeLine, 60000);
             
             // Setup swipe navigation for mobile
             setupCalendarSwipe();

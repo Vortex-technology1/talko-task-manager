@@ -43,6 +43,9 @@ let crm = {
 // ── Init ───────────────────────────────────────────────────
 window.initCRMModule = async function () {
     if (!window.currentCompanyId) return;
+    // Guard: prevent double-init race condition (called from auth + switchTab)
+    if (crm._initializingFor === window.currentCompanyId) return;
+    crm._initializingFor = window.currentCompanyId;
     _renderShell();
     try {
         await _loadAll();
@@ -50,8 +53,8 @@ window.initCRMModule = async function () {
         console.error('[CRM]', e.message);
         const c = document.getElementById('crmViewKanban');
         if (c) c.innerHTML = `<div style="padding:2rem;text-align:center;color:#ef4444;font-size:0.82rem;">
-            Помилка: ${e.message}<br>
-            <button onclick="window.initCRMModule()" style="margin-top:0.75rem;padding:0.4rem 1rem;
+            Помилка: ${window.htmlEsc ? window.htmlEsc(e.message) : e.message}<br>
+            <button onclick="crm._initializingFor=null;window.initCRMModule()" style="margin-top:0.75rem;padding:0.4rem 1rem;
             background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;">Повторити</button></div>`;
         crm.loading = false;
     }

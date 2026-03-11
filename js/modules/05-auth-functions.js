@@ -435,6 +435,16 @@
                 clearInterval(_pageTitleInterval);
                 _pageTitleInterval = null;
             }
+            // FIX: cleanup offline save interval
+            if (window._offlineSaveInterval) {
+                clearInterval(window._offlineSaveInterval);
+                window._offlineSaveInterval = null;
+            }
+            // FIX: cleanup calendar time line interval
+            if (window._calendarTimeLineInterval) {
+                clearInterval(window._calendarTimeLineInterval);
+                window._calendarTimeLineInterval = null;
+            }
             // Clear undo timers
             if (typeof undoTimerInterval !== 'undefined' && undoTimerInterval) {
                 clearInterval(undoTimerInterval);
@@ -451,6 +461,18 @@
             // ── Скидаємо модулі при logout (для re-login іншого юзера) ────
             if (typeof window.destroyBotsModule === 'function') {
                 window.destroyBotsModule();
+            }
+            // FIX: CRM listeners cleanup on logout
+            if (window.TALKO && window.TALKO.crm && window.TALKO.crm.unsubs) {
+                window.TALKO.crm.unsubs.forEach(u => u && u());
+                window.TALKO.crm.unsubs = [];
+            }
+            if (window.TALKO && window.TALKO.crm) {
+                window.TALKO.crm._initializingFor = null;
+            }
+            // FIX: Landing pages listener cleanup on logout
+            if (typeof window.destroyLandingPagesModule === 'function') {
+                window.destroyLandingPagesModule();
             }
             // Reset TALKO domain caches
             if (window.TALKO) {

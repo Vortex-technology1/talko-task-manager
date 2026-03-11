@@ -89,7 +89,7 @@
                 
             } catch (error) {
                 console.error('Error loading companies:', error);
-                container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:1rem;">Помилка завантаження: ' + error.message + '</p>';
+                container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:1rem;">Помилка завантаження: ' + (window.htmlEsc ? window.htmlEsc(error.message) : error.message) + '</p>';
             }
         }
         
