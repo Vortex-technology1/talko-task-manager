@@ -254,6 +254,92 @@
             });
         }
 
+        // РЕГУЛЯРНІ ЗАВДАННЯ
+        if (typeof regularTasks !== 'undefined') {
+            regularTasks.filter(t =>
+                (t.title||'').toLowerCase().includes(q)||(t.description||'').toLowerCase().includes(q)
+            ).slice(0, 3).forEach(t => {
+                const assignee = (typeof users!=='undefined') ? users.find(u=>u.id===t.assigneeId) : null;
+                results.push({
+                    category:'Регулярні', categoryIcon:'🔁',
+                    title: t.title||'(без назви)',
+                    subtitle: assignee ? (assignee.name||assignee.email) : '',
+                    badge: 'Регулярне', badgeColor:'#06b6d4',
+                    action: () => { if (typeof switchTab==='function') switchTab('regular'); }
+                });
+            });
+        }
+
+        // КООРДИНАЦІЇ (наради)
+        if (window.coordinations && window.coordinations.length) {
+            window.coordinations.filter(c =>
+                (c.name||'').toLowerCase().includes(q)||(c.description||'').toLowerCase().includes(q)
+            ).slice(0, 3).forEach(c => {
+                results.push({
+                    category:'Координація', categoryIcon:'📅',
+                    title: c.name||'(без назви)',
+                    subtitle: c.type||'',
+                    badge: c.status==='active'?'Активна':'Завершена',
+                    badgeColor: c.status==='active'?'#22c55e':'#9ca3af',
+                    action: () => {
+                        if (typeof switchTab==='function') switchTab('coordination');
+                        if (window._initCoordTab) setTimeout(window._initCoordTab, 100);
+                    }
+                });
+            });
+        }
+
+        // МЕТРИКИ
+        if (typeof metrics !== 'undefined' && metrics.length) {
+            metrics.filter(m =>
+                (m.name||'').toLowerCase().includes(q)
+            ).slice(0, 3).forEach(m => {
+                results.push({
+                    category:'Статистика', categoryIcon:'📊',
+                    title: m.name,
+                    subtitle: m.unit ? 'Одиниця: ' + m.unit : '',
+                    badge:'Метрика', badgeColor:'#8b5cf6',
+                    action: () => { if (typeof switchTab==='function') switchTab('statistics'); }
+                });
+            });
+        }
+
+        // НАВІГАЦІЯ по вкладках
+        const navItems = [
+            {keys:['мій день','myday','my day'], label:'Мій день', tab:'myday'},
+            {keys:['завдання','tasks','задачі'], label:'Завдання', tab:'tasks'},
+            {keys:['регулярні','regular'], label:'Регулярні завдання', tab:'regular'},
+            {keys:['проект','projects'], label:'Проєкти', tab:'projects'},
+            {keys:['процес','processes'], label:'Процеси', tab:'processes'},
+            {keys:['координація','coordination','нарада'], label:'Координація', tab:'coordination'},
+            {keys:['контроль','control','дашборд'], label:'Контроль', tab:'control'},
+            {keys:['аналітика','analytics'], label:'Аналітика', tab:'analytics'},
+            {keys:['статистика','statistics','метрики'], label:'Статистика', tab:'statistics'},
+            {keys:['функції','functions'], label:'Функції', tab:'functions'},
+            {keys:['структура','bizstructure'], label:'Структура', tab:'bizstructure'},
+            {keys:['співробітники','users','команда'], label:'Співробітники', tab:'users'},
+            {keys:['навчання','learning'], label:'Навчання', tab:'learning'},
+            {keys:['crm','клієнти','угоди'], label:'CRM', tab:'crm'},
+            {keys:['маркетинг','marketing'], label:'Маркетинг', tab:'marketing'},
+            {keys:['боти','bots'], label:'Боти', tab:'bots'},
+            {keys:['сайти','sites'], label:'Сайти', tab:'sites'},
+            {keys:['інтеграції','integrations'], label:'Інтеграції', tab:'integrations'},
+        ];
+        navItems.forEach(item => {
+            if (item.keys.some(k => k.includes(q) || q.includes(k))) {
+                results.push({
+                    category:'Перейти', categoryIcon:'🧭',
+                    title: item.label,
+                    subtitle: 'Відкрити вкладку',
+                    badge:'Навігація', badgeColor:'#6b7280',
+                    action: () => {
+                        if (typeof switchTab==='function') switchTab(item.tab);
+                        if (item.tab==='coordination' && window._initCoordTab) setTimeout(window._initCoordTab,100);
+                    }
+                });
+            }
+        });
+
         return results;
     }
 
