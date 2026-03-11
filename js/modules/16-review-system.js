@@ -61,6 +61,8 @@
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update({
                     status: 'progress',
                     completedAt: null,
+                    completedDate: null, // FIX 12: clear so analytics don't count reopen as completed
+                    completedBy: null,   // FIX 12
                     reopenedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     reopenedBy: currentUser?.uid || ''
                 });
@@ -94,6 +96,7 @@
             const task = tasks[taskIndex];
             if (task.creatorId !== currentUser?.uid && !isManagerOrAbove()) {
                 showToast(t('noPermissionTask'), 'error');
+                reviewingTasks.delete(taskId); // FIX 13: prevent permanent lock
                 return;
             }
             

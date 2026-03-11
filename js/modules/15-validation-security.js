@@ -193,6 +193,11 @@
                 errors.push(t('descTooLong'));
             }
             
+            // FIX 5: startDate must not be after deadlineDate
+            if (data.startDate && data.deadlineDate && data.startDate > data.deadlineDate) {
+                errors.push(t('startAfterDeadline') || 'Дата початку не може бути пізніше дедлайну');
+            }
+            
             // assigneeId — обов'язкове поле. Якщо порожнє — showToast, не зберігаємо
             if (!data.assigneeId || data.assigneeId.trim().length === 0) {
                 errors.push(t('assigneeRequired') || 'Вкажіть виконавця');

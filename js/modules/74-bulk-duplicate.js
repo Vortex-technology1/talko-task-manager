@@ -229,12 +229,24 @@
         delete clone.reviewedAt;
         delete clone.reviewedBy;
         delete clone._openedAt;
+        delete clone.completedBy;    // FIX 8: don't carry completion owner to new task
+        delete clone.reviewRejectedAt;
+        delete clone.reviewRejectedBy;
+        delete clone.reviewRejectReason;
         // P1 FIX: копія стає самостійним завданням, а не підзавданням
         delete clone.parentId;
         delete clone.parentTitle;
 
         clone.title = `${orig.title} (копія)`;
         clone.status = 'new';
+        // FIX 9: reset checklist so clone starts fresh
+        if (Array.isArray(clone.checklist)) {
+            clone.checklist = clone.checklist.map(item => ({
+                ...item,
+                id: Math.random().toString(36).slice(2,10), // new unique ID
+                done: false
+            }));
+        }
         clone.createdAt = firebase.firestore.FieldValue.serverTimestamp();
         clone.createdDate = (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0];
         clone.creatorId = currentUser.uid;
