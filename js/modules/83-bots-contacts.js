@@ -1736,10 +1736,10 @@ window.chatSend = window.bpSendMsg = async function() {
     try {
         // Відправляємо через webhook endpoint (він сам пише в Firestore + Telegram)
         const webhookBase = window.location.origin.includes('localhost')
-            ? 'https://test-talko-task-manager-test-production.up.railway.app'
-            : 'https://test-talko-task-manager-test-production.up.railway.app';
+            ? 'https://europe-west1-task-manager-44e84.cloudfunctions.net'
+            : 'https://europe-west1-task-manager-44e84.cloudfunctions.net';
 
-        const res = await fetch(`${webhookBase}/api/webhook?action=send-message`, {
+        const res = await fetch(`https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1787,7 +1787,7 @@ async function _chatMarkRead(contactId) {
         _chatRenderContactsList();
 
         // Відправляємо на сервер
-        const webhookBase = 'https://test-talko-task-manager-test-production.up.railway.app';
+        const webhookBase = 'https://europe-west1-task-manager-44e84.cloudfunctions.net';
         fetch(`${webhookBase}/api/webhook?action=mark-read`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2358,7 +2358,7 @@ async function renderSettingsTab() {
 
     const compDoc = await         window.companyRef().get();
     const compData = compDoc.data() || {};
-    const webhookUrl = `https://test-talko-task-manager-test-production.up.railway.app/api/webhook?companyId=${window.currentCompanyId}&channel=${bot.channel}`;
+    const webhookUrl = `https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`;
 
     const sectionStyle = 'background:white;border-radius:14px;padding:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);';
     const labelStyle = 'font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;';
@@ -2602,7 +2602,7 @@ window.bpReinstallWebhook = async function(botId) {
     }
 
     try {
-        const webhookUrl = `https://test-talko-task-manager-test-production.up.railway.app/api/webhook?companyId=${window.currentCompanyId}&channel=${bot.channel}`;
+        const webhookUrl = `https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`;
         const res = await fetch(`https://api.telegram.org/bot${bot.token}/setWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2638,7 +2638,7 @@ window.bpReconnectBot = async function(botId) {
         const me = await meRes.json();
         if (!me.ok) throw new Error(me.description);
 
-        const webhookUrl = `https://test-talko-task-manager-test-production.up.railway.app/api/webhook?companyId=${window.currentCompanyId}&channel=telegram`;
+        const webhookUrl = `https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`;
         const whRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
