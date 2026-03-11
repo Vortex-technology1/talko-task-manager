@@ -916,7 +916,9 @@ window.crmDrop = async function(e, newStage) {
         if (!ok) { deal.stage = oldStage; _renderKanban(); return; }
 
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
-        await ref.update({ stage: newStage, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        const stageUpdate = { stage: newStage, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+        if (newStage === 'won') stageUpdate.wonAt = firebase.firestore.FieldValue.serverTimestamp(); // FIX
+        await ref.update(stageUpdate);
         deal.stageEnteredAt = { toMillis: () => Date.now() };
         await ref.collection('history').add({
             type:'stage_changed', from:oldStage, to:newStage,
@@ -1007,7 +1009,9 @@ window.crmQuickSetStage = async function(dealId, newStage) {
         if (!ok) { deal.stage = oldStage; _renderKanban(); return; }
 
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
-        await ref.update({ stage: newStage, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        const stageUpdate2 = { stage: newStage, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+        if (newStage === 'won') stageUpdate2.wonAt = firebase.firestore.FieldValue.serverTimestamp(); // FIX
+        await ref.update(stageUpdate2);
         deal.stageEnteredAt = { toMillis: () => Date.now() };
         await ref.collection('history').add({
             type: 'stage_changed', from: oldStage, to: newStage,
@@ -1378,12 +1382,33 @@ window.crmSaveDeal = async function(dealId) {
     const assigneeId  = document.getElementById('dd_assignee')?.value || null;
 
     try {
-        const updates = { title:title||deal.title, stage:stage||deal.stage, amount, clientName:client||deal.clientName, clientNiche:niche, note, expectedClose:expClose||null, nextContactDate:nextContact||null, assigneeId:assigneeId||deal.assigneeId||null, updatedAt:firebase.firestore.FieldValue.serverTimestamp() };
-        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).update(updates);
-        if (stage !== deal.stage && typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
-            await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, { dealId, fromStage:deal.stage, toStage:stage, clientName:deal.clientName, amount });
+        const stageChanged = stage && stage !== deal.stage;
+        const updates = {
+            title: title||deal.title, stage: stage||deal.stage, amount,
+            clientName: client||deal.clientName, clientNiche: niche, note,
+            expectedClose: expClose||null, nextContactDate: nextContact||null,
+            assigneeId: assigneeId||deal.assigneeId||null,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+        // FIX: оновлюємо stageEnteredAt при зміні стадії через форму
+        if (stageChanged) {
+            updates.stageEnteredAt = firebase.firestore.FieldValue.serverTimestamp();
+        }
+        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+        await ref.update(updates);
+        // FIX: записуємо history при зміні стадії через форму
+        if (stageChanged) {
+            await ref.collection('history').add({
+                type: 'stage_changed', from: deal.stage, to: stage,
+                by: window.currentUser?.email || 'manager',
+                at: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
+                await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, { dealId, fromStage:deal.stage, toStage:stage, clientName:deal.clientName, amount });
+            }
         }
         Object.assign(deal, updates);
+        if (stageChanged) deal.stageEnteredAt = { toMillis: () => Date.now() };
         crmCloseDeal();
         if (typeof showToast === 'function') showToast(window.t('crmSaved'), 'success');
     } catch(e) {
@@ -1397,7 +1422,17 @@ window.crmSaveDeal = async function(dealId) {
 window.crmDeleteDeal = async function(dealId) {
     if (!(await (window.showConfirmModal ? showConfirmModal(window.t('crmDeleteDeal'),{danger:true}) : Promise.resolve(confirm(window.t('crmDeleteDeal')))))) return;
     try {
-        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).delete();
+        const dealRef = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+        // FIX: видаляємо history субколекцію перед видаленням угоди
+        try {
+            const histSnap = await dealRef.collection('history').limit(100).get();
+            if (!histSnap.empty) {
+                const batch = firebase.firestore().batch();
+                histSnap.docs.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+            }
+        } catch(he) { console.warn('[CRM] history cleanup:', he.message); }
+        await dealRef.delete();
         crmCloseDeal();
         if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success');
     } catch(e) {
@@ -1766,6 +1801,7 @@ window.crmCreateDeal = async function() {
                 amount, source:'manual',
                 assigneeId: window.currentUser?.uid || null,
                 creatorId:  window.currentUser?.uid || null,
+                stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), // FIX
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
@@ -2035,11 +2071,10 @@ async function _renderActivitiesTab() {
     if (!c) return;
     c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
 
-    // Завантажуємо паралельно (Promise.all замість sequential loop — N+1 fix)
+    // FIX: використовуємо crm.deals (вже завантажені по поточній pipeline) замість повного get()
     let allActivities = [];
     try {
-        const snap = await window.companyRef().collection('crm_deals').get();
-        const deals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const deals = crm.deals; // вже відфільтровані по pipelineId через _subscribeDeals
         const histResults = await Promise.all(
             deals.map(deal =>
                 window.companyRef().collection('crm_deals').doc(deal.id)
@@ -2193,16 +2228,22 @@ function _renderAnalytics() {
     ];
 
     // По місяцях (останні 6)
+    // FIX: використовуємо lostAt/wonAt для точної дати закриття, createdAt для нових
+    const _dealDate = (dl, field) => {
+        const ts = dl[field];
+        return ts?.toDate ? ts.toDate() : (ts ? new Date(ts) : null);
+    };
     const months = [];
     const now = new Date();
     for (let i = 5; i >= 0; i--) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
         const label = d.toLocaleString('uk-UA', {month:'short'});
-        const newDeals = crm.deals.filter(dl => (dl.createdAt?.toDate ? dl.createdAt.toDate() : new Date(dl.createdAt||0)).toISOString().startsWith(key)).length;
-        const wonDeals = crm.deals.filter(dl => dl.stage==='won' && (dl.updatedAt?.toDate ? dl.updatedAt.toDate() : new Date(dl.updatedAt||0)).toISOString().startsWith(key)).length;
-        const lostDeals = crm.deals.filter(dl => dl.stage==='lost' && (dl.updatedAt?.toDate ? dl.updatedAt.toDate() : new Date(dl.updatedAt||0)).toISOString().startsWith(key)).length;
-        const wonRevenue = crm.deals.filter(dl => dl.stage==='won' && (dl.updatedAt?.toDate ? dl.updatedAt.toDate() : new Date(dl.updatedAt||0)).toISOString().startsWith(key)).reduce((s,dl)=>s+(dl.amount||0),0);
+        const newDeals  = crm.deals.filter(dl => (_dealDate(dl,'createdAt')||new Date(0)).toISOString().startsWith(key)).length;
+        // FIX: won/lost — по lostAt або wonAt якщо є, fallback на updatedAt
+        const wonDeals  = crm.deals.filter(dl => dl.stage==='won'  && (_dealDate(dl,'wonAt')  || _dealDate(dl,'lostAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).length;
+        const lostDeals = crm.deals.filter(dl => dl.stage==='lost' && (_dealDate(dl,'lostAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).length;
+        const wonRevenue = crm.deals.filter(dl => dl.stage==='won' && (_dealDate(dl,'wonAt') || _dealDate(dl,'lostAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).reduce((s,dl)=>s+(dl.amount||0),0);
         months.push({ label, newDeals, wonDeals, lostDeals, wonRevenue });
     }
     const maxBar = Math.max(...months.map(m => Math.max(m.newDeals, m.wonDeals, m.lostDeals)), 1);
