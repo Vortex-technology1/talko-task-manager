@@ -458,14 +458,20 @@ exports.telegramWebhook = functions
                     );
                 }
             } else if (text === '/today' || text === '/overdue') {
-                // БАГ 2 FIX: collectionGroup замість N+1 loop по 500 компаніях
-                // Lookup via telegramIndex for fast O(1) access without collectionGroup
+                // Lookup via telegramIndex for fast O(1) access
                 const chatIdxDoc = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
                 let cgUserSnap = { empty: true, docs: [] };
                 if (chatIdxDoc.exists) {
                     const { companyId: cId2, userId: uId2 } = chatIdxDoc.data();
-                    const uDoc2 = await db.collection('companies').doc(cId2).collection('users').doc(uId2).get();
-                    if (uDoc2.exists) cgUserSnap = { empty: false, docs: [{ ...uDoc2, ref: uDoc2.ref }] };
+                    if (cId2 && uId2) {
+                        const uDoc2 = await db.collection('companies').doc(cId2).collection('users').doc(uId2).get();
+                        if (uDoc2.exists) cgUserSnap = { empty: false, docs: [{ ...uDoc2, ref: uDoc2.ref }] };
+                    }
+                }
+                // Fallback: знайти по telegramChatId
+                if (cgUserSnap.empty) {
+                    cgUserSnap = await db.collectionGroup('users')
+                        .where('telegramChatId', '==', chatId.toString()).limit(1).get();
                 }
                 if (!cgUserSnap.empty) {
                     const companyId = cgUserSnap.docs[0].ref.parent.parent.id;
