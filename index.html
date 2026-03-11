@@ -3564,13 +3564,20 @@ document.addEventListener('mousedown', function(e) {
     window._learningLoaded = false;
     window.loadLearningModules = function(cb) {
         if (window._learningLoaded) { cb && cb(); return; }
-        var scripts = ['js/modules/80-learning-data.js','js/modules/80-learning-engine.js'];
-        var loaded = 0;
-        scripts.forEach(function(src) {
+        // Завантажуємо ПОСЛІДОВНО: data.js ОБОВ'ЯЗКОВО до engine.js
+        // (engine.js читає window.learningCourseData що виставляє data.js)
+        function loadScript(src, done) {
             var s = document.createElement('script');
             s.src = src;
-            s.onload = function() { if (++loaded === scripts.length) { window._learningLoaded = true; cb && cb(); } };
+            s.onload = done;
+            s.onerror = done; // не блокуємо при помилці
             document.body.appendChild(s);
+        }
+        loadScript('js/modules/80-learning-data.js', function() {
+            loadScript('js/modules/80-learning-engine.js', function() {
+                window._learningLoaded = true;
+                cb && cb();
+            });
         });
     };
     </script>
