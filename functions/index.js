@@ -1576,7 +1576,7 @@ exports.weeklyReport = functions
 // ===========================
 exports.aiAssistant = functions
     .region(REGION)
-    .runWith({ timeoutSeconds: 120, memory: '256MB', secrets: ['OPENAI_API_KEY'] })
+    .runWith({ timeoutSeconds: 120, memory: '256MB' })
     .https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new functions.https.HttpsError('unauthenticated', 'Login required');
