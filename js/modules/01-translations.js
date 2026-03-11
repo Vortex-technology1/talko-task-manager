@@ -7580,6 +7580,22 @@ en: {
                             }
                         }
                     });
+                    // Force direct nav span translation after async renders
+                    const _navKeys2 = {
+                        navSpanCoordination: 'tabCoordination',
+                        navSpanAnalytics: 'navAnalytics',
+                        navSpanBusiness: 'tabBusiness',
+                        navSpanMarketing: 'tabMarketing',
+                        navSpanBots: 'tabBots',
+                        navSpanSites: 'tabSites',
+                        navSpanIntegrations: 'tabIntegrations'
+                    };
+                    Object.entries(_navKeys2).forEach(function(kv) {
+                        var el2 = document.getElementById(kv[0]);
+                        if (el2 && translations[lang] && translations[lang][kv[1]]) {
+                            el2.innerHTML = translations[lang][kv[1]];
+                        }
+                    });
                 }, 300);
             }
         }
