@@ -7608,7 +7608,7 @@ en: {
                 var _pollCount = 0;
                 var _pollInterval = setInterval(function() {
                     _pollCount++;
-                    document.querySelectorAll('.tab-navigation [data-i18n]').forEach(function(el) {
+                    document.querySelectorAll('[data-i18n]').forEach(function(el) {
                         const key = el.getAttribute('data-i18n');
                         if (translations[lang] && translations[lang][key]) {
                             el.innerHTML = translations[lang][key];

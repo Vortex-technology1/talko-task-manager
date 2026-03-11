@@ -209,6 +209,10 @@
             // Відновлюємо стан кнопки "Приховати виконані"
             const hideBtn = document.getElementById('hideCompletedBtn');
             if (hideBtn && window.hideCompletedTasks) hideBtn.classList.add('active');
+            // Re-apply translations AFTER interface is shown (nav spans now visible)
+            if (typeof setLanguage === 'function' && typeof currentLang !== 'undefined') {
+                setTimeout(function() { setLanguage(currentLang); }, 100);
+            }
         }
 
         function getRoleText(role) {
