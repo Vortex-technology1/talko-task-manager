@@ -794,8 +794,7 @@ window.crmCreateDeal = async function() {
     const niche  = document.getElementById('nd_niche')?.value.trim();
     if (!title && !client) { if(window.showToast)showToast("Введіть назву або ім'я клієнта",'warning'); else alert("Введіть назву або ім'я клієнта"); return; }
     try {
-        const ref = await firebase.firestore()
-            .collection(window.DB_COLS.CRM_DEALS).add({
+        const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add({
                 title: title||client, clientName: client||title, clientNiche: niche||'',
                 stage, pipelineId: crm.pipeline?.id || '',
                 amount, source:'manual',
@@ -1544,8 +1543,7 @@ async function _doCreatePipeline(name) {
 window.crmDeletePipeline = async function(pipelineId, name) {
     if (!(await (window.showConfirmModal ? showConfirmModal(`Видалити воронку "${name}"?\nВсі угоди в ній залишаться.`,{danger:true}) : Promise.resolve(confirm(`Видалити воронку "${name}"?\nВсі угоди в ній залишаться.`))))) return;
     try {
-        await firebase.firestore()
-            .doc(window.currentCompanyId + '/crm_pipeline/' + pipelineId).delete();
+        await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE).doc(pipelineId).delete();
         crm.pipelines = crm.pipelines.filter(p => p.id !== pipelineId);
         if (crm.pipeline?.id === pipelineId) {
             crm.pipeline = crm.pipelines[0];
@@ -1587,8 +1585,7 @@ window.crmSaveStages = async function() {
     // Оновлюємо order
     crm.pipeline.stages.forEach((s,i) => s.order = i);
     try {
-        await firebase.firestore()
-            .doc(window.currentCompanyId + '/crm_pipeline/' + crm.pipeline.id)
+        await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE).doc(crm.pipeline.id)
             .update({ stages: crm.pipeline.stages, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         // Sync в pipelines array
         const idx = crm.pipelines.findIndex(p => p.id === crm.pipeline.id);
