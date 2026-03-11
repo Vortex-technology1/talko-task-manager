@@ -7504,6 +7504,22 @@ en: {
             dayNames = getDayNames();
             dayNamesShort = getDayNamesShort();
             monthNames = getMonthNames();
+            // DIRECT nav span translation (bypass querySelectorAll for persistent nav items)
+            const _navKeys = {
+                navSpanCoordination: 'tabCoordination',
+                navSpanAnalytics: 'navAnalytics',
+                navSpanBusiness: 'tabBusiness',
+                navSpanMarketing: 'tabMarketing',
+                navSpanBots: 'tabBots',
+                navSpanSites: 'tabSites',
+                navSpanIntegrations: 'tabIntegrations'
+            };
+            Object.entries(_navKeys).forEach(([id, key]) => {
+                const el = document.getElementById(id);
+                if (el && translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
             document.getElementById('langUA')?.classList.toggle('active', lang === 'ua');
             document.getElementById('langRU')?.classList.toggle('active', lang === 'ru');
             document.getElementById('langPL')?.classList.toggle('active', lang === 'pl');
