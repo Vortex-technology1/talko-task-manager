@@ -1823,8 +1823,8 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
     // ── Tab hook ───────────────────────────────────────────
     
 
-    window.destroyBotsModule = function () {
-        if (botsUnsubscribe) botsUnsubscribe();
+    window._destroyBotsFlows81 = function () {
+        if (typeof botsUnsubscribe === 'function') botsUnsubscribe();
         botsUnsubscribe = null;
     };
 

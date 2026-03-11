@@ -87,12 +87,16 @@ window.destroyBotsModule = function() {
     bcast.sent              = 0;
     bcast.failed            = 0;
     bcast.total             = 0;
+    // Chain: знищити listener з 81-bots-flows.js (IIFE closure)
+    if (typeof window._destroyBotsFlows81 === 'function') window._destroyBotsFlows81();
 };
 
 function loadBots() {
     if (typeof bp.botsUnsub === 'function') bp.botsUnsub();
     bp.botsUnsub = null;
-    bp.botsUnsub = window.companyRef()
+    const ref = window.companyRef();
+    if (!ref) return;
+    bp.botsUnsub = ref
         .collection('bots')
         .orderBy('createdAt', 'desc')
         .onSnapshot(snap => {
@@ -270,7 +274,9 @@ window.openBot = function(botId) {
 
     // Підписуємось на flows цього бота
     if (typeof bp.flowsUnsub === 'function') bp.flowsUnsub(); bp.flowsUnsub = null;
-    bp.flowsUnsub = window.companyRef()
+    const _flowsRef = window.companyRef();
+    if (!_flowsRef) return;
+    bp.flowsUnsub = _flowsRef
         .collection('bots').doc(botId)
         .collection('flows')
         .orderBy('createdAt','desc')
@@ -1295,7 +1301,9 @@ window.ctsExportCSV = async function() {
 function _ctsStartRealtimeCounter() {
     if (typeof cts.unsub === 'function') cts.unsub(); cts.unsub = null;
     // Слухаємо тільки останній документ — дешево
-    cts.unsub = window.companyCol('contacts')
+    const _ctsCol = window.companyCol('contacts');
+    if (!_ctsCol) return;
+    cts.unsub = _ctsCol
         .orderBy('createdAt', 'desc')
         .limit(1)
         .onSnapshot(snap => {
@@ -1611,12 +1619,15 @@ window.bpOpenChat = async function(contactId) {
     if (typeof chat.msgsUnsub === 'function') { chat.msgsUnsub(); } chat.msgsUnsub = null;
 
     // Підписуємось на messages цього контакту
-    chat.msgsUnsub = window.companyRef().collection('contacts').doc(contactId).collection('messages')
-        .orderBy('timestamp', 'asc')
-        .limitToLast(100)
-        .onSnapshot(snap => {
-            _chatRenderMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-        });
+    const _msgRef = window.companyRef();
+    if (_msgRef) {
+        chat.msgsUnsub = _msgRef.collection('contacts').doc(contactId).collection('messages')
+            .orderBy('timestamp', 'asc')
+            .limitToLast(100)
+            .onSnapshot(snap => {
+                _chatRenderMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+            });
+    }
 
     // Отримуємо токен бота для відправки
     chat.sendingBotToken = await _chatGetBotToken(ct);
@@ -1815,7 +1826,9 @@ function _chatStartUnreadListener() {
     if (typeof chat.contactsUnsub === 'function') { chat.contactsUnsub(); } chat.contactsUnsub = null;
 
     // Слухаємо тільки контакти з unreadCount > 0
-    chat.contactsUnsub = window.companyCol('contacts')
+    const _unreadCol = window.companyCol('contacts');
+    if (!_unreadCol) return;
+    chat.contactsUnsub = _unreadCol
         .where('unreadCount', '>', 0)
         .onSnapshot(snap => {
             snap.docs.forEach(doc => {
