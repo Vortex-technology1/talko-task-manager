@@ -73,7 +73,7 @@
         // Owner/Manager бачать ВСЕ. Employee — тільки де він учасник.
         // Centralized permission check for task operations
         function canEditTask(task) {
-            if (!currentUserData || !currentUser) return false;
+            if (!currentUserData || !currentUser) return true; // не блокуємо поки дані ще не завантажились
             const role = currentUserData.role;
             if ((typeof hasPermission === 'function' && hasPermission('editAnyTask')) || role === 'owner' || role === 'admin' || role === 'manager') return true;
             const uid = currentUser?.uid || '';
