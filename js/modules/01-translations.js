@@ -7596,7 +7596,26 @@ en: {
                             el2.innerHTML = translations[lang][kv[1]];
                         }
                     });
+                    // Also re-apply via data-i18n querySelectorAll
+                    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                        const key = el.getAttribute('data-i18n');
+                        if (translations[lang] && translations[lang][key]) {
+                            if (el.tagName !== 'INPUT') el.innerHTML = translations[lang][key];
+                        }
+                    });
                 }, 300);
+                // Polling: re-apply nav every 500ms for 5s to survive any async resets
+                var _pollCount = 0;
+                var _pollInterval = setInterval(function() {
+                    _pollCount++;
+                    document.querySelectorAll('.tab-navigation [data-i18n]').forEach(function(el) {
+                        const key = el.getAttribute('data-i18n');
+                        if (translations[lang] && translations[lang][key]) {
+                            el.innerHTML = translations[lang][key];
+                        }
+                    });
+                    if (_pollCount >= 10) clearInterval(_pollInterval);
+                }, 500);
             }
         }
         window.setLanguage = setLanguage;
