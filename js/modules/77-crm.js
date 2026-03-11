@@ -768,7 +768,9 @@ async function _bulkUpdateDeals(updates) {
     if (typeof showToast === 'function') showToast('Оновлено ' + done + ' угод', 'success');
     crm.selectedIds = new Set();
     crm._bulkMode = false;
-    _renderListView();
+    // FIX: рендеримо поточний режим, не завжди list
+    if (crm.viewMode === 'kanban') _renderKanban();
+    else _renderListView();
 }
 
 // ── Дублювання угоди ──
@@ -789,6 +791,7 @@ window.crmDuplicateDeal = async function(dealId) {
             note:            deal.note || '',
             assigneeId:      window.currentUser?.uid || null,
             creatorId:       window.currentUser?.uid || null,
+            stageEnteredAt:  firebase.firestore.FieldValue.serverTimestamp(), // FIX
             createdAt:       firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt:       firebase.firestore.FieldValue.serverTimestamp(),
         };
@@ -2606,11 +2609,13 @@ function _renderCRMSettings() {
 
 // ── Pipeline CRUD ──────────────────────────────────────────
 window.crmSelectPipeline = async function(pipelineId) {
-    if (crm.pipeline?.id === pipelineId) { _renderCRMSettings(); return; } // вже вибрана
+    // FIX: при кліку на активну — не відкриваємо Settings, просто ігноруємо
+    if (crm.pipeline?.id === pipelineId) return;
     crm.pipeline = crm.pipelines.find(p => p.id === pipelineId) || crm.pipeline;
-    _subscribeDeals(); // централізований subscribe — без дублікатів
-    _renderCRMSettings();
-    if (typeof showToast === 'function') showToast('Воронку: ' + crm.pipeline.name, 'success');
+    _subscribeDeals(); // subscribe запустить _renderKanban або _renderListView через onSnapshot
+    // FIX: рендеримо поточний subTab, не Settings
+    if (crm.subTab === 'settings') _renderCRMSettings();
+    if (typeof showToast === 'function') showToast('Воронка: ' + crm.pipeline.name, 'success');
 };
 
 // Єдина точка підписки на deals — викликати звідусіль
@@ -2687,8 +2692,27 @@ window.crmUpdateStageColor = function(stageId, color) {
 };
 
 window.crmRemoveStage = async function(stageId) {
-    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('crmDeleteStage'),{danger:true}) : Promise.resolve(confirm(window.t('crmDeleteStage')))))) return;
     if (!crm.pipeline) return;
+    // FIX: перевіряємо чи є угоди в цій стадії
+    const dealsInStage = crm.deals.filter(d => d.stage === stageId);
+    let confirmMsg = window.t('crmDeleteStage');
+    if (dealsInStage.length > 0) {
+        confirmMsg = `В стадії "${_stageLabel(stageId)}" є ${dealsInStage.length} угод(и). Вони будуть переміщені в "Новий". Продовжити?`;
+    }
+    if (!(await (window.showConfirmModal ? showConfirmModal(confirmMsg, {danger:true}) : Promise.resolve(confirm(confirmMsg))))) return;
+    // FIX: переміщуємо угоди в 'new' перед видаленням стадії
+    if (dealsInStage.length > 0) {
+        const fallbackStage = crm.pipeline.stages.find(s => s.id !== stageId && s.id !== 'lost' && s.id !== 'won')?.id || 'new';
+        try {
+            const batch = firebase.firestore().batch();
+            dealsInStage.forEach(d => {
+                const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(d.id);
+                batch.update(ref, { stage: fallbackStage, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                d.stage = fallbackStage; // локально
+            });
+            await batch.commit();
+        } catch(e) { console.error('[CRM removeStage] move deals:', e); }
+    }
     crm.pipeline.stages = crm.pipeline.stages.filter(s => s.id !== stageId);
     _renderCRMSettings();
 };
