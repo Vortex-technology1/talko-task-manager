@@ -30,6 +30,14 @@ const I = {
     funnel:   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
     users:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
     calendar: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    list:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+    kanban:   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="12" rx="1"/></svg>',
+    filter:   '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
+    tag:      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+    task:     '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+    copy:     '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+    search:   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+    hot:      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>',
 };
 
 // ── State ──────────────────────────────────────────────────
@@ -37,20 +45,30 @@ let crm = {
     deals: [], clients: [], pipeline: null, pipelines: [],
     stats: null, unsubs: [], subTab: 'kanban',
     activeDealId: null, dragDealId: null, loading: true,
-    saving: false,  // guard проти подвійного submit
+    saving: false,
+    dealUnsub: null, clientUnsub: null,
+    // Фільтри для kanban/list
+    filters: { assignee: '', stage: '', tag: '', search: '' },
+    // Режим перегляду: kanban | list
+    viewMode: 'kanban',
+    // Сортування list view
+    listSort: { field: 'updatedAt', dir: 'desc' },
 };
 
 // ── Init ───────────────────────────────────────────────────
 window.initCRMModule = async function () {
     if (!window.currentCompanyId) return;
-    // Guard: prevent double-init race condition (called from auth + switchTab)
-    if (crm._initializingFor === window.currentCompanyId) return;
+    // FIX: guard порівнює companyId — при logout/login скидається
+    if (crm._initializingFor === window.currentCompanyId && crm.pipeline) return;
     crm._initializingFor = window.currentCompanyId;
+    crm.saving = false; // FIX: скидаємо saving guard при реініціалізації
+    crm._remindersChecked = false;
     _renderShell();
     try {
         await _loadAll();
     } catch(e) {
         console.error('[CRM]', e.message);
+        crm._initializingFor = null; // FIX: дозволяємо повторну ініціалізацію
         const c = document.getElementById('crmViewKanban');
         if (c) c.innerHTML = `<div style="padding:2rem;text-align:center;color:#ef4444;font-size:0.82rem;">
             Помилка: ${window.htmlEsc ? window.htmlEsc(e.message) : e.message}<br>
@@ -90,12 +108,37 @@ function _renderShell() {
                     ${icon} ${label}
                 </button>`).join('')}
             </div>
-            <button onclick="crmOpenCreateDeal()"
-                style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
-                background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;
-                font-size:0.81rem;font-weight:600;">
-                ${I.plus} Угода
-            </button>
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+                <!-- Пошук -->
+                <div id="crmSearchWrap" style="display:none;align-items:center;gap:0.3rem;
+                    background:#f4f5f7;border-radius:7px;padding:0.3rem 0.6rem;">
+                    ${I.search}
+                    <input id="crmSearchInput" placeholder="Пошук угод..."
+                        oninput="crmApplyFilters()"
+                        style="border:none;background:none;outline:none;font-size:0.8rem;width:160px;">
+                    <button onclick="document.getElementById('crmSearchInput').value='';crmApplyFilters()"
+                        style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;">×</button>
+                </div>
+                <!-- Toggle kanban/list -->
+                <div id="crmViewToggle" style="display:none;gap:2px;">
+                    <button id="crmToggleKanban" onclick="crmSetViewMode('kanban')"
+                        title="Kanban" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:6px 0 0 6px;
+                        background:white;cursor:pointer;display:flex;align-items:center;color:#6b7280;">
+                        ${I.kanban}
+                    </button>
+                    <button id="crmToggleList" onclick="crmSetViewMode('list')"
+                        title="Список" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:0 6px 6px 0;
+                        background:white;cursor:pointer;display:flex;align-items:center;color:#6b7280;">
+                        ${I.list}
+                    </button>
+                </div>
+                <button onclick="crmOpenCreateDeal()"
+                    style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
+                    background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;
+                    font-size:0.81rem;font-weight:600;">
+                    ${I.plus} Угода
+                </button>
+            </div>
         </div>
 
         <!-- Content -->
@@ -110,6 +153,50 @@ function _renderShell() {
 
     crmSwitchTab('kanban');
 }
+
+// Фільтрація угод з урахуванням filters state
+function _filteredDeals() {
+    let deals = crm.deals;
+    const f = crm.filters;
+    if (f.search) {
+        const q = f.search.toLowerCase();
+        deals = deals.filter(d =>
+            (d.title||'').toLowerCase().includes(q) ||
+            (d.clientName||'').toLowerCase().includes(q) ||
+            (d.clientNiche||'').toLowerCase().includes(q) ||
+            (d.note||'').toLowerCase().includes(q)
+        );
+    }
+    if (f.assignee) deals = deals.filter(d => d.assigneeId === f.assignee);
+    if (f.stage)    deals = deals.filter(d => d.stage === f.stage);
+    if (f.tag)      deals = deals.filter(d => (d.tags||[]).includes(f.tag));
+    return deals;
+}
+
+window.crmApplyFilters = function() {
+    const q = document.getElementById('crmSearchInput')?.value || '';
+    crm.filters.search = q;
+    if (crm.viewMode === 'kanban') _renderKanban();
+    else _renderListView();
+};
+
+window.crmSetViewMode = function(mode) {
+    crm.viewMode = mode;
+    document.getElementById('crmToggleKanban').style.background = mode==='kanban' ? '#f0fdf4' : 'white';
+    document.getElementById('crmToggleKanban').style.color = mode==='kanban' ? '#16a34a' : '#6b7280';
+    document.getElementById('crmToggleList').style.background = mode==='list' ? '#f0fdf4' : 'white';
+    document.getElementById('crmToggleList').style.color = mode==='list' ? '#16a34a' : '#6b7280';
+    const kanbanView = document.getElementById('crmViewKanban');
+    if (!kanbanView) return;
+    if (mode === 'kanban') {
+        kanbanView.style.display = '';
+        document.getElementById('crmListView')?.remove();
+        _renderKanban();
+    } else {
+        kanbanView.style.display = 'none';
+        _renderListView();
+    }
+};
 
 window.crmSwitchTab = function(tab) {
     crm.subTab = tab;
@@ -134,25 +221,23 @@ window.crmSwitchTab = function(tab) {
 async function _loadAll() {
     const base = window.companyRef();
     if (!base) throw new Error('companyRef not ready');
-    crm.unsubs.forEach(u => u && u());
-    crm.unsubs = [];
+    // FIX: очищуємо окремо deals і clients unsubs
+    if (crm.dealUnsub)   { crm.dealUnsub();   crm.dealUnsub   = null; }
+    if (crm.clientUnsub) { crm.clientUnsub(); crm.clientUnsub = null; }
 
     const pipSnap = await base.collection('crm_pipeline').get();
     crm.pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     if (!crm.pipelines.length) await _createDefaultPipeline();
     crm.pipeline = crm.pipelines.find(p => p.isDefault) || crm.pipelines[0];
 
-    _subscribeDeals(); // централізований — без дублікатів
+    _subscribeDeals();
 
-    // Real-time clients listener — no 100 limit, auto-updates
-    const clientUnsub = base.collection('crm_clients').orderBy('createdAt', 'desc').limit(500)
+    crm.clientUnsub = base.collection('crm_clients').orderBy('createdAt', 'desc').limit(500)
         .onSnapshot(snap => {
             crm.clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             if (crm.subTab === 'clients') _renderClients();
-            // Check reminders once on first load
-            if (!crm._remindersChecked) { crm._remindersChecked = true; setTimeout(_checkContactReminders, 1500); }
+            if (!crm._remindersChecked) { crm._remindersChecked = true; setTimeout(_checkContactReminders, 1000); }
         }, err => console.error('[CRM clients]', err));
-    crm.unsubs.push(clientUnsub);
 }
 
 async function _createDefaultPipeline() {
@@ -193,6 +278,7 @@ function _listenEventBus() {
 function _renderKanban() {
     const c = document.getElementById('crmViewKanban');
     if (!c) return;
+    if (crm.viewMode === 'list') { _renderListView(); return; }
 
     if (crm.loading) {
         c.innerHTML = '<div style="text-align:center;padding:4rem;color:#9ca3af;font-size:0.85rem;">Завантаження...</div>';
@@ -233,7 +319,7 @@ function _renderKanban() {
 }
 
 function _kanbanCol(stage) {
-    const deals = crm.deals.filter(d => d.stage === stage.id);
+    const deals = _filteredDeals().filter(d => d.stage === stage.id);
     const amt   = deals.reduce((s,d) => s+(d.amount||0), 0);
 
     return `
@@ -271,7 +357,7 @@ function _kanbanCol(stage) {
 }
 
 function _kanbanColLost(stage) {
-    const deals = crm.deals.filter(d => d.stage === 'lost');
+    const deals = _filteredDeals().filter(d => d.stage === 'lost');
     return `
     <div data-stage="lost"
         style="width:160px;flex-shrink:0;background:#fef2f2;border-left:1px solid #e8eaed;
@@ -295,6 +381,190 @@ function _kanbanColLost(stage) {
     </div>`;
 }
 
+// ══════════════════════════════════════════════════════════
+// LIST VIEW (таблиця угод — альтернатива kanban)
+// ══════════════════════════════════════════════════════════
+function _renderListView() {
+    // Прибираємо kanban з поля зору
+    const kanbanEl = document.getElementById('crmViewKanban');
+    if (kanbanEl) kanbanEl.style.display = 'none';
+    // Або render в existing container
+    const container = document.getElementById('crmContainer');
+    if (!container) return;
+    let listEl = document.getElementById('crmListView');
+    if (!listEl) {
+        listEl = document.createElement('div');
+        listEl.id = 'crmListView';
+        listEl.style.cssText = 'flex:1;overflow-y:auto;background:#f4f5f7;';
+        // Вставляємо після kanban view
+        const kanban = document.getElementById('crmViewKanban');
+        if (kanban && kanban.parentNode) kanban.parentNode.insertBefore(listEl, kanban.nextSibling);
+        else container.appendChild(listEl);
+    }
+    listEl.style.display = '';
+
+    const deals = _filteredDeals();
+    // Сортування
+    const { field, dir } = crm.listSort;
+    deals.sort((a,b) => {
+        let av = a[field], bv = b[field];
+        if (field === 'updatedAt' || field === 'createdAt') {
+            av = av?.toMillis ? av.toMillis() : (av ? new Date(av).getTime() : 0);
+            bv = bv?.toMillis ? bv.toMillis() : (bv ? new Date(bv).getTime() : 0);
+        }
+        if (av == null) av = dir === 'asc' ? Infinity : -Infinity;
+        if (bv == null) bv = dir === 'asc' ? Infinity : -Infinity;
+        return dir === 'asc' ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
+    });
+
+    const colHdr = (label, f) => {
+        const active = crm.listSort.field === f;
+        const arrow = active ? (crm.listSort.dir === 'asc' ? '↑' : '↓') : '';
+        return `<th onclick="crmListSort('${f}')" style="padding:0.5rem 0.75rem;font-size:0.72rem;
+            font-weight:600;color:${active?'#22c55e':'#6b7280'};cursor:pointer;text-align:left;
+            white-space:nowrap;user-select:none;border-bottom:2px solid #e8eaed;background:white;">
+            ${label} ${arrow}
+        </th>`;
+    };
+
+    const stages = crm.pipeline?.stages || [];
+    const today = new Date().toISOString().split('T')[0];
+
+    listEl.innerHTML = `
+    <div style="padding:0.75rem;max-width:1200px;margin:0 auto;">
+        <!-- Фільтр-бар -->
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;align-items:center;">
+            <select onchange="crm.filters.assignee=this.value;crmSetViewMode('list')"
+                style="padding:0.35rem 0.5rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;background:white;cursor:pointer;">
+                <option value="">Всі відповідальні</option>
+                ${(typeof users!=='undefined'?users:[]).map(u=>`<option value="${u.id}" ${crm.filters.assignee===u.id?'selected':''}>${_esc(u.name||u.email)}</option>`).join('')}
+            </select>
+            <select onchange="crm.filters.stage=this.value;crmSetViewMode('list')"
+                style="padding:0.35rem 0.5rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;background:white;cursor:pointer;">
+                <option value="">Всі стадії</option>
+                ${stages.map(s=>`<option value="${s.id}" ${crm.filters.stage===s.id?'selected':''}>${_esc(s.label)}</option>`).join('')}
+            </select>
+            ${crm.filters.assignee || crm.filters.stage || crm.filters.search ? `
+            <button onclick="crm.filters={assignee:'',stage:'',tag:'',search:''};document.getElementById('crmSearchInput').value='';crmSetViewMode('list')"
+                style="padding:0.35rem 0.65rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;color:#6b7280;">
+                × Скинути
+            </button>` : ''}
+            <div style="margin-left:auto;font-size:0.78rem;color:#9ca3af;">${deals.length} угод</div>
+        </div>
+
+        <!-- Таблиця -->
+        <div style="background:white;border-radius:10px;border:1px solid #e8eaed;overflow:hidden;">
+            <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        ${colHdr('Угода','title')}
+                        ${colHdr('Клієнт','clientName')}
+                        ${colHdr('Стадія','stage')}
+                        ${colHdr('Сума','amount')}
+                        ${colHdr('Відповідальний','assigneeId')}
+                        ${colHdr('Наст. контакт','nextContactDate')}
+                        ${colHdr('Оновлено','updatedAt')}
+                        <th style="width:80px;border-bottom:2px solid #e8eaed;background:white;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${deals.length === 0 ? `
+                    <tr><td colspan="8" style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">
+                        Угод не знайдено
+                    </td></tr>` :
+                    deals.map((d,i) => {
+                        const stage = stages.find(s=>s.id===d.stage);
+                        const assignee = (typeof users!=='undefined'?users:[]).find(u=>u.id===d.assigneeId);
+                        const isOverdue = d.nextContactDate && d.nextContactDate < today && d.stage!=='won' && d.stage!=='lost';
+                        const upd = d.updatedAt?.toDate ? _relTime(d.updatedAt.toDate()) : '—';
+                        return `
+                        <tr onclick="crmOpenDeal('${d.id}')" style="cursor:pointer;background:${i%2===0?'white':'#fafafa'};
+                            transition:background 0.1s;" onmouseenter="this.style.background='#f0fdf4'"
+                            onmouseleave="this.style.background='${i%2===0?'white':'#fafafa'}'">
+                            <td style="padding:0.6rem 0.75rem;font-size:0.8rem;font-weight:600;color:#111827;
+                                max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-bottom:1px solid #f3f4f6;">
+                                ${d.isHot ? `<span style="color:#f97316;margin-right:4px;">${I.hot}</span>` : ''}
+                                ${_esc(d.title||d.clientName||'—')}
+                            </td>
+                            <td style="padding:0.6rem 0.75rem;font-size:0.78rem;color:#6b7280;border-bottom:1px solid #f3f4f6;
+                                max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                ${_esc(d.clientName||'—')}
+                            </td>
+                            <td style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;">
+                                ${stage ? `<span style="font-size:0.72rem;font-weight:600;padding:2px 8px;border-radius:20px;
+                                    background:${stage.color}18;color:${stage.color};">${_esc(stage.label)}</span>` : '—'}
+                            </td>
+                            <td style="padding:0.6rem 0.75rem;font-size:0.8rem;font-weight:700;
+                                color:${d.amount?'#16a34a':'#d1d5db'};border-bottom:1px solid #f3f4f6;white-space:nowrap;">
+                                ${d.amount ? _fmt(d.amount) : '—'}
+                            </td>
+                            <td style="padding:0.6rem 0.75rem;font-size:0.75rem;color:#6b7280;border-bottom:1px solid #f3f4f6;">
+                                ${_esc(assignee?.name || assignee?.email || '—')}
+                            </td>
+                            <td style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;">
+                                ${d.nextContactDate ? `<span style="font-size:0.72rem;padding:2px 7px;border-radius:10px;font-weight:600;
+                                    background:${isOverdue?'#fef2f2':'#eff6ff'};color:${isOverdue?'#ef4444':'#3b82f6'};">
+                                    ${d.nextContactDate}</span>` : '—'}
+                            </td>
+                            <td style="padding:0.6rem 0.75rem;font-size:0.72rem;color:#9ca3af;border-bottom:1px solid #f3f4f6;white-space:nowrap;">
+                                ${upd}
+                            </td>
+                            <td style="padding:0.6rem 0.75rem;border-bottom:1px solid #f3f4f6;" onclick="event.stopPropagation()">
+                                <div style="display:flex;gap:4px;">
+                                    <button onclick="crmOpenDeal('${d.id}')" title="Відкрити"
+                                        style="padding:3px 6px;border:1px solid #e8eaed;border-radius:5px;background:white;cursor:pointer;
+                                        font-size:0.68rem;color:#6b7280;display:flex;align-items:center;">${I.edit}</button>
+                                    <button onclick="crmDuplicateDeal('${d.id}')" title="Дублювати"
+                                        style="padding:3px 6px;border:1px solid #e8eaed;border-radius:5px;background:white;cursor:pointer;
+                                        font-size:0.68rem;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
+                                </div>
+                            </td>
+                        </tr>`;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    </div>`;
+}
+
+window.crmListSort = function(field) {
+    if (crm.listSort.field === field) {
+        crm.listSort.dir = crm.listSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+        crm.listSort = { field, dir: 'desc' };
+    }
+    _renderListView();
+};
+
+// ── Дублювання угоди ──
+window.crmDuplicateDeal = async function(dealId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    try {
+        const copy = {
+            title:           (deal.title || deal.clientName || '') + ' (копія)',
+            clientName:      deal.clientName || '',
+            clientNiche:     deal.clientNiche || '',
+            clientId:        deal.clientId || null,
+            stage:           'new',
+            pipelineId:      deal.pipelineId || crm.pipeline?.id || '',
+            amount:          deal.amount || 0,
+            source:          deal.source || 'manual',
+            tags:            deal.tags || [],
+            note:            deal.note || '',
+            assigneeId:      window.currentUser?.uid || null,
+            creatorId:       window.currentUser?.uid || null,
+            createdAt:       firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt:       firebase.firestore.FieldValue.serverTimestamp(),
+        };
+        const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add(copy);
+        await ref.collection('history').add({ type:'created', text:'Дублікат угоди #'+dealId.slice(-6), by: window.currentUser?.email||'manager', at: firebase.firestore.FieldValue.serverTimestamp() });
+        if (window.showToast) showToast('Угоду дубльовано', 'success');
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: '+e.message, 'error');
+    }
+};
+
 function _dealCard(deal) {
     const colors  = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4','#ec4899'];
     const color   = colors[(deal.clientName||'a').charCodeAt(0) % colors.length];
@@ -307,9 +577,9 @@ function _dealCard(deal) {
         ondragstart="crmDragStart(event,'${deal.id}')"
         onclick="crmOpenDeal('${deal.id}')"
         style="background:white;border-radius:7px;padding:0.65rem;cursor:pointer;
-        border:1px solid #e8eaed;transition:box-shadow 0.15s,border-color 0.15s;"
-        onmouseenter="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.1)';this.style.borderColor='#c7d2fe'"
-        onmouseleave="this.style.boxShadow='none';this.style.borderColor='#e8eaed'">
+        border:1px solid ${deal.isHot ? '#f97316' : '#e8eaed'};transition:box-shadow 0.15s,border-color 0.15s;position:relative;"
+        onmouseenter="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.1)'"
+        onmouseleave="this.style.boxShadow='none'">
 
         <!-- Title -->
         <div style="font-size:0.8rem;font-weight:600;color:#1f2937;margin-bottom:0.45rem;
@@ -342,6 +612,8 @@ function _dealCard(deal) {
             <span style="font-size:0.62rem;color:#d1d5db;">${date}</span>
         </div>
         ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#3b82f6'};">📅 ${deal.nextContactDate}</div>` : ''}
+        ${(deal.tags||[]).length ? `<div style="margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:2px;">${(deal.tags||[]).map(tag=>`<span style="font-size:0.6rem;padding:1px 5px;background:#f3f4f6;color:#6b7280;border-radius:3px;">${_esc(tag)}</span>`).join('')}</div>` : ''}
+        ${deal.isHot ? `<div style="position:absolute;top:6px;right:6px;color:#f97316;">${I.hot}</div>` : ''}
     </div>`;
 }
 
@@ -441,7 +713,7 @@ window.crmOpenDeal = function(dealId) {
 
             <!-- Sub-tabs -->
             <div style="display:flex;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                ${[['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['ai','AI']].map(([id,label]) => `
+                ${[['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['tasks','Задачі'],['ai','AI']].map(([id,label]) => `
                 <button onclick="crmDealTab('${deal.id}','${id}')" id="cdt_${id}"
                     style="flex:1;padding:0.6rem;background:none;border:none;border-bottom:2px solid transparent;
                     cursor:pointer;font-size:0.8rem;font-weight:500;color:#6b7280;transition:all 0.15s;">
@@ -476,7 +748,7 @@ window.crmOpenDeal = function(dealId) {
 window.crmDealTab = function(dealId, tab) {
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
-    ['details','activity','ai'].forEach(t => {
+    ['details','activity','tasks','ai'].forEach(t => {
         const btn = document.getElementById('cdt_' + t);
         if (btn) {
             btn.style.borderBottomColor = t === tab ? '#22c55e' : 'transparent';
@@ -486,6 +758,7 @@ window.crmDealTab = function(dealId, tab) {
     });
     if (tab === 'details')  _renderDealDetails(deal);
     if (tab === 'activity') _loadActivityTab(deal);
+    if (tab === 'tasks')    _loadTasksTab(deal);
     if (tab === 'ai')       _loadAITab(deal);
 };
 
@@ -546,12 +819,41 @@ function _renderDealDetails(deal) {
         <textarea id="dd_note" rows="3" style="${inp}resize:vertical;">${_esc(deal.note||'')}</textarea>
     </div>
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
-    <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;">
+    <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;margin-bottom:0.9rem;">
         <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Дані з боту</div>
         ${[[window.t('crmRole'),'role'],[window.t('crmProblem'),'mainProblem'],[window.t('crmGoal'),'mainGoal']].map(([l,k]) =>
             deal.leadData[k] ? `<div style="font-size:0.78rem;margin-bottom:0.25rem;"><span style="color:#9ca3af;">${l}: </span>${_esc(deal.leadData[k])}</div>` : ''
         ).join('')}
-    </div>` : ''}`;
+    </div>` : ''}
+
+    <!-- Теги -->
+    <div style="margin-bottom:0.9rem;">
+        <label style="${lbl}">Теги</label>
+        <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.3rem;" id="dealTagsList">
+            ${(deal.tags||[]).map(tag =>
+            `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">
+                ${_esc(tag)}
+                <button onclick="crmRemoveTag('${deal.id}','${_esc(tag).replace(/'/g,'\\x27')}')" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;padding:0;">×</button>
+            </span>`).join('')}
+        </div>
+        <div style="display:flex;gap:0.3rem;">
+            <input id="dd_tagInput" placeholder="Новий тег..." onkeydown="if(event.key==='Enter'){event.preventDefault();crmAddTag('${deal.id}')}"
+                style="${inp}flex:1;">
+            <button onclick="crmAddTag('${deal.id}')"
+                style="padding:0.45rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;">+ Тег</button>
+        </div>
+    </div>
+
+    <!-- Hot toggle -->
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;padding:0.6rem 0.75rem;
+        background:${deal.isHot?'#fff7ed':'#f8fafc'};border-radius:8px;border:1px solid ${deal.isHot?'#fed7aa':'#e8eaed'};cursor:pointer;"
+        onclick="crmToggleHot('${deal.id}')">
+        <span style="color:#f97316;">${I.hot}</span>
+        <span style="font-size:0.8rem;font-weight:600;color:${deal.isHot?'#f97316':'#6b7280'};">${deal.isHot?'Гаряча угода':'Позначити як гарячу'}</span>
+        <div style="margin-left:auto;width:32px;height:18px;border-radius:9px;background:${deal.isHot?'#f97316':'#e5e7eb'};position:relative;">
+            <div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;top:2px;left:${deal.isHot?'16px':'2px'};"></div>
+        </div>
+    </div>`;
 }
 
 window.crmCloseDeal = function() {
@@ -560,10 +862,10 @@ window.crmCloseDeal = function() {
 };
 
 window.crmSaveDeal = async function(dealId) {
-    if (crm.saving) return;  // guard: подвійний click/submit
+    if (crm.saving) return;
     crm.saving = true;
     const deal = crm.deals.find(d => d.id === dealId);
-    if (!deal) return;
+    if (!deal) { crm.saving = false; return; } // FIX: скидаємо guard при early return
     const title  = document.getElementById('dd_title')?.value.trim();
     const stage  = document.getElementById('dd_stage')?.value;
     const amount = parseFloat(document.getElementById('dd_amount')?.value) || 0;
@@ -602,6 +904,134 @@ window.crmDeleteDeal = async function(dealId) {
     }
 };
 
+// ── Теги ───────────────────────────────────────────────────
+window.crmAddTag = async function(dealId) {
+    const inp = document.getElementById('dd_tagInput');
+    const tag = inp?.value.trim();
+    if (!tag || !dealId) return;
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    const tags = [...new Set([...(deal.tags||[]), tag])];
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+            .update({ tags, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        deal.tags = tags;
+        if (inp) inp.value = '';
+        // Оновлюємо список тегів в DOM без повного ре-рендеру
+        const list = document.getElementById('dealTagsList');
+        if (list) {
+            const lbl = 'font-size:0.68rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.25rem;letter-spacing:0.03em;';
+            const inp2 = 'width:100%;padding:0.45rem 0.55rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.82rem;box-sizing:border-box;font-family:inherit;background:white;';
+            list.innerHTML = tags.map(t =>
+                `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">
+                    ${t}<button onclick="crmRemoveTag('${dealId}','${t.replace(/'/g,"\'")}')"
+                    style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;padding:0;">×</button></span>`
+            ).join('');
+        }
+    } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+};
+
+window.crmRemoveTag = async function(dealId, tag) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    const tags = (deal.tags||[]).filter(t => t !== tag);
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+            .update({ tags, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        deal.tags = tags;
+        const list = document.getElementById('dealTagsList');
+        if (list) list.innerHTML = tags.map(t =>
+            `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f3f4f6;border-radius:20px;font-size:0.72rem;color:#374151;">
+                ${t}<button onclick="crmRemoveTag('${dealId}','${t.replace(/'/g,"\'")}')"
+                style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;padding:0;">×</button></span>`
+        ).join('');
+    } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+};
+
+window.crmToggleHot = async function(dealId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    const isHot = !deal.isHot;
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+            .update({ isHot, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        deal.isHot = isHot;
+        if(window.showToast) showToast(isHot ? 'Гаряча угода 🔥' : 'Знято позначку', 'success');
+        crmDealTab(dealId, 'details'); // ре-рендер деталей
+    } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+};
+
+// ── Задачі по угоді ────────────────────────────────────────
+async function _loadTasksTab(deal) {
+    const cnt = document.getElementById('crmDealContent');
+    if (!cnt) return;
+    cnt.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
+    try {
+        let dealTasks = [];
+        try {
+            const snap = await window.companyRef().collection('tasks')
+                .where('crmDealId','==', deal.id).orderBy('createdAt','desc').get();
+            dealTasks = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+        } catch(qErr) {
+            if (typeof tasks !== 'undefined') dealTasks = tasks.filter(t => t.crmDealId === deal.id);
+        }
+        const statusColors = { new:'#6b7280', in_progress:'#3b82f6', done:'#22c55e', overdue:'#ef4444' };
+        const statusLabels = { new:'Нова', in_progress:'В роботі', done:'Виконано', overdue:'Прострочена' };
+        const today = new Date().toISOString().split('T')[0];
+        const usersArr = (typeof users !== 'undefined') ? users : [];
+
+        let rows = '';
+        if (!dealTasks.length) {
+            rows = '<div style="text-align:center;padding:2rem;background:#f8fafc;border-radius:10px;border:2px dashed #e8eaed;"><div style="color:#9ca3af;font-size:0.82rem;">Задач ще немає</div></div>';
+        } else {
+            rows = dealTasks.map(function(task) {
+                const isOverdue = task.deadlineDate && task.deadlineDate < today && task.status !== 'done';
+                const eff = isOverdue ? 'overdue' : (task.status || 'new');
+                const col = statusColors[eff] || '#6b7280';
+                const asgn = usersArr.find(function(u){return u.id===task.assigneeId;});
+                const deadlinePart = task.deadlineDate ? '<span style="font-size:0.68rem;color:' + (isOverdue?'#ef4444':'#6b7280') + ';">' + task.deadlineDate + '</span>' : '';
+                const asgnPart = asgn ? '<span style="font-size:0.68rem;color:#9ca3af;">' + _esc(asgn.name||asgn.email) + '</span>' : '';
+                const donePart = task.status !== 'done' ? '<button onclick="crmMarkTaskDone(\'' + task.id + '\')" style="padding:4px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.72rem;font-weight:600;">✓ Готово</button>' : '';
+                const notePart = task.note ? '<div style="font-size:0.74rem;color:#9ca3af;margin-top:4px;">' + _esc((task.note||'').slice(0,100)) + '</div>' : '';
+                return '<div style="background:white;border:1px solid #e8eaed;border-left:3px solid ' + col + ';border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.5rem;">' +
+                    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">' +
+                        '<div style="flex:1;">' +
+                            '<div style="font-size:0.8rem;font-weight:600;color:' + (task.status==='done'?'#9ca3af':'#111827') + ';text-decoration:' + (task.status==='done'?'line-through':'none') + ';">' + _esc(task.title||'') + '</div>' +
+                            '<div style="display:flex;gap:0.5rem;margin-top:4px;flex-wrap:wrap;">' +
+                                '<span style="font-size:0.68rem;padding:1px 6px;border-radius:8px;font-weight:600;background:' + col + '18;color:' + col + ';">' + (statusLabels[eff]||eff) + '</span>' +
+                                deadlinePart + asgnPart +
+                            '</div>' +
+                        '</div>' +
+                        donePart +
+                    '</div>' + notePart + '</div>';
+            }).join('');
+        }
+
+        cnt.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">' +
+            '<div style="font-size:0.78rem;color:#6b7280;">' + dealTasks.length + ' задач по угоді</div>' +
+            '<button onclick="crmCreateTaskFromDeal(\'' + deal.id + '\')" style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">' +
+                I.plus + ' Нова задача</button></div>' + rows;
+    } catch(e) {
+        if (cnt) cnt.innerHTML = '<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ' + _esc(e.message) + '</div>';
+    }
+}
+
+window.crmMarkTaskDone = async function(taskId) {
+    try {
+        await window.companyRef().collection('tasks').doc(taskId).update({
+            status: 'done',
+            doneAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        if(window.showToast) showToast('Задачу виконано ✓', 'success');
+        if (crm.activeDealId) {
+            const deal = crm.deals.find(function(d){return d.id === crm.activeDealId;});
+            if (deal) _loadTasksTab(deal);
+        }
+    } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+};
+
+
 // ── Активності ─────────────────────────────────────────────
 async function _loadActivityTab(deal) {
     const content = document.getElementById('crmDealContent');
@@ -624,7 +1054,7 @@ async function _loadActivityTab(deal) {
                     <option value="meeting">Зустріч</option>
                     <option value="email">Email</option>
                 </select>
-                <input id="actText" placeholder=window.t('crmActivityDescPh')
+                <input id="actText" placeholder="${window.t('crmActivityDescPh')}"
                     onkeydown="if(event.key==='Enter')crmAddActivity('${deal.id}')"
                     style="flex:1;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;">
                 <button onclick="crmAddActivity('${deal.id}')"
@@ -1250,7 +1680,8 @@ function _renderAnalytics() {
     const lost     = crm.deals.filter(d => d.stage==='lost').length;
     const revenue  = crm.deals.filter(d => d.stage==='won').reduce((s,d) => s+(d.amount||0), 0);
     const avgDeal  = won > 0 ? Math.round(revenue/won) : 0;
-    const conv     = total > 0 ? Math.round(won/total*100) : 0;
+    const closed   = won + lost;
+    const conv     = closed > 0 ? Math.round(won/closed*100) : 0; // FIX: конверсія = won/(won+lost)
 
     // KPI картки
     const kpis = [
@@ -1549,19 +1980,19 @@ window.crmSelectPipeline = async function(pipelineId) {
 
 // Єдина точка підписки на deals — викликати звідусіль
 function _subscribeDeals() {
-    crm.unsubs.forEach(u => u && u());
-    crm.unsubs = [];
+    // FIX: скасовуємо ТІЛЬКИ deals-підписку, не торкаємо clientUnsub
+    if (crm.dealUnsub) { crm.dealUnsub(); crm.dealUnsub = null; }
     crm.loading = true;
     if (!crm.pipeline) return;
-    const dealUnsub = window.companyRef().collection(window.DB_COLS.CRM_DEALS)
+    crm.dealUnsub = window.companyRef().collection(window.DB_COLS.CRM_DEALS)
         .where('pipelineId','==', crm.pipeline.id).limit(200)
         .onSnapshot(snap => {
             crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}))
                 .sort((a,b) => (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
             crm.loading = false;
             if (crm.subTab === 'kanban') _renderKanban();
+            else if (crm.subTab === 'list') _renderListView();
         }, err => { console.error('[CRM deals]', err); crm.loading = false; });
-    crm.unsubs.push(dealUnsub);
 }
 
 window.crmCreatePipeline = async function() {
