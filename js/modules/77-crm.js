@@ -37,6 +37,7 @@ const I = {
     task:     '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
     copy:     '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
     search:   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+    clock:    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
     hot:      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>',
 };
 
@@ -572,12 +573,19 @@ function _dealCard(deal) {
     const date    = deal.updatedAt?.toDate ? _relTime(deal.updatedAt.toDate()) : '';
     const srcIcon = { telegram: I.tg, instagram: I.ig, site_form: I.web, manual: I.user }[deal.source] || I.deal;
 
+    // Stale detection: не активна 7+ днів (не won/lost)
+    const isActive = deal.stage !== 'won' && deal.stage !== 'lost';
+    const updMs = deal.updatedAt?.toMillis ? deal.updatedAt.toMillis() : (deal.updatedAt ? new Date(deal.updatedAt).getTime() : 0);
+    const daysSinceUpdate = updMs ? Math.floor((Date.now() - updMs) / 86400000) : 999;
+    const isStale = isActive && daysSinceUpdate >= 7;
+    const staleDays = isStale ? daysSinceUpdate : 0;
+
     return `
     <div draggable="true" data-deal-id="${deal.id}"
         ondragstart="crmDragStart(event,'${deal.id}')"
         onclick="crmOpenDeal('${deal.id}')"
         style="background:white;border-radius:7px;padding:0.65rem;cursor:pointer;
-        border:1px solid ${deal.isHot ? '#f97316' : '#e8eaed'};transition:box-shadow 0.15s,border-color 0.15s;position:relative;"
+        border:1px solid ${deal.isHot ? '#f97316' : isStale ? '#d1d5db' : '#e8eaed'};transition:box-shadow 0.15s,border-color 0.15s;position:relative;opacity:${isStale ? '0.82' : '1'};"
         onmouseenter="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.1)'"
         onmouseleave="this.style.boxShadow='none'">
 
@@ -614,6 +622,17 @@ function _dealCard(deal) {
         ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#3b82f6'};">📅 ${deal.nextContactDate}</div>` : ''}
         ${(deal.tags||[]).length ? `<div style="margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:2px;">${(deal.tags||[]).map(tag=>`<span style="font-size:0.6rem;padding:1px 5px;background:#f3f4f6;color:#6b7280;border-radius:3px;">${_esc(tag)}</span>`).join('')}</div>` : ''}
         ${deal.isHot ? `<div style="position:absolute;top:6px;right:6px;color:#f97316;">${I.hot}</div>` : ''}
+        ${isStale ? `<div style="position:absolute;top:6px;right:${deal.isHot?'22px':'6px'};color:#9ca3af;" title="${staleDays} днів без активності">${I.clock}</div>` : ''}
+
+        <!-- Quick stage bar -->
+        <div style="margin-top:0.4rem;display:flex;gap:2px;align-items:center;" onclick="event.stopPropagation()">
+            <button onclick="crmQuickStage(event,'${deal.id}')"
+                title="Змінити стадію"
+                style="flex:1;padding:2px 0;background:#f4f5f7;border:1px solid #e8eaed;border-radius:4px;
+                cursor:pointer;font-size:0.65rem;color:#6b7280;display:flex;align-items:center;justify-content:center;gap:3px;">
+                ${I.arrow} <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px;">${_stageLabel(deal.stage)}</span>
+            </button>
+        </div>
     </div>`;
 }
 
@@ -641,6 +660,13 @@ window.crmDrop = async function(e, newStage) {
     const deal = crm.deals.find(d => d.id === crm.dragDealId);
     crm.dragDealId = null;
     if (!deal || deal.stage === newStage) return;
+
+    // Якщо drag в "lost" — показуємо причину програшу
+    if (newStage === 'lost') {
+        _showLostReasonModal(deal.id, newStage, deal.stage);
+        return;
+    }
+
     const oldStage = deal.stage;
     deal.stage = newStage;
     _renderKanban();
@@ -664,6 +690,231 @@ window.crmDrop = async function(e, newStage) {
         console.error('[CRM drop]', err);
         deal.stage = oldStage;
         _renderKanban();
+    }
+};
+
+// ── Швидка зміна стадії з картки ──────────────────────────
+window.crmQuickStage = function(e, dealId) {
+    e.stopPropagation();
+    // Прибираємо попередній dropdown якщо є
+    document.getElementById('crmQuickStageMenu')?.remove();
+
+    const deal = crm.deals.find(function(d){ return d.id === dealId; });
+    if (!deal) return;
+    const stages = (crm.pipeline?.stages || []).slice().sort(function(a,b){ return a.order - b.order; });
+
+    const btn = e.currentTarget;
+    const rect = btn.getBoundingClientRect();
+
+    const menu = document.createElement('div');
+    menu.id = 'crmQuickStageMenu';
+    menu.style.cssText = 'position:fixed;z-index:10050;background:white;border:1px solid #e8eaed;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:4px;min-width:180px;';
+    menu.style.left = Math.min(rect.left, window.innerWidth - 200) + 'px';
+    menu.style.top = (rect.bottom + 4) + 'px';
+
+    menu.innerHTML = '<div style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;padding:4px 8px 2px;">Змінити стадію</div>' +
+        stages.map(function(s) {
+            const isActive = s.id === deal.stage;
+            return '<button data-did="' + dealId + '" data-sid="' + s.id + '" ' +
+                'style="display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;background:' + (isActive ? '#f0fdf4' : 'transparent') + ';' +
+                'border:none;border-radius:5px;cursor:pointer;font-size:0.78rem;text-align:left;color:' + (isActive ? '#16a34a' : '#374151') + ';">' +
+                '<span style="width:8px;height:8px;border-radius:50%;background:' + s.color + ';flex-shrink:0;"></span>' +
+                s.label +
+                (isActive ? ' <span style="margin-left:auto;font-size:0.7rem;">✓</span>' : '') +
+                '</button>';
+        }).join('');
+    // Event delegation для кнопок стадій
+    menu.addEventListener('click', function(ev) {
+        const btn = ev.target.closest('button[data-did]');
+        if (btn) { crmQuickSetStage(btn.dataset.did, btn.dataset.sid); }
+    });
+
+    document.body.appendChild(menu);
+
+    // Закриваємо при кліку зовні
+    function closeMenu(ev) {
+        if (!menu.contains(ev.target)) {
+            menu.remove();
+            document.removeEventListener('click', closeMenu);
+        }
+    }
+    setTimeout(function(){ document.addEventListener('click', closeMenu); }, 0);
+};
+
+window.crmQuickSetStage = async function(dealId, newStage) {
+    document.getElementById('crmQuickStageMenu')?.remove();
+    const deal = crm.deals.find(function(d){ return d.id === dealId; });
+    if (!deal || deal.stage === newStage) return;
+
+    // Якщо переходимо в "lost" — показуємо причину програшу
+    if (newStage === 'lost') {
+        _showLostReasonModal(dealId, newStage, deal.stage);
+        return;
+    }
+
+    const oldStage = deal.stage;
+    deal.stage = newStage;
+    _renderKanban();
+
+    try {
+        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
+        await ref.update({ stage: newStage, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await ref.collection('history').add({
+            type: 'stage_changed', from: oldStage, to: newStage,
+            by: window.currentUser?.email || 'manager',
+            at: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
+            emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
+                dealId: deal.id, clientName: deal.clientName,
+                fromStage: oldStage, toStage: newStage,
+                pipelineId: deal.pipelineId, amount: deal.amount,
+            });
+        }
+        if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
+    } catch(err) {
+        console.error('[CRM quickStage]', err);
+        deal.stage = oldStage;
+        _renderKanban();
+        if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
+    }
+};
+
+// ── Причина програшу угоди ────────────────────────────────
+const LOST_REASONS = [
+    { id: 'price',       label: 'Ціна — занадто дорого' },
+    { id: 'competitor',  label: 'Пішов до конкурента' },
+    { id: 'not_target',  label: 'Не цільовий клієнт' },
+    { id: 'no_response', label: 'Не відповідає / пропав' },
+    { id: 'postponed',   label: 'Відклав на потім' },
+    { id: 'budget',      label: 'Немає бюджету зараз' },
+    { id: 'other',       label: 'Інша причина' },
+];
+
+function _showLostReasonModal(dealId, newStage, oldStage) {
+    document.getElementById('crmLostModal')?.remove();
+    const deal = crm.deals.find(function(d){ return d.id === dealId; });
+    if (!deal) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'crmLostModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
+
+    modal.innerHTML =
+        '<div style="background:white;border-radius:12px;padding:1.5rem;width:380px;max-width:95vw;">' +
+            '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">' +
+                '<div style="width:32px;height:32px;background:#fef2f2;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#ef4444;flex-shrink:0;">' + I.trash + '</div>' +
+                '<div>' +
+                    '<div style="font-weight:700;font-size:0.92rem;color:#111827;">Причина програшу</div>' +
+                    '<div style="font-size:0.72rem;color:#9ca3af;">' + _esc(deal.clientName || deal.title || '') + '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.75rem;" id="lostReasonList">' +
+                LOST_REASONS.map(function(r) {
+                    return '<button data-rid="' + r.id + '" id="lr_' + r.id + '" ' +
+                        'style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.65rem;border:1.5px solid #e8eaed;' +
+                        'border-radius:7px;background:white;cursor:pointer;font-size:0.8rem;text-align:left;color:#374151;transition:all 0.1s;">' +
+                        '<span style="width:8px;height:8px;border-radius:50%;background:#e8eaed;flex-shrink:0;" id="lrd_' + r.id + '"></span>' +
+                        r.label + '</button>';
+                }).join('') +
+            '</div>' +
+            '<div style="margin-bottom:0.75rem;">' +
+                '<input id="lostReasonNote" placeholder="Коментар (необов\'язково)..." ' +
+                'style="width:100%;padding:0.45rem 0.55rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.8rem;box-sizing:border-box;">' +
+            '</div>' +
+            '<div style="display:flex;gap:0.5rem;justify-content:flex-end;">' +
+                '<button id="lostCancelBtn" style="padding:0.5rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;">Скасувати</button>' +
+                '<button id="lostConfirmBtn" style="padding:0.5rem 1.25rem;background:#ef4444;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">Програно</button>' +
+            '</div>' +
+        '</div>';
+
+    document.body.appendChild(modal);
+    window._selectedLostReason = null;
+    // Event delegation для reason buttons
+    var reasonList = modal.querySelector('#lostReasonList');
+    if (reasonList) {
+        reasonList.addEventListener('click', function(ev) {
+            var btn = ev.target.closest('button[data-rid]');
+            if (btn) crmSelectLostReason(btn.dataset.rid);
+        });
+    }
+    // Cancel button
+    var cancelBtn = modal.querySelector('#lostCancelBtn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+            modal.remove();
+            if (oldStage) {
+                var d = crm.deals.find(function(x){ return x.id === dealId; });
+                if (d) { d.stage = oldStage; _renderKanban(); }
+            }
+        });
+    }
+    // Confirm button
+    var confirmBtn = modal.querySelector('#lostConfirmBtn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            crmConfirmLost(dealId, newStage, oldStage || '');
+        });
+    }
+}
+
+window.crmSelectLostReason = function(reasonId) {
+    window._selectedLostReason = reasonId;
+    LOST_REASONS.forEach(function(r) {
+        const btn = document.getElementById('lr_' + r.id);
+        const dot = document.getElementById('lrd_' + r.id);
+        if (btn) {
+            const active = r.id === reasonId;
+            btn.style.borderColor = active ? '#ef4444' : '#e8eaed';
+            btn.style.background = active ? '#fef2f2' : 'white';
+            btn.style.color = active ? '#ef4444' : '#374151';
+            if (dot) dot.style.background = active ? '#ef4444' : '#e8eaed';
+        }
+    });
+};
+
+window.crmConfirmLost = async function(dealId, newStage, oldStage) {
+    const reason = window._selectedLostReason;
+    const note = document.getElementById('lostReasonNote')?.value.trim() || '';
+    const reasonLabel = reason ? (LOST_REASONS.find(function(r){ return r.id === reason; })?.label || reason) : '';
+
+    document.getElementById('crmLostModal')?.remove();
+
+    const deal = crm.deals.find(function(d){ return d.id === dealId; });
+    if (!deal) return;
+
+    deal.stage = newStage;
+    _renderKanban();
+
+    try {
+        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
+        await ref.update({
+            stage: newStage,
+            lostReason: reason || null,
+            lostReasonLabel: reasonLabel || null,
+            lostNote: note || null,
+            lostAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await ref.collection('history').add({
+            type: 'stage_changed', from: oldStage, to: newStage,
+            lostReason: reasonLabel || null, note: note || null,
+            by: window.currentUser?.email || 'manager',
+            at: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
+            emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
+                dealId: deal.id, clientName: deal.clientName,
+                fromStage: oldStage, toStage: newStage,
+                lostReason: reason, amount: deal.amount,
+            });
+        }
+        if (typeof showToast === 'function') showToast('Угоду закрито: ' + (reasonLabel || 'Програно'), 'error');
+    } catch(err) {
+        console.error('[CRM lost]', err);
+        deal.stage = oldStage || 'new';
+        _renderKanban();
+        if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
     }
 };
 
@@ -1734,6 +1985,17 @@ function _renderAnalytics() {
         .map(u => ({ ...u, name: (typeof users!=='undefined' ? users.find(x=>x.id===u.uid) : null)?.name || window.t('crmUnknown') }));
     const maxMgr = topManagers[0]?.amount || 1;
 
+    // Причини програшу
+    const lostDealsAll = crm.deals.filter(function(d){ return d.stage === 'lost'; });
+    const lostByReason = {};
+    lostDealsAll.forEach(function(d) {
+        const r = d.lostReasonLabel || d.lostReason || 'Не вказано';
+        lostByReason[r] = (lostByReason[r] || 0) + 1;
+    });
+    const lostReasonEntries = Object.entries(lostByReason).sort(function(a,b){ return b[1]-a[1]; });
+    const totalLost = lostDealsAll.length || 1;
+    const lostColors = ['#ef4444','#f97316','#f59e0b','#6b7280','#8b5cf6','#3b82f6','#22c55e'];
+
     c.innerHTML = `
     <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:0.75rem;padding-bottom:2rem;">
 
@@ -1849,6 +2111,29 @@ function _renderAnalytics() {
                 }).join('') || '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>'}
             </div>
         </div>
+
+        <!-- Причини програшу -->
+        ${lostReasonEntries.length ? (function(){
+            var html = '<div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;margin-bottom:0.75rem;">' +
+                '<div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">' + 'Причини програшу (' + lostDealsAll.length + ' угод)' + '</div>';
+            lostReasonEntries.forEach(function(entry, i){
+                var reason = entry[0]; var count = entry[1];
+                var col = lostColors[i % lostColors.length];
+                var pct = Math.round(count/totalLost*100);
+                html += '<div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;">' +
+                    '<div style="width:10px;height:10px;border-radius:50%;background:' + col + ';flex-shrink:0;"></div>' +
+                    '<div style="flex:1;">' +
+                        '<div style="display:flex;justify-content:space-between;margin-bottom:2px;">' +
+                            '<span style="font-size:0.78rem;color:#374151;">' + _esc(reason) + '</span>' +
+                            '<span style="font-size:0.72rem;font-weight:700;color:' + col + ';margin-left:0.5rem;">' + count + ' (' + pct + '%)</span>' +
+                        '</div>' +
+                        '<div style="background:#f1f5f9;border-radius:3px;height:5px;">' +
+                            '<div style="height:100%;background:' + col + ';width:' + pct + '%;border-radius:3px;"></div>' +
+                        '</div></div></div>';
+            });
+            html += '</div>';
+            return html;
+        })() : ''}
 
         <!-- Топ-5 менеджерів -->
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
