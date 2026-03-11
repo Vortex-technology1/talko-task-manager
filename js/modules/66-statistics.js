@@ -1299,7 +1299,10 @@
     }
 
     // Save metric detail (value + target + comment)
+    let _saveMetricDetailLock = false; // lock for double-submit
     window.saveMetricDetail = async function(metricId, periodKey) {
+        if (_saveMetricDetailLock) return;
+        _saveMetricDetailLock = true;
         const valInput = document.getElementById('metricDetailValue');
         const tgtInput = document.getElementById('metricDetailTarget');
         const cmtInput = document.getElementById('metricDetailComment');
@@ -1386,6 +1389,8 @@
         } catch (e) {
             console.error('[STATS] saveMetricDetail:', e);
             showToast('Помилка: ' + e.message, 'error');
+        } finally {
+            _saveMetricDetailLock = false;
         }
     };
 

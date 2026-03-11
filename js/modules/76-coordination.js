@@ -558,10 +558,13 @@
         const m=document.getElementById('coordModal'); if(m) m.style.display='none';
     };
 
+    let _saveCoordLock = false;
     window.saveCoord = async function() {
+        if (_saveCoordLock) return;
+        _saveCoordLock = true;
         const name = document.getElementById('coordName').value.trim();
-        if (!name) { toast('Введіть назву','error'); return; }
-        if (!window.currentCompanyId) return;
+        if (!name) { _saveCoordLock = false; toast('Введіть назву','error'); return; }
+        if (!window.currentCompanyId) { _saveCoordLock = false; return; }
         const participantIds = Array.from(document.querySelectorAll('.coord-participant-cb:checked')).map(cb=>cb.value);
         const filters={};
         ['filterFunctions','filterProjects','filterAssignees','filterOverdue','filterReview']
@@ -590,6 +593,7 @@
             }
             closeCoordModal();
         } catch(e) { toast('Помилка: '+e.message,'error'); }
+        finally { _saveCoordLock = false; }
     };
 
     window.deleteCoord = async function(coordId) {
