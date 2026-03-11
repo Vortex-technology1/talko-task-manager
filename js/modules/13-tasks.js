@@ -270,7 +270,7 @@
                 if (currentUser?.uid) {
                     const sel = document.getElementById('taskAssignee');
                     if (sel && !sel.value) {
-                        sel.value = currentUser.uid;
+                        sel.value = currentUser?.uid || '';
                     }
                 }
             }

@@ -453,7 +453,7 @@
                     pinned: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     createdDate: getLocalDateStr(),
-                    creatorId: currentUser.uid,
+                    creatorId: currentUser?.uid || '',
                     creatorName: t('systemUser'),
                     regularTaskId: id,
                     periodStart: periodStart
@@ -525,7 +525,7 @@
                     priority: rt.priority || 'medium',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     createdDate: todayStr,
-                    creatorId: currentUser.uid,
+                    creatorId: currentUser?.uid || '',
                     regularTaskId: regularId
                 };
                 await ref.set(taskData);
@@ -611,7 +611,7 @@
             const existingTasks = tasks.filter(t => 
                 t.regularTaskId === id && 
                 t.periodStart === periodStart &&
-                t.assigneeId === currentUser.uid
+                t.assigneeId === currentUser?.uid
             );
             
             if (existingTasks.length > 0) {
@@ -631,7 +631,7 @@
                 const newTaskData = {
                     title: rt.title,
                     function: rt.function,
-                    assigneeId: currentUser.uid,
+                    assigneeId: currentUser?.uid || '',
                     assigneeName: currentUserData?.name || currentUser.email,
                     deadlineDate: today,
                     deadlineTime: rt.timeStart || rt.time || '18:00',
@@ -662,16 +662,16 @@
         function filterRegularToday() {
             const today = new Date().getDay().toString();
             document.getElementById('regularDayFilter').value = today;
-            document.getElementById('regularAssigneeFilter').value = currentUser.uid;
+            document.getElementById('regularAssigneeFilter').value = currentUser?.uid || '';
             applyRegularFilters();
         }
         
         function filterRegularMy() {
             const af = document.getElementById('regularAssigneeFilter');
-            if (af.value === currentUser.uid) {
+            if (af.value === currentUser?.uid || '') {
                 af.value = ''; // toggle off
             } else {
-                af.value = currentUser.uid;
+                af.value = currentUser?.uid || '';
             }
             applyRegularFilters();
         }

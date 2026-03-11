@@ -301,7 +301,7 @@
             // Permission check: owner/admin/manager can move any, employee only own
             const role = currentUserData?.role;
             const canMove = (typeof hasPermission === 'function' && hasPermission('editAnyTask')) || role === 'owner' || role === 'admin' || role === 'manager' 
-                || task.assigneeId === currentUser.uid || task.creatorId === currentUser.uid;
+                || task.assigneeId === currentUser?.uid || task.creatorId === currentUser?.uid;
             if (!canMove) {
                 showToast(t('noPermissionTask'), 'error');
                 kanbanDropLock = false; return;
@@ -332,7 +332,7 @@
                     const upd = { status: effectiveTarget, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                     if (effectiveTarget === 'done') {
                         upd.completedAt = firebase.firestore.FieldValue.serverTimestamp();
-                        upd.completedBy = currentUser.uid;
+                        upd.completedBy = currentUser?.uid || '';
                     } else {
                         upd.completedAt = null;
                     }
@@ -344,7 +344,7 @@
                     task.status = effectiveTarget;
                     if (effectiveTarget === 'done') { 
                         task.completedAt = new Date(); 
-                        task.completedBy = currentUser.uid;
+                        task.completedBy = currentUser?.uid || '';
                         advanceProcessIfLinked(task.id);
                         if (task.projectId) autoUpdateProjectStatus(task.projectId);
                     }

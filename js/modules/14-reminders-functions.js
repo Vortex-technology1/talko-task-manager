@@ -313,7 +313,7 @@
                     // Create new task
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     data.createdDate = getLocalDateStr();
-                    data.creatorId = currentUser.uid;
+                    data.creatorId = currentUser?.uid || '';
                     data.creatorName = currentUserData?.name || currentUser.email;
                     data.pinned = false;
                     

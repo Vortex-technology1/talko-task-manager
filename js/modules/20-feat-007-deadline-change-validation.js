@@ -125,7 +125,7 @@
             // Collection: tasks, Fields: creatorId (Ascending), status (Ascending)
             reviewTasksUnsubscribe = db.collection('companies').doc(currentCompany)
                 .collection('tasks')
-                .where('creatorId', '==', currentUser.uid)
+                .where('creatorId', '==', currentUser?.uid || '')
                 .where('status', '==', 'review')
                 .onSnapshot(snapshot => {
                     const currentIds = new Set(snapshot.docs.map(d => d.id));
@@ -142,7 +142,7 @@
                         newReviews.forEach(doc => {
                             const task = doc.data();
                             // Не сповіщаємо якщо сам собі поставив
-                            if (task.assigneeId !== currentUser.uid) {
+                            if (task.assigneeId !== currentUser?.uid || '') {
                                 playNotificationSound();
                                 showReviewTaskToast(task, doc.id);
                             }
@@ -179,7 +179,7 @@
             // і є поле reviewRejectedAt (означає що повернули з перевірки)
             rejectedTasksUnsubscribe = db.collection('companies').doc(currentCompany)
                 .collection('tasks')
-                .where('assigneeId', '==', currentUser.uid)
+                .where('assigneeId', '==', currentUser?.uid || '')
                 .where('status', '==', 'progress')
                 .onSnapshot(snapshot => {
                     if (isFirstLoad) {
@@ -197,7 +197,7 @@
                     // Шукаємо нові повернення
                     snapshot.docs.forEach(doc => {
                         const data = doc.data();
-                        if (data.reviewRejectedAt && data.reviewRejectedBy !== currentUser.uid) {
+                        if (data.reviewRejectedAt && data.reviewRejectedBy !== currentUser?.uid || '') {
                             const prevTimestamp = knownRejectedTimestamps.get(doc.id);
                             if (data.reviewRejectedAt !== prevTimestamp) {
                                 playNotificationSound();

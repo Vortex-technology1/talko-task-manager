@@ -178,7 +178,7 @@
     function canViewStats() {
         if (!currentUser || !currentCompany) return false;
         if (typeof hasPermission === 'function') return hasPermission('viewStats');
-        const u = users.find(u => u.id === currentUser.uid);
+        const u = users.find(u => u.id === currentUser?.uid);
         return u ? (u.role === 'owner' || u.canViewStatsTab !== false) : false;
     }
 
@@ -187,7 +187,7 @@
         if (!currentUser) return false;
         // SuperAdmin бачить все
         if (currentUser.email === 'management.talco@gmail.com') return true;
-        const u = users.find(u => u.id === currentUser.uid);
+        const u = users.find(u => u.id === currentUser?.uid);
         if (!u) return false;
 
         // Owner/admin — бачить все
@@ -198,7 +198,7 @@
 
         // restricted — тільки ті хто в visibleTo
         if (m.privacy === 'restricted') {
-            return Array.isArray(m.visibleTo) && m.visibleTo.includes(currentUser.uid);
+            return Array.isArray(m.visibleTo) && m.visibleTo.includes(currentUser?.uid || '');
         }
 
         // team — manager + owner
@@ -258,7 +258,7 @@
                 const chunk = pks.slice(i, i + 30);
                 let q = entriesRef().where('periodKey', 'in', chunk);
                 if (role === 'employee' && statsCurrentScope === 'my') {
-                    q = entriesRef().where('periodKey', 'in', chunk).where('createdBy', '==', currentUser.uid);
+                    q = entriesRef().where('periodKey', 'in', chunk).where('createdBy', '==', currentUser?.uid || '');
                 }
                 const s = await q.get();
                 results.push(...s.docs.map(d => ({ id: d.id, ...d.data() })));
@@ -310,7 +310,7 @@
                 // Employee "my" view: only own entries
                 const s = await entriesRef()
                     .where('periodKey', '==', pk)
-                    .where('createdBy', '==', currentUser.uid)
+                    .where('createdBy', '==', currentUser?.uid || '')
                     .get();
                 results = s.docs.map(d => ({ id: d.id, ...d.data() }));
 
@@ -420,7 +420,7 @@
                 await metricsRef().doc(statsEditingMetricId).update(data);
             } else {
                 data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                data.createdBy = currentUser.uid;
+                data.createdBy = currentUser?.uid || '';
                 const ref = await metricsRef().add(data);
                 const tv = parseFloat(document.getElementById('metricTarget')?.value);
                 if (tv > 0) {
@@ -437,7 +437,7 @@
                         scope: targetScope,
                         scopeId: targetScopeId,
                         targetValue: tv,
-                        setBy: currentUser.uid,
+                        setBy: currentUser?.uid || '',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     });
                 }
@@ -476,8 +476,8 @@
 
         const metric = statsMetrics.find(m => m.id === metricId);
         const pt = metric?.frequency || getStatsPeriodType();
-        const d = new Date(dateStr || new Date());
-        const iso = d.toISOString().split('T')[0];
+        const d = dateStr ? new Date(dateStr + 'T12:00:00') : new Date();
+        const iso = (typeof getLocalDateStr === 'function') ? getLocalDateStr(d) : d.toISOString().split('T')[0];
 
         let pk;
         if (pt === 'daily') pk = iso;
@@ -486,7 +486,7 @@
 
         // Determine scope+scopeId
         let scope = 'user';
-        let scopeId = currentUser.uid;
+        let scopeId = currentUser?.uid || '';
 
         if (statsCurrentScope === 'function' && statsSelectedFunctionId) {
             scope = 'function';
@@ -506,8 +506,8 @@
             source: 'manual',
             // P0-2: function/company entries are explicit overrides
             isOverride: scope !== 'user',
-            createdBy: currentUser.uid,
-            userName: users.find(u => u.id === currentUser.uid)?.name || currentUser.email,
+            createdBy: currentUser?.uid || '',
+            userName: users.find(u => u.id === currentUser?.uid)?.name || currentUser.email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
 
@@ -522,7 +522,7 @@
             // For user scope: include createdBy (each person has own entry)
             // For function/company: one entry per scope (no createdBy filter)
             if (scope === 'user') {
-                query = query.where('createdBy', '==', currentUser.uid);
+                query = query.where('createdBy', '==', currentUser?.uid || '');
             }
 
             const ex = await query.limit(1).get();
@@ -547,7 +547,7 @@
     function getEntryForMetric(mid, pk) {
         if (statsCurrentScope === 'my') {
             return statsEntries.find(e =>
-                e.metricId === mid && e.periodKey === pk && e.createdBy === currentUser.uid
+                e.metricId === mid && e.periodKey === pk && e.createdBy === currentUser?.uid
             );
         }
 
@@ -606,7 +606,7 @@
     // P1-1: Target lookup with scopeId
     function getTargetForMetric(mid, pk) {
         const sc = statsCurrentScope === 'my' ? 'user' : statsCurrentScope === 'function' ? 'function' : 'company';
-        const sid = statsCurrentScope === 'my' ? currentUser.uid :
+        const sid = statsCurrentScope === 'my' ? (currentUser?.uid || '') :
                     statsCurrentScope === 'function' ? statsSelectedFunctionId :
                     currentCompany;
 
@@ -627,7 +627,7 @@
     // ========================
     function openQuickInputModal() {
         const p = document.getElementById('quickInputDatePicker');
-        if (p) p.value = new Date().toISOString().split('T')[0];
+        if (p) p.value = (typeof getLocalDateStr === 'function') ? getLocalDateStr() : new Date().toISOString().split('T')[0];
 
         const c = document.getElementById('quickInputList');
         if (!c) return;
@@ -1161,7 +1161,7 @@
         if (f === 'daily') {
             const d = new Date(now);
             d.setDate(d.getDate() + offset);
-            return d.toISOString().split('T')[0];
+            return (typeof getLocalDateStr === 'function') ? getLocalDateStr(d) : d.toISOString().split('T')[0];
         } else if (f === 'weekly') {
             const d = new Date(now);
             d.setDate(d.getDate() + offset * 7);
@@ -1304,7 +1304,7 @@
         }
 
         try {
-            const uid = currentUser.uid;
+            const uid = currentUser?.uid || '';
             const userName = users.find(u => u.id === uid)?.name || currentUser.email;
             const scope = statsCurrentScope;
             const scopeId = scope === 'function' ? statsSelectedFunctionId : scope === 'company' ? currentCompany : uid;
@@ -1325,7 +1325,7 @@
                 periodKey,
                 scope,
                 scopeId,
-                date: new Date().toISOString().split('T')[0],
+                date: (typeof getLocalDateStr === 'function') ? getLocalDateStr() : new Date().toISOString().split('T')[0],
                 value: val,
                 comment: cmt,
                 source: 'manual',
@@ -1933,7 +1933,7 @@
                     value,
                     period,
                     date: period,
-                    createdBy: currentUser.uid,
+                    createdBy: currentUser?.uid || '',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 imported++;
@@ -2003,7 +2003,7 @@
         if (!niche) return;
 
         const now = new Date();
-        const uid = currentUser.uid;
+        const uid = currentUser?.uid || '';
         const userName = users.find(u => u.id === uid)?.name || currentUser.email;
         const funcList = typeof functions !== 'undefined' ? functions : [];
         const funcIds = funcList.map(f => f.id);
@@ -2116,7 +2116,7 @@
                     let pk;
                     if (dm.freq === 'daily') {
                         const d = new Date(now); d.setDate(d.getDate() - i);
-                        pk = d.toISOString().split('T')[0];
+                        pk = (typeof getLocalDateStr === 'function') ? getLocalDateStr(d) : d.toISOString().split('T')[0];
                     } else if (dm.freq === 'weekly') {
                         const d = new Date(now); d.setDate(d.getDate() - i * 7);
                         pk = toWeekKey(d);
@@ -2143,7 +2143,7 @@
                     batch.set(entriesRef().doc(), {
                         metricId, periodType: dm.freq, periodKey: pk,
                         scope: 'user', scopeId: uid,
-                        date: new Date().toISOString().split('T')[0],
+                        date: (typeof getLocalDateStr === 'function') ? getLocalDateStr() : new Date().toISOString().split('T')[0],
                         value, source: 'demo', isOverride: false,
                         createdBy: uid, userName,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -2273,7 +2273,7 @@
         let dateStr = null;
         if (tk.status === 'done' && tk.completedAt) {
             const d = tk.completedAt.toDate ? tk.completedAt.toDate() : new Date(tk.completedAt);
-            dateStr = d.toISOString().split('T')[0];
+            dateStr = (typeof getLocalDateStr === 'function') ? getLocalDateStr(d) : d.toISOString().split('T')[0];
         } else if (tk.deadlineDate) {
             dateStr = tk.deadlineDate;
         } else if (tk.createdDate) {

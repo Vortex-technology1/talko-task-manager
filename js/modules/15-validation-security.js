@@ -76,7 +76,7 @@
             if (!currentUserData || !currentUser) return false;
             const role = currentUserData.role;
             if ((typeof hasPermission === 'function' && hasPermission('editAnyTask')) || role === 'owner' || role === 'admin' || role === 'manager') return true;
-            const uid = currentUser.uid;
+            const uid = currentUser?.uid || '';
             return task.assigneeId === uid || task.creatorId === uid;
         }
         
@@ -106,7 +106,7 @@
         function _buildVisibleSet() {
             if (!currentUserData || !currentUser) return null;
             if ((typeof hasPermission === 'function' && hasPermission('assignTasks')) || currentUserData.role === 'owner' || currentUserData.role === 'admin' || currentUserData.role === 'manager') return null;
-            const uid = currentUser.uid;
+            const uid = currentUser?.uid || '';
             const s = new Set();
             for (const t of tasks) {
                 if (t.assigneeId === uid || t.creatorId === uid || 
