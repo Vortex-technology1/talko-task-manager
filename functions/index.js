@@ -412,11 +412,14 @@ exports.telegramWebhook = functions
                 if (parts.length > 1) {
                     const registrationCode = parts[1];
 
-                    // БАГ 7 FIX: collectionGroup замість N+1 loop (500 компаній = 500 reads)
-                    // 1 запит замість 500
-                    const cgUsersSnap = await db.collectionGroup('users')
-                        .where('telegramCode', '==', registrationCode)
-                        .limit(1).get();
+                    // Lookup via telegramIndex for fast O(1) access without collectionGroup
+                    const idxDoc = await db.collection('telegramIndex').doc('code_' + registrationCode).get();
+                    let cgUsersSnap = { empty: true, docs: [] };
+                    if (idxDoc.exists) {
+                        const { companyId: cId, userId: uId } = idxDoc.data();
+                        const uDoc = await db.collection('companies').doc(cId).collection('users').doc(uId).get();
+                        if (uDoc.exists) cgUsersSnap = { empty: false, docs: [uDoc] };
+                    }
 
                     if (!cgUsersSnap.empty) {
                         const userDoc = cgUsersSnap.docs[0];
@@ -424,6 +427,13 @@ exports.telegramWebhook = functions
                             telegramChatId: chatId.toString(),
                             telegramUserId: userId.toString(),
                             telegramCode: null
+                        });
+                        // Write to telegramIndex for fast future lookups
+                        const cIdForIdx = userDoc.ref.parent.parent.id;
+                        const uIdForIdx = userDoc.id;
+                        await db.collection('telegramIndex').doc('chat_' + chatId.toString()).set({
+                            companyId: cIdForIdx, userId: uIdForIdx,
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp()
                         });
 
                         await sendTelegramMessage(chatId,
@@ -444,8 +454,14 @@ exports.telegramWebhook = functions
                 }
             } else if (text === '/today' || text === '/overdue') {
                 // БАГ 2 FIX: collectionGroup замість N+1 loop по 500 компаніях
-                const cgUserSnap = await db.collectionGroup('users')
-                    .where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                // Lookup via telegramIndex for fast O(1) access without collectionGroup
+                const chatIdxDoc = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
+                let cgUserSnap = { empty: true, docs: [] };
+                if (chatIdxDoc.exists) {
+                    const { companyId: cId2, userId: uId2 } = chatIdxDoc.data();
+                    const uDoc2 = await db.collection('companies').doc(cId2).collection('users').doc(uId2).get();
+                    if (uDoc2.exists) cgUserSnap = { empty: false, docs: [{ ...uDoc2, ref: uDoc2.ref }] };
+                }
                 if (!cgUserSnap.empty) {
                     const companyId = cgUserSnap.docs[0].ref.parent.parent.id;
                     const uid = cgUserSnap.docs[0].id;
