@@ -35,15 +35,52 @@ window.initBotsModule = async function () {
 
 window.destroyBotsModule = function() {
     // Відписуємо всі Firestore listeners
-    if (bp.botsUnsub)    { bp.botsUnsub();    bp.botsUnsub    = null; }
-    if (bp.flowsUnsub)   { bp.flowsUnsub();   bp.flowsUnsub   = null; }
-    if (bp.chatUnsub)    { bp.chatUnsub();     bp.chatUnsub    = null; }
+    if (bp.botsUnsub)      { bp.botsUnsub();       bp.botsUnsub      = null; }
+    if (bp.flowsUnsub)     { bp.flowsUnsub();       bp.flowsUnsub     = null; }
+    if (bp.chatUnsub)      { bp.chatUnsub();         bp.chatUnsub      = null; }
+    // FIX 1: clean chat message + chat contacts listeners
+    if (chat.msgsUnsub)    { chat.msgsUnsub();       chat.msgsUnsub    = null; }
+    if (chat.contactsUnsub){ chat.contactsUnsub();   chat.contactsUnsub= null; }
+    // FIX 2: clean contacts realtime counter
+    if (cts.unsub)         { cts.unsub();             cts.unsub         = null; }
+    // FIX 3: clear pending search timers
+    clearTimeout(_ctsSearchTimer);
+    clearTimeout(_chatSearchTimer);
+    // FIX 5: reset broadcast state so UI doesn't get stuck
+    bcast.running   = false;
+    bcast.cancelled = true;
     // Скидаємо guard для re-init при наступному login
-    bp._initializedFor  = null;
-    bp.activeBotId      = null;
-    bp.bots             = [];
-    bp.contacts         = [];
-    bp.flows            = [];
+    bp._initializedFor      = null;
+    bp.activeBotId          = null;
+    bp.bots                 = [];
+    bp.contacts             = [];
+    bp.flows                = [];
+    bp.subTab               = 'bots';
+    bp.activeChatContactId  = null;
+    bp.contactsFilter       = 'all';
+    // chat state
+    chat.contacts           = [];
+    chat.activeId           = null;
+    chat.lastContactDoc     = null;
+    chat.hasMoreContacts    = false;
+    chat.search             = '';
+    chat.sendingBotToken    = null;
+    // cts state
+    cts.items               = [];
+    cts.lastDoc             = null;
+    cts.hasMore             = false;
+    cts.loading             = false;
+    cts.total               = 0;
+    cts.search              = '';
+    cts.botId               = '';
+    cts.flowId              = '';
+    cts.dateFrom            = '';
+    cts.dateTo              = '';
+    cts.activeContactId     = null;
+    // bcast counters
+    bcast.sent              = 0;
+    bcast.failed            = 0;
+    bcast.total             = 0;
 };
 
 function loadBots() {
@@ -464,7 +501,7 @@ window.createAndConnectBot = async function() {
     if (!token) { if(window.showToast)showToast(window.t('botsEnterToken'),'warning'); else alert(window.t('botsEnterToken')); return; }
 
     const btn = document.querySelector('[onclick="createAndConnectBot()"]');
-    if (btn) { btn.textContent = t('botsLoading'); }
+    if (btn) { btn.disabled = true; btn.textContent = t('botsLoading'); }
 
     try {
         let username = '';
@@ -516,7 +553,7 @@ window.createAndConnectBot = async function() {
         if (typeof showToast === 'function') showToast(connected ? `<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Бот @${username} підключено!` : window.t('botsBotCreated'), 'success');
         openBot(botRef.id);
     } catch(e) {
-        if (btn) btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Підключити';
+        if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Підключити'; }
         if(window.showToast)showToast(window.t('errPrefix')+e.message,'error'); else alert(window.t('errPrefix')+e.message);
     }
 };
@@ -529,9 +566,13 @@ window.openBotSettings = async function(botId) {
 
 window.confirmDeleteBot = async function(botId) {
     if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteBot'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteBot')))))) return;
-    window.companyRef()
-        .collection('bots').doc(botId).delete()
-        .then(() => { if (typeof showToast === 'function') showToast(window.t('botsBotDeleted'), 'success'); });
+    try {
+        await window.companyRef().collection('bots').doc(botId).delete();
+        if (typeof showToast === 'function') showToast(window.t('botsBotDeleted'), 'success');
+    } catch(e) {
+        if(window.showToast) showToast(window.t('errPrefix')+e.message,'error');
+        console.error('[confirmDeleteBot]', e);
+    }
 };
 
 // ══════════════════════════════════════════════════════════
@@ -575,6 +616,8 @@ window.openCreateFlowModal = function() {
 window.saveNewFlow = async function() {
     const name = document.getElementById('bpFlowName')?.value.trim();
     if (!name) { if(window.showToast)showToast(window.t('enterName2'),'warning'); else alert(window.t('enterName2')); return; }
+    const saveBtn = document.querySelector('#bpCreateFlow button[onclick*="saveNewFlow"]');
+    if (saveBtn) { saveBtn.disabled = true; }
     const bot = bp.bots.find(b=>b.id===bp.activeBotId);
     try {
         const ref = await             window.companyRef()
@@ -597,7 +640,10 @@ window.saveNewFlow = async function() {
         document.getElementById('bpCreateFlow')?.remove();
         if (typeof showToast === 'function') showToast(window.t('botsFlowCreated'), 'success');
         editFlow(ref.id);
-    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
+    } catch(e) {
+        if (saveBtn) { saveBtn.disabled = false; }
+        if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message);
+    }
 };
 
 window.editFlow = function(flowId) {
@@ -608,11 +654,13 @@ window.editFlow = function(flowId) {
 
 window.toggleFlowStatus = async function(flowId, status) {
     const newStatus = status === 'active' ? 'paused' : 'active';
-    await window.companyRef()
-        .collection('bots').doc(bp.activeBotId)
-        .collection('flows').doc(flowId)
-        .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-    if (typeof showToast === 'function') showToast(newStatus==='active'?'▶ Активовано':'⏸ Пауза', 'success');
+    try {
+        await window.companyRef()
+            .collection('bots').doc(bp.activeBotId)
+            .collection('flows').doc(flowId)
+            .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        if (typeof showToast === 'function') showToast(newStatus==='active'?'▶ Активовано':'⏸ Пауза', 'success');
+    } catch(e) { console.error('[toggleFlowStatus]', e); if(window.showToast) showToast(window.t('errPrefix')+e.message,'error'); }
 };
 
 window.deleteFlow = async function(flowId) {
@@ -757,7 +805,7 @@ async function ctsLoad(reset = false) {
 
     try {
         const db = firebase.firestore();
-        let q = db.collection(window.currentCompanyId + '/contacts')
+        let q = window.companyCol('contacts')
             .orderBy('createdAt', 'desc');
 
         // Фільтри Firestore (індексовані поля)
@@ -1198,7 +1246,7 @@ window.ctsExportCSV = async function() {
     if (typeof showToast === 'function') showToast(window.t('botsPrepareCSV'), 'info');
     try {
         const db = firebase.firestore();
-        let q = db.collection(window.currentCompanyId + '/contacts')
+        let q = window.companyCol('contacts')
             .orderBy('createdAt', 'desc');
         if (cts.botId)   q = q.where('botId', '==', cts.botId);
         if (cts.flowId)  q = q.where('flowId', '==', cts.flowId);
@@ -1240,8 +1288,7 @@ window.ctsExportCSV = async function() {
 function _ctsStartRealtimeCounter() {
     if (cts.unsub) cts.unsub();
     // Слухаємо тільки останній документ — дешево
-    cts.unsub = firebase.firestore()
-        .collection(window.currentCompanyId + '/contacts')
+    cts.unsub = window.companyCol('contacts')
         .orderBy('createdAt', 'desc')
         .limit(1)
         .onSnapshot(snap => {
@@ -1421,8 +1468,7 @@ async function chatLoadContacts(reset = true) {
     }
 
     try {
-        let q = firebase.firestore()
-            .collection(window.currentCompanyId + '/contacts')
+        let q = window.companyCol('contacts')
             .orderBy('lastMessageAt', 'desc');
 
         if (chat.lastContactDoc) q = q.startAfter(chat.lastContactDoc);
@@ -1558,8 +1604,7 @@ window.bpOpenChat = async function(contactId) {
     if (chat.msgsUnsub) { chat.msgsUnsub(); chat.msgsUnsub = null; }
 
     // Підписуємось на messages цього контакту
-    chat.msgsUnsub = firebase.firestore()
-        .companyRef().collection('contacts').doc(contactId).collection('messages')
+    chat.msgsUnsub = window.companyRef().collection('contacts').doc(contactId).collection('messages')
         .orderBy('timestamp', 'asc')
         .limitToLast(100)
         .onSnapshot(snap => {
@@ -1698,16 +1743,19 @@ window.chatSend = window.bpSendMsg = async function() {
     } catch(e) {
         console.error('[chat] send:', e);
         // Fallback: пишемо напряму в Firestore (без Telegram)
-        await firebase.firestore()
-            .companyRef().collection('contacts').doc(chat.activeId).collection('messages')
-            .add({
-                text, from: 'bot', direction: 'out',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                read: true, sentBy: 'operator',
-            });
+        try {
+            if (window.companyRef()) {
+                await window.companyRef().collection('contacts').doc(chat.activeId).collection('messages')
+                    .add({
+                        text, from: 'bot', direction: 'out',
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        read: true, sentBy: 'operator',
+                    });
+            }
+        } catch(e2) { console.error('[chat] fallback send:', e2); }
+    } finally {
+        if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
     }
-
-    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
 };
 
 // ─────────────────────────────────────────
@@ -1760,8 +1808,7 @@ function _chatStartUnreadListener() {
     if (chat.contactsUnsub) { chat.contactsUnsub(); chat.contactsUnsub = null; }
 
     // Слухаємо тільки контакти з unreadCount > 0
-    chat.contactsUnsub = firebase.firestore()
-        .collection(window.currentCompanyId + '/contacts')
+    chat.contactsUnsub = window.companyCol('contacts')
         .where('unreadCount', '>', 0)
         .onSnapshot(snap => {
             snap.docs.forEach(doc => {
@@ -2025,8 +2072,7 @@ window.bcastPreview = async function() {
     const tag     = document.getElementById('bcastTag')?.value || '';
 
     try {
-        let q = firebase.firestore()
-            .collection(window.currentCompanyId + '/contacts')
+        let q = window.companyCol('contacts')
             .where('botStatus', '!=', 'blocked');
 
         // Firestore дозволяє один inequality filter — решта фільтруємо на клієнті
@@ -2077,6 +2123,7 @@ window.bcastCountChars = function(val) {
 // ОСНОВНА ФУНКЦІЯ ВІДПРАВКИ
 // ─────────────────────────────────────────
 window.bpSendBroadcast = async function() {
+    if (bcast.running) return; // prevent double-send
     const text    = document.getElementById('bcastText')?.value.trim();
     const flowSendId = document.getElementById('bcastFlowSend')?.value;
     const channel = document.getElementById('bcastChannel')?.value || '';
@@ -2087,8 +2134,7 @@ window.bpSendBroadcast = async function() {
     if (!text && !flowSendId) { if(window.showToast)showToast(window.t('botsEnterTextOrFlow'),'warning'); else alert(window.t('botsEnterTextOrFlow')); return; }
 
     // Завантажуємо всіх цільових контактів з Firestore (не з bp.contacts)
-    let q = firebase.firestore()
-        .collection(window.currentCompanyId + '/contacts')
+    let q = window.companyCol('contacts')
         .where('botStatus', '!=', 'blocked');
 
     if (channel) q = q.where('channel', '==', channel);
