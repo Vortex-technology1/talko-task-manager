@@ -1170,8 +1170,7 @@ window.ctsAddTag = async function(contactId) {
     const ct = cts.items.find(c => c.id === contactId);
     if (!ct) return;
     const tags = [...(ct.tags||[]), tag];
-    await firebase.firestore()
-        .doc(window.currentCompanyId + '/contacts/' + contactId)
+    await window.companyRef().collection('contacts').doc(contactId)
         .update({ tags, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     ct.tags = tags;
     if (input) input.value = '';
@@ -1182,8 +1181,7 @@ window.ctsRemoveTag = async function(contactId, index) {
     const ct = cts.items.find(c => c.id === contactId);
     if (!ct) return;
     const tags = (ct.tags||[]).filter((_,i) => i !== index);
-    await firebase.firestore()
-        .doc(window.currentCompanyId + '/contacts/' + contactId)
+    await window.companyRef().collection('contacts').doc(contactId)
         .update({ tags, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     ct.tags = tags;
     ctsOpenCard(contactId);
@@ -1194,8 +1192,7 @@ window.ctsRemoveTag = async function(contactId, index) {
 // ─────────────────────────────────────────
 window.ctsSaveNote = async function(contactId) {
     const note = document.getElementById('ctsNote')?.value.trim() || '';
-    await firebase.firestore()
-        .doc(window.currentCompanyId + '/contacts/' + contactId)
+    await window.companyRef().collection('contacts').doc(contactId)
         .update({ managerNote: note, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     const ct = cts.items.find(c => c.id === contactId);
     if (ct) ct.managerNote = note;
@@ -1239,8 +1236,7 @@ window.ctsAddToCRM = async function(contactId) {
 window.ctsDeleteContact = async function(contactId) {
     if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteContact'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteContact')))))) return;
     try {
-        await firebase.firestore()
-            .doc(window.currentCompanyId + '/contacts/' + contactId)
+        await window.companyRef().collection('contacts').doc(contactId)
             .delete();
         cts.items = cts.items.filter(c => c.id !== contactId);
         ctsCloseCard();
@@ -1597,8 +1593,7 @@ window.bpOpenChat = async function(contactId) {
     let ct = chat.contacts.find(c => c.id === contactId);
     if (!ct) {
         // Завантажуємо якщо не в списку
-        const doc = await firebase.firestore()
-            .doc(window.currentCompanyId + '/contacts/' + contactId).get();
+        const doc = await window.companyRef().collection('contacts').doc(contactId).get();
         if (doc.exists) {
             ct = { id: doc.id, ...doc.data() };
             chat.contacts.unshift(ct);
@@ -1786,18 +1781,9 @@ async function _chatMarkRead(contactId) {
         if (ct) ct.unreadCount = 0;
         _chatRenderContactsList();
 
-        // Відправляємо на сервер
-        const webhookBase = 'https://europe-west1-task-manager-44e84.cloudfunctions.net';
-        fetch(`${webhookBase}/api/webhook?action=mark-read`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ companyId: window.currentCompanyId, contactId }),
-        }).catch(() => {
-            // Fallback: пишемо напряму
-            firebase.firestore()
-                .doc(window.currentCompanyId + '/contacts/' + contactId)
-                .update({ unreadCount: 0 }).catch(() => {});
-        });
+        // Оновлюємо напряму в Firestore (без зовнішнього запиту)
+        window.companyRef().collection('contacts').doc(contactId)
+            .update({ unreadCount: 0 }).catch(() => {});
     } catch(e) { /* не критично */ }
 }
 
@@ -2253,8 +2239,7 @@ window.bpSendBroadcast = async function() {
                     bcast.failed++;
                     // Автоматично позначаємо заблокованих
                     if (data.error_code === 403) {
-                        firebase.firestore()
-                            .doc(window.currentCompanyId + '/contacts/' + ct.id)
+                        window.companyRef().collection('contacts').doc(ct.id)
                             .update({ botStatus: 'blocked' }).catch(() => {});
                     }
                     // Rate limit від Telegram — чекаємо
