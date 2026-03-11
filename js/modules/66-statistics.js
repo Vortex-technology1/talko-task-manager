@@ -863,7 +863,7 @@
                 ${canEdit ? `<button class="stats-pill accent" onclick="openMetricModal()" style="background:var(--primary);color:white;border-color:var(--primary);font-weight:700;padding:0.45rem 1rem;">${SVG.plus} Метрика</button>` : ''}
                 <button class="stats-pill" onclick="openQuickInputModal()" style="font-weight:600;">${SVG.edit} Внести дані</button>
                 <button class="stats-pill" onclick="runAIAnalysis()" style="color:#7c3aed;border-color:#e9d5ff;">${SVG.sparkles} AI</button>
-                <button class="stats-pill" onclick="openTrendsChart(statsMetrics[0]?.id || '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренди</button>
+                <button class="stats-pill" onclick="openTrendsChart(window._statsGetFirstMetricId ? window._statsGetFirstMetricId() : '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренди</button>
                 <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title="Експорт CSV">⬇ CSV</button>
                 <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title="Експорт Excel">⬇ Excel</button>
                 <button class="stats-pill" onclick="statsExportPDF()" style="color:#dc2626;border-color:#fecaca;" title="Вивантажити PDF">⬇ PDF</button>
