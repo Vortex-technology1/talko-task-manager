@@ -7552,6 +7552,19 @@ en: {
                 
                 switchTab(tabName);
                 updateSelects(true);
+                // Re-apply nav translations after switchTab (module renders may run async)
+                setTimeout(function() {
+                    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                        const key = el.getAttribute('data-i18n');
+                        if (translations[lang] && translations[lang][key]) {
+                            if (el.tagName === 'INPUT' && el.type !== 'text' && el.type !== 'email') {
+                                el.value = translations[lang][key];
+                            } else {
+                                el.innerHTML = translations[lang][key];
+                            }
+                        }
+                    });
+                }, 300);
             }
         }
         window.setLanguage = setLanguage;
