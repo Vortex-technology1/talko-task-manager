@@ -186,7 +186,7 @@
                 document.getElementById('logoutBtn').style.display = 'none';
                 document.getElementById('adminTabBtn').style.display = 'none';
                 // P3 FIX: bell завжди видимий — не ховаємо при логауті
-                notifications = [];
+                if (typeof notifications !== 'undefined') notifications = [];
                 
                 // Hide FAB on logout
                 const fab = document.getElementById('fabAdd');

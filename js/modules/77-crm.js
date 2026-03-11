@@ -271,7 +271,7 @@ function _kanbanCol(stage) {
 }
 
 function _kanbanColLost(stage) {
-    const deals = _getFilteredDeals().filter(d => d.stage === 'lost');
+    const deals = crm.deals.filter(d => d.stage === 'lost');
     return `
     <div data-stage="lost"
         style="width:160px;flex-shrink:0;background:#fef2f2;border-left:1px solid #e8eaed;
@@ -820,17 +820,21 @@ window.crmOpenCreateDeal = function(defaultStage) {
 };
 
 window.crmCreateDeal = async function() {
-    const title  = document.getElementById('nd_title')?.value.trim();
-    const client = document.getElementById('nd_client')?.value.trim();
-    const stage  = document.getElementById('nd_stage')?.value || 'new';
-    const amount = parseFloat(document.getElementById('nd_amount')?.value) || 0;
-    const niche  = document.getElementById('nd_niche')?.value.trim();
+    const title    = document.getElementById('nd_title')?.value.trim();
+    const client   = document.getElementById('nd_client')?.value.trim();
+    const stage    = document.getElementById('nd_stage')?.value || 'new';
+    const amount   = parseFloat(document.getElementById('nd_amount')?.value) || 0;
+    const niche    = document.getElementById('nd_niche')?.value.trim();
+    const clientId = document.getElementById('crmCreateDealOverlay')?.dataset?.clientId || null;
     if (!title && !client) { if(window.showToast)showToast(window.t('crmEnterNameOrClient'),'warning'); else alert(window.t('crmEnterNameOrClient')); return; }
     try {
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add({
                 title: title||client, clientName: client||title, clientNiche: niche||'',
+                clientId: clientId || null,
                 stage, pipelineId: crm.pipeline?.id || '',
                 amount, source:'manual',
+                assigneeId: window.currentUser?.uid || null,
+                creatorId:  window.currentUser?.uid || null,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
