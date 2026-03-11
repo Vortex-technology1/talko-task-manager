@@ -6089,24 +6089,6 @@ en: {
 
                 ua: 'Ukrainian',
 },
-                assigneeRequired: 'Bitte Beauftragten auswählen',
-                dayFri: 'Fr',
-                dayMon: 'Mo',
-                daySat: 'Sa',
-                dayTue: 'Di',
-                dayWed: 'Mi',
-                fri: 'Freitag',
-                sat: 'Samstag',
-                saturday: 'Samstag',
-                sun: 'Sonntag',
-                sunday: 'Sonntag',
-                thu: 'Donnerstag',
-                thursday: 'Donnerstag',
-                tue: 'Dienstag',
-                tuesday: 'Dienstag',
-                wed: 'Mittwoch',
-                wednesday: 'Mittwoch',
-
             de: {
                 // Auth
                 authSubtitle: 'Aufgabenmanagement für Unternehmen',
@@ -7629,23 +7611,6 @@ en: {
                 ru: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
                 pl: ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru'],
                 en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                assigneeRequired: 'Bitte Beauftragten auswählen',
-                dayFri: 'Fr',
-                dayMon: 'Mo',
-                daySat: 'Sa',
-                dayTue: 'Di',
-                dayWed: 'Mi',
-                fri: 'Freitag',
-                sat: 'Samstag',
-                saturday: 'Samstag',
-                sun: 'Sonntag',
-                sunday: 'Sonntag',
-                thu: 'Donnerstag',
-                thursday: 'Donnerstag',
-                tue: 'Dienstag',
-                tuesday: 'Dienstag',
-                wed: 'Mittwoch',
-                wednesday: 'Mittwoch',
                 de: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
             };
             return months[currentLang] || months['ua'];
