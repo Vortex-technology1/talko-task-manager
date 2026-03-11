@@ -285,7 +285,13 @@
                 }
             }
             kanbanTouchCard = null;
-            kanbanTouchMoved = false;
+            // FIX D: delay reset so click event (300ms after touchend on iOS) is still blocked
+            const _wasMoved = kanbanTouchMoved;
+            if (_wasMoved) {
+                setTimeout(() => { kanbanTouchMoved = false; }, 350);
+            } else {
+                kanbanTouchMoved = false;
+            }
         }
         let kanbanDropLock = false;
         async function kanbanDrop(e, mode) {

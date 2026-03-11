@@ -149,7 +149,12 @@
                 let closed = false;
                 modals.forEach(modal => {
                     if (modal.style.display === 'block') {
-                        closeModal(modal.id);
+                        // FIX: completionReportModal needs special close handler to clear lock
+                        if (modal.id === 'completionReportModal' && typeof closeCompletionReport === 'function') {
+                            closeCompletionReport(false);
+                        } else {
+                            closeModal(modal.id);
+                        }
                         closed = true;
                     }
                 });
