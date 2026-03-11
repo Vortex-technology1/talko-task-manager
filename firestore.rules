@@ -159,6 +159,15 @@ service cloud.firestore {
         allow delete: if isManagerOrOwner(companyId);
       }
       
+      // COORDINATIONS (наради/координації)
+      match /coordinations/{coordId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isManagerOrOwner(companyId) &&
+          isValidString(request.resource.data.name, 500);
+        allow update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+      
       // PROJECTS
       match /projects/{projectId} {
         allow read: if isCompanyMember(companyId);

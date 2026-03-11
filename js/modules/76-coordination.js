@@ -116,9 +116,17 @@
         coordUnsubscribes.push(taskUnsub);
 
         const coordUnsub = col('coordinations')
-            .orderBy('createdAt','desc')
             .onSnapshot(snap => {
-                coordinations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                coordinations = snap.docs
+                    .map(d => ({ id: d.id, ...d.data() }))
+                    .sort((a, b) => {
+                        const ta = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+                        const tb = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+                        return tb - ta;
+                    });
+                renderCoordList();
+            }, err => {
+                console.error('[Coordination] snapshot error:', err.message);
                 renderCoordList();
             });
         coordUnsubscribes.push(coordUnsub);
