@@ -180,7 +180,7 @@
                     deadlineTime: deadlineTime,
                     timeEnd: timeEnd,
                     duration: duration,
-                    deadline: deadlineDate + 'T' + deadlineTime, // для сумісності
+                    deadline: deadlineDate + (deadlineTime ? 'T' + deadlineTime : ''), // для сумісності
                     estimatedTime: document.getElementById('taskEstimatedTime').value,
                     priority: document.getElementById('taskPriority').value,
                     status: statusVal,
