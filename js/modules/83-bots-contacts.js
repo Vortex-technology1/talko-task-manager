@@ -35,14 +35,20 @@ window.initBotsModule = async function () {
 
 window.destroyBotsModule = function() {
     // Відписуємо всі Firestore listeners
-    if (bp.botsUnsub)      { bp.botsUnsub();       bp.botsUnsub      = null; }
-    if (bp.flowsUnsub)     { bp.flowsUnsub();       bp.flowsUnsub     = null; }
-    if (bp.chatUnsub)      { bp.chatUnsub();         bp.chatUnsub      = null; }
+    if (typeof bp.botsUnsub === 'function')      { bp.botsUnsub();       bp.botsUnsub      = null; }
+    else bp.botsUnsub = null;
+    if (typeof bp.flowsUnsub === 'function')     { bp.flowsUnsub();       bp.flowsUnsub     = null; }
+    else bp.flowsUnsub = null;
+    if (typeof bp.chatUnsub === 'function')      { bp.chatUnsub();         bp.chatUnsub      = null; }
+    else bp.chatUnsub = null;
     // FIX 1: clean chat message + chat contacts listeners
-    if (chat.msgsUnsub)    { chat.msgsUnsub();       chat.msgsUnsub    = null; }
-    if (chat.contactsUnsub){ chat.contactsUnsub();   chat.contactsUnsub= null; }
+    if (typeof chat.msgsUnsub === 'function')    { chat.msgsUnsub();       chat.msgsUnsub    = null; }
+    else chat.msgsUnsub = null;
+    if (typeof chat.contactsUnsub === 'function'){ chat.contactsUnsub();   chat.contactsUnsub= null; }
+    else chat.contactsUnsub = null;
     // FIX 2: clean contacts realtime counter
-    if (cts.unsub)         { cts.unsub();             cts.unsub         = null; }
+    if (typeof cts.unsub === 'function')         { cts.unsub();             cts.unsub         = null; }
+    else cts.unsub = null;
     // FIX 3: clear pending search timers
     clearTimeout(_ctsSearchTimer);
     clearTimeout(_chatSearchTimer);
@@ -84,7 +90,8 @@ window.destroyBotsModule = function() {
 };
 
 function loadBots() {
-    if (bp.botsUnsub) bp.botsUnsub();
+    if (typeof bp.botsUnsub === 'function') bp.botsUnsub();
+    bp.botsUnsub = null;
     bp.botsUnsub = window.companyRef()
         .collection('bots')
         .orderBy('createdAt', 'desc')
@@ -262,7 +269,7 @@ window.openBot = function(botId) {
     bpSwitch('flows');
 
     // Підписуємось на flows цього бота
-    if (bp.flowsUnsub) bp.flowsUnsub();
+    if (typeof bp.flowsUnsub === 'function') bp.flowsUnsub(); bp.flowsUnsub = null;
     bp.flowsUnsub = window.companyRef()
         .collection('bots').doc(botId)
         .collection('flows')
@@ -1286,7 +1293,7 @@ window.ctsExportCSV = async function() {
 // (тільки metadata — не весь список)
 // ─────────────────────────────────────────
 function _ctsStartRealtimeCounter() {
-    if (cts.unsub) cts.unsub();
+    if (typeof cts.unsub === 'function') cts.unsub(); cts.unsub = null;
     // Слухаємо тільки останній документ — дешево
     cts.unsub = window.companyCol('contacts')
         .orderBy('createdAt', 'desc')
@@ -1601,7 +1608,7 @@ window.bpOpenChat = async function(contactId) {
     if (inputArea) inputArea.style.display = '';
 
     // Зупиняємо попередній listener
-    if (chat.msgsUnsub) { chat.msgsUnsub(); chat.msgsUnsub = null; }
+    if (typeof chat.msgsUnsub === 'function') { chat.msgsUnsub(); } chat.msgsUnsub = null;
 
     // Підписуємось на messages цього контакту
     chat.msgsUnsub = window.companyRef().collection('contacts').doc(contactId).collection('messages')
@@ -1805,7 +1812,7 @@ async function _chatGetBotToken(ct) {
 // REAL-TIME: лічильник непрочитаних
 // ─────────────────────────────────────────
 function _chatStartUnreadListener() {
-    if (chat.contactsUnsub) { chat.contactsUnsub(); chat.contactsUnsub = null; }
+    if (typeof chat.contactsUnsub === 'function') { chat.contactsUnsub(); } chat.contactsUnsub = null;
 
     // Слухаємо тільки контакти з unreadCount > 0
     chat.contactsUnsub = window.companyCol('contacts')
