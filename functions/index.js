@@ -521,6 +521,47 @@ exports.telegramWebhook = functions
                     }
                     } // end scope wrapper
                 } // end if cgUserSnap
+            } else if (text === '/help') {
+                await sendTelegramMessage(chatId,
+                    '📖 <b>TALKO Tasks — команди:</b>\n\n' +
+                    '/today — завдання на сьогодні\n' +
+                    '/overdue — прострочені завдання\n' +
+                    '/weekly — звіт за тиждень\n' +
+                    '/team — статус команди\n' +
+                    '/connect — підключити email\n' +
+                    '/help — ця довідка'
+                );
+            } else if (text === '/weekly') {
+                // Тижневий звіт для поточного користувача
+                let wCompanyId = null, wUid = null;
+                const wIdxDoc = await db.collection('telegramIndex').doc('chat_' + chatId.toString()).get();
+                if (wIdxDoc.exists) { const d = wIdxDoc.data(); wCompanyId = d.companyId; wUid = d.userId; }
+                if (!wCompanyId) {
+                    const ws = await db.collectionGroup('users').where('telegramChatId', '==', chatId.toString()).limit(1).get();
+                    if (!ws.empty) { wUid = ws.docs[0].id; wCompanyId = ws.docs[0].ref.parent.parent.id; }
+                }
+                if (wCompanyId && wUid) {
+                    const now = new Date();
+                    const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                    const todayStr = now.toISOString().split('T')[0];
+                    const snap = await db.collection('companies').doc(wCompanyId).collection('tasks')
+                        .where('assigneeId', '==', wUid).where('status', 'in', ['done', 'new', 'progress']).get();
+                    let done = 0, inProgress = 0, overdue = 0;
+                    snap.docs.forEach(d => {
+                        const t = d.data();
+                        if (t.status === 'done') done++;
+                        else if (t.status === 'progress') inProgress++;
+                        if (t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done') overdue++;
+                    });
+                    await sendTelegramMessage(chatId,
+                        `📊 <b>Тижневий звіт</b>\n\n✅ Виконано: ${done}\n🔄 В роботі: ${inProgress}\n⚠️ Прострочено: ${overdue}`);
+                } else {
+                    await sendTelegramMessage(chatId, '❌ Не підключено. Натисніть "Підключити Telegram" в TALKO System.');
+                }
+            } else if (text === '/team') {
+                await sendTelegramMessage(chatId, 'ℹ️ Команда /team доступна тільки для керівників в TALKO System.');
+            } else if (text === '/connect') {
+                await sendTelegramMessage(chatId, 'ℹ️ Для підключення email зайдіть в TALKO System → Профіль → Підключити Telegram.');
             }
         }
 
