@@ -3559,8 +3559,21 @@ document.addEventListener('mousedown', function(e) {
         </div>
     </div>
 
-    <script src="js/modules/80-learning-data.js" defer></script>
-    <script src="js/modules/80-learning-engine.js" defer></script>
+    <!-- Learning modules: lazy-loaded on first tab click (~800KB saved on initial load) -->
+    <script>
+    window._learningLoaded = false;
+    window.loadLearningModules = function(cb) {
+        if (window._learningLoaded) { cb && cb(); return; }
+        var scripts = ['js/modules/80-learning-data.js','js/modules/80-learning-engine.js'];
+        var loaded = 0;
+        scripts.forEach(function(src) {
+            var s = document.createElement('script');
+            s.src = src;
+            s.onload = function() { if (++loaded === scripts.length) { window._learningLoaded = true; cb && cb(); } };
+            document.body.appendChild(s);
+        });
+    };
+    </script>
     <script src="js/modules/77-crm.js" defer></script>
     <script src="js/modules/78-landing-pages.js" defer></script>
     <script src="js/modules/79-funnels.js" defer></script>

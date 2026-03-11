@@ -231,7 +231,15 @@
                 case 'admin': renderAdminPanel(); break;
                 case 'bizstructure': if (typeof showBizStructureTab === 'function') showBizStructureTab(); break;
                 case 'ownerDashboard': if (typeof renderOwnerDashboard === 'function') renderOwnerDashboard(); break;
-                case 'learning': if (typeof window.initLearning === 'function') window.initLearning(); break;
+                case 'learning':
+                    if (typeof window.loadLearningModules === 'function') {
+                        window.loadLearningModules(function() {
+                            if (typeof window.initLearning === 'function') window.initLearning();
+                        });
+                    } else if (typeof window.initLearning === 'function') {
+                        window.initLearning();
+                    }
+                    break;
                 case 'onboarding': if (typeof window.initOnboarding === 'function') window.initOnboarding(); break;
                 case 'marketing': if (typeof window.initLandingPagesModule === 'function') window.initLandingPagesModule(); break;
                 case 'sites': if (typeof window.initSitesModule === 'function') window.initSitesModule(); break;

@@ -1,10 +1,7 @@
 // =====================
-        // TRANSLATIONS
-        // =====================
 'use strict';
         const translations = {
             ua: {
-                // Auth
                 authSubtitle: 'Управління завданнями для бізнесу',
                 signInGoogle: 'Увійти через Google',
                 or: 'або',
@@ -31,8 +28,6 @@
                 registerSubmit: 'Зареєструватися',
                 backToLogin: '← Повернутися до входу',
                 logout: 'Вийти',
-                
-                // Tabs
                 tabMyDay: 'Мій день',
                 myDay: 'Мій день',
                 tabTasks: 'Завдання',
@@ -42,8 +37,6 @@
                 tabFunctions: 'Функції',
                 tabTeam: 'Команда',
                 tabAdmin: 'Адмін',
-                
-                // Tasks
                 addTask: '+ Завдання',
                 allFunctions: 'Всі функції',
                 allDates: 'Всі дати',
@@ -83,11 +76,7 @@
                 priority: 'Пріоритет',
                 status: 'Статус',
                 close: 'Закрити',
-                
-                // Comments
                 comments: 'Коментарі',
-                
-                // Statuses
                 statusNew: 'Нове',
                 statusProgress: 'В роботі',
                 statusReview: 'Перевірка',
@@ -104,21 +93,15 @@
                 actual: 'Фактичний',
                 startTimer: 'Старт',
                 stopTimer: 'Стоп',
-                
-                // Priorities
                 priorityLow: 'Низький',
                 priorityMedium: 'Середній',
                 priorityHigh: 'Високий',
-                
-                // Control
                 controlPanel: 'Панель контролю',
                 critical: 'Критичні',
                 attention: 'Увага',
                 completed: 'Готово',
                 workload: 'Навантаження',
                 noActiveTasks: 'Немає активних завдань',
-                
-                // Regular
                 addRegular: '+ Регулярне',
                 regularTask: 'Регулярне завдання',
                 regularTasks: 'Регулярні завдання',
@@ -160,8 +143,6 @@
                 create: 'Створити',
                 radarAI: 'Керівник',
                 techAI: 'Помічник',
-                
-                // Functions
                 addFunction: '+ Функція',
                 newFunction: 'Нова функція',
                 head: 'Головний *',
@@ -179,8 +160,6 @@
                 mergeSelectMaxFive: 'Максимум 5 функцій',
                 mergeEnterName: 'Введіть назву об\'єднаної функції',
                 mergedFrom: 'Об\'єднано з',
-                
-                // Team
                 invite: 'Запросити',
                 inviteTitle: 'Запрошення',
                 employeeEmail: 'Email співробітника *',
@@ -190,8 +169,6 @@
                 inviteLinkLabel: 'Посилання для входу:',
                 copy: 'Копіювати',
                 createInvite: 'Створити запрошення',
-                
-                // Admin
                 adminPanel: 'Адмін-панель TALKO',
                 ownerEmail: 'Email власника *',
                 passwordLabel: 'Пароль *',
@@ -200,8 +177,6 @@
                 createCompanyBtn: 'Створити компанію та Owner',
                 allCompanies: 'Всі компанії',
                 users: 'користувачів',
-                
-                // Empty states
                 noTasks: 'Завдань немає',
                 createFirstTask: 'Створіть перше завдання',
                 noFunctions: 'Функцій немає',
@@ -214,15 +189,11 @@
                 allDays: 'Всі дні',
                 createRegular: 'Створіть регулярне завдання',
                 noUsers: 'Немає користувачів',
-                
-                // Other
                 footerSupport: '<i data-lucide="life-buoy" class="icon icon-sm"></i> Підтримка',
                 notAssigned: 'Не призначено',
                 deleteConfirm: 'Видалити?',
                 error: 'Помилка',
                 copied: 'Посилання скопійовано!',
-                
-                // New filters & analytics
                 clear: 'Очистити',
                 allTasks: 'Всі завдання',
                 myTasks: 'Мої завдання',
@@ -241,8 +212,6 @@
                 changeFilters: 'Змініть фільтри або додайте нове завдання',
                 edit: 'Редагувати',
                 delete: 'Видалити',
-                
-                // Control panel
                 controlPanelTitle: 'Панель контролю завдань',
                 assigneeLabel: 'Виконавець:',
                 functionLabel: 'Функція:',
@@ -257,8 +226,6 @@
                 viewLabel: 'Перегляд:',
                 employeeWorkload: 'Навантаження співробітників',
                 byFunctions: 'По функціях',
-                
-                // Processes
                 tabProcesses: 'Процеси',
                 processes: 'Бізнес-процеси',
                 allProcesses: 'Всі процеси',
@@ -291,8 +258,6 @@
                 templateSaved: 'Шаблон збережено',
                 processStarted: 'Процес запущено',
                 stepCompleted: 'Етап завершено',
-                
-                // Analytics
                 tabStructure: 'Структура',
                 aiStructure: 'AI Структура',
                 tabAnalytics: 'Ефективність',
@@ -303,8 +268,6 @@
                 byStatus: 'По статусах',
                 topPerformers: 'Топ виконавців',
                 noCompletedTasks: 'Немає виконаних завдань',
-                
-                // Users
                 tabUsers: 'Співробітники',
                 addEmployee: '+ Додати співробітника',
                 editEmployee: 'Редагувати співробітника',
@@ -313,11 +276,7 @@
                 userFunctions: 'Функції співробітника',
                 inviteFirst: 'Запросіть першого співробітника',
                 noEmployees: 'Немає співробітників',
-                
-                // Regular
                 addRegularTask: '+ Регулярне завдання',
-                
-                // Mobile menu
                 menu: 'Меню',
                 aiAssistants: 'AI Асистенти',
                 aiManager: 'Керівник',
@@ -325,15 +284,12 @@
                 aiSupport: 'AI Support 24/7',
                 profile: 'Профіль',
                 loadDemoData: 'Завантажити демо-дані',
-                // Review (перевірка)
                 taskSentForReview: 'Відправлено на перевірку',
                 rejectTask: 'На доопрацювання',
                 taskAccepted: 'Завдання прийнято',
                 taskRejected: 'Повернуто на доопрацювання',
                 reviewByCreator: 'Очікує перевірки постановником',
                 rejectReasonPlaceholder: 'Причина повернення (необовʼязково)',
-
-                // Dynamic strings (previously hardcoded)
                 inviteNotFound: 'Запрошення не знайдено або застаріло',
                 enterEmail: 'Введіть email',
                 passwordMinLength: 'Пароль має бути мінімум 6 символів',
@@ -809,8 +765,6 @@
                 fileUploadError: 'Помилка завантаження файлу',
                 sentForReview: 'Відправлено на перевірку',
                 editProject: 'Редагувати проєкт',
-            
-                // Auto-added missing keys
                 addComment: 'Додати коментар',
                 addItem: 'Додати',
                 addProject: '+ Проєкт',
@@ -848,8 +802,6 @@
                 timeEnd: 'Час завершення',
                 timeStart: 'Час початку',
                 yes: 'Так',
-
-                // Auto-added missing keys
                 assistantName: 'Назва асистента:',
                 confirmDelete: 'Видалити?',
                 saved: 'Збережено',
@@ -860,8 +812,6 @@
                 ownerOnly: 'Тільки для власника',
                 reportFormatPlaceholder: 'Формат звіту (що саме має здати співробітник)',
                 taskTemplates: 'Шаблони задач',
-
-                // Hardcode-fix keys
                 statusNewLabel: 'Нове',
                 statusProgressLabel: 'В роботі',
                 statusReviewLabel: 'Перевірка',
@@ -904,8 +854,6 @@
                 completedProjectStatus: 'завершено',
                 pausedProjectStatus: 'пауза',
                 deleteAllConfirmText: 'ВИДАЛИТИ ВСЕ',
-
-                // Iter2 hardcode-fix
                 selectCompanyFirst: 'Оберіть компанію спочатку',
                 aiGeneratorError: 'Помилка AI генератора. Перевірте API ключ.',
                 stepN: 'Крок',
@@ -934,8 +882,6 @@
                 monthShort: 'міс',
 
                 tomorrow: 'Завтра',
-
-                // Iter3 keys
                 deleteAllPrompt: 'Введіть "{confirmText}" щоб підтвердити повне видалення всіх даних компанії (крім користувачів):',
                 emptyStructure: 'Порожня структура',
                 askAI: 'Запитати AI',
@@ -948,8 +894,6 @@
                 recordsCount: '{n} записів',
                 loadingCompany: 'Завантаження компанії...',
                 clickRefreshToLoadList: 'Натисніть "Оновити" щоб завантажити список',
-
-                // Iter3 keys
                 nicheClinic: 'Медична клініка',
                 nicheManufacturing: 'Виробництво',
                 nicheFurniture: 'Меблевий бізнес',
@@ -1059,7 +1003,6 @@
                 metricLimit: 'Максимум 50 метрик на компанію',
                 chartsComingSoon: 'Графіки',
                 chartsNeedData: 'Графіки з\'являться після накопичення даних',
-                // ── Bots & Flows (modules 81-83) ──
                 botsTitle: 'Боти та воронки',
                 botsNoBot: 'Оберіть бота',
                 botsLoading: 'Завантаження...',
@@ -1437,7 +1380,6 @@
                 enterName2: 'Введіть назву',
 },
 ru: {
-                // Auth
                 authSubtitle: 'Управление задачами для бизнеса',
                 signInGoogle: 'Войти через Google',
                 or: 'или',
@@ -1464,8 +1406,6 @@ ru: {
                 registerSubmit: 'Зарегистрироваться',
                 backToLogin: '← Вернуться ко входу',
                 logout: 'Выйти',
-                
-                // Tabs
                 tabMyDay: 'Мой день',
                 myDay: 'Мой день',
                 tabTasks: 'Задачи',
@@ -1475,8 +1415,6 @@ ru: {
                 tabFunctions: 'Функции',
                 tabTeam: 'Команда',
                 tabAdmin: 'Админ',
-                
-                // Tasks
                 addTask: '+ Задача',
                 allFunctions: 'Все функции',
                 allDates: 'Все даты',
@@ -1516,11 +1454,7 @@ ru: {
                 priority: 'Приоритет',
                 status: 'Статус',
                 close: 'Закрыть',
-                
-                // Comments
                 comments: 'Комментарии',
-                
-                // Statuses
                 statusNew: 'Новое',
                 statusProgress: 'В работе',
                 statusReview: 'Проверка',
@@ -1537,21 +1471,15 @@ ru: {
                 actual: 'Фактически',
                 startTimer: 'Старт',
                 stopTimer: 'Стоп',
-                
-                // Priorities
                 priorityLow: 'Низкий',
                 priorityMedium: 'Средний',
                 priorityHigh: 'Высокий',
-                
-                // Control
                 controlPanel: 'Панель контроля',
                 critical: 'Критические',
                 attention: 'Внимание',
                 completed: 'Готово',
                 workload: 'Нагрузка',
                 noActiveTasks: 'Нет активных задач',
-                
-                // Regular
                 addRegular: '+ Регулярное',
                 regularTask: 'Регулярная задача',
                 regularTasks: 'Регулярные задачи',
@@ -1625,8 +1553,6 @@ ru: {
                 gotIt: 'Понятно',
                 skip: 'Пропустить',
                 next: 'Далее',
-                
-                // Functions
                 addFunction: '+ Функция',
                 newFunction: 'Новая функция',
                 head: 'Главный *',
@@ -1644,8 +1570,6 @@ ru: {
                 mergeSelectMaxFive: 'Максимум 5 функций',
                 mergeEnterName: 'Введите название объединённой функции',
                 mergedFrom: 'Объединено из',
-                
-                // Team
                 invite: 'Пригласить',
                 inviteTitle: 'Приглашение',
                 employeeEmail: 'Email сотрудника *',
@@ -1655,8 +1579,6 @@ ru: {
                 inviteLinkLabel: 'Ссылка для входа:',
                 copy: 'Копировать',
                 createInvite: 'Создать приглашение',
-                
-                // Admin
                 adminPanel: 'Админ-панель TALKO',
                 ownerEmail: 'Email владельца *',
                 passwordLabel: 'Пароль *',
@@ -1665,8 +1587,6 @@ ru: {
                 createCompanyBtn: 'Создать компанию и Owner',
                 allCompanies: 'Все компании',
                 users: 'пользователей',
-                
-                // Empty states
                 noTasks: 'Задач нет',
                 createFirstTask: 'Создайте первую задачу',
                 noFunctions: 'Функций нет',
@@ -1679,15 +1599,11 @@ ru: {
                 allDays: 'Все дни',
                 createRegular: 'Создайте регулярную задачу',
                 noUsers: 'Нет пользователей',
-                
-                // Other
                 footerSupport: '<i data-lucide="life-buoy" class="icon icon-sm"></i> Поддержка',
                 notAssigned: 'Не назначено',
                 deleteConfirm: 'Удалить?',
                 error: 'Ошибка',
                 copied: 'Ссылка скопирована!',
-                
-                // New filters & analytics
                 clear: 'Очистить',
                 allTasks: 'Все задачи',
                 myTasks: 'Мои задачи',
@@ -1706,8 +1622,6 @@ ru: {
                 changeFilters: 'Измените фильтры или добавьте новую задачу',
                 edit: 'Редактировать',
                 delete: 'Удалить',
-                
-                // Control panel
                 controlPanelTitle: 'Панель контроля задач',
                 assigneeLabel: 'Исполнитель:',
                 functionLabel: 'Функция:',
@@ -1722,8 +1636,6 @@ ru: {
                 viewLabel: 'Просмотр:',
                 employeeWorkload: 'Нагрузка сотрудников',
                 byFunctions: 'По функциям',
-                
-                // Processes
                 tabProcesses: 'Процессы',
                 processes: 'Бизнес-процессы',
                 allProcesses: 'Все процессы',
@@ -1758,8 +1670,6 @@ ru: {
                 templateSaved: 'Шаблон сохранён',
                 processStarted: 'Процесс запущен',
                 stepCompleted: 'Этап завершён',
-                
-                // Analytics
                 tabStructure: 'Структура',
                 tabAnalytics: 'Эффективность',
                 analytics: 'Аналитика',
@@ -1769,8 +1679,6 @@ ru: {
                 byStatus: 'По статусам',
                 topPerformers: 'Топ исполнителей',
                 noCompletedTasks: 'Нет выполненных задач',
-                
-                // Users
                 tabUsers: 'Сотрудники',
                 addEmployee: '+ Добавить сотрудника',
                 editEmployee: 'Редактировать сотрудника',
@@ -1779,11 +1687,7 @@ ru: {
                 userFunctions: 'Функции сотрудника',
                 inviteFirst: 'Пригласите первого сотрудника',
                 noEmployees: 'Нет сотрудников',
-                
-                // Regular
                 addRegularTask: '+ Регулярная задача',
-                
-                // Mobile menu
                 menu: 'Меню',
                 aiAssistants: 'AI Ассистенты',
                 aiManager: 'Руководитель',
@@ -1791,15 +1695,12 @@ ru: {
                 aiSupport: 'AI Помощник (Поддержка)',
                 profile: 'Профиль',
                 loadDemoData: 'Загрузить демо-данные',
-                // Review (проверка)
                 taskSentForReview: 'Отправлено на проверку',
                 rejectTask: 'На доработку',
                 taskAccepted: 'Задача принята',
                 taskRejected: 'Возвращено на доработку',
                 reviewByCreator: 'Ожидает проверки постановщиком',
                 rejectReasonPlaceholder: 'Причина возврата (необязательно)',
-
-                // Dynamic strings (previously hardcoded)
                 inviteNotFound: 'Приглашение не найдено или устарело',
                 enterEmail: 'Введите email',
                 passwordMinLength: 'Пароль должен быть минимум 6 символов',
@@ -2200,8 +2101,6 @@ ru: {
                 morningBriefing: 'Утренний брифинг',
                 requireReport: 'Отчёт в Telegram при завершении',
                 structureView: 'Структура',
-
-                // Missing keys added
                 autonomyIndex: 'Индекс автономности',
                 returnedFromReview: 'Возвращено с ревью',
                 showDetails: 'Подробнее',
@@ -2244,8 +2143,6 @@ ru: {
                 resolvedIncidents: 'разобрано',
                 markResolved: 'Разобрано',
                 manual: 'ручной',
-            
-                // Auto-added missing keys
                 addComment: 'Добавить комментарий',
                 addItem: 'Добавить',
                 addProject: '+ Проект',
@@ -2282,8 +2179,6 @@ ru: {
                 timeEnd: 'Время окончания',
                 timeStart: 'Время начала',
                 yes: 'Да',
-
-                // Auto-added missing keys
                 assistantName: 'Название ассистента:',
                 confirmDelete: 'Удалить?',
                 saved: 'Сохранено',
@@ -2294,8 +2189,6 @@ ru: {
                 ownerOnly: 'Только для владельца',
                 reportFormatPlaceholder: 'Формат отчёта (что именно должен сдать сотрудник)',
                 taskTemplates: 'Шаблоны задач',
-
-                // Hardcode-fix keys
                 statusNewLabel: 'Новая',
                 statusProgressLabel: 'В работе',
                 statusReviewLabel: 'Проверка',
@@ -2338,8 +2231,6 @@ ru: {
                 completedProjectStatus: 'завершён',
                 pausedProjectStatus: 'пауза',
                 deleteAllConfirmText: 'УДАЛИТЬ ВСЕ',
-
-                // Iter2 hardcode-fix
                 selectCompanyFirst: 'Сначала выберите компанию',
                 aiGeneratorError: 'Ошибка AI генератора. Проверьте API ключ.',
                 stepN: 'Шаг',
@@ -2368,8 +2259,6 @@ ru: {
                 monthShort: 'мес',
 
                 tomorrow: 'Завтра',
-
-                // Iter3 keys
                 deleteAllPrompt: 'Введите "{confirmText}" для подтверждения полного удаления всех данных компании (кроме пользователей):',
                 emptyStructure: 'Пустая структура',
                 askAI: 'Спросить AI',
@@ -2382,8 +2271,6 @@ ru: {
                 recordsCount: '{n} записей',
                 loadingCompany: 'Загрузка компании...',
                 clickRefreshToLoadList: 'Нажмите "Обновить" для загрузки списка',
-
-                // Iter3 keys
                 nicheClinic: 'Медицинская клиника',
                 nicheManufacturing: 'Производство',
                 nicheFurniture: 'Мебельный бизнес',
@@ -2493,7 +2380,6 @@ ru: {
                 metricLimit: 'Максимум 50 метрик на компанию',
                 chartsComingSoon: 'Графики',
                 chartsNeedData: 'Графики появятся после накопления данных',
-                // ── Bots & Flows (modules 81-83) ──
                 botsTitle: 'Боты и воронки',
                 botsNoBot: 'Выберите бота',
                 botsLoading: 'Загрузка...',
@@ -3192,7 +3078,6 @@ ru: {
                 enterName2: 'Введите название',
 
 pl: {
-                // Auth
                 authSubtitle: 'Zarządzanie zadaniami dla biznesu',
                 signInGoogle: 'Zaloguj przez Google',
                 or: 'lub',
@@ -3219,8 +3104,6 @@ pl: {
                 registerSubmit: 'Zarejestruj się',
                 backToLogin: '← Powrót do logowania',
                 logout: 'Wyloguj',
-                
-                // Tabs
                 tabMyDay: 'Mój dzień',
                 myDay: 'Mój dzień',
                 tabTasks: 'Zadania',
@@ -3230,8 +3113,6 @@ pl: {
                 tabFunctions: 'Funkcje',
                 tabTeam: 'Zespół',
                 tabAdmin: 'Admin',
-                
-                // Tasks
                 addTask: '+ Zadanie',
                 allFunctions: 'Wszystkie funkcje',
                 allDates: 'Wszystkie daty',
@@ -3272,11 +3153,7 @@ pl: {
                 priority: 'Priorytet',
                 status: 'Status',
                 close: 'Zamknij',
-                
-                // Comments
                 comments: 'Komentarze',
-                
-                // Statuses
                 statusNew: 'Nowe',
                 statusProgress: 'W toku',
                 statusReview: 'Weryfikacja',
@@ -3293,21 +3170,15 @@ pl: {
                 actual: 'Rzeczywisty',
                 startTimer: 'Start',
                 stopTimer: 'Stop',
-                
-                // Priorities
                 priorityLow: 'Niski',
                 priorityMedium: 'Średni',
                 priorityHigh: 'Wysoki',
-                
-                // Control
                 controlPanel: 'Panel kontroli',
                 critical: 'Krytyczne',
                 attention: 'Uwaga',
                 completed: 'Gotowe',
                 workload: 'Obciążenie',
                 noActiveTasks: 'Brak aktywnych zadań',
-                
-                // Regular
                 addRegular: '+ Regularne',
                 regularTask: 'Zadanie regularne',
                 regularTasks: 'Zadania regularne',
@@ -3349,8 +3220,6 @@ pl: {
                 create: 'Utwórz',
                 radarAI: 'Kierownik',
                 techAI: 'Asystent',
-                
-                // Functions
                 addFunction: '+ Funkcja',
                 newFunction: 'Nowa funkcja',
                 head: 'Kierownik *',
@@ -3368,8 +3237,6 @@ pl: {
                 mergeSelectMaxFive: 'Maksimum 5 funkcji',
                 mergeEnterName: 'Wprowadź nazwę połączonej funkcji',
                 mergedFrom: 'Połączono z',
-                
-                // Team
                 invite: 'Zaproś',
                 inviteTitle: 'Zaproszenie',
                 employeeEmail: 'Email pracownika *',
@@ -3379,8 +3246,6 @@ pl: {
                 inviteLinkLabel: 'Link do logowania:',
                 copy: 'Kopiuj',
                 createInvite: 'Utwórz zaproszenie',
-                
-                // Admin
                 adminPanel: 'Panel admina TALKO',
                 ownerEmail: 'Email właściciela *',
                 passwordLabel: 'Hasło *',
@@ -3389,8 +3254,6 @@ pl: {
                 createCompanyBtn: 'Utwórz firmę i właściciela',
                 allCompanies: 'Wszystkie firmy',
                 users: 'użytkowników',
-                
-                // Empty states
                 noTasks: 'Brak zadań',
                 createFirstTask: 'Utwórz pierwsze zadanie',
                 noFunctions: 'Brak funkcji',
@@ -3403,16 +3266,12 @@ pl: {
                 allDays: 'Wszystkie dni',
                 createRegular: 'Utwórz zadanie regularne',
                 noUsers: 'Brak użytkowników',
-                
-                // Other
                 aiSupport: 'AI Pomoc',
                 footerSupport: '<i data-lucide="life-buoy" class="icon icon-sm"></i> Pomoc',
                 notAssigned: 'Nie przypisano',
                 deleteConfirm: 'Usunąć?',
                 error: 'Błąd',
                 copied: 'Link skopiowany!',
-                
-                // New filters & analytics
                 clear: 'Wyczyść',
                 allTasks: 'Wszystkie zadania',
                 myTasks: 'Moje zadania',
@@ -3431,8 +3290,6 @@ pl: {
                 changeFilters: 'Zmień filtry lub dodaj nowe zadanie',
                 edit: 'Edytuj',
                 delete: 'Usuń',
-                
-                // Control panel
                 controlPanelTitle: 'Panel kontroli zadań',
                 assigneeLabel: 'Wykonawca:',
                 functionLabel: 'Funkcja:',
@@ -3446,8 +3303,6 @@ pl: {
                 viewLabel: 'Widok:',
                 employeeWorkload: 'Obciążenie pracowników',
                 byFunctions: 'Wg funkcji',
-                
-                // Processes
                 tabProcesses: 'Procesy',
                 processes: 'Procesy biznesowe',
                 allProcesses: 'Wszystkie procesy',
@@ -3480,8 +3335,6 @@ pl: {
                 templateSaved: 'Szablon zapisany',
                 processStarted: 'Proces uruchomiony',
                 stepCompleted: 'Etap zakończony',
-                
-                // Analytics
                 tabStructure: 'Struktura',
                 aiStructure: 'AI Struktura',
                 tabAnalytics: 'Efektywność',
@@ -3492,8 +3345,6 @@ pl: {
                 byStatus: 'Wg statusów',
                 topPerformers: 'Top wykonawców',
                 noCompletedTasks: 'Brak wykonanych zadań',
-                
-                // Users
                 tabUsers: 'Pracownicy',
                 addEmployee: '+ Dodaj pracownika',
                 editEmployee: 'Edytuj pracownika',
@@ -3502,27 +3353,19 @@ pl: {
                 userFunctions: 'Funkcje pracownika',
                 inviteFirst: 'Zaproś pierwszego pracownika',
                 noEmployees: 'Brak pracowników',
-                
-                // Regular
                 addRegularTask: '+ Zadanie regularne',
-                
-                // Mobile menu
                 menu: 'Menu',
                 aiAssistants: 'Asystenci AI',
                 aiManager: 'Kierownik',
                 aiTechnical: 'Techniczny',
                 profile: 'Profil',
                 loadDemoData: 'Załaduj dane demo',
-                
-                // Review
                 taskSentForReview: 'Wysłano do weryfikacji',
                 rejectTask: 'Do poprawy',
                 taskAccepted: 'Zadanie zaakceptowane',
                 taskRejected: 'Zwrócono do poprawy',
                 reviewByCreator: 'Oczekuje weryfikacji zleceniodawcy',
                 rejectReasonPlaceholder: 'Powód zwrotu (opcjonalnie)',
-
-                // Dynamic strings
                 inviteNotFound: 'Zaproszenie nie znalezione lub przeterminowane',
                 enterEmail: 'Wprowadź email',
                 passwordMinLength: 'Hasło musi mieć minimum 6 znaków',
@@ -3997,8 +3840,6 @@ pl: {
                 fileUploadError: 'Błąd przesyłania pliku',
                 sentForReview: 'Wysłano do weryfikacji',
                 editProject: 'Edytuj projekt',
-            
-                // Auto-added missing keys
                 addComment: 'Dodaj komentarz',
                 addItem: 'Dodaj',
                 addProject: '+ Projekt',
@@ -4036,8 +3877,6 @@ pl: {
                 timeEnd: 'Czas zakończenia',
                 timeStart: 'Czas startu',
                 yes: 'Tak',
-
-                // Auto-added missing keys
                 assistantName: 'Nazwa asystenta:',
                 confirmDelete: 'Usunąć?',
                 saved: 'Zapisano',
@@ -4048,8 +3887,6 @@ pl: {
                 ownerOnly: 'Tylko dla właściciela',
                 reportFormatPlaceholder: 'Format raportu (co dokładnie ma oddać pracownik)',
                 taskTemplates: 'Szablony zadań',
-
-                // Hardcode-fix keys
                 statusNewLabel: 'Nowe',
                 statusProgressLabel: 'W toku',
                 statusReviewLabel: 'Weryfikacja',
@@ -4092,8 +3929,6 @@ pl: {
                 completedProjectStatus: 'zakończony',
                 pausedProjectStatus: 'pauza',
                 deleteAllConfirmText: 'USUŃ WSZYSTKO',
-
-                // Iter2 hardcode-fix
                 selectCompanyFirst: 'Najpierw wybierz firmę',
                 aiGeneratorError: 'Błąd AI generatora. Sprawdź klucz API.',
                 stepN: 'Krok',
@@ -4122,8 +3957,6 @@ pl: {
                 monthShort: 'mies',
 
                 tomorrow: 'Jutro',
-
-                // Iter3 keys
                 deleteAllPrompt: 'Wpisz "{confirmText}" aby potwierdzić całkowite usunięcie danych firmy (oprócz użytkowników):',
                 emptyStructure: 'Pusta struktura',
                 askAI: 'Zapytaj AI',
@@ -4136,8 +3969,6 @@ pl: {
                 recordsCount: '{n} rekordów',
                 loadingCompany: 'Ładowanie firmy...',
                 clickRefreshToLoadList: 'Kliknij "Odśwież" aby załadować listę',
-
-                // Iter3 keys
                 nicheClinic: 'Klinika medyczna',
                 nicheManufacturing: 'Produkcja',
                 nicheFurniture: 'Biznes meblowy',
@@ -4247,7 +4078,6 @@ pl: {
                 metricLimit: 'Maksymalnie 50 metryk na firmę',
                 chartsComingSoon: 'Wykresy',
                 chartsNeedData: 'Wykresy pojawią się po zgromadzeniu danych',
-                // ── Bots & Flows (modules 81-83) ──
                 botsTitle: 'Boty i lejki',
                 botsNoBot: 'Wybierz bota',
                 botsLoading: 'Ładowanie...',
@@ -4629,7 +4459,6 @@ pl: {
                 ua: 'Ukraiński',
 },
 en: {
-                // Auth
                 authSubtitle: 'Business task management',
                 signInGoogle: 'Sign in with Google',
                 or: 'or',
@@ -4655,8 +4484,6 @@ en: {
                 confirmPassword: 'Confirm password',
                 registerSubmit: 'Register',
                 backToLogin: 'Back to sign in',
-
-                // Tabs
                 tabMyDay: 'My Day',
                 myDay: 'My Day',
                 tabTasks: 'Tasks',
@@ -4672,8 +4499,6 @@ en: {
                 tabStructure: 'Structure',
                 aiStructure: 'AI Structure',
                 tabEmployees: 'Team',
-
-                // Common
                 loading: 'Loading...',
                 noData: 'No data',
                 error: 'Error',
@@ -4719,8 +4544,6 @@ en: {
                 skip: 'Skip',
                 later: 'Later',
                 start: 'Start',
-
-                // Tasks
                 addTask: '+ Task',
                 editTask: 'Edit task',
                 deleteTask: 'Delete task',
@@ -4807,8 +4630,6 @@ en: {
                 noSLA: 'No SLA',
                 expectedResult: 'Expected result',
                 controlQuestion: 'Control question',
-
-                // Status
                 statusNew: 'New',
                 statusProgress: 'In Progress',
                 statusReview: 'Review',
@@ -4820,8 +4641,6 @@ en: {
                 inProgressStatus: 'In progress',
                 completedStatus: 'Completed',
                 pendingStatus: 'Pending',
-
-                // Priority
                 priority: 'Priority',
                 priorityLow: 'Low',
                 priorityMedium: 'Medium',
@@ -4832,8 +4651,6 @@ en: {
                 normal: 'Normal',
                 critical: 'Critical',
                 attention: 'Attention',
-
-                // Checklist & Comments
                 checklist: 'Checklist',
                 addItem: 'Add item',
                 subtasks: 'Subtasks',
@@ -4843,8 +4660,6 @@ en: {
                 writeComment: 'Write comment...',
                 newChecklistItem: 'New item',
                 checklistItemPlaceholder: 'Checklist item',
-
-                // Review
                 taskSentForReview: 'Task sent for review',
                 rejectTask: 'Reject',
                 taskAccepted: 'Task accepted',
@@ -4863,8 +4678,6 @@ en: {
                 returnToWork: 'Return to work',
                 awaitingReview: 'Awaiting review',
                 reviewLabel: 'Review',
-
-                // Control Panel
                 controlPanel: 'Control panel',
                 controlPanelTitle: 'Control panel',
                 controlDashboard: 'Control dashboard',
@@ -4897,8 +4710,6 @@ en: {
                 delegationPipeline: 'Delegation pipeline',
                 failureJournal: 'Failure journal',
                 autonomyIndex: 'Autonomy index',
-
-                // Regular tasks
                 regularTasks: 'Regular tasks',
                 addRegular: '+ Regular',
                 addRegularTask: '+ Regular task',
@@ -4939,16 +4750,12 @@ en: {
                 dayOfMonthLabel: 'Day of month',
                 quarterlyTasks: 'Quarterly tasks',
                 oncePerQuarter: 'Once per quarter',
-
-                // Days
                 mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun',
                 monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday', thursday: 'Thursday',
                 friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday',
                 daySun: 'Sun', dayMon: 'Mon', dayTue: 'Tue', dayWed: 'Wed',
                 dayThu: 'Thu', dayFri: 'Fri', daySat: 'Sat',
                 monFri: 'Mon-Fri',
-
-                // Date/Time
                 today: 'Today',
                 yesterday: 'Yesterday',
                 thisWeek: 'This week',
@@ -4971,8 +4778,6 @@ en: {
                 week: 'Week',
                 month: 'Month',
                 list: 'List',
-
-                // Functions
                 functions: 'Functions',
                 addFunction: '+ Function',
                 newFunction: 'New function',
@@ -5010,8 +4815,6 @@ en: {
                 categoryName: 'Column name:',
                 categoryExists: 'This column already exists',
                 categoryHasFunctions: 'Column has functions. They will become uncategorized. Delete?',
-
-                // Team/Users
                 users: 'Users',
                 noUsers: 'No users',
                 inviteEmployee: 'Invite employee',
@@ -5037,8 +4840,6 @@ en: {
                 noMembers: 'No members',
                 tabUsers: 'Team',
                 enterName: 'Enter name',
-
-                // Admin
                 adminPanel: 'Admin panel',
                 ownerEmail: 'Owner email',
                 passwordLabel: 'Password',
@@ -5064,8 +4865,6 @@ en: {
                 usersCol: 'Users',
                 tasksCol: 'Tasks',
                 statusCol: 'Status',
-
-                // Projects
                 projects: 'Projects',
                 addProject: '+ Project',
                 projectName: 'Project name',
@@ -5084,8 +4883,6 @@ en: {
                 projectActive: 'Active',
                 projectCompleted: 'Completed',
                 projectPaused: 'Paused',
-
-                // Processes
                 processes: 'Processes',
                 allProcesses: 'All processes',
                 showCompleted: 'Show completed',
@@ -5126,8 +4923,6 @@ en: {
                 checkpoint: 'Checkpoint',
                 smartAssign: 'Smart assign',
                 previousSteps: 'Previous steps',
-
-                // Analytics
                 analytics: 'Analytics',
                 weeklyActivity: 'Weekly activity',
                 createdLabel: 'Created',
@@ -5138,8 +4933,6 @@ en: {
                 overdue1day: '1 day overdue',
                 stuckProcesses: 'Stuck processes',
                 noTasksForChart: 'No tasks for chart',
-
-                // Calendar
                 kanban: 'Kanban',
                 deadlines: 'Deadlines',
                 kanbanView: 'Kanban view',
@@ -5147,21 +4940,15 @@ en: {
                 refresh: 'Refresh',
                 calendarSyncDesc: 'Sync with Google Calendar',
                 calendarConnected: 'Calendar connected',
-
-                // Notifications
                 notifications: 'Notifications',
                 noNotifications: 'No notifications',
                 notificationsEnabled: 'Notifications enabled',
                 notificationsEnabledDesc: 'You will receive notifications about tasks',
                 disableNotifications: 'Disable',
                 enableNotifications: 'Enable',
-
-                // Telegram
                 telegramNotifications: 'Telegram notifications',
                 telegramDesc: 'Get notifications in Telegram',
                 telegramConnected: 'Telegram connected',
-
-                // My Day
                 greeting: 'Good morning!',
                 goodMorning: 'Good morning!',
                 yourTasksToday: 'Your tasks for today',
@@ -5181,8 +4968,6 @@ en: {
                 criticalOverdueWarning: 'tasks overdue 3+ days.',
                 criticalOverdueAdvice: 'Recommendation: close overdue tasks first.',
                 continueAnyway: 'Create task anyway?',
-
-                // Menu / AI
                 menu: 'Menu',
                 aiAssistants: 'AI Assistants',
                 aiManager: 'Manager',
@@ -5214,8 +4999,6 @@ en: {
                 importStructure: 'Import structure',
                 previewStructure: 'Preview structure',
                 regenerate: 'Regenerate',
-
-                // Registration errors
                 inviteNotFound: 'Invite not found',
                 enterEmail: 'Enter email',
                 passwordMinLength: 'Password min 6 characters',
@@ -5240,8 +5023,6 @@ en: {
                 employeeRole: 'Employee',
                 tooManyRequests: 'Too many requests. Please wait.',
                 noPermissionTask: 'Insufficient permissions',
-
-                // Archive
                 archive: 'Archive',
                 archiveTitle: 'Archive',
                 backToTasks: 'Back to tasks',
@@ -5260,8 +5041,6 @@ en: {
                 resetFilter: 'Reset filter',
                 hideCompleted: 'Hide completed',
                 overdue: 'Overdue',
-
-                // Misc UI
                 selectPlaceholder: 'Select...',
                 offlineMode: 'Offline mode',
                 notAssigned: 'Not assigned',
@@ -5287,8 +5066,6 @@ en: {
                 noIncidents: 'No incidents found',
                 completion30d: 'Completion 30d',
                 openTask: 'Open task',
-
-                // Incidents
                 addIncident: 'Add incident',
                 whatHappened: 'What happened?',
                 cat_people: 'People',
@@ -5308,8 +5085,6 @@ en: {
                 resolvedIncidents: 'resolved',
                 markResolved: 'Resolved',
                 manual: 'manual',
-
-                // Processes - actions
                 deleteProcess: 'Delete process',
                 minTwoSteps: 'Minimum 2 steps',
                 deleteTemplateConfirm: 'Delete template?',
@@ -5328,8 +5103,6 @@ en: {
                 processStepTaskCreated: 'Task created for step',
                 deleteProcessConfirm: 'Delete process?',
                 skipStepConfirm: 'There is an unfinished task "{title}" for this step. Continue anyway?',
-
-                // Company actions
                 companyDeleted: 'Company deleted',
                 deleteError: 'Delete error',
                 creating: 'Creating...',
@@ -5370,8 +5143,6 @@ en: {
                 otherEmail: 'Other email',
                 minChars: 'Min 3 characters',
                 minCharsShort: 'Min 3 chars',
-
-                // Projects actions
                 reopen: 'Reopen',
                 completeTask: 'Complete task',
                 taskReopened: 'Task reopened',
@@ -5399,8 +5170,6 @@ en: {
                 projectStatusChanged: 'Project \"{name}\" status changed to {status}',
                 confirmProjectComplete: 'There are {n} unfinished tasks in the project. Mark as "Completed" anyway?',
                 startRequired: 'Start date required',
-
-                // Audit
                 auditCreated: 'Created',
                 auditCompleted: 'Completed',
                 auditReopened: 'Reopened',
@@ -5408,8 +5177,6 @@ en: {
                 auditDeleted: 'Deleted',
                 auditEscalation: 'Escalation',
                 auditChanged: 'Changed',
-
-                // Validation
                 titleRequired: 'Title is required',
                 titleTooLong: 'Title is too long',
                 invalidDate: 'Invalid date',
@@ -5419,8 +5186,6 @@ en: {
                 invalidStartTime: 'Invalid start time',
                 regularTaskNotFound: 'Regular task not found',
                 taskNotFound: 'Task not found',
-
-                // Files
                 addTimeManually: 'Add time manually',
                 dropFilesHere: 'Drop files here',
                 fileTypesHint: 'Images, documents, PDF',
@@ -5439,8 +5204,6 @@ en: {
                 fileTypeNotSupported: 'File type .{ext} not supported',
                 filesUploaded: '{n} file(s) uploaded',
                 fileUploadError: 'File upload error',
-
-                // Errors/System
                 commentSendError: 'Comment send error',
                 escalationCritical: 'CRITICAL: {n} tasks are overdue 7+ days!',
                 escalationWarning: '! {n} tasks are overdue 3+ days',
@@ -5460,27 +5223,19 @@ en: {
                 processNoExecutors: 'Function "{func}" has no executors — task not created',
                 processCompleted: 'Process \"{name}\" completed',
                 tasksUnlinked: '{n} tasks unlinked from project',
-
-                // Hints
                 hintNextTask: 'Click to see next task',
                 hintTasks: 'All your tasks',
                 hintControl: 'Control dashboard',
                 hintMore: 'More options',
                 gotIt: 'Got it',
-
-                // Stats
                 myStats: 'My stats',
                 daysStreak: 'Day streak',
                 avgTime: 'Avg time',
                 teamDashboard: 'Team dashboard',
                 bottleneck: 'Bottleneck',
                 processesWaiting: 'Processes waiting',
-
-                // Overdue groups
                 overdueGroup: 'Overdue',
                 noRegularTasks: 'No regular tasks',
-            
-                // Auto-added missing keys
                 assistantName: 'Assistant name:',
                 confirmDelete: 'Delete?',
                 saved: 'Saved',
@@ -5491,8 +5246,6 @@ en: {
                 ownerOnly: 'Owner only',
                 reportFormatPlaceholder: 'Report format (what exactly the employee must deliver)',
                 taskTemplates: 'Task templates',
-
-                // Hardcode-fix keys
                 statusNewLabel: 'New',
                 statusProgressLabel: 'In Progress',
                 statusReviewLabel: 'Review',
@@ -5535,8 +5288,6 @@ en: {
                 completedProjectStatus: 'completed',
                 pausedProjectStatus: 'paused',
                 deleteAllConfirmText: 'DELETE ALL',
-
-                // Iter2 hardcode-fix
                 selectCompanyFirst: 'Select a company first',
                 aiGeneratorError: 'AI generator error. Check API key.',
                 stepN: 'Step',
@@ -5565,8 +5316,6 @@ en: {
                 monthShort: 'mo',
 
                 tomorrow: 'Tomorrow',
-
-                // Iter3 keys
                 deleteAllPrompt: 'Enter "{confirmText}" to confirm complete deletion of all company data (except users):',
                 emptyStructure: 'Empty structure',
                 askAI: 'Ask AI',
@@ -5579,8 +5328,6 @@ en: {
                 recordsCount: '{n} records',
                 loadingCompany: 'Loading company...',
                 clickRefreshToLoadList: 'Click "Refresh" to load the list',
-
-                // Iter3 keys
                 nicheClinic: 'Medical clinic',
                 nicheManufacturing: 'Manufacturing',
                 nicheFurniture: 'Furniture business',
@@ -5690,7 +5437,6 @@ en: {
                 metricLimit: 'Maximum 50 metrics per company',
                 chartsComingSoon: 'Charts',
                 chartsNeedData: 'Charts will appear after data accumulation',
-                // ── Bots & Flows (modules 81-83) ──
                 botsTitle: 'Bots & Funnels',
                 botsNoBot: 'Select a bot',
                 botsLoading: 'Loading...',
@@ -5749,7 +5495,6 @@ en: {
                 botsActionStartFlow: '▶ Start flow',
                 botsActionStopFlow: '⏹ Stop flow',
                 botsEndNode: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> End of flow',
-
 
                 assigneeRequired: 'Select an assignee',
                 dayFri: 'Fri',
@@ -6090,7 +5835,6 @@ en: {
                 ua: 'Ukrainian',
 },
             de: {
-                // Auth
                 authSubtitle: 'Aufgabenmanagement für Unternehmen',
                 signInGoogle: 'Mit Google anmelden',
                 or: 'oder',
@@ -6116,8 +5860,6 @@ en: {
                 confirmPassword: 'Passwort bestätigen',
                 registerSubmit: 'Registrieren',
                 backToLogin: 'Zurück zur Anmeldung',
-
-                // Tabs
                 tabMyDay: 'Mein Tag',
                 myDay: 'Mein Tag',
                 tabTasks: 'Aufgaben',
@@ -6133,8 +5875,6 @@ en: {
                 tabStructure: 'Struktur',
                 aiStructure: 'KI-Struktur',
                 tabEmployees: 'Team',
-
-                // Common
                 loading: 'Laden...',
                 noData: 'Keine Daten',
                 error: 'Fehler',
@@ -6180,8 +5920,6 @@ en: {
                 skip: 'Überspringen',
                 later: 'Später',
                 start: 'Start',
-
-                // Tasks
                 addTask: '+ Aufgabe',
                 editTask: 'Aufgabe bearbeiten',
                 deleteTask: 'Aufgabe löschen',
@@ -6268,8 +6006,6 @@ en: {
                 noSLA: 'Kein SLA',
                 expectedResult: 'Erwartetes Ergebnis',
                 controlQuestion: 'Kontrollfrage',
-
-                // Status
                 statusNew: 'Neu',
                 statusProgress: 'In Bearbeitung',
                 statusReview: 'Prüfung',
@@ -6281,8 +6017,6 @@ en: {
                 inProgressStatus: 'In Bearbeitung',
                 completedStatus: 'Erledigt',
                 pendingStatus: 'Ausstehend',
-
-                // Priority
                 priority: 'Priorität',
                 priorityLow: 'Niedrig',
                 priorityMedium: 'Mittel',
@@ -6293,8 +6027,6 @@ en: {
                 normal: 'Normal',
                 critical: 'Kritisch',
                 attention: 'Achtung',
-
-                // Checklist & Comments
                 checklist: 'Checkliste',
                 addItem: 'Punkt hinzufügen',
                 subtasks: 'Teilaufgaben',
@@ -6304,8 +6036,6 @@ en: {
                 writeComment: 'Kommentar schreiben...',
                 newChecklistItem: 'Neuer Punkt',
                 checklistItemPlaceholder: 'Checklistenpunkt',
-
-                // Review
                 taskSentForReview: 'Aufgabe zur Prüfung gesendet',
                 rejectTask: 'Ablehnen',
                 taskAccepted: 'Aufgabe angenommen',
@@ -6324,8 +6054,6 @@ en: {
                 returnToWork: 'Zurück zur Arbeit',
                 awaitingReview: 'Warten auf Prüfung',
                 reviewLabel: 'Prüfung',
-
-                // Control Panel
                 controlPanel: 'Kontrollpanel',
                 controlPanelTitle: 'Kontrollpanel',
                 controlDashboard: 'Kontroll-Dashboard',
@@ -6358,8 +6086,6 @@ en: {
                 delegationPipeline: 'Delegations-Pipeline',
                 failureJournal: 'Störungsprotokoll',
                 autonomyIndex: 'Autonomie-Index',
-
-                // Regular tasks
                 regularTasks: 'Regelmäßige Aufgaben',
                 addRegular: '+ Regelmäßig',
                 addRegularTask: '+ Regelmäßige Aufgabe',
@@ -6400,16 +6126,12 @@ en: {
                 dayOfMonthLabel: 'Tag des Monats',
                 quarterlyTasks: 'Vierteljährliche Aufgaben',
                 oncePerQuarter: 'Einmal pro Quartal',
-
-                // Days
                 mon: 'Mo', tue: 'Di', wed: 'Mi', thu: 'Do', fri: 'Fr', sat: 'Sa', sun: 'So',
                 monday: 'Montag', tuesday: 'Dienstag', wednesday: 'Mittwoch', thursday: 'Donnerstag',
                 friday: 'Freitag', saturday: 'Samstag', sunday: 'Sonntag',
                 daySun: 'So', dayMon: 'Mo', dayTue: 'Di', dayWed: 'Mi',
                 dayThu: 'Do', dayFri: 'Fr', daySat: 'Sa',
                 monFri: 'Mo-Fr',
-
-                // Date/Time
                 today: 'Heute',
                 yesterday: 'Gestern',
                 thisWeek: 'Diese Woche',
@@ -6432,8 +6154,6 @@ en: {
                 week: 'Woche',
                 month: 'Monat',
                 list: 'Liste',
-
-                // Functions
                 functions: 'Funktionen',
                 addFunction: '+ Funktion',
                 newFunction: 'Neue Funktion',
@@ -6471,8 +6191,6 @@ en: {
                 categoryName: 'Spaltenname:',
                 categoryExists: 'Diese Spalte existiert bereits',
                 categoryHasFunctions: 'Spalte enthält Funktionen. Sie werden unkategorisiert. Löschen?',
-
-                // Team/Users
                 users: 'Benutzer',
                 noUsers: 'Keine Benutzer',
                 inviteEmployee: 'Mitarbeiter einladen',
@@ -6498,8 +6216,6 @@ en: {
                 noMembers: 'Keine Mitglieder',
                 tabUsers: 'Team',
                 enterName: 'Name eingeben',
-
-                // Admin
                 adminPanel: 'Admin-Panel',
                 ownerEmail: 'Inhaber-E-Mail',
                 passwordLabel: 'Passwort',
@@ -6525,8 +6241,6 @@ en: {
                 usersCol: 'Benutzer',
                 tasksCol: 'Aufgaben',
                 statusCol: 'Status',
-
-                // Projects
                 projects: 'Projekte',
                 addProject: '+ Projekt',
                 projectName: 'Projektname',
@@ -6545,8 +6259,6 @@ en: {
                 projectActive: 'Aktiv',
                 projectCompleted: 'Abgeschlossen',
                 projectPaused: 'Pausiert',
-
-                // Processes
                 processes: 'Prozesse',
                 allProcesses: 'Alle Prozesse',
                 showCompleted: 'Erledigte anzeigen',
@@ -6587,8 +6299,6 @@ en: {
                 checkpoint: 'Prüfpunkt',
                 smartAssign: 'Auto-Zuweisung',
                 previousSteps: 'Vorherige Schritte',
-
-                // Analytics
                 analytics: 'Analytik',
                 weeklyActivity: 'Wochenaktivität',
                 createdLabel: 'Erstellt',
@@ -6599,8 +6309,6 @@ en: {
                 overdue1day: '1 Tag überfällig',
                 stuckProcesses: 'Stockende Prozesse',
                 noTasksForChart: 'Keine Daten für Diagramm',
-
-                // Calendar
                 kanban: 'Kanban',
                 deadlines: 'Fristen',
                 kanbanView: 'Kanban-Ansicht',
@@ -6608,21 +6316,15 @@ en: {
                 refresh: 'Aktualisieren',
                 calendarSyncDesc: 'Mit Google Kalender synchronisieren',
                 calendarConnected: 'Kalender verbunden',
-
-                // Notifications
                 notifications: 'Benachrichtigungen',
                 noNotifications: 'Keine Benachrichtigungen',
                 notificationsEnabled: 'Benachrichtigungen aktiviert',
                 notificationsEnabledDesc: 'Sie erhalten Aufgabenbenachrichtigungen',
                 disableNotifications: 'Deaktivieren',
                 enableNotifications: 'Aktivieren',
-
-                // Telegram
                 telegramNotifications: 'Telegram-Benachrichtigungen',
                 telegramDesc: 'Benachrichtigungen über Telegram',
                 telegramConnected: 'Telegram verbunden',
-
-                // My Day
                 greeting: 'Guten Morgen!',
                 goodMorning: 'Guten Morgen!',
                 yourTasksToday: 'Ihre heutigen Aufgaben',
@@ -6642,8 +6344,6 @@ en: {
                 criticalOverdueWarning: 'Aufgaben 3+ Tage überfällig.',
                 criticalOverdueAdvice: 'Empfehlung: Zuerst überfällige Aufgaben schließen.',
                 continueAnyway: 'Trotzdem Aufgabe erstellen?',
-
-                // Menu / AI
                 menu: 'Menü',
                 aiAssistants: 'KI-Assistenten',
                 aiManager: 'Manager',
@@ -6675,8 +6375,6 @@ en: {
                 importStructure: 'Struktur importieren',
                 previewStructure: 'Struktur-Vorschau',
                 regenerate: 'Neu generieren',
-
-                // Registration errors
                 inviteNotFound: 'Einladung nicht gefunden',
                 enterEmail: 'E-Mail eingeben',
                 passwordMinLength: 'Passwort mind. 6 Zeichen',
@@ -6701,8 +6399,6 @@ en: {
                 employeeRole: 'Mitarbeiter',
                 tooManyRequests: 'Zu viele Anfragen. Bitte warten.',
                 noPermissionTask: 'Unzureichende Berechtigungen',
-
-                // Archive
                 archive: 'Archiv',
                 archiveTitle: 'Archiv',
                 backToTasks: 'Zurück zu Aufgaben',
@@ -6721,8 +6417,6 @@ en: {
                 resetFilter: 'Filter zurücksetzen',
                 hideCompleted: 'Erledigte ausblenden',
                 overdue: 'Überfällig',
-
-                // Misc UI
                 selectPlaceholder: 'Auswählen...',
                 offlineMode: 'Offline-Modus',
                 notAssigned: 'Nicht zugewiesen',
@@ -6748,8 +6442,6 @@ en: {
                 noIncidents: 'Keine Störungen',
                 completion30d: 'Erledigung 30T',
                 openTask: 'Aufgabe öffnen',
-
-                // Incidents
                 addIncident: 'Störung hinzufügen',
                 whatHappened: 'Was ist passiert?',
                 cat_people: 'Personal',
@@ -6769,8 +6461,6 @@ en: {
                 resolvedIncidents: 'behoben',
                 markResolved: 'Behoben',
                 manual: 'manuell',
-
-                // Processes - actions
                 deleteProcess: 'Prozess löschen',
                 minTwoSteps: 'Mindestens 2 Schritte',
                 deleteTemplateConfirm: 'Vorlage löschen?',
@@ -6789,8 +6479,6 @@ en: {
                 processStepTaskCreated: 'Aufgabe für Schritt erstellt',
                 deleteProcessConfirm: 'Prozess löschen?',
                 skipStepConfirm: 'Es gibt eine offene Aufgabe "{title}" für diesen Schritt. Trotzdem fortfahren?',
-
-                // Company actions
                 companyDeleted: 'Firma gelöscht',
                 deleteError: 'Löschfehler',
                 creating: 'Wird erstellt...',
@@ -6831,8 +6519,6 @@ en: {
                 otherEmail: 'Andere E-Mail',
                 minChars: 'Mind. 3 Zeichen',
                 minCharsShort: 'Mind. 3',
-
-                // Projects actions
                 reopen: 'Wieder öffnen',
                 completeTask: 'Aufgabe erledigen',
                 taskReopened: 'Aufgabe wieder geöffnet',
@@ -6860,8 +6546,6 @@ en: {
                 projectStatusChanged: 'Projektstatus \"{name}\" geändert zu {status}',
                 confirmProjectComplete: 'Im Projekt gibt es {n} offene Aufgaben. Trotzdem als "Abgeschlossen" markieren?',
                 startRequired: 'Startdatum erforderlich',
-
-                // Audit
                 auditCreated: 'Erstellt',
                 auditCompleted: 'Erledigt',
                 auditReopened: 'Wieder geöffnet',
@@ -6869,8 +6553,6 @@ en: {
                 auditDeleted: 'Gelöscht',
                 auditEscalation: 'Eskalation',
                 auditChanged: 'Geändert',
-
-                // Validation
                 titleRequired: 'Titel erforderlich',
                 titleTooLong: 'Titel zu lang',
                 invalidDate: 'Ungültiges Datum',
@@ -6880,8 +6562,6 @@ en: {
                 invalidStartTime: 'Ungültige Startzeit',
                 regularTaskNotFound: 'Regelmäßige Aufgabe nicht gefunden',
                 taskNotFound: 'Aufgabe nicht gefunden',
-
-                // Files
                 addTimeManually: 'Zeit manuell hinzufügen',
                 dropFilesHere: 'Dateien hier ablegen',
                 fileTypesHint: 'Bilder, Dokumente, PDF',
@@ -6900,8 +6580,6 @@ en: {
                 fileTypeNotSupported: 'Dateityp .{ext} nicht unterstützt',
                 filesUploaded: '{n} Datei(en) hochgeladen',
                 fileUploadError: 'Fehler beim Hochladen',
-
-                // Errors/System
                 commentSendError: 'Fehler beim Senden des Kommentars',
                 escalationCritical: 'KRITISCH: {n} Aufgaben sind seit 7+ Tagen überfällig!',
                 escalationWarning: '! {n} Aufgaben sind seit 3+ Tagen überfällig',
@@ -6921,27 +6599,19 @@ en: {
                 processNoExecutors: 'Funktion "{func}" hat keine Ausführenden — Aufgabe wurde nicht erstellt',
                 processCompleted: 'Prozess \"{name}\" abgeschlossen',
                 tasksUnlinked: '{n} Aufgaben vom Projekt getrennt',
-
-                // Hints
                 hintNextTask: 'Klicken für nächste Aufgabe',
                 hintTasks: 'Alle Ihre Aufgaben',
                 hintControl: 'Kontroll-Dashboard',
                 hintMore: 'Weitere Optionen',
                 gotIt: 'Verstanden',
-
-                // Stats
                 myStats: 'Meine Statistik',
                 daysStreak: 'Tage-Serie',
                 avgTime: 'Durchschn. Zeit',
                 teamDashboard: 'Team-Dashboard',
                 bottleneck: 'Engpass',
                 processesWaiting: 'Wartende Prozesse',
-
-                // Overdue groups
                 overdueGroup: 'Überfällig',
                 noRegularTasks: 'Keine regelmäßigen Aufgaben',
-            
-                // Auto-added missing keys
                 assistantName: 'Assistentenname:',
                 confirmDelete: 'Löschen?',
                 saved: 'Gespeichert',
@@ -6952,8 +6622,6 @@ en: {
                 ownerOnly: 'Nur für Inhaber',
                 reportFormatPlaceholder: 'Berichtsformat (was genau der Mitarbeiter liefern muss)',
                 taskTemplates: 'Aufgabenvorlagen',
-
-                // Hardcode-fix keys
                 statusNewLabel: 'Neu',
                 statusProgressLabel: 'In Bearbeitung',
                 statusReviewLabel: 'Prüfung',
@@ -6996,8 +6664,6 @@ en: {
                 completedProjectStatus: 'abgeschlossen',
                 pausedProjectStatus: 'pausiert',
                 deleteAllConfirmText: 'ALLES LÖSCHEN',
-
-                // Iter2 hardcode-fix
                 selectCompanyFirst: 'Zuerst Firma auswählen',
                 aiGeneratorError: 'KI-Generator-Fehler. API-Schlüssel prüfen.',
                 stepN: 'Schritt',
@@ -7026,8 +6692,6 @@ en: {
                 monthShort: 'Mo',
 
                 tomorrow: 'Morgen',
-
-                // Iter3 keys
                 deleteAllPrompt: 'Geben Sie "{confirmText}" ein, um die vollständige Löschung aller Firmendaten (außer Benutzer) zu bestätigen:',
                 emptyStructure: 'Leere Struktur',
                 askAI: 'KI fragen',
@@ -7040,8 +6704,6 @@ en: {
                 recordsCount: '{n} Datensätze',
                 loadingCompany: 'Firma wird geladen...',
                 clickRefreshToLoadList: 'Klicken Sie "Aktualisieren" um die Liste zu laden',
-
-                // Iter3 keys
                 nicheClinic: 'Medizinische Klinik',
                 nicheManufacturing: 'Produktion',
                 nicheFurniture: 'Möbelgeschäft',
@@ -7151,8 +6813,6 @@ en: {
                 metricLimit: 'Maximal 50 Metriken pro Unternehmen',
                 chartsComingSoon: 'Diagramme',
                 chartsNeedData: 'Diagramme erscheinen nach Datensammlung',
-
-            // Bots module — додано
             botsTitle: 'Bots & Funnels',
             botsNoBot: 'Wählen Sie einen Bot',
             botsLoading: 'Laden...',
@@ -7211,7 +6871,6 @@ en: {
             botsActionRemoveTag: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span> Tag entfernen',
             botsActionStartFlow: '▶ Flow starten',
             botsActionStopFlow: '⏹ Flow stoppen',
-
 
         
                 bizScheme: 'Schema',
@@ -7555,10 +7214,7 @@ en: {
         };
 
         let currentLang = localStorage.getItem('talko_lang') || 'ua';
-
-        // Ініціалізуємо переклади при завантаженні сторінки
         document.addEventListener('DOMContentLoaded', () => {
-            // Оновлюємо кнопки мови
             document.getElementById('langUA')?.classList.toggle('active', currentLang === 'ua');
             document.getElementById('langRU')?.classList.toggle('active', currentLang === 'ru');
             document.getElementById('langPL')?.classList.toggle('active', currentLang === 'pl');
@@ -7569,8 +7225,6 @@ en: {
             document.getElementById('mLangPL')?.classList.toggle('active', currentLang === 'pl');
             document.getElementById('mLangEN')?.classList.toggle('active', currentLang === 'en');
             document.getElementById('mLangDE')?.classList.toggle('active', currentLang === 'de');
-            
-            // Оновлюємо всі тексти з data-i18n
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[currentLang] && translations[currentLang][key]) {
@@ -7618,20 +7272,14 @@ en: {
         function setLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('talko_lang', lang);
-            
-            // Оновлюємо масиви днів і місяців
             dayNames = getDayNames();
             dayNamesShort = getDayNamesShort();
             monthNames = getMonthNames();
-            
-            // Update desktop buttons
             document.getElementById('langUA')?.classList.toggle('active', lang === 'ua');
             document.getElementById('langRU')?.classList.toggle('active', lang === 'ru');
             document.getElementById('langPL')?.classList.toggle('active', lang === 'pl');
             document.getElementById('langEN')?.classList.toggle('active', lang === 'en');
             document.getElementById('langDE')?.classList.toggle('active', lang === 'de');
-            
-            // Update mobile buttons
             document.getElementById('mLangUA')?.classList.toggle('active', lang === 'ua');
             document.getElementById('mLangRU')?.classList.toggle('active', lang === 'ru');
             document.getElementById('mLangPL')?.classList.toggle('active', lang === 'pl');
@@ -7648,7 +7296,6 @@ en: {
                     }
                 }
             });
-            // Translate placeholders
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
                 if (translations[lang] && translations[lang][key]) {
@@ -7661,11 +7308,8 @@ en: {
                     el.title = translations[lang][key];
                 }
             });
-            
-            // Refresh lucide icons after i18n innerHTML updates
             refreshIcons();
             if (currentCompany || isSuperAdmin) {
-                // Find active tab from either desktop tabs or bottom nav
                 let tabName = 'tasks';
                 const activeBottomBtn = document.querySelector('.bottom-nav-btn.active');
                 const activeTabBtn = document.querySelector('.tab-btn.active');
@@ -7681,5 +7325,4 @@ en: {
                 updateSelects(true);
             }
         }
-        // Виставляємо в window для виклику з header language dropdown
         window.setLanguage = setLanguage;
