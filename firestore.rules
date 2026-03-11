@@ -557,6 +557,13 @@ service cloud.firestore {
           request.resource.data.type == resource.data.type;
         allow delete: if isSuperAdmin();
       }
+
+      // FALLBACK: будь-яка subcollection компанії — члени читають, менеджери пишуть
+      // (для нових колекцій до деплою специфічних правил)
+      match /{subcollection}/{docId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if isManagerOrOwner(companyId);
+      }
     }
     
     // =====================
