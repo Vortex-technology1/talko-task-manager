@@ -64,11 +64,11 @@ function _renderShell() {
     if (!container) return;
 
     const tabs = [
-        ['kanban',     I.funnel,    'Воронка'],
-        ['clients',    I.users,     'Клієнти'],
-        ['activities', I.calendar,  'Активності'],
-        ['analytics',  I.chart,     'Аналітика'],
-        ['settings',   I.settings,  'Налаштування'],
+        ['kanban',     I.funnel,    window.t('crmTabFunnel')],
+        ['clients',    I.users,     window.t('crmTabClients')],
+        ['activities', I.calendar,  window.t('crmTabActivities')],
+        ['analytics',  I.chart,     window.t('crmTabAnalytics')],
+        ['settings',   I.settings,  window.t('crmTabSettings')],
     ];
 
     container.innerHTML = `
@@ -147,20 +147,20 @@ async function _loadAll() {
 
 async function _createDefaultPipeline() {
     const stages = [
-        { id:'new',         label:'Новий',        color:'#6b7280', order:0 },
-        { id:'contact',     label:'Контакт',      color:'#3b82f6', order:1 },
-        { id:'negotiation', label:'Переговори',   color:'#8b5cf6', order:2 },
-        { id:'proposal',    label:'Пропозиція',   color:'#f59e0b', order:3 },
-        { id:'closing',     label:'Закриття',     color:'#f97316', order:4 },
-        { id:'won',         label:'Виграно',      color:'#22c55e', order:5 },
-        { id:'lost',        label:'Програно',     color:'#ef4444', order:6 },
+        { id:'new',         label:window.t('crmStageNew'),        color:'#6b7280', order:0 },
+        { id:'contact',     label:window.t('crmStageContact'),      color:'#3b82f6', order:1 },
+        { id:'negotiation', label:window.t('crmStageNegotiation'),   color:'#8b5cf6', order:2 },
+        { id:'proposal',    label:window.t('crmStageProposal'),   color:'#f59e0b', order:3 },
+        { id:'closing',     label:window.t('crmStageClosing'),     color:'#f97316', order:4 },
+        { id:'won',         label:window.t('crmStageWon'),      color:'#22c55e', order:5 },
+        { id:'lost',        label:window.t('crmStageLost'),     color:'#ef4444', order:6 },
     ];
     const ref = await window.companyRef()
         .collection(window.DB_COLS.CRM_PIPELINE).add({
-            name:'Основна воронка', isDefault:true, stages,
+            name:window.t('crmDefaultPipeline'), isDefault:true, stages,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-    crm.pipelines = [{ id: ref.id, name:'Основна воронка', isDefault:true, stages }];
+    crm.pipelines = [{ id: ref.id, name:window.t('crmDefaultPipeline'), isDefault:true, stages }];
     crm.pipeline  = crm.pipelines[0];
 }
 
@@ -172,7 +172,7 @@ function _listenEventBus() {
     window.addEventListener('talko:event', function(e) {
         const ev = e.detail;
         if (ev && ev.type === window.TALKO_EVENTS?.DEAL_CREATED) {
-            if (typeof showToast === 'function') showToast('Новий лід у CRM', 'success');
+            if (typeof showToast === 'function') showToast(window.t('crmNewLeadEvent'), 'success');
         }
     });
 }
@@ -203,9 +203,9 @@ function _renderKanban() {
     <!-- Stats row -->
     <div style="display:flex;gap:1px;background:#e8eaed;border-bottom:1px solid #e8eaed;">
         ${[
-            ['Угод', total],
-            ['Активних', active],
-            ['Виграно', won],
+            [window.t('crmDealsCount'), total],
+            [window.t('crmActiveCount'), active],
+            [window.t('crmStageWon'), won],
             ['Revenue', _fmt(revenue)],
             ['Pipeline', _fmt(pipeline)],
         ].map(([l,v]) => `
@@ -242,7 +242,7 @@ function _kanbanCol(stage) {
                     <button onclick="crmOpenCreateDeal('${stage.id}')"
                         style="width:20px;height:20px;background:#f4f5f7;border:none;border-radius:4px;
                         cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;"
-                        title="Додати угоду">${I.plus}</button>
+                        title=window.t('crmAddDeal')>${I.plus}</button>
                 </div>
             </div>
             ${amt > 0 ? `<div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${_fmt(amt)}</div>` : ''}
@@ -278,7 +278,7 @@ function _kanbanColLost(stage) {
                 border-left:2px solid #ef4444;font-size:0.72rem;color:#6b7280;
                 overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
                 title="${_esc(d.clientName||d.title||'')}">
-                ${_esc((d.clientName||d.title||'Угода').slice(0,24))}
+                ${_esc((d.clientName||d.title||window.t('crmDeal')).slice(0,24))}
             </div>`).join('')}
             ${deals.length > 8 ? `<div style="font-size:0.68rem;color:#fca5a5;text-align:center;padding:0.25rem;">+${deals.length-8}</div>` : ''}
         </div>
@@ -304,7 +304,7 @@ function _dealCard(deal) {
         <!-- Title -->
         <div style="font-size:0.8rem;font-weight:600;color:#1f2937;margin-bottom:0.45rem;
             overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-            ${_esc(deal.title || deal.clientName || 'Угода')}
+            ${_esc(deal.title || deal.clientName || window.t('crmDeal'))}
         </div>
 
         <!-- Client row -->
@@ -409,7 +409,7 @@ window.crmOpenDeal = function(dealId) {
                 display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
                 <div>
                     <div style="font-weight:700;font-size:0.95rem;color:#111827;">
-                        ${_esc(deal.title || deal.clientName || 'Угода')}
+                        ${_esc(deal.title || deal.clientName || window.t('crmDeal'))}
                     </div>
                     <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">
                         ${_esc(deal.clientName || '')}
@@ -420,7 +420,7 @@ window.crmOpenDeal = function(dealId) {
                     <button onclick="crmDeleteDeal('${deal.id}')"
                         style="padding:0.35rem;background:none;border:1px solid #e8eaed;border-radius:6px;
                         cursor:pointer;color:#9ca3af;display:flex;align-items:center;"
-                        title="Видалити">${I.trash}</button>
+                        title=window.t('crmDelete')>${I.trash}</button>
                     <button onclick="crmCloseDeal()"
                         style="padding:0.35rem;background:none;border:1px solid #e8eaed;border-radius:6px;
                         cursor:pointer;color:#9ca3af;display:flex;align-items:center;">${I.close}</button>
@@ -429,7 +429,7 @@ window.crmOpenDeal = function(dealId) {
 
             <!-- Sub-tabs -->
             <div style="display:flex;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
-                ${[['details','Деталі'],['activity','Активності'],['ai','AI']].map(([id,label]) => `
+                ${[['details',window.t('crmDetails')],['activity',window.t('crmTabActivities')],['ai','AI']].map(([id,label]) => `
                 <button onclick="crmDealTab('${deal.id}','${id}')" id="cdt_${id}"
                     style="flex:1;padding:0.6rem;background:none;border:none;border-bottom:2px solid transparent;
                     cursor:pointer;font-size:0.8rem;font-weight:500;color:#6b7280;transition:all 0.15s;">
@@ -517,7 +517,7 @@ function _renderDealDetails(deal) {
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;">
         <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Дані з боту</div>
-        ${[['Роль','role'],['Проблема','mainProblem'],['Ціль','mainGoal']].map(([l,k]) =>
+        ${[[window.t('crmRole'),'role'],[window.t('crmProblem'),'mainProblem'],[window.t('crmGoal'),'mainGoal']].map(([l,k]) =>
             deal.leadData[k] ? `<div style="font-size:0.78rem;margin-bottom:0.25rem;"><span style="color:#9ca3af;">${l}: </span>${_esc(deal.leadData[k])}</div>` : ''
         ).join('')}
     </div>` : ''}`;
@@ -549,9 +549,9 @@ window.crmSaveDeal = async function(dealId) {
         }
         Object.assign(deal, updates);
         crmCloseDeal();
-        if (typeof showToast === 'function') showToast('Збережено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('crmSaved'), 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
         console.error('[CRM] crmSaveDeal error:', e.message);
     } finally {
         crm.saving = false;  // завжди скидаємо guard
@@ -559,13 +559,13 @@ window.crmSaveDeal = async function(dealId) {
 };
 
 window.crmDeleteDeal = async function(dealId) {
-    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити угоду?',{danger:true}) : Promise.resolve(confirm('Видалити угоду?'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('crmDeleteDeal'),{danger:true}) : Promise.resolve(confirm(window.t('crmDeleteDeal')))))) return;
     try {
         await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).delete();
         crmCloseDeal();
-        if (typeof showToast === 'function') showToast('Видалено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -591,7 +591,7 @@ async function _loadActivityTab(deal) {
                     <option value="meeting">Зустріч</option>
                     <option value="email">Email</option>
                 </select>
-                <input id="actText" placeholder="Опис дії..."
+                <input id="actText" placeholder=window.t('crmActivityDescPh')
                     onkeydown="if(event.key==='Enter')crmAddActivity('${deal.id}')"
                     style="flex:1;padding:0.4rem 0.5rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.78rem;">
                 <button onclick="crmAddActivity('${deal.id}')"
@@ -610,7 +610,7 @@ async function _loadActivityTab(deal) {
                 const time = ev.at?.toDate ? ev.at.toDate().toLocaleString('uk-UA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
                 let text = ev.text || '';
                 if (ev.type === 'stage_changed') text = _stageLabel(ev.from) + ' → ' + _stageLabel(ev.to);
-                if (ev.type === 'created') text = 'Угоду створено';
+                if (ev.type === 'created') text = window.t('crmDealCreated');
                 return `
                 <div style="display:flex;gap:0.65rem;align-items:flex-start;">
                     <div style="width:28px;height:28px;border-radius:50%;background:#f0fdf4;
@@ -641,7 +641,7 @@ window.crmAddActivity = async function(dealId) {
         const deal = crm.deals.find(d => d.id === dealId);
         if (deal) _loadActivityTab(deal);
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -692,7 +692,7 @@ window.crmRunAI = async function(dealId) {
     try {
         // ── Отримуємо Firebase ID token (ніколи не передаємо API key у браузері) ──
         const idToken = await firebase.auth().currentUser?.getIdToken();
-        if (!idToken) throw new Error('Не авторизований');
+        if (!idToken) throw new Error(window.t('crmNotAuthorized'));
 
         const response = await fetch('/api/ai-crm', {
             method: 'POST',
@@ -708,10 +708,10 @@ window.crmRunAI = async function(dealId) {
 
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(data.error || 'Помилка сервера ' + response.status);
+            throw new Error(data.error || window.t('errServer') + response.status);
         }
 
-        const analysis = data.analysis || 'Не вдалось отримати аналіз';
+        const analysis = data.analysis || window.t('crmAnalysisFailed');
         // deal в Firestore вже оновлено сервером — тільки local state
         deal.aiAnalysis   = analysis;
         deal.aiAnalyzedAt = new Date();
@@ -746,11 +746,11 @@ window.crmOpenCreateDeal = function(defaultStage) {
             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                 <div>
                     <label style="${lbl}">Назва угоди</label>
-                    <input id="nd_title" placeholder="Консультація, Проект..." style="${inp}" autofocus>
+                    <input id="nd_title" placeholder=window.t('crmDealTitlePh') style="${inp}" autofocus>
                 </div>
                 <div>
                     <label style="${lbl}">Клієнт</label>
-                    <input id="nd_client" placeholder="Ім'я або компанія..." style="${inp}">
+                    <input id="nd_client" placeholder=window.t('crmClientNamePh') style="${inp}">
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                     <div>
@@ -766,7 +766,7 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 </div>
                 <div>
                     <label style="${lbl}">Ніша</label>
-                    <input id="nd_niche" placeholder="Стоматологія, Будівництво..." style="${inp}">
+                    <input id="nd_niche" placeholder=window.t('crmNichePh') style="${inp}">
                 </div>
             </div>
             <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;display:flex;justify-content:flex-end;gap:0.4rem;">
@@ -792,7 +792,7 @@ window.crmCreateDeal = async function() {
     const stage  = document.getElementById('nd_stage')?.value || 'new';
     const amount = parseFloat(document.getElementById('nd_amount')?.value) || 0;
     const niche  = document.getElementById('nd_niche')?.value.trim();
-    if (!title && !client) { if(window.showToast)showToast("Введіть назву або ім'я клієнта",'warning'); else alert("Введіть назву або ім'я клієнта"); return; }
+    if (!title && !client) { if(window.showToast)showToast(window.t('crmEnterNameOrClient'),'warning'); else alert(window.t('crmEnterNameOrClient')); return; }
     try {
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add({
                 title: title||client, clientName: client||title, clientNiche: niche||'',
@@ -803,11 +803,11 @@ window.crmCreateDeal = async function() {
             });
         await ref.collection('history').add({ type:'created', by: window.currentUser?.email||'manager', at: firebase.firestore.FieldValue.serverTimestamp() });
         document.getElementById('crmCreateDealOverlay')?.remove();
-        if (typeof showToast === 'function') showToast('Угоду створено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('crmDealCreated'), 'success');
         if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
             emitTalkoEvent(window.TALKO_EVENTS.DEAL_CREATED, { dealId:ref.id, clientName:client||title, stage, amount });
         }
-    } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
 };
 
 // ══════════════════════════════════════════════════════════
@@ -822,7 +822,7 @@ function _renderClients() {
         <div style="flex:1;min-width:0;overflow-y:auto;">
             <div style="max-width:640px;margin:0 auto;">
                 <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;align-items:center;">
-                    <input id="crmClientSearch" type="text" placeholder="Пошук за ім'ям, телефоном..."
+                    <input id="crmClientSearch" type="text" placeholder=window.t('crmSearchPh')
                         oninput="crmFilterClients(this.value)"
                         style="flex:1;padding:0.5rem 0.75rem;border:1px solid #e8eaed;
                         border-radius:8px;font-size:0.82rem;background:white;">
@@ -869,7 +869,7 @@ function _clientListHTML(clients) {
                 ${(cl.name||'?').charAt(0).toUpperCase()}
             </div>
             <div style="flex:1;min-width:0;">
-                <div style="font-weight:600;font-size:0.85rem;color:#111827;">${_esc(cl.name||'Без імені')}</div>
+                <div style="font-weight:600;font-size:0.85rem;color:#111827;">${_esc(cl.name||window.t('crmNoName'))}</div>
                 <div style="font-size:0.72rem;color:#9ca3af;">
                     ${cl.phone ? _esc(cl.phone) + (cl.niche ? ' · ' : '') : ''}${cl.niche ? _esc(cl.niche) : ''}
                     ${cl.source === 'telegram' ? '<span style="background:#e0f2fe;color:#0284c7;font-size:0.65rem;padding:1px 5px;border-radius:8px;margin-left:4px;">TG</span>' : ''}
@@ -903,7 +903,7 @@ window.crmOpenClient = function(clientId) {
                     ${(cl.name||'?').charAt(0).toUpperCase()}
                 </div>
                 <div>
-                    <div style="font-weight:700;font-size:0.92rem;color:#111827;">${_esc(cl.name||'Без імені')}</div>
+                    <div style="font-weight:700;font-size:0.92rem;color:#111827;">${_esc(cl.name||window.t('crmNoName'))}</div>
                     ${cl.niche ? `<div style="font-size:0.72rem;color:#9ca3af;">${_esc(cl.niche)}</div>` : ''}
                 </div>
             </div>
@@ -948,7 +948,7 @@ window.crmOpenClient = function(clientId) {
                 onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='#e8eaed'">
                 <div style="width:6px;height:6px;border-radius:50%;background:${stage?.color||'#6b7280'};flex-shrink:0;"></div>
                 <div style="flex:1;min-width:0;">
-                    <div style="font-size:0.8rem;font-weight:500;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(d.title||d.clientName||'Угода')}</div>
+                    <div style="font-size:0.8rem;font-weight:500;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(d.title||d.clientName||window.t('crmDeal'))}</div>
                     <div style="font-size:0.68rem;color:#9ca3af;">${stage?.label||d.stage}</div>
                 </div>
                 ${d.amount ? `<span style="font-size:0.75rem;font-weight:600;color:#374151;">${Number(d.amount).toLocaleString()}</span>` : ''}
@@ -980,14 +980,14 @@ window.crmNewDealFromClient = function(clientName) {
 };
 
 window.crmDeleteClient = async function(clientId) {
-    if (!confirm('Видалити клієнта?')) return;
+    if (!confirm(window.t('crmDeleteClient'))) return;
     try {
         await window.companyRef().collection('crm_clients').doc(clientId).delete();
         crm.clients = crm.clients.filter(c => c.id !== clientId);
         document.getElementById('crmClientCard').style.display = 'none';
         _renderClients();
-        if (window.showToast) showToast('Клієнта видалено', 'success');
-    } catch(e) { if (window.showToast) showToast('Помилка: ' + e.message, 'error'); }
+        if (window.showToast) showToast(window.t('crmClientDeleted'), 'success');
+    } catch(e) { if (window.showToast) showToast(window.t('errPrefix') + e.message, 'error'); }
 };
 
 window.crmOpenCreateClient = function() {
@@ -1003,10 +1003,10 @@ window.crmOpenCreateClient = function() {
     overlay.innerHTML = `
     <div style="background:white;border-radius:14px;padding:1.5rem;width:380px;max-width:95vw;">
         <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;">Новий клієнт</div>
-        ${inp('name',"Ім'я","Ім'я клієнта")}
-        ${inp('phone','Телефон','+380...')}
+        ${inp('name',"Ім'я",window.t('crmClientName'))}
+        ${inp('phone',window.t('crmPhone'),'+380...')}
         ${inp('email','Email','email@example.com','email')}
-        ${inp('niche','Ніша/Сфера','Стоматологія, Будівництво...')}
+        ${inp('niche',window.t('crmNiche'),window.t('crmNichePh'))}
         ${inp('telegram','Telegram','username')}
         <div style="margin-bottom:0.6rem;">
             <label style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:3px;">Примітка</label>
@@ -1041,8 +1041,8 @@ window.crmSaveNewClient = async function() {
             niche: v('niche'), telegram: v('telegram'), note: v('note'), source: 'manual' });
         document.getElementById('crmCreateClientOverlay')?.remove();
         _renderClients();
-        if (window.showToast) showToast('Клієнта додано', 'success');
-    } catch(e) { if(window.showToast) showToast('Помилка: ' + e.message, 'error'); }
+        if (window.showToast) showToast(window.t('crmClientAdded'), 'success');
+    } catch(e) { if(window.showToast) showToast(window.t('errPrefix') + e.message, 'error'); }
 };
 
 // ══════════════════════════════════════════════════════════
@@ -1056,7 +1056,7 @@ const ACT_ICONS = {
     task: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg>',
 };
 const ACT_COLORS = { call:'#3b82f6', meeting:'#8b5cf6', email:'#f59e0b', note:'#6b7280', task:'#22c55e' };
-const ACT_LABELS = { call:'Дзвінок', meeting:'Зустріч', email:'Лист', note:'Нотатка', task:'Завдання' };
+const ACT_LABELS = { call:window.t('crmActivityCall'), meeting:window.t('crmActivityMeet'), email:window.t('crmActivityLetter'), note:window.t('crmActivityNote'), task:window.t('crmActivityTask') };
 
 async function _renderActivitiesTab() {
     const c = document.getElementById('crmViewActivities');
@@ -1071,7 +1071,7 @@ async function _renderActivitiesTab() {
             const histSnap = await dealDoc.ref.collection('history').orderBy('at','desc').limit(50).get();
             const deal = { id: dealDoc.id, ...dealDoc.data() };
             histSnap.docs.forEach(h => {
-                allActivities.push({ ...h.data(), id: h.id, dealId: deal.id, dealTitle: deal.title || deal.clientName || 'Угода' });
+                allActivities.push({ ...h.data(), id: h.id, dealId: deal.id, dealTitle: deal.title || deal.clientName || window.t('crmDeal') });
             });
         }
     } catch(e) { /* тихо */ }
@@ -1102,7 +1102,7 @@ async function _renderActivitiesTab() {
                 border-radius:7px;font-size:0.8rem;margin-bottom:0.4rem;background:white;">
                 <option value="">Оберіть угоду...</option>
                 ${crm.deals.filter(d=>d.stage!=='won'&&d.stage!=='lost').map(d =>
-                    `<option value="${d.id}">${_esc(d.title||d.clientName||'Угода')}</option>`).join('')}
+                    `<option value="${d.id}">${_esc(d.title||d.clientName||window.t('crmDeal'))}</option>`).join('')}
             </select>
             <textarea id="actNoteText" rows="2" placeholder="Нотатка / деталі..."
                 style="width:100%;padding:0.4rem 0.5rem;border:1.5px solid #e8eaed;border-radius:7px;
@@ -1116,7 +1116,7 @@ async function _renderActivitiesTab() {
 
         const filterBar = `
         <div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.75rem;">
-            ${[['all','Всі'],...Object.entries(ACT_LABELS)].map(([k,v]) => `
+            ${[['all',window.t('crmAll')],...Object.entries(ACT_LABELS)].map(([k,v]) => `
             <button onclick="actFilter('${k}')"
                 style="padding:0.3rem 0.65rem;border-radius:999px;border:1.5px solid ${k===filter?'#22c55e':'#e8eaed'};
                 background:${k===filter?'#f0fdf4':'white'};color:${k===filter?'#16a34a':'#6b7280'};
@@ -1143,7 +1143,7 @@ async function _renderActivitiesTab() {
                             <span style="font-size:0.72rem;font-weight:700;color:${color};
                                 background:${color}12;padding:1px 7px;border-radius:10px;">${label}</span>
                             <span style="font-size:0.75rem;font-weight:600;color:#374151;">
-                                ${_esc(a.dealTitle||'Угода')}
+                                ${_esc(a.dealTitle||window.t('crmDeal'))}
                             </span>
                         </div>
                         <span style="font-size:0.68rem;color:#9ca3af;">${ts}</span>
@@ -1178,7 +1178,7 @@ async function _renderActivitiesTab() {
         const dealId = document.getElementById('actDealSelect')?.value;
         const note = document.getElementById('actNoteText')?.value?.trim();
         const type = window._actCurrentType || 'note';
-        if (!dealId) { if(window.showToast) showToast('Оберіть угоду','error'); return; }
+        if (!dealId) { if(window.showToast) showToast(window.t('crmSelectDeal'),'error'); return; }
         try {
             await window.companyRef().collection('crm_deals').doc(dealId)
                 .collection('history').add({
@@ -1186,9 +1186,9 @@ async function _renderActivitiesTab() {
                     by: window.currentUser?.email || 'manager',
                     at: firebase.firestore.FieldValue.serverTimestamp(),
                 });
-            if (window.showToast) showToast('Активність збережено', 'success');
+            if (window.showToast) showToast(window.t('crmActivitySaved'), 'success');
             await _renderActivitiesTab();
-        } catch(e) { if(window.showToast) showToast('Помилка: ' + e.message, 'error'); }
+        } catch(e) { if(window.showToast) showToast(window.t('errPrefix') + e.message, 'error'); }
     };
 }
 
@@ -1207,10 +1207,10 @@ function _renderAnalytics() {
 
     // KPI картки
     const kpis = [
-        ['Конверсія', conv+'%', '#22c55e'],
+        [window.t('crmConversion'), conv+'%', '#22c55e'],
         ['Revenue', _fmt(revenue), '#16a34a'],
         ['Avg Deal', _fmt(avgDeal), '#3b82f6'],
-        ['Програно', lost, '#ef4444'],
+        [window.t('crmStageLost'), lost, '#ef4444'],
     ];
 
     // По місяцях (останні 6)
@@ -1239,7 +1239,7 @@ function _renderAnalytics() {
     // Джерела лідів — для пай-чарту
     const sources = crm.deals.reduce((acc, d) => { const src=d.source||'manual'; acc[src]=(acc[src]||0)+1; return acc; }, {});
     const srcColors = { telegram:'#3b82f6', instagram:'#e879f9', site_form:'#22c55e', manual:'#f59e0b' };
-    const srcLabels = { telegram:'Telegram', instagram:'Instagram', site_form:'Сайт', manual:'Вручну' };
+    const srcLabels = { telegram:'Telegram', instagram:'Instagram', site_form:window.t('sitesSite'), manual:window.t('crmManual') };
     const totalSrc = Object.values(sources).reduce((s,v)=>s+v, 0) || 1;
 
     // Топ-5 менеджерів
@@ -1253,7 +1253,7 @@ function _renderAnalytics() {
     const topManagers = Object.values(byUser)
         .sort((a,b) => b.amount - a.amount)
         .slice(0, 5)
-        .map(u => ({ ...u, name: (typeof users!=='undefined' ? users.find(x=>x.id===u.uid) : null)?.name || 'Невідомо' }));
+        .map(u => ({ ...u, name: (typeof users!=='undefined' ? users.find(x=>x.id===u.uid) : null)?.name || window.t('crmUnknown') }));
     const maxMgr = topManagers[0]?.amount || 1;
 
     c.innerHTML = `
@@ -1440,7 +1440,7 @@ function _renderCRMSettings() {
                     <span style="font-size:0.72rem;color:#9ca3af;">${(p.stages||[]).length} стадій</span>
                     ${!p.isDefault ? `<button onclick="event.stopPropagation();crmDeletePipeline('${p.id}','${_esc(p.name)}')"
                         style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px;
-                        display:flex;align-items:center;" title="Видалити">${I.trash}</button>` : ''}
+                        display:flex;align-items:center;" title=window.t('crmDelete')>${I.trash}</button>` : ''}
                 </div>`).join('')}
             </div>
         </div>
@@ -1475,11 +1475,11 @@ function _renderCRMSettings() {
                     <input type="color" value="${s.color}"
                         onchange="crmUpdateStageColor('${s.id}',this.value)"
                         style="width:26px;height:26px;border:none;border-radius:4px;cursor:pointer;padding:0;background:none;"
-                        title="Колір стадії">
+                        title=window.t('crmStageColor')>
                     ${!['won','lost'].includes(s.id) ? `
                     <button onclick="crmRemoveStage('${s.id}')"
                         style="background:none;border:none;cursor:pointer;color:#fca5a5;
-                        display:flex;align-items:center;padding:2px;" title="Видалити">${I.trash}</button>` : ''}
+                        display:flex;align-items:center;padding:2px;" title=window.t('crmDelete')>${I.trash}</button>` : ''}
                 </div>`).join('')}
             </div>
             <button onclick="crmSaveStages()"
@@ -1518,26 +1518,26 @@ function _subscribeDeals() {
 }
 
 window.crmCreatePipeline = async function() {
-    const name = await (window.showInputModal ? showInputModal('Назва нової воронки:', '', {placeholder: 'Введіть назву'}) : (async()=>prompt('Назва нової воронки:'))());
+    const name = await (window.showInputModal ? showInputModal(window.t('crmNewPipelineName'), '', {placeholder: window.t('enterName2')}) : (async()=>prompt(window.t('crmNewPipelineName')))());
     if (!name?.trim()) return;
     _doCreatePipeline(name.trim());
 };
 
 async function _doCreatePipeline(name) {
     const stages = [
-        {id:'new_'+Date.now(),    label:'Новий',      color:'#6b7280', order:0},
-        {id:'contact_'+Date.now(),label:'Контакт',    color:'#3b82f6', order:1},
-        {id:'proposal_'+Date.now(),label:'Пропозиція',color:'#f59e0b', order:2},
-        {id:'won',                label:'Виграно',    color:'#22c55e', order:3},
-        {id:'lost',               label:'Програно',   color:'#ef4444', order:4},
+        {id:'new_'+Date.now(),    label:window.t('crmStageNew'),      color:'#6b7280', order:0},
+        {id:'contact_'+Date.now(),label:window.t('crmStageContact'),    color:'#3b82f6', order:1},
+        {id:'proposal_'+Date.now(),label:window.t('crmStageProposal'),color:'#f59e0b', order:2},
+        {id:'won',                label:window.t('crmStageWon'),    color:'#22c55e', order:3},
+        {id:'lost',               label:window.t('crmStageLost'),   color:'#ef4444', order:4},
     ];
     try {
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE)
             .add({ name, isDefault:false, stages, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         crm.pipelines.push({ id:ref.id, name, isDefault:false, stages });
-        if (typeof showToast === 'function') showToast('Воронку створено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('crmPipelineCreated'), 'success');
         _renderCRMSettings();
-    } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
 }
 
 window.crmDeletePipeline = async function(pipelineId, name) {
@@ -1548,9 +1548,9 @@ window.crmDeletePipeline = async function(pipelineId, name) {
         if (crm.pipeline?.id === pipelineId) {
             crm.pipeline = crm.pipelines[0];
         }
-        if (typeof showToast === 'function') showToast('Видалено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success');
         _renderCRMSettings();
-    } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
 };
 
 // ── Stage CRUD ─────────────────────────────────────────────
@@ -1558,7 +1558,7 @@ window.crmAddStage = function() {
     if (!crm.pipeline) return;
     const id    = 'stage_' + Date.now();
     const order = (crm.pipeline.stages || []).length;
-    const stage = { id, label:'Нова стадія', color:'#8b5cf6', order };
+    const stage = { id, label:window.t('crmNewStage'), color:'#8b5cf6', order };
     crm.pipeline.stages = [...(crm.pipeline.stages || []), stage];
     _renderCRMSettings();
 };
@@ -1574,7 +1574,7 @@ window.crmUpdateStageColor = function(stageId, color) {
 };
 
 window.crmRemoveStage = async function(stageId) {
-    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити стадію? Угоди залишаться.',{danger:true}) : Promise.resolve(confirm('Видалити стадію? Угоди залишаться.'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('crmDeleteStage'),{danger:true}) : Promise.resolve(confirm(window.t('crmDeleteStage')))))) return;
     if (!crm.pipeline) return;
     crm.pipeline.stages = crm.pipeline.stages.filter(s => s.id !== stageId);
     _renderCRMSettings();
@@ -1590,10 +1590,10 @@ window.crmSaveStages = async function() {
         // Sync в pipelines array
         const idx = crm.pipelines.findIndex(p => p.id === crm.pipeline.id);
         if (idx >= 0) crm.pipelines[idx].stages = crm.pipeline.stages;
-        if (typeof showToast === 'function') showToast('Стадії збережено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('crmStagesSaved'), 'success');
         _renderKanban();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -1639,10 +1639,10 @@ function _fmt(n) {
 }
 function _relTime(d) {
     const diff = Date.now() - d.getTime(), m = Math.floor(diff/60000);
-    if (m < 1)  return 'щойно';
+    if (m < 1)  return window.t('botsJustNow');
     if (m < 60) return m + 'хв';
     const h = Math.floor(m/60);
-    if (h < 24) return h + 'год';
+    if (h < 24) return h + window.t('botsHour');
     return Math.floor(h/24) + 'дн';
 }
 function _stageLabel(id) {

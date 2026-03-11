@@ -94,12 +94,12 @@ function renderTabBar(visibleTabs) {
     const bar = document.getElementById('bpTabBar');
     if (!bar) return;
     const all = [
-        ['bots',      '<i data-lucide="bot" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', 'Боти'],
-        ['flows',     '<i data-lucide="link" style="width:15px;height:15px;display:inline-block;vertical-align:middle;"></i>',  'Ланцюги'],
-        ['contacts',  '<i data-lucide="users" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', 'Контакти'],
-        ['chat',      '<i data-lucide="message-square" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', 'Чат'],
-        ['broadcast', '<i data-lucide="send" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', 'Розсилка'],
-        ['settings',  '<i data-lucide="settings" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i>',  'Налаштування'],
+        ['bots',      '<i data-lucide="bot" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', window.t('botsBots')],
+        ['flows',     '<i data-lucide="link" style="width:15px;height:15px;display:inline-block;vertical-align:middle;"></i>',  window.t('botsFlows')],
+        ['contacts',  '<i data-lucide="users" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', window.t('botsContacts')],
+        ['chat',      '<i data-lucide="message-square" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', window.t('botsChat')],
+        ['broadcast', '<i data-lucide="send" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', window.t('botsBroadcast')],
+        ['settings',  '<i data-lucide="settings" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i>',  window.t('crmTabSettings')],
     ];
     bar.innerHTML = all.filter(([id]) => visibleTabs.includes(id)).map(([id, icon, label]) => `
         <button id="bpTab_${id}" onclick="bpSwitch('${id}')"
@@ -185,7 +185,7 @@ function renderBotsTab() {
                                 <div style="font-size:0.74rem;color:#6b7280;margin-top:1px;">
                                     ${bot.channel} · @${escH(bot.username||'—')}
                                     · <span style="color:${bot.connected?'#22c55e':'#ef4444'};font-weight:600;">
-                                        ${bot.connected?'● Підключено':'○ Не підключено'}
+                                        ${bot.connected?window.t('botsConnectedBadge'):window.t('botsNotConnectedBadge')}
                                     </span>
                                 </div>
                                 <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">
@@ -259,7 +259,7 @@ function renderFlowsTab() {
                 Всі боти
             </button>
             <span style="color:#9ca3af;">›</span>
-            <span style="font-weight:700;font-size:0.85rem;color:#374151;">${escH(bot?.name||'Бот')}</span>
+            <span style="font-weight:700;font-size:0.85rem;color:#374151;">${escH(bot?.name||window.t('botsBot'))}</span>
             <span style="background:${bot?.connected?'#f0fdf4':'#fee2e2'};
                 color:${bot?.connected?'#22c55e':'#ef4444'};
                 font-size:0.68rem;padding:1px 7px;border-radius:10px;font-weight:600;">
@@ -364,7 +364,7 @@ function renderFlowsTab() {
                                 </button>
                                 <div style="display:flex;gap:0.25rem;">
                                     <button onclick="toggleFlowStatus('${flow.id}','${flow.status}')"
-                                        title="${flow.status==='active'?'Пауза':'Активувати'}"
+                                        title="${flow.status==='active'?window.t('botsPause'):window.t('botsActivate')}"
                                         style="flex:1;padding:0.4rem 0;
                                         background:${flow.status==='active'?'#fff7ed':'#f0fdf4'};
                                         color:${flow.status==='active'?'#f97316':'#16a34a'};
@@ -376,7 +376,7 @@ function renderFlowsTab() {
                                             : '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5,3 19,12 5,21"/></svg>'}
                                     </button>
                                     <button onclick="deleteFlow('${flow.id}')"
-                                        title="Видалити"
+                                        title=window.t('crmDelete')
                                         style="flex:1;padding:0.4rem 0;background:#fff5f5;color:#ef4444;
                                         border:1px solid #fecaca;border-radius:7px;cursor:pointer;
                                         display:flex;align-items:center;justify-content:center;
@@ -421,7 +421,7 @@ window.openCreateBotModal = function() {
                     </div>
                     <div>
                         <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА БОТА</label>
-                        <input id="bpNewBotName" placeholder="Наприклад: Запис на консультацію"
+                        <input id="bpNewBotName" placeholder=window.t('botsTokenExample')
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                     <div>
@@ -450,7 +450,7 @@ window.updateBotTokenHint = function(channel) {
     const label = document.getElementById('bpTokenLabel');
     const hint = document.getElementById('bpTokenHint');
     if (channel === 'telegram') {
-        if (label) label.textContent = 'BOT TOKEN (від @BotFather)';
+        if (label) label.textContent = window.t('botsBotTokenLabel');
         if (hint) hint.textContent = '1. Відкрий @BotFather <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> /newbot <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> скопіюй токен';
     } else if (channel === 'instagram') {
         if (label) label.textContent = 'PAGE ACCESS TOKEN';
@@ -462,8 +462,8 @@ window.createAndConnectBot = async function() {
     const name = document.getElementById('bpNewBotName')?.value.trim();
     const token = document.getElementById('bpNewBotToken')?.value.trim();
     const channel = document.getElementById('bpNewBotChannel')?.value || 'telegram';
-    if (!name) { if(window.showToast)showToast('Введіть назву бота','warning'); else alert('Введіть назву бота'); return; }
-    if (!token) { if(window.showToast)showToast('Введіть токен','warning'); else alert('Введіть токен'); return; }
+    if (!name) { if(window.showToast)showToast(window.t('botsEnterName'),'warning'); else alert(window.t('botsEnterName')); return; }
+    if (!token) { if(window.showToast)showToast(window.t('botsEnterToken'),'warning'); else alert(window.t('botsEnterToken')); return; }
 
     const btn = document.querySelector('[onclick="createAndConnectBot()"]');
     if (btn) { btn.textContent = t('botsLoading'); }
@@ -477,7 +477,7 @@ window.createAndConnectBot = async function() {
             // Verify token + set webhook
             const meRes = await fetch(`https://api.telegram.org/bot${token}/getMe`);
             const meData = await meRes.json();
-            if (!meData.ok) throw new Error('Невірний токен: ' + (meData.description||''));
+            if (!meData.ok) throw new Error(window.t('botsInvalidToken') + (meData.description||''));
             username = meData.result.username || '';
 
             const whRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
@@ -516,11 +516,11 @@ window.createAndConnectBot = async function() {
         });
 
         document.getElementById('bpCreateBot')?.remove();
-        if (typeof showToast === 'function') showToast(connected ? `<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Бот @${username} підключено!` : 'Бот створено. Налаштуйте вебхук вручну.', 'success');
+        if (typeof showToast === 'function') showToast(connected ? `<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Бот @${username} підключено!` : window.t('botsBotCreated'), 'success');
         openBot(botRef.id);
     } catch(e) {
         if (btn) btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Підключити';
-        if(window.showToast)showToast('Помилка: '+e.message,'error'); else alert('Помилка: '+e.message);
+        if(window.showToast)showToast(window.t('errPrefix')+e.message,'error'); else alert(window.t('errPrefix')+e.message);
     }
 };
 
@@ -531,10 +531,10 @@ window.openBotSettings = async function(botId) {
 };
 
 window.confirmDeleteBot = async function(botId) {
-    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити бота і всі його ланцюги?',{danger:true}) : Promise.resolve(confirm('Видалити бота і всі його ланцюги?'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteBot'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteBot')))))) return;
     window.companyRef()
         .collection('bots').doc(botId).delete()
-        .then(() => { if (typeof showToast === 'function') showToast('Бота видалено', 'success'); });
+        .then(() => { if (typeof showToast === 'function') showToast(window.t('botsBotDeleted'), 'success'); });
 };
 
 // ══════════════════════════════════════════════════════════
@@ -555,12 +555,12 @@ window.openCreateFlowModal = function() {
                 <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.6rem;">
                     <div>
                         <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА *</label>
-                        <input id="bpFlowName" placeholder="Наприклад: Запис на прийом"
+                        <input id="bpFlowName" placeholder=window.t('sitesFormExPh')
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                     <div>
                         <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТРИГЕР</label>
-                        <input id="bpFlowTrigger" placeholder="/start або ключове слово"
+                        <input id="bpFlowTrigger" placeholder=window.t('botsStartKeyword')
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                 </div>
@@ -577,7 +577,7 @@ window.openCreateFlowModal = function() {
 
 window.saveNewFlow = async function() {
     const name = document.getElementById('bpFlowName')?.value.trim();
-    if (!name) { if(window.showToast)showToast('Введіть назву','warning'); else alert('Введіть назву'); return; }
+    if (!name) { if(window.showToast)showToast(window.t('enterName2'),'warning'); else alert(window.t('enterName2')); return; }
     const bot = bp.bots.find(b=>b.id===bp.activeBotId);
     try {
         const ref = await firebase.firestore()
@@ -599,9 +599,9 @@ window.saveNewFlow = async function() {
             .update({ flowCount: firebase.firestore.FieldValue.increment(1) });
 
         document.getElementById('bpCreateFlow')?.remove();
-        if (typeof showToast === 'function') showToast('Ланцюг створено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('botsFlowCreated'), 'success');
         editFlow(ref.id);
-    } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
 };
 
 window.editFlow = function(flowId) {
@@ -620,11 +620,11 @@ window.toggleFlowStatus = async function(flowId, status) {
 };
 
 window.deleteFlow = async function(flowId) {
-    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити ланцюг?',{danger:true}) : Promise.resolve(confirm('Видалити ланцюг?'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteFlow'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteFlow')))))) return;
     window.companyRef()
         .collection('bots').doc(bp.activeBotId)
         .collection('flows').doc(flowId).delete()
-        .then(() => { if (typeof showToast === 'function') showToast('Видалено', 'success'); });
+        .then(() => { if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success'); });
 };
 
 // ══════════════════════════════════════════════════════════
@@ -726,7 +726,7 @@ async function renderContactsTab() {
             <!-- Список контактів -->
             <div id="ctsList" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.35rem;"></div>
 
-            <!-- Кнопка "Завантажити ще" -->
+            <!-- Кнопка window.t('botsLoadMore') -->
             <div id="ctsLoadMore" style="display:none;padding:0.25rem 0;">
                 <button onclick="ctsLoadMore()"
                     style="width:100%;padding:0.55rem;background:white;border:1.5px solid #e5e7eb;
@@ -842,7 +842,7 @@ function _ctsRenderList() {
 }
 
 function _ctsCardHTML(ct) {
-    const name = ct.senderName || ct.name || 'Без імені';
+    const name = ct.senderName || ct.name || window.t('crmNoName');
     const initial = name.charAt(0).toUpperCase();
     const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
     const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % avatarColors.length : 0];
@@ -911,13 +911,13 @@ function _ctsCardHTML(ct) {
                 <span style="font-size:0.68rem;color:#9ca3af;">${date}</span>
                 <div style="display:flex;gap:3px;margin-top:2px;">
                     <button onclick="event.stopPropagation();bpOpenChat('${ct.id}')"
-                        title="Написати"
+                        title=window.t('botsWrite')
                         style="padding:0.3rem 0.45rem;background:#eff6ff;color:#3b82f6;border:none;
                         border-radius:7px;cursor:pointer;font-size:0.7rem;">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     </button>
                     <button onclick="event.stopPropagation();ctsOpenCard('${ct.id}')"
-                        title="Картка"
+                        title=window.t('crmCard')
                         style="padding:0.3rem 0.45rem;background:#f9fafb;color:#6b7280;border:1px solid #e5e7eb;
                         border-radius:7px;cursor:pointer;font-size:0.7rem;">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -953,7 +953,7 @@ window.ctsOpenCard = function(contactId) {
     if (!panel) return;
     panel.style.display = '';
 
-    const name = ct.senderName || ct.name || 'Без імені';
+    const name = ct.senderName || ct.name || window.t('crmNoName');
     const initial = name.charAt(0).toUpperCase();
     const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
     const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % avatarColors.length : 0];
@@ -1010,17 +1010,17 @@ window.ctsOpenCard = function(contactId) {
 
             <!-- Основні поля -->
             <div>
-                ${field('Телефон', ct.phone, '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2.17h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span> ')}
+                ${field(window.t('crmPhone'), ct.phone, '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2.17h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span> ')}
                 ${field('Telegram ID', ct.senderId, '')}
-                ${field('Канал', ct.channel || 'telegram', '')}
-                ${field('Роль', ct.role, '')}
-                ${field('Тип бізнесу', ct.business_type, '')}
+                ${field(window.t('botsChannel'), ct.channel || 'telegram', '')}
+                ${field(window.t('crmRole'), ct.role, '')}
+                ${field(window.t('onbBizType'), ct.business_type, '')}
                 ${field('Головна проблема', ct.main_problem, '')}
-                ${field('Ціль', ct.main_goal, '')}
-                ${field('Термін пошуку', ct.search_time, '')}
-                ${field('Воронка', ct.flowName || ct.flowId, '')}
-                ${field('Перший контакт', createdAt, '')}
-                ${field('Останній контакт', updatedAt, '')}
+                ${field(window.t('crmGoal'), ct.main_goal, '')}
+                ${field(window.t('botsSearchTerm'), ct.search_time, '')}
+                ${field(window.t('crmTabFunnel'), ct.flowName || ct.flowId, '')}
+                ${field(window.t('crmFirstContact'), createdAt, '')}
+                ${field(window.t('crmLastContact'), updatedAt, '')}
             </div>
 
             <!-- AI Summary -->
@@ -1047,7 +1047,7 @@ window.ctsOpenCard = function(contactId) {
                     </span>`).join('')}
                 </div>
                 <div style="display:flex;gap:4px;">
-                    <input id="ctsNewTag" placeholder="Новий тег..."
+                    <input id="ctsNewTag" placeholder=window.t('botsNewTag')
                         style="flex:1;padding:0.35rem 0.5rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.76rem;"
                         onkeydown="if(event.key==='Enter')ctsAddTag('${ct.id}')">
                     <button onclick="ctsAddTag('${ct.id}')"
@@ -1172,7 +1172,7 @@ window.ctsAddToCRM = async function(contactId) {
         }, { triggeredBy: 'user' });
         if (typeof showToast === 'function') showToast('<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Додано в CRM', 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -1180,7 +1180,7 @@ window.ctsAddToCRM = async function(contactId) {
 // ВИДАЛЕННЯ КОНТАКТУ
 // ─────────────────────────────────────────
 window.ctsDeleteContact = async function(contactId) {
-    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити контакт? Цю дію не можна скасувати.',{danger:true}) : Promise.resolve(confirm('Видалити контакт? Цю дію не можна скасувати.'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteContact'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteContact')))))) return;
     try {
         await firebase.firestore()
             .doc(window.currentCompanyId + '/contacts/' + contactId)
@@ -1188,9 +1188,9 @@ window.ctsDeleteContact = async function(contactId) {
         cts.items = cts.items.filter(c => c.id !== contactId);
         ctsCloseCard();
         _ctsRenderList();
-        if (typeof showToast === 'function') showToast('Контакт видалено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('botsContactDeleted'), 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -1199,7 +1199,7 @@ window.ctsDeleteContact = async function(contactId) {
 // ─────────────────────────────────────────
 window.ctsExportCSV = async function() {
     // Завантажуємо всі з поточними фільтрами (без пагінації)
-    if (typeof showToast === 'function') showToast('Готуємо CSV...', 'info');
+    if (typeof showToast === 'function') showToast(window.t('botsPrepareCSV'), 'info');
     try {
         const db = firebase.firestore();
         let q = db.collection(window.currentCompanyId + '/contacts')
@@ -1233,7 +1233,7 @@ window.ctsExportCSV = async function() {
         a.click(); URL.revokeObjectURL(url);
         if (typeof showToast === 'function') showToast(`Експортовано ${rows.length} контактів`, 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -1353,7 +1353,7 @@ async function renderChatTab() {
                         width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                     </svg>
-                    <input id="chatSearch" type="text" placeholder="Пошук..."
+                    <input id="chatSearch" type="text" placeholder=window.t('botsSearch')
                         value="${escH(chat.search)}"
                         oninput="chatOnSearch(this.value)"
                         style="width:100%;padding:0.38rem 0.5rem 0.38rem 1.8rem;border:1.5px solid #e5e7eb;
@@ -1468,7 +1468,7 @@ function _chatRenderContactsList() {
     }
 
     list.innerHTML = chat.contacts.map(ct => {
-        const name = ct.senderName || ct.name || 'Анонім';
+        const name = ct.senderName || ct.name || window.t('botsAnon');
         const initial = name.charAt(0).toUpperCase();
         const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
         const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
@@ -1509,7 +1509,7 @@ function _chatRenderContactsList() {
                     </div>
                     <div style="font-size:0.72rem;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
                         font-weight:${unread>0?'600':'400'};color:${unread>0?'#374151':'#9ca3af'};">
-                        ${escH(lastMsg.slice(0, 45) || 'Немає повідомлень')}
+                        ${escH(lastMsg.slice(0, 45) || window.t('botsNoMessages2'))}
                     </div>
                 </div>
             </div>
@@ -1580,7 +1580,7 @@ window.bpOpenChat = async function(contactId) {
 function _chatRenderHeader(ct) {
     const header = document.getElementById('chatMsgHeader');
     if (!header || !ct) return;
-    const name = ct.senderName || ct.name || 'Анонім';
+    const name = ct.senderName || ct.name || window.t('botsAnon');
     const initial = name.charAt(0).toUpperCase();
     const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
     const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
@@ -1605,7 +1605,7 @@ function _chatRenderHeader(ct) {
             <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></span> Заблокував
         </span>` : ''}
         <button onclick="ctsOpenCard('${ct.id}')"
-            title="Картка контакту"
+            title=window.t('botsContactCard')
             style="padding:0.35rem 0.5rem;background:#f9fafb;border:1px solid #e5e7eb;
             border-radius:8px;cursor:pointer;flex-shrink:0;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1990,7 +1990,7 @@ async function renderBroadcastTab() {
                         box-shadow:0 1px 4px rgba(0,0,0,0.06);">
                         <div style="font-size:0.8rem;font-weight:700;margin-bottom:3px;overflow:hidden;
                             text-overflow:ellipsis;white-space:nowrap;">
-                            ${escH(b.text?.slice(0, 45) || b.flowName || 'Розсилка')}
+                            ${escH(b.text?.slice(0, 45) || b.flowName || window.t('botsBroadcast'))}
                         </div>
                         <div style="font-size:0.7rem;color:#9ca3af;margin-bottom:0.45rem;">
                             ${date}
@@ -2088,7 +2088,7 @@ window.bpSendBroadcast = async function() {
     const niche   = document.getElementById('bcastNiche')?.value || '';
     const tag     = document.getElementById('bcastTag')?.value || '';
 
-    if (!text && !flowSendId) { if(window.showToast)showToast('Введіть текст або оберіть ланцюг для запуску','warning'); else alert('Введіть текст або оберіть ланцюг для запуску'); return; }
+    if (!text && !flowSendId) { if(window.showToast)showToast(window.t('botsEnterTextOrFlow'),'warning'); else alert(window.t('botsEnterTextOrFlow')); return; }
 
     // Завантажуємо всіх цільових контактів з Firestore (не з bp.contacts)
     let q = firebase.firestore()
@@ -2109,7 +2109,7 @@ window.bpSendBroadcast = async function() {
     // Тільки Telegram (поки)
     targets = targets.filter(ct => ct.channel === 'telegram' || ct.source === 'telegram');
 
-    if (targets.length === 0) { if(window.showToast)showToast('Немає контактів для розсилки з обраними фільтрами','warning'); else alert('Немає контактів для розсилки з обраними фільтрами'); return; }
+    if (targets.length === 0) { if(window.showToast)showToast(window.t('botsNoBroadcastContacts'),'warning'); else alert(window.t('botsNoBroadcastContacts')); return; }
 
     if (!(await (window.showConfirmModal ? showConfirmModal(`Надіслати розсилку ${targets.length} контактам?`) : Promise.resolve(confirm(`Надіслати розсилку ${targets.length} контактам?`))))) return;
 
@@ -2119,7 +2119,7 @@ window.bpSendBroadcast = async function() {
     const botToken = compDoc.data()?.integrations?.telegram?.botToken
         || bp.bots.find(b => b.channel === 'telegram')?.token;
 
-    if (!botToken) { if(window.showToast)showToast('Не знайдено токен Telegram бота. Перевірте налаштування.','warning'); else alert('Не знайдено токен Telegram бота. Перевірте налаштування.'); return; }
+    if (!botToken) { if(window.showToast)showToast(window.t('botsNoToken'),'warning'); else alert(window.t('botsNoToken')); return; }
 
     // ── Запускаємо відправку ──
     bcast.running   = true;
@@ -2243,7 +2243,7 @@ window.bpSendBroadcast = async function() {
             <div style="text-align:center;padding:0.5rem;">
                 <div style="font-size:1.5rem;margin-bottom:0.3rem;">${bcast.cancelled ? '⏹' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>'}</div>
                 <div style="font-weight:700;font-size:0.92rem;">
-                    ${bcast.cancelled ? 'Зупинено' : 'Розсилку завершено!'}
+                    ${bcast.cancelled ? window.t('botsStopped') : window.t('botsBroadcastDone')}
                 </div>
                 <div style="font-size:0.8rem;color:#6b7280;margin-top:4px;">
                     Надіслано: <b style="color:#22c55e;">${bcast.sent}</b>
@@ -2259,7 +2259,7 @@ window.bpSendBroadcast = async function() {
     }
 
     if (typeof showToast === 'function') {
-        showToast(`${bcast.cancelled ? 'Зупинено' : 'Готово'}: ${bcast.sent} надіслано, ${bcast.failed} помилок`, 'success');
+        showToast(`${bcast.cancelled ? window.t('botsStopped') : window.t('onbDone')}: ${bcast.sent} надіслано, ${bcast.failed} помилок`, 'success');
     }
 };
 
@@ -2268,7 +2268,7 @@ window.bpSendBroadcast = async function() {
 // ─────────────────────────────────────────
 window.bcastCancel = async function() {
     if (!bcast.running) return;
-    if (!(await (window.showConfirmModal ? showConfirmModal('Зупинити розсилку? Вже надіслані повідомлення не відкличуться.',{danger:true}) : Promise.resolve(confirm('Зупинити розсилку? Вже надіслані повідомлення не відкличуться.'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsStopBroadcast'),{danger:true}) : Promise.resolve(confirm(window.t('botsStopBroadcast')))))) return;
     bcast.cancelled = true;
 };
 
@@ -2328,7 +2328,7 @@ async function renderSettingsTab() {
                     <div style="font-size:0.72rem;color:#6b7280;">
                         @${escH(bot.username || '—')} · ${bot.channel}
                         · <span style="color:${bot.connected?'#22c55e':'#ef4444'};font-weight:600;">
-                            ${bot.connected ? '● Підключено' : '○ Не підключено'}
+                            ${bot.connected ? window.t('botsConnectedBadge') : window.t('botsNotConnectedBadge')}
                         </span>
                     </div>
                 </div>
@@ -2356,7 +2356,7 @@ async function renderSettingsTab() {
             </div>
             <div style="font-size:0.72rem;color:#6b7280;">
                 Цей URL вже встановлений автоматично при підключенні бота.
-                Якщо webhook перестав працювати — натисніть "Перевстановити".
+                Якщо webhook перестав працювати — натисніть window.t('botsReinstall').
             </div>
             <button onclick="bpReinstallWebhook('${bot.id}')" id="btnReinstall"
                 style="margin-top:0.6rem;${btnGreenStyle}">
@@ -2380,7 +2380,7 @@ async function renderSettingsTab() {
             <label style="${labelStyle}">ЗАМІНИТИ ТОКЕН</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="password" id="bpSettingsToken"
-                    placeholder="Новий токен від @BotFather..."
+                    placeholder=window.t('botsNewTokenPh')
                     style="${inputStyle}flex:1;">
                 <button onclick="bpReconnectBot('${bot.id}')" style="${btnGreenStyle}">
                     Замінити
@@ -2445,7 +2445,7 @@ async function renderSettingsTab() {
             <div style="display:flex;gap:0.4rem;margin-bottom:0.35rem;">
                 <input id="settingsNotifyTgId" type="text"
                     value="${escH(notifyTg)}"
-                    placeholder="Наприклад: 123456789"
+                    placeholder=window.t('botsExampleChatId')
                     style="${inputStyle}flex:1;">
                 <button onclick="settingsSaveNotify()" style="${btnGreenStyle}">
                     Зберегти
@@ -2487,7 +2487,7 @@ window.bpCheckBotStatus = async function(botId) {
     const bot = bp.bots.find(b => b.id === botId);
     if (!bot?.token) {
         if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">Токен не встановлений</div>`;
-        if (btn) { btn.textContent = 'Перевірити'; btn.disabled = false; }
+        if (btn) { btn.textContent = window.t('botsCheck'); btn.disabled = false; }
         return;
     }
 
@@ -2524,7 +2524,7 @@ window.bpCheckBotStatus = async function(botId) {
         if (result) result.innerHTML = `<div style="color:#ef4444;font-size:0.78rem;">Помилка: ${escH(e.message)}</div>`;
     }
 
-    if (btn) { btn.textContent = 'Перевірити'; btn.disabled = false; }
+    if (btn) { btn.textContent = window.t('botsCheck'); btn.disabled = false; }
 };
 
 // ─────────────────────────────────────────
@@ -2556,7 +2556,7 @@ window.bpReinstallWebhook = async function(botId) {
                 .doc(window.currentCompanyId + '/bots/' + botId)
                 .update({ connected: true, webhookUrl, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
             if (result) result.innerHTML = `<div style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Webhook встановлено</div>`;
-            if (typeof showToast === 'function') showToast('Webhook встановлено ✓', 'success');
+            if (typeof showToast === 'function') showToast(window.t('botsWebhookSet'), 'success');
         } else {
             throw new Error(data.description);
         }
@@ -2572,7 +2572,7 @@ window.bpReinstallWebhook = async function(botId) {
 // ─────────────────────────────────────────
 window.bpReconnectBot = async function(botId) {
     const token = document.getElementById('bpSettingsToken')?.value.trim();
-    if (!token || token.includes('•')) { if(window.showToast)showToast('Введіть новий токен','warning'); else alert('Введіть новий токен'); return; }
+    if (!token || token.includes('•')) { if(window.showToast)showToast(window.t('botsNewToken'),'warning'); else alert(window.t('botsNewToken')); return; }
 
     try {
         const meRes = await fetch(`https://api.telegram.org/bot${token}/getMe`);
@@ -2604,7 +2604,7 @@ window.bpReconnectBot = async function(botId) {
         if (typeof showToast === 'function') showToast(`<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Токен оновлено, @${me.result.username} підключено`, 'success');
         document.getElementById('bpSettingsToken').value = '';
         renderSettingsTab();
-    } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
 };
 
 // ─────────────────────────────────────────
@@ -2615,7 +2615,7 @@ window.settingsSaveApiKey = window.saveBotApiKey = async function(type) {
         ? document.getElementById('settingsOpenAIKey')
         : document.getElementById('settingsAnthropicKey');
     const key = keyEl?.value.trim();
-    if (!key || key.includes('•')) { if(window.showToast)showToast('Введіть новий ключ','warning'); else alert('Введіть новий ключ'); return; }
+    if (!key || key.includes('•')) { if(window.showToast)showToast(window.t('botsNewKey'),'warning'); else alert(window.t('botsNewKey')); return; }
 
     const result = document.getElementById('apiKeyResult');
     try {
@@ -2660,7 +2660,7 @@ window.settingsSaveNotify = async function() {
 
 // ── Helpers ────────────────────────────────────────────────
 window.copyLink = function(link) {
-    navigator.clipboard.writeText(link).then(()=>{ if(typeof showToast==='function') showToast('Скопійовано ✓','success'); });
+    navigator.clipboard.writeText(link).then(()=>{ if(typeof showToast==='function') showToast(window.t('intgCopied'),'success'); });
 };
 window.showQR = function(encodedLink) {
     const link = decodeURIComponent(encodedLink);
@@ -2683,8 +2683,8 @@ window.showQR = function(encodedLink) {
 function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function relTime(d) {
     const diff = Date.now()-d.getTime(), m=Math.floor(diff/60000);
-    if(m<1) return 'щойно'; if(m<60) return m+'хв';
-    const h=Math.floor(m/60); if(h<24) return h+'год';
+    if(m<1) return window.t('botsJustNow'); if(m<60) return m+'хв';
+    const h=Math.floor(m/60); if(h<24) return h+window.t('botsHour');
     return Math.floor(h/24)+'дн';
 }
 

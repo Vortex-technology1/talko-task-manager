@@ -44,7 +44,7 @@ async function _loadSiteAndForms() {
         const siteDoc = await window.companyDoc('sites/' + sf.siteId).get();
         sf.site = { id: siteDoc.id, ...siteDoc.data() };
         const nameEl = document.getElementById('sfSiteName');
-        if (nameEl) nameEl.textContent = sf.site.name || 'Сайт';
+        if (nameEl) nameEl.textContent = sf.site.name || window.t('sitesSite');
 
         const formsSnap = await window.companyDoc('sites/' + sf.siteId).collection('forms')
             .orderBy('createdAt','desc').get();
@@ -94,7 +94,7 @@ function _renderFormsList() {
 }
 
 function _formCard(form) {
-    const fieldLabels = {name:"Ім'я",phone:'Телефон',email:'Email',message:'Повідомлення',telegram:'Telegram'};
+    const fieldLabels = {name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
     const fields = (form.fields||[]).map(f => fieldLabels[f]||f).join(', ');
     const submissions = form.submissionsCount || 0;
 
@@ -103,7 +103,7 @@ function _formCard(form) {
         box-shadow:0 1px 4px rgba(0,0,0,0.06);border:1.5px solid #f1f5f9;margin-bottom:0.5rem;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">
             <div style="flex:1;">
-                <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.2rem;">${_esc(form.name||'Форма')}</div>
+                <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.2rem;">${_esc(form.name||window.t('sitesBlockForm'))}</div>
                 <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.4rem;">
                     Поля: ${_esc(fields || 'не задані')}
                 </div>
@@ -152,16 +152,16 @@ window.sfOpenCreate = function () {
             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                 <div>
                     <label style="font-size:0.67rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.25rem;">Назва форми</label>
-                    <input id="sfc_name" placeholder="Запис на консультацію..." style="${inp}" autofocus>
+                    <input id="sfc_name" placeholder=window.t('sitesFormPlaceholder') style="${inp}" autofocus>
                 </div>
                 <div>
                     <label style="font-size:0.67rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Поля форми</label>
                     <div style="display:flex;flex-direction:column;gap:0.3rem;">
                         ${[
                             {key:'name', label:"Ім'я", checked:true},
-                            {key:'phone',label:'Телефон', checked:true},
+                            {key:'phone',label:window.t('crmPhone'), checked:true},
                             {key:'email',label:'Email', checked:false},
-                            {key:'message',label:'Повідомлення', checked:false},
+                            {key:'message',label:window.t('sitesFormMessage'), checked:false},
                             {key:'telegram',label:'Telegram', checked:false},
                         ].map(f => `
                         <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;cursor:pointer;
@@ -203,7 +203,7 @@ window.sfOpenCreate = function () {
 
 window.sfCreate = async function () {
     const name = document.getElementById('sfc_name')?.value.trim();
-    if (!name) { if(window.showToast)showToast("Введіть назву форми",'warning'); else alert("Введіть назву форми"); return; }
+    if (!name) { if(window.showToast)showToast(window.t('sitesFormNamePh'),'warning'); else alert(window.t('sitesFormNamePh')); return; }
 
     const fields = ['name','phone','email','message','telegram']
         .filter(k => document.getElementById('sfc_' + k)?.checked);
@@ -216,7 +216,7 @@ window.sfCreate = async function () {
             .collection(window.currentCompanyId + '/sites/' + sf.siteId + '/forms')
             .add({
                 name, fields, crmIntegration, telegramNotify,
-                cta: 'Відправити',
+                cta: window.t('sitesFormSubmit'),
                 title: name,
                 subtitle: '',
                 submissionsCount: 0,
@@ -225,9 +225,9 @@ window.sfCreate = async function () {
             });
         document.getElementById('sfCreateOverlay')?.remove();
         sf.forms.unshift({ id: ref.id, name, fields, crmIntegration, telegramNotify, submissionsCount: 0 });
-        if (typeof showToast === 'function') showToast('Форму створено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('sitesFormCreated'), 'success');
         sfOpenEditor(ref.id);
-    } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
 };
 
 // ── Редактор форми ─────────────────────────────────────────
@@ -251,7 +251,7 @@ async function _renderFormEditor() {
         } catch(e) { return; }
     }
 
-    const fieldLabels = {name:"Ім'я",phone:'Телефон',email:'Email',message:'Повідомлення',telegram:'Telegram'};
+    const fieldLabels = {name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
     const inp = 'width:100%;padding:0.45rem 0.55rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.8rem;box-sizing:border-box;font-family:inherit;margin-bottom:0.5rem;';
 
     c.innerHTML = `
@@ -260,7 +260,7 @@ async function _renderFormEditor() {
             style="padding:0.3rem 0.6rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:7px;cursor:pointer;font-size:0.78rem;">
             ← Форми
         </button>
-        <span style="font-weight:700;font-size:0.88rem;">${_esc(form.name||'Форма')}</span>
+        <span style="font-weight:700;font-size:0.88rem;">${_esc(form.name||window.t('sitesBlockForm'))}</span>
     </div>
 
     <div style="background:white;border-radius:14px;padding:1.25rem;box-shadow:0 1px 6px rgba(0,0,0,0.06);margin-bottom:0.75rem;">
@@ -270,13 +270,13 @@ async function _renderFormEditor() {
         <input id="sfe_name" value="${_esc(form.name||'')}" style="${inp}">
 
         <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.2rem;">Заголовок над формою</label>
-        <input id="sfe_title" value="${_esc(form.title||'')}" placeholder="Залишити заявку" style="${inp}">
+        <input id="sfe_title" value="${_esc(form.title||'')}" placeholder=window.t('sitesFormSubmitAlt') style="${inp}">
 
         <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.2rem;">Підзаголовок</label>
         <input id="sfe_subtitle" value="${_esc(form.subtitle||'')}" placeholder="Зв'яжемося за 15 хвилин" style="${inp}">
 
         <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.2rem;">Текст кнопки</label>
-        <input id="sfe_cta" value="${_esc(form.cta||'Відправити')}" style="${inp}">
+        <input id="sfe_cta" value="${_esc(form.cta||window.t('sitesFormSubmit'))}" style="${inp}">
     </div>
 
     <div style="background:white;border-radius:14px;padding:1.25rem;box-shadow:0 1px 6px rgba(0,0,0,0.06);margin-bottom:0.75rem;">
@@ -338,12 +338,12 @@ async function _renderFormEditor() {
 function _sfUpdatePreview() {
     const c = document.getElementById('sfePreview');
     if (!c) return;
-    const title    = document.getElementById('sfe_title')?.value || 'Залишити заявку';
+    const title    = document.getElementById('sfe_title')?.value || window.t('sitesFormSubmitAlt');
     const subtitle = document.getElementById('sfe_subtitle')?.value || '';
-    const cta      = document.getElementById('sfe_cta')?.value || 'Відправити';
+    const cta      = document.getElementById('sfe_cta')?.value || window.t('sitesFormSubmit');
     const fields   = ['name','phone','email','message','telegram']
         .filter(k => document.getElementById('sfe_field_' + k)?.checked);
-    const labels   = {name:"Ім'я",phone:'Телефон',email:'Email',message:'Повідомлення',telegram:'Telegram'};
+    const labels   = {name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
 
     c.innerHTML = `
     <div style="background:linear-gradient(135deg,#f0fdf4,#f9fafb);border-radius:10px;padding:1.25rem;text-align:center;">
@@ -363,14 +363,14 @@ function _sfUpdatePreview() {
 
 window.sfSaveForm = async function (formId) {
     const name     = document.getElementById('sfe_name')?.value.trim();
-    if (!name) { if(window.showToast)showToast('Введіть назву','warning'); else alert('Введіть назву'); return; }
+    if (!name) { if(window.showToast)showToast(window.t('enterName2'),'warning'); else alert(window.t('enterName2')); return; }
     const fields = ['name','phone','email','message','telegram']
         .filter(k => document.getElementById('sfe_field_' + k)?.checked);
     const data = {
         name,
         title:           document.getElementById('sfe_title')?.value.trim() || '',
         subtitle:        document.getElementById('sfe_subtitle')?.value.trim() || '',
-        cta:             document.getElementById('sfe_cta')?.value.trim() || 'Відправити',
+        cta:             document.getElementById('sfe_cta')?.value.trim() || window.t('sitesFormSubmit'),
         fields,
         crmIntegration:  document.getElementById('sfe_crm')?.checked || false,
         telegramNotify:  document.getElementById('sfe_tg')?.checked  || false,
@@ -383,9 +383,9 @@ window.sfSaveForm = async function (formId) {
         // Оновлюємо кеш
         const idx = sf.forms.findIndex(f => f.id === formId);
         if (idx >= 0) sf.forms[idx] = { ...sf.forms[idx], ...data };
-        if (typeof showToast === 'function') showToast('Форму збережено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('sitesFormSaved'), 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -435,12 +435,12 @@ window.sfOpenSubmissions = async function (formId) {
                 box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:0.5rem;
                 border-left:3px solid #22c55e;">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;margin-bottom:0.4rem;">
-                    <div style="font-weight:700;font-size:0.85rem;">${_esc(fields.name||fields.phone||'Заявка')}</div>
+                    <div style="font-weight:700;font-size:0.85rem;">${_esc(fields.name||fields.phone||window.t('sitesFormSubmitShort'))}</div>
                     <div style="font-size:0.68rem;color:#9ca3af;flex-shrink:0;">${date}</div>
                 </div>
                 ${Object.entries(fields).map(([k,v]) => v ? `
                 <div style="font-size:0.75rem;color:#374151;margin-bottom:0.15rem;">
-                    <span style="color:#9ca3af;">${{name:"Ім'я",phone:'Телефон',email:'Email',message:'Повідомлення',telegram:'Telegram'}[k]||k}:</span>
+                    <span style="color:#9ca3af;">${{name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'}[k]||k}:</span>
                     ${_esc(String(v))}
                 </div>` : '').join('')}
                 ${sub.crmDealId ? `<div style="margin-top:0.4rem;font-size:0.68rem;background:#f0fdf4;color:#16a34a;
@@ -460,10 +460,10 @@ window.sfDelete = async function (formId, name) {
         await window.companyRef()
             .collection(window.DB_COLS.SITES).doc( + '/sites/' + sf.siteId + '/forms/' + formId).delete();
         sf.forms = sf.forms.filter(f => f.id !== formId);
-        if (typeof showToast === 'function') showToast('Форму видалено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('sitesFormDeleted'), 'success');
         _renderFormsList();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -494,11 +494,11 @@ window.sfHandleSubmit = async function (siteId, formId, fieldsData) {
         let crmDealId = null;
         if (form.crmIntegration && typeof window._actionCreateClientAndDeal === 'function') {
             const result = await window._actionCreateClientAndDeal({
-                clientName: fieldsData.name || fieldsData.phone || 'Заявка з сайту',
+                clientName: fieldsData.name || fieldsData.phone || window.t('sitesFormLead'),
                 phone:      fieldsData.phone || '',
                 email:      fieldsData.email || '',
                 source:     'site_form',
-                note:       'Форма: ' + (form.name||'') + '. ' + (fieldsData.message||''),
+                note:       window.t('sitesFormPrefix') + (form.name||'') + '. ' + (fieldsData.message||''),
                 leadData:   { mainProblem: fieldsData.message || '' },
             });
             crmDealId = result?.dealId || null;

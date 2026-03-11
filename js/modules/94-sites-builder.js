@@ -16,15 +16,15 @@ let sb = {
 
 const BLOCK_TYPES = [
     { type:'hero',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="5" r="3"/><path d="M6.5 8.5 5 12 7 11"/><path d="M17.5 8.5 19 12l-2-1"/></svg></span>', label:'Hero' },
-    { type:'benefits',  icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>', label:'Переваги' },
-    { type:'services',  icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>', label:'Послуги' },
-    { type:'reviews',   icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>', label:'Відгуки' },
+    { type:'benefits',  icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>', label:window.t('sitesBlockBenefits') },
+    { type:'services',  icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>', label:window.t('sitesBlockServices') },
+    { type:'reviews',   icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>', label:window.t('sitesBlockReviews') },
     { type:'faq',       icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>', label:'FAQ' },
-    { type:'form',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>', label:'Форма' },
-    { type:'team',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>', label:'Команда' },
-    { type:'prices',    icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>', label:'Ціни' },
+    { type:'form',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>', label:window.t('sitesBlockForm') },
+    { type:'team',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>', label:window.t('sitesBlockTeam') },
+    { type:'prices',    icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>', label:window.t('sitesBlockPrices') },
     { type:'gallery',   icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>', label:'Галерея' },
-    { type:'about',     icon:'ℹ️',  label:'Про нас' },
+    { type:'about',     icon:'ℹ️',  label:window.t('sitesBlockAbout') },
 ];
 
 // ── Init ───────────────────────────────────────────────────
@@ -134,7 +134,7 @@ async function _loadSite() {
     try {
         const doc = await window.companyRef()
             .collection(window.DB_COLS.SITES).doc( + '/sites/' + sb.siteId).get();
-        if (!doc.exists) { (window.showToast && showToast('Сайт не знайдено','warning')); window.initSitesModule(); return; }
+        if (!doc.exists) { (window.showToast && showToast(window.t('sitesNotFound'),'warning')); window.initSitesModule(); return; }
         sb.site   = { id: doc.id, ...doc.data() };
         sb.blocks = sb.site.blocks || [];
         _updateHeader();
@@ -142,17 +142,17 @@ async function _loadSite() {
         _renderPreview();
     } catch(e) {
         console.error('[Builder]', e);
-        if (typeof showToast === 'function') showToast('Помилка завантаження: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('intgLoadError') + e.message, 'error');
     }
 }
 
 function _updateHeader() {
     const nameEl   = document.getElementById('sbSiteName');
     const statusEl = document.getElementById('sbStatusBadge');
-    if (nameEl)   nameEl.textContent = sb.site.name || 'Без назви';
+    if (nameEl)   nameEl.textContent = sb.site.name || window.t('botsNoTitle');
     if (statusEl) {
         const pub = sb.site.status === 'published';
-        statusEl.textContent = pub ? '● Опублікований' : '○ Чернетка';
+        statusEl.textContent = pub ? window.t('sitesPublishedBadge') : window.t('sitesDraftBadge');
         statusEl.style.background = pub ? '#f0fdf4' : '#f9fafb';
         statusEl.style.color      = pub ? '#16a34a' : '#9ca3af';
     }
@@ -183,13 +183,13 @@ function _renderBlockList() {
             <div style="display:flex;gap:0.2rem;">
                 ${i > 0 ? `<button onclick="event.stopPropagation();sbMoveBlock(${i},-1)"
                     style="padding:1px 4px;background:none;border:none;cursor:pointer;font-size:0.7rem;color:#9ca3af;"
-                    title="Вгору">↑</button>` : ''}
+                    title=window.t('sitesUp')>↑</button>` : ''}
                 ${i < sb.blocks.length-1 ? `<button onclick="event.stopPropagation();sbMoveBlock(${i},1)"
                     style="padding:1px 4px;background:none;border:none;cursor:pointer;font-size:0.7rem;color:#9ca3af;"
-                    title="Вниз">↓</button>` : ''}
+                    title=window.t('sitesDown')>↓</button>` : ''}
                 <button onclick="event.stopPropagation();sbRemoveBlock(${i})"
                     style="padding:1px 4px;background:none;border:none;cursor:pointer;font-size:0.7rem;color:#ef4444;"
-                    title="Видалити">✕</button>
+                    title=window.t('crmDelete')>✕</button>
             </div>
         </div>`;
     }).join('');
@@ -242,11 +242,11 @@ function _renderBlockEditor(idx) {
                 <input type="checkbox" ${(block.fields||[]).includes(f)?'checked':''}
                     onchange="sbToggleFormField(${idx},'${f}',this.checked)"
                     style="width:14px;height:14px;accent-color:#22c55e;">
-                ${{name:"Ім'я",phone:'Телефон',email:'Email',message:'Повідомлення',telegram:'Telegram'}[f]}
+                ${{name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'}[f]}
             </label>`).join('')}
         </div></div>
         <div style="margin-top:0.4rem;"><label style="${lbl}">Текст кнопки</label>
-        <input value="${_esc(block.cta||'Відправити')}" oninput="sbUpdateBlock(${idx},'cta',this.value)" style="${inp}"></div>`;
+        <input value="${_esc(block.cta||window.t('sitesFormSubmit'))}" oninput="sbUpdateBlock(${idx},'cta',this.value)" style="${inp}"></div>`;
     } else if (['benefits','services','reviews','faq','team','prices'].includes(block.type)) {
         fields = `
         <div><label style="${lbl}">Заголовок секції</label>
@@ -293,7 +293,7 @@ window.sbAddBlock = function (type) {
     _renderBlockList();
     _renderPreview();
     _renderBlockEditor(sb.activeBlockIdx);
-    if (typeof showToast === 'function') showToast('Блок додано', 'success');
+    if (typeof showToast === 'function') showToast(window.t('sitesBlockAdded'), 'success');
 };
 
 window.sbMoveBlock = function (idx, dir) {
@@ -307,7 +307,7 @@ window.sbMoveBlock = function (idx, dir) {
 };
 
 window.sbRemoveBlock = async function (idx) {
-    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити блок?',{danger:true}) : Promise.resolve(confirm('Видалити блок?'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal(window.t('sitesDeleteBlock'),{danger:true}) : Promise.resolve(confirm(window.t('sitesDeleteBlock')))))) return;
     sb.blocks.splice(idx, 1);
     if (sb.activeBlockIdx >= sb.blocks.length) sb.activeBlockIdx = sb.blocks.length - 1;
     _renderBlockList();
@@ -317,16 +317,16 @@ window.sbRemoveBlock = async function (idx) {
 
 function _defaultBlock(type, order) {
     const defaults = {
-        hero:     { type:'hero',     order, title:'Заголовок сайту', subtitle:'Ваша головна перевага', cta:'Залишити заявку', bgColor:'#0a0f1a', textColor:'#ffffff' },
-        benefits: { type:'benefits', order, title:'Наші переваги', items:[{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>',title:'Перевага 1',text:'Опис'},{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>',title:'Перевага 2',text:'Опис'},{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>',title:'Перевага 3',text:'Опис'}]},
-        services: { type:'services', order, title:'Послуги', items:[{title:'Послуга 1',price:'від 500 грн',text:'Опис'},{title:'Послуга 2',price:'від 800 грн',text:'Опис'}]},
-        reviews:  { type:'reviews',  order, title:'Відгуки', items:[{name:'Клієнт 1',rating:5,text:'Чудовий сервіс!'},{name:'Клієнт 2',rating:5,text:'Рекомендую!'}]},
-        faq:      { type:'faq',      order, title:'Питання та відповіді', items:[{question:'Питання 1?',answer:'Відповідь 1.'},{question:'Питання 2?',answer:'Відповідь 2.'}]},
-        form:     { type:'form',     order, title:'Залишити заявку', subtitle:'Зв\'яжемося за 15 хвилин', fields:['name','phone'], cta:'Відправити' },
-        team:     { type:'team',     order, title:'Команда', items:[{name:'Спеціаліст 1',role:'Посада',photo:''}]},
-        prices:   { type:'prices',   order, title:'Ціни', items:[{title:'Базовий',price:'990 грн',features:['Опція 1','Опція 2']}]},
-        gallery:  { type:'gallery',  order, title:'Наші роботи', items:[]},
-        about:    { type:'about',    order, title:'Про нас', text:'Розкажіть про себе', photo:''},
+        hero:     { type:'hero',     order, title:window.t('sitesHeaderTitle'), subtitle:window.t('sitesMainBenefit'), cta:window.t('sitesFormSubmitAlt'), bgColor:'#0a0f1a', textColor:'#ffffff' },
+        benefits: { type:'benefits', order, title:window.t('sitesOurBenefits'), items:[{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>',title:'Перевага 1',text:'Опис'},{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>',title:'Перевага 2',text:'Опис'},{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>',title:'Перевага 3',text:'Опис'}]},
+        services: { type:'services', order, title:window.t('sitesBlockServices'), items:[{title:window.t('sitesService1'),price:window.t('sitesPrice1'),text:'Опис'},{title:window.t('sitesService2'),price:window.t('sitesPrice2'),text:'Опис'}]},
+        reviews:  { type:'reviews',  order, title:window.t('sitesBlockReviews'), items:[{name:window.t('sitesClient1'),rating:5,text:window.t('sitesReview4')},{name:window.t('sitesClient2'),rating:5,text:window.t('sitesReview2')}]},
+        faq:      { type:'faq',      order, title:'Питання та відповіді', items:[{question:window.t('sitesQuestion1'),answer:window.t('sitesAns1')},{question:window.t('sitesQuestion2'),answer:window.t('sitesAns2')}]},
+        form:     { type:'form',     order, title:window.t('sitesFormSubmitAlt'), subtitle:'Зв\'яжемося за 15 хвилин', fields:['name','phone'], cta:window.t('sitesFormSubmit') },
+        team:     { type:'team',     order, title:window.t('sitesBlockTeam'), items:[{name:window.t('sitesSpecialist1'),role:window.t('botsPosition'),photo:''}]},
+        prices:   { type:'prices',   order, title:window.t('sitesBlockPrices'), items:[{title:'Базовий',price:window.t('sitesPrice4'),features:[window.t('sitesOption1'),window.t('sitesOption2')]}]},
+        gallery:  { type:'gallery',  order, title:window.t('sitesOurWorks'), items:[]},
+        about:    { type:'about',    order, title:window.t('sitesBlockAbout'), text:window.t('sitesAboutPh'), photo:''},
     };
     return defaults[type] || { type, order, title: type };
 }
@@ -363,12 +363,12 @@ function _renderPreview() {
             <div style="background:${block.bgColor||'#0a0f1a'};color:${block.textColor||'#fff'};
                 padding:3rem 1.5rem;text-align:center;">
                 <h1 style="font-size:1.6rem;font-weight:800;margin:0 0 0.75rem;line-height:1.2;">
-                    ${_esc(block.title||'Заголовок')}</h1>
+                    ${_esc(block.title||window.t('sitesHeading'))}</h1>
                 <p style="font-size:0.9rem;opacity:0.8;margin:0 0 1.5rem;max-width:480px;margin-inline:auto;">
                     ${_esc(block.subtitle||'')}</p>
                 <button style="padding:0.7rem 2rem;background:${primary};color:white;border:none;
                     border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;">
-                    ${_esc(block.cta||'Залишити заявку')}</button>
+                    ${_esc(block.cta||window.t('sitesFormSubmitAlt'))}</button>
             </div>`);
         }
         if (block.type === 'benefits') {
@@ -376,7 +376,7 @@ function _renderPreview() {
             return wrapper(`
             <div style="padding:2rem 1.5rem;background:#f9fafb;">
                 <h2 style="text-align:center;font-size:1.2rem;font-weight:700;margin:0 0 1.25rem;">
-                    ${_esc(block.title||'Переваги')}</h2>
+                    ${_esc(block.title||window.t('sitesBlockBenefits'))}</h2>
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem;">
                     ${items.map(item => `
                     <div style="background:white;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
@@ -392,7 +392,7 @@ function _renderPreview() {
             return wrapper(`
             <div style="padding:2rem 1.5rem;">
                 <h2 style="text-align:center;font-size:1.2rem;font-weight:700;margin:0 0 1.25rem;">
-                    ${_esc(block.title||'Послуги')}</h2>
+                    ${_esc(block.title||window.t('sitesBlockServices'))}</h2>
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;">
                     ${items.map(item => `
                     <div style="border:1.5px solid #e5e7eb;border-radius:12px;padding:1rem;">
@@ -408,7 +408,7 @@ function _renderPreview() {
             return wrapper(`
             <div style="padding:2rem 1.5rem;background:#f9fafb;">
                 <h2 style="text-align:center;font-size:1.2rem;font-weight:700;margin:0 0 1.25rem;">
-                    ${_esc(block.title||'Відгуки')}</h2>
+                    ${_esc(block.title||window.t('sitesBlockReviews'))}</h2>
                 <div style="display:flex;flex-direction:column;gap:0.6rem;">
                     ${items.map(item => `
                     <div style="background:white;border-radius:12px;padding:0.9rem;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
@@ -443,11 +443,11 @@ function _renderPreview() {
         }
         if (block.type === 'form') {
             const fields = block.fields || ['name','phone'];
-            const fieldLabels = {name:"Ім'я",phone:'Телефон',email:'Email',message:'Повідомлення',telegram:'Telegram'};
+            const fieldLabels = {name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
             return wrapper(`
             <div style="padding:2rem 1.5rem;background:linear-gradient(135deg,${primary}15,${primary}05);">
                 <h2 style="text-align:center;font-size:1.2rem;font-weight:700;margin:0 0 0.35rem;">
-                    ${_esc(block.title||'Залишити заявку')}</h2>
+                    ${_esc(block.title||window.t('sitesFormSubmitAlt'))}</h2>
                 ${block.subtitle ? `<p style="text-align:center;font-size:0.8rem;color:#6b7280;margin:0 0 1rem;">${_esc(block.subtitle)}</p>` : ''}
                 <div style="max-width:360px;margin:0 auto;display:flex;flex-direction:column;gap:0.5rem;">
                     ${fields.map(f => `
@@ -455,7 +455,7 @@ function _renderPreview() {
                         border:1.5px solid #e5e7eb;border-radius:9px;font-size:0.83rem;width:100%;box-sizing:border-box;" disabled>`).join('')}
                     <button style="padding:0.65rem;background:${primary};color:white;border:none;
                         border-radius:9px;font-weight:700;font-size:0.85rem;cursor:pointer;">
-                        ${_esc(block.cta||'Відправити')}</button>
+                        ${_esc(block.cta||window.t('sitesFormSubmit'))}</button>
                 </div>
             </div>`);
         }
@@ -464,7 +464,7 @@ function _renderPreview() {
             return wrapper(`
             <div style="padding:2rem 1.5rem;background:#f9fafb;">
                 <h2 style="text-align:center;font-size:1.2rem;font-weight:700;margin:0 0 1.25rem;">
-                    ${_esc(block.title||'Команда')}</h2>
+                    ${_esc(block.title||window.t('sitesBlockTeam'))}</h2>
                 <div style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;">
                     ${items.map(item => `
                     <div style="text-align:center;width:120px;">
@@ -483,7 +483,7 @@ function _renderPreview() {
             return wrapper(`
             <div style="padding:2rem 1.5rem;">
                 <h2 style="text-align:center;font-size:1.2rem;font-weight:700;margin:0 0 1.25rem;">
-                    ${_esc(block.title||'Ціни')}</h2>
+                    ${_esc(block.title||window.t('sitesBlockPrices'))}</h2>
                 <div style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;">
                     ${items.map(item => `
                     <div style="border:2px solid ${primary};border-radius:14px;padding:1.25rem;min-width:140px;text-align:center;">
@@ -512,7 +512,7 @@ window.sbSave = async function () {
     if (sb.saving) return;
     sb.saving = true;
     const btn = document.querySelector('[onclick="sbSave()"]');
-    if (btn) { btn.textContent = 'Зберігаю...'; btn.disabled = true; }
+    if (btn) { btn.textContent = window.t('saving'); btn.disabled = true; }
     try {
         await window.companyRef()
             .collection(window.DB_COLS.SITES).doc( + '/sites/' + sb.siteId)
@@ -520,9 +520,9 @@ window.sbSave = async function () {
                 blocks:    sb.blocks,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
-        if (typeof showToast === 'function') showToast('Збережено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('savedOk'), 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     } finally {
         sb.saving = false;
         if (btn) { btn.textContent = '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Зберегти'; btn.disabled = false; }
@@ -569,7 +569,7 @@ function _renderSeoPanel() {
         </div>
         <div style="margin-bottom:0.5rem;">
             <label style="${lbl}">Title (заголовок сторінки)</label>
-            <input id="seo_title" value="${_esc(s.seoTitle||s.name||'')}" placeholder="Назва сторінки для Google" style="${inp}">
+            <input id="seo_title" value="${_esc(s.seoTitle||s.name||'')}" placeholder=window.t('sitesSeoTitle') style="${inp}">
         </div>
         <div style="margin-bottom:0.5rem;">
             <label style="${lbl}">Description</label>
@@ -669,9 +669,9 @@ window.sbSaveSeo = async function() {
             .collection(window.DB_COLS.SITES).doc( + '/sites/' + sb.siteId)
             .update(updates);
         Object.assign(sb.site, updates);
-        if (typeof showToast === 'function') showToast('SEO збережено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('sitesSeoSaved'), 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -741,7 +741,7 @@ window.sbBuildPublicHtml = function(site, blocksHtml) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${_esc(s.seoTitle || s.name || 'Сайт')}</title>
+    <title>${_esc(s.seoTitle || s.name || window.t('sitesSite'))}</title>
     ${s.seoDescription ? `<meta name="description" content="${_esc(s.seoDescription)}">` : ''}
     ${s.seoKeywords    ? `<meta name="keywords"    content="${_esc(s.seoKeywords)}">` : ''}
     ${s.seoOgImage     ? `<meta property="og:image" content="${_esc(s.seoOgImage)}">` : ''}

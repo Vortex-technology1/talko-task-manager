@@ -76,7 +76,7 @@ function _renderAll() {
                     placeholder="sk-ant-api03-..." style="${inp}flex:1;">
                 <button onclick="intgToggleVisibility('intg_anthropic')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;"
-                    title="Показати/приховати">${I.eye}</button>
+                    title=window.t('intgToggleVisibility')>${I.eye}</button>
             </div>
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
                 Для AI аналізу угод у CRM. Отримати: <a href="https://console.anthropic.com" target="_blank" style="color:#22c55e;">console.anthropic.com</a>
@@ -131,7 +131,7 @@ function _renderAll() {
                     onclick="this.select()">
                 <button onclick="intgCopy(this.previousElementSibling.value)"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;"
-                    title="Копіювати">${I.copy}</button>
+                    title=window.t('botsCopy')>${I.copy}</button>
             </div>
         </div>
         <div style="margin-bottom:0.75rem;">
@@ -146,10 +146,10 @@ function _renderAll() {
         <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;border:1px solid #e8eaed;">
             <div style="font-size:0.7rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Підтримувані події</div>
             ${[
-                ['new_lead','Новий лід з форми/боту → CRM'],
-                ['deal_won','Угода виграна → сповіщення'],
-                ['form_submit','Відправка форми з сайту'],
-                ['task_done','Завдання виконано'],
+                ['new_lead',window.t('intgEventNewLead')],
+                ['deal_won',window.t('intgEventDealWon')],
+                ['form_submit',window.t('intgEventFormSubmit')],
+                ['task_done',window.t('intgEventTaskDone')],
             ].map(([ev, desc]) => `
             <div style="display:flex;gap:0.5rem;align-items:center;padding:0.2rem 0;font-size:0.78rem;">
                 <code style="background:#e8eaed;padding:1px 5px;border-radius:3px;font-size:0.7rem;color:#374151;">${ev}</code>
@@ -215,28 +215,28 @@ window.intgToggleVisibility = function(inputId) {
 
 window.intgCopy = function(text) {
     navigator.clipboard?.writeText(text).then(() => {
-        if (typeof showToast === 'function') showToast('Скопійовано', 'success');
+        if (typeof showToast === 'function') showToast(window.t('botsCopied'), 'success');
     });
 };
 
 window.intgSave = async function(field, inputId, isSecret = true) {
     const val = document.getElementById(inputId)?.value.trim();
-    if (!val) { if (typeof showToast === 'function') showToast('Введіть значення', 'error'); return; }
+    if (!val) { if (typeof showToast === 'function') showToast(window.t('botsEnterValue'), 'error'); return; }
     try {
         await window.companyRef()
             .update({ [field]: val, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         intg.settings[field] = val;
-        if (typeof showToast === 'function') showToast('Збережено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('savedOk'), 'success');
         _renderAll();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
 window.intgSaveTelegram = async function() {
     const token  = document.getElementById('intg_tgtoken')?.value.trim();
     const chatId = document.getElementById('intg_tgchat')?.value.trim();
-    if (!token) { if (typeof showToast === 'function') showToast('Введіть Bot Token', 'error'); return; }
+    if (!token) { if (typeof showToast === 'function') showToast(window.t('intgBotToken'), 'error'); return; }
     try {
         await window.companyRef()
             .update({
@@ -246,10 +246,10 @@ window.intgSaveTelegram = async function() {
             });
         intg.settings.telegramBotToken = token;
         intg.settings.managerChatId    = chatId;
-        if (typeof showToast === 'function') showToast('Telegram збережено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('botsTgSaved'), 'success');
         _renderAll();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -257,7 +257,7 @@ window.intgTestTelegram = async function() {
     const token  = document.getElementById('intg_tgtoken')?.value.trim() || intg.settings?.telegramBotToken;
     const chatId = document.getElementById('intg_tgchat')?.value.trim()  || intg.settings?.managerChatId;
     if (!token || !chatId) {
-        if (typeof showToast === 'function') showToast('Заповніть Token і Chat ID', 'error');
+        if (typeof showToast === 'function') showToast(window.t('botsFilledRequired'), 'error');
         return;
     }
     try {
@@ -268,12 +268,12 @@ window.intgTestTelegram = async function() {
         });
         const data = await res.json();
         if (data.ok) {
-            if (typeof showToast === 'function') showToast('Повідомлення надіслано ✓', 'success');
+            if (typeof showToast === 'function') showToast(window.t('botsMsgSent'), 'success');
         } else {
-            if (typeof showToast === 'function') showToast('Помилка Telegram: ' + data.description, 'error');
+            if (typeof showToast === 'function') showToast(window.t('botsTgError') + data.description, 'error');
         }
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 

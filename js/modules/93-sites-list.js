@@ -87,9 +87,9 @@ function _renderList() {
     <!-- Статистика -->
     <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">
         ${[
-            ['Всього сайтів', sl.sites.length, '#374151'],
-            ['Опублікованих', sl.sites.filter(s=>s.status==='published').length, '#22c55e'],
-            ['Чернеток', sl.sites.filter(s=>s.status!=='published').length, '#9ca3af'],
+            [window.t('sitesTotal'), sl.sites.length, '#374151'],
+            [window.t('sitesPublished'), sl.sites.filter(s=>s.status==='published').length, '#22c55e'],
+            [window.t('sitesDrafts'), sl.sites.filter(s=>s.status!=='published').length, '#9ca3af'],
         ].map(([l,v,col]) => `
         <div style="flex:1;min-width:90px;background:white;border-radius:12px;
             padding:0.6rem 0.75rem;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-top:3px solid ${col};">
@@ -127,11 +127,11 @@ function _siteCard(site) {
             <!-- Ліво: info -->
             <div style="flex:1;min-width:0;">
                 <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;flex-wrap:wrap;">
-                    <span style="font-weight:700;font-size:0.92rem;color:#1a1a1a;">${_esc(site.name || 'Без назви')}</span>
+                    <span style="font-weight:700;font-size:0.92rem;color:#1a1a1a;">${_esc(site.name || window.t('botsNoTitle'))}</span>
                     <span style="font-size:0.65rem;padding:1px 7px;border-radius:8px;font-weight:600;
                         background:${isPublished ? '#f0fdf4' : '#f9fafb'};
                         color:${isPublished ? '#16a34a' : '#9ca3af'};">
-                        ${isPublished ? '● Опублікований' : '○ Чернетка'}
+                        ${isPublished ? window.t('sitesPublishedBadge') : window.t('sitesDraftBadge')}
                     </span>
                     ${niche ? `<span style="font-size:0.65rem;padding:1px 7px;border-radius:8px;
                         background:#f1f5f9;color:${nicheColor};font-weight:600;">${_esc(niche)}</span>` : ''}
@@ -167,12 +167,12 @@ function _siteCard(site) {
                         border-radius:7px;cursor:pointer;font-size:0.72rem;" title="Відкрити сайт"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></button>` : ''}
                     <button onclick="sitesTogglePublish('${site.id}','${site.status}')"
                         style="flex:1;padding:0.35rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title="${isPublished ? 'Зняти' : 'Опублікувати'}">
+                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title="${isPublished ? window.t('botsRemove') : window.t('sitesPublish')}">
                         ${isPublished ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="2" y1="2" x2="22" y2="22"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span>'}
                     </button>
                     <button onclick="sitesDelete('${site.id}','${_esc(site.name || '')}')"
                         style="flex:1;padding:0.35rem;background:#fff5f5;color:#ef4444;border:none;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title="Видалити"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></button>
+                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title=window.t('crmDelete')><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></button>
                 </div>
             </div>
         </div>
@@ -215,7 +215,7 @@ window.sitesOpenCreate = function () {
                 </div>
                 <div>
                     <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Опис (необов'язково)</label>
-                    <input id="sc_desc" placeholder="Короткий опис для чого цей сайт..."
+                    <input id="sc_desc" placeholder=window.t('sitesDescPh')
                         style="${inp}">
                 </div>
                 <div>
@@ -266,17 +266,17 @@ window.sitesSelectNiche = function (key) {
 
 window.sitesCreate = async function () {
     const name = document.getElementById('sc_name')?.value.trim();
-    if (!name) { if(window.showToast)showToast('Введіть назву сайту','warning'); else alert('Введіть назву сайту'); return; }
+    if (!name) { if(window.showToast)showToast(window.t('sitesEnterName'),'warning'); else alert(window.t('sitesEnterName')); return; }
     const desc = document.getElementById('sc_desc')?.value.trim() || '';
 
     const nicheTemplates = {
-        dental:       { niche: 'Стоматологія',  blocks: ['hero','benefits','services','team','reviews','form'] },
-        construction: { niche: 'Будівництво',   blocks: ['hero','services','gallery','reviews','form'] },
-        legal:        { niche: 'Юристи',        blocks: ['hero','services','team','faq','form'] },
-        auto:         { niche: 'Авто',          blocks: ['hero','services','prices','reviews','form'] },
-        beauty:       { niche: 'Краса',         blocks: ['hero','services','team','portfolio','form'] },
-        fitness:      { niche: 'Фітнес',        blocks: ['hero','programs','team','prices','form'] },
-        education:    { niche: 'Освіта',        blocks: ['hero','program','about','reviews','prices','form'] },
+        dental:       { niche: window.t('nicheDental'),  blocks: ['hero','benefits','services','team','reviews','form'] },
+        construction: { niche: window.t('nicheConstruction2'),   blocks: ['hero','services','gallery','reviews','form'] },
+        legal:        { niche: window.t('nicheLawyers'),        blocks: ['hero','services','team','faq','form'] },
+        auto:         { niche: window.t('botsAuto'),          blocks: ['hero','services','prices','reviews','form'] },
+        beauty:       { niche: window.t('nicheBeauty'),         blocks: ['hero','services','team','portfolio','form'] },
+        fitness:      { niche: window.t('nicheFitness'),        blocks: ['hero','programs','team','prices','form'] },
+        education:    { niche: window.t('nicheEducation'),        blocks: ['hero','program','about','reviews','prices','form'] },
         custom:       { niche: '',              blocks: ['hero'] },
     };
 
@@ -300,41 +300,41 @@ window.sitesCreate = async function () {
             });
 
         document.getElementById('sitesCreateOverlay')?.remove();
-        if (typeof showToast === 'function') showToast('Сайт створено ✓', 'success');
+        if (typeof showToast === 'function') showToast(window.t('sitesCreated'), 'success');
 
         // Одразу відкриваємо редактор
         sitesOpenBuilder(ref.id);
-    } catch (e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+    } catch (e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
 };
 
 function _defaultBlock(type, order) {
     const defaults = {
-        hero:     { type:'hero',     order, title:'Заголовок сайту', subtitle:'Підзаголовок з вашою головною перевагою', cta:'Залишити заявку', bgColor:'#0a0f1a', textColor:'#ffffff' },
-        benefits: { type:'benefits', order, title:'Наші переваги', items:[
+        hero:     { type:'hero',     order, title:window.t('sitesHeaderTitle'), subtitle:window.t('sitesSubBenefit'), cta:window.t('sitesFormSubmitAlt'), bgColor:'#0a0f1a', textColor:'#ffffff' },
+        benefits: { type:'benefits', order, title:window.t('sitesOurBenefits'), items:[
             { icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>', title:'Перевага 1', text:'Опис першої переваги' },
             { icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>', title:'Перевага 2', text:'Опис другої переваги' },
             { icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>', title:'Перевага 3', text:'Опис третьої переваги' },
         ]},
-        services: { type:'services', order, title:'Наші послуги', items:[
-            { title:'Послуга 1', price:'від 500 грн', text:'Короткий опис' },
-            { title:'Послуга 2', price:'від 800 грн', text:'Короткий опис' },
-            { title:'Послуга 3', price:'від 1200 грн', text:'Короткий опис' },
+        services: { type:'services', order, title:window.t('sitesOurServices'), items:[
+            { title:window.t('sitesService1'), price:window.t('sitesPrice1'), text:window.t('sitesShortDesc') },
+            { title:window.t('sitesService2'), price:window.t('sitesPrice2'), text:window.t('sitesShortDesc') },
+            { title:window.t('sitesService3'), price:window.t('sitesPrice3'), text:window.t('sitesShortDesc') },
         ]},
         reviews:  { type:'reviews', order, title:'Відгуки клієнтів', items:[
-            { name:'Клієнт 1', rating:5, text:'Дуже задоволений сервісом!' },
-            { name:'Клієнт 2', rating:5, text:'Рекомендую всім!' },
+            { name:window.t('sitesClient1'), rating:5, text:window.t('sitesReview3') },
+            { name:window.t('sitesClient2'), rating:5, text:window.t('sitesReview1') },
         ]},
-        faq:      { type:'faq', order, title:'Часті питання', items:[
-            { question:'Питання 1?', answer:'Відповідь на питання 1.' },
-            { question:'Питання 2?', answer:'Відповідь на питання 2.' },
+        faq:      { type:'faq', order, title:window.t('sitesFAQ'), items:[
+            { question:window.t('sitesQuestion1'), answer:window.t('sitesAnswer1') },
+            { question:window.t('sitesQuestion2'), answer:window.t('sitesAnswer2') },
         ]},
-        form:     { type:'form', order, title:'Залишити заявку', subtitle:'Ми зв\'яжемося з вами протягом 15 хвилин', fields:['name','phone'], cta:'Відправити' },
-        team:     { type:'team', order, title:'Наша команда', items:[ { name:'Спеціаліст 1', role:'Посада', photo:'' } ]},
-        prices:   { type:'prices', order, title:'Ціни', items:[ { title:'Базовий', price:'990 грн', features:['Опція 1','Опція 2'] } ]},
-        gallery:  { type:'gallery', order, title:'Наші роботи', items:[] },
-        programs: { type:'programs', order, title:'Програми', items:[ { title:'Програма 1', text:'Опис' } ]},
-        about:    { type:'about', order, title:'Про автора', text:'Розкажіть про себе', photo:'' },
-        portfolio:{ type:'portfolio', order, title:'Портфоліо', items:[] },
+        form:     { type:'form', order, title:window.t('sitesFormSubmitAlt'), subtitle:'Ми зв\'яжемося з вами протягом 15 хвилин', fields:['name','phone'], cta:window.t('sitesFormSubmit') },
+        team:     { type:'team', order, title:window.t('sitesOurTeam'), items:[ { name:window.t('sitesSpecialist1'), role:window.t('botsPosition'), photo:'' } ]},
+        prices:   { type:'prices', order, title:window.t('sitesBlockPrices'), items:[ { title:'Базовий', price:window.t('sitesPrice4'), features:[window.t('sitesOption1'),window.t('sitesOption2')] } ]},
+        gallery:  { type:'gallery', order, title:window.t('sitesOurWorks'), items:[] },
+        programs: { type:'programs', order, title:window.t('sitesPrograms'), items:[ { title:window.t('sitesProgram1'), text:'Опис' } ]},
+        about:    { type:'about', order, title:window.t('sitesAboutAuthor'), text:window.t('sitesAboutPh'), photo:'' },
+        portfolio:{ type:'portfolio', order, title:window.t('sitesBlockPortfolio'), items:[] },
     };
     return defaults[type] || { type, order, title: type };
 }
@@ -349,7 +349,7 @@ window.sitesTogglePublish = async function (siteId, currentStatus) {
         if (typeof showToast === 'function')
             showToast(newStatus === 'published' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span> Сайт опублікований!' : 'Сайт знято з публікації', 'success');
     } catch (e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -358,9 +358,9 @@ window.sitesDelete = async function (siteId, name) {
     try {
         await window.companyRef()
             .collection(window.DB_COLS.SITES).doc( + '/sites/' + siteId).delete();
-        if (typeof showToast === 'function') showToast('Сайт видалено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('sitesDeleted'), 'success');
     } catch (e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -369,7 +369,7 @@ window.sitesOpenBuilder = function (siteId) {
     if (typeof window.initSitesBuilder === 'function') {
         window.initSitesBuilder(siteId);
     } else {
-        if (typeof showToast === 'function') showToast('Редактор завантажується...', 'success');
+        if (typeof showToast === 'function') showToast(window.t('sitesEditorLoading'), 'success');
     }
 };
 
@@ -377,7 +377,7 @@ window.sitesOpenForms = function (siteId) {
     if (typeof window.initSitesForms === 'function') {
         window.initSitesForms(siteId);
     } else {
-        if (typeof showToast === 'function') showToast('Конструктор форм завантажується...', 'success');
+        if (typeof showToast === 'function') showToast(window.t('sitesFormBuilderLoading'), 'success');
     }
 };
 
@@ -419,7 +419,7 @@ window.sitesTrackVisit = async function(siteId) {
 window.sitesOpenAnalytics = async function(siteId) {
     const site = sl.sites.find(s => s.id === siteId);
     if (!site) return;
-    const name = _esc(site.name || 'Сайт');
+    const name = _esc(site.name || window.t('sitesSite'));
 
     // Завантажуємо submissions для підрахунку лідів
     let leads = 0;
