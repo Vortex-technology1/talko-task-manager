@@ -23,6 +23,8 @@
         } catch(e) { console.error('[52-timer]', e.message); }
         
         updateTimerDisplay(taskId);
+        if (timerInterval) clearInterval(timerInterval);
+
         timerInterval = setInterval(() => updateTimerDisplay(taskId), 1000);
         
         // Save start time to Firestore
@@ -129,6 +131,8 @@
                 // Відновлюємо без повторного запису в localStorage
                 activeTimer = { taskId, startTime };
                 updateTimerDisplay(taskId);
+                if (timerInterval) clearInterval(timerInterval);
+
                 timerInterval = setInterval(() => updateTimerDisplay(taskId), 1000);
                 
                 typeof showToast === 'function' && showToast(

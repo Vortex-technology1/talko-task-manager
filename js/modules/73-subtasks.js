@@ -178,6 +178,9 @@
             document.getElementById('stTitle')?.focus();
             return;
         }
+        // Блокуємо кнопку від подвійного кліку
+        const _saveBtn = document.querySelector('#subtaskFormOverlay button[onclick*="saveSubtask"]');
+        if (_saveBtn) { if (_saveBtn.disabled) return; _saveBtn.disabled = true; }
         const assigneeId = document.getElementById('stAssignee')?.value || '';
         const deadlineDate = document.getElementById('stDeadline')?.value || '';
         const priority = document.getElementById('stPriority')?.value || 'medium';
@@ -205,10 +208,10 @@
             coExecutorIds: [],
             observerIds: [],
             requireReview: false,
-            notifyOnComplete: [currentUser.uid],
+            notifyOnComplete: [currentUser?.uid || ''],
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             createdDate: (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0],
-            creatorId: currentUser.uid,
+            creatorId: currentUser?.uid || '',
             creatorName: currentUserData?.name || currentUser.email,
             source: 'subtask',
             pinned: false,
@@ -222,19 +225,29 @@
             // Закриваємо форму
             document.getElementById('subtaskFormOverlay')?.remove();
 
+            // Додаємо в локальний масив tasks (renderTasks побачить підзавдання одразу)
+            if (typeof tasks !== 'undefined') {
+                tasks.unshift({ id: ref.id, ...subtaskData, createdAt: new Date() });
+            }
+
             // Оновлюємо список
             renderSubtasks(parentId);
+            if (typeof refreshCurrentView === 'function') refreshCurrentView();
 
             // Показуємо toast
             if (typeof showToast === 'function') showToast('Підзавдання створено ✓');
 
             // Нотифікація виконавцю
-            if (assigneeId && assigneeId !== currentUser.uid && typeof notifyUser === 'function') {
+            if (assigneeId && assigneeId !== currentUser?.uid && typeof notifyUser === 'function') {
                 notifyUser(cid, assigneeId, 'new_task', { taskTitle: title, creatorName: subtaskData.creatorName });
             }
         } catch(err) {
             console.error('saveSubtask error:', err);
             if(window.showToast)showToast('Помилка збереження: '+err.message,'error'); else alert('Помилка збереження: '+err.message);
+        } finally {
+            // Розблоковуємо кнопку
+            const _saveBtnF = document.querySelector('#subtaskFormOverlay button[onclick*="saveSubtask"]');
+            if (_saveBtnF) _saveBtnF.disabled = false;
         }
     };
 

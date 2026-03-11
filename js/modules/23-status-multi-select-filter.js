@@ -145,8 +145,8 @@
                 if (selectedStatuses.length > 0 && !selectedStatuses.includes(task.status)) return false;
                 if (ff && task.function !== ff) return false;
                 if (af && task.assigneeId !== af) return false;
-                if (tf === 'my' && task.assigneeId !== currentUser.uid) return false;
-                if (tf === 'created' && task.creatorId !== currentUser.uid) return false;
+                if (tf === 'my' && task.assigneeId !== currentUser?.uid) return false;
+                if (tf === 'created' && task.creatorId !== currentUser?.uid) return false;
                 if (searchQuery && !(task.title || '').toLowerCase().includes(searchQuery) && 
                     !(task.description || '').toLowerCase().includes(searchQuery) &&
                     !(task.assigneeName || '').toLowerCase().includes(searchQuery)) return false;

@@ -201,7 +201,7 @@
                 await db.collection('companies').doc(currentCompany).collection('taskTemplates').doc(id).update(data);
             } else {
                 data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                data.createdBy = currentUser.uid;
+                data.createdBy = currentUser?.uid || '';
                 await db.collection('companies').doc(currentCompany).collection('taskTemplates').add(data);
             }
             await loadTaskTemplates();

@@ -4,6 +4,7 @@
         
         // Визначаємо чи потрібна перевірка постановником
 'use strict';
+        const reviewingTasks = new Set(); // lock for double-click
         function shouldSendForReview(task) {
             // Якщо постановник = виконавець — одразу done, без перевірки
             if (!task) return false;
@@ -84,8 +85,10 @@
         
         async function acceptReviewTask(taskId) {
             if (!currentUser) return;
+            if (reviewingTasks.has(taskId)) return;
+            reviewingTasks.add(taskId);
             const taskIndex = tasks.findIndex(t => t.id === taskId);
-            if (taskIndex < 0) return;
+            if (taskIndex < 0) { reviewingTasks.delete(taskId); return; }
             
             // Only creator or manager+ can accept review
             const task = tasks[taskIndex];
@@ -134,6 +137,8 @@
                 renderMyDay();
                 refreshCurrentView();
                 showAlertModal(t('error') + ': ' + e.message);
+            } finally {
+                reviewingTasks.delete(taskId);
             }
         }
         

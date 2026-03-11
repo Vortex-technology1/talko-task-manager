@@ -332,13 +332,13 @@
             cyclingTasks.add(taskId);
             try {
             const taskIndex = tasks.findIndex(t => t.id === taskId);
-            if (taskIndex < 0) return;
+            if (taskIndex < 0) { cyclingTasks.delete(taskId); return; }
             const task = tasks[taskIndex];
             
             // Permission check
             if (!canEditTask(task)) {
                 showToast(t('noPermissionTask'), 'error');
-                return;
+                cyclingTasks.delete(taskId); return;
             }
             
             // Визначаємо наступний статус
@@ -348,10 +348,10 @@
             else if (task.status === 'review') {
                 // Review → викликаємо повноцінний accept (з reviewedAt/reviewedBy)
                 acceptReviewTask(taskId);
-                return;
+                cyclingTasks.delete(taskId); return;
             }
             else if (task.status === 'done') newStatus = 'progress';
-            else return;
+            else { cyclingTasks.delete(taskId); return; }
             
             const originalTask = deepCloneTask(tasks[taskIndex]);
             
@@ -366,7 +366,7 @@
                 const update = { status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                 if (newStatus === 'done') {
                     update.completedAt = firebase.firestore.FieldValue.serverTimestamp();
-                    update.completedBy = currentUser.uid;
+                    update.completedBy = currentUser?.uid || '';
                 } else {
                     update.completedAt = null;
                 }
