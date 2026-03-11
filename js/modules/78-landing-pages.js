@@ -91,7 +91,7 @@
 
             ${lpPages.length === 0 ? `
                 <div style="text-align:center;padding:3rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
-                    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🚀</div>
+                    <div style="font-size:2.5rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span></div>
                     <div style="font-weight:600;color:#1a1a1a;margin-bottom:0.4rem;">Ще немає лендінгів</div>
                     <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">Створіть перший лендінг і підключіть AI воронку</div>
                     <button onclick="openCreatePageModal()" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">+ Створити лендінг</button>
@@ -233,7 +233,7 @@
                         <div>
                             <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">HTML КОД ЛЕНДІНГУ</label>
                             <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:0.5rem;margin-bottom:0.4rem;">
-                                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;">💡 Підказка: додайте кнопку з <code style="background:#f0fdf4;padding:1px 4px;border-radius:3px;">data-talko-funnel="open"</code> щоб відкривати чат</div>
+                                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Підказка: додайте кнопку з <code style="background:#f0fdf4;padding:1px 4px;border-radius:3px;">data-talko-funnel="open"</code> щоб відкривати чат</div>
                                 <div style="font-size:0.75rem;color:#6b7280;">Приклад: <code style="background:#f0fdf4;padding:1px 4px;border-radius:3px;">&lt;button data-talko-funnel="open"&gt;Записатися&lt;/button&gt;</code></div>
                             </div>
                             <textarea id="lpPageHtml" placeholder="&lt;!DOCTYPE html&gt;&#10;&lt;html&gt;...&lt;/html&gt;"
@@ -252,7 +252,7 @@
                     </div>
                     <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;position:sticky;bottom:0;background:white;border-radius:0 0 16px 16px;">
                         <button onclick="closeLPPageModal()" style="padding:0.55rem 1rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Скасувати</button>
-                        <button onclick="previewLPHtml()" style="padding:0.55rem 1rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-weight:600;">👁 Прев'ю</button>
+                        <button onclick="previewLPHtml()" style="padding:0.55rem 1rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> Прев'ю</button>
                         <button onclick="saveLandingPage('${page?.id || ''}')" style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Зберегти</button>
                     </div>
                 </div>
@@ -424,7 +424,7 @@
                         </button>
                     </div>
                 </div>
-                ${funnel.calendlyUrl ? `<div style="margin-top:0.5rem;font-size:0.75rem;color:#6b7280;">📅 Calendly: ${escHtml(funnel.calendlyUrl)}</div>` : ''}
+                ${funnel.calendlyUrl ? `<div style="margin-top:0.5rem;font-size:0.75rem;color:#6b7280;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Calendly: ${escHtml(funnel.calendlyUrl)}</div>` : ''}
             </div>`;
     }
 
@@ -614,7 +614,7 @@ _registerTab('marketing', function() { if (typeof window.initLandingPagesModule 
 
             ${lpPages.length === 0 ? `
                 <div style="text-align:center;padding:3rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
-                    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🚀</div>
+                    <div style="font-size:2.5rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span></div>
                     <div style="font-weight:600;color:#1a1a1a;margin-bottom:0.4rem;">Ще немає лендінгів</div>
                     <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">Створіть перший лендінг і підключіть AI воронку</div>
                     <button onclick="openCreatePageModal()" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">+ Створити лендінг</button>
@@ -756,7 +756,7 @@ _registerTab('marketing', function() { if (typeof window.initLandingPagesModule 
                         <div>
                             <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">HTML КОД ЛЕНДІНГУ</label>
                             <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:0.5rem;margin-bottom:0.4rem;">
-                                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;">💡 Підказка: додайте кнопку з <code style="background:#f0fdf4;padding:1px 4px;border-radius:3px;">data-talko-funnel="open"</code> щоб відкривати чат</div>
+                                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Підказка: додайте кнопку з <code style="background:#f0fdf4;padding:1px 4px;border-radius:3px;">data-talko-funnel="open"</code> щоб відкривати чат</div>
                                 <div style="font-size:0.75rem;color:#6b7280;">Приклад: <code style="background:#f0fdf4;padding:1px 4px;border-radius:3px;">&lt;button data-talko-funnel="open"&gt;Записатися&lt;/button&gt;</code></div>
                             </div>
                             <textarea id="lpPageHtml" placeholder="&lt;!DOCTYPE html&gt;&#10;&lt;html&gt;...&lt;/html&gt;"
@@ -775,7 +775,7 @@ _registerTab('marketing', function() { if (typeof window.initLandingPagesModule 
                     </div>
                     <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;position:sticky;bottom:0;background:white;border-radius:0 0 16px 16px;">
                         <button onclick="closeLPPageModal()" style="padding:0.55rem 1rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Скасувати</button>
-                        <button onclick="previewLPHtml()" style="padding:0.55rem 1rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-weight:600;">👁 Прев'ю</button>
+                        <button onclick="previewLPHtml()" style="padding:0.55rem 1rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> Прев'ю</button>
                         <button onclick="saveLandingPage('${page?.id || ''}')" style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Зберегти</button>
                     </div>
                 </div>
@@ -947,7 +947,7 @@ _registerTab('marketing', function() { if (typeof window.initLandingPagesModule 
                         </button>
                     </div>
                 </div>
-                ${funnel.calendlyUrl ? `<div style="margin-top:0.5rem;font-size:0.75rem;color:#6b7280;">📅 Calendly: ${escHtml(funnel.calendlyUrl)}</div>` : ''}
+                ${funnel.calendlyUrl ? `<div style="margin-top:0.5rem;font-size:0.75rem;color:#6b7280;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Calendly: ${escHtml(funnel.calendlyUrl)}</div>` : ''}
             </div>`;
     }
 

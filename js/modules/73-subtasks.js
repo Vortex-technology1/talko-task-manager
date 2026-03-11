@@ -72,7 +72,7 @@
 
         subtasks.forEach(st => {
             const statusColor = st.status==='done'?'#22c55e':st.status==='progress'?'#3b82f6':st.status==='review'?'#f97316':'#9ca3af';
-            const statusIcon = st.status==='done'?'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>':st.status==='progress'?'🔵':st.status==='review'?'🔍':'⬜';
+            const statusIcon = st.status==='done'?'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>':st.status==='progress'?'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#3b82f6"/></svg></span>':st.status==='review'?'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>':'⬜';
             const isOverdue = st.deadlineDate && st.deadlineDate < (typeof getLocalDateStr==='function'?getLocalDateStr(new Date()):new Date().toISOString().split('T')[0]) && st.status !== 'done';
             const row = document.createElement('div');
             row.style.cssText = 'display:flex;align-items:center;gap:0.5rem;padding:0.55rem 0.65rem;background:white;border-radius:8px;border:1px solid #e5e7eb;cursor:pointer;transition:box-shadow 0.15s;';
@@ -85,8 +85,8 @@
                         ${isOverdue?'<span style="color:#ef4444;">⚠ </span>':''}${safeEsc(st.title)}
                     </div>
                     <div style="font-size:0.72rem;color:#9ca3af;display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1px;">
-                        ${st.assigneeName?`<span>👤 ${safeEsc(st.assigneeName)}</span>`:''}
-                        ${st.deadlineDate?`<span style="color:${isOverdue?'#ef4444':'#6b7280'};">📅 ${st.deadlineDate}</span>`:''}
+                        ${st.assigneeName?`<span><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> ${safeEsc(st.assigneeName)}</span>`:''}
+                        ${st.deadlineDate?`<span style="color:${isOverdue?'#ef4444':'#6b7280'};"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> ${st.deadlineDate}</span>`:''}
                     </div>
                 </div>
                 <button type="button" onclick="event.stopPropagation();deleteSubtask('${st.id}','${parentTaskId}')" 
@@ -150,9 +150,9 @@
                     <div>
                         <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Пріоритет</label>
                         <select id="stPriority" style="width:100%;padding:0.5rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;">
-                            <option value="medium">🟡 Середній</option>
-                            <option value="high">🔴 Високий</option>
-                            <option value="low">🟢 Низький</option>
+                            <option value="medium"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span> Середній</option>
+                            <option value="high"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Високий</option>
+                            <option value="low"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Низький</option>
                         </select>
                     </div>
                     <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">

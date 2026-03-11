@@ -312,7 +312,7 @@
                         <button onclick="document.getElementById('aiTab_models').style.display='';document.getElementById('aiTab_general').style.display='none';this.style.background='white';this.style.color='#111';document.getElementById('aiTabBtn_general').style.background='transparent';document.getElementById('aiTabBtn_general').style.color='#6b7280';"
                             id="aiTabBtn_models"
                             style="flex:1;padding:6px;background:transparent;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#6b7280;">
-                            🤖 Моделі AI
+                            <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> Моделі AI
                         </button>
                     </div>
 

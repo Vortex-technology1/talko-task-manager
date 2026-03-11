@@ -349,7 +349,7 @@ function mountCanvas() {
     const statusBtn = document.getElementById('fcBtnToggleStatus');
     if (statusBtn && fc.flowData) {
         const st = fc.flowData.status || 'draft';
-        statusBtn.textContent = st === 'active' ? '🟢 active' : '⚫ draft';
+        statusBtn.textContent = st === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> active' : '⚫ draft';
         statusBtn.style.background = st === 'active' ? '#dcfce7' : '#334155';
         statusBtn.style.color = st === 'active' ? '#16a34a' : '#94a3b8';
         statusBtn.onclick = async function() {
@@ -361,10 +361,10 @@ function mountCanvas() {
                     : firebase.firestore().collection('companies').doc(window.currentCompanyId).collection('flows').doc(fc.flowId);
                 await ref.update({ status: next });
                 fc.flowData.status = next;
-                statusBtn.textContent = next === 'active' ? '🟢 active' : '⚫ draft';
+                statusBtn.textContent = next === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> active' : '⚫ draft';
                 statusBtn.style.background = next === 'active' ? '#dcfce7' : '#334155';
                 statusBtn.style.color = next === 'active' ? '#16a34a' : '#94a3b8';
-                if (typeof showToast === 'function') showToast(next === 'active' ? '🟢 Флоу активовано' : '⚫ Флоу на паузі', 'success');
+                if (typeof showToast === 'function') showToast(next === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Флоу активовано' : '⚫ Флоу на паузі', 'success');
             } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
         };
     }
@@ -1467,7 +1467,7 @@ function renderPropPanel() {
                     <textarea id="fcp_notifyText" rows="3"
                         placeholder="Новий лід: {{senderName}} розпочав діалог"
                         style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
-                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;resize:vertical;">${d.notifyText||'🔔 Новий лід: {{senderName}}\nКанал: {{channel}}\nВоронка: {{flowName}}\nДані: {{ai_response}}'}</textarea>
+                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;resize:vertical;">${d.notifyText||'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Новий лід: {{senderName}}\nКанал: {{channel}}\nВоронка: {{flowName}}\nДані: {{ai_response}}'}</textarea>
                 </div>` : fld('Параметри (JSON)', ta('actionPayload', d.actionPayload, '{"variable":"phone","value":"{{input}}"}', 3));
             const actionSel = `<select id="fcp_actionType"
                 onchange="fcSetActionType(this.value)"
@@ -1508,7 +1508,7 @@ function renderPropPanel() {
             // Тільки синхронне читання кешу (await заборонено в switch/case)
             const fallbackModels = {
                 openai:    [
-                    ['gpt-5-mini-2025-08-07','GPT-5 mini (швидкий, дешевий) ⭐'],
+                    ['gpt-5-mini-2025-08-07','GPT-5 mini (швидкий, дешевий) <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>'],
                     ['gpt-5.4','GPT-5.4 (найрозумніший)'],
                     ['gpt-4.1-mini','GPT-4.1 mini (швидкий)'],
                     ['gpt-4.1','GPT-4.1 (розумний)'],
@@ -1551,7 +1551,7 @@ function renderPropPanel() {
             const savedKey = d.aiApiKey || '';
 
             fields = `<div style="background:#0f172a;border:1px solid #22c55e33;border-radius:10px;padding:10px;margin-bottom:10px;">
-                <div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">🔑 AI Провайдер</div>
+                <div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span> AI Провайдер</div>
                 <div style="display:flex;gap:6px;margin-bottom:8px;">
                     ${['openai','anthropic','google'].map(p => `
                         <button onclick="fcSetAiProvider('${p}')"
@@ -1945,19 +1945,19 @@ function getPreview(node) {
     if (d.text) return d.text.slice(0,80);
     // AI вузол — показуємо назву або початок промпту
     if (node.type === 'ai') {
-        if (d.name) return '🤖 ' + d.name;
+        if (d.name) return '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> ' + d.name;
         const prompt = d.aiSystem || d.systemPrompt || '';
         if (prompt && !prompt.startsWith('__ref:')) return 'AI: ' + prompt.slice(0,60);
-        if (prompt.startsWith('__ref:')) return '🤖 Промпт завантажено';
+        if (prompt.startsWith('__ref:')) return '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> Промпт завантажено';
         return '';
     }
     // Action вузол — показуємо тип дії
     if (node.type === 'action') {
         const typeMap = {
-            notify_admin: '🔔 Сповістити менеджера',
-            set_var: '📝 Встановити змінну',
-            set_tag: '🏷 Додати тег',
-            remove_tag: '🗑 Видалити тег',
+            notify_admin: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Сповістити менеджера',
+            set_var: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Встановити змінну',
+            set_tag: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span> Додати тег',
+            remove_tag: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span> Видалити тег',
             start_flow: '▶ Запустити флоу',
             stop_flow: '⏹ Зупинити флоу',
         };
@@ -1971,8 +1971,8 @@ function getPreview(node) {
     if (d.delay) return `⏸ ${d.delay} ${d.delayUnit||'секунд'}`;
     if (d.condVar) return `${d.condVar} ${d.condOp||'='} ${d.condVal||'?'}`;
     if (d.splitA) return `А: ${d.splitA}% / Б: ${d.splitB||50}%`;
-    if (node.type === 'repeat' && d.maxRepeats) return `🔁 Макс. ${d.maxRepeats} разів`;
-    if (node.type === 'end') return '🔴 Кінець ланцюга';
+    if (node.type === 'repeat' && d.maxRepeats) return `<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> Макс. ${d.maxRepeats} разів`;
+    if (node.type === 'end') return '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Кінець ланцюга';
     return '';
 }
 

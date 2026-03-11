@@ -69,7 +69,7 @@ function _renderList() {
     if (sl.sites.length === 0) {
         c.innerHTML = `
         <div style="text-align:center;padding:3rem 1rem;">
-            <div style="font-size:3rem;margin-bottom:0.75rem;">🌐</div>
+            <div style="font-size:3rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span></div>
             <div style="font-weight:700;font-size:0.95rem;margin-bottom:0.35rem;">Сайтів ще немає</div>
             <div style="font-size:0.8rem;color:#6b7280;margin-bottom:1.25rem;">
                 Створи перший лендінг за 30 хвилин без коду
@@ -141,9 +141,9 @@ function _siteCard(site) {
                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(site.description)}</div>` : ''}
 
                 <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-                    <span style="font-size:0.72rem;color:#9ca3af;">📦 ${blocksCount} блоків</span>
-                    ${site.visits ? `<span style="font-size:0.72rem;color:#9ca3af;">👁 ${site.visits} відвідувань</span>` : ''}
-                    ${site.formSubmissions ? `<span style="font-size:0.72rem;color:#22c55e;font-weight:600;">📋 ${site.formSubmissions} заявок</span>` : ''}
+                    <span style="font-size:0.72rem;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 9.4-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span> ${blocksCount} блоків</span>
+                    ${site.visits ? `<span style="font-size:0.72rem;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> ${site.visits} відвідувань</span>` : ''}
+                    ${site.formSubmissions ? `<span style="font-size:0.72rem;color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span> ${site.formSubmissions} заявок</span>` : ''}
                     ${createdAt ? `<span style="font-size:0.68rem;color:#d1d5db;">${createdAt}</span>` : ''}
                 </div>
             </div>
@@ -153,26 +153,26 @@ function _siteCard(site) {
                 <button onclick="sitesOpenBuilder('${site.id}')"
                     style="padding:0.4rem 0.7rem;background:#22c55e;color:white;border:none;
                     border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;white-space:nowrap;">
-                    ✏️ Редагувати
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>️ Редагувати
                 </button>
                 <button onclick="sitesOpenForms('${site.id}')"
                     style="padding:0.4rem 0.7rem;background:#eff6ff;color:#3b82f6;border:none;
                     border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:600;">
-                    📋 Форми
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span> Форми
                 </button>
                 <div style="display:flex;gap:0.3rem;">
                     ${isPublished && site.publicUrl ? `
                     <button onclick="sitesTrackVisit('${site.id}');window.open('${_esc(site.publicUrl)}','_blank')"
                         style="flex:1;padding:0.35rem;background:#f0fdf4;color:#16a34a;border:none;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title="Відкрити сайт">🔗</button>` : ''}
+                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title="Відкрити сайт"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></button>` : ''}
                     <button onclick="sitesTogglePublish('${site.id}','${site.status}')"
                         style="flex:1;padding:0.35rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;
                         border-radius:7px;cursor:pointer;font-size:0.72rem;" title="${isPublished ? 'Зняти' : 'Опублікувати'}">
-                        ${isPublished ? '📴' : '🚀'}
+                        ${isPublished ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="2" y1="2" x2="22" y2="22"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span>'}
                     </button>
                     <button onclick="sitesDelete('${site.id}','${_esc(site.name || '')}')"
                         style="flex:1;padding:0.35rem;background:#fff5f5;color:#ef4444;border:none;
-                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title="Видалити">🗑</button>
+                        border-radius:7px;cursor:pointer;font-size:0.72rem;" title="Видалити"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></button>
                 </div>
             </div>
         </div>
@@ -184,14 +184,14 @@ window.sitesOpenCreate = function () {
     document.getElementById('sitesCreateOverlay')?.remove();
 
     const niches = [
-        { key: 'dental',       label: '🦷 Стоматологія',  template: 'Dental Pro' },
-        { key: 'construction', label: '🏗 Будівництво',    template: 'Build & Repair' },
+        { key: 'dental',       label: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5c-1.5-2-4-2.5-5.5-1S5 8 6 10c.5 1 1 2 1 4 0 1 .5 2 1 2s1-.5 1-1 .5-1 1-1 1 .5 1 1-.5 1 1 1 1-1 1-2c0-2 .5-3 1-4 1-2 1-4.5-.5-6S13.5 3.5 12 5.5z"/></svg></span> Стоматологія',  template: 'Dental Pro' },
+        { key: 'construction', label: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg></span> Будівництво',    template: 'Build & Repair' },
         { key: 'legal',        label: '⚖️ Юристи',         template: 'Legal Expert' },
-        { key: 'auto',         label: '🚗 Авто',           template: 'AutoService' },
-        { key: 'beauty',       label: '💆 Краса',          template: 'Beauty Studio' },
-        { key: 'fitness',      label: '🏋 Фітнес',         template: 'FitLife' },
-        { key: 'education',    label: '📚 Освіта',         template: 'Online Course' },
-        { key: 'custom',       label: '✏️ З нуля',         template: null },
+        { key: 'auto',         label: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span> Авто',           template: 'AutoService' },
+        { key: 'beauty',       label: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M5 22v-3a7 7 0 0 1 14 0v3"/><path d="M9 17v5"/><path d="M15 17v5"/></svg></span> Краса',          template: 'Beauty Studio' },
+        { key: 'fitness',      label: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="5" x2="6" y2="19"/><line x1="18" y1="5" x2="18" y2="19"/><line x1="2" y1="12" x2="22" y2="12"/></svg></span> Фітнес',         template: 'FitLife' },
+        { key: 'education',    label: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> Освіта',         template: 'Online Course' },
+        { key: 'custom',       label: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>️ З нуля',         template: null },
     ];
 
     const inp = 'width:100%;padding:0.5rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:9px;font-size:0.83rem;box-sizing:border-box;font-family:inherit;';
@@ -311,9 +311,9 @@ function _defaultBlock(type, order) {
     const defaults = {
         hero:     { type:'hero',     order, title:'Заголовок сайту', subtitle:'Підзаголовок з вашою головною перевагою', cta:'Залишити заявку', bgColor:'#0a0f1a', textColor:'#ffffff' },
         benefits: { type:'benefits', order, title:'Наші переваги', items:[
-            { icon:'⭐', title:'Перевага 1', text:'Опис першої переваги' },
-            { icon:'✅', title:'Перевага 2', text:'Опис другої переваги' },
-            { icon:'🏆', title:'Перевага 3', text:'Опис третьої переваги' },
+            { icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>', title:'Перевага 1', text:'Опис першої переваги' },
+            { icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>', title:'Перевага 2', text:'Опис другої переваги' },
+            { icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>', title:'Перевага 3', text:'Опис третьої переваги' },
         ]},
         services: { type:'services', order, title:'Наші послуги', items:[
             { title:'Послуга 1', price:'від 500 грн', text:'Короткий опис' },
@@ -347,7 +347,7 @@ window.sitesTogglePublish = async function (siteId, currentStatus) {
             .collection(window.DB_COLS.SITES).doc( + '/sites/' + siteId)
             .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         if (typeof showToast === 'function')
-            showToast(newStatus === 'published' ? '🚀 Сайт опублікований!' : 'Сайт знято з публікації', 'success');
+            showToast(newStatus === 'published' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span> Сайт опублікований!' : 'Сайт знято з публікації', 'success');
     } catch (e) {
         if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
     }
@@ -460,7 +460,7 @@ window.sitesOpenAnalytics = async function(siteId) {
                     <div style="font-size:0.7rem;color:#6b7280;">Останній візит</div>
                 </div>
             </div>
-            ${visits === 0 ? '<div style="font-size:0.78rem;color:#9ca3af;text-align:center;">Поки що немає даних. Відвідування трекуються при кліку на кнопку 🔗</div>' : ''}
+            ${visits === 0 ? '<div style="font-size:0.78rem;color:#9ca3af;text-align:center;">Поки що немає даних. Відвідування трекуються при кліку на кнопку <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></div>' : ''}
         </div>
     `);
 };

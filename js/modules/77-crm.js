@@ -938,7 +938,7 @@ function _renderAnalytics() {
 
         <!-- Барчарт: Нових / Виграно / Програно по місяцях -->
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
-            <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">📊 Угоди по місяцях</div>
+            <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Угоди по місяцях</div>
             <div style="display:flex;align-items:flex-end;gap:0.5rem;height:120px;padding-bottom:24px;position:relative;">
                 ${months.map(m => `
                 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;height:100%;justify-content:flex-end;position:relative;">
@@ -959,7 +959,7 @@ function _renderAnalytics() {
 
         <!-- Лінійний: Revenue тренд -->
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
-            <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">📈 Revenue тренд (виграні угоди)</div>
+            <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> Revenue тренд (виграні угоди)</div>
             <div style="position:relative;height:80px;margin-bottom:20px;">
                 <svg width="100%" height="80" viewBox="0 0 600 80" preserveAspectRatio="none">
                     <defs>
@@ -991,7 +991,7 @@ function _renderAnalytics() {
 
             <!-- Пай-чарт: джерела -->
             <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
-                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">🥧 Джерела лідів</div>
+                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> Джерела лідів</div>
                 ${Object.keys(sources).length ? `
                 <div style="display:flex;align-items:center;gap:0.75rem;">
                     <svg width="80" height="80" viewBox="-1 -1 2 2" style="transform:rotate(-90deg);flex-shrink:0;">
@@ -1023,7 +1023,7 @@ function _renderAnalytics() {
 
             <!-- Воронка конверсії -->
             <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
-                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">🔽 Воронка конверсії</div>
+                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span> Воронка конверсії</div>
                 ${byStage.filter(s=>s.count>0).map(s => {
                     const pct = total > 0 ? Math.round(s.count/total*100) : 0;
                     return `
@@ -1042,7 +1042,7 @@ function _renderAnalytics() {
 
         <!-- Топ-5 менеджерів -->
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
-            <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">🏆 Топ менеджери (виграні угоди)</div>
+            <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span> Топ менеджери (виграні угоди)</div>
             ${topManagers.length ? topManagers.map((u,i) => `
             <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;">
                 <div style="width:22px;height:22px;border-radius:50%;background:${['#f59e0b','#9ca3af','#cd7c2b','#22c55e','#3b82f6'][i]};

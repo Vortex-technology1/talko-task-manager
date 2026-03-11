@@ -146,7 +146,7 @@
         overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999999;display:flex;align-items:center;justify-content:center;padding:1rem;';
         overlay.innerHTML = `
             <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:360px;">
-                <h3 style="margin:0 0 1rem;font-size:1rem;">👤 Перепризначити ${ids.length} завдань</h3>
+                <h3 style="margin:0 0 1rem;font-size:1rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Перепризначити ${ids.length} завдань</h3>
                 <select id="bulkAssigneeSelect" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;margin-bottom:1rem;">
                     <option value="">— Оберіть виконавця —</option>
                     ${userOpts}
@@ -288,11 +288,11 @@
                 </button>
                 <button class="bulk-action-btn" onclick="bulkReassign()" disabled
                     style="padding:0.35rem 0.7rem;background:#3b82f6;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.78rem;">
-                    👤 Змінити виконавця
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Змінити виконавця
                 </button>
                 <button class="bulk-action-btn" onclick="bulkDelete()" disabled
                     style="padding:0.35rem 0.7rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.78rem;">
-                    🗑 Видалити
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span> Видалити
                 </button>
                 <button onclick="toggleBulkMode()"
                     style="padding:0.35rem 0.7rem;border:1px solid #e5e7eb;background:#f9fafb;border-radius:8px;cursor:pointer;font-size:0.78rem;color:#6b7280;">

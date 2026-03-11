@@ -265,7 +265,7 @@ window.intgTestTelegram = async function() {
         const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method:'POST',
             headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ chat_id: chatId, text: '✅ TALKO: тестове повідомлення. Інтеграція працює!' }),
+            body: JSON.stringify({ chat_id: chatId, text: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> TALKO: тестове повідомлення. Інтеграція працює!' }),
         });
         const data = await res.json();
         if (data.ok) {

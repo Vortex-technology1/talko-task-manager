@@ -118,7 +118,7 @@
                 const today = (typeof getLocalDateStr==='function') ? getLocalDateStr(new Date()) : '';
                 const isOverdue = t.deadlineDate && t.deadlineDate < today && t.status !== 'done';
                 results.push({
-                    category:'Завдання', categoryIcon:'📋',
+                    category:'Завдання', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>',
                     title: t.title||'(без назви)',
                     subtitle: [assigneeName, t.deadlineDate].filter(Boolean).join(' · '),
                     badge: t.status==='done'?'Виконано':t.status==='progress'?'В роботі':'Нове',
@@ -138,7 +138,7 @@
                 const userTasks = (typeof tasks!=='undefined') ? tasks.filter(t=>t.assigneeId===u.id&&t.status!=='done') : [];
                 const roleMap = {owner:'Власник',manager:'Менеджер',admin:'Адмін',employee:'Співробітник'};
                 results.push({
-                    category:'Співробітники', categoryIcon:'👤',
+                    category:'Співробітники', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>',
                     title: u.name||u.email,
                     subtitle: `${u.email} · ${userTasks.length} активних`,
                     badge: roleMap[u.role]||u.role,
@@ -200,7 +200,7 @@
             ).slice(0, 3).forEach(p => {
                 const taskCount = (typeof tasks!=='undefined') ? tasks.filter(t=>t.projectId===p.id&&t.status!=='done').length : 0;
                 results.push({
-                    category:'Проєкти', categoryIcon:'📁',
+                    category:'Проєкти', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>',
                     title: p.name, subtitle:`${taskCount} активних завдань`,
                     badge:'Проєкт', badgeColor:'#3b82f6',
                     action: () => {
@@ -230,7 +230,7 @@
             ).slice(0, 2).forEach(p => {
                 const desc = p.description||'';
                 results.push({
-                    category:'Процеси', categoryIcon:'🔄',
+                    category:'Процеси', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>',
                     title: p.name,
                     subtitle: desc.length>60 ? desc.substring(0,60)+'…' : desc,
                     badge:'Процес', badgeColor:'#06b6d4',
@@ -262,7 +262,7 @@
             ).slice(0, 3).forEach(t => {
                 const assignee = (typeof users!=='undefined') ? users.find(u=>u.id===t.assigneeId) : null;
                 results.push({
-                    category:'Регулярні', categoryIcon:'🔁',
+                    category:'Регулярні', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>',
                     title: t.title||'(без назви)',
                     subtitle: assignee ? (assignee.name||assignee.email) : '',
                     badge: 'Регулярне', badgeColor:'#06b6d4',
@@ -278,7 +278,7 @@
                 (c.name||'').toLowerCase().includes(q)||(c.description||'').toLowerCase().includes(q)
             ).slice(0, 3).forEach(c => {
                 results.push({
-                    category:'Координація', categoryIcon:'📅',
+                    category:'Координація', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>',
                     title: c.name||'(без назви)',
                     subtitle: c.type||'',
                     badge: c.status==='active'?'Активна':'Завершена',
@@ -298,7 +298,7 @@
                 (m.name||'').toLowerCase().includes(q)
             ).slice(0, 3).forEach(m => {
                 results.push({
-                    category:'Статистика', categoryIcon:'📊',
+                    category:'Статистика', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>',
                     title: m.name,
                     subtitle: m.unit ? 'Одиниця: ' + m.unit : '',
                     badge:'Метрика', badgeColor:'#8b5cf6',
@@ -331,7 +331,7 @@
         navItems.forEach(item => {
             if (item.keys.some(k => k.includes(q) || q.includes(k))) {
                 results.push({
-                    category:'Перейти', categoryIcon:'🧭',
+                    category:'Перейти', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>',
                     title: item.label,
                     subtitle: 'Відкрити вкладку',
                     badge:'Навігація', badgeColor:'#6b7280',
@@ -353,7 +353,7 @@
         if (results.length === 0) {
             r.style.display = 'block';
             r.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#9ca3af;font-size:0.85rem;">
-                <div style="font-size:1.5rem;margin-bottom:0.5rem;">🔍</div>
+                <div style="font-size:1.5rem;margin-bottom:0.5rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span></div>
                 Нічого не знайдено за "<strong>${safeEsc(q)}</strong>"
             </div>`;
             return;

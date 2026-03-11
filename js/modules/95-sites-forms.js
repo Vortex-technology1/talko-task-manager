@@ -80,7 +80,7 @@ function _renderFormsList() {
     ${sf.forms.length === 0 ? `
     <div style="text-align:center;padding:3rem 1rem;background:white;border-radius:14px;
         box-shadow:0 1px 4px rgba(0,0,0,0.06);">
-        <div style="font-size:2.5rem;margin-bottom:0.5rem;">📋</div>
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span></div>
         <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;">Форм ще немає</div>
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;">
             Кожна форма автоматично відправляє ліда в CRM
@@ -108,7 +108,7 @@ function _formCard(form) {
                     Поля: ${_esc(fields || 'не задані')}
                 </div>
                 <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-                    <span style="font-size:0.72rem;color:#22c55e;font-weight:600;">📥 ${submissions} заявок</span>
+                    <span style="font-size:0.72rem;color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> ${submissions} заявок</span>
                     ${form.crmIntegration ? '<span style="font-size:0.7rem;background:#f0fdf4;color:#16a34a;padding:1px 6px;border-radius:6px;">→ CRM</span>' : ''}
                     ${form.telegramNotify ? '<span style="font-size:0.7rem;background:#eff6ff;color:#3b82f6;padding:1px 6px;border-radius:6px;">→ Telegram</span>' : ''}
                 </div>
@@ -117,17 +117,17 @@ function _formCard(form) {
                 <button onclick="sfOpenEditor('${form.id}')"
                     style="padding:0.35rem 0.7rem;background:#22c55e;color:white;border:none;
                     border-radius:7px;cursor:pointer;font-size:0.73rem;font-weight:700;">
-                    ✏️ Ред.
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>️ Ред.
                 </button>
                 <button onclick="sfOpenSubmissions('${form.id}')"
                     style="padding:0.35rem 0.7rem;background:#eff6ff;color:#3b82f6;border:none;
                     border-radius:7px;cursor:pointer;font-size:0.73rem;font-weight:600;">
-                    📋 Заявки
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span> Заявки
                 </button>
                 <button onclick="sfDelete('${form.id}','${_esc(form.name||'')}')"
                     style="padding:0.35rem 0.7rem;background:#fff5f5;color:#ef4444;border:none;
                     border-radius:7px;cursor:pointer;font-size:0.73rem;">
-                    🗑
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
                 </button>
             </div>
         </div>
@@ -316,7 +316,7 @@ async function _renderFormEditor() {
     <button onclick="sfSaveForm('${form.id}')"
         style="width:100%;padding:0.65rem;background:#22c55e;color:white;border:none;
         border-radius:10px;cursor:pointer;font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">
-        💾 Зберегти форму
+        <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Зберегти форму
     </button>
 
     <!-- Прев'ю форми -->
@@ -419,7 +419,7 @@ window.sfOpenSubmissions = async function (formId) {
 
         if (!submissions.length) {
             el.innerHTML = `<div style="text-align:center;padding:3rem;background:white;border-radius:14px;">
-                <div style="font-size:2rem;margin-bottom:0.5rem;">📭</div>
+                <div style="font-size:2rem;margin-bottom:0.5rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><path d="m17 17 4 4"/><path d="m21 17-4 4"/></svg></span></div>
                 <div style="font-weight:700;font-size:0.88rem;">Заявок ще немає</div>
             </div>`;
             return;

@@ -295,7 +295,7 @@ function renderFlowsTab() {
                 const deepLink = botUsername
                     ? `https://t.me/${botUsername}?start=${flow.id}`
                     : webhookBase + flow.id;
-                const statusLabel = flow.status==='active' ? '🟢 active' : flow.status==='paused' ? '⏸ paused' : '⚫ draft';
+                const statusLabel = flow.status==='active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> active' : flow.status==='paused' ? '⏸ paused' : '⚫ draft';
                 const statusBg   = flow.status==='active' ? '#f0fdf4' : flow.status==='paused' ? '#fff7ed' : '#f9fafb';
                 const statusCol  = statusColors[flow.status]||'#9ca3af';
                 const nodeCount  = flow.nodes?.length||0;
@@ -516,7 +516,7 @@ window.createAndConnectBot = async function() {
         });
 
         document.getElementById('bpCreateBot')?.remove();
-        if (typeof showToast === 'function') showToast(connected ? `✅ Бот @${username} підключено!` : 'Бот створено. Налаштуйте вебхук вручну.', 'success');
+        if (typeof showToast === 'function') showToast(connected ? `<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Бот @${username} підключено!` : 'Бот створено. Налаштуйте вебхук вручну.', 'success');
         openBot(botRef.id);
     } catch(e) {
         if (btn) btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Підключити';
@@ -996,7 +996,7 @@ window.ctsOpenCard = function(contactId) {
                 <button onclick="bpOpenChat('${ct.id}')"
                     style="flex:1;padding:0.5rem;background:#22c55e;color:white;border:none;
                     border-radius:9px;cursor:pointer;font-size:0.78rem;font-weight:700;">
-                    ✉ Написати
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> Написати
                 </button>
                 <button onclick="ctsAddToCRM('${ct.id}')"
                     style="flex:1;padding:0.5rem;background:#f0fdf4;color:#16a34a;border:1.5px solid #bbf7d0;
@@ -1010,7 +1010,7 @@ window.ctsOpenCard = function(contactId) {
 
             <!-- Основні поля -->
             <div>
-                ${field('Телефон', ct.phone, '📞 ')}
+                ${field('Телефон', ct.phone, '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2.17h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span> ')}
                 ${field('Telegram ID', ct.senderId, '')}
                 ${field('Канал', ct.channel || 'telegram', '')}
                 ${field('Роль', ct.role, '')}
@@ -1170,7 +1170,7 @@ window.ctsAddToCRM = async function(contactId) {
             ai_response: ct.ai_response,
             tags: ct.tags,
         }, { triggeredBy: 'user' });
-        if (typeof showToast === 'function') showToast('✅ Додано в CRM', 'success');
+        if (typeof showToast === 'function') showToast('<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Додано в CRM', 'success');
     } catch(e) {
         if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
     }
@@ -1595,14 +1595,14 @@ function _chatRenderHeader(ct) {
             <div style="font-weight:700;font-size:0.88rem;">${escH(name)}</div>
             <div style="font-size:0.7rem;color:#6b7280;">
                 ${ct.senderId ? 'ID: '+ct.senderId : ''}
-                ${ct.phone ? ' · 📞 '+ct.phone : ''}
+                ${ct.phone ? ' · <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2.17h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span> '+ct.phone : ''}
                 ${ct.business_type ? ' · '+ct.business_type : ''}
             </div>
         </div>
         ${ct.botStatus === 'blocked' ? `
         <span style="font-size:0.7rem;color:#ef4444;background:#fee2e2;
             padding:2px 8px;border-radius:6px;font-weight:600;flex-shrink:0;">
-            🚫 Заблокував
+            <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></span> Заблокував
         </span>` : ''}
         <button onclick="ctsOpenCard('${ct.id}')"
             title="Картка контакту"
@@ -1940,7 +1940,7 @@ async function renderBroadcastTab() {
             <!-- Прогрес-бар (прихований поки не запущено) -->
             <div id="bcastProgress" style="display:none;${sectionStyle}">
                 <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.6rem;">
-                    📤 Відправка в процесі...
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></span> Відправка в процесі...
                 </div>
                 <div style="background:#f1f5f9;border-radius:8px;height:10px;overflow:hidden;margin-bottom:0.5rem;">
                     <div id="bcastProgressBar"
@@ -2060,7 +2060,7 @@ window.bcastPreview = async function() {
         if (flowId) parts.push(bp.flows.find(f => f.id === flowId)?.name || flowId);
 
         box.innerHTML = `
-            👥 <b>${count}</b> контактів отримають розсилку
+            <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> <b>${count}</b> контактів отримають розсилку
             ${parts.length ? `· <span style="font-weight:400;color:#16a34a;">${parts.join(' · ')}</span>` : ''}
             ${count === 1000 ? '<span style="color:#f97316;"> (показано перші 1000)</span>' : ''}`;
     } catch(e) {
@@ -2182,7 +2182,7 @@ window.bpSendBroadcast = async function() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: telegramId,
-                        text: text || '📢 Повідомлення від бота',
+                        text: text || '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span> Повідомлення від бота',
                         parse_mode: 'Markdown',
                     }),
                 });
@@ -2242,7 +2242,7 @@ window.bpSendBroadcast = async function() {
     if (progressDiv) {
         progressDiv.innerHTML = `
             <div style="text-align:center;padding:0.5rem;">
-                <div style="font-size:1.5rem;margin-bottom:0.3rem;">${bcast.cancelled ? '⏹' : '✅'}</div>
+                <div style="font-size:1.5rem;margin-bottom:0.3rem;">${bcast.cancelled ? '⏹' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>'}</div>
                 <div style="font-weight:700;font-size:0.92rem;">
                     ${bcast.cancelled ? 'Зупинено' : 'Розсилку завершено!'}
                 </div>
@@ -2344,7 +2344,7 @@ async function renderSettingsTab() {
         <!-- Секція 2: Webhook URL -->
         <div style="${sectionStyle}">
             <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
-                🔗 Webhook URL
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span> Webhook URL
             </div>
             <label style="${labelStyle}">URL ДЛЯ TELEGRAM WEBHOOK</label>
             <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem;">
@@ -2369,7 +2369,7 @@ async function renderSettingsTab() {
         <!-- Секція 3: Токен бота -->
         <div style="${sectionStyle}">
             <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
-                🔑 Токен бота
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span> Токен бота
             </div>
             <label style="${labelStyle}">ПОТОЧНИЙ ТОКЕН</label>
             <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.75rem;">
@@ -2395,7 +2395,7 @@ async function renderSettingsTab() {
         <!-- Секція 4: AI ключ -->
         <div style="${sectionStyle}">
             <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
-                🤖 OpenAI / Claude API ключ
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> OpenAI / Claude API ключ
             </div>
             <label style="${labelStyle}">OPENAI (GPT-4o-mini, GPT-4o)</label>
             <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
@@ -2423,7 +2423,7 @@ async function renderSettingsTab() {
         <!-- Секція 5: Сповіщення менеджеру -->
         <div style="${sectionStyle}">
             <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.75rem;">
-                🔔 Сповіщення менеджеру
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Сповіщення менеджеру
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                 <div>
@@ -2505,9 +2505,9 @@ window.bpCheckBotStatus = async function(botId) {
         if (result) result.innerHTML = `
             <div style="background:#f0fdf4;border-radius:10px;padding:0.65rem;border:1px solid #bbf7d0;">
                 <div style="font-size:0.78rem;display:flex;flex-direction:column;gap:4px;">
-                    <div>✅ Бот: <b>@${me.result?.username || '—'}</b> (${me.result?.first_name || ''})</div>
+                    <div><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Бот: <b>@${me.result?.username || '—'}</b> (${me.result?.first_name || ''})</div>
                     <div style="color:${whInfo.url ? '#16a34a' : '#ef4444'};">
-                        ${whInfo.url ? '✅' : '❌'} Webhook: ${whInfo.url ? 'встановлено' : 'не встановлено'}
+                        ${whInfo.url ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>'} Webhook: ${whInfo.url ? 'встановлено' : 'не встановлено'}
                     </div>
                     ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ Остання помилка: ${escH(whInfo.last_error_message)}</div>` : ''}
                     <div style="color:#6b7280;">Очікуваних оновлень: ${whInfo.pending_update_count || 0}</div>
@@ -2556,13 +2556,13 @@ window.bpReinstallWebhook = async function(botId) {
             await firebase.firestore()
                 .doc(window.currentCompanyId + '/bots/' + botId)
                 .update({ connected: true, webhookUrl, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            if (result) result.innerHTML = `<div style="color:#22c55e;font-weight:600;">✅ Webhook встановлено</div>`;
+            if (result) result.innerHTML = `<div style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Webhook встановлено</div>`;
             if (typeof showToast === 'function') showToast('Webhook встановлено ✓', 'success');
         } else {
             throw new Error(data.description);
         }
     } catch(e) {
-        if (result) result.innerHTML = `<div style="color:#ef4444;">❌ ${escH(e.message)}</div>`;
+        if (result) result.innerHTML = `<div style="color:#ef4444;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> ${escH(e.message)}</div>`;
     }
 
     if (btn) { btn.textContent = '↺ Перевстановити webhook'; btn.disabled = false; }
@@ -2602,7 +2602,7 @@ window.bpReconnectBot = async function(botId) {
             'integrations.telegram.botName': me.result.username,
         });
 
-        if (typeof showToast === 'function') showToast(`✅ Токен оновлено, @${me.result.username} підключено`, 'success');
+        if (typeof showToast === 'function') showToast(`<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Токен оновлено, @${me.result.username} підключено`, 'success');
         document.getElementById('bpSettingsToken').value = '';
         renderSettingsTab();
     } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
@@ -2625,10 +2625,10 @@ window.settingsSaveApiKey = window.saveBotApiKey = async function(type) {
             window.companyRef()
             .update({ [field]: key, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         if (keyEl) keyEl.value = '•••••' + key.slice(-4);
-        if (result) result.innerHTML = `<span style="color:#22c55e;font-weight:600;">✅ Збережено</span>`;
+        if (result) result.innerHTML = `<span style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Збережено</span>`;
         setTimeout(() => { if (result) result.innerHTML = ''; }, 3000);
     } catch(e) {
-        if (result) result.innerHTML = `<span style="color:#ef4444;">❌ ${escH(e.message)}</span>`;
+        if (result) result.innerHTML = `<span style="color:#ef4444;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> ${escH(e.message)}</span>`;
     }
 };
 
@@ -2652,10 +2652,10 @@ window.settingsSaveNotify = async function() {
         await firebase.firestore()
             window.companyRef()
             .update({ notifyTelegramId: tgId, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (result) result.innerHTML = `<span style="color:#22c55e;font-weight:600;">✅ Збережено</span>`;
+        if (result) result.innerHTML = `<span style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Збережено</span>`;
         setTimeout(() => { if (result) result.innerHTML = ''; }, 3000);
     } catch(e) {
-        if (result) result.innerHTML = `<span style="color:#ef4444;">❌ ${escH(e.message)}</span>`;
+        if (result) result.innerHTML = `<span style="color:#ef4444;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> ${escH(e.message)}</span>`;
     }
 };
 

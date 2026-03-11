@@ -15,15 +15,15 @@ let sb = {
 };
 
 const BLOCK_TYPES = [
-    { type:'hero',      icon:'🦸', label:'Hero' },
-    { type:'benefits',  icon:'✅', label:'Переваги' },
-    { type:'services',  icon:'🛎', label:'Послуги' },
-    { type:'reviews',   icon:'⭐', label:'Відгуки' },
-    { type:'faq',       icon:'❓', label:'FAQ' },
-    { type:'form',      icon:'📋', label:'Форма' },
-    { type:'team',      icon:'👥', label:'Команда' },
-    { type:'prices',    icon:'💰', label:'Ціни' },
-    { type:'gallery',   icon:'🖼', label:'Галерея' },
+    { type:'hero',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="5" r="3"/><path d="M6.5 8.5 5 12 7 11"/><path d="M17.5 8.5 19 12l-2-1"/></svg></span>', label:'Hero' },
+    { type:'benefits',  icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>', label:'Переваги' },
+    { type:'services',  icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>', label:'Послуги' },
+    { type:'reviews',   icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>', label:'Відгуки' },
+    { type:'faq',       icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>', label:'FAQ' },
+    { type:'form',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>', label:'Форма' },
+    { type:'team',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>', label:'Команда' },
+    { type:'prices',    icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>', label:'Ціни' },
+    { type:'gallery',   icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>', label:'Галерея' },
     { type:'about',     icon:'ℹ️',  label:'Про нас' },
 ];
 
@@ -53,11 +53,11 @@ function _renderBuilderShell() {
             <div style="display:flex;gap:0.4rem;">
                 <button onclick="sbTogglePreview()"
                     style="padding:0.4rem 0.7rem;background:#f1f5f9;border:none;border-radius:8px;
-                    cursor:pointer;font-size:0.78rem;" title="Прев'ю">👁 Прев'ю</button>
+                    cursor:pointer;font-size:0.78rem;" title="Прев'ю"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> Прев'ю</button>
                 <button onclick="sbSave()"
                     style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;
                     border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">
-                    💾 Зберегти
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Зберегти
                 </button>
             </div>
         </div>
@@ -169,7 +169,7 @@ function _renderBlockList() {
     }
 
     c.innerHTML = sb.blocks.map((block, i) => {
-        const bt   = BLOCK_TYPES.find(b => b.type === block.type) || { icon:'📦', label: block.type };
+        const bt   = BLOCK_TYPES.find(b => b.type === block.type) || { icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 9.4-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>', label: block.type };
         const active = i === sb.activeBlockIdx;
         return `
         <div onclick="sbSelectBlock(${i})"
@@ -212,7 +212,7 @@ function _renderBlockEditor(idx) {
     const block = sb.blocks[idx];
     if (!block) { c.style.display = 'none'; return; }
     c.style.display = 'block';
-    const bt = BLOCK_TYPES.find(b => b.type === block.type) || { icon:'📦', label: block.type };
+    const bt = BLOCK_TYPES.find(b => b.type === block.type) || { icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 9.4-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>', label: block.type };
 
     const inp = 'width:100%;padding:0.4rem 0.5rem;border:1.5px solid #e5e7eb;border-radius:7px;font-size:0.78rem;box-sizing:border-box;font-family:inherit;margin-bottom:0.4rem;';
 
@@ -318,7 +318,7 @@ window.sbRemoveBlock = async function (idx) {
 function _defaultBlock(type, order) {
     const defaults = {
         hero:     { type:'hero',     order, title:'Заголовок сайту', subtitle:'Ваша головна перевага', cta:'Залишити заявку', bgColor:'#0a0f1a', textColor:'#ffffff' },
-        benefits: { type:'benefits', order, title:'Наші переваги', items:[{icon:'⭐',title:'Перевага 1',text:'Опис'},{icon:'✅',title:'Перевага 2',text:'Опис'},{icon:'🏆',title:'Перевага 3',text:'Опис'}]},
+        benefits: { type:'benefits', order, title:'Наші переваги', items:[{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>',title:'Перевага 1',text:'Опис'},{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>',title:'Перевага 2',text:'Опис'},{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>',title:'Перевага 3',text:'Опис'}]},
         services: { type:'services', order, title:'Послуги', items:[{title:'Послуга 1',price:'від 500 грн',text:'Опис'},{title:'Послуга 2',price:'від 800 грн',text:'Опис'}]},
         reviews:  { type:'reviews',  order, title:'Відгуки', items:[{name:'Клієнт 1',rating:5,text:'Чудовий сервіс!'},{name:'Клієнт 2',rating:5,text:'Рекомендую!'}]},
         faq:      { type:'faq',      order, title:'Питання та відповіді', items:[{question:'Питання 1?',answer:'Відповідь 1.'},{question:'Питання 2?',answer:'Відповідь 2.'}]},
@@ -340,7 +340,7 @@ function _renderPreview() {
 
     if (!sb.blocks.length) {
         c.innerHTML = `<div style="text-align:center;padding:3rem;color:#9ca3af;">
-            <div style="font-size:2rem;margin-bottom:0.5rem;">🌐</div>
+            <div style="font-size:2rem;margin-bottom:0.5rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span></div>
             Додай перший блок з панелі зліва
         </div>`;
         return;
@@ -380,7 +380,7 @@ function _renderPreview() {
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem;">
                     ${items.map(item => `
                     <div style="background:white;border-radius:12px;padding:1rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-                        <div style="font-size:1.5rem;margin-bottom:0.35rem;">${item.icon||'⭐'}</div>
+                        <div style="font-size:1.5rem;margin-bottom:0.35rem;">${item.icon||'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>'}</div>
                         <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.25rem;">${_esc(item.title||'')}</div>
                         <div style="font-size:0.72rem;color:#6b7280;">${_esc(item.text||'')}</div>
                     </div>`).join('')}
@@ -525,7 +525,7 @@ window.sbSave = async function () {
         if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
     } finally {
         sb.saving = false;
-        if (btn) { btn.textContent = '💾 Зберегти'; btn.disabled = false; }
+        if (btn) { btn.textContent = '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Зберегти'; btn.disabled = false; }
     }
 };
 

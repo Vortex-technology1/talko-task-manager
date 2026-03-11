@@ -146,7 +146,7 @@ window.renderOwnerDashboard = function(targetEl) {
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
             <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;flex:1;">
                 <div style="padding:0.85rem 1rem;border-bottom:1px solid #f3f4f6;font-weight:600;font-size:0.9rem;color:#dc2626;">
-                    🔴 Прострочені (${overdue.length})
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Прострочені (${overdue.length})
                 </div>
                 ${overdue.length > 0 ? `<table style="width:100%;border-collapse:collapse;">
                     <tbody>${overdueRows}</tbody>

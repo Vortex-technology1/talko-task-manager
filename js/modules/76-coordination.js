@@ -39,13 +39,13 @@
 
     const TYPES = {
         daily:       { label: 'Щоденна',            icon: '☀️',  color: '#f59e0b', duration: 20 },
-        weekly:      { label: 'Щотижнева',           icon: '📅',  color: '#3b82f6', duration: 60 },
-        monthly:     { label: 'Місячна',             icon: '📆',  color: '#8b5cf6', duration: 90 },
-        council_rec: { label: 'Рекомендаційна рада', icon: '🤝',  color: '#06b6d4', duration: 60 },
-        council_dir: { label: 'Рада директора',      icon: '🎯',  color: '#16a34a', duration: 60 },
+        weekly:      { label: 'Щотижнева',           icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>',  color: '#3b82f6', duration: 60 },
+        monthly:     { label: 'Місячна',             icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg></span>',  color: '#8b5cf6', duration: 90 },
+        council_rec: { label: 'Рекомендаційна рада', icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg></span>',  color: '#06b6d4', duration: 60 },
+        council_dir: { label: 'Рада директора',      icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>',  color: '#16a34a', duration: 60 },
         council_exe: { label: 'Виконавча рада',      icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>',  color: '#ef4444', duration: 90 },
-        council_own: { label: 'Рада засновників',    icon: '👑',  color: '#d97706', duration: 120 },
-        oneoff:      { label: 'Разова',              icon: '🔔',  color: '#6b7280', duration: 45 },
+        council_own: { label: 'Рада засновників',    icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M5 20h14"/></svg></span>',  color: '#d97706', duration: 120 },
+        oneoff:      { label: 'Разова',              icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>',  color: '#6b7280', duration: 45 },
     };
 
     const DAYS_UK = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
@@ -53,10 +53,10 @@
     const AGENDA_BASE = [
         { id: 'stats',     icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>', label: 'Статистики учасників' },
         { id: 'execution', icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>', label: 'Виконання попередніх завдань' },
-        { id: 'reports',   icon: '🗣', label: 'Звіти учасників' },
-        { id: 'questions', icon: '❓', label: 'Питання від учасників' },
+        { id: 'reports',   icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg></span>', label: 'Звіти учасників' },
+        { id: 'questions', icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>', label: 'Питання від учасників' },
         { id: 'decisions', icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>', label: 'Рішення' },
-        { id: 'tasks',     icon: '📌', label: 'Нові завдання' },
+        { id: 'tasks',     icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>', label: 'Нові завдання' },
     ];
 
     // ── Helpers ────────────────────────────────────────────
@@ -232,7 +232,7 @@
     }
 
     function coordCard(c) {
-        const type = TYPES[c.type] || { label:c.type, icon:'📋', color:'#6b7280', duration:60 };
+        const type = TYPES[c.type] || { label:c.type, icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>', color:'#6b7280', duration:60 };
         const chair = coordUsers.find(u => u.id === c.chairmanId);
         const chairName = chair ? (chair.name||chair.email).split(' ')[0] : '—';
         const cnt = (c.participantIds||[]).length;
@@ -260,7 +260,7 @@
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.55rem;">
             <span style="background:${type.color}18;color:${type.color};padding:.1rem .4rem;border-radius:5px;font-size:.7rem;font-weight:600;">${type.label}</span>
-            ${sched?`<span style="background:#f3f4f6;color:#6b7280;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;">🕐 ${esc(sched)}</span>`:''}
+            ${sched?`<span style="background:#f3f4f6;color:#6b7280;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span> ${esc(sched)}</span>`:''}
             <span style="background:#f0fdf4;color:#16a34a;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><i data-lucide="users" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:2px;"></i>${cnt}</span>
             <span style="background:#f3f4f6;color:#6b7280;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;">⏱ ~${type.duration}хв</span>
             ${(c.dynamicAgenda||[]).length?`<span style="background:#fef3c7;color:#d97706;padding:.1rem .4rem;border-radius:5px;font-size:.7rem;"><i data-lucide="help-circle" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:2px;"></i>${c.dynamicAgenda.length}</span>`:''}
@@ -274,7 +274,7 @@
               <i data-lucide="play" style="width:13px;height:13px;"></i> Розпочати
             </button>
             <button onclick="openDynAgenda('${c.id}')" style="padding:.35rem .55rem;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.78rem;color:#6b7280;" title="Порядок денний"><i data-lucide="list" style="width:14px;height:14px;"></i></button>
-            <button onclick="viewCoordHistory('${c.id}')" style="padding:.35rem .55rem;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.78rem;color:#6b7280;" title="Протоколи">📄</button>
+            <button onclick="viewCoordHistory('${c.id}')" style="padding:.35rem .55rem;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.78rem;color:#6b7280;" title="Протоколи"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span></button>
           </div>
         </div>`;
     }
@@ -488,11 +488,11 @@
         <div id="coordProtocolModal" class="modal" role="dialog" aria-modal="true" style="display:none;z-index:10030;">
           <div class="modal-content" style="max-width:680px;max-height:92vh;overflow-y:auto;padding:1.4rem;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;flex-wrap:wrap;gap:.45rem;">
-              <h2 style="margin:0;font-size:1rem;">📄 Протокол координації</h2>
+              <h2 style="margin:0;font-size:1rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Протокол координації</h2>
               <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
                 <button onclick="sendProtocolToTelegram()" style="padding:.3rem .65rem;font-size:.76rem;background:#2b9ef4;color:#fff;border:none;border-radius:7px;cursor:pointer;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19 2c-2-2-4-2-5.5-.5L10 5 1.8 6.2c-.5.1-.9.5-1 1-.1.4.1.9.4 1.2l4 4L4 15l-2 1 1 2 2-1 3.8 1.2 4 4c.3.3.8.5 1.2.4.5-.1.9-.5 1-1z"/></svg></span> Telegram</button>
                 <button onclick="exportCoordHistoryExcel()" style="padding:.3rem .65rem;font-size:.76rem;background:#16a34a;color:#fff;border:none;border-radius:7px;cursor:pointer;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Excel</button>
-                <button onclick="printProtocol()" style="padding:.3rem .65rem;font-size:.76rem;background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:7px;cursor:pointer;">🖨 PDF</button>
+                <button onclick="printProtocol()" style="padding:.3rem .65rem;font-size:.76rem;background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:7px;cursor:pointer;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></span> PDF</button>
                 <button onclick="closeProtocolModal()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
               </div>
             </div>
@@ -511,7 +511,7 @@
             </div>
             <div id="coordAnalysisContent" style="min-height:180px;"></div>
             <div style="margin-top:1rem;display:flex;gap:.5rem;">
-              <button onclick="runCoordAI()" class="btn btn-success" style="flex:1;">✨ Аналізувати</button>
+              <button onclick="runCoordAI()" class="btn btn-success" style="flex:1;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span> Аналізувати</button>
               <button onclick="closeCoordAnalysis()" class="btn" style="flex:1;">Закрити</button>
             </div>
           </div>
@@ -725,7 +725,7 @@
               <span style="width:6px;height:6px;border-radius:50%;background:${ready?'#22c55e':'#d1d5db'};flex-shrink:0;"></span>
               <span style="font-size:.8rem;font-weight:600;flex:1;">${esc(name)}</span>
               <span style="font-size:.75rem;font-weight:700;color:${rc};">${r.rate}%</span>
-              ${r.overdue?`<span style="font-size:.68rem;background:#fef2f2;color:#ef4444;padding:.08rem .3rem;border-radius:4px;">🔴${r.overdue}</span>`:''}
+              ${r.overdue?`<span style="font-size:.68rem;background:#fef2f2;color:#ef4444;padding:.08rem .3rem;border-radius:4px;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span>${r.overdue}</span>`:''}
               <span style="font-size:.68rem;color:#9ca3af;">${r.completed}/${r.total}</span>
             </div>`;
         }).join('');
@@ -735,7 +735,7 @@
         const el=document.getElementById('coordAgenda'); if(!el) return;
         const items=[...AGENDA_BASE];
         if ((c.dynamicAgenda||[]).length) {
-            items.splice(3,0,{id:'dynamic',icon:'❓',label:`Питання (${c.dynamicAgenda.length})`});
+            items.splice(3,0,{id:'dynamic',icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>',label:`Питання (${c.dynamicAgenda.length})`});
         }
         el.innerHTML=items.map(item=>`
         <div style="display:flex;align-items:center;gap:.4rem;padding:.38rem .55rem;border-radius:8px;border:1.5px solid ${sessionAgendaDone[item.id]?'#22c55e':'#e5e7eb'};background:${sessionAgendaDone[item.id]?'#f0fdf4':'#fff'};cursor:pointer;transition:all .12s;"
@@ -929,7 +929,7 @@
     function showProtocol(session) {
         currentProtocol=session;
         const content=document.getElementById('coordProtocolContent'); if(!content) return;
-        const type=TYPES[session.coordType]||{icon:'📋',label:''};
+        const type=TYPES[session.coordType]||{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>',label:''};
         const startD=session.startedAt?new Date(session.startedAt):null;
         const endD=session.finishedAt?new Date(session.finishedAt):null;
         const dur=startD&&endD?Math.round((endD-startD)/60000):0;
@@ -1009,7 +1009,7 @@
         try {
             const snap=await db().collection('settings').doc('telegram').get();
             const token=snap.data()?.botToken; if(!token) return;
-            const type=TYPES[session.coordType]||{icon:'📋'};
+            const type=TYPES[session.coordType]||{icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>'};
             const dec=session.decisions||[];
             const unr=session.unresolved||[];
             const lines=[`*${session.coordName}*`,
@@ -1143,7 +1143,7 @@
     function renderPatterns(p) {
         let html='';
         if(p.repD.length) html+=`<div style="background:#fef3c7;border-radius:8px;padding:.6rem;margin-bottom:.5rem;">
-          <div style="font-weight:600;font-size:.8rem;color:#92400e;margin-bottom:.3rem;">🔄 Повторювані рішення → системна проблема</div>
+          <div style="font-weight:600;font-size:.8rem;color:#92400e;margin-bottom:.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span> Повторювані рішення → системна проблема</div>
           ${p.repD.map(([k,c])=>`<div style="font-size:.76rem;color:#374151;margin-top:2px;">• "${k}..." — ${c} рази</div>`).join('')}
         </div>`;
         if(p.repU.length) html+=`<div style="background:#fef2f2;border-radius:8px;padding:.6rem;margin-bottom:.5rem;">
