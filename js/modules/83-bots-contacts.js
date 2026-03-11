@@ -48,8 +48,7 @@ window.destroyBotsModule = function() {
 
 function loadBots() {
     if (bp.botsUnsub) bp.botsUnsub();
-    bp.botsUnsub = firebase.firestore()
-        window.companyRef()
+    bp.botsUnsub = window.companyRef()
         .collection('bots')
         .orderBy('createdAt', 'desc')
         .onSnapshot(snap => {
@@ -227,8 +226,7 @@ window.openBot = function(botId) {
 
     // Підписуємось на flows цього бота
     if (bp.flowsUnsub) bp.flowsUnsub();
-    bp.flowsUnsub = firebase.firestore()
-        window.companyRef()
+    bp.flowsUnsub = window.companyRef()
         .collection('bots').doc(botId)
         .collection('flows')
         .orderBy('createdAt','desc')
@@ -491,8 +489,7 @@ window.createAndConnectBot = async function() {
         }
 
         // Save bot to Firestore
-        const botRef = await firebase.firestore()
-            window.companyRef()
+        const botRef = await             window.companyRef()
             .collection('bots').add({
                 name,
                 channel,
@@ -580,8 +577,7 @@ window.saveNewFlow = async function() {
     if (!name) { if(window.showToast)showToast(window.t('enterName2'),'warning'); else alert(window.t('enterName2')); return; }
     const bot = bp.bots.find(b=>b.id===bp.activeBotId);
     try {
-        const ref = await firebase.firestore()
-            window.companyRef()
+        const ref = await             window.companyRef()
             .collection('bots').doc(bp.activeBotId)
             .collection('flows').add({
                 name,
@@ -2114,8 +2110,7 @@ window.bpSendBroadcast = async function() {
     if (!(await (window.showConfirmModal ? showConfirmModal(`Надіслати розсилку ${targets.length} контактам?`) : Promise.resolve(confirm(`Надіслати розсилку ${targets.length} контактам?`))))) return;
 
     // Отримуємо токен бота
-    const compDoc = await firebase.firestore()
-        window.companyRef().get();
+    const compDoc = await         window.companyRef().get();
     const botToken = compDoc.data()?.integrations?.telegram?.botToken
         || bp.bots.find(b => b.channel === 'telegram')?.token;
 
@@ -2137,8 +2132,7 @@ window.bpSendBroadcast = async function() {
     document.getElementById('bcastStatTotal').textContent = targets.length;
 
     // Зберігаємо broadcast запис зі статусом 'running'
-    const broadcastRef = await firebase.firestore()
-        window.companyRef().collection(window.DB_COLS.BROADCASTS)
+    const broadcastRef = await         window.companyRef().collection(window.DB_COLS.BROADCASTS)
         .add({
             text: text || '',
             flowSendId: flowSendId || null,
@@ -2296,8 +2290,7 @@ async function renderSettingsTab() {
         return;
     }
 
-    const compDoc = await firebase.firestore()
-        window.companyRef().get();
+    const compDoc = await         window.companyRef().get();
     const compData = compDoc.data() || {};
     const webhookUrl = `https://test-talko-task-manager-test-production.up.railway.app/api/webhook?companyId=${window.currentCompanyId}&channel=${bot.channel}`;
 
@@ -2620,8 +2613,7 @@ window.settingsSaveApiKey = window.saveBotApiKey = async function(type) {
     const result = document.getElementById('apiKeyResult');
     try {
         const field = type === 'openai' ? 'openaiApiKey' : 'anthropicApiKey';
-        await firebase.firestore()
-            window.companyRef()
+        await             window.companyRef()
             .update({ [field]: key, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         if (keyEl) keyEl.value = '•••••' + key.slice(-4);
         if (result) result.innerHTML = `<span style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Збережено</span>`;
@@ -2639,8 +2631,7 @@ window.settingsToggleNotify = async function(enabled) {
     const thumb = document.getElementById('settingsNotifyThumb');
     if (track) track.style.background = enabled ? '#22c55e' : '#d1d5db';
     if (thumb) thumb.style.left = enabled ? '20px' : '2px';
-    await firebase.firestore()
-        window.companyRef()
+    await         window.companyRef()
         .update({ notifyEnabled: enabled });
 };
 
@@ -2648,8 +2639,7 @@ window.settingsSaveNotify = async function() {
     const tgId = document.getElementById('settingsNotifyTgId')?.value.trim();
     const result = document.getElementById('notifyResult');
     try {
-        await firebase.firestore()
-            window.companyRef()
+        await             window.companyRef()
             .update({ notifyTelegramId: tgId, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         if (result) result.innerHTML = `<span style="color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Збережено</span>`;
         setTimeout(() => { if (result) result.innerHTML = ''; }, 3000);
