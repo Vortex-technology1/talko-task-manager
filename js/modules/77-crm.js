@@ -797,6 +797,12 @@ function _dealCard(deal) {
     const isStale = isActive && daysSinceUpdate >= 7;
     const staleDays = isStale ? daysSinceUpdate : 0;
 
+    // Час в поточній стадії
+    const stageMs = deal.stageEnteredAt?.toMillis ? deal.stageEnteredAt.toMillis() : (deal.stageEnteredAt ? new Date(deal.stageEnteredAt).getTime() : (updMs || 0));
+    const daysInStage = stageMs ? Math.floor((Date.now() - stageMs) / 86400000) : 0;
+    const stageTimeLabel = daysInStage > 0 ? (daysInStage === 1 ? '1 день' : daysInStage < 5 ? daysInStage + ' дні' : daysInStage + ' днів') : 'сьогодні';
+    const stageTimeColor = daysInStage >= 14 ? '#ef4444' : daysInStage >= 7 ? '#f59e0b' : '#9ca3af';
+
     return `
     <div draggable="true" data-deal-id="${deal.id}"
         ondragstart="crmDragStart(event,'${deal.id}')"
@@ -834,7 +840,7 @@ function _dealCard(deal) {
             <span style="font-size:0.78rem;font-weight:700;color:${deal.amount ? '#16a34a' : '#d1d5db'};">
                 ${deal.amount ? _fmt(deal.amount) : '—'}
             </span>
-            <span style="font-size:0.62rem;color:#d1d5db;">${date}</span>
+            <span style="font-size:0.62rem;color:${stageTimeColor};font-weight:${daysInStage>=7?'600':'400'};" title="Час в стадії">${isActive ? '⏱ '+stageTimeLabel : date}</span>
         </div>
         ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#3b82f6'};">📅 ${deal.nextContactDate}</div>` : ''}
         ${(deal.tags||[]).length ? `<div style="margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:2px;">${(deal.tags||[]).map(tag=>`<span style="font-size:0.6rem;padding:1px 5px;background:#f3f4f6;color:#6b7280;border-radius:3px;">${_esc(tag)}</span>`).join('')}</div>` : ''}
@@ -888,8 +894,13 @@ window.crmDrop = async function(e, newStage) {
     deal.stage = newStage;
     _renderKanban();
     try {
+        // Перевірка обов'язкових полів
+        const ok = await _checkRequiredFields(deal, newStage);
+        if (!ok) { deal.stage = oldStage; _renderKanban(); return; }
+
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
-        await ref.update({ stage: newStage, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await ref.update({ stage: newStage, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        deal.stageEnteredAt = { toMillis: () => Date.now() };
         await ref.collection('history').add({
             type:'stage_changed', from:oldStage, to:newStage,
             by: window.currentUser?.email || 'manager',
@@ -974,8 +985,13 @@ window.crmQuickSetStage = async function(dealId, newStage) {
     _renderKanban();
 
     try {
+        // Перевірка обов'язкових полів
+        const ok = await _checkRequiredFields(deal, newStage);
+        if (!ok) { deal.stage = oldStage; _renderKanban(); return; }
+
         const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
-        await ref.update({ stage: newStage, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await ref.update({ stage: newStage, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        deal.stageEnteredAt = { toMillis: () => Date.now() };
         await ref.collection('history').add({
             type: 'stage_changed', from: oldStage, to: newStage,
             by: window.currentUser?.email || 'manager',
@@ -2310,22 +2326,50 @@ function _renderAnalytics() {
                 </div>` : '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>'}
             </div>
 
-            <!-- Воронка конверсії -->
+            <!-- Воронка конверсій між стадіями -->
             <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
-                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span> Воронка конверсії</div>
-                ${byStage.filter(s=>s.count>0).map(s => {
-                    const pct = total > 0 ? Math.round(s.count/total*100) : 0;
-                    return `
-                    <div style="margin-bottom:0.45rem;">
-                        <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
-                            <span style="font-size:0.74rem;color:#374151;font-weight:500;">${_esc(s.label)}</span>
-                            <span style="font-size:0.7rem;color:#9ca3af;">${s.count} · ${pct}%</span>
-                        </div>
-                        <div style="background:#f1f5f9;border-radius:3px;height:5px;">
-                            <div style="height:100%;background:${s.color||'#22c55e'};width:${pct}%;border-radius:3px;transition:width 0.3s;"></div>
-                        </div>
-                    </div>`;
-                }).join('') || '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>'}
+                <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span> Конверсія між стадіями</div>
+                ${(() => {
+                    const funnelStages = (crm.pipeline?.stages || [])
+                        .filter(s => !['lost'].includes(s.id))
+                        .sort((a,b) => a.order - b.order);
+                    const won = crm.deals.filter(d => d.stage === 'won').length;
+                    let html = '';
+                    funnelStages.forEach((s, i) => {
+                        const cnt = s.id === 'won' ? won : crm.deals.filter(d => {
+                            if (d.stage === s.id) return true;
+                            // також рахуємо тих, хто пройшов через цю стадію (по history не доступно тут, тому рахуємо всіх з stage >= поточної)
+                            const sIdx = funnelStages.findIndex(x => x.id === d.stage);
+                            return sIdx > i;
+                        }).length;
+                        const prevCnt = i === 0 ? (total || 1) : (() => {
+                            const prevS = funnelStages[i-1];
+                            return crm.deals.filter(d => {
+                                const sIdx = funnelStages.findIndex(x => x.id === d.stage);
+                                return sIdx >= i-1;
+                            }).length || 1;
+                        })();
+                        const pct = total > 0 ? Math.round(cnt / total * 100) : 0;
+                        const convPct = prevCnt > 0 ? Math.round(cnt / prevCnt * 100) : 0;
+                        const barW = pct;
+                        html += `<div style="margin-bottom:0.5rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+                                <div style="display:flex;align-items:center;gap:5px;">
+                                    <span style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;"></span>
+                                    <span style="font-size:0.74rem;color:#374151;font-weight:500;">${_esc(s.label)}</span>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:6px;">
+                                    ${i > 0 ? `<span style="font-size:0.65rem;color:${convPct>=50?'#22c55e':convPct>=25?'#f59e0b':'#ef4444'};font-weight:700;background:${convPct>=50?'#f0fdf4':convPct>=25?'#fffbeb':'#fef2f2'};padding:1px 5px;border-radius:3px;">↓${convPct}%</span>` : ''}
+                                    <span style="font-size:0.7rem;color:#9ca3af;">${cnt}</span>
+                                </div>
+                            </div>
+                            <div style="background:#f1f5f9;border-radius:3px;height:6px;">
+                                <div style="height:100%;background:${s.color};width:${barW}%;border-radius:3px;transition:width 0.3s;"></div>
+                            </div>
+                        </div>`;
+                    });
+                    return html || '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>';
+                })()}
             </div>
         </div>
 
@@ -2468,6 +2512,37 @@ function _renderCRMSettings() {
                 Зберегти стадії
             </button>
         </div>
+
+        <!-- Обов'язкові поля при зміні стадії -->
+        <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
+            <div style="${sectionTitle}">Обов'язкові поля при переході в стадію</div>
+            <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.75rem;">При переході в стадію буде запит відсутніх даних</div>
+            ${stages.filter(s => !['won','lost'].includes(s.id)).map(s => {
+                const req = (pipeline?.stageRequiredFields || {})[s.id] || [];
+                const fields = [
+                    { id:'amount',          label:'Сума угоди' },
+                    { id:'nextContactDate', label:'Дата контакту' },
+                    { id:'assigneeId',      label:'Відповідальний' },
+                    { id:'phone',           label:'Телефон клієнта' },
+                    { id:'clientNiche',     label:'Ніша клієнта' },
+                ];
+                return `<div style="margin-bottom:0.65rem;padding:0.55rem 0.65rem;background:#f8fafc;border-radius:7px;border-left:4px solid ${s.color};">
+                    <div style="font-size:0.78rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">${_esc(s.label)}</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+                        ${fields.map(f => `
+                        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.72rem;color:#374151;
+                            background:${req.includes(f.id)?'#f0fdf4':'white'};border:1px solid ${req.includes(f.id)?'#bbf7d0':'#e8eaed'};
+                            border-radius:5px;padding:3px 8px;">
+                            <input type="checkbox" ${req.includes(f.id)?'checked':''} value="${f.id}"
+                                onchange="crmToggleRequiredField('${s.id}','${f.id}',this.checked)"
+                                style="margin:0;accent-color:#22c55e;">
+                            ${f.label}
+                        </label>`).join('')}
+                    </div>
+                </div>`;
+            }).join('')}
+        </div>
+
     </div>`;
 }
 
@@ -2576,6 +2651,103 @@ window.crmSaveStages = async function() {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
+
+// Обов'язкові поля при зміні стадії
+window.crmToggleRequiredField = async function(stageId, fieldId, checked) {
+    if (!crm.pipeline) return;
+    if (!crm.pipeline.stageRequiredFields) crm.pipeline.stageRequiredFields = {};
+    const cur = crm.pipeline.stageRequiredFields[stageId] || [];
+    crm.pipeline.stageRequiredFields[stageId] = checked
+        ? [...new Set([...cur, fieldId])]
+        : cur.filter(f => f !== fieldId);
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE).doc(crm.pipeline.id)
+            .update({ stageRequiredFields: crm.pipeline.stageRequiredFields, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    } catch(e) {
+        console.error('[CRM reqFields]', e);
+    }
+};
+
+// Перевірка обов'язкових полів перед зміною стадії
+// Повертає true якщо все ок, false якщо показано popup
+async function _checkRequiredFields(deal, newStage) {
+    const req = (crm.pipeline?.stageRequiredFields || {})[newStage] || [];
+    if (!req.length) return true;
+
+    const FIELD_LABELS = {
+        amount: 'Сума угоди',
+        nextContactDate: 'Дата наступного контакту',
+        assigneeId: 'Відповідальний менеджер',
+        phone: 'Телефон клієнта',
+        clientNiche: 'Ніша / сфера клієнта',
+    };
+
+    const missing = req.filter(f => !deal[f]);
+    if (!missing.length) return true;
+
+    // Показуємо popup для заповнення
+    const stageName = _stageLabel(newStage);
+    const overlay = document.createElement('div');
+    overlay.id = 'crmRequiredFieldsModal';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:10200;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:1rem;';
+
+    const inp = 'width:100%;padding:0.45rem 0.6rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.82rem;box-sizing:border-box;font-family:inherit;';
+
+    overlay.innerHTML = `
+    <div style="background:white;border-radius:12px;padding:1.25rem;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="font-weight:700;font-size:0.95rem;color:#111827;margin-bottom:0.3rem;">Обов'язкові поля</div>
+        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;">Для переходу в <b style="color:#374151;">${_esc(stageName)}</b> заповніть:</div>
+        <div id="crmReqFieldsList" style="display:flex;flex-direction:column;gap:0.65rem;">
+            ${missing.map(f => `
+            <div>
+                <label style="font-size:0.72rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.25rem;">${FIELD_LABELS[f] || f}</label>
+                ${f === 'assigneeId' ? `
+                <select id="crmReqField_${f}" style="${inp}">
+                    <option value="">— оберіть —</option>
+                    ${(typeof users !== 'undefined' ? users : []).map(u => `<option value="${u.id}">${_esc(u.name)}</option>`).join('')}
+                </select>` :
+                f === 'nextContactDate' ? `<input type="date" id="crmReqField_${f}" style="${inp}" value="${deal[f]||''}">` :
+                f === 'amount' ? `<input type="number" id="crmReqField_${f}" style="${inp}" placeholder="0" min="0" value="${deal[f]||''}">` :
+                `<input type="text" id="crmReqField_${f}" style="${inp}" placeholder="${FIELD_LABELS[f]||f}" value="${_esc(deal[f]||'')}">`
+                }
+            </div>`).join('')}
+        </div>
+        <div style="display:flex;gap:0.6rem;margin-top:1rem;">
+            <button onclick="document.getElementById('crmRequiredFieldsModal').remove()"
+                style="flex:1;padding:0.5rem;background:#f3f4f6;color:#374151;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
+                Скасувати
+            </button>
+            <button id="crmReqFieldsConfirm"
+                style="flex:2;padding:0.5rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-weight:600;font-size:0.82rem;">
+                Зберегти і продовжити
+            </button>
+        </div>
+    </div>`;
+
+    document.body.appendChild(overlay);
+
+    return new Promise(resolve => {
+        document.getElementById('crmReqFieldsConfirm').onclick = async () => {
+            const updates = {};
+            let valid = true;
+            missing.forEach(f => {
+                const el = document.getElementById('crmReqField_' + f);
+                const val = el?.value?.trim();
+                if (!val) { el?.style && (el.style.borderColor='#ef4444'); valid = false; return; }
+                updates[f] = f === 'amount' ? Number(val) : val;
+                Object.assign(deal, updates); // оновлюємо локально
+            });
+            if (!valid) { if (typeof showToast === 'function') showToast('Заповніть усі поля', 'error'); return; }
+            // Зберігаємо в Firestore
+            try {
+                await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id).update(updates);
+            } catch(e) { console.error('[CRM reqFields save]', e); }
+            overlay.remove();
+            resolve(true);
+        };
+        overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.remove(); resolve(false); }});
+    });
+}
 
 // Stage drag-and-drop reorder
 let _stageDragId = null;
