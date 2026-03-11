@@ -413,7 +413,7 @@
         }
         
         function openTaskModalForKanban(colId, mode) {
-            openAddTask();
+            openTaskModal(); // відкриває форму нового завдання
             // Pre-set based on column
             setTimeout(() => {
                 if (mode === 'kanban') {
