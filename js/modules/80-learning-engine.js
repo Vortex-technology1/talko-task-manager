@@ -113,7 +113,7 @@
                     <div class="learning-stat-label">${isRu ? 'Модулей' : 'Модулів'}</div>
                 </div>
                 <div class="learning-progress-bar-wrap">
-                    
+                    <div class="progress-fill" style="width:${stats.pct}%"></div>
                 </div>
             </div>
 
@@ -130,7 +130,9 @@
         const title = isRu ? (module.title_ru || module.title) : module.title;
         const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
         const isCompleted = module.completed;
-        const isAvailable = module.id === 0 || (learningCourseData[module.id - 1] && learningCourseData[module.id - 1].completed) || module.id <= 3;
+        const moduleIndex = learningCourseData.findIndex(m => m.id === module.id);
+        // Перші 3 модулі (індекси 0,1,2) — завжди доступні; далі — тільки після завершення попереднього
+        const isAvailable = moduleIndex <= 2 || (moduleIndex > 0 && learningCourseData[moduleIndex - 1] && learningCourseData[moduleIndex - 1].completed);
 
         return `
         <div class="l-module-card ${isCompleted ? 'completed' : ''} ${!isAvailable ? 'locked' : ''}" 
@@ -5009,11 +5011,17 @@
 
 
     // ── Mark complete ─────────────────────────────────────────
+    const _learningToggleLock = new Set(); // lock for double-click (БАГ 3)
+
     window._toggleLearningComplete = function(moduleId, done) {
+        if (_learningToggleLock.has(moduleId)) return;
+        _learningToggleLock.add(moduleId);
         if (!learningProgress[moduleId]) learningProgress[moduleId] = {};
         learningProgress[moduleId].completed = done;
         updateModulesFromLearningProgress();
-        saveLearningProgress();
+        saveLearningProgress().finally(() => {
+            _learningToggleLock.delete(moduleId);
+        });
         window._openLearningModule(moduleId);
     };
 
@@ -5021,11 +5029,33 @@
     window._saveLearningHomework = function(moduleId) {
         const ta = document.getElementById('learningHwTextarea');
         if (!ta) return;
+
+        // БАГ 6: підтвердження перед видаленням статусу "Виконано"
+        const wasHomeworkDone = learningProgress[moduleId] && learningProgress[moduleId].homeworkDone;
+        const newHomeworkDone = ta.value.trim().length > 0;
+        if (wasHomeworkDone && !newHomeworkDone) {
+            const isRu = getLearningLang() === 'ru';
+            const msg = isRu ? 'Очистить домашнее задание и снять статус "Выполнено"?' : 'Очистити домашнє завдання та зняти статус "Виконано"?';
+            if (!confirm(msg)) return;
+        }
+
+        // БАГ 2: disable кнопки + feedback
+        const btn = document.querySelector('.l-btn-save-hw');
+        if (btn) {
+            btn.disabled = true;
+            const origText = btn.innerHTML;
+            btn.innerHTML = '✓ ' + (getLearningLang() === 'ru' ? 'Сохранено' : 'Збережено');
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = origText;
+            }, 2000);
+        }
+
         if (!learningProgress[moduleId]) learningProgress[moduleId] = {};
         learningProgress[moduleId].homeworkText = ta.value;
-        learningProgress[moduleId].homeworkDone = ta.value.trim().length > 0;
+        learningProgress[moduleId].homeworkDone = newHomeworkDone;
         saveLearningProgress();
-        window._openLearningModule(moduleId);
+        setTimeout(() => window._openLearningModule(moduleId), 2100);
     };
 
     // ── Init (called when tab opens) ──────────────────────────
