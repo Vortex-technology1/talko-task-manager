@@ -264,11 +264,21 @@
             const completedToday = lastCompleted && getLocalDateStr(lastCompleted) === todayDateStr;
             
             // Check if task was generated today
-            const generatedTasks = tasks.filter(t => 
-                t.regularTaskId === rt.id && 
-                t.createdAt?.toDate && 
-                getLocalDateStr(t.createdAt.toDate()) === todayDateStr
-            );
+            const generatedTasks = tasks.filter(t => {
+                if (t.regularTaskId !== rt.id) return false;
+                // createdAt може бути Firestore Timestamp (.toDate) або JS Date або рядок
+                let createdDate;
+                try {
+                    if (t.createdAt?.toDate) {
+                        createdDate = getLocalDateStr(t.createdAt.toDate());
+                    } else if (t.createdAt instanceof Date) {
+                        createdDate = getLocalDateStr(t.createdAt);
+                    } else {
+                        createdDate = t.createdDate || '';
+                    }
+                } catch(e) { createdDate = t.createdDate || ''; }
+                return createdDate === todayDateStr;
+            });
             
             if (completedToday) {
                 return { status: 'completed', color: '#4caf50', text: t('completedStatus'), lucideIcon: 'check-circle', completedToday: true };

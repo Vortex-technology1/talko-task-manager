@@ -77,7 +77,9 @@
             const role = currentUserData.role;
             if ((typeof hasPermission === 'function' && hasPermission('editAnyTask')) || role === 'owner' || role === 'admin' || role === 'manager') return true;
             const uid = currentUser?.uid || '';
-            return task.assigneeId === uid || task.creatorId === uid;
+            // BUG 7 FIX: співвиконавці повинні мати право редагування (узгоджено з isTaskVisibleToUser)
+            return task.assigneeId === uid || task.creatorId === uid ||
+                   (task.coExecutorIds && task.coExecutorIds.includes(uid));
         }
         
         function isManagerOrAbove() {
