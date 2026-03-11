@@ -608,14 +608,15 @@ service cloud.firestore {
     // SETTINGS (AI assistants, global config)
     // =====================
     match /settings/{doc} {
-      // P0 SEC FIX: openaiApiKey не має читати будь-який юзер
-      allow read: if isSuperAdmin();
-      allow write: if isSuperAdmin();
+      // openaiApiKey — тільки superAdmin
+      // onboarding, preferences — власник і менеджер
+      allow read: if isSuperAdmin() || (doc != 'main' && isManagerOrOwner(companyId));
+      allow write: if isSuperAdmin() || (doc == 'onboarding' && isManagerOrOwner(companyId));
     }
     
     match /settings/{doc}/{sub=**} {
-      allow read: if isSuperAdmin();
-      allow write: if isSuperAdmin();
+      allow read: if isSuperAdmin() || isManagerOrOwner(companyId);
+      allow write: if isSuperAdmin() || (doc == 'onboarding' && isManagerOrOwner(companyId));
     }
   }
 }

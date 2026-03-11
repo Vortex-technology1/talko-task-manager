@@ -236,6 +236,8 @@
                 case 'marketing': if (typeof window.initLandingPagesModule === 'function') window.initLandingPagesModule(); break;
                 case 'sites': if (typeof window.initSitesModule === 'function') window.initSitesModule(); break;
                 case 'integrations': if (typeof window.initIntegrationsModule === 'function') window.initIntegrationsModule(); break;
+                case 'crm': if (typeof window.initCRMModule === 'function') window.initCRMModule(); break;
+                case 'bots': if (typeof window.initBotsModule === 'function') window.initBotsModule(); break;
             }
             
             updateOverdueBadges();
