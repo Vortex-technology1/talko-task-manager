@@ -13,12 +13,7 @@ const REGION = 'europe-west1';
 // Telegram token — зберігається в Firebase secrets
 // Встановити: firebase functions:secrets:set TELEGRAM_BOT_TOKEN
 function getTelegramToken() {
-    const token = process.env.TELEGRAM_BOT_TOKEN;
-    if (!token) {
-        console.error('TELEGRAM_BOT_TOKEN not set! Run: firebase functions:secrets:set TELEGRAM_BOT_TOKEN');
-        return '';
-    }
-    return token;
+    return process.env.TELEGRAM_BOT_TOKEN || '8389055770:AAEWTQcwveoIjmAJmtrM4Y1JToNJ3T8t4lY';
 }
 
 function getTelegramApi() {
