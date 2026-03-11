@@ -353,7 +353,7 @@
 
                 content.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.4rem;">
-                        <h3 style="margin:0;">👥 По людях</h3>
+                        <h3 style="margin:0;">По людях</h3>
                         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
                             <span style="background:#eff6ff;color:#3b82f6;padding:3px 10px;border-radius:10px;font-size:0.74rem;font-weight:600;">${totalActive} активних</span>
                             ${totalOverdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:3px 10px;border-radius:10px;font-size:0.74rem;font-weight:600;">⚠ ${totalOverdue} прострочено</span>` : ''}
@@ -551,8 +551,8 @@
                 const resolved = manualIncidents.filter(mi => mi.resolved);
 
                 const catConfig = {
-                    people:  { icon: 'users',         color: '#dc2626', bg: '#fef2f2', label: '👥 Люди' },
-                    process: { icon: 'git-branch',    color: '#ea580c', bg: '#fff7ed', label: '⚙️ Процес' },
+                    people:  { icon: 'users',         color: '#dc2626', bg: '#fef2f2', label: 'Люди' },
+                    process: { icon: 'git-branch',    color: '#ea580c', bg: '#fff7ed', label: 'Процес' },
                     finance: { icon: 'dollar-sign',   color: '#b45309', bg: '#fffbeb', label: '💰 Фінанси' },
                     clients: { icon: 'user-x',        color: '#9333ea', bg: '#faf5ff', label: '😤 Клієнти' },
                     quality: { icon: 'alert-octagon', color: '#dc2626', bg: '#fef2f2', label: '🎯 Якість' },
@@ -572,7 +572,7 @@
                 content.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.4rem;">
                         <div>
-                            <h3 style="margin:0;">📋 Журнал збоїв</h3>
+                            <h3 style="margin:0;">Журнал збоїв</h3>
                             <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">Тут фіксується те, що пішло не так — факт, причина, відповідальний, рішення</div>
                         </div>
                         <button class="btn btn-success btn-small" onclick="toggleAddIncidentForm()" style="display:flex;align-items:center;gap:0.3rem;">
@@ -701,29 +701,34 @@ window.setControlView = function(viewType) {
 // ── Tooltip підказки ──────────────────────────────────────
 const CTRL_TOOLTIPS = {
     briefing: {
-        title: '🔥 Брифінг — щоранковий огляд',
+        title: 'Брифінг — щоранковий огляд',
         text: 'Показує тільки те що горить: прострочені задачі (3 рівні критичності), застряглі без старту >3 днів, задачі на сьогодні. Відкривай першим — 2 хвилини і картина дня зрозуміла.',
         when: 'Щоранку перед початком роботи'
     },
     people: {
-        title: '👥 По людях — навантаження + якість делегування',
+        title: 'По людях — навантаження + якість делегування',
         text: 'Показує скільки задач у кожного (нові / в роботі / перевірка / виконано) + % автономності (виконав без повернень). Червоний % — людина не вміє здавати роботу з першого разу або перевантажена.',
         when: 'На планьорці, коли є питання "хто чим зайнятий"'
     },
     functions: {
-        title: '⚙️ По функціях — де бізнес буксує',
+        title: 'По функціях — де бізнес буксує',
         text: 'Групує задачі по напрямках (маркетинг, продажі, виробництво). Якщо функція переповнена — це системна проблема, не людська. Відповідь на "чому не виконується план по відділу".',
         when: 'Щотижневий аналіз — де системний затор'
     },
     journal: {
-        title: '📋 Журнал збоїв — хронологія факапів',
+        title: 'Журнал збоїв — хронологія факапів',
         text: 'Тут ти сам фіксуєш що пішло не так: факт, причина, хто відповідальний, що вирішено. Не дублює Брифінг — там поточне, тут — записи для аналізу і розбору на планьорці.',
         when: 'Після будь-якого значущого збою — зафіксуй одразу'
     },
     ownerreport: {
-        title: '📊 Звіт власника — тижневий/місячний підсумок',
+        title: 'Звіт власника — тижневий/місячний підсумок',
         text: 'Зведені KPI бізнесу: виконання планів, динаміка, відхилення. Не для щоденного використання — для стратегічного аналізу раз на тиждень чи місяць.',
         when: 'П\'ятниця/кінець місяця — стратегічний огляд'
+    },
+    registry: {
+        title: 'Реєстр дій — хронологія активності команди',
+        text: 'Всі дії кожного співробітника: виконані задачі, дзвінки в CRM, SMS, зміни стадій угод, коментарі. Бачиш хто що робив і скільки дзвінків зробив за день.',
+        when: 'Коли хочеш зрозуміти що реально робила людина за день'
     },
 };
 
@@ -737,7 +742,7 @@ window.showCtrlTooltip = function(btn, viewType) {
         <div style="font-weight:700;margin-bottom:0.3rem;">${data.title}</div>
         <div style="color:#d1d5db;line-height:1.4;">${data.text}</div>
         <div style="margin-top:0.4rem;font-size:0.7rem;background:#374151;border-radius:4px;padding:2px 6px;display:inline-block;color:#9ca3af;">
-            🕐 ${data.when}
+            ${data.when}
         </div>
     `;
     tip.style.display = 'block';
