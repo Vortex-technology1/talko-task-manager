@@ -770,10 +770,10 @@ document.addEventListener('mousedown', function(e) {
                                 <input type="text" class="tsearch" id="taskSearchInput" placeholder="Пошук..." data-i18n-placeholder="search" oninput="syncSearchInputs(this);debouncedRenderTasks()">
                             </div>
                             <div class="ttabs" id="dateTabs">
-                                <button class="task-type-tab active" data-value="" onclick="setDateFilter(this, '')">Всі</button>
-                                <button class="task-type-tab" data-value="today" onclick="setDateFilter(this, 'today')">День</button>
-                                <button class="task-type-tab" data-value="week" onclick="setDateFilter(this, 'week')">Тиждень</button>
-                                <button class="task-type-tab" data-value="month" onclick="setDateFilter(this, 'month')">Місяць</button>
+                                <button class="task-type-tab active" data-value="" onclick="setDateFilter(this, '')" data-i18n="all">Всі</button>
+                                <button class="task-type-tab" data-value="today" onclick="setDateFilter(this, 'today')" data-i18n="day">День</button>
+                                <button class="task-type-tab" data-value="week" onclick="setDateFilter(this, 'week')" data-i18n="week">Тиждень</button>
+                                <button class="task-type-tab" data-value="month" onclick="setDateFilter(this, 'month')" data-i18n="month">Місяць</button>
                                 <button class="task-type-tab" data-value="overdue" onclick="setDateFilter(this, 'overdue')" style="color:#ef4444;">!</button>
                             </div>
                             <input type="hidden" id="dateFilter" value="">
