@@ -93,7 +93,8 @@
 
     // ── Load ───────────────────────────────────────────────
     async function loadCoordData() {
-        if (!window.currentCompanyId) return;
+        console.log('[Coord] loadCoordData start, companyId:', window.currentCompanyId);
+        if (!window.currentCompanyId) { console.warn('[Coord] no companyId — abort'); return; }
         coordUnsubscribes.forEach(u => u());
         coordUnsubscribes = [];
 
@@ -115,8 +116,10 @@
             });
         coordUnsubscribes.push(taskUnsub);
 
+        console.log('[Coord] subscribing to coordinations collection...');
         const coordUnsub = col('coordinations')
             .onSnapshot(snap => {
+                console.log('[Coord] snapshot received, docs:', snap.docs.length);
                 coordinations = snap.docs
                     .map(d => ({ id: d.id, ...d.data() }))
                     .sort((a, b) => {
@@ -126,7 +129,7 @@
                     });
                 renderCoordList();
             }, err => {
-                console.error('[Coordination] snapshot error:', err.message);
+                console.error('[Coordination] snapshot error:', err.code, err.message);
                 renderCoordList();
             });
         coordUnsubscribes.push(coordUnsub);
@@ -1155,12 +1158,13 @@
 
     // ── Tab integration ────────────────────────────────────
     window.onSwitchTab && window.onSwitchTab('coordination', function() {
-        loadCoordData().then(() => renderCoordination());
+        renderCoordination(); // показуємо UI одразу (порожній стан)
+        loadCoordData();      // потім завантажуємо дані (onSnapshot оновить список)
     });
 
     document.addEventListener('DOMContentLoaded',()=>{
         const a=document.querySelector('.tab-btn.active[data-tab]');
-        if(a?.dataset.tab==='coordination') loadCoordData().then(()=>renderCoordination());
+        if(a?.dataset.tab==='coordination') { renderCoordination(); loadCoordData(); }
     });
 
 })();
