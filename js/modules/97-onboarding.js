@@ -26,7 +26,7 @@ const OB_STEPS = [
 <b>Канбан</b> — по стовпцях статусів: Нове → В роботі → На перевірці → Виконано. Видно де завдання «застрягають».<br>
 <b>Терміни</b> — часова шкала (Gantt) — показує хто що і коли робить, де перетинаються навантаження.<br><br>
 <b>Фільтри</b> — пошук по системі: по виконавцю, статусу, функції, дедлайну, пріоритету. Можна комбінувати. Фільтр зберігається до наступного відкриття.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про завдання</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про завдання</a>`,
         tasks: [
             { id: 'v1', text: 'Відкрити вкладку «Всі завдання» і переключити всі 6 видів', detail: 'Зверніть увагу: кожен вид — інша задача управління. Список і Канбан — для щоденної роботи. Тиждень/Місяць — для планування.' },
             { id: 'v2', text: 'Застосувати фільтр: обрати конкретного виконавця', detail: 'Вгорі над списком завдань — панель фільтрів. Оберіть ім\'я зі списку — одразу побачите лише їхні завдання.' },
@@ -34,7 +34,7 @@ const OB_STEPS = [
             { id: 'v4', text: 'Знайти завдання через глобальний пошук (рядок зверху)', detail: 'Пошук зверху — це «Google по системі». Шукає по назві завдань, коментарях, іменах. Працює миттєво.' },
         ],
         action: { label: 'Відкрити завдання', tab: 'tasks' },
-        tip: '💡 Порада: канбан-вид ідеальний для щотижневого огляду з командою — одразу видно де стопор і чому не рухається.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Порада: канбан-вид ідеальний для щотижневого огляду з командою — одразу видно де стопор і чому не рухається.'
     },
     {
         id: 'tasks_anatomy',
@@ -57,7 +57,7 @@ const OB_STEPS = [
 <b>Повторювана задача</b> — щоденна/тижнева/місячна. Налаштовується один раз.<br>
 <b>Перевірка після виконання</b> — виконавець відмічає done → статус «На перевірці» → йде до контролера.<br>
 <b>Коментарі та файли</b> — вся комунікація зберігається всередині завдання.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про постановку завдань</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про постановку завдань</a>`,
         tasks: [
             { id: 'a1', text: 'Створити тестове завдання з повним заповненням полів', detail: 'Натисніть + або «Нове завдання». Заповніть: назву, виконавця, дедлайн, пріоритет, очікуваний результат, формат звіту.' },
             { id: 'a2', text: 'Додати до завдання чекліст з 3 підпунктів', detail: 'Всередині завдання — розділ «Чекліст» → «Додати пункт». Зручно для складних задач.' },
@@ -66,7 +66,7 @@ const OB_STEPS = [
             { id: 'a5', text: 'Написати коментар і прикріпити файл до завдання', detail: 'Внизу завдання — поле коментаря і скрепка для файлу. Вся переписка залишається тут назавжди.' },
         ],
         action: { label: 'Відкрити завдання', tab: 'tasks' },
-        tip: '💡 Правило: якщо виконавець може зробити завдання без жодного додаткового питання — поставлено правильно.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Правило: якщо виконавець може зробити завдання без жодного додаткового питання — поставлено правильно.'
     },
     {
         id: 'regular_tasks',
@@ -82,7 +82,7 @@ const OB_STEPS = [
 <b>Щомісячні</b> — у визначену дату місяця. «Підготувати звіт по продажах 30-го числа».<br><br>
 Налаштовуєте один раз → система ставить завдання автоматично → виконавець отримує нотифікацію в Telegram.<br><br>
 Можна налаштувати: виконавця, дедлайн (через скільки годин/днів після створення), очікуваний результат, нагадування.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про регулярні завдання</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про регулярні завдання</a>`,
         tasks: [
             { id: 'reg1', text: 'Відкрити вкладку «Регулярні завдання»', detail: 'Завдання → «Регулярні» або через меню «Всі завдання» → вкладка «Регулярні».' },
             { id: 'reg2', text: 'Визначити 3 завдання що ви ставите вручну щотижня', detail: 'Наприклад: звіт, планерка, перевірка показників. Це кандидати на автоматизацію.' },
@@ -90,7 +90,7 @@ const OB_STEPS = [
             { id: 'reg4', text: 'Перевірити що завдання автоматично з\'явилось у виконавця', detail: 'Відкрийте «Всі завдання» → фільтр по виконавцю. Регулярне завдання вже там з дедлайном.' },
         ],
         action: { label: 'Відкрити регулярні', tab: 'regular' },
-        tip: '💡 Золоте правило: будь-яке завдання що ви ставите більше 2 разів — автоматизуйте. Регулярні завдання економлять 3-5 годин на місяць тільки на постановці.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Золоте правило: будь-яке завдання що ви ставите більше 2 разів — автоматизуйте. Регулярні завдання економлять 3-5 годин на місяць тільки на постановці.'
     },
 
     // ═══════════════════════════════════════════
@@ -108,13 +108,13 @@ const OB_STEPS = [
 <b>Звичайний вид</b> — всі завдання на сьогодні з дедлайнами, відсортовані по пріоритету. Видно статус кожного.<br><br>
 <b>Режим «Фокус»</b> — одне завдання на весь екран. Виконав → натиснув «Готово» → система показує наступне. Без відволікань. Для тих хто легко «розпилюється».<br><br>
 Різниця: <b>звичайний вид</b> — для планування і огляду, <b>Фокус</b> — для виконання коли потрібна концентрація.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про Мій день</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про Мій день</a>`,
         tasks: [
             { id: 'm1', text: 'Відкрити «Мій день» і переглянути свої завдання на сьогодні', detail: 'Перша вкладка в нижній навігації. Якщо завдань немає — створіть тестове з дедлайном сьогодні.' },
             { id: 'm2', text: 'Перемкнути в режим «Фокус» і виконати одне завдання', detail: 'Кнопка «Фокус» вгорі вкладки. Натисніть «Готово» — система перейде до наступного завдання автоматично.' },
         ],
         action: { label: 'Відкрити Мій день', tab: 'myday' },
-        tip: '💡 Попросіть команду починати день з «Мого дня». 5 хвилин зранку — і кожен знає свій план. Без нарад, без питань «що сьогодні робити».'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Попросіть команду починати день з «Мого дня». 5 хвилин зранку — і кожен знає свій план. Без нарад, без питань «що сьогодні робити».'
     },
 
     // ═══════════════════════════════════════════
@@ -135,7 +135,7 @@ const OB_STEPS = [
 — <b>Картка</b> — детально: відповідальний, KPI, завдання, статистика<br>
 — <b>Структура</b> — схема зв'язків між функціями<br><br>
 Функції пов'язані з завданнями, статистикою і фінансами — вся аналітика розрізається по функціях.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про функції і KPI</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про функції і KPI</a>`,
         tasks: [
             { id: 'f1', text: 'Відкрити Система → Функції і переглянути наявні', detail: 'Якщо функцій немає — це перше що потрібно налаштувати. Без функцій аналітика не працює коректно.' },
             { id: 'f2', text: 'Створити або відредагувати 3 ключові функції свого бізнесу', detail: 'Кнопка «Додати функцію». Назва + відповідальний + 1-3 KPI. Приклад для продажів: «Нових клієнтів на місяць = 20».' },
@@ -143,7 +143,7 @@ const OB_STEPS = [
             { id: 'f4', text: 'До кожної функції додати мінімум 1 KPI з конкретним числом', detail: 'KPI без числа — не KPI. «Збільшити продажі» — ціль. «25 угод на місяць» — KPI.' },
         ],
         action: { label: 'Відкрити функції', tab: 'functions' },
-        tip: '💡 Мінімум для старту: 3-5 функцій з KPI. Це фундамент для всієї аналітики і звітності в системі.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Мінімум для старту: 3-5 функцій з KPI. Це фундамент для всієї аналітики і звітності в системі.'
     },
     {
         id: 'structure_users',
@@ -161,7 +161,7 @@ const OB_STEPS = [
 — <b>Employee</b> — бачить тільки свої завдання<br><br>
 <b>Запрошення</b> — Email → співробітник отримує лист → реєструється → одразу прив'язується до компанії.<br><br>
 <b>Важливо:</b> роль встановлюється при запрошенні. Після реєстрації змінити можна в картці співробітника.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про структуру і ролі</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про структуру і ролі</a>`,
         tasks: [
             { id: 's1', text: 'Переглянути схему структури компанії', detail: 'Система → Структура. Якщо схема порожня — потрібно заповнити відділи.' },
             { id: 's2', text: 'Відкрити картку будь-якого співробітника і переглянути поля', detail: 'Клік на картку — бачите роль, статус, завдання. Звідси можна змінити роль або заблокувати доступ.' },
@@ -169,7 +169,7 @@ const OB_STEPS = [
             { id: 's4', text: 'Перевірити ролі і переконатись що всі мають правильний рівень доступу', detail: 'Owner бачить все. Manager — свою команду. Employee — тільки себе. Налаштуйте правильно з першого разу.' },
         ],
         action: { label: 'Відкрити структуру', tab: 'bizstructure' },
-        tip: '💡 Помилка №1: всім дають роль Owner «для зручності». Потім дивуються чому співробітники бачать зарплати одне одного.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Помилка №1: всім дають роль Owner «для зручності». Потім дивуються чому співробітники бачать зарплати одне одного.'
     },
 
     // ═══════════════════════════════════════════
@@ -190,14 +190,14 @@ const OB_STEPS = [
 — <b>Таймлайн</b> — Gantt-схема. Видно хто що і коли робить, де перетинаються строки, де є залежності.<br><br>
 <b>Прогрес проєкту</b> — автоматично рахується з виконаних завдань. Видно % готовності.<br><br>
 Приклади проєктів: «Відкриття нової точки», «Запуск нового продукту», «Ремонт офісу», «Впровадження CRM».<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про проєкти</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про проєкти</a>`,
         tasks: [
             { id: 'pr1', text: 'Відкрити вкладку «Проєкти» і переглянути наявні', detail: 'Якщо проєктів немає — створіть тестовий. Назва + дедлайн + кілька завдань.' },
             { id: 'pr2', text: 'Переключити вид проєкту: Карти → Список → Таймлайн', detail: 'Кнопки переключення вгорі проєкту. Таймлайн — найінформативніший вид для контролю.' },
             { id: 'pr3', text: 'Додати кілька завдань до проєкту і перевірити прогрес', detail: 'В проєкті кнопка «+ Завдання». Додайте 3-4 завдання → перевірте таймлайн.' },
         ],
         action: { label: 'Відкрити проєкти', tab: 'projects' },
-        tip: '💡 Таймлайн — найпотужніший інструмент для складних проєктів. Відразу видно де «вузьке місце» і хто блокує решту команди.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Таймлайн — найпотужніший інструмент для складних проєктів. Відразу видно де «вузьке місце» і хто блокує решту команди.'
     },
     {
         id: 'processes',
@@ -216,7 +216,7 @@ const OB_STEPS = [
 — Закриття місяця в бухгалтерії<br>
 — Підготовка комерційної пропозиції<br><br>
 Кожен етап: відповідальний + строк виконання в днях + очікуваний результат.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про процеси</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про процеси</a>`,
         tasks: [
             { id: 'proc1', text: 'Відкрити вкладку «Процеси» і переглянути логіку', detail: 'Знайдіть демо-шаблони або існуючі процеси. Зверніть увагу на структуру: шаблон → запуск → активний процес.' },
             { id: 'proc2', text: 'Визначити 1 повторюваний процес у своєму бізнесі', detail: 'Що ви робите кілька разів на місяць однаково? Це кандидат на процес.' },
@@ -224,36 +224,70 @@ const OB_STEPS = [
             { id: 'proc4', text: 'Запустити процес і перевірити що завдання створились автоматично', detail: 'Кнопка «Запустити» в шаблоні. Перейдіть в «Всі завдання» — завдання вже там з виконавцями і дедлайнами.' },
         ],
         action: { label: 'Відкрити процеси', tab: 'processes' },
-        tip: '💡 1 налаштований процес = сотні годин зекономленого часу за рік. Почніть з того що повторюється найчастіше.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> 1 налаштований процес = сотні годин зекономленого часу за рік. Почніть з того що повторюється найчастіше.'
     },
 
     // ═══════════════════════════════════════════
     // БЛОК 5 — КОНТРОЛЬ І КООРДИНАЦІЇ
     // ═══════════════════════════════════════════
     {
-        id: 'coordination',
+        id: 'coordination_types',
         icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
         color: '#f59e0b',
-        title: 'Координації: наради що дають результат',
-        subtitle: 'Блок 5 · Контроль',
+        title: 'Координації: типи і коли використовувати',
+        subtitle: 'Блок 5 · Координації',
         est: '10 хв',
-        description: `<b>Біль без цього:</b> нарада проходить, всі розійшлись, через тиждень — нічого не зроблено. Рішення не зафіксовані або «загубились в месенджері».<br><br>
-<b>Координації</b> — структуровані зустрічі де кожне рішення автоматично перетворюється на завдання з виконавцем і дедлайном.<br><br>
-<b>Типи координацій:</b><br>
-— Щотижнева планерка<br>
-— Тактична нарада<br>
-— Стратегічна сесія<br>
-— Звіт за місяць<br><br>
-<b>Процес:</b> Створюєте координацію → обираєте тип → додаєте учасників → в ході наради фіксуєте рішення прямо в системі → кожне рішення = завдання з виконавцем і строком.<br><br>
-Вся історія координацій зберігається. Через місяць можна переглянути що вирішували і що виконали.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про координації</a>`,
+        description: `<b>Біль без цього:</b> нарада проходить раз на тиждень, всі розійшлись, через тиждень — нічого не зроблено. Рішення «загубились в месенджері» або залишились «в голові» у керівника.<br><br>
+<b>Координація</b> — це не просто нарада. Це структурована зустріч де кожне рішення одразу стає завданням з виконавцем і дедлайном.<br><br>
+<b>8 типів координацій у TALKO:</b><br><br>
+<b>Щоденна</b> <span style="color:#6b7280;font-size:.82rem">· 20 хв</span> — швидкий стендап. Що зроблено вчора, що сьогодні, що блокує. Не обговорення — синхронізація.<br><br>
+<b>Щотижнева</b> <span style="color:#6b7280;font-size:.82rem">· 60 хв</span> — основна планерка тижня. Статистики + виконання попередніх завдань + нові пріоритети.<br><br>
+<b>Місячна</b> <span style="color:#6b7280;font-size:.82rem">· 90 хв</span> — підведення підсумків місяця. Цифри, аналіз, рішення на наступний місяць.<br><br>
+<b>Рекомендаційна рада</b> <span style="color:#6b7280;font-size:.82rem">· 60 хв</span> — зовнішні радники або ментори. Обговорення стратегічних питань, отримання рекомендацій.<br><br>
+<b>Рада директора</b> <span style="color:#6b7280;font-size:.82rem">· 60 хв</span> — управлінські рішення: фінанси, інвестиції, стратегія, кадрові питання топ-рівня.<br><br>
+<b>Виконавча рада</b> <span style="color:#6b7280;font-size:.82rem">· 90 хв</span> — операційні питання: процеси, ресурси, виконання планів. Для команди керівників.<br><br>
+<b>Рада засновників</b> <span style="color:#6b7280;font-size:.82rem">· 120 хв</span> — між власниками бізнесу. Стратегія, розподіл прибутку, партнерські питання.<br><br>
+<b>Разова</b> <span style="color:#6b7280;font-size:.82rem">· 45 хв</span> — будь-яка позапланова зустріч: вирішення конкретної проблеми, мозковий штурм, презентація.<br><br>
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про координації</a>`,
         tasks: [
-            { id: 'c1', text: 'Відкрити вкладку «Координації» і переглянути типи', detail: 'Бачите список типів координацій. Кожен тип має свій шаблон порядку денного.' },
-            { id: 'c2', text: 'Створити тестову координацію і пройти через процес', detail: 'Кнопка «Нова координація» → оберіть тип → додайте учасників → зафіксуйте 1-2 тестових рішення.' },
-            { id: 'c3', text: 'Перевірити що рішення перетворились на завдання', detail: 'Після завершення координації — перейдіть у «Всі завдання». Зафіксовані рішення вже там.' },
+            { id: 'ct1', text: 'Відкрити вкладку «Координації» і переглянути всі 8 типів', detail: 'Тут список всіх типів з кольоровим маркуванням. Кожен тип — окремий шаблон порядку денного і тривалість.' },
+            { id: 'ct2', text: 'Визначити які типи координацій потрібні вашому бізнесу', detail: 'Мінімум для старту: Щотижнева (основна планерка) + Місячна (підсумки). Для команди керівників — Виконавча рада.' },
+            { id: 'ct3', text: 'Налаштувати регулярну щотижневу координацію в потрібний день', detail: 'Кнопка «Нова координація» → тип «Щотижнева» → день тижня → час → список учасників.' },
         ],
         action: { label: 'Відкрити координації', tab: 'coordination' },
-        tip: '💡 Правило: кожна нарада закінчується списком завдань з іменами і датами. Якщо цього немає — нарада була марна.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Щотижнева планерка — базовий ритм бізнесу. Без неї команда «розсипається» на острівці.'
+    },
+    {
+        id: 'coordination_process',
+        icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+        color: '#f59e0b',
+        title: 'Координації: як провести і зафіксувати результат',
+        subtitle: 'Блок 5 · Координації',
+        est: '15 хв',
+        description: `<b>Біль без цього:</b> навіть якщо нарада проведена — рішення «загубились». Немає протоколу, немає відповідальних, немає контролю виконання.<br><br>
+<b>Порядок денний координації</b> — фіксований для кожного типу. Для щотижневої:<br><br>
+<div style="display:grid;gap:6px;margin:8px 0;">
+<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:.85rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><b>1. Статистики учасників</b> — кожен озвучує свої ключові показники за тиждень</div>
+<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:.85rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><b>2. Виконання попередніх завдань</b> — чи виконані завдання з минулої координації</div>
+<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:.85rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg><b>3. Звіти учасників</b> — короткий звіт кожного по своєму напрямку</div>
+<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:.85rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><b>4. Питання від учасників</b> — питання що потребують спільного вирішення</div>
+<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#fef9c3;border-radius:8px;border:1px solid #fde047;font-size:.85rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><b>5. Рішення</b> — фіксуємо кожне рішення прямо в системі</div>
+<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;font-size:.85rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg><b>6. Нові завдання</b> — кожне рішення одразу перетворюється на завдання</div>
+</div>
+<b>Таймер</b> — вбудований зворотний відлік. Допомагає не виходити за регламент.<br><br>
+<b>Протокол</b> — після завершення система автоматично формує PDF-протокол: рішення + завдання + учасники + час.<br><br>
+<b>Ескалація</b> — якщо питання не вирішене на цьому рівні — можна ескалювати на вищий рівень координації одним кліком.<br><br>
+<b>Аналітика</b> — скільки координацій проведено, скільки рішень прийнято, скільки виконано, середня тривалість.<br><br>
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про проведення координацій</a>`,
+        tasks: [
+            { id: 'cp1', text: 'Створити координацію «Щотижнева» і додати учасників', detail: 'Кнопка «Нова координація» → тип «Щотижнева» → введіть назву → додайте всіх учасників зі списку.' },
+            { id: 'cp2', text: 'Запустити координацію і пройти порядок денний до кінця', detail: 'Натисніть «Почати» → система покаже порядок денний → пройдіть кожен пункт → зафіксуйте мінімум 1 рішення.' },
+            { id: 'cp3', text: 'Зафіксувати рішення і призначити виконавця з дедлайном', detail: 'В пункті «Рішення» → «+ Додати рішення» → текст → виконавець → дедлайн. Одразу стає завданням.' },
+            { id: 'cp4', text: 'Завершити координацію і перевірити що завдання з\'явились', detail: 'Кнопка «Завершити» → підтвердити. Перейдіть у «Всі завдання» — всі рішення вже там з виконавцями.' },
+            { id: 'cp5', text: 'Відкрити автоматично сформований протокол', detail: 'В архіві координацій → клік на завершену → кнопка «Протокол». Готовий PDF для збереження або відправки.' },
+        ],
+        action: { label: 'Відкрити координації', tab: 'coordination' },
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Правило: кожна нарада закінчується протоколом із завданнями. Якщо немає протоколу — нарада була неформальною розмовою.'
     },
     {
         id: 'control',
@@ -267,7 +301,7 @@ const OB_STEPS = [
 <b>Навантаження</b> — хто і скільки завдань веде. Дисбаланс (хтось 15 завдань, хтось 2) — сигнал проблеми.<br><br>
 <b>Воронка делегування</b> — на якому етапі «застрягають» завдання. Якщо більшість на «Нове» — команда не бере в роботу.<br><br>
 <b>Журнал управлінських збоїв</b> — реєстр ситуацій що заважають бізнесу. Фіксуєте: факт → причина → рішення. Через 3 місяці видно системні патерни.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про контроль</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про контроль</a>`,
         tasks: [
             { id: 'ctrl1', text: 'Відкрити «Контроль» → натиснути «Критична увага»', detail: 'Це ваш щоранковий ритуал. 2 хвилини — і ви знаєте де «пожежа».' },
             { id: 'ctrl2', text: 'Переглянути «Навантаження» — побачити розподіл по команді', detail: 'Хто має 15 завдань а хто 2? Дисбаланс — ознака неправильного делегування.' },
@@ -275,7 +309,7 @@ const OB_STEPS = [
             { id: 'ctrl4', text: 'Додати перший запис в «Журнал управлінських збоїв»', detail: 'Будь-яка ситуація що повторюється і заважає. Фіксуємо: факт → причина → рішення.' },
         ],
         action: { label: 'Відкрити контроль', tab: 'control' },
-        tip: '💡 Щоранковий ритуал керівника: 5 хвилин в «Критичній увазі» — і ви знаєте стан бізнесу без єдиної наради.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Щоранковий ритуал керівника: 5 хвилин в «Критичній увазі» — і ви знаєте стан бізнесу без єдиної наради.'
     },
 
     // ═══════════════════════════════════════════
@@ -296,14 +330,14 @@ const OB_STEPS = [
 — <b>Місячні</b>: прибуток, ріст бази, NPS<br><br>
 <b>Імпорт/Експорт</b> — завантажити дані з Excel або вивантажити для зовнішнього аналізу.<br><br>
 Метрики переключаються кнопками День/Тиждень/Місяць. Система показує динаміку: ростемо чи падаємо і на скільки %.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про аналітику</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про аналітику</a>`,
         tasks: [
             { id: 'an1', text: 'Відкрити «Ефективність» — переглянути статистику по завданнях', detail: 'Тут видно хто виконує вчасно а хто постійно переносить. Об\'єктивні дані без емоцій.' },
             { id: 'an2', text: 'Відкрити «Статистика» і додати 3 ключові метрики свого бізнесу', detail: 'Кнопка «+ Метрика». Приклади: «Виручка за день», «Нових клієнтів», «Виконаних замовлень». Вводьте дані щодня.' },
             { id: 'an3', text: 'Переключити метрики між День / Тиждень / Місяць', detail: 'Місяць показує тренд, день — поточний пульс.' },
         ],
         action: { label: 'Відкрити аналітику', tab: 'analytics' },
-        tip: '💡 Правило: якщо метрика не вимірюється — нею неможливо управляти. Почніть з 3 цифр і заповнюйте щодня.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Правило: якщо метрика не вимірюється — нею неможливо управляти. Почніть з 3 цифр і заповнюйте щодня.'
     },
 
     // ═══════════════════════════════════════════
@@ -326,14 +360,14 @@ const OB_STEPS = [
 <b>Топ витрат по категоріях</b> — де найбільше «йде» грошей.<br><br>
 <b>Структура витрат</b> — кругова діаграма розподілу.<br><br>
 <b>Сигнали</b> — автоматичні попередження: витрати перевищили доходи, незвичайно великі транзакції, бюджет перевищено.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про фінанси</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про фінанси</a>`,
         tasks: [
             { id: 'fin1', text: 'Відкрити Бізнес → Фінанси і переглянути дашборд', detail: 'Оберіть поточний місяць. Якщо немає даних — це нормально для першого входу.' },
             { id: 'fin2', text: 'Переглянути всі підвкладки: Доходи, Витрати, Рахунки, Планування', detail: 'Пройдіть по кожній вкладці — зрозумійте логіку розділу перед тим як вносити дані.' },
             { id: 'fin3', text: 'Налаштувати рахунки (каса, банк, картка)', detail: 'Фінанси → Налаштування → Рахунки. Додайте мінімум 2: готівка і поточний рахунок.' },
         ],
         action: { label: 'Відкрити фінанси', tab: 'finance' },
-        tip: '💡 Фінанси без даних — красивий але порожній дашборд. Почніть вносити транзакції з сьогоднішнього дня і через місяць побачите реальну картину.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Фінанси без даних — красивий але порожній дашборд. Почніть вносити транзакції з сьогоднішнього дня і через місяць побачите реальну картину.'
     },
     {
         id: 'finance_transactions',
@@ -348,7 +382,7 @@ const OB_STEPS = [
 <b>Категорії</b> налаштовуються під ваш бізнес. Системні категорії вже є — можна додати свої.<br><br>
 <b>Фільтри:</b> по даті, категорії, рахунку, функції. Будь-яку вибірку можна експортувати в Excel.<br><br>
 <b>Повторювані транзакції</b> — орендна плата, підписки, зарплата — налаштовуються один раз і списуються автоматично.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про транзакції</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про транзакції</a>`,
         tasks: [
             { id: 'fin4', text: 'Внести 3 тестові доходи по різних категоріях', detail: 'Фінанси → Доходи → «+ Дохід». Оберіть категорію, суму, рахунок, дату. Це 1-2 хвилини на транзакцію.' },
             { id: 'fin5', text: 'Внести 3 тестові витрати по різних категоріях', detail: 'Фінанси → Витрати → «+ Витрата». Важливо: прив\'яжіть до функції щоб аналітика по відділах працювала.' },
@@ -356,7 +390,7 @@ const OB_STEPS = [
             { id: 'fin7', text: 'Перевірити як виглядає дашборд після внесення даних', detail: 'Повернутись на дашборд — тепер графіки і топ витрат заповнені реальними даними.' },
         ],
         action: { label: 'Відкрити фінанси', tab: 'finance' },
-        tip: '💡 Стандарт: вносити транзакції щодня або мінімум раз на 2-3 дні. Якщо накопичилось за тиждень — уже важко відновити деталі.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Стандарт: вносити транзакції щодня або мінімум раз на 2-3 дні. Якщо накопичилось за тиждень — уже важко відновити деталі.'
     },
     {
         id: 'finance_invoices',
@@ -373,14 +407,14 @@ const OB_STEPS = [
 <b>Нагадування</b> — автоматичні нагадування клієнту про оплату за N днів до дедлайну.<br><br>
 <b>Аналітика по рахунках</b> — скільки виставлено, скільки оплачено, скільки прострочено. Середній час оплати.<br><br>
 Оплачений рахунок автоматично створює транзакцію доходу — не потрібно вносити двічі.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про рахунки</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про рахунки</a>`,
         tasks: [
             { id: 'fin8', text: 'Відкрити Фінанси → Рахунки і переглянути розділ', detail: 'Тут список всіх виставлених рахунків і їх статуси.' },
             { id: 'fin9', text: 'Створити тестовий рахунок клієнту на 2-3 позиції', detail: 'Кнопка «+ Рахунок» → оберіть клієнта (або введіть email) → додайте позиції → встановіть дедлайн оплати.' },
             { id: 'fin10', text: 'Перемістити рахунок в статус «Оплачено» і перевірити що транзакція з\'явилась', detail: 'Клікніть на рахунок → змініть статус на «Оплачено» → перейдіть в Доходи — транзакція вже там.' },
         ],
         action: { label: 'Відкрити фінанси', tab: 'finance' },
-        tip: '💡 Правило: будь-яка послуга — рахунок в системі. Не «домовились на словах». Рахунок = юридичний документ + контроль оплати автоматично.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Правило: будь-яка послуга — рахунок в системі. Не «домовились на словах». Рахунок = юридичний документ + контроль оплати автоматично.'
     },
     {
         id: 'finance_planning',
@@ -395,7 +429,7 @@ const OB_STEPS = [
 <b>Бюджет по функціях</b> — скільки може витратити кожен відділ. Відділ маркетингу — 30,000 грн. Відділ продажів — 15,000 грн. При перевищенні — автоматичний сигнал.<br><br>
 <b>Plan vs Fact</b> — таблиця порівняння: що планували і що фактично вийшло. Відхилення в % і сумах.<br><br>
 <b>Прогноз</b> — на основі поточних даних система розраховує очікуваний результат місяця.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про бюджетування</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про бюджетування</a>`,
         tasks: [
             { id: 'fin11', text: 'Відкрити Фінанси → Планування', detail: 'Оберіть поточний місяць. Побачите форму для введення планових показників.' },
             { id: 'fin12', text: 'Внести план доходів на поточний місяць', detail: 'Вкажіть очікуваний дохід по кожній категорії. Наприклад: Послуги 150,000 + Передоплати 50,000.' },
@@ -403,7 +437,7 @@ const OB_STEPS = [
             { id: 'fin14', text: 'Переглянути план vs факт і зрозуміти відхилення', detail: 'Якщо є транзакції за поточний місяць — одразу побачите де перевищуєте бюджет.' },
         ],
         action: { label: 'Відкрити фінанси', tab: 'finance' },
-        tip: '💡 Бюджет без контролю — папірець. Переглядайте план vs факт раз на тиждень. 15 хвилин і ви знаєте де «тече».'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Бюджет без контролю — папірець. Переглядайте план vs факт раз на тиждень. 15 хвилин і ви знаєте де «тече».'
     },
     {
         id: 'finance_analytics',
@@ -419,14 +453,14 @@ const OB_STEPS = [
 <b>Аналітика по функціях</b> — яка функція (відділ) найприбутковіша і яка «їсть» найбільше.<br><br>
 <b>Аналітика по категоріях</b> — де ростуть витрати, де ростуть доходи.<br><br>
 <b>Експорт</b> — будь-який звіт в Excel або PDF для бухгалтера або інвестора.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про фін-аналітику</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про фін-аналітику</a>`,
         tasks: [
             { id: 'fin15', text: 'Відкрити Фінанси → Аналітика', detail: 'Оберіть період і переглянути доступні звіти.' },
             { id: 'fin16', text: 'Переглянути P&L звіт за поточний або минулий місяць', detail: 'Якщо є транзакції — P&L заповниться автоматично. Зверніть увагу на маржинальність.' },
             { id: 'fin17', text: 'Перевірити аналітику по функціях — який відділ найбільше витрачає', detail: 'Це покаже де можна оптимізувати витрати без шкоди для бізнесу.' },
         ],
         action: { label: 'Відкрити фінанси', tab: 'finance' },
-        tip: '💡 P&L звіт — це перший документ який потрібен при розмові з інвестором, банком або партнером. Тепер він формується автоматично.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> P&L звіт — це перший документ який потрібен при розмові з інвестором, банком або партнером. Тепер він формується автоматично.'
     },
 
     // ═══════════════════════════════════════════
@@ -446,7 +480,7 @@ const OB_STEPS = [
 <b>Активності</b> — журнал взаємодій: дзвінок, зустріч, лист. Кожна активність прив'язана до угоди і клієнта.<br><br>
 <b>Аналітика CRM</b> — скільки угод закрито, середній чек, конверсія між стадіями, хто з менеджерів продає краще.<br><br>
 <b>Угоди + рахунки</b> — прямо з угоди виставляється рахунок. Він автоматично потрапляє у Фінанси.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про CRM</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про CRM</a>`,
         tasks: [
             { id: 'crm1', text: 'Відкрити CRM → Бізнес і переглянути канбан угод', detail: 'Налаштуйте назви стадій під свій бізнес: CRM → Налаштування → Воронки.' },
             { id: 'crm2', text: 'Створити тестову угоду і перетягнути між стадіями', detail: 'Кнопка «+ Угода». Заповніть: назва, сума, клієнт, стадія. Спробуйте drag & drop.' },
@@ -454,7 +488,7 @@ const OB_STEPS = [
             { id: 'crm4', text: 'З угоди створити завдання «Передзвонити» з дедлайном', detail: 'Відкрийте угоду → кнопка «Задача» внизу. Завдання одразу з\'являється в системі.' },
         ],
         action: { label: 'Відкрити CRM', tab: 'crm' },
-        tip: '💡 Головне правило CRM: будь-яка взаємодія з клієнтом — фіксується. Через 6 місяців цей журнал стає найціннішим активом бізнесу.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Головне правило CRM: будь-яка взаємодія з клієнтом — фіксується. Через 6 місяців цей журнал стає найціннішим активом бізнесу.'
     },
     {
         id: 'bots_sites',
@@ -471,14 +505,14 @@ const OB_STEPS = [
 — Бот кваліфікує клієнта (різні гілки залежно від відповіді)<br><br>
 <b>Мої сайти</b> — конструктор лендингів прямо в системі. Форми → автоматично в CRM і ботів.<br><br>
 <b>Маркетинг</b> — маркетингові матеріали, шаблони повідомлень, статистика по каналах.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента про боти і сайти</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента про боти і сайти</a>`,
         tasks: [
             { id: 'b1', text: 'Відкрити «Боти» і переглянути як підключається Telegram-бот', detail: 'Боти → «+ Новий бот» → введіть токен від @BotFather → налаштуйте привітальне повідомлення.' },
             { id: 'b2', text: 'Переглянути конструктор ланцюжків повідомлень', detail: 'В боті → «Ланцюги» → «+ Новий ланцюжок». Drag & drop блоки: Повідомлення, Запитання, Умова, Дія.' },
             { id: 'b3', text: 'Відкрити «Мої сайти» і переглянути конструктор', detail: 'Сайти → «+ Новий сайт». Обрати шаблон → редагувати → опублікувати. Форма веде прямо в CRM.' },
         ],
         action: { label: 'Відкрити боти', tab: 'bots' },
-        tip: '💡 Підключіть бота першим. Навіть простий бот що відповідає і передає контакт в CRM — вже краще ніж нічого.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Підключіть бота першим. Навіть простий бот що відповідає і передає контакт в CRM — вже краще ніж нічого.'
     },
 
     // ═══════════════════════════════════════════
@@ -502,14 +536,14 @@ const OB_STEPS = [
 — Асистент для аналізу звітів<br>
 — Асистент для постановки завдань по голосовому опису<br><br>
 <b>Інтеграції</b> — підключення зовнішніх сервісів: Google Calendar (синхронізація дедлайнів), Telegram (нотифікації), Webhook API для власних інтеграцій.<br><br>
-<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">🤖 Відкрити AI-асистента платформи</a>`,
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Відкрити AI-асистента платформи</a>`,
         tasks: [
             { id: 'ai1', text: 'Натиснути зелену кнопку і задати питання про платформу', detail: 'Наприклад: «Як налаштувати повторювану задачу?» або «Як підключити Telegram бота?».' },
             { id: 'ai2', text: 'Відкрити «Інтеграції» і переглянути доступні підключення', detail: 'Бізнес → Інтеграції. Тут: Google Calendar, Telegram, Webhook.' },
             { id: 'ai3', text: 'Підключити Google Calendar або Telegram нотифікації', detail: 'Обрати інтеграцію → дотримуватись інструкції підключення. Займає 3-5 хвилин.' },
         ],
         action: { label: 'Відкрити інтеграції', tab: 'integrations' },
-        tip: '💡 AI-асистент 24/7 — перша точка допомоги. Перш ніж писати розробнику — запитайте асистента. Він знає 90% відповідей і відповідає миттєво.'
+        tip: '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> AI-асистент 24/7 — перша точка допомоги. Перш ніж писати розробнику — запитайте асистента. Він знає 90% відповідей і відповідає миттєво.'
     },
 ];
 
@@ -743,7 +777,7 @@ function renderOnboarding() {
                     </button>` : `
                     <div style="padding:0.6rem 1.25rem;background:#f0fdf4;color:#22c55e;
                         border:1.5px solid #bbf7d0;border-radius:9px;font-size:0.82rem;font-weight:700;">
-                        🎉 Онбординг завершено!
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Онбординг завершено!
                     </div>`}
                 </div>
 
@@ -769,7 +803,7 @@ window.obToggleTask = async function(stepId, taskId) {
     const step = OB_STEPS.find(s => s.id === stepId);
     if (step && stepComplete(step)) {
         ob.progress[stepId].done = true;
-        if (window.showToast) showToast(`✓ Крок "${step.title}" виконано!`, 'success');
+        if (window.showToast) showToast(`[OK] Крок "${step.title}" виконано!`, 'success');
     }
 
     renderOnboarding();
