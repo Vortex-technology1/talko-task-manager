@@ -1555,34 +1555,35 @@ ${context}
 Валюта: ${_state.currency || 'EUR'}. 
 Дата аналізу: ${new Date().toLocaleDateString('uk-UA')}.`;
 
-    // Читаємо ключ з settings/ai
+    // Читаємо OpenAI ключ з settings/ai
     const sSnap = await getDb().collection('settings').doc('ai').get();
-    const apiKey = sSnap.data()?.anthropicApiKey || sSnap.data()?.apiKey || '';
+    const apiKey = sSnap.data()?.openaiApiKey || sSnap.data()?.apiKey || '';
     if (!apiKey) {
       const loadElNoKey = document.getElementById('aiFinLoading');
       if (loadElNoKey) loadElNoKey.remove();
-      _appendAiMsg(chat, 'error', 'API ключ не налаштований. Перейдіть в Інтеграції → Anthropic API і введіть ключ.');
+      _appendAiMsg(chat, 'error', 'API ключ не налаштований. Перейдіть в Налаштування → AI і введіть OpenAI ключ.');
       chat.scrollTop = chat.scrollHeight;
       return;
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
+        'Authorization': 'Bearer ' + apiKey
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'gpt-4o-mini',
         max_tokens: 1000,
-        system: systemPrompt,
-        messages: _aiFinHistory
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ..._aiFinHistory
+        ]
       })
     });
 
     const data = await response.json();
-    const aiText = data.content?.[0]?.text || 'Не вдалося отримати відповідь.';
+    const aiText = data.choices?.[0]?.message?.content || data.error?.message || 'Не вдалося отримати відповідь.';
 
     // Видаляємо індикатор
     const loadElDone = document.getElementById('aiFinLoading');
