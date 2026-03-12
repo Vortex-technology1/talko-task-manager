@@ -301,89 +301,141 @@ function renderSubTab(tab) {
 }
 
 // ── Дашборд (заглушка Етап 1) ─────────────────────────────
+// ── Дашборд — Етап 3 ──────────────────────────────────────
 function renderDashboard(el) {
+  const now = new Date();
+  const monthLabel = now.toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' });
   const totalBalance = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
 
   el.innerHTML = `
     <div style="max-width:960px;margin:0 auto;">
 
-      <!-- Welcome banner -->
-      <div style="
-        background:linear-gradient(135deg,#22c55e,#16a34a);
-        border-radius:16px;padding:1.5rem 2rem;
-        color:#fff;margin-bottom:1.5rem;
-        display:flex;align-items:center;justify-content:space-between;
-      ">
+      <!-- Header рядок -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.5rem;">
         <div>
-          <div style="font-size:1.15rem;font-weight:700;margin-bottom:0.25rem;">Фінанси TALKO</div>
-          <div style="font-size:0.85rem;opacity:0.85;">Управлінський облік вашого бізнесу</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Дашборд</div>
+          <div style="font-size:0.78rem;color:#6b7280;margin-top:0.1rem;">${monthLabel}</div>
         </div>
-        <div style="text-align:right;">
-          <div style="font-size:0.75rem;opacity:0.8;margin-bottom:0.2rem;">Загальний залишок</div>
-          <div style="font-size:1.75rem;font-weight:800;">${fmt(totalBalance)}</div>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <select id="dashMonthSel" onchange="window._dashMonthChange(this.value)"
+            style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+            ${Array.from({length:6},(_,i)=>{
+              const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+              const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+              const lbl=d.toLocaleDateString('uk-UA',{month:'long',year:'numeric'});
+              return `<option value="${val}" ${i===0?'selected':''}>${lbl}</option>`;
+            }).join('')}
+          </select>
+          ${isOwnerOrManager() ? `
+            <button onclick="window._financeAddTransaction()"
+              style="display:flex;align-items:center;gap:0.35rem;padding:0.35rem 0.8rem;
+              background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
+              ${I.plus} Додати
+            </button>
+          ` : ''}
         </div>
       </div>
 
-      <!-- KPI картки (порожні, заповняться в Етапі 2) -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem;">
-        ${[
-          { label: 'Дохід (місяць)',   value: '—',  color: '#22c55e', sub: 'даних ще немає' },
-          { label: 'Витрати (місяць)', value: '—',  color: '#ef4444', sub: 'даних ще немає' },
-          { label: 'Прибуток',         value: '—',  color: '#3b82f6', sub: 'даних ще немає' },
-          { label: 'Маржа %',          value: '—%', color: '#f59e0b', sub: 'даних ще немає' },
-        ].map(k => `
-          <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-            <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.4rem;">${k.label}</div>
-            <div class="kpi-value" style="font-size:1.5rem;font-weight:700;color:${k.color};">${k.value}</div>
-            <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">${k.sub}</div>
+      <!-- KPI картки -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
+        <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">Дохід</div>
+          <div id="kpiIncome" style="font-size:1.5rem;font-weight:800;color:#22c55e;">...</div>
+          <div id="kpiIncomeSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">Витрати</div>
+          <div id="kpiExpense" style="font-size:1.5rem;font-weight:800;color:#ef4444;">...</div>
+          <div id="kpiExpenseSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">Прибуток</div>
+          <div id="kpiProfit" style="font-size:1.5rem;font-weight:800;color:#3b82f6;">...</div>
+          <div id="kpiProfitSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">Маржа</div>
+          <div id="kpiMargin" style="font-size:1.5rem;font-weight:800;color:#f59e0b;">...</div>
+          <div id="kpiMarginSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
+        </div>
+      </div>
+
+      <!-- Графік + Рахунки -->
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:0.75rem;margin-bottom:1.25rem;">
+
+        <!-- Графік доходів/витрат за 6 місяців -->
+        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">Доходи vs Витрати (6 міс.)</div>
+          <div id="dashChart" style="height:160px;display:flex;align-items:flex-end;gap:6px;padding-bottom:24px;position:relative;">
+            <div style="color:#9ca3af;font-size:0.78rem;">Завантаження...</div>
           </div>
-        `).join('')}
-      </div>
-
-      <!-- Рахунки -->
-      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;margin-bottom:1.5rem;">
-        <div style="font-size:0.9rem;font-weight:600;margin-bottom:1rem;color:#1a1a1a;">Рахунки та каси</div>
-        ${_state.accounts.length === 0
-          ? '<div style="color:#9ca3af;font-size:0.85rem;">Рахунки завантажуються...</div>'
-          : _state.accounts.map(acc => `
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid #f3f4f6;">
-              <div style="display:flex;align-items:center;gap:0.6rem;">
-                <div style="width:32px;height:32px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${acc.type === 'cash' ? '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M6 12h.01M18 12h.01"/>' : '<rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/>'}</svg>
-                </div>
-                <div>
-                  <div style="font-size:0.85rem;font-weight:500;">${acc.name}</div>
-                  <div style="font-size:0.72rem;color:#9ca3af;">${acc.currency}</div>
-                </div>
-              </div>
-              <div style="font-size:0.95rem;font-weight:700;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+          <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
+              <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>Доходи
             </div>
-          `).join('')
-        }
+            <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
+              <div style="width:10px;height:10px;border-radius:2px;background:#ef4444;"></div>Витрати
+            </div>
+          </div>
+        </div>
+
+        <!-- Рахунки -->
+        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Рахунки</div>
+          <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #f3f4f6;">
+            <div style="font-size:0.72rem;color:#6b7280;">Загальний залишок</div>
+            <div style="font-size:1.25rem;font-weight:800;color:#1a1a1a;">${fmt(totalBalance)}</div>
+          </div>
+          ${_state.accounts.map(acc => `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
+              <div style="font-size:0.8rem;color:#374151;">${acc.name}</div>
+              <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+            </div>
+          `).join('')}
+        </div>
       </div>
 
-      <!-- Підказка наступного кроку -->
-      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:0.75rem;">
-        <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-        <div>
-          <div style="font-size:0.85rem;font-weight:600;color:#16a34a;">Що далі?</div>
-          <div style="font-size:0.8rem;color:#166534;margin-top:0.2rem;">
-            Натисніть <strong>«Додати»</strong> щоб внести першу транзакцію, або перейдіть у <strong>«Доходи»</strong> / <strong>«Витрати»</strong>
+      <!-- Сигнали + Топ витрат -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
+
+        <!-- Сигнали -->
+        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Сигнали</div>
+          <div id="dashAlerts">
+            <div style="color:#9ca3af;font-size:0.8rem;">Перевірка...</div>
+          </div>
+        </div>
+
+        <!-- Топ витрат по категоріях -->
+        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Топ витрат</div>
+          <div id="dashTopExpense">
+            <div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div>
           </div>
         </div>
       </div>
+
     </div>
   `;
 
-  // Підтягуємо реальні суми місяця в KPI картки
-  loadDashboardKPI();
+  // Завантажуємо дані
+  const selMonth = document.getElementById('dashMonthSel');
+  const monthVal = selMonth ? selMonth.value : (now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'));
+  loadDashboardData(monthVal);
+  loadChartData();
 }
 
-async function loadDashboardKPI() {
+// ── Зміна місяця на дашборді ─────────────────────────────
+window._dashMonthChange = function(monthVal) {
+  loadDashboardData(monthVal);
+};
+
+// ── Завантаження KPI + сигнали + топ витрат ──────────────
+async function loadDashboardData(monthVal) {
   try {
-    const now  = new Date();
-    const from = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth(), 1));
-    const to   = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth()+1, 0, 23, 59, 59));
+    const [y, m] = monthVal.split('-').map(Number);
+    const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
 
     const snap = await colRef('finance_transactions')
       .where('date', '>=', from)
@@ -391,31 +443,206 @@ async function loadDashboardKPI() {
       .get();
 
     let income = 0, expense = 0;
+    const expByCat = {};
+    const catMap = {};
+    (_state.categories.expense || []).forEach(c => { catMap[c.id] = c.name; });
+
     snap.docs.forEach(d => {
       const tx = d.data();
-      if (tx.type === 'income')  income  += (tx.amount || 0);
-      if (tx.type === 'expense') expense += (tx.amount || 0);
+      if (tx.type === 'income')  income += (tx.amount || 0);
+      if (tx.type === 'expense') {
+        expense += (tx.amount || 0);
+        const cn = tx.categoryId || 'other';
+        expByCat[cn] = (expByCat[cn] || 0) + (tx.amount || 0);
+      }
     });
 
     const profit = income - expense;
     const margin = income > 0 ? Math.round(profit / income * 100) : 0;
-    const color  = profit >= 0 ? '#22c55e' : '#ef4444';
+    const pColor = profit >= 0 ? '#22c55e' : '#ef4444';
+    const txCount = snap.docs.length;
 
-    // Оновлюємо картки напряму
-    const cards = document.querySelectorAll('#financeContentInner .kpi-value');
-    if (cards.length >= 4) {
-      cards[0].textContent = fmt(income);
-      cards[0].style.color = '#22c55e';
-      cards[1].textContent = fmt(expense);
-      cards[1].style.color = '#ef4444';
-      cards[2].textContent = fmt(profit);
-      cards[2].style.color = color;
-      cards[3].textContent = margin + '%';
-      cards[3].style.color = color;
+    // KPI
+    const set = (id, val, sub, color) => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = val; if (color) el.style.color = color; }
+      const subEl = document.getElementById(id+'Sub');
+      if (subEl) subEl.textContent = sub || '';
+    };
+    set('kpiIncome',  fmt(income),  `${snap.docs.filter(d=>d.data().type==='income').length} операцій`, '#22c55e');
+    set('kpiExpense', fmt(expense), `${snap.docs.filter(d=>d.data().type==='expense').length} операцій`, '#ef4444');
+    set('kpiProfit',  fmt(profit),  profit >= 0 ? 'прибуток' : 'збиток', pColor);
+    set('kpiMargin',  margin+'%',   income > 0 ? `від доходу ${fmt(income)}` : 'немає доходів', profit>=0?'#22c55e':'#ef4444');
+
+    // Сигнали
+    const alerts = [];
+    if (income === 0 && expense === 0) {
+      alerts.push({ type: 'info', text: 'Немає операцій за цей місяць' });
     }
+    _state.accounts.forEach(acc => {
+      if ((acc.balance || 0) < 0) {
+        alerts.push({ type: 'error', text: `Від'ємний баланс: ${acc.name} (${fmt(acc.balance, acc.currency)})` });
+      }
+    });
+    if (expense > income && income > 0) {
+      alerts.push({ type: 'warn', text: `Витрати перевищують доходи на ${fmt(expense - income)}` });
+    }
+    if (margin < 10 && income > 0) {
+      alerts.push({ type: 'warn', text: `Низька маржа: ${margin}% (норма > 15%)` });
+    }
+    if (alerts.length === 0) {
+      alerts.push({ type: 'ok', text: 'Все в нормі — сигналів немає' });
+    }
+
+    const alertColors = { error: '#ef4444', warn: '#f59e0b', ok: '#22c55e', info: '#6b7280' };
+    const alertBg     = { error: '#fef2f2', warn: '#fffbeb', ok: '#f0fdf4', info: '#f9fafb' };
+    const alertIcon   = {
+      error: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+      warn:  '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+      ok:    '<polyline points="20 6 9 17 4 12"/>',
+      info:  '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+    };
+
+    const alertsEl = document.getElementById('dashAlerts');
+    if (alertsEl) {
+      alertsEl.innerHTML = alerts.map(a => `
+        <div style="display:flex;align-items:flex-start;gap:0.5rem;padding:0.5rem 0.6rem;
+          background:${alertBg[a.type]};border-radius:8px;margin-bottom:0.4rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${alertColors[a.type]}"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
+            ${alertIcon[a.type]}
+          </svg>
+          <div style="font-size:0.78rem;color:${alertColors[a.type]};font-weight:500;">${a.text}</div>
+        </div>
+      `).join('');
+    }
+
+    // Топ витрат по категоріях
+    const topEl = document.getElementById('dashTopExpense');
+    if (topEl) {
+      const sorted = Object.entries(expByCat)
+        .map(([id, amt]) => ({ name: catMap[id] || id, amt }))
+        .sort((a,b) => b.amt - a.amt)
+        .slice(0, 5);
+
+      if (sorted.length === 0) {
+        topEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Витрат немає</div>';
+      } else {
+        const maxAmt = sorted[0].amt;
+        topEl.innerHTML = sorted.map(item => `
+          <div style="margin-bottom:0.6rem;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;">
+              <div style="font-size:0.78rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${item.name}</div>
+              <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">${fmt(item.amt)}</div>
+            </div>
+            <div style="height:4px;background:#f3f4f6;border-radius:2px;">
+              <div style="height:4px;background:#ef4444;border-radius:2px;width:${Math.round(item.amt/maxAmt*100)}%;"></div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
   } catch(e) {
-    console.error('[Finance] loadDashboardKPI error:', e);
+    console.error('[Finance] loadDashboardData error:', e);
   }
+}
+
+// ── Графік 6 місяців (SVG bar chart) ─────────────────────
+async function loadChartData() {
+  const chartEl = document.getElementById('dashChart');
+  if (!chartEl) return;
+
+  try {
+    const now = new Date();
+    const months = Array.from({length:6}, (_,i) => {
+      const d = new Date(now.getFullYear(), now.getMonth()-5+i, 1);
+      return {
+        year: d.getFullYear(),
+        month: d.getMonth()+1,
+        label: d.toLocaleDateString('uk-UA', {month:'short'}),
+        income: 0,
+        expense: 0,
+      };
+    });
+
+    // Завантажуємо всі транзакції за 6 місяців одним запитом
+    const from = firebase.firestore.Timestamp.fromDate(
+      new Date(months[0].year, months[0].month-1, 1)
+    );
+    const to = firebase.firestore.Timestamp.fromDate(
+      new Date(now.getFullYear(), now.getMonth()+1, 0, 23, 59, 59)
+    );
+
+    const snap = await colRef('finance_transactions')
+      .where('date', '>=', from)
+      .where('date', '<=', to)
+      .get();
+
+    snap.docs.forEach(d => {
+      const tx = d.data();
+      const txDate = tx.date?.toDate ? tx.date.toDate() : new Date(tx.date?.seconds*1000 || 0);
+      const mIdx = months.findIndex(m => m.year === txDate.getFullYear() && m.month === txDate.getMonth()+1);
+      if (mIdx < 0) return;
+      if (tx.type === 'income')  months[mIdx].income  += (tx.amount || 0);
+      if (tx.type === 'expense') months[mIdx].expense += (tx.amount || 0);
+    });
+
+    const maxVal = Math.max(...months.map(m => Math.max(m.income, m.expense)), 1);
+    const H = 130; // висота графіка px
+    const barW = 18;
+    const gap = 6;
+    const groupW = barW*2 + gap + 12;
+
+    const svgWidth = months.length * groupW;
+
+    const bars = months.map((m, i) => {
+      const x = i * groupW;
+      const incH = Math.round(m.income  / maxVal * H);
+      const expH = Math.round(m.expense / maxVal * H);
+      return `
+        <g>
+          <!-- Дохід -->
+          <rect x="${x}" y="${H - incH}" width="${barW}" height="${incH || 2}"
+            fill="#22c55e" rx="3" opacity="0.85"/>
+          <!-- Витрата -->
+          <rect x="${x + barW + gap}" y="${H - expH}" width="${barW}" height="${expH || 2}"
+            fill="#ef4444" rx="3" opacity="0.85"/>
+          <!-- Підпис місяця -->
+          <text x="${x + barW}" y="${H + 16}" text-anchor="middle"
+            font-size="10" fill="#9ca3af">${m.label}</text>
+          <!-- Значення при наведенні (title) -->
+          <title>${m.label}: дохід ${fmt(m.income)} / витрати ${fmt(m.expense)}</title>
+        </g>
+      `;
+    }).join('');
+
+    chartEl.innerHTML = `
+      <svg width="100%" viewBox="0 0 ${svgWidth} ${H+24}" preserveAspectRatio="xMidYMid meet"
+        style="overflow:visible;">
+        <!-- Горизонтальні лінії сітки -->
+        ${[0.25,0.5,0.75,1].map(r => `
+          <line x1="0" y1="${H - Math.round(r*H)}" x2="${svgWidth}" y2="${H - Math.round(r*H)}"
+            stroke="#f3f4f6" stroke-width="1"/>
+          <text x="-4" y="${H - Math.round(r*H) + 4}" text-anchor="end"
+            font-size="9" fill="#d1d5db">${fmt(maxVal*r,_state.currency).replace(/[^0-9,. KMk€$₴]/g,'')}</text>
+        `).join('')}
+        ${bars}
+      </svg>
+    `;
+
+  } catch(e) {
+    console.error('[Finance] loadChartData error:', e);
+    const chartEl2 = document.getElementById('dashChart');
+    if (chartEl2) chartEl2.innerHTML = '<div style="color:#9ca3af;font-size:0.78rem;">Графік недоступний</div>';
+  }
+}
+
+async function loadDashboardKPI() {
+  // Тепер використовуємо loadDashboardData
+  const now = new Date();
+  const monthVal = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  await loadDashboardData(monthVal);
 }
 
 // ── Транзакції — Етап 2 ──────────────────────────────────
