@@ -11,10 +11,14 @@
                 // Очищаємо попередні listeners перед ініціалізацією нової сесії
                 cleanupAllListeners();
                 
+                // Встановлюємо isSuperAdmin на основі email
+                isSuperAdmin = (user.email === SUPERADMIN_EMAIL);
+                
                 if (isSuperAdmin) {
-                const superBtn = document.getElementById('superadminBtn');
-                if (superBtn) superBtn.style.display = '';
-                    document.getElementById('adminTabBtn').style.display = 'block';
+                    const superBtn = document.getElementById('superadminBtn');
+                    if (superBtn) superBtn.style.display = '';
+                    const adminBtn = document.getElementById('adminTabBtn');
+                    if (adminBtn) adminBtn.style.display = 'block';
                 }
                 
                 const companyId = await findUserCompany(user.uid, user.email);
