@@ -17,6 +17,18 @@
         return localStorage.getItem('talko_lang') || 'ua';
     }
 
+    // Universal helper: module.title_de || module.title_en || module.title_ru || module.title
+    function getLangField(module, field, lang) {
+        if (!lang || lang === 'ua') return module[field] || '';
+        const localized = module[field + '_' + lang];
+        if (localized) return localized;
+        // fallback chain: en → ru → ua
+        if (lang === 'pl' || lang === 'de') {
+            return module[field + '_en'] || module[field + '_ru'] || module[field] || '';
+        }
+        return module[field + '_ru'] || module[field] || '';
+    }
+
     // ── Firestore helpers ─────────────────────────────────────
     // Use same pattern as 76-coordination: firebase.firestore() + window.currentCompany
     function _db() { return firebase.firestore(); }
@@ -128,8 +140,8 @@
 
     function renderModuleCard(module) {
         const lang = getLearningLang();
-        const title = lang === 'ru' ? (module.title_ru || module.title) : module.title;
-        const subtitle = lang === 'ru' ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
+        const title = getLangField(module, 'title', lang);
+        const subtitle = getLangField(module, 'subtitle', lang);
         const isCompleted = module.completed;
         const moduleIndex = learningCourseData.findIndex(m => m.id === module.id);
         // Перші 3 модулі (індекси 0,1,2) — завжди доступні; далі — тільки після завершення попереднього
@@ -5035,7 +5047,6 @@
         const wasHomeworkDone = learningProgress[moduleId] && learningProgress[moduleId].homeworkDone;
         const newHomeworkDone = ta.value.trim().length > 0;
         if (wasHomeworkDone && !newHomeworkDone) {
-            const isRu = getLearningLang() === 'ru'; // kept for context only
             const msg = t('learningClearConfirm');
             if (!confirm(msg)) return;
         }
@@ -5078,16 +5089,20 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
     function renderAIBlock(module, isRu) {
         const lang = getLearningLang();
-        const title = lang === 'ru' ? (module.title_ru || module.title) : module.title;
-        const hwRaw = lang === 'ru' ? (module.homework_ru || module.homework || '') : (module.homework || '');
+        const title = getLangField(module, 'title', lang);
+        const hwRaw = getLangField(module, 'homework', lang);
         // Витягуємо тільки текст з <li> елементів, ігноруємо заголовки блоку
         const hwItems = [];
         const liMatches = hwRaw.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
         liMatches.forEach(li => hwItems.push(li.replace(/<[^>]*>/g, '').trim()));
         const hw = hwItems.length ? hwItems.join('; ') : hwRaw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
-        const prompt = lang === 'ru'
-            ? `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`
-            : `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
+        const aiPrompts = {
+            ru: `У меня задание из программы обучения TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнее задание: ' + hw + '\n' : ''}\nКак мне это выполнить? Проведи меня шаг за шагом.`,
+            en: `I have an assignment from the TALKO training program:\n\nModule: ${title}\n${hw ? 'Homework: ' + hw + '\n' : ''}\nHow do I complete it? Guide me step by step.`,
+            pl: `Mam zadanie z programu szkoleniowego TALKO:\n\nModuł: ${title}\n${hw ? 'Zadanie domowe: ' + hw + '\n' : ''}\nJak to wykonać? Przeprowadź mnie krok po kroku.`,
+            de: `Ich habe eine Aufgabe aus dem TALKO-Schulungsprogramm:\n\nModul: ${title}\n${hw ? 'Hausaufgabe: ' + hw + '\n' : ''}\nWie soll ich das erledigen? Führe mich Schritt für Schritt.`,
+        };
+        const prompt = aiPrompts[lang] || `У мене завдання з програми навчання TALKO:\n\nМодуль: ${title}\n${hw ? 'Домашнє завдання: ' + hw + '\n' : ''}\nЯк мені це виконати? Проведи мене крок за кроком.`;
         const btnText = 'Запитати AI асистента';
         const descText = 'Зайдіть в AI асистента, натисніть кнопку нижче — промпт скопіюється автоматично. Вставте його в чат і асистент проведе вас через виконання.';
         return `
@@ -5112,11 +5127,10 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         if (!module) return;
         currentLearningModule = module;
         const lang = getLearningLang();
-        const isRu = lang === 'ru';
 
-        const title = isRu ? (module.title_ru || module.title) : module.title;
-        const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
-        const content = isRu ? (module.lessonContent_ru || module.lessonContent || '') : (module.lessonContent || '');
+        const title = getLangField(module, 'title', lang);
+        const subtitle = getLangField(module, 'subtitle', lang);
+        const content = getLangField(module, 'lessonContent', lang);
         const isCompleted = module.completed;
         const hwText = (learningProgress[moduleId] || {}).homeworkText || '';
         const hwDone = (learningProgress[moduleId] || {}).homeworkDone || false;
@@ -5163,12 +5177,12 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
 
                 <!-- Homework block -->
                 ${module.homework ? (() => {
-                    const hwHtml = isRu ? (module.homework_ru || module.homework) : module.homework;
+                    const hwHtml = getLangField(module, 'homework', lang);
                     const liItems2 = [];
                     const liM = hwHtml.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
                     liM.forEach(li => liItems2.push(li.replace(/<[^>]*>/g, '').trim()));
                     const hwLinkUrl = module.homeworkLink || null;
-                    const hwLinkName = isRu ? (module.homeworkLinkName_ru || module.homeworkLinkName || '') : (module.homeworkLinkName || '');
+                    const hwLinkName = getLangField(module, 'homeworkLinkName', lang);
                     return `
                 <div class="l-homework-block">
                     <div class="l-homework-title">
