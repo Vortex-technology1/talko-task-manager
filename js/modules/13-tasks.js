@@ -26,6 +26,7 @@
             
             if (id) {
                 editingId = id;
+                window.currentEditingId = id; // BUG1 FIX: expose for subtasks module
                 if (id) { const _t = tasks.find(t => t.id === id); if (_t) _t._openedAt = Date.now(); }
                 const task = tasks.find(x => x.id === id);
                 if (task) {
@@ -219,6 +220,7 @@
                 }
             } else {
                 editingId = null;
+                window.currentEditingId = null; // BUG1 FIX: clear for subtasks module
                 document.getElementById('taskModalTitle').textContent = t('newTask');
                 const _dupBtnN = document.getElementById('duplicateTaskBtn');
                 if (_dupBtnN) _dupBtnN.style.display = 'none';

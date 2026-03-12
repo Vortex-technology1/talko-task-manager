@@ -74,9 +74,13 @@
         // Open task modal and fill with template data
         openTaskModal();
         
-        setTimeout(() => {
+        // BUG4 FIX: use requestAnimationFrame x2 to wait for modal DOM to settle, avoid race condition
+        const _applyTemplate = () => {
             if (tpl.title) document.getElementById('taskTitle').value = tpl.title;
-            if (tpl.function) document.getElementById('taskFunction').value = tpl.function;
+            if (tpl.function) {
+                const fnEl = document.getElementById('taskFunction');
+                if (fnEl) { fnEl.value = tpl.function; fnEl.dispatchEvent(new Event('change')); }
+            }
             if (tpl.priority) document.getElementById('taskPriority').value = tpl.priority;
             if (tpl.expectedResult) document.getElementById('taskExpectedResult').value = tpl.expectedResult;
             if (tpl.reportFormat) document.getElementById('taskReportFormat').value = tpl.reportFormat;
@@ -85,13 +89,10 @@
             if (tpl.requireReview !== undefined) document.getElementById('taskRequireReview').checked = tpl.requireReview;
             if (tpl.requireReport !== undefined) document.getElementById('taskRequireReport').checked = tpl.requireReport;
             if (tpl.checklist?.length) renderChecklist(tpl.checklist);
-            
-            // Trigger function change to update assignee
-            const funcSelect = document.getElementById('taskFunction');
-            if (funcSelect) funcSelect.dispatchEvent(new Event('change'));
-            
             showToast(t('templateApplied'), 'success', 2000);
-        }, 200);
+        };
+        // double rAF ensures both layout pass + paint before filling fields
+        requestAnimationFrame(() => requestAnimationFrame(_applyTemplate));
     }
     
     function openManageTemplatesModal() {

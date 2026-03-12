@@ -259,7 +259,13 @@
             await firebase.firestore()
                 .collection('companies').doc(cid)
                 .collection('tasks').doc(subtaskId).delete();
+            // BUG2 FIX: remove from local tasks[] so refreshCurrentView doesn't ghost it back
+            if (typeof tasks !== 'undefined') {
+                const _idx = tasks.findIndex(t => t.id === subtaskId);
+                if (_idx >= 0) tasks.splice(_idx, 1);
+            }
             renderSubtasks(parentId);
+            if (typeof refreshCurrentView === 'function') refreshCurrentView();
             if (typeof showToast === 'function') showToast('Підзавдання видалено');
         } catch(err) {
             console.error('deleteSubtask error:', err);

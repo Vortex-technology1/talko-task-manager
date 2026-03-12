@@ -340,7 +340,11 @@
                     }
                 }
                 
+                // BUG3 FIX: success toast after save
+                const _toastKey = currentEditingId ? 'taskUpdated' : 'taskCreated';
+                const _toastMsg = (typeof t === 'function' && t(_toastKey) !== _toastKey) ? t(_toastKey) : (currentEditingId ? 'Завдання збережено ✓' : 'Завдання створено ✓');
                 closeModal('taskModal');
+                showToast(_toastMsg, 'success');
                 
                 // FIX 3: Warning якщо дедлайн задачі > дедлайн проєкту
                 if (data.projectId && data.deadlineDate) {
