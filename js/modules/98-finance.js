@@ -648,7 +648,8 @@ async function loadDashboardData(monthVal) {
         let cumAngle = -90;
         const R = 50, CX = 60, CY = 60;
         const paths = sorted.map((item, i) => {
-          const pct = item.amt / total;
+          if (total === 0) return '';
+        const pct = item.amt / total;
           const angle = pct * 360;
           const startRad = cumAngle * Math.PI / 180;
           const endRad   = (cumAngle + angle) * Math.PI / 180;
@@ -1015,10 +1016,11 @@ async function loadAndRenderTxList(type) {
     if (txs.length > 100) txs = txs.slice(0, 100);
 
     // Кешуємо для метрик (window._financeTxCache = всі останні транзакції)
-    if (!window._financeTxCache) window._financeTxCache = [];
-    txs.forEach(tx => {
-      if (!window._financeTxCache.find(c => c.id === tx.id)) window._financeTxCache.push(tx);
-    });
+    // Замінюємо повністю щоб не накопичувати застарілі дані при зміні фільтра
+    window._financeTxCache = (window._financeTxCache || []).filter(c => !txs.find(t => t.id === c.id));
+    window._financeTxCache.push(...txs);
+    // Обмежуємо розмір кешу
+    if (window._financeTxCache.length > 500) window._financeTxCache = window._financeTxCache.slice(-500);
 
     if (txs.length === 0) {
       listEl.innerHTML = `
@@ -1054,7 +1056,7 @@ async function loadAndRenderTxList(type) {
             </div>
             <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.1rem;">
               ${catName} &bull; ${accName} &bull; ${dateStr}
-              ${tx.counterparty ? ' &bull; ' + tx.counterparty : ''}
+              ${tx.counterparty ? ' &bull; ' + escHtml(tx.counterparty) : ''}
               ${tx.functionId ? ' &bull; <span style="color:#16a34a;">Ф</span>' : ''}
               ${tx.projectId  ? ' &bull; <span style="color:#3b82f6;">П</span>' : ''}
             </div>
@@ -1218,7 +1220,12 @@ window._exportTxXlsx = async function(type) {
       return ssMap[str];
     };
 
-    const cellRef = (col, row) => String.fromCharCode(65 + col) + row;
+    const cellRef = (col, row) => {
+      let s = '';
+      let c = col;
+      do { s = String.fromCharCode(65 + (c % 26)) + s; c = Math.floor(c / 26) - 1; } while (c >= 0);
+      return s + row;
+    };
     let xmlRows = '';
 
     // Header row
@@ -1289,7 +1296,7 @@ window._financeTransfer = function() {
     <div style="background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
         <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">⇄ Переказ між рахунками</div>
-        <button onclick="document.getElementById('transferModal').remove()"
+        <button onclick="document.getElementById('transferModal')?.remove()"
           style="background:none;border:none;font-size:1.2rem;color:#9ca3af;cursor:pointer;padding:2px;">✕</button>
       </div>
 
@@ -1319,7 +1326,7 @@ window._financeTransfer = function() {
       </div>
 
       <div style="display:flex;gap:0.5rem;margin-top:1.25rem;">
-        <button onclick="document.getElementById('transferModal').remove()"
+        <button onclick="document.getElementById('transferModal')?.remove()"
           style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#374151;cursor:pointer;font-size:0.85rem;">
           Скасувати
         </button>
@@ -1337,6 +1344,7 @@ window._financeTransfer = function() {
 };
 
 window._doTransfer = async function() {
+  if (!_state.companyId || !_state.initialized) { if (typeof showToast === 'function') showToast('Фінанси не ініціалізовані', 'error'); return; }
   const fromId = document.getElementById('trFrom')?.value;
   const toId   = document.getElementById('trTo')?.value;
   const amount = parseFloat(document.getElementById('trAmount')?.value || 0);
@@ -1362,13 +1370,17 @@ window._doTransfer = async function() {
     const desc = note || `Переказ між рахунками`;
 
     // Два оновлення балансу + запис в finance_transfers
-    await db.collection('companies').doc(companyId)
-      .collection('finance_accounts').doc(fromId)
-      .update({ balance: firebase.firestore.FieldValue.increment(-amount) });
-
-    await db.collection('companies').doc(companyId)
-      .collection('finance_accounts').doc(toId)
-      .update({ balance: firebase.firestore.FieldValue.increment(amount) });
+    // Атомарно: batch щоб обидва update або жоден
+    const batch = db.batch();
+    batch.update(
+      db.collection('companies').doc(companyId).collection('finance_accounts').doc(fromId),
+      { balance: firebase.firestore.FieldValue.increment(-amount) }
+    );
+    batch.update(
+      db.collection('companies').doc(companyId).collection('finance_accounts').doc(toId),
+      { balance: firebase.firestore.FieldValue.increment(amount) }
+    );
+    await batch.commit();
 
     await db.collection('companies').doc(companyId)
       .collection('finance_transfers').add({
@@ -1508,7 +1520,7 @@ function _invoiceModal(inv) {
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f3f4f6;">
         <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a;">${isEdit ? 'Редагувати рахунок' : 'Новий рахунок'}</div>
-        <button onclick="document.getElementById('invoiceModal').remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
+        <button onclick="document.getElementById('invoiceModal')?.remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
       </div>
 
       <!-- Body -->
@@ -1571,7 +1583,7 @@ function _invoiceModal(inv) {
 
       <!-- Footer -->
       <div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;border-top:1px solid #f3f4f6;">
-        <button onclick="document.getElementById('invoiceModal').remove()"
+        <button onclick="document.getElementById('invoiceModal')?.remove()"
           style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">Скасувати</button>
         <button id="inv_save_btn" onclick="window._invoiceSave('${inv?.id || ''}')"
           style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? 'Зберегти' : 'Створити'}</button>
@@ -2015,7 +2027,7 @@ window._finAddRecurring = function(editId) {
     <div style="background:#fff;border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
         <h3 style="margin:0;font-size:1rem;font-weight:700;">${existing ? 'Редагувати' : 'Новий'} регулярний платіж</h3>
-        <button onclick="document.getElementById('recurringModal').remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
+        <button onclick="document.getElementById('recurringModal')?.remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
       </div>
       <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
 
@@ -2106,7 +2118,7 @@ window._finAddRecurring = function(editId) {
 
         <!-- Кнопки -->
         <div style="display:flex;gap:0.5rem;padding-top:0.5rem;">
-          <button onclick="document.getElementById('recurringModal').remove()"
+          <button onclick="document.getElementById('recurringModal')?.remove()"
             style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;cursor:pointer;font-size:0.9rem;color:#6b7280;">
             Скасувати
           </button>
@@ -2123,7 +2135,8 @@ window._finAddRecurring = function(editId) {
 };
 
 window._recSetType = function(type) {
-  document.getElementById('rec_type').value = type;
+  const recTypeEl = document.getElementById('rec_type');
+  if (recTypeEl) recTypeEl.value = type;
   const eBtn = document.getElementById('rec_type_expense');
   const iBtn = document.getElementById('rec_type_income');
   if (type === 'expense') {
@@ -2350,7 +2363,7 @@ async function loadFunctionsData(monthVal) {
       const fid = tx.functionId || '__none__';
       if (!byFunc[fid]) byFunc[fid] = { income: 0, expense: 0 };
       if (tx.type === 'income')  { byFunc[fid].income  += tx.amount||0; totalIncome  += tx.amount||0; }
-      if (tx.type === 'expense') { byFunc[fid].expense += tx.amount||0; totalExpense += tx.amount||0; }
+      if (tx.type === 'expense') { byFunc[fid].expense += txAmt(tx); totalExpense += txAmt(tx); }
     });
 
     // 4. Будуємо рядки таблиці
@@ -2636,8 +2649,8 @@ async function loadPlanningData(monthVal) {
     let totalIncome = 0, totalExpense = 0;
     txs.forEach(tx => {
       if (tx.type === 'expense') {
-        factByCat[tx.categoryId] = (factByCat[tx.categoryId] || 0) + (tx.amount||0);
-        totalExpense += tx.amount||0;
+        factByCat[tx.categoryId] = (factByCat[tx.categoryId] || 0) + txAmt(tx);
+        totalExpense += txAmt(tx);
       }
       if (tx.type === 'income') totalIncome += tx.amount||0;
     });
@@ -2808,8 +2821,8 @@ async function _renderFunctionsBudget(monthVal) {
     txs.forEach(tx => {
       if (tx.type !== 'expense') return;
       const fid = tx.functionId || '__none__';
-      byFunc[fid] = (byFunc[fid] || 0) + (tx.amount || 0);
-      totalExpense += tx.amount || 0;
+      byFunc[fid] = (byFunc[fid] || 0) + txAmt(tx);
+      totalExpense += txAmt(tx);
     });
 
     const funcs = _state.functions || [];
@@ -3085,8 +3098,8 @@ function _renderPnl(el, txs, currency, from, to) {
       byIncCat[tx.categoryId] = (byIncCat[tx.categoryId] || 0) + txAmt(tx);
       totalInc += txAmt(tx);
     } else {
-      byExpCat[tx.categoryId] = (byExpCat[tx.categoryId] || 0) + (tx.amount || 0);
-      totalExp += tx.amount || 0;
+      byExpCat[tx.categoryId] = (byExpCat[tx.categoryId] || 0) + txAmt(tx);
+      totalExp += txAmt(tx);
     }
   });
 
@@ -3157,8 +3170,8 @@ async function _renderProjectsMargin(el, txs, currency) {
   txs.forEach(tx => {
     if (!tx.projectId) return;
     if (!byProject[tx.projectId]) byProject[tx.projectId] = { income: 0, expense: 0 };
-    if (tx.type === 'income')  byProject[tx.projectId].income  += tx.amount || 0;
-    if (tx.type === 'expense') byProject[tx.projectId].expense += tx.amount || 0;
+    if (tx.type === 'income')  byProject[tx.projectId].income  += txAmt(tx);
+    if (tx.type === 'expense') byProject[tx.projectId].expense += txAmt(tx);
   });
 
   const rows = Object.entries(byProject).map(([pid, d]) => {
@@ -3252,7 +3265,7 @@ function _renderTrends(el, txs, currency, from, to, period) {
     }
     if (!bkey) return;
     if (!byCatBucket[cid]) byCatBucket[cid] = {};
-    byCatBucket[cid][bkey] = (byCatBucket[cid][bkey] || 0) + (tx.amount || 0);
+    byCatBucket[cid][bkey] = (byCatBucket[cid][bkey] || 0) + txAmt(tx);
   });
 
   // Топ-5 категорій за сумою
@@ -3487,7 +3500,13 @@ window._fetchRates = async function() {
   if (st) st.textContent = 'Завантаження...';
   try {
     // Використовуємо відкритий API без ключа
-    const resp = await fetch(`https://api.frankfurter.app/latest?from=${base}`);
+    let resp;
+    try {
+      resp = await fetch(`https://api.frankfurter.app/latest?from=${base}`);
+    } catch(netErr) {
+      // Fallback — exchangerate-api (без ключа, обмежений)
+      resp = await fetch(`https://open.er-api.com/v6/latest/${base}`);
+    }
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const data = await resp.json();
     // frankfurter повертає rates як { USD: 1.08, UAH: 42.1, ... } — тобто скільки ІНОЗЕМНОЇ за 1 BASE
@@ -3965,7 +3984,7 @@ function addTransaction(forceType) {
             background:${type==='expense'?'#ef4444':'#f3f4f6'};color:${type==='expense'?'#fff':'#6b7280'};">
             Витрата
           </button>
-          <button onclick="document.getElementById('financeModal').remove()"
+          <button onclick="document.getElementById('financeModal')?.remove()"
             style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:0.25rem;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -4062,7 +4081,7 @@ function addTransaction(forceType) {
 
         <!-- Кнопки -->
         <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
-          <button onclick="document.getElementById('financeModal').remove()"
+          <button onclick="document.getElementById('financeModal')?.remove()"
             style="flex:1;padding:0.65rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:0.85rem;color:#6b7280;font-weight:500;">
             Скасувати
           </button>
