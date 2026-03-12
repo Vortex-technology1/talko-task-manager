@@ -2759,6 +2759,262 @@
     </div>
 </div>`,
 
+                lessonContent_en: `
+<style>
+.l5e{margin-bottom:1.75rem}.l5e:last-child{margin-bottom:0}.l5e-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l5e-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l5e-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l5e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l5e-card p{font-size:.9rem;color:#374151;line-height:1.65}.l5e-card p+p{margin-top:.7rem}.l5e-flow{display:flex;align-items:center;border-radius:10px;overflow:hidden;margin:.85rem 0}.l5e-fi{flex:1;text-align:center;padding:.75rem .4rem;background:#f0fdf4;border:1px solid #bbf7d0}.l5e-fi.active{background:#22c55e;border-color:#22c55e}.l5e-fi span{display:block;font-weight:700;font-size:.8rem;color:#166534}.l5e-fi.active span{color:white}.l5e-fa{padding:0 .2rem;color:#22c55e;font-weight:700;font-size:1rem;flex-shrink:0}.l5e-bl{display:grid;gap:.55rem;margin-top:.75rem}.l5e-bi{display:flex;align-items:flex-start;gap:.8rem;padding:.8rem .95rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l5e-bic{width:34px;height:34px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l5e-bt{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l5e-bd{font-size:.82rem;color:#525252;line-height:1.5}.l5e-ba{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.75rem}.l5e-bef{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l5e-aft{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l5e-bal{font-size:.7rem;font-weight:700;letter-spacing:.06em;margin-bottom:.5rem}.l5e-bat{font-size:.82rem;line-height:1.5}.l5e-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l5e-th{display:flex;align-items:flex-start;gap:.85rem}.l5e-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l5e-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l5e-td{font-size:.82rem;color:#525252;line-height:1.5}.l5e-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l5e-steps{display:grid;gap:.5rem;margin-top:.75rem}.l5e-step{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem .95rem;background:#f8fafc;border-radius:10px}.l5e-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}.l5e-st2{font-size:.875rem;color:#374151;line-height:1.5;padding-top:.1rem}.l5e-rb{margin-top:1rem;padding:1rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px}.l5e-rl{font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}.l5e-rd{font-size:.85rem;color:#15803d;line-height:1.6}
+</style>
+<div class="l5e">
+    <div class="l5e-sl">Problem</div>
+    <div class="l5e-st">The manager who solves everything alone is the most expensive employee in the company</div>
+    <div class="l5e-card">
+        <p>In most companies the same problem repeats every day. An employee comes to the manager not with a solution, but with a question:</p>
+        <div style="margin:.85rem 0;display:grid;gap:.4rem;">
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— A client is asking for a discount. What should I do?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— The supplier is delayed. How should we handle it?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— We need to buy something. Is that okay?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— I want to take vacation. Please approve.</div>
+        </div>
+        <p>At first glance it seems normal. But this is where the manager's overload begins. When they constantly take on other people's problems and solve them personally, they stop being a manager and become the most expensive task-doer in the company.</p>
+    </div>
+</div>
+<div class="l5e-div"></div>
+<div class="l5e">
+    <div class="l5e-sl">Mistake</div>
+    <div class="l5e-st">The main mistake — accepting a raw problem</div>
+    <div class="l5e-card">
+        <p>When an employee brings a problem without analysis, without data and without a proposed solution — they are effectively pushing responsibility upward.</p>
+        <p>If the manager immediately answers what to do, two things happen: the manager overloads themselves even more, and the employee becomes less responsible.</p>
+        <p>Every time the manager solves a problem <em>for</em> the employee, they lower that employee's level of accountability.</p>
+    </div>
+</div>
+<div class="l5e-div"></div>
+<div class="l5e">
+    <div class="l5e-sl">Solution</div>
+    <div class="l5e-st">What is CWE — Completed Work of an Employee</div>
+    <div class="l5e-card">
+        <p>CWE is a principle by which an employee brings to the manager not a "raw problem" but a prepared management unit.</p>
+    </div>
+    <div class="l5e-flow" style="margin-top:.85rem;">
+        <div class="l5e-fi"><span>Situation</span><span style="font-size:.72rem;color:#6b7280;font-weight:400;margin-top:.2rem;">what happened</span></div>
+        <div class="l5e-fa">→</div>
+        <div class="l5e-fi"><span>Data</span><span style="font-size:.72rem;color:#6b7280;font-weight:400;margin-top:.2rem;">facts & numbers</span></div>
+        <div class="l5e-fa">→</div>
+        <div class="l5e-fi active"><span>Solution</span><span style="font-size:.72rem;color:rgba(255,255,255,.85);font-weight:400;margin-top:.2rem;">proposal</span></div>
+    </div>
+    <p style="font-size:.82rem;color:#525252;margin-top:.75rem;line-height:1.5;">CWE = a problem already worked through to solution level. Not a question for the manager, but a ready proposal to approve or reject.</p>
+</div>
+<div class="l5e-div"></div>
+<div class="l5e">
+    <div class="l5e-sl">Methodology</div>
+    <div class="l5e-st">What CWE consists of</div>
+    <div class="l5e-bl">
+        <div class="l5e-bi"><div class="l5e-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div><div class="l5e-bt">Situation</div><div class="l5e-bd">Not "something's wrong," but a specific deviation from the norm. For example: "the lift broke and we have a shipment today" or "a client wants a discount and there's a risk of losing the contract."</div></div></div>
+        <div class="l5e-bi"><div class="l5e-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div><div class="l5e-bt">Data</div><div class="l5e-bd">All information sufficient to make a decision without additional questions. Numbers, alternatives, timelines, consequences, comparisons, costs — everything that removes uncertainty.</div></div></div>
+        <div class="l5e-bi"><div class="l5e-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="l5e-bt">Solution</div><div class="l5e-bd">Not "what should I do?" but "I propose doing it this way." Specifically: what exactly, who does it, when, for how much, on what terms.</div></div></div>
+    </div>
+</div>
+<div class="l5e-div"></div>
+<div class="l5e">
+    <div class="l5e-sl">Effect</div>
+    <div class="l5e-st">What CWE changes in the team</div>
+    <div class="l5e-ba">
+        <div class="l5e-bef"><div class="l5e-bal" style="color:#dc2626;">WITHOUT CWE</div><div class="l5e-bat" style="color:#7f1d1d;">One request — 10–15 minutes of clarifications, conversations, back-and-forth. The manager thinks for the employee.</div></div>
+        <div class="l5e-aft"><div class="l5e-bal" style="color:#16a34a;">WITH CWE</div><div class="l5e-bat" style="color:#14532d;">1 minute: approve / reject / send back for revision. Decision documented.</div></div>
+    </div>
+    <div style="display:grid;gap:.5rem;margin-top:.75rem;">
+        <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f8fafc;border-radius:9px;font-size:.85rem;color:#374151;"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Removes the manager's overload</div>
+        <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f8fafc;border-radius:9px;font-size:.85rem;color:#374151;"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Increases employee accountability</div>
+        <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f8fafc;border-radius:9px;font-size:.85rem;color:#374151;"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Builds management thinking across the team</div>
+        <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f8fafc;border-radius:9px;font-size:.85rem;color:#374151;"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Protects both sides — the decision is documented</div>
+    </div>
+</div>
+<div class="l5e-div"></div>
+<div class="l5e">
+    <div class="l5e-sl">AI Assistant</div>
+    <div class="l5e-st">Why AI should stand between the employee and the manager</div>
+    <div class="l5e-card">
+        <p>Even after you explain the methodology, employees will still bring "raw" problems for a while. Not because they're bad — but because they haven't gotten used to thinking in this format.</p>
+        <p>This is exactly where the AI assistant is needed. Its role is not to replace the manager. Its role is to not let a raw question through to the manager.</p>
+    </div>
+    <div class="l5e-ba" style="margin-top:.85rem;">
+        <div class="l5e-bef" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.3rem;"><div class="l5e-bal" style="color:#dc2626;">Before</div><div style="font-size:.82rem;color:#7f1d1d;line-height:1.5;">Employee → Manager</div></div>
+        <div class="l5e-aft" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.3rem;"><div class="l5e-bal" style="color:#16a34a;">After</div><div style="font-size:.82rem;color:#14532d;line-height:1.6;">Employee → AI → CWE → Manager</div></div>
+    </div>
+    <p style="font-size:.82rem;color:#525252;margin-top:.75rem;line-height:1.5;">The AI guides the person step by step: identifies the situation → gathers missing data → forces them to formulate a solution → compiles everything into a ready CWE. The output is a ready text: Situation / Data / Solution.</p>
+</div>
+<div class="l5e-div"></div>
+<div class="l5e">
+    <div class="l5e-sl">Tool</div>
+    <div class="l5e-tool">
+        <div class="l5e-th"><div class="l5e-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg></div><div><div class="l5e-tn">AI CWE Assistant</div><div class="l5e-td">Before bringing a question to the manager, the employee goes through this assistant — describes the situation, gathers data, formulates a solution. Output: ready CWE text.</div></div></div>
+        <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="l5e-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Open CWE Assistant</a>
+    </div>
+</div>
+<div class="l5e-div"></div>
+<div class="l5e">
+    <div class="l5e-sl">Implementation</div>
+    <div class="l5e-st">How to roll it out to the team</div>
+    <div class="l5e-steps">
+        <div class="l5e-step"><div class="l5e-sn">1</div><div class="l5e-st2">Explain the logic to the team: from now on we don't bring raw problems — we bring CWE. The AI helps do it correctly.</div></div>
+        <div class="l5e-step"><div class="l5e-sn">2</div><div class="l5e-st2">Define which request types require this: discounts, purchases, vacations, hiring, non-standard situations, process changes.</div></div>
+        <div class="l5e-step"><div class="l5e-sn">3</div><div class="l5e-st2">Set the response standard: if an employee comes without a CWE — you don't resolve the issue. You say: "Format it as a CWE and come back with a ready proposal."</div></div>
+        <div class="l5e-step"><div class="l5e-sn">4</div><div class="l5e-st2">Enforce strictly at the start. The first 2–3 weeks the system breaks if you say "okay, just this once I'll answer verbally." Either CWE — or back to the drawing board.</div></div>
+    </div>
+    <div class="l5e-rb">
+        <div class="l5e-rl"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Team rule</div>
+        <div class="l5e-rd">Any question, problem, request for approval, purchase, hiring, vacation or non-standard situation — first goes through the AI CWE Assistant. You come to the manager not with a problem, but with a ready CWE.</div>
+    </div>
+</div>`,
+
+                lessonContent_pl: `
+<style>
+.l5p{margin-bottom:1.75rem}.l5p:last-child{margin-bottom:0}.l5p-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l5p-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l5p-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l5p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l5p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l5p-card p+p{margin-top:.7rem}.l5p-flow{display:flex;align-items:center;border-radius:10px;overflow:hidden;margin:.85rem 0}.l5p-fi{flex:1;text-align:center;padding:.75rem .4rem;background:#f0fdf4;border:1px solid #bbf7d0}.l5p-fi.active{background:#22c55e;border-color:#22c55e}.l5p-fi span{display:block;font-weight:700;font-size:.8rem;color:#166534}.l5p-fi.active span{color:white}.l5p-fa{padding:0 .2rem;color:#22c55e;font-weight:700;font-size:1rem;flex-shrink:0}.l5p-bl{display:grid;gap:.55rem;margin-top:.75rem}.l5p-bi{display:flex;align-items:flex-start;gap:.8rem;padding:.8rem .95rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l5p-bic{width:34px;height:34px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l5p-bt{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l5p-bd{font-size:.82rem;color:#525252;line-height:1.5}.l5p-ba{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.75rem}.l5p-bef{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l5p-aft{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l5p-bal{font-size:.7rem;font-weight:700;letter-spacing:.06em;margin-bottom:.5rem}.l5p-bat{font-size:.82rem;line-height:1.5}.l5p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l5p-th{display:flex;align-items:flex-start;gap:.85rem}.l5p-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l5p-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l5p-td{font-size:.82rem;color:#525252;line-height:1.5}.l5p-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l5p-steps{display:grid;gap:.5rem;margin-top:.75rem}.l5p-step{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem .95rem;background:#f8fafc;border-radius:10px}.l5p-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}.l5p-st2{font-size:.875rem;color:#374151;line-height:1.5;padding-top:.1rem}.l5p-rb{margin-top:1rem;padding:1rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px}.l5p-rl{font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}.l5p-rd{font-size:.85rem;color:#15803d;line-height:1.6}
+</style>
+<div class="l5p">
+    <div class="l5p-sl">Problem</div>
+    <div class="l5p-st">Menedżer który sam rozwiązuje wszystko — jest najdroższym pracownikiem firmy</div>
+    <div class="l5p-card">
+        <p>W większości firm ten sam problem powtarza się każdego dnia. Pracownik przychodzi do menedżera nie z rozwiązaniem, lecz z pytaniem:</p>
+        <div style="margin:.85rem 0;display:grid;gap:.4rem;">
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— Klient prosi o zniżkę. Co mam zrobić?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— Dostawca się opóźnia. Jak postępować?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— Trzeba coś kupić. Czy mogę?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— Chcę wziąć urlop. Proszę o zgodę.</div>
+        </div>
+        <p>Na pierwszy rzut oka wydaje się — normalnie. Ale właśnie tutaj zaczyna się przeciążenie menedżera. Kiedy stale przyjmuje cudze problemy i sam je rozwiązuje, przestaje być menedżerem i staje się najdroższym wykonawcą w firmie.</p>
+    </div>
+</div>
+<div class="l5p-div"></div>
+<div class="l5p">
+    <div class="l5p-sl">Błąd</div>
+    <div class="l5p-st">Główny błąd — przyjmowanie problemu w surowej postaci</div>
+    <div class="l5p-card">
+        <p>Gdy podwładny przynosi problem bez analizy, bez danych i bez proponowanego rozwiązania — faktycznie przesuwa odpowiedzialność w górę.</p>
+        <p>Jeśli menedżer od razu odpowiada co robić, dzieją się dwie rzeczy: menedżer jeszcze bardziej się przeciąża, a pracownik staje się mniej odpowiedzialny.</p>
+        <p>Za każdym razem gdy menedżer rozwiązuje problem <em>za</em> pracownika, obniża jego poziom odpowiedzialności.</p>
+    </div>
+</div>
+<div class="l5p-div"></div>
+<div class="l5p">
+    <div class="l5p-sl">Rozwiązanie</div>
+    <div class="l5p-st">Czym jest ZRP — Zakończona Robota Pracownika</div>
+    <div class="l5p-card"><p>ZRP to zasada, według której pracownik przynosi menedżerowi nie „surowy problem", ale przygotowaną jednostkę zarządczą.</p></div>
+    <div class="l5p-flow" style="margin-top:.85rem;">
+        <div class="l5p-fi"><span>Sytuacja</span><span style="font-size:.72rem;color:#6b7280;font-weight:400;margin-top:.2rem;">co się stało</span></div>
+        <div class="l5p-fa">→</div>
+        <div class="l5p-fi"><span>Dane</span><span style="font-size:.72rem;color:#6b7280;font-weight:400;margin-top:.2rem;">fakty i liczby</span></div>
+        <div class="l5p-fa">→</div>
+        <div class="l5p-fi active"><span>Rozwiązanie</span><span style="font-size:.72rem;color:rgba(255,255,255,.85);font-weight:400;margin-top:.2rem;">propozycja</span></div>
+    </div>
+</div>
+<div class="l5p-div"></div>
+<div class="l5p">
+    <div class="l5p-sl">Metodologia</div>
+    <div class="l5p-st">Z czego składa się ZRP</div>
+    <div class="l5p-bl">
+        <div class="l5p-bi"><div class="l5p-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div><div class="l5p-bt">Sytuacja</div><div class="l5p-bd">Nie „coś jest nie tak", ale konkretne odchylenie od normy. Na przykład: „dźwig się zepsuł a dziś jest wysyłka" lub „klient prosi o zniżkę i grozi utratą kontraktu".</div></div></div>
+        <div class="l5p-bi"><div class="l5p-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div><div class="l5p-bt">Dane</div><div class="l5p-bd">Wszystkie informacje wystarczające do podjęcia decyzji bez dodatkowych pytań. Liczby, alternatywy, terminy, konsekwencje, koszty.</div></div></div>
+        <div class="l5p-bi"><div class="l5p-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="l5p-bt">Rozwiązanie</div><div class="l5p-bd">Nie „co robić?" ale „proponuję zrobić tak". Konkretnie: co dokładnie, kto robi, kiedy, za ile, na jakich warunkach.</div></div></div>
+    </div>
+</div>
+<div class="l5p-div"></div>
+<div class="l5p">
+    <div class="l5p-sl">Narzędzie</div>
+    <div class="l5p-tool">
+        <div class="l5p-th"><div class="l5p-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg></div><div><div class="l5p-tn">Asystent AI ZRP</div><div class="l5p-td">Zanim pracownik przyjdzie z pytaniem do menedżera, przechodzi przez tego asystenta — opisuje sytuację, zbiera dane, formułuje rozwiązanie.</div></div></div>
+        <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="l5p-btn">Otwórz asystenta ZRP</a>
+    </div>
+</div>
+<div class="l5p-div"></div>
+<div class="l5p">
+    <div class="l5p-sl">Wdrożenie</div>
+    <div class="l5p-st">Jak przekazać zespołowi do użytku</div>
+    <div class="l5p-steps">
+        <div class="l5p-step"><div class="l5p-sn">1</div><div class="l5p-st2">Wyjaśnij zespołowi logikę: odtąd nie przynosimy surowych problemów — przynosimy ZRP. AI pomaga to zrobić prawidłowo.</div></div>
+        <div class="l5p-step"><div class="l5p-sn">2</div><div class="l5p-st2">Określ dla jakich typów próśb to jest obowiązkowe: zniżki, zakupy, urlopy, rekrutacja, niestandardowe sytuacje.</div></div>
+        <div class="l5p-step"><div class="l5p-sn">3</div><div class="l5p-st2">Wprowadź standard odpowiedzi: jeśli pracownik przychodzi bez ZRP — nie rozwiązujesz sprawy. Odpowiadasz: „Sformatuj jako ZRP i wróć z gotową propozycją".</div></div>
+        <div class="l5p-step"><div class="l5p-sn">4</div><div class="l5p-st2">Na początku egzekwuj rygorystycznie. Pierwsze 2–3 tygodnie system się psuje jeśli powiesz „no dobra, tym razem powiem ustnie".</div></div>
+    </div>
+    <div class="l5p-rb">
+        <div class="l5p-rl"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Zasada dla zespołu</div>
+        <div class="l5p-rd">Każde pytanie, problem, prośba o zgodę, zakup, urlop lub niestandardowa sytuacja — najpierw przechodzi przez asystenta AI ZRP. Do menedżera przychodzisz już nie z problemem, ale z gotową ZRP.</div>
+    </div>
+</div>`,
+
+                lessonContent_de: `
+<style>
+.l5d{margin-bottom:1.75rem}.l5d:last-child{margin-bottom:0}.l5d-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l5d-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l5d-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l5d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l5d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l5d-card p+p{margin-top:.7rem}.l5d-flow{display:flex;align-items:center;border-radius:10px;overflow:hidden;margin:.85rem 0}.l5d-fi{flex:1;text-align:center;padding:.75rem .4rem;background:#f0fdf4;border:1px solid #bbf7d0}.l5d-fi.active{background:#22c55e;border-color:#22c55e}.l5d-fi span{display:block;font-weight:700;font-size:.8rem;color:#166534}.l5d-fi.active span{color:white}.l5d-fa{padding:0 .2rem;color:#22c55e;font-weight:700;font-size:1rem;flex-shrink:0}.l5d-bl{display:grid;gap:.55rem;margin-top:.75rem}.l5d-bi{display:flex;align-items:flex-start;gap:.8rem;padding:.8rem .95rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l5d-bic{width:34px;height:34px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l5d-bt{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l5d-bd{font-size:.82rem;color:#525252;line-height:1.5}.l5d-ba{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.75rem}.l5d-bef{padding:.85rem .95rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}.l5d-aft{padding:.85rem .95rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px}.l5d-bal{font-size:.7rem;font-weight:700;letter-spacing:.06em;margin-bottom:.5rem}.l5d-bat{font-size:.82rem;line-height:1.5}.l5d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l5d-th{display:flex;align-items:flex-start;gap:.85rem}.l5d-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l5d-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l5d-td{font-size:.82rem;color:#525252;line-height:1.5}.l5d-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l5d-steps{display:grid;gap:.5rem;margin-top:.75rem}.l5d-step{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem .95rem;background:#f8fafc;border-radius:10px}.l5d-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}.l5d-st2{font-size:.875rem;color:#374151;line-height:1.5;padding-top:.1rem}.l5d-rb{margin-top:1rem;padding:1rem 1.1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px}.l5d-rl{font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}.l5d-rd{font-size:.85rem;color:#15803d;line-height:1.6}
+</style>
+<div class="l5d">
+    <div class="l5d-sl">Problem</div>
+    <div class="l5d-st">Der Manager der alles selbst löst — ist der teuerste Mitarbeiter im Unternehmen</div>
+    <div class="l5d-card">
+        <p>In den meisten Unternehmen wiederholt sich täglich dasselbe Problem. Ein Mitarbeiter kommt zum Manager nicht mit einer Lösung, sondern mit einer Frage:</p>
+        <div style="margin:.85rem 0;display:grid;gap:.4rem;">
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— Ein Kunde bittet um Rabatt. Was soll ich tun?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— Der Lieferant verzögert sich. Wie sollen wir vorgehen?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— Wir müssen etwas kaufen. Ist das okay?</div>
+            <div style="padding:.55rem .85rem;background:white;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;color:#374151;">— Ich möchte Urlaub nehmen. Bitte genehmigen.</div>
+        </div>
+        <p>Auf den ersten Blick scheint das normal. Aber genau hier beginnt die Überlastung des Managers. Wenn er ständig fremde Probleme übernimmt und selbst löst, hört er auf Manager zu sein und wird zum teuersten Ausführenden im Unternehmen.</p>
+    </div>
+</div>
+<div class="l5d-div"></div>
+<div class="l5d">
+    <div class="l5d-sl">Fehler</div>
+    <div class="l5d-st">Der Hauptfehler — ein rohes Problem akzeptieren</div>
+    <div class="l5d-card">
+        <p>Wenn ein Mitarbeiter ein Problem ohne Analyse, ohne Daten und ohne vorgeschlagene Lösung bringt — schiebt er faktisch die Verantwortung nach oben.</p>
+        <p>Wenn der Manager sofort antwortet was zu tun ist, passieren zwei Dinge: der Manager überlastet sich noch mehr, und der Mitarbeiter wird weniger verantwortungsbewusst.</p>
+    </div>
+</div>
+<div class="l5d-div"></div>
+<div class="l5d">
+    <div class="l5d-sl">Lösung</div>
+    <div class="l5d-st">Was ist FAM — Fertige Arbeit des Mitarbeiters</div>
+    <div class="l5d-card"><p>FAM ist ein Prinzip, nach dem der Mitarbeiter zum Manager nicht ein „rohes Problem" bringt, sondern eine vorbereitete Managementeinheit.</p></div>
+    <div class="l5d-flow" style="margin-top:.85rem;">
+        <div class="l5d-fi"><span>Situation</span><span style="font-size:.72rem;color:#6b7280;font-weight:400;margin-top:.2rem;">was passiert ist</span></div>
+        <div class="l5d-fa">→</div>
+        <div class="l5d-fi"><span>Daten</span><span style="font-size:.72rem;color:#6b7280;font-weight:400;margin-top:.2rem;">Fakten & Zahlen</span></div>
+        <div class="l5d-fa">→</div>
+        <div class="l5d-fi active"><span>Lösung</span><span style="font-size:.72rem;color:rgba(255,255,255,.85);font-weight:400;margin-top:.2rem;">Vorschlag</span></div>
+    </div>
+</div>
+<div class="l5d-div"></div>
+<div class="l5d">
+    <div class="l5d-sl">Methodik</div>
+    <div class="l5d-st">Woraus besteht FAM</div>
+    <div class="l5d-bl">
+        <div class="l5d-bi"><div class="l5d-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div><div class="l5d-bt">Situation</div><div class="l5d-bd">Nicht „etwas stimmt nicht", sondern eine konkrete Abweichung von der Norm. Z.B.: „Der Aufzug ist kaputt und heute ist Lieferung" oder „Kunde bittet um Rabatt und droht Vertrag zu kündigen".</div></div></div>
+        <div class="l5d-bi"><div class="l5d-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div><div class="l5d-bt">Daten</div><div class="l5d-bd">Alle Informationen die ausreichen um eine Entscheidung ohne zusätzliche Fragen zu treffen. Zahlen, Alternativen, Fristen, Konsequenzen, Kosten.</div></div></div>
+        <div class="l5d-bi"><div class="l5d-bic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="l5d-bt">Lösung</div><div class="l5d-bd">Nicht „was soll ich tun?" sondern „ich schlage vor es so zu machen". Konkret: was genau, wer macht es, wann, für wie viel, zu welchen Bedingungen.</div></div></div>
+    </div>
+</div>
+<div class="l5d-div"></div>
+<div class="l5d">
+    <div class="l5d-sl">Werkzeug</div>
+    <div class="l5d-tool">
+        <div class="l5d-th"><div class="l5d-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg></div><div><div class="l5d-tn">KI FAM-Assistent</div><div class="l5d-td">Bevor der Mitarbeiter mit einer Frage zum Manager kommt, geht er durch diesen Assistenten — beschreibt die Situation, sammelt Daten, formuliert eine Lösung.</div></div></div>
+        <a href="https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko" target="_blank" class="l5d-btn">FAM-Assistenten öffnen</a>
+    </div>
+</div>
+<div class="l5d-div"></div>
+<div class="l5d">
+    <div class="l5d-sl">Einführung</div>
+    <div class="l5d-st">Wie man es dem Team übergibt</div>
+    <div class="l5d-steps">
+        <div class="l5d-step"><div class="l5d-sn">1</div><div class="l5d-st2">Erklären Sie dem Team die Logik: ab sofort bringen wir keine rohen Probleme — wir bringen FAM. Die KI hilft es richtig zu machen.</div></div>
+        <div class="l5d-step"><div class="l5d-sn">2</div><div class="l5d-st2">Legen Sie fest für welche Anfragetypen dies Pflicht ist: Rabatte, Einkäufe, Urlaub, Einstellung, nicht-standardmäßige Situationen.</div></div>
+        <div class="l5d-step"><div class="l5d-sn">3</div><div class="l5d-st2">Führen Sie den Antwortstandard ein: kommt ein Mitarbeiter ohne FAM — lösen Sie das Problem nicht. Antwort: „Formatiere es als FAM und komm mit einem fertigen Vorschlag zurück".</div></div>
+        <div class="l5d-step"><div class="l5d-sn">4</div><div class="l5d-st2">Setzen Sie es zu Beginn strikt durch. In den ersten 2–3 Wochen bricht das System wenn Sie sagen „na gut, diesmal sage ich es mündlich".</div></div>
+    </div>
+    <div class="l5d-rb">
+        <div class="l5d-rl"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="16" height="16"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Teamregel</div>
+        <div class="l5d-rd">Jede Frage, jedes Problem, jede Anfrage zur Genehmigung, Einkauf, Urlaub oder nicht-standardmäßige Situation — geht zuerst durch den KI FAM-Assistenten. Zum Manager kommen Sie nicht mit einem Problem, sondern mit einer fertigen FAM.</div>
+    </div>
+</div>`,
+
                 homework: `<ol><li>Протестуйте AI-асистента на 3–5 реальних ситуаціях з вашого бізнесу</li><li>Оберіть 1 підлеглого і дайте йому інструмент у роботу</li><li>Попросіть перед наступним питанням пройти через AI</li><li>Напишіть у полі відповіді: для якої ролі впровадили і в яких ситуаціях будете використовувати</li></ol>`,
                 homework_en: `<ol><li>Test the AI assistant on 3–5 real situations from your business</li><li>Choose 1 employee and give them the tool to use at work</li><li>Ask them to go through the AI before bringing the next question</li><li>Write in the answer field: for which role you implemented it and in which situations you will use it</li></ol>`,
                 homework_pl: `<ol><li>Przetestuj asystenta AI na 3–5 rzeczywistych sytuacjach z Twojego biznesu</li><li>Wybierz 1 pracownika i daj mu narzędzie do pracy</li><li>Poproś, żeby przed następnym pytaniem przeszedł przez AI</li><li>Napisz w polu odpowiedzi: dla jakiej roli wdrożyłeś i w jakich sytuacjach będziesz używać</li></ol>`,
