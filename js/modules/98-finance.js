@@ -608,7 +608,7 @@ function addTransaction(forceType) {
   const old = document.getElementById('financeModal');
   if (old) old.remove();
 
-  const type     = forceType || _state.activeSubTab === 'income' ? 'income' : 'expense';
+  const type     = forceType || (_state.activeSubTab === 'income' ? 'income' : 'expense');
   const cats     = _state.categories[type] || [];
   const today    = new Date().toISOString().split('T')[0];
   const color    = type === 'income' ? '#22c55e' : '#ef4444';
