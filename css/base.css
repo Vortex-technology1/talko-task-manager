@@ -173,6 +173,18 @@
             box-sizing: border-box;
         }
 
+        /* Фінанси — на всю ширину без внутрішніх відступів контейнера */
+        #financeTab {
+            margin: -1rem;
+            width: calc(100% + 2rem);
+            box-sizing: border-box;
+        }
+        #financeContainer {
+            padding: 1rem 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         /* Статистика: таблиця скролиться горизонтально всередині, але обгортка — на всю ширину */
         #statisticsTab {
             padding: 0 1rem 1.5rem;
