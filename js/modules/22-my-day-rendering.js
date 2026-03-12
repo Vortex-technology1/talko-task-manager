@@ -104,7 +104,12 @@
                 // Перевіряємо чи сьогодні день цього завдання
                 let isToday = false;
                 
-                // Підтримка старого формату daily
+                // BUG-W FIX: use isRegularTaskDay for consistent period logic (was duplicating logic with bugs)
+                // Old quarterly was limited to quarterStartMonth only — missed tasks on day X of month 2/3 of quarter
+                if (typeof isRegularTaskDay === 'function') {
+                    isToday = isRegularTaskDay(rt, today);
+                } else {
+                // Fallback inline (same as isRegularTaskDay)
                 if (rt.period === 'daily') {
                     isToday = true;
                 } else if (rt.period === 'weekly') {
@@ -132,6 +137,7 @@
                             isToday = todayDate === parseInt(rt.dayOfMonth);
                         }
                     }
+                }
                 }
                 
                 if (!isToday) return;

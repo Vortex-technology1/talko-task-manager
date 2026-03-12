@@ -198,7 +198,7 @@
             assigneeId: assigneeId || (parentTask?.assigneeId || ''),
             assigneeName: assigneeName || (parentTask?.assigneeName || ''),
             deadlineDate,
-            deadline: deadlineDate ? deadlineDate + 'T23:59' : '',
+            deadline: deadlineDate ? deadlineDate + 'T23:59' : null, // BUG-S FIX: was '' + 'T23:59' = 'T23:59' (invalid)
             priority,
             status: 'new',
             function: parentTask?.function || '',
@@ -207,7 +207,7 @@
             checklist: [],
             coExecutorIds: [],
             observerIds: [],
-            requireReview: false,
+            requireReview: parentTask?.requireReview || false, // BUG-V FIX: was hardcoded false — now inherits from parent
             notifyOnComplete: [currentUser?.uid || ''],
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             createdDate: (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0],
@@ -253,6 +253,16 @@
 
     // ---- ВИДАЛЕННЯ підзавдання ----
     window.deleteSubtask = async function(subtaskId, parentId) {
+        // BUG-R FIX: permission check — only creator, parent task owner, or manager+ can delete
+        const subtask = (typeof tasks !== 'undefined') ? tasks.find(t => t.id === subtaskId) : null;
+        const uid = currentUser?.uid;
+        const canDelete = !subtask || subtask.creatorId === uid || subtask.assigneeId === uid ||
+            (typeof isManagerOrAbove === 'function' && isManagerOrAbove()) ||
+            (typeof canEditTask === 'function' && canEditTask(subtask));
+        if (!canDelete) {
+            if (typeof showToast === 'function') showToast(typeof t === 'function' ? t('noPermissionTask') : 'Немає дозволу', 'error');
+            return;
+        }
         if (!(await (window.showConfirmModal ? showConfirmModal('Видалити підзавдання?',{danger:true}) : Promise.resolve(confirm('Видалити підзавдання?'))))) return;
         const cid = currentUserData?.companyId || currentCompany;
         try {

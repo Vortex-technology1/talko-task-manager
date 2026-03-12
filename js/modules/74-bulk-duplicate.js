@@ -237,6 +237,10 @@
         delete clone.parentId;
         delete clone.parentTitle;
 
+        // BUG-T FIX: don't carry participants — they didn't consent to join the copy
+        clone.coExecutorIds = [];
+        clone.observerIds = [];
+
         clone.title = `${orig.title} (копія)`;
         clone.status = 'new';
         // FIX 9: reset checklist so clone starts fresh
