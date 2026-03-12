@@ -2203,6 +2203,10 @@
         auto_tasks_overdue:    { label: 'Прострочені задачі', unit: 'шт' },
         auto_tasks_review:     { label: 'На перевірці',       unit: 'шт' },
         auto_completion_rate:  { label: '% виконання',        unit: '%'  },
+        finance_income:        { label: 'Дохід',              unit: '€'  },
+        finance_expense:       { label: 'Витрати',            unit: '€'  },
+        finance_profit:        { label: 'Прибуток',           unit: '€'  },
+        finance_margin:        { label: 'Маржа %',            unit: '%'  },
     };
 
     // Вибір джерела в UI metricModal
@@ -2279,6 +2283,21 @@
             const done = periodTasks.filter(tk => tk.status === 'done').length;
             return Math.round((done / total) * 100);
         }
+
+        // ── Фінансові джерела ──────────────────────────────
+        if (src === 'finance_income' || src === 'finance_expense' || src === 'finance_profit' || src === 'finance_margin') {
+            // Беремо транзакції з фінансового модуля (якщо завантажені)
+            const allTx = window._financeGetTxForPeriod ? window._financeGetTxForPeriod(periodKey, metric.frequency || 'monthly') : null;
+            if (!allTx) return null;
+            const income  = allTx.filter(t => t.type === 'income').reduce((s, t) => s + (t.amount || 0), 0);
+            const expense = allTx.filter(t => t.type === 'expense').reduce((s, t) => s + (t.amount || 0), 0);
+            const profit  = income - expense;
+            if (src === 'finance_income')  return Math.round(income);
+            if (src === 'finance_expense') return Math.round(expense);
+            if (src === 'finance_profit')  return Math.round(profit);
+            if (src === 'finance_margin')  return income > 0 ? Math.round(profit / income * 100) : 0;
+        }
+
         return null;
     }
 

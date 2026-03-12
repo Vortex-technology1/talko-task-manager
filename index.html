@@ -3470,6 +3470,30 @@ document.addEventListener('mousedown', function(e) {
                         <span>%<br>виконання</span>
                     </button>
 
+                    <button type="button" class="metric-source-btn" data-source="finance_income" onclick="selectMetricSource('finance_income')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.3rem;padding:0.65rem 0.3rem;border-radius:12px;font-size:0.72rem;font-weight:500;border:2px solid #e5e7eb;background:white;color:#374151;cursor:pointer;line-height:1.2;text-align:center;min-height:64px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                        <span>Дохід<br>💰</span>
+                    </button>
+
+                    <button type="button" class="metric-source-btn" data-source="finance_expense" onclick="selectMetricSource('finance_expense')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.3rem;padding:0.65rem 0.3rem;border-radius:12px;font-size:0.72rem;font-weight:500;border:2px solid #e5e7eb;background:white;color:#374151;cursor:pointer;line-height:1.2;text-align:center;min-height:64px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+                        <span>Витрати<br>📉</span>
+                    </button>
+
+                    <button type="button" class="metric-source-btn" data-source="finance_profit" onclick="selectMetricSource('finance_profit')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.3rem;padding:0.65rem 0.3rem;border-radius:12px;font-size:0.72rem;font-weight:500;border:2px solid #e5e7eb;background:white;color:#374151;cursor:pointer;line-height:1.2;text-align:center;min-height:64px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <span>Прибуток<br>📊</span>
+                    </button>
+
+                    <button type="button" class="metric-source-btn" data-source="finance_margin" onclick="selectMetricSource('finance_margin')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.3rem;padding:0.65rem 0.3rem;border-radius:12px;font-size:0.72rem;font-weight:500;border:2px solid #e5e7eb;background:white;color:#374151;cursor:pointer;line-height:1.2;text-align:center;min-height:64px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        <span>Маржа<br>%</span>
+                    </button>
+
                 </div>
                 <div id="autoSpecBlock" style="margin-top:0.5rem;padding:0.55rem 0.85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:0.8rem;color:#166534;display:none;">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" style="vertical-align:-2px;margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg>
@@ -3840,7 +3864,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/82-flow-canvas.js?v=20260311s" defer></script>
     <script src="js/modules/83-bots-contacts.js?v=20260311s" defer></script>
     <script src="js/modules/97-onboarding.js?v=20260311s" defer></script>
-    <script src="js/modules/98-finance.js?v=20260312j" defer></script>
+    <script src="js/modules/98-finance.js?v=20260312k" defer></script>
     <script>
       // Keep webhook warm — пінг кожні 20 сек поки юзер на сайті
       (function() {

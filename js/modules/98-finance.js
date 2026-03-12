@@ -814,6 +814,12 @@ async function loadAndRenderTxList(type) {
     });
     if (txs.length > 100) txs = txs.slice(0, 100);
 
+    // Кешуємо для метрик (window._financeTxCache = всі останні транзакції)
+    if (!window._financeTxCache) window._financeTxCache = [];
+    txs.forEach(tx => {
+      if (!window._financeTxCache.find(c => c.id === tx.id)) window._financeTxCache.push(tx);
+    });
+
     if (txs.length === 0) {
       listEl.innerHTML = `
         <div style="padding:2rem;text-align:center;color:#9ca3af;">
@@ -3080,6 +3086,32 @@ async function initFinance(companyId, currentUser) {
 // ── Публічний API ─────────────────────────────────────────
 window._financeTab = function(tab) {
   renderSubTab(tab);
+};
+
+// Публічний доступ до транзакцій для метрик — без додаткових запитів до Firestore
+window._financeGetTxForPeriod = function(periodKey, freq) {
+  // periodKey: 'YYYY-MM' (monthly) | 'YYYY-Www' (weekly) | 'YYYY-MM-DD' (daily)
+  if (!window._financeTxCache) return null;
+  return window._financeTxCache.filter(tx => {
+    const d = tx.date?.toDate ? tx.date.toDate() : tx.date ? new Date(tx.date) : null;
+    if (!d) return false;
+    if (freq === 'daily') {
+      return d.toISOString().split('T')[0] === periodKey;
+    }
+    if (freq === 'weekly') {
+      // periodKey формат 'YYYY-Www'
+      const getWeekKey = (dt) => {
+        const d2 = new Date(dt); d2.setHours(0,0,0,0);
+        d2.setDate(d2.getDate() + 4 - (d2.getDay() || 7));
+        const y = d2.getFullYear();
+        const w = Math.ceil(((d2 - new Date(y,0,1)) / 86400000 + 1) / 7);
+        return y + '-W' + String(w).padStart(2,'0');
+      };
+      return getWeekKey(d) === periodKey;
+    }
+    // monthly: YYYY-MM
+    return d.toISOString().slice(0, 7) === periodKey;
+  });
 };
 
 window._financeAddTransaction = function(type) {
