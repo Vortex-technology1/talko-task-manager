@@ -340,11 +340,16 @@
                     }
                 }
                 
-                // BUG3 FIX: success toast after save
-                const _toastKey = currentEditingId ? 'taskUpdated' : 'taskCreated';
-                const _toastMsg = (typeof t === 'function' && t(_toastKey) !== _toastKey) ? t(_toastKey) : (currentEditingId ? 'Завдання збережено ✓' : 'Завдання створено ✓');
+                // BUG-D+F FIX: correct toast — if done→review redirect, show "sent for review" not "saved"
+                const _redirectedToReview = (statusVal === 'done' && data.status === 'review');
                 closeModal('taskModal');
-                showToast(_toastMsg, 'success');
+                if (_redirectedToReview) {
+                    showToast(t('taskSentForReview') || 'Завдання надіслано на перевірку ✓', 'info');
+                } else {
+                    const _toastKey = currentEditingId ? 'taskUpdated' : 'taskCreated';
+                    const _toastMsg = (typeof t === 'function' && t(_toastKey) !== _toastKey) ? t(_toastKey) : (currentEditingId ? 'Завдання збережено ✓' : 'Завдання створено ✓');
+                    showToast(_toastMsg, 'success');
+                }
                 
                 // FIX 3: Warning якщо дедлайн задачі > дедлайн проєкту
                 if (data.projectId && data.deadlineDate) {

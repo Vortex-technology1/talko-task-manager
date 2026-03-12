@@ -197,7 +197,7 @@
                     // Шукаємо нові повернення
                     snapshot.docs.forEach(doc => {
                         const data = doc.data();
-                        if (data.reviewRejectedAt && data.reviewRejectedBy !== currentUser?.uid || '') {
+                        if (data.reviewRejectedAt && (data.reviewRejectedBy !== (currentUser?.uid || ''))) { // BUG-A FIX: operator precedence was always truthy
                             const prevTimestamp = knownRejectedTimestamps.get(doc.id);
                             if (data.reviewRejectedAt !== prevTimestamp) {
                                 playNotificationSound();
@@ -362,6 +362,8 @@
                 
                 if (needsReview) {
                     showToast(t('taskSentForReview'), 'info');
+                } else {
+                    showToast(t('taskCompleted') || 'Завдання виконано ✓', 'success'); // BUG-E FIX: was missing
                 }
             } catch (e) {
                 // Rollback при помилці
@@ -391,6 +393,8 @@
             if (taskIndex >= 0) {
                 tasks[taskIndex].status = 'progress';
                 tasks[taskIndex].completedAt = null;
+                tasks[taskIndex].completedDate = null; // BUG-B FIX: was missing → KPI counted reopened as done
+                tasks[taskIndex].completedBy = null;   // BUG-B FIX
                 renderMyDay();
                 refreshCurrentView();
             }
@@ -398,7 +402,9 @@
             try {
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({ 
                     status: 'progress',
-                    completedAt: null
+                    completedAt: null,
+                    completedDate: null, // BUG-B FIX
+                    completedBy: null    // BUG-B FIX
                 });
                 // Автостатус проєкту (done→progress може змінити completed→active)
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);

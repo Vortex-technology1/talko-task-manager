@@ -605,7 +605,12 @@
             const el = document.getElementById(id);
             if (el) el.style.display = 'none';
             if (PRIMARY_MODALS.includes(id)) {
+                // BUG-C FIX: stop time tracker before clearing editingId — otherwise addTimeEntry loses taskId
+                if (id === 'taskModal' && window.timeTrackerInterval) {
+                    if (typeof stopTimeTracker === 'function') stopTimeTracker(true);
+                }
                 editingId = null;
+                window.currentEditingId = null;
                 editingUserId = null;
             }
             checkModalState();

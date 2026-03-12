@@ -4,12 +4,15 @@
 'use strict';
         let checklistCounter = 0;
         
-        function addChecklistItem(text = '', checked = false) {
+        function addChecklistItem(text = '', checked = false, stableId = null) {
             checklistCounter++;
             const id = 'cl_' + checklistCounter;
+            // BUG-G FIX: carry stable id from saved data, generate new one for new items
+            const itemId = stableId || ('cl_' + Date.now() + '_' + checklistCounter);
             const container = document.getElementById('taskChecklist');
             const item = document.createElement('div');
             item.id = id;
+            item.dataset.clId = itemId; // stable id persisted to Firestore
             item.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;';
             item.innerHTML = `
                 <input type="checkbox" ${checked ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--primary);flex-shrink:0;">
@@ -32,7 +35,9 @@
                 const checkbox = item.querySelector('input[type="checkbox"]');
                 const textInput = item.querySelector('input[type="text"]');
                 if (textInput && textInput.value.trim()) {
-                    items.push({ text: textInput.value.trim(), done: checkbox?.checked || false });
+                    // BUG-G FIX: preserve stable id for audit log / sync
+                    const clId = item.dataset.clId || ('cl_' + Date.now() + '_' + Math.random().toString(36).slice(2,7));
+                    items.push({ id: clId, text: textInput.value.trim(), done: checkbox?.checked || false });
                 }
             });
             return items;
@@ -43,5 +48,5 @@
             container.innerHTML = '';
             checklistCounter = 0;
             if (!checklist || !Array.isArray(checklist)) return;
-            checklist.forEach(item => addChecklistItem(item.text, item.done));
+            checklist.forEach(item => addChecklistItem(item.text, item.done, item.id || null));
         }
