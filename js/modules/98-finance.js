@@ -244,6 +244,16 @@ function renderFinanceContainer() {
   const container = document.getElementById('financeContainer');
   if (!container) return;
 
+  // Розтягуємо на всю ширину — компенсуємо padding батьківського .container
+  container.style.cssText = 'width:100%;box-sizing:border-box;';
+  const parentContainer = container.closest('.container');
+  if (parentContainer) {
+    const pad = parseFloat(getComputedStyle(parentContainer).paddingLeft) || 16;
+    container.style.marginLeft = `-${pad}px`;
+    container.style.marginRight = `-${pad}px`;
+    container.style.width = `calc(100% + ${pad*2}px)`;
+  }
+
   container.innerHTML = `
     <div id="financeModule" style="display:flex;flex-direction:column;height:100%;min-height:0;">
 
