@@ -20,6 +20,33 @@
         { key: 'weeklyReport',     label: 'Тижневий звіт (Telegram)' },
     ];
 
+    window.deleteEmptyCompanies = async function() {
+        if (!isSuperAdmin) return;
+        const confirmed = confirm('Видалити всі компанії з 0 юзерів і 0 завдань?');
+        if (!confirmed) return;
+
+        try {
+            const snap = await db.collection('companies').get();
+            let deleted = 0;
+            for (const doc of snap.docs) {
+                const data = doc.data();
+                // Пропускаємо компанії з власником або назвою що містить реальні дані
+                const usersSnap = await db.collection('companies').doc(doc.id).collection('users').limit(1).get();
+                const tasksSnap = await db.collection('companies').doc(doc.id).collection('tasks').limit(1).get();
+                
+                if (usersSnap.empty && tasksSnap.empty) {
+                    await db.collection('companies').doc(doc.id).delete();
+                    deleted++;
+                    console.log('[Admin] Deleted empty company:', doc.id, data.name || '—');
+                }
+            }
+            alert(`Видалено ${deleted} пустих компаній.`);
+            loadSuperadminData();
+        } catch(e) {
+            alert('Помилка: ' + e.message);
+        }
+    };
+
     window.openSuperadminPanel = async function() {
         if (!isSuperAdmin) return;
         // Відкриваємо модальне вікно напряму (openModal — локальна в statistics.js)
@@ -119,6 +146,7 @@
         <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem;">
             <span style="font-size:0.85rem;color:#6b7280;">Компаній: <strong>${companyDocs.length}</strong></span>
             <button onclick="loadSuperadminData()" style="margin-left:auto;padding:0.35rem 0.8rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.8rem;">↻ Оновити</button>
+            <button onclick="deleteEmptyCompanies()" style="padding:0.35rem 0.8rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">🗑 Видалити пусті (0 юзерів)</button>
             <button onclick="openGlobalAISettings()" style="padding:0.35rem 0.8rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Глобальні налаштування</button>
         </div>
         <div style="overflow-x:auto;">
