@@ -28,18 +28,20 @@ const I = {
 // ── Константи ──────────────────────────────────────────────
 const FINANCE_VERSION = '1.0.0';
 const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'analytics', 'ai', 'settings'];
-const TAB_LABELS = {
-  dashboard:  { icon: 'chart',     label: window.t('finTabDashboard')      },
-  income:     { icon: 'income',    label: window.t('finTabIncome')       },
-  expense:    { icon: 'expense',   label: window.t('finTabExpense')      },
-  recurring:  { icon: 'repeat',    label: window.t('finTabRecurring')    },
-  invoices:   { icon: 'invoice',   label: window.t('finTabInvoices')      },
-  functions:  { icon: 'func',      label: window.t('finTabFunctions')      },
-  planning:   { icon: 'plan',      label: window.t('finTabPlanning')   },
-  analytics:  { icon: 'chart',     label: window.t('finTabAnalytics')    },
-  ai:         { icon: 'ai',        label: 'AI'           },
-  settings:   { icon: 'settings',  label: window.t('finTabSettings') },
-};
+function getTabLabels() {
+  return {
+    dashboard:  { icon: 'chart',     label: window.t('finTabDashboard') },
+    income:     { icon: 'income',    label: window.t('finTabIncome')    },
+    expense:    { icon: 'expense',   label: window.t('finTabExpense')   },
+    recurring:  { icon: 'repeat',    label: window.t('finTabRecurring') },
+    invoices:   { icon: 'invoice',   label: window.t('finTabInvoices')  },
+    functions:  { icon: 'func',      label: window.t('finTabFunctions') },
+    planning:   { icon: 'plan',      label: window.t('finTabPlanning')  },
+    analytics:  { icon: 'chart',     label: window.t('finTabAnalytics') },
+    ai:         { icon: 'ai',        label: 'AI'                        },
+    settings:   { icon: 'settings',  label: window.t('finTabSettings')  },
+  };
+}
 
 // ── Стан модуля ────────────────────────────────────────────
 let _state = {
@@ -286,8 +288,8 @@ function renderFinanceContainer() {
               white-space:nowrap;transition:all .15s;
             "
           >
-            ${I[TAB_LABELS[t].icon]}
-            ${TAB_LABELS[t].label}
+            ${I[getTabLabels()[t].icon]}
+            ${getTabLabels()[t].label}
           </button>
         `).join('')}
 
@@ -413,14 +415,14 @@ function renderDashboard(el) {
         <div style="flex:1;min-width:280px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;overflow:hidden;">
           <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finIncVsExp')}</div>
           <div id="dashChart" style="width:100%;overflow:hidden;">
-            <div style="color:#9ca3af;font-size:0.78rem;">Завантаження...</div>
+            <div style="color:#9ca3af;font-size:0.78rem;">${window.t('finLoading')}</div>
           </div>
           <div style="display:flex;gap:1rem;margin-top:0.5rem;">
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
               <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>${window.t('finIncome')}
             </div>
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
-              <div style="width:10px;height:10px;border-radius:2px;background:#ef4444;"></div>Витрати
+              <div style="width:10px;height:10px;border-radius:2px;background:#ef4444;"></div>${window.t('finExpense')}
             </div>
           </div>
         </div>
@@ -453,7 +455,7 @@ function renderDashboard(el) {
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finSignals')}</div>
           <div id="dashAlerts">
-            <div style="color:#9ca3af;font-size:0.8rem;">Перевірка...</div>
+            <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
           </div>
         </div>
 
@@ -461,7 +463,7 @@ function renderDashboard(el) {
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finTopExpenses')}</div>
           <div id="dashTopExpense">
-            <div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div>
+            <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
           </div>
         </div>
       </div>
@@ -470,18 +472,18 @@ function renderDashboard(el) {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finExpStructure')}</div>
-          <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
+          <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
         </div>
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finProjMargin')}</div>
-          <div id="dashProjects"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
+          <div id="dashProjects"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
         </div>
       </div>
 
       <!-- План-факт KPI -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;margin-bottom:1.25rem;">
         <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finPlanVsFact')}</div>
-        <div id="dashPlanFact"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
+        <div id="dashPlanFact"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
       </div>
 
     </div>
@@ -612,7 +614,7 @@ async function loadDashboardData(monthVal) {
         .slice(0, 5);
 
       if (sorted.length === 0) {
-        topEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Витрат немає</div>';
+        topEl.innerHTML = `<div style="color:#9ca3af;font-size:0.8rem;">${window.t('finNoExpenses')}</div>`;
       } else {
         const maxAmt = sorted[0].amt;
         topEl.innerHTML = sorted.map(item => `
@@ -636,7 +638,7 @@ async function loadDashboardData(monthVal) {
         .map(([id, amt]) => ({ name: catMap[id] || 'Інше', amt }))
         .sort((a, b) => b.amt - a.amt).slice(0, 6);
       if (sorted.length === 0) {
-        donutEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Витрат немає</div>';
+        donutEl.innerHTML = `<div style="color:#9ca3af;font-size:0.8rem;">${window.t('finNoExpenses')}</div>`;
       } else {
         const COLORS = ['#ef4444','#f59e0b','#3b82f6','#8b5cf6','#22c55e','#6b7280'];
         const total = sorted.reduce((s, x) => s + x.amt, 0);
@@ -730,7 +732,7 @@ async function loadDashboardData(monthVal) {
         const goalProfit  = bud['goal'] || 0;
 
         if (totalBudget === 0 && goalProfit === 0) {
-          pfEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Бюджет не встановлено. Перейдіть у «Планування».</div>';
+          pfEl.innerHTML = `<div style="color:#9ca3af;font-size:0.8rem;">${window.t('finNoBudget')}</div>`;
         } else {
           const rows = [
             { label: window.t('finPlanExpense'), plan: totalBudget, fact: expense, inverse: true },
@@ -874,7 +876,7 @@ async function loadChartData() {
   } catch(e) {
     console.error('[Finance] loadChartData error:', e);
     const chartEl2 = document.getElementById('dashChart');
-    if (chartEl2) chartEl2.innerHTML = '<div style="color:#9ca3af;font-size:0.78rem;">Графік недоступний</div>';
+    if (chartEl2) chartEl2.innerHTML = `<div style="color:#9ca3af;font-size:0.78rem;">${window.t('finChartNA')}</div>`;
   }
 }
 
@@ -961,7 +963,7 @@ function renderTransactions(el, type) {
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;display:block;margin-left:auto;margin-right:auto;">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
-          <div style="font-size:0.85rem;">Завантаження...</div>
+          <div style="font-size:0.85rem;">${window.t('finLoading')}</div>
         </div>
       </div>
 
@@ -1020,8 +1022,8 @@ async function loadAndRenderTxList(type) {
     if (txs.length === 0) {
       listEl.innerHTML = `
         <div style="padding:2rem;text-align:center;color:#9ca3af;">
-          <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.25rem;">Транзакцій немає</div>
-          <div style="font-size:0.8rem;">Змініть фільтри або додайте нову операцію</div>
+          <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.25rem;">${window.t('finNoTx')}</div>
+          <div style="font-size:0.8rem;">${window.t('finNoTxHint')}</div>
         </div>`;
       if (summaryEl) summaryEl.textContent = '';
       return;
@@ -1078,7 +1080,7 @@ async function loadAndRenderTxList(type) {
 
   } catch(e) {
     console.error('[Finance] loadTxList error:', e);
-    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">Помилка завантаження: ${e.message}</div>`;
+    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">${window.t('finLoadError')} ${e.message}</div>`;
   }
 }
 
@@ -1275,7 +1277,7 @@ window._exportTxXlsx = async function(type) {
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
       script.onload = () => window._exportTxXlsx(type);
       document.head.appendChild(script);
-      if (typeof showToast === 'function') showToast('Завантаження бібліотеки...', 'info', 2000);
+      if (typeof showToast === 'function') showToast(window.t('finLibLoading'), 'info', 2000);
     }
   } catch(e) { alert('Помилка Excel експорту: ' + e.message); }
 };
@@ -1307,24 +1309,24 @@ window._financeTransfer = function() {
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">Звідки</label>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${window.t('finTransferFrom')}</label>
           <select id="trFrom" style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
             ${accOpts}
           </select>
         </div>
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">Куди</label>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${window.t('finTransferTo')}</label>
           <select id="trTo" style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
             ${accOpts}
           </select>
         </div>
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">Сума</label>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${window.t('finAmountLbl')}</label>
           <input id="trAmount" type="number" min="0.01" step="0.01" placeholder="0.00"
             style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
         </div>
         <div>
-          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">Примітка (необов'язково)</label>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">${window.t('finOptional')}</label>
           <input id="trNote" type="text" placeholder="напр. Поповнення каси"
             style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
         </div>
@@ -1457,8 +1459,8 @@ function renderInvoices(el) {
         ${invoices.length === 0 ? `
           <div style="text-align:center;padding:40px;color:#9ca3af;">
             <div style="font-size:2rem;margin-bottom:8px;">📄</div>
-            <div style="font-weight:600;margin-bottom:4px;">Рахунків ще немає</div>
-            <div style="font-size:0.85rem;">Натисніть «Новий рахунок» щоб створити перший</div>
+            <div style="font-weight:600;margin-bottom:4px;">${window.t('finNoAccountsYet')}</div>
+            <div style="font-size:0.85rem;">${window.t('finNoAccountsHint')}</div>
           </div>` :
           invoices.map(inv => _invoiceRow(inv, currency)).join('<div style="border-top:1px solid #f3f4f6;"></div>')
         }
@@ -1533,12 +1535,12 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <!-- Номер та дата -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Номер рахунку</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finInvoiceNum')}</label>
             <input id="inv_number" value="${escHtml(inv?.number || nextNum)}"
               style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Дата</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finDateLbl')}</label>
             <input id="inv_date" type="date" value="${inv?.date || new Date().toISOString().split('T')[0]}"
               style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
           </div>
@@ -1546,21 +1548,21 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
 
         <!-- Клієнт -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Клієнт (назва / ПІБ)</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finInvoiceClientName')}</label>
           <input id="inv_client" value="${escHtml(inv?.clientName || prefillClient || '')}" placeholder="ТОВ «Назва» або Іваненко І.І."
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
         <!-- Реквізити клієнта -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Реквізити клієнта</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finInvoiceClientDetails')}</label>
           <textarea id="inv_client_details" rows="2" placeholder="ЄДРПОУ, адреса, IBAN..."
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.85rem;resize:vertical;box-sizing:border-box;">${escHtml(inv?.clientDetails || '')}</textarea>
         </div>
 
         <!-- Позиції -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:8px;">Позиції</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:8px;">${window.t('finInvoiceItems')}</label>
           <div id="inv_items_list" style="display:flex;flex-direction:column;gap:6px;"></div>
           <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ Додати рядок</button>
         </div>
@@ -1568,7 +1570,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <!-- ПДВ -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end;">
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">ПДВ (%)</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finInvoiceVAT')}</label>
             <input id="inv_vat" type="number" min="0" max="100" value="${inv?.vatPct ?? 0}"
               oninput="window._invRecalc()"
               style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
@@ -1578,7 +1580,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
 
         <!-- Примітки -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Примітки / реквізити для оплати</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finInvoicePayNotes')}</label>
           <textarea id="inv_notes" rows="3" placeholder="IBAN, банк, призначення платежу..."
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.85rem;resize:vertical;box-sizing:border-box;">${escHtml(inv?.notes || '')}</textarea>
         </div>
@@ -1591,7 +1593,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
       <!-- Footer -->
       <div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;border-top:1px solid #f3f4f6;">
         <button onclick="document.getElementById('invoiceModal')?.remove()"
-          style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">Скасувати</button>
+          style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">${window.t('cancel')}</button>
         <button id="inv_save_btn" onclick="window._invoiceSave('${inv?.id || ''}')"
           style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? 'Зберегти' : 'Створити'}</button>
       </div>
@@ -1652,9 +1654,9 @@ window._invRecalc = function() {
   const currency = _state.currency || 'EUR';
   const block = document.getElementById('inv_totals_block');
   if (block) block.innerHTML = `
-    <div>Підсумок: <strong>${fmt(subtotal, currency)}</strong></div>
-    ${vatPct > 0 ? `<div>ПДВ ${vatPct}%: <strong>${fmt(vat, currency)}</strong></div>` : ''}
-    <div style="font-size:1rem;font-weight:700;color:#22c55e;margin-top:2px;">До сплати: ${fmt(total, currency)}</div>`;
+    <div>${window.t('finSubtotal')}: <strong>${fmt(subtotal, currency)}</strong></div>
+    ${vatPct > 0 ? `<div>${window.t('finVAT')} ${vatPct}%: <strong>${fmt(vat, currency)}</strong></div>` : ''}
+    <div style="font-size:1rem;font-weight:700;color:#22c55e;margin-top:2px;">${window.t('finTotal')} ${fmt(total, currency)}</div>`;
 };
 
 // ── Збереження ─────────────────────────────────────────────
@@ -1886,8 +1888,8 @@ function renderRecurring(el) {
       <!-- Заголовок -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
         <div>
-          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Регулярні платежі</h3>
-          <p style="margin:0.25rem 0 0;font-size:0.82rem;color:#6b7280;">Автоматичне списання/нарахування в заданий день місяця</p>
+          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabRecurring')}</h3>
+          <p style="margin:0.25rem 0 0;font-size:0.82rem;color:#6b7280;">${window.t('finRecurringHint')}</p>
         </div>
         ${isOwnerOrManager() ? `
           <button onclick="window._finAddRecurring()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;">
@@ -1908,8 +1910,8 @@ function renderRecurring(el) {
       ${items.length === 0 ? `
         <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;">
           ${I.repeat}
-          <p style="margin:0.75rem 0 0;font-size:0.9rem;">Регулярних платежів ще немає</p>
-          <p style="margin:0.25rem 0 0;font-size:0.8rem;">Додайте оренду, зарплату, підписки — вони будуть списуватись автоматично</p>
+          <p style="margin:0.75rem 0 0;font-size:0.9rem;">${window.t('finNoRecurring')}</p>
+          <p style="margin:0.25rem 0 0;font-size:0.8rem;">${window.t('finRecurringEmpty')}</p>
         </div>
       ` : `
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
@@ -2056,14 +2058,14 @@ window._finAddRecurring = function(editId) {
 
         <!-- Назва -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва платежу *</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finRecurringName')}</label>
           <input id="rec_name" value="${escHtml(existing?.name || '')}" placeholder="Оренда офісу, Зарплата, Netflix..." 
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
         <!-- Тип -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Тип</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finTypeLbl')}</label>
           <div style="display:flex;gap:0.5rem;">
             <button id="rec_type_expense" onclick="_recSetType('expense')"
               style="flex:1;padding:8px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;border:2px solid ${!existing || existing.type==='expense' ? '#ef4444' : '#e5e7eb'};background:${!existing || existing.type==='expense' ? '#fef2f2' : '#fff'};color:${!existing || existing.type==='expense' ? '#ef4444' : '#6b7280'};">
@@ -2080,12 +2082,12 @@ window._finAddRecurring = function(editId) {
         <!-- Сума + валюта -->
         <div style="display:grid;grid-template-columns:1fr auto;gap:0.5rem;">
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Сума *</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finAmountRequired')}</label>
             <input id="rec_amount" type="number" min="0" value="${existing?.amount || ''}" placeholder="0"
               style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Валюта</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCurrencyLbl')}</label>
             <select id="rec_currency" style="border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;font-size:0.9rem;height:38px;">
               ${['UAH','EUR','USD','PLN','CZK'].map(c => `<option ${(existing?.currency||currency)===c?'selected':''}>${c}</option>`).join('')}
             </select>
@@ -2104,13 +2106,13 @@ window._finAddRecurring = function(editId) {
         <!-- Частота + день -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Частота</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finFrequency')}</label>
             <select id="rec_freq" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
               ${freqOptions.map(f => `<option value="${f.v}" ${existing?.frequency===f.v?'selected':''}>${f.l}</option>`).join('')}
             </select>
           </div>
           <div>
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">День місяця</label>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finDayOfMonth')}</label>
             <select id="rec_day" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
               ${days.map(d => `<option ${existing?.dayOfMonth===d?'selected':''}>${d}</option>`).join('')}
             </select>
@@ -2133,7 +2135,7 @@ window._finAddRecurring = function(editId) {
 
         <!-- Рахунок -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Рахунок</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finAccountLbl')}</label>
           <select id="rec_account" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
             ${(_state.accounts||[]).map(a => `<option value="${a.id}" ${existing?.accountId===a.id?'selected':''}>${escHtml(a.name)}</option>`).join('')}
           </select>
@@ -2318,7 +2320,7 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
     <div style="width:100%;">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Фінанси по функціях</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finByFunction')}</div>
         <select id="funcFilterMonth" onchange="window._funcMonthChange(this.value)"
           style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
           <option value="">Всі місяці</option>
@@ -2332,13 +2334,13 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
           background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
           padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;">
           <div>${window.t('finFunctionLbl')}</div>
-          <div style="text-align:right;">Дохід</div>
+          <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
           <div style="text-align:right;">${window.t('finExpense')}</div>
-          <div style="text-align:right;">Маржа</div>
+          <div style="text-align:right;">${window.t('finMargin')}</div>
           <div style="text-align:right;">% від загальних</div>
         </div>
         <div id="funcTableBody">
-          <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">Завантаження...</div>
+          <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${window.t('finLoading')}</div>
         </div>
       </div>
 
@@ -2346,7 +2348,7 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
         <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">${window.t('finExpByFunction')}</div>
         <div id="funcChart">
-          <div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div>
+          <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
         </div>
       </div>
     </div>
@@ -2447,7 +2449,7 @@ async function loadFunctionsData(monthVal) {
       <!-- Підсумок -->
       <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
         padding:0.65rem 1rem;background:#f0fdf4;border-top:2px solid #22c55e;align-items:center;">
-        <div style="font-size:0.82rem;font-weight:700;color:#16a34a;">ВСЬОГО</div>
+        <div style="font-size:0.82rem;font-weight:700;color:#16a34a;">${window.t('finTotalAll')}</div>
         <div style="text-align:right;font-size:0.85rem;font-weight:700;color:#22c55e;">${fmt(totalIncome)}</div>
         <div style="text-align:right;font-size:0.85rem;font-weight:700;color:#ef4444;">${fmt(totalExpense)}</div>
         <div style="text-align:right;font-size:0.85rem;font-weight:700;color:${totalIncome>0?(totalIncome-totalExpense)/totalIncome>=0.15?'#22c55e':'#f59e0b':'#6b7280'};">
@@ -2507,7 +2509,7 @@ function renderPlanning(el) {
     <div style="width:100%;">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Планування бюджету</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finBudgetPlanning')}</div>
         <div style="display:flex;gap:0.5rem;align-items:center;">
           <select id="planMonthSel" onchange="window._planMonthChange(this.value)"
             style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
@@ -2548,12 +2550,12 @@ function renderPlanning(el) {
             padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;
             display:grid;grid-template-columns:1fr 110px 110px 90px;">
             <div>${window.t('finCategoryLbl')}</div>
-            <div style="text-align:right;">Бюджет</div>
-            <div style="text-align:right;">Факт</div>
-            <div style="text-align:right;">Відхилення</div>
+            <div style="text-align:right;">${window.t('finBudgetLbl')}</div>
+            <div style="text-align:right;">${window.t('finActual')}</div>
+            <div style="text-align:right;">${window.t('finVariance')}</div>
           </div>
           <div id="planBudgetBody">
-            <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">Завантаження...</div>
+            <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${window.t('finLoading')}</div>
           </div>
         </div>
 
@@ -2564,15 +2566,15 @@ function renderPlanning(el) {
           <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
             <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Cashflow місяця</div>
             <div id="planCashflow">
-              <div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div>
+              <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
             </div>
           </div>
 
           <!-- Фінансова ціль -->
           <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Фінансова ціль місяця</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finMonthlyGoal')}</div>
             <div style="margin-bottom:0.5rem;">
-              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">Цільовий прибуток (EUR)</label>
+              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">${window.t('finTargetProfit')}</label>
               <input id="planGoalInput" type="number" min="0" placeholder="напр. 5000"
                 style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
             </div>
@@ -2585,14 +2587,14 @@ function renderPlanning(el) {
       <!-- Бюджет по функціях -->
       <div id="planModeView_functions" style="display:none;">
         <div id="planFunctionsBody">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
         </div>
       </div>
 
       <!-- Cashflow 30/60/90 -->
       <div id="planModeView_cashflow" style="display:none;">
         <div id="planCashflowForecast">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
         </div>
       </div>
 
@@ -2753,7 +2755,7 @@ async function loadPlanningData(monthVal) {
           ${goalVal > 0 ? `
           <div style="margin-top:0.5rem;">
             <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;">
-              <span>Виконання цілі</span>
+              <span>${window.t('finGoalExec')}</span>
               <span>${Math.min(Math.round(profit/goalVal*100),100)}%</span>
             </div>
             <div style="height:6px;background:#f3f4f6;border-radius:3px;">
@@ -2863,7 +2865,7 @@ async function _renderFunctionsBudget(monthVal) {
           <div style="text-align:right;">Норма %</div>
           <div style="text-align:right;">Факт сума</div>
           <div style="text-align:right;">Факт %</div>
-          <div style="text-align:right;">Відхилення</div>
+          <div style="text-align:right;">${window.t('finVariance')}</div>
         </div>
         ${funcs.map((f, i) => {
           const fact = byFunc[f.id] || 0;
@@ -3046,7 +3048,7 @@ function renderAnalytics(el) {
       </div>
 
       <div id="analyticsContent">
-        <div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>
+        <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
       </div>
     </div>`;
 
@@ -3074,7 +3076,7 @@ window._analyticsPeriodChange = function(val) {
 async function _loadAnalytics(mode, period) {
   const el = document.getElementById('analyticsContent');
   if (!el) return;
-  el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>';
+  el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>';
 
   try {
     const currency = _state.currency || 'EUR';
@@ -3161,7 +3163,7 @@ function _renderPnl(el, txs, currency, from, to) {
 
       <!-- Доходи -->
       <div style="background:#f0fdf4;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;">
-        <span>ДОХОДИ</span><span>${fmt(totalInc, currency)}</span>
+        <span>${window.t('finIncome').toUpperCase()}</span><span>${fmt(totalInc, currency)}</span>
       </div>
       ${incCats.filter(c => byIncCat[c.id]).map(c => catRow(c, byIncCat[c.id] || 0, '#22c55e')).join('')}
       ${!incCats.filter(c => byIncCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає доходів</div>' : ''}
@@ -3219,11 +3221,11 @@ async function _renderProjectsMargin(el, txs, currency) {
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
       <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;padding:10px 14px;
         display:grid;grid-template-columns:1fr 100px 100px 100px 70px;text-transform:uppercase;">
-        <div>Проект</div>
-        <div style="text-align:right;">Дохід</div>
+        <div>${window.t('finProjectLbl')}</div>
+        <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
         <div style="text-align:right;">Витрати</div>
         <div style="text-align:right;">Прибуток</div>
-        <div style="text-align:right;">Маржа</div>
+        <div style="text-align:right;">${window.t('finMargin')}</div>
       </div>
       ${rows.map((r, i) => {
         const profitColor = r.profit >= 0 ? '#22c55e' : '#ef4444';
@@ -3521,7 +3523,7 @@ window._saveRates = async function() {
 window._fetchRates = async function() {
   const base = _state.currency || 'EUR';
   const st = document.getElementById('ratesStatus');
-  if (st) st.textContent = 'Завантаження...';
+  if (st) st.textContent = window.t('finLoading');
   try {
     // Використовуємо відкритий API без ключа
     let resp;
@@ -4023,14 +4025,14 @@ function addTransaction(forceType) {
         <!-- Сума + валюта -->
         <div style="display:flex;gap:0.5rem;">
           <div style="flex:1;">
-            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Сума *</label>
+            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finAmountRequired')}</label>
             <input id="fmAmount" type="number" min="0" step="0.01" placeholder="0.00"
               style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;outline:none;"
               onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"
               oninput="window._updateCurrencyHint()">
           </div>
           <div style="width:90px;">
-            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Валюта</label>
+            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCurrencyLbl')}</label>
             <select id="fmCurrency" onchange="window._updateCurrencyHint()"
               style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
               ${['EUR','USD','UAH','PLN','GBP','CZK'].map(cur =>
@@ -4062,7 +4064,7 @@ function addTransaction(forceType) {
 
         <!-- Рахунок -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Рахунок</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finAccountLbl')}</label>
           <select id="fmAccount"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             ${_state.accounts.map(a => `<option value="${a.id}" ${a.isDefault?'selected':''}>${a.name} (${a.currency})</option>`).join('')}
@@ -4435,7 +4437,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
   const filterField = mode === 'function' ? 'functionId' : 'projectId';
 
   if (!entityId || !el) return;
-  el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>';
+  el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>';
 
   try {
     const db = getDb();
