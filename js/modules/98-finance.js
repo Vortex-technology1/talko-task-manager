@@ -523,11 +523,11 @@ async function loadDashboardData(monthVal) {
 
     snap.docs.forEach(d => {
       const tx = d.data();
-      if (tx.type === 'income')  income += (tx.amount || 0);
+      if (tx.type === 'income')  income += txAmt(tx);
       if (tx.type === 'expense') {
-        expense += (tx.amount || 0);
+        expense += txAmt(tx);
         const cn = tx.categoryId || 'other';
-        expByCat[cn] = (expByCat[cn] || 0) + (tx.amount || 0);
+        expByCat[cn] = (expByCat[cn] || 0) + txAmt(tx);
       }
     });
 
@@ -689,8 +689,8 @@ async function loadDashboardData(monthVal) {
           const tx = d.data();
           if (!tx.projectId) return;
           if (!byProj[tx.projectId]) byProj[tx.projectId] = { inc: 0, exp: 0 };
-          if (tx.type === 'income')  byProj[tx.projectId].inc += tx.amount || 0;
-          if (tx.type === 'expense') byProj[tx.projectId].exp += tx.amount || 0;
+          if (tx.type === 'income')  byProj[tx.projectId].inc += txAmt(tx);
+          if (tx.type === 'expense') byProj[tx.projectId].exp += txAmt(tx);
         });
         const projRows = Object.entries(byProj).map(([pid, d]) => ({
           pid, profit: d.inc - d.exp,
@@ -834,8 +834,8 @@ async function loadChartData() {
       const txDate = tx.date?.toDate ? tx.date.toDate() : new Date(tx.date?.seconds*1000 || 0);
       const mIdx = months.findIndex(m => m.year === txDate.getFullYear() && m.month === txDate.getMonth()+1);
       if (mIdx < 0) return;
-      if (tx.type === 'income')  months[mIdx].income  += (tx.amount || 0);
-      if (tx.type === 'expense') months[mIdx].expense += (tx.amount || 0);
+      if (tx.type === 'income')  months[mIdx].income  += txAmt(tx);
+      if (tx.type === 'expense') months[mIdx].expense += txAmt(tx);
     });
 
     const maxVal = Math.max(...months.map(m => Math.max(m.income, m.expense)), 1);
@@ -3082,8 +3082,8 @@ function _renderPnl(el, txs, currency, from, to) {
 
   txs.forEach(tx => {
     if (tx.type === 'income') {
-      byIncCat[tx.categoryId] = (byIncCat[tx.categoryId] || 0) + (tx.amount || 0);
-      totalInc += tx.amount || 0;
+      byIncCat[tx.categoryId] = (byIncCat[tx.categoryId] || 0) + txAmt(tx);
+      totalInc += txAmt(tx);
     } else {
       byExpCat[tx.categoryId] = (byExpCat[tx.categoryId] || 0) + (tx.amount || 0);
       totalExp += tx.amount || 0;
@@ -3409,9 +3409,104 @@ function renderSettings(el) {
       ${renderCatList('income')}
       ${renderCatList('expense')}
       ${renderAccList()}
+      ${renderRatesBlock()}
     </div>
   `;
 }
+
+// ── Блок курсів валют ─────────────────────────────────────
+function renderRatesBlock() {
+  const base = _state.currency || 'EUR';
+  const rates = _state.rates || {};
+  const CURRENCIES = ['UAH','USD','EUR','PLN','CZK','GBP'].filter(c => c !== base);
+
+  const rows = CURRENCIES.map(cur => {
+    const r = rates[cur] || '';
+    return `
+      <div style="display:flex;align-items:center;gap:0.75rem;padding:0.55rem 0.9rem;border-bottom:1px solid #f3f4f6;">
+        <div style="width:42px;font-size:0.82rem;font-weight:600;color:#374151;">${cur}</div>
+        <div style="flex:1;font-size:0.78rem;color:#6b7280;">1 ${cur} =</div>
+        <input type="number" min="0" step="0.0001"
+          id="rate_${cur}" value="${r}"
+          placeholder="курс"
+          style="width:90px;padding:4px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;text-align:right;">
+        <div style="font-size:0.78rem;color:#6b7280;">${base}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div style="margin-bottom:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+        <div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Курси валют</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-top:2px;">Базова валюта: <b>${base}</b>. Скільки ${base} за 1 одиницю іноземної валюти.</div>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <button onclick="window._fetchRates()"
+            style="display:flex;align-items:center;gap:4px;padding:0.35rem 0.7rem;border:1px solid #e5e7eb;
+            border-radius:7px;background:#fff;color:#374151;cursor:pointer;font-size:0.78rem;font-weight:500;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+            Актуальні курси
+          </button>
+          <button onclick="window._saveRates()"
+            style="padding:0.35rem 0.7rem;border:none;border-radius:7px;background:#22c55e;
+            color:#fff;cursor:pointer;font-size:0.78rem;font-weight:600;">
+            Зберегти
+          </button>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+        ${rows}
+      </div>
+      <div id="ratesStatus" style="font-size:0.75rem;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+    </div>`;
+}
+
+window._saveRates = async function() {
+  const base = _state.currency || 'EUR';
+  const CURRENCIES = ['UAH','USD','EUR','PLN','CZK','GBP'].filter(c => c !== base);
+  const rates = {};
+  CURRENCIES.forEach(cur => {
+    const val = parseFloat(document.getElementById('rate_' + cur)?.value || 0);
+    if (val > 0) rates[cur] = val;
+  });
+  _state.rates = rates;
+  try {
+    await colRef('finance_settings').doc('main').set({ rates }, { merge: true });
+    const st = document.getElementById('ratesStatus');
+    if (st) st.textContent = 'Збережено ' + new Date().toLocaleTimeString('uk-UA');
+    if (typeof showToast === 'function') showToast('Курси збережено', 'success');
+  } catch(e) { alert('Помилка збереження: ' + e.message); }
+};
+
+window._fetchRates = async function() {
+  const base = _state.currency || 'EUR';
+  const st = document.getElementById('ratesStatus');
+  if (st) st.textContent = 'Завантаження...';
+  try {
+    // Використовуємо відкритий API без ключа
+    const resp = await fetch(`https://api.frankfurter.app/latest?from=${base}`);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    // frankfurter повертає rates як { USD: 1.08, UAH: 42.1, ... } — тобто скільки ІНОЗЕМНОЇ за 1 BASE
+    // Нам потрібно зворотне: скільки BASE за 1 ІНОЗЕМНУ
+    const CURRENCIES = ['UAH','USD','EUR','PLN','CZK','GBP'].filter(c => c !== base);
+    CURRENCIES.forEach(cur => {
+      const directRate = data.rates?.[cur]; // скільки cur за 1 base
+      if (directRate && directRate > 0) {
+        const inverseRate = 1 / directRate; // скільки base за 1 cur
+        const input = document.getElementById('rate_' + cur);
+        if (input) input.value = inverseRate.toFixed(4);
+      }
+    });
+    if (st) st.textContent = `Курси від ${data.date} (frankfurter.app)`;
+  } catch(e) {
+    if (st) st.textContent = 'Помилка отримання курсів: ' + e.message;
+    if (typeof showToast === 'function') showToast('Не вдалося отримати курси. Введіть вручну.', 'warn');
+  }
+};
 
 // Додавання категорії
 window._financeAddCategory = async function(type) {
@@ -3888,18 +3983,21 @@ function addTransaction(forceType) {
             <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Сума *</label>
             <input id="fmAmount" type="number" min="0" step="0.01" placeholder="0.00"
               style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;outline:none;"
-              onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+              onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"
+              oninput="window._updateCurrencyHint()">
           </div>
           <div style="width:90px;">
             <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Валюта</label>
-            <select id="fmCurrency"
+            <select id="fmCurrency" onchange="window._updateCurrencyHint()"
               style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-              ${['EUR','USD','UAH','PLN','GBP'].map(cur =>
+              ${['EUR','USD','UAH','PLN','GBP','CZK'].map(cur =>
                 `<option value="${cur}" ${_state.currency===cur?'selected':''}>${cur}</option>`
               ).join('')}
             </select>
           </div>
         </div>
+        <!-- Підказка конвертації -->
+        <div id="fmCurrencyHint" style="font-size:0.72rem;color:#6b7280;margin-top:-8px;margin-bottom:4px;min-height:16px;"></div>
 
         <!-- Категорія -->
         <div id="fmCatWrap">
@@ -4027,6 +4125,7 @@ window._financeSaveTx = async function() {
       type,
       amount,
       currency,
+      amountBase: toBase(amount, currency), // сума в базовій валюті для аналітики
       categoryId:   catId,
       date,
       accountId:    accId,
@@ -4137,16 +4236,35 @@ async function detectRegionAndCurrency() {
       _state.region   = snap.data().region   || 'EU';
       _state.currency = snap.data().currency || 'EUR';
       _state.niche    = snap.data().niche    || null;
+      _state.rates    = snap.data().rates    || {};
     } else {
-      // Нова компанія — спробуємо взяти з профілю компанії
       const cSnap = await db.collection('companies').doc(_state.companyId).get();
       if (cSnap.exists) {
         _state.region   = cSnap.data().region   || 'EU';
         _state.currency = cSnap.data().currency || 'EUR';
         _state.niche    = cSnap.data().niche    || null;
       }
+      _state.rates = {};
     }
   } catch(e) { /* defaults OK */ }
+}
+
+// ── Конвертація в базову валюту ───────────────────────────
+// toBase(amount, fromCurrency) -> сума в базовій валюті (_state.currency)
+function toBase(amount, fromCur) {
+  const base = _state.currency || 'EUR';
+  if (!fromCur || fromCur === base) return amount;
+  const rates = _state.rates || {};
+  // rates зберігаються як { USD: 1.08, UAH: 0.024, PLN: 0.23 } — ціна 1 одиниці в базовій
+  const rate = rates[fromCur];
+  if (!rate || rate <= 0) return amount; // якщо курс невідомий — не конвертуємо
+  return amount * rate;
+}
+
+// txAmt(tx) — повертає суму в базовій валюті для аналітики/дашборду
+function txAmt(tx) {
+  if (tx.amountBase != null) return tx.amountBase;
+  return toBase(tx.amount || 0, tx.currency);
 }
 
 // ── Показати кнопку в навігації ──────────────────────────
@@ -4213,6 +4331,22 @@ window._financeGetTxForPeriod = function(periodKey, freq) {
     // monthly: YYYY-MM
     return d.toISOString().slice(0, 7) === periodKey;
   });
+};
+
+window._updateCurrencyHint = function() {
+  const hint = document.getElementById('fmCurrencyHint');
+  if (!hint) return;
+  const cur = document.getElementById('fmCurrency')?.value;
+  const amt = parseFloat(document.getElementById('fmAmount')?.value || 0);
+  const base = _state.currency || 'EUR';
+  if (!cur || cur === base || !amt) { hint.textContent = ''; return; }
+  const converted = toBase(amt, cur);
+  const rates = _state.rates || {};
+  if (!rates[cur]) {
+    hint.innerHTML = `<span style="color:#f59e0b;">⚠ Курс для ${cur} не встановлено. Перейдіть у Налаштування → Курси валют.</span>`;
+  } else {
+    hint.textContent = `≈ ${converted.toFixed(2)} ${base} (курс: 1 ${cur} = ${rates[cur]} ${base})`;
+  }
 };
 
 window._financeAddTransaction = function(type) {
