@@ -2016,8 +2016,27 @@ function renderPlanning(el) {
         </div>
       </div>
 
+      <!-- Сигнали відхилень -->
+      <div id="planAlerts" style="margin-bottom:1rem;"></div>
+
+      <!-- Перемикач режиму -->
+      <div style="display:flex;gap:6px;margin-bottom:1rem;">
+        <button onclick="window._planMode('budget')" id="planModeBtn_budget"
+          style="padding:6px 14px;border-radius:8px;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:600;cursor:pointer;">
+          Бюджет по категоріях
+        </button>
+        <button onclick="window._planMode('functions')" id="planModeBtn_functions"
+          style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
+          Бюджет по функціях
+        </button>
+        <button onclick="window._planMode('cashflow')" id="planModeBtn_cashflow"
+          style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
+          Cashflow 30/60/90 днів
+        </button>
+      </div>
+
       <!-- 2 колонки: бюджет + cashflow -->
-      <div style="display:grid;grid-template-columns:1fr 320px;gap:1rem;align-items:start;">
+      <div id="planModeView_budget" style="display:grid;grid-template-columns:1fr 320px;gap:1rem;align-items:start;">
 
         <!-- Бюджет по категоріях -->
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
@@ -2057,7 +2076,22 @@ function renderPlanning(el) {
           </div>
 
         </div>
+      </div><!-- /planModeView_budget -->
+
+      <!-- Бюджет по функціях -->
+      <div id="planModeView_functions" style="display:none;">
+        <div id="planFunctionsBody">
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>
+        </div>
       </div>
+
+      <!-- Cashflow 30/60/90 -->
+      <div id="planModeView_cashflow" style="display:none;">
+        <div id="planCashflowForecast">
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>
+        </div>
+      </div>
+
     </div>
   `;
 
@@ -2067,6 +2101,26 @@ function renderPlanning(el) {
 window._planMonthChange = function(val) {
   _planMonth = val;
   loadPlanningData(val);
+};
+
+// Перемикач режиму планування
+let _planCurrentMode = 'budget';
+window._planMode = function(mode) {
+  _planCurrentMode = mode;
+  ['budget','functions','cashflow'].forEach(m => {
+    const view = document.getElementById('planModeView_' + m);
+    const btn  = document.getElementById('planModeBtn_' + m);
+    if (view) view.style.display = m === mode ? (m === 'budget' ? 'grid' : 'block') : 'none';
+    if (btn) {
+      const active = m === mode;
+      btn.style.borderColor  = active ? '#22c55e' : '#e5e7eb';
+      btn.style.background   = active ? '#f0fdf4' : '#fff';
+      btn.style.color        = active ? '#16a34a' : '#6b7280';
+    }
+  });
+  // Завантажуємо дані для вибраного режиму
+  if (mode === 'functions') _renderFunctionsBudget(_planMonth);
+  if (mode === 'cashflow')  _renderCashflowForecast();
 };
 
 window._savePlanBudget = async function() {
@@ -2126,6 +2180,8 @@ async function loadPlanningData(monthVal) {
     if (!bodyEl) return;
 
     const expCats = (_state.categories.expense || []);
+    // Сигнали відхилень
+    _renderPlanAlerts(expCats, factByCat, budgetData);
 
     if (expCats.length === 0) {
       bodyEl.innerHTML = '<div style="padding:1.5rem;text-align:center;color:#9ca3af;font-size:0.82rem;">Немає категорій витрат</div>';
@@ -2227,6 +2283,225 @@ async function loadPlanningData(monthVal) {
     console.error('[Finance] loadPlanningData:', e);
     const bodyEl = document.getElementById('planBudgetBody');
     if (bodyEl) bodyEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
+  }
+}
+
+// ── Сигнали відхилень бюджету ─────────────────────────────
+function _renderPlanAlerts(expCats, factByCat, budgetData) {
+  const el = document.getElementById('planAlerts');
+  if (!el) return;
+  const alerts = [];
+  expCats.forEach(cat => {
+    const budget = budgetData['cat_' + cat.id] || 0;
+    if (budget <= 0) return;
+    const fact = factByCat[cat.id] || 0;
+    const overPct = Math.round((fact - budget) / budget * 100);
+    if (overPct >= 25) alerts.push({ label: cat.name, pct: overPct, level: 'red' });
+    else if (overPct >= 10) alerts.push({ label: cat.name, pct: overPct, level: 'yellow' });
+  });
+  if (alerts.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      ${alerts.map(a => `
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;
+          background:${a.level==='red'?'#fef2f2':'#fffbeb'};border:1px solid ${a.level==='red'?'#fecaca':'#fde68a'};">
+          <span style="font-size:1rem;">${a.level==='red'?'🔴':'🟡'}</span>
+          <span style="font-size:0.82rem;font-weight:600;color:${a.level==='red'?'#dc2626':'#d97706'};">
+            ${escHtml(a.label)}: перевищення бюджету на +${a.pct}%
+          </span>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ── Бюджет по функціях ────────────────────────────────────
+async function _renderFunctionsBudget(monthVal) {
+  const el = document.getElementById('planFunctionsBody');
+  if (!el) return;
+  try {
+    const [y, m] = monthVal.split('-').map(Number);
+    const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
+
+    const [txSnap, budgSnap] = await Promise.all([
+      colRef('finance_transactions').where('date','>=',from).where('date','<=',to).get(),
+      colRef('finance_budgets').doc(monthVal).get(),
+    ]);
+
+    const txs = txSnap.docs.map(d => d.data());
+    const budgData = budgSnap.exists ? budgSnap.data() : {};
+    const currency = _state.currency || 'EUR';
+
+    // Загальний бюджет витрат = сума всіх cat_ полів
+    let totalBudget = 0;
+    Object.keys(budgData).forEach(k => { if (k.startsWith('cat_')) totalBudget += budgData[k] || 0; });
+
+    // Факт по функціях
+    const byFunc = {};
+    let totalExpense = 0;
+    txs.forEach(tx => {
+      if (tx.type !== 'expense') return;
+      const fid = tx.functionId || '__none__';
+      byFunc[fid] = (byFunc[fid] || 0) + (tx.amount || 0);
+      totalExpense += tx.amount || 0;
+    });
+
+    const funcs = _state.functions || [];
+    if (funcs.length === 0) {
+      el.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Функції не знайдено. Створіть їх у розділі «Процеси».</div>';
+      return;
+    }
+
+    el.innerHTML = `
+      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
+        <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
+          padding:0.65rem 1rem;display:grid;grid-template-columns:1fr 80px 110px 80px 90px;">
+          <div>Функція</div>
+          <div style="text-align:right;">Норма %</div>
+          <div style="text-align:right;">Факт сума</div>
+          <div style="text-align:right;">Факт %</div>
+          <div style="text-align:right;">Відхилення</div>
+        </div>
+        ${funcs.map((f, i) => {
+          const fact = byFunc[f.id] || 0;
+          const factPct = totalExpense > 0 ? Math.round(fact / totalExpense * 100) : 0;
+          const normPct = budgData['func_norm_' + f.id] || 0;
+          const diff = factPct - normPct;
+          const diffColor = diff > 5 ? '#ef4444' : diff > 2 ? '#f59e0b' : '#22c55e';
+          const bg = i%2===0 ? '#fff' : '#fafafa';
+          return `
+            <div style="display:grid;grid-template-columns:1fr 80px 110px 80px 90px;
+              padding:0.55rem 1rem;background:${bg};border-bottom:1px solid #f3f4f6;align-items:center;">
+              <div style="font-size:0.82rem;color:#374151;font-weight:500;">${escHtml(f.name)}</div>
+              <div style="text-align:right;">
+                <input type="number" min="0" max="100" value="${normPct||''}" placeholder="0"
+                  data-func-norm="${f.id}"
+                  style="width:55px;padding:3px 5px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.78rem;text-align:right;">%
+              </div>
+              <div style="text-align:right;font-size:0.82rem;font-weight:600;color:#374151;">${fmt(fact, currency)}</div>
+              <div style="text-align:right;font-size:0.82rem;font-weight:600;color:#374151;">${factPct}%</div>
+              <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${normPct>0?diffColor:'#9ca3af'};">
+                ${normPct > 0 ? (diff > 0 ? '+' : '') + diff + '%' : '—'}
+              </div>
+            </div>`;
+        }).join('')}
+        ${byFunc['__none__'] ? `
+          <div style="display:grid;grid-template-columns:1fr 80px 110px 80px 90px;
+            padding:0.55rem 1rem;background:#fafafa;border-bottom:1px solid #f3f4f6;align-items:center;">
+            <div style="font-size:0.78rem;color:#9ca3af;">Без функції</div>
+            <div></div>
+            <div style="text-align:right;font-size:0.82rem;color:#9ca3af;">${fmt(byFunc['__none__'], currency)}</div>
+            <div style="text-align:right;font-size:0.78rem;color:#9ca3af;">
+              ${totalExpense > 0 ? Math.round(byFunc['__none__'] / totalExpense * 100) : 0}%
+            </div>
+            <div></div>
+          </div>` : ''}
+      </div>
+      <div style="margin-top:10px;text-align:right;">
+        <button onclick="window._saveFuncNorms()"
+          style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">
+          Зберегти норми
+        </button>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
+  }
+}
+
+window._saveFuncNorms = async function() {
+  const inputs = document.querySelectorAll('[data-func-norm]');
+  const data = { updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+  inputs.forEach(inp => { data['func_norm_' + inp.dataset.funcNorm] = parseFloat(inp.value) || 0; });
+  try {
+    await colRef('finance_budgets').doc(_planMonth).set(data, { merge: true });
+    if (typeof showToast === 'function') showToast('Норми збережено', 'success');
+  } catch(e) { alert('Помилка: ' + e.message); }
+};
+
+// ── Cashflow прогноз 30/60/90 днів ───────────────────────
+async function _renderCashflowForecast() {
+  const el = document.getElementById('planCashflowForecast');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Розраховую прогноз...</div>';
+
+  try {
+    const currency = _state.currency || 'EUR';
+    const today = new Date(); today.setHours(0,0,0,0);
+
+    // Поточний баланс
+    const totalBalance = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
+
+    // Регулярні витрати на наступні 90 днів
+    const recurring = _state.recurring || [];
+    const outflows = {}; // date → amount
+
+    recurring.filter(r => r.status !== 'paused' && r.type === 'expense').forEach(r => {
+      for (let d = 0; d < 90; d++) {
+        const dt = new Date(today); dt.setDate(today.getDate() + d);
+        const dayOfMonth = dt.getDate();
+        let match = false;
+        if (r.period === 'monthly' && r.dayOfMonth == dayOfMonth) match = true;
+        if (r.period === 'weekly') {
+          const jsDay = dt.getDay(); // 0=Sun
+          const days = r.daysOfWeek || [];
+          if (days.includes(String(jsDay)) || days.includes(jsDay)) match = true;
+        }
+        if (r.period === 'daily') match = true;
+        if (match) {
+          const key = dt.toISOString().split('T')[0];
+          outflows[key] = (outflows[key] || 0) + (r.amount || 0);
+        }
+      }
+    });
+
+    // Будуємо cashflow по днях → агрегуємо по 30/60/90
+    const points = [30, 60, 90];
+    const results = points.map(days => {
+      let balance = totalBalance;
+      for (let d = 0; d < days; d++) {
+        const dt = new Date(today); dt.setDate(today.getDate() + d);
+        const key = dt.toISOString().split('T')[0];
+        balance -= (outflows[key] || 0);
+      }
+      return { days, balance };
+    });
+
+    const minBalance = Math.min(...results.map(r => r.balance));
+    const hasNegative = minBalance < 0;
+
+    el.innerHTML = `
+      ${hasNegative ? `
+        <div style="padding:10px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;margin-bottom:16px;font-size:0.82rem;font-weight:600;color:#dc2626;">
+          ⚠️ Прогнозується від'ємний залишок: ${fmt(minBalance, currency)}
+        </div>` : ''}
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+        ${results.map(r => `
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;text-align:center;">
+            <div style="font-size:0.72rem;color:#6b7280;margin-bottom:4px;">Через ${r.days} днів</div>
+            <div style="font-size:1.1rem;font-weight:700;color:${r.balance>=0?'#22c55e':'#ef4444'};">
+              ${fmt(r.balance, currency)}
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;">
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:12px;">Поточний стан</div>
+        <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
+          <span style="color:#6b7280;">Залишок на рахунках</span>
+          <span style="font-weight:700;color:#22c55e;">${fmt(totalBalance, currency)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
+          <span style="color:#6b7280;">Регулярні витрати / міс.</span>
+          <span style="font-weight:600;color:#ef4444;">
+            ${fmt(recurring.filter(r=>r.status!=='paused'&&r.period==='monthly').reduce((s,r)=>s+(r.amount||0),0), currency)}
+          </span>
+        </div>
+        <div style="border-top:1px solid #f3f4f6;padding-top:8px;font-size:0.75rem;color:#9ca3af;">
+          Прогноз базується на поточному залишку та регулярних витратах
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
   }
 }
 
