@@ -22,16 +22,18 @@ const I = {
   pause:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>',
   play:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
   check:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  invoice:  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
 };
 
 // ── Константи ──────────────────────────────────────────────
 const FINANCE_VERSION = '1.0.0';
-const TABS = ['dashboard', 'income', 'expense', 'recurring', 'functions', 'planning', 'ai', 'settings'];
+const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'ai', 'settings'];
 const TAB_LABELS = {
   dashboard:  { icon: 'chart',    label: 'Дашборд'      },
   income:     { icon: 'income',   label: 'Доходи'       },
   expense:    { icon: 'expense',  label: 'Витрати'      },
   recurring:  { icon: 'repeat',   label: 'Регулярні'    },
+  invoices:   { icon: 'invoice',  label: 'Рахунки'      },
   functions:  { icon: 'func',     label: 'Функції'      },
   planning:   { icon: 'plan',     label: 'Планування'   },
   ai:         { icon: 'ai',       label: 'AI'           },
@@ -47,6 +49,7 @@ let _state = {
   initialized: false,
   accounts: [],
   categories: { income: [], expense: [] },
+  invoices: [],
   region: 'EU',             // EU | DE | PL | US
   currency: 'EUR',
   niche: null,              // beauty | construction | medical | ...
@@ -336,6 +339,7 @@ function renderSubTab(tab) {
     case 'income':    renderTransactions(inner, 'income'); break;
     case 'expense':   renderTransactions(inner, 'expense'); break;
     case 'recurring': renderRecurring(inner); break;
+    case 'invoices':  renderInvoices(inner); break;
     case 'functions': renderFunctions(inner); break;
     case 'planning':  renderPlanning(inner); break;
     case 'ai':        renderAI(inner); break;
@@ -874,6 +878,478 @@ async function loadAndRenderTxList(type) {
   }
 }
 
+// ════════════════════════════════════════════════════════════
+// ── INVOICES — Рахунки клієнтам ─────────────────────────────
+// ════════════════════════════════════════════════════════════
+
+async function _loadInvoices() {
+  try {
+    const snap = await colRef('finance_invoices').orderBy('createdAt', 'desc').limit(100).get();
+    _state.invoices = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) {
+    _state.invoices = [];
+  }
+}
+
+function _nextInvoiceNumber(invoices) {
+  if (!invoices || invoices.length === 0) return 'INV-001';
+  const nums = invoices
+    .map(inv => { const m = (inv.number || '').match(/(\d+)$/); return m ? parseInt(m[1]) : 0; })
+    .filter(n => n > 0);
+  const max = nums.length ? Math.max(...nums) : 0;
+  return 'INV-' + String(max + 1).padStart(3, '0');
+}
+
+function _invoiceStatusBadge(status) {
+  const map = {
+    draft:    { label: 'Чернетка',  bg: '#f3f4f6', color: '#6b7280' },
+    sent:     { label: 'Надіслано', bg: '#eff6ff', color: '#3b82f6' },
+    paid:     { label: 'Оплачено',  bg: '#f0fdf4', color: '#16a34a' },
+    overdue:  { label: 'Прострочено', bg: '#fef2f2', color: '#dc2626' },
+    cancelled:{ label: 'Скасовано', bg: '#f9fafb', color: '#9ca3af' },
+  };
+  const s = map[status] || map.draft;
+  return `<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:${s.bg};color:${s.color};">${s.label}</span>`;
+}
+
+function _invoiceTotals(items, vatPct) {
+  const subtotal = (items || []).reduce((s, it) => s + (parseFloat(it.qty) || 0) * (parseFloat(it.price) || 0), 0);
+  const vat = vatPct > 0 ? subtotal * vatPct / 100 : 0;
+  const total = subtotal + vat;
+  return { subtotal, vat, total };
+}
+
+function renderInvoices(el) {
+  const currency = _state.currency || 'EUR';
+  const invoices = _state.invoices || [];
+
+  const total   = invoices.reduce((s, inv) => s + (inv.total || 0), 0);
+  const paid    = invoices.filter(i => i.status === 'paid').reduce((s, inv) => s + (inv.total || 0), 0);
+  const pending = invoices.filter(i => i.status === 'sent').reduce((s, inv) => s + (inv.total || 0), 0);
+
+  el.innerHTML = `
+    <div style="width:100%;">
+      <!-- Статистика -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+        ${[
+          { label: 'Виставлено',   val: fmt(total, currency),   color: '#22c55e' },
+          { label: 'Оплачено',     val: fmt(paid, currency),    color: '#16a34a' },
+          { label: 'Очікує оплати',val: fmt(pending, currency), color: '#f59e0b' },
+        ].map(s => `
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;">
+            <div style="font-size:0.75rem;color:#6b7280;margin-bottom:4px;">${s.label}</div>
+            <div style="font-size:1.15rem;font-weight:700;color:${s.color};">${s.val}</div>
+          </div>`).join('')}
+      </div>
+
+      <!-- Кнопка додати -->
+      ${isOwnerOrManager() ? `
+        <div style="margin-bottom:16px;">
+          <button onclick="window._invoiceAdd()"
+            style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:0.9rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            ${I.plus} Новий рахунок
+          </button>
+        </div>` : ''}
+
+      <!-- Список -->
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;">
+        ${invoices.length === 0 ? `
+          <div style="text-align:center;padding:40px;color:#9ca3af;">
+            <div style="font-size:2rem;margin-bottom:8px;">📄</div>
+            <div style="font-weight:600;margin-bottom:4px;">Рахунків ще немає</div>
+            <div style="font-size:0.85rem;">Натисніть «Новий рахунок» щоб створити перший</div>
+          </div>` :
+          invoices.map(inv => _invoiceRow(inv, currency)).join('<div style="border-top:1px solid #f3f4f6;"></div>')
+        }
+      </div>
+    </div>`;
+}
+
+function _invoiceRow(inv, currency) {
+  const { total } = _invoiceTotals(inv.items, inv.vatPct || 0);
+  const displayTotal = inv.total || total;
+  return `
+    <div style="padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div style="flex:0 0 90px;font-size:0.85rem;font-weight:700;color:#1a1a1a;">${escHtml(inv.number || '—')}</div>
+      <div style="flex:1;min-width:120px;">
+        <div style="font-size:0.9rem;font-weight:600;color:#1a1a1a;">${escHtml(inv.clientName || '—')}</div>
+        <div style="font-size:0.75rem;color:#9ca3af;">${inv.date ? fmtDate(inv.date) : '—'}</div>
+      </div>
+      <div style="flex:0 0 100px;text-align:right;font-size:0.9rem;font-weight:700;color:#1a1a1a;">${fmt(displayTotal, currency)}</div>
+      <div style="flex:0 0 110px;text-align:center;">${_invoiceStatusBadge(inv.status || 'draft')}</div>
+      <div style="flex:0 0 auto;display:flex;gap:6px;">
+        <button onclick="window._invoicePdf('${inv.id}')" title="PDF"
+          style="border:1px solid #e5e7eb;background:#fff;border-radius:7px;padding:5px 8px;cursor:pointer;font-size:0.75rem;color:#374151;">PDF</button>
+        ${isOwnerOrManager() ? `
+          ${inv.status !== 'paid' ? `<button onclick="window._invoiceMarkPaid('${inv.id}')" title="Оплачено"
+            style="border:1px solid #d1fae5;background:#f0fdf4;border-radius:7px;padding:5px 8px;cursor:pointer;color:#16a34a;">${I.check}</button>` : ''}
+          <button onclick="window._invoiceEdit('${inv.id}')" title="Редагувати"
+            style="border:1px solid #e5e7eb;background:#fff;border-radius:7px;padding:5px 8px;cursor:pointer;color:#6b7280;">${I.edit}</button>
+          <button onclick="window._invoiceDelete('${inv.id}')" title="Видалити"
+            style="border:1px solid #fee2e2;background:#fef2f2;border-radius:7px;padding:5px 8px;cursor:pointer;color:#ef4444;">${I.trash}</button>
+        ` : ''}
+      </div>
+    </div>`;
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Модальне вікно рахунку ────────────────────────────────
+window._invoiceAdd  = () => _invoiceModal(null);
+window._invoiceEdit = (id) => {
+  const inv = (_state.invoices || []).find(i => i.id === id);
+  if (inv) _invoiceModal(inv);
+};
+
+function _invoiceModal(inv) {
+  const isEdit = !!inv;
+  const currency = _state.currency || 'EUR';
+  const nextNum  = _nextInvoiceNumber(_state.invoices);
+
+  // Дефолтні рядки позицій
+  const defaultItems = inv?.items || [{ desc: '', qty: 1, price: 0 }];
+  const itemsJson = JSON.stringify(defaultItems).replace(/'/g, '&#39;');
+
+  const overlay = document.createElement('div');
+  overlay.id = 'invoiceModal';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;';
+
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:18px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f3f4f6;">
+        <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a;">${isEdit ? 'Редагувати рахунок' : 'Новий рахунок'}</div>
+        <button onclick="document.getElementById('invoiceModal').remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
+      </div>
+
+      <!-- Body -->
+      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
+
+        <!-- Номер та дата -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Номер рахунку</label>
+            <input id="inv_number" value="${escHtml(inv?.number || nextNum)}"
+              style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Дата</label>
+            <input id="inv_date" type="date" value="${inv?.date || new Date().toISOString().split('T')[0]}"
+              style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
+          </div>
+        </div>
+
+        <!-- Клієнт -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Клієнт (назва / ПІБ)</label>
+          <input id="inv_client" value="${escHtml(inv?.clientName || '')}" placeholder="ТОВ «Назва» або Іваненко І.І."
+            style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
+        </div>
+
+        <!-- Реквізити клієнта -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Реквізити клієнта</label>
+          <textarea id="inv_client_details" rows="2" placeholder="ЄДРПОУ, адреса, IBAN..."
+            style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.85rem;resize:vertical;box-sizing:border-box;">${escHtml(inv?.clientDetails || '')}</textarea>
+        </div>
+
+        <!-- Позиції -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:8px;">Позиції</label>
+          <div id="inv_items_list" style="display:flex;flex-direction:column;gap:6px;"></div>
+          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ Додати рядок</button>
+        </div>
+
+        <!-- ПДВ -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end;">
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">ПДВ (%)</label>
+            <input id="inv_vat" type="number" min="0" max="100" value="${inv?.vatPct ?? 0}"
+              oninput="window._invRecalc()"
+              style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
+          </div>
+          <div id="inv_totals_block" style="text-align:right;font-size:0.85rem;color:#374151;"></div>
+        </div>
+
+        <!-- Примітки -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Примітки / реквізити для оплати</label>
+          <textarea id="inv_notes" rows="3" placeholder="IBAN, банк, призначення платежу..."
+            style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.85rem;resize:vertical;box-sizing:border-box;">${escHtml(inv?.notes || '')}</textarea>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;border-top:1px solid #f3f4f6;">
+        <button onclick="document.getElementById('invoiceModal').remove()"
+          style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">Скасувати</button>
+        <button id="inv_save_btn" onclick="window._invoiceSave('${inv?.id || ''}')"
+          style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? 'Зберегти' : 'Створити'}</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+
+  // Ініціалізація рядків позицій
+  window._invItems = defaultItems.map(it => ({ ...it }));
+  _invRenderLines();
+  _invRecalc();
+}
+
+// ── Позиції (рядки) ────────────────────────────────────────
+window._invItems = [];
+
+window._invAddLine = function() {
+  window._invItems.push({ desc: '', qty: 1, price: 0 });
+  _invRenderLines();
+  _invRecalc();
+};
+
+window._invRemoveLine = function(idx) {
+  if (window._invItems.length <= 1) return;
+  window._invItems.splice(idx, 1);
+  _invRenderLines();
+  _invRecalc();
+};
+
+window._invLineChange = function(idx, field, value) {
+  if (!window._invItems[idx]) return;
+  window._invItems[idx][field] = (field === 'qty' || field === 'price') ? parseFloat(value) || 0 : value;
+  _invRecalc();
+};
+
+function _invRenderLines() {
+  const container = document.getElementById('inv_items_list');
+  if (!container) return;
+  container.innerHTML = window._invItems.map((it, idx) => `
+    <div style="display:grid;grid-template-columns:1fr 70px 90px 32px;gap:6px;align-items:center;">
+      <input value="${escHtml(it.desc)}" placeholder="Опис послуги/товару"
+        oninput="window._invLineChange(${idx},'desc',this.value)"
+        style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 10px;font-size:0.82rem;box-sizing:border-box;">
+      <input type="number" value="${it.qty}" min="0" placeholder="Кіл."
+        oninput="window._invLineChange(${idx},'qty',this.value)"
+        style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 8px;font-size:0.82rem;box-sizing:border-box;text-align:right;">
+      <input type="number" value="${it.price}" min="0" placeholder="Ціна"
+        oninput="window._invLineChange(${idx},'price',this.value)"
+        style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 8px;font-size:0.82rem;box-sizing:border-box;text-align:right;">
+      <button onclick="window._invRemoveLine(${idx})"
+        style="border:none;background:transparent;cursor:pointer;color:#ef4444;font-size:1rem;padding:0;display:flex;align-items:center;justify-content:center;">×</button>
+    </div>`).join('');
+}
+
+window._invRecalc = function() {
+  const vatPct = parseFloat(document.getElementById('inv_vat')?.value) || 0;
+  const { subtotal, vat, total } = _invoiceTotals(window._invItems, vatPct);
+  const currency = _state.currency || 'EUR';
+  const block = document.getElementById('inv_totals_block');
+  if (block) block.innerHTML = `
+    <div>Підсумок: <strong>${fmt(subtotal, currency)}</strong></div>
+    ${vatPct > 0 ? `<div>ПДВ ${vatPct}%: <strong>${fmt(vat, currency)}</strong></div>` : ''}
+    <div style="font-size:1rem;font-weight:700;color:#22c55e;margin-top:2px;">До сплати: ${fmt(total, currency)}</div>`;
+};
+
+// ── Збереження ─────────────────────────────────────────────
+window._invoiceSave = async function(editId) {
+  const btn = document.getElementById('inv_save_btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Зберігаємо...'; }
+
+  const vatPct = parseFloat(document.getElementById('inv_vat')?.value) || 0;
+  const { total } = _invoiceTotals(window._invItems, vatPct);
+
+  const data = {
+    number:        document.getElementById('inv_number')?.value.trim() || '',
+    date:          document.getElementById('inv_date')?.value || '',
+    clientName:    document.getElementById('inv_client')?.value.trim() || '',
+    clientDetails: document.getElementById('inv_client_details')?.value.trim() || '',
+    items:         window._invItems.map(it => ({ desc: it.desc, qty: it.qty, price: it.price })),
+    vatPct,
+    total,
+    notes:         document.getElementById('inv_notes')?.value.trim() || '',
+    status:        editId ? undefined : 'draft',
+    updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
+  };
+  if (!editId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+  if (!data.number) { alert('Вкажіть номер рахунку'); if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; } return; }
+  if (!data.clientName) { alert('Вкажіть клієнта'); if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; } return; }
+
+  // Видаляємо undefined
+  if (editId) delete data.status;
+  Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
+
+  try {
+    const col = colRef('finance_invoices');
+    if (editId) {
+      await col.doc(editId).update(data);
+    } else {
+      await col.add(data);
+    }
+    await _loadInvoices();
+    document.getElementById('invoiceModal')?.remove();
+    renderSubTab('invoices');
+  } catch(e) {
+    console.error('[Invoice] save error:', e);
+    alert('Помилка: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; }
+  }
+};
+
+// ── Позначити оплаченим ────────────────────────────────────
+window._invoiceMarkPaid = async function(id) {
+  if (!confirm('Позначити рахунок як оплачений?')) return;
+  try {
+    await colRef('finance_invoices').doc(id).update({ status: 'paid', paidAt: firebase.firestore.FieldValue.serverTimestamp() });
+    const inv = _state.invoices.find(i => i.id === id);
+    if (inv) inv.status = 'paid';
+    renderSubTab('invoices');
+  } catch(e) { alert('Помилка: ' + e.message); }
+};
+
+// ── Видалення ─────────────────────────────────────────────
+window._invoiceDelete = async function(id) {
+  if (!confirm('Видалити рахунок? Це незворотно.')) return;
+  try {
+    await colRef('finance_invoices').doc(id).delete();
+    _state.invoices = _state.invoices.filter(i => i.id !== id);
+    renderSubTab('invoices');
+  } catch(e) { alert('Помилка: ' + e.message); }
+};
+
+// ── PDF через jsPDF (клієнтський, без API) ─────────────────
+window._invoicePdf = async function(id) {
+  const inv = (_state.invoices || []).find(i => i.id === id);
+  if (!inv) return;
+
+  // Завантажуємо jsPDF якщо ще немає
+  if (!window.jspdf) {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const currency = _state.currency || 'EUR';
+
+  const pageW = 210;
+  const margin = 18;
+  let y = 22;
+
+  // Шапка
+  doc.setFillColor(34, 197, 94);
+  doc.rect(0, 0, pageW, 12, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('TALKO Business Systems', margin, 8.5);
+
+  // Заголовок
+  y = 24;
+  doc.setTextColor(26, 26, 26);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text('INVOICE / РАХУНОК', margin, y);
+
+  // Номер і дата
+  y += 9;
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(100, 100, 100);
+  doc.text(`No: ${inv.number || '—'}`, margin, y);
+  doc.text(`Дата: ${inv.date || '—'}`, pageW - margin - 60, y);
+
+  // Клієнт
+  y += 12;
+  doc.setFillColor(249, 250, 251);
+  doc.roundedRect(margin, y - 4, pageW - margin * 2, 20, 3, 3, 'F');
+  doc.setTextColor(26, 26, 26);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.text('КЛІЄНТ:', margin + 4, y + 2);
+  doc.setFont('helvetica', 'normal');
+  doc.text(inv.clientName || '—', margin + 4, y + 8);
+  if (inv.clientDetails) {
+    doc.setTextColor(100, 100, 100);
+    doc.setFontSize(8);
+    doc.text(inv.clientDetails.substring(0, 80), margin + 4, y + 14);
+  }
+
+  // Таблиця позицій
+  y += 28;
+  doc.setFillColor(22, 163, 74);
+  doc.rect(margin, y, pageW - margin * 2, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.text('Опис', margin + 3, y + 5.5);
+  doc.text('Кіл.', pageW - margin - 55, y + 5.5);
+  doc.text('Ціна', pageW - margin - 38, y + 5.5);
+  doc.text('Сума', pageW - margin - 16, y + 5.5);
+
+  y += 8;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  (inv.items || []).forEach((it, idx) => {
+    const lineTotal = (parseFloat(it.qty) || 0) * (parseFloat(it.price) || 0);
+    if (idx % 2 === 1) {
+      doc.setFillColor(248, 250, 248);
+      doc.rect(margin, y - 1, pageW - margin * 2, 7, 'F');
+    }
+    doc.setTextColor(26, 26, 26);
+    doc.text(String(it.desc || '').substring(0, 50), margin + 3, y + 4.5);
+    doc.text(String(it.qty || 0), pageW - margin - 50, y + 4.5, { align: 'right' });
+    doc.text(String(it.price || 0), pageW - margin - 30, y + 4.5, { align: 'right' });
+    doc.text(String(lineTotal.toFixed(2)), pageW - margin - 3, y + 4.5, { align: 'right' });
+    y += 7;
+  });
+
+  // Підсумки
+  const vatPct = inv.vatPct || 0;
+  const { subtotal, vat, total } = _invoiceTotals(inv.items, vatPct);
+  y += 4;
+  doc.setDrawColor(229, 231, 235);
+  doc.line(margin, y, pageW - margin, y);
+  y += 5;
+
+  const addRow = (label, val, bold) => {
+    if (bold) { doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(22, 163, 74); }
+    else { doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(80, 80, 80); }
+    doc.text(label, pageW - margin - 50, y);
+    doc.text(val, pageW - margin - 3, y, { align: 'right' });
+    y += 6;
+  };
+
+  addRow('Підсумок:', subtotal.toFixed(2) + ' ' + currency, false);
+  if (vatPct > 0) addRow(`ПДВ ${vatPct}%:`, vat.toFixed(2) + ' ' + currency, false);
+  addRow('ДО СПЛАТИ:', total.toFixed(2) + ' ' + currency, true);
+
+  // Примітки
+  if (inv.notes) {
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Реквізити для оплати:', margin, y);
+    y += 5;
+    const lines = doc.splitTextToSize(inv.notes, pageW - margin * 2);
+    doc.setTextColor(26, 26, 26);
+    doc.text(lines, margin, y);
+  }
+
+  // Footer
+  doc.setFontSize(7);
+  doc.setTextColor(160, 160, 160);
+  doc.text('TALKO Business Systems | alextolko.com', pageW / 2, 290, { align: 'center' });
+
+  doc.save(`${inv.number || 'invoice'}.pdf`);
+};
+
 // ── Функції (заглушка Етап 1) ────────────────────────────
 // ── Фінанси по функціях — Етап 4 ────────────────────────
 let _funcFilter = { month: '' };
@@ -1304,9 +1780,6 @@ async function _loadRecurring() {
   }
 }
 
-function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
 
 // ── Функції по бізнес-функціях ─────────────────────────────
 function renderFunctions(el) {
@@ -2579,6 +3052,7 @@ async function initFinance(companyId, currentUser) {
     await loadAccounts();
     await loadCategories();
     await _loadRecurring();
+    await _loadInvoices();
 
     // Автосписання — якщо сьогодні збігається день платежу
     _processRecurringAutopost().catch(e => console.warn('[Recurring autopost]', e));
