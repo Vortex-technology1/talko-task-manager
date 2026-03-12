@@ -1671,6 +1671,17 @@ function _appendAiMsg(chat, role, text) {
 async function _buildAiFinContext() {
   try {
     const now = new Date();
+
+    // Завантажуємо профіль компанії
+    let companyProfile = {};
+    try {
+      const compSnap = await getDb().collection('companies').doc(_state.companyId).get();
+      if (compSnap.exists) companyProfile = compSnap.data();
+    } catch(e) {}
+
+    // Оновлюємо niche зі свіжих даних
+    if (companyProfile.niche) _state.niche = companyProfile.niche;
+
     // Останні 3 місяці
     const from3m = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth()-2, 1));
     const txSnap = await colRef('finance_transactions').where('date','>=',from3m).orderBy('date','desc').get();
@@ -1760,6 +1771,15 @@ ${d.month}: дохід=${d.income}, витрати=${d.expense}, прибуто�
 `;
       _state.accounts.forEach(a => { ctx += `  ${a.name}: ${a.balance||0} ${_state.currency||'EUR'}
 `; });
+    }
+
+    // Стратегічний профіль компанії
+    if (companyProfile.companyGoal || companyProfile.companyConcept || companyProfile.companyIdeal) {
+      ctx += `\nСТРАТЕГІЧНИЙ ПРОФІЛЬ КОМПАНІЇ:\n`;
+      if (companyProfile.companyGoal)    ctx += `Мета: ${companyProfile.companyGoal}\n`;
+      if (companyProfile.companyConcept) ctx += `Задум: ${companyProfile.companyConcept}\n`;
+      if (companyProfile.companyCKP)     ctx += `ЦКП: ${companyProfile.companyCKP}\n`;
+      if (companyProfile.companyIdeal)   ctx += `Ідеальна картина: ${companyProfile.companyIdeal}\n`;
     }
 
     return ctx;

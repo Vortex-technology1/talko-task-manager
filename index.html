@@ -1380,6 +1380,101 @@ document.addEventListener('mousedown', function(e) {
                             </div>
                         </div>
 
+                        <!-- Профіль компанії для AI -->
+                        <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
+                            <div style="padding:1rem 1.25rem;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:0.5rem;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                                <h3 style="margin:0;font-size:1rem;font-weight:600;">Профіль компанії</h3>
+                                <span style="margin-left:auto;font-size:0.72rem;background:#f0fdf4;color:#16a34a;padding:0.2rem 0.5rem;border-radius:20px;border:1px solid #bbf7d0;">
+                                    Використовується AI-аналітиком
+                                </span>
+                            </div>
+                            <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1.25rem;">
+
+                                <!-- Ніша -->
+                                <div>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.4rem;">
+                                        Ніша / Галузь бізнесу
+                                        <span title="AI порівнює вашу маржу з бенчмарками ніші"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                    </label>
+                                    <div style="display:flex;gap:0.5rem;">
+                                        <select id="settingNiche"
+                                            style="flex:1;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;background:#fff;">
+                                            <option value="">Оберіть нішу...</option>
+                                            <option value="construction">Будівництво / Підряд</option>
+                                            <option value="medical">Медичний бізнес</option>
+                                            <option value="dental">Стоматологія</option>
+                                            <option value="beauty">Бьюті бізнес (салон, косметологія)</option>
+                                            <option value="furniture">Меблевий бізнес</option>
+                                            <option value="retail">Роздрібна торгівля</option>
+                                            <option value="it">IT / Діджитал послуги</option>
+                                            <option value="manufacturing">Виробництво</option>
+                                            <option value="consulting">Консалтинг / Навчання</option>
+                                            <option value="logistics">Логістика / Транспорт</option>
+                                            <option value="food">Ресторан / Кафе / Їжа</option>
+                                            <option value="other">Інше</option>
+                                        </select>
+                                        <button onclick="saveCompanyProfile()" class="btn btn-success" style="padding:0.6rem 1rem;white-space:nowrap;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти все
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Мета -->
+                                <div>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
+                                        Мета компанії
+                                        <span title="Відповідає на питання 'що зробити для клієнта'. Результат, а не процес. 1-2 речення"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                    </label>
+                                    <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
+                                        Приклад: «Допомагати власникам бізнесу вибудовувати систему управління, яка працює без їхньої постійної участі»
+                                    </div>
+                                    <textarea id="settingGoal" rows="2" placeholder="Мета вашої компанії..."
+                                        style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
+                                </div>
+
+                                <!-- Задум -->
+                                <div>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
+                                        Задум (чим займається, відмінність від конкурентів)
+                                        <span title="Що продаєте, як виробляєте, чому клієнт обирає саме вас. 1-4 речення"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                    </label>
+                                    <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
+                                        Приклад: «Будівельна компанія, що спеціалізується на зведенні житлових будинків "під ключ". Власна бригада без субпідряду, гарантія 5 років»
+                                    </div>
+                                    <textarea id="settingConcept" rows="3" placeholder="Задум вашої компанії..."
+                                        style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
+                                </div>
+
+                                <!-- ЦКП -->
+                                <div>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
+                                        Цінний Кінцевий Продукт (ЦКП)
+                                        <span title="Що отримує клієнт як завершений результат. Не процес, а результат"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                    </label>
+                                    <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
+                                        Приклад: «Готовий об'єкт у встановлені терміни, з гарантією якості, без додаткових витрат понад кошторис»
+                                    </div>
+                                    <textarea id="settingCKP" rows="2" placeholder="ЦКП вашої компанії..."
+                                        style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
+                                </div>
+
+                                <!-- Ідеальна картина -->
+                                <div>
+                                    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
+                                        Ідеальна картина (цілі на 1-3 роки в цифрах)
+                                        <span title="Конкретні KPI: виручка, кількість клієнтів, маржа, команда. Реалістично на 1-3 роки"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                    </label>
+                                    <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
+                                        Приклад: «До кінця 2026: виручка 500к EUR/міс, 3 об'єкти паралельно, команда 25 осіб, маржа 20%+»
+                                    </div>
+                                    <textarea id="settingIdealPicture" rows="3" placeholder="Ідеальна картина вашого бізнесу..."
+                                        style="width:100%;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:8px;font-size:0.85rem;resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
                         <!-- Небезпечна зона -->
                         <div style="background:white;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;border:1px solid #fecaca;">
                             <div style="padding:1rem 1.25rem;border-bottom:1px solid #fecaca;display:flex;align-items:center;gap:0.5rem;">
@@ -3478,6 +3573,7 @@ document.addEventListener('mousedown', function(e) {
         }
         if (tab === 'company') {
             if (typeof loadCompanySettings === 'function') loadCompanySettings();
+            if (typeof loadCompanyProfile === 'function') loadCompanyProfile();
         }
     }
 
@@ -3534,7 +3630,6 @@ document.addEventListener('mousedown', function(e) {
         try {
             await window.db.collection('companies').doc(window.currentCompany).set({ [key]: val }, { merge: true });
             if (typeof showToast === 'function') showToast('Збережено', 'success');
-            // Оновлюємо badge якщо змінили назву
             if (key === 'name') {
                 var badge = document.getElementById('companyBadge');
                 if (badge) badge.textContent = val;
@@ -3542,6 +3637,43 @@ document.addEventListener('mousedown', function(e) {
         } catch(e) {
             if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
         }
+    };
+
+    // Зберігаємо профіль компанії (ніша + стратегічні поля)
+    window.saveCompanyProfile = async function() {
+        if (!window.currentCompany || !window.db) return;
+        const profile = {
+            niche:          document.getElementById('settingNiche')?.value || '',
+            companyGoal:    document.getElementById('settingGoal')?.value?.trim() || '',
+            companyConcept: document.getElementById('settingConcept')?.value?.trim() || '',
+            companyCKP:     document.getElementById('settingCKP')?.value?.trim() || '',
+            companyIdeal:   document.getElementById('settingIdealPicture')?.value?.trim() || '',
+        };
+        try {
+            await window.db.collection('companies').doc(window.currentCompany).set(profile, { merge: true });
+            if (typeof showToast === 'function') showToast('Профіль компанії збережено', 'success');
+        } catch(e) {
+            if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        }
+    };
+
+    // Завантажуємо профіль при відкритті вкладки Компанія
+    window.loadCompanyProfile = async function() {
+        if (!window.currentCompany || !window.db) return;
+        try {
+            const snap = await window.db.collection('companies').doc(window.currentCompany).get();
+            if (!snap.exists) return;
+            const d = snap.data();
+            const el = (id) => document.getElementById(id);
+            if (el('settingNiche'))         el('settingNiche').value         = d.niche          || '';
+            if (el('settingGoal'))          el('settingGoal').value          = d.companyGoal     || '';
+            if (el('settingConcept'))       el('settingConcept').value       = d.companyConcept  || '';
+            if (el('settingCKP'))           el('settingCKP').value           = d.companyCKP      || '';
+            if (el('settingIdealPicture'))  el('settingIdealPicture').value  = d.companyIdeal    || '';
+            if (el('settingCompanyName'))   el('settingCompanyName').value   = d.name            || '';
+            if (el('settingTimezone'))      el('settingTimezone').value      = d.timezone        || 'Europe/Kyiv';
+            if (el('settingWeeklyReport'))  el('settingWeeklyReport').checked = !!d.weeklyReport;
+        } catch(e) { console.warn('loadCompanyProfile:', e.message); }
     };
     </script>
 
@@ -3635,7 +3767,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/82-flow-canvas.js?v=20260311s" defer></script>
     <script src="js/modules/83-bots-contacts.js?v=20260311s" defer></script>
     <script src="js/modules/97-onboarding.js?v=20260311s" defer></script>
-    <script src="js/modules/98-finance.js?v=20260312b" defer></script>
+    <script src="js/modules/98-finance.js?v=20260312d" defer></script>
     <script>
       // Keep webhook warm — пінг кожні 20 сек поки юзер на сайті
       (function() {
