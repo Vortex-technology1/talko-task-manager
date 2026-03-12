@@ -2664,8 +2664,11 @@ function _subscribeDeals() {
             crm.loading = false;
             // FIX B: індикатор якщо досягнуто ліміт
             crm._dealsLimitReached = snap.docs.length >= DEALS_LIMIT;
-            if (crm.subTab === 'kanban') _renderKanban();
-            else if (crm.subTab === 'list') _renderListView();
+            // FIX G: ре-рендеримо поточний subTab при оновленні deals
+            if (crm.subTab === 'kanban')     _renderKanban();
+            else if (crm.subTab === 'list')  _renderListView();
+            else if (crm.subTab === 'analytics')  _renderAnalytics();
+            // activities і settings не ре-рендеримо автоматично — вони мають власне завантаження
         }, err => { console.error('[CRM deals]', err); crm.loading = false; });
 }
 
@@ -2676,12 +2679,14 @@ window.crmCreatePipeline = async function() {
 };
 
 async function _doCreatePipeline(name) {
+    // FIX E: унікальні IDs через Date.now() + випадковий суфікс — без race condition
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     const stages = [
-        {id:'new_'+Date.now(),    label:window.t('crmStageNew'),      color:'#6b7280', order:0},
-        {id:'contact_'+Date.now(),label:window.t('crmStageContact'),    color:'#3b82f6', order:1},
-        {id:'proposal_'+Date.now(),label:window.t('crmStageProposal'),color:'#f59e0b', order:2},
-        {id:'won',                label:window.t('crmStageWon'),    color:'#22c55e', order:3},
-        {id:'lost',               label:window.t('crmStageLost'),   color:'#ef4444', order:4},
+        {id:'new_'+uid(),      label:window.t('crmStageNew'),      color:'#6b7280', order:0},
+        {id:'contact_'+uid(),  label:window.t('crmStageContact'),   color:'#3b82f6', order:1},
+        {id:'proposal_'+uid(), label:window.t('crmStageProposal'),  color:'#f59e0b', order:2},
+        {id:'won',             label:window.t('crmStageWon'),       color:'#22c55e', order:3},
+        {id:'lost',            label:window.t('crmStageLost'),      color:'#ef4444', order:4},
     ];
     try {
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE)
@@ -2805,7 +2810,18 @@ async function _checkRequiredFields(deal, newStage) {
         clientNiche: 'Ніша / сфера клієнта',
     };
 
-    const missing = req.filter(f => !deal[f]);
+    // FIX M: phone зберігається в crm_clients, а не в deal — шукаємо в клієнті
+    const clientPhone = (() => {
+        if (!req.includes('phone')) return null;
+        if (deal.phone) return deal.phone; // якщо раптом є напряму
+        const cl = crm.clients.find(c => c.id === deal.clientId || c.name === deal.clientName);
+        return cl?.phone || null;
+    })();
+
+    const missing = req.filter(f => {
+        if (f === 'phone') return !clientPhone;
+        return !deal[f];
+    });
     if (!missing.length) return true;
 
     // Показуємо popup для заповнення
@@ -2857,13 +2873,34 @@ async function _checkRequiredFields(deal, newStage) {
                 const el = document.getElementById('crmReqField_' + f);
                 const val = el?.value?.trim();
                 if (!val) { el?.style && (el.style.borderColor='#ef4444'); valid = false; return; }
+                // FIX M: phone зберігаємо в клієнта, не в deal
+                if (f === 'phone') return; // обробимо окремо
                 updates[f] = f === 'amount' ? Number(val) : val;
-                Object.assign(deal, updates); // оновлюємо локально
+                Object.assign(deal, updates);
             });
             if (!valid) { if (typeof showToast === 'function') showToast('Заповніть усі поля', 'error'); return; }
-            // Зберігаємо в Firestore
+            // Зберігаємо deal поля в Firestore
             try {
-                await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id).update(updates);
+                if (Object.keys(updates).length) {
+                    await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id).update(updates);
+                }
+                // FIX M: phone → crm_clients якщо є clientId
+                if (missing.includes('phone')) {
+                    const phoneVal = document.getElementById('crmReqField_phone')?.value?.trim();
+                    if (phoneVal && deal.clientId) {
+                        try {
+                            await window.companyRef().collection('crm_clients').doc(deal.clientId)
+                                .update({ phone: phoneVal, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                            const cl = crm.clients.find(c => c.id === deal.clientId);
+                            if (cl) cl.phone = phoneVal;
+                        } catch(pe) { console.warn('[CRM reqFields phone]', pe); }
+                    } else if (phoneVal) {
+                        // немає clientId — зберігаємо як clientPhone прямо в deal
+                        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id)
+                            .update({ phone: phoneVal });
+                        deal.phone = phoneVal;
+                    }
+                }
             } catch(e) { console.error('[CRM reqFields save]', e); }
             overlay.remove();
             resolve(true);
