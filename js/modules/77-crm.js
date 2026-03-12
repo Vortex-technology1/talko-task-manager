@@ -1561,7 +1561,8 @@ async function _loadTasksTab(deal) {
                 const asgn = usersArr.find(function(u){return u.id===task.assigneeId;});
                 const deadlinePart = task.deadlineDate ? '<span style="font-size:0.68rem;color:' + (isOverdue?'#ef4444':'#6b7280') + ';">' + task.deadlineDate + '</span>' : '';
                 const asgnPart = asgn ? '<span style="font-size:0.68rem;color:#9ca3af;">' + _esc(asgn.name||asgn.email) + '</span>' : '';
-                const donePart = task.status !== 'done' ? '<button onclick="crmMarkTaskDone(\'' + task.id + '\')" style="padding:4px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.72rem;font-weight:600;">✓ Готово</button>' : '';
+                // FIX H: data-taskid замість inline onclick
+                const donePart = task.status !== 'done' ? '<button data-taskid="' + task.id + '" class="crm-task-done-btn" style="padding:4px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.72rem;font-weight:600;">✓ Готово</button>' : '';
                 const notePart = task.note ? '<div style="font-size:0.74rem;color:#9ca3af;margin-top:4px;">' + _esc((task.note||'').slice(0,100)) + '</div>' : '';
                 return '<div style="background:white;border:1px solid #e8eaed;border-left:3px solid ' + col + ';border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.5rem;">' +
                     '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">' +
@@ -1581,6 +1582,8 @@ async function _loadTasksTab(deal) {
             '<div style="font-size:0.78rem;color:#6b7280;">' + dealTasks.length + ' задач по угоді</div>' +
             '<button onclick="crmCreateTaskFromDeal(\'' + deal.id + '\')" style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">' +
                 I.plus + ' Нова задача</button></div>' + rows;
+        // FIX H: event delegation для .crm-task-done-btn
+        cnt.onclick = function(e) { const b = e.target.closest('.crm-task-done-btn'); if (b) crmMarkTaskDone(b.dataset.taskid); };
     } catch(e) {
         if (cnt) cnt.innerHTML = '<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ' + _esc(e.message) + '</div>';
     }
@@ -1883,9 +1886,15 @@ function _renderClients() {
 window.crmFilterClients = function(q) {
     const list = document.getElementById('crmClientList');
     if (!list) return;
-    const filtered = q ? crm.clients.filter(c =>
-        (c.name||'').toLowerCase().includes(q.toLowerCase()) || (c.phone||'').includes(q)
-    ) : crm.clients;
+    // FIX J: пошук по name, phone, email, niche, telegram
+    const filtered = q ? crm.clients.filter(c => {
+        const ql = q.toLowerCase();
+        return (c.name||'').toLowerCase().includes(ql) ||
+               (c.phone||'').includes(q) ||
+               (c.email||'').toLowerCase().includes(ql) ||
+               (c.niche||'').toLowerCase().includes(ql) ||
+               (c.telegram||'').toLowerCase().includes(ql);
+    }) : crm.clients;
     list.innerHTML = _clientListHTML(filtered);
 };
 
@@ -1893,7 +1902,8 @@ function _clientListHTML(clients) {
     if (!clients.length) return '<div style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">Клієнтів не знайдено</div>';
     const colors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b'];
     return clients.map(cl => {
-        const deals = crm.deals.filter(d => d.clientId===cl.id || d.clientName===cl.name).length;
+        // FIX K: рахуємо угоди строго по clientId; name-fallback тільки якщо немає clientId
+        const deals = crm.deals.filter(d => d.clientId ? d.clientId === cl.id : d.clientName === cl.name).length;
         const color = colors[(cl.name||'').charCodeAt(0) % 4];
         return `
         <div onclick="crmOpenClient('${cl.id}')"
@@ -2154,7 +2164,7 @@ async function _renderActivitiesTab() {
             <textarea id="actNoteText" rows="2" placeholder="Нотатка / деталі..."
                 style="width:100%;padding:0.4rem 0.5rem;border:1.5px solid #e8eaed;border-radius:7px;
                 font-size:0.8rem;box-sizing:border-box;resize:vertical;"></textarea>
-            <button onclick="actSave()"
+            <button id="actSaveBtn"
                 style="margin-top:0.4rem;padding:0.45rem 1rem;background:#22c55e;color:white;
                 border:none;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">
                 Зберегти активність
@@ -2164,7 +2174,7 @@ async function _renderActivitiesTab() {
         const filterBar = `
         <div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.75rem;">
             ${[['all',window.t('crmAll')],...Object.entries(ACT_LABELS)].map(([k,v]) => `
-            <button onclick="actFilter('${k}')"
+            <button data-actfilter="${k}"
                 style="padding:0.3rem 0.65rem;border-radius:999px;border:1.5px solid ${k===filter?'#22c55e':'#e8eaed'};
                 background:${k===filter?'#f0fdf4':'white'};color:${k===filter?'#16a34a':'#6b7280'};
                 font-size:0.72rem;cursor:pointer;font-weight:${k===filter?'700':'400'};">
@@ -2203,28 +2213,42 @@ async function _renderActivitiesTab() {
 
         c.innerHTML = `<div style="max-width:680px;margin:0 auto;">${addForm}${filterBar}${timeline}</div>`;
 
-        // Стан кнопок типу
-        window._actCurrentType = 'note';
-        window.actSetType = (t) => {
-            window._actCurrentType = t;
-            Object.keys(ACT_LABELS).forEach(k => {
-                const btn = document.getElementById('actType_' + k);
-                if (btn) {
-                    btn.style.borderColor = k === t ? ACT_COLORS[k] : '#e8eaed';
-                    btn.style.background = k === t ? ACT_COLORS[k] + '12' : 'white';
-                    btn.style.color = k === t ? ACT_COLORS[k] : '#374151';
-                }
-            });
-        };
-        window.actFilter = (f) => { activeFilter = f; render(f); };
+        // FIX I: скидаємо тип до 'note' після кожного ре-рендеру
+        crm._actCurrentType = 'note';
     };
 
     render(activeFilter);
 
-    window.actSave = async () => {
+    // FIX I: event delegation на контейнер — не перезаписуємо window функції при кожному ре-рендері
+    c.onclick = function(e) {
+        // Тип активності
+        const typeBtn = e.target.closest('button[id^="actType_"]');
+        if (typeBtn) {
+            const t = typeBtn.id.replace('actType_', '');
+            crm._actCurrentType = t;
+            Object.keys(ACT_LABELS).forEach(k => {
+                const btn = document.getElementById('actType_' + k);
+                if (btn) {
+                    btn.style.borderColor = k === t ? ACT_COLORS[k] : '#e8eaed';
+                    btn.style.background  = k === t ? ACT_COLORS[k] + '12' : 'white';
+                    btn.style.color       = k === t ? ACT_COLORS[k] : '#374151';
+                }
+            });
+            return;
+        }
+        // Фільтр
+        const filterBtn = e.target.closest('button[data-actfilter]');
+        if (filterBtn) { activeFilter = filterBtn.dataset.actfilter; render(activeFilter); return; }
+    };
+
+    // actSave через delegation на кнопку
+    c.addEventListener('click', async function actSaveDelegate(e) {
+        if (!e.target.matches && !e.target.closest) return;
+        const saveBtn = e.target.id === 'actSaveBtn' ? e.target : e.target.closest('#actSaveBtn');
+        if (!saveBtn) return;
         const dealId = document.getElementById('actDealSelect')?.value;
-        const note = document.getElementById('actNoteText')?.value?.trim();
-        const type = window._actCurrentType || 'note';
+        const note   = document.getElementById('actNoteText')?.value?.trim();
+        const type   = crm._actCurrentType || 'note';
         if (!dealId) { if(window.showToast) showToast(window.t('crmSelectDeal'),'error'); return; }
         try {
             await window.companyRef().collection('crm_deals').doc(dealId)
@@ -2235,8 +2259,8 @@ async function _renderActivitiesTab() {
                 });
             if (window.showToast) showToast(window.t('crmActivitySaved'), 'success');
             await _renderActivitiesTab();
-        } catch(e) { if(window.showToast) showToast(window.t('errPrefix') + e.message, 'error'); }
-    };
+        } catch(e2) { if(window.showToast) showToast(window.t('errPrefix') + e2.message, 'error'); }
+    });
 }
 
 
@@ -2774,7 +2798,10 @@ window.crmSaveStages = async function() {
         const idx = crm.pipelines.findIndex(p => p.id === crm.pipeline.id);
         if (idx >= 0) crm.pipelines[idx].stages = crm.pipeline.stages;
         if (typeof showToast === 'function') showToast(window.t('crmStagesSaved'), 'success');
-        _renderKanban();
+        // FIX L: рендеримо поточний subTab, не завжди kanban
+        if (crm.subTab === 'kanban' || crm.subTab === 'list') {
+            if (crm.viewMode === 'list') _renderListView(); else _renderKanban();
+        }
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
