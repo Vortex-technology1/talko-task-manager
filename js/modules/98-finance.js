@@ -300,7 +300,7 @@ function renderDashboard(el) {
         ].map(k => `
           <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
             <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.4rem;">${k.label}</div>
-            <div style="font-size:1.5rem;font-weight:700;color:${k.color};">${k.value}</div>
+            <div class="kpi-value" style="font-size:1.5rem;font-weight:700;color:${k.color};">${k.value}</div>
             <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">${k.sub}</div>
           </div>
         `).join('')}
@@ -340,31 +340,204 @@ function renderDashboard(el) {
       </div>
     </div>
   `;
+
+  // Підтягуємо реальні суми місяця в KPI картки
+  loadDashboardKPI();
 }
 
-// ── Транзакції (заглушка Етап 1) ─────────────────────────
+async function loadDashboardKPI() {
+  try {
+    const now  = new Date();
+    const from = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth(), 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth()+1, 0, 23, 59, 59));
+
+    const snap = await colRef('finance_transactions')
+      .where('date', '>=', from)
+      .where('date', '<=', to)
+      .get();
+
+    let income = 0, expense = 0;
+    snap.docs.forEach(d => {
+      const tx = d.data();
+      if (tx.type === 'income')  income  += (tx.amount || 0);
+      if (tx.type === 'expense') expense += (tx.amount || 0);
+    });
+
+    const profit = income - expense;
+    const margin = income > 0 ? Math.round(profit / income * 100) : 0;
+    const color  = profit >= 0 ? '#22c55e' : '#ef4444';
+
+    // Оновлюємо картки напряму
+    const cards = document.querySelectorAll('#financeContentInner .kpi-value');
+    if (cards.length >= 4) {
+      cards[0].textContent = fmt(income);
+      cards[0].style.color = '#22c55e';
+      cards[1].textContent = fmt(expense);
+      cards[1].style.color = '#ef4444';
+      cards[2].textContent = fmt(profit);
+      cards[2].style.color = color;
+      cards[3].textContent = margin + '%';
+      cards[3].style.color = color;
+    }
+  } catch(e) {
+    console.error('[Finance] loadDashboardKPI error:', e);
+  }
+}
+
+// ── Транзакції — Етап 2 ──────────────────────────────────
+let _txFilter = { month: '', categoryId: '', accountId: '' };
+
 function renderTransactions(el, type) {
   const label = type === 'income' ? 'Доходи' : 'Витрати';
   const color  = type === 'income' ? '#22c55e' : '#ef4444';
+  const cats   = _state.categories[type] || [];
+
+  // Місяці для фільтра (поточний + 5 попередніх)
+  const monthOpts = [];
+  const now = new Date();
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const lbl = d.toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' });
+    monthOpts.push(`<option value="${val}" ${_txFilter.month===val?'selected':''}>${lbl}</option>`);
+  }
+
   el.innerHTML = `
     <div style="max-width:960px;margin:0 auto;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
         <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${label}</div>
         ${isOwnerOrManager() ? `
           <button onclick="window._financeAddTransaction('${type}')" style="
             display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;
             background:${color};color:#fff;border:none;border-radius:8px;
-            cursor:pointer;font-size:0.82rem;font-weight:600;
-          ">${I.plus} Додати ${label === 'Доходи' ? 'дохід' : 'витрату'}</button>
+            cursor:pointer;font-size:0.82rem;font-weight:600;flex-shrink:0;
+          ">${I.plus} Додати</button>
         ` : ''}
       </div>
-      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:2rem;text-align:center;color:#9ca3af;">
-        <div style="margin-bottom:0.75rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${type === 'income' ? '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' : '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>'}</svg></div>
-        <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.35rem;">Транзакцій поки немає</div>
-        <div style="font-size:0.8rem;">Натисніть «Додати» щоб внести першу операцію</div>
+
+      <!-- Фільтри -->
+      <div style="display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;">
+        <select id="txFilterMonth" onchange="window._txFilterChange('month',this.value,'${type}')"
+          style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+          <option value="">Всі місяці</option>
+          ${monthOpts.join('')}
+        </select>
+        <select id="txFilterCat" onchange="window._txFilterChange('categoryId',this.value,'${type}')"
+          style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+          <option value="">Всі категорії</option>
+          ${cats.map(c => `<option value="${c.id}" ${_txFilter.categoryId===c.id?'selected':''}>${c.name}</option>`).join('')}
+        </select>
+        <select id="txFilterAcc" onchange="window._txFilterChange('accountId',this.value,'${type}')"
+          style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+          <option value="">Всі рахунки</option>
+          ${_state.accounts.map(a => `<option value="${a.id}" ${_txFilter.accountId===a.id?'selected':''}>${a.name}</option>`).join('')}
+        </select>
       </div>
+
+      <!-- Список транзакцій -->
+      <div id="txList_${type}" style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
+        <div style="padding:1.5rem;text-align:center;color:#9ca3af;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;display:block;margin-left:auto;margin-right:auto;">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <div style="font-size:0.85rem;">Завантаження...</div>
+        </div>
+      </div>
+
+      <!-- Підсумок -->
+      <div id="txSummary_${type}" style="margin-top:0.75rem;text-align:right;font-size:0.82rem;color:#6b7280;"></div>
     </div>
   `;
+
+  loadAndRenderTxList(type);
+}
+
+async function loadAndRenderTxList(type) {
+  const listEl    = document.getElementById(`txList_${type}`);
+  const summaryEl = document.getElementById(`txSummary_${type}`);
+  if (!listEl) return;
+
+  try {
+    let query = colRef('finance_transactions').where('type', '==', type).orderBy('date', 'desc').limit(100);
+
+    if (_txFilter.month) {
+      const [y, m] = _txFilter.month.split('-').map(Number);
+      const from = new Date(y, m-1, 1);
+      const to   = new Date(y, m, 0, 23, 59, 59);
+      query = query.where('date', '>=', firebase.firestore.Timestamp.fromDate(from))
+                   .where('date', '<=', firebase.firestore.Timestamp.fromDate(to));
+    }
+    if (_txFilter.categoryId) query = query.where('categoryId', '==', _txFilter.categoryId);
+    if (_txFilter.accountId)  query = query.where('accountId',  '==', _txFilter.accountId);
+
+    const snap = await query.get();
+    const txs  = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    if (txs.length === 0) {
+      listEl.innerHTML = `
+        <div style="padding:2rem;text-align:center;color:#9ca3af;">
+          <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.25rem;">Транзакцій немає</div>
+          <div style="font-size:0.8rem;">Змініть фільтри або додайте нову операцію</div>
+        </div>`;
+      if (summaryEl) summaryEl.textContent = '';
+      return;
+    }
+
+    const color = type === 'income' ? '#22c55e' : '#ef4444';
+    const total = txs.reduce((s, t) => s + (t.amount || 0), 0);
+    const catMap = {};
+    (_state.categories[type] || []).forEach(c => { catMap[c.id] = c.name; });
+    const accMap = {};
+    _state.accounts.forEach(a => { accMap[a.id] = a.name; });
+
+    listEl.innerHTML = txs.map((tx, i) => {
+      const dateStr = fmtDate(tx.date);
+      const catName = catMap[tx.categoryId] || tx.categoryId || '—';
+      const accName = accMap[tx.accountId]  || '—';
+      const bg = i % 2 === 0 ? '#fff' : '#fafafa';
+      return `
+        <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:${bg};border-bottom:1px solid #f3f4f6;" data-txid="${tx.id}">
+          <div style="width:36px;height:36px;border-radius:10px;background:${type==='income'?'#f0fdf4':'#fef2f2'};
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            ${type === 'income' ? I.income : I.expense}
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:0.85rem;font-weight:500;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              ${tx.description || catName}
+            </div>
+            <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.1rem;">
+              ${catName} &bull; ${accName} &bull; ${dateStr}
+              ${tx.counterparty ? ' &bull; ' + tx.counterparty : ''}
+              ${tx.functionId ? ' &bull; <span style="color:#16a34a;">Ф</span>' : ''}
+              ${tx.projectId  ? ' &bull; <span style="color:#3b82f6;">П</span>' : ''}
+            </div>
+          </div>
+          <div style="font-size:0.95rem;font-weight:700;color:${color};flex-shrink:0;">
+            ${type==='income'?'+':'−'}${fmt(tx.amount, tx.currency)}
+          </div>
+          ${isOwnerOrManager() ? `
+            <button onclick="window._financeDeleteTx('${tx.id}','${type}')"
+              style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.25rem;border-radius:6px;flex-shrink:0;"
+              title="Видалити">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+              </svg>
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+
+    if (summaryEl) {
+      summaryEl.innerHTML = `Всього: <strong style="color:${color};">${fmt(total)}</strong> &bull; ${txs.length} операцій`;
+    }
+
+  } catch(e) {
+    console.error('[Finance] loadTxList error:', e);
+    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">Помилка завантаження: ${e.message}</div>`;
+  }
 }
 
 // ── Функції (заглушка Етап 1) ────────────────────────────
@@ -413,10 +586,285 @@ function renderAI(el) {
   `;
 }
 
-// ── Заглушка форми додавання транзакції ──────────────────
-function addTransaction(type) {
-  alert('Форма додавання транзакцій — Етап 2');
+// ── Форма додавання транзакції — Етап 2 ─────────────────
+function addTransaction(forceType) {
+  // Видаляємо старий модал якщо є
+  const old = document.getElementById('financeModal');
+  if (old) old.remove();
+
+  const type     = forceType || _state.activeSubTab === 'income' ? 'income' : 'expense';
+  const cats     = _state.categories[type] || [];
+  const today    = new Date().toISOString().split('T')[0];
+  const color    = type === 'income' ? '#22c55e' : '#ef4444';
+  const label    = type === 'income' ? 'дохід' : 'витрату';
+
+  // Функції для прив'язки
+  let functionsHtml = '<option value="">— не вибрано —</option>';
+  if (window._state && window._state.functions) {
+    window._state.functions.forEach(f => {
+      functionsHtml += `<option value="${f.id}">${f.name}</option>`;
+    });
+  }
+
+  // Проекти для прив'язки
+  let projectsHtml = '<option value="">— не вибрано —</option>';
+  if (window._projectsCache) {
+    window._projectsCache.forEach(p => {
+      projectsHtml += `<option value="${p.id}">${p.name || p.title || p.id}</option>`;
+    });
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'financeModal';
+  modal.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:99999;
+    display:flex;align-items:center;justify-content:center;padding:1rem;
+  `;
+
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">
+          Додати ${label}
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <button id="fmTabIncome" onclick="window._financeModalSwitchType('income')"
+            style="padding:0.3rem 0.75rem;border-radius:6px;border:none;cursor:pointer;font-size:0.8rem;font-weight:600;
+            background:${type==='income'?'#22c55e':'#f3f4f6'};color:${type==='income'?'#fff':'#6b7280'};">
+            Дохід
+          </button>
+          <button id="fmTabExpense" onclick="window._financeModalSwitchType('expense')"
+            style="padding:0.3rem 0.75rem;border-radius:6px;border:none;cursor:pointer;font-size:0.8rem;font-weight:600;
+            background:${type==='expense'?'#ef4444':'#f3f4f6'};color:${type==='expense'?'#fff':'#6b7280'};">
+            Витрата
+          </button>
+          <button onclick="document.getElementById('financeModal').remove()"
+            style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:0.25rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div style="padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1rem;">
+
+        <!-- Сума + валюта -->
+        <div style="display:flex;gap:0.5rem;">
+          <div style="flex:1;">
+            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Сума *</label>
+            <input id="fmAmount" type="number" min="0" step="0.01" placeholder="0.00"
+              style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;outline:none;"
+              onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+          </div>
+          <div style="width:90px;">
+            <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Валюта</label>
+            <select id="fmCurrency"
+              style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+              ${['EUR','USD','UAH','PLN','GBP'].map(cur =>
+                `<option value="${cur}" ${_state.currency===cur?'selected':''}>${cur}</option>`
+              ).join('')}
+            </select>
+          </div>
+        </div>
+
+        <!-- Категорія -->
+        <div id="fmCatWrap">
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Категорія *</label>
+          <select id="fmCategory"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+            <option value="">— оберіть категорію —</option>
+            ${cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+          </select>
+        </div>
+
+        <!-- Дата -->
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Дата *</label>
+          <input id="fmDate" type="date" value="${today}"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;"
+            onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+
+        <!-- Рахунок -->
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Рахунок</label>
+          <select id="fmAccount"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+            ${_state.accounts.map(a => `<option value="${a.id}" ${a.isDefault?'selected':''}>${a.name} (${a.currency})</option>`).join('')}
+          </select>
+        </div>
+
+        <!-- Контрагент -->
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Контрагент</label>
+          <input id="fmCounterparty" type="text" placeholder="Постачальник / клієнт / підрядник"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;"
+            onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+
+        <!-- Функція -->
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Функція</label>
+          <select id="fmFunction"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+            ${functionsHtml}
+          </select>
+        </div>
+
+        <!-- Проект -->
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Проект / Об'єкт</label>
+          <select id="fmProject"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
+            ${projectsHtml}
+          </select>
+        </div>
+
+        <!-- Коментар -->
+        <div>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Коментар</label>
+          <input id="fmDescription" type="text" placeholder="Призначення платежу"
+            style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;"
+            onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+
+        <!-- Кнопки -->
+        <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
+          <button onclick="document.getElementById('financeModal').remove()"
+            style="flex:1;padding:0.65rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:0.85rem;color:#6b7280;font-weight:500;">
+            Скасувати
+          </button>
+          <button id="fmSaveBtn" onclick="window._financeSaveTx()"
+            style="flex:2;padding:0.65rem;border:none;border-radius:8px;background:${color};color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
+            Зберегти
+          </button>
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  // Закриття по кліку на overlay
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+  setTimeout(() => { const a = document.getElementById('fmAmount'); if (a) a.focus(); }, 100);
+
+  // Зберігаємо поточний тип у data-атрибуті
+  modal.dataset.type = type;
 }
+
+// Перемикання типу в модалі
+window._financeModalSwitchType = function(type) {
+  const modal = document.getElementById('financeModal');
+  if (!modal) return;
+  modal.remove();
+  addTransaction(type);
+};
+
+// Збереження транзакції
+window._financeSaveTx = async function() {
+  const modal   = document.getElementById('financeModal');
+  if (!modal) return;
+  const type    = modal.dataset.type || 'expense';
+
+  const amount  = parseFloat(document.getElementById('fmAmount')?.value);
+  const catId   = document.getElementById('fmCategory')?.value;
+  const dateVal = document.getElementById('fmDate')?.value;
+
+  // Валідація
+  if (!amount || amount <= 0) { alert('Введіть суму'); return; }
+  if (!catId)                 { alert('Оберіть категорію'); return; }
+  if (!dateVal)               { alert('Вкажіть дату'); return; }
+
+  const btn = document.getElementById('fmSaveBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
+
+  try {
+    const db = getDb();
+    const date = firebase.firestore.Timestamp.fromDate(new Date(dateVal));
+    const accId = document.getElementById('fmAccount')?.value || _state.accounts[0]?.id || '';
+    const funcId = document.getElementById('fmFunction')?.value || null;
+    const projId = document.getElementById('fmProject')?.value  || null;
+    const desc   = document.getElementById('fmDescription')?.value?.trim() || '';
+    const counter= document.getElementById('fmCounterparty')?.value?.trim() || '';
+    const currency = document.getElementById('fmCurrency')?.value || _state.currency;
+
+    const txData = {
+      type,
+      amount,
+      currency,
+      categoryId:   catId,
+      date,
+      accountId:    accId,
+      functionId:   funcId,
+      projectId:    projId,
+      description:  desc,
+      counterparty: counter,
+      createdBy:    _state.currentUser.uid,
+      createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
+      recurring:    false,
+    };
+
+    // Прибираємо null поля
+    Object.keys(txData).forEach(k => { if (txData[k] === null || txData[k] === '') delete txData[k]; });
+
+    await colRef('finance_transactions').add(txData);
+
+    // Оновлюємо баланс рахунку
+    const accRef = colRef('finance_accounts').doc(accId);
+    const delta  = type === 'income' ? amount : -amount;
+    await accRef.update({ balance: firebase.firestore.FieldValue.increment(delta) });
+
+    // Оновлюємо локальний стан рахунків
+    const acc = _state.accounts.find(a => a.id === accId);
+    if (acc) acc.balance = (acc.balance || 0) + delta;
+
+    modal.remove();
+
+    // Оновлюємо поточну вкладку
+    const inner = document.getElementById('financeContentInner');
+    if (inner) renderSubTab(_state.activeSubTab);
+
+  } catch(e) {
+    console.error('[Finance] saveTx error:', e);
+    alert('Помилка збереження: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; }
+  }
+};
+
+// Видалення транзакції
+window._financeDeleteTx = async function(txId, type) {
+  if (!confirm('Видалити цю транзакцію?')) return;
+  try {
+    const snap = await colRef('finance_transactions').doc(txId).get();
+    if (!snap.exists) return;
+    const tx = snap.data();
+
+    await colRef('finance_transactions').doc(txId).delete();
+
+    // Відкатуємо баланс
+    if (tx.accountId && tx.amount) {
+      const delta = tx.type === 'income' ? -tx.amount : tx.amount;
+      await colRef('finance_accounts').doc(tx.accountId).update({
+        balance: firebase.firestore.FieldValue.increment(delta)
+      });
+      const acc = _state.accounts.find(a => a.id === tx.accountId);
+      if (acc) acc.balance = (acc.balance || 0) + delta;
+    }
+
+    // Оновлюємо список
+    const inner = document.getElementById('financeContentInner');
+    if (inner) renderSubTab(_state.activeSubTab);
+
+  } catch(e) {
+    console.error('[Finance] deleteTx error:', e);
+    alert('Помилка видалення: ' + e.message);
+  }
+};
 
 // ── Визначення ролі користувача ──────────────────────────
 async function detectUserRole() {
@@ -499,7 +947,12 @@ window._financeTab = function(tab) {
 };
 
 window._financeAddTransaction = function(type) {
-  addTransaction(type || 'expense');
+  addTransaction(type || (_state.activeSubTab === 'income' ? 'income' : 'expense'));
+};
+
+window._txFilterChange = function(field, value, type) {
+  _txFilter[field] = value;
+  loadAndRenderTxList(type);
 };
 
 // ── Хук: коли switchTab('finance') викликається ──────────
