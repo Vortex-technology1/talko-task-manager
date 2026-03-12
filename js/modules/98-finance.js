@@ -27,17 +27,18 @@ const I = {
 
 // ── Константи ──────────────────────────────────────────────
 const FINANCE_VERSION = '1.0.0';
-const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'ai', 'settings'];
+const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'analytics', 'ai', 'settings'];
 const TAB_LABELS = {
-  dashboard:  { icon: 'chart',    label: 'Дашборд'      },
-  income:     { icon: 'income',   label: 'Доходи'       },
-  expense:    { icon: 'expense',  label: 'Витрати'      },
-  recurring:  { icon: 'repeat',   label: 'Регулярні'    },
-  invoices:   { icon: 'invoice',  label: 'Рахунки'      },
-  functions:  { icon: 'func',     label: 'Функції'      },
-  planning:   { icon: 'plan',     label: 'Планування'   },
-  ai:         { icon: 'ai',       label: 'AI'           },
-  settings:   { icon: 'settings', label: 'Налаштування' },
+  dashboard:  { icon: 'chart',     label: 'Дашборд'      },
+  income:     { icon: 'income',    label: 'Доходи'       },
+  expense:    { icon: 'expense',   label: 'Витрати'      },
+  recurring:  { icon: 'repeat',    label: 'Регулярні'    },
+  invoices:   { icon: 'invoice',   label: 'Рахунки'      },
+  functions:  { icon: 'func',      label: 'Функції'      },
+  planning:   { icon: 'plan',      label: 'Планування'   },
+  analytics:  { icon: 'chart',     label: 'Аналітика'    },
+  ai:         { icon: 'ai',        label: 'AI'           },
+  settings:   { icon: 'settings',  label: 'Налаштування' },
 };
 
 // ── Стан модуля ────────────────────────────────────────────
@@ -342,8 +343,9 @@ function renderSubTab(tab) {
     case 'recurring': renderRecurring(inner); break;
     case 'invoices':  renderInvoices(inner); break;
     case 'functions': renderFunctions(inner); break;
-    case 'planning':  renderPlanning(inner); break;
-    case 'ai':        renderAI(inner); break;
+    case 'planning':   renderPlanning(inner); break;
+    case 'analytics':  renderAnalytics(inner); break;
+    case 'ai':         renderAI(inner); break;
     case 'settings':  renderSettings(inner); break;
     default:          renderDashboard(inner);
   }
@@ -2503,6 +2505,365 @@ async function _renderCashflowForecast() {
   } catch(e) {
     el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
   }
+}
+
+// ── Аналітика (P&L, проекти, тренди) ─────────────────────
+let _analyticsMode = 'pnl';
+let _analyticsPeriod = 'month'; // month | quarter | year
+
+function renderAnalytics(el) {
+  const currency = _state.currency || 'EUR';
+  el.innerHTML = `
+    <div style="width:100%;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Аналітика</div>
+        <div style="display:flex;gap:6px;">
+          <select id="analyticsPeriodSel" onchange="window._analyticsPeriodChange(this.value)"
+            style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+            <option value="month">Цей місяць</option>
+            <option value="quarter">Цей квартал</option>
+            <option value="year">Цей рік</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Перемикач режиму -->
+      <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;">
+        <button onclick="window._analyticsMode('pnl')" id="anlBtn_pnl"
+          style="padding:6px 14px;border-radius:8px;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:600;cursor:pointer;">
+          P&L звіт
+        </button>
+        <button onclick="window._analyticsMode('projects')" id="anlBtn_projects"
+          style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
+          Маржа по проектах
+        </button>
+        <button onclick="window._analyticsMode('trends')" id="anlBtn_trends"
+          style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
+          Тренд витрат
+        </button>
+      </div>
+
+      <div id="analyticsContent">
+        <div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>
+      </div>
+    </div>`;
+
+  _loadAnalytics(_analyticsMode, _analyticsPeriod);
+}
+
+window._analyticsMode = function(mode) {
+  _analyticsMode = mode;
+  ['pnl','projects','trends'].forEach(m => {
+    const btn = document.getElementById('anlBtn_' + m);
+    if (!btn) return;
+    const active = m === mode;
+    btn.style.borderColor = active ? '#22c55e' : '#e5e7eb';
+    btn.style.background  = active ? '#f0fdf4' : '#fff';
+    btn.style.color       = active ? '#16a34a' : '#6b7280';
+  });
+  _loadAnalytics(mode, _analyticsPeriod);
+};
+
+window._analyticsPeriodChange = function(val) {
+  _analyticsPeriod = val;
+  _loadAnalytics(_analyticsMode, val);
+};
+
+async function _loadAnalytics(mode, period) {
+  const el = document.getElementById('analyticsContent');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>';
+
+  try {
+    const currency = _state.currency || 'EUR';
+    const now = new Date();
+    let from, to;
+
+    if (period === 'month') {
+      from = new Date(now.getFullYear(), now.getMonth(), 1);
+      to   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    } else if (period === 'quarter') {
+      const q = Math.floor(now.getMonth() / 3);
+      from = new Date(now.getFullYear(), q * 3, 1);
+      to   = new Date(now.getFullYear(), q * 3 + 3, 0, 23, 59, 59);
+    } else {
+      from = new Date(now.getFullYear(), 0, 1);
+      to   = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+    }
+
+    const fromTs = firebase.firestore.Timestamp.fromDate(from);
+    const toTs   = firebase.firestore.Timestamp.fromDate(to);
+
+    const snap = await colRef('finance_transactions')
+      .where('date', '>=', fromTs).where('date', '<=', toTs).get();
+    const txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    if (mode === 'pnl')      _renderPnl(el, txs, currency, from, to);
+    if (mode === 'projects')  _renderProjectsMargin(el, txs, currency);
+    if (mode === 'trends')    _renderTrends(el, txs, currency, from, to, period);
+
+  } catch(e) {
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
+  }
+}
+
+// ── P&L звіт ─────────────────────────────────────────────
+function _renderPnl(el, txs, currency, from, to) {
+  const incCats = _state.categories.income  || [];
+  const expCats = _state.categories.expense || [];
+
+  const byIncCat = {}, byExpCat = {};
+  let totalInc = 0, totalExp = 0;
+
+  txs.forEach(tx => {
+    if (tx.type === 'income') {
+      byIncCat[tx.categoryId] = (byIncCat[tx.categoryId] || 0) + (tx.amount || 0);
+      totalInc += tx.amount || 0;
+    } else {
+      byExpCat[tx.categoryId] = (byExpCat[tx.categoryId] || 0) + (tx.amount || 0);
+      totalExp += tx.amount || 0;
+    }
+  });
+
+  const profit = totalInc - totalExp;
+  const margin = totalInc > 0 ? Math.round(profit / totalInc * 100) : 0;
+  const profitColor = profit >= 0 ? '#22c55e' : '#ef4444';
+
+  const catRow = (cat, amount, color) => {
+    const pct = totalInc > 0 ? Math.round(amount / totalInc * 100) : 0;
+    return `
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f3f4f6;">
+        <div style="flex:1;font-size:0.82rem;color:#374151;">${escHtml(cat.name)}</div>
+        <div style="font-size:0.82rem;font-weight:600;color:${color};width:90px;text-align:right;">${fmt(amount, currency)}</div>
+        <div style="font-size:0.75rem;color:#9ca3af;width:40px;text-align:right;">${pct}%</div>
+      </div>`;
+  };
+
+  el.innerHTML = `
+    <!-- KPI рядок -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      ${[
+        { label: 'Дохід',    val: fmt(totalInc, currency),  color: '#22c55e' },
+        { label: 'Витрати',  val: fmt(totalExp, currency),  color: '#ef4444' },
+        { label: 'Прибуток', val: fmt(profit, currency),    color: profitColor },
+        { label: 'Маржа',    val: margin + '%',             color: profitColor },
+      ].map(k => `
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;text-align:center;">
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:4px;">${k.label}</div>
+          <div style="font-size:1.1rem;font-weight:700;color:${k.color};">${k.val}</div>
+        </div>`).join('')}
+    </div>
+
+    <!-- Таблиця P&L -->
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+
+      <!-- Доходи -->
+      <div style="background:#f0fdf4;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;">
+        <span>ДОХОДИ</span><span>${fmt(totalInc, currency)}</span>
+      </div>
+      ${incCats.filter(c => byIncCat[c.id]).map(c => catRow(c, byIncCat[c.id] || 0, '#22c55e')).join('')}
+      ${!incCats.filter(c => byIncCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає доходів</div>' : ''}
+
+      <!-- Витрати -->
+      <div style="background:#fef2f2;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;margin-top:4px;">
+        <span>ВИТРАТИ</span><span>${fmt(totalExp, currency)}</span>
+      </div>
+      ${expCats.filter(c => byExpCat[c.id]).map(c => catRow(c, byExpCat[c.id] || 0, '#ef4444')).join('')}
+      ${!expCats.filter(c => byExpCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає витрат</div>' : ''}
+
+      <!-- Підсумок -->
+      <div style="background:#1f2937;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:0.85rem;font-weight:700;">ПРИБУТОК / ЗБИТОК</span>
+        <span style="font-size:1rem;font-weight:700;color:${profitColor};">${profit >= 0 ? '+' : ''}${fmt(profit, currency)}</span>
+      </div>
+    </div>`;
+}
+
+// ── Маржинальність по проектах ────────────────────────────
+async function _renderProjectsMargin(el, txs, currency) {
+  // Беремо проекти
+  let projects = [];
+  try {
+    const snap = await colRef('projects').get();
+    projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) { /* немає колекції */ }
+
+  const byProject = {};
+  txs.forEach(tx => {
+    if (!tx.projectId) return;
+    if (!byProject[tx.projectId]) byProject[tx.projectId] = { income: 0, expense: 0 };
+    if (tx.type === 'income')  byProject[tx.projectId].income  += tx.amount || 0;
+    if (tx.type === 'expense') byProject[tx.projectId].expense += tx.amount || 0;
+  });
+
+  const rows = Object.entries(byProject).map(([pid, d]) => {
+    const proj = projects.find(p => p.id === pid);
+    const name = proj?.name || proj?.title || 'Проект ' + pid.slice(0,6);
+    const profit = d.income - d.expense;
+    const margin = d.income > 0 ? Math.round(profit / d.income * 100) : 0;
+    return { name, ...d, profit, margin };
+  }).sort((a, b) => b.margin - a.margin);
+
+  if (rows.length === 0) {
+    el.innerHTML = `
+      <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;text-align:center;color:#9ca3af;">
+        Немає транзакцій прив'язаних до проектів.<br>
+        <span style="font-size:0.78rem;">При додаванні транзакції вкажіть «Проект».</span>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+      <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;padding:10px 14px;
+        display:grid;grid-template-columns:1fr 100px 100px 100px 70px;text-transform:uppercase;">
+        <div>Проект</div>
+        <div style="text-align:right;">Дохід</div>
+        <div style="text-align:right;">Витрати</div>
+        <div style="text-align:right;">Прибуток</div>
+        <div style="text-align:right;">Маржа</div>
+      </div>
+      ${rows.map((r, i) => {
+        const profitColor = r.profit >= 0 ? '#22c55e' : '#ef4444';
+        const marginColor = r.margin >= 30 ? '#22c55e' : r.margin >= 10 ? '#f59e0b' : '#ef4444';
+        return `
+          <div style="display:grid;grid-template-columns:1fr 100px 100px 100px 70px;
+            padding:9px 14px;background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;align-items:center;">
+            <div style="font-size:0.82rem;font-weight:500;color:#1a1a1a;">${escHtml(r.name)}</div>
+            <div style="text-align:right;font-size:0.82rem;color:#22c55e;font-weight:600;">${fmt(r.income, currency)}</div>
+            <div style="text-align:right;font-size:0.82rem;color:#ef4444;">${fmt(r.expense, currency)}</div>
+            <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${profitColor};">${fmt(r.profit, currency)}</div>
+            <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${marginColor};">${r.margin}%</div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// ── Тренд витрат по категоріях ────────────────────────────
+function _renderTrends(el, txs, currency, from, to, period) {
+  const expCats = _state.categories.expense || [];
+
+  // Визначаємо buckets (місяці або тижні)
+  const buckets = [];
+  if (period === 'year') {
+    for (let m = 0; m < 12; m++) {
+      const d = new Date(from.getFullYear(), m, 1);
+      buckets.push({ key: d.getFullYear() + '-' + String(m+1).padStart(2,'0'), label: d.toLocaleDateString('uk-UA',{month:'short'}) });
+    }
+  } else if (period === 'quarter') {
+    // 3 місяці
+    for (let m = 0; m < 3; m++) {
+      const d = new Date(from.getFullYear(), from.getMonth() + m, 1);
+      buckets.push({ key: d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'), label: d.toLocaleDateString('uk-UA',{month:'short'}) });
+    }
+  } else {
+    // Місяць — тижні
+    const cur = new Date(from);
+    while (cur <= to) {
+      const wstart = new Date(cur);
+      const wend   = new Date(cur); wend.setDate(cur.getDate() + 6);
+      buckets.push({
+        key: cur.toISOString().split('T')[0],
+        label: cur.getDate() + '/' + (cur.getMonth()+1),
+        from: new Date(wstart), to: new Date(Math.min(wend, to))
+      });
+      cur.setDate(cur.getDate() + 7);
+    }
+  }
+
+  // Агрегація
+  const byCatBucket = {}; // catId → { bucketKey → sum }
+  txs.filter(t => t.type === 'expense').forEach(tx => {
+    const d = tx.date?.toDate ? tx.date.toDate() : new Date(tx.date);
+    const cid = tx.categoryId;
+    let bkey;
+    if (period === 'month') {
+      // Знаходимо тиждень-бакет
+      const txDay = d.toISOString().split('T')[0];
+      const bk = buckets.find(b => b.from && txDay >= b.from.toISOString().split('T')[0] && txDay <= b.to.toISOString().split('T')[0]);
+      bkey = bk ? bk.key : null;
+    } else {
+      bkey = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    }
+    if (!bkey) return;
+    if (!byCatBucket[cid]) byCatBucket[cid] = {};
+    byCatBucket[cid][bkey] = (byCatBucket[cid][bkey] || 0) + (tx.amount || 0);
+  });
+
+  // Топ-5 категорій за сумою
+  const catTotals = expCats.map(c => ({
+    cat: c,
+    total: buckets.reduce((s, b) => s + (byCatBucket[c.id]?.[b.key] || 0), 0)
+  })).filter(x => x.total > 0).sort((a, b) => b.total - a.total).slice(0, 5);
+
+  if (catTotals.length === 0) {
+    el.innerHTML = '<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;text-align:center;color:#9ca3af;">Немає даних для відображення</div>';
+    return;
+  }
+
+  const maxVal = Math.max(...catTotals.flatMap(({cat}) => buckets.map(b => byCatBucket[cat.id]?.[b.key] || 0)));
+  const COLORS = ['#22c55e','#3b82f6','#f59e0b','#8b5cf6','#ef4444'];
+
+  el.innerHTML = `
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;">
+      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:16px;">Топ-5 категорій витрат по ${period === 'year' ? 'місяцях' : period === 'quarter' ? 'місяцях кварталу' : 'тижнях'}</div>
+
+      <!-- Легенда -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+        ${catTotals.map(({cat}, i) => `
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:${COLORS[i]};flex-shrink:0;"></div>
+            <span style="font-size:0.75rem;color:#374151;">${escHtml(cat.name)}</span>
+          </div>`).join('')}
+      </div>
+
+      <!-- Бар-чарт по periods -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        ${buckets.map(b => {
+          const bucketData = catTotals.map(({cat}) => byCatBucket[cat.id]?.[b.key] || 0);
+          const bucketTotal = bucketData.reduce((s, v) => s + v, 0);
+          if (bucketTotal === 0 && period === 'month') return '';
+          return `
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;margin-bottom:4px;">
+                <span>${b.label}</span>
+                <span style="font-weight:600;color:#374151;">${fmt(bucketTotal, currency)}</span>
+              </div>
+              <div style="height:20px;background:#f3f4f6;border-radius:4px;overflow:hidden;display:flex;">
+                ${catTotals.map(({cat}, i) => {
+                  const val = byCatBucket[cat.id]?.[b.key] || 0;
+                  const pct = maxVal > 0 ? (val / maxVal * 100) : 0;
+                  return pct > 0 ? `<div style="height:100%;width:${pct}%;background:${COLORS[i]};opacity:0.85;" title="${cat.name}: ${fmt(val, currency)}"></div>` : '';
+                }).join('')}
+              </div>
+            </div>`;
+        }).filter(Boolean).join('')}
+      </div>
+
+      <!-- Таблиця-деталі -->
+      <div style="margin-top:20px;overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+          <thead>
+            <tr style="background:#f9fafb;">
+              <th style="padding:6px 10px;text-align:left;color:#6b7280;font-weight:600;border-bottom:1px solid #e5e7eb;">Категорія</th>
+              ${buckets.map(b => `<th style="padding:6px 8px;text-align:right;color:#6b7280;font-weight:600;border-bottom:1px solid #e5e7eb;">${b.label}</th>`).join('')}
+              <th style="padding:6px 10px;text-align:right;color:#6b7280;font-weight:600;border-bottom:1px solid #e5e7eb;">Разом</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${catTotals.map(({cat, total}, i) => `
+              <tr>
+                <td style="padding:6px 10px;color:#374151;font-weight:500;">
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${COLORS[i]};margin-right:5px;"></span>
+                  ${escHtml(cat.name)}
+                </td>
+                ${buckets.map(b => `<td style="padding:6px 8px;text-align:right;color:#374151;">${byCatBucket[cat.id]?.[b.key] ? fmt(byCatBucket[cat.id][b.key], currency) : '—'}</td>`).join('')}
+                <td style="padding:6px 10px;text-align:right;font-weight:700;color:#1a1a1a;">${fmt(total, currency)}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
 }
 
 // ── Налаштування ─────────────────────────────────────────
