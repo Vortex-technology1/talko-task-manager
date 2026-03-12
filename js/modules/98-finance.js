@@ -3194,6 +3194,88 @@ window._addEntityTx = function(entityId, field, type) {
   });
 };
 
+// ── CRM інтеграція: угода → авто-транзакція доходу ────────
+(function _setupCrmIntegration() {
+  // Підписуємось після завантаження event-bus
+  function _subscribe() {
+    if (typeof window.onTalkoEvent !== 'function' || typeof window.TALKO_EVENTS === 'undefined') return false;
+
+    window.onTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, async function(event) {
+      const p = event.payload || event;
+      // Тільки коли угода переходить в 'won' і є сума
+      if (p.toStage !== 'won') return;
+      if (!p.amount || p.amount <= 0) return;
+
+      const companyId = _state.companyId || window.currentCompanyId || window._companyId;
+      const db = getDb();
+      if (!db || !companyId) return;
+
+      // Захист від дублювання — перевіряємо чи вже є транзакція по цій угоді
+      try {
+        const existing = await db.collection('companies').doc(companyId)
+          .collection('finance_transactions')
+          .where('crmDealId', '==', p.dealId)
+          .limit(1).get();
+        if (!existing.empty) return; // вже є
+      } catch(e) { /* індекс ще не готовий — пропускаємо перевірку */ }
+
+      // Знаходимо категорію "Продаж послуг" або першу income-категорію
+      const cats = _state.categories?.income || [];
+      const defCat = cats.find(c => /продаж|sale|service|послуг/i.test(c.name)) || cats[0];
+
+      // Знаходимо дефолтний рахунок
+      const defAcc = _state.accounts?.find(a => a.isDefault) || _state.accounts?.[0];
+
+      const tx = {
+        type:          'income',
+        amount:        parseFloat(p.amount) || 0,
+        currency:      _state.currency || 'EUR',
+        date:          firebase.firestore.Timestamp.now(),
+        description:   `CRM: ${p.clientName || 'Угода'} — оплата`,
+        counterparty:  p.clientName || '',
+        categoryId:    defCat?.id   || null,
+        categoryName:  defCat?.name || 'Продаж послуг',
+        accountId:     defAcc?.id   || null,
+        projectId:     p.projectId  || null,
+        crmDealId:     p.dealId     || null,   // для захисту від дублювання
+        source:        'crm_auto',             // щоб відрізняти від ручних
+        createdAt:     firebase.firestore.FieldValue.serverTimestamp(),
+      };
+
+      try {
+        await db.collection('companies').doc(companyId)
+          .collection('finance_transactions').add(tx);
+
+        // Оновлюємо баланс рахунку
+        if (defAcc) {
+          await db.collection('companies').doc(companyId)
+            .collection('finance_accounts').doc(defAcc.id)
+            .update({ balance: firebase.firestore.FieldValue.increment(tx.amount) });
+          const acc = _state.accounts?.find(a => a.id === defAcc.id);
+          if (acc) acc.balance = (acc.balance || 0) + tx.amount;
+        }
+
+        if (typeof showToast === 'function') {
+          showToast(`💰 Авто-транзакція: +${tx.amount} ${tx.currency} (${p.clientName || 'CRM'})`, 'success');
+        }
+        console.log('[Finance] CRM auto-tx created:', tx.amount, tx.currency, p.clientName);
+      } catch(e) {
+        console.error('[Finance] CRM auto-tx error:', e);
+      }
+    });
+    return true;
+  }
+
+  // Якщо event-bus ще не завантажено — чекаємо
+  if (!_subscribe()) {
+    let attempts = 0;
+    const poll = setInterval(() => {
+      attempts++;
+      if (_subscribe() || attempts >= 20) clearInterval(poll);
+    }, 300);
+  }
+})();
+
 // ── Хук: коли switchTab('finance') викликається ──────────
 const _origSwitchTab = window.switchTab;
 if (typeof _origSwitchTab === 'function') {
