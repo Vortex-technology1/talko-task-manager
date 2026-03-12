@@ -6,7 +6,6 @@
 (function() {
 'use strict';
 
-    window.learningCourseData = window.learningCourseData || [];
     const learningCourseData = [
             {
                 id: 0,
@@ -626,6 +625,187 @@
     </div>
 </div>`,
 
+                lessonContent_en: `
+<div style="margin-bottom:1.25rem;padding:1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;display:flex;align-items:flex-start;gap:0.9rem;">
+    <div style="width:40px;height:40px;background:#22c55e;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg>
+    </div>
+    <div>
+        <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">You have an AI assistant</div>
+        <div style="color:#15803d;font-size:0.85rem;line-height:1.6;">If anything is unclear — describe the task to the assistant and it will guide you step by step.</div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.65rem;padding:0.4rem 0.85rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">Open AI Assistant →</a>
+    </div>
+</div>
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Why you need this</div></div>
+    <div class="lesson-block-content">
+        <p>All program materials are stored in Google Drive.</p>
+        <p style="margin-top:0.75rem;">This allows you to:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;"><li>keep all documents in one place</li><li>easily share materials with your team</li><li>access files from any device</li></ul>
+        <p style="margin-top:0.75rem;">Google Drive will be your <strong>central document hub</strong> throughout the program.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">What you need to do</div></div>
+    <div class="lesson-block-content">
+        <p>In this lesson you need to:</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.6rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;"><span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">1</span><span style="font-size:0.9rem;color:#1a1a1a;">Create a program working folder</span></div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;"><span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">2</span><span style="font-size:0.9rem;color:#1a1a1a;">Create working documents inside it</span></div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:#f0fdf4;border-radius:10px;"><span style="background:#22c55e;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;">3</span><span style="font-size:0.9rem;color:#1a1a1a;">Set up access permissions</span></div>
+        </div>
+        <p style="margin-top:0.9rem;color:#525252;font-size:0.875rem;">This will take about 5–10 minutes.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</span>Create the program folder</div></div>
+    <div class="lesson-block-content">
+        <p>In Google Drive, create a new folder named:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:0.9rem;color:#1a1a1a;">TALKO Systematization — Your Name</div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</span>Create documents in the folder</div></div>
+    <div class="lesson-block-content">
+        <p>Inside the folder, create:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;"><li>2 Google Docs</li><li>1 Google Sheet</li></ul>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</span>Set up folder access</div></div>
+    <div class="lesson-block-content">
+        <p>Click <strong>"Share"</strong>. In the settings select:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.875rem;color:#166534;font-weight:600;">Anyone with the link can comment</div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">4</span>Add the link to the system</div></div>
+    <div class="lesson-block-content"><p>Paste the folder link in the homework field below.</p></div>
+</div>
+<div class="result-block"><strong>Result.</strong> Your work environment is ready — all program materials will be stored in one place with the correct access settings.</div>
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;">
+    <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+        <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+        <div>
+            <div style="font-weight:700;color:#1a1a1a;font-size:0.9rem;margin-bottom:0.3rem;">Need help?</div>
+            <div style="color:#525252;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">If you have questions during the task, use the technical assistant.</div>
+            <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">Get help →</a>
+        </div>
+    </div>
+</div>`,
+
+                lessonContent_pl: `
+<div style="margin-bottom:1.25rem;padding:1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;display:flex;align-items:flex-start;gap:0.9rem;">
+    <div style="width:40px;height:40px;background:#22c55e;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg>
+    </div>
+    <div>
+        <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">Masz asystenta AI</div>
+        <div style="color:#15803d;font-size:0.85rem;line-height:1.6;">Jeśli coś jest niejasne — opisz zadanie asystentowi, a on poprowadzi Cię krok po kroku.</div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.65rem;padding:0.4rem 0.85rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">Otwórz Asystenta AI →</a>
+    </div>
+</div>
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Po co to jest</div></div>
+    <div class="lesson-block-content">
+        <p>Wszystkie materiały programu są przechowywane w Google Drive.</p>
+        <p style="margin-top:0.75rem;">Pozwala to:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;"><li>przechowywać wszystkie dokumenty w jednym miejscu</li><li>łatwo udostępniać materiały zespołowi</li><li>pracować z plikami z dowolnego urządzenia</li></ul>
+        <p style="margin-top:0.75rem;">Google Drive będzie Twoim <strong>centrum dokumentów roboczych</strong> w programie.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</span>Utwórz folder programu</div></div>
+    <div class="lesson-block-content">
+        <p>W Google Drive utwórz nowy folder o nazwie:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:0.9rem;color:#1a1a1a;">Systematyzacja TALKO — Twoje Imię</div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</span>Utwórz dokumenty w folderze</div></div>
+    <div class="lesson-block-content">
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;"><li>2 Dokumenty Google</li><li>1 Arkusz Google</li></ul>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</span>Skonfiguruj dostęp do folderu</div></div>
+    <div class="lesson-block-content">
+        <p>Kliknij <strong>„Udostępnij"</strong>. Wybierz:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.875rem;color:#166534;font-weight:600;">Każdy z linkiem może komentować</div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">4</span>Dodaj link do systemu</div></div>
+    <div class="lesson-block-content"><p>Wklej link do folderu w polu zadania domowego poniżej.</p></div>
+</div>
+<div class="result-block"><strong>Wynik.</strong> Twoje środowisko pracy jest gotowe — wszystkie materiały programu będą przechowywane w jednym miejscu.</div>
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;">
+    <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+        <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+        <div>
+            <div style="font-weight:700;color:#1a1a1a;font-size:0.9rem;margin-bottom:0.3rem;">Potrzebujesz pomocy?</div>
+            <div style="color:#525252;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">Skorzystaj z asystenta technicznego.</div>
+            <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">Uzyskaj pomoc →</a>
+        </div>
+    </div>
+</div>`,
+
+                lessonContent_de: `
+<div style="margin-bottom:1.25rem;padding:1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;display:flex;align-items:flex-start;gap:0.9rem;">
+    <div style="width:40px;height:40px;background:#22c55e;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M12 15h.01M16 15h.01"/></svg>
+    </div>
+    <div>
+        <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">Sie haben einen KI-Assistenten</div>
+        <div style="color:#15803d;font-size:0.85rem;line-height:1.6;">Wenn etwas unklar ist — beschreiben Sie dem Assistenten die Aufgabe und er führt Sie Schritt für Schritt.</div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.65rem;padding:0.4rem 0.85rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">KI-Assistenten öffnen →</a>
+    </div>
+</div>
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Warum das wichtig ist</div></div>
+    <div class="lesson-block-content">
+        <p>Alle Programmunterlagen werden in Google Drive gespeichert.</p>
+        <p style="margin-top:0.75rem;">Das ermöglicht:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;"><li>alle Dokumente an einem Ort aufzubewahren</li><li>Materialien einfach mit dem Team zu teilen</li><li>von jedem Gerät aus auf Dateien zuzugreifen</li></ul>
+        <p style="margin-top:0.75rem;">Google Drive wird Ihr <strong>zentrales Dokumenten-Hub</strong> im Programm sein.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</span>Programmordner erstellen</div></div>
+    <div class="lesson-block-content">
+        <p>Erstellen Sie in Google Drive einen neuen Ordner:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:0.9rem;color:#1a1a1a;">TALKO-Systematisierung — Ihr Name</div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</span>Dokumente im Ordner erstellen</div></div>
+    <div class="lesson-block-content">
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;"><li>2 Google Docs</li><li>1 Google Tabelle</li></ul>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</span>Ordnerzugriff einrichten</div></div>
+    <div class="lesson-block-content">
+        <p>Klicken Sie auf <strong>„Teilen"</strong>. Wählen Sie:</p>
+        <div style="margin-top:0.6rem;padding:0.7rem 1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.875rem;color:#166534;font-weight:600;">Jeder mit dem Link kann kommentieren</div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title" style="display:flex;align-items:center;gap:0.5rem;"><span style="background:#22c55e;color:white;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">4</span>Link ins System einfügen</div></div>
+    <div class="lesson-block-content"><p>Fügen Sie den Ordner-Link in das Hausaufgaben-Feld unten ein.</p></div>
+</div>
+<div class="result-block"><strong>Ergebnis.</strong> Ihre Arbeitsumgebung ist bereit — alle Programmunterlagen werden an einem Ort gespeichert.</div>
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;">
+    <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+        <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+        <div>
+            <div style="font-weight:700;color:#1a1a1a;font-size:0.9rem;margin-bottom:0.3rem;">Brauchen Sie Hilfe?</div>
+            <div style="color:#525252;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">Nutzen Sie den technischen Assistenten.</div>
+            <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#22c55e;color:white;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none;">Hilfe erhalten →</a>
+        </div>
+    </div>
+</div>`,
+
                 homework: `<ol><li>Створіть папку <strong>Систематизація TALKO — Ваше Ім'я</strong></li><li>Створіть у ній 2 Google Документи та 1 Google Таблицю</li><li>Налаштуйте доступ: <em>Усі, хто має посилання — можуть коментувати</em></li><li>Вставте посилання на папку у поле нижче</li></ol>`,
                 homework_ru: `<ol><li>Создайте папку <strong>Систематизация TALKO — Ваше Имя</strong></li><li>Создайте в ней 2 Google Документа и 1 Google Таблицу</li><li>Настройте доступ: <em>Все, у кого есть ссылка — могут комментировать</em></li><li>Вставьте ссылку на папку в поле ниже</li></ol>`,
                 homework_en: `<ol><li>Create a folder <strong>TALKO Systematization — Your Name</strong></li><li>Create 2 Google Docs and 1 Google Sheet inside it</li><li>Set access: <em>Anyone with the link can comment</em></li><li>Paste the folder link in the field below</li></ol>`,
@@ -944,6 +1124,149 @@
     <a href="https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#22c55e;color:white;border-radius:9px;font-size:0.875rem;font-weight:700;text-decoration:none;">
         Открыть ассистента терминов →
     </a>
+</div>`,
+
+                lessonContent_en: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Why most learning doesn't work</div></div>
+    <div class="lesson-block-content">
+        <p>Most people spend years learning but can't apply the knowledge in practice.</p>
+        <p style="margin-top:0.75rem;">For example: university — 5 years, thousands of hours of lectures, a diploma. Yet most graduates don't work in their field.</p>
+        <p style="margin-top:0.75rem;">The problem isn't people. The problem is that education lacks a <strong>learning technology</strong>.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">What is technology</div></div>
+    <div class="lesson-block-content">
+        <p>Technology is a sequence of actions that produces a predictable result.</p>
+        <p style="margin-top:0.75rem;">For example, to fry eggs:</p>
+        <div style="margin-top:0.75rem;display:grid;gap:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;"><span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">1</span>Turn on the stove</div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;"><span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">2</span>Place the pan</div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;"><span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">3</span>Crack the eggs</div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0.85rem;background:#f8fafc;border-radius:8px;font-size:0.875rem;"><span style="width:20px;height:20px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">4</span>Wait a few minutes</div>
+        </div>
+        <p style="margin-top:0.75rem;"><strong>Learning should work the same way.</strong></p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">How effective learning works</div></div>
+    <div class="lesson-block-content">
+        <p>Effective learning has three stages:</p>
+        <div style="margin-top:0.85rem;display:flex;align-items:center;gap:0;border-radius:10px;overflow:hidden;">
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;"><div style="font-weight:700;color:#166534;font-size:0.875rem;">Understand</div></div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;"><div style="font-weight:700;color:#166534;font-size:0.875rem;">Apply</div></div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#22c55e;"><div style="font-weight:700;color:white;font-size:0.875rem;">Skill</div></div>
+        </div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">The main cause of learning problems</div></div>
+    <div class="lesson-block-content">
+        <p>The main cause is an <strong>undefined word</strong>. When a person encounters a word they don't understand — they stop understanding the material, lose interest, and try to memorize instead of understand.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">Why this matters in business</div></div>
+    <div class="lesson-block-content">
+        <p>You tell an employee: <em>"Prepare a sales plan"</em>. But you each have different concepts of the word "plan":</p>
+        <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <div style="padding:0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;"><div style="font-size:0.72rem;font-weight:700;color:#16a34a;margin-bottom:0.3rem;">FOR YOU</div><div style="font-size:0.875rem;">Specific steps and actions</div></div>
+            <div style="padding:0.75rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;"><div style="font-size:0.72rem;font-weight:700;color:#dc2626;margin-bottom:0.3rem;">FOR THE EMPLOYEE</div><div style="font-size:0.875rem;">A desired result in numbers</div></div>
+        </div>
+    </div>
+</div>
+<div class="result-block"><strong>Conclusion.</strong> To learn quickly and effectively — understand key terms, form correct concepts and use them at work. That is what the TALKO glossary is for.</div>
+<div class="lesson-block" style="margin-top:1.25rem;">
+    <div class="lesson-block-header"><div class="lesson-block-title">Task</div></div>
+    <div class="lesson-block-content">
+        <div style="margin-top:0.75rem;display:grid;gap:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;"><span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">1</span><span style="font-size:0.875rem;">Go through the first 13 terms with the assistant</span></div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;"><span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">2</span><span style="font-size:0.875rem;">Understand their meaning</span></div>
+            <div style="display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.9rem;background:#f0fdf4;border-radius:10px;"><span style="background:#22c55e;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;">3</span><span style="font-size:0.875rem;">Think about how they apply in your business</span></div>
+        </div>
+    </div>
+</div>
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;">
+    <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">Terminology Assistant</div>
+    <div style="color:#15803d;font-size:0.85rem;line-height:1.5;margin-bottom:0.75rem;">Use the assistant to quickly understand the program terms.</div>
+    <a href="https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#22c55e;color:white;border-radius:9px;font-size:0.875rem;font-weight:700;text-decoration:none;">Open terminology assistant →</a>
+</div>`,
+
+                lessonContent_pl: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Dlaczego większość nauki nie działa</div></div>
+    <div class="lesson-block-content">
+        <p>Większość ludzi spędza lata na nauce, ale nie potrafi zastosować wiedzy w praktyce.</p>
+        <p style="margin-top:0.75rem;">Problemem nie są ludzie. Problem w tym, że w edukacji brakuje <strong>technologii uczenia się</strong>.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">Jak działa skuteczna nauka</div></div>
+    <div class="lesson-block-content">
+        <div style="margin-top:0.85rem;display:flex;align-items:center;gap:0;border-radius:10px;overflow:hidden;">
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;"><div style="font-weight:700;color:#166534;font-size:0.875rem;">Zrozumieć</div></div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;"><div style="font-weight:700;color:#166534;font-size:0.875rem;">Zastosować</div></div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#22c55e;"><div style="font-weight:700;color:white;font-size:0.875rem;">Umiejętność</div></div>
+        </div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">Dlaczego to ważne w biznesie</div></div>
+    <div class="lesson-block-content">
+        <p>Mówisz pracownikowi: <em>„Przygotuj plan sprzedaży"</em>. Ale macie różne koncepty słowa „plan":</p>
+        <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <div style="padding:0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;"><div style="font-size:0.72rem;font-weight:700;color:#16a34a;margin-bottom:0.3rem;">DLA CIEBIE</div><div style="font-size:0.875rem;">Konkretne kroki i działania</div></div>
+            <div style="padding:0.75rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;"><div style="font-size:0.72rem;font-weight:700;color:#dc2626;margin-bottom:0.3rem;">DLA PRACOWNIKA</div><div style="font-size:0.875rem;">Oczekiwany wynik w liczbach</div></div>
+        </div>
+    </div>
+</div>
+<div class="result-block"><strong>Wniosek.</strong> Aby uczyć się szybko — rozumiej kluczowe terminy i używaj ich w pracy. Do tego służy słownik TALKO.</div>
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;">
+    <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">Asystent terminologii</div>
+    <div style="color:#15803d;font-size:0.85rem;line-height:1.5;margin-bottom:0.75rem;">Wyjaśni każde pojęcie prostymi słowami.</div>
+    <a href="https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#22c55e;color:white;border-radius:9px;font-size:0.875rem;font-weight:700;text-decoration:none;">Otwórz asystenta terminologii →</a>
+</div>`,
+
+                lessonContent_de: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Warum die meisten Lernmethoden nicht funktionieren</div></div>
+    <div class="lesson-block-content">
+        <p>Die meisten Menschen verbringen Jahre mit Lernen, können das Wissen aber nicht in der Praxis anwenden.</p>
+        <p style="margin-top:0.75rem;">Das Problem liegt nicht bei den Menschen. Das Problem ist, dass in der Bildung eine <strong>Lerntechnologie</strong> fehlt.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">Wie effektives Lernen funktioniert</div></div>
+    <div class="lesson-block-content">
+        <div style="margin-top:0.85rem;display:flex;align-items:center;gap:0;border-radius:10px;overflow:hidden;">
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;"><div style="font-weight:700;color:#166534;font-size:0.875rem;">Verstehen</div></div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#f0fdf4;border:1px solid #bbf7d0;"><div style="font-weight:700;color:#166534;font-size:0.875rem;">Anwenden</div></div>
+            <div style="padding:0 0.3rem;color:#22c55e;font-weight:700;font-size:1.1rem;">→</div>
+            <div style="flex:1;text-align:center;padding:0.8rem 0.5rem;background:#22c55e;"><div style="font-weight:700;color:white;font-size:0.875rem;">Fähigkeit</div></div>
+        </div>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header"><div class="lesson-block-title">Warum das im Geschäft wichtig ist</div></div>
+    <div class="lesson-block-content">
+        <p>Sie sagen einem Mitarbeiter: <em>„Bereite einen Verkaufsplan vor"</em>. Aber Sie haben unterschiedliche Konzepte:</p>
+        <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <div style="padding:0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;"><div style="font-size:0.72rem;font-weight:700;color:#16a34a;margin-bottom:0.3rem;">FÜR SIE</div><div style="font-size:0.875rem;">Konkrete Schritte und Maßnahmen</div></div>
+            <div style="padding:0.75rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;"><div style="font-size:0.72rem;font-weight:700;color:#dc2626;margin-bottom:0.3rem;">FÜR DEN MITARBEITER</div><div style="font-size:0.875rem;">Ein gewünschtes Ergebnis in Zahlen</div></div>
+        </div>
+    </div>
+</div>
+<div class="result-block"><strong>Fazit.</strong> Um schnell zu lernen — verstehen Sie Schlüsselbegriffe und wenden Sie sie an. Dafür gibt es das TALKO-Glossar.</div>
+<div style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:14px;">
+    <div style="font-weight:700;color:#166534;font-size:0.95rem;margin-bottom:0.3rem;">Terminologie-Assistent</div>
+    <div style="color:#15803d;font-size:0.85rem;line-height:1.5;margin-bottom:0.75rem;">Er erklärt jeden Begriff in einfachen Worten.</div>
+    <a href="https://chatgpt.com/g/g-688c4d14d300819186e96a0226712dde-terminology-assistant" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#22c55e;color:white;border-radius:9px;font-size:0.875rem;font-weight:700;text-decoration:none;">Terminologie-Assistenten öffnen →</a>
 </div>`,
 
                 homework: `<ol><li>Відкрийте асистента термінів</li><li>Пройдіть перші 13 термінів</li><li>Подумайте, як вони застосовуються у вашому бізнесі</li></ol>`,
