@@ -187,6 +187,33 @@ async function loadCategories() {
   }
 }
 
+// Перераховує баланс кожного рахунку з усіх транзакцій і записує в Firestore
+async function recalcAccountBalances() {
+  try {
+    const snap = await colRef('finance_transactions').get();
+    // Обчислюємо баланс по кожному accountId
+    const balances = {};
+    snap.docs.forEach(d => {
+      const tx = d.data();
+      if (!tx.accountId) return;
+      const delta = tx.type === 'income' ? (tx.amount || 0) : -(tx.amount || 0);
+      balances[tx.accountId] = (balances[tx.accountId] || 0) + delta;
+    });
+    // Оновлюємо Firestore і локальний стан
+    const batch = getDb().batch();
+    _state.accounts.forEach(acc => {
+      const newBal = balances[acc.id] !== undefined ? balances[acc.id] : acc.balance;
+      if (newBal !== acc.balance) {
+        batch.update(colRef('finance_accounts').doc(acc.id), { balance: newBal });
+        acc.balance = newBal;
+      }
+    });
+    await batch.commit();
+  } catch(e) {
+    console.warn('[Finance] recalcAccountBalances:', e.message);
+  }
+}
+
 async function writeDefaultCategories() {
   try {
     const batch = getDb().batch();
@@ -522,8 +549,8 @@ async function loadDashboardData(monthVal) {
     }
 
     // Топ витрат по категоріях
-    // Оновлюємо відображення рахунків (баланс міг змінитись)
-    await loadAccounts();
+    // Перераховуємо реальний баланс по рахунках з УСІХ транзакцій (не тільки поточного місяця)
+    await recalcAccountBalances();
     const totalBal = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
     const totalBalEl = document.getElementById('dashTotalBalance');
     if (totalBalEl) totalBalEl.textContent = fmt(totalBal);
@@ -637,8 +664,8 @@ async function loadChartData() {
     }).join('');
 
     chartEl.innerHTML = `
-      <svg width="100%" viewBox="0 0 ${svgWidth} ${H+24}" preserveAspectRatio="xMinYMin meet"
-        style="display:block;overflow:visible;">
+      <svg width="100%" height="${H+28}" viewBox="0 0 ${svgWidth} ${H+28}"
+        preserveAspectRatio="none" style="display:block;overflow:hidden;">
         ${bars}
       </svg>
     `;
