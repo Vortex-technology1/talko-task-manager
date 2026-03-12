@@ -12,8 +12,14 @@
                 id: 0,
                 title: "МАРШРУТ ПРОГРАМИ",
                 title_ru: "МАРШРУТ ПРОГРАММЫ",
+                title_en: "PROGRAM ROADMAP",
+                title_pl: "MAPA PROGRAMU",
+                title_de: "PROGRAMM-ROADMAP",
                 subtitle: "Покрокова карта переходу від хаотичного управління до системного бізнесу",
                 subtitle_ru: "Пошаговая карта перехода от хаотичного управления к системному бизнесу",
+                subtitle_en: "A step-by-step map for transitioning from chaotic management to a systematic business",
+                subtitle_pl: "Krok po kroku od chaotycznego zarządzania do systematycznego biznesu",
+                subtitle_de: "Schritt-für-Schritt-Karte vom chaotischen Management zum systematischen Unternehmen",
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -147,8 +153,188 @@
     <strong>Результат.</strong> После ознакомления с маршрутом вы будете понимать: какие этапы проходит систематизация, что именно нужно сделать на каждом этапе и как двигаться по программе дальше.
 </div>`,
 
+                lessonContent_en: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">What is this</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Most business owners try to get organized chaotically.</p>
+        <p style="margin-top:0.75rem;">Today they work on hiring.<br>Tomorrow — marketing.<br>The day after — CRM or finances.</p>
+        <p style="margin-top:0.75rem;">As a result, work happens in all directions, but a system never emerges.</p>
+        <p style="margin-top:0.75rem;">That is why the program uses a <strong>business systematization roadmap</strong>.</p>
+        <p style="margin-top:0.75rem;">It is a step-by-step map that shows:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>what needs to be set up</li>
+            <li>in what order to do it</li>
+            <li>what result should be achieved at each stage</li>
+        </ul>
+        <p style="margin-top:0.75rem;">In essence, this is the roadmap from chaos to a systematic business.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">How the roadmap is structured</div>
+    </div>
+    <div class="lesson-block-content">
+        <p style="margin-bottom:1rem;">The roadmap consists of several key phases.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">PHASE 1</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Business Architecture</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Company structure, roles, functions and areas of responsibility.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">PHASE 2</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Hiring & Team</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Building the team and defining the results of each role.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">PHASE 3</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Marketing & Sales</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">A stable and predictable flow of clients.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">PHASE 4</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Finance & Scaling</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Profit control and preparation for scaling.</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="lesson-block" style="text-align:center;">
+    <div class="lesson-block-content" style="padding:1.25rem;">
+        <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">To see the full program structure, open the roadmap.</p>
+        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">Open program roadmap →</a>
+    </div>
+</div>
+<div class="result-block">
+    <strong>Result.</strong> After reviewing the roadmap you will understand: what stages systematization goes through, what exactly needs to be done at each stage, and how to move through the program.
+</div>`,
+
+                lessonContent_pl: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Czym to jest</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Większość właścicieli próbuje zaprowadzić porządek w biznesie chaotycznie.</p>
+        <p style="margin-top:0.75rem;">Dzisiaj zajmują się rekrutacją.<br>Jutro — marketingiem.<br>Pojutrze — CRM lub finansami.</p>
+        <p style="margin-top:0.75rem;">W efekcie praca odbywa się w różnych kierunkach, ale system nigdy nie powstaje.</p>
+        <p style="margin-top:0.75rem;">Dlatego w programie stosuje się <strong>mapę systematyzacji biznesu</strong>.</p>
+        <p style="margin-top:0.75rem;">To mapa krok po kroku, która pokazuje:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>co należy skonfigurować</li>
+            <li>w jakiej kolejności to robić</li>
+            <li>jaki wynik powinien być na każdym etapie</li>
+        </ul>
+        <p style="margin-top:0.75rem;">To droga od chaosu do systematycznego biznesu.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Jak zbudowana jest mapa</div>
+    </div>
+    <div class="lesson-block-content">
+        <p style="margin-bottom:1rem;">Mapa składa się z kilku kluczowych faz.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">FAZA 1</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Architektura biznesu</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Struktura firmy, role, funkcje i obszary odpowiedzialności.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">FAZA 2</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Rekrutacja i zespół</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Budowanie zespołu i wyniki pracy każdej roli.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">FAZA 3</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Marketing i sprzedaż</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Stabilny i przewidywalny przepływ klientów.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">FAZA 4</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Finanse i skalowanie</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Kontrola zysku i przygotowanie do skalowania.</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="lesson-block" style="text-align:center;">
+    <div class="lesson-block-content" style="padding:1.25rem;">
+        <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">Aby zobaczyć pełną strukturę programu, otwórz mapę.</p>
+        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">Otwórz mapę programu →</a>
+    </div>
+</div>
+<div class="result-block">
+    <strong>Wynik.</strong> Po zapoznaniu się z mapą będziesz rozumieć: jakie etapy przechodzi systematyzacja, co dokładnie należy zrobić na każdym etapie i jak poruszać się dalej po programie.
+</div>`,
+
+                lessonContent_de: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Was ist das</div>
+    </div>
+    <div class="lesson-block-content">
+        <p>Die meisten Unternehmer versuchen, Ordnung im Unternehmen chaotisch zu schaffen.</p>
+        <p style="margin-top:0.75rem;">Heute kümmern sie sich um die Einstellung.<br>Morgen — um Marketing.<br>Übermorgen — um CRM oder Finanzen.</p>
+        <p style="margin-top:0.75rem;">Das Ergebnis: Arbeit in alle Richtungen, aber ein System entsteht nie.</p>
+        <p style="margin-top:0.75rem;">Deshalb verwendet das Programm eine <strong>Business-Systematisierungs-Roadmap</strong>.</p>
+        <p style="margin-top:0.75rem;">Das ist eine Schritt-für-Schritt-Karte, die zeigt:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;line-height:1.9;">
+            <li>was eingerichtet werden muss</li>
+            <li>in welcher Reihenfolge das zu tun ist</li>
+            <li>welches Ergebnis in jedem Schritt erwartet wird</li>
+        </ul>
+        <p style="margin-top:0.75rem;">Im Wesentlichen ist das der Weg vom Chaos zum systematischen Unternehmen.</p>
+    </div>
+</div>
+<div class="lesson-block">
+    <div class="lesson-block-header">
+        <div class="lesson-block-title">Wie die Roadmap aufgebaut ist</div>
+    </div>
+    <div class="lesson-block-content">
+        <p style="margin-bottom:1rem;">Die Roadmap besteht aus mehreren Schlüsselphasen.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">PHASE 1</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Business-Architektur</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Unternehmensstruktur, Rollen, Funktionen und Verantwortungsbereiche.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">PHASE 2</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Einstellung & Team</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Teamaufbau und Ergebnisse jeder Rolle.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">PHASE 3</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Marketing & Vertrieb</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Stabiler und vorhersehbarer Kundenstrom.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;">
+                <div style="font-size:0.7rem;font-weight:700;color:#16a34a;letter-spacing:0.08em;margin-bottom:0.35rem;">PHASE 4</div>
+                <div style="font-weight:700;color:#1a1a1a;font-size:0.95rem;margin-bottom:0.4rem;">Finanzen & Skalierung</div>
+                <div style="font-size:0.82rem;color:#525252;line-height:1.5;">Gewinnkontrolle und Vorbereitung auf die Skalierung.</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="lesson-block" style="text-align:center;">
+    <div class="lesson-block-content" style="padding:1.25rem;">
+        <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">Um die vollständige Programmstruktur zu sehen, öffnen Sie die Roadmap.</p>
+        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">Programm-Roadmap öffnen →</a>
+    </div>
+</div>
+<div class="result-block">
+    <strong>Ergebnis.</strong> Nach dem Kennenlernen der Roadmap werden Sie verstehen: welche Phasen die Systematisierung durchläuft, was genau in jeder Phase zu tun ist und wie Sie im Programm voranschreiten.
+</div>`,
+
                 homework: `<ol><li>Відкрийте маршрут програми</li><li>Ознайомтесь із фазами систематизації</li><li>Поверніться до цього уроку</li></ol>`,
                 homework_ru: `<ol><li>Откройте маршрут программы</li><li>Ознакомьтесь с фазами систематизации</li><li>Вернитесь к этому уроку</li></ol>`,
+                homework_en: `<ol><li>Open the program roadmap</li><li>Review the systematization phases</li><li>Return to this lesson</li></ol>`,
+                homework_pl: `<ol><li>Otwórz mapę programu</li><li>Zapoznaj się z fazami systematyzacji</li><li>Wróć do tej lekcji</li></ol>`,
+                homework_de: `<ol><li>Öffnen Sie die Programm-Roadmap</li><li>Machen Sie sich mit den Systematisierungsphasen vertraut</li><li>Kehren Sie zu dieser Lektion zurück</li></ol>`,
 
                 homeworkLink: null,
                 homeworkLinkName: null,
