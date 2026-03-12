@@ -2286,11 +2286,18 @@
 
         // ── Фінансові джерела ──────────────────────────────
         if (src === 'finance_income' || src === 'finance_expense' || src === 'finance_profit' || src === 'finance_margin') {
-            // Беремо транзакції з фінансового модуля (якщо завантажені)
+            // Беремо транзакції з фінансового модуля
+            // Якщо фінанси не відкривались — ініціюємо завантаження в фоні
+            if (!window._financeTxCache && window._financeEnsureLoaded) {
+                window._financeEnsureLoaded(); // тихо завантажує без відображення UI
+            }
             const allTx = window._financeGetTxForPeriod ? window._financeGetTxForPeriod(periodKey, metric.frequency || 'monthly') : null;
-            if (!allTx) return null;
-            const income  = allTx.filter(t => t.type === 'income').reduce((s, t) => s + (t.amount || 0), 0);
-            const expense = allTx.filter(t => t.type === 'expense').reduce((s, t) => s + (t.amount || 0), 0);
+            if (!allTx || allTx.length === 0) return null;
+            // amountBase — сума в базовій валюті (збережена при записі транзакції)
+            // fallback на amount якщо amountBase відсутній (старі записи)
+            const getAmt = t => t.amountBase != null ? t.amountBase : (t.amount || 0);
+            const income  = allTx.filter(t => t.type === 'income').reduce((s, t) => s + getAmt(t), 0);
+            const expense = allTx.filter(t => t.type === 'expense').reduce((s, t) => s + getAmt(t), 0);
             const profit  = income - expense;
             if (src === 'finance_income')  return Math.round(income);
             if (src === 'finance_expense') return Math.round(expense);

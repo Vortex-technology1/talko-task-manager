@@ -200,26 +200,21 @@ async function loadCategories() {
 // Перераховує баланс кожного рахунку з усіх транзакцій
 async function recalcAccountBalances() {
   try {
-    const snap = await colRef('finance_transactions').get();
+    // limit 2000 — захист від quota exceeded при великій кількості транзакцій
+    const snap = await colRef('finance_transactions').limit(2000).get();
     const balances = {};
     snap.docs.forEach(d => {
       const tx = d.data();
       if (!tx.accountId) return;
-      const delta = tx.type === 'income' ? (tx.amount || 0) : -(tx.amount || 0);
+      // txAmt конвертує в базову валюту — баланси завжди в базовій валюті
+      const amt = txAmt(tx);
+      const delta = tx.type === 'income' ? amt : -amt;
       balances[tx.accountId] = (balances[tx.accountId] || 0) + delta;
     });
-    // Оновлюємо локальний стан
+    // Оновлюємо тільки локальний стан — Firestore баланс оновлюється при кожній транзакції інкрементально
     _state.accounts.forEach(acc => {
       if (balances[acc.id] !== undefined) acc.balance = balances[acc.id];
     });
-    // Записуємо в Firestore по одному (ігноруємо помилки прав)
-    for (const acc of _state.accounts) {
-      if (balances[acc.id] !== undefined) {
-        try {
-          await colRef('finance_accounts').doc(acc.id).update({ balance: balances[acc.id] });
-        } catch(e) { /* ігноруємо */ }
-      }
-    }
   } catch(e) {
     console.warn('[Finance] recalcAccountBalances:', e.message);
   }
@@ -1146,17 +1141,25 @@ async function _getTxForExport(type) {
     ? _txFilter.month.split('-').map(Number)
     : [new Date().getFullYear(), new Date().getMonth() + 1];
 
+  const EXPORT_LIMIT = 2000;
   let query = colRef('finance_transactions').where('type', '==', type);
   if (_txFilter.month) {
     const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
     const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
     query = query.where('date', '>=', from).where('date', '<=', to).orderBy('date', 'desc');
   } else {
-    query = query.limit(500);
+    query = query.limit(EXPORT_LIMIT);
   }
   if (_txFilter.categoryId) query = query.where('categoryId', '==', _txFilter.categoryId);
 
   const snap = await query.get();
+
+  // Попередження якщо досягли ліміту — дані можуть бути обрізані
+  if (!_txFilter.month && snap.docs.length >= EXPORT_LIMIT) {
+    if (typeof showToast === 'function')
+      showToast(`⚠ Показано перші ${EXPORT_LIMIT} записів. Для повного експорту виберіть конкретний місяць.`, 'warn', 6000);
+  }
+
   const catMap = {};
   [...(_state.categories.income || []), ...(_state.categories.expense || [])].forEach(c => { catMap[c.id] = c.name; });
   const accMap = {};
@@ -1166,16 +1169,18 @@ async function _getTxForExport(type) {
     const tx = d.data();
     const dt = tx.date?.toDate ? tx.date.toDate() : new Date((tx.date?.seconds || 0) * 1000);
     return {
-      Дата:        dt.toLocaleDateString('uk-UA'),
-      Тип:         tx.type === 'income' ? 'Дохід' : 'Витрата',
-      Сума:        tx.amount || 0,
-      Валюта:      tx.currency || _state.currency || 'EUR',
-      Категорія:   catMap[tx.categoryId] || tx.categoryName || '',
-      Рахунок:     accMap[tx.accountId] || '',
-      Контрагент:  tx.counterparty || '',
-      Опис:        tx.description || '',
-      Проект:      tx.projectId || '',
-      Функція:     tx.functionId || '',
+      Дата:             dt.toLocaleDateString('uk-UA'),
+      Тип:              tx.type === 'income' ? 'Дохід' : 'Витрата',
+      Сума:             tx.amount || 0,
+      Валюта:           tx.currency || _state.currency || 'EUR',
+      'Сума (базова)':  tx.amountBase != null ? tx.amountBase : (tx.amount || 0),
+      'Баз. валюта':    _state.currency || 'EUR',
+      Категорія:        catMap[tx.categoryId] || tx.categoryName || '',
+      Рахунок:          accMap[tx.accountId] || '',
+      Контрагент:       tx.counterparty || '',
+      Опис:             tx.description || '',
+      Проект:           tx.projectId || '',
+      Функція:          tx.functionId || '',
     };
   });
 }
@@ -1391,15 +1396,13 @@ window._doTransfer = async function() {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
 
-    // Оновлюємо стан в пам'яті
-    const fAcc = _state.accounts.find(a => a.id === fromId);
-    const tAcc = _state.accounts.find(a => a.id === toId);
-    if (fAcc) fAcc.balance = (fAcc.balance || 0) - amount;
-    if (tAcc) tAcc.balance = (tAcc.balance || 0) + amount;
-
     document.getElementById('transferModal')?.remove();
 
-    // Оновлюємо баланси на дашборді
+    // Перезавантажуємо рахунки з Firestore — гарантує актуальні баланси
+    // навіть якщо інший юзер паралельно зробив транзакцію
+    await loadAccounts();
+
+    // Оновлюємо UI дашборду
     const totalBal = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
     const tbEl = document.getElementById('dashTotalBalance');
     if (tbEl) tbEl.textContent = fmt(totalBal);
@@ -4366,6 +4369,21 @@ window._updateCurrencyHint = function() {
   } else {
     hint.textContent = `≈ ${converted.toFixed(2)} ${base} (курс: 1 ${cur} = ${rates[cur]} ${base})`;
   }
+};
+
+// Завантажує транзакції поточного місяця в кеш без відображення UI
+// Викликається з 66-statistics.js коли фінанси ще не відкривались
+window._financeEnsureLoaded = async function() {
+  if (!_state.initialized || !_state.companyId) return;
+  if (window._financeTxCache && window._financeTxCache.length > 0) return; // вже є
+  try {
+    const now = new Date();
+    const from = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth(), 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59));
+    const snap = await colRef('finance_transactions')
+      .where('date', '>=', from).where('date', '<=', to).limit(500).get();
+    window._financeTxCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) { /* тихо — не критично */ }
 };
 
 window._financeAddTransaction = function(type) {
