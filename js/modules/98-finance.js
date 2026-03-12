@@ -187,11 +187,10 @@ async function loadCategories() {
   }
 }
 
-// Перераховує баланс кожного рахунку з усіх транзакцій і записує в Firestore
+// Перераховує баланс кожного рахунку з усіх транзакцій
 async function recalcAccountBalances() {
   try {
     const snap = await colRef('finance_transactions').get();
-    // Обчислюємо баланс по кожному accountId
     const balances = {};
     snap.docs.forEach(d => {
       const tx = d.data();
@@ -199,16 +198,18 @@ async function recalcAccountBalances() {
       const delta = tx.type === 'income' ? (tx.amount || 0) : -(tx.amount || 0);
       balances[tx.accountId] = (balances[tx.accountId] || 0) + delta;
     });
-    // Оновлюємо Firestore і локальний стан
-    const batch = getDb().batch();
+    // Оновлюємо локальний стан
     _state.accounts.forEach(acc => {
-      const newBal = balances[acc.id] !== undefined ? balances[acc.id] : acc.balance;
-      if (newBal !== acc.balance) {
-        batch.update(colRef('finance_accounts').doc(acc.id), { balance: newBal });
-        acc.balance = newBal;
-      }
+      if (balances[acc.id] !== undefined) acc.balance = balances[acc.id];
     });
-    await batch.commit();
+    // Записуємо в Firestore по одному (ігноруємо помилки прав)
+    for (const acc of _state.accounts) {
+      if (balances[acc.id] !== undefined) {
+        try {
+          await colRef('finance_accounts').doc(acc.id).update({ balance: balances[acc.id] });
+        } catch(e) { /* ігноруємо */ }
+      }
+    }
   } catch(e) {
     console.warn('[Finance] recalcAccountBalances:', e.message);
   }
@@ -635,37 +636,38 @@ async function loadChartData() {
     });
 
     const maxVal = Math.max(...months.map(m => Math.max(m.income, m.expense)), 1);
-    const H = 130; // висота графіка px
-    const barW = 18;
-    const gap = 6;
-    const groupW = barW*2 + gap + 12;
+    // Фіксований viewBox — стовпці рівномірно по всій ширині
+    const H  = 120;
+    const VW = 480; // ширина viewBox завжди однакова
+    const n  = months.length;
+    const groupW = VW / n;
+    const barW   = Math.floor(groupW * 0.28);
+    const gap    = Math.floor(groupW * 0.06);
 
-    const svgWidth = months.length * groupW;
+    const gridLines = [0.25, 0.5, 0.75, 1].map(r =>
+      `<line x1="0" y1="${H - r*H}" x2="${VW}" y2="${H - r*H}" stroke="#f3f4f6" stroke-width="1"/>`
+    ).join('');
 
     const bars = months.map((m, i) => {
-      const x = i * groupW;
+      const cx  = i * groupW + groupW / 2;
       const incH = Math.round(m.income  / maxVal * H);
       const expH = Math.round(m.expense / maxVal * H);
       return `
         <g>
-          <!-- Дохід -->
-          <rect x="${x}" y="${H - incH}" width="${barW}" height="${incH || 2}"
-            fill="#22c55e" rx="3" opacity="0.85"/>
-          <!-- Витрата -->
-          <rect x="${x + barW + gap}" y="${H - expH}" width="${barW}" height="${expH || 2}"
-            fill="#ef4444" rx="3" opacity="0.85"/>
-          <!-- Підпис місяця -->
-          <text x="${x + barW}" y="${H + 16}" text-anchor="middle"
-            font-size="10" fill="#9ca3af">${m.label}</text>
-          <!-- Значення при наведенні (title) -->
+          <rect x="${cx - barW - gap/2}" y="${H - Math.max(incH,2)}" width="${barW}" height="${Math.max(incH,2)}"
+            fill="#22c55e" rx="2" opacity="0.85"/>
+          <rect x="${cx + gap/2}"        y="${H - Math.max(expH,2)}" width="${barW}" height="${Math.max(expH,2)}"
+            fill="#ef4444" rx="2" opacity="0.85"/>
+          <text x="${cx}" y="${H+16}" text-anchor="middle" font-size="11" fill="#9ca3af">${m.label}</text>
           <title>${m.label}: дохід ${fmt(m.income)} / витрати ${fmt(m.expense)}</title>
         </g>
       `;
     }).join('');
 
     chartEl.innerHTML = `
-      <svg width="100%" height="${H+28}" viewBox="0 0 ${svgWidth} ${H+28}"
-        preserveAspectRatio="none" style="display:block;overflow:hidden;">
+      <svg width="100%" viewBox="0 0 ${VW} ${H+20}"
+        preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;">
+        ${gridLines}
         ${bars}
       </svg>
     `;
