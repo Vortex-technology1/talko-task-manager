@@ -1555,9 +1555,24 @@ ${context}
 Валюта: ${_state.currency || 'EUR'}. 
 Дата аналізу: ${new Date().toLocaleDateString('uk-UA')}.`;
 
+    // Читаємо ключ з settings/ai
+    const sSnap = await getDb().collection('settings').doc('ai').get();
+    const apiKey = sSnap.data()?.anthropicApiKey || sSnap.data()?.apiKey || '';
+    if (!apiKey) {
+      const loadElNoKey = document.getElementById('aiFinLoading');
+      if (loadElNoKey) loadElNoKey.remove();
+      _appendAiMsg(chat, 'error', 'API ключ не налаштований. Перейдіть в Інтеграції → Anthropic API і введіть ключ.');
+      chat.scrollTop = chat.scrollHeight;
+      return;
+    }
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
