@@ -4572,14 +4572,19 @@ window._addEntityTx = function(entityId, field, type) {
       };
 
       try {
-        await db.collection('companies').doc(companyId)
-          .collection('finance_transactions').add(tx);
-
-        // Оновлюємо баланс рахунку
+        // FIX BX2: atomic batch — transaction + balance update together
+        const _batch = db.batch();
+        const txRef = db.collection('companies').doc(companyId)
+          .collection('finance_transactions').doc();
+        _batch.set(txRef, tx);
         if (defAcc) {
-          await db.collection('companies').doc(companyId)
-            .collection('finance_accounts').doc(defAcc.id)
-            .update({ balance: firebase.firestore.FieldValue.increment(tx.amount) });
+          const accRef = db.collection('companies').doc(companyId)
+            .collection('finance_accounts').doc(defAcc.id);
+          _batch.update(accRef, { balance: firebase.firestore.FieldValue.increment(tx.amount) });
+        }
+        await _batch.commit();
+        // Update local state after successful commit
+        if (defAcc) {
           const acc = _state.accounts?.find(a => a.id === defAcc.id);
           if (acc) acc.balance = (acc.balance || 0) + tx.amount;
         }

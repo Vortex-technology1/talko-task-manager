@@ -439,6 +439,73 @@ module.exports = async (req, res) => {
                 } catch(e) { session.data._apiError = e.message; }
                 nodeId = n.nextNode || null;
 
+            } else if (n.type === 'talko_task') {
+                // FIX BX: create TALKO task from bot flow node
+                try {
+                    const taskTitle = interp(n.taskTitle || n.text || 'Задача з боту', session.data);
+                    // Знаходимо assignee по ролі: owner/manager → беремо з compData
+                    const assignRole = n.taskAssignRole || 'owner';
+                    const ownerId = _compData.ownerId || null;
+                    const taskData = {
+                        title: taskTitle,
+                        status: 'new',
+                        priority: n.taskPriority || 'medium',
+                        assigneeId: ownerId,
+                        creatorId: 'system',
+                        autoCreated: true,
+                        autoSource: 'bot_flow',
+                        flowId: flow?.id || null,
+                        senderName: session.senderName || '',
+                        senderId: session.senderId || '',
+                        channel: session.channel || '',
+                        contactData: session.data || {},
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    };
+                    await compRef.collection('tasks').add(taskData);
+                    console.log('[webhook] talko_task created:', taskTitle);
+                } catch(e) { console.error('[webhook] talko_task error:', e.message); }
+                nodeId = n.nextNode || null;
+
+            } else if (n.type === 'talko_deal') {
+                // FIX BX: create/update CRM deal from bot flow node
+                try {
+                    const dealTitle = interp(n.dealTitle || ('{contact.name} — запит з боту'), session.data)
+                        .replace('{contact.name}', session.senderName || session.senderId || 'Лід');
+                    const targetStage = n.dealStage || 'new';
+                    // Перевіряємо чи вже є deal з цим контактом + флоу
+                    const existingDeals = await compRef.collection('crm_deals')
+                        .where('botContactId', '==', session.channel + '_' + session.senderId)
+                        .where('flowId', '==', flow?.id || '')
+                        .limit(1).get();
+                    if (existingDeals.empty) {
+                        const dealRef = compRef.collection('crm_deals').doc();
+                        await dealRef.set({
+                            id: dealRef.id,
+                            title: dealTitle,
+                            stage: targetStage,
+                            status: 'open',
+                            amount: 0,
+                            currency: 'UAH',
+                            source: 'telegram_bot',
+                            flowId: flow?.id || null,
+                            botContactId: session.channel + '_' + session.senderId,
+                            clientName: session.senderName || '',
+                            description: session.data?.ai_response || session.data?.main_problem || '',
+                            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        });
+                        console.log('[webhook] talko_deal created:', dealTitle);
+                    } else {
+                        // Оновлюємо стадію якщо угода вже є
+                        await existingDeals.docs[0].ref.update({
+                            stage: targetStage,
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        });
+                    }
+                } catch(e) { console.error('[webhook] talko_deal error:', e.message); }
+                nodeId = n.nextNode || null;
+
             } else if (n.type === 'end' || n.type === 'finish') {
                 if (n.text) {
                     const endText = interp(n.text, session.data);
