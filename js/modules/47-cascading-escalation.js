@@ -3,14 +3,18 @@
         // =============================================
         
 'use strict';
-        const ESCALATION_LEVELS = [
-            { days: 1, level: 1, label: t('overdue1day'), target: 'assignee', color: '#92400e' },
-            { days: 3, level: 2, label: t('overdue3days'), target: 'manager', color: '#9a3412' },
-            { days: 7, level: 3, label: t('overdue7days'), target: 'owner', color: '#dc2626' }
-        ];
+        // BUG-AN FIX: t() called lazily to avoid init-time crash if i18n not yet loaded
+        function getEscalationLevels() {
+            return [
+                { days: 1, level: 1, label: (typeof t === 'function' ? t('overdue1day') : '1+ день'), target: 'assignee', color: '#92400e' },
+                { days: 3, level: 2, label: (typeof t === 'function' ? t('overdue3days') : '3+ дні'), target: 'manager', color: '#9a3412' },
+                { days: 7, level: 3, label: (typeof t === 'function' ? t('overdue7days') : '7+ днів'), target: 'owner', color: '#dc2626' }
+            ];
+        }
         
         function getEscalationLevel(task) {
-            if (!task.deadlineDate || task.status === 'done') return null;
+            // BUG-AO FIX: review tasks are waiting approval — don't escalate them
+            if (!task.deadlineDate || task.status === 'done' || task.status === 'review') return null;
             
             const now = new Date();
             const deadline = new Date(task.deadlineDate + 'T' + (task.deadlineTime || '23:59'));
@@ -20,7 +24,7 @@
             const diffDays = diffMs / (1000 * 60 * 60 * 24);
             
             let level = null;
-            for (const esc of ESCALATION_LEVELS) {
+            for (const esc of getEscalationLevels()) {
                 if (diffDays >= esc.days) level = esc;
             }
             return level;

@@ -1947,7 +1947,12 @@
                     metricId: metric.id,
                     value,
                     period,
+                    periodKey: period, // BUG-AP FIX: was missing — imported entries vanished after reload
+                    periodType: metric.frequency || 'weekly',
                     date: period,
+                    scope: 'user',
+                    scopeId: currentUser?.uid || '',
+                    source: 'import',
                     createdBy: currentUser?.uid || '',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -2310,14 +2315,19 @@
 
     // Визначає чи задача потрапляє в period (по completedAt або deadlineDate)
     function isTaskInPeriod(tk, periodKey, freq) {
-        // Для done — по completedAt; для решти — по deadlineDate
         let dateStr = null;
-        if (tk.status === 'done' && tk.completedAt) {
-            const d = tk.completedAt.toDate ? tk.completedAt.toDate() : new Date(tk.completedAt);
-            dateStr = (typeof getLocalDateStr === 'function') ? getLocalDateStr(d) : d.toISOString().split('T')[0];
-        } else if (tk.deadlineDate) {
+        if (tk.status === 'done') {
+            // BUG-AQ FIX: check completedDate (string) first, then completedAt (Timestamp)
+            if (tk.completedDate) {
+                dateStr = tk.completedDate;
+            } else if (tk.completedAt) {
+                const d = tk.completedAt.toDate ? tk.completedAt.toDate() : new Date(tk.completedAt);
+                dateStr = (typeof getLocalDateStr === 'function') ? getLocalDateStr(d) : d.toISOString().split('T')[0];
+            }
+        }
+        if (!dateStr && tk.deadlineDate) {
             dateStr = tk.deadlineDate;
-        } else if (tk.createdDate) {
+        } else if (!dateStr && tk.createdDate) {
             dateStr = tk.createdDate;
         }
         if (!dateStr) return false;
@@ -2352,7 +2362,9 @@
         if (!autoMetrics.length) return;
 
         // Для кожної auto метрики і поточного + попередніх periods
-        const offsets = [-2, -1, 0];
+        // BUG-AR FIX: cover all periods shown in table (daily=14, weekly=12, monthly=8)
+        const maxOffset = statsPeriodType === 'daily' ? 14 : statsPeriodType === 'monthly' ? 8 : 12;
+        const offsets = Array.from({ length: maxOffset + 1 }, (_, i) => -i);
         autoMetrics.forEach(m => {
             offsets.forEach(offset => {
                 const pk = getStatsPeriodKey(offset, m.frequency);
