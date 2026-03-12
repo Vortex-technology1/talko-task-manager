@@ -4164,13 +4164,17 @@ window._financeSaveTx = async function() {
     // Прибираємо null поля
     Object.keys(txData).forEach(k => { if (txData[k] === null || txData[k] === '') delete txData[k]; });
 
-    await colRef('finance_transactions').add(txData);
-
-    // FIX BQ: баланс рахунку ведеться в базовій валюті → increment на базову суму
+    // FIX BS: атомарно зберігаємо транзакцію + оновлюємо баланс (batch)
+    // Якщо будь-яка операція впаде — жодна не виконається
     const baseAmount = toBase(amount, currency);
-    const accRef = colRef('finance_accounts').doc(accId);
-    const delta  = type === 'income' ? baseAmount : -baseAmount;
-    await accRef.update({ balance: firebase.firestore.FieldValue.increment(delta) });
+    const delta = type === 'income' ? baseAmount : -baseAmount;
+    const accRef2 = colRef('finance_accounts').doc(accId);
+    const txRef = colRef('finance_transactions').doc(); // генеруємо ID заздалегідь
+
+    const saveBatch = getDb().batch();
+    saveBatch.set(txRef, txData);
+    saveBatch.update(accRef2, { balance: firebase.firestore.FieldValue.increment(delta) });
+    await saveBatch.commit();
 
     // Оновлюємо локальний стан рахунків
     const acc = _state.accounts.find(a => a.id === accId);
