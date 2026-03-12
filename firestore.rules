@@ -620,56 +620,56 @@ service cloud.firestore {
     // FINANCE MODULE
     // =====================
 
-    // Транзакції: owner+manager читають всі; employee — тільки свої витрати з projectId або taskId
+    // Транзакції
     match /finance_transactions/{txId} {
-      allow read: if isManagerOrOwner();
-      allow create: if isCompanyMember() && (
-        isManagerOrOwner() ||
+      allow read: if isManagerOrOwner(companyId);
+      allow create: if isCompanyMember(companyId) && (
+        isManagerOrOwner(companyId) ||
         (request.resource.data.type == 'expense' &&
          (request.resource.data.projectId != null || request.resource.data.taskId != null))
       );
-      allow update, delete: if isManagerOrOwner();
+      allow update, delete: if isManagerOrOwner(companyId);
     }
 
     // Категорії: всі члени читають; manager/owner пишуть
     match /finance_categories/{catId} {
-      allow read: if isCompanyMember();
-      allow write: if isManagerOrOwner();
+      allow read: if isCompanyMember(companyId);
+      allow write: if isManagerOrOwner(companyId);
     }
 
-    // Бюджети: тільки owner/manager; бюджет місяця — тільки owner
+    // Бюджети
     match /finance_budgets/{budgetId} {
-      allow read: if isManagerOrOwner();
-      allow write: if isCompanyOwner();
+      allow read: if isManagerOrOwner(companyId);
+      allow write: if isCompanyOwner(companyId);
     }
 
-    // Рахунки/каси: читають manager+owner; налаштовує тільки owner
+    // Рахунки/каси
     match /finance_accounts/{accId} {
-      allow read: if isManagerOrOwner();
-      allow write: if isCompanyOwner();
+      allow read: if isManagerOrOwner(companyId);
+      allow write: if isManagerOrOwner(companyId);
     }
 
     // Регулярні фінансові операції
     match /finance_recurring/{recId} {
-      allow read: if isManagerOrOwner();
-      allow write: if isManagerOrOwner();
+      allow read: if isManagerOrOwner(companyId);
+      allow write: if isManagerOrOwner(companyId);
     }
 
     // Бюджети по функціях
     match /finance_function_budgets/{fbudId} {
-      allow read: if isManagerOrOwner();
-      allow write: if isCompanyOwner();
+      allow read: if isManagerOrOwner(companyId);
+      allow write: if isCompanyOwner(companyId);
     }
 
-    // AI-аналітика (тільки owner+manager)
+    // AI-аналітика
     match /finance_ai_history/{aiId} {
-      allow read, write: if isManagerOrOwner();
+      allow read, write: if isManagerOrOwner(companyId);
     }
 
     // Налаштування модуля фінансів
     match /finance_settings/{doc} {
-      allow read: if isCompanyMember();
-      allow write: if isCompanyOwner();
+      allow read: if isCompanyMember(companyId);
+      allow write: if isManagerOrOwner(companyId);
     }
   }
 }
