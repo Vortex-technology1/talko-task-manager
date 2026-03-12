@@ -1545,15 +1545,45 @@ window._aiFinSend = async function() {
     // Збираємо фінансові дані для контексту
     const context = await _buildAiFinContext();
 
-    const systemPrompt = `Ти фінансовий аналітик бізнесу. Аналізуєш реальні дані компанії.
-Відповідай українською, конкретно, з цифрами. Без зайвої "води".
-Формат: короткі абзаци або список. Виділяй проблеми та можливості.
+    // Бенчмарки по нішах
+    const BENCHMARKS = {
+      construction:  { marginMin:12, marginMax:25, labourPct:35, adminPct:10, name:'Будівництво/підряд' },
+      medical:       { marginMin:20, marginMax:45, labourPct:50, adminPct:12, name:'Медичний бізнес' },
+      dental:        { marginMin:25, marginMax:50, labourPct:45, adminPct:10, name:'Стоматологія' },
+      beauty:        { marginMin:30, marginMax:55, labourPct:40, adminPct:8,  name:'Бьюті бізнес' },
+      furniture:     { marginMin:15, marginMax:35, labourPct:30, adminPct:8,  name:'Меблевий бізнес' },
+      retail:        { marginMin:10, marginMax:25, labourPct:20, adminPct:7,  name:'Роздрібна торгівля' },
+      it:            { marginMin:30, marginMax:60, labourPct:55, adminPct:10, name:'IT / Послуги' },
+      manufacturing: { marginMin:12, marginMax:28, labourPct:32, adminPct:8,  name:'Виробництво' },
+    };
+    const niche = _state.niche || 'general';
+    const bench = BENCHMARKS[niche] || { marginMin:15, marginMax:35, labourPct:35, adminPct:10, name:'Бізнес' };
 
-ПОТОЧНІ ФІНАНСОВІ ДАНІ КОМПАНІЇ:
+    const systemPrompt = `Ти стратегічний фінансовий аналітик для малого та середнього бізнесу.
+Ніша клієнта: ${bench.name}. Регіон: ${_state.region==='EU'?'Європа':'Україна'}. Валюта: ${_state.currency||'EUR'}.
+
+БЕНЧМАРКИ НІШІ "${bench.name}":
+- Нормальна маржа: ${bench.marginMin}–${bench.marginMax}%
+- ФОП/зарплата від виручки: до ${bench.labourPct}%
+- Адміністративні від виручки: до ${bench.adminPct}%
+
+ПОТОЧНІ ДАНІ КОМПАНІЇ:
 ${context}
 
-Валюта: ${_state.currency || 'EUR'}. 
-Дата аналізу: ${new Date().toLocaleDateString('uk-UA')}.`;
+АЛГОРИТМ АНАЛІЗУ (завжди дотримуйся):
+1. ДІАГНОЗ — що відбувається з фінансами зараз (цифри)
+2. ПРИЧИНА — чому саме так (порівняй з бенчмарками ніші)
+3. НАСЛІДОК — до чого це призведе якщо не змінити
+4. ДІЯ — конкретний крок власника на наступні 30 днів
+
+ПРАВИЛА ВІДПОВІДІ:
+- Завжди порівнюй маржу з бенчмарком ніші
+- Якщо маржа нижче норми — шукай причину в конкретних категоріях витрат
+- Якщо маржа вище норми — поясни чому і як утримати
+- Давай числові прогнози (+/- скільки грошей від конкретної дії)
+- Відповідай українською, коротко і по суті
+- Формат: емодзі-маркери для кожного блоку (📊 Діагноз, 🔍 Причина, ⚠️ Наслідок, ✅ Дія)
+- Максимум 4-5 речень на блок`;
 
     // Читаємо OpenAI ключ з settings/ai
     const sSnap = await getDb().collection('settings').doc('ai').get();
@@ -1663,26 +1693,74 @@ async function _buildAiFinContext() {
     // Рахунки
     const accTotal = (_state.accounts||[]).reduce((s,a)=>s+(a.balance||0),0);
 
-    let ctx = `ЗАГАЛЬНИЙ БАЛАНС РАХУНКІВ: ${accTotal} ${_state.currency||'EUR'}
+    // Динаміка маржі
+    const months = Object.entries(byMonth).sort();
+    const margins = months.map(([mk, d]) => ({
+      month: mk,
+      income: d.income,
+      expense: d.expense,
+      profit: d.income - d.expense,
+      margin: d.income > 0 ? Math.round((d.income-d.expense)/d.income*100) : 0
+    }));
 
-`;
-    ctx += `СТАТИСТИКА ПО МІСЯЦЯХ (останні 3):
-`;
+    // Тренд — росте чи падає маржа
+    let trendTxt = '—';
+    if (margins.length >= 2) {
+      const last = margins[margins.length-1].margin;
+      const prev = margins[margins.length-2].margin;
+      const diff = last - prev;
+      trendTxt = diff > 0 ? `↑ +${diff}% vs попередній місяць` : diff < 0 ? `↓ ${diff}% vs попередній місяць` : '→ без змін';
+    }
 
-    Object.entries(byMonth).sort().reverse().forEach(([month, d]) => {
-      const profit = d.income - d.expense;
-      const margin = d.income > 0 ? Math.round(profit/d.income*100) : 0;
-      ctx += `
-${month}:
-`;
-      ctx += `  Дохід: ${d.income} | Витрати: ${d.expense} | Прибуток: ${profit} | Маржа: ${margin}%
-`;
-      const topCats = Object.entries(d.cats).sort((a,b)=>b[1]-a[1]).slice(0,5);
-      if (topCats.length) {
-        ctx += `  Топ витрати: ${topCats.map(([k,v])=>`${k}=${v}`).join(', ')}
-`;
+    // Бюджет поточного місяця
+    const curMonth = new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
+    let budgetCtx = '';
+    try {
+      const budSnap = await colRef('finance_budgets').doc(curMonth).get();
+      if (budSnap.exists) {
+        const bd = budSnap.data();
+        const expCats = _state.categories.expense || [];
+        let totalBudg = 0, totalFact = 0;
+        expCats.forEach(cat => {
+          const budVal = bd['cat_'+cat.id] || 0;
+          const factVal = (byMonth[curMonth]?.cats[cat.name] || 0);
+          if (budVal > 0) { totalBudg += budVal; totalFact += factVal; }
+        });
+        if (totalBudg > 0) {
+          const budExec = Math.round(totalFact/totalBudg*100);
+          budgetCtx = `
+БЮДЖЕТ ${curMonth}: план=${totalBudg}, факт=${totalFact}, виконання=${budExec}%`;
+          if (bd.goal) budgetCtx += `, ціль прибутку=${bd.goal}`;
+        }
       }
+    } catch(e) {}
+
+    let ctx = `ЗАГАЛЬНИЙ БАЛАНС РАХУНКІВ: ${accTotal} ${_state.currency||'EUR'}
+`;
+    ctx += `ТРЕНД МАРЖІ: ${trendTxt}
+${budgetCtx}
+`;
+    ctx += `
+P&L ПО МІСЯЦЯХ (останні 3, від нового до старого):
+`;
+
+    margins.reverse().forEach(d => {
+      ctx += `
+${d.month}: дохід=${d.income}, витрати=${d.expense}, прибуток=${d.profit}, маржа=${d.margin}%
+`;
+      const topCats = Object.entries(byMonth[d.month]?.cats||{}).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      if (topCats.length) ctx += `  Топ витрати: ${topCats.map(([k,v])=>`${k}=${v}`).join(', ')}
+`;
     });
+
+    // Рахунки окремо
+    if (_state.accounts?.length) {
+      ctx += `
+РАХУНКИ:
+`;
+      _state.accounts.forEach(a => { ctx += `  ${a.name}: ${a.balance||0} ${_state.currency||'EUR'}
+`; });
+    }
 
     return ctx;
   } catch(e) {
