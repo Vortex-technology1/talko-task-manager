@@ -2033,6 +2033,194 @@
     </div>
 </div>`,
 
+                lessonContent_en: `
+<style>
+.l4e{margin-bottom:1.75rem}.l4e:last-child{margin-bottom:0}.l4e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l4e-rule{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;border-left:3px solid #22c55e;margin-bottom:.5rem}.l4e-rule:last-child{margin-bottom:0}.l4e-ri{width:36px;height:36px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l4e-rt{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l4e-rd{font-size:.82rem;color:#525252;line-height:1.5}.l4e-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}.l4e-cell{padding:.7rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px}.l4e-cl{font-size:.68rem;font-weight:700;color:#16a34a;letter-spacing:.07em;margin-bottom:.2rem}.l4e-ct{font-size:.82rem;color:#374151;line-height:1.4}.l4e-bad{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.9rem 1rem;margin-bottom:.5rem}.l4e-good{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.9rem 1rem}.l4e-el{display:flex;align-items:center;gap:.45rem;margin-bottom:.5rem;font-weight:700;font-size:.8rem}.l4e-et{font-size:.875rem;color:#374151;line-height:1.55}.l4e-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l4e-th{display:flex;align-items:flex-start;gap:.85rem}.l4e-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l4e-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l4e-td{font-size:.82rem;color:#525252;line-height:1.5}.l4e-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l4e-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l4e-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.75rem}.l4e-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.6rem}.l4e-pow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin-top:.85rem}.l4e-pc{border-radius:11px;padding:.9rem .6rem;text-align:center}.l4e-pn{font-size:1.5rem;font-weight:900;line-height:1.1}.l4e-pd{font-size:.75rem;color:#6b7280;margin-top:.35rem;line-height:1.35}
+</style>
+<div class="l4e">
+    <div class="l4e-sl">Intro</div>
+    <div class="l4e-st">Why most instructions never get done</div>
+    <div class="l4e-card">
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;">You give tasks every day. A week later, half are undone. You forget what you asked — and so do your employees.</p>
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;margin-top:.7rem;">The team runs on an unspoken rule: <strong>"Said once without follow-up — means it's not important."</strong> That's not bad intent — it's a normal human response to an avalanche of tasks.</p>
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;margin-top:.7rem;">The problem isn't the people. The problem is a weak form of task-setting.</p>
+    </div>
+</div>
+<div class="l4e-div"></div>
+<div class="l4e">
+    <div class="l4e-sl">Principle</div>
+    <div class="l4e-st">Authority level determines execution level</div>
+    <p style="font-size:.875rem;color:#525252;line-height:1.6;">Some managers say "it's stuffy" and someone immediately opens a window. Others remind the team 10 times to "clean the office" and get ignored. The difference is not character — it's authority level.</p>
+    <div class="l4e-pow">
+        <div class="l4e-pc" style="background:#fef2f2;border:1px solid #fecaca;"><div class="l4e-pn" style="color:#ef4444;">1–10</div><div class="l4e-pd">Reminding 10+ times</div></div>
+        <div class="l4e-pc" style="background:#fff7ed;border:1px solid #fed7aa;"><div class="l4e-pn" style="color:#f97316;">40–60</div><div class="l4e-pd">Reminding 2–3 times</div></div>
+        <div class="l4e-pc" style="background:#f0fdf4;border:1px solid #bbf7d0;"><div class="l4e-pn" style="color:#22c55e;">80+</div><div class="l4e-pd">Said once — done</div></div>
+    </div>
+    <p style="font-size:.82rem;color:#525252;line-height:1.55;margin-top:.85rem;">Most owners are currently at level 20–30. The only way to rise — systematically follow through on every instruction. Every uncontrolled task is minus points to your authority.</p>
+</div>
+<div class="l4e-div"></div>
+<div class="l4e">
+    <div class="l4e-sl">Rules</div>
+    <div class="l4e-st">4 rules of the system</div>
+    <div class="l4e-rule"><div class="l4e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div><div class="l4e-rt">Written only</div><div class="l4e-rd">Verbal instructions don't exist. If said at a meeting — duplicate in writing immediately, even if you need a pause.</div></div></div>
+    <div class="l4e-rule"><div class="l4e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="l4e-rt">Specific date and time</div><div class="l4e-rd">"Soon" and "later" don't exist. Without a deadline, a task will never be done.</div></div></div>
+    <div class="l4e-rule"><div class="l4e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="l4e-rt">List of all instructions</div><div class="l4e-rd">Google Sheet: who, what, deadline, done. Without a list you forget to follow up — and erode your authority.</div></div></div>
+    <div class="l4e-rule"><div class="l4e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="l4e-rt">Review at every meeting</div><div class="l4e-rd">Open the list and go through each item. Calmly, without shouting — until they understand you won't forget.</div></div></div>
+</div>
+<div class="l4e-div"></div>
+<div class="l4e">
+    <div class="l4e-sl">Template</div>
+    <div class="l4e-st">7 elements of a correct instruction</div>
+    <div class="l4e-grid">
+        <div class="l4e-cell"><div class="l4e-cl">TO WHOM</div><div class="l4e-ct">Specific position + full name. Not "the department".</div></div>
+        <div class="l4e-cell"><div class="l4e-cl">DEADLINE</div><div class="l4e-ct">Specific date and time of completion</div></div>
+        <div class="l4e-cell"><div class="l4e-cl">CONTEXT</div><div class="l4e-ct">Why, what changed, who it concerns</div></div>
+        <div class="l4e-cell"><div class="l4e-cl">TASK</div><div class="l4e-ct">Specific action + expected result</div></div>
+        <div class="l4e-cell"><div class="l4e-cl">PRODUCT</div><div class="l4e-ct">What must be ready: document, photo, report</div></div>
+        <div class="l4e-cell"><div class="l4e-cl">REPORT</div><div class="l4e-ct">Report deadline, format, where to send</div></div>
+        <div class="l4e-cell" style="grid-column:1/-1;"><div class="l4e-cl">PROOF</div><div class="l4e-ct">Screenshot, file or photo. Without proof — not done.</div></div>
+    </div>
+</div>
+<div class="l4e-div"></div>
+<div class="l4e">
+    <div class="l4e-sl">Example</div>
+    <div class="l4e-st">Wrong vs Right</div>
+    <div class="l4e-bad"><div class="l4e-el" style="color:#dc2626;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Wrong</div><div class="l4e-et" style="color:#7f1d1d;font-style:italic;">"Make sure everything is fine. Let me know if there are problems."</div></div>
+    <div class="l4e-good"><div class="l4e-el" style="color:#16a34a;"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Right</div><div class="l4e-et" style="color:#14532d;font-style:italic;">"By 1:00 PM — check 4 product photos, pass 5 banners 1:5 to the designer, send report via Telegram by 7:00 PM."</div></div>
+</div>
+<div class="l4e-div"></div>
+<div class="l4e">
+    <div class="l4e-sl">Tool</div>
+    <div class="l4e-tool">
+        <div class="l4e-th"><div class="l4e-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div><div class="l4e-tn">AI Instruction Generator</div><div class="l4e-td">Describe the task in plain words — the system will build a correct TALKO instruction with all 7 elements.</div></div></div>
+        <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="l4e-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Open generator</a>
+    </div>
+</div>`,
+
+                lessonContent_pl: `
+<style>
+.l4p{margin-bottom:1.75rem}.l4p:last-child{margin-bottom:0}.l4p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l4p-rule{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;border-left:3px solid #22c55e;margin-bottom:.5rem}.l4p-rule:last-child{margin-bottom:0}.l4p-ri{width:36px;height:36px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l4p-rt{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l4p-rd{font-size:.82rem;color:#525252;line-height:1.5}.l4p-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}.l4p-cell{padding:.7rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px}.l4p-cl{font-size:.68rem;font-weight:700;color:#16a34a;letter-spacing:.07em;margin-bottom:.2rem}.l4p-ct{font-size:.82rem;color:#374151;line-height:1.4}.l4p-bad{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.9rem 1rem;margin-bottom:.5rem}.l4p-good{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.9rem 1rem}.l4p-el{display:flex;align-items:center;gap:.45rem;margin-bottom:.5rem;font-weight:700;font-size:.8rem}.l4p-et{font-size:.875rem;color:#374151;line-height:1.55}.l4p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l4p-th{display:flex;align-items:flex-start;gap:.85rem}.l4p-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l4p-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l4p-td{font-size:.82rem;color:#525252;line-height:1.5}.l4p-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l4p-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l4p-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.75rem}.l4p-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.6rem}.l4p-pow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin-top:.85rem}.l4p-pc{border-radius:11px;padding:.9rem .6rem;text-align:center}.l4p-pn{font-size:1.5rem;font-weight:900;line-height:1.1}.l4p-pd{font-size:.75rem;color:#6b7280;margin-top:.35rem;line-height:1.35}
+</style>
+<div class="l4p">
+    <div class="l4p-sl">Wstęp</div>
+    <div class="l4p-st">Dlaczego większość poleceń nie jest wykonywana</div>
+    <div class="l4p-card">
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;">Codziennie wydajesz zadania. Tydzień później połowa jest niewykonana. Sam zapominasz co prosiłeś — pracownicy też.</p>
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;margin-top:.7rem;">W zespole żyje niepisana zasada: <strong>„Powiedziano raz i nie przypomniano — znaczy nieważne."</strong> To nie zła wola — to normalna ludzka reakcja na lawinę zadań.</p>
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;margin-top:.7rem;">Problemem nie są ludzie. Problemem jest słaba forma stawiania zadań.</p>
+    </div>
+</div>
+<div class="l4p-div"></div>
+<div class="l4p">
+    <div class="l4p-sl">Zasada</div>
+    <div class="l4p-st">Poziom autorytetu określa poziom wykonania</div>
+    <div class="l4p-pow">
+        <div class="l4p-pc" style="background:#fef2f2;border:1px solid #fecaca;"><div class="l4p-pn" style="color:#ef4444;">1–10</div><div class="l4p-pd">Przypominasz 10+ razy</div></div>
+        <div class="l4p-pc" style="background:#fff7ed;border:1px solid #fed7aa;"><div class="l4p-pn" style="color:#f97316;">40–60</div><div class="l4p-pd">Przypominasz 2–3 razy</div></div>
+        <div class="l4p-pc" style="background:#f0fdf4;border:1px solid #bbf7d0;"><div class="l4p-pn" style="color:#22c55e;">80+</div><div class="l4p-pd">Powiedziałeś raz — zrobione</div></div>
+    </div>
+</div>
+<div class="l4p-div"></div>
+<div class="l4p">
+    <div class="l4p-sl">Zasady</div>
+    <div class="l4p-st">4 zasady systemu</div>
+    <div class="l4p-rule"><div class="l4p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div><div class="l4p-rt">Tylko pisemnie</div><div class="l4p-rd">Ustne polecenia nie istnieją. Powiedziano na spotkaniu — od razu zdubluj pisemnie.</div></div></div>
+    <div class="l4p-rule"><div class="l4p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="l4p-rt">Konkretna data i czas</div><div class="l4p-rd">„Wkrótce" i „później" nie istnieje. Bez terminu zadanie nigdy nie zostanie wykonane.</div></div></div>
+    <div class="l4p-rule"><div class="l4p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="l4p-rt">Lista wszystkich poleceń</div><div class="l4p-rd">Arkusz Google: komu, co, termin, wykonane. Bez listy zapominasz kontrolować — i niszczysz swój autorytet.</div></div></div>
+    <div class="l4p-rule"><div class="l4p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="l4p-rt">Kontrola na każdym spotkaniu</div><div class="l4p-rd">Otwierasz listę i przechodzisz przez każdy punkt. Spokojnie, bez krzyku — dopóki nie zrozumieją, że nie zapomnisz.</div></div></div>
+</div>
+<div class="l4p-div"></div>
+<div class="l4p">
+    <div class="l4p-sl">Szablon</div>
+    <div class="l4p-st">7 elementów prawidłowego polecenia</div>
+    <div class="l4p-grid">
+        <div class="l4p-cell"><div class="l4p-cl">DO KOGO</div><div class="l4p-ct">Konkretne stanowisko + imię i nazwisko. Nie „do działu".</div></div>
+        <div class="l4p-cell"><div class="l4p-cl">TERMIN</div><div class="l4p-ct">Konkretna data i godzina wykonania</div></div>
+        <div class="l4p-cell"><div class="l4p-cl">KONTEKST</div><div class="l4p-ct">Dlaczego, co się zmieniło, kogo dotyczy</div></div>
+        <div class="l4p-cell"><div class="l4p-cl">ZADANIE</div><div class="l4p-ct">Konkretne działanie + oczekiwany wynik</div></div>
+        <div class="l4p-cell"><div class="l4p-cl">PRODUKT</div><div class="l4p-ct">Co ma być gotowe: dokument, zdjęcie, raport</div></div>
+        <div class="l4p-cell"><div class="l4p-cl">RAPORT</div><div class="l4p-ct">Termin raportu, format, gdzie wysłać</div></div>
+        <div class="l4p-cell" style="grid-column:1/-1;"><div class="l4p-cl">DOWÓD</div><div class="l4p-ct">Zrzut ekranu, plik lub zdjęcie. Bez dowodu — niewykonane.</div></div>
+    </div>
+</div>
+<div class="l4p-div"></div>
+<div class="l4p">
+    <div class="l4p-sl">Przykład</div>
+    <div class="l4p-st">Źle vs Dobrze</div>
+    <div class="l4p-bad"><div class="l4p-el" style="color:#dc2626;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Źle</div><div class="l4p-et" style="color:#7f1d1d;font-style:italic;">"Pilnuj żeby wszystko było w porządku. Daj znać jeśli będą problemy."</div></div>
+    <div class="l4p-good"><div class="l4p-el" style="color:#16a34a;"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Dobrze</div><div class="l4p-et" style="color:#14532d;font-style:italic;">"Do 13:00 sprawdzić 4 zdjęcia produktu, przekazać 5 banerów 1:5 do grafika, wysłać raport przez Telegram do 19:00."</div></div>
+</div>
+<div class="l4p-div"></div>
+<div class="l4p">
+    <div class="l4p-sl">Narzędzie</div>
+    <div class="l4p-tool">
+        <div class="l4p-th"><div class="l4p-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div><div class="l4p-tn">Generator poleceń AI</div><div class="l4p-td">Opisz zadanie prostymi słowami — system zbuduje prawidłowe polecenie TALKO z 7 elementami.</div></div></div>
+        <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="l4p-btn">Otwórz generator</a>
+    </div>
+</div>`,
+
+                lessonContent_de: `
+<style>
+.l4d{margin-bottom:1.75rem}.l4d:last-child{margin-bottom:0}.l4d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l4d-rule{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;border-left:3px solid #22c55e;margin-bottom:.5rem}.l4d-rule:last-child{margin-bottom:0}.l4d-ri{width:36px;height:36px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l4d-rt{font-weight:700;color:#1a1a1a;font-size:.875rem;margin-bottom:.2rem}.l4d-rd{font-size:.82rem;color:#525252;line-height:1.5}.l4d-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}.l4d-cell{padding:.7rem .85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px}.l4d-cl{font-size:.68rem;font-weight:700;color:#16a34a;letter-spacing:.07em;margin-bottom:.2rem}.l4d-ct{font-size:.82rem;color:#374151;line-height:1.4}.l4d-bad{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.9rem 1rem;margin-bottom:.5rem}.l4d-good{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.9rem 1rem}.l4d-el{display:flex;align-items:center;gap:.45rem;margin-bottom:.5rem;font-weight:700;font-size:.8rem}.l4d-et{font-size:.875rem;color:#374151;line-height:1.55}.l4d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l4d-th{display:flex;align-items:flex-start;gap:.85rem}.l4d-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l4d-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l4d-td{font-size:.82rem;color:#525252;line-height:1.5}.l4d-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l4d-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l4d-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.75rem}.l4d-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.6rem}.l4d-pow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin-top:.85rem}.l4d-pc{border-radius:11px;padding:.9rem .6rem;text-align:center}.l4d-pn{font-size:1.5rem;font-weight:900;line-height:1.1}.l4d-pd{font-size:.75rem;color:#6b7280;margin-top:.35rem;line-height:1.35}
+</style>
+<div class="l4d">
+    <div class="l4d-sl">Einleitung</div>
+    <div class="l4d-st">Warum die meisten Anweisungen nie erledigt werden</div>
+    <div class="l4d-card">
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;">Sie geben täglich Aufgaben. Eine Woche später ist die Hälfte unerledigt. Sie selbst vergessen was Sie gebeten haben — Mitarbeiter auch.</p>
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;margin-top:.7rem;">Im Team gilt eine ungeschriebene Regel: <strong>„Einmal gesagt ohne Nachfassen — bedeutet unwichtig."</strong> Das ist kein böser Wille — das ist eine normale Reaktion auf eine Flut von Aufgaben.</p>
+        <p style="font-size:.9rem;color:#374151;line-height:1.65;margin-top:.7rem;">Das Problem liegt nicht bei den Menschen. Das Problem ist eine schwache Form der Aufgabenstellung.</p>
+    </div>
+</div>
+<div class="l4d-div"></div>
+<div class="l4d">
+    <div class="l4d-sl">Prinzip</div>
+    <div class="l4d-st">Autoritätslevel bestimmt Ausführungslevel</div>
+    <div class="l4d-pow">
+        <div class="l4d-pc" style="background:#fef2f2;border:1px solid #fecaca;"><div class="l4d-pn" style="color:#ef4444;">1–10</div><div class="l4d-pd">10+ Mal erinnern</div></div>
+        <div class="l4d-pc" style="background:#fff7ed;border:1px solid #fed7aa;"><div class="l4d-pn" style="color:#f97316;">40–60</div><div class="l4d-pd">2–3 Mal erinnern</div></div>
+        <div class="l4d-pc" style="background:#f0fdf4;border:1px solid #bbf7d0;"><div class="l4d-pn" style="color:#22c55e;">80+</div><div class="l4d-pd">Einmal gesagt — erledigt</div></div>
+    </div>
+</div>
+<div class="l4d-div"></div>
+<div class="l4d">
+    <div class="l4d-sl">Regeln</div>
+    <div class="l4d-st">4 Regeln des Systems</div>
+    <div class="l4d-rule"><div class="l4d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div><div class="l4d-rt">Nur schriftlich</div><div class="l4d-rd">Mündliche Anweisungen existieren nicht. Im Meeting gesagt — sofort schriftlich duplizieren.</div></div></div>
+    <div class="l4d-rule"><div class="l4d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="l4d-rt">Konkretes Datum und Zeit</div><div class="l4d-rd">„Bald" und „später" existieren nicht. Ohne Deadline wird eine Aufgabe nie erledigt.</div></div></div>
+    <div class="l4d-rule"><div class="l4d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="l4d-rt">Liste aller Anweisungen</div><div class="l4d-rd">Google Tabelle: wer, was, Frist, erledigt. Ohne Liste vergessen Sie nachzufassen — und untergraben Ihre Autorität.</div></div></div>
+    <div class="l4d-rule"><div class="l4d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="l4d-rt">Kontrolle bei jedem Meeting</div><div class="l4d-rd">Liste öffnen und jeden Punkt durchgehen. Ruhig, ohne Schreien — bis sie verstehen, dass Sie nicht vergessen werden.</div></div></div>
+</div>
+<div class="l4d-div"></div>
+<div class="l4d">
+    <div class="l4d-sl">Vorlage</div>
+    <div class="l4d-st">7 Elemente einer korrekten Anweisung</div>
+    <div class="l4d-grid">
+        <div class="l4d-cell"><div class="l4d-cl">AN WEN</div><div class="l4d-ct">Konkrete Position + vollständiger Name. Nicht „an die Abteilung".</div></div>
+        <div class="l4d-cell"><div class="l4d-cl">FRIST</div><div class="l4d-ct">Konkretes Datum und Uhrzeit der Fertigstellung</div></div>
+        <div class="l4d-cell"><div class="l4d-cl">KONTEXT</div><div class="l4d-ct">Warum, was sich geändert hat, wen es betrifft</div></div>
+        <div class="l4d-cell"><div class="l4d-cl">AUFGABE</div><div class="l4d-ct">Konkrete Handlung + erwartetes Ergebnis</div></div>
+        <div class="l4d-cell"><div class="l4d-cl">PRODUKT</div><div class="l4d-ct">Was fertig sein muss: Dokument, Foto, Bericht</div></div>
+        <div class="l4d-cell"><div class="l4d-cl">BERICHT</div><div class="l4d-ct">Berichtsfrist, Format, wohin senden</div></div>
+        <div class="l4d-cell" style="grid-column:1/-1;"><div class="l4d-cl">BEWEIS</div><div class="l4d-ct">Screenshot, Datei oder Foto. Ohne Beweis — nicht erledigt.</div></div>
+    </div>
+</div>
+<div class="l4d-div"></div>
+<div class="l4d">
+    <div class="l4d-sl">Beispiel</div>
+    <div class="l4d-st">Falsch vs Richtig</div>
+    <div class="l4d-bad"><div class="l4d-el" style="color:#dc2626;"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Falsch</div><div class="l4d-et" style="color:#7f1d1d;font-style:italic;">"Stell sicher, dass alles in Ordnung ist. Melde dich wenn es Probleme gibt."</div></div>
+    <div class="l4d-good"><div class="l4d-el" style="color:#16a34a;"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Richtig</div><div class="l4d-et" style="color:#14532d;font-style:italic;">"Bis 13:00 Uhr — 4 Produktfotos prüfen, 5 Banner 1:5 an den Designer übergeben, Bericht via Telegram bis 19:00 Uhr senden."</div></div>
+</div>
+<div class="l4d-div"></div>
+<div class="l4d">
+    <div class="l4d-sl">Werkzeug</div>
+    <div class="l4d-tool">
+        <div class="l4d-th"><div class="l4d-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div><div class="l4d-tn">KI-Anweisungsgenerator</div><div class="l4d-td">Beschreiben Sie die Aufgabe in einfachen Worten — das System erstellt eine korrekte TALKO-Anweisung mit allen 7 Elementen.</div></div></div>
+        <a href="https://chatgpt.com/g/g-684be37e3bcc81918f64088a2bb094da-task-generator" target="_blank" class="l4d-btn">Generator öffnen</a>
+    </div>
+</div>`,
+
                 homework: `<ol><li>Складіть одне реальне розпорядження для співробітника</li><li>Перевірте, чи є всі 7 елементів</li><li>Відправте його реальному співробітнику</li><li>Напишіть, кому і яке розпорядження ви відправили</li></ol>`,
                 homework_en: `<ol><li>Compose one real instruction for an employee</li><li>Check that all 7 elements are present</li><li>Send it to a real employee</li><li>Write who you sent it to and what the instruction was</li></ol>`,
                 homework_pl: `<ol><li>Napisz jedno realne polecenie dla pracownika</li><li>Sprawdź, czy wszystkie 7 elementów jest obecnych</li><li>Wyślij je do prawdziwego pracownika</li><li>Napisz komu i jakie polecenie wysłałeś</li></ol>`,
