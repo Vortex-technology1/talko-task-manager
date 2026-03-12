@@ -4272,7 +4272,251 @@
     </div>
 </div>
                 `,
-                
+
+                lessonContent_en: `
+<style>
+.l7e{margin-bottom:1.75rem}.l7e:last-child{margin-bottom:0}.l7e-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l7e-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l7e-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l7e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l7e-card p{font-size:.9rem;color:#374151;line-height:1.65}.l7e-card p+p{margin-top:.7rem}.l7e-warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.85rem}.l7e-wl{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#c2410c;font-size:.875rem;margin-bottom:.5rem}.l7e-wt{font-size:.875rem;color:#9a3412;line-height:1.6}.l7e-steps{display:grid;gap:.5rem;margin-top:.75rem}.l7e-step{display:flex;align-items:flex-start;gap:.75rem;padding:.8rem .95rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l7e-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.05rem}.l7e-st2{font-size:.875rem;color:#374151;line-height:1.5}.l7e-acc{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-top:.85rem}.l7e-ach{padding:.95rem 1rem;background:#f9fafb;font-weight:600;font-size:.9rem;color:#1a1a1a;cursor:pointer;display:flex;align-items:center;gap:.5rem}.l7e-acb{padding:1.1rem 1.1rem;background:white;font-size:.875rem;color:#374151;line-height:1.65;border-top:1px solid #e2e8f0}.l7e-acb p+p{margin-top:.75rem}.l7e-acb ul{margin:.65rem 0 .65rem 1.2rem}.l7e-acb li{margin-bottom:.3rem}.l7e-hl{padding:.85rem 1rem;background:#fef2f2;border-radius:8px;border-left:4px solid #ef4444;margin-bottom:1rem}.l7e-hl p{font-size:.875rem;color:#7f1d1d;margin:0}.l7e-tpl{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1.1rem 1.25rem;margin-top:.85rem}.l7e-tph{font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}.l7e-tpb{font-size:.875rem;color:#374151;line-height:1.65;white-space:pre-line}
+</style>
+<div class="l7e">
+    <div class="l7e-sl">Why this lesson</div>
+    <div class="l7e-st">Prepare the team — or face silent resistance</div>
+    <div class="l7e-card">
+        <p>When an owner starts changes without aligning with the team — resistance arises. Employees don't understand <strong>why</strong> the changes are needed and <strong>where</strong> they'll lead.</p>
+        <p>This lesson will help you prepare the team correctly: explain the essence of the changes, run a briefing, and get the buy-in of key people.</p>
+    </div>
+</div>
+<div class="l7e-div"></div>
+<div class="l7e">
+    <div class="l7e-sl">The root cause</div>
+    <div class="l7e-st">"That's it, I get it" — why employees resist</div>
+    <div class="l7e-warn">
+        <div class="l7e-wl"><svg viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Recommendation</div>
+        <div class="l7e-wt">If an employee shows resistance, offense, or passive aggression — read this article together with them. Have the employee read it aloud.</div>
+    </div>
+    <div class="l7e-acc">
+        <div class="l7e-ach"><svg viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="1.75" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>Article: "That's it, I get it" — why your employees don't accept criticism</div>
+        <div class="l7e-acb">
+            <p><strong>A familiar scene?</strong></p>
+            <p>You calmly tell someone: "This needs improvement. This is the right way to do it."</p>
+            <p>And in response?</p>
+            <ul>
+                <li>A sour look</li>
+                <li>Offense</li>
+                <li>Passive aggression</li>
+                <li>"That's it, I got it"</li>
+                <li>Minimum actions, maximum emotions</li>
+            </ul>
+            <p>Even though you weren't even shouting.</p>
+            <div class="l7e-hl"><p><strong>Here's an uncomfortable truth:</strong> Most adults function with the mindset of a 12-year-old. They look 30+. They've worked 20+ years. But they react like a student told by a teacher: "You need to work on your math."</p></div>
+            <p><strong>Why does this happen?</strong></p>
+            <p>The adult brain hasn't processed a key idea: criticism of an action ≠ criticism of the person. When you say "this was done wrong" — their brain hears "you are wrong." The identity is being attacked. And the psyche defends itself.</p>
+            <p>This is not a character flaw. This is a developmental stage that most people never passed through — if they grew up in an environment where criticism meant humiliation.</p>
+            <p><strong>What do you do with this?</strong></p>
+            <p>First — stop hoping the person will change on their own. Without deliberate work on themselves, this doesn't change.</p>
+            <p>Second — change the format of your communication. When giving feedback: separate the person from the action. Not "you're always late" but "this task was completed 2 days past the deadline — what happened?"</p>
+            <p>Third — set a clear standard: here we discuss actions, not personalities. Everyone is safe to say "I made a mistake." People who can't accept feedback are a management risk.</p>
+            <p>You're not a psychotherapist. You're not required to heal wounds from childhood. But you are required to create an environment where the team can grow.</p>
+        </div>
+    </div>
+</div>
+<div class="l7e-div"></div>
+<div class="l7e">
+    <div class="l7e-sl">Script</div>
+    <div class="l7e-st">How to brief key employees about the changes</div>
+    <div class="l7e-card">
+        <p>Before rolling out any system — hold individual conversations with key people. The goal is not to ask permission, but to prepare them so there's no panic or resistance.</p>
+    </div>
+    <div class="l7e-steps">
+        <div class="l7e-step"><div class="l7e-sn">1</div><div class="l7e-st2"><strong>Announce your decision.</strong> Not a discussion — a fact. "I've decided to systematize the company. This will affect how we all work."</div></div>
+        <div class="l7e-step"><div class="l7e-sn">2</div><div class="l7e-st2"><strong>Explain why.</strong> What's the current problem? Why can't things stay as they are? "We're losing clients because processes aren't standardized. I'm responsible for fixing this."</div></div>
+        <div class="l7e-step"><div class="l7e-sn">3</div><div class="l7e-st2"><strong>Describe what will change.</strong> What specifically will be different: reporting, task format, meetings, tools.</div></div>
+        <div class="l7e-step"><div class="l7e-sn">4</div><div class="l7e-st2"><strong>State what won't change.</strong> Role, salary, team. Reduce anxiety.</div></div>
+        <div class="l7e-step"><div class="l7e-sn">5</div><div class="l7e-st2"><strong>Ask for commitment.</strong> "Are you ready to work in the new format?" — a direct question that requires a direct answer.</div></div>
+    </div>
+</div>
+<div class="l7e-div"></div>
+<div class="l7e">
+    <div class="l7e-sl">Template</div>
+    <div class="l7e-st">Message text — for those you can't meet in person</div>
+    <div class="l7e-tpl">
+        <div class="l7e-tph"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="15" height="15"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message template</div>
+        <div class="l7e-tpb">Hi [Name],
+
+I want to share something important with you. I've made a decision to systematize the company — this is my deliberate choice as the owner, which I've thought through carefully.
+
+What this means in practice:
+— We'll introduce clear processes, KPIs, and reporting
+— Tasks will be formatted as written instructions with deadlines
+— We'll hold weekly review meetings
+
+This won't affect your role or salary. What will change — is the work format. More clarity, more structure.
+
+I want you, as a key person on the team, to understand this and be ready.
+
+Are you on board?</div>
+    </div>
+</div>`,
+
+                lessonContent_pl: `
+<style>
+.l7p{margin-bottom:1.75rem}.l7p:last-child{margin-bottom:0}.l7p-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l7p-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l7p-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l7p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l7p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l7p-card p+p{margin-top:.7rem}.l7p-warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.85rem}.l7p-wl{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#c2410c;font-size:.875rem;margin-bottom:.5rem}.l7p-wt{font-size:.875rem;color:#9a3412;line-height:1.6}.l7p-steps{display:grid;gap:.5rem;margin-top:.75rem}.l7p-step{display:flex;align-items:flex-start;gap:.75rem;padding:.8rem .95rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l7p-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.05rem}.l7p-st2{font-size:.875rem;color:#374151;line-height:1.5}.l7p-acc{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-top:.85rem}.l7p-ach{padding:.95rem 1rem;background:#f9fafb;font-weight:600;font-size:.9rem;color:#1a1a1a;display:flex;align-items:center;gap:.5rem}.l7p-acb{padding:1.1rem 1.1rem;background:white;font-size:.875rem;color:#374151;line-height:1.65;border-top:1px solid #e2e8f0}.l7p-acb p+p{margin-top:.75rem}.l7p-acb ul{margin:.65rem 0 .65rem 1.2rem}.l7p-acb li{margin-bottom:.3rem}.l7p-hl{padding:.85rem 1rem;background:#fef2f2;border-radius:8px;border-left:4px solid #ef4444;margin-bottom:1rem}.l7p-hl p{font-size:.875rem;color:#7f1d1d;margin:0}.l7p-tpl{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1.1rem 1.25rem;margin-top:.85rem}.l7p-tph{font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}.l7p-tpb{font-size:.875rem;color:#374151;line-height:1.65;white-space:pre-line}
+</style>
+<div class="l7p">
+    <div class="l7p-sl">Dlaczego ta lekcja</div>
+    <div class="l7p-st">Przygotuj zespół — albo napotkasz ciche opory</div>
+    <div class="l7p-card">
+        <p>Gdy właściciel wprowadza zmiany bez uzgodnienia z zespołem — pojawia się opór. Pracownicy nie rozumieją <strong>po co</strong> są zmiany i <strong>do czego</strong> doprowadzą.</p>
+        <p>Ta lekcja pomoże właściwie przygotować zespół: wyjaśnić istotę zmian, przeprowadzić odprawę i uzyskać wsparcie kluczowych osób.</p>
+    </div>
+</div>
+<div class="l7p-div"></div>
+<div class="l7p">
+    <div class="l7p-sl">Przyczyna</div>
+    <div class="l7p-st">"No dobra, rozumiem" — dlaczego pracownicy stawiają opór</div>
+    <div class="l7p-warn">
+        <div class="l7p-wl"><svg viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Rekomendacja</div>
+        <div class="l7p-wt">Jeśli pracownik przejawia opór, obrazę lub pasywną agresję — przeczytajcie ten artykuł razem. Niech pracownik czyta go na głos.</div>
+    </div>
+    <div class="l7p-acc">
+        <div class="l7p-ach"><svg viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="1.75" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>Artykuł: "No dobra, rozumiem" — dlaczego twoi pracownicy nie przyjmują krytyki</div>
+        <div class="l7p-acb">
+            <p><strong>Znana scena?</strong></p>
+            <p>Spokojnie mówisz komuś: "Tu trzeba się podszkolić. Tak należy to robić."</p>
+            <p>A w odpowiedzi?</p>
+            <ul>
+                <li>Kwaśna mina</li>
+                <li>Obraza</li>
+                <li>Pasywna agresja</li>
+                <li>"No dobra, zrozumiałem(am)"</li>
+                <li>Minimum działań, maksimum emocji</li>
+            </ul>
+            <p>Choć nawet nie krzyczałeś(aś).</p>
+            <div class="l7p-hl"><p><strong>Tu ważne jest zrozumienie pewnej nieprzyjemnej prawdy:</strong> Większość dorosłych działa z psychiką 12-latka. Wygląda na 30+. Pracuje 20+. A reaguje jak uczeń któremu nauczyciel powiedział: "Musisz poprawić matematykę."</p></div>
+            <p><strong>Dlaczego tak jest?</strong></p>
+            <p>Mózg dorosłego nie przepracował kluczowej idei: krytyka działania ≠ krytyka osoby. Gdy mówisz "to zostało zrobione źle" — mózg słyszy "ty jesteś zły(a)." Atak na tożsamość. I psychika się broni.</p>
+            <p>To nie jest wada charakteru. To etap rozwoju przez który większość ludzi nie przeszła — jeśli wychowała się w środowisku gdzie krytyka oznaczała upokorzenie.</p>
+            <p><strong>Co z tym zrobić?</strong></p>
+            <p>Po pierwsze — przestań mieć nadzieję że osoba zmieni się sama. Bez świadomej pracy nad sobą to się nie zmienia.</p>
+            <p>Po drugie — zmień format komunikacji. Oddzielaj osobę od działania. Nie "ty zawsze się spóźniasz" ale "to zadanie było wykonane 2 dni po terminie — co się stało?"</p>
+            <p>Po trzecie — ustal jasny standard: tutaj omawiamy działania, nie osobowości. Każdy może powiedzieć "popełniłem(am) błąd". Osoby które nie przyjmują informacji zwrotnej — to ryzyko zarządcze.</p>
+        </div>
+    </div>
+</div>
+<div class="l7p-div"></div>
+<div class="l7p">
+    <div class="l7p-sl">Skrypt</div>
+    <div class="l7p-st">Jak poinformować kluczowych pracowników o zmianach</div>
+    <div class="l7p-steps">
+        <div class="l7p-step"><div class="l7p-sn">1</div><div class="l7p-st2"><strong>Ogłoś swoją decyzję.</strong> Nie dyskusja — fakt. "Podjąłem(am) decyzję o systematyzacji firmy. To wpłynie na sposób pracy nas wszystkich."</div></div>
+        <div class="l7p-step"><div class="l7p-sn">2</div><div class="l7p-st2"><strong>Wyjaśnij dlaczego.</strong> Jaki jest obecny problem? Dlaczego nie można zostać jak jest? "Tracimy klientów bo procesy nie są ustandaryzowane. Moim zadaniem jest to naprawić."</div></div>
+        <div class="l7p-step"><div class="l7p-sn">3</div><div class="l7p-st2"><strong>Opisz co się zmieni.</strong> Co konkretnie będzie inne: raportowanie, format zadań, spotkania, narzędzia.</div></div>
+        <div class="l7p-step"><div class="l7p-sn">4</div><div class="l7p-st2"><strong>Powiedz co się nie zmieni.</strong> Rola, wynagrodzenie, zespół. Zmniejsz niepokój.</div></div>
+        <div class="l7p-step"><div class="l7p-sn">5</div><div class="l7p-st2"><strong>Poproś o zobowiązanie.</strong> "Czy jesteś gotowy(a) pracować w nowym formacie?" — bezpośrednie pytanie wymagające bezpośredniej odpowiedzi.</div></div>
+    </div>
+</div>
+<div class="l7p-div"></div>
+<div class="l7p">
+    <div class="l7p-sl">Szablon</div>
+    <div class="l7p-st">Treść wiadomości — dla tych z którymi nie możesz spotkać się osobiście</div>
+    <div class="l7p-tpl">
+        <div class="l7p-tph"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="15" height="15"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Szablon wiadomości</div>
+        <div class="l7p-tpb">Hej [Imię],
+
+Chcę podzielić się z tobą czymś ważnym. Podjąłem(am) decyzję o systematyzacji firmy — to mój świadomy wybór jako właściciela, który dokładnie przemyślałem(am).
+
+Co to oznacza w praktyce:
+— Wprowadzamy jasne procesy, KPI i raportowanie
+— Zadania będą w formie pisemnych poleceń z terminami
+— Prowadzimy cotygodniowe spotkania kontrolne
+
+To nie wpłynie na twoją rolę ani wynagrodzenie. Zmieni się — format pracy. Więcej jasności, więcej struktury.
+
+Chcę żebyś ty, jako kluczowa osoba w zespole, to rozumiał(a) i był(a) gotowy(a).
+
+Czy jesteś na pokładzie?</div>
+    </div>
+</div>`,
+
+                lessonContent_de: `
+<style>
+.l7d{margin-bottom:1.75rem}.l7d:last-child{margin-bottom:0}.l7d-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l7d-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l7d-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l7d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l7d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l7d-card p+p{margin-top:.7rem}.l7d-warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.85rem}.l7d-wl{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#c2410c;font-size:.875rem;margin-bottom:.5rem}.l7d-wt{font-size:.875rem;color:#9a3412;line-height:1.6}.l7d-steps{display:grid;gap:.5rem;margin-top:.75rem}.l7d-step{display:flex;align-items:flex-start;gap:.75rem;padding:.8rem .95rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l7d-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.05rem}.l7d-st2{font-size:.875rem;color:#374151;line-height:1.5}.l7d-acc{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-top:.85rem}.l7d-ach{padding:.95rem 1rem;background:#f9fafb;font-weight:600;font-size:.9rem;color:#1a1a1a;display:flex;align-items:center;gap:.5rem}.l7d-acb{padding:1.1rem 1.1rem;background:white;font-size:.875rem;color:#374151;line-height:1.65;border-top:1px solid #e2e8f0}.l7d-acb p+p{margin-top:.75rem}.l7d-acb ul{margin:.65rem 0 .65rem 1.2rem}.l7d-acb li{margin-bottom:.3rem}.l7d-hl{padding:.85rem 1rem;background:#fef2f2;border-radius:8px;border-left:4px solid #ef4444;margin-bottom:1rem}.l7d-hl p{font-size:.875rem;color:#7f1d1d;margin:0}.l7d-tpl{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1.1rem 1.25rem;margin-top:.85rem}.l7d-tph{font-weight:700;color:#166534;font-size:.875rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}.l7d-tpb{font-size:.875rem;color:#374151;line-height:1.65;white-space:pre-line}
+</style>
+<div class="l7d">
+    <div class="l7d-sl">Warum diese Lektion</div>
+    <div class="l7d-st">Bereiten Sie das Team vor — oder stoßen Sie auf stillen Widerstand</div>
+    <div class="l7d-card">
+        <p>Wenn ein Inhaber Änderungen ohne Abstimmung mit dem Team einführt — entsteht Widerstand. Mitarbeiter verstehen nicht <strong>warum</strong> die Änderungen nötig sind und <strong>wohin</strong> sie führen.</p>
+        <p>Diese Lektion hilft Ihnen das Team richtig vorzubereiten: die Essenz der Änderungen zu erklären, ein Briefing durchzuführen und die Unterstützung der Schlüsselpersonen zu erhalten.</p>
+    </div>
+</div>
+<div class="l7d-div"></div>
+<div class="l7d">
+    <div class="l7d-sl">Ursache</div>
+    <div class="l7d-st">"Okay, hab's verstanden" — warum Mitarbeiter Widerstand leisten</div>
+    <div class="l7d-warn">
+        <div class="l7d-wl"><svg viewBox="0 0 24 24" fill="none" stroke="#c2410c" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Empfehlung</div>
+        <div class="l7d-wt">Wenn ein Mitarbeiter Widerstand, Beleidigung oder passive Aggression zeigt — lesen Sie diesen Artikel gemeinsam mit ihm. Der Mitarbeiter soll ihn laut vorlesen.</div>
+    </div>
+    <div class="l7d-acc">
+        <div class="l7d-ach"><svg viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="1.75" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>Artikel: "Okay, hab's verstanden" — warum Ihre Mitarbeiter Kritik nicht akzeptieren</div>
+        <div class="l7d-acb">
+            <p><strong>Eine bekannte Szene?</strong></p>
+            <p>Sie sagen ruhig zu jemandem: "Hier muss man noch dazulernen. So ist es richtig."</p>
+            <p>Und als Antwort?</p>
+            <ul>
+                <li>Ein saures Gesicht</li>
+                <li>Beleidigung</li>
+                <li>Passive Aggression</li>
+                <li>"Okay okay, hab's kapiert"</li>
+                <li>Minimum Handlungen, Maximum Emotionen</li>
+            </ul>
+            <p>Obwohl Sie nicht einmal geschrien haben.</p>
+            <div class="l7d-hl"><p><strong>Hier ist eine unangenehme Wahrheit zu verstehen:</strong> Die meisten Erwachsenen funktionieren mit der Psyche eines 12-Jährigen. Sieht aus wie 30+. Arbeitet 20+. Reagiert aber wie ein Schüler dem der Lehrer sagte: "Du musst Mathe verbessern."</p></div>
+            <p><strong>Warum passiert das?</strong></p>
+            <p>Das Erwachsenengehirn hat eine Schlüsselidee nicht verarbeitet: Kritik an einer Handlung ≠ Kritik an der Person. Wenn Sie sagen "das wurde falsch gemacht" — hört das Gehirn "du bist falsch." Angriff auf die Identität. Und die Psyche verteidigt sich.</p>
+            <p>Das ist kein Charakterfehler. Das ist eine Entwicklungsstufe die die meisten Menschen nie durchlaufen haben — wenn sie in einem Umfeld aufgewachsen sind wo Kritik Demütigung bedeutete.</p>
+            <p><strong>Was tun?</strong></p>
+            <p>Erstens — hören Sie auf zu hoffen die Person ändert sich von selbst. Ohne bewusste Arbeit an sich selbst ändert sich das nicht.</p>
+            <p>Zweitens — ändern Sie das Kommunikationsformat. Trennen Sie Person von Handlung. Nicht "du bist immer zu spät" sondern "diese Aufgabe war 2 Tage nach Frist — was ist passiert?"</p>
+            <p>Drittens — setzen Sie einen klaren Standard: hier besprechen wir Handlungen, nicht Persönlichkeiten. Jeder darf sagen "ich habe einen Fehler gemacht". Personen die kein Feedback annehmen können — sind ein Managementrisiko.</p>
+        </div>
+    </div>
+</div>
+<div class="l7d-div"></div>
+<div class="l7d">
+    <div class="l7d-sl">Skript</div>
+    <div class="l7d-st">Wie Sie Schlüsselmitarbeiter über die Änderungen informieren</div>
+    <div class="l7d-steps">
+        <div class="l7d-step"><div class="l7d-sn">1</div><div class="l7d-st2"><strong>Kündigen Sie Ihre Entscheidung an.</strong> Keine Diskussion — eine Tatsache. "Ich habe entschieden das Unternehmen zu systematisieren. Das wird die Arbeitsweise uns aller beeinflussen."</div></div>
+        <div class="l7d-step"><div class="l7d-sn">2</div><div class="l7d-st2"><strong>Erklären Sie warum.</strong> Was ist das aktuelle Problem? Warum kann es nicht so bleiben? "Wir verlieren Kunden weil Prozesse nicht standardisiert sind. Ich bin dafür verantwortlich das zu beheben."</div></div>
+        <div class="l7d-step"><div class="l7d-sn">3</div><div class="l7d-st2"><strong>Beschreiben Sie was sich ändert.</strong> Was genau anders wird: Berichterstattung, Aufgabenformat, Meetings, Tools.</div></div>
+        <div class="l7d-step"><div class="l7d-sn">4</div><div class="l7d-st2"><strong>Sagen Sie was sich nicht ändert.</strong> Rolle, Gehalt, Team. Reduzieren Sie die Angst.</div></div>
+        <div class="l7d-step"><div class="l7d-sn">5</div><div class="l7d-st2"><strong>Fordern Sie eine Zusage ein.</strong> "Bist du bereit im neuen Format zu arbeiten?" — eine direkte Frage die eine direkte Antwort erfordert.</div></div>
+    </div>
+</div>
+<div class="l7d-div"></div>
+<div class="l7d">
+    <div class="l7d-sl">Vorlage</div>
+    <div class="l7d-st">Nachrichtentext — für die mit denen Sie sich nicht persönlich treffen können</div>
+    <div class="l7d-tpl">
+        <div class="l7d-tph"><svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.75" width="15" height="15"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Nachrichtenvorlage</div>
+        <div class="l7d-tpb">Hallo [Name],
+
+Ich möchte etwas Wichtiges mit dir teilen. Ich habe die Entscheidung getroffen das Unternehmen zu systematisieren — das ist meine bewusste Wahl als Inhaber, die ich sorgfältig durchdacht habe.
+
+Was das in der Praxis bedeutet:
+— Wir führen klare Prozesse, KPIs und Berichterstattung ein
+— Aufgaben werden als schriftliche Anweisungen mit Fristen formatiert
+— Wir führen wöchentliche Kontrollmeetings durch
+
+Das wird deine Rolle oder dein Gehalt nicht beeinflussen. Was sich ändert — ist das Arbeitsformat. Mehr Klarheit, mehr Struktur.
+
+Ich möchte dass du als Schlüsselperson im Team das verstehst und bereit bist.
+
+Bist du dabei?</div>
+    </div>
+</div>`,
+
                 homework: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
