@@ -424,11 +424,15 @@
             days.forEach(d => { doneByDay[d] = 0; createdByDay[d] = 0; });
             
             visibleTasks.forEach(t => {
-                // Completed
-                if (t.status === 'done' && t.completedAt) {
+                // Completed — FIX BV: check completedDate (string) first, fallback to completedAt
+                if (t.status === 'done') {
                     let cDate;
-                    if (t.completedAt.toDate) cDate = getLocalDateStr(t.completedAt.toDate());
-                    else if (typeof t.completedAt === 'string') cDate = t.completedAt.split('T')[0];
+                    if (t.completedDate) {
+                        cDate = t.completedDate;
+                    } else if (t.completedAt) {
+                        if (t.completedAt.toDate) cDate = getLocalDateStr(t.completedAt.toDate());
+                        else if (typeof t.completedAt === 'string') cDate = t.completedAt.split('T')[0];
+                    }
                     if (cDate && doneByDay[cDate] !== undefined) doneByDay[cDate]++;
                 }
                 // Created
