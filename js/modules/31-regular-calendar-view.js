@@ -392,13 +392,16 @@
                 });
             };
             
-            // Filter WEEKLY tasks for selected day
+            // Filter WEEKLY tasks for selected day — підтримуємо обидва формати: daysOfWeek (масив) і dayOfWeek (рядок)
+            // FIX BU: старий код ігнорував daysOfWeek масив → порожній список на мобільному
             const weeklyTasks = applyUserFilters(regularTasks.filter(rt => {
-                if (rt.period === 'weekly') {
-                    return parseInt(rt.dayOfWeek) === selectedRegularDay;
+                if (rt.period !== 'weekly') return false;
+                if (rt.daysOfWeek && Array.isArray(rt.daysOfWeek)) {
+                    return rt.daysOfWeek.includes(selectedRegularDay.toString()) ||
+                           rt.daysOfWeek.includes(selectedRegularDay);
                 }
-                return false;
-            })).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+                return parseInt(rt.dayOfWeek) === selectedRegularDay;
+            })).sort((a, b) => (a.time || a.timeStart || '').localeCompare(b.time || b.timeStart || ''));
             
             // Get MONTHLY tasks (show in separate section)
             const monthlyTasks = applyUserFilters(regularTasks.filter(rt => rt.period === 'monthly'))
