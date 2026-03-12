@@ -140,9 +140,9 @@
                                 </div>
                                 <div style="display:flex;gap:0.4rem;flex-shrink:0;">
                                     <button onclick="toggleFlowStatus('${flow.id}','${flow.status}')"
-                                        title="${flow.status === 'active' ? 'Поставити на паузу' : 'Активувати ланцюг'}"
+                                        title="${flow.status === 'active' ? window.t('botsPauseFlow') : window.t('botsActivateFlow')}"
                                         style="padding:0.45rem 0.75rem;background:${flow.status==='active'?'#fee2e2':'#f0fdf4'};color:${flow.status==='active'?'#ef4444':'#16a34a'};border:1.5px solid ${flow.status==='active'?'#fca5a5':'#86efac'};border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                                        ${flow.status === 'active' ? 'Пауза' : 'Активувати'}
+                                        ${flow.status === 'active' ? window.t('botsPauseLabel') : window.t('botsActivateLabel')}
                                     </button>
                                     <button onclick="openFlowEditor('${flow.id}')" title="Редагувати"
                                         style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">
@@ -168,17 +168,17 @@
             ? compRef.collection('bots').doc(botsCurrentBotId).collection('flows').doc(flowId)
             : compRef.collection('flows').doc(flowId);
         await ref.update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (typeof showToast === 'function') showToast(newStatus === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> Бота активовано' : '⏸ Бота на паузі', 'success');
+        if (typeof showToast === 'function') showToast(newStatus === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> Бота активовано' : window.t('botsBotPaused'), 'success');
     };
 
     window.confirmDeleteFlow = async function (flowId) {
-        if (!(await (window.showConfirmModal ? showConfirmModal('Видалити бота? Активні сесії будуть зупинені.',{danger:true}) : Promise.resolve(confirm('Видалити бота? Активні сесії будуть зупинені.'))))) return;
+        if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteBotConfirm'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteBotConfirm')))))) return;
         const compRef = firebase.firestore().collection('companies').doc(window.currentCompanyId);
         // FIX: correct path
         const ref = botsCurrentBotId
             ? compRef.collection('bots').doc(botsCurrentBotId).collection('flows').doc(flowId)
             : compRef.collection('flows').doc(flowId);
-        ref.delete().then(() => { if (typeof showToast === 'function') showToast('Видалено', 'success'); });
+        ref.delete().then(() => { if (typeof showToast === 'function') showToast(window.t('finDeleted'), 'success'); });
     };
 
     // ── Create Flow Modal ──────────────────────────────────
@@ -224,7 +224,7 @@
 
     window.saveNewFlow = async function () {
         const name = document.getElementById('newFlowName')?.value.trim();
-        if (!name) { if(window.showToast)showToast('Введіть назву','warning'); else alert('Введіть назву'); return; }
+        if (!name) { if(window.showToast)showToast(window.t('botsEnterBotName'),'warning'); else alert(window.t('botsEnterBotName')); return; }
         try {
             const db = firebase.firestore();
             const compRef = db.collection('companies').doc(window.currentCompanyId);
@@ -253,7 +253,7 @@
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             document.getElementById('botsCreateOverlay')?.remove();
-            if (typeof showToast === 'function') showToast('Бота створено ✓', 'success');
+            if (typeof showToast === 'function') showToast(window.t('botsBotCreatedOk'), 'success');
             openFlowEditor(ref.id, botsCurrentBotId);
         } catch (err) { if(window.showToast)showToast('Помилка: ' + err.message,'error'); else alert('Помилка: ' + err.message); }
     };
@@ -286,17 +286,17 @@
     function renderFlowEditorPanel(flowData) {
         document.getElementById('botsEditorOverlay')?.remove();
         const nodeTypes = [
-            ['message','Повідомлення','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>'],
-            ['question','Питання','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>'],
-            ['buttons','Кнопки','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="5" r="2" fill="currentColor"/></svg></span>'],
-            ['condition','Умова','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>'],
-            ['ai','AI відповідь','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>'],
-            ['delay','Затримка','⏳'],
-            ['talko_task','Задача TALKO','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>'],
-            ['talko_deal','Угода CRM','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>'],
-            ['tag','Тег контакту','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>️'],
-            ['human','Передати менеджеру','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>'],
-            ['end','Завершення','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>'],
+            ['message',window.t('botsNodeMessage'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>'],
+            ['question',window.t('botsNodeQuestion'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>'],
+            ['buttons',window.t('botsNodeButtons'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="5" r="2" fill="currentColor"/></svg></span>'],
+            ['condition',window.t('botsNodeCondition'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>'],
+            ['ai',window.t('botsNodeAI'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>'],
+            ['delay',window.t('botsNodeDelay'),'⏳'],
+            ['talko_task',window.t('botsNodeTask'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>'],
+            ['talko_deal',window.t('botsNodeCRM'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>'],
+            ['tag',window.t('botsNodeTag'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>️'],
+            ['human',window.t('botsNodeManager'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>'],
+            ['end',window.t('botsNodeEnd'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>'],
         ];
 
         const html = `
@@ -383,14 +383,14 @@
 
     window.addFlowNode = function (type) {
         const id = 'node_' + Date.now();
-        const names = { message:'Повідомлення', question:'Питання', buttons:'Вибір', condition:'Умова', ai:'AI', delay:'Затримка', talko_task:'Задача', talko_deal:'Угода', tag:'Тег', human:'Менеджер', end:'Завершення' };
+        const names = { message:window.t('botsNodeMessage'), question:window.t('botsNodeQuestion'), buttons:window.t('botsChoiceList'), condition:window.t('botsNodeCondition'), ai:'AI', delay:window.t('botsNodeDelay'), talko_task:window.t('botsChoiceTask'), talko_deal:'Угода', tag:window.t('botsChoiceTag'), human:window.t('botsChoiceManager'), end:window.t('botsNodeEnd') };
         botsFlowNodes.push({ id, type, name: names[type]||type, text:'', options:[], saveAs:null, condition:null, delay:0, taskTitle:'', dealTitle:'', tagName:'', aiPrompt:'', nextNode:null });
         renderBotsNodesList();
         selectFlowNode(id);
     };
 
     window.deleteFlowNode = async function (nodeId) {
-        if (!(await (window.showConfirmModal ? showConfirmModal('Видалити вузол?',{danger:true}) : Promise.resolve(confirm('Видалити вузол?'))))) return;
+        if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteNode'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteNode')))))) return;
         botsFlowNodes = botsFlowNodes.filter(n => n.id !== nodeId);
         if (botsSelectedNodeId === nodeId) {
             botsSelectedNodeId = null;
@@ -427,16 +427,16 @@
         let specific = '';
 
         if (node.type === 'message') {
-            specific = field('ТЕКСТ ПОВІДОМЛЕННЯ') + textarea(node.text, `updateNode('${nodeId}','text',this.value)`);
+            specific = field(window.t('botsFieldMsgText')) + textarea(node.text, `updateNode('${nodeId}','text',this.value)`);
         }
 
         if (node.type === 'question') {
-            specific = field('ПИТАННЯ') + textarea(node.text, `updateNode('${nodeId}','text',this.value)`) +
-                field('ЗБЕРЕГТИ ВІДПОВІДЬ ЯК') + input(node.saveAs||'', `updateNode('${nodeId}','saveAs',this.value)`, 'answer');
+            specific = field(window.t('botsFieldQuestion')) + textarea(node.text, `updateNode('${nodeId}','text',this.value)`) +
+                field(window.t('botsFieldSaveAs')) + input(node.saveAs||'', `updateNode('${nodeId}','saveAs',this.value)`, 'answer');
         }
 
         if (node.type === 'buttons') {
-            specific = field('ТЕКСТ ПЕРЕД КНОПКАМИ') + textarea(node.text, `updateNode('${nodeId}','text',this.value)`) +
+            specific = field(window.t('botsFieldBtnText')) + textarea(node.text, `updateNode('${nodeId}','text',this.value)`) +
                 `<div><label style="${lbl()}">КНОПКИ</label>
                 <div id="nodeOpts_${nodeId}" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.4rem;">
                     ${(node.options||[]).map((o,i) => `
@@ -456,9 +456,9 @@
         }
 
         if (node.type === 'condition') {
-            specific = field('ПОЛЕ ДЛЯ ПЕРЕВІРКИ') + input(node.conditionField||'', `updateNode('${nodeId}','conditionField',this.value)`, 'phone') +
-                field('ОПЕРАТОР') + `<select onchange="updateNode('${nodeId}','conditionOp',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
-                    ${['exists','not_exists','equals','contains','starts_with'].map(op=>`<option value="${op}" ${node.conditionOp===op?'selected':''}>${{exists:'існує',not_exists:'не існує',equals:'=',contains:'містить',starts_with:'починається з'}[op]||op}</option>`).join('')}
+            specific = field(window.t('botsFieldCheckField')) + input(node.conditionField||'', `updateNode('${nodeId}','conditionField',this.value)`, 'phone') +
+                field(window.t('botsFieldOperator')) + `<select onchange="updateNode('${nodeId}','conditionOp',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
+                    ${['exists','not_exists','equals','contains','starts_with'].map(op=>`<option value="${op}" ${node.conditionOp===op?'selected':''}>${{exists:window.t('botsOpExists'),not_exists:window.t('botsOpNotExists'),equals:'=',contains:window.t('botsOpContains'),starts_with:window.t('botsOpStartsWith')}[op]||op}</option>`).join('')}
                 </select>` +
                 field('ЗНАЧЕННЯ (для =, містить, починається з)') + input(node.conditionValue||'', `updateNode('${nodeId}','conditionValue',this.value)`, '') +
                 `<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
@@ -476,24 +476,24 @@
         }
 
         if (node.type === 'ai') {
-            specific = field('СИСТЕМНИЙ ПРОМПТ') + textarea(node.aiPrompt||'', `updateNode('${nodeId}','aiPrompt',this.value)`, 'Ти консультант. Дані клієнта: {session.data}') +
-                field('ПРОВАЙДЕР') + `<select onchange="updateNode('${nodeId}','aiProvider',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
+            specific = field(window.t('botsFieldSysPrompt')) + textarea(node.aiPrompt||'', `updateNode('${nodeId}','aiPrompt',this.value)`, 'Ти консультант. Дані клієнта: {session.data}') +
+                field(window.t('botsFieldProvider')) + `<select onchange="updateNode('${nodeId}','aiProvider',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
                     <option value="openai" ${node.aiProvider!=='anthropic'?'selected':''}>OpenAI GPT-4o-mini</option>
                     <option value="anthropic" ${node.aiProvider==='anthropic'?'selected':''}>Anthropic claude-haiku</option>
                 </select>`;
         }
 
         if (node.type === 'delay') {
-            specific = field('ЗАТРИМКА (хвилин)') + input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '60', 'number');
+            specific = field(window.t('botsFieldDelay')) + input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '60', 'number');
         }
 
         if (node.type === 'talko_task') {
-            specific = field('ЗАГОЛОВОК ЗАДАЧІ') + input(node.taskTitle||'', `updateNode('${nodeId}','taskTitle',this.value)`, 'Опрацювати ліда') +
-                field('ВІДПОВІДАЛЬНИЙ (роль)') + `<select onchange="updateNode('${nodeId}','taskAssignRole',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
+            specific = field(window.t('botsFieldTaskTitle')) + input(node.taskTitle||'', `updateNode('${nodeId}','taskTitle',this.value)`, 'Опрацювати ліда') +
+                field(window.t('botsFieldAssignRole')) + `<select onchange="updateNode('${nodeId}','taskAssignRole',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
                     <option value="owner">Власник</option>
                     <option value="manager">Менеджер</option>
                 </select>` +
-                field('ПРІОРИТЕТ') + `<select onchange="updateNode('${nodeId}','taskPriority',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
+                field(window.t('botsFieldPriority')) + `<select onchange="updateNode('${nodeId}','taskPriority',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
                     <option value="high"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Високий</option>
                     <option value="medium" selected><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span> Середній</option>
                     <option value="low"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Низький</option>
@@ -501,22 +501,22 @@
         }
 
         if (node.type === 'talko_deal') {
-            specific = field('НАЗВА УГОДИ') + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
-                field('СТАДІЯ') + input(node.dealStage||'new', `updateNode('${nodeId}','dealStage',this.value)`, 'new');
+            specific = field(window.t('botsFieldDealName')) + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
+                field(window.t('botsFieldStage')) + input(node.dealStage||'new', `updateNode('${nodeId}','dealStage',this.value)`, 'new');
         }
 
         if (node.type === 'tag') {
-            specific = field('ТЕГ') + input(node.tagName||'', `updateNode('${nodeId}','tagName',this.value)`, 'telegram-bot');
+            specific = field(window.t('botsFieldTagName')) + input(node.tagName||'', `updateNode('${nodeId}','tagName',this.value)`, 'telegram-bot');
         }
 
         if (node.type === 'human') {
             specific = `<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:0.75rem;font-size:0.82rem;color:#9a3412;margin-bottom:0.75rem;">
                 <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Цей вузол передає розмову живому менеджеру. Бот надішле сповіщення в TALKO і зупинить автоматичні відповіді до вирішення.
-            </div>` + field('ПОВІДОМЛЕННЯ ДЛЯ КЛІЄНТА') + textarea(node.text||'Дякую! Зараз передам вас до менеджера.', `updateNode('${nodeId}','text',this.value)`);
+            </div>` + field(window.t('botsFieldMgrMsg')) + textarea(node.text||'Дякую! Зараз передам вас до менеджера.', `updateNode('${nodeId}','text',this.value)`);
         }
 
         if (node.type === 'end') {
-            specific = field('ФІНАЛЬНЕ ПОВІДОМЛЕННЯ') + textarea(node.text||'Дякуємо за звернення! До зустрічі. <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>', `updateNode('${nodeId}','text',this.value)`);
+            specific = field(window.t('botsFieldEndMsg')) + textarea(node.text||'Дякуємо за звернення! До зустрічі. <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>', `updateNode('${nodeId}','text',this.value)`);
         }
 
         const showNextNode = !['buttons','condition','end'].includes(node.type);
@@ -576,7 +576,7 @@
                 ? compRef.collection('bots').doc(botsCurrentBotId).collection('flows').doc(botsCurrentFlowId)
                 : compRef.collection('flows').doc(botsCurrentFlowId);
             await ref.update({ nodes: botsFlowNodes, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            if (typeof showToast === 'function') showToast('Збережено ✓', 'success');
+            if (typeof showToast === 'function') showToast(window.t('botsSavedOk'), 'success');
         } catch (e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
     };
 
@@ -601,8 +601,8 @@
                         return `<div style="background:white;border-radius:10px;padding:0.75rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:0.75rem;">
                             <div style="width:10px;height:10px;border-radius:50%;background:${statusColor};flex-shrink:0;"></div>
                             <div style="flex:1;min-width:0;">
-                                <div style="font-weight:600;font-size:0.85rem;">${escH(s.contactName || s.chatId || 'Анонім')}</div>
-                                <div style="font-size:0.75rem;color:#6b7280;">${flow?.name || s.flowId || ''} · ${s.currentNodeId || 'вузол 0'}</div>
+                                <div style="font-weight:600;font-size:0.85rem;">${escH(s.contactName || s.chatId || window.t('botsAnonymous'))}</div>
+                                <div style="font-size:0.75rem;color:#6b7280;">${flow?.name || s.flowId || ''} · ${s.currentNodeId || window.t('botsNode0')}</div>
                             </div>
                             <div style="font-size:0.72rem;color:#9ca3af;">${s.lastActivity?.toDate ? relTime(s.lastActivity.toDate()) : ''}</div>
                             ${s.status === 'waiting_human' ? `<button onclick="resolveHumanSession('${s.id}')" style="padding:0.3rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;">Вирішити</button>` : ''}
@@ -618,7 +618,7 @@
         await firebase.firestore().collection('companies').doc(window.currentCompanyId)
             .collection('sessions').doc(sessionId)
             .update({ status: 'resolved', resolvedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (typeof showToast === 'function') showToast('Сесію вирішено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('botsSessionResolved'), 'success');
         renderBotsSessionsView();
     };
 
@@ -792,11 +792,11 @@
     window.botsConnectTelegram = async function() {
         const token = document.getElementById('tgBotToken')?.value.trim();
         if (!token || token.includes('•')) {
-            if (typeof showToast === 'function') showToast('Введіть Bot Token', 'error');
+            if (typeof showToast === 'function') showToast(window.t('botsEnterBotToken'), 'error');
             return;
         }
         try {
-            if (typeof showToast === 'function') showToast('Підключаємо...', 'info');
+            if (typeof showToast === 'function') showToast(window.t('botsConnecting'), 'info');
 
             // Встановлюємо вебхук через Telegram API
             const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram`;
@@ -853,7 +853,7 @@
         const token = document.getElementById(tokenId)?.value.trim();
         const verifyToken = document.getElementById(verifyId)?.value.trim();
         if (!token || token.includes('•')) {
-            if (typeof showToast === 'function') showToast('Введіть Page Access Token', 'error');
+            if (typeof showToast === 'function') showToast(window.t('botsEnterPageToken'), 'error');
             return;
         }
         try {
@@ -892,7 +892,7 @@
         try {
             await firebase.firestore().collection('companies').doc(window.currentCompanyId)
                 .update({ [field]: key });
-            if (typeof showToast === 'function') showToast('Ключ збережено ✓', 'success');
+            if (typeof showToast === 'function') showToast(window.t('botsKeySaved'), 'success');
             document.getElementById(inputId).value = '••••••••' + key.slice(-4);
         } catch (e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
     };
@@ -902,8 +902,8 @@
     function relTime(d) {
         const diff = Date.now() - d.getTime();
         const m = Math.floor(diff/60000);
-        if (m<1) return 'щойно'; if (m<60) return m+'хв';
-        const h = Math.floor(m/60); if (h<24) return h+'год';
+        if (m<1) return window.t('botsJustNowLabel'); if (m<60) return m+'хв';
+        const h = Math.floor(m/60); if (h<24) return h+window.t('botsHourShort');
         return Math.floor(h/24)+'дн';
     }
 
@@ -1053,9 +1053,9 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
                                 </div>
                                 <div style="display:flex;gap:0.4rem;flex-shrink:0;">
                                     <button onclick="toggleFlowStatus('${flow.id}','${flow.status}')"
-                                        title="${flow.status === 'active' ? 'Поставити на паузу' : 'Активувати ланцюг'}"
+                                        title="${flow.status === 'active' ? window.t('botsPauseFlow') : window.t('botsActivateFlow')}"
                                         style="padding:0.45rem 0.75rem;background:${flow.status==='active'?'#fee2e2':'#f0fdf4'};color:${flow.status==='active'?'#ef4444':'#16a34a'};border:1.5px solid ${flow.status==='active'?'#fca5a5':'#86efac'};border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                                        ${flow.status === 'active' ? 'Пауза' : 'Активувати'}
+                                        ${flow.status === 'active' ? window.t('botsPauseLabel') : window.t('botsActivateLabel')}
                                     </button>
                                     <button onclick="openFlowEditor('${flow.id}')" title="Редагувати"
                                         style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">
@@ -1081,17 +1081,17 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
             ? compRef.collection('bots').doc(botsCurrentBotId).collection('flows').doc(flowId)
             : compRef.collection('flows').doc(flowId);
         await ref.update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (typeof showToast === 'function') showToast(newStatus === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> Бота активовано' : '⏸ Бота на паузі', 'success');
+        if (typeof showToast === 'function') showToast(newStatus === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> Бота активовано' : window.t('botsBotPaused'), 'success');
     };
 
     window.confirmDeleteFlow = async function (flowId) {
-        if (!(await (window.showConfirmModal ? showConfirmModal('Видалити бота? Активні сесії будуть зупинені.',{danger:true}) : Promise.resolve(confirm('Видалити бота? Активні сесії будуть зупинені.'))))) return;
+        if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteBotConfirm'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteBotConfirm')))))) return;
         const compRef = firebase.firestore().collection('companies').doc(window.currentCompanyId);
         // FIX: correct path
         const ref = botsCurrentBotId
             ? compRef.collection('bots').doc(botsCurrentBotId).collection('flows').doc(flowId)
             : compRef.collection('flows').doc(flowId);
-        ref.delete().then(() => { if (typeof showToast === 'function') showToast('Видалено', 'success'); });
+        ref.delete().then(() => { if (typeof showToast === 'function') showToast(window.t('finDeleted'), 'success'); });
     };
 
     // ── Create Flow Modal ──────────────────────────────────
@@ -1137,7 +1137,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
 
     window.saveNewFlow = async function () {
         const name = document.getElementById('newFlowName')?.value.trim();
-        if (!name) { if(window.showToast)showToast('Введіть назву','warning'); else alert('Введіть назву'); return; }
+        if (!name) { if(window.showToast)showToast(window.t('botsEnterBotName'),'warning'); else alert(window.t('botsEnterBotName')); return; }
         try {
             const db = firebase.firestore();
             const compRef = db.collection('companies').doc(window.currentCompanyId);
@@ -1166,7 +1166,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
             document.getElementById('botsCreateOverlay')?.remove();
-            if (typeof showToast === 'function') showToast('Бота створено ✓', 'success');
+            if (typeof showToast === 'function') showToast(window.t('botsBotCreatedOk'), 'success');
             openFlowEditor(ref.id, botsCurrentBotId);
         } catch (err) { if(window.showToast)showToast('Помилка: ' + err.message,'error'); else alert('Помилка: ' + err.message); }
     };
@@ -1199,17 +1199,17 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
     function renderFlowEditorPanel(flowData) {
         document.getElementById('botsEditorOverlay')?.remove();
         const nodeTypes = [
-            ['message','Повідомлення','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>'],
-            ['question','Питання','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>'],
-            ['buttons','Кнопки','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="5" r="2" fill="currentColor"/></svg></span>'],
-            ['condition','Умова','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>'],
-            ['ai','AI відповідь','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>'],
-            ['delay','Затримка','⏳'],
-            ['talko_task','Задача TALKO','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>'],
-            ['talko_deal','Угода CRM','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>'],
-            ['tag','Тег контакту','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>️'],
-            ['human','Передати менеджеру','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>'],
-            ['end','Завершення','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>'],
+            ['message',window.t('botsNodeMessage'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>'],
+            ['question',window.t('botsNodeQuestion'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>'],
+            ['buttons',window.t('botsNodeButtons'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="5" r="2" fill="currentColor"/></svg></span>'],
+            ['condition',window.t('botsNodeCondition'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>'],
+            ['ai',window.t('botsNodeAI'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>'],
+            ['delay',window.t('botsNodeDelay'),'⏳'],
+            ['talko_task',window.t('botsNodeTask'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>'],
+            ['talko_deal',window.t('botsNodeCRM'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>'],
+            ['tag',window.t('botsNodeTag'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>️'],
+            ['human',window.t('botsNodeManager'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>'],
+            ['end',window.t('botsNodeEnd'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>'],
         ];
 
         const html = `
@@ -1296,14 +1296,14 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
 
     window.addFlowNode = function (type) {
         const id = 'node_' + Date.now();
-        const names = { message:'Повідомлення', question:'Питання', buttons:'Вибір', condition:'Умова', ai:'AI', delay:'Затримка', talko_task:'Задача', talko_deal:'Угода', tag:'Тег', human:'Менеджер', end:'Завершення' };
+        const names = { message:window.t('botsNodeMessage'), question:window.t('botsNodeQuestion'), buttons:window.t('botsChoiceList'), condition:window.t('botsNodeCondition'), ai:'AI', delay:window.t('botsNodeDelay'), talko_task:window.t('botsChoiceTask'), talko_deal:'Угода', tag:window.t('botsChoiceTag'), human:window.t('botsChoiceManager'), end:window.t('botsNodeEnd') };
         botsFlowNodes.push({ id, type, name: names[type]||type, text:'', options:[], saveAs:null, condition:null, delay:0, taskTitle:'', dealTitle:'', tagName:'', aiPrompt:'', nextNode:null });
         renderBotsNodesList();
         selectFlowNode(id);
     };
 
     window.deleteFlowNode = async function (nodeId) {
-        if (!(await (window.showConfirmModal ? showConfirmModal('Видалити вузол?',{danger:true}) : Promise.resolve(confirm('Видалити вузол?'))))) return;
+        if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteNode'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteNode')))))) return;
         botsFlowNodes = botsFlowNodes.filter(n => n.id !== nodeId);
         if (botsSelectedNodeId === nodeId) {
             botsSelectedNodeId = null;
@@ -1340,16 +1340,16 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
         let specific = '';
 
         if (node.type === 'message') {
-            specific = field('ТЕКСТ ПОВІДОМЛЕННЯ') + textarea(node.text, `updateNode('${nodeId}','text',this.value)`);
+            specific = field(window.t('botsFieldMsgText')) + textarea(node.text, `updateNode('${nodeId}','text',this.value)`);
         }
 
         if (node.type === 'question') {
-            specific = field('ПИТАННЯ') + textarea(node.text, `updateNode('${nodeId}','text',this.value)`) +
-                field('ЗБЕРЕГТИ ВІДПОВІДЬ ЯК') + input(node.saveAs||'', `updateNode('${nodeId}','saveAs',this.value)`, 'answer');
+            specific = field(window.t('botsFieldQuestion')) + textarea(node.text, `updateNode('${nodeId}','text',this.value)`) +
+                field(window.t('botsFieldSaveAs')) + input(node.saveAs||'', `updateNode('${nodeId}','saveAs',this.value)`, 'answer');
         }
 
         if (node.type === 'buttons') {
-            specific = field('ТЕКСТ ПЕРЕД КНОПКАМИ') + textarea(node.text, `updateNode('${nodeId}','text',this.value)`) +
+            specific = field(window.t('botsFieldBtnText')) + textarea(node.text, `updateNode('${nodeId}','text',this.value)`) +
                 `<div><label style="${lbl()}">КНОПКИ</label>
                 <div id="nodeOpts_${nodeId}" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.4rem;">
                     ${(node.options||[]).map((o,i) => `
@@ -1369,9 +1369,9 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
         }
 
         if (node.type === 'condition') {
-            specific = field('ПОЛЕ ДЛЯ ПЕРЕВІРКИ') + input(node.conditionField||'', `updateNode('${nodeId}','conditionField',this.value)`, 'phone') +
-                field('ОПЕРАТОР') + `<select onchange="updateNode('${nodeId}','conditionOp',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
-                    ${['exists','not_exists','equals','contains','starts_with'].map(op=>`<option value="${op}" ${node.conditionOp===op?'selected':''}>${{exists:'існує',not_exists:'не існує',equals:'=',contains:'містить',starts_with:'починається з'}[op]||op}</option>`).join('')}
+            specific = field(window.t('botsFieldCheckField')) + input(node.conditionField||'', `updateNode('${nodeId}','conditionField',this.value)`, 'phone') +
+                field(window.t('botsFieldOperator')) + `<select onchange="updateNode('${nodeId}','conditionOp',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
+                    ${['exists','not_exists','equals','contains','starts_with'].map(op=>`<option value="${op}" ${node.conditionOp===op?'selected':''}>${{exists:window.t('botsOpExists'),not_exists:window.t('botsOpNotExists'),equals:'=',contains:window.t('botsOpContains'),starts_with:window.t('botsOpStartsWith')}[op]||op}</option>`).join('')}
                 </select>` +
                 field('ЗНАЧЕННЯ (для =, містить, починається з)') + input(node.conditionValue||'', `updateNode('${nodeId}','conditionValue',this.value)`, '') +
                 `<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
@@ -1389,24 +1389,24 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
         }
 
         if (node.type === 'ai') {
-            specific = field('СИСТЕМНИЙ ПРОМПТ') + textarea(node.aiPrompt||'', `updateNode('${nodeId}','aiPrompt',this.value)`, 'Ти консультант. Дані клієнта: {session.data}') +
-                field('ПРОВАЙДЕР') + `<select onchange="updateNode('${nodeId}','aiProvider',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
+            specific = field(window.t('botsFieldSysPrompt')) + textarea(node.aiPrompt||'', `updateNode('${nodeId}','aiPrompt',this.value)`, 'Ти консультант. Дані клієнта: {session.data}') +
+                field(window.t('botsFieldProvider')) + `<select onchange="updateNode('${nodeId}','aiProvider',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
                     <option value="openai" ${node.aiProvider!=='anthropic'?'selected':''}>OpenAI GPT-4o-mini</option>
                     <option value="anthropic" ${node.aiProvider==='anthropic'?'selected':''}>Anthropic claude-haiku</option>
                 </select>`;
         }
 
         if (node.type === 'delay') {
-            specific = field('ЗАТРИМКА (хвилин)') + input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '60', 'number');
+            specific = field(window.t('botsFieldDelay')) + input(node.delay||0, `updateNode('${nodeId}','delay',parseInt(this.value)||0)`, '60', 'number');
         }
 
         if (node.type === 'talko_task') {
-            specific = field('ЗАГОЛОВОК ЗАДАЧІ') + input(node.taskTitle||'', `updateNode('${nodeId}','taskTitle',this.value)`, 'Опрацювати ліда') +
-                field('ВІДПОВІДАЛЬНИЙ (роль)') + `<select onchange="updateNode('${nodeId}','taskAssignRole',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
+            specific = field(window.t('botsFieldTaskTitle')) + input(node.taskTitle||'', `updateNode('${nodeId}','taskTitle',this.value)`, 'Опрацювати ліда') +
+                field(window.t('botsFieldAssignRole')) + `<select onchange="updateNode('${nodeId}','taskAssignRole',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
                     <option value="owner">Власник</option>
                     <option value="manager">Менеджер</option>
                 </select>` +
-                field('ПРІОРИТЕТ') + `<select onchange="updateNode('${nodeId}','taskPriority',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
+                field(window.t('botsFieldPriority')) + `<select onchange="updateNode('${nodeId}','taskPriority',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
                     <option value="high"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#ef4444"/></svg></span> Високий</option>
                     <option value="medium" selected><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#f59e0b"/></svg></span> Середній</option>
                     <option value="low"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Низький</option>
@@ -1414,22 +1414,22 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
         }
 
         if (node.type === 'talko_deal') {
-            specific = field('НАЗВА УГОДИ') + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
-                field('СТАДІЯ') + input(node.dealStage||'new', `updateNode('${nodeId}','dealStage',this.value)`, 'new');
+            specific = field(window.t('botsFieldDealName')) + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
+                field(window.t('botsFieldStage')) + input(node.dealStage||'new', `updateNode('${nodeId}','dealStage',this.value)`, 'new');
         }
 
         if (node.type === 'tag') {
-            specific = field('ТЕГ') + input(node.tagName||'', `updateNode('${nodeId}','tagName',this.value)`, 'telegram-bot');
+            specific = field(window.t('botsFieldTagName')) + input(node.tagName||'', `updateNode('${nodeId}','tagName',this.value)`, 'telegram-bot');
         }
 
         if (node.type === 'human') {
             specific = `<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:0.75rem;font-size:0.82rem;color:#9a3412;margin-bottom:0.75rem;">
                 <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Цей вузол передає розмову живому менеджеру. Бот надішле сповіщення в TALKO і зупинить автоматичні відповіді до вирішення.
-            </div>` + field('ПОВІДОМЛЕННЯ ДЛЯ КЛІЄНТА') + textarea(node.text||'Дякую! Зараз передам вас до менеджера.', `updateNode('${nodeId}','text',this.value)`);
+            </div>` + field(window.t('botsFieldMgrMsg')) + textarea(node.text||'Дякую! Зараз передам вас до менеджера.', `updateNode('${nodeId}','text',this.value)`);
         }
 
         if (node.type === 'end') {
-            specific = field('ФІНАЛЬНЕ ПОВІДОМЛЕННЯ') + textarea(node.text||'Дякуємо за звернення! До зустрічі. <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>', `updateNode('${nodeId}','text',this.value)`);
+            specific = field(window.t('botsFieldEndMsg')) + textarea(node.text||'Дякуємо за звернення! До зустрічі. <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>', `updateNode('${nodeId}','text',this.value)`);
         }
 
         const showNextNode = !['buttons','condition','end'].includes(node.type);
@@ -1489,7 +1489,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
                 ? compRef.collection('bots').doc(botsCurrentBotId).collection('flows').doc(botsCurrentFlowId)
                 : compRef.collection('flows').doc(botsCurrentFlowId);
             await ref.update({ nodes: botsFlowNodes, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            if (typeof showToast === 'function') showToast('Збережено ✓', 'success');
+            if (typeof showToast === 'function') showToast(window.t('botsSavedOk'), 'success');
         } catch (e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
     };
 
@@ -1514,8 +1514,8 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
                         return `<div style="background:white;border-radius:10px;padding:0.75rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:0.75rem;">
                             <div style="width:10px;height:10px;border-radius:50%;background:${statusColor};flex-shrink:0;"></div>
                             <div style="flex:1;min-width:0;">
-                                <div style="font-weight:600;font-size:0.85rem;">${escH(s.contactName || s.chatId || 'Анонім')}</div>
-                                <div style="font-size:0.75rem;color:#6b7280;">${flow?.name || s.flowId || ''} · ${s.currentNodeId || 'вузол 0'}</div>
+                                <div style="font-weight:600;font-size:0.85rem;">${escH(s.contactName || s.chatId || window.t('botsAnonymous'))}</div>
+                                <div style="font-size:0.75rem;color:#6b7280;">${flow?.name || s.flowId || ''} · ${s.currentNodeId || window.t('botsNode0')}</div>
                             </div>
                             <div style="font-size:0.72rem;color:#9ca3af;">${s.lastActivity?.toDate ? relTime(s.lastActivity.toDate()) : ''}</div>
                             ${s.status === 'waiting_human' ? `<button onclick="resolveHumanSession('${s.id}')" style="padding:0.3rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;">Вирішити</button>` : ''}
@@ -1531,7 +1531,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
         await firebase.firestore().collection('companies').doc(window.currentCompanyId)
             .collection('sessions').doc(sessionId)
             .update({ status: 'resolved', resolvedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (typeof showToast === 'function') showToast('Сесію вирішено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('botsSessionResolved'), 'success');
         renderBotsSessionsView();
     };
 
@@ -1705,11 +1705,11 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
     window.botsConnectTelegram = async function() {
         const token = document.getElementById('tgBotToken')?.value.trim();
         if (!token || token.includes('•')) {
-            if (typeof showToast === 'function') showToast('Введіть Bot Token', 'error');
+            if (typeof showToast === 'function') showToast(window.t('botsEnterBotToken'), 'error');
             return;
         }
         try {
-            if (typeof showToast === 'function') showToast('Підключаємо...', 'info');
+            if (typeof showToast === 'function') showToast(window.t('botsConnecting'), 'info');
 
             // Встановлюємо вебхук через Telegram API
             const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram`;
@@ -1766,7 +1766,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
         const token = document.getElementById(tokenId)?.value.trim();
         const verifyToken = document.getElementById(verifyId)?.value.trim();
         if (!token || token.includes('•')) {
-            if (typeof showToast === 'function') showToast('Введіть Page Access Token', 'error');
+            if (typeof showToast === 'function') showToast(window.t('botsEnterPageToken'), 'error');
             return;
         }
         try {
@@ -1805,7 +1805,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
         try {
             await firebase.firestore().collection('companies').doc(window.currentCompanyId)
                 .update({ [field]: key });
-            if (typeof showToast === 'function') showToast('Ключ збережено ✓', 'success');
+            if (typeof showToast === 'function') showToast(window.t('botsKeySaved'), 'success');
             document.getElementById(inputId).value = '••••••••' + key.slice(-4);
         } catch (e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
     };
@@ -1815,8 +1815,8 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
     function relTime(d) {
         const diff = Date.now() - d.getTime();
         const m = Math.floor(diff/60000);
-        if (m<1) return 'щойно'; if (m<60) return m+'хв';
-        const h = Math.floor(m/60); if (h<24) return h+'год';
+        if (m<1) return window.t('botsJustNowLabel'); if (m<60) return m+'хв';
+        const h = Math.floor(m/60); if (h<24) return h+window.t('botsHourShort');
         return Math.floor(h/24)+'дн';
     }
 
