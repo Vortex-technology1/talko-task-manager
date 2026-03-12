@@ -29,16 +29,16 @@ const I = {
 const FINANCE_VERSION = '1.0.0';
 const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'analytics', 'ai', 'settings'];
 const TAB_LABELS = {
-  dashboard:  { icon: 'chart',     label: 'Дашборд'      },
-  income:     { icon: 'income',    label: 'Доходи'       },
-  expense:    { icon: 'expense',   label: 'Витрати'      },
-  recurring:  { icon: 'repeat',    label: 'Регулярні'    },
-  invoices:   { icon: 'invoice',   label: 'Рахунки'      },
-  functions:  { icon: 'func',      label: 'Функції'      },
-  planning:   { icon: 'plan',      label: 'Планування'   },
-  analytics:  { icon: 'chart',     label: 'Аналітика'    },
+  dashboard:  { icon: 'chart',     label: window.t('finTabDashboard')      },
+  income:     { icon: 'income',    label: window.t('finTabIncome')       },
+  expense:    { icon: 'expense',   label: window.t('finTabExpense')      },
+  recurring:  { icon: 'repeat',    label: window.t('finTabRecurring')    },
+  invoices:   { icon: 'invoice',   label: window.t('finTabInvoices')      },
+  functions:  { icon: 'func',      label: window.t('finTabFunctions')      },
+  planning:   { icon: 'plan',      label: window.t('finTabPlanning')   },
+  analytics:  { icon: 'chart',     label: window.t('finTabAnalytics')    },
   ai:         { icon: 'ai',        label: 'AI'           },
-  settings:   { icon: 'settings',  label: 'Налаштування' },
+  settings:   { icon: 'settings',  label: window.t('finTabSettings') },
 };
 
 // ── Стан модуля ────────────────────────────────────────────
@@ -90,25 +90,25 @@ function colRef(name) {
 // ── Системні категорії (дефолт при ініціалізації) ──────────
 const DEFAULT_CATEGORIES = {
   income: [
-    { id: 'inc_services',   name: 'Оплата за послуги',    icon: 'briefcase' },
-    { id: 'inc_goods',      name: 'Продаж товарів',       icon: 'package' },
-    { id: 'inc_prepay',     name: 'Передоплата',          icon: 'credit-card' },
-    { id: 'inc_royalty',    name: 'Роялті / Оренда',      icon: 'building-2' },
+    { id: 'inc_services',   name: window.t('finCatServices'),    icon: 'briefcase' },
+    { id: 'inc_goods',      name: window.t('finCatGoods'),       icon: 'package' },
+    { id: 'inc_prepay',     name: window.t('finCatPrepay'),          icon: 'credit-card' },
+    { id: 'inc_royalty',    name: window.t('finCatRoyalty'),      icon: 'building-2' },
     { id: 'inc_other',      name: 'Інше',                 icon: 'plus-circle' },
   ],
   expense: [
-    { id: 'exp_materials',  name: 'Матеріали / сировина', icon: 'wrench' },
-    { id: 'exp_salary',     name: 'ФОП / Зарплата',       icon: 'user' },
-    { id: 'exp_rent',       name: 'Оренда',               icon: 'home' },
-    { id: 'exp_transport',  name: 'Транспорт / Паливо',   icon: 'car' },
-    { id: 'exp_marketing',  name: 'Маркетинг / Реклама',  icon: 'megaphone' },
-    { id: 'exp_equipment',  name: 'Обладнання',           icon: 'settings' },
-    { id: 'exp_utilities',  name: 'Комунальні послуги',   icon: 'lightbulb' },
-    { id: 'exp_admin',      name: 'Адміністративні',      icon: 'clipboard-list' },
-    { id: 'exp_subcontract',name: 'Субпідряд',            icon: 'handshake' },
-    { id: 'exp_tax',        name: 'Податки / ZUS',        icon: 'bar-chart-2' },
-    { id: 'exp_reserve',    name: 'Резервний фонд',       icon: 'shield' },
-    { id: 'exp_dividends',  name: 'Дивіденди власника',   icon: 'coins' },
+    { id: 'exp_materials',  name: window.t('finCatMaterials'), icon: 'wrench' },
+    { id: 'exp_salary',     name: window.t('finCatSalary'),       icon: 'user' },
+    { id: 'exp_rent',       name: window.t('finRent'),               icon: 'home' },
+    { id: 'exp_transport',  name: window.t('finCatTransport'),   icon: 'car' },
+    { id: 'exp_marketing',  name: window.t('finCatMarketing'),  icon: 'megaphone' },
+    { id: 'exp_equipment',  name: window.t('finCatEquipment'),           icon: 'settings' },
+    { id: 'exp_utilities',  name: window.t('finCatUtilities'),   icon: 'lightbulb' },
+    { id: 'exp_admin',      name: window.t('finCatAdmin'),      icon: 'clipboard-list' },
+    { id: 'exp_subcontract',name: window.t('finCatSubcontract'),            icon: 'handshake' },
+    { id: 'exp_tax',        name: window.t('finCatTax'),        icon: 'bar-chart-2' },
+    { id: 'exp_reserve',    name: window.t('finCatReserve'),       icon: 'shield' },
+    { id: 'exp_dividends',  name: window.t('finCatDividends'),   icon: 'coins' },
     { id: 'exp_other',      name: 'Інше',                 icon: 'plus-circle' },
   ],
 };
@@ -151,7 +151,7 @@ async function initFirestoreCollections() {
   // 4. Рахунок за замовчуванням
   const accRef = colRef('finance_accounts').doc('acc_main');
   batch.set(accRef, {
-    name: _state.region === 'US' ? 'Bank Account' : 'Розрахунковий рахунок',
+    name: _state.region === 'US' ? window.t('finBankAccount') : window.t('finBankAccount'),
     type: 'bank',
     currency: _state.currency,
     balance: 0,
@@ -162,7 +162,7 @@ async function initFirestoreCollections() {
   // 5. Готівкова каса
   const cashRef = colRef('finance_accounts').doc('acc_cash');
   batch.set(cashRef, {
-    name: _state.region === 'US' ? 'Cash' : 'Готівкова каса',
+    name: _state.region === 'US' ? window.t('finCashAccount') : window.t('finCashAccount'),
     type: 'cash',
     currency: _state.currency,
     balance: 0,
@@ -429,7 +429,7 @@ function renderDashboard(el) {
         <div style="width:240px;flex-shrink:0;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
             <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Рахунки</div>
-            ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ Переказ</button>` : ''}
+            ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ ${window.t('finTransfer')}</button>` : ''}
           </div>
           <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #f3f4f6;">
             <div style="font-size:0.72rem;color:#6b7280;">Загальний залишок</div>
@@ -540,15 +540,15 @@ async function loadDashboardData(monthVal) {
     };
     const incCount = snap.docs.filter(d=>d.data().type==='income').length;
     const expCount = snap.docs.filter(d=>d.data().type==='expense').length;
-    set('kpiIncome',  fmt(income),  incCount + ' операцій', '#22c55e');
-    set('kpiExpense', fmt(expense), expCount + ' операцій', '#ef4444');
-    set('kpiProfit',  fmt(profit),  profit >= 0 ? 'прибуток' : 'збиток', pColor);
-    set('kpiMargin',  margin+'%',   income > 0 ? `від доходу ${fmt(income)}` : 'немає доходів', profit>=0?'#22c55e':'#ef4444');
+    set('kpiIncome',  fmt(income),  incCount + ` ${window.t('finOperations')}`, '#22c55e');
+    set('kpiExpense', fmt(expense), expCount + ` ${window.t('finOperations')}`, '#ef4444');
+    set('kpiProfit',  fmt(profit),  profit >= 0 ? window.t('finProfitWord') : window.t('finLossWord'), pColor);
+    set('kpiMargin',  margin+'%',   income > 0 ? `від доходу ${fmt(income)}` : window.t('finNoRevenue'), profit>=0?'#22c55e':'#ef4444');
 
     // Сигнали
     const alerts = [];
     if (income === 0 && expense === 0) {
-      alerts.push({ type: 'info', text: 'Немає операцій за цей місяць' });
+      alerts.push({ type: 'info', text: window.t('finNoOps') });
     }
     _state.accounts.forEach(acc => {
       if ((acc.balance || 0) < 0) {
@@ -562,7 +562,7 @@ async function loadDashboardData(monthVal) {
       alerts.push({ type: 'warn', text: `Низька маржа: ${margin}% (норма > 15%)` });
     }
     if (alerts.length === 0) {
-      alerts.push({ type: 'ok', text: 'Все в нормі — сигналів немає' });
+      alerts.push({ type: 'ok', text: window.t('finAllOk') });
     }
 
     const alertColors = { error: '#ef4444', warn: '#f59e0b', ok: '#22c55e', info: '#6b7280' };
@@ -1118,11 +1118,11 @@ function _nextInvoiceNumber(invoices) {
 
 function _invoiceStatusBadge(status) {
   const map = {
-    draft:    { label: 'Чернетка',  bg: '#f3f4f6', color: '#6b7280' },
-    sent:     { label: 'Надіслано', bg: '#eff6ff', color: '#3b82f6' },
-    paid:     { label: 'Оплачено',  bg: '#f0fdf4', color: '#16a34a' },
-    overdue:  { label: 'Прострочено', bg: '#fef2f2', color: '#dc2626' },
-    cancelled:{ label: 'Скасовано', bg: '#f9fafb', color: '#9ca3af' },
+    draft:    { label: window.t('finInvoiceDraft'),  bg: '#f3f4f6', color: '#6b7280' },
+    sent:     { label: window.t('finInvoiceSent'), bg: '#eff6ff', color: '#3b82f6' },
+    paid:     { label: window.t('finInvoicePaid'),  bg: '#f0fdf4', color: '#16a34a' },
+    overdue:  { label: window.t('finInvoiceOverdue'), bg: '#fef2f2', color: '#dc2626' },
+    cancelled:{ label: window.t('finInvoiceCancelled'), bg: '#f9fafb', color: '#9ca3af' },
   };
   const s = map[status] || map.draft;
   return `<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:${s.bg};color:${s.color};">${s.label}</span>`;
@@ -1349,15 +1349,15 @@ window._financeTransfer = function() {
 };
 
 window._doTransfer = async function() {
-  if (!_state.companyId || !_state.initialized) { if (typeof showToast === 'function') showToast('Фінанси не ініціалізовані', 'error'); return; }
+  if (!_state.companyId || !_state.initialized) { if (typeof showToast === 'function') showToast(window.t('finNotInit'), 'error'); return; }
   const fromId = document.getElementById('trFrom')?.value;
   const toId   = document.getElementById('trTo')?.value;
   const amount = parseFloat(document.getElementById('trAmount')?.value || 0);
   const note   = document.getElementById('trNote')?.value?.trim() || '';
 
   if (!fromId || !toId) return;
-  if (fromId === toId) { if (typeof showToast === 'function') showToast('Оберіть різні рахунки', 'warn'); return; }
-  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast('Введіть суму', 'warn'); return; }
+  if (fromId === toId) { if (typeof showToast === 'function') showToast(window.t('finTransferDiff'), 'warn'); return; }
+  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast(window.t('finTransferAmount'), 'warn'); return; }
 
   const fromAcc = _state.accounts.find(a => a.id === fromId);
   if (fromAcc && (fromAcc.balance || 0) < amount) {
@@ -1433,9 +1433,9 @@ function renderInvoices(el) {
       <!-- Статистика -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
         ${[
-          { label: 'Виставлено',   val: fmt(total, currency),   color: '#22c55e' },
-          { label: 'Оплачено',     val: fmt(paid, currency),    color: '#16a34a' },
-          { label: 'Очікує оплати',val: fmt(pending, currency), color: '#f59e0b' },
+          { label: window.t('finInvoiceIssued'),   val: fmt(total, currency),   color: '#22c55e' },
+          { label: window.t('finInvoicePaid'),     val: fmt(paid, currency),    color: '#16a34a' },
+          { label: window.t('finInvoiceAwaiting'),val: fmt(pending, currency), color: '#f59e0b' },
         ].map(s => `
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;">
             <div style="font-size:0.75rem;color:#6b7280;margin-bottom:4px;">${s.label}</div>
@@ -1681,8 +1681,8 @@ window._invoiceSave = async function(editId) {
     updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
   };
   if (!editId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-  if (!data.number) { alert('Вкажіть номер рахунку'); if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; } return; }
-  if (!data.clientName) { alert('Вкажіть клієнта'); if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; } return; }
+  if (!data.number) { alert(window.t('finEnterInvNum')); if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; } return; }
+  if (!data.clientName) { alert(window.t('finEnterClient')); if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; } return; }
 
   // Видаляємо undefined
   if (editId) delete data.status;
@@ -1709,8 +1709,8 @@ window._invoiceSave = async function(editId) {
 window._invoiceMarkPaid = async function(id) {
   // FIX CA: use showConfirmModal instead of native confirm + emit INVOICE_PAID for automation
   const confirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal('Позначити рахунок як оплачений?')
-    : confirm('Позначити рахунок як оплачений?');
+    ? await showConfirmModal(window.t('finMarkPaid'))
+    : confirm(window.t('finMarkPaid'));
   if (!confirmed) return;
   try {
     await colRef('finance_invoices').doc(id).update({ status: 'paid', paidAt: firebase.firestore.FieldValue.serverTimestamp() });
@@ -1731,7 +1731,7 @@ window._invoiceMarkPaid = async function(id) {
 
 // ── Видалення ─────────────────────────────────────────────
 window._invoiceDelete = async function(id) {
-  if (!confirm('Видалити рахунок? Це незворотно.')) return;
+  if (!confirm(window.t('finDeleteInvoice'))) return;
   try {
     await colRef('finance_invoices').doc(id).delete();
     _state.invoices = _state.invoices.filter(i => i.id !== id);
@@ -2008,7 +2008,7 @@ function _recurringCard(item, currency) {
       <!-- Дії -->
       ${isOwnerOrManager() ? `
         <div style="display:flex;gap:0.4rem;flex-shrink:0;">
-          <button onclick="window._finToggleRecurring('${item.id}')" title="${active ? 'Призупинити' : 'Активувати'}"
+          <button onclick="window._finToggleRecurring('${item.id}')" title="${active ? window.t('finPause') : window.t('finActivate')}"
             style="width:30px;height:30px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
             ${active ? I.pause : I.play}
           </button>
@@ -2147,7 +2147,7 @@ window._finAddRecurring = function(editId) {
           </button>
           <button onclick="window._finSaveRecurring('${editId || ''}')"
             style="flex:2;padding:10px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:700;">
-            ${existing ? 'Зберегти зміни' : 'Додати платіж'}
+            ${existing ? window.t('finSaveChanges') : window.t('finAddPayment')}
           </button>
         </div>
       </div>
@@ -2174,8 +2174,8 @@ window._recSetType = function(type) {
 window._finSaveRecurring = async function(editId) {
   const name   = document.getElementById('rec_name')?.value?.trim();
   const amount = parseFloat(document.getElementById('rec_amount')?.value);
-  if (!name) { showToast('Введіть назву платежу', 'error'); return; }
-  if (!amount || amount <= 0) { showToast('Введіть суму', 'error'); return; }
+  if (!name) { showToast(window.t('finEnterPayName'), 'error'); return; }
+  if (!amount || amount <= 0) { showToast(window.t('finTransferAmount'), 'error'); return; }
 
   const data = {
     name,
@@ -2203,7 +2203,7 @@ window._finSaveRecurring = async function(editId) {
     document.getElementById('recurringModal')?.remove();
     await _loadRecurring();
     renderSubTab('recurring');
-    showToast(editId ? 'Платіж оновлено' : 'Платіж додано', 'success');
+    showToast(editId ? window.t('finPaymentUpdated') : window.t('finPaymentAdded'), 'success');
   } catch(e) {
     console.error('[Recurring save]', e);
     showToast('Помилка: ' + e.message, 'error');
@@ -2224,20 +2224,20 @@ window._finToggleRecurring = async function(id) {
       .update({ active: newActive, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     await _loadRecurring();
     renderSubTab('recurring');
-    showToast(newActive ? 'Платіж активовано' : 'Платіж призупинено', 'success');
+    showToast(newActive ? window.t('finPaymentActivated') : window.t('finPaymentPaused'), 'success');
   } catch(e) {
     showToast('Помилка: ' + e.message, 'error');
   }
 };
 
 window._finDeleteRecurring = async function(id) {
-  if (!await showConfirmModal('Видалити регулярний платіж? Минулі транзакції залишаться.', { danger: true })) return;
+  if (!await showConfirmModal(window.t('finDeleteRecurring'), { danger: true })) return;
   try {
     await db.collection('companies').doc(_state.companyId)
       .collection('finance_recurring').doc(id).delete();
     _state.recurring = (_state.recurring || []).filter(r => r.id !== id);
     renderSubTab('recurring');
-    showToast('Видалено', 'success');
+    showToast(window.t('finDeleted'), 'success');
   } catch(e) {
     showToast('Помилка: ' + e.message, 'error');
   }
@@ -2647,7 +2647,7 @@ window._savePlanBudget = async function() {
     loadPlanningData(_planMonth);
     // Короткий feedback
     const btn = document.querySelector('[onclick="window._savePlanBudget()"]');
-    if (btn) { btn.textContent = '✓ Збережено'; setTimeout(()=>{ btn.textContent = 'Зберегти'; }, 1500); }
+    if (btn) { btn.textContent = window.t('finSaved'); setTimeout(()=>{ btn.textContent = 'Зберегти'; }, 1500); }
   } catch(e) {
     alert('Помилка збереження: ' + e.message);
   }
@@ -2917,7 +2917,7 @@ window._saveFuncNorms = async function() {
   inputs.forEach(inp => { data['func_norm_' + inp.dataset.funcNorm] = parseFloat(inp.value) || 0; });
   try {
     await colRef('finance_budgets').doc(_planMonth).set(data, { merge: true });
-    if (typeof showToast === 'function') showToast('Норми збережено', 'success');
+    if (typeof showToast === 'function') showToast(window.t('finNormsSaved'), 'success');
   } catch(e) { alert('Помилка: ' + e.message); }
 };
 
@@ -3146,9 +3146,9 @@ function _renderPnl(el, txs, currency, from, to) {
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
       ${[
         { label: 'Дохід',    val: fmt(totalInc, currency),  color: '#22c55e' },
-        { label: 'Витрати',  val: fmt(totalExp, currency),  color: '#ef4444' },
-        { label: 'Прибуток', val: fmt(profit, currency),    color: profitColor },
-        { label: 'Маржа',    val: margin + '%',             color: profitColor },
+        { label: window.t('finTabExpense'),  val: fmt(totalExp, currency),  color: '#ef4444' },
+        { label: window.t('finProfit'), val: fmt(profit, currency),    color: profitColor },
+        { label: window.t('finMargin'),    val: margin + '%',             color: profitColor },
       ].map(k => `
         <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;text-align:center;">
           <div style="font-size:0.72rem;color:#6b7280;margin-bottom:4px;">${k.label}</div>
@@ -3514,7 +3514,7 @@ window._saveRates = async function() {
     await colRef('finance_settings').doc('main').set({ rates }, { merge: true });
     const st = document.getElementById('ratesStatus');
     if (st) st.textContent = 'Збережено ' + new Date().toLocaleTimeString('uk-UA');
-    if (typeof showToast === 'function') showToast('Курси збережено', 'success');
+    if (typeof showToast === 'function') showToast(window.t('finRateSaved'), 'success');
   } catch(e) { alert('Помилка збереження: ' + e.message); }
 };
 
@@ -3572,7 +3572,7 @@ window._financeAddCategory = async function(type) {
 
 // Видалення категорії
 window._financeDeleteCategory = async function(catId, type) {
-  if (!confirm('Видалити категорію?')) return;
+  if (!confirm(window.t('finDeleteCat'))) return;
   try {
     await colRef('finance_categories').doc(catId).delete();
     _state.categories[type] = _state.categories[type].filter(c => c.id !== catId);
@@ -4147,9 +4147,9 @@ window._financeSaveTx = async function() {
   const dateVal = document.getElementById('fmDate')?.value;
 
   // Валідація
-  if (!amount || amount <= 0) { alert('Введіть суму'); return; }
-  if (!catId)                 { alert('Оберіть категорію'); return; }
-  if (!dateVal)               { alert('Вкажіть дату'); return; }
+  if (!amount || amount <= 0) { alert(window.t('finTransferAmount')); return; }
+  if (!catId)                 { alert(window.t('finSelectCategory')); return; }
+  if (!dateVal)               { alert(window.t('finSelectDate')); return; }
 
   const btn = document.getElementById('fmSaveBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
@@ -4215,7 +4215,7 @@ window._financeSaveTx = async function() {
 
 // Видалення транзакції
 window._financeDeleteTx = async function(txId, type) {
-  if (!confirm('Видалити цю транзакцію?')) return;
+  if (!confirm(window.t('finDeleteTx'))) return;
   try {
     const snap = await colRef('finance_transactions').doc(txId).get();
     if (!snap.exists) return;
@@ -4463,9 +4463,9 @@ window._renderProjectFinance = async function(projectId, el, opts) {
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
           ${[
             { label: 'Дохід',    val: fmt(income, currency),  color: '#22c55e' },
-            { label: 'Витрати',  val: fmt(expense, currency), color: '#ef4444' },
-            { label: 'Прибуток', val: fmt(profit, currency),  color: profit >= 0 ? '#16a34a' : '#ef4444' },
-            { label: 'Маржа',    val: margin + '%',           color: margin >= 20 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444' },
+            { label: window.t('finTabExpense'),  val: fmt(expense, currency), color: '#ef4444' },
+            { label: window.t('finProfit'), val: fmt(profit, currency),  color: profit >= 0 ? '#16a34a' : '#ef4444' },
+            { label: window.t('finMargin'),    val: margin + '%',           color: margin >= 20 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444' },
           ].map(k => `
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;">
               <div style="font-size:0.72rem;color:#6b7280;margin-bottom:3px;">${k.label}</div>
