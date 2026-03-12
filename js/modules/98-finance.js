@@ -869,17 +869,189 @@ async function loadAndRenderTxList(type) {
 }
 
 // ── Функції (заглушка Етап 1) ────────────────────────────
+// ── Фінанси по функціях — Етап 4 ────────────────────────
+let _funcFilter = { month: '' };
+
 function renderFunctions(el) {
+  const now = new Date();
+  const monthOpts = Array.from({length:6},(_,i)=>{
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const val = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    const lbl = d.toLocaleDateString('uk-UA',{month:'long',year:'numeric'});
+    return `<option value="${val}" ${_funcFilter.month===val?'selected':''}>${lbl}</option>`;
+  }).join('');
+
   el.innerHTML = `
     <div style="width:100%;">
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:1.25rem;">Фінанси по функціях</div>
-      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:2rem;text-align:center;color:#9ca3af;">
-        <div style="margin-bottom:0.75rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-        <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.35rem;">Звіт по функціях</div>
-        <div style="font-size:0.8rem;">Буде доступний після внесення перших транзакцій</div>
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Фінанси по функціях</div>
+        <select id="funcFilterMonth" onchange="window._funcMonthChange(this.value)"
+          style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+          <option value="">Всі місяці</option>
+          ${monthOpts}
+        </select>
+      </div>
+
+      <!-- Зведена таблиця -->
+      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;margin-bottom:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
+          background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
+          padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;">
+          <div>Функція</div>
+          <div style="text-align:right;">Дохід</div>
+          <div style="text-align:right;">Витрати</div>
+          <div style="text-align:right;">Маржа</div>
+          <div style="text-align:right;">% від загальних</div>
+        </div>
+        <div id="funcTableBody">
+          <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">Завантаження...</div>
+        </div>
+      </div>
+
+      <!-- Графік по функціях -->
+      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">Витрати по функціях</div>
+        <div id="funcChart">
+          <div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div>
+        </div>
       </div>
     </div>
   `;
+
+  loadFunctionsData(_funcFilter.month);
+}
+
+window._funcMonthChange = function(val) {
+  _funcFilter.month = val;
+  loadFunctionsData(val);
+};
+
+async function loadFunctionsData(monthVal) {
+  try {
+    // 1. Завантажуємо функції з Firestore
+    const db = getDb();
+    const funcsSnap = await db.collection('companies').doc(_state.companyId)
+      .collection('functions').orderBy('name').get();
+    const funcs = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // 2. Завантажуємо транзакції за обраний період
+    let txQuery = colRef('finance_transactions');
+    if (monthVal) {
+      const [y, m] = monthVal.split('-').map(Number);
+      const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
+      const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
+      txQuery = txQuery.where('date','>=',from).where('date','<=',to);
+    }
+    const txSnap = await txQuery.get();
+    const txs = txSnap.docs.map(d => d.data());
+
+    // 3. Групуємо по functionId
+    const byFunc = {};
+    let totalIncome = 0, totalExpense = 0;
+
+    txs.forEach(tx => {
+      const fid = tx.functionId || '__none__';
+      if (!byFunc[fid]) byFunc[fid] = { income: 0, expense: 0 };
+      if (tx.type === 'income')  { byFunc[fid].income  += tx.amount||0; totalIncome  += tx.amount||0; }
+      if (tx.type === 'expense') { byFunc[fid].expense += tx.amount||0; totalExpense += tx.amount||0; }
+    });
+
+    // 4. Будуємо рядки таблиці
+    const tableEl  = document.getElementById('funcTableBody');
+    const chartEl  = document.getElementById('funcChart');
+    if (!tableEl) return;
+
+    // Функції що мають транзакції + "Без функції"
+    const rows = [];
+    funcs.forEach(f => {
+      const d = byFunc[f.id] || { income:0, expense:0 };
+      if (d.income > 0 || d.expense > 0) {
+        rows.push({ name: f.name, ...d });
+      }
+    });
+    if (byFunc['__none__'] && (byFunc['__none__'].income > 0 || byFunc['__none__'].expense > 0)) {
+      rows.push({ name: 'Без функції', ...byFunc['__none__'] });
+    }
+
+    if (rows.length === 0) {
+      tableEl.innerHTML = `
+        <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">
+          Транзакцій з прив'язкою до функцій немає.<br>
+          <span style="font-size:0.78rem;">При додаванні транзакцій вибирайте поле «Функція»</span>
+        </div>`;
+      if (chartEl) chartEl.innerHTML = '';
+      return;
+    }
+
+    // Сортуємо за витратами
+    rows.sort((a,b) => b.expense - a.expense);
+
+    tableEl.innerHTML = rows.map((r, i) => {
+      const profit = r.income - r.expense;
+      const margin = r.income > 0 ? Math.round(profit/r.income*100) : (r.expense > 0 ? -100 : 0);
+      const pctOfTotal = totalExpense > 0 ? Math.round(r.expense/totalExpense*100) : 0;
+      const mColor = margin >= 15 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444';
+      const bg = i%2===0 ? '#fff' : '#fafafa';
+      return `
+        <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
+          padding:0.65rem 1rem;background:${bg};border-bottom:1px solid #f3f4f6;align-items:center;">
+          <div style="font-size:0.85rem;font-weight:500;color:#1a1a1a;">${r.name}</div>
+          <div style="text-align:right;font-size:0.85rem;color:#22c55e;font-weight:600;">${fmt(r.income)}</div>
+          <div style="text-align:right;font-size:0.85rem;color:#ef4444;font-weight:600;">${fmt(r.expense)}</div>
+          <div style="text-align:right;font-size:0.85rem;font-weight:700;color:${mColor};">${margin}%</div>
+          <div style="text-align:right;">
+            <div style="display:flex;align-items:center;gap:0.4rem;justify-content:flex-end;">
+              <div style="flex:1;max-width:60px;height:4px;background:#f3f4f6;border-radius:2px;">
+                <div style="height:4px;background:#ef4444;border-radius:2px;width:${pctOfTotal}%;"></div>
+              </div>
+              <span style="font-size:0.78rem;color:#6b7280;">${pctOfTotal}%</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('') + `
+      <!-- Підсумок -->
+      <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
+        padding:0.65rem 1rem;background:#f0fdf4;border-top:2px solid #22c55e;align-items:center;">
+        <div style="font-size:0.82rem;font-weight:700;color:#16a34a;">ВСЬОГО</div>
+        <div style="text-align:right;font-size:0.85rem;font-weight:700;color:#22c55e;">${fmt(totalIncome)}</div>
+        <div style="text-align:right;font-size:0.85rem;font-weight:700;color:#ef4444;">${fmt(totalExpense)}</div>
+        <div style="text-align:right;font-size:0.85rem;font-weight:700;color:${totalIncome>0?(totalIncome-totalExpense)/totalIncome>=0.15?'#22c55e':'#f59e0b':'#6b7280'};">
+          ${totalIncome>0?Math.round((totalIncome-totalExpense)/totalIncome*100)+'%':'—'}
+        </div>
+        <div></div>
+      </div>
+    `;
+
+    // 5. Горизонтальний bar chart витрат по функціях
+    if (chartEl && rows.length > 0) {
+      const maxExp = Math.max(...rows.map(r => r.expense), 1);
+      chartEl.innerHTML = rows.map(r => {
+        const pct = Math.round(r.expense / maxExp * 100);
+        return `
+          <div style="margin-bottom:0.65rem;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;">
+              <div style="font-size:0.78rem;color:#374151;font-weight:500;">${r.name}</div>
+              <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">${fmt(r.expense)}</div>
+            </div>
+            <div style="height:8px;background:#f3f4f6;border-radius:4px;">
+              <div style="height:8px;background:linear-gradient(90deg,#ef4444,#f87171);
+                border-radius:4px;width:${pct}%;transition:width 0.3s;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+  } catch(e) {
+    console.error('[Finance] loadFunctionsData:', e);
+    const tableEl = document.getElementById('funcTableBody');
+    if (tableEl) tableEl.innerHTML = `
+      <div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">
+        Помилка: ${e.message}
+      </div>`;
+  }
 }
 
 // ── Планування (заглушка Етап 1) ─────────────────────────
