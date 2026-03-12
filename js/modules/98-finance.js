@@ -417,7 +417,7 @@ function renderDashboard(el) {
           </div>
           <div style="display:flex;gap:1rem;margin-top:0.5rem;">
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
-              <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>Доходи
+              <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>${window.t('finIncome')}
             </div>
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
               <div style="width:10px;height:10px;border-radius:2px;background:#ef4444;"></div>Витрати
@@ -428,7 +428,7 @@ function renderDashboard(el) {
         <!-- Рахунки -->
         <div style="width:240px;flex-shrink:0;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Рахунки</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finAccountsLabel')}</div>
             ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ ${window.t('finTransfer')}</button>` : ''}
           </div>
           <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #f3f4f6;">
@@ -473,14 +473,14 @@ function renderDashboard(el) {
           <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
         </div>
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Проекти за маржею</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finProjMargin')}</div>
           <div id="dashProjects"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
         </div>
       </div>
 
       <!-- План-факт KPI -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;margin-bottom:1.25rem;">
-        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">План vs Факт</div>
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finPlanVsFact')}</div>
         <div id="dashPlanFact"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
       </div>
 
@@ -552,7 +552,7 @@ async function loadDashboardData(monthVal) {
     }
     _state.accounts.forEach(acc => {
       if ((acc.balance || 0) < 0) {
-        alerts.push({ type: 'error', text: `Від'ємний баланс: ${acc.name} (${fmt(acc.balance, acc.currency)})` });
+        alerts.push({ type: 'error', text: `${window.t('finNegBalance')} ${acc.name} (${fmt(acc.balance, acc.currency)})` });
       }
     });
     if (expense > income && income > 0) {
@@ -694,7 +694,7 @@ async function loadDashboardData(monthVal) {
         })).sort((a, b) => b.margin - a.margin).slice(0, 5);
 
         if (projRows.length === 0) {
-          projEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Транзакцій по проектах немає</div>';
+          projEl.innerHTML = `<div style="color:#9ca3af;font-size:0.8rem;">${window.t('finNoProjData')}</div>`;
         } else {
           // Підтягуємо назви проектів
           let projNames = {};
@@ -733,8 +733,8 @@ async function loadDashboardData(monthVal) {
           pfEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Бюджет не встановлено. Перейдіть у «Планування».</div>';
         } else {
           const rows = [
-            { label: 'Витрати (план/факт)', plan: totalBudget, fact: expense, inverse: true },
-            { label: 'Прибуток (ціль/факт)', plan: goalProfit, fact: profit, inverse: false },
+            { label: window.t('finPlanExpense'), plan: totalBudget, fact: expense, inverse: true },
+            { label: window.t('finPlanProfit'), plan: goalProfit, fact: profit, inverse: false },
           ].filter(r => r.plan > 0);
 
           pfEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px;">` +
@@ -2333,7 +2333,7 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
           padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;">
           <div>${window.t('finFunctionLbl')}</div>
           <div style="text-align:right;">Дохід</div>
-          <div style="text-align:right;">Витрати</div>
+          <div style="text-align:right;">${window.t('finExpense')}</div>
           <div style="text-align:right;">Маржа</div>
           <div style="text-align:right;">% від загальних</div>
         </div>
@@ -2344,7 +2344,7 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
 
       <!-- Графік по функціях -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">Витрати по функціях</div>
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">${window.t('finExpByFunction')}</div>
         <div id="funcChart">
           <div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div>
         </div>
@@ -2743,7 +2743,7 @@ async function loadPlanningData(monthVal) {
             <span style="font-weight:600;color:#22c55e;">${fmt(totalIncome)}</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
-            <span style="color:#6b7280;">Витрати факт</span>
+            <span style="color:#6b7280;">${window.t('finExpFact')}</span>
             <span style="font-weight:600;color:#ef4444;">${fmt(totalExpense)}</span>
           </div>
           <div style="border-top:1px solid #f3f4f6;padding-top:0.5rem;display:flex;justify-content:space-between;font-size:0.85rem;">
@@ -3378,20 +3378,20 @@ function renderSettings(el) {
   const renderCatList = (type) => {
     const cats = _state.categories[type] || [];
     const color = type === 'income' ? '#22c55e' : '#ef4444';
-    const label = type === 'income' ? 'Доходи' : 'Витрати';
+    const label = type === 'income' ? window.t('finIncome') : window.t('finExpense');
     return `
       <div style="margin-bottom:1.5rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Категорії — ${label}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finCategoriesOf')} — ${label}</div>
           <button onclick="window._financeAddCategory('${type}')"
             style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
             background:${color};color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            ${I.plus} Додати
+            ${I.plus} ${window.t('finAddBtn')}
           </button>
         </div>
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
           ${cats.length === 0
-            ? '<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">Немає категорій</div>'
+            ? `<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">${window.t('finNoCategories')}</div>`
             : cats.map((cat, i) => `
               <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
                 background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
@@ -3908,7 +3908,7 @@ async function _buildAiFinContext() {
         if (totalBudg > 0) {
           const budExec = Math.round(totalFact/totalBudg*100);
           budgetCtx = `
-БЮДЖЕТ ${curMonth}: план=${totalBudg}, факт=${totalFact}, виконання=${budExec}%`;
+${window.t('finBudgetCtx').replace('{month}',curMonth).replace('{plan}',totalBudg).replace('{fact}',totalFact).replace('{pct}',budExec)}`;
           if (bd.goal) budgetCtx += `, ціль прибутку=${bd.goal}`;
         }
       }
