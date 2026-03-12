@@ -460,20 +460,36 @@ async function loadAndRenderTxList(type) {
   if (!listEl) return;
 
   try {
-    let query = colRef('finance_transactions').where('type', '==', type).orderBy('date', 'desc').limit(100);
+    // Будуємо query залежно від фільтрів (уникаємо composite index без потреби)
+    const hasMonth    = !!_txFilter.month;
+    const hasCat      = !!_txFilter.categoryId;
+    const hasAcc      = !!_txFilter.accountId;
 
-    if (_txFilter.month) {
+    let query = colRef('finance_transactions').where('type', '==', type);
+
+    if (hasMonth) {
       const [y, m] = _txFilter.month.split('-').map(Number);
-      const from = new Date(y, m-1, 1);
-      const to   = new Date(y, m, 0, 23, 59, 59);
-      query = query.where('date', '>=', firebase.firestore.Timestamp.fromDate(from))
-                   .where('date', '<=', firebase.firestore.Timestamp.fromDate(to));
+      const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
+      const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
+      query = query.where('date', '>=', from).where('date', '<=', to).orderBy('date', 'desc');
+    } else if (hasCat) {
+      query = query.where('categoryId', '==', _txFilter.categoryId);
+    } else if (hasAcc) {
+      query = query.where('accountId', '==', _txFilter.accountId);
+    } else {
+      // Без фільтрів — простий запит, сортуємо на клієнті
+      query = query.limit(100);
     }
-    if (_txFilter.categoryId) query = query.where('categoryId', '==', _txFilter.categoryId);
-    if (_txFilter.accountId)  query = query.where('accountId',  '==', _txFilter.accountId);
 
     const snap = await query.get();
-    const txs  = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    let txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // Сортування на клієнті (якщо не було orderBy в query)
+    txs.sort((a, b) => {
+      const da = a.date?.toMillis ? a.date.toMillis() : (a.date?.seconds || 0) * 1000;
+      const db2 = b.date?.toMillis ? b.date.toMillis() : (b.date?.seconds || 0) * 1000;
+      return db2 - da;
+    });
+    if (txs.length > 100) txs = txs.slice(0, 100);
 
     if (txs.length === 0) {
       listEl.innerHTML = `
@@ -868,24 +884,31 @@ window._financeDeleteTx = async function(txId, type) {
 
 // ── Визначення ролі користувача ──────────────────────────
 async function detectUserRole() {
+  // Спочатку — з window.currentUserData (вже є в системі після логіну)
+  if (window.currentUserData && window.currentUserData.role) {
+    _state.userRole = window.currentUserData.role;
+    return;
+  }
+  // Fallback — читаємо з Firestore
   const db = getDb();
   if (!db || !_state.companyId || !_state.currentUser) return;
   try {
     const snap = await db.collection('companies').doc(_state.companyId)
-      .collection('members').doc(_state.currentUser.uid).get();
-    if (snap.exists) {
-      _state.userRole = snap.data().role || 'employee';
+      .collection('users').doc(_state.currentUser.uid).get();
+    if (snap.exists && snap.data().role) {
+      _state.userRole = snap.data().role;
+      return;
+    }
+    // Перевіряємо чи owner через компанію
+    const cSnap = await db.collection('companies').doc(_state.companyId).get();
+    if (cSnap.exists && cSnap.data().ownerId === _state.currentUser.uid) {
+      _state.userRole = 'owner';
+    } else {
+      _state.userRole = 'employee';
     }
   } catch(e) {
-    // fallback — перевіряємо через компанію
-    try {
-      const cSnap = await db.collection('companies').doc(_state.companyId).get();
-      if (cSnap.exists && cSnap.data().ownerId === _state.currentUser.uid) {
-        _state.userRole = 'owner';
-      } else {
-        _state.userRole = 'employee';
-      }
-    } catch(e2) { _state.userRole = 'employee'; }
+    // Якщо є currentUserData без role — owner за замовчуванням для безпеки UI
+    _state.userRole = window.currentUserData?.role || 'owner';
   }
 }
 
@@ -975,6 +998,10 @@ function tryInit() {
   const companyId = window.currentCompanyId || window._companyId;
 
   if (user && companyId) {
+    // Одразу підхоплюємо роль якщо currentUserData вже є
+    if (window.currentUserData && window.currentUserData.role) {
+      _state.userRole = window.currentUserData.role;
+    }
     initFinance(companyId, user);
     return true;
   }
