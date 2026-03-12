@@ -615,5 +615,61 @@ service cloud.firestore {
       allow read: if request.auth != null;
       allow write: if request.auth != null;
     }
+
+    // =====================
+    // FINANCE MODULE
+    // =====================
+
+    // Транзакції: owner+manager читають всі; employee — тільки свої витрати з projectId або taskId
+    match /finance_transactions/{txId} {
+      allow read: if isManagerOrOwner();
+      allow create: if isCompanyMember() && (
+        isManagerOrOwner() ||
+        (request.resource.data.type == 'expense' &&
+         (request.resource.data.projectId != null || request.resource.data.taskId != null))
+      );
+      allow update, delete: if isManagerOrOwner();
+    }
+
+    // Категорії: всі члени читають; manager/owner пишуть
+    match /finance_categories/{catId} {
+      allow read: if isCompanyMember();
+      allow write: if isManagerOrOwner();
+    }
+
+    // Бюджети: тільки owner/manager; бюджет місяця — тільки owner
+    match /finance_budgets/{budgetId} {
+      allow read: if isManagerOrOwner();
+      allow write: if isCompanyOwner();
+    }
+
+    // Рахунки/каси: читають manager+owner; налаштовує тільки owner
+    match /finance_accounts/{accId} {
+      allow read: if isManagerOrOwner();
+      allow write: if isCompanyOwner();
+    }
+
+    // Регулярні фінансові операції
+    match /finance_recurring/{recId} {
+      allow read: if isManagerOrOwner();
+      allow write: if isManagerOrOwner();
+    }
+
+    // Бюджети по функціях
+    match /finance_function_budgets/{fbudId} {
+      allow read: if isManagerOrOwner();
+      allow write: if isCompanyOwner();
+    }
+
+    // AI-аналітика (тільки owner+manager)
+    match /finance_ai_history/{aiId} {
+      allow read, write: if isManagerOrOwner();
+    }
+
+    // Налаштування модуля фінансів
+    match /finance_settings/{doc} {
+      allow read: if isCompanyMember();
+      allow write: if isCompanyOwner();
+    }
   }
 }
