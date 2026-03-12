@@ -524,13 +524,13 @@ function _renderListView() {
                             <input type="checkbox" id="crmBulkAll" onchange="crmBulkSelectAll(this.checked)"
                                 style="cursor:pointer;width:14px;height:14px;accent-color:#22c55e;">
                         </th>
-                        ${colHdr('Угода','title')}
-                        ${colHdr('Клієнт','clientName')}
-                        ${colHdr('Стадія','stage')}
-                        ${colHdr('Сума','amount')}
-                        ${colHdr('Відповідальний','assigneeId')}
-                        ${colHdr('Наст. контакт','nextContactDate')}
-                        ${colHdr('Оновлено','updatedAt')}
+                        ${colHdr(window.t('crmDealCol'),'title')}
+                        ${colHdr(window.t('crmClientCol'),'clientName')}
+                        ${colHdr(window.t('crmStageCol'),'stage')}
+                        ${colHdr(window.t('crmAmountCol'),'amount')}
+                        ${colHdr(window.t('crmAssigneeCol'),'assigneeId')}
+                        ${colHdr(window.t('crmNextContactCol'),'nextContactDate')}
+                        ${colHdr(window.t('crmUpdatedCol'),'updatedAt')}
                         <th style="width:80px;border-bottom:2px solid #e8eaed;background:white;"></th>
                     </tr>
                 </thead>
@@ -672,7 +672,7 @@ window.crmBulkAssign = function() {
     document.getElementById('crmBulkActionMenu')?.remove();
     const userList = typeof users !== 'undefined' ? users : [];
     if (userList.length === 0) {
-        if (typeof showToast === 'function') showToast('Немає доступних користувачів', 'error');
+        if (typeof showToast === 'function') showToast(window.t('crmNoUsers'), 'error');
         return;
     }
     const menu = document.createElement('div');
@@ -801,7 +801,7 @@ window.crmDuplicateDeal = async function(dealId) {
     if (!deal) return;
     try {
         const copy = {
-            title:           (deal.title || deal.clientName || '') + ' (копія)',
+            title:           (deal.title || deal.clientName || '') + window.t('crmCopySuffix'),
             clientName:      deal.clientName || '',
             clientNiche:     deal.clientNiche || '',
             clientId:        deal.clientId || null,
@@ -819,7 +819,7 @@ window.crmDuplicateDeal = async function(dealId) {
         };
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add(copy);
         await ref.collection('history').add({ type:'created', text:'Дублікат угоди #'+dealId.slice(-6), by: window.currentUser?.email||'manager', at: firebase.firestore.FieldValue.serverTimestamp() });
-        if (window.showToast) showToast('Угоду дубльовано', 'success');
+        if (window.showToast) showToast(window.t('crmDuplicated'), 'success');
     } catch(e) {
         if (window.showToast) showToast('Помилка: '+e.message, 'error');
     }
@@ -842,7 +842,7 @@ function _dealCard(deal) {
     // Час в поточній стадії
     const stageMs = deal.stageEnteredAt?.toMillis ? deal.stageEnteredAt.toMillis() : (deal.stageEnteredAt ? new Date(deal.stageEnteredAt).getTime() : (updMs || 0));
     const daysInStage = stageMs ? Math.floor((Date.now() - stageMs) / 86400000) : 0;
-    const stageTimeLabel = daysInStage > 0 ? (daysInStage === 1 ? '1 день' : daysInStage < 5 ? daysInStage + ' дні' : daysInStage + ' днів') : 'сьогодні';
+    const stageTimeLabel = daysInStage > 0 ? (daysInStage === 1 ? '1 день' : daysInStage < 5 ? daysInStage + ' дні' : daysInStage + ' днів') : window.t('crmDayToday');
     const stageTimeColor = daysInStage >= 14 ? '#ef4444' : daysInStage >= 7 ? '#f59e0b' : '#9ca3af';
 
     return `
@@ -1065,13 +1065,13 @@ window.crmQuickSetStage = async function(dealId, newStage) {
 
 // ── Причина програшу угоди ────────────────────────────────
 const LOST_REASONS = [
-    { id: 'price',       label: 'Ціна — занадто дорого' },
-    { id: 'competitor',  label: 'Пішов до конкурента' },
-    { id: 'not_target',  label: 'Не цільовий клієнт' },
-    { id: 'no_response', label: 'Не відповідає / пропав' },
-    { id: 'postponed',   label: 'Відклав на потім' },
-    { id: 'budget',      label: 'Немає бюджету зараз' },
-    { id: 'other',       label: 'Інша причина' },
+    { id: 'price',       label: window.t('crmLostPrice') },
+    { id: 'competitor',  label: window.t('crmLostCompetitor') },
+    { id: 'not_target',  label: window.t('crmLostNotTarget') },
+    { id: 'no_response', label: window.t('crmLostNoResponse') },
+    { id: 'postponed',   label: window.t('crmLostPostponed') },
+    { id: 'budget',      label: window.t('crmLostNoBudget') },
+    { id: 'other',       label: window.t('crmLostOther') },
 ];
 
 function _showLostReasonModal(dealId, newStage, oldStage) {
@@ -1195,7 +1195,7 @@ window.crmConfirmLost = async function(dealId, newStage, oldStage) {
                 assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
             });
         }
-        if (typeof showToast === 'function') showToast('Угоду закрито: ' + (reasonLabel || 'Програно'), 'error');
+        if (typeof showToast === 'function') showToast('Угоду закрито: ' + (reasonLabel || window.t('crmLostBtn')), 'error');
     } catch(err) {
         console.error('[CRM lost]', err);
         deal.stage = oldStage || 'new';
@@ -1393,7 +1393,7 @@ function _renderDealDetails(deal) {
         background:${deal.isHot?'#fff7ed':'#f8fafc'};border-radius:8px;border:1px solid ${deal.isHot?'#fed7aa':'#e8eaed'};cursor:pointer;"
         onclick="crmToggleHot('${deal.id}')">
         <span style="color:#f97316;">${I.hot}</span>
-        <span style="font-size:0.8rem;font-weight:600;color:${deal.isHot?'#f97316':'#6b7280'};">${deal.isHot?'Гаряча угода':'Позначити як гарячу'}</span>
+        <span style="font-size:0.8rem;font-weight:600;color:${deal.isHot?'#f97316':'#6b7280'};">${deal.isHot?window.t('crmHotDeal'):window.t('crmMarkHot')}</span>
         <div style="margin-left:auto;width:32px;height:18px;border-radius:9px;background:${deal.isHot?'#f97316':'#e5e7eb'};position:relative;">
             <div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;top:2px;left:${deal.isHot?'16px':'2px'};"></div>
         </div>
@@ -1543,7 +1543,7 @@ window.crmToggleHot = async function(dealId) {
         await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
             .update({ isHot, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         deal.isHot = isHot;
-        if(window.showToast) showToast(isHot ? 'Гаряча угода 🔥' : 'Знято позначку', 'success');
+        if(window.showToast) showToast(isHot ? window.t('crmHotDealEmoji') : window.t('crmUnmarked'), 'success');
         crmDealTab(dealId, 'details'); // ре-рендер деталей
     } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
 };
@@ -1563,7 +1563,7 @@ async function _loadTasksTab(deal) {
             if (typeof tasks !== 'undefined') dealTasks = tasks.filter(t => t.crmDealId === deal.id);
         }
         const statusColors = { new:'#6b7280', in_progress:'#3b82f6', done:'#22c55e', overdue:'#ef4444' };
-        const statusLabels = { new:'Нова', in_progress:'В роботі', done:'Виконано', overdue:'Прострочена' };
+        const statusLabels = { new:window.t('crmTaskStatusNew'), in_progress:window.t('crmTaskStatusWork'), done:window.t('crmTaskStatusDone'), overdue:window.t('crmTaskStatusOver') };
         const today = new Date().toISOString().split('T')[0];
         const usersArr = (typeof users !== 'undefined') ? users : [];
 
@@ -1616,7 +1616,7 @@ window.crmMarkTaskDone = async function(taskId) {
             doneAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        if(window.showToast) showToast('Задачу виконано ✓', 'success');
+        if(window.showToast) showToast(window.t('crmTaskDone'), 'success');
         if (crm.activeDealId) {
             const deal = crm.deals.find(function(d){return d.id === crm.activeDealId;});
             if (deal) _loadTasksTab(deal);
@@ -2361,7 +2361,7 @@ function _renderAnalytics() {
     const lostDealsAll = crm.deals.filter(function(d){ return d.stage === 'lost'; });
     const lostByReason = {};
     lostDealsAll.forEach(function(d) {
-        const r = d.lostReasonLabel || d.lostReason || 'Не вказано';
+        const r = d.lostReasonLabel || d.lostReason || window.t('notSpecified');
         lostByReason[r] = (lostByReason[r] || 0) + 1;
     });
     const lostReasonEntries = Object.entries(lostByReason).sort(function(a,b){ return b[1]-a[1]; });
@@ -2659,11 +2659,11 @@ function _renderCRMSettings() {
             ${stages.filter(s => !['won','lost'].includes(s.id)).map(s => {
                 const req = (pipeline?.stageRequiredFields || {})[s.id] || [];
                 const fields = [
-                    { id:'amount',          label:'Сума угоди' },
-                    { id:'nextContactDate', label:'Дата контакту' },
-                    { id:'assigneeId',      label:'Відповідальний' },
-                    { id:'phone',           label:'Телефон клієнта' },
-                    { id:'clientNiche',     label:'Ніша клієнта' },
+                    { id:'amount',          label:window.t('crmDealAmount') },
+                    { id:'nextContactDate', label:window.t('crmContactDate') },
+                    { id:'assigneeId',      label:window.t('crmAssigneeCol') },
+                    { id:'phone',           label:window.t('crmClientPhone') },
+                    { id:'clientNiche',     label:window.t('crmClientNiche') },
                 ];
                 return `<div style="margin-bottom:0.65rem;padding:0.55rem 0.65rem;background:#f8fafc;border-radius:7px;border-left:4px solid ${s.color};">
                     <div style="font-size:0.78rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">${_esc(s.label)}</div>
@@ -2693,7 +2693,7 @@ window.crmSelectPipeline = async function(pipelineId) {
     _subscribeDeals(); // subscribe запустить _renderKanban або _renderListView через onSnapshot
     // FIX: рендеримо поточний subTab, не Settings
     if (crm.subTab === 'settings') _renderCRMSettings();
-    if (typeof showToast === 'function') showToast('Воронка: ' + crm.pipeline.name, 'success');
+    if (typeof showToast === 'function') showToast(window.t('crmFunnelLabel') + ': ' + crm.pipeline.name, 'success');
 };
 
 // Єдина точка підписки на deals — викликати звідусіль
@@ -2853,11 +2853,11 @@ async function _checkRequiredFields(deal, newStage) {
     if (!req.length) return true;
 
     const FIELD_LABELS = {
-        amount: 'Сума угоди',
-        nextContactDate: 'Дата наступного контакту',
-        assigneeId: 'Відповідальний менеджер',
-        phone: 'Телефон клієнта',
-        clientNiche: 'Ніша / сфера клієнта',
+        amount: window.t('crmDealAmount'),
+        nextContactDate: window.t('crmNextContactDate'),
+        assigneeId: window.t('crmResponsibleMgr'),
+        phone: window.t('crmClientPhone'),
+        clientNiche: window.t('crmClientNicheField'),
     };
 
     // FIX M: phone зберігається в crm_clients, а не в deal — шукаємо в клієнті
@@ -2928,7 +2928,7 @@ async function _checkRequiredFields(deal, newStage) {
                 updates[f] = f === 'amount' ? Number(val) : val;
                 Object.assign(deal, updates);
             });
-            if (!valid) { if (typeof showToast === 'function') showToast('Заповніть усі поля', 'error'); return; }
+            if (!valid) { if (typeof showToast === 'function') showToast(window.t('crmFillAllFields'), 'error'); return; }
             // Зберігаємо deal поля в Firestore
             try {
                 if (Object.keys(updates).length) {
@@ -3017,8 +3017,8 @@ function _stageLabel(id) {
         const found = (p.stages || []).find(s => s.id === id)?.label;
         if (found) return found;
     }
-    // FIX: якщо це технічний id типу 'stage_1710000000' — показуємо 'Стадія' замість сирого id
-    if (/^stage_\d+/.test(id)) return 'Стадія';
+    // FIX: якщо це технічний id типу 'stage_1710000000' — показуємо window.t('crmStageCol') замість сирого id
+    if (/^stage_\d+/.test(id)) return window.t('crmStageCol');
     return id;
 }
 
@@ -3039,7 +3039,7 @@ window.crmCreateInvoiceForDeal = function(dealId) {
     if (typeof window._invoiceAdd === 'function') {
         window._invoiceAdd(dealId, deal.clientName || '');
     } else {
-        if (typeof showToast === 'function') showToast('Модуль фінансів не завантажено', 'warning');
+        if (typeof showToast === 'function') showToast(window.t('crmFinanceNotLoaded'), 'warning');
     }
 };
 
@@ -3121,7 +3121,7 @@ window.crmSaveTaskFromDeal = async function(dealId) {
     const note     = document.getElementById('crmT_note')?.value.trim();
     const deal     = crm.deals.find(d => d.id === dealId);
 
-    if (!title) { if(window.showToast) showToast('Вкажіть назву задачі','error'); return; }
+    if (!title) { if(window.showToast) showToast(window.t('crmEnterTaskTitle'),'error'); return; }
     try {
         const usersArr = typeof users !== 'undefined' ? users : [];
         const assigneeUser = usersArr.find(u => u.id === (assignee || window.currentUser?.uid));
@@ -3151,7 +3151,7 @@ window.crmSaveTaskFromDeal = async function(dealId) {
             });
 
         document.getElementById('crmTaskModal')?.remove();
-        if(window.showToast) showToast('Задачу створено в Task Manager ✓', 'success');
+        if(window.showToast) showToast(window.t('crmTaskCreated'), 'success');
 
         // Оновлюємо локальний tasks масив якщо доступний
         if (typeof tasks !== 'undefined') {
