@@ -18,18 +18,23 @@ const I = {
   settings: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>',
   trash:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',
   edit:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  repeat:   '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+  pause:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>',
+  play:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+  check:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
 };
 
 // ── Константи ──────────────────────────────────────────────
 const FINANCE_VERSION = '1.0.0';
-const TABS = ['dashboard', 'income', 'expense', 'functions', 'planning', 'ai', 'settings'];
+const TABS = ['dashboard', 'income', 'expense', 'recurring', 'functions', 'planning', 'ai', 'settings'];
 const TAB_LABELS = {
-  dashboard:  { icon: 'chart',    label: 'Дашборд'   },
-  income:     { icon: 'income',   label: 'Доходи'    },
-  expense:    { icon: 'expense',  label: 'Витрати'   },
-  functions:  { icon: 'func',     label: 'Функції'   },
-  planning:   { icon: 'plan',     label: 'Планування'},
-  ai:         { icon: 'ai',       label: 'AI'        },
+  dashboard:  { icon: 'chart',    label: 'Дашборд'      },
+  income:     { icon: 'income',   label: 'Доходи'       },
+  expense:    { icon: 'expense',  label: 'Витрати'      },
+  recurring:  { icon: 'repeat',   label: 'Регулярні'    },
+  functions:  { icon: 'func',     label: 'Функції'      },
+  planning:   { icon: 'plan',     label: 'Планування'   },
+  ai:         { icon: 'ai',       label: 'AI'           },
   settings:   { icon: 'settings', label: 'Налаштування' },
 };
 
@@ -330,6 +335,7 @@ function renderSubTab(tab) {
     case 'dashboard': renderDashboard(inner); break;
     case 'income':    renderTransactions(inner, 'income'); break;
     case 'expense':   renderTransactions(inner, 'expense'); break;
+    case 'recurring': renderRecurring(inner); break;
     case 'functions': renderFunctions(inner); break;
     case 'planning':  renderPlanning(inner); break;
     case 'ai':        renderAI(inner); break;
@@ -872,6 +878,437 @@ async function loadAndRenderTxList(type) {
 // ── Фінанси по функціях — Етап 4 ────────────────────────
 let _funcFilter = { month: '' };
 
+// ── Регулярні витрати/доходи ───────────────────────────────
+function renderRecurring(el) {
+  const items = _state.recurring || [];
+  const currency = _state.currency || 'UAH';
+
+  el.innerHTML = `
+    <div style="max-width:860px;margin:0 auto;">
+
+      <!-- Заголовок -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Регулярні платежі</h3>
+          <p style="margin:0.25rem 0 0;font-size:0.82rem;color:#6b7280;">Автоматичне списання/нарахування в заданий день місяця</p>
+        </div>
+        ${isOwnerOrManager() ? `
+          <button onclick="window._finAddRecurring()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;">
+            ${I.plus} Додати платіж
+          </button>
+        ` : ''}
+      </div>
+
+      <!-- Статистика -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.5rem;">
+        ${_recurringStats(items, currency)}
+      </div>
+
+      <!-- Наступні списання (цього місяця) -->
+      ${_recurringUpcoming(items, currency)}
+
+      <!-- Список -->
+      ${items.length === 0 ? `
+        <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;">
+          ${I.repeat}
+          <p style="margin:0.75rem 0 0;font-size:0.9rem;">Регулярних платежів ще немає</p>
+          <p style="margin:0.25rem 0 0;font-size:0.8rem;">Додайте оренду, зарплату, підписки — вони будуть списуватись автоматично</p>
+        </div>
+      ` : `
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          ${items.map(item => _recurringCard(item, currency)).join('')}
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function _recurringStats(items, currency) {
+  const active = items.filter(i => i.active !== false);
+  const monthlyExpense = active.filter(i => i.type === 'expense').reduce((s, i) => s + (i.amount || 0), 0);
+  const monthlyIncome  = active.filter(i => i.type === 'income').reduce((s, i) => s + (i.amount || 0), 0);
+
+  const card = (label, value, color, icon) => `
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1rem;">
+      <div style="font-size:0.75rem;color:#9ca3af;margin-bottom:0.35rem;">${label}</div>
+      <div style="font-size:1.25rem;font-weight:700;color:${color};">${fmt(value, currency)}</div>
+      <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">щомісяця</div>
+    </div>
+  `;
+  return card('Регулярні витрати', monthlyExpense, '#ef4444', 'expense')
+       + card('Регулярні доходи',  monthlyIncome,  '#22c55e', 'income')
+       + card('Чисто/міс',         monthlyIncome - monthlyExpense, monthlyIncome >= monthlyExpense ? '#22c55e' : '#ef4444', 'wallet');
+}
+
+function _recurringUpcoming(items, currency) {
+  const now = new Date();
+  const today = now.getDate();
+  const active = items.filter(i => i.active !== false && i.dayOfMonth);
+
+  // Платежі до кінця місяця
+  const upcoming = active
+    .filter(i => i.dayOfMonth >= today)
+    .sort((a, b) => a.dayOfMonth - b.dayOfMonth)
+    .slice(0, 5);
+
+  if (!upcoming.length) return '';
+
+  return `
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;margin-bottom:1.25rem;">
+      <div style="font-size:0.8rem;font-weight:700;color:#16a34a;margin-bottom:0.65rem;">
+        ${I.repeat} Найближчі платежі цього місяця
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.4rem;">
+        ${upcoming.map(i => `
+          <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.82rem;">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <span style="background:#dcfce7;color:#16a34a;border-radius:6px;padding:2px 7px;font-weight:700;min-width:28px;text-align:center;">${i.dayOfMonth}</span>
+              <span style="color:#374151;">${escHtml(i.name)}</span>
+            </div>
+            <span style="font-weight:600;color:${i.type === 'expense' ? '#ef4444' : '#22c55e'};">
+              ${i.type === 'expense' ? '−' : '+'}${fmt(i.amount, currency)}
+            </span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function _recurringCard(item, currency) {
+  const active = item.active !== false;
+  const freqLabel = { monthly: 'Щомісяця', quarterly: 'Щоквартально', yearly: 'Щороку' }[item.frequency] || 'Щомісяця';
+  const typeColor = item.type === 'expense' ? '#ef4444' : '#22c55e';
+  const typeLabel = item.type === 'expense' ? 'Витрата' : 'Дохід';
+
+  return `
+    <div style="background:#fff;border:1px solid ${active ? '#e5e7eb' : '#f3f4f6'};border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;opacity:${active ? '1' : '0.55'};">
+      <!-- Тип -->
+      <div style="width:36px;height:36px;border-radius:10px;background:${typeColor}15;color:${typeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        ${item.type === 'expense' ? I.expense : I.income}
+      </div>
+
+      <!-- Основна інфо -->
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:600;color:#1a1a1a;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(item.name)}</div>
+        <div style="font-size:0.75rem;color:#9ca3af;margin-top:2px;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+          <span style="background:#f3f4f6;border-radius:5px;padding:1px 6px;">${typeLabel}</span>
+          <span>${escHtml(item.category || '—')}</span>
+          <span>·</span>
+          <span>${freqLabel}, ${item.dayOfMonth || 1}-го числа</span>
+          ${item.counterparty ? `<span>· ${escHtml(item.counterparty)}</span>` : ''}
+        </div>
+      </div>
+
+      <!-- Сума -->
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:1.05rem;font-weight:700;color:${typeColor};">
+          ${item.type === 'expense' ? '−' : '+'}${fmt(item.amount, currency)}
+        </div>
+        <div style="font-size:0.72rem;color:#9ca3af;">/міс</div>
+      </div>
+
+      <!-- Дії -->
+      ${isOwnerOrManager() ? `
+        <div style="display:flex;gap:0.4rem;flex-shrink:0;">
+          <button onclick="window._finToggleRecurring('${item.id}')" title="${active ? 'Призупинити' : 'Активувати'}"
+            style="width:30px;height:30px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
+            ${active ? I.pause : I.play}
+          </button>
+          <button onclick="window._finEditRecurring('${item.id}')" title="Редагувати"
+            style="width:30px;height:30px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
+            ${I.edit}
+          </button>
+          <button onclick="window._finDeleteRecurring('${item.id}')" title="Видалити"
+            style="width:30px;height:30px;border:1px solid #fecaca;border-radius:8px;background:#fef2f2;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;">
+            ${I.trash}
+          </button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// Модальне вікно — додати/редагувати регулярний платіж
+window._finAddRecurring = function(editId) {
+  const existing = editId ? (_state.recurring || []).find(r => r.id === editId) : null;
+  const cats = _state.categories;
+  const allCats = [...(cats.expense || []), ...(cats.income || [])];
+  const currency = _state.currency || 'UAH';
+
+  const freqOptions = [
+    { v: 'monthly',     l: 'Щомісяця'      },
+    { v: 'quarterly',   l: 'Щоквартально'  },
+    { v: 'yearly',      l: 'Щороку'        },
+  ];
+
+  const days = Array.from({length:28}, (_,i) => i+1);
+
+  showInputModal('', '', { skipInput: true }); // закрити якщо відкрито
+
+  const overlay = document.createElement('div');
+  overlay.id = 'recurringModal';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:15000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:1rem;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
+        <h3 style="margin:0;font-size:1rem;font-weight:700;">${existing ? 'Редагувати' : 'Новий'} регулярний платіж</h3>
+        <button onclick="document.getElementById('recurringModal').remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
+      </div>
+      <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
+
+        <!-- Назва -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва платежу *</label>
+          <input id="rec_name" value="${escHtml(existing?.name || '')}" placeholder="Оренда офісу, Зарплата, Netflix..." 
+            style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
+        </div>
+
+        <!-- Тип -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Тип</label>
+          <div style="display:flex;gap:0.5rem;">
+            <button id="rec_type_expense" onclick="_recSetType('expense')"
+              style="flex:1;padding:8px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;border:2px solid ${!existing || existing.type==='expense' ? '#ef4444' : '#e5e7eb'};background:${!existing || existing.type==='expense' ? '#fef2f2' : '#fff'};color:${!existing || existing.type==='expense' ? '#ef4444' : '#6b7280'};">
+              Витрата
+            </button>
+            <button id="rec_type_income" onclick="_recSetType('income')"
+              style="flex:1;padding:8px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;border:2px solid ${existing?.type==='income' ? '#22c55e' : '#e5e7eb'};background:${existing?.type==='income' ? '#f0fdf4' : '#fff'};color:${existing?.type==='income' ? '#22c55e' : '#6b7280'};">
+              Дохід
+            </button>
+          </div>
+          <input type="hidden" id="rec_type" value="${existing?.type || 'expense'}">
+        </div>
+
+        <!-- Сума + валюта -->
+        <div style="display:grid;grid-template-columns:1fr auto;gap:0.5rem;">
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Сума *</label>
+            <input id="rec_amount" type="number" min="0" value="${existing?.amount || ''}" placeholder="0"
+              style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Валюта</label>
+            <select id="rec_currency" style="border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;font-size:0.9rem;height:38px;">
+              ${['UAH','EUR','USD','PLN','CZK'].map(c => `<option ${(existing?.currency||currency)===c?'selected':''}>${c}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+
+        <!-- Категорія -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Категорія</label>
+          <select id="rec_category" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
+            <option value="">— Оберіть категорію —</option>
+            ${allCats.map(c => `<option ${existing?.category===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+
+        <!-- Частота + день -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Частота</label>
+            <select id="rec_freq" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
+              ${freqOptions.map(f => `<option value="${f.v}" ${existing?.frequency===f.v?'selected':''}>${f.l}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">День місяця</label>
+            <select id="rec_day" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
+              ${days.map(d => `<option ${existing?.dayOfMonth===d?'selected':''}>${d}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+
+        <!-- Контрагент -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Контрагент</label>
+          <input id="rec_counterparty" value="${escHtml(existing?.counterparty || '')}" placeholder="Орендодавець, постачальник..."
+            style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
+        </div>
+
+        <!-- Коментар -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Коментар</label>
+          <input id="rec_comment" value="${escHtml(existing?.comment || '')}" placeholder="Необов'язково"
+            style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
+        </div>
+
+        <!-- Рахунок -->
+        <div>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Рахунок</label>
+          <select id="rec_account" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
+            ${(_state.accounts||[]).map(a => `<option value="${a.id}" ${existing?.accountId===a.id?'selected':''}>${escHtml(a.name)}</option>`).join('')}
+          </select>
+        </div>
+
+        <!-- Кнопки -->
+        <div style="display:flex;gap:0.5rem;padding-top:0.5rem;">
+          <button onclick="document.getElementById('recurringModal').remove()"
+            style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;cursor:pointer;font-size:0.9rem;color:#6b7280;">
+            Скасувати
+          </button>
+          <button onclick="window._finSaveRecurring('${editId || ''}')"
+            style="flex:2;padding:10px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:700;">
+            ${existing ? 'Зберегти зміни' : 'Додати платіж'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+};
+
+window._recSetType = function(type) {
+  document.getElementById('rec_type').value = type;
+  const eBtn = document.getElementById('rec_type_expense');
+  const iBtn = document.getElementById('rec_type_income');
+  if (type === 'expense') {
+    eBtn.style.cssText += ';border-color:#ef4444;background:#fef2f2;color:#ef4444;';
+    iBtn.style.cssText += ';border-color:#e5e7eb;background:#fff;color:#6b7280;';
+  } else {
+    iBtn.style.cssText += ';border-color:#22c55e;background:#f0fdf4;color:#22c55e;';
+    eBtn.style.cssText += ';border-color:#e5e7eb;background:#fff;color:#6b7280;';
+  }
+};
+
+window._finSaveRecurring = async function(editId) {
+  const name   = document.getElementById('rec_name')?.value?.trim();
+  const amount = parseFloat(document.getElementById('rec_amount')?.value);
+  if (!name) { showToast('Введіть назву платежу', 'error'); return; }
+  if (!amount || amount <= 0) { showToast('Введіть суму', 'error'); return; }
+
+  const data = {
+    name,
+    type:         document.getElementById('rec_type')?.value || 'expense',
+    amount,
+    currency:     document.getElementById('rec_currency')?.value || _state.currency,
+    category:     document.getElementById('rec_category')?.value || '',
+    frequency:    document.getElementById('rec_freq')?.value || 'monthly',
+    dayOfMonth:   parseInt(document.getElementById('rec_day')?.value) || 1,
+    counterparty: document.getElementById('rec_counterparty')?.value?.trim() || '',
+    comment:      document.getElementById('rec_comment')?.value?.trim() || '',
+    accountId:    document.getElementById('rec_account')?.value || '',
+    active:       true,
+    updatedAt:    firebase.firestore.FieldValue.serverTimestamp(),
+  };
+
+  try {
+    const colRef = db.collection('companies').doc(_state.companyId).collection('finance_recurring');
+    if (editId) {
+      await colRef.doc(editId).update(data);
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await colRef.add(data);
+    }
+    document.getElementById('recurringModal')?.remove();
+    await _loadRecurring();
+    renderSubTab('recurring');
+    showToast(editId ? 'Платіж оновлено' : 'Платіж додано', 'success');
+  } catch(e) {
+    console.error('[Recurring save]', e);
+    showToast('Помилка: ' + e.message, 'error');
+  }
+};
+
+window._finEditRecurring = function(id) {
+  window._finAddRecurring(id);
+};
+
+window._finToggleRecurring = async function(id) {
+  const item = (_state.recurring || []).find(r => r.id === id);
+  if (!item) return;
+  const newActive = item.active === false ? true : false;
+  try {
+    await db.collection('companies').doc(_state.companyId)
+      .collection('finance_recurring').doc(id)
+      .update({ active: newActive, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    await _loadRecurring();
+    renderSubTab('recurring');
+    showToast(newActive ? 'Платіж активовано' : 'Платіж призупинено', 'success');
+  } catch(e) {
+    showToast('Помилка: ' + e.message, 'error');
+  }
+};
+
+window._finDeleteRecurring = async function(id) {
+  if (!await showConfirmModal('Видалити регулярний платіж? Минулі транзакції залишаться.', { danger: true })) return;
+  try {
+    await db.collection('companies').doc(_state.companyId)
+      .collection('finance_recurring').doc(id).delete();
+    _state.recurring = (_state.recurring || []).filter(r => r.id !== id);
+    renderSubTab('recurring');
+    showToast('Видалено', 'success');
+  } catch(e) {
+    showToast('Помилка: ' + e.message, 'error');
+  }
+};
+
+// Автосписання — запускається при ініціалізації та на 1-е число
+async function _processRecurringAutopost() {
+  if (!isOwnerOrManager()) return;
+  const items = (_state.recurring || []).filter(i => i.active !== false);
+  if (!items.length) return;
+
+  const now = new Date();
+  const today = now.getDate();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+  const colRef = db.collection('companies').doc(_state.companyId).collection('finance_transactions');
+  const recurRef = db.collection('companies').doc(_state.companyId).collection('finance_recurring');
+
+  for (const item of items) {
+    if (item.dayOfMonth !== today) continue;
+    // Перевіряємо чи вже списували цього місяця
+    const lastPosted = item.lastPostedMonth;
+    if (lastPosted === monthKey) continue;
+
+    try {
+      // Створюємо транзакцію
+      await colRef.add({
+        type:         item.type,
+        amount:       item.amount,
+        currency:     item.currency || _state.currency,
+        category:     item.category || '',
+        accountId:    item.accountId || '',
+        accountName:  (_state.accounts||[]).find(a=>a.id===item.accountId)?.name || '',
+        counterparty: item.counterparty || '',
+        comment:      (item.comment || '') + ` [авто: ${item.name}]`,
+        date:         firebase.firestore.Timestamp.fromDate(now),
+        recurringId:  item.id,
+        isRecurring:  true,
+        createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      // Відмічаємо що списали цього місяця
+      await recurRef.doc(item.id).update({ lastPostedMonth: monthKey });
+      console.log(`[Recurring] Autoposted: ${item.name} ${item.amount}`);
+    } catch(e) {
+      console.error('[Recurring autopost]', e);
+    }
+  }
+
+  // Перезавантажуємо транзакції
+  await _loadTransactions();
+  if (_state.activeSubTab === 'dashboard') renderSubTab('dashboard');
+}
+
+async function _loadRecurring() {
+  if (!_state.companyId) return;
+  try {
+    const snap = await db.collection('companies').doc(_state.companyId)
+      .collection('finance_recurring').orderBy('createdAt','asc').get();
+    _state.recurring = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) {
+    _state.recurring = [];
+  }
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Функції по бізнес-функціях ─────────────────────────────
 function renderFunctions(el) {
   const now = new Date();
   const monthOpts = Array.from({length:6},(_,i)=>{
@@ -2141,6 +2578,10 @@ async function initFinance(companyId, currentUser) {
     await initFirestoreCollections();
     await loadAccounts();
     await loadCategories();
+    await _loadRecurring();
+
+    // Автосписання — якщо сьогодні збігається день платежу
+    _processRecurringAutopost().catch(e => console.warn('[Recurring autopost]', e));
 
     showNavButton();
     _state.initialized = true;
