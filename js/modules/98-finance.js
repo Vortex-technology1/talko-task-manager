@@ -1437,21 +1437,241 @@ window._financeAddAccount = async function() {
 };
 
 // ── AI (заглушка Етап 1) ──────────────────────────────────
+// ── AI Аналітик фінансів — Етап 6 ───────────────────────
+let _aiFinHistory = []; // локальна історія чату
+
 function renderAI(el) {
   if (!isOwnerOrManager()) {
     el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Доступ лише для Owner та Manager</div>';
     return;
   }
+
+  const quickBtns = [
+    { label: 'Аналіз поточного місяця', q: 'Зроби детальний аналіз фінансів за поточний місяць: доходи, витрати, маржа, тренди.' },
+    { label: 'Де витікають гроші?', q: 'Знайди категорії з найбільшими витратами і порівняй з попередніми місяцями. Де найбільший перевитрат?' },
+    { label: 'Прогноз на наступний місяць', q: 'На основі поточних даних зроби прогноз доходів і витрат на наступний місяць.' },
+    { label: 'Рекомендації по оптимізації', q: 'Дай конкретні рекомендації як збільшити прибуток і скоротити витрати на основі моїх даних.' },
+  ];
+
   el.innerHTML = `
-    <div style="width:100%;">
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:1.25rem;">AI-аналітик</div>
-      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:2rem;text-align:center;color:#9ca3af;">
-        <div style="margin-bottom:0.75rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-        <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.35rem;">Claude AI аналітика</div>
-        <div style="font-size:0.8rem;">Буде активовано після наповнення даними</div>
+    <div style="width:100%;display:flex;flex-direction:column;gap:1rem;">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">AI-аналітик фінансів</div>
+          <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.1rem;">Аналізує ваші реальні фінансові дані</div>
+        </div>
+        <button onclick="window._aiFinClear()"
+          style="padding:0.3rem 0.7rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;font-size:0.75rem;cursor:pointer;color:#6b7280;">
+          Очистити чат
+        </button>
+      </div>
+
+      <!-- Quick buttons -->
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        ${quickBtns.map(b => `
+          <button onclick="window._aiFinAsk(${JSON.stringify(b.q)})"
+            style="padding:0.35rem 0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;
+              border-radius:20px;font-size:0.78rem;cursor:pointer;font-weight:500;white-space:nowrap;">
+            ${b.label}
+          </button>
+        `).join('')}
+      </div>
+
+      <!-- Chat area -->
+      <div id="aiFinChat" style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;
+        min-height:300px;max-height:500px;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem;">
+        <div style="text-align:center;color:#9ca3af;font-size:0.82rem;margin:auto;">
+          Задайте питання або оберіть швидкий аналіз вище
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div style="display:flex;gap:0.5rem;">
+        <input id="aiFinInput" type="text" placeholder="Задайте питання про ваші фінанси..."
+          onkeydown="if(event.key==='Enter')window._aiFinSend()"
+          style="flex:1;padding:0.6rem 0.9rem;border:1px solid #e5e7eb;border-radius:10px;
+            font-size:0.85rem;outline:none;">
+        <button onclick="window._aiFinSend()"
+          style="padding:0.6rem 1.2rem;background:#22c55e;color:#fff;border:none;border-radius:10px;
+            font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;">
+          Надіслати
+        </button>
       </div>
     </div>
   `;
+}
+
+window._aiFinClear = function() {
+  _aiFinHistory = [];
+  const chat = document.getElementById('aiFinChat');
+  if (chat) chat.innerHTML = '<div style="text-align:center;color:#9ca3af;font-size:0.82rem;margin:auto;">Чат очищено</div>';
+};
+
+window._aiFinAsk = function(question) {
+  const inp = document.getElementById('aiFinInput');
+  if (inp) inp.value = question;
+  window._aiFinSend();
+};
+
+window._aiFinSend = async function() {
+  const inp = document.getElementById('aiFinInput');
+  const chat = document.getElementById('aiFinChat');
+  if (!inp || !chat) return;
+
+  const userText = inp.value.trim();
+  if (!userText) return;
+  inp.value = '';
+
+  // Очищаємо плейсхолдер якщо є
+  if (chat.children.length === 1 && chat.children[0].style.textAlign === 'center') {
+    chat.innerHTML = '';
+  }
+
+  // Додаємо повідомлення юзера
+  _appendAiMsg(chat, 'user', userText);
+  _aiFinHistory.push({ role: 'user', content: userText });
+
+  // Індикатор завантаження
+  const loadEl = document.createElement('div');
+  loadEl.id = 'aiFinLoading';
+  loadEl.style.cssText = 'display:flex;align-items:center;gap:0.5rem;color:#9ca3af;font-size:0.82rem;';
+  loadEl.innerHTML = `<div style="width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pulse 1s infinite;"></div> AI аналізує дані...`;
+  chat.appendChild(loadEl);
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+    // Збираємо фінансові дані для контексту
+    const context = await _buildAiFinContext();
+
+    const systemPrompt = `Ти фінансовий аналітик бізнесу. Аналізуєш реальні дані компанії.
+Відповідай українською, конкретно, з цифрами. Без зайвої "води".
+Формат: короткі абзаци або список. Виділяй проблеми та можливості.
+
+ПОТОЧНІ ФІНАНСОВІ ДАНІ КОМПАНІЇ:
+${context}
+
+Валюта: ${_state.currency || 'EUR'}. 
+Дата аналізу: ${new Date().toLocaleDateString('uk-UA')}.`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: _aiFinHistory
+      })
+    });
+
+    const data = await response.json();
+    const aiText = data.content?.[0]?.text || 'Не вдалося отримати відповідь.';
+
+    // Видаляємо індикатор
+    const loadElDone = document.getElementById('aiFinLoading');
+    if (loadElDone) loadElDone.remove();
+
+    _appendAiMsg(chat, 'ai', aiText);
+    _aiFinHistory.push({ role: 'assistant', content: aiText });
+
+    // Зберігаємо в Firestore
+    try {
+      await colRef('finance_ai_history').add({
+        question: userText,
+        answer: aiText,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        userId: _state.userId
+      });
+    } catch(e) { /* ігноруємо */ }
+
+  } catch(e) {
+    const loadElErr = document.getElementById('aiFinLoading');
+    if (loadElErr) loadElErr.remove();
+    _appendAiMsg(chat, 'error', 'Помилка: ' + e.message);
+  }
+
+  chat.scrollTop = chat.scrollHeight;
+};
+
+function _appendAiMsg(chat, role, text) {
+  const div = document.createElement('div');
+  const isUser = role === 'user';
+  const isError = role === 'error';
+
+  div.style.cssText = `
+    display:flex;
+    justify-content:${isUser ? 'flex-end' : 'flex-start'};
+  `;
+
+  const bubble = document.createElement('div');
+  bubble.style.cssText = `
+    max-width:80%;
+    padding:0.65rem 0.9rem;
+    border-radius:${isUser ? '12px 12px 2px 12px' : '12px 12px 12px 2px'};
+    font-size:0.82rem;
+    line-height:1.55;
+    white-space:pre-wrap;
+    background:${isUser ? '#22c55e' : isError ? '#fef2f2' : '#f9fafb'};
+    color:${isUser ? '#fff' : isError ? '#dc2626' : '#1a1a1a'};
+    border:${isUser ? 'none' : '1px solid #e5e7eb'};
+  `;
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  chat.appendChild(div);
+}
+
+async function _buildAiFinContext() {
+  try {
+    const now = new Date();
+    // Останні 3 місяці
+    const from3m = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth()-2, 1));
+    const txSnap = await colRef('finance_transactions').where('date','>=',from3m).orderBy('date','desc').get();
+    const txs = txSnap.docs.map(d => d.data());
+
+    // Групуємо по місяцях
+    const byMonth = {};
+    txs.forEach(tx => {
+      const d = tx.date?.toDate ? tx.date.toDate() : new Date();
+      const mk = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+      if (!byMonth[mk]) byMonth[mk] = { income:0, expense:0, cats:{} };
+      if (tx.type==='income')  byMonth[mk].income  += tx.amount||0;
+      if (tx.type==='expense') {
+        byMonth[mk].expense += tx.amount||0;
+        const cn = tx.categoryName || tx.categoryId || 'Інше';
+        byMonth[mk].cats[cn] = (byMonth[mk].cats[cn]||0) + (tx.amount||0);
+      }
+    });
+
+    // Рахунки
+    const accTotal = (_state.accounts||[]).reduce((s,a)=>s+(a.balance||0),0);
+
+    let ctx = `ЗАГАЛЬНИЙ БАЛАНС РАХУНКІВ: ${accTotal} ${_state.currency||'EUR'}
+
+`;
+    ctx += `СТАТИСТИКА ПО МІСЯЦЯХ (останні 3):
+`;
+
+    Object.entries(byMonth).sort().reverse().forEach(([month, d]) => {
+      const profit = d.income - d.expense;
+      const margin = d.income > 0 ? Math.round(profit/d.income*100) : 0;
+      ctx += `
+${month}:
+`;
+      ctx += `  Дохід: ${d.income} | Витрати: ${d.expense} | Прибуток: ${profit} | Маржа: ${margin}%
+`;
+      const topCats = Object.entries(d.cats).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      if (topCats.length) {
+        ctx += `  Топ витрати: ${topCats.map(([k,v])=>`${k}=${v}`).join(', ')}
+`;
+      }
+    });
+
+    return ctx;
+  } catch(e) {
+    return 'Дані недоступні: ' + e.message;
+  }
 }
 
 // ── Форма додавання транзакції — Етап 2 ─────────────────
