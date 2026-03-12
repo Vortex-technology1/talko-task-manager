@@ -6241,6 +6241,9 @@ Bist du dabei?</div>
                 homeworkLink: "https://chatgpt.com/g/g-6850f64368a08191b2c1e8cb233b7ebb-ai-kouch-konsultant-alex-talko-tochka-b",
                 homeworkLinkName: "→ AI-коуч цілей",
                 homeworkLinkName_ru: "→ AI-коуч целей",
+                homeworkLinkName_en: "→ AI Goal Coach",
+                homeworkLinkName_pl: "→ AI Coach Celów",
+                homeworkLinkName_de: "→ KI-Ziel-Coach",
                 time: 180
             },
             {
