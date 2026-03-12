@@ -85,7 +85,7 @@ service cloud.firestore {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId) && 
           isValidString(request.resource.data.title, 500);
-        // BUG #2 fix: employee може редагувати тільки свої завдання
+        // employee може редагувати тільки свої завдання
         allow update: if isManagerOrOwner(companyId) || 
           (isCompanyMember(companyId) && (
             resource.data.assigneeId == userId() ||
@@ -98,7 +98,7 @@ service cloud.firestore {
         match /comments/{commentId} {
           allow read: if isCompanyMember(companyId);
           allow create: if isCompanyMember(companyId);
-          // P2 FIX: автор може редагувати/видаляти власний коментар
+          // автор може редагувати/видаляти власний коментар
           allow update: if isManagerOrOwner(companyId) ||
             (isAuthenticated() && isCompanyMember(companyId) && resource.data.authorId == userId());
           allow delete: if isManagerOrOwner(companyId) ||
@@ -118,6 +118,7 @@ service cloud.firestore {
       }
       
       // REGULAR TASKS
+      // FIX: employee не може редагувати шаблони регулярних завдань
       match /regularTasks/{taskId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isManagerOrOwner(companyId) &&
@@ -231,7 +232,7 @@ service cloud.firestore {
       }
       
       // =====================
-      // PROJECT TEMPLATES, STANDARDS, QC, EVENTS
+      // PROJECT TEMPLATES, STANDARDS, QC
       // =====================
       
       match /projectTemplates/{templateId} {
@@ -275,7 +276,7 @@ service cloud.firestore {
           isValidString(request.resource.data.projectId, 200);
         // update — member може міняти статус (доставлено, використано)
         allow update: if isCompanyMember(companyId);
-        // delete — тільки manager (щоб виконавець не видаляв записи)
+        // delete — тільки manager
         allow delete: if isManagerOrOwner(companyId);
       }
       
@@ -352,7 +353,7 @@ service cloud.firestore {
 
       // MARKETING — FUNNELS
       match /funnels/{funnelId} {
-        allow read: if isCompanyMember(companyId); // public read for embedded widget — companyMember only
+        allow read: if isCompanyMember(companyId);
         allow create, update: if isManagerOrOwner(companyId);
         allow delete: if isManagerOrOwner(companyId);
       }
@@ -388,20 +389,18 @@ service cloud.firestore {
         allow create, update: if isManagerOrOwner(companyId);
         allow delete: if isManagerOrOwner(companyId);
 
-        // Великі AI промпти зберігаються окремо (щоб обійти ліміт 1MB)
         match /nodePrompts/{nodeId} {
           allow read: if isCompanyMember(companyId);
           allow write: if isManagerOrOwner(companyId);
         }
 
-        // Canvas layout (позиції вузлів) зберігається окремо від основного документу
         match /canvasData/{docId} {
           allow read: if isCompanyMember(companyId);
           allow write: if isManagerOrOwner(companyId);
         }
       }
 
-      // BOTS — LEADS (збираються після завершення флоу)
+      // BOTS — LEADS
       match /leads/{leadId} {
         allow read: if isManagerOrOwner(companyId);
         allow create: if isCompanyMember(companyId);
@@ -466,11 +465,10 @@ service cloud.firestore {
       }
 
       // =====================
-      // CRM — STATS AGGREGATE (read-only для UI, пишуть тільки rules/functions)
+      // CRM — STATS AGGREGATE
       // =====================
       match /crm_stats/{docId} {
         allow read: if isManagerOrOwner(companyId);
-        // Пишеться з фронтенду через batch при зміні угоди
         allow write: if isCompanyMember(companyId);
       }
 
@@ -488,7 +486,6 @@ service cloud.firestore {
       match /contacts/{contactId}/messages/{msgId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId);
-        // Тільки позначення read:true дозволено для member
         allow update: if isCompanyMember(companyId);
         allow delete: if isManagerOrOwner(companyId);
       }
@@ -529,7 +526,6 @@ service cloud.firestore {
       match /form_submissions/{submissionId} {
         allow read: if isCompanyMember(companyId);
         // create: публічно (форма на сайті — без авторизації)
-        // Обмеження: тільки якщо є submittedAt і розмір даних <= 10KB
         allow create: if request.resource.data.keys().hasAll(['submittedAt', 'formId'])
                       && request.resource.data.size() < 10240;
         allow update: if isCompanyMember(companyId);
@@ -537,13 +533,14 @@ service cloud.firestore {
       }
 
       // =====================
-      // EVENTS (event bus, TTL 7 днів)
+      // EVENTS (event bus + audit trail — єдиний блок)
+      // FIX: прибрано дублікат першого блоку events.
+      // update дозволено тільки зі збереженням type (automation engine — processed:true)
       // =====================
       match /events/{eventId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId) &&
           isValidString(request.resource.data.type, 100);
-        // processed:true може виставляти будь-який member (automation engine)
         allow update: if isCompanyMember(companyId) &&
           request.resource.data.type == resource.data.type;
         allow delete: if isSuperAdmin();
@@ -561,7 +558,7 @@ service cloud.firestore {
     // INVITES
     // =====================
     match /invites/{inviteId} {
-      // P0 GDPR FIX: тільки власний invite, manager компанії або superadmin
+      // GDPR FIX: тільки власний invite, manager компанії або superadmin
       allow read: if isAuthenticated() && (
         isSuperAdmin() ||
         request.auth.token.email == resource.data.email ||
@@ -597,10 +594,11 @@ service cloud.firestore {
     
     // =====================
     // SETTINGS (AI assistants, global config)
+    // FIX: прибрано невизначений companyId з root-level контексту.
+    // read: будь-який автентифікований (крім doc 'main' — тільки superAdmin)
+    // write: тільки superAdmin
     // =====================
     match /settings/{doc} {
-      // openaiApiKey — тільки superAdmin
-      // onboarding, preferences — тільки superAdmin (root-level settings)
       allow read: if isSuperAdmin() || (isAuthenticated() && doc != 'main');
       allow write: if isSuperAdmin();
     }
