@@ -114,9 +114,9 @@
                     if (chunk.length) chunks.push(chunk);
                     
                     for (const refs of chunks) {
-                        const batch = db.batch();
+                        const _batchOps = [];
                         refs.forEach(ref => batch.delete(ref));
-                        await batch.commit();
+                        await window.safeBatchCommit(_batchOps);
                         totalDeleted += refs.length;
                     }
                 }
@@ -165,7 +165,7 @@
         }
         
         async function loadClinicDemoData() {
-            const batch = db.batch();
+            const _batchOps = [];
             const companyRef = db.collection('companies').doc(currentCompany);
             
             // Demo users (if not exist)
@@ -178,7 +178,7 @@
             const userIds = [];
             for (const user of demoUsers) {
                 const userRef = companyRef.collection('users').doc();
-                batch.set(userRef, { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: userRef, data: { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 userIds.push(userRef.id);
             }
             
@@ -194,7 +194,7 @@
             const funcRefs = [];
             for (const func of clinicFunctions) {
                 const funcRef = companyRef.collection('functions').doc();
-                batch.set(funcRef, { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: funcRef, data: { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 funcRefs.push({ id: funcRef.id, ...func });
             }
             
@@ -212,7 +212,7 @@
             
             for (const rt of clinicRegularTasks) {
                 const rtRef = companyRef.collection('regularTasks').doc();
-                batch.set(rtRef, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: rtRef, data: { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
             // Sample tasks for today/tomorrow
@@ -434,11 +434,11 @@
                 });
             }
             
-            await batch.commit();
+            await window.safeBatchCommit(_batchOps);
         }
         
         async function loadManufacturingDemoData() {
-            const batch = db.batch();
+            const _batchOps = [];
             const companyRef = db.collection('companies').doc(currentCompany);
             
             // Demo users
@@ -451,7 +451,7 @@
             const userIds = [];
             for (const user of demoUsers) {
                 const userRef = companyRef.collection('users').doc();
-                batch.set(userRef, { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: userRef, data: { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 userIds.push(userRef.id);
             }
             
@@ -467,7 +467,7 @@
             const funcRefs = [];
             for (const func of mfgFunctions) {
                 const funcRef = companyRef.collection('functions').doc();
-                batch.set(funcRef, { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: funcRef, data: { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 funcRefs.push({ id: funcRef.id, ...func });
             }
             
@@ -488,7 +488,7 @@
             
             for (const rt of mfgRegularTasks) {
                 const rtRef = companyRef.collection('regularTasks').doc();
-                batch.set(rtRef, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: rtRef, data: { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
             // Sample tasks - виконавці беруться з функцій автоматично
@@ -696,11 +696,11 @@
                 });
             }
             
-            await batch.commit();
+            await window.safeBatchCommit(_batchOps);
         }
 
         async function loadFurnitureDemoData() {
-            const batch = db.batch();
+            const _batchOps = [];
             const companyRef = db.collection('companies').doc(currentCompany);
             
             const demoUsers = [
@@ -713,7 +713,7 @@
             const userIds = [];
             for (const u of demoUsers) {
                 const ref = companyRef.collection('users').doc();
-                batch.set(ref, { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 userIds.push(ref.id);
             }
             
@@ -730,7 +730,7 @@
             const funcRefs = [];
             for (const f of funcs) {
                 const ref = companyRef.collection('functions').doc();
-                batch.set(ref, { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 funcRefs.push({ id: ref.id, ...f });
             }
             
@@ -747,7 +747,7 @@
             
             for (const rt of regularTasks) {
                 const ref = companyRef.collection('regularTasks').doc();
-                batch.set(ref, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
             const today = new Date();
@@ -773,7 +773,7 @@
                 const idx = userIds.indexOf(assigneeId);
                 const assigneeName = idx >= 0 ? demoUsers[idx].name : '';
                 const ref = companyRef.collection('tasks').doc();
-                batch.set(ref, { ...task, assigneeId, assigneeName, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) });
+                _batchOps.push({type:'set', ref: ref, data: { ...task, assigneeId, assigneeName, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) }});
             }
             
             // Business processes
@@ -806,7 +806,7 @@
             
             for (const tpl of processTemplates) {
                 const tplRef = companyRef.collection('processTemplates').doc();
-                batch.set(tplRef, { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: tplRef, data: { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 if (tpl.name === 'Виконання замовлення клієнта') {
                     for (const proc of [
                         { name: 'Кухня "Модерн" — Петренко', currentStep: 6, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 5*86400000)) },
@@ -814,7 +814,7 @@
                         { name: 'Офісні меблі — "Альфа Груп"', currentStep: 1, status: 'active', assigneeId: userIds[1], deadline: getLocalDateStr(new Date(Date.now() + 30*86400000)) }
                     ]) {
                         const pRef = companyRef.collection('processes').doc();
-                        batch.set(pRef, { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                        _batchOps.push({type:'set', ref: pRef, data: { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                     }
                 }
             }
@@ -828,7 +828,7 @@
             const projRefs = [];
             for (const p of projects) {
                 const ref = companyRef.collection('projects').doc();
-                batch.set(ref, { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 projRefs.push(ref.id);
             }
             
@@ -847,14 +847,14 @@
                 const aid = func?.assigneeIds?.[0] || null;
                 const ai = userIds.indexOf(aid);
                 const ref = companyRef.collection('tasks').doc();
-                batch.set(ref, { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
-            await batch.commit();
+            await window.safeBatchCommit(_batchOps);
         }
 
         async function loadConstructionDemoData() {
-            const batch = db.batch();
+            const _batchOps = [];
             const companyRef = db.collection('companies').doc(currentCompany);
             
             const demoUsers = [
@@ -867,7 +867,7 @@
             const userIds = [];
             for (const u of demoUsers) {
                 const ref = companyRef.collection('users').doc();
-                batch.set(ref, { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 userIds.push(ref.id);
             }
             
@@ -885,7 +885,7 @@
             const funcRefs = [];
             for (const f of funcs) {
                 const ref = companyRef.collection('functions').doc();
-                batch.set(ref, { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 funcRefs.push({ id: ref.id, ...f });
             }
             
@@ -902,7 +902,7 @@
             
             for (const rt of regularTasks) {
                 const ref = companyRef.collection('regularTasks').doc();
-                batch.set(ref, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
             const today = new Date();
@@ -928,7 +928,7 @@
                 const aid = func?.assigneeIds?.[0] || null;
                 const ai = userIds.indexOf(aid);
                 const ref = companyRef.collection('tasks').doc();
-                batch.set(ref, { ...task, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) });
+                _batchOps.push({type:'set', ref: ref, data: { ...task, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) }});
             }
             
             // Business processes
@@ -960,19 +960,19 @@
             
             for (const tpl of processTemplates) {
                 const tplRef = companyRef.collection('processTemplates').doc();
-                batch.set(tplRef, { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: tplRef, data: { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 if (tpl.name === 'Будівництво об\'єкту') {
                     for (const proc of [
                         { name: 'ЖК "Озерна" — корпус А', currentStep: 5, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 60*86400000)) },
                         { name: 'Котедж "Парковий 12"', currentStep: 3, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 30*86400000)) }
                     ]) {
                         const pRef = companyRef.collection('processes').doc();
-                        batch.set(pRef, { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                        _batchOps.push({type:'set', ref: pRef, data: { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                     }
                 }
                 if (tpl.name === 'Тендерна пропозиція') {
                     const pRef = companyRef.collection('processes').doc();
-                    batch.set(pRef, { name: 'Тендер ЖК "Сонячний"', templateId: tplRef.id, currentStep: 2, status: 'active', assigneeId: userIds[2], deadline: getLocalDateStr(new Date(Date.now() + 3*86400000)), createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    _batchOps.push({type:'set', ref: pRef, data: { name: 'Тендер ЖК "Сонячний"', templateId: tplRef.id, currentStep: 2, status: 'active', assigneeId: userIds[2], deadline: getLocalDateStr(new Date(Date.now() + 3*86400000)), createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 }
             }
             
@@ -985,7 +985,7 @@
             const projRefs = [];
             for (const p of projects) {
                 const ref = companyRef.collection('projects').doc();
-                batch.set(ref, { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 projRefs.push(ref.id);
             }
             
@@ -1004,10 +1004,10 @@
                 const aid = func?.assigneeIds?.[0] || null;
                 const ai = userIds.indexOf(aid);
                 const ref = companyRef.collection('tasks').doc();
-                batch.set(ref, { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
-            await batch.commit();
+            await window.safeBatchCommit(_batchOps);
         }
         let mobileFilters = {
             type: '',
@@ -1240,9 +1240,9 @@
                     if (chunk.length) chunks.push(chunk);
                     
                     for (const refs of chunks) {
-                        const batch = db.batch();
+                        const _batchOps = [];
                         refs.forEach(ref => batch.delete(ref));
-                        await batch.commit();
+                        await window.safeBatchCommit(_batchOps);
                         totalDeleted += refs.length;
                     }
                 }
@@ -1292,7 +1292,7 @@
         }
         
         async function loadClinicDemoData() {
-            const batch = db.batch();
+            const _batchOps = [];
             const companyRef = db.collection('companies').doc(currentCompany);
             
             // Demo users (if not exist)
@@ -1305,7 +1305,7 @@
             const userIds = [];
             for (const user of demoUsers) {
                 const userRef = companyRef.collection('users').doc();
-                batch.set(userRef, { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: userRef, data: { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 userIds.push(userRef.id);
             }
             
@@ -1321,7 +1321,7 @@
             const funcRefs = [];
             for (const func of clinicFunctions) {
                 const funcRef = companyRef.collection('functions').doc();
-                batch.set(funcRef, { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: funcRef, data: { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 funcRefs.push({ id: funcRef.id, ...func });
             }
             
@@ -1339,7 +1339,7 @@
             
             for (const rt of clinicRegularTasks) {
                 const rtRef = companyRef.collection('regularTasks').doc();
-                batch.set(rtRef, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: rtRef, data: { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
             // Sample tasks for today/tomorrow
@@ -1561,11 +1561,11 @@
                 });
             }
             
-            await batch.commit();
+            await window.safeBatchCommit(_batchOps);
         }
         
         async function loadManufacturingDemoData() {
-            const batch = db.batch();
+            const _batchOps = [];
             const companyRef = db.collection('companies').doc(currentCompany);
             
             // Demo users
@@ -1578,7 +1578,7 @@
             const userIds = [];
             for (const user of demoUsers) {
                 const userRef = companyRef.collection('users').doc();
-                batch.set(userRef, { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: userRef, data: { ...user, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 userIds.push(userRef.id);
             }
             
@@ -1594,7 +1594,7 @@
             const funcRefs = [];
             for (const func of mfgFunctions) {
                 const funcRef = companyRef.collection('functions').doc();
-                batch.set(funcRef, { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: funcRef, data: { ...func, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 funcRefs.push({ id: funcRef.id, ...func });
             }
             
@@ -1615,7 +1615,7 @@
             
             for (const rt of mfgRegularTasks) {
                 const rtRef = companyRef.collection('regularTasks').doc();
-                batch.set(rtRef, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: rtRef, data: { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
             // Sample tasks - виконавці беруться з функцій автоматично
@@ -1823,11 +1823,11 @@
                 });
             }
             
-            await batch.commit();
+            await window.safeBatchCommit(_batchOps);
         }
 
         async function loadFurnitureDemoData() {
-            const batch = db.batch();
+            const _batchOps = [];
             const companyRef = db.collection('companies').doc(currentCompany);
             
             const demoUsers = [
@@ -1840,7 +1840,7 @@
             const userIds = [];
             for (const u of demoUsers) {
                 const ref = companyRef.collection('users').doc();
-                batch.set(ref, { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 userIds.push(ref.id);
             }
             
@@ -1857,7 +1857,7 @@
             const funcRefs = [];
             for (const f of funcs) {
                 const ref = companyRef.collection('functions').doc();
-                batch.set(ref, { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 funcRefs.push({ id: ref.id, ...f });
             }
             
@@ -1874,7 +1874,7 @@
             
             for (const rt of regularTasks) {
                 const ref = companyRef.collection('regularTasks').doc();
-                batch.set(ref, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
             const today = new Date();
@@ -1900,7 +1900,7 @@
                 const idx = userIds.indexOf(assigneeId);
                 const assigneeName = idx >= 0 ? demoUsers[idx].name : '';
                 const ref = companyRef.collection('tasks').doc();
-                batch.set(ref, { ...task, assigneeId, assigneeName, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) });
+                _batchOps.push({type:'set', ref: ref, data: { ...task, assigneeId, assigneeName, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) }});
             }
             
             // Business processes
@@ -1933,7 +1933,7 @@
             
             for (const tpl of processTemplates) {
                 const tplRef = companyRef.collection('processTemplates').doc();
-                batch.set(tplRef, { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: tplRef, data: { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 if (tpl.name === 'Виконання замовлення клієнта') {
                     for (const proc of [
                         { name: 'Кухня "Модерн" — Петренко', currentStep: 6, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 5*86400000)) },
@@ -1941,7 +1941,7 @@
                         { name: 'Офісні меблі — "Альфа Груп"', currentStep: 1, status: 'active', assigneeId: userIds[1], deadline: getLocalDateStr(new Date(Date.now() + 30*86400000)) }
                     ]) {
                         const pRef = companyRef.collection('processes').doc();
-                        batch.set(pRef, { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                        _batchOps.push({type:'set', ref: pRef, data: { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                     }
                 }
             }
@@ -1955,7 +1955,7 @@
             const projRefs = [];
             for (const p of projects) {
                 const ref = companyRef.collection('projects').doc();
-                batch.set(ref, { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 projRefs.push(ref.id);
             }
             
@@ -1974,14 +1974,14 @@
                 const aid = func?.assigneeIds?.[0] || null;
                 const ai = userIds.indexOf(aid);
                 const ref = companyRef.collection('tasks').doc();
-                batch.set(ref, { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
-            await batch.commit();
+            await window.safeBatchCommit(_batchOps);
         }
 
         async function loadConstructionDemoData() {
-            const batch = db.batch();
+            const _batchOps = [];
             const companyRef = db.collection('companies').doc(currentCompany);
             
             const demoUsers = [
@@ -1994,7 +1994,7 @@
             const userIds = [];
             for (const u of demoUsers) {
                 const ref = companyRef.collection('users').doc();
-                batch.set(ref, { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...u, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 userIds.push(ref.id);
             }
             
@@ -2012,7 +2012,7 @@
             const funcRefs = [];
             for (const f of funcs) {
                 const ref = companyRef.collection('functions').doc();
-                batch.set(ref, { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...f, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 funcRefs.push({ id: ref.id, ...f });
             }
             
@@ -2029,7 +2029,7 @@
             
             for (const rt of regularTasks) {
                 const ref = companyRef.collection('regularTasks').doc();
-                batch.set(ref, { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...rt, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
             const today = new Date();
@@ -2055,7 +2055,7 @@
                 const aid = func?.assigneeIds?.[0] || null;
                 const ai = userIds.indexOf(aid);
                 const ref = companyRef.collection('tasks').doc();
-                batch.set(ref, { ...task, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) });
+                _batchOps.push({type:'set', ref: ref, data: { ...task, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp(), deadline: firebase.firestore.Timestamp.fromDate(new Date(task.deadlineDate + 'T' + (task.deadlineTime || '18:00'))) }});
             }
             
             // Business processes
@@ -2087,19 +2087,19 @@
             
             for (const tpl of processTemplates) {
                 const tplRef = companyRef.collection('processTemplates').doc();
-                batch.set(tplRef, { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: tplRef, data: { ...tpl, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 if (tpl.name === 'Будівництво об\'єкту') {
                     for (const proc of [
                         { name: 'ЖК "Озерна" — корпус А', currentStep: 5, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 60*86400000)) },
                         { name: 'Котедж "Парковий 12"', currentStep: 3, status: 'active', assigneeId: userIds[0], deadline: getLocalDateStr(new Date(Date.now() + 30*86400000)) }
                     ]) {
                         const pRef = companyRef.collection('processes').doc();
-                        batch.set(pRef, { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                        _batchOps.push({type:'set', ref: pRef, data: { ...proc, templateId: tplRef.id, createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                     }
                 }
                 if (tpl.name === 'Тендерна пропозиція') {
                     const pRef = companyRef.collection('processes').doc();
-                    batch.set(pRef, { name: 'Тендер ЖК "Сонячний"', templateId: tplRef.id, currentStep: 2, status: 'active', assigneeId: userIds[2], deadline: getLocalDateStr(new Date(Date.now() + 3*86400000)), createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    _batchOps.push({type:'set', ref: pRef, data: { name: 'Тендер ЖК "Сонячний"', templateId: tplRef.id, currentStep: 2, status: 'active', assigneeId: userIds[2], deadline: getLocalDateStr(new Date(Date.now() + 3*86400000)), createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 }
             }
             
@@ -2112,7 +2112,7 @@
             const projRefs = [];
             for (const p of projects) {
                 const ref = companyRef.collection('projects').doc();
-                batch.set(ref, { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...p, creatorId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
                 projRefs.push(ref.id);
             }
             
@@ -2131,9 +2131,9 @@
                 const aid = func?.assigneeIds?.[0] || null;
                 const ai = userIds.indexOf(aid);
                 const ref = companyRef.collection('tasks').doc();
-                batch.set(ref, { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                _batchOps.push({type:'set', ref: ref, data: { ...t, assigneeId: aid, assigneeName: ai >= 0 ? demoUsers[ai].name : '', createdBy: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() }});
             }
             
-            await batch.commit();
+            await window.safeBatchCommit(_batchOps);
         }
         // Bottom nav sync вбудований у switchTab (35-helpers.js)

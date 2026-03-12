@@ -1197,4 +1197,13 @@
         }
     });
 
+    // Cleanup для logout
+    window.destroyCoordListeners = function() {
+        coordUnsubscribes.forEach(u => { try { u(); } catch(e) {} });
+        coordUnsubscribes = [];
+        activeSession = null;
+        coordinations = [];
+        coordTasks = [];
+    };
+
 })();

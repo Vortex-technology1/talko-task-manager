@@ -105,6 +105,8 @@
                 await batch.commit();
             }
         }
+        // Expose globally для demo-data та інших модулів
+        window.safeBatchCommit = safeBatchCommit;
         
         let _visibleTaskIds = null;
         

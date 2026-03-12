@@ -670,8 +670,10 @@
                     completedBy: completedBy         // BUG 3 FIX
                 };
                 const docRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(newTaskData);
-                // Локальне додавання
-                if (!tasks.some(t => t.id === docRef.id)) tasks.unshift({ id: docRef.id, ...newTaskData, createdAt: new Date(), completedAt: new Date().toISOString() });
+                // Локальне додавання — completedAt як об'єкт сумісний з Firebase Timestamp
+                // (toDate() метод потрібний в renderMyDay та інших рендерах)
+                const _nowTs = { toDate: () => new Date(), seconds: Math.floor(Date.now()/1000), nanoseconds: 0 };
+                if (!tasks.some(t => t.id === docRef.id)) tasks.unshift({ id: docRef.id, ...newTaskData, createdAt: _nowTs, completedAt: _nowTs });
             }
             
             renderMyDay();

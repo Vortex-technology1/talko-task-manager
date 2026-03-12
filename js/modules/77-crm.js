@@ -3173,4 +3173,17 @@ function _startRemindersScheduler() {
         };
     }
 
+    // Cleanup для logout — відписуємо всі CRM listeners
+    window.destroyCRMListeners = function() {
+        if (typeof crm.clientUnsub === 'function') { crm.clientUnsub(); crm.clientUnsub = null; }
+        if (typeof crm.dealUnsub   === 'function') { crm.dealUnsub();   crm.dealUnsub   = null; }
+        crm._initializingFor = null;
+        if (window.TALKO && window.TALKO.crm) window.TALKO.crm._initialized = false;
+        // Скидаємо стан щоб при наступному login завантажились свіжі дані
+        crm.deals   = [];
+        crm.clients = [];
+        crm.pipelines = [];
+        crm.pipeline  = null;
+    };
+
 })();

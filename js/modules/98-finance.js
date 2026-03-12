@@ -4376,6 +4376,9 @@ window._updateCurrencyHint = function() {
 window._financeEnsureLoaded = async function() {
   if (!_state.initialized || !_state.companyId) return;
   if (window._financeTxCache && window._financeTxCache.length > 0) return; // вже є
+  // Loading lock — запобігає паралельним Firestore reads при кількох одночасних викликах
+  if (window._financeEnsureLoadedInProgress) return;
+  window._financeEnsureLoadedInProgress = true;
   try {
     const now = new Date();
     const from = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth(), 1));
@@ -4384,6 +4387,7 @@ window._financeEnsureLoaded = async function() {
       .where('date', '>=', from).where('date', '<=', to).limit(500).get();
     window._financeTxCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(e) { /* тихо — не критично */ }
+  finally { window._financeEnsureLoadedInProgress = false; }
 };
 
 window._financeAddTransaction = function(type) {

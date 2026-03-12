@@ -46,7 +46,7 @@
                     // Отримуємо кількість юзерів та завдань
                     const [usersSnap, tasksSnap] = await Promise.all([
                         db.collection('companies').doc(companyId).collection('users').get(),
-                        db.collection('companies').doc(companyId).collection('tasks').get()
+                        db.collection('companies').doc(companyId).collection('tasks').limit(5000).get()
                     ]);
                     
                     const createdAt = company.createdAt?.toDate?.() 

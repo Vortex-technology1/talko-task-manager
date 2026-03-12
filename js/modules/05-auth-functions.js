@@ -462,7 +462,17 @@
             if (typeof window.destroyBotsModule === 'function') {
                 window.destroyBotsModule();
             }
-            // FIX: CRM listeners cleanup on logout
+            // CRM listeners cleanup on logout
+            if (typeof window.destroyCRMListeners === 'function') {
+                window.destroyCRMListeners();
+            }
+            // Coordination listeners cleanup on logout
+            if (typeof window.destroyCoordListeners === 'function') {
+                window.destroyCoordListeners();
+            }
+            // Finance cache reset on logout (щоб наступний юзер не бачив чужі дані)
+            window._financeTxCache = null;
+            // FIX: CRM listeners cleanup on logout (legacy TALKO.crm.unsubs path)
             if (window.TALKO && window.TALKO.crm && window.TALKO.crm.unsubs) {
                 window.TALKO.crm.unsubs.forEach(u => u && u());
                 window.TALKO.crm.unsubs = [];
