@@ -154,7 +154,7 @@ const _defaultAutomationRules = [
     {
         id: 'deal_proposal_task',
         triggerEvent: TALKO_EVENTS.DEAL_STAGE_CHANGED,
-        condition: (e) => e.payload.toStage === 'Пропозиція',
+        condition: (e) => ['proposal','Пропозиція'].includes(e.payload.toStage), // FIX BY: match by id OR label
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `Підготувати КП для ${e.payload.clientName || e.payload.dealTitle}`,
@@ -170,7 +170,7 @@ const _defaultAutomationRules = [
     {
         id: 'deal_closing_task',
         triggerEvent: TALKO_EVENTS.DEAL_STAGE_CHANGED,
-        condition: (e) => e.payload.toStage === 'Закриття',
+        condition: (e) => ['closing','Закриття'].includes(e.payload.toStage), // FIX BY: match by id OR label
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `Фінальний дзвінок: ${e.payload.clientName || e.payload.dealTitle}`,
@@ -183,10 +183,11 @@ const _defaultAutomationRules = [
     },
 
     // DEAL WON → задача "Виставити рахунок"
+    // FIX BZ: also trigger on DEAL_STAGE_CHANGED toStage=won (CRM never emits DEAL_WON directly)
     {
         id: 'deal_won_invoice_task',
-        triggerEvent: TALKO_EVENTS.DEAL_WON,
-        condition: null,
+        triggerEvent: TALKO_EVENTS.DEAL_STAGE_CHANGED,
+        condition: (e) => ['won','Виграно'].includes(e.payload.toStage),
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `Виставити рахунок: ${e.payload.clientName || e.payload.dealTitle}`,
@@ -410,14 +411,20 @@ async function _actionCreateTask(event, params = {}) {
     const taskId = taskRef.id;
     const now = firebase.firestore.FieldValue.serverTimestamp();
 
+    // FIX BB: add missing fields for task rendering (assigneeName, creatorName, createdDate)
+    const _assignee = users?.find(u => u.id === (params.assigneeId || currentUser?.uid));
+    const _deadline = deadline || ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]);
     await taskRef.set({
         id: taskId,
         title: params.title,
         status: 'new',
         priority: params.priority || 'medium',
         assigneeId: params.assigneeId || currentUser?.uid || null,
+        assigneeName: _assignee?.name || currentUser?.displayName || currentUser?.email || '',
         creatorId: currentUser?.uid || 'system',
-        deadlineDate: deadline,
+        creatorName: currentUser?.displayName || currentUserData?.name || currentUser?.email || '',
+        deadlineDate: _deadline,
+        createdDate: (typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0],
         // Зв'язок з CRM
         dealId: params.dealId || null,
         clientId: params.clientId || null,

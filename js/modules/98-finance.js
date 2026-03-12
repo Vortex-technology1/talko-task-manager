@@ -1700,13 +1700,26 @@ window._invoiceSave = async function(editId) {
 
 // ── Позначити оплаченим ────────────────────────────────────
 window._invoiceMarkPaid = async function(id) {
-  if (!confirm('Позначити рахунок як оплачений?')) return;
+  // FIX CA: use showConfirmModal instead of native confirm + emit INVOICE_PAID for automation
+  const confirmed = typeof showConfirmModal === 'function'
+    ? await showConfirmModal('Позначити рахунок як оплачений?')
+    : confirm('Позначити рахунок як оплачений?');
+  if (!confirmed) return;
   try {
     await colRef('finance_invoices').doc(id).update({ status: 'paid', paidAt: firebase.firestore.FieldValue.serverTimestamp() });
     const inv = _state.invoices.find(i => i.id === id);
     if (inv) inv.status = 'paid';
     renderSubTab('invoices');
-  } catch(e) { alert('Помилка: ' + e.message); }
+    // FIX CA: emit INVOICE_PAID so automation can close linked CRM deal
+    if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS && inv?.crmDealId) {
+      await emitTalkoEvent(window.TALKO_EVENTS.INVOICE_PAID, {
+        invoiceId: id,
+        dealId: inv.crmDealId,
+        amount: inv.total || inv.amount || 0,
+        clientName: inv.clientName || inv.client || '',
+      }, { triggeredBy: 'user' });
+    }
+  } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); else alert('Помилка: ' + e.message); }
 };
 
 // ── Видалення ─────────────────────────────────────────────
