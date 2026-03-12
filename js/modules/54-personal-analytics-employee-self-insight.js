@@ -17,7 +17,7 @@
         const lastWeekStart = new Date(weekStart); lastWeekStart.setDate(lastWeekStart.getDate() - 7);
         const lastWeekStartStr = getLocalDateStr(lastWeekStart);
         
-        const myTasks = tasks.filter(t => t.assigneeId === uid);
+        const myTasks = tasks.filter(t => t.assigneeId === uid || (t.coExecutorIds && t.coExecutorIds.includes(uid))); // BUG-AE FIX: was assigneeId only
         const myDone = myTasks.filter(t => t.status === 'done');
         const myActive = myTasks.filter(t => t.status !== 'done');
         const myOverdue = myActive.filter(t => t.deadlineDate && t.deadlineDate < todayStr);

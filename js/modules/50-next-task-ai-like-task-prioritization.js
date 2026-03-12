@@ -7,14 +7,19 @@
         const uid = currentUser?.uid;
         if (!uid) return null;
         
+        // BUG-AD FIX: include coExecutor tasks, not only assignee
         const myActive = tasks.filter(t => 
-            t.assigneeId === uid && t.status !== 'done' && t.status !== 'review'
+            (t.assigneeId === uid || (t.coExecutorIds && t.coExecutorIds.includes(uid))) &&
+            t.status !== 'done' && t.status !== 'review'
         );
         
         if (myActive.length === 0) return null;
         
-        // Priority: 1) overdue by severity, 2) high priority today, 3) today by time, 4) future
+        // Priority: 1) pinned, 2) overdue by severity, 3) high priority today, 4) today by time, 5) future
         myActive.sort((a, b) => {
+            // BUG-AD FIX: pinned tasks go first
+            if ((a.pinned ? 1 : 0) !== (b.pinned ? 1 : 0)) return (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
+
             const aOverdue = a.deadlineDate && a.deadlineDate < todayStr ? 1 : 0;
             const bOverdue = b.deadlineDate && b.deadlineDate < todayStr ? 1 : 0;
             if (aOverdue !== bOverdue) return bOverdue - aOverdue; // overdue first

@@ -14,7 +14,8 @@
         const weekStartStr = getLocalDateStr(weekStart);
         
         const teamData = users.map(u => {
-            const ut = tasks.filter(t => t.assigneeId === u.id);
+            // BUG-AF FIX: include coExecutor tasks in workload count
+            const ut = tasks.filter(t => t.assigneeId === u.id || (t.coExecutorIds && t.coExecutorIds.includes(u.id)));
             const active = ut.filter(t => t.status !== 'done');
             const overdue = active.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
             // FIX: support both completedDate (string, set by newer code) and completedAt (Timestamp, legacy)

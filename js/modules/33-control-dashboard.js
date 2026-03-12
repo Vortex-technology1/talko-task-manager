@@ -234,12 +234,17 @@
                 }).filter(u => u.active > 0 || u.overdue > 0).sort((a,b) => b.overdue - a.overdue);
                 
                 // 6. REGULAR TASKS completion rate (today)
-                const todayDow = new Date().getDay().toString();
+                // BUG-AC FIX: use isRegularTaskDay — was missing quarterly, skipWeekends, disabled tasks
+                const _todayDate = new Date();
                 const todaysRegular = regularTasks.filter(rt => {
-                    if (rt.period === 'daily') return true;
-                    if (rt.period === 'weekly' && rt.daysOfWeek?.includes(todayDow)) return true;
-                    if (rt.period === 'monthly' && parseInt(rt.dayOfMonth) === new Date().getDate()) return true;
-                    return false;
+                    if (rt.disabled || rt.paused || rt.status === 'paused' || rt.status === 'disabled') return false;
+                    return typeof isRegularTaskDay === 'function' ? isRegularTaskDay(rt, _todayDate) : (() => {
+                        const dow = _todayDate.getDay().toString();
+                        if (rt.period === 'daily') return true;
+                        if (rt.period === 'weekly' && rt.daysOfWeek?.includes(dow)) return true;
+                        if (rt.period === 'monthly' && parseInt(rt.dayOfMonth) === _todayDate.getDate()) return true;
+                        return false;
+                    })();
                 });
                 const regDone = todaysRegular.filter(rt => {
                     return tasks.some(t => t.regularTaskId === rt.id && t.deadlineDate === todayStr && t.status === 'done');
@@ -339,11 +344,16 @@
                     { key: 'done',     label: t('statusDone'),      color: '#16a34a', bg: '#f0fdf4' },
                 ];
                 const byPerson = {};
+                // BUG-AG FIX: include coExecutor tasks in workload — was assigneeId only
                 allVisible.forEach(task => {
-                    const uid  = task.assigneeId || 'unassigned';
-                    const name = task.assigneeName || t('notAssigned');
-                    if (!byPerson[uid]) byPerson[uid] = { name, new:[], progress:[], review:[], done:[] };
-                    if (byPerson[uid][task.status]) byPerson[uid][task.status].push(task);
+                    const participants = [task.assigneeId || 'unassigned'];
+                    if (task.coExecutorIds?.length) task.coExecutorIds.forEach(cid => { if (!participants.includes(cid)) participants.push(cid); });
+                    participants.forEach(uid => {
+                        const user = users.find(u => u.id === uid);
+                        const name = user ? (user.name || user.email) : (task.assigneeName || t('notAssigned'));
+                        if (!byPerson[uid]) byPerson[uid] = { name, new:[], progress:[], review:[], done:[] };
+                        if (byPerson[uid][task.status]) byPerson[uid][task.status].push(task);
+                    });
                 });
 
                 // Загальні лічильники
