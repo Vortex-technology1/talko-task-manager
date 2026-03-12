@@ -462,6 +462,7 @@
             
             const s = getProjectStats(projectId);
             const container = document.getElementById('projectDetailContent');
+            if (container) container.dataset.projectId = projectId;
             
             const statusOptions = ['active', 'paused', 'completed'].map(st => 
                 `<option value="${st}" ${project.status === st ? 'selected' : ''}>${st === 'active' ? t('projectActive') : st === 'completed' ? t('projectCompleted') : t('projectPaused')}</option>`
@@ -580,12 +581,17 @@
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         Стандарти
                     </button>
+                    <button class="calendar-view-btn" onclick="switchProjectView('finance', this)" style="padding:0.4rem 0.8rem;font-size:0.8rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Фінанси
+                    </button>
                 </div>
                 
                 <div id="projectBoardView" class="project-board-columns">${boardHTML}</div>
                 <div id="projectStagesView" style="display:none;">${typeof renderStagesList === 'function' ? renderStagesList(projectId) : '<div>Loading stages...</div>'}</div>
                 <div id="projectGanttView" style="display:none;">${renderProjectGantt(s.tasks, project)}</div>
                 <div id="projectStandardsView" style="display:none;"><div id="standardsListContainer"></div></div>
+                <div id="projectFinanceView" style="display:none;"><div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження фінансів...</div></div>
             `;
             
             refreshIcons();
@@ -603,6 +609,16 @@
                     window.loadWorkStandards().then(() => {
                         if (typeof window.renderStandardsList === 'function') window.renderStandardsList();
                     });
+                }
+            }
+            const finView = document.getElementById('projectFinanceView');
+            if (finView) {
+                finView.style.display = view === 'finance' ? '' : 'none';
+                if (view === 'finance') {
+                    const pid = document.getElementById('projectDetailContent')?.dataset?.projectId;
+                    if (pid && typeof window._renderProjectFinance === 'function') {
+                        window._renderProjectFinance(pid, finView);
+                    }
                 }
             }
             btn.parentElement.querySelectorAll('.calendar-view-btn').forEach(b => b.classList.remove('active'));

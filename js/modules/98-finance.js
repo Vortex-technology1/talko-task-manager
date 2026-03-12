@@ -3091,6 +3091,96 @@ window._txFilterChange = function(field, value, type) {
   loadAndRenderTxList(type);
 };
 
+// ── Фінанси в картці проекту ──────────────────────────────
+window._renderProjectFinance = async function(projectId, el) {
+  if (!projectId || !el) return;
+  el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>';
+
+  try {
+    const db = getDb();
+    const companyId = _state.companyId || window.currentCompanyId || window._companyId;
+    if (!db || !companyId) { el.innerHTML = '<div style="padding:2rem;color:#ef4444;">Фінансовий модуль не ініціалізовано</div>'; return; }
+
+    const snap = await db.collection('companies').doc(companyId)
+      .collection('finance_transactions')
+      .where('projectId', '==', projectId)
+      .orderBy('date', 'desc')
+      .get();
+
+    const txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const currency = _state.currency || 'EUR';
+
+    const income  = txs.filter(t => t.type === 'income').reduce((s, t) => s + (t.amount || 0), 0);
+    const expense = txs.filter(t => t.type === 'expense').reduce((s, t) => s + (t.amount || 0), 0);
+    const profit  = income - expense;
+    const margin  = income > 0 ? Math.round(profit / income * 100) : 0;
+
+    el.innerHTML = `
+      <div style="padding:4px 0;">
+
+        <!-- KPI -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
+          ${[
+            { label: 'Дохід',    val: fmt(income, currency),  color: '#22c55e' },
+            { label: 'Витрати',  val: fmt(expense, currency), color: '#ef4444' },
+            { label: 'Прибуток', val: fmt(profit, currency),  color: profit >= 0 ? '#16a34a' : '#ef4444' },
+            { label: 'Маржа',    val: margin + '%',           color: margin >= 20 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444' },
+          ].map(k => `
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;">
+              <div style="font-size:0.72rem;color:#6b7280;margin-bottom:3px;">${k.label}</div>
+              <div style="font-size:1.2rem;font-weight:700;color:${k.color};">${k.val}</div>
+            </div>`).join('')}
+        </div>
+
+        <!-- Кнопки додати -->
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <button onclick="window._addProjectTx('${projectId}','income')"
+            style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Дохід</button>
+          <button onclick="window._addProjectTx('${projectId}','expense')"
+            style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Витрата</button>
+        </div>
+
+        <!-- Список транзакцій -->
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+          ${txs.length === 0
+            ? '<div style="text-align:center;padding:32px;color:#9ca3af;"><div style="font-size:1.8rem;margin-bottom:6px;">💰</div><div>Транзакцій по проекту ще немає</div></div>'
+            : txs.map((tx, i) => {
+                const isIncome = tx.type === 'income';
+                const dateStr = tx.date ? fmtDate(tx.date) : '—';
+                return `
+                  ${i > 0 ? '<div style="border-top:1px solid #f3f4f6;"></div>' : ''}
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap;">
+                    <div style="width:8px;height:8px;border-radius:50%;background:${isIncome ? '#22c55e' : '#ef4444'};flex-shrink:0;"></div>
+                    <div style="flex:1;min-width:100px;">
+                      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(tx.description || tx.counterparty || (isIncome ? 'Дохід' : 'Витрата'))}</div>
+                      <div style="font-size:0.72rem;color:#9ca3af;">${dateStr}${tx.categoryName ? ' · ' + escHtml(tx.categoryName) : ''}</div>
+                    </div>
+                    <div style="font-size:0.95rem;font-weight:700;color:${isIncome ? '#22c55e' : '#ef4444'};">
+                      ${isIncome ? '+' : '−'}${fmt(tx.amount, tx.currency || currency)}
+                    </div>
+                  </div>`;
+              }).join('')
+          }
+        </div>
+      </div>`;
+  } catch(e) {
+    console.error('[ProjectFinance]', e);
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;">Помилка: ${e.message}</div>`;
+  }
+};
+
+// Відкрити форму додавання транзакції з прив'язкою до проекту
+window._addProjectTx = function(projectId, type) {
+  addTransaction(type);
+  // Після рендеру форми — підставляємо projectId
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const sel = document.getElementById('fmProject');
+      if (sel) sel.value = projectId;
+    }, 150);
+  });
+};
+
 // ── Хук: коли switchTab('finance') викликається ──────────
 const _origSwitchTab = window.switchTab;
 if (typeof _origSwitchTab === 'function') {
