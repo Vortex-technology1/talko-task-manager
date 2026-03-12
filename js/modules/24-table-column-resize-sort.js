@@ -241,6 +241,13 @@
             if (td.querySelector('input')) return;
             
             const task = tasks.find(t => t.id === taskId);
+            
+            // BUG-K FIX: check deadline edit permission before showing input
+            if (task && typeof canEditDeadline === 'function' && !canEditDeadline(task)) {
+                showToast(t('noPermissionDeadline') || 'Немає дозволу на зміну дедлайну', 'warning');
+                return;
+            }
+            
             const originalHTML = td.innerHTML;
             
             const wrap = document.createElement('div');
@@ -383,6 +390,7 @@
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(update);
                 if (newStatus === 'done') advanceProcessIfLinked(taskId);
                 if (newStatus === 'review') showToast(t('taskSentForReview'), 'info');
+                else if (newStatus === 'done') showToast(t('taskCompleted') || 'Завдання виконано ✓', 'success'); // BUG-M FIX: was missing
                 // Автостатус проекту
                 if (task.projectId) autoUpdateProjectStatus(task.projectId);
                 // AUDIT LOG

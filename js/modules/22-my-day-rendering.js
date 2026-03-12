@@ -46,7 +46,10 @@
             
             // 1. Разові завдання з дедлайном сьогодні або прострочені
             tasks.filter(t => {
-                if (t.assigneeId !== currentUser.uid) return false;
+                const uid = currentUser.uid;
+                // BUG-O FIX: include coExecutor tasks, not only assignee
+                const isParticipant = t.assigneeId === uid || (t.coExecutorIds && t.coExecutorIds.includes(uid));
+                if (!isParticipant) return false;
                 if (t.deadlineDate === todayStr) return true;
                 if (t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review') return true;
                 return false;
@@ -312,7 +315,7 @@
             
             return `
                 <div class="myday-item ${itemClass}" onclick="openMyDayTask('${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}')">
-                    <div class="myday-checkbox ${checkClass}" ${!task.review ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}', ${task.done || task.review})"` : ''} ${task.review ? 'style="background:#8b5cf6;border-color:#8b5cf6;"' : ''}>
+                    <div class="myday-checkbox ${checkClass}" ${!task.review ? `onclick="event.stopPropagation(); toggleMyDayTask(event, '${escId(task.id)}', '${escId(task.type)}', '${escId(task.generatedTaskId || '')}', ${task.done || task.review})"` : 'onclick="event.stopPropagation();"'} ${task.review ? 'style="background:#8b5cf6;border-color:#8b5cf6;cursor:not-allowed;" title="На перевірці — очікуйте рішення постановника"' : ''}>
                         ${task.done ? '<i data-lucide="check" class="icon icon-sm"></i>' : ''}
                         ${task.review ? '<i data-lucide="eye" class="icon icon-sm" style="color:white;"></i>' : ''}
                     </div>
@@ -378,7 +381,7 @@
                     
                     if (taskToUpdate) {
                         // Оновлюємо існуюче завдання
-                        const newStatus = currentDone ? 'new' : 'done';
+                        const newStatus = currentDone ? 'progress' : 'done'; // BUG-J FIX: was 'new' → broke status flow
                         await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskToUpdate.id).update({
                             status: newStatus,
                             completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
@@ -436,14 +439,16 @@
                         }
                         } // close existCheck else
                     } else {
-                        console.error('Cannot uncheck - task not found for user');
-                        throw new Error(t('taskNotFound'));
+                        // BUG-N FIX: graceful fail — local tasks[] may be stale, re-render to sync UI
+                        console.warn('Cannot uncheck - task not found for user, re-rendering');
+                        renderMyDay();
+                        return;
                     }
                 } else {
                     // Для разових - перевіряємо чи потрібна перевірка
                     const taskObj = tasks.find(t => t.id === id);
                     const needsReview = !currentDone && shouldSendForReview(taskObj);
-                    const newStatus = currentDone ? 'new' : (needsReview ? 'review' : 'done');
+                    const newStatus = currentDone ? 'progress' : (needsReview ? 'review' : 'done'); // BUG-J FIX: was 'new'
                     
                     const _cd = ((typeof getLocalDateStr === 'function') ? getLocalDateStr(new Date()) : new Date().toISOString().split('T')[0]);
                     await db.collection('companies').doc(currentCompany).collection('tasks').doc(id).update({
@@ -469,7 +474,7 @@
                         t.assigneeId === currentUser.uid
                     );
                     if (taskToUpdate) {
-                        taskToUpdate.status = currentDone ? 'new' : 'done';
+                        taskToUpdate.status = currentDone ? 'progress' : 'done'; // BUG-J FIX: was 'new'
                         taskToUpdate.completedAt = currentDone ? null : new Date().toISOString();
                         if (taskToUpdate.projectId) autoUpdateProjectStatus(taskToUpdate.projectId);
                     }
@@ -477,7 +482,7 @@
                     const task = tasks.find(t => t.id === id);
                     if (task) {
                         const needsReview = !currentDone && shouldSendForReview(task);
-                        task.status = currentDone ? 'new' : (needsReview ? 'review' : 'done');
+                        task.status = currentDone ? 'progress' : (needsReview ? 'review' : 'done'); // BUG-J FIX: was 'new'
                         task.completedAt = currentDone ? null : new Date().toISOString();
                         // Автопросування процесу
                         if (!needsReview && !currentDone) {

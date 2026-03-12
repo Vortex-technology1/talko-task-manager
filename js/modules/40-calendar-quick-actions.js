@@ -6,6 +6,7 @@
 'use strict';
         function openTaskAtTime(dateStr, hour) {
             editingId = null;
+            window.currentEditingId = null; // BUG-L FIX: was missing, subtasks would attach to wrong parent
             document.getElementById('taskModalTitle').textContent = t('addTask');
             document.getElementById('taskForm').reset();
             
