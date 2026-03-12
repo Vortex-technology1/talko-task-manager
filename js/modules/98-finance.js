@@ -432,7 +432,10 @@ function renderDashboard(el) {
 
         <!-- Рахунки -->
         <div style="width:240px;flex-shrink:0;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Рахунки</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Рахунки</div>
+            ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ Переказ</button>` : ''}
+          </div>
           <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #f3f4f6;">
             <div style="font-size:0.72rem;color:#6b7280;">Загальний залишок</div>
             <div id="dashTotalBalance" style="font-size:1.25rem;font-weight:800;color:#1a1a1a;">${fmt(totalBalance)}</div>
@@ -936,6 +939,24 @@ function renderTransactions(el, type) {
           <option value="">Всі рахунки</option>
           ${_state.accounts.map(a => `<option value="${a.id}" ${_txFilter.accountId===a.id?'selected':''}>${a.name}</option>`).join('')}
         </select>
+        <button onclick="window._exportTx('${type}')"
+          style="display:flex;align-items:center;gap:5px;padding:0.4rem 0.75rem;border:1px solid #e5e7eb;
+          border-radius:8px;font-size:0.8rem;background:#fff;color:#374151;cursor:pointer;font-weight:500;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          CSV
+        </button>
+        <button onclick="window._exportTxXlsx('${type}')"
+          style="display:flex;align-items:center;gap:5px;padding:0.4rem 0.75rem;border:1px solid #22c55e;
+          border-radius:8px;font-size:0.8rem;background:#f0fdf4;color:#16a34a;cursor:pointer;font-weight:500;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          Excel
+        </button>
       </div>
 
       <!-- Список транзакцій -->
@@ -1116,6 +1137,273 @@ function _invoiceTotals(items, vatPct) {
   const total = subtotal + vat;
   return { subtotal, vat, total };
 }
+
+// ── Експорт транзакцій CSV / Excel ───────────────────────
+async function _getTxForExport(type) {
+  const [y, m] = _txFilter.month
+    ? _txFilter.month.split('-').map(Number)
+    : [new Date().getFullYear(), new Date().getMonth() + 1];
+
+  let query = colRef('finance_transactions').where('type', '==', type);
+  if (_txFilter.month) {
+    const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
+    query = query.where('date', '>=', from).where('date', '<=', to).orderBy('date', 'desc');
+  } else {
+    query = query.limit(500);
+  }
+  if (_txFilter.categoryId) query = query.where('categoryId', '==', _txFilter.categoryId);
+
+  const snap = await query.get();
+  const catMap = {};
+  [...(_state.categories.income || []), ...(_state.categories.expense || [])].forEach(c => { catMap[c.id] = c.name; });
+  const accMap = {};
+  (_state.accounts || []).forEach(a => { accMap[a.id] = a.name; });
+
+  return snap.docs.map(d => {
+    const tx = d.data();
+    const dt = tx.date?.toDate ? tx.date.toDate() : new Date((tx.date?.seconds || 0) * 1000);
+    return {
+      Дата:        dt.toLocaleDateString('uk-UA'),
+      Тип:         tx.type === 'income' ? 'Дохід' : 'Витрата',
+      Сума:        tx.amount || 0,
+      Валюта:      tx.currency || _state.currency || 'EUR',
+      Категорія:   catMap[tx.categoryId] || tx.categoryName || '',
+      Рахунок:     accMap[tx.accountId] || '',
+      Контрагент:  tx.counterparty || '',
+      Опис:        tx.description || '',
+      Проект:      tx.projectId || '',
+      Функція:     tx.functionId || '',
+    };
+  });
+}
+
+window._exportTx = async function(type) {
+  try {
+    const rows = await _getTxForExport(type);
+    if (!rows.length) { if (typeof showToast === 'function') showToast('Немає даних для експорту', 'warn'); return; }
+
+    const headers = Object.keys(rows[0]);
+    const csvRows = [
+      headers.join(';'),
+      ...rows.map(r => headers.map(h => {
+        const v = String(r[h] ?? '').replace(/"/g, '""');
+        return v.includes(';') || v.includes('"') || v.includes('\n') ? `"${v}"` : v;
+      }).join(';'))
+    ];
+    const bom = '\uFEFF'; // UTF-8 BOM для Excel
+    const blob = new Blob([bom + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `finance_${type}_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if (typeof showToast === 'function') showToast(`Експортовано ${rows.length} записів`, 'success');
+  } catch(e) { alert('Помилка експорту: ' + e.message); }
+};
+
+window._exportTxXlsx = async function(type) {
+  try {
+    const rows = await _getTxForExport(type);
+    if (!rows.length) { if (typeof showToast === 'function') showToast('Немає даних для експорту', 'warn'); return; }
+
+    // Генеруємо XLSX вручну (без бібліотек) — XML-based Office Open XML
+    const headers = Object.keys(rows[0]);
+    const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+    const sharedStrings = [];
+    const ssMap = {};
+    const si = str => {
+      if (ssMap[str] === undefined) { ssMap[str] = sharedStrings.length; sharedStrings.push(str); }
+      return ssMap[str];
+    };
+
+    const cellRef = (col, row) => String.fromCharCode(65 + col) + row;
+    let xmlRows = '';
+
+    // Header row
+    xmlRows += `<row r="1">${headers.map((h, c) => `<c r="${cellRef(c,1)}" t="s"><v>${si(h)}</v></c>`).join('')}</row>`;
+
+    // Data rows
+    rows.forEach((row, ri) => {
+      const r = ri + 2;
+      const cells = headers.map((h, c) => {
+        const v = row[h];
+        if (typeof v === 'number') return `<c r="${cellRef(c,r)}"><v>${v}</v></c>`;
+        return `<c r="${cellRef(c,r)}" t="s"><v>${si(String(v ?? ''))}</v></c>`;
+      }).join('');
+      xmlRows += `<row r="${r}">${cells}</row>`;
+    });
+
+    const ssXml = `<?xml version="1.0" encoding="UTF-8"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${sharedStrings.length}" uniqueCount="${sharedStrings.length}">${sharedStrings.map(s=>`<si><t>${esc(s)}</t></si>`).join('')}</sst>`;
+    const sheetXml = `<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${xmlRows}</sheetData></worksheet>`;
+    const wbXml = `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Фінанси" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+    const relsXml = `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>`;
+    const contentTypes = `<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>`;
+
+    // Пакуємо в ZIP через JSZip (якщо доступний) або fallback на CSV
+    if (typeof JSZip !== 'undefined') {
+      const zip = new JSZip();
+      zip.file('[Content_Types].xml', contentTypes);
+      zip.file('xl/workbook.xml', wbXml);
+      zip.file('xl/worksheets/sheet1.xml', sheetXml);
+      zip.file('xl/sharedStrings.xml', ssXml);
+      zip.file('xl/_rels/workbook.xml.rels', relsXml);
+      zip.file('_rels/.rels', `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
+      const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `finance_${type}_${new Date().toISOString().slice(0,10)}.xlsx`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if (typeof showToast === 'function') showToast(`Excel: експортовано ${rows.length} записів`, 'success');
+    } else {
+      // Завантажуємо JSZip динамічно
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+      script.onload = () => window._exportTxXlsx(type);
+      document.head.appendChild(script);
+      if (typeof showToast === 'function') showToast('Завантаження бібліотеки...', 'info', 2000);
+    }
+  } catch(e) { alert('Помилка Excel експорту: ' + e.message); }
+};
+
+// ── Переказ між рахунками ─────────────────────────────────
+window._financeTransfer = function() {
+  if (!isOwnerOrManager()) return;
+  const accs = _state.accounts || [];
+  if (accs.length < 2) {
+    if (typeof showToast === 'function') showToast('Потрібно мінімум 2 рахунки для переказу', 'warn');
+    return;
+  }
+
+  const existing = document.getElementById('transferModal');
+  if (existing) existing.remove();
+
+  const accOpts = accs.map(a => `<option value="${a.id}">${escHtml(a.name)} (${fmt(a.balance, a.currency)})</option>`).join('');
+
+  const modal = document.createElement('div');
+  modal.id = 'transferModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">⇄ Переказ між рахунками</div>
+        <button onclick="document.getElementById('transferModal').remove()"
+          style="background:none;border:none;font-size:1.2rem;color:#9ca3af;cursor:pointer;padding:2px;">✕</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+        <div>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">Звідки</label>
+          <select id="trFrom" style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+            ${accOpts}
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">Куди</label>
+          <select id="trTo" style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+            ${accOpts}
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">Сума</label>
+          <input id="trAmount" type="number" min="0.01" step="0.01" placeholder="0.00"
+            style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:4px;">Примітка (необов'язково)</label>
+          <input id="trNote" type="text" placeholder="напр. Поповнення каси"
+            style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;margin-top:1.25rem;">
+        <button onclick="document.getElementById('transferModal').remove()"
+          style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;color:#374151;cursor:pointer;font-size:0.85rem;">
+          Скасувати
+        </button>
+        <button onclick="window._doTransfer()"
+          style="flex:1;padding:10px;border:none;border-radius:8px;background:#22c55e;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:600;">
+          Переказати
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+
+  // Автоматично вибираємо різні рахунки
+  const toSel = document.getElementById('trTo');
+  if (toSel && accs.length >= 2) toSel.value = accs[1].id;
+};
+
+window._doTransfer = async function() {
+  const fromId = document.getElementById('trFrom')?.value;
+  const toId   = document.getElementById('trTo')?.value;
+  const amount = parseFloat(document.getElementById('trAmount')?.value || 0);
+  const note   = document.getElementById('trNote')?.value?.trim() || '';
+
+  if (!fromId || !toId) return;
+  if (fromId === toId) { if (typeof showToast === 'function') showToast('Оберіть різні рахунки', 'warn'); return; }
+  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast('Введіть суму', 'warn'); return; }
+
+  const fromAcc = _state.accounts.find(a => a.id === fromId);
+  if (fromAcc && (fromAcc.balance || 0) < amount) {
+    if (typeof showToast === 'function') showToast(`Недостатньо коштів: ${fmt(fromAcc.balance)}`, 'error');
+    return;
+  }
+
+  const btn = document.querySelector('#transferModal button[onclick="window._doTransfer()"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
+
+  try {
+    const db = getDb();
+    const companyId = _state.companyId;
+    const ts = firebase.firestore.Timestamp.now();
+    const desc = note || `Переказ між рахунками`;
+
+    // Два оновлення балансу + запис в finance_transfers
+    await db.collection('companies').doc(companyId)
+      .collection('finance_accounts').doc(fromId)
+      .update({ balance: firebase.firestore.FieldValue.increment(-amount) });
+
+    await db.collection('companies').doc(companyId)
+      .collection('finance_accounts').doc(toId)
+      .update({ balance: firebase.firestore.FieldValue.increment(amount) });
+
+    await db.collection('companies').doc(companyId)
+      .collection('finance_transfers').add({
+        fromAccountId: fromId, toAccountId: toId,
+        amount, currency: _state.currency || 'EUR',
+        description: desc, date: ts,
+        createdBy: _state.currentUser?.uid || '',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
+    // Оновлюємо стан в пам'яті
+    const fAcc = _state.accounts.find(a => a.id === fromId);
+    const tAcc = _state.accounts.find(a => a.id === toId);
+    if (fAcc) fAcc.balance = (fAcc.balance || 0) - amount;
+    if (tAcc) tAcc.balance = (tAcc.balance || 0) + amount;
+
+    document.getElementById('transferModal')?.remove();
+
+    // Оновлюємо баланси на дашборді
+    const totalBal = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
+    const tbEl = document.getElementById('dashTotalBalance');
+    if (tbEl) tbEl.textContent = fmt(totalBal);
+    const accEl = document.getElementById('dashAccounts');
+    if (accEl) accEl.innerHTML = _state.accounts.map(acc => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
+        <div style="font-size:0.8rem;color:#374151;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
+        <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+      </div>`).join('');
+
+    if (typeof showToast === 'function') showToast(`Переказ ${fmt(amount)} виконано`, 'success');
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Переказати'; }
+    alert('Помилка переказу: ' + e.message);
+  }
+};
 
 function renderInvoices(el) {
   const currency = _state.currency || 'EUR';
