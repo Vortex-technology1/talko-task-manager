@@ -120,6 +120,7 @@
                 
                 // Атомарно оновлюємо всі дані
                 users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                window.users = users; // FIX CH: keep window.users in sync for event-bus
                 functions = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 tasks = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 regularTasks = regSnap.docs.map(d => ({ id: d.id, ...d.data() }));

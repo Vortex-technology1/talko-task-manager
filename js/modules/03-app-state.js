@@ -93,7 +93,7 @@
         let currentUserData = null;
         let isSuperAdmin = false;
         let tasks = [];
-        let users = [];
+        let users = []; window.users = users; // FIX CH: event-bus needs access to users
         let functions = [];
         let regularTasks = [];
         let projects = [];

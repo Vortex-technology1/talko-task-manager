@@ -955,6 +955,8 @@ window.crmDrop = async function(e, newStage) {
                 dealId:deal.id, clientName:deal.clientName,
                 fromStage:oldStage, toStage:newStage,
                 pipelineId:deal.pipelineId, amount:deal.amount,
+                clientId: deal.clientId || null,          // FIX CF: required for task creation
+                assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
             });
         }
         if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
@@ -1048,6 +1050,8 @@ window.crmQuickSetStage = async function(dealId, newStage) {
                 dealId: deal.id, clientName: deal.clientName,
                 fromStage: oldStage, toStage: newStage,
                 pipelineId: deal.pipelineId, amount: deal.amount,
+                clientId: deal.clientId || null,          // FIX CF
+                assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
             });
         }
         if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
@@ -1187,6 +1191,8 @@ window.crmConfirmLost = async function(dealId, newStage, oldStage) {
                 dealId: deal.id, clientName: deal.clientName,
                 fromStage: oldStage, toStage: newStage,
                 lostReason: reason, amount: deal.amount,
+                clientId: deal.clientId || null,          // FIX CF
+                assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
             });
         }
         if (typeof showToast === 'function') showToast('Угоду закрито: ' + (reasonLabel || 'Програно'), 'error');
@@ -1263,6 +1269,12 @@ window.crmOpenDeal = function(dealId) {
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title="Створити задачу в Task Manager">
                     ${I.check} Задача
+                </button>
+                <button onclick="window.crmCreateInvoiceForDeal('${deal.id}')"
+                    style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
+                    border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
+                    title="Виставити рахунок для угоди">
+                    💰 Рахунок
                 </button>
                 <button onclick="crmSaveDeal('${deal.id}')"
                     style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
@@ -1439,7 +1451,12 @@ window.crmSaveDeal = async function(dealId) {
                 at: firebase.firestore.FieldValue.serverTimestamp(),
             });
             if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
-                await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, { dealId, fromStage:deal.stage, toStage:stage, clientName:deal.clientName, amount });
+                await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
+                    dealId, fromStage:deal.stage, toStage:stage,
+                    clientName:deal.clientName, amount,
+                    clientId: deal.clientId || null,          // FIX CF
+                    assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
+                });
             }
         }
         Object.assign(deal, updates);
@@ -3014,6 +3031,18 @@ window.onSwitchTab && window.onSwitchTab('crm', function() {
 // ══════════════════════════════════════════════════════════
 // ЗАДАЧА З УГОДИ → TASK MANAGER
 // ══════════════════════════════════════════════════════════
+// FIX CG: create invoice from deal card — links invoice to deal via crmDealId
+window.crmCreateInvoiceForDeal = function(dealId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    // Open finance tab and launch invoice modal with dealId + prefilled client
+    if (typeof window._invoiceAdd === 'function') {
+        window._invoiceAdd(dealId, deal.clientName || '');
+    } else {
+        if (typeof showToast === 'function') showToast('Модуль фінансів не завантажено', 'warning');
+    }
+};
+
 window.crmCreateTaskFromDeal = function(dealId) {
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;

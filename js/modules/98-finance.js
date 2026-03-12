@@ -1499,13 +1499,14 @@ function escHtml(s) {
 }
 
 // ── Модальне вікно рахунку ────────────────────────────────
-window._invoiceAdd  = () => _invoiceModal(null);
+window._invoiceAdd  = (crmDealId, clientName) => _invoiceModal(null, null, crmDealId, clientName);
 window._invoiceEdit = (id) => {
   const inv = (_state.invoices || []).find(i => i.id === id);
   if (inv) _invoiceModal(inv);
 };
 
-function _invoiceModal(inv) {
+// FIX CG: crmDealId + prefillClient allow CRM to open invoice form linked to a deal
+function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
   const isEdit = !!inv;
   const currency = _state.currency || 'EUR';
   const nextNum  = _nextInvoiceNumber(_state.invoices);
@@ -1546,7 +1547,7 @@ function _invoiceModal(inv) {
         <!-- Клієнт -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Клієнт (назва / ПІБ)</label>
-          <input id="inv_client" value="${escHtml(inv?.clientName || '')}" placeholder="ТОВ «Назва» або Іваненко І.І."
+          <input id="inv_client" value="${escHtml(inv?.clientName || prefillClient || '')}" placeholder="ТОВ «Назва» або Іваненко І.І."
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
@@ -1581,6 +1582,9 @@ function _invoiceModal(inv) {
           <textarea id="inv_notes" rows="3" placeholder="IBAN, банк, призначення платежу..."
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.85rem;resize:vertical;box-sizing:border-box;">${escHtml(inv?.notes || '')}</textarea>
         </div>
+
+        <!-- FIX CG: hidden CRM deal link -->
+        <input type="hidden" id="inv_crm_deal_id" value="${escHtml(inv?.crmDealId || crmDealId || '')}">
 
       </div>
 
@@ -1661,6 +1665,8 @@ window._invoiceSave = async function(editId) {
   const vatPct = parseFloat(document.getElementById('inv_vat')?.value) || 0;
   const { total } = _invoiceTotals(window._invItems, vatPct);
 
+  // FIX CG: read crmDealId from hidden field if set (links invoice to CRM deal for automation)
+  const _crmDealId = document.getElementById('inv_crm_deal_id')?.value.trim() || null;
   const data = {
     number:        document.getElementById('inv_number')?.value.trim() || '',
     date:          document.getElementById('inv_date')?.value || '',
@@ -1671,6 +1677,7 @@ window._invoiceSave = async function(editId) {
     total,
     notes:         document.getElementById('inv_notes')?.value.trim() || '',
     status:        editId ? undefined : 'draft',
+    crmDealId:     _crmDealId || undefined,    // FIX CG: required for invoice_paid→deal_won automation
     updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
   };
   if (!editId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
