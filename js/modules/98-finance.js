@@ -1251,15 +1251,15 @@ async function loadPlanningData(monthVal) {
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
           <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
             <span style="color:#6b7280;">Дохід факт</span>
-            <span style="font-weight:600;color:#22c55e;">${fmt(totalIncome)} EUR</span>
+            <span style="font-weight:600;color:#22c55e;">${fmt(totalIncome)}</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
             <span style="color:#6b7280;">Витрати факт</span>
-            <span style="font-weight:600;color:#ef4444;">${fmt(totalExpense)} EUR</span>
+            <span style="font-weight:600;color:#ef4444;">${fmt(totalExpense)}</span>
           </div>
           <div style="border-top:1px solid #f3f4f6;padding-top:0.5rem;display:flex;justify-content:space-between;font-size:0.85rem;">
             <span style="color:#1a1a1a;font-weight:600;">Прибуток</span>
-            <span style="font-weight:700;color:${profit>=0?'#22c55e':'#ef4444'};">${profit>=0?'+':''}${fmt(profit)} EUR</span>
+            <span style="font-weight:700;color:${profit>=0?'#22c55e':'#ef4444'};">${profit>=0?'+':''}${fmt(profit)}</span>
           </div>
           ${goalVal > 0 ? `
           <div style="margin-top:0.5rem;">
@@ -1283,7 +1283,7 @@ async function loadPlanningData(monthVal) {
       const pct = Math.min(Math.max(Math.round(profit / budgetData['goal'] * 100), 0), 100);
       goalEl.innerHTML = `
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.3rem;">
-          Факт: <strong>${fmt(profit)} EUR</strong> з <strong>${fmt(budgetData['goal'])} EUR</strong>
+          Факт: <strong>${fmt(profit)}</strong> з <strong>${fmt(budgetData['goal'])}</strong>
         </div>
         <div style="height:8px;background:#f3f4f6;border-radius:4px;">
           <div style="height:8px;background:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
