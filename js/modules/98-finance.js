@@ -359,7 +359,7 @@ function renderDashboard(el) {
       <!-- Header рядок -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.5rem;">
         <div>
-          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Дашборд</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabDashboard')}</div>
           <div style="font-size:0.78rem;color:#6b7280;margin-top:0.1rem;">${monthLabel}</div>
         </div>
         <div style="display:flex;align-items:center;gap:0.5rem;">
@@ -385,22 +385,22 @@ function renderDashboard(el) {
       <!-- KPI картки -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">Дохід</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finIncome')}</div>
           <div id="kpiIncome" style="font-size:1.5rem;font-weight:800;color:#22c55e;">...</div>
           <div id="kpiIncomeSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">Витрати</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finExpense')}</div>
           <div id="kpiExpense" style="font-size:1.5rem;font-weight:800;color:#ef4444;">...</div>
           <div id="kpiExpenseSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">Прибуток</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finProfit')}</div>
           <div id="kpiProfit" style="font-size:1.5rem;font-weight:800;color:#3b82f6;">...</div>
           <div id="kpiProfitSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">Маржа</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finMargin')}</div>
           <div id="kpiMargin" style="font-size:1.5rem;font-weight:800;color:#f59e0b;">...</div>
           <div id="kpiMarginSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
@@ -411,7 +411,7 @@ function renderDashboard(el) {
 
         <!-- Графік доходів/витрат за 6 місяців -->
         <div style="flex:1;min-width:280px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;overflow:hidden;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Доходи vs Витрати (6 міс.)</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finIncVsExp')}</div>
           <div id="dashChart" style="width:100%;overflow:hidden;">
             <div style="color:#9ca3af;font-size:0.78rem;">Завантаження...</div>
           </div>
@@ -432,7 +432,7 @@ function renderDashboard(el) {
             ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ ${window.t('finTransfer')}</button>` : ''}
           </div>
           <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #f3f4f6;">
-            <div style="font-size:0.72rem;color:#6b7280;">Загальний залишок</div>
+            <div style="font-size:0.72rem;color:#6b7280;">${window.t('finTotalBalance')}</div>
             <div id="dashTotalBalance" style="font-size:1.25rem;font-weight:800;color:#1a1a1a;">${fmt(totalBalance)}</div>
           </div>
           <div id="dashAccounts">
@@ -451,7 +451,7 @@ function renderDashboard(el) {
 
         <!-- Сигнали -->
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Сигнали</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finSignals')}</div>
           <div id="dashAlerts">
             <div style="color:#9ca3af;font-size:0.8rem;">Перевірка...</div>
           </div>
@@ -459,7 +459,7 @@ function renderDashboard(el) {
 
         <!-- Топ витрат по категоріях -->
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Топ витрат</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finTopExpenses')}</div>
           <div id="dashTopExpense">
             <div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div>
           </div>
@@ -469,7 +469,7 @@ function renderDashboard(el) {
       <!-- Donut + Проекти за маржею -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Структура витрат</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finExpStructure')}</div>
           <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
         </div>
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
@@ -543,7 +543,7 @@ async function loadDashboardData(monthVal) {
     set('kpiIncome',  fmt(income),  incCount + ` ${window.t('finOperations')}`, '#22c55e');
     set('kpiExpense', fmt(expense), expCount + ` ${window.t('finOperations')}`, '#ef4444');
     set('kpiProfit',  fmt(profit),  profit >= 0 ? window.t('finProfitWord') : window.t('finLossWord'), pColor);
-    set('kpiMargin',  margin+'%',   income > 0 ? `від доходу ${fmt(income)}` : window.t('finNoRevenue'), profit>=0?'#22c55e':'#ef4444');
+    set('kpiMargin',  margin+'%',   income > 0 ? `${window.t('finFromIncome')} ${fmt(income)}` : window.t('finNoRevenue'), profit>=0?'#22c55e':'#ef4444');
 
     // Сигнали
     const alerts = [];
@@ -556,7 +556,7 @@ async function loadDashboardData(monthVal) {
       }
     });
     if (expense > income && income > 0) {
-      alerts.push({ type: 'warn', text: `Витрати перевищують доходи на ${fmt(expense - income)}` });
+      alerts.push({ type: 'warn', text: `${window.t('finOverspend')} ${fmt(expense - income)}` });
     }
     if (margin < 10 && income > 0) {
       alerts.push({ type: 'warn', text: `Низька маржа: ${margin}% (норма > 15%)` });
@@ -889,7 +889,7 @@ async function loadDashboardKPI() {
 let _txFilter = { month: '', categoryId: '', accountId: '' };
 
 function renderTransactions(el, type) {
-  const label = type === 'income' ? 'Доходи' : 'Витрати';
+  const label = type === 'income' ? window.t('finIncome') : window.t('finExpense');
   const color  = type === 'income' ? '#22c55e' : '#ef4444';
   const cats   = _state.categories[type] || [];
 
@@ -1170,17 +1170,17 @@ async function _getTxForExport(type) {
     const dt = tx.date?.toDate ? tx.date.toDate() : new Date((tx.date?.seconds || 0) * 1000);
     return {
       Дата:             dt.toLocaleDateString('uk-UA'),
-      Тип:              tx.type === 'income' ? 'Дохід' : 'Витрата',
+      Тип:              tx.type === 'income' ? window.t('finTransactionIncome') : window.t('finTransactionExpense'),
       Сума:             tx.amount || 0,
       Валюта:           tx.currency || _state.currency || 'EUR',
       'Сума (базова)':  tx.amountBase != null ? tx.amountBase : (tx.amount || 0),
       'Баз. валюта':    _state.currency || 'EUR',
-      Категорія:        catMap[tx.categoryId] || tx.categoryName || '',
+      [ window.t('finCategoryLbl') ]: catMap[tx.categoryId] || tx.categoryName || '',
       Рахунок:          accMap[tx.accountId] || '',
-      Контрагент:       tx.counterparty || '',
+      [ window.t('finCounterpartyLbl') ]: tx.counterparty || '',
       Опис:             tx.description || '',
       Проект:           tx.projectId || '',
-      Функція:          tx.functionId || '',
+      [ window.t('finFunctionLbl') ]: tx.functionId || '',
     };
   });
 }
@@ -2094,7 +2094,7 @@ window._finAddRecurring = function(editId) {
 
         <!-- Категорія -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Категорія</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCategoryLbl')}</label>
           <select id="rec_category" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
             <option value="">— Оберіть категорію —</option>
             ${allCats.map(c => `<option ${existing?.category===c?'selected':''}>${c}</option>`).join('')}
@@ -2119,14 +2119,14 @@ window._finAddRecurring = function(editId) {
 
         <!-- Контрагент -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Контрагент</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCounterpartyLbl')}</label>
           <input id="rec_counterparty" value="${escHtml(existing?.counterparty || '')}" placeholder="Орендодавець, постачальник..."
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
         <!-- Коментар -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Коментар</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCommentLbl')}</label>
           <input id="rec_comment" value="${escHtml(existing?.comment || '')}" placeholder="Необов'язково"
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
@@ -2331,7 +2331,7 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
         <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
           background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
           padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;">
-          <div>Функція</div>
+          <div>${window.t('finFunctionLbl')}</div>
           <div style="text-align:right;">Дохід</div>
           <div style="text-align:right;">Витрати</div>
           <div style="text-align:right;">Маржа</div>
@@ -2411,7 +2411,7 @@ async function loadFunctionsData(monthVal) {
       tableEl.innerHTML = `
         <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">
           Транзакцій з прив'язкою до функцій немає.<br>
-          <span style="font-size:0.78rem;">При додаванні транзакцій вибирайте поле «Функція»</span>
+          <span style="font-size:0.78rem;">${window.t('finFunctionHint')}</span>
         </div>`;
       if (chartEl) chartEl.innerHTML = '';
       return;
@@ -2547,7 +2547,7 @@ function renderPlanning(el) {
           <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
             padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;
             display:grid;grid-template-columns:1fr 110px 110px 90px;">
-            <div>Категорія</div>
+            <div>${window.t('finCategoryLbl')}</div>
             <div style="text-align:right;">Бюджет</div>
             <div style="text-align:right;">Факт</div>
             <div style="text-align:right;">Відхилення</div>
@@ -2718,7 +2718,7 @@ async function loadPlanningData(monthVal) {
       }).join('') + `
         <div style="display:grid;grid-template-columns:1fr 110px 110px 90px;
           padding:0.65rem 1rem;background:#fafafa;border-top:2px solid #e5e7eb;align-items:center;">
-          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;">РАЗОМ ВИТРАТИ</div>
+          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;">${window.t('finTotalExpenses')}</div>
           <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#374151;">${fmt(totalBudget)}</div>
           <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#ef4444;">${fmt(totalExpense)}</div>
           <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${totalBudget>=totalExpense?'#22c55e':'#ef4444'};">
@@ -3145,7 +3145,7 @@ function _renderPnl(el, txs, currency, from, to) {
     <!-- KPI рядок -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
       ${[
-        { label: 'Дохід',    val: fmt(totalInc, currency),  color: '#22c55e' },
+        { label: window.t('finTransactionIncome'), val: fmt(totalInc, currency), color: '#22c55e' },
         { label: window.t('finTabExpense'),  val: fmt(totalExp, currency),  color: '#ef4444' },
         { label: window.t('finProfit'), val: fmt(profit, currency),    color: profitColor },
         { label: window.t('finMargin'),    val: margin + '%',             color: profitColor },
@@ -3168,14 +3168,14 @@ function _renderPnl(el, txs, currency, from, to) {
 
       <!-- Витрати -->
       <div style="background:#fef2f2;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;margin-top:4px;">
-        <span>ВИТРАТИ</span><span>${fmt(totalExp, currency)}</span>
+        <span>${window.t('finExpense').toUpperCase()}</span><span>${fmt(totalExp, currency)}</span>
       </div>
       ${expCats.filter(c => byExpCat[c.id]).map(c => catRow(c, byExpCat[c.id] || 0, '#ef4444')).join('')}
       ${!expCats.filter(c => byExpCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає витрат</div>' : ''}
 
       <!-- Підсумок -->
       <div style="background:#1f2937;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:0.85rem;font-weight:700;">ПРИБУТОК / ЗБИТОК</span>
+        <span style="font-size:0.85rem;font-weight:700;">${window.t('finProfitLoss')}</span>
         <span style="font-size:1rem;font-weight:700;color:${profitColor};">${profit >= 0 ? '+' : ''}${fmt(profit, currency)}</span>
       </div>
     </div>`;
@@ -3210,7 +3210,7 @@ async function _renderProjectsMargin(el, txs, currency) {
     el.innerHTML = `
       <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;text-align:center;color:#9ca3af;">
         Немає транзакцій прив'язаних до проектів.<br>
-        <span style="font-size:0.78rem;">При додаванні транзакції вкажіть «Проект».</span>
+        <span style="font-size:0.78rem;">${window.t('finProjectHint')}</span>
       </div>`;
     return;
   }
@@ -4044,7 +4044,7 @@ function addTransaction(forceType) {
 
         <!-- Категорія -->
         <div id="fmCatWrap">
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Категорія *</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCategoryLbl')} *</label>
           <select id="fmCategory"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             <option value="">— оберіть категорію —</option>
@@ -4079,7 +4079,7 @@ function addTransaction(forceType) {
 
         <!-- Функція -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Функція</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finFunctionLbl')}</label>
           <select id="fmFunction"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             ${functionsHtml}
@@ -4462,7 +4462,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
         <!-- KPI -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
           ${[
-            { label: 'Дохід',    val: fmt(income, currency),  color: '#22c55e' },
+            { label: window.t('finTransactionIncome'), val: fmt(income, currency), color: '#22c55e' },
             { label: window.t('finTabExpense'),  val: fmt(expense, currency), color: '#ef4444' },
             { label: window.t('finProfit'), val: fmt(profit, currency),  color: profit >= 0 ? '#16a34a' : '#ef4444' },
             { label: window.t('finMargin'),    val: margin + '%',           color: margin >= 20 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444' },
@@ -4493,7 +4493,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
                   <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap;">
                     <div style="width:8px;height:8px;border-radius:50%;background:${isIncome ? '#22c55e' : '#ef4444'};flex-shrink:0;"></div>
                     <div style="flex:1;min-width:100px;">
-                      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(tx.description || tx.counterparty || (isIncome ? 'Дохід' : 'Витрата'))}</div>
+                      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(tx.description || tx.counterparty || (isIncome ? window.t('finTransactionIncome') : window.t('finTransactionExpense')))}</div>
                       <div style="font-size:0.72rem;color:#9ca3af;">${dateStr}${tx.categoryName ? ' · ' + escHtml(tx.categoryName) : ''}</div>
                     </div>
                     <div style="font-size:0.95rem;font-weight:700;color:${isIncome ? '#22c55e' : '#ef4444'};">

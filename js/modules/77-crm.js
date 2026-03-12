@@ -1340,6 +1340,41 @@ function _renderDealDetails(deal) {
             <input id="dd_niche" value="${_esc(deal.clientNiche||'')}" style="${inp}">
         </div>
     </div>
+    <!-- Контакти + Джерело -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
+        <div>
+            <label style="${lbl}">${window.t('crmPhone')}</label>
+            <input id="dd_phone" value="${_esc(deal.phone||'')}" placeholder="+38 (___) ___-__-__" style="${inp}">
+        </div>
+        <div>
+            <label style="${lbl}">Email</label>
+            <input id="dd_email" type="email" value="${_esc(deal.email||'')}" placeholder="name@company.com" style="${inp}">
+        </div>
+    </div>
+    <div style="margin-bottom:0.9rem;">
+        <label style="${lbl}">${window.t('crmSource')}</label>
+        <select id="dd_source" style="${inp}background:white;cursor:pointer;">
+            <option value="manual" ${(deal.source||'manual')==='manual'?'selected':''}>${window.t('crmSourceManual')}</option>
+            <option value="telegram" ${deal.source==='telegram'?'selected':''}>Telegram</option>
+            <option value="instagram" ${deal.source==='instagram'?'selected':''}>Instagram</option>
+            <option value="site_form" ${deal.source==='site_form'?'selected':''}>${window.t('crmSourceSite')}</option>
+            <option value="referral" ${deal.source==='referral'?'selected':''}>${window.t('crmSourceReferral')}</option>
+            <option value="ads" ${deal.source==='ads'?'selected':''}>${window.t('crmSourceAds')}</option>
+            <option value="phone_call" ${deal.source==='phone_call'?'selected':''}>${window.t('crmSourcePhone')}</option>
+        </select>
+    </div>
+    <!-- Конвертація: Лід → Клієнт (показуємо якщо стадія new або contact) -->
+    ${['new','contact'].includes(deal.stage) ? `
+    <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:0.75rem 1rem;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.75rem;">
+        <div style="flex:1;">
+            <div style="font-size:0.78rem;font-weight:700;color:#16a34a;margin-bottom:0.15rem;">${window.t('crmLeadConvertTitle')}</div>
+            <div style="font-size:0.72rem;color:#6b7280;">${window.t('crmLeadConvertHint')}</div>
+        </div>
+        <button onclick="crmConvertLead('${deal.id}')"
+            style="padding:0.4rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:700;white-space:nowrap;">
+            ${window.t('crmLeadConvertBtn')}
+        </button>
+    </div>` : ''}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
         <div>
             <label style="${lbl}">Дата закриття</label>
@@ -1427,12 +1462,16 @@ window.crmSaveDeal = async function(dealId) {
     const expClose    = document.getElementById('dd_close')?.value || null;
     const nextContact = document.getElementById('dd_nextContact')?.value || null;
     const assigneeId  = document.getElementById('dd_assignee')?.value || null;
+    const phone  = document.getElementById('dd_phone')?.value.trim() || deal.phone || '';
+    const email  = document.getElementById('dd_email')?.value.trim() || deal.email || '';
+    const source = document.getElementById('dd_source')?.value || deal.source || 'manual';
 
     try {
         const stageChanged = stage && stage !== deal.stage;
         const updates = {
             title: title||deal.title, stage: stage||deal.stage, amount,
             clientName: client||deal.clientName, clientNiche: niche, note,
+            phone, email, source,
             expectedClose: expClose||null, nextContactDate: nextContact||null,
             assigneeId: assigneeId||deal.assigneeId||null,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1468,6 +1507,34 @@ window.crmSaveDeal = async function(dealId) {
         console.error('[CRM] crmSaveDeal error:', e.message);
     } finally {
         crm.saving = false;  // завжди скидаємо guard
+    }
+};
+
+
+window.crmConvertLead = async function(dealId) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    // Переводимо лід у стадію "negotiation" (переговори)
+    const targetStage = 'negotiation';
+    try {
+        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+        await ref.update({
+            stage: targetStage,
+            isConverted: true,
+            convertedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await ref.collection('history').add({
+            type: 'lead_converted', from: deal.stage, to: targetStage,
+            by: window.currentUser?.email || 'manager',
+            at: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        Object.assign(deal, { stage: targetStage, isConverted: true });
+        crmCloseDeal();
+        if (typeof showToast === 'function') showToast(window.t('crmLeadConverted'), 'success');
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 
@@ -1824,6 +1891,24 @@ window.crmOpenCreateDeal = function(defaultStage) {
                     <label style="${lbl}">Ніша</label>
                     <input id="nd_niche" placeholder=window.t('crmNichePh') style="${inp}">
                 </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                    <div>
+                        <label style="${lbl}">${window.t('crmPhone')}</label>
+                        <input id="nd_phone" type="tel" placeholder="+38 (___) ___-__-__" style="${inp}">
+                    </div>
+                    <div>
+                        <label style="${lbl}">${window.t('crmSource')}</label>
+                        <select id="nd_source" style="${inp}background:white;cursor:pointer;">
+                            <option value="manual">${window.t('crmSourceManual')}</option>
+                            <option value="telegram">Telegram</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="site_form">${window.t('crmSourceSite')}</option>
+                            <option value="referral">${window.t('crmSourceReferral')}</option>
+                            <option value="ads">${window.t('crmSourceAds')}</option>
+                            <option value="phone_call">${window.t('crmSourcePhone')}</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;display:flex;justify-content:flex-end;gap:0.4rem;">
                 <button onclick="document.getElementById('crmCreateDealOverlay').remove()"
@@ -1848,14 +1933,17 @@ window.crmCreateDeal = async function() {
     const stage    = document.getElementById('nd_stage')?.value || 'new';
     const amount   = parseFloat(document.getElementById('nd_amount')?.value) || 0;
     const niche    = document.getElementById('nd_niche')?.value.trim();
+    const phone    = document.getElementById('nd_phone')?.value.trim() || '';
+    const source   = document.getElementById('nd_source')?.value || 'manual';
     const clientId = document.getElementById('crmCreateDealOverlay')?.dataset?.clientId || null;
     if (!title && !client) { if(window.showToast)showToast(window.t('crmEnterNameOrClient'),'warning'); else alert(window.t('crmEnterNameOrClient')); return; }
     try {
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add({
                 title: title||client, clientName: client||title, clientNiche: niche||'',
+                phone: phone||'', email:'',
                 clientId: clientId || null,
                 stage, pipelineId: crm.pipeline?.id || '',
-                amount, source:'manual',
+                amount, source: source||'manual',
                 assigneeId: window.currentUser?.uid || null,
                 creatorId:  window.currentUser?.uid || null,
                 stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), // FIX
