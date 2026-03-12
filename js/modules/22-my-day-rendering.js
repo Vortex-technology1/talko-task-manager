@@ -90,9 +90,13 @@
             
             // 2. Регулярні завдання на сьогодні
             regularTasks.forEach(rt => {
-                // Перевіряємо чи поточний користувач є виконавцем функції (O(1) map lookup)
+                // Перевіряємо чи поточний користувач є виконавцем:
+                // 1) прямий виконавець (rt.assigneeId) АБО
+                // 2) виконавець через функцію (func.assigneeIds)
+                const isDirectAssignee = rt.assigneeId && rt.assigneeId === currentUser.uid;
                 const func = funcByName[rt.function];
-                if (!func || !func.assigneeIds?.includes(currentUser.uid)) return;
+                const isFuncAssignee = !rt.assigneeId && func && func.assigneeIds?.includes(currentUser.uid);
+                if (!isDirectAssignee && !isFuncAssignee) return;
                 
                 // Перевіряємо чи сьогодні день цього завдання
                 let isToday = false;
@@ -505,9 +509,9 @@
                 openTaskModal(generatedTaskId);
             } else if (type === 'task') {
                 openTaskModal(id);
-            } else {
-                // Регулярне без згенерованого - відкриваємо регулярне
-                openRegularTaskModal(id);
+            } else if (type === 'regular') {
+                // Регулярне без згенерованої задачі — генеруємо/відкриваємо разову задачу
+                openTodayRegularTask(id);
             }
         }
         

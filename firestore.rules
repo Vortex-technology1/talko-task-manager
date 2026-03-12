@@ -122,7 +122,7 @@ service cloud.firestore {
         allow read: if isCompanyMember(companyId);
         allow create: if isManagerOrOwner(companyId) &&
           isValidString(request.resource.data.title, 500);
-        allow update: if isCompanyMember(companyId);
+        allow update: if isManagerOrOwner(companyId);
         allow delete: if isManagerOrOwner(companyId);
       }
       
@@ -250,15 +250,6 @@ service cloud.firestore {
           isValidString(request.resource.data.projectId, 200);
         allow update: if isCompanyMember(companyId);
         allow delete: if isManagerOrOwner(companyId);
-      }
-      
-      match /events/{eventId} {
-        allow read: if isCompanyMember(companyId);
-        // Тільки create — events immutable, delete/update заборонені
-        allow create: if isCompanyMember(companyId) &&
-          isValidString(request.resource.data.type, 100);
-        // Явна заборона зміни та видалення подій (audit trail)
-        allow update, delete: if isSuperAdmin();
       }
       
       // =====================
@@ -609,14 +600,14 @@ service cloud.firestore {
     // =====================
     match /settings/{doc} {
       // openaiApiKey — тільки superAdmin
-      // onboarding, preferences — власник і менеджер
-      allow read: if isSuperAdmin() || (doc != 'main' && isManagerOrOwner(companyId));
-      allow write: if isSuperAdmin() || (doc == 'onboarding' && isManagerOrOwner(companyId));
+      // onboarding, preferences — тільки superAdmin (root-level settings)
+      allow read: if isSuperAdmin() || (isAuthenticated() && doc != 'main');
+      allow write: if isSuperAdmin();
     }
     
     match /settings/{doc}/{sub=**} {
-      allow read: if isSuperAdmin() || isManagerOrOwner(companyId);
-      allow write: if isSuperAdmin() || (doc == 'onboarding' && isManagerOrOwner(companyId));
+      allow read: if isSuperAdmin() || isAuthenticated();
+      allow write: if isSuperAdmin();
     }
 
     // =====================
