@@ -15,6 +15,25 @@
         function closeDemoDataModal() {
             document.getElementById('demoDataModal').style.display = 'none';
         }
+
+        // Нові розширені ніші з фінансами (42-demo-niches.js)
+        window.loadDemoDataFull = async function(nicheKey) {
+            if (!isSuperAdmin) { showToast('Тільки SuperAdmin', 'error'); return; }
+            if (!currentCompany) { showAlertModal('Спочатку створіть компанію'); closeDemoDataModal(); return; }
+            if (!await showConfirmModal('Завантажити повне демо для цієї ніші? Дані додадуться до існуючих.', { danger: true })) return;
+            closeDemoDataModal();
+            showToast('Завантаження демо-середовища...', 'info');
+            try {
+                const fn = window._DEMO_NICHE_MAP?.[nicheKey];
+                if (!fn) { showToast('Нішу не знайдено: ' + nicheKey, 'error'); return; }
+                await fn();
+                await loadAllData();
+                showAlertModal('Демо готове! Перейдіть у Завдання, Контроль, Бізнес → Фінанси.');
+            } catch(e) {
+                console.error('[DemoFull]', e);
+                showToast('Помилка: ' + e.message, 'error');
+            }
+        };
         
         async function clearAllCompanyData() {
             if (!isSuperAdmin) return;

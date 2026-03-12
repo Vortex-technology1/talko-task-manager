@@ -2438,6 +2438,7 @@ document.addEventListener('mousedown', function(e) {
     <script src="js/modules/39-telegram-integration.js?v=20260311s" defer></script>
     <script src="js/modules/40-calendar-quick-actions.js?v=20260311s" defer></script>
     <script src="js/modules/41-demo-data.js?v=20260311s" defer></script>
+    <script src="js/modules/42-demo-niches.js?v=20260312a" defer></script>
     <script src="js/modules/42-swipe-between-tabs.js?v=20260311s" defer></script>
     <script src="js/modules/43-pull-to-refresh-mobile.js?v=20260311s" defer></script>
     <script src="js/modules/44-offline-support.js?v=20260311s" defer></script>
@@ -2936,65 +2937,135 @@ document.addEventListener('mousedown', function(e) {
     
     <!-- Demo Data Modal -->
     <div class="modal" id="demoDataModal">
-        <div class="modal-content" style="max-width:450px;">
-            <div class="modal-header">
-                <h3><i data-lucide="database" class="icon"></i> Завантажити демо-дані</h3>
+        <div class="modal-content" style="max-width:620px;max-height:90vh;overflow-y:auto;">
+            <div class="modal-header" style="position:sticky;top:0;background:white;z-index:1;border-bottom:1px solid #f3f4f6;">
+                <h3 style="display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                    Демо-дані по нішах
+                </h3>
                 <button class="close-btn" onclick="closeDemoDataModal()">&times;</button>
             </div>
             <div style="padding:1.5rem;">
-                <p style="color:#666;margin-bottom:1.5rem;font-size:0.9rem;">
-                    Оберіть тип бізнесу для завантаження демо-даних. Буде створено функції, регулярні завдання та приклади задач.
+                <p style="color:#6b7280;margin-bottom:1.25rem;font-size:0.85rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.75rem;">
+                    <strong style="color:#16a34a;">Тільки для SuperAdmin.</strong> Завантажує повне демо середовище: функції, завдання, проекти, бізнес-процеси, фінанси за 3 місяці, профіль компанії.
                 </p>
-                
-                <div style="display:flex;flex-direction:column;gap:1rem;">
-                    <button class="demo-option-btn" onclick="loadDemoData('clinic')">
-                        <div class="demo-option-icon" style="background:#ecfdf5;color:#10b981;">
-                            <i data-lucide="heart-pulse" class="icon icon-lg"></i>
+
+                <!-- Секція: Нові ніші (розширені) -->
+                <div style="font-size:0.72rem;font-weight:700;color:#9ca3af;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.75rem;">
+                    Повні демо-середовища (з фінансами)
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
+
+                    <button class="demo-option-btn" onclick="loadDemoDataFull('construction_eu')" style="flex-direction:column;align-items:flex-start;gap:0.4rem;padding:0.85rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="background:#dbeafe;color:#3b82f6;border-radius:8px;padding:0.3rem;display:flex;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            </span>
+                            <strong style="font-size:0.85rem;">Будівництво (Німеччина)</strong>
                         </div>
-                        <div class="demo-option-info">
-                            <strong data-i18n="nicheClinic">Медична клініка</strong>
-                            <span data-i18n="nicheClinicDesc">Стоматологія, приватна практика, медцентр</span>
-                        </div>
-                        <i data-lucide="chevron-right" class="icon"></i>
+                        <span style="font-size:0.73rem;color:#9ca3af;">Об'єкти, бригади, матеріали · EUR</span>
                     </button>
-                    
-                    <button class="demo-option-btn" onclick="loadDemoData('manufacturing')">
-                        <div class="demo-option-icon" style="background:#fef3c7;color:#f59e0b;">
-                            <i data-lucide="factory" class="icon icon-lg"></i>
+
+                    <button class="demo-option-btn" onclick="loadDemoDataFull('medical')" style="flex-direction:column;align-items:flex-start;gap:0.4rem;padding:0.85rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="background:#ecfdf5;color:#10b981;border-radius:8px;padding:0.3rem;display:flex;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            </span>
+                            <strong style="font-size:0.85rem;">Медична клініка</strong>
                         </div>
-                        <div class="demo-option-info">
-                            <strong data-i18n="nicheManufacturing">Виробництво</strong>
-                            <span data-i18n="nicheManufacturingDesc">Завод, цех, виробнича компанія</span>
-                        </div>
-                        <i data-lucide="chevron-right" class="icon"></i>
+                        <span style="font-size:0.73rem;color:#9ca3af;">Лікарі, план-факт, маркетинг · UAH</span>
                     </button>
-                    
-                    <button class="demo-option-btn" onclick="loadDemoData('furniture')">
-                        <div class="demo-option-icon" style="background:#fce7f3;color:#ec4899;">
-                            <i data-lucide="sofa" class="icon icon-lg"></i>
+
+                    <button class="demo-option-btn" onclick="loadDemoDataFull('furniture_factory')" style="flex-direction:column;align-items:flex-start;gap:0.4rem;padding:0.85rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="background:#fce7f3;color:#ec4899;border-radius:8px;padding:0.3rem;display:flex;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+                            </span>
+                            <strong style="font-size:0.85rem;">Меблеве виробництво</strong>
                         </div>
-                        <div class="demo-option-info">
-                            <strong data-i18n="nicheFurniture">Меблевий бізнес</strong>
-                            <span data-i18n="nicheFurnitureDesc">Виробництво меблів на замовлення, салон</span>
-                        </div>
-                        <i data-lucide="chevron-right" class="icon"></i>
+                        <span style="font-size:0.73rem;color:#9ca3af;">Замовлення, матеріали, монтаж · UAH</span>
                     </button>
-                    
-                    <button class="demo-option-btn" onclick="loadDemoData('construction')">
-                        <div class="demo-option-icon" style="background:#dbeafe;color:#3b82f6;">
-                            <i data-lucide="hard-hat" class="icon icon-lg"></i>
+
+                    <button class="demo-option-btn" onclick="loadDemoDataFull('beauty')" style="flex-direction:column;align-items:flex-start;gap:0.4rem;padding:0.85rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="background:#fdf2f8;color:#d946ef;border-radius:8px;padding:0.3rem;display:flex;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </span>
+                            <strong style="font-size:0.85rem;">Бьюті студія</strong>
                         </div>
-                        <div class="demo-option-info">
-                            <strong data-i18n="nicheConstruction">Будівельна компанія</strong>
-                            <span data-i18n="nicheConstructionDesc">Генпідряд, об'єкти, бригади, тендери</span>
+                        <span style="font-size:0.73rem;color:#9ca3af;">Майстри, запис, виручка · UAH</span>
+                    </button>
+
+                    <button class="demo-option-btn" onclick="loadDemoDataFull('food_production')" style="flex-direction:column;align-items:flex-start;gap:0.4rem;padding:0.85rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="background:#fef9c3;color:#ca8a04;border-radius:8px;padding:0.3rem;display:flex;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                            </span>
+                            <strong style="font-size:0.85rem;">Харчове виробництво</strong>
                         </div>
-                        <i data-lucide="chevron-right" class="icon"></i>
+                        <span style="font-size:0.73rem;color:#9ca3af;">Партії, втрати, логістика · UAH</span>
+                    </button>
+
+                    <button class="demo-option-btn" onclick="loadDemoDataFull('cleaning_us')" style="flex-direction:column;align-items:flex-start;gap:0.4rem;padding:0.85rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="background:#e0f2fe;color:#0284c7;border-radius:8px;padding:0.3rem;display:flex;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                            </span>
+                            <strong style="font-size:0.85rem;">Клінінг (США)</strong>
+                        </div>
+                        <span style="font-size:0.73rem;color:#9ca3af;">Об'єкти, прибутковість · USD</span>
+                    </button>
+
+                    <button class="demo-option-btn" onclick="loadDemoDataFull('trucking_us')" style="flex-direction:column;align-items:flex-start;gap:0.4rem;padding:0.85rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="background:#f1f5f9;color:#475569;border-radius:8px;padding:0.3rem;display:flex;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                            </span>
+                            <strong style="font-size:0.85rem;">Трак / Owner-operator (США)</strong>
+                        </div>
+                        <span style="font-size:0.73rem;color:#9ca3af;">Рейси, паливо, брокери · USD</span>
+                    </button>
+
+                </div>
+
+                <!-- Секція: базові ніші (старі) -->
+                <div style="font-size:0.72rem;font-weight:700;color:#9ca3af;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.75rem;">
+                    Базові (завдання та процеси)
+                </div>
+                <div style="display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.25rem;">
+                    <button class="demo-option-btn" onclick="loadDemoData('clinic')" style="padding:0.65rem 1rem;">
+                        <div class="demo-option-icon" style="background:#ecfdf5;color:#10b981;width:32px;height:32px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <div class="demo-option-info"><strong>Медицина (базово)</strong><span>Клініка, стоматологія</span></div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    <button class="demo-option-btn" onclick="loadDemoData('construction')" style="padding:0.65rem 1rem;">
+                        <div class="demo-option-icon" style="background:#dbeafe;color:#3b82f6;width:32px;height:32px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                        </div>
+                        <div class="demo-option-info"><strong>Будівництво (базово)</strong><span>Підряд, бригади</span></div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    <button class="demo-option-btn" onclick="loadDemoData('furniture')" style="padding:0.65rem 1rem;">
+                        <div class="demo-option-icon" style="background:#fce7f3;color:#ec4899;width:32px;height:32px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
+                        </div>
+                        <div class="demo-option-info"><strong>Меблі (базово)</strong><span>Виробництво на замовлення</span></div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    <button class="demo-option-btn" onclick="loadDemoData('manufacturing')" style="padding:0.65rem 1rem;">
+                        <div class="demo-option-icon" style="background:#fef3c7;color:#f59e0b;width:32px;height:32px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>
+                        </div>
+                        <div class="demo-option-info"><strong>Виробництво (базово)</strong><span>Завод, цех</span></div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                     </button>
                 </div>
                 
-                <div style="margin-top:1.5rem;padding:1rem;background:#fef2f2;border-radius:8px;font-size:0.85rem;color:#991b1b;">
-                    <i data-lucide="alert-triangle" class="icon icon-sm" style="vertical-align:middle;margin-right:0.25rem;"></i>
-                    Увага: демо-дані будуть додані до існуючих даних компанії.
+                <div style="padding:0.75rem;background:#fef2f2;border-radius:8px;font-size:0.82rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Дані будуть додані до існуючих. Перед демо рекомендується очистити компанію.
                 </div>
                 
                 <div style="margin-top:1rem;border-top:1px solid #e5e7eb;padding-top:1rem;">
