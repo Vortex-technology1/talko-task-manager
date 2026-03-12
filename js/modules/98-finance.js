@@ -3092,8 +3092,13 @@ window._txFilterChange = function(field, value, type) {
 };
 
 // ── Фінанси в картці проекту ──────────────────────────────
-window._renderProjectFinance = async function(projectId, el) {
-  if (!projectId || !el) return;
+window._renderProjectFinance = async function(projectId, el, opts) {
+  // opts: { mode: 'project'|'function', id: string, label: string }
+  const mode = opts?.mode || 'project';
+  const entityId = opts?.id || projectId;
+  const filterField = mode === 'function' ? 'functionId' : 'projectId';
+
+  if (!entityId || !el) return;
   el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Завантаження...</div>';
 
   try {
@@ -3103,7 +3108,7 @@ window._renderProjectFinance = async function(projectId, el) {
 
     const snap = await db.collection('companies').doc(companyId)
       .collection('finance_transactions')
-      .where('projectId', '==', projectId)
+      .where(filterField, '==', entityId)
       .orderBy('date', 'desc')
       .get();
 
@@ -3134,9 +3139,9 @@ window._renderProjectFinance = async function(projectId, el) {
 
         <!-- Кнопки додати -->
         <div style="display:flex;gap:8px;margin-bottom:16px;">
-          <button onclick="window._addProjectTx('${projectId}','income')"
+          <button onclick="window._addEntityTx('${entityId}','${filterField}','income')"
             style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Дохід</button>
-          <button onclick="window._addProjectTx('${projectId}','expense')"
+          <button onclick="window._addEntityTx('${entityId}','${filterField}','expense')"
             style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Витрата</button>
         </div>
 
@@ -3169,14 +3174,22 @@ window._renderProjectFinance = async function(projectId, el) {
   }
 };
 
-// Відкрити форму додавання транзакції з прив'язкою до проекту
+// Відкрити форму додавання транзакції з прив'язкою до проекту або функції
 window._addProjectTx = function(projectId, type) {
+  window._addEntityTx(projectId, 'projectId', type);
+};
+
+window._addEntityTx = function(entityId, field, type) {
   addTransaction(type);
-  // Після рендеру форми — підставляємо projectId
   requestAnimationFrame(() => {
     setTimeout(() => {
-      const sel = document.getElementById('fmProject');
-      if (sel) sel.value = projectId;
+      if (field === 'projectId') {
+        const sel = document.getElementById('fmProject');
+        if (sel) sel.value = entityId;
+      } else if (field === 'functionId') {
+        const sel = document.getElementById('fmFunction');
+        if (sel) sel.value = entityId;
+      }
     }, 150);
   });
 };

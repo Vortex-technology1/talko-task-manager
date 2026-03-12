@@ -305,6 +305,11 @@
                     </div>`;
                 }
 
+                const financeHTML = `
+                    <div class="func-regular-section" id="funcFinance_${escId(f.id)}" style="display:none;margin-top:0.75rem;border-top:1px solid #e5e7eb;padding-top:0.75rem;">
+                        <div style="text-align:center;color:#9ca3af;font-size:0.82rem;padding:0.5rem;">Завантаження...</div>
+                    </div>`;
+
                 return `
                 <div class="function-card" style="cursor:pointer;" onclick="toggleFuncRegular('${escId(f.id)}', event)">
                     <div class="function-header">
@@ -323,6 +328,9 @@
                             ${weeklyHours > 0 ? `<span style="font-size:0.82rem;color:#0284c7;font-weight:600;"><i data-lucide="clock" class="icon icon-sm"></i> ${weeklyHours} ${t('hoursPerWeek')}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.3rem;" onclick="event.stopPropagation();">
+                            <button class="btn btn-small" onclick="toggleFuncFinance('${escId(f.id)}')" title="Фінанси" style="color:#22c55e;border-color:#d1fae5;">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            </button>
                             <button class="btn btn-small" onclick="openFunctionModal('${escId(f.id)}')"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                             <button class="btn btn-small btn-danger" onclick="deleteFunction('${escId(f.id)}')"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                         </div>
@@ -332,6 +340,7 @@
                         <span class="func-toggle-hint" id="funcToggle_${escId(f.id)}" style="font-size:0.75rem;color:#9ca3af;"><i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks')}</span>
                     </div>` : ''}
                     ${regularHTML}
+                    ${financeHTML}
                 </div>
             `}).join('');
             refreshIcons();
@@ -355,5 +364,19 @@
                     ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks')}`
                     : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${t('hideRegularTasks')}`;
                 refreshIcons();
+            }
+        }
+
+        function toggleFuncFinance(funcId) {
+            const el = document.getElementById('funcFinance_' + funcId);
+            if (!el) return;
+            const isOpen = el.style.display !== 'none';
+            if (isOpen) { el.style.display = 'none'; return; }
+            el.style.display = 'block';
+            // Викликаємо ту саму функцію що і в проектах — просто з mode:'function'
+            if (typeof window._renderProjectFinance === 'function') {
+                window._renderProjectFinance(null, el, { mode: 'function', id: funcId });
+            } else {
+                el.innerHTML = '<div style="color:#ef4444;padding:0.5rem;font-size:0.82rem;">Фінансовий модуль не завантажено</div>';
             }
         }
