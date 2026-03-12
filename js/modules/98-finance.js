@@ -16,11 +16,13 @@ const I = {
   func:     '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
   plus:     '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
   settings: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>',
+  trash:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',
+  edit:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
 };
 
 // ── Константи ──────────────────────────────────────────────
 const FINANCE_VERSION = '1.0.0';
-const TABS = ['dashboard', 'income', 'expense', 'functions', 'planning', 'ai'];
+const TABS = ['dashboard', 'income', 'expense', 'functions', 'planning', 'ai', 'settings'];
 const TAB_LABELS = {
   dashboard:  { icon: 'chart',    label: 'Дашборд'   },
   income:     { icon: 'income',   label: 'Доходи'    },
@@ -28,6 +30,7 @@ const TAB_LABELS = {
   functions:  { icon: 'func',     label: 'Функції'   },
   planning:   { icon: 'plan',     label: 'Планування'},
   ai:         { icon: 'ai',       label: 'AI'        },
+  settings:   { icon: 'settings', label: 'Налаштування' },
 };
 
 // ── Стан модуля ────────────────────────────────────────────
@@ -176,6 +179,36 @@ async function loadCategories() {
     if (cat.type === 'income') _state.categories.income.push(cat);
     else _state.categories.expense.push(cat);
   });
+
+  // Якщо категорії порожні — записуємо дефолтні в Firestore і використовуємо
+  if (_state.categories.income.length === 0 && _state.categories.expense.length === 0) {
+    console.log('[Finance] Categories empty — writing defaults');
+    await writeDefaultCategories();
+  }
+}
+
+async function writeDefaultCategories() {
+  try {
+    const batch = getDb().batch();
+    DEFAULT_CATEGORIES.income.forEach(cat => {
+      const ref = colRef('finance_categories').doc(cat.id);
+      batch.set(ref, { ...cat, type: 'income', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    });
+    DEFAULT_CATEGORIES.expense.forEach(cat => {
+      const ref = colRef('finance_categories').doc(cat.id);
+      batch.set(ref, { ...cat, type: 'expense', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    });
+    await batch.commit();
+    // Заповнюємо state з дефолтних
+    _state.categories.income  = DEFAULT_CATEGORIES.income.map(c => ({ ...c, type: 'income' }));
+    _state.categories.expense = DEFAULT_CATEGORIES.expense.map(c => ({ ...c, type: 'expense' }));
+    console.log('[Finance] Default categories written');
+  } catch(e) {
+    // Якщо немає доступу до Firestore — просто використовуємо з пам'яті
+    _state.categories.income  = DEFAULT_CATEGORIES.income.map(c => ({ ...c, type: 'income' }));
+    _state.categories.expense = DEFAULT_CATEGORIES.expense.map(c => ({ ...c, type: 'expense' }));
+    console.warn('[Finance] writeDefaultCategories fallback to memory:', e.message);
+  }
 }
 
 // ── Рендер головного контейнера ──────────────────────────
@@ -262,6 +295,7 @@ function renderSubTab(tab) {
     case 'functions': renderFunctions(inner); break;
     case 'planning':  renderPlanning(inner); break;
     case 'ai':        renderAI(inner); break;
+    case 'settings':  renderSettings(inner); break;
     default:          renderDashboard(inner);
   }
 }
@@ -583,6 +617,141 @@ function renderPlanning(el) {
     </div>
   `;
 }
+
+// ── Налаштування ─────────────────────────────────────────
+function renderSettings(el) {
+  if (!isOwnerOrManager()) {
+    el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Доступ лише для Owner та Manager</div>';
+    return;
+  }
+
+  const renderCatList = (type) => {
+    const cats = _state.categories[type] || [];
+    const color = type === 'income' ? '#22c55e' : '#ef4444';
+    const label = type === 'income' ? 'Доходи' : 'Витрати';
+    return `
+      <div style="margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Категорії — ${label}</div>
+          <button onclick="window._financeAddCategory('${type}')"
+            style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
+            background:${color};color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
+            ${I.plus} Додати
+          </button>
+        </div>
+        <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+          ${cats.length === 0
+            ? '<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">Немає категорій</div>'
+            : cats.map((cat, i) => `
+              <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
+                background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
+                <div style="flex:1;font-size:0.85rem;color:#1a1a1a;">${cat.name}</div>
+                ${!cat.system ? `
+                  <button onclick="window._financeDeleteCategory('${cat.id}','${type}')"
+                    style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">
+                    ${I.trash}
+                  </button>
+                ` : '<span style="font-size:0.7rem;color:#9ca3af;">системна</span>'}
+              </div>
+            `).join('')
+          }
+        </div>
+      </div>
+    `;
+  };
+
+  const renderAccList = () => {
+    return `
+      <div style="margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Рахунки та каси</div>
+          <button onclick="window._financeAddAccount()"
+            style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
+            background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
+            ${I.plus} Додати
+          </button>
+        </div>
+        <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
+          ${_state.accounts.length === 0
+            ? '<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">Немає рахунків</div>'
+            : _state.accounts.map((acc, i) => `
+              <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
+                background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
+                <div style="flex:1;">
+                  <div style="font-size:0.85rem;color:#1a1a1a;">${acc.name}</div>
+                  <div style="font-size:0.72rem;color:#9ca3af;">${acc.type} · ${acc.currency}</div>
+                </div>
+                <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+              </div>
+            `).join('')
+          }
+        </div>
+      </div>
+    `;
+  };
+
+  el.innerHTML = `
+    <div style="max-width:640px;margin:0 auto;">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:1.25rem;">Налаштування фінансів</div>
+      ${renderCatList('income')}
+      ${renderCatList('expense')}
+      ${renderAccList()}
+    </div>
+  `;
+}
+
+// Додавання категорії
+window._financeAddCategory = async function(type) {
+  const name = prompt(`Назва нової категорії (${type === 'income' ? 'дохід' : 'витрата'}):`);
+  if (!name || !name.trim()) return;
+  try {
+    const ref = await colRef('finance_categories').add({
+      name: name.trim(),
+      type,
+      system: false,
+      icon: 'tag',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    _state.categories[type].push({ id: ref.id, name: name.trim(), type, system: false });
+    renderSubTab('settings');
+  } catch(e) {
+    alert('Помилка: ' + e.message);
+  }
+};
+
+// Видалення категорії
+window._financeDeleteCategory = async function(catId, type) {
+  if (!confirm('Видалити категорію?')) return;
+  try {
+    await colRef('finance_categories').doc(catId).delete();
+    _state.categories[type] = _state.categories[type].filter(c => c.id !== catId);
+    renderSubTab('settings');
+  } catch(e) {
+    alert('Помилка: ' + e.message);
+  }
+};
+
+// Додавання рахунку
+window._financeAddAccount = async function() {
+  const name = prompt('Назва рахунку (напр. Monobank, Готівка USD):');
+  if (!name || !name.trim()) return;
+  const currency = prompt('Валюта (EUR / USD / UAH / PLN):', _state.currency) || _state.currency;
+  const typeAcc  = prompt('Тип (bank / cash / card):', 'bank') || 'bank';
+  try {
+    const ref = await colRef('finance_accounts').add({
+      name: name.trim(),
+      type: typeAcc,
+      currency: currency.toUpperCase(),
+      balance: 0,
+      isDefault: false,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    _state.accounts.push({ id: ref.id, name: name.trim(), type: typeAcc, currency: currency.toUpperCase(), balance: 0 });
+    renderSubTab('settings');
+  } catch(e) {
+    alert('Помилка: ' + e.message);
+  }
+};
 
 // ── AI (заглушка Етап 1) ──────────────────────────────────
 function renderAI(el) {
