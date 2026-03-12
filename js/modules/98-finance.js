@@ -1055,17 +1055,250 @@ async function loadFunctionsData(monthVal) {
 }
 
 // ── Планування (заглушка Етап 1) ─────────────────────────
+// ── Планування — Етап 5 ──────────────────────────────────
+let _planMonth = (() => {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+})();
+
 function renderPlanning(el) {
+  const now = new Date();
+  const monthOpts = Array.from({length:6},(_,i)=>{
+    const d = new Date(now.getFullYear(), now.getMonth()-i+1, 1);
+    const val = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    const lbl = d.toLocaleDateString('uk-UA',{month:'long',year:'numeric'});
+    return `<option value="${val}" ${_planMonth===val?'selected':''}>${lbl}</option>`;
+  }).join('');
+
   el.innerHTML = `
     <div style="width:100%;">
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:1.25rem;">Планування</div>
-      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:2rem;text-align:center;color:#9ca3af;">
-        <div style="margin-bottom:0.75rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-        <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.35rem;">Бюджетування</div>
-        <div style="font-size:0.8rem;">Розробляється в наступному етапі</div>
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Планування бюджету</div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <select id="planMonthSel" onchange="window._planMonthChange(this.value)"
+            style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
+            ${monthOpts}
+          </select>
+          <button onclick="window._savePlanBudget()"
+            style="padding:0.35rem 0.9rem;background:#22c55e;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">
+            Зберегти
+          </button>
+        </div>
+      </div>
+
+      <!-- 2 колонки: бюджет + cashflow -->
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:1rem;align-items:start;">
+
+        <!-- Бюджет по категоріях -->
+        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;">
+          <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
+            padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;
+            display:grid;grid-template-columns:1fr 110px 110px 90px;">
+            <div>Категорія</div>
+            <div style="text-align:right;">Бюджет</div>
+            <div style="text-align:right;">Факт</div>
+            <div style="text-align:right;">Відхилення</div>
+          </div>
+          <div id="planBudgetBody">
+            <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">Завантаження...</div>
+          </div>
+        </div>
+
+        <!-- Cashflow + ціль -->
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+
+          <!-- Cashflow прогноз -->
+          <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Cashflow місяця</div>
+            <div id="planCashflow">
+              <div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div>
+            </div>
+          </div>
+
+          <!-- Фінансова ціль -->
+          <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Фінансова ціль місяця</div>
+            <div style="margin-bottom:0.5rem;">
+              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">Цільовий прибуток (EUR)</label>
+              <input id="planGoalInput" type="number" min="0" placeholder="напр. 5000"
+                style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
+            </div>
+            <div id="planGoalProgress" style="margin-top:0.5rem;"></div>
+          </div>
+
+        </div>
       </div>
     </div>
   `;
+
+  loadPlanningData(_planMonth);
+}
+
+window._planMonthChange = function(val) {
+  _planMonth = val;
+  loadPlanningData(val);
+};
+
+window._savePlanBudget = async function() {
+  if (!isOwnerOrManager()) return;
+  try {
+    const inputs = document.querySelectorAll('[data-plan-cat]');
+    const batch = getDb().batch();
+    const docRef = colRef('finance_budgets').doc(_planMonth);
+    const budgetData = { month: _planMonth, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    inputs.forEach(inp => {
+      const catId = inp.dataset.planCat;
+      const val = parseFloat(inp.value) || 0;
+      budgetData['cat_' + catId] = val;
+    });
+    // Зберігаємо ціль
+    const goalInp = document.getElementById('planGoalInput');
+    if (goalInp) budgetData['goal'] = parseFloat(goalInp.value) || 0;
+    await docRef.set(budgetData, { merge: true });
+    // Оновлюємо прогрес цілі
+    loadPlanningData(_planMonth);
+    // Короткий feedback
+    const btn = document.querySelector('[onclick="window._savePlanBudget()"]');
+    if (btn) { btn.textContent = '✓ Збережено'; setTimeout(()=>{ btn.textContent = 'Зберегти'; }, 1500); }
+  } catch(e) {
+    alert('Помилка збереження: ' + e.message);
+  }
+};
+
+async function loadPlanningData(monthVal) {
+  try {
+    // Факт — транзакції за місяць
+    const [y, m] = monthVal.split('-').map(Number);
+    const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
+    const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
+
+    const [txSnap, budgetSnap] = await Promise.all([
+      colRef('finance_transactions').where('date','>=',from).where('date','<=',to).get(),
+      colRef('finance_budgets').doc(monthVal).get()
+    ]);
+
+    const budgetData = budgetSnap.exists ? budgetSnap.data() : {};
+    const txs = txSnap.docs.map(d => d.data());
+
+    // Факт по категоріях витрат
+    const factByCat = {};
+    let totalIncome = 0, totalExpense = 0;
+    txs.forEach(tx => {
+      if (tx.type === 'expense') {
+        factByCat[tx.categoryId] = (factByCat[tx.categoryId] || 0) + (tx.amount||0);
+        totalExpense += tx.amount||0;
+      }
+      if (tx.type === 'income') totalIncome += tx.amount||0;
+    });
+
+    // Рендер бюджетної таблиці
+    const bodyEl = document.getElementById('planBudgetBody');
+    if (!bodyEl) return;
+
+    const expCats = (_state.categories.expense || []);
+
+    if (expCats.length === 0) {
+      bodyEl.innerHTML = '<div style="padding:1.5rem;text-align:center;color:#9ca3af;font-size:0.82rem;">Немає категорій витрат</div>';
+    } else {
+      let totalBudget = 0;
+      bodyEl.innerHTML = expCats.map((cat, i) => {
+        const budgetVal = budgetData['cat_' + cat.id] || 0;
+        const factVal   = factByCat[cat.id] || 0;
+        const diff      = budgetVal - factVal;
+        const diffColor = diff >= 0 ? '#22c55e' : '#ef4444';
+        const diffSign  = diff >= 0 ? '+' : '';
+        totalBudget += budgetVal;
+        const bg = i%2===0 ? '#fff' : '#fafafa';
+        return `
+          <div style="display:grid;grid-template-columns:1fr 110px 110px 90px;
+            padding:0.55rem 1rem;background:${bg};border-bottom:1px solid #f3f4f6;align-items:center;">
+            <div style="font-size:0.82rem;color:#374151;">${cat.name}</div>
+            <div style="text-align:right;">
+              <input data-plan-cat="${cat.id}" type="number" min="0" value="${budgetVal||''}"
+                placeholder="0"
+                style="width:90px;padding:0.25rem 0.4rem;border:1px solid #e5e7eb;border-radius:6px;
+                  font-size:0.82rem;text-align:right;box-sizing:border-box;">
+            </div>
+            <div style="text-align:right;font-size:0.82rem;color:#374151;font-weight:500;">${fmt(factVal)}</div>
+            <div style="text-align:right;font-size:0.82rem;font-weight:600;color:${budgetVal>0?diffColor:'#9ca3af'};">
+              ${budgetVal > 0 ? diffSign + fmt(Math.abs(diff)) : '—'}
+            </div>
+          </div>
+        `;
+      }).join('') + `
+        <div style="display:grid;grid-template-columns:1fr 110px 110px 90px;
+          padding:0.65rem 1rem;background:#fafafa;border-top:2px solid #e5e7eb;align-items:center;">
+          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;">РАЗОМ ВИТРАТИ</div>
+          <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#374151;">${fmt(totalBudget)}</div>
+          <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#ef4444;">${fmt(totalExpense)}</div>
+          <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${totalBudget>=totalExpense?'#22c55e':'#ef4444'};">
+            ${totalBudget>0?(totalBudget>=totalExpense?'+':'')+fmt(Math.abs(totalBudget-totalExpense)):'—'}
+          </div>
+        </div>
+      `;
+    }
+
+    // Cashflow
+    const cashEl = document.getElementById('planCashflow');
+    if (cashEl) {
+      const profit = totalIncome - totalExpense;
+      const goalVal = budgetData['goal'] || 0;
+      const goalInp = document.getElementById('planGoalInput');
+      if (goalInp && goalVal) goalInp.value = goalVal;
+
+      cashEl.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
+            <span style="color:#6b7280;">Дохід факт</span>
+            <span style="font-weight:600;color:#22c55e;">${fmt(totalIncome)} EUR</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
+            <span style="color:#6b7280;">Витрати факт</span>
+            <span style="font-weight:600;color:#ef4444;">${fmt(totalExpense)} EUR</span>
+          </div>
+          <div style="border-top:1px solid #f3f4f6;padding-top:0.5rem;display:flex;justify-content:space-between;font-size:0.85rem;">
+            <span style="color:#1a1a1a;font-weight:600;">Прибуток</span>
+            <span style="font-weight:700;color:${profit>=0?'#22c55e':'#ef4444'};">${profit>=0?'+':''}${fmt(profit)} EUR</span>
+          </div>
+          ${goalVal > 0 ? `
+          <div style="margin-top:0.5rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;">
+              <span>Виконання цілі</span>
+              <span>${Math.min(Math.round(profit/goalVal*100),100)}%</span>
+            </div>
+            <div style="height:6px;background:#f3f4f6;border-radius:3px;">
+              <div style="height:6px;background:${profit>=goalVal?'#22c55e':'#f59e0b'};border-radius:3px;
+                width:${Math.min(Math.max(Math.round(profit/goalVal*100),0),100)}%;transition:width 0.3s;"></div>
+            </div>
+          </div>` : ''}
+        </div>
+      `;
+    }
+
+    // Прогрес цілі окремо
+    const goalEl = document.getElementById('planGoalProgress');
+    if (goalEl && budgetData['goal']) {
+      const profit = totalIncome - totalExpense;
+      const pct = Math.min(Math.max(Math.round(profit / budgetData['goal'] * 100), 0), 100);
+      goalEl.innerHTML = `
+        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.3rem;">
+          Факт: <strong>${fmt(profit)} EUR</strong> з <strong>${fmt(budgetData['goal'])} EUR</strong>
+        </div>
+        <div style="height:8px;background:#f3f4f6;border-radius:4px;">
+          <div style="height:8px;background:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
+            border-radius:4px;width:${pct}%;transition:width 0.3s;"></div>
+        </div>
+        <div style="font-size:0.75rem;color:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
+          margin-top:0.2rem;font-weight:600;">${pct}% виконано</div>
+      `;
+    }
+
+  } catch(e) {
+    console.error('[Finance] loadPlanningData:', e);
+    const bodyEl = document.getElementById('planBudgetBody');
+    if (bodyEl) bodyEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
+  }
 }
 
 // ── Налаштування ─────────────────────────────────────────
