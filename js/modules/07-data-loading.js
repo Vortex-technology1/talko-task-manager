@@ -102,11 +102,13 @@
                 };
 
                 
-                // Попередження якщо досягнуто ліміт
-                const taskCount = tasksSnap._merged ? tasksSnap.size : tasksSnap.docs.length;
-                if (!tasksSnap._merged && taskCount >= TASKS_LOAD_LIMIT) {
-                    console.warn(`[loadAllData] Task limit reached: ${taskCount}/${TASKS_LOAD_LIMIT}`);
-                    showToast(t('taskLimitWarning').replace('{n}', TASKS_LOAD_LIMIT), 'warning');
+                // BUG-AM FIX: _merged is always true for both employee and manager paths
+                // Use task count vs per-query limits to detect truncation
+                const taskCount = tasksSnap.size !== undefined ? tasksSnap.size : tasksSnap.docs.length;
+                const WARN_THRESHOLD = isEmployeeRole ? 900 : TASKS_LOAD_LIMIT - 100;
+                if (taskCount >= WARN_THRESHOLD) {
+                    console.warn(`[loadAllData] Task limit reached: ${taskCount}`);
+                    showToast(t('taskLimitWarning').replace('{n}', taskCount), 'warning');
                 }
                 dbg(`[loadAllData] ${isEmployeeRole ? 'Employee' : 'Manager'} mode: ${taskCount} tasks`);
                 

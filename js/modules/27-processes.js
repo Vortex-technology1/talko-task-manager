@@ -126,14 +126,20 @@
             const isOverdue = process.isOverdue;
             const todayStr = getLocalDateStr();
             
-            // Знаходимо відповідального за поточний крок
+            // BUG-AL FIX: find actual assignee from the running process task, not just first in function
             let currentAssignee = '';
             if (!isCompleted && template.steps[currentStep]) {
-                const stepFunc = template.steps[currentStep].function;
-                const func = functions.find(f => f.name === stepFunc);
-                if (func?.assigneeIds?.length) {
-                    const assignee = users.find(u => func.assigneeIds.includes(u.id));
-                    currentAssignee = assignee?.name || '';
+                // Try to find the active task for this process step first
+                const activeTask = tasks.find(tk => tk.processId === process.id && tk.processStep === currentStep && tk.status !== 'done');
+                if (activeTask && activeTask.assigneeName) {
+                    currentAssignee = activeTask.assigneeName;
+                } else {
+                    const stepFunc = template.steps[currentStep].function;
+                    const func = functions.find(f => f.name === stepFunc);
+                    if (func?.assigneeIds?.length) {
+                        const assignee = users.find(u => func.assigneeIds.includes(u.id));
+                        currentAssignee = assignee?.name || '';
+                    }
                 }
             }
             

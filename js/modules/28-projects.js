@@ -410,27 +410,25 @@
         }
         
         function openTaskForProject(projectId) {
+            // BUG-AI FIX: double rAF instead of rAF+setTimeout(0) to avoid race condition
             openTaskModal();
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    updateProjectSelects(projectId);
-                    const sel = document.getElementById('taskProject');
-                    if (sel) sel.value = projectId;
-                    updateTaskStageSelect(projectId, '');
-                }, 0);
-            });
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                updateProjectSelects(projectId);
+                const sel = document.getElementById('taskProject');
+                if (sel) sel.value = projectId;
+                updateTaskStageSelect(projectId, '');
+            }));
         }
         
         window.openTaskForProjectStage = function(projectId, stageId) {
+            // BUG-AI FIX: double rAF instead of rAF+setTimeout(50)
             openTaskModal();
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    updateProjectSelects(projectId);
-                    const sel = document.getElementById('taskProject');
-                    if (sel) sel.value = projectId;
-                    updateTaskStageSelect(projectId, stageId);
-                }, 50);
-            });
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                updateProjectSelects(projectId);
+                const sel = document.getElementById('taskProject');
+                if (sel) sel.value = projectId;
+                updateTaskStageSelect(projectId, stageId);
+            }));
         };
         
         function closeProjectDetail() {
@@ -1262,7 +1260,7 @@
                     createdDate: getLocalDateStr(),
                     deadline: firstDeadlineDate + 'T18:00',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    creatorName: t('systemUser')
+                    creatorName: currentUserData?.name || currentUser?.email || '' // BUG-AK FIX: was t('systemUser')
                 };
                 
                 await db.collection('companies').doc(currentCompany).collection('tasks').add(taskData);

@@ -337,7 +337,9 @@
         }
         
         function updatePageTitle() {
-            const myTasks = tasks.filter(t => t.assigneeId === currentUser?.uid && t.status !== 'done');
+            const uid = currentUser?.uid;
+            // BUG-AH FIX: include coExecutor tasks in page title badge count
+            const myTasks = tasks.filter(t => (t.assigneeId === uid || (t.coExecutorIds && t.coExecutorIds.includes(uid))) && t.status !== 'done');
             const newCount = myTasks.filter(t => t.status === 'new').length;
             
             if (newCount > 0) {
