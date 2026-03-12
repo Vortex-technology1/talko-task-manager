@@ -98,14 +98,10 @@
                     });
                 }
                 
-                // Show demo data button ONLY for superadmin (by email, not role)
-                if (isSuperAdmin) {
-                    document.getElementById('demoDataBtnDesktop').style.display = 'flex';
-                    document.getElementById('demoDataBtn').style.display = 'flex';
-                } else {
-                    document.getElementById('demoDataBtnDesktop').style.display = 'none';
-                    document.getElementById('demoDataBtn').style.display = 'none';
-                }
+                // Кнопка Демо: для superadmin і owner
+                const showDemo = isSuperAdmin || currentUserData?.role === 'owner';
+                document.getElementById('demoDataBtnDesktop').style.display = showDemo ? 'flex' : 'none';
+                document.getElementById('demoDataBtn').style.display = showDemo ? 'flex' : 'none';
                 
                 // AI buttons: Generator + Import = owner only, AI config = admin/superadmin only
                 const isOwnerRole = currentUserData?.role === 'owner';

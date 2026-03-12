@@ -4,8 +4,9 @@
         
 'use strict';
         function openDemoDataModal() {
-            if (!isSuperAdmin) {
-                showToast(t('superAdminOnly'), 'error');
+            const isOwner = window.currentUserData?.role === 'owner';
+            if (!isSuperAdmin && !isOwner) {
+                showToast('Тільки для власника компанії', 'error');
                 return;
             }
             document.getElementById('demoDataModal').style.display = 'flex';
@@ -16,12 +17,57 @@
             document.getElementById('demoDataModal').style.display = 'none';
         }
 
+        // Подвійний захист перед внесенням демо-даних
+        async function _confirmDemoLoad(nicheLabel) {
+            // Крок 1 — попередження
+            const step1 = await showConfirmModal(
+                `⚠️ Ви збираєтесь внести демо-дані для ніші:\n«${nicheLabel}»\n\nЦі дані додадуться до вашої компанії. Якщо хочете чистий демо — спочатку очистіть дані через кнопку нижче.\n\nПродовжити?`,
+                { danger: true }
+            );
+            if (!step1) return false;
+
+            // Крок 2 — текстове підтвердження
+            const confirmWord = 'внести демо дані';
+            const input = await (window.showInputModal
+                ? showInputModal(
+                    `Для підтвердження введіть: "${confirmWord}"`,
+                    '',
+                    { placeholder: confirmWord }
+                  )
+                : (async () => prompt(`Введіть: "${confirmWord}"`))()
+            );
+            if (input !== confirmWord) {
+                if (input !== null) showToast('Текст не співпадає. Демо не внесено.', 'error');
+                return false;
+            }
+            return true;
+        }
+
         // Нові розширені ніші з фінансами (42-demo-niches.js)
+        const _NICHE_LABELS = {
+            construction_eu:  'Будівництво (Німеччина)',
+            medical:          'Медична клініка',
+            furniture_factory:'Меблеве виробництво',
+            beauty:           'Бьюті студія',
+            food_production:  'Харчове виробництво',
+            cleaning_us:      'Клінінг (США)',
+            trucking_us:      'Трак / Owner-operator (США)',
+            clinic:           'Медицина (базово)',
+            construction:     'Будівництво (базово)',
+            furniture:        'Меблі (базово)',
+            manufacturing:    'Виробництво (базово)',
+        };
+
         window.loadDemoDataFull = async function(nicheKey) {
-            if (!isSuperAdmin) { showToast('Тільки SuperAdmin', 'error'); return; }
+            const isOwner = window.currentUserData?.role === 'owner';
+            if (!isSuperAdmin && !isOwner) { showToast('Тільки для власника компанії', 'error'); return; }
             if (!currentCompany) { showAlertModal('Спочатку створіть компанію'); closeDemoDataModal(); return; }
-            if (!await showConfirmModal('Завантажити повне демо для цієї ніші? Дані додадуться до існуючих.', { danger: true })) return;
+
+            const label = _NICHE_LABELS[nicheKey] || nicheKey;
             closeDemoDataModal();
+
+            if (!await _confirmDemoLoad(label)) return;
+
             showToast('Завантаження демо-середовища...', 'info');
             try {
                 const fn = window._DEMO_NICHE_MAP?.[nicheKey];
@@ -93,12 +139,11 @@
                 closeDemoDataModal();
                 return;
             }
-            
-            if (!await showConfirmModal(t('loadDemoConfirm'), { danger: true })) {
-                return;
-            }
-            
+
+            const label = _NICHE_LABELS[type] || type;
             closeDemoDataModal();
+
+            if (!await _confirmDemoLoad(label)) return;
             
             try {
                 if (type === 'clinic') {
