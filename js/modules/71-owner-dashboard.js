@@ -29,7 +29,14 @@ window.renderOwnerDashboard = function(targetEl) {
     });
     const inProgress = activeTasks.filter(t => t.status === 'progress');
     const doneThisWeek = doneTasks.filter(t => {
-        const comp = t.completedAt ? getLocalDateStr(new Date(t.completedAt)) : '';
+        // BUG-BB FIX: check completedDate (string, set by newer code) first, then completedAt (Timestamp)
+        let comp = '';
+        if (t.completedDate) {
+            comp = t.completedDate;
+        } else if (t.completedAt) {
+            const d = t.completedAt.toDate ? t.completedAt.toDate() : new Date(t.completedAt);
+            comp = getLocalDateStr(d);
+        }
         return comp >= weekAgoStr;
     });
 

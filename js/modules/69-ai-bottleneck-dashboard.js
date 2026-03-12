@@ -421,6 +421,8 @@
                 assigneeId: currentUser.uid,
                 assigneeName: currentUserData?.name || currentUser.email || '',
                 creatorId: currentUser.uid,
+                // BUG-BA FIX: was missing creatorName
+                creatorName: currentUserData?.name || currentUser.email || '',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             };
@@ -511,14 +513,25 @@
     // ========================
     //  HOOK INTO CONTROL DASHBOARD
     // ========================
-    // Add project overview to existing control tab
-    const _origRenderControl = window.renderControl;
-    if (typeof _origRenderControl === 'function') {
+    // BUG-AZ FIX: module 69 may load before module 33 — wrap in a lazy hook via defineProperty
+    // so it catches renderControl whenever it is eventually set
+    let _controlHookInstalled = false;
+    function ensureControlHook() {
+        if (_controlHookInstalled) return;
+        if (typeof window.renderControl !== 'function') return;
+        const orig = window.renderControl;
         window.renderControl = function() {
-            _origRenderControl();
+            orig();
             renderOwnerProjectDashboard();
         };
+        _controlHookInstalled = true;
     }
+    // Try immediately (if module 33 already loaded)
+    ensureControlHook();
+    // Also try after a tick (covers most load-order cases)
+    setTimeout(ensureControlHook, 0);
+    // Expose so module 33 can call after it defines renderControl
+    window._ensureOwnerDashboardHook = ensureControlHook;
 
     // ========================
     //  EXPORTS

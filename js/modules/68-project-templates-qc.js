@@ -286,6 +286,13 @@
                         deadlineDate: getLocalDateStr(new Date(Date.now() + 86400000 * 2)), // +2 days
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         creatorId: currentUser.uid,
+                        // BUG-AW FIX: was missing — task wouldn't appear in assignee filters or MyDay
+                        creatorName: (typeof currentUserData !== 'undefined' ? currentUserData?.name : null) || currentUser.email || '',
+                        assigneeId: qc.inspectorUserId || currentUser.uid,
+                        assigneeName: (() => {
+                            const u = (typeof users !== 'undefined' ? users : []).find(u => u.id === (qc.inspectorUserId || currentUser.uid));
+                            return u ? (u.name || u.email || '') : (currentUser.email || '');
+                        })(),
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     };
                     try {
@@ -510,13 +517,9 @@
                 dayOffset += s.defaultDurationDays || 0;
             }
 
-            // Atomic commit — all or nothing
-            try {
+            // BUG-AX FIX: removed inner try/catch — if batch fails, outer catch handles it
+            // Previous version: inner catch showed toast but let code continue → ghost project in UI
             await batch.commit();
-            } catch(err) {
-                console.error('[Batch] commit failed:', err);
-                showToast && showToast('Помилка збереження. Спробуйте ще раз.', 'error');
-            }
 
             projects.unshift({ id: projectId, name: projectName, status: 'active', startDate: getLocalDateStr(), color: '#22c55e' });
             showToast('Проєкт "' + projectName + '" створено з ' + (tpl.stages || []).length + ' етапами', 'success');
