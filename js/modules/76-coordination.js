@@ -361,7 +361,7 @@
             el.innerHTML = `<div style="text-align:center;padding:3rem 1rem;">
               <div style="display:flex;justify-content:center;margin-bottom:.75rem;"><i data-lucide="calendar-x" style="width:48px;height:48px;color:#d1d5db;"></i></div>
               <p style="color:#6b7280;margin:0 0 1rem;">${ct('emptyText')}</p>
-              ${isManager()?'<button class="btn btn-success" onclick="openCoordModal()">${ct("addFirst")}</button>':''}
+              ${isManager()?`<button class="btn btn-success" onclick="openCoordModal()">${ct('addFirst')}</button>`:''}
             </div>`;
             return;
         }
