@@ -142,6 +142,14 @@
         renderFocusTask();
     }
     
+    function exitFocusToMyDay() {
+        // Зупиняємо таймер
+        if (focusTimerInterval) { clearInterval(focusTimerInterval); focusTimerInterval = null; }
+        focusTimerRunning = false;
+        // Переходимо в Мій день
+        if (typeof switchTab === 'function') switchTab('myDay');
+    }
+
     function closeFocusMode() {
         closeModal('focusModal');
         document.body.style.overflow = '';
@@ -196,11 +204,17 @@
         
         const container = document.getElementById('focusContent');
         container.innerHTML = `
-            <!-- Progress bar -->
+            <!-- Progress bar + exit -->
             <div style="padding:1rem 1.5rem 0;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
                     <span style="font-size:0.8rem;color:#9ca3af;">${t('taskNofM').replace('{n}', doneCount + 1).replace('{total}', total)}</span>
-                    <span style="font-size:0.8rem;color:#9ca3af;">${progressPercent}%</span>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <span style="font-size:0.8rem;color:#9ca3af;">${progressPercent}%</span>
+                        <button onclick="exitFocusToMyDay()" style="display:flex;align-items:center;gap:5px;padding:4px 10px;border:1px solid #e5e7eb;border-radius:8px;background:white;font-size:0.75rem;color:#6b7280;cursor:pointer;font-weight:500;" title="Вийти в Мій день">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                            ${t('myDay') || 'Мій день'}
+                        </button>
+                    </div>
                 </div>
                 <div style="height:6px;background:#f3f4f6;border-radius:99px;overflow:hidden;">
                     <div style="height:100%;width:${progressPercent}%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:99px;transition:width 0.5s ease;"></div>
