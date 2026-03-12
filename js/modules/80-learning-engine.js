@@ -21,6 +21,7 @@
     function getLangField(module, field, lang) {
         if (!lang || lang === 'ua') return module[field] || '';
         const localized = module[field + '_' + lang];
+        console.log('[LANG DEBUG]', field, lang, 'key='+field+'_'+lang, 'found='+!!localized, 'moduleId='+module.id);
         if (localized) return localized;
         // fallback chain: en → ru → ua
         if (lang === 'pl' || lang === 'de') {
