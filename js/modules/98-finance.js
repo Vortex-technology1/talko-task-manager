@@ -468,6 +468,24 @@ function renderDashboard(el) {
         </div>
       </div>
 
+      <!-- Donut + Проекти за маржею -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
+        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Структура витрат</div>
+          <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Проекти за маржею</div>
+          <div id="dashProjects"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
+        </div>
+      </div>
+
+      <!-- План-факт KPI -->
+      <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;margin-bottom:1.25rem;">
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">План vs Факт</div>
+        <div id="dashPlanFact"><div style="color:#9ca3af;font-size:0.8rem;">Завантаження...</div></div>
+      </div>
+
     </div>
   `;
 
@@ -612,6 +630,165 @@ async function loadDashboardData(monthVal) {
         `).join('');
       }
     }
+
+    // ── Donut chart витрат по категоріях ─────────────────
+    const donutEl = document.getElementById('dashDonut');
+    if (donutEl) {
+      const sorted = Object.entries(expByCat)
+        .map(([id, amt]) => ({ name: catMap[id] || 'Інше', amt }))
+        .sort((a, b) => b.amt - a.amt).slice(0, 6);
+      if (sorted.length === 0) {
+        donutEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Витрат немає</div>';
+      } else {
+        const COLORS = ['#ef4444','#f59e0b','#3b82f6','#8b5cf6','#22c55e','#6b7280'];
+        const total = sorted.reduce((s, x) => s + x.amt, 0);
+        let cumAngle = -90;
+        const R = 50, CX = 60, CY = 60;
+        const paths = sorted.map((item, i) => {
+          const pct = item.amt / total;
+          const angle = pct * 360;
+          const startRad = cumAngle * Math.PI / 180;
+          const endRad   = (cumAngle + angle) * Math.PI / 180;
+          const x1 = CX + R * Math.cos(startRad);
+          const y1 = CY + R * Math.sin(startRad);
+          const x2 = CX + R * Math.cos(endRad);
+          const y2 = CY + R * Math.sin(endRad);
+          const large = angle > 180 ? 1 : 0;
+          cumAngle += angle;
+          return `<path d="M${CX},${CY} L${x1.toFixed(1)},${y1.toFixed(1)} A${R},${R} 0 ${large},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z"
+            fill="${COLORS[i]}" opacity="0.85"><title>${item.name}: ${fmt(item.amt)}</title></path>`;
+        }).join('');
+        // Hole
+        const hole = `<circle cx="${CX}" cy="${CY}" r="28" fill="white"/>
+          <text x="${CX}" y="${CY}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6b7280">${fmt(total)}</text>`;
+        const legend = sorted.map((item, i) => `
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:${COLORS[i]};flex-shrink:0;"></div>
+            <div style="font-size:0.72rem;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${escHtml(item.name)}</div>
+            <div style="font-size:0.72rem;font-weight:600;color:#374151;flex-shrink:0;">${Math.round(item.amt/total*100)}%</div>
+          </div>`).join('');
+        donutEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:12px;">
+            <svg width="120" height="120" viewBox="0 0 120 120" style="flex-shrink:0;">
+              ${paths}${hole}
+            </svg>
+            <div style="flex:1;overflow:hidden;">${legend}</div>
+          </div>`;
+      }
+    }
+
+    // ── Топ проектів за маржею ────────────────────────────
+    const projEl = document.getElementById('dashProjects');
+    if (projEl) {
+      try {
+        const byProj = {};
+        snap.docs.forEach(d => {
+          const tx = d.data();
+          if (!tx.projectId) return;
+          if (!byProj[tx.projectId]) byProj[tx.projectId] = { inc: 0, exp: 0 };
+          if (tx.type === 'income')  byProj[tx.projectId].inc += tx.amount || 0;
+          if (tx.type === 'expense') byProj[tx.projectId].exp += tx.amount || 0;
+        });
+        const projRows = Object.entries(byProj).map(([pid, d]) => ({
+          pid, profit: d.inc - d.exp,
+          margin: d.inc > 0 ? Math.round((d.inc - d.exp) / d.inc * 100) : 0
+        })).sort((a, b) => b.margin - a.margin).slice(0, 5);
+
+        if (projRows.length === 0) {
+          projEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Транзакцій по проектах немає</div>';
+        } else {
+          // Підтягуємо назви проектів
+          let projNames = {};
+          try {
+            const ps = await colRef('projects').get();
+            ps.docs.forEach(d => { projNames[d.id] = d.data().name || d.data().title || d.id.slice(0,6); });
+          } catch(e) { /* немає */ }
+
+          projEl.innerHTML = projRows.map((r, i) => {
+            const mc = r.margin >= 30 ? '#22c55e' : r.margin >= 10 ? '#f59e0b' : '#ef4444';
+            return `
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f3f4f6;">
+                <div style="font-size:0.78rem;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">
+                  ${i+1}. ${escHtml(projNames[r.pid] || r.pid.slice(0,8))}
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div style="font-size:0.78rem;font-weight:700;color:${mc};">${r.margin}%</div>
+                  <div style="font-size:0.75rem;color:#9ca3af;">${fmt(r.profit)}</div>
+                </div>
+              </div>`;
+          }).join('');
+        }
+      } catch(e) { projEl.innerHTML = ''; }
+    }
+
+    // ── Plan-fact KPI ─────────────────────────────────────
+    const pfEl = document.getElementById('dashPlanFact');
+    if (pfEl) {
+      try {
+        const budSnap = await colRef('finance_budgets').doc(monthVal).get();
+        const bud = budSnap.exists ? budSnap.data() : {};
+        const totalBudget = Object.keys(bud).filter(k => k.startsWith('cat_')).reduce((s, k) => s + (bud[k] || 0), 0);
+        const goalProfit  = bud['goal'] || 0;
+
+        if (totalBudget === 0 && goalProfit === 0) {
+          pfEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Бюджет не встановлено. Перейдіть у «Планування».</div>';
+        } else {
+          const rows = [
+            { label: 'Витрати (план/факт)', plan: totalBudget, fact: expense, inverse: true },
+            { label: 'Прибуток (ціль/факт)', plan: goalProfit, fact: profit, inverse: false },
+          ].filter(r => r.plan > 0);
+
+          pfEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px;">` +
+            rows.map(r => {
+              const pct = r.plan > 0 ? Math.round(r.fact / r.plan * 100) : 0;
+              const ok  = r.inverse ? r.fact <= r.plan : r.fact >= r.plan;
+              const barColor = ok ? '#22c55e' : r.inverse ? '#ef4444' : '#f59e0b';
+              const barW = Math.min(Math.max(pct, 0), 100);
+              return `
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:4px;">
+                    <span style="color:#374151;font-weight:500;">${r.label}</span>
+                    <span style="color:${barColor};font-weight:700;">${fmt(r.fact)} / ${fmt(r.plan)} (${pct}%)</span>
+                  </div>
+                  <div style="height:6px;background:#f3f4f6;border-radius:3px;">
+                    <div style="height:6px;background:${barColor};border-radius:3px;width:${barW}%;transition:width .3s;"></div>
+                  </div>
+                </div>`;
+            }).join('') + '</div>';
+        }
+      } catch(e) { pfEl.innerHTML = ''; }
+    }
+
+    // ── Сигнал: дебіторська >30 днів ─────────────────────
+    try {
+      const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const invSnap = await colRef('finance_invoices')
+        .where('status', 'in', ['sent','overdue']).get();
+      const overdue = invSnap.docs.filter(d => {
+        const inv = d.data();
+        const dt = inv.date?.toDate ? inv.date.toDate() : new Date(inv.date?.seconds * 1000 || 0);
+        return dt < thirtyDaysAgo;
+      });
+      if (overdue.length > 0) {
+        const alertsEl = document.getElementById('dashAlerts');
+        if (alertsEl) {
+          const debtTotal = overdue.reduce((s, d) => s + (d.data().total || 0), 0);
+          const debtHtml = `
+            <div style="display:flex;align-items:flex-start;gap:0.5rem;padding:0.5rem 0.6rem;
+              background:#fef2f2;border-radius:8px;margin-bottom:0.4rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444"
+                stroke-width="2" stroke-linecap="round" style="flex-shrink:0;margin-top:1px;">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <div style="font-size:0.78rem;color:#ef4444;font-weight:500;">
+                Дебіторська >30 днів: ${overdue.length} рахунків на ${fmt(debtTotal)}
+              </div>
+            </div>`;
+          alertsEl.innerHTML = debtHtml + alertsEl.innerHTML;
+        }
+      }
+    } catch(e) { /* invoices можуть бути пусті */ }
 
   } catch(e) {
     console.error('[Finance] loadDashboardData error:', e);
