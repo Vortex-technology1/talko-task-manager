@@ -53,6 +53,7 @@ let _state = {
   region: 'EU',             // EU | DE | PL | US
   currency: 'EUR',
   niche: null,              // beauty | construction | medical | ...
+  functions: [],            // бізнес-функції компанії
 };
 
 // ── Утиліти ────────────────────────────────────────────────
@@ -881,6 +882,18 @@ async function loadAndRenderTxList(type) {
 // ════════════════════════════════════════════════════════════
 // ── INVOICES — Рахунки клієнтам ─────────────────────────────
 // ════════════════════════════════════════════════════════════
+
+async function _loadFunctionsCache() {
+  try {
+    const db = getDb();
+    if (!db || !_state.companyId) return;
+    const snap = await db.collection('companies').doc(_state.companyId)
+      .collection('functions').orderBy('name').get();
+    _state.functions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) {
+    _state.functions = [];
+  }
+}
 
 async function _loadInvoices() {
   try {
@@ -2712,11 +2725,9 @@ function addTransaction(forceType) {
 
   // Функції для прив'язки
   let functionsHtml = '<option value="">— не вибрано —</option>';
-  if (window._state && window._state.functions) {
-    window._state.functions.forEach(f => {
-      functionsHtml += `<option value="${f.id}">${f.name}</option>`;
-    });
-  }
+  (_state.functions || []).forEach(f => {
+    functionsHtml += `<option value="${f.id}">${escHtml(f.name)}</option>`;
+  });
 
   // Проекти для прив'язки
   let projectsHtml = '<option value="">— не вибрано —</option>';
@@ -3053,6 +3064,7 @@ async function initFinance(companyId, currentUser) {
     await loadCategories();
     await _loadRecurring();
     await _loadInvoices();
+    await _loadFunctionsCache();
 
     // Автосписання — якщо сьогодні збігається день платежу
     _processRecurringAutopost().catch(e => console.warn('[Recurring autopost]', e));
