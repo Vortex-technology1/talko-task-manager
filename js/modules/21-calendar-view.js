@@ -461,7 +461,8 @@
             
             // Оптимістичне оновлення
             tasks[taskIndex].status = newStatus;
-            tasks[taskIndex].completedAt = newStatus === 'done' || newStatus === 'review' ? new Date().toISOString() : null;
+            tasks[taskIndex].completedAt = newStatus === 'done' ? new Date().toISOString() : null;
+            tasks[taskIndex].completedDate = newStatus === 'done' ? getLocalDateStr() : null; // FIX BQ
             if (needsReview) tasks[taskIndex].sentForReviewAt = new Date().toISOString();
             renderMyDay();
             renderCalendar();
@@ -473,7 +474,8 @@
                 
                 const updateData = {
                     status: newStatus,
-                    completedAt: newStatus === 'done' || newStatus === 'review' ? firebase.firestore.FieldValue.serverTimestamp() : null
+                    completedAt: newStatus === 'done' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                    completedDate: newStatus === 'done' ? getLocalDateStr() : null // FIX BQ
                 };
                 if (needsReview) updateData.sentForReviewAt = firebase.firestore.FieldValue.serverTimestamp();
                 
