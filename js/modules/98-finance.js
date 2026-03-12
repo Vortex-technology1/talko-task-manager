@@ -337,7 +337,7 @@ function renderSubTab(tab) {
     case 'expense':   renderTransactions(inner, 'expense'); break;
     case 'recurring': renderRecurring(inner); break;
     case 'invoices':  renderInvoices(inner); break;
-    case 'functions': renderFunctions(inner); break;
+    case 'functions': renderFinanceFunctions(inner); break;
     case 'planning':   renderPlanning(inner); break;
     case 'analytics':  renderAnalytics(inner); break;
     case 'ai':         renderAI(inner); break;
@@ -2266,9 +2266,10 @@ async function _processRecurringAutopost() {
     }
   }
 
-  // Перезавантажуємо транзакції
-  await _loadTransactions();
-  if (_state.activeSubTab === 'dashboard') renderSubTab('dashboard');
+  // FIX BM: _loadTransactions не існує — оновлюємо поточну вкладку
+  if (_state.activeSubTab === 'dashboard' || _state.activeSubTab === 'income' || _state.activeSubTab === 'expense') {
+    renderSubTab(_state.activeSubTab);
+  }
 }
 
 async function _loadRecurring() {
@@ -2284,7 +2285,7 @@ async function _loadRecurring() {
 
 
 // ── Функції по бізнес-функціях ─────────────────────────────
-function renderFunctions(el) {
+function renderFinanceFunctions(el) { // FIX BN: перейменовано щоб не конфліктувати з renderFunctions з 25-functions.js
   const now = new Date();
   const monthOpts = Array.from({length:6},(_,i)=>{
     const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
@@ -2917,7 +2918,7 @@ async function _renderCashflowForecast() {
     const recurring = _state.recurring || [];
     const outflows = {}; // date → amount
 
-    recurring.filter(r => r.status !== 'paused' && r.type === 'expense').forEach(r => {
+    recurring.filter(r => r.active !== false && r.type === 'expense').forEach(r => { // FIX BO: active замість status
       for (let d = 0; d < 90; d++) {
         const dt = new Date(today); dt.setDate(today.getDate() + d);
         const dayOfMonth = dt.getDate();
@@ -2976,7 +2977,7 @@ async function _renderCashflowForecast() {
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
           <span style="color:#6b7280;">Регулярні витрати / міс.</span>
           <span style="font-weight:600;color:#ef4444;">
-            ${fmt(recurring.filter(r=>r.status!=='paused'&&r.period==='monthly').reduce((s,r)=>s+(r.amount||0),0), currency)}
+            ${fmt(recurring.filter(r=>r.active!==false&&r.frequency==='monthly').reduce((s,r)=>s+(r.amount||0),0), currency)}
           </span>
         </div>
         <div style="border-top:1px solid #f3f4f6;padding-top:8px;font-size:0.75rem;color:#9ca3af;">
@@ -4165,9 +4166,10 @@ window._financeSaveTx = async function() {
 
     await colRef('finance_transactions').add(txData);
 
-    // Оновлюємо баланс рахунку
+    // FIX BQ: баланс рахунку ведеться в базовій валюті → increment на базову суму
+    const baseAmount = toBase(amount, currency);
     const accRef = colRef('finance_accounts').doc(accId);
-    const delta  = type === 'income' ? amount : -amount;
+    const delta  = type === 'income' ? baseAmount : -baseAmount;
     await accRef.update({ balance: firebase.firestore.FieldValue.increment(delta) });
 
     // Оновлюємо локальний стан рахунків
@@ -4197,9 +4199,11 @@ window._financeDeleteTx = async function(txId, type) {
 
     await colRef('finance_transactions').doc(txId).delete();
 
-    // Відкатуємо баланс
+    // Відкатуємо баланс — використовуємо amountBase (базова валюта) як і при збереженні
+    // FIX BP: tx.amount — оригінальна валюта; баланс рахунку в базовій → потрібно txAmt
     if (tx.accountId && tx.amount) {
-      const delta = tx.type === 'income' ? -tx.amount : tx.amount;
+      const baseAmt = txAmt(tx); // враховує amountBase або конвертує через курс
+      const delta = tx.type === 'income' ? -baseAmt : baseAmt;
       await colRef('finance_accounts').doc(tx.accountId).update({
         balance: firebase.firestore.FieldValue.increment(delta)
       });
