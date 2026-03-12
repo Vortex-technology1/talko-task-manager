@@ -1591,8 +1591,11 @@ async function _loadTasksTab(deal) {
 
 window.crmMarkTaskDone = async function(taskId) {
     try {
+        const todayStr = new Date().toISOString().split('T')[0];
         await window.companyRef().collection('tasks').doc(taskId).update({
             status: 'done',
+            completedDate: todayStr, // FIX BH: потрібен для статистики, owner dashboard, аналітики
+            completedAt: firebase.firestore.FieldValue.serverTimestamp(),
             doneAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
@@ -2241,26 +2244,29 @@ async function _renderActivitiesTab() {
         if (filterBtn) { activeFilter = filterBtn.dataset.actfilter; render(activeFilter); return; }
     };
 
-    // actSave через delegation на кнопку
-    c.addEventListener('click', async function actSaveDelegate(e) {
-        if (!e.target.matches && !e.target.closest) return;
-        const saveBtn = e.target.id === 'actSaveBtn' ? e.target : e.target.closest('#actSaveBtn');
-        if (!saveBtn) return;
-        const dealId = document.getElementById('actDealSelect')?.value;
-        const note   = document.getElementById('actNoteText')?.value?.trim();
-        const type   = crm._actCurrentType || 'note';
-        if (!dealId) { if(window.showToast) showToast(window.t('crmSelectDeal'),'error'); return; }
-        try {
-            await window.companyRef().collection('crm_deals').doc(dealId)
-                .collection('history').add({
-                    type, note: note || '',
-                    by: window.currentUser?.email || 'manager',
-                    at: firebase.firestore.FieldValue.serverTimestamp(),
-                });
-            if (window.showToast) showToast(window.t('crmActivitySaved'), 'success');
-            await _renderActivitiesTab();
-        } catch(e2) { if(window.showToast) showToast(window.t('errPrefix') + e2.message, 'error'); }
-    });
+    // actSave через delegation на кнопку — FIX BF: guard щоб не накопичувати listeners
+    if (!c._actSaveListenerSet) {
+        c._actSaveListenerSet = true;
+        c.addEventListener('click', async function actSaveDelegate(e) {
+            if (!e.target.matches && !e.target.closest) return;
+            const saveBtn = e.target.id === 'actSaveBtn' ? e.target : e.target.closest('#actSaveBtn');
+            if (!saveBtn) return;
+            const dealId = document.getElementById('actDealSelect')?.value;
+            const note   = document.getElementById('actNoteText')?.value?.trim();
+            const type   = crm._actCurrentType || 'note';
+            if (!dealId) { if(window.showToast) showToast(window.t('crmSelectDeal'),'error'); return; }
+            try {
+                await window.companyRef().collection('crm_deals').doc(dealId)
+                    .collection('history').add({
+                        type, note: note || '',
+                        by: window.currentUser?.email || 'manager',
+                        at: firebase.firestore.FieldValue.serverTimestamp(),
+                    });
+                if (window.showToast) showToast(window.t('crmActivitySaved'), 'success');
+                await _renderActivitiesTab();
+            } catch(e2) { if(window.showToast) showToast(window.t('errPrefix') + e2.message, 'error'); }
+        });
+    }
 }
 
 
@@ -3088,10 +3094,15 @@ window.crmSaveTaskFromDeal = async function(dealId) {
 
     if (!title) { if(window.showToast) showToast('Вкажіть назву задачі','error'); return; }
     try {
+        const usersArr = typeof users !== 'undefined' ? users : [];
+        const assigneeUser = usersArr.find(u => u.id === (assignee || window.currentUser?.uid));
+        const creatorUser  = usersArr.find(u => u.id === window.currentUser?.uid);
         const taskData = {
             title, note: note||'',
-            assigneeId: assignee || window.currentUser?.uid || '',
-            creatorId:  window.currentUser?.uid || '',
+            assigneeId:   assignee || window.currentUser?.uid || '',
+            assigneeName: assigneeUser ? (assigneeUser.name || assigneeUser.email || '') : '',
+            creatorId:    window.currentUser?.uid || '',
+            creatorName:  creatorUser  ? (creatorUser.name  || creatorUser.email  || '') : '',
             status:     'new',
             deadlineDate: deadline || null,
             deadlineTime: null,

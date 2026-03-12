@@ -158,8 +158,13 @@
         const weekAgoStr = weekAgo.toISOString().split('T')[0];
         const rating = {};
         try {
-            const snap = await col('completedTasks').where('completedAt','>=',weekAgoStr).get();
-            const completed = snap.docs.map(d => d.data());
+            // FIX BE: колекції 'completedTasks' не існує — читаємо з 'tasks' де status='done'
+            const snap = await col('tasks').where('status','==','done').get();
+            const completed = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(t => {
+                // тільки виконані за останній тиждень
+                const cd = t.completedDate || (t.completedAt?.toDate ? t.completedAt.toDate().toISOString().split('T')[0] : '');
+                return cd >= weekAgoStr;
+            });
             ids.forEach(id => {
                 const mine = coordTasks.filter(t => t.assigneeId === id);
                 const done = completed.filter(t => t.assigneeId === id);
