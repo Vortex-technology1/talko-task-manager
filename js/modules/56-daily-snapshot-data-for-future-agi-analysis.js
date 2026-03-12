@@ -13,7 +13,16 @@
         
         const activeTasks = tasks.filter(t => t.status !== 'done');
         const overdueTasks = activeTasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr);
-        const doneTodayTasks = tasks.filter(t => t.status === 'done' && t.completedAt && getDateStr(t.completedAt) === todayStr);
+        // FIX BP: рахуємо по completedDate (string) як primary, completedAt як fallback
+        const doneTodayTasks = tasks.filter(t => {
+            if (t.status !== 'done') return false;
+            if (t.completedDate) return t.completedDate === todayStr;
+            if (t.completedAt) {
+                const d = t.completedAt?.toDate ? t.completedAt.toDate() : new Date(t.completedAt);
+                return getLocalDateStr(d) === todayStr;
+            }
+            return false;
+        });
         
         // Per-user load
         const userLoads = users.map(u => ({

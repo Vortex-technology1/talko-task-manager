@@ -115,32 +115,31 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">${icon}</svg>
             <span id="timerDisplay_${escId(taskId)}" style="min-width:28px;"></span>
         </button>`;
-
-        // ─── ВІДНОВЛЕННЯ ТАЙМЕРА ПІСЛЯ ПЕРЕЗАВАНТАЖЕННЯ ─────────────
-        window.restoreActiveTimer = function() {
-            try {
-                const saved = localStorage.getItem('talko_activeTimer');
-                if (!saved) return;
-                const { taskId, startTime } = JSON.parse(saved);
-                
-                // Перевіряємо чи задача існує і не виконана
-                const task = (typeof tasks !== 'undefined' ? tasks : [])
-                    .find(t => t.id === taskId && t.status !== 'done');
-                if (!task) { localStorage.removeItem('talko_activeTimer'); return; }
-                
-                // Відновлюємо без повторного запису в localStorage
-                activeTimer = { taskId, startTime };
-                updateTimerDisplay(taskId);
-                if (timerInterval) clearInterval(timerInterval);
-
-                timerInterval = setInterval(() => updateTimerDisplay(taskId), 1000);
-                
-                typeof showToast === 'function' && showToast(
-                    `⏱ Таймер відновлено: ${task.title.slice(0, 30)}`, 'info'
-                );
-            } catch(e) {
-                try { localStorage.removeItem('talko_activeTimer'); } catch(e2) {}
-            }
-        };
-
     }
+
+    // ─── ВІДНОВЛЕННЯ ТАЙМЕРА ПІСЛЯ ПЕРЕЗАВАНТАЖЕННЯ ─────────────
+    // FIX BM: було всередині getTimerButtonHtml після return — мертвий код, ніколи не виконувався
+    window.restoreActiveTimer = function() {
+        try {
+            const saved = localStorage.getItem('talko_activeTimer');
+            if (!saved) return;
+            const { taskId, startTime } = JSON.parse(saved);
+
+            // Перевіряємо чи задача існує і не виконана
+            const task = (typeof tasks !== 'undefined' ? tasks : [])
+                .find(t => t.id === taskId && t.status !== 'done');
+            if (!task) { localStorage.removeItem('talko_activeTimer'); return; }
+
+            // Відновлюємо без повторного запису в localStorage
+            activeTimer = { taskId, startTime };
+            updateTimerDisplay(taskId);
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => updateTimerDisplay(taskId), 1000);
+
+            typeof showToast === 'function' && showToast(
+                `⏱ Таймер відновлено: ${task.title.slice(0, 30)}`, 'info'
+            );
+        } catch(e) {
+            try { localStorage.removeItem('talko_activeTimer'); } catch(e2) {}
+        }
+    };

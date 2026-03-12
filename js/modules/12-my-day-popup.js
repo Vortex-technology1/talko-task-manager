@@ -8,7 +8,10 @@
             myDayPopupShown = true;
             
             const today = getLocalDateStr();
-            const myTasks = tasks.filter(t => t.assigneeId === currentUser?.uid);
+            const myTasks = tasks.filter(t =>
+                t.assigneeId === currentUser?.uid ||
+                (t.coExecutorIds || []).includes(currentUser?.uid) // FIX BO: включаємо coExecutor задачі
+            );
             
             // Завдання на сьогодні
             const todayTasks = myTasks.filter(t => t.deadlineDate === today && t.status !== 'done');

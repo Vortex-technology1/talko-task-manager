@@ -136,7 +136,7 @@
                             createdDate: getLocalDateStr(),
                             deadline: stepDeadlineDate + 'T18:00',
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            creatorName: t('systemUser')
+                            creatorName: currentUserData?.name || currentUser.email || t('systemUser') // FIX BN
                         };
                         const docRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(newTaskData);
                         // Локально додаємо задачу — без повного loadAllData()
