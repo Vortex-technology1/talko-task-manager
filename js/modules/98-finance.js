@@ -77,26 +77,26 @@ function colRef(name) {
 // ── Системні категорії (дефолт при ініціалізації) ──────────
 const DEFAULT_CATEGORIES = {
   income: [
-    { id: 'inc_services',   name: 'Оплата за послуги',    icon: '💼' },
-    { id: 'inc_goods',      name: 'Продаж товарів',       icon: '📦' },
-    { id: 'inc_prepay',     name: 'Передоплата',          icon: '💳' },
-    { id: 'inc_royalty',    name: 'Роялті / Оренда',      icon: '🏢' },
-    { id: 'inc_other',      name: 'Інше',                 icon: '➕' },
+    { id: 'inc_services',   name: 'Оплата за послуги',    icon: 'briefcase' },
+    { id: 'inc_goods',      name: 'Продаж товарів',       icon: 'package' },
+    { id: 'inc_prepay',     name: 'Передоплата',          icon: 'credit-card' },
+    { id: 'inc_royalty',    name: 'Роялті / Оренда',      icon: 'building-2' },
+    { id: 'inc_other',      name: 'Інше',                 icon: 'plus-circle' },
   ],
   expense: [
-    { id: 'exp_materials',  name: 'Матеріали / сировина', icon: '🔧' },
-    { id: 'exp_salary',     name: 'ФОП / Зарплата',       icon: '👤' },
-    { id: 'exp_rent',       name: 'Оренда',               icon: '🏠' },
-    { id: 'exp_transport',  name: 'Транспорт / Паливо',   icon: '🚗' },
-    { id: 'exp_marketing',  name: 'Маркетинг / Реклама',  icon: '📢' },
-    { id: 'exp_equipment',  name: 'Обладнання',           icon: '⚙️' },
-    { id: 'exp_utilities',  name: 'Комунальні послуги',   icon: '💡' },
-    { id: 'exp_admin',      name: 'Адміністративні',      icon: '📋' },
-    { id: 'exp_subcontract',name: 'Субпідряд',            icon: '🤝' },
-    { id: 'exp_tax',        name: 'Податки / ZUS',        icon: '📊' },
-    { id: 'exp_reserve',    name: 'Резервний фонд',       icon: '🛡️' },
-    { id: 'exp_dividends',  name: 'Дивіденди власника',   icon: '💰' },
-    { id: 'exp_other',      name: 'Інше',                 icon: '➕' },
+    { id: 'exp_materials',  name: 'Матеріали / сировина', icon: 'wrench' },
+    { id: 'exp_salary',     name: 'ФОП / Зарплата',       icon: 'user' },
+    { id: 'exp_rent',       name: 'Оренда',               icon: 'home' },
+    { id: 'exp_transport',  name: 'Транспорт / Паливо',   icon: 'car' },
+    { id: 'exp_marketing',  name: 'Маркетинг / Реклама',  icon: 'megaphone' },
+    { id: 'exp_equipment',  name: 'Обладнання',           icon: 'settings' },
+    { id: 'exp_utilities',  name: 'Комунальні послуги',   icon: 'lightbulb' },
+    { id: 'exp_admin',      name: 'Адміністративні',      icon: 'clipboard-list' },
+    { id: 'exp_subcontract',name: 'Субпідряд',            icon: 'handshake' },
+    { id: 'exp_tax',        name: 'Податки / ZUS',        icon: 'bar-chart-2' },
+    { id: 'exp_reserve',    name: 'Резервний фонд',       icon: 'shield' },
+    { id: 'exp_dividends',  name: 'Дивіденди власника',   icon: 'coins' },
+    { id: 'exp_other',      name: 'Інше',                 icon: 'plus-circle' },
   ],
 };
 
@@ -315,7 +315,7 @@ function renderDashboard(el) {
             <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid #f3f4f6;">
               <div style="display:flex;align-items:center;gap:0.6rem;">
                 <div style="width:32px;height:32px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;">
-                  ${acc.type === 'cash' ? '💵' : '🏦'}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${acc.type === 'cash' ? '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M6 12h.01M18 12h.01"/>' : '<rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/>'}</svg>
                 </div>
                 <div>
                   <div style="font-size:0.85rem;font-weight:500;">${acc.name}</div>
@@ -330,7 +330,7 @@ function renderDashboard(el) {
 
       <!-- Підказка наступного кроку -->
       <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:0.75rem;">
-        <div style="font-size:1.5rem;">💡</div>
+        <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
         <div>
           <div style="font-size:0.85rem;font-weight:600;color:#16a34a;">Що далі?</div>
           <div style="font-size:0.8rem;color:#166534;margin-top:0.2rem;">
@@ -359,7 +359,7 @@ function renderTransactions(el, type) {
         ` : ''}
       </div>
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:2rem;text-align:center;color:#9ca3af;">
-        <div style="font-size:2rem;margin-bottom:0.75rem;">${type === 'income' ? '📈' : '📉'}</div>
+        <div style="margin-bottom:0.75rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${type === 'income' ? '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' : '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>'}</svg></div>
         <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.35rem;">Транзакцій поки немає</div>
         <div style="font-size:0.8rem;">Натисніть «Додати» щоб внести першу операцію</div>
       </div>
@@ -373,7 +373,7 @@ function renderFunctions(el) {
     <div style="max-width:960px;margin:0 auto;">
       <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:1.25rem;">Фінанси по функціях</div>
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:2rem;text-align:center;color:#9ca3af;">
-        <div style="font-size:2rem;margin-bottom:0.75rem;">📊</div>
+        <div style="margin-bottom:0.75rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
         <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.35rem;">Звіт по функціях</div>
         <div style="font-size:0.8rem;">Буде доступний після внесення перших транзакцій</div>
       </div>
@@ -387,7 +387,7 @@ function renderPlanning(el) {
     <div style="max-width:960px;margin:0 auto;">
       <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:1.25rem;">Планування</div>
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:2rem;text-align:center;color:#9ca3af;">
-        <div style="font-size:2rem;margin-bottom:0.75rem;">📅</div>
+        <div style="margin-bottom:0.75rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
         <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.35rem;">Бюджетування</div>
         <div style="font-size:0.8rem;">Розробляється в наступному етапі</div>
       </div>
@@ -405,7 +405,7 @@ function renderAI(el) {
     <div style="max-width:960px;margin:0 auto;">
       <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:1.25rem;">AI-аналітик</div>
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:2rem;text-align:center;color:#9ca3af;">
-        <div style="font-size:2rem;margin-bottom:0.75rem;">🤖</div>
+        <div style="margin-bottom:0.75rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
         <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.35rem;">Claude AI аналітика</div>
         <div style="font-size:0.8rem;">Буде активовано після наповнення даними</div>
       </div>
