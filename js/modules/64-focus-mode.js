@@ -145,9 +145,11 @@
     window.exitFocusToMyDay = function() {
         if (focusTimerInterval) { clearInterval(focusTimerInterval); focusTimerInterval = null; }
         focusTimerRunning = false;
+        document.body.style.overflow = '';
         const modal = document.getElementById('focusModal');
         if (modal) modal.style.display = 'none';
-        if (typeof switchTab === 'function') switchTab('myDay');
+        // Назва таба точно 'myday' (малими)
+        if (typeof switchTab === 'function') switchTab('myday');
     };
 
     function closeFocusMode() {
