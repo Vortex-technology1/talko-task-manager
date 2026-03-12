@@ -672,7 +672,7 @@ window.toggleFlowStatus = async function(flowId, status) {
             .collection('bots').doc(bp.activeBotId)
             .collection('flows').doc(flowId)
             .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (typeof showToast === 'function') showToast(newStatus==='active'?'▶ Активовано':'⏸ Пауза', 'success');
+        if (typeof showToast === 'function') showToast(newStatus==='active'?window.t('botsContactActivated'):window.t('botsContactPaused'), 'success');
     } catch(e) { console.error('[toggleFlowStatus]', e); if(window.showToast) showToast(window.t('errPrefix')+e.message,'error'); }
 };
 
@@ -1072,7 +1072,7 @@ window.ctsOpenCard = function(contactId) {
                 ${field(window.t('botsChannel'), ct.channel || 'telegram', '')}
                 ${field(window.t('crmRole'), ct.role, '')}
                 ${field(window.t('onbBizType'), ct.business_type, '')}
-                ${field('Головна проблема', ct.main_problem, '')}
+                ${field(window.t('botsContactMainProblem'), ct.main_problem, '')}
                 ${field(window.t('crmGoal'), ct.main_goal, '')}
                 ${field(window.t('botsSearchTerm'), ct.search_time, '')}
                 ${field(window.t('crmTabFunnel'), ct.flowName || ct.flowId, '')}
@@ -1196,7 +1196,7 @@ window.ctsSaveNote = async function(contactId) {
         .update({ managerNote: note, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     const ct = cts.items.find(c => c.id === contactId);
     if (ct) ct.managerNote = note;
-    if (typeof showToast === 'function') showToast('Примітку збережено ✓', 'success');
+    if (typeof showToast === 'function') showToast(window.t('botsContactNoteSaved'), 'success');
 };
 
 // ─────────────────────────────────────────
@@ -1206,7 +1206,7 @@ window.ctsAddToCRM = async function(contactId) {
     const ct = cts.items.find(c => c.id === contactId);
     if (!ct) return;
     if (typeof emitTalkoEvent !== 'function') {
-        if (typeof showToast === 'function') showToast('Event Bus не завантажений', 'error');
+        if (typeof showToast === 'function') showToast(window.t('botsEventBusNotLoaded'), 'error');
         return;
     }
     try {
@@ -2179,7 +2179,7 @@ window.bpSendBroadcast = async function() {
             text: text || '',
             flowSendId: flowSendId || null,
             flowSendName: bp.flows.find(f => f.id === flowSendId)?.name || '',
-            segment: [channel, niche, tag ? '#'+tag : '', bp.flows.find(f=>f.id===flowId)?.name||''].filter(Boolean).join(' · ') || 'всі',
+            segment: [channel, niche, tag ? '#'+tag : '', bp.flows.find(f=>f.id===flowId)?.name||''].filter(Boolean).join(' · ') || window.t('botsBroadcastAll'),
             channel: channel || 'all',
             flowId: flowId || null,
             niche: niche || null,
@@ -2408,7 +2408,7 @@ async function renderSettingsTab() {
             <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.75rem;">
                 <div style="flex:1;padding:0.5rem 0.6rem;background:#f9fafb;border:1.5px solid #e5e7eb;
                     border-radius:9px;font-size:0.78rem;color:#6b7280;font-family:monospace;">
-                    ${bot.token ? '•••••••••' + bot.token.slice(-8) : 'Не встановлено'}
+                    ${bot.token ? '•••••••••' + bot.token.slice(-8) : window.t('botsNotSet')}
                 </div>
             </div>
             <label style="${labelStyle}">ЗАМІНИТИ ТОКЕН</label>
@@ -2540,7 +2540,7 @@ window.bpCheckBotStatus = async function(botId) {
                 <div style="font-size:0.78rem;display:flex;flex-direction:column;gap:4px;">
                     <div><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Бот: <b>@${me.result?.username || '—'}</b> (${me.result?.first_name || ''})</div>
                     <div style="color:${whInfo.url ? '#16a34a' : '#ef4444'};">
-                        ${whInfo.url ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>'} Webhook: ${whInfo.url ? 'встановлено' : 'не встановлено'}
+                        ${whInfo.url ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' : '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>'} Webhook: ${whInfo.url ? window.t('botsIsSet') : window.t('botsNotSetShort')}
                     </div>
                     ${whInfo.last_error_message ? `<div style="color:#ef4444;">⚠️ Остання помилка: ${escH(whInfo.last_error_message)}</div>` : ''}
                     <div style="color:#6b7280;">Очікуваних оновлень: ${whInfo.pending_update_count || 0}</div>
@@ -2572,7 +2572,7 @@ window.bpReinstallWebhook = async function(botId) {
     const bot = bp.bots.find(b => b.id === botId);
     if (!bot?.token) {
         if (result) result.innerHTML = `<div style="color:#ef4444;">Спочатку введіть токен</div>`;
-        if (btn) { btn.textContent = '↺ Перевстановити webhook'; btn.disabled = false; }
+        if (btn) { btn.textContent = window.t('botsReinstallWebhook'); btn.disabled = false; }
         return;
     }
 
@@ -2598,7 +2598,7 @@ window.bpReinstallWebhook = async function(botId) {
         if (result) result.innerHTML = `<div style="color:#ef4444;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> ${escH(e.message)}</div>`;
     }
 
-    if (btn) { btn.textContent = '↺ Перевстановити webhook'; btn.disabled = false; }
+    if (btn) { btn.textContent = window.t('botsReinstallWebhook'); btn.disabled = false; }
 };
 
 // ─────────────────────────────────────────
