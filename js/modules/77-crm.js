@@ -293,6 +293,12 @@ function _renderKanban() {
         return;
     }
 
+    // FIX B: попередження якщо угод >= ліміт (500)
+    const limitBanner = crm._dealsLimitReached
+        ? `<div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:0.4rem 1rem;font-size:0.72rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;">
+            ⚠️ Показано перші 500 угод. Виграні/програні угоди краще архівувати для покращення продуктивності.
+           </div>` : '';
+
     const stages    = (crm.pipeline?.stages || []).slice().sort((a,b) => a.order - b.order);
     const mainStages = stages.filter(s => s.id !== 'lost');
     const lostStage  = stages.find(s => s.id === 'lost');
@@ -307,6 +313,7 @@ function _renderKanban() {
     const switcherHeight = crm.pipelines.length > 1 ? 89 : 57;
 
     c.innerHTML = `
+    ${limitBanner}
     <!-- Pipeline switcher + Stats row -->
     <div style="background:white;border-bottom:1px solid #e8eaed;">
         ${crm.pipelines.length > 1 ? `
@@ -746,7 +753,17 @@ window.crmBulkDelete = async function() {
     let done = 0;
     for (const dealId of ids) {
         try {
-            await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).delete();
+            const dealRef = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+            // FIX A: видаляємо history субколекцію перед видаленням угоди
+            try {
+                const histSnap = await dealRef.collection('history').limit(100).get();
+                if (!histSnap.empty) {
+                    const batch = firebase.firestore().batch();
+                    histSnap.docs.forEach(d => batch.delete(d.ref));
+                    await batch.commit();
+                }
+            } catch(he) { console.warn('[Bulk delete] history cleanup:', he.message); }
+            await dealRef.delete();
             crm.deals = crm.deals.filter(function(d){ return d.id !== dealId; });
             done++;
         } catch(e) { console.error('[Bulk delete]', e); }
@@ -1156,6 +1173,7 @@ window.crmConfirmLost = async function(dealId, newStage, oldStage) {
             lostReasonLabel: reasonLabel || null,
             lostNote: note || null,
             lostAt: firebase.firestore.FieldValue.serverTimestamp(),
+            stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), // FIX D
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
         await ref.collection('history').add({
@@ -2637,12 +2655,15 @@ function _subscribeDeals() {
     if (crm.dealUnsub) { crm.dealUnsub(); crm.dealUnsub = null; }
     crm.loading = true;
     if (!crm.pipeline) return;
+    const DEALS_LIMIT = 500; // FIX B: збільшено з 200 до 500
     crm.dealUnsub = window.companyRef().collection(window.DB_COLS.CRM_DEALS)
-        .where('pipelineId','==', crm.pipeline.id).limit(200)
+        .where('pipelineId','==', crm.pipeline.id).limit(DEALS_LIMIT)
         .onSnapshot(snap => {
             crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}))
                 .sort((a,b) => (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
             crm.loading = false;
+            // FIX B: індикатор якщо досягнуто ліміт
+            crm._dealsLimitReached = snap.docs.length >= DEALS_LIMIT;
             if (crm.subTab === 'kanban') _renderKanban();
             else if (crm.subTab === 'list') _renderListView();
         }, err => { console.error('[CRM deals]', err); crm.loading = false; });
@@ -2672,12 +2693,19 @@ async function _doCreatePipeline(name) {
 }
 
 window.crmDeletePipeline = async function(pipelineId, name) {
-    if (!(await (window.showConfirmModal ? showConfirmModal(`Видалити воронку "${name}"?\nВсі угоди в ній залишаться.`,{danger:true}) : Promise.resolve(confirm(`Видалити воронку "${name}"?\nВсі угоди в ній залишаться.`))))) return;
+    // FIX F+C: перевіряємо скільки угод в pipeline
+    const dealsInPipeline = crm.deals.filter(d => d.pipelineId === pipelineId).length;
+    const dealsWarn = dealsInPipeline > 0 ? `\nУ воронці є ${dealsInPipeline} угод — вони залишаться в базі, але зникнуть з UI.` : '\nУгод у воронці немає.';
+    const msg = `Видалити воронку "${name}"?${dealsWarn}`;
+    if (!(await (window.showConfirmModal ? showConfirmModal(msg, {danger:true}) : Promise.resolve(confirm(msg))))) return;
     try {
         await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE).doc(pipelineId).delete();
         crm.pipelines = crm.pipelines.filter(p => p.id !== pipelineId);
         if (crm.pipeline?.id === pipelineId) {
-            crm.pipeline = crm.pipelines[0];
+            crm.pipeline = crm.pipelines[0] || null;
+            // FIX C: підписуємось на deals нової pipeline
+            if (crm.pipeline) _subscribeDeals();
+            else { crm.deals = []; crm.loading = false; }
         }
         if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success');
         _renderCRMSettings();
