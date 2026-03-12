@@ -79,8 +79,8 @@
 <div class="lesson-block" style="text-align:center;">
     <div class="lesson-block-content" style="padding:1.25rem;">
         <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">Щоб побачити повну структуру програми, відкрийте карту маршруту.</p>
-        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">
-            Відкрити маршрут програми →
+        <a href="https://chatgpt.com/g/g-68568e2561ac8191a0a71e31dc7cb74d-ai-coach-consultant-alex-talko-preparation" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">
+            Відкрити AI-асистента →
         </a>
     </div>
 </div>
@@ -143,8 +143,8 @@
 <div class="lesson-block" style="text-align:center;">
     <div class="lesson-block-content" style="padding:1.25rem;">
         <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">Чтобы увидеть полную структуру программы, откройте карту маршрута.</p>
-        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">
-            Открыть маршрут программы →
+        <a href="https://chatgpt.com/g/g-68568e2561ac8191a0a71e31dc7cb74d-ai-coach-consultant-alex-talko-preparation" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">
+            Открыть AI-ассистента →
         </a>
     </div>
 </div>
@@ -205,7 +205,7 @@
 <div class="lesson-block" style="text-align:center;">
     <div class="lesson-block-content" style="padding:1.25rem;">
         <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">To see the full program structure, open the roadmap.</p>
-        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">Open program roadmap →</a>
+        <a href="https://chatgpt.com/g/g-68568e2561ac8191a0a71e31dc7cb74d-ai-coach-consultant-alex-talko-preparation" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">Open AI Assistant →</a>
     </div>
 </div>
 <div class="result-block">
@@ -264,7 +264,7 @@
 <div class="lesson-block" style="text-align:center;">
     <div class="lesson-block-content" style="padding:1.25rem;">
         <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">Aby zobaczyć pełną strukturę programu, otwórz mapę.</p>
-        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">Otwórz mapę programu →</a>
+        <a href="https://chatgpt.com/g/g-68568e2561ac8191a0a71e31dc7cb74d-ai-coach-consultant-alex-talko-preparation" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">Otwórz Asystenta AI →</a>
     </div>
 </div>
 <div class="result-block">
@@ -323,7 +323,7 @@
 <div class="lesson-block" style="text-align:center;">
     <div class="lesson-block-content" style="padding:1.25rem;">
         <p style="color:#525252;font-size:0.9rem;margin-bottom:1rem;">Um die vollständige Programmstruktur zu sehen, öffnen Sie die Roadmap.</p>
-        <a href="#" onclick="event.preventDefault();window._openAlgoritm()" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">Programm-Roadmap öffnen →</a>
+        <a href="https://chatgpt.com/g/g-68568e2561ac8191a0a71e31dc7cb74d-ai-coach-consultant-alex-talko-preparation" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border-radius:12px;font-weight:700;font-size:0.95rem;text-decoration:none;">KI-Assistenten öffnen →</a>
     </div>
 </div>
 <div class="result-block">
