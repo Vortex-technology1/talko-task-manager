@@ -361,12 +361,12 @@ function renderDashboard(el) {
       </div>
 
       <!-- Графік + Рахунки -->
-      <div style="display:grid;grid-template-columns:1fr 280px;gap:0.75rem;margin-bottom:1.25rem;">
+      <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
 
         <!-- Графік доходів/витрат за 6 місяців -->
-        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">Доходи vs Витрати (6 міс.)</div>
-          <div id="dashChart" style="height:160px;display:flex;align-items:flex-end;gap:6px;padding-bottom:24px;position:relative;">
+        <div style="flex:1;min-width:280px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;overflow:hidden;">
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Доходи vs Витрати (6 міс.)</div>
+          <div id="dashChart" style="width:100%;overflow:hidden;">
             <div style="color:#9ca3af;font-size:0.78rem;">Завантаження...</div>
           </div>
           <div style="display:flex;gap:1rem;margin-top:0.5rem;">
@@ -380,18 +380,20 @@ function renderDashboard(el) {
         </div>
 
         <!-- Рахунки -->
-        <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
+        <div style="width:240px;flex-shrink:0;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Рахунки</div>
           <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #f3f4f6;">
             <div style="font-size:0.72rem;color:#6b7280;">Загальний залишок</div>
-            <div style="font-size:1.25rem;font-weight:800;color:#1a1a1a;">${fmt(totalBalance)}</div>
+            <div id="dashTotalBalance" style="font-size:1.25rem;font-weight:800;color:#1a1a1a;">${fmt(totalBalance)}</div>
           </div>
+          <div id="dashAccounts">
           ${_state.accounts.map(acc => `
             <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
-              <div style="font-size:0.8rem;color:#374151;">${acc.name}</div>
+              <div style="font-size:0.8rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
               <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
             </div>
           `).join('')}
+          </div>
         </div>
       </div>
 
@@ -469,8 +471,10 @@ async function loadDashboardData(monthVal) {
       const subEl = document.getElementById(id+'Sub');
       if (subEl) subEl.textContent = sub || '';
     };
-    set('kpiIncome',  fmt(income),  `${snap.docs.filter(d=>d.data().type==='income').length} операцій`, '#22c55e');
-    set('kpiExpense', fmt(expense), `${snap.docs.filter(d=>d.data().type==='expense').length} операцій`, '#ef4444');
+    const incCount = snap.docs.filter(d=>d.data().type==='income').length;
+    const expCount = snap.docs.filter(d=>d.data().type==='expense').length;
+    set('kpiIncome',  fmt(income),  incCount + ' операцій', '#22c55e');
+    set('kpiExpense', fmt(expense), expCount + ' операцій', '#ef4444');
     set('kpiProfit',  fmt(profit),  profit >= 0 ? 'прибуток' : 'збиток', pColor);
     set('kpiMargin',  margin+'%',   income > 0 ? `від доходу ${fmt(income)}` : 'немає доходів', profit>=0?'#22c55e':'#ef4444');
 
@@ -518,6 +522,21 @@ async function loadDashboardData(monthVal) {
     }
 
     // Топ витрат по категоріях
+    // Оновлюємо відображення рахунків (баланс міг змінитись)
+    await loadAccounts();
+    const totalBal = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
+    const totalBalEl = document.getElementById('dashTotalBalance');
+    if (totalBalEl) totalBalEl.textContent = fmt(totalBal);
+    const accEl = document.getElementById('dashAccounts');
+    if (accEl) {
+      accEl.innerHTML = _state.accounts.map(acc => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
+          <div style="font-size:0.8rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
+          <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+        </div>
+      `).join('');
+    }
+
     const topEl = document.getElementById('dashTopExpense');
     if (topEl) {
       const sorted = Object.entries(expByCat)
@@ -618,15 +637,8 @@ async function loadChartData() {
     }).join('');
 
     chartEl.innerHTML = `
-      <svg width="100%" viewBox="0 0 ${svgWidth} ${H+24}" preserveAspectRatio="xMidYMid meet"
-        style="overflow:visible;">
-        <!-- Горизонтальні лінії сітки -->
-        ${[0.25,0.5,0.75,1].map(r => `
-          <line x1="0" y1="${H - Math.round(r*H)}" x2="${svgWidth}" y2="${H - Math.round(r*H)}"
-            stroke="#f3f4f6" stroke-width="1"/>
-          <text x="-4" y="${H - Math.round(r*H) + 4}" text-anchor="end"
-            font-size="9" fill="#d1d5db">${fmt(maxVal*r,_state.currency).replace(/[^0-9,. KMk€$₴]/g,'')}</text>
-        `).join('')}
+      <svg width="100%" viewBox="0 0 ${svgWidth} ${H+24}" preserveAspectRatio="xMinYMin meet"
+        style="display:block;overflow:visible;">
         ${bars}
       </svg>
     `;
