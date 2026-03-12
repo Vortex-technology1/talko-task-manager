@@ -114,19 +114,22 @@
         if (!currentCompany || !stageId) return;
         // confirm знаходиться в deleteStageUI — тут не дублюємо
         try {
-            // Unlink tasks
+            // BUG-AS FIX: use batch for atomic delete + unlink instead of fire-and-forget per-task
             const linkedTasks = tasks.filter(t => t.stageId === stageId);
-            for (const t of linkedTasks) {
-                t.stageId = '';
-                db.collection('companies').doc(currentCompany).collection('tasks').doc(t.id)
-                    .update({ stageId: '' }).catch(() => {});
-            }
-            // Delete materials
             const mats = projectMaterials.filter(m => m.stageId === stageId);
-            for (const m of mats) {
-                await materialsRef().doc(m.id).delete();
+            const tasksBase = db.collection('companies').doc(currentCompany).collection('tasks');
+            const CHUNK = 450;
+            const ops = [];
+            ops.push({ ref: stagesRef().doc(stageId), type: 'delete' });
+            linkedTasks.forEach(t => ops.push({ ref: tasksBase.doc(t.id), type: 'update', data: { stageId: '' } }));
+            mats.forEach(m => ops.push({ ref: materialsRef().doc(m.id), type: 'delete' }));
+            for (let i = 0; i < ops.length; i += CHUNK) {
+                const batch = db.batch();
+                ops.slice(i, i + CHUNK).forEach(op => op.type === 'delete' ? batch.delete(op.ref) : batch.update(op.ref, op.data));
+                await batch.commit();
             }
-            await stagesRef().doc(stageId).delete();
+            // Update local state only after successful Firestore writes
+            linkedTasks.forEach(t => { t.stageId = ''; });
             showToast('Етап видалено', 'success');
         } catch (e) {
             console.error('[STAGES] deleteStage:', e);
@@ -553,24 +556,28 @@
     window.updateStageStatusUI = async function(stageId, newStatus) {
         if (_stageActionLock) return;
         _stageActionLock = true;
+        let prevStatus, projectId;
         try {
             const stage = projectStages.find(s => s.id === stageId);
             if (!stage) return;
-            const prevStatus = stage.status;
+            prevStatus = stage.status;
+            projectId = stage.projectId;
             await updateStageStatus(stageId, newStatus);
-            await loadStages(stage.projectId);
+            await loadStages(projectId);
             if (typeof window.renderProjectDetail === 'function') {
-                window.renderProjectDetail(stage.projectId);
+                window.renderProjectDetail(projectId);
             }
-            const statusLabels = { planned:'Заплановано', in_progress:'В роботі', blocked:'Заблоковано', done:'Завершено' };
-            // await — lock тримається поки toast відкритий (4 сек або undo)
-            // Це блокує повторну зміну select під час вікна undo
-            await showUndoToast(`Статус: ${statusLabels[newStatus] || newStatus}`, async () => {
-                await updateStageStatus(stageId, prevStatus);
-                await loadStages(stage.projectId);
-                if (typeof window.renderProjectDetail === 'function') window.renderProjectDetail(stage.projectId);
-            });
-        } finally { _stageActionLock = false; }
+        } finally {
+            // BUG-AT FIX: release lock BEFORE undo toast — 4s hold silently dropped other actions
+            _stageActionLock = false;
+        }
+        if (!projectId) return;
+        const statusLabels = { planned:'Заплановано', in_progress:'В роботі', blocked:'Заблоковано', done:'Завершено' };
+        showUndoToast(`Статус: ${statusLabels[newStatus] || newStatus}`, async () => {
+            await updateStageStatus(stageId, prevStatus);
+            await loadStages(projectId);
+            if (typeof window.renderProjectDetail === 'function') window.renderProjectDetail(projectId);
+        });
     };
 
     window.deleteStageUI = async function(stageId) {
@@ -592,9 +599,11 @@
     let _materialActionLock = false;
     window.updateMaterialStatusUI = async function(materialId, newStatus) {
         if (_materialActionLock) return;
-        _materialActionLock = true;
+        // BUG-AV FIX: guard against mat not found — undo would write {status: undefined} to Firestore
         const mat = projectMaterials.find(m => m.id === materialId);
-        const prevStatus = mat?.status;
+        if (!mat) { showToast('Матеріал не знайдено', 'error'); return; }
+        _materialActionLock = true;
+        const prevStatus = mat.status;
         try {
             await updateMaterial(materialId, { status: newStatus });
             if (newStatus === 'missing' && mat && typeof window.createProjectEvent === 'function') {
@@ -610,19 +619,22 @@
                     window.renderProjectDetail(mat.projectId);
                 }
             }
-            const statusLabels = { needed:'Потрібно', ordered:'Замовлено', delivering:'Доставляється', delivered:'Доставлено', used:'Використано', missing:'Відсутній' };
-            await showUndoToast(`Матеріал: ${statusLabels[newStatus] || newStatus}`, async () => {
-                if (!prevStatus) return;
-                await updateMaterial(materialId, { status: prevStatus });
-                if (mat) {
-                    await loadMaterials(mat.projectId);
-                    await loadStages(mat.projectId);
-                    if (typeof window.renderProjectDetail === 'function') window.renderProjectDetail(mat.projectId);
-                }
-            });
-        } finally {
+            } finally {
+            // BUG-AT FIX (material): release lock before undo toast
             _materialActionLock = false;
         }
+        const statusLabels = { needed:'Потрібно', ordered:'Замовлено', delivering:'Доставляється', delivered:'Доставлено', used:'Використано', missing:'Відсутній' };
+        const _prevStatus = prevStatus;
+        const _mat = mat;
+        showUndoToast(`Матеріал: ${statusLabels[newStatus] || newStatus}`, async () => {
+            if (!_prevStatus) return;
+            await updateMaterial(materialId, { status: _prevStatus });
+            if (_mat) {
+                await loadMaterials(_mat.projectId);
+                await loadStages(_mat.projectId);
+                if (typeof window.renderProjectDetail === 'function') window.renderProjectDetail(_mat.projectId);
+            }
+        });
     };
 
     window.deleteMaterialUI = async function(materialId) {
@@ -713,16 +725,19 @@
     // Auto-update stage progress + auto-advance to done
     window.autoUpdateStageProgress = async function(stageId) {
         if (!stageId || !currentCompany) return;
+        const stage = projectStages.find(s => s.id === stageId);
+        // BUG-AU FIX: don't auto-complete blocked stages; don't run on already-done stages
+        if (!stage || stage.status === 'blocked') return;
         const stageTasks = tasks.filter(t => t.stageId === stageId);
         if (stageTasks.length === 0) return;
-        
-        const done = stageTasks.filter(t => t.status === 'done').length;
-        const pct = Math.round((done / stageTasks.length) * 100);
-        
+
+        const doneCount = stageTasks.filter(t => t.status === 'done').length;
+        const pct = Math.round((doneCount / stageTasks.length) * 100);
+
         const updates = { progressPct: pct };
-        
+
         // Auto-advance: all tasks done → check materials → mark stage done
-        if (done === stageTasks.length) {
+        if (doneCount === stageTasks.length && stage.status !== 'done') {
             const mats = projectMaterials.filter(m => m.stageId === stageId);
             const allMatsDelivered = mats.length === 0 || mats.every(m => m.status === 'delivered' || m.status === 'used');
             if (allMatsDelivered) {
@@ -730,12 +745,19 @@
                 updates.actualEndDate = new Date().toISOString().split('T')[0];
             }
         }
-        
+
         try {
             await stagesRef().doc(stageId).update({
                 ...updates,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
+            // BUG-AU FIX: sync local state so UI reflects change without reload
+            const idx = projectStages.findIndex(s => s.id === stageId);
+            if (idx >= 0) Object.assign(projectStages[idx], updates);
+            // BUG-AU FIX: propagate to project status if stage just completed
+            if (updates.status === 'done' && stage.projectId && typeof window.autoUpdateProjectStatus === 'function') {
+                window.autoUpdateProjectStatus(stage.projectId);
+            }
         } catch (e) {
             console.error('[STAGES] autoUpdateProgress:', e);
         }
