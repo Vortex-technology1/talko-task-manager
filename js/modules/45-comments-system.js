@@ -174,6 +174,7 @@
             const inp = document.getElementById('comment-edit-input-' + commentId);
             const newText = inp?.value?.trim();
             if (!newText) return;
+            if (newText.length > 4000) { showToast((typeof t === 'function' ? t('commentTooLong') : null) || 'Коментар занадто довгий (макс. 4000 символів)', 'warning'); return; } // BUG-AB FIX
             try {
                 await db.collection('companies').doc(currentCompany)
                     .collection('tasks').doc(currentTaskIdForComments)
@@ -239,6 +240,12 @@
             const text = input.value.trim();
             
             if (!text || !currentTaskIdForComments || !currentUser) return;
+            
+            // BUG-AB FIX: limit comment length to 4000 chars
+            if (text.length > 4000) {
+                showToast((typeof t === 'function' ? t('commentTooLong') : null) || `Коментар занадто довгий (макс. 4000 символів)`, 'warning');
+                return;
+            }
             
             btn.disabled = true;
             

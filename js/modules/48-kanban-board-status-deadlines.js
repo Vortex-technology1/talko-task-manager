@@ -40,7 +40,7 @@
                 if (selectedStatuses.length > 0 && !selectedStatuses.includes(task.status)) return false;
                 if (funcF && task.function !== funcF) return false;
                 if (assigneeF && task.assigneeId !== assigneeF) return false;
-                if (tf === 'my' && task.assigneeId !== currentUser?.uid) return false;
+                if (tf === 'my' && task.assigneeId !== currentUser?.uid && !(task.coExecutorIds && task.coExecutorIds.includes(currentUser?.uid))) return false; // BUG-Y FIX: was missing coExecutors
                 if (tf === 'created' && task.creatorId !== currentUser?.uid) return false;
                 if (searchQuery && !(task.title || '').toLowerCase().includes(searchQuery) && 
                     !(task.assigneeName || '').toLowerCase().includes(searchQuery)) return false;
@@ -411,6 +411,8 @@
                     await ref.update({ deadlineDate: newDeadline || firebase.firestore.FieldValue.delete(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
                     await logTaskChange(task.id, 'edit', { field: 'deadlineDate', from: oldDl, to: newDeadline });
                     task.deadlineDate = newDeadline;
+                    // BUG-X FIX: also update composite deadline field used by parseDeadline()
+                    task.deadline = newDeadline ? (newDeadline + (task.deadlineTime ? 'T' + task.deadlineTime : '')) : null;
                     showToast(newDeadline ? `${t('deadlineChanged')} → ${newDeadline}` : t('deadlineRemoved'), 'success');
                 } catch(err) {
                     console.error('Kanban deadline drop error:', err);
@@ -433,7 +435,8 @@
         function openTaskModalForKanban(colId, mode) {
             openTaskModal(); // відкриває форму нового завдання
             // Pre-set deadline based on column (deadline mode only)
-            setTimeout(() => {
+            // BUG-Z FIX: was setTimeout(100) race condition → use rAF double-frame like task templates fix
+            requestAnimationFrame(() => requestAnimationFrame(() => {
                 if (mode !== 'deadlines') return;
                 const today = getLocalDateStr();
                 const todayD = new Date(today);
@@ -441,13 +444,11 @@
                 if (colId === 'today') {
                     dl = today;
                 } else if (colId === 'this_week') {
-                    // Find end of THIS week (Sunday) — use closest upcoming day within week
                     const fri = new Date(todayD);
-                    const delta = (5 - fri.getDay() + 7) % 7 || 7; // FIX: always forward (+7 if already Friday)
+                    const delta = (5 - fri.getDay() + 7) % 7 || 7;
                     fri.setDate(fri.getDate() + delta);
                     dl = fri.toISOString().split('T')[0];
                 } else if (colId === 'next_week') {
-                    // Monday of next week + 4 = Friday of next week
                     const nextMon = new Date(todayD);
                     const daysToMon = (8 - nextMon.getDay()) % 7 || 7;
                     nextMon.setDate(nextMon.getDate() + daysToMon);
@@ -455,17 +456,15 @@
                     nextFri.setDate(nextFri.getDate() + 4);
                     dl = nextFri.toISOString().split('T')[0];
                 } else if (colId === 'later') {
-                    // 2 weeks from today
                     const later = new Date(todayD);
                     later.setDate(later.getDate() + 14);
                     dl = later.toISOString().split('T')[0];
                 }
-                // 'no_deadline' and 'overdue' → leave empty
                 if (dl) {
                     const deadlineInput = document.getElementById('taskDeadlineDate');
                     if (deadlineInput) deadlineInput.value = dl;
                 }
-            }, 100);
+            }));
         }
         
         // Escape HTML for security

@@ -29,8 +29,10 @@
         async function logTaskChange(taskId, action, changes, oldTask) {
             if (!currentCompany || !taskId) return;
             
-            // Debounce: same task + action within 2s = skip
-            const dKey = taskId + '_' + action;
+            // Debounce: same task + action + fields within 2s = skip
+            // BUG-AA FIX: include field names in key — was taskId+action only, suppressed different-field edits
+            const changedFields = changes ? Object.keys(changes).sort().join(',') : '';
+            const dKey = taskId + '_' + action + '_' + changedFields;
             const now = Date.now();
             if (_logDebounce.has(dKey) && now - _logDebounce.get(dKey) < 2000) return;
             _logDebounce.set(dKey, now);
