@@ -345,8 +345,14 @@
                 id: 1,
                 title: "ЯК ПРАЦЮВАТИ З GOOGLE ДИСКОМ",
                 title_ru: "КАК РАБОТАТЬ С GOOGLE ДИСКОМ",
+                title_en: "HOW TO WORK WITH GOOGLE DRIVE",
+                title_pl: "JAK PRACOWAĆ Z GOOGLE DRIVE",
+                title_de: "WIE MAN MIT GOOGLE DRIVE ARBEITET",
                 subtitle: "Підготовка робочого середовища програми",
                 subtitle_ru: "Подготовка рабочей среды программы",
+                subtitle_en: "Setting up the program work environment",
+                subtitle_pl: "Przygotowanie środowiska pracy programu",
+                subtitle_de: "Vorbereitung der Arbeitsumgebung des Programms",
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -622,6 +628,9 @@
 
                 homework: `<ol><li>Створіть папку <strong>Систематизація TALKO — Ваше Ім'я</strong></li><li>Створіть у ній 2 Google Документи та 1 Google Таблицю</li><li>Налаштуйте доступ: <em>Усі, хто має посилання — можуть коментувати</em></li><li>Вставте посилання на папку у поле нижче</li></ol>`,
                 homework_ru: `<ol><li>Создайте папку <strong>Систематизация TALKO — Ваше Имя</strong></li><li>Создайте в ней 2 Google Документа и 1 Google Таблицу</li><li>Настройте доступ: <em>Все, у кого есть ссылка — могут комментировать</em></li><li>Вставьте ссылку на папку в поле ниже</li></ol>`,
+                homework_en: `<ol><li>Create a folder <strong>TALKO Systematization — Your Name</strong></li><li>Create 2 Google Docs and 1 Google Sheet inside it</li><li>Set access: <em>Anyone with the link can comment</em></li><li>Paste the folder link in the field below</li></ol>`,
+                homework_pl: `<ol><li>Utwórz folder <strong>Systematyzacja TALKO — Twoje Imię</strong></li><li>Utwórz w nim 2 Dokumenty Google i 1 Arkusz Google</li><li>Ustaw dostęp: <em>Każdy z linkiem może komentować</em></li><li>Wklej link do folderu w polu poniżej</li></ol>`,
+                homework_de: `<ol><li>Erstellen Sie einen Ordner <strong>TALKO-Systematisierung — Ihr Name</strong></li><li>Erstellen Sie darin 2 Google Docs und 1 Google Tabelle</li><li>Zugriff einstellen: <em>Jeder mit dem Link kann kommentieren</em></li><li>Fügen Sie den Ordner-Link in das Feld unten ein</li></ol>`,
 
                 homeworkLink: null,
                 homeworkLinkName: null,
@@ -632,8 +641,14 @@
                 id: 2,
                 title: "СЛОВНИК ТЕРМІНІВ + ЕФЕКТИВНЕ НАВЧАННЯ",
                 title_ru: "СЛОВАРЬ ТЕРМИНОВ + ЭФФЕКТИВНОЕ ОБУЧЕНИЕ",
+                title_en: "GLOSSARY + EFFECTIVE LEARNING",
+                title_pl: "SŁOWNIK POJĘĆ + EFEKTYWNA NAUKA",
+                title_de: "GLOSSAR + EFFEKTIVES LERNEN",
                 subtitle: "Технологія навчання + прояснення 13 термінів",
                 subtitle_ru: "Технология обучения + прояснение 13 терминов",
+                subtitle_en: "Learning technology + clarification of 13 key terms",
+                subtitle_pl: "Technologia uczenia się + wyjaśnienie 13 pojęć",
+                subtitle_de: "Lerntechnologie + Erklärung von 13 Schlüsselbegriffen",
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -933,6 +948,9 @@
 
                 homework: `<ol><li>Відкрийте асистента термінів</li><li>Пройдіть перші 13 термінів</li><li>Подумайте, як вони застосовуються у вашому бізнесі</li></ol>`,
                 homework_ru: `<ol><li>Откройте ассистента терминов</li><li>Пройдите первые 13 терминов</li><li>Подумайте, как они применяются в вашем бизнесе</li></ol>`,
+                homework_en: `<ol><li>Open the terminology assistant</li><li>Go through the first 13 terms</li><li>Think about how they apply in your business</li></ol>`,
+                homework_pl: `<ol><li>Otwórz asystenta terminologii</li><li>Przejdź przez pierwsze 13 pojęć</li><li>Zastanów się, jak stosują się w Twoim biznesie</li></ol>`,
+                homework_de: `<ol><li>Öffnen Sie den Terminologie-Assistenten</li><li>Gehen Sie die ersten 13 Begriffe durch</li><li>Überlegen Sie, wie sie in Ihrem Unternehmen angewendet werden</li></ol>`,
 
                 homeworkLink: null,
                 homeworkLinkName: null,
@@ -943,8 +961,14 @@
                 id: 3,
                 title: "НАЛАШТУВАННЯ ДОСТУПУ ДО AI",
                 title_ru: "НАСТРОЙКА ДОСТУПА К AI",
+                title_en: "SETTING UP AI ACCESS",
+                title_pl: "KONFIGURACJA DOSTĘPU DO AI",
+                title_de: "KI-ZUGANG EINRICHTEN",
                 subtitle: "ChatGPT та Claude AI — ваші робочі інструменти",
                 subtitle_ru: "ChatGPT и Claude AI — ваши рабочие инструменты",
+                subtitle_en: "ChatGPT and Claude AI — your working tools",
+                subtitle_pl: "ChatGPT i Claude AI — Twoje narzędzia pracy",
+                subtitle_de: "ChatGPT und Claude AI — Ihre Arbeitswerkzeuge",
                 
                 videoLink: null,
                 materialsLink: null,
@@ -1118,6 +1142,111 @@
 </div>
                 `,
 
+                lessonContent_en: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">What this lesson is for</div></div>
+    <div class="lesson-block-content">
+        <p>All AI assistants in the program run on <strong>ChatGPT</strong> and <strong>Claude AI</strong>. To work through the lessons, you need access to both platforms.</p>
+        <p style="margin-top: 12px;">This lesson will help you set up accounts and log in.</p>
+    </div>
+</div>
+<div class="lesson-block step">
+    <div class="lesson-block-header"><div class="lesson-block-title">STEP 1. Register in ChatGPT</div></div>
+    <div class="lesson-block-content">
+        <p>ChatGPT is the main platform for the program's AI assistants.</p>
+        <ol>
+            <li>Go to <a href="https://chat.openai.com" target="_blank" style="color: var(--primary); font-weight: 600;">chat.openai.com</a></li>
+            <li>Click <strong>"Sign up"</strong> (or "Log in" if you already have an account)</li>
+            <li>Sign up via Google, Microsoft or email</li>
+            <li>Confirm your email if required</li>
+        </ol>
+        <div style="margin-top: 12px;"><a href="https://chat.openai.com" target="_blank" class="action-btn primary">Open ChatGPT</a></div>
+    </div>
+</div>
+<div class="lesson-block step">
+    <div class="lesson-block-header"><div class="lesson-block-title">STEP 2. Register in Claude AI</div></div>
+    <div class="lesson-block-content">
+        <p>Claude AI is used for several program assistants.</p>
+        <ol>
+            <li>Go to <a href="https://claude.ai" target="_blank" style="color: var(--primary); font-weight: 600;">claude.ai</a></li>
+            <li>Click <strong>"Sign up"</strong></li>
+            <li>Sign up via Google or email</li>
+        </ol>
+        <div style="margin-top: 12px;"><a href="https://claude.ai" target="_blank" class="action-btn primary">Open Claude AI</a></div>
+    </div>
+</div>
+<div class="result-block"><strong>Result.</strong> Both platforms are set up and ready — you can now work with any AI assistant in the program.</div>`,
+
+                lessonContent_pl: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Po co ta lekcja</div></div>
+    <div class="lesson-block-content">
+        <p>Wszystkie asystenty AI w programie działają na <strong>ChatGPT</strong> i <strong>Claude AI</strong>. Aby przechodzić lekcje, potrzebujesz dostępu do obu platform.</p>
+        <p style="margin-top: 12px;">Ta lekcja pomoże Ci skonfigurować konta i się zalogować.</p>
+    </div>
+</div>
+<div class="lesson-block step">
+    <div class="lesson-block-header"><div class="lesson-block-title">KROK 1. Rejestracja w ChatGPT</div></div>
+    <div class="lesson-block-content">
+        <p>ChatGPT to główna platforma dla asystentów AI w programie.</p>
+        <ol>
+            <li>Przejdź na <a href="https://chat.openai.com" target="_blank" style="color: var(--primary); font-weight: 600;">chat.openai.com</a></li>
+            <li>Kliknij <strong>"Sign up"</strong> (lub "Log in" jeśli masz już konto)</li>
+            <li>Zarejestruj się przez Google, Microsoft lub email</li>
+            <li>Potwierdź email jeśli wymagane</li>
+        </ol>
+        <div style="margin-top: 12px;"><a href="https://chat.openai.com" target="_blank" class="action-btn primary">Otwórz ChatGPT</a></div>
+    </div>
+</div>
+<div class="lesson-block step">
+    <div class="lesson-block-header"><div class="lesson-block-title">KROK 2. Rejestracja w Claude AI</div></div>
+    <div class="lesson-block-content">
+        <p>Claude AI jest używany dla kilku asystentów programu.</p>
+        <ol>
+            <li>Przejdź na <a href="https://claude.ai" target="_blank" style="color: var(--primary); font-weight: 600;">claude.ai</a></li>
+            <li>Kliknij <strong>"Sign up"</strong></li>
+            <li>Zarejestruj się przez Google lub email</li>
+        </ol>
+        <div style="margin-top: 12px;"><a href="https://claude.ai" target="_blank" class="action-btn primary">Otwórz Claude AI</a></div>
+    </div>
+</div>
+<div class="result-block"><strong>Wynik.</strong> Obie platformy są gotowe — możesz teraz korzystać z dowolnego asystenta AI w programie.</div>`,
+
+                lessonContent_de: `
+<div class="lesson-block intro">
+    <div class="lesson-block-header"><div class="lesson-block-title">Worum geht es in dieser Lektion</div></div>
+    <div class="lesson-block-content">
+        <p>Alle KI-Assistenten des Programms laufen auf <strong>ChatGPT</strong> und <strong>Claude AI</strong>. Um die Lektionen zu durchlaufen, brauchen Sie Zugang zu beiden Plattformen.</p>
+        <p style="margin-top: 12px;">Diese Lektion hilft Ihnen, Konten einzurichten und sich anzumelden.</p>
+    </div>
+</div>
+<div class="lesson-block step">
+    <div class="lesson-block-header"><div class="lesson-block-title">SCHRITT 1. Bei ChatGPT registrieren</div></div>
+    <div class="lesson-block-content">
+        <p>ChatGPT ist die Hauptplattform für die KI-Assistenten des Programms.</p>
+        <ol>
+            <li>Gehen Sie zu <a href="https://chat.openai.com" target="_blank" style="color: var(--primary); font-weight: 600;">chat.openai.com</a></li>
+            <li>Klicken Sie auf <strong>"Sign up"</strong> (oder "Log in" wenn Sie schon ein Konto haben)</li>
+            <li>Registrieren Sie sich über Google, Microsoft oder E-Mail</li>
+            <li>Bestätigen Sie Ihre E-Mail falls erforderlich</li>
+        </ol>
+        <div style="margin-top: 12px;"><a href="https://chat.openai.com" target="_blank" class="action-btn primary">ChatGPT öffnen</a></div>
+    </div>
+</div>
+<div class="lesson-block step">
+    <div class="lesson-block-header"><div class="lesson-block-title">SCHRITT 2. Bei Claude AI registrieren</div></div>
+    <div class="lesson-block-content">
+        <p>Claude AI wird für mehrere Programmassistenten verwendet.</p>
+        <ol>
+            <li>Gehen Sie zu <a href="https://claude.ai" target="_blank" style="color: var(--primary); font-weight: 600;">claude.ai</a></li>
+            <li>Klicken Sie auf <strong>"Sign up"</strong></li>
+            <li>Registrieren Sie sich über Google oder E-Mail</li>
+        </ol>
+        <div style="margin-top: 12px;"><a href="https://claude.ai" target="_blank" class="action-btn primary">Claude AI öffnen</a></div>
+    </div>
+</div>
+<div class="result-block"><strong>Ergebnis.</strong> Beide Plattformen sind eingerichtet — Sie können nun mit jedem KI-Assistenten im Programm arbeiten.</div>`,
+
                 homework_ru: `
 <div class="lesson-block homework">
     <div class="lesson-block-header">
@@ -1152,18 +1281,110 @@
     </div>
 </div>
                 `,
+                homework_en: `
+<div class="lesson-block homework">
+    <div class="lesson-block-header"><div class="lesson-block-title">Homework</div></div>
+    <div class="lesson-block-content">
+        <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">1</span>
+                <span style="flex: 1; min-width: 150px;">Register in ChatGPT</span>
+                <a href="https://chat.openai.com" target="_blank" style="padding: 6px 12px; background: #22c55e; color: white; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none;">Open</a>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">2</span>
+                <span style="flex: 1; min-width: 150px;">Register in Claude AI</span>
+                <a href="https://claude.ai" target="_blank" style="padding: 6px 12px; background: #22c55e; color: white; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none;">Open</a>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">3</span>
+                <span>If both sites open — you are ready!</span>
+            </div>
+        </div>
+        <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                <span style="font-weight: 700; color: #166534; font-size: 15px;">WRITE "DONE"</span>
+            </div>
+            <textarea placeholder="Done" style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white;"></textarea>
+        </div>
+    </div>
+</div>
+                `,
+                homework_pl: `
+<div class="lesson-block homework">
+    <div class="lesson-block-header"><div class="lesson-block-title">Zadanie domowe</div></div>
+    <div class="lesson-block-content">
+        <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">1</span>
+                <span style="flex: 1; min-width: 150px;">Zarejestruj się w ChatGPT</span>
+                <a href="https://chat.openai.com" target="_blank" style="padding: 6px 12px; background: #22c55e; color: white; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none;">Otwórz</a>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">2</span>
+                <span style="flex: 1; min-width: 150px;">Zarejestruj się w Claude AI</span>
+                <a href="https://claude.ai" target="_blank" style="padding: 6px 12px; background: #22c55e; color: white; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none;">Otwórz</a>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">3</span>
+                <span>Jeśli oba serwisy się otwierają — gotowe!</span>
+            </div>
+        </div>
+        <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
+            <span style="font-weight: 700; color: #166534; font-size: 15px;">NAPISZ „GOTOWE"</span>
+            <textarea placeholder="Gotowe" style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white; margin-top:8px;"></textarea>
+        </div>
+    </div>
+</div>
+                `,
+                homework_de: `
+<div class="lesson-block homework">
+    <div class="lesson-block-header"><div class="lesson-block-title">Hausaufgabe</div></div>
+    <div class="lesson-block-content">
+        <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">1</span>
+                <span style="flex: 1; min-width: 150px;">Bei ChatGPT registrieren</span>
+                <a href="https://chat.openai.com" target="_blank" style="padding: 6px 12px; background: #22c55e; color: white; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none;">Öffnen</a>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">2</span>
+                <span style="flex: 1; min-width: 150px;">Bei Claude AI registrieren</span>
+                <a href="https://claude.ai" target="_blank" style="padding: 6px 12px; background: #22c55e; color: white; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none;">Öffnen</a>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <span style="background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0;">3</span>
+                <span>Wenn beide Seiten öffnen — fertig!</span>
+            </div>
+        </div>
+        <div style="padding: 16px; background: #f0fdf4; border-radius: 10px; border: 2px solid #22c55e;">
+            <span style="font-weight: 700; color: #166534; font-size: 15px;">SCHREIBEN SIE „FERTIG"</span>
+            <textarea placeholder="Fertig" style="width: 100%; min-height: 50px; padding: 12px; border: 1px solid #22c55e; border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; background: white; margin-top:8px;"></textarea>
+        </div>
+    </div>
+</div>
+                `,
                 
                 homeworkLink: "https://chat.openai.com",
                 homeworkLinkName: "→ Відкрити ChatGPT",
                 homeworkLinkName_ru: "→ Открыть ChatGPT",
+                homeworkLinkName_en: "→ Open ChatGPT",
+                homeworkLinkName_pl: "→ Otwórz ChatGPT",
+                homeworkLinkName_de: "→ ChatGPT öffnen",
                 time: 10
             },
             {
                 id: 4,
                 title: "СИСТЕМА РОЗПОРЯДЖЕНЬ",
                 title_ru: "СИСТЕМА РАСПОРЯЖЕНИЙ",
+                title_en: "ORDER SYSTEM",
+                title_pl: "SYSTEM POLECEŃ",
+                title_de: "ANWEISUNGSSYSTEM",
                 subtitle: "Як ставити завдання так, щоб їх виконували",
                 subtitle_ru: "Как ставить задачи так, чтобы их выполняли",
+                subtitle_en: "How to give instructions that actually get done",
+                subtitle_pl: "Jak wydawać polecenia, które są wykonywane",
+                subtitle_de: "Wie man Anweisungen gibt, die tatsächlich ausgeführt werden",
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -1490,6 +1711,9 @@
 </div>`,
 
                 homework: `<ol><li>Складіть одне реальне розпорядження для співробітника</li><li>Перевірте, чи є всі 7 елементів</li><li>Відправте його реальному співробітнику</li><li>Напишіть, кому і яке розпорядження ви відправили</li></ol>`,
+                homework_en: `<ol><li>Compose one real instruction for an employee</li><li>Check that all 7 elements are present</li><li>Send it to a real employee</li><li>Write who you sent it to and what the instruction was</li></ol>`,
+                homework_pl: `<ol><li>Napisz jedno realne polecenie dla pracownika</li><li>Sprawdź, czy wszystkie 7 elementów jest obecnych</li><li>Wyślij je do prawdziwego pracownika</li><li>Napisz komu i jakie polecenie wysłałeś</li></ol>`,
+                homework_de: `<ol><li>Verfassen Sie eine echte Anweisung für einen Mitarbeiter</li><li>Prüfen Sie, ob alle 7 Elemente vorhanden sind</li><li>Senden Sie sie an einen echten Mitarbeiter</li><li>Schreiben Sie, an wen und welche Anweisung Sie gesendet haben</li></ol>`,
                 homework_ru: `<ol><li>Составьте одно реальное распоряжение для сотрудника</li><li>Проверьте, есть ли все 7 элементов</li><li>Отправьте его реальному сотруднику</li><li>Напишите, кому и какое распоряжение вы отправили</li></ol>`,
 
                 homeworkLink: null,
@@ -1502,8 +1726,14 @@
                 id: 5,
                 title: "СИСТЕМА РАДАР",
                 title_ru: "СИСТЕМА РАДАР",
+                title_en: "RADAR SYSTEM",
+                title_pl: "SYSTEM RADAR",
+                title_de: "RADAR-SYSTEM",
                 subtitle: "Як перестати бути «пожежником» для власної команди",
                 subtitle_ru: "Как перестать быть «пожарным» для собственной команды",
+                subtitle_en: "How to stop being the 'firefighter' for your own team",
+                subtitle_pl: "Jak przestać być 'strażakiem' dla własnego zespołu",
+                subtitle_de: "Wie man aufhört, der 'Feuerwehrmann' des eigenen Teams zu sein",
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -2019,6 +2249,9 @@
 </div>`,
 
                 homework: `<ol><li>Протестуйте AI-асистента на 3–5 реальних ситуаціях з вашого бізнесу</li><li>Оберіть 1 підлеглого і дайте йому інструмент у роботу</li><li>Попросіть перед наступним питанням пройти через AI</li><li>Напишіть у полі відповіді: для якої ролі впровадили і в яких ситуаціях будете використовувати</li></ol>`,
+                homework_en: `<ol><li>Test the AI assistant on 3–5 real situations from your business</li><li>Choose 1 employee and give them the tool to use at work</li><li>Ask them to go through the AI before bringing the next question</li><li>Write in the answer field: for which role you implemented it and in which situations you will use it</li></ol>`,
+                homework_pl: `<ol><li>Przetestuj asystenta AI na 3–5 rzeczywistych sytuacjach z Twojego biznesu</li><li>Wybierz 1 pracownika i daj mu narzędzie do pracy</li><li>Poproś, żeby przed następnym pytaniem przeszedł przez AI</li><li>Napisz w polu odpowiedzi: dla jakiej roli wdrożyłeś i w jakich sytuacjach będziesz używać</li></ol>`,
+                homework_de: `<ol><li>Testen Sie den KI-Assistenten an 3–5 realen Situationen aus Ihrem Unternehmen</li><li>Wählen Sie 1 Mitarbeiter und geben Sie ihm das Tool für die Arbeit</li><li>Bitten Sie ihn, vor der nächsten Frage durch die KI zu gehen</li><li>Schreiben Sie im Antwortfeld: für welche Rolle Sie es eingeführt haben und in welchen Situationen Sie es nutzen werden</li></ol>`,
                 homework_ru: `<ol><li>Протестируйте AI-ассистента на 3–5 реальных ситуациях из вашего бизнеса</li><li>Выберите 1 подчинённого и дайте ему инструмент в работу</li><li>Попросите перед следующим вопросом пройти через AI</li><li>Напишите в поле ответа: для какой роли внедрили и в каких ситуациях будете использовать</li></ol>`,
 
                 homeworkLink: "https://chatgpt.com/g/g-684bb075301481918669f787231e1af7-radar-ai-alex-talko",
@@ -2031,8 +2264,14 @@
                 id: 6,
                 title: "ТЕХНІЧНИЙ ПРОВІДНИК",
                 title_ru: "ТЕХНИЧЕСКИЙ ПРОВОДНИК",
+                title_en: "TECHNICAL GUIDE",
+                title_pl: "PRZEWODNIK TECHNICZNY",
+                title_de: "TECHNISCHER LEITFADEN",
                 subtitle: "AI-інструмент для покрокового налаштування технічних рішень",
                 subtitle_ru: "AI-инструмент для пошагового внедрения технических решений",
+                subtitle_en: "AI tool for step-by-step setup of technical solutions",
+                subtitle_pl: "Narzędzie AI do krok po kroku konfigurowania rozwiązań technicznych",
+                subtitle_de: "KI-Tool für die schrittweise Einrichtung technischer Lösungen",
                 hideAiBlock: true,
 
                 videoLink: null,
@@ -2375,6 +2614,9 @@
 </div>`,
 
                 homework: `<ol><li>Оберіть одну реальну технічну задачу і пройдіть її через Технічного провідника до готового результату</li><li>Напишіть у полі відповіді: яку задачу обрали, що вдалося налаштувати, який результат отримали</li></ol>`,
+                homework_en: `<ol><li>Choose one real technical task and complete it through the Technical Guide to a finished result</li><li>Write in the answer field: which task you chose, what you managed to set up, what result you got</li></ol>`,
+                homework_pl: `<ol><li>Wybierz jedno realne zadanie techniczne i przeprowadź je przez Przewodnika Technicznego do gotowego wyniku</li><li>Napisz w polu odpowiedzi: jakie zadanie wybrałeś, co udało się skonfigurować, jaki wynik otrzymałeś</li></ol>`,
+                homework_de: `<ol><li>Wählen Sie eine echte technische Aufgabe und führen Sie sie über den Technischen Leitfaden zu einem fertigen Ergebnis</li><li>Schreiben Sie im Antwortfeld: welche Aufgabe Sie gewählt haben, was Sie konfigurieren konnten, welches Ergebnis Sie erhalten haben</li></ol>`,
                 homework_ru: `<ol><li>Выберите одну реальную техническую задачу и пройдите её через Технического проводника до готового результата</li><li>Напишите в поле ответа: какую задачу выбрали, что удалось настроить, какой результат получили</li></ol>`,
 
                 homeworkLink: "https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-tekhnichnii-providnik",
