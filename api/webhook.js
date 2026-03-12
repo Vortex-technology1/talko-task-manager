@@ -146,6 +146,8 @@ module.exports = async (req, res) => {
             currentNodeId: null, waitingForInput: null,
             data: {}, tags: [],
         };
+        // FIX CE: refresh senderName on every message (user may rename in Telegram)
+        if (normalized.senderName) session.senderName = normalized.senderName;
 
         // FIX 1: Deduplication — ігноруємо повторний update_id від Telegram
         const updateId = body?.update_id || body?.entry?.[0]?.id || null;
@@ -446,21 +448,27 @@ module.exports = async (req, res) => {
                     // Знаходимо assignee по ролі: owner/manager → беремо з compData
                     const assignRole = n.taskAssignRole || 'owner';
                     const ownerId = _compData.ownerId || null;
+                    // FIX CD: add required rendering fields: assigneeName, creatorName, deadlineDate, createdDate
+                    const _today = new Date().toISOString().split('T')[0];
                     const taskData = {
-                        title: taskTitle,
-                        status: 'new',
-                        priority: n.taskPriority || 'medium',
-                        assigneeId: ownerId,
-                        creatorId: 'system',
-                        autoCreated: true,
-                        autoSource: 'bot_flow',
-                        flowId: flow?.id || null,
-                        senderName: session.senderName || '',
-                        senderId: session.senderId || '',
-                        channel: session.channel || '',
-                        contactData: session.data || {},
-                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        title:        taskTitle,
+                        status:       'new',
+                        priority:     n.taskPriority || 'medium',
+                        assigneeId:   ownerId,
+                        assigneeName: _compData.ownerName || '',         // FIX CD
+                        creatorId:    'system',
+                        creatorName:  'TALKO Bot',                        // FIX CD
+                        deadlineDate: _today,                             // FIX CD: default today
+                        createdDate:  _today,                             // FIX CD
+                        autoCreated:  true,
+                        autoSource:   'bot_flow',
+                        flowId:       flow?.id || null,
+                        senderName:   session.senderName || '',
+                        senderId:     session.senderId || '',
+                        channel:      session.channel || '',
+                        contactData:  session.data || {},
+                        createdAt:    admin.firestore.FieldValue.serverTimestamp(),
+                        updatedAt:    admin.firestore.FieldValue.serverTimestamp(),
                     };
                     await compRef.collection('tasks').add(taskData);
                     console.log('[webhook] talko_task created:', taskTitle);
@@ -479,21 +487,39 @@ module.exports = async (req, res) => {
                         .where('flowId', '==', flow?.id || '')
                         .limit(1).get();
                     if (existingDeals.empty) {
+                        // FIX CC: fetch pipeline to get pipelineId (required for CRM kanban query)
+                        let ccPipelineId = 'default', ccStageColor = '#6b7280', ccProbability = 10;
+                        try {
+                            const ccPipSnap = await compRef.collection('crm_pipeline').where('isDefault','==',true).limit(1).get();
+                            if (!ccPipSnap.empty) {
+                                ccPipelineId = ccPipSnap.docs[0].id;
+                                const ccStages = ccPipSnap.docs[0].data().stages || [];
+                                const ccStage = ccStages.find(s => s.id === targetStage) || ccStages[0];
+                                ccStageColor = ccStage?.color || '#6b7280';
+                                ccProbability = ccStage?.probability || 10;
+                            }
+                        } catch(e) { console.warn('[talko_deal] pipeline fetch error:', e.message); }
                         const dealRef = compRef.collection('crm_deals').doc();
                         await dealRef.set({
-                            id: dealRef.id,
-                            title: dealTitle,
-                            stage: targetStage,
-                            status: 'open',
-                            amount: 0,
-                            currency: 'UAH',
-                            source: 'telegram_bot',
-                            flowId: flow?.id || null,
-                            botContactId: session.channel + '_' + session.senderId,
-                            clientName: session.senderName || '',
-                            description: session.data?.ai_response || session.data?.main_problem || '',
-                            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            id:            dealRef.id,
+                            title:         dealTitle,
+                            stage:         targetStage,
+                            stageColor:    ccStageColor,
+                            status:        'open',
+                            amount:        0,
+                            currency:      'UAH',
+                            source:        'telegram_bot',
+                            flowId:        flow?.id || null,
+                            botContactId:  session.channel + '_' + session.senderId,
+                            clientName:    session.senderName || '',
+                            description:   session.data?.ai_response || session.data?.main_problem || '',
+                            pipelineId:    ccPipelineId,          // FIX CC: required for CRM kanban
+                            probability:   ccProbability,
+                            stageEnteredAt: admin.firestore.FieldValue.serverTimestamp(),
+                            assignedToId:  _compData.ownerId || null,
+                            assignedToName: _compData.ownerName || '',
+                            createdAt:     admin.firestore.FieldValue.serverTimestamp(),
+                            updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
                         });
                         console.log('[webhook] talko_deal created:', dealTitle);
                     } else {
@@ -981,25 +1007,33 @@ async function finish(session, flow, compRef, channel) {
                 const firstStage = pipeline?.stages?.[0] || { id: 'new', label: 'Новий', color: '#6b7280' };
 
                 const dealRef = compRef.collection('crm_deals').doc();
+                // FIX CB: pipelineId is required — CRM _subscribeDeals filters .where('pipelineId','==',...)
+                // Without it deal is created but NEVER appears on CRM kanban board
+                const pipelineId = !pipSnap.empty ? pipSnap.docs[0].id : 'default';
                 await dealRef.set({
-                    id:           dealRef.id,
-                    title:        `Лід: ${clientName}`,
+                    id:              dealRef.id,
+                    title:           `Лід: ${clientName}`,
                     clientId,
                     clientName,
-                    clientNiche:  d.business_type || d.niche || '',
-                    stage:        firstStage.id,
-                    stageColor:   firstStage.color,
-                    status:       'open',
-                    amount:       0,
-                    currency:     'UAH',
-                    source:       'telegram_bot',
-                    flowId:       flow?.id || null,
-                    flowName:     flow?.name || '',
-                    botContactId: contactId,
-                    description:  d.ai_response || d.main_problem || '',
-                    tags:         session.tags || [],
-                    createdAt:    admin.firestore.FieldValue.serverTimestamp(),
-                    updatedAt:    admin.firestore.FieldValue.serverTimestamp(),
+                    clientNiche:     d.business_type || d.niche || '',
+                    stage:           firstStage.id,
+                    stageColor:      firstStage.color || '#6b7280',
+                    status:          'open',
+                    amount:          0,
+                    currency:        'UAH',
+                    source:          'telegram_bot',
+                    flowId:          flow?.id || null,
+                    flowName:        flow?.name || '',
+                    botContactId:    contactId,
+                    description:     d.ai_response || d.main_problem || '',
+                    tags:            session.tags || [],
+                    pipelineId,                                          // FIX CB: critical for kanban query
+                    probability:     firstStage.probability || 10,
+                    stageEnteredAt:  admin.firestore.FieldValue.serverTimestamp(),
+                    assignedToId:    _compData.ownerId || null,          // FIX CB: assign to owner by default
+                    assignedToName:  _compData.ownerName || '',
+                    createdAt:       admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt:       admin.firestore.FieldValue.serverTimestamp(),
                 });
 
                 await dealRef.collection('history').add({
