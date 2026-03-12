@@ -3380,6 +3380,196 @@
     </div>
 </div>`,
 
+                lessonContent_en: `
+<style>
+.l6e{margin-bottom:1.75rem}.l6e:last-child{margin-bottom:0}.l6e-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l6e-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l6e-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l6e-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l6e-card p{font-size:.9rem;color:#374151;line-height:1.65}.l6e-card p+p{margin-top:.7rem}.l6e-grid{display:grid;gap:.5rem;margin-top:.75rem}.l6e-item{display:flex;align-items:flex-start;gap:.7rem;padding:.75rem .9rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l6e-ic{width:32px;height:32px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l6e-it{font-size:.875rem;color:#374151;line-height:1.5;padding-top:.1rem}.l6e-steps{display:grid;gap:.5rem;margin-top:.75rem}.l6e-step{display:flex;align-items:flex-start;gap:.75rem;padding:.8rem .95rem;background:#f8fafc;border-radius:10px}.l6e-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.05rem}.l6e-st2{font-size:.875rem;color:#374151;line-height:1.5}.l6e-ex{margin-top:.5rem;padding:.5rem .75rem;background:white;border:1px solid #e2e8f0;border-radius:7px;font-size:.8rem;color:#6b7280;font-style:italic}.l6e-no{display:grid;gap:.4rem;margin-top:.75rem}.l6e-ni{display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;background:#fef2f2;border-radius:8px;font-size:.85rem;color:#7f1d1d}.l6e-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l6e-th{display:flex;align-items:flex-start;gap:.85rem}.l6e-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l6e-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l6e-td{font-size:.82rem;color:#525252;line-height:1.5}.l6e-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l6e-res{display:grid;gap:.45rem;margin-top:.75rem}.l6e-ri{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f8fafc;border-radius:9px;font-size:.875rem;color:#374151}
+</style>
+<div class="l6e">
+    <div class="l6e-sl">What it is</div>
+    <div class="l6e-st">Technical Guide — step by step to a finished result</div>
+    <div class="l6e-card">
+        <p>The Technical Guide is an AI tool that helps set up typical technical solutions for business without confusion and chaos.</p>
+        <p>You simply describe the result you want to achieve — and the guide leads you step by step: what to do, where to click, what to check, what to fix if something doesn't work.</p>
+    </div>
+    <div class="l6e-grid">
+        <div class="l6e-item"><div class="l6e-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><div class="l6e-it">CRM setup and sales funnels</div></div>
+        <div class="l6e-item"><div class="l6e-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="l6e-it">Creating tables and dashboards in Google Sheets</div></div>
+        <div class="l6e-item"><div class="l6e-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><div class="l6e-it">Basic automations and organizing work tools</div></div>
+    </div>
+</div>
+<div class="l6e-div"></div>
+<div class="l6e">
+    <div class="l6e-sl">When to open it</div>
+    <div class="l6e-st">When to use the Technical Guide</div>
+    <div class="l6e-grid">
+        <div class="l6e-item"><div class="l6e-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="l6e-it">When you need to set something up but don't know where to start</div></div>
+        <div class="l6e-item"><div class="l6e-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="l6e-it">When you got stuck mid-setup and don't know what went wrong</div></div>
+        <div class="l6e-item"><div class="l6e-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="l6e-it">When you need to explain a technical task to an employee without getting lost in details</div></div>
+    </div>
+</div>
+<div class="l6e-div"></div>
+<div class="l6e">
+    <div class="l6e-sl">Purpose</div>
+    <div class="l6e-st">So that technical setup doesn't stop your work</div>
+    <div class="l6e-card">
+        <p>Most owners lose hours trying to figure out technical tools on their own: watching videos, reading documentation, trying and failing.</p>
+        <p>The Technical Guide replaces all of that. You describe your goal — it gives you a ready step-by-step plan specific to your situation.</p>
+    </div>
+    <div class="l6e-no">
+        <div class="l6e-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>No more 3-hour YouTube rabbit holes</div>
+        <div class="l6e-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>No more generic instructions that don't fit your case</div>
+        <div class="l6e-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>No more calling a tech specialist for every small thing</div>
+    </div>
+</div>
+<div class="l6e-div"></div>
+<div class="l6e">
+    <div class="l6e-sl">Tool</div>
+    <div class="l6e-tool">
+        <div class="l6e-th"><div class="l6e-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><div><div class="l6e-tn">Technical Guide AI</div><div class="l6e-td">Describe what you want to achieve — the guide will build a step-by-step plan: what to do, where to click, what to check.</div></div></div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="l6e-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75" width="15" height="15"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Open Technical Guide</a>
+    </div>
+</div>
+<div class="l6e-div"></div>
+<div class="l6e">
+    <div class="l6e-sl">Your task</div>
+    <div class="l6e-st">Complete a real task through to a finished result</div>
+    <div class="l6e-steps">
+        <div class="l6e-step"><div class="l6e-sn">1</div><div class="l6e-st2">Choose one real technical task you need to complete<div class="l6e-ex">Example: "Set up a Google Sheet to track expenses" or "Connect a form to a spreadsheet"</div></div></div>
+        <div class="l6e-step"><div class="l6e-sn">2</div><div class="l6e-st2">Open the Technical Guide and describe your goal</div></div>
+        <div class="l6e-step"><div class="l6e-sn">3</div><div class="l6e-st2">Follow the steps until you get a finished result — don't stop halfway</div></div>
+    </div>
+</div>
+<div class="l6e-div"></div>
+<div class="l6e">
+    <div class="l6e-sl">Result</div>
+    <div class="l6e-st">After this lesson you will have</div>
+    <div class="l6e-res">
+        <div class="l6e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>One real technical task completed</div>
+        <div class="l6e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Experience working with the Technical Guide</div>
+        <div class="l6e-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>A tool you can use for any future technical task</div>
+    </div>
+</div>`,
+
+                lessonContent_pl: `
+<style>
+.l6p{margin-bottom:1.75rem}.l6p:last-child{margin-bottom:0}.l6p-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l6p-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l6p-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l6p-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l6p-card p{font-size:.9rem;color:#374151;line-height:1.65}.l6p-card p+p{margin-top:.7rem}.l6p-grid{display:grid;gap:.5rem;margin-top:.75rem}.l6p-item{display:flex;align-items:flex-start;gap:.7rem;padding:.75rem .9rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l6p-ic{width:32px;height:32px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l6p-it{font-size:.875rem;color:#374151;line-height:1.5;padding-top:.1rem}.l6p-steps{display:grid;gap:.5rem;margin-top:.75rem}.l6p-step{display:flex;align-items:flex-start;gap:.75rem;padding:.8rem .95rem;background:#f8fafc;border-radius:10px}.l6p-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.05rem}.l6p-st2{font-size:.875rem;color:#374151;line-height:1.5}.l6p-ex{margin-top:.5rem;padding:.5rem .75rem;background:white;border:1px solid #e2e8f0;border-radius:7px;font-size:.8rem;color:#6b7280;font-style:italic}.l6p-no{display:grid;gap:.4rem;margin-top:.75rem}.l6p-ni{display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;background:#fef2f2;border-radius:8px;font-size:.85rem;color:#7f1d1d}.l6p-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l6p-th{display:flex;align-items:flex-start;gap:.85rem}.l6p-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l6p-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l6p-td{font-size:.82rem;color:#525252;line-height:1.5}.l6p-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l6p-res{display:grid;gap:.45rem;margin-top:.75rem}.l6p-ri{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f8fafc;border-radius:9px;font-size:.875rem;color:#374151}
+</style>
+<div class="l6p">
+    <div class="l6p-sl">Co to jest</div>
+    <div class="l6p-st">Przewodnik Techniczny — krok po kroku do gotowego wyniku</div>
+    <div class="l6p-card">
+        <p>Przewodnik Techniczny to narzędzie AI, które pomaga konfigurować typowe rozwiązania techniczne dla biznesu bez zamieszania i chaosu.</p>
+        <p>Po prostu opisujesz jaki wynik chcesz uzyskać — i przewodnik prowadzi cię krok po kroku: co zrobić, gdzie kliknąć, co sprawdzić, co naprawić jeśli coś nie działa.</p>
+    </div>
+    <div class="l6p-grid">
+        <div class="l6p-item"><div class="l6p-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><div class="l6p-it">Konfiguracja CRM i lejków sprzedaży</div></div>
+        <div class="l6p-item"><div class="l6p-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="l6p-it">Tworzenie tabel i dashboardów w Google Sheets</div></div>
+        <div class="l6p-item"><div class="l6p-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><div class="l6p-it">Podstawowe automatyzacje i organizacja narzędzi pracy</div></div>
+    </div>
+</div>
+<div class="l6p-div"></div>
+<div class="l6p">
+    <div class="l6p-sl">Cel</div>
+    <div class="l6p-st">Aby techniczne ustawienia nie zatrzymywały twojej pracy</div>
+    <div class="l6p-card">
+        <p>Większość właścicieli traci godziny próbując samodzielnie rozgryźć narzędzia techniczne: oglądają filmy, czytają dokumentację, próbują i się nie udaje.</p>
+        <p>Przewodnik Techniczny zastępuje to wszystko. Opisujesz swój cel — on daje gotowy plan krok po kroku dostosowany do twojej sytuacji.</p>
+    </div>
+    <div class="l6p-no">
+        <div class="l6p-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Koniec z 3-godzinnymi filmami na YouTube</div>
+        <div class="l6p-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Koniec z ogólnymi instrukcjami które nie pasują do twojego przypadku</div>
+        <div class="l6p-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Koniec z dzwonieniem do specjalisty przy każdej drobnostce</div>
+    </div>
+</div>
+<div class="l6p-div"></div>
+<div class="l6p">
+    <div class="l6p-sl">Narzędzie</div>
+    <div class="l6p-tool">
+        <div class="l6p-th"><div class="l6p-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><div><div class="l6p-tn">Przewodnik Techniczny AI</div><div class="l6p-td">Opisz co chcesz osiągnąć — przewodnik zbuduje plan krok po kroku: co zrobić, gdzie kliknąć, co sprawdzić.</div></div></div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="l6p-btn">Otwórz Przewodnika Technicznego</a>
+    </div>
+</div>
+<div class="l6p-div"></div>
+<div class="l6p">
+    <div class="l6p-sl">Twoje zadanie</div>
+    <div class="l6p-st">Przeprowadź realne zadanie do gotowego wyniku</div>
+    <div class="l6p-steps">
+        <div class="l6p-step"><div class="l6p-sn">1</div><div class="l6p-st2">Wybierz jedno realne zadanie techniczne które musisz wykonać<div class="l6p-ex">Przykład: „Skonfiguruj arkusz Google do śledzenia wydatków" lub „Podłącz formularz do arkusza"</div></div></div>
+        <div class="l6p-step"><div class="l6p-sn">2</div><div class="l6p-st2">Otwórz Przewodnika Technicznego i opisz swój cel</div></div>
+        <div class="l6p-step"><div class="l6p-sn">3</div><div class="l6p-st2">Idź przez kroki aż do gotowego wyniku — nie zatrzymuj się w połowie</div></div>
+    </div>
+</div>
+<div class="l6p-div"></div>
+<div class="l6p">
+    <div class="l6p-sl">Wynik</div>
+    <div class="l6p-st">Po tej lekcji będziesz mieć</div>
+    <div class="l6p-res">
+        <div class="l6p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Jedno realne zadanie techniczne wykonane</div>
+        <div class="l6p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Doświadczenie pracy z Przewodnikiem Technicznym</div>
+        <div class="l6p-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Narzędzie które możesz używać do każdego kolejnego zadania technicznego</div>
+    </div>
+</div>`,
+
+                lessonContent_de: `
+<style>
+.l6d{margin-bottom:1.75rem}.l6d:last-child{margin-bottom:0}.l6d-div{height:1px;background:#e2e8f0;margin:1.75rem 0}.l6d-sl{font-size:.7rem;font-weight:700;letter-spacing:.09em;color:#9ca3af;text-transform:uppercase;margin-bottom:.65rem}.l6d-st{font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:.65rem}.l6d-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem}.l6d-card p{font-size:.9rem;color:#374151;line-height:1.65}.l6d-card p+p{margin-top:.7rem}.l6d-grid{display:grid;gap:.5rem;margin-top:.75rem}.l6d-item{display:flex;align-items:flex-start;gap:.7rem;padding:.75rem .9rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px}.l6d-ic{width:32px;height:32px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l6d-it{font-size:.875rem;color:#374151;line-height:1.5;padding-top:.1rem}.l6d-steps{display:grid;gap:.5rem;margin-top:.75rem}.l6d-step{display:flex;align-items:flex-start;gap:.75rem;padding:.8rem .95rem;background:#f8fafc;border-radius:10px}.l6d-sn{width:24px;height:24px;background:#22c55e;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.05rem}.l6d-st2{font-size:.875rem;color:#374151;line-height:1.5}.l6d-ex{margin-top:.5rem;padding:.5rem .75rem;background:white;border:1px solid #e2e8f0;border-radius:7px;font-size:.8rem;color:#6b7280;font-style:italic}.l6d-no{display:grid;gap:.4rem;margin-top:.75rem}.l6d-ni{display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;background:#fef2f2;border-radius:8px;font-size:.85rem;color:#7f1d1d}.l6d-tool{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.25rem}.l6d-th{display:flex;align-items:flex-start;gap:.85rem}.l6d-ti{width:40px;height:40px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.l6d-tn{font-weight:700;color:#1a1a1a;font-size:.95rem;margin-bottom:.25rem}.l6d-td{font-size:.82rem;color:#525252;line-height:1.5}.l6d-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;padding:.5rem 1.05rem;background:#22c55e;color:white;border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none}.l6d-res{display:grid;gap:.45rem;margin-top:.75rem}.l6d-ri{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;background:#f8fafc;border-radius:9px;font-size:.875rem;color:#374151}
+</style>
+<div class="l6d">
+    <div class="l6d-sl">Was ist das</div>
+    <div class="l6d-st">Technischer Leitfaden — Schritt für Schritt zum fertigen Ergebnis</div>
+    <div class="l6d-card">
+        <p>Der Technische Leitfaden ist ein KI-Tool das hilft, typische technische Lösungen für Unternehmen ohne Verwirrung und Chaos einzurichten.</p>
+        <p>Sie beschreiben einfach welches Ergebnis Sie erzielen möchten — und der Leitfaden führt Sie Schritt für Schritt: was zu tun ist, wo zu klicken, was zu prüfen, was zu beheben wenn etwas nicht funktioniert.</p>
+    </div>
+    <div class="l6d-grid">
+        <div class="l6d-item"><div class="l6d-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><div class="l6d-it">CRM-Einrichtung und Verkaufstrichter</div></div>
+        <div class="l6d-item"><div class="l6d-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="l6d-it">Erstellen von Tabellen und Dashboards in Google Sheets</div></div>
+        <div class="l6d-item"><div class="l6d-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="16" height="16"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><div class="l6d-it">Grundlegende Automatisierungen und Organisation von Arbeitswerkzeugen</div></div>
+    </div>
+</div>
+<div class="l6d-div"></div>
+<div class="l6d">
+    <div class="l6d-sl">Zweck</div>
+    <div class="l6d-st">Damit technische Einrichtung Ihre Arbeit nicht aufhält</div>
+    <div class="l6d-card">
+        <p>Die meisten Inhaber verlieren Stunden damit, technische Tools selbst herauszufinden: Videos ansehen, Dokumentationen lesen, versuchen und scheitern.</p>
+        <p>Der Technische Leitfaden ersetzt all das. Sie beschreiben Ihr Ziel — er gibt Ihnen einen fertigen Schritt-für-Schritt-Plan speziell für Ihre Situation.</p>
+    </div>
+    <div class="l6d-no">
+        <div class="l6d-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Kein 3-stündiges YouTube-Rabbit-Hole mehr</div>
+        <div class="l6d-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Keine allgemeinen Anleitungen mehr die nicht zu Ihrem Fall passen</div>
+        <div class="l6d-ni"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.75" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Kein Anruf beim Techniker für jede Kleinigkeit mehr</div>
+    </div>
+</div>
+<div class="l6d-div"></div>
+<div class="l6d">
+    <div class="l6d-sl">Werkzeug</div>
+    <div class="l6d-tool">
+        <div class="l6d-th"><div class="l6d-ti"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="20" height="20"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><div><div class="l6d-tn">Technischer Leitfaden KI</div><div class="l6d-td">Beschreiben Sie was Sie erreichen möchten — der Leitfaden erstellt einen Schritt-für-Schritt-Plan: was zu tun, wo zu klicken, was zu prüfen.</div></div></div>
+        <a href="https://chatgpt.com/g/g-685640bc592881918743da9332b83f31-ai-alex-talko-technical-lead" target="_blank" class="l6d-btn">Technischen Leitfaden öffnen</a>
+    </div>
+</div>
+<div class="l6d-div"></div>
+<div class="l6d">
+    <div class="l6d-sl">Ihre Aufgabe</div>
+    <div class="l6d-st">Führen Sie eine echte Aufgabe bis zum fertigen Ergebnis durch</div>
+    <div class="l6d-steps">
+        <div class="l6d-step"><div class="l6d-sn">1</div><div class="l6d-st2">Wählen Sie eine echte technische Aufgabe die Sie erledigen müssen<div class="l6d-ex">Beispiel: „Google-Tabelle zur Ausgabenverfolgung einrichten" oder „Formular mit Tabelle verbinden"</div></div></div>
+        <div class="l6d-step"><div class="l6d-sn">2</div><div class="l6d-st2">Öffnen Sie den Technischen Leitfaden und beschreiben Sie Ihr Ziel</div></div>
+        <div class="l6d-step"><div class="l6d-sn">3</div><div class="l6d-st2">Folgen Sie den Schritten bis zum fertigen Ergebnis — hören Sie nicht auf halbem Weg auf</div></div>
+    </div>
+</div>
+<div class="l6d-div"></div>
+<div class="l6d">
+    <div class="l6d-sl">Ergebnis</div>
+    <div class="l6d-st">Nach dieser Lektion haben Sie</div>
+    <div class="l6d-res">
+        <div class="l6d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Eine echte technische Aufgabe erledigt</div>
+        <div class="l6d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Erfahrung mit dem Technischen Leitfaden</div>
+        <div class="l6d-ri"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>Ein Werkzeug das Sie für jede zukünftige technische Aufgabe nutzen können</div>
+    </div>
+</div>`,
+
                 homework: `<ol><li>Оберіть одну реальну технічну задачу і пройдіть її через Технічного провідника до готового результату</li><li>Напишіть у полі відповіді: яку задачу обрали, що вдалося налаштувати, який результат отримали</li></ol>`,
                 homework_en: `<ol><li>Choose one real technical task and complete it through the Technical Guide to a finished result</li><li>Write in the answer field: which task you chose, what you managed to set up, what result you got</li></ol>`,
                 homework_pl: `<ol><li>Wybierz jedno realne zadanie techniczne i przeprowadź je przez Przewodnika Technicznego do gotowego wyniku</li><li>Napisz w polu odpowiedzi: jakie zadanie wybrałeś, co udało się skonfigurować, jaki wynik otrzymałeś</li></ol>`,
