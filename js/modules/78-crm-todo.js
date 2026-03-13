@@ -521,10 +521,12 @@ window._crmTodoAddTestDeals = async function() {
         return;
     }
     const pipelineId = window.crm.pipeline.id;
-    const today = _todayStr();
-    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-    const yStr = yesterday.getFullYear()+'-'+String(yesterday.getMonth()+1).padStart(2,'0')+'-'+String(yesterday.getDate()).padStart(2,'0');
-    const tomorrow = _tomorrowStr();
+    const _d = new Date();
+    const today = _d.getFullYear()+'-'+String(_d.getMonth()+1).padStart(2,'0')+'-'+String(_d.getDate()).padStart(2,'0');
+    const _dy = new Date(); _dy.setDate(_dy.getDate()-1);
+    const yStr = _dy.getFullYear()+'-'+String(_dy.getMonth()+1).padStart(2,'0')+'-'+String(_dy.getDate()).padStart(2,'0');
+    const _dt = new Date(); _dt.setDate(_dt.getDate()+1);
+    const tomorrow = _dt.getFullYear()+'-'+String(_dt.getMonth()+1).padStart(2,'0')+'-'+String(_dt.getDate()).padStart(2,'0');
 
     const testDeals = [
         { clientName:'Іванченко Марія', phone:'+380671234567', stage:'new',         note:'Цікавиться імплантацією',  nextContactDate: yStr,     source:'instagram' },
