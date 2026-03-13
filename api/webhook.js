@@ -96,8 +96,20 @@ module.exports = async (req, res) => {
                 const mode      = req.query['hub.mode'];
                 const challenge = req.query['hub.challenge'];
                 const verify    = req.query['hub.verify_token'];
-                // Перевіряємо verify token якщо є в companySettings
-                return res.status(200).send(challenge || 'ok');
+                // PROB 4 FIX: перевіряємо verify_token з Firestore.
+                // Без перевірки — будь-хто може зареєструвати наш URL як свій FB webhook.
+                if (mode === 'subscribe' && challenge) {
+                    try {
+                        const vDoc = await db.collection('companies').doc(companyId).get();
+                        const stored = vDoc.data()?.fbVerifyToken || vDoc.data()?.integrations?.facebook?.verifyToken;
+                        if (stored && verify !== stored) {
+                            console.warn(`[webhook] FB verify_token mismatch for ${companyId}`);
+                            return res.status(403).send('Forbidden');
+                        }
+                    } catch(e) { console.warn('[webhook] FB token check:', e.message); }
+                    return res.status(200).send(challenge);
+                }
+                return res.status(400).send('Bad Request');
             }
             const entry = body?.entry?.[0];
             // Leadgen подія (Facebook Lead Ads)
@@ -753,9 +765,10 @@ async function callAI(node, userText, session, compRef, compData) {
 
         let responseText = null;
 
-        // FIX 2: Timeout 25 сек щоб не зависнути
+        // BUG H FIX: aiAbort/aiTimeout оголошені ПЕРЕД try щоб catch мав до них доступ.
+        // Раніше — якщо provider невідомий, aiTimeout не оголошувався → ReferenceError у catch.
         const aiAbort = new AbortController();
-        const aiTimeout = setTimeout(() => aiAbort.abort(), 25000);
+        let aiTimeout = setTimeout(() => aiAbort.abort(), 25000);
 
         // ── OpenAI / Deepseek (same API format) ──────────────
         if (provider === 'openai' || provider === 'deepseek' || model.startsWith('gpt-') || model.startsWith('o3') || model.startsWith('o4') || model.startsWith('o1') || model.startsWith('deepseek')) {
@@ -815,9 +828,10 @@ async function callAI(node, userText, session, compRef, compData) {
             responseText = d.candidates?.[0]?.content?.parts?.[0]?.text || null;
         }
 
+        clearTimeout(aiTimeout); // BUG H FIX: завжди чистимо таймер перед поверненням
         return responseText || node.config?.fallback || node.fallback || 'Дякуємо!';
     } catch(e) {
-        clearTimeout(aiTimeout);
+        if (typeof aiTimeout !== 'undefined') clearTimeout(aiTimeout);
         if (e.name === 'AbortError') {
             console.error('[callAI] TIMEOUT after 25s');
             return node.config?.fallback || node.fallback || 'Вибачте, відповідь зайняла надто довго. Спробуйте ще раз.';
@@ -972,29 +986,19 @@ async function editTg(token, chatId, messageId, text, buttons) {
 async function saveIncomingMessage(compRef, channel, normalized, botId) {
     try {
         const contactId = `${channel}_${normalized.senderId}`;
-        const msgData = {
-            text:      normalized.text,
-            from:      'user',
-            direction: 'in',
-            read:      false,
-            timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        };
 
-        // Пишемо в contacts/{id}/messages/
-        await compRef.collection('contacts').doc(contactId)
-            .collection('messages').add(msgData);
-
-        // Оновлюємо контакт: lastMessage + unreadCount++
+        // BUG G FIX: повідомлення вже записане в ранньому блоці (рядок ~181).
+        // Тут тільки оновлюємо метадані контакту — без дублів в messages.
         await compRef.collection('contacts').doc(contactId).set({
-            senderId:      normalized.senderId,
-            senderName:    normalized.senderName || '',
+            senderId:        normalized.senderId,
+            senderName:      normalized.senderName || '',
             channel,
-            botId:         botId || null,
-            lastMessage:   normalized.text.slice(0, 100),
-            lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
+            botId:           botId || null,
+            lastMessage:     normalized.text.slice(0, 100),
+            lastMessageAt:   admin.firestore.FieldValue.serverTimestamp(),
             lastMessageFrom: 'user',
-            unreadCount:   admin.firestore.FieldValue.increment(1),
-            updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
+            unreadCount:     admin.firestore.FieldValue.increment(1),
+            updatedAt:       admin.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
 
         console.log(`[saveIncoming] ${contactId}: "${normalized.text.slice(0, 50)}"`);

@@ -150,7 +150,7 @@ function _renderShell() {
         <!-- Content -->
         <div style="flex:1;overflow:hidden;">
             <div id="crmViewTodo" style="height:100%;overflow:auto;display:none;"></div>
-            <div id="crmViewKanban" style="height:100%;overflow:auto;"></div>
+            <div id="crmViewKanban" style="height:100%;display:flex;flex-direction:column;overflow:hidden;"></div>
             <div id="crmViewClients" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
             <div id="crmViewActivities" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
             <div id="crmViewAnalytics" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
@@ -391,8 +391,8 @@ function _renderKanban() {
 
     // Висота kanban board залежить від наявності switcher рядка
     const switcherHeight = crm.pipelines.length > 1 ? 89 : 57;
-    const filterBarH = 41; // filter bar висота
-    const bulkBarH   = crm.selectedIds.size > 0 ? 41 : 0;
+    // PROB 2 FIX: filterBarH видалено — board тепер flex:1, висота авторозрахунок
+    // bulkBarH видалено — board тепер flex:1, calc() не потрібен (PROB 2 FIX)
 
     c.innerHTML = `
     ${limitBanner}
@@ -460,7 +460,8 @@ function _renderKanban() {
     </div>` : ''}
 
     <!-- Kanban board -->
-    <div style="display:flex;gap:0;height:calc(100% - ${switcherHeight + filterBarH + bulkBarH}px);overflow-x:auto;">
+    <!-- PROB 2 FIX: board отримує flex:1 замість calc(). Батько crmViewKanban — flex-column → висота автоматична. -->
+    <div id="crmKanbanBoard" style="display:flex;gap:0;flex:1;min-height:0;overflow-x:auto;">
         ${mainStages.map(s => _kanbanCol(s)).join('')}
         ${lostStage ? _kanbanColLost(lostStage) : ''}
     </div>`;
@@ -2193,6 +2194,10 @@ window.crmRunAI = async function(dealId) {
 // СТВОРЕННЯ УГОДИ
 // ══════════════════════════════════════════════════════════
 // ── Client autocomplete для форми створення угоди ─────────
+// BUG E FIX: зберігаємо посилання на поточний hide-handler щоб знімати перед додаванням нового.
+// Раніше кожен символ в полі = новий addEventListener → memory leak + множинні закриття.
+let _crmAutocompleteHideHandler = null;
+
 window.crmClientAutocomplete = function(q) {
     const dd  = document.getElementById('nd_clientDropdown');
     const ov  = document.getElementById('crmCreateDealOverlay');
@@ -2201,6 +2206,12 @@ window.crmClientAutocomplete = function(q) {
     // Скидаємо прив'язку при зміні тексту
     if (ov) { delete ov.dataset.clientId; delete ov.dataset.clientLinked; }
     document.getElementById('nd_clientLinked').style.display = 'none';
+
+    // BUG E FIX: знімаємо попередній listener перед реєстрацією нового
+    if (_crmAutocompleteHideHandler) {
+        document.removeEventListener('click', _crmAutocompleteHideHandler);
+        _crmAutocompleteHideHandler = null;
+    }
 
     const all = crm.clients || [];
     const filtered = q.length < 1 ? all.slice(0, 8) :
@@ -2226,15 +2237,16 @@ window.crmClientAutocomplete = function(q) {
         </div>`).join('');
     dd.style.display = 'block';
 
-    // Закриваємо при кліку поза
+    // Один listener — зберігаємо посилання щоб можна було зняти наступного разу
     setTimeout(() => {
-        const hide = (e) => {
+        _crmAutocompleteHideHandler = function(e) {
             if (!dd.contains(e.target) && e.target.id !== 'nd_client') {
                 dd.style.display = 'none';
-                document.removeEventListener('click', hide);
+                document.removeEventListener('click', _crmAutocompleteHideHandler);
+                _crmAutocompleteHideHandler = null;
             }
         };
-        document.addEventListener('click', hide);
+        document.addEventListener('click', _crmAutocompleteHideHandler);
     }, 0);
 };
 
@@ -2516,7 +2528,13 @@ window.crmOpenClient = function(clientId) {
     if (!card) return;
     card.style.display = 'block';
 
-    const clientDeals = crm.deals.filter(d => d.clientId===cl.id || d.clientName===cl.name);
+    // BUG F FIX: фільтруємо по clientId як пріоритет.
+    // Fallback на clientName тільки для старих угод де clientId відсутній.
+    // Два клієнти з однаковим ім'ям більше не отримають чужі угоди.
+    const clientDeals = crm.deals.filter(d =>
+        d.clientId === cl.id ||
+        (!d.clientId && d.clientName === cl.name)
+    );
     const colors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b'];
     const color = colors[(cl.name||'').charCodeAt(0) % 4];
 
@@ -2915,10 +2933,10 @@ function _renderAnalytics() {
         const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
         const label = d.toLocaleString('uk-UA', {month:'short'});
         const newDeals  = crm.deals.filter(dl => (_dealDate(dl,'createdAt')||new Date(0)).toISOString().startsWith(key)).length;
-        // FIX: won/lost — по lostAt або wonAt якщо є, fallback на updatedAt
-        const wonDeals  = crm.deals.filter(dl => dl.stage==='won'  && (_dealDate(dl,'wonAt')  || _dealDate(dl,'lostAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).length;
+        // BUG A FIX: wonDeals НЕ використовує lostAt — угода won ніколи не мала lostAt як дату виграшу
+        const wonDeals  = crm.deals.filter(dl => dl.stage==='won'  && (_dealDate(dl,'wonAt')  || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).length;
         const lostDeals = crm.deals.filter(dl => dl.stage==='lost' && (_dealDate(dl,'lostAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).length;
-        const wonRevenue = crm.deals.filter(dl => dl.stage==='won' && (_dealDate(dl,'wonAt') || _dealDate(dl,'lostAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).reduce((s,dl)=>s+(dl.amount||0),0);
+        const wonRevenue = crm.deals.filter(dl => dl.stage==='won' && (_dealDate(dl,'wonAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).reduce((s,dl)=>s+(dl.amount||0),0);
         months.push({ label, newDeals, wonDeals, lostDeals, wonRevenue });
     }
     const maxBar = Math.max(...months.map(m => Math.max(m.newDeals, m.wonDeals, m.lostDeals)), 1);
@@ -3336,9 +3354,11 @@ window.crmMoveDealToPipeline = async function(dealId, targetPipelineId, targetPi
     if (!targetPipeline) return;
     const firstStage = targetPipeline.stages?.[0]?.id || 'new';
 
-    const confirmed = confirm(
-        `Перемістити "${deal.clientName || deal.title || 'лід'}" у воронку "${targetPipelineName}"?\n→ Стадія: "${targetPipeline.stages?.[0]?.label || firstStage}"`
-    );
+    // BUG C FIX: showConfirmModal замість нативного confirm()
+    const _moveMsg = `Перемістити "${deal.clientName || deal.title || 'лід'}" у воронку "${targetPipelineName}"?`;
+    const confirmed = await (window.showConfirmModal
+        ? showConfirmModal(_moveMsg, { danger: false })
+        : Promise.resolve(confirm(_moveMsg)));
     if (!confirmed) return;
 
     try {
