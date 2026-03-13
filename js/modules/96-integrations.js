@@ -120,7 +120,7 @@ function _renderAll() {
         </div>
     </div>
 
-    <!-- Webhook / Ліди з лендингів -->
+    <!-- Viber Bot -->\n    <div style=\"${card}\">\n        <div style=\"${sTitle}\">\n            <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/></svg>\n            Viber Bot ${badge(!!s.viberBotToken)}\n        </div>\n        <div style=\"margin-bottom:0.6rem;\">\n            <label style=\"${lbl}\">Bot Token</label>\n            <div style=\"display:flex;gap:0.4rem;\">\n                <input id=\"intg_vibertoken\" type=\"password\" value=\"${s.viberBotToken||''}\"\n                    placeholder=\"xxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxx-xxxxxxxx\" style=\"${inp}flex:1;font-family:monospace;\">\n                <button onclick=\"intgToggleVisibility('intg_vibertoken')\"\n                    style=\"padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;\">${I.eye}</button>\n            </div>\n            <div style=\"font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;\">\n                Отримати token: <a href=\"https://partners.viber.com\" target=\"_blank\" style=\"color:#7c3aed;\">partners.viber.com</a> → Create bot\n            </div>\n        </div>\n        <div style=\"margin-bottom:0.75rem;\">\n            <label style=\"${lbl}\">ID чату менеджера (для сповіщень)</label>\n            <input id=\"intg_viberchat\" type=\"text\" value=\"${s.viberManagerId||''}\"\n                placeholder=\"+380XXXXXXXXX або user_id\" style=\"${inp}\">\n            <div style=\"font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;\">\n                Отримати ID: напишіть боту будь-що — він відповість з вашим Viber ID\n            </div>\n        </div>\n        <div style=\"margin-bottom:0.75rem;\">\n            <label style=\"${lbl}\">Webhook URL (встановіть у Viber)</label>\n            <div style=\"display:flex;gap:0.4rem;\">\n                <input type=\"text\" readonly\n                    value=\"https://taskmanagerai-vert.vercel.app/api/webhook?channel=viber&cid=${window.currentCompanyId||''}\"\n                    style=\"${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;\">\n                <button onclick=\"intgCopy('https://taskmanagerai-vert.vercel.app/api/webhook?channel=viber&cid=${window.currentCompanyId||''}')\"  \n                    style=\"padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;\">${I.copy}</button>\n            </div>\n        </div>\n        <div style=\"display:flex;gap:0.4rem;\">\n            <button onclick=\"intgSaveViber()\"\n                style=\"padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\">\n                ${I.save} Зберегти\n            </button>\n            <button onclick=\"intgTestViber()\"\n                style=\"padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\">\n                ${I.test} Тест\n            </button>\n            <button onclick=\"intgSetViberWebhook()\"\n                style=\"padding:0.4rem 0.9rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;\">\n                ${I.webhook} Підключити webhook\n            </button>\n        </div>\n    </div>\n\n    <!-- Webhook / Ліди з лендингів -->
     <div style="${card}">
         <div style="${sTitle}">${I.webhook} Ліди з лендингів → CRM ${badge(!!(s.webhookApiKey))}</div>
 
@@ -295,6 +295,80 @@ window.intgSave = async function(field, inputId, isSecret = true) {
         intg.settings[field] = val;
         if (typeof showToast === 'function') showToast(window.t('savedOk'), 'success');
         _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+window.intgSaveViber = async function() {
+    const token   = document.getElementById('intg_vibertoken')?.value.trim();
+    const manager = document.getElementById('intg_viberchat')?.value.trim();
+    if (!token) { if (typeof showToast === 'function') showToast('Введіть Viber Bot Token', 'error'); return; }
+    try {
+        await window.companyRef().update({
+            viberBotToken:  token,
+            viberManagerId: manager || '',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        intg.settings.viberBotToken  = token;
+        intg.settings.viberManagerId = manager;
+        if (typeof showToast === 'function') showToast('Viber Bot збережено', 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+window.intgTestViber = async function() {
+    const token   = document.getElementById('intg_vibertoken')?.value.trim() || intg.settings?.viberBotToken;
+    const manager = document.getElementById('intg_viberchat')?.value.trim()  || intg.settings?.viberManagerId;
+    if (!token || !manager) {
+        if (typeof showToast === 'function') showToast('Заповніть Token і ID менеджера', 'error');
+        return;
+    }
+    try {
+        const res = await fetch('https://chatapi.viber.com/pa/send_message', {
+            method: 'POST',
+            headers: { 'X-Viber-Auth-Token': token, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                receiver: manager,
+                min_api_version: 1,
+                sender: { name: 'TALKO CRM' },
+                type: 'text',
+                text: '✅ TALKO: тестове повідомлення. Viber Bot працює!',
+            }),
+        });
+        const data = await res.json();
+        if (data.status === 0) {
+            if (typeof showToast === 'function') showToast('Повідомлення відправлено у Viber ✅', 'success');
+        } else {
+            if (typeof showToast === 'function') showToast('Viber помилка: ' + (data.status_message || data.status), 'error');
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+window.intgSetViberWebhook = async function() {
+    const token = document.getElementById('intg_vibertoken')?.value.trim() || intg.settings?.viberBotToken;
+    if (!token) { if (typeof showToast === 'function') showToast('Спочатку введіть Token', 'error'); return; }
+    const webhookUrl = `https://taskmanagerai-vert.vercel.app/api/webhook?channel=viber&cid=${window.currentCompanyId||''}`;
+    try {
+        const res = await fetch('https://chatapi.viber.com/pa/set_webhook', {
+            method: 'POST',
+            headers: { 'X-Viber-Auth-Token': token, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                url: webhookUrl,
+                event_types: ['message', 'conversation_started'],
+                send_name: true,
+            }),
+        });
+        const data = await res.json();
+        if (data.status === 0) {
+            if (typeof showToast === 'function') showToast('Webhook підключено ✅ Viber бот активний', 'success');
+        } else {
+            if (typeof showToast === 'function') showToast('Помилка webhook: ' + (data.status_message || data.status), 'error');
+        }
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }

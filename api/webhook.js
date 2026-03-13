@@ -78,6 +78,18 @@ module.exports = async (req, res) => {
                 text: msg?.text || cb?.data || '',
             };
             if (cb) callbackQueryId = cb.id;
+        } else if (channel === 'viber') {
+            // Viber webhook payload
+            const evType = body?.event;
+            if (evType === 'webhook') return res.status(200).json({ status: 0, status_message: 'ok' });
+            const sender = body?.sender;
+            const msgObj = body?.message;
+            if (!sender || !msgObj) return res.status(200).json({ ok: true, skipped: 'no sender/message' });
+            normalized = {
+                senderId:   sender.id || '',
+                senderName: sender.name || '',
+                text:       msgObj.text || '',
+            };
         } else if (channel === 'facebook' || channel === 'instagram') {
             const messaging = body?.entry?.[0]?.messaging?.[0];
             if (!messaging) return res.status(200).json({ ok: true, skipped: 'no messaging' });
@@ -103,7 +115,9 @@ module.exports = async (req, res) => {
             botToken = bd.data().token || bd.data().botToken;
         }
         if (!botToken) {
-            botToken = _compData?.integrations?.telegram?.botToken;
+            botToken = channel === 'viber'
+                ? _compData?.viberBotToken
+                : _compData?.integrations?.telegram?.botToken;
         }
         if (!botToken) return res.status(200).json({ ok: true, skipped: 'no token' });
 
@@ -193,7 +207,7 @@ module.exports = async (req, res) => {
         }
 
         if (!flow) {
-            if (isStart) await sendTg(botToken, normalized.senderId, 'Вітаємо! Бот активний ✅');
+            if (isStart) await sendMsg(channel, botToken, normalized.senderId, 'Вітаємо! Бот активний ✅');
             // Немає активного флоу — зберігаємо як вхідне повідомлення для ручного чату
             await saveIncomingMessage(compRef, channel, normalized, botDocId);
             return res.status(200).json({ ok: true, saved: 'no-flow-incoming' });
@@ -329,7 +343,7 @@ module.exports = async (req, res) => {
                 if (!text.trim()) { nodeId = n.nextNode || null; continue; }
                 await sendTyping(botToken, normalized.senderId);
                 const btns = n.buttons?.length ? n.buttons : (n.options?.length ? n.options : null);
-                await sendTg(botToken, normalized.senderId, text, btns);
+                await sendMsg(channel, botToken, normalized.senderId, text, btns);
                 await saveBotMessage(compRef, contactId, text);
                 if (btns?.length) {
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
@@ -392,7 +406,7 @@ module.exports = async (req, res) => {
                     if (thinkingMsgId) {
                         await editTg(botToken, normalized.senderId, thinkingMsgId, cleanReply, aiBtns.length ? aiBtns : null);
                     } else {
-                        await sendTg(botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null);
+                        await sendMsg(channel, botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null);
                         await saveBotMessage(compRef, contactId, cleanReply);
                     }
                 }
@@ -535,7 +549,7 @@ module.exports = async (req, res) => {
             } else if (n.type === 'end' || n.type === 'finish') {
                 if (n.text) {
                     const endText = interp(n.text, session.data);
-                    await sendTg(botToken, normalized.senderId, endText);
+                    await sendMsg(channel, botToken, normalized.senderId, endText);
                     await saveBotMessage(compRef, contactId, endText);
                 }
                 await finish(session, flow, compRef, channel);
@@ -810,6 +824,45 @@ async function sendTg(token, chatId, text, buttons) {
         const result = await r.json();
         if (!result.ok) console.error('[sendTg] Error:', result.description, JSON.stringify(payload).slice(0, 200));
     } catch(e) { console.error('[sendTg] fetch error:', e.message); }
+}
+
+async function sendViber(token, receiverId, text, buttons) {
+    if (!token || !receiverId) return;
+    const payload = {
+        receiver: receiverId,
+        min_api_version: 1,
+        sender: { name: 'TALKO CRM' },
+        type: 'text',
+        text: (text || ' ').trim().slice(0, 7000),
+    };
+    if (buttons?.length) {
+        // Viber keyboard
+        payload.keyboard = {
+            Type: 'keyboard',
+            DefaultHeight: false,
+            Buttons: buttons.slice(0, 6).map(b => ({
+                ActionType: b.url ? 'open-url' : 'reply',
+                ActionBody: b.url || b.label || b.text || '?',
+                Text: b.label || b.text || '?',
+                TextSize: 'regular',
+            })),
+        };
+    }
+    try {
+        const r = await fetch('https://chatapi.viber.com/pa/send_message', {
+            method: 'POST',
+            headers: { 'X-Viber-Auth-Token': token, 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const result = await r.json();
+        if (result.status !== 0) console.error('[sendViber] Error:', result.status_message, result.status);
+    } catch(e) { console.error('[sendViber] fetch error:', e.message); }
+}
+
+// Єдина точка відправки — вибирає канал автоматично
+async function sendMsg(channel, token, chatId, text, buttons) {
+    if (channel === 'viber') return sendViber(token, chatId, text, buttons);
+    return sendTg(token, chatId, text, buttons);
 }
 
 // Показує індикатор "бот друкує..." в Telegram
