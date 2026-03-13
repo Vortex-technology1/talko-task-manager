@@ -161,9 +161,13 @@ function _renderShell() {
     crmSwitchTab('kanban');
 }
 
-// Фільтрація угод з урахуванням filters state
+// Фільтрація угод з урахуванням filters state + прав доступу
 function _filteredDeals() {
-    let deals = crm.deals;
+    // Права доступу: менеджер бачить тільки свої угоди
+    let deals = (window.crmAccessFilter && window.crm?.pipeline?.accessMode === 'own')
+        ? window.crmAccessFilter(crm.deals)
+        : crm.deals;
+
     const f = crm.filters;
     if (f.search) {
         const q = f.search.toLowerCase();
@@ -1471,10 +1475,11 @@ window.crmOpenDeal = function(dealId) {
                     </div>
                 </div>
                 <div style="display:flex;gap:0.4rem;align-items:center;">
+                    ${(window.crmAccess?.canDelete(deal) !== false) ? `
                     <button onclick="crmDeleteDeal('${deal.id}')"
                         style="padding:0.35rem;background:none;border:1px solid #e8eaed;border-radius:6px;
                         cursor:pointer;color:#9ca3af;display:flex;align-items:center;"
-                        title="${window.t('crmDelete')}">${I.trash}</button>
+                        title="${window.t('crmDelete')}">${I.trash}</button>` : ''}
                     <button onclick="crmCloseDeal()"
                         style="padding:0.35rem;background:none;border:1px solid #e8eaed;border-radius:6px;
                         cursor:pointer;color:#9ca3af;display:flex;align-items:center;">${I.close}</button>
@@ -3421,6 +3426,9 @@ function _renderCRMSettings() {
                 </div>`;
             }).join('')}
         </div>
+
+        <!-- Права доступу менеджерів -->
+        ${(window.crmRenderAccessSettings ? window.crmRenderAccessSettings() : '')}
 
     </div>`;
 }

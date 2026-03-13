@@ -65,6 +65,7 @@
                     }
                 }
                 currentUserData = userDoc.exists ? { id: user.uid, ...userDoc.data() } : { id: user.uid, email: user.email, role: 'employee' };
+                window.currentUserData = currentUserData; // expose для CRM та інших модулів
                 
                 const companyDoc = await db.collection('companies').doc(companyId).get();
                 const companyData = companyDoc.data();
