@@ -1798,37 +1798,56 @@ async function _loadAITab(deal) {
     const content = document.getElementById('crmDealContent');
     if (!content) return;
 
+    const analyzedAt = deal.aiAnalyzedAt
+        ? (deal.aiAnalyzedAt.toDate ? deal.aiAnalyzedAt.toDate() : new Date(deal.aiAnalyzedAt)).toLocaleDateString('uk-UA',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})
+        : '';
+
     if (deal.aiAnalysis) {
         content.innerHTML = `
-        <div style="background:#f0fdf4;border-radius:8px;padding:1rem;border:1px solid #bbf7d0;margin-bottom:0.75rem;">
-            <div style="font-size:0.68rem;font-weight:700;color:#16a34a;text-transform:uppercase;margin-bottom:0.5rem;letter-spacing:0.04em;">
-                AI Аналіз угоди
+        <div style="margin-bottom:0.75rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.65rem;">
+                <div style="display:flex;align-items:center;gap:0.4rem;">
+                    <div style="width:28px;height:28px;background:#f0fdf4;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#22c55e;">${I.ai}</div>
+                    <div style="font-weight:700;font-size:0.88rem;color:#111827;">AI Аналіз</div>
+                </div>
+                ${analyzedAt ? `<div style="font-size:0.68rem;color:#9ca3af;">${analyzedAt}</div>` : ''}
             </div>
-            <div style="font-size:0.82rem;color:#374151;line-height:1.6;white-space:pre-wrap;">${_esc(deal.aiAnalysis)}</div>
+            <div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:1rem;font-size:0.82rem;color:#374151;line-height:1.7;white-space:pre-wrap;">${_esc(deal.aiAnalysis)}</div>
         </div>
         <button onclick="crmRunAI('${deal.id}')"
-            style="width:100%;padding:0.5rem;background:white;color:#22c55e;
-            border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-            Оновити аналіз
+            style="width:100%;padding:0.5rem;background:#f0fdf4;color:#16a34a;
+            border:1px solid #bbf7d0;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
+            ${I.refresh} Оновити аналіз
         </button>`;
         return;
     }
 
+    // Збираємо контекст угоди для preview
+    const ctx = [
+        deal.clientName ? `👤 ${deal.clientName}` : null,
+        deal.amount ? `💰 ${Number(deal.amount).toLocaleString('uk-UA')} грн` : null,
+        deal.note ? `📝 ${deal.note.slice(0,60)}${deal.note.length>60?'...':''}` : null,
+    ].filter(Boolean);
+
     content.innerHTML = `
-    <div style="text-align:center;padding:2rem 1rem;">
-        <div style="width:48px;height:48px;background:#f0fdf4;border-radius:12px;
-            margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;color:#22c55e;">
-            ${I.ai}
+    <div style="text-align:center;padding:1.5rem 1rem;">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:14px;
+            margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;color:#22c55e;font-size:1.4rem;">
+            🤖
         </div>
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.35rem;">AI Аналіз угоди</div>
-        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1.25rem;">
-            Ймовірність закриття, ризики, наступний крок
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:0.35rem;color:#111827;">AI Аналіз угоди</div>
+        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;line-height:1.5;">
+            Ймовірність закриття • Ризики • Наступний крок • Текст повідомлення
         </div>
+        ${ctx.length ? `<div style="background:#f8fafc;border-radius:8px;padding:0.65rem;margin-bottom:1rem;text-align:left;">
+            ${ctx.map(c=>`<div style="font-size:0.75rem;color:#6b7280;margin-bottom:3px;">${_esc(c)}</div>`).join('')}
+        </div>` : ''}
         <button onclick="crmRunAI('${deal.id}')"
-            style="padding:0.6rem 1.5rem;background:#22c55e;color:white;border:none;
-            border-radius:8px;cursor:pointer;font-weight:600;font-size:0.84rem;">
-            Запустити аналіз
+            style="padding:0.65rem 1.75rem;background:#22c55e;color:white;border:none;
+            border-radius:8px;cursor:pointer;font-weight:600;font-size:0.84rem;display:inline-flex;align-items:center;gap:0.4rem;">
+            🤖 Запустити аналіз
         </button>
+        <div style="font-size:0.68rem;color:#d1d5db;margin-top:0.5rem;">~5 секунд</div>
     </div>`;
 }
 

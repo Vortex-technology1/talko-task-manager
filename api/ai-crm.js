@@ -31,6 +31,7 @@ const db = admin.firestore();
 
 // Дозволені origin-и (тільки наш домен)
 const ALLOWED_ORIGINS = [
+    'https://taskmanagerai-vert.vercel.app',
     'https://test-talko-task.vercel.app',
     'http://localhost:5500',
     'http://localhost:3000',
