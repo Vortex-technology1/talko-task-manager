@@ -138,12 +138,20 @@ function _renderShell() {
                         ${I.list}
                     </button>
                 </div>
-                <button onclick="crmOpenCreateDeal()"
-                    style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
-                    background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;
-                    font-size:0.81rem;font-weight:600;">
-                    ${I.plus} Угода
-                </button>
+                <div style="display:flex;gap:0.4rem;">
+                    <button onclick="crmOpenImport()"
+                        style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;
+                        background:white;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;
+                        font-size:0.81rem;font-weight:600;" title="Імпорт клієнтів/угод з CSV">
+                        📥 Імпорт
+                    </button>
+                    <button onclick="crmOpenCreateDeal()"
+                        style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
+                        background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;
+                        font-size:0.81rem;font-weight:600;">
+                        ${I.plus} Угода
+                    </button>
+                </div>
             </div>
         </div>
 
