@@ -789,4 +789,7 @@ function _injectStyles() {
   document.head.appendChild(style);
 }
 
+// ── backward-compat alias (07-data-loading.js calls loadManualIncidents) ──
+window.loadManualIncidents = window.loadIncidentsForJournal;
+
 })();
