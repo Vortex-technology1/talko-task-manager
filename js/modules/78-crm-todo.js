@@ -60,12 +60,13 @@ function _fmtDateShort(ts) {
 // Отримує угоди для "Що робити зараз"
 // Критерії: nextActionDate <= now + 1 день  АБО  немає nextActionDate і updatedAt > 3 днів тому
 function _getTodayDeals() {
-    if (typeof crm === 'undefined' || !crm.deals) return [];
+    if (!window.crm || !window.crm.deals) return [];
+    const crm = window.crm;
     const now   = new Date();
     const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1); tomorrow.setHours(23,59,59,999);
     const active = ['new','contact','negotiation','proposal','won'].includes;
 
-    return crm.deals.filter(d => {
+    return window.crm.deals.filter(d => {
         if (d.stage === 'lost') return false; // втрачені не показуємо
         if (d.nextActionDate) {
             const nad = d.nextActionDate.toDate ? d.nextActionDate.toDate() : new Date(d.nextActionDate);
@@ -123,7 +124,7 @@ window.renderCrmTodo = function() {
     const filter  = window._crmTodoFilter || '';
 
     // Визначаємо стадії для фільтра
-    const stages  = (typeof crm !== 'undefined' && crm.pipeline?.stages) || [];
+    const stages  = (window.crm?.pipeline?.stages) || [];
 
     // Застосовуємо фільтр
     const deals   = filter ? sorted.filter(d => d.stage === filter) : sorted;
@@ -215,7 +216,7 @@ function _renderTodoRow(d, i) {
     const isToday  = fmt?.today;
 
     // Стадія
-    const stages   = (typeof crm !== 'undefined' && crm.pipeline?.stages) || [];
+    const stages   = (window.crm?.pipeline?.stages) || [];
     const stageObj = stages.find(s => s.id === d.stage);
     const stageColor = stageObj?.color || '#6b7280';
     const stageLabel = stageObj?.label || d.stage;
@@ -293,7 +294,7 @@ function _renderTodoRow(d, i) {
 // ── Модальне "Що сталось?" ─────────────────────────────────
 window.crmTodoOpenCard = async function(dealId) {
     // Знаходимо угоду
-    const deal = (typeof crm !== 'undefined') ? crm.deals.find(d => d.id === dealId) : null;
+    const deal = window.crm?.deals.find(d => d.id === dealId) ?? null;
     if (!deal) return;
 
     // Завантажуємо history
@@ -304,7 +305,7 @@ window.crmTodoOpenCard = async function(dealId) {
         history = snap.docs.map(d => ({id:d.id,...d.data()}));
     } catch(e) { /* no history */ }
 
-    const stages    = (typeof crm !== 'undefined' && crm.pipeline?.stages) || [];
+    const stages    = (window.crm?.pipeline?.stages) || [];
     const stageObj  = stages.find(s => s.id === deal.stage);
     const stageColor = stageObj?.color || '#6b7280';
     const inp = 'width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;box-sizing:border-box;font-family:inherit;';
@@ -530,8 +531,8 @@ window._crmTodoSelectResult = function(type, dealId) {
 
     const form = document.getElementById('crmTodoDetailForm');
     if (!form) return;
-    const deal = (typeof crm !== 'undefined') ? crm.deals.find(d => d.id === dealId) : null;
-    const stages = (typeof crm !== 'undefined' && crm.pipeline?.stages) || [];
+    const deal = window.crm?.deals.find(d => d.id === dealId) ?? null;
+    const stages = (window.crm?.pipeline?.stages) || [];
     const inp = 'width:100%;padding:0.45rem 0.6rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.82rem;box-sizing:border-box;font-family:inherit;';
     const lbl = 'font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.3rem;letter-spacing:.04em;';
 
@@ -793,7 +794,7 @@ window._crmTodoMoveToPipeline = async function(dealId, targetPipelineId, targetP
 
 // ── Швидке створення ліда ─────────────────────────────────
 window._crmTodoCreateLead = function(sourceDealId) {
-    const deal = (typeof crm !== 'undefined') ? crm.deals.find(d => d.id === sourceDealId) : null;
+    const deal = window.crm?.deals.find(d => d.id === sourceDealId) ?? null;
     _crmTodoCloseCard();
 
     // Відкриваємо стандартну форму і префіллаємо
