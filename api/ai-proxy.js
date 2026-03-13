@@ -75,16 +75,19 @@ async function getSuperadminSettings() {
 
 // ── Get API key ──────────────────────────────────────────────
 async function getApiKey(companyId, saSettings) {
-    // 1. Ключ компанії
+    // 1. Ключ компанії — Anthropic пріоритет, потім OpenAI
     try {
         const snap = await db.doc(`companies/${companyId}/settings/ai`).get();
-        const key = snap.data()?.openaiApiKey;
-        if (key) return key;
+        const d = snap.data() || {};
+        if (d.anthropicApiKey) return { key: d.anthropicApiKey, provider: 'anthropic' };
+        if (d.openaiApiKey)    return { key: d.openaiApiKey,    provider: 'openai' };
     } catch(_) {}
     // 2. Платформний ключ суперадміна
-    if (saSettings.openaiApiKey) return saSettings.openaiApiKey;
+    if (saSettings.anthropicApiKey) return { key: saSettings.anthropicApiKey, provider: 'anthropic' };
+    if (saSettings.openaiApiKey)    return { key: saSettings.openaiApiKey,    provider: 'openai' };
     // 3. Vercel ENV fallback
-    return process.env.OPENAI_API_KEY || '';
+    if (process.env.ANTHROPIC_API_KEY) return { key: process.env.ANTHROPIC_API_KEY, provider: 'anthropic' };
+    return { key: process.env.OPENAI_API_KEY || '', provider: 'openai' };
 }
 
 // ── Main handler ─────────────────────────────────────────────
@@ -145,10 +148,10 @@ module.exports = async function handler(req, res) {
     const saSettings = await getSuperadminSettings();
 
     // Get API key
-    const apiKey = await getApiKey(companyId, saSettings);
+    const { key: apiKey, provider } = await getApiKey(companyId, saSettings);
     if (!apiKey) {
         return res.status(400).json({
-            error: 'OpenAI ключ не налаштований. Зверніться до адміністратора платформи.'
+            error: 'API ключ не налаштований. Зверніться до адміністратора платформи.'
         });
     }
 
@@ -193,35 +196,56 @@ module.exports = async function handler(req, res) {
     if (systemPrompt) finalMessages.push({ role: 'system', content: systemPrompt });
     finalMessages.push(...messages);
 
-    // Call OpenAI
+    // Call AI (Anthropic або OpenAI)
     let text;
     try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type':  'application/json',
-                'Authorization': `Bearer ${apiKey}`,
-            },
-            body: (() => {
-                // o3/o4/gpt-4.1+ вимагають max_completion_tokens замість max_tokens
-                const isNewModel = /^(o[1-9]|gpt-4\.1|gpt-5)/.test(model);
-                const bodyObj = { model, messages: finalMessages };
-                bodyObj[isNewModel ? 'max_completion_tokens' : 'max_tokens'] = maxTokens || 800;
-                if (!isNewModel) bodyObj.temperature = 0.3;
-                return JSON.stringify(bodyObj);
-            })(),
-        });
+        let response, data;
 
-        const data = await response.json();
-        if (!response.ok) {
-            console.error(`[ai-proxy:${mod}] OpenAI error:`, response.status, JSON.stringify(data).slice(0, 200));
-            return res.status(502).json({
-                error: 'OpenAI API error: ' + (data.error?.message || response.status)
+        if (provider === 'anthropic') {
+            // Anthropic API — system prompt окремим полем
+            const anthropicMsgs = finalMessages.filter(m => m.role !== 'system');
+            const sysContent = finalMessages.find(m => m.role === 'system')?.content || '';
+            const anthropicModel = /^claude/.test(model) ? model : 'claude-sonnet-4-20250514';
+            response = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                    'anthropic-version': '2023-06-01',
+                },
+                body: JSON.stringify({
+                    model: anthropicModel,
+                    max_tokens: maxTokens || 800,
+                    ...(sysContent ? { system: sysContent } : {}),
+                    messages: anthropicMsgs,
+                }),
             });
+            data = await response.json();
+            if (!response.ok) {
+                console.error(`[ai-proxy:${mod}] Anthropic error:`, response.status, JSON.stringify(data).slice(0, 200));
+                return res.status(502).json({ error: 'Anthropic API error: ' + (data.error?.message || response.status) });
+            }
+            text = data.content?.[0]?.text || '';
+        } else {
+            // OpenAI API
+            const isNewModel = /^(o[1-9]|gpt-4\.1|gpt-5)/.test(model);
+            const bodyObj = { model, messages: finalMessages };
+            bodyObj[isNewModel ? 'max_completion_tokens' : 'max_tokens'] = maxTokens || 800;
+            if (!isNewModel) bodyObj.temperature = 0.3;
+            response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                body: JSON.stringify(bodyObj),
+            });
+            data = await response.json();
+            if (!response.ok) {
+                console.error(`[ai-proxy:${mod}] OpenAI error:`, response.status, JSON.stringify(data).slice(0, 200));
+                return res.status(502).json({ error: 'OpenAI API error: ' + (data.error?.message || response.status) });
+            }
+            text = data.choices?.[0]?.message?.content || '';
         }
 
-        text = data.choices?.[0]?.message?.content || '';
-        if (!text) return res.status(502).json({ error: 'Порожня відповідь від OpenAI' });
+        if (!text) return res.status(502).json({ error: 'Порожня відповідь від AI' });
 
     } catch(e) {
         console.error(`[ai-proxy:${mod}] fetch error:`, e.message);
