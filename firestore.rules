@@ -636,6 +636,15 @@ service cloud.firestore {
         allow write: if isManagerOrOwner(companyId);
       }
 
+      // =====================
+      // FINANCE — TRANSFERS (перекази між рахунками)
+      // =====================
+      match /finance_transfers/{transferId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if isManagerOrOwner(companyId);
+        allow update, delete: if isManagerOrOwner(companyId);
+      }
+
       // FALLBACK: будь-яка subcollection компанії — члени читають, менеджери пишуть
       // (для нових колекцій до деплою специфічних правил)
       match /{subcollection}/{docId} {
