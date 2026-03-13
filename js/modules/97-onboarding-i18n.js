@@ -18,6 +18,7 @@ en: {
     skip:'Skip', prev:'Previous', done:'Onboarding complete!',
     askAI:'Ask AI Assistant', minUnit:'min', overview:'Overview',
     completed:'completed', complete:'Complete', estLabel:'Estimated time:',
+    next:'Next step', stepsOf:'steps', stepsLabel:'Steps completed',
   },
 
   setup_company: {
@@ -343,6 +344,7 @@ ru: {
     skip:'Пропустить', prev:'Назад', done:'Онбординг завершён!',
     askAI:'Спросить AI-ассистента', minUnit:'мин', overview:'Обзор',
     completed:'выполнено', complete:'Завершить', estLabel:'Ориентировочное время:',
+    next:'Следующий шаг', stepsOf:'шаги', stepsLabel:'Шаги выполнения',
   },
 
   setup_company: {
