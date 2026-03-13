@@ -70,6 +70,12 @@ window.destroyBotsModule = function() {
     chat.hasMoreContacts    = false;
     chat.search             = '';
     chat.sendingBotToken    = null;
+    // cleanup всіх multi-instance listeners (crm, тощо)
+    Object.keys(chat.instances || {}).forEach(id => {
+        const inst = chat.instances[id];
+        if (inst) _safeUnsub(inst.msgsUnsub, `msgsUnsub_${id}`);
+    });
+    chat.instances          = {};
     // cts state
     cts.items               = [];
     cts.lastDoc             = null;
@@ -1377,12 +1383,31 @@ let chat = {
     contacts: [],        // список контактів для лівої колонки
     lastContactDoc: null,
     hasMoreContacts: false,
-    activeId: null,      // поточний contactId
-    msgsUnsub: null,     // onSnapshot на messages
+    activeId: null,      // поточний contactId (main instance)
+    msgsUnsub: null,     // onSnapshot на messages (main instance)
     contactsUnsub: null, // onSnapshot на unreadCount
     search: '',
-    sendingBotToken: null, // токен бота поточного контакту
+    sendingBotToken: null, // токен бота поточного контакту (main instance)
+
+    // ── Multi-instance: кожен контекст (main, crm, тощо) має свій стейт ──
+    // instances[id] = { activeId, msgsUnsub, sendingBotToken, msgsContainerId, inputId, sendBtnId }
+    instances: {},
 };
+
+// Ініціалізація або отримання інстансу чату
+function _chatGetInstance(instanceId) {
+    if (!chat.instances[instanceId]) {
+        chat.instances[instanceId] = {
+            activeId:        null,
+            msgsUnsub:       null,
+            sendingBotToken: null,
+            msgsContainerId: instanceId === 'main' ? 'chatMsgs'    : `chatMsgs_${instanceId}`,
+            inputId:         instanceId === 'main' ? 'chatInput'   : `chatInput_${instanceId}`,
+            sendBtnId:       instanceId === 'main' ? 'chatSendBtn' : `chatSendBtn_${instanceId}`,
+        };
+    }
+    return chat.instances[instanceId];
+}
 
 async function renderChatTab() {
     const c = document.getElementById('bpViewChat');
@@ -1578,20 +1603,25 @@ function _chatRenderContactsList() {
 // ─────────────────────────────────────────
 // ВІДКРИТИ ЧАТ З КОНТАКТОМ
 // ─────────────────────────────────────────
-window.bpOpenChat = async function(contactId) {
-    // Якщо не на вкладці chat — переходимо
-    if (bp.subTab !== 'chat') {
+window.bpOpenChat = async function(contactId, instanceId = 'main') {
+    const inst = _chatGetInstance(instanceId);
+
+    // Якщо main instance і не на вкладці chat — переходимо
+    if (instanceId === 'main' && bp.subTab !== 'chat') {
         bpSwitch('chat');
         await new Promise(r => setTimeout(r, 100));
     }
 
-    chat.activeId = contactId;
-    bp.activeChatContactId = contactId;
+    inst.activeId = contactId;
+    // backward compat для main instance
+    if (instanceId === 'main') {
+        chat.activeId = contactId;
+        bp.activeChatContactId = contactId;
+    }
 
     // Знаходимо контакт
     let ct = chat.contacts.find(c => c.id === contactId);
     if (!ct) {
-        // Завантажуємо якщо не в списку
         const doc = await window.companyRef().collection('contacts').doc(contactId).get();
         if (doc.exists) {
             ct = { id: doc.id, ...doc.data() };
@@ -1599,39 +1629,49 @@ window.bpOpenChat = async function(contactId) {
         }
     }
 
-    // Оновлюємо лівий список (підсвічуємо активний)
-    _chatRenderContactsList();
+    // Оновлюємо лівий список тільки для main
+    if (instanceId === 'main') _chatRenderContactsList();
 
     // Рендеримо хедер
-    _chatRenderHeader(ct);
+    const headerContainerId = instanceId === 'main' ? 'chatMsgHeader' : `chatMsgHeader_${instanceId}`;
+    _chatRenderHeader(ct, headerContainerId);
 
     // Показуємо поле вводу
-    const inputArea = document.getElementById('chatInputArea');
+    const inputAreaId = instanceId === 'main' ? 'chatInputArea' : `chatInputArea_${instanceId}`;
+    const inputArea = document.getElementById(inputAreaId);
     if (inputArea) inputArea.style.display = '';
 
-    // Зупиняємо попередній listener
-    if (typeof chat.msgsUnsub === 'function') { chat.msgsUnsub(); } chat.msgsUnsub = null;
+    // Зупиняємо попередній listener цього інстансу
+    if (typeof inst.msgsUnsub === 'function') { inst.msgsUnsub(); }
+    inst.msgsUnsub = null;
+    // backward compat
+    if (instanceId === 'main') { chat.msgsUnsub = null; }
 
-    // Підписуємось на messages цього контакту
+    // Підписуємось на messages
     const _msgRef = window.companyRef();
     if (_msgRef) {
-        chat.msgsUnsub = _msgRef.collection('contacts').doc(contactId).collection('messages')
+        inst.msgsUnsub = _msgRef.collection('contacts').doc(contactId).collection('messages')
             .orderBy('timestamp', 'asc')
             .limitToLast(100)
             .onSnapshot(snap => {
-                _chatRenderMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+                _chatRenderMessages(
+                    snap.docs.map(d => ({ id: d.id, ...d.data() })),
+                    inst.msgsContainerId
+                );
             });
+        if (instanceId === 'main') chat.msgsUnsub = inst.msgsUnsub;
     }
 
-    // Отримуємо токен бота для відправки
-    chat.sendingBotToken = await _chatGetBotToken(ct);
+    // Токен бота
+    inst.sendingBotToken = await _chatGetBotToken(ct);
+    if (instanceId === 'main') chat.sendingBotToken = inst.sendingBotToken;
 
     // Позначаємо прочитаними
     _chatMarkRead(contactId);
 };
 
-function _chatRenderHeader(ct) {
-    const header = document.getElementById('chatMsgHeader');
+function _chatRenderHeader(ct, containerId = 'chatMsgHeader') {
+    const header = document.getElementById(containerId);
     if (!header || !ct) return;
     const name = ct.senderName || ct.name || window.t('botsAnon');
     const initial = name.charAt(0).toUpperCase();
@@ -1668,8 +1708,8 @@ function _chatRenderHeader(ct) {
         </button>`;
 }
 
-function _chatRenderMessages(msgs) {
-    const div = document.getElementById('chatMsgs');
+function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
+    const div = document.getElementById(containerId);
     if (!div) return;
 
     if (!msgs.length) {
@@ -1717,29 +1757,28 @@ function _chatRenderMessages(msgs) {
 // ─────────────────────────────────────────
 // ВІДПРАВКА ПОВІДОМЛЕННЯ
 // ─────────────────────────────────────────
-window.chatSend = window.bpSendMsg = async function() {
-    const input = document.getElementById('chatInput') || document.getElementById('bpChatInput');
+window.chatSend = window.bpSendMsg = async function(instanceId = 'main') {
+    const inst = _chatGetInstance(instanceId);
+    const input = document.getElementById(inst.inputId);
     const text = input?.value.trim();
-    if (!text || !chat.activeId) return;
+    if (!text || !inst.activeId) return;
 
-    const btn = document.getElementById('chatSendBtn');
+    const btn = document.getElementById(inst.sendBtnId);
     if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
     input.value = '';
     if (input.tagName === 'TEXTAREA') { input.style.height = 'auto'; }
 
     try {
         // 1. Пишемо повідомлення в Firestore
-        await window.companyRef().collection('contacts').doc(chat.activeId).collection('messages')
+        await window.companyRef().collection('contacts').doc(inst.activeId).collection('messages')
             .add({
                 text, from: 'bot', direction: 'out',
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 read: true, sentBy: 'operator',
             });
 
-        // 2. Ставимо завдання для Functions: відправити в Telegram
-        // Functions підхоплять через Firestore trigger (якщо налаштований)
-        // або через окрему чергу
-        await window.companyRef().collection('contacts').doc(chat.activeId)
+        // 2. Оновлюємо контакт — черга для Functions + lastMessage
+        await window.companyRef().collection('contacts').doc(inst.activeId)
             .update({
                 pendingOutMessage: text,
                 pendingOutAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1748,9 +1787,9 @@ window.chatSend = window.bpSendMsg = async function() {
             });
 
         // 3. Оновлюємо локальний стан
-        const ct = chat.contacts.find(c => c.id === chat.activeId);
+        const ct = chat.contacts.find(c => c.id === inst.activeId);
         if (ct) { ct.lastMessage = text; ct.lastMessageAt = { toDate: () => new Date() }; }
-        _chatRenderContactsList();
+        if (instanceId === 'main') _chatRenderContactsList();
 
     } catch(e) {
         console.error('[chat] send:', e);

@@ -2608,16 +2608,83 @@ window.crmOpenClient = function(clientId) {
                 border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">
                 + Угода
             </button>
+            ${cl.botContactId || cl.senderId ? `
+            <button onclick="crmClientToggleChat('${cl.botContactId || ((cl.channel||'telegram')+'_'+cl.senderId)}')"
+                id="crmChatToggleBtn_${cl.id}"
+                style="padding:0.45rem 0.65rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;
+                border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Чат
+            </button>` : ''}
             <button onclick="crmDeleteClient('${cl.id}')"
                 style="padding:0.45rem 0.65rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;
                 border-radius:7px;cursor:pointer;font-size:0.78rem;">
                 Видалити
             </button>
         </div>
+
+        <!-- Чат-панель (прихована за замовчуванням) -->
+        <div id="crmClientChatPanel" style="display:none;margin-top:0.75rem;border-top:1px solid #f1f5f9;padding-top:0.75rem;">
+            <!-- Хедер контакту -->
+            <div id="chatMsgHeader_crm"
+                style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;min-height:36px;">
+            </div>
+            <!-- Повідомлення -->
+            <div id="chatMsgs_crm"
+                style="height:280px;overflow-y:auto;padding:0.75rem;
+                background:#f8fafc;border-radius:8px;border:1px solid #f1f5f9;
+                display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.5rem;">
+                <div style="text-align:center;color:#9ca3af;font-size:0.78rem;padding:2rem;">Завантаження...</div>
+            </div>
+            <!-- Поле вводу -->
+            <div id="chatInputArea_crm" style="display:flex;gap:0.4rem;align-items:flex-end;">
+                <textarea id="chatInput_crm" rows="1" placeholder="Написати повідомлення... (Enter — відправити)"
+                    style="flex:1;padding:0.45rem 0.6rem;border:1.5px solid #e5e7eb;
+                    border-radius:8px;font-size:0.8rem;resize:none;font-family:inherit;
+                    max-height:80px;overflow-y:auto;outline:none;line-height:1.4;box-sizing:border-box;"
+                    onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"
+                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend('crm');}"
+                    oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'">
+                </textarea>
+                <button id="chatSendBtn_crm" onclick="chatSend('crm')"
+                    style="padding:0.45rem 0.65rem;background:#22c55e;color:white;border:none;
+                    border-radius:8px;cursor:pointer;flex-shrink:0;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>`;
 };
 
-window.crmNewDealFromClient = function(clientName, clientId) {
+window.crmClientToggleChat = function(contactId) {
+    const panel = document.getElementById('crmClientChatPanel');
+    if (!panel) return;
+
+    const isOpen = panel.style.display !== 'none';
+    if (isOpen) {
+        panel.style.display = 'none';
+        return;
+    }
+
+    // Відкриваємо панель
+    panel.style.display = 'block';
+
+    // Прокручуємо картку вниз щоб показати чат
+    const card = document.getElementById('crmClientCard');
+    if (card) setTimeout(() => { card.scrollTop = card.scrollHeight; }, 50);
+
+    // Відкриваємо чат через параметризований bpOpenChat
+    if (typeof window.bpOpenChat === 'function') {
+        window.bpOpenChat(contactId, 'crm');
+    } else {
+        const msgs = document.getElementById('chatMsgs_crm');
+        if (msgs) msgs.innerHTML = '<div style="text-align:center;color:#ef4444;font-size:0.78rem;padding:2rem;">Модуль чату не завантажено</div>';
+    }
+};
+
+
     crmOpenCreateDeal();
     setTimeout(() => {
         const inp  = document.getElementById('nd_client');
