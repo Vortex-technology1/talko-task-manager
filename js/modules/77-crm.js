@@ -49,7 +49,7 @@ let crm = {
     saving: false,
     dealUnsub: null, clientUnsub: null,
     // Фільтри для kanban/list
-    filters: { assignee: '', stage: '', tag: '', search: '' },
+    filters: { assignee: '', stage: '', tag: '', search: '', amountMin: '', amountMax: '', source: '' },
     // Режим перегляду: kanban | list
     viewMode: 'kanban',
     // Сортування list view
@@ -177,12 +177,34 @@ function _filteredDeals() {
     if (f.assignee) deals = deals.filter(d => d.assigneeId === f.assignee);
     if (f.stage)    deals = deals.filter(d => d.stage === f.stage);
     if (f.tag)      deals = deals.filter(d => (d.tags||[]).includes(f.tag));
+    if (f.source)   deals = deals.filter(d => d.source === f.source);
+    if (f.amountMin) deals = deals.filter(d => (d.amount||0) >= parseFloat(f.amountMin));
+    if (f.amountMax) deals = deals.filter(d => (d.amount||0) <= parseFloat(f.amountMax));
     return deals;
 }
 
-window.crmApplyFilters = function() {
+window.crmApplyFilters = function(fromKanbanBar) {
     const q = document.getElementById('crmSearchInput')?.value || '';
     crm.filters.search = q;
+    // Зчитуємо kanban filter bar якщо є
+    const assigneeEl = document.getElementById('crmKanbanFilterAssignee');
+    const tagEl      = document.getElementById('crmKanbanFilterTag');
+    const sourceEl   = document.getElementById('crmKanbanFilterSource');
+    const minEl      = document.getElementById('crmKanbanFilterAmountMin');
+    const maxEl      = document.getElementById('crmKanbanFilterAmountMax');
+    if (assigneeEl) crm.filters.assignee  = assigneeEl.value;
+    if (tagEl)      crm.filters.tag       = tagEl.value;
+    if (sourceEl)   crm.filters.source    = sourceEl.value;
+    if (minEl)      crm.filters.amountMin = minEl.value;
+    if (maxEl)      crm.filters.amountMax = maxEl.value;
+    if (crm.viewMode === 'kanban') _renderKanban();
+    else _renderListView();
+};
+
+window.crmResetFilters = function() {
+    crm.filters = { assignee: '', stage: '', tag: '', search: '', amountMin: '', amountMax: '', source: '' };
+    const inp = document.getElementById('crmSearchInput');
+    if (inp) inp.value = '';
     if (crm.viewMode === 'kanban') _renderKanban();
     else _renderListView();
 };
@@ -347,8 +369,75 @@ function _renderKanban() {
         </div>
     </div>
 
+    <!-- Kanban Filter Bar -->
+    <div id="crmKanbanFilters" style="background:white;border-bottom:1px solid #e8eaed;padding:0.4rem 0.75rem;display:flex;flex-wrap:wrap;gap:0.35rem;align-items:center;">
+        <select id="crmKanbanFilterAssignee" onchange="crmApplyFilters(true)"
+            style="padding:0.25rem 0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;">
+            <option value="">${window.t('allAssignees')||'Всі відповідальні'}</option>
+            \${(typeof users!=='undefined'?users:[]).map(u=>\`<option value="\${u.id}" \${crm.filters.assignee===u.id?'selected':''}>\${_esc(u.name||u.email)}</option>\`).join('')}
+        </select>
+        <select id="crmKanbanFilterSource" onchange="crmApplyFilters(true)"
+            style="padding:0.25rem 0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;">
+            <option value="">Всі джерела</option>
+            \${ [...new Set(crm.deals.map(d=>d.source).filter(Boolean))].map(s=>\`<option value="\${_esc(s)}" \${crm.filters.source===s?'selected':''}>\${_esc(s)}</option>\`).join('') }
+        </select>
+        <select id="crmKanbanFilterTag" onchange="crmApplyFilters(true)"
+            style="padding:0.25rem 0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;">
+            <option value="">Всі теги</option>
+            \${ [...new Set(crm.deals.flatMap(d=>d.tags||[]))].sort().map(tg=>\`<option value="\${_esc(tg)}" \${crm.filters.tag===tg?'selected':''}>\${_esc(tg)}</option>\`).join('') }
+        </select>
+        <div style="display:flex;align-items:center;gap:0.25rem;">
+            <span style="font-size:0.72rem;color:#9ca3af;">₴</span>
+            <input id="crmKanbanFilterAmountMin" type="number" placeholder="від" value="\${crm.filters.amountMin||''}"
+                oninput="crmApplyFilters(true)"
+                style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
+            <span style="font-size:0.72rem;color:#9ca3af;">—</span>
+            <input id="crmKanbanFilterAmountMax" type="number" placeholder="до" value="\${crm.filters.amountMax||''}"
+                oninput="crmApplyFilters(true)"
+                style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
+        </div>
+        \${ (crm.filters.assignee||crm.filters.tag||crm.filters.source||crm.filters.amountMin||crm.filters.amountMax||crm.filters.search) ? \`
+        <button onclick="crmResetFilters()"
+            style="padding:0.25rem 0.6rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;border-radius:6px;font-size:0.73rem;cursor:pointer;font-weight:600;">
+            × Скинути фільтри
+        </button>
+        <span style="font-size:0.72rem;color:#6b7280;font-weight:600;">\${_filteredDeals().length} / \${crm.deals.length}</span>
+        \` : \`<span style="font-size:0.72rem;color:#9ca3af;margin-left:auto;">\${crm.deals.length} угод</span>\` }
+    </div>
+
+    <!-- Bulk action bar -->
+    ${crm.selectedIds.size > 0 ? `
+    <div id="crmKanbanBulkBar" style="display:flex;align-items:center;gap:0.5rem;
+        padding:0.4rem 0.75rem;background:#1f2937;color:white;flex-wrap:wrap;flex-shrink:0;">
+        <span id="crmBulkCount" style="font-size:0.78rem;font-weight:600;">${crm.selectedIds.size} вибрано</span>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+            <select onchange="crmBulkReassign(this.value);this.value=''"
+                style="padding:0.25rem 0.5rem;border-radius:6px;border:1px solid #4b5563;background:#374151;color:white;font-size:0.75rem;cursor:pointer;">
+                <option value="">👤 Перепризначити...</option>
+                ${(typeof users!=='undefined'?users:[]).map(u=>`<option value="${u.id}">${_esc(u.name||u.email)}</option>`).join('')}
+            </select>
+            <select onchange="crmBulkMoveStage(this.value);this.value=''"
+                style="padding:0.25rem 0.5rem;border-radius:6px;border:1px solid #4b5563;background:#374151;color:white;font-size:0.75rem;cursor:pointer;">
+                <option value="">📋 Стадія...</option>
+                ${(crm.pipeline?.stages||[]).map(s=>`<option value="${s.id}">${_esc(s.label)}</option>`).join('')}
+            </select>
+            <button onclick="crmBulkSetHot(true)"
+                style="padding:0.25rem 0.6rem;background:#ea580c;color:white;border:none;border-radius:6px;font-size:0.74rem;cursor:pointer;font-weight:600;">
+                🔥 Гарячі
+            </button>
+            <button onclick="crmBulkDelete()"
+                style="padding:0.25rem 0.6rem;background:#ef4444;color:white;border:none;border-radius:6px;font-size:0.74rem;cursor:pointer;font-weight:600;">
+                🗑 Видалити
+            </button>
+        </div>
+        <button onclick="crm.selectedIds.clear();_renderKanban()"
+            style="margin-left:auto;padding:0.25rem 0.6rem;background:none;color:#9ca3af;border:1px solid #4b5563;border-radius:6px;font-size:0.74rem;cursor:pointer;">
+            Скасувати
+        </button>
+    </div>` : ''}
+
     <!-- Kanban board -->
-    <div style="display:flex;gap:0;height:calc(100% - ${switcherHeight}px);overflow-x:auto;">
+    <div style="display:flex;gap:0;height:calc(100% - ${switcherHeight + 41 + (crm.selectedIds.size>0 ? 41 : 0)}px);overflow-x:auto;">
         ${mainStages.map(s => _kanbanCol(s)).join('')}
         ${lostStage ? _kanbanColLost(lostStage) : ''}
     </div>`;
@@ -614,6 +703,59 @@ window.crmListSort = function(field) {
 };
 
 // ── Bulk Actions ───────────────────────────────────────────
+window.crmToggleSelectDeal = function(dealId, e) {
+    if (e) e.stopPropagation();
+    if (crm.selectedIds.has(dealId)) crm.selectedIds.delete(dealId);
+    else crm.selectedIds.add(dealId);
+    // Оновлюємо bulk bar без повного перерендеру
+    _updateKanbanBulkBar();
+    // Оновлюємо вигляд картки
+    const card = document.getElementById('dealCard_' + dealId);
+    if (card) {
+        card.style.borderColor = crm.selectedIds.has(dealId) ? '#22c55e' : '#e8eaed';
+        card.style.background  = crm.selectedIds.has(dealId) ? '#f0fdf4' : 'white';
+        const cb = card.querySelector('.crm-deal-checkbox');
+        if (cb) { cb.checked = crm.selectedIds.has(dealId); cb.style.opacity = '1'; }
+    }
+    // Оновлюємо opacity всіх чекбоксів
+    document.querySelectorAll('.crm-deal-checkbox').forEach(cb => {
+        if (!cb.checked) cb.style.opacity = crm.selectedIds.size > 0 ? '1' : '0';
+    });
+};
+
+function _updateKanbanBulkBar() {
+    const bar = document.getElementById('crmKanbanBulkBar');
+    const cnt = crm.selectedIds.size;
+    if (!bar) return;
+    if (cnt === 0) {
+        bar.style.display = 'none';
+        return;
+    }
+    bar.style.display = 'flex';
+    const cntEl = bar.querySelector('#crmBulkCount');
+    if (cntEl) cntEl.textContent = cnt + ' вибрано';
+}
+
+// ── Аліаси для kanban bulk bar (select onchange) ──────────
+window.crmBulkReassign = async function(uid) {
+    if (!uid || crm.selectedIds.size === 0) return;
+    await _bulkUpdateDeals({ assigneeId: uid });
+};
+
+window.crmBulkMoveStage = async function(stageId) {
+    if (!stageId || crm.selectedIds.size === 0) return;
+    if (stageId === 'lost') {
+        if (typeof showToast === 'function') showToast('Для стадії "Програно" використовуйте індивідуальну зміну', 'error');
+        return;
+    }
+    await _bulkUpdateDeals({ stage: stageId, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp() });
+};
+
+window.crmBulkSetHot = async function(isHot) {
+    if (crm.selectedIds.size === 0) return;
+    await _bulkUpdateDeals({ isHot: !!isHot });
+};
+
 window.crmBulkSelectAll = function(checked) {
     crm._bulkMode = true;
     if (checked) {
@@ -850,17 +992,25 @@ function _dealCard(deal) {
     const stageTimeColor = daysInStage >= 14 ? '#ef4444' : daysInStage >= 7 ? '#f59e0b' : '#9ca3af';
 
     return `
-    <div draggable="true" data-deal-id="${deal.id}"
+    <div draggable="true" data-deal-id="${deal.id}" id="dealCard_${deal.id}"
         ondragstart="crmDragStart(event,'${deal.id}')"
         onclick="crmOpenDeal('${deal.id}')"
         style="background:white;border-radius:7px;padding:0.65rem;cursor:pointer;
-        border:1px solid ${deal.isHot ? '#f97316' : isStale ? '#d1d5db' : '#e8eaed'};transition:box-shadow 0.15s,border-color 0.15s;position:relative;opacity:${isStale ? '0.82' : '1'};"
+        border:2px solid ${crm.selectedIds.has(deal.id) ? '#22c55e' : deal.isHot ? '#f97316' : isStale ? '#d1d5db' : '#e8eaed'};transition:box-shadow 0.15s,border-color 0.15s;position:relative;opacity:${isStale ? '0.82' : '1'};background:${crm.selectedIds.has(deal.id)?'#f0fdf4':'white'};"
         onmouseenter="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.1)'"
         onmouseleave="this.style.boxShadow='none'">
 
+        <!-- Checkbox select (показується при наведенні або коли є вибрані) -->
+        <div style="position:absolute;top:6px;left:6px;z-index:2;" onclick="event.stopPropagation();crmToggleSelectDeal('${deal.id}',event)">
+            <input type="checkbox" ${crm.selectedIds.has(deal.id)?'checked':''} 
+                style="width:14px;height:14px;accent-color:#22c55e;cursor:pointer;opacity:${crm.selectedIds.size>0?'1':'0'};transition:opacity 0.15s;"
+                class="crm-deal-checkbox"
+                onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='${crm.selectedIds.size>0?'1':'0'}'">
+        </div>
+
         <!-- Title -->
         <div style="font-size:0.8rem;font-weight:600;color:#1f2937;margin-bottom:0.45rem;
-            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:${crm.selectedIds.size>0?'18px':'0'};">
             ${_esc(deal.title || deal.clientName || window.t('crmDeal'))}
         </div>
 
