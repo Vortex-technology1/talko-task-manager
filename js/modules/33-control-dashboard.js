@@ -585,7 +585,7 @@
                             <h3 style="margin:0;">Журнал збоїв</h3>
                             <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">Тут фіксується те, що пішло не так — факт, причина, відповідальний, рішення</div>
                         </div>
-                        <button class="btn btn-success btn-small" onclick="toggleAddIncidentForm()" style="display:flex;align-items:center;gap:0.3rem;">
+                        <button class="btn btn-success btn-small" onclick="if(typeof showIncidentModal==='function')showIncidentModal();else toggleAddIncidentForm();" style="display:flex;align-items:center;gap:0.3rem;">
                             + Записати збій
                         </button>
                     </div>
@@ -593,6 +593,19 @@
                     <div id="addIncidentFormArea" style="display:none;margin-bottom:1rem;"></div>
 
                     <!-- Активні записи -->
+                    <!-- Онбординг: як працює AI агент -->
+                    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:0.75rem 1rem;margin-bottom:0.75rem;display:flex;align-items:flex-start;gap:0.75rem;">
+                        <div style="font-size:1.2rem;flex-shrink:0;">🤖</div>
+                        <div>
+                            <div style="font-size:0.8rem;font-weight:700;color:#0369a1;margin-bottom:0.2rem;">Як записати збій через AI</div>
+                            <div style="font-size:0.75rem;color:#0c4a6e;line-height:1.5;">
+                                Натисни <b>+ Записати збій</b> → вибери <b>AI режим</b> → опиши своїми словами що сталося → AI задасть 1-3 уточнюючих питання → сформує структурований запис → ти переглянеш і збережеш.<br>
+                                <span style="color:#0284c7;">Або одразу <b>Ручний режим</b> — заповнити форму самостійно.</span>
+                            </div>
+                        </div>
+                        <button onclick="this.parentElement.style.display='none'" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1rem;flex-shrink:0;padding:0;">✕</button>
+                    </div>
+
                     ${active.length === 0 ? `
                     <div style="text-align:center;padding:1.5rem;background:#f0fdf4;border-radius:10px;border:1px dashed #bbf7d0;margin-bottom:0.75rem;">
                         <div style="font-size:1.5rem;">✅</div>
