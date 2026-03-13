@@ -1994,9 +1994,9 @@ function _renderClients() {
     <div style="display:flex;gap:1rem;height:calc(100vh - 104px);overflow:hidden;">
         <!-- Список -->
         <div style="flex:1;min-width:0;overflow-y:auto;">
-            <div style="max-width:640px;margin:0 auto;">
+            <div style="padding:0 0.5rem;">
                 <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;align-items:center;">
-                    <input id="crmClientSearch" type="text" placeholder=window.t('crmSearchPh')
+                    <input id="crmClientSearch" type="text" placeholder="${window.t('crmSearchPh')}"
                         oninput="crmFilterClients(this.value)"
                         style="flex:1;padding:0.5rem 0.75rem;border:1px solid #e8eaed;
                         border-radius:8px;font-size:0.82rem;background:white;">
@@ -2239,9 +2239,15 @@ const ACT_ICONS = {
     email: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
     note: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
     task: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></svg>',
+    stage_changed: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+    created: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    call_answered: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    call_missed: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    sms_sent: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    contact_updated: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
 };
-const ACT_COLORS = { call:'#3b82f6', meeting:'#8b5cf6', email:'#f59e0b', note:'#6b7280', task:'#22c55e' };
-const ACT_LABELS = { call:window.t('crmActivityCall'), meeting:window.t('crmActivityMeet'), email:window.t('crmActivityLetter'), note:window.t('crmActivityNote'), task:window.t('crmActivityTask') };
+const ACT_COLORS = { call:'#3b82f6', meeting:'#8b5cf6', email:'#f59e0b', note:'#6b7280', task:'#22c55e', stage_changed:'#8b5cf6', created:'#22c55e', call_answered:'#22c55e', call_missed:'#ef4444', sms_sent:'#3b82f6', contact_updated:'#f59e0b' };
+const ACT_LABELS = { call:window.t('crmActivityCall'), meeting:window.t('crmActivityMeet'), email:window.t('crmActivityLetter'), note:window.t('crmActivityNote'), task:window.t('crmActivityTask'), stage_changed:'Зміна стадії', created:'Створено', call_answered:'Взяв трубку', call_missed:'Не взяв', sms_sent:'Повідомлення', contact_updated:'Контакт оновлено' };
 
 async function _renderActivitiesTab() {
     const c = document.getElementById('crmViewActivities');
