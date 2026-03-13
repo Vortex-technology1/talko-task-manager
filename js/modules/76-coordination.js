@@ -1245,22 +1245,15 @@
             const patterns=analyzePatterns(sessions);
 
             // Try AI via proxy (OpenAI)
-            let aiText='';
-            try {
-                aiText = await window.aiProxy({
-                    messages:  [{ role: 'user', content: buildPrompt(patterns) }],
-                    model:     'gpt-4o-mini',
-                    maxTokens: 800,
-                    module:    'coordination',
-                });
-            } catch(ae){ console.warn('[COORD] AI proxy:', ae); }
-
-            el.innerHTML=`
-            ${aiText?`<div style="background:linear-gradient(135deg,#7c3aed15,#a855f715);border:1.5px solid #e9d5ff;border-radius:12px;padding:.9rem;margin-bottom:.85rem;">
-              <div style="font-weight:700;color:#7c3aed;margin-bottom:.4rem;font-size:.83rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span> ${ct('aiTitle')}</div>
-              <div style="font-size:.82rem;color:#374151;white-space:pre-wrap;line-height:1.55;">${esc(aiText)}</div>
-            </div>`:''}
-            ${renderPatterns(patterns)}`;
+            // Відкриваємо AI чат з діалогом
+            window.closeCoordAnalysis && window.closeCoordAnalysis();
+            window.openAiChat({
+                module:         'coordination',
+                title:          '✦ AI Аналіз координацій',
+                contextText:    buildPrompt(patterns),
+                systemPrompt:   null,
+                initialMessage: 'Проаналізуй ці дані координацій. Дай 3-4 конкретні рекомендації що змінити.',
+            });
         } catch(e){el.innerHTML=`<div style="color:#ef4444;padding:1rem;">Помилка: ${esc(e.message)}</div>`;}
     };
 
