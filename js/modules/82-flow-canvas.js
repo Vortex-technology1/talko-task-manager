@@ -349,7 +349,7 @@ function mountCanvas() {
     const statusBtn = document.getElementById('fcBtnToggleStatus');
     if (statusBtn && fc.flowData) {
         const st = fc.flowData.status || 'draft';
-        statusBtn.textContent = st === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> active' : '⚫ draft';
+        statusBtn.innerHTML = st === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> active' : '⚫ draft';
         statusBtn.style.background = st === 'active' ? '#dcfce7' : '#334155';
         statusBtn.style.color = st === 'active' ? '#16a34a' : '#94a3b8';
         statusBtn.onclick = async function() {
@@ -361,7 +361,7 @@ function mountCanvas() {
                     : firebase.firestore().collection('companies').doc(window.currentCompanyId).collection('flows').doc(fc.flowId);
                 await ref.update({ status: next });
                 fc.flowData.status = next;
-                statusBtn.textContent = next === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> active' : '⚫ draft';
+                statusBtn.innerHTML = next === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> active' : '⚫ draft';
                 statusBtn.style.background = next === 'active' ? '#dcfce7' : '#334155';
                 statusBtn.style.color = next === 'active' ? '#16a34a' : '#94a3b8';
                 if (typeof showToast === 'function') showToast(next === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Флоу активовано' : '⚫ Флоу на паузі', 'success');
@@ -651,7 +651,7 @@ function buildNodeEl(node) {
             ${preview
                 ? `<div style="font-size:11.5px;color:#374151;line-height:1.5;
                     max-height:56px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;
-                    -webkit-box-orient:vertical;word-break:break-word;">${esc(preview)}</div>`
+                    -webkit-box-orient:vertical;word-break:break-word;">${preview}</div>`
                 : `<div style="font-size:11px;color:#94a3b8;font-style:italic;display:flex;align-items:center;gap:5px;padding:4px 0;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                     Клікніть для налаштування</div>`
