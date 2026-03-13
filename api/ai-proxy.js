@@ -202,12 +202,14 @@ module.exports = async function handler(req, res) {
                 'Content-Type':  'application/json',
                 'Authorization': `Bearer ${apiKey}`,
             },
-            body: JSON.stringify({
-                model,
-                max_tokens:  maxTokens || 800,
-                temperature: 0.3,
-                messages:    finalMessages,
-            }),
+            body: (() => {
+                // o3/o4/gpt-4.1+ вимагають max_completion_tokens замість max_tokens
+                const isNewModel = /^(o[1-9]|gpt-4\.1|gpt-5)/.test(model);
+                const bodyObj = { model, messages: finalMessages };
+                bodyObj[isNewModel ? 'max_completion_tokens' : 'max_tokens'] = maxTokens || 800;
+                if (!isNewModel) bodyObj.temperature = 0.3;
+                return JSON.stringify(bodyObj);
+            })(),
         });
 
         const data = await response.json();
