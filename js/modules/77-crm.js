@@ -90,6 +90,7 @@ function _renderShell() {
     if (!container) return;
 
     const tabs = [
+        ['todo',       I.task,      window.t('crmTabTodo')],
         ['kanban',     I.funnel,    window.t('crmTabFunnel')],
         ['clients',    I.users,     window.t('crmTabClients')],
         ['activities', I.calendar,  window.t('crmTabActivities')],
@@ -148,6 +149,7 @@ function _renderShell() {
 
         <!-- Content -->
         <div style="flex:1;overflow:hidden;">
+            <div id="crmViewTodo" style="height:100%;overflow:auto;display:none;"></div>
             <div id="crmViewKanban" style="height:100%;overflow:auto;"></div>
             <div id="crmViewClients" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
             <div id="crmViewActivities" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
@@ -205,7 +207,7 @@ window.crmSetViewMode = function(mode) {
 
 window.crmSwitchTab = function(tab) {
     crm.subTab = tab;
-    ['kanban','clients','activities','analytics','settings'].forEach(t => {
+    ['todo','kanban','clients','activities','analytics','settings'].forEach(t => {
         const view = document.getElementById('crmView' + t.charAt(0).toUpperCase() + t.slice(1));
         const btn  = document.getElementById('crmTab_' + t);
         if (view) view.style.display = t === tab ? '' : 'none';
@@ -215,6 +217,7 @@ window.crmSwitchTab = function(tab) {
             btn.style.fontWeight = t === tab ? '600' : '500';
         }
     });
+    if (tab === 'todo')       { if (typeof renderCrmTodo === 'function') renderCrmTodo(); }
     if (tab === 'kanban')     _renderKanban();
     if (tab === 'clients')    _renderClients();
     if (tab === 'activities') _renderActivitiesTab();
