@@ -16,7 +16,7 @@
         function showToast(message, type = 'success', duration = 4000) {
             // WCAG: анонс для скрін-рідерів через aria-live region
             const liveRegion = document.getElementById(type === 'error' ? 'ariaAlertRegion' : 'ariaLiveRegion');
-            if (liveRegion) { liveRegion.textContent = ''; setTimeout(() => { liveRegion.textContent = message; }, 50); }
+            if (liveRegion) { const _plain = message.replace(/<[^>]+>/g,''); liveRegion.textContent = ''; setTimeout(() => { liveRegion.textContent = _plain; }, 50); }
             const existing = document.getElementById('simpleToast');
             if (existing) existing.remove();
             
@@ -36,7 +36,7 @@
                 z-index:10001;animation:slideInRight 0.3s ease;cursor:pointer;
                 max-width:350px;font-weight:500;font-size:0.9rem;
             `;
-            toast.textContent = message;
+            toast.innerHTML = message; // SVG-safe: повідомлення формуються нашим кодом, не user input
             toast.onclick = () => toast.remove();
             document.body.appendChild(toast);
             
