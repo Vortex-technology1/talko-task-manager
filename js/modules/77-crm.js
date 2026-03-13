@@ -3156,28 +3156,42 @@ function _renderAnalytics() {
             <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
                 <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span> Конверсія між стадіями</div>
                 ${(() => {
+                    // PROB 1 FIX: рахуємо угоди які ПРОЙШЛИ ЧЕРЕЗ стадію
+                    // Логіка: угода "пройшла через" стадію S якщо її поточна стадія
+                    // знаходиться на індексі >= індексу S у воронці (або won)
                     const funnelStages = (crm.pipeline?.stages || [])
                         .filter(s => !['lost'].includes(s.id))
                         .sort((a,b) => a.order - b.order);
-                    const won = crm.deals.filter(d => d.stage === 'won').length;
+                    if (!funnelStages.length) return '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>';
+
+                    // Будуємо індекс стадій для O(1) lookup
+                    const stageIdx = {};
+                    funnelStages.forEach((s, i) => { stageIdx[s.id] = i; });
+                    // won — завжди остання позиція (після всіх стадій)
+                    const wonIdx = funnelStages.length;
+
+                    // Для кожної угоди визначаємо її "прогрес" у воронці
+                    const getDealProgress = (d) => {
+                        if (d.stage === 'won') return wonIdx;
+                        if (d.stage === 'lost') return stageIdx[d.stage] ?? -1; // lost не рахуємо
+                        return stageIdx[d.stage] ?? 0;
+                    };
+
+                    // Рахуємо кількість угод що пройшли через кожну стадію
+                    const stageCounts = funnelStages.map((s, i) =>
+                        crm.deals.filter(d => {
+                            if (d.stage === 'lost') return false; // програні не рахуємо у воронці
+                            return getDealProgress(d) >= i;
+                        }).length
+                    );
+
                     let html = '';
                     funnelStages.forEach((s, i) => {
-                        const cnt = s.id === 'won' ? won : crm.deals.filter(d => {
-                            if (d.stage === s.id) return true;
-                            // також рахуємо тих, хто пройшов через цю стадію (по history не доступно тут, тому рахуємо всіх з stage >= поточної)
-                            const sIdx = funnelStages.findIndex(x => x.id === d.stage);
-                            return sIdx > i;
-                        }).length;
-                        const prevCnt = i === 0 ? (total || 1) : (() => {
-                            const prevS = funnelStages[i-1];
-                            return crm.deals.filter(d => {
-                                const sIdx = funnelStages.findIndex(x => x.id === d.stage);
-                                return sIdx >= i-1;
-                            }).length || 1;
-                        })();
-                        const pct = total > 0 ? Math.round(cnt / total * 100) : 0;
-                        const convPct = prevCnt > 0 ? Math.round(cnt / prevCnt * 100) : 0;
-                        const barW = pct;
+                        const cnt = stageCounts[i];
+                        const firstCnt = stageCounts[0] || 1;
+                        const prevCnt = i === 0 ? firstCnt : (stageCounts[i-1] || 1);
+                        const pct = firstCnt > 0 ? Math.round(cnt / firstCnt * 100) : 0;
+                        const convPct = i === 0 ? 100 : (prevCnt > 0 ? Math.round(cnt / prevCnt * 100) : 0);
                         html += `<div style="margin-bottom:0.5rem;">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
                                 <div style="display:flex;align-items:center;gap:5px;">
@@ -3185,16 +3199,16 @@ function _renderAnalytics() {
                                     <span style="font-size:0.74rem;color:#374151;font-weight:500;">${_esc(s.label)}</span>
                                 </div>
                                 <div style="display:flex;align-items:center;gap:6px;">
-                                    ${i > 0 ? `<span style="font-size:0.65rem;color:${convPct>=50?'#22c55e':convPct>=25?'#f59e0b':'#ef4444'};font-weight:700;background:${convPct>=50?'#f0fdf4':convPct>=25?'#fffbeb':'#fef2f2'};padding:1px 5px;border-radius:3px;">↓${convPct}%</span>` : ''}
+                                    ${i > 0 ? `<span style="font-size:0.65rem;color:${convPct>=50?'#22c55e':convPct>=25?'#f59e0b':'#ef4444'};font-weight:700;background:${convPct>=50?'#f0fdf4':convPct>=25?'#fffbeb':'#fef2f2'};padding:1px 5px;border-radius:3px;">↓${convPct}%</span>` : '<span style="font-size:0.65rem;color:#6b7280;padding:1px 5px;">вхід</span>'}
                                     <span style="font-size:0.7rem;color:#9ca3af;">${cnt}</span>
                                 </div>
                             </div>
                             <div style="background:#f1f5f9;border-radius:3px;height:6px;">
-                                <div style="height:100%;background:${s.color};width:${barW}%;border-radius:3px;transition:width 0.3s;"></div>
+                                <div style="height:100%;background:${s.color};width:${pct}%;border-radius:3px;transition:width 0.3s;"></div>
                             </div>
                         </div>`;
                     });
-                    return html || '<div style="color:#9ca3af;font-size:0.8rem;">Немає даних</div>';
+                    return html;
                 })()}
             </div>
         </div>
@@ -3831,7 +3845,10 @@ window.crmCreateTaskFromDeal = function(dealId) {
         };
         openAddTask();
         // Заповнюємо поля через setTimeout після рендеру модалки
-        setTimeout(() => {
+        // PROB 5 FIX: зберігаємо ID таймера щоб очистити при повторному виклику
+        if (window._crmTaskFillTimer) clearTimeout(window._crmTaskFillTimer);
+        window._crmTaskFillTimer = setTimeout(() => {
+            window._crmTaskFillTimer = null;
             const titleEl = document.getElementById('taskTitle') || document.getElementById('newTaskTitle');
             if (titleEl && !titleEl.value) {
                 titleEl.value = `[CRM] ${deal.clientName || deal.title || ''} — ${(crm.pipeline?.stages||[]).find(s=>s.id===deal.stage)?.label||deal.stage}`;
@@ -3971,7 +3988,8 @@ function _checkContactReminders() {
 
     // Browser Push — тільки якщо дозвіл є + не дублюємо (localStorage ключ per day)
     const notifKey = `crm-reminder-${today}`;
-    const alreadySent = localStorage.getItem(notifKey);
+    let alreadySent = false;
+    try { alreadySent = !!localStorage.getItem(notifKey); } catch(e) { /* Safari ITP */ }
     if (!alreadySent && typeof window.sendBrowserNotif === 'function') {
         const all = [...overdue, ...dueToday];
         if (all.length > 0) {
@@ -3985,7 +4003,6 @@ function _checkContactReminders() {
                 body: body + (all.length > 1 ? ` та ще ${all.length - 1}...` : ''),
                 tag: notifKey,
                 onClick: () => {
-                    // Відкриваємо CRM вкладку з todo (черга дзвінків)
                     if (typeof window.crmSwitchTab === 'function') {
                         const crmTab = document.querySelector('[data-tab="crm"]') ||
                                        document.getElementById('tab-crm');
@@ -3994,7 +4011,7 @@ function _checkContactReminders() {
                     }
                 },
             });
-            localStorage.setItem(notifKey, '1');
+            try { localStorage.setItem(notifKey, '1'); } catch(e) { /* Safari ITP */ }
         }
     }
 }
