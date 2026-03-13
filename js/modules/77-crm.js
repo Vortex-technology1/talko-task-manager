@@ -1187,6 +1187,7 @@ window.crmDrop = async function(e, newStage) {
             });
         }
         if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
+        if (typeof window.crmAutoTasksOnStageChange === 'function') window.crmAutoTasksOnStageChange(deal, newStage);
         if (crm.subTab === 'todo' && typeof renderCrmTodo === 'function') renderCrmTodo();
         if (typeof window.trackAction === 'function') {
             window.trackAction('crm_stage', {
@@ -1291,6 +1292,7 @@ window.crmQuickSetStage = async function(dealId, newStage) {
             });
         }
         if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
+        if (typeof window.crmAutoTasksOnStageChange === 'function') window.crmAutoTasksOnStageChange(deal, newStage);
     } catch(err) {
         console.error('[CRM quickStage]', err);
         deal.stage = oldStage;
@@ -2005,12 +2007,24 @@ async function _loadTasksTab(deal) {
             }).join('');
         }
 
-        cnt.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">' +
-            '<div style="font-size:0.78rem;color:#6b7280;">' + dealTasks.length + ' задач по угоді</div>' +
-            '<button onclick="crmCreateTaskFromDeal(\'' + deal.id + '\')" style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.78rem;font-weight:600;">' +
-                I.plus + ' Нова задача</button></div>' + rows;
-        // FIX H: event delegation для .crm-task-done-btn
+        cnt.innerHTML = '<div style="display:flex;flex-direction:column;gap:0.75rem;">' +
+            // CRM-специфічні задачі (авто + ручні всередині угоди)
+            '<div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:0.75rem;">' +
+                '<div style="font-size:0.78rem;font-weight:700;color:#374151;margin-bottom:0.5rem;">⚡ Задачі угоди</div>' +
+                '<div id="crmDealTasksList"></div>' +
+            '</div>' +
+            // Загальні задачі з таск-менеджера
+            '<div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:0.75rem;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">' +
+                    '<div style="font-size:0.78rem;font-weight:700;color:#374151;">📋 Задачі з менеджера (' + dealTasks.length + ')</div>' +
+                    '<button onclick="crmCreateTaskFromDeal(\'' + deal.id + '\')" style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;">' +
+                        I.plus + ' Задача</button></div>' + rows +
+            '</div>' +
+        '</div>';
         cnt.onclick = function(e) { const b = e.target.closest('.crm-task-done-btn'); if (b) crmMarkTaskDone(b.dataset.taskid); };
+        // Завантажуємо CRM-специфічні задачі
+        window._crmActiveDealId = deal.id;
+        if (typeof window.crmRenderDealTasks === 'function') window.crmRenderDealTasks(deal.id);
     } catch(e) {
         if (cnt) cnt.innerHTML = '<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ' + _esc(e.message) + '</div>';
     }
@@ -3437,6 +3451,16 @@ function _renderCRMSettings() {
 
         <!-- Права доступу менеджерів -->
         ${(window.crmRenderAccessSettings ? window.crmRenderAccessSettings() : '')}
+
+        <!-- Авто-задачі по стадіях -->
+        ${(window.crmRenderTaskTemplatesSettings ? window.crmRenderTaskTemplatesSettings() : '')}
+
+        ${(window.crmRenderTaskTemplatesSettings && window.crmRenderAccessSettings) ? `
+        <button onclick="crmSaveTaskTemplates()"
+            style="padding:0.55rem;width:100%;background:#3b82f6;color:white;border:none;
+            border-radius:8px;cursor:pointer;font-weight:600;font-size:0.83rem;">
+            💾 Зберегти шаблони задач
+        </button>` : ''}
 
     </div>`;
 }
