@@ -136,7 +136,7 @@ window.renderCrmTodo = function() {
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button onclick="renderCrmTodo()" style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${TI.refresh}</button>
-          ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;" title="Тільки для owner/admin">🧪 Тест</button>' : ''}
+          ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;" title="Тільки для owner/admin"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
           <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} Новий лід</button>
         </div>
       </div>
@@ -146,7 +146,7 @@ window.renderCrmTodo = function() {
         ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} прострочено</div>`:''}
         ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} на сьогодні</div>`:''}
         ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} нових</div>`:''}
-        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;">🔕 ${sla.length} забутих лідів</div>`:''})()}
+        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg> ${sla.length} забутих лідів</div>`:''})()}
       </div>
 
       <!-- Фільтр по стадіях -->
@@ -171,7 +171,7 @@ window.renderCrmTodo = function() {
       <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
         ${deals.length===0
             ?`<div style="padding:3rem;text-align:center;color:#9ca3af;">
-                <div style="font-size:2rem;margin-bottom:0.5rem;">✓</div>
+                <div style="font-size:2rem;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                 <div style="font-weight:600;color:#374151;">Все зроблено!</div>
                 <div style="font-size:0.82rem;margin-top:0.25rem;">Лідів немає або всі у статусі "Виграно/Програно"</div>
                 <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">Всього в CRM: ${window.crm&&window.crm.deals?window.crm.deals.length:0} лідів</div>
@@ -325,7 +325,7 @@ window.crmTodoOpenCard = async function(dealId) {
           <div style="margin-top:0.6rem;">
             <div style="display:flex;align-items:center;justify-content:space-between;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:0.5rem 0.75rem;cursor:pointer;"
               onclick="const b=document.getElementById('crmTodoNoteBody_${dealId}');if(b){b.style.display=b.style.display==='none'?'block':'none';this.querySelector('.crmNoteToggle').textContent=b.style.display==='none'?'Розгорнути ▼':'Згорнути ▲';}">
-              <span style="font-size:0.75rem;font-weight:700;color:#92400e;">📋 Примітки/Звіт</span>
+              <span style="font-size:0.75rem;font-weight:700;color:#92400e;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Примітки/Звіт</span>
               <span class="crmNoteToggle" style="font-size:0.7rem;color:#b45309;">Розгорнути ▼</span>
             </div>
             <div id="crmTodoNoteBody_${dealId}" style="display:none;background:#fffbeb;border:1px solid #fde68a;border-top:none;border-radius:0 0 8px 8px;padding:0.65rem 0.75rem;font-size:0.8rem;color:#374151;line-height:1.6;white-space:pre-wrap;">${_esc(deal.note||deal.notes)}</div>

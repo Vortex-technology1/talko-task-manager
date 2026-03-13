@@ -91,7 +91,7 @@ window.initCRMModule = async function () {
         crm._initializingFor = null; // FIX: дозволяємо повторну ініціалізацію
         const c = document.getElementById('crmViewKanban') || document.getElementById('crmContainer');
         if (c) c.innerHTML = `<div style="padding:3rem 2rem;text-align:center;">
-            <div style="font-size:2rem;margin-bottom:0.75rem;">⚡</div>
+            <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
             <div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.4rem;">CRM не завантажилась</div>
             <div style="font-size:0.8rem;color:#6b7280;margin-bottom:1.25rem;line-height:1.5;">
                 ${window.htmlEsc ? window.htmlEsc(e.message) : e.message}
@@ -99,7 +99,7 @@ window.initCRMModule = async function () {
             <button onclick="crm._initializingFor=null;window.initCRMModule()"
                 style="padding:0.55rem 1.5rem;background:#22c55e;color:white;border:none;
                 border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                🔄 Спробувати ще раз
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Спробувати ще раз
             </button>
         </div>`;
         crm.loading = false;
@@ -166,7 +166,7 @@ function _renderShell() {
                         style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;
                         background:white;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;
                         font-size:0.81rem;font-weight:600;" title="Імпорт клієнтів/угод з CSV">
-                        📥 Імпорт
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Імпорт
                     </button>
                     <button onclick="crmOpenCreateDeal()"
                         style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
@@ -432,7 +432,7 @@ function _renderKanban() {
     // FIX B: попередження якщо угод >= ліміт (500)
     const limitBanner = crm._dealsLimitReached
         ? `<div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:0.4rem 1rem;font-size:0.72rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;">
-            ⚠️ Показано перші 500 угод. Виграні/програні угоди краще архівувати для покращення продуктивності.
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️ Показано перші 500 угод. Виграні/програні угоди краще архівувати для покращення продуктивності.
            </div>` : '';
 
     const stages    = (crm.pipeline?.stages || []).slice().sort((a,b) => a.order - b.order);
@@ -490,21 +490,21 @@ function _renderKanban() {
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
             <select onchange="crmBulkReassign(this.value);this.value=''"
                 style="padding:0.25rem 0.5rem;border-radius:6px;border:1px solid #4b5563;background:#374151;color:white;font-size:0.75rem;cursor:pointer;">
-                <option value="">👤 Перепризначити...</option>
+                <option value=""><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Перепризначити...</option>
                 ${(typeof users!=='undefined'?users:[]).map(u=>`<option value="${u.id}">${_esc(u.name||u.email)}</option>`).join('')}
             </select>
             <select onchange="crmBulkMoveStage(this.value);this.value=''"
                 style="padding:0.25rem 0.5rem;border-radius:6px;border:1px solid #4b5563;background:#374151;color:white;font-size:0.75rem;cursor:pointer;">
-                <option value="">📋 Стадія...</option>
+                <option value=""><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Стадія...</option>
                 ${(crm.pipeline?.stages||[]).map(s=>`<option value="${s.id}">${_esc(s.label)}</option>`).join('')}
             </select>
             <button onclick="crmBulkSetHot(true)"
                 style="padding:0.25rem 0.6rem;background:#ea580c;color:white;border:none;border-radius:6px;font-size:0.74rem;cursor:pointer;font-weight:600;">
-                🔥 Гарячі
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg> Гарячі
             </button>
             <button onclick="crmBulkDelete()"
                 style="padding:0.25rem 0.6rem;background:#ef4444;color:white;border:none;border-radius:6px;font-size:0.74rem;cursor:pointer;font-weight:600;">
-                🗑 Видалити
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Видалити
             </button>
         </div>
         <button onclick="crm.selectedIds.clear();_renderKanban()"
@@ -1123,7 +1123,7 @@ function _dealCard(deal) {
             </span>
             <span style="font-size:0.62rem;color:${stageTimeColor};font-weight:${daysInStage>=7?'600':'400'};" title="Час в стадії">${isActive ? '⏱ '+stageTimeLabel : date}</span>
         </div>
-        ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#3b82f6'};">📅 ${deal.nextContactDate}</div>` : ''}
+        ${deal.nextContactDate ? `<div style="margin-top:0.35rem;font-size:0.65rem;padding:2px 6px;border-radius:4px;display:inline-block;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#eff6ff'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#3b82f6'};"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${deal.nextContactDate}</div>` : ''}
         ${(deal.tags||[]).length ? `<div style="margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:2px;">${(deal.tags||[]).map(tag=>`<span style="font-size:0.6rem;padding:1px 5px;background:#f3f4f6;color:#6b7280;border-radius:3px;">${_esc(tag)}</span>`).join('')}</div>` : ''}
         ${deal.isHot ? `<div style="position:absolute;top:6px;right:6px;color:#f97316;">${I.hot}</div>` : ''}
         ${isStale ? `<div style="position:absolute;top:6px;right:${deal.isHot?'22px':'6px'};color:#9ca3af;" title="${staleDays} днів без активності">${I.clock}</div>` : ''}
@@ -1264,7 +1264,7 @@ window.crmQuickStage = function(e, dealId) {
                 'border:none;border-radius:5px;cursor:pointer;font-size:0.78rem;text-align:left;color:' + (isActive ? '#16a34a' : '#374151') + ';">' +
                 '<span style="width:8px;height:8px;border-radius:50%;background:' + s.color + ';flex-shrink:0;"></span>' +
                 s.label +
-                (isActive ? ' <span style="margin-left:auto;font-size:0.7rem;">✓</span>' : '') +
+                (isActive ? ' <span style="margin-left:auto;font-size:0.7rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>' : '') +
                 '</button>';
         }).join('');
     // Event delegation для кнопок стадій
@@ -1542,7 +1542,7 @@ window.crmOpenDeal = function(dealId) {
                     <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">
                         ${_esc(deal.clientName || '')}
                         ${deal.clientNiche ? ` · ${_esc(deal.clientNiche)}` : ''}
-                        ${deal.nextContactDate ? `<span style="margin-left:6px;padding:1px 7px;border-radius:8px;font-size:0.68rem;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#f0fdf4'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#16a34a'};">📅 ${deal.nextContactDate}</span>` : ''}
+                        ${deal.nextContactDate ? `<span style="margin-left:6px;padding:1px 7px;border-radius:8px;font-size:0.68rem;font-weight:600;background:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#fef2f2' : '#f0fdf4'};color:${deal.nextContactDate < new Date().toISOString().split('T')[0] ? '#ef4444' : '#16a34a'};"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${deal.nextContactDate}</span>` : ''}
                     </div>
                 </div>
                 <div style="display:flex;gap:0.4rem;align-items:center;">
@@ -1591,7 +1591,7 @@ window.crmOpenDeal = function(dealId) {
                     style="padding:0.5rem 1rem;background:white;color:#374151;border:1px solid #e8eaed;
                     border-radius:7px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;"
                     title="Виставити рахунок для угоди">
-                    💰 Рахунок
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Рахунок
                 </button>
                 <button onclick="crmSaveDeal('${deal.id}')"
                     style="padding:0.5rem 1.25rem;background:#22c55e;color:white;border:none;
@@ -1670,26 +1670,26 @@ function _renderDealDetails(deal) {
             <button onclick="crmStartCall('${deal.id}','${_esc(deal.phone)}','${_esc(deal.clientName||'')}')"
                 style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#f0fdf4;
                 border:1px solid #bbf7d0;border-radius:7px;color:#16a34a;font-size:0.78rem;font-weight:600;cursor:pointer;border:1px solid #bbf7d0;">
-                📞 Дзвінок
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Дзвінок
             </button>
             <a href="https://wa.me/${(deal.phone||'').replace(/[^0-9]/g,'')}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;color:#16a34a;font-size:0.78rem;font-weight:600;text-decoration:none;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.306A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 11.999 2zm.001 18a7.96 7.96 0 0 1-4.073-1.114l-.292-.174-3.012.79.803-2.927-.19-.3A7.96 7.96 0 0 1 4 12c0-4.411 3.588-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
                 WhatsApp
             </a>
             <a href="viber://chat?number=${(deal.phone||'').replace(/[^0-9]/g,'')}" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#f5f0ff;border:1px solid #ddd6fe;border-radius:7px;color:#7c3aed;font-size:0.78rem;font-weight:600;text-decoration:none;">
-                📱 Viber
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Viber
             </a>` : ''}
             ${deal.telegram ? `
             <a href="https://t.me/${(deal.telegram||'').replace('@','')}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:7px;color:#2563eb;font-size:0.78rem;font-weight:600;text-decoration:none;">
-                ✈️ Telegram
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>️ Telegram
             </a>` : ''}
             ${deal.instagram ? `
             <a href="https://instagram.com/${(deal.instagram||'').replace('@','')}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#fdf4ff;border:1px solid #f0abfc;border-radius:7px;color:#a21caf;font-size:0.78rem;font-weight:600;text-decoration:none;">
-                📸 Instagram
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Instagram
             </a>` : ''}
             ${deal.email ? `
             <a href="mailto:${_esc(deal.email)}" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;color:#ea580c;font-size:0.78rem;font-weight:600;text-decoration:none;">
-                ✉️ Email
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>️ Email
             </a>` : ''}
         </div>
     </div>` : ''}
@@ -1762,7 +1762,7 @@ function _renderDealDetails(deal) {
 
     <!-- Доставка / Оплата -->
     <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
-        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">📦 Доставка та оплата</div>
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Доставка та оплата</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
             <div>
                 <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">ТТН Нова Пошта</label>
@@ -1772,7 +1772,7 @@ function _renderDealDetails(deal) {
                     ${deal.ttn ? `<button onclick="crmTrackNP('${_esc(deal.ttn)}')"
                         title="Відстежити"
                         style="padding:0.3rem 0.5rem;background:#e30613;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.7rem;font-weight:600;white-space:nowrap;">
-                        📦 Статус
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Статус
                     </button>` : ''}
                 </div>
             </div>
@@ -1781,8 +1781,8 @@ function _renderDealDetails(deal) {
                 <select id="dd_payStatus" style="${inp}background:white;cursor:pointer;font-size:0.78rem;">
                     <option value="" ${!deal.payStatus?'selected':''}>— не встановлено —</option>
                     <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>⏳ Очікує оплати</option>
-                    <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}>✅ Оплачено</option>
-                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}>🔶 Частково</option>
+                    <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Оплачено</option>
+                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><polygon points="12,2 22,12 12,22 2,12"/></svg> Частково</option>
                     <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>↩️ Повернено</option>
                 </select>
             </div>
@@ -1790,7 +1790,7 @@ function _renderDealDetails(deal) {
         ${deal.amount ? `
         <button onclick="crmMonoPayLink(${deal.amount||0},'${_esc(deal.title||deal.clientName||'')}','${deal.id}')"
             style="padding:0.3rem 0.75rem;background:#1f3950;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
-            💳 Monobank — посилання на оплату ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Monobank — посилання на оплату ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
         </button>` : ''}
     </div>
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
@@ -1906,11 +1906,11 @@ window.crmToggleDealChat = async function (dealId) {
         chatPane.style.display = 'flex';
         const msgsEl = document.getElementById('chatMsgs_crmdeal');
         const headerEl = document.getElementById('chatMsgHeader_crmdeal');
-        if (headerEl) headerEl.innerHTML = '<div style="font-size:0.8rem;color:#6b7280;font-weight:600;">💬 Чат з клієнтом</div>';
+        if (headerEl) headerEl.innerHTML = '<div style="font-size:0.8rem;color:#6b7280;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Чат з клієнтом</div>';
         if (msgsEl) msgsEl.innerHTML = `
             <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
                 height:100%;text-align:center;padding:2rem;color:#9ca3af;">
-                <div style="font-size:2rem;margin-bottom:0.75rem;">💬</div>
+                <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
                 <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Чат не підключено</div>
                 <div style="font-size:0.75rem;line-height:1.5;">
                     Клієнт ще не писав через бота.<br>
@@ -1921,17 +1921,17 @@ window.crmToggleDealChat = async function (dealId) {
                     <a href="https://t.me/+${String(deal.phone).replace(/\D/g,'')}" target="_blank"
                         style="padding:0.45rem;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;
                         border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
-                        ✈️ Написати в Telegram
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>️ Написати в Telegram
                     </a>
                     <a href="https://wa.me/${String(deal.phone).replace(/\D/g,'')}" target="_blank"
                         style="padding:0.45rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
                         border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
-                        💬 Написати в WhatsApp
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Написати в WhatsApp
                     </a>
                     <a href="viber://chat?number=${String(deal.phone).replace(/\D/g,'')}" 
                         style="padding:0.45rem;background:#f5f0ff;color:#7c3aed;border:1px solid #ddd6fe;
                         border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
-                        📱 Написати в Viber
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Написати в Viber
                     </a>
                 </div>` : ''}
             </div>`;
@@ -2175,7 +2175,7 @@ async function _loadTasksTab(deal) {
                 const deadlinePart = task.deadlineDate ? '<span style="font-size:0.68rem;color:' + (isOverdue?'#ef4444':'#6b7280') + ';">' + task.deadlineDate + '</span>' : '';
                 const asgnPart = asgn ? '<span style="font-size:0.68rem;color:#9ca3af;">' + _esc(asgn.name||asgn.email) + '</span>' : '';
                 // FIX H: data-taskid замість inline onclick
-                const donePart = task.status !== 'done' ? '<button data-taskid="' + task.id + '" class="crm-task-done-btn" style="padding:4px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.72rem;font-weight:600;">✓ Готово</button>' : '';
+                const donePart = task.status !== 'done' ? '<button data-taskid="' + task.id + '" class="crm-task-done-btn" style="padding:4px 8px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.72rem;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Готово</button>' : '';
                 const notePart = task.note ? '<div style="font-size:0.74rem;color:#9ca3af;margin-top:4px;">' + _esc((task.note||'').slice(0,100)) + '</div>' : '';
                 return '<div style="background:white;border:1px solid #e8eaed;border-left:3px solid ' + col + ';border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.5rem;">' +
                     '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">' +
@@ -2194,13 +2194,13 @@ async function _loadTasksTab(deal) {
         cnt.innerHTML = '<div style="display:flex;flex-direction:column;gap:0.75rem;">' +
             // CRM-специфічні задачі (авто + ручні всередині угоди)
             '<div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:0.75rem;">' +
-                '<div style="font-size:0.78rem;font-weight:700;color:#374151;margin-bottom:0.5rem;">⚡ Задачі угоди</div>' +
+                '<div style="font-size:0.78rem;font-weight:700;color:#374151;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Задачі угоди</div>' +
                 '<div id="crmDealTasksList"></div>' +
             '</div>' +
             // Загальні задачі з таск-менеджера
             '<div style="background:white;border:1px solid #e8eaed;border-radius:10px;padding:0.75rem;">' +
                 '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">' +
-                    '<div style="font-size:0.78rem;font-weight:700;color:#374151;">📋 Задачі з менеджера (' + dealTasks.length + ')</div>' +
+                    '<div style="font-size:0.78rem;font-weight:700;color:#374151;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Задачі з менеджера (' + dealTasks.length + ')</div>' +
                     '<button onclick="crmCreateTaskFromDeal(\'' + deal.id + '\')" style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;">' +
                         I.plus + ' Задача</button></div>' + rows +
             '</div>' +
@@ -2345,16 +2345,16 @@ async function _loadAITab(deal) {
 
     // Збираємо контекст угоди для preview
     const ctx = [
-        deal.clientName ? `👤 ${deal.clientName}` : null,
-        deal.amount ? `💰 ${Number(deal.amount).toLocaleString('uk-UA')} грн` : null,
-        deal.note ? `📝 ${deal.note.slice(0,60)}${deal.note.length>60?'...':''}` : null,
+        deal.clientName ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${deal.clientName}` : null,
+        deal.amount ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> ${Number(deal.amount).toLocaleString('uk-UA')} грн` : null,
+        deal.note ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> ${deal.note.slice(0,60)}${deal.note.length>60?'...':''}` : null,
     ].filter(Boolean);
 
     content.innerHTML = `
     <div style="text-align:center;padding:1.5rem 1rem;">
         <div style="width:52px;height:52px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:14px;
             margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;color:#22c55e;font-size:1.4rem;">
-            🤖
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
         </div>
         <div style="font-weight:700;font-size:0.92rem;margin-bottom:0.35rem;color:#111827;">AI Аналіз угоди</div>
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:1rem;line-height:1.5;">
@@ -2366,7 +2366,7 @@ async function _loadAITab(deal) {
         <button onclick="crmRunAI('${deal.id}')"
             style="padding:0.65rem 1.75rem;background:#22c55e;color:white;border:none;
             border-radius:8px;cursor:pointer;font-weight:600;font-size:0.84rem;display:inline-flex;align-items:center;gap:0.4rem;">
-            🤖 Запустити аналіз
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg> Запустити аналіз
         </button>
         <div style="font-size:0.68rem;color:#d1d5db;margin-top:0.5rem;">~5 секунд</div>
     </div>`;
@@ -2523,7 +2523,7 @@ window.crmOpenCreateDeal = function(defaultStage) {
                             box-shadow:0 4px 12px rgba(0,0,0,0.1);z-index:100;max-height:160px;overflow-y:auto;"></div>
                     </div>
                     <div id="nd_clientLinked" style="display:none;margin-top:4px;font-size:0.68rem;color:#16a34a;font-weight:600;">
-                        ✓ <span id="nd_clientLinkedName"></span> — клієнт прив'язаний
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span id="nd_clientLinkedName"></span> — клієнт прив'язаний
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
@@ -2774,7 +2774,7 @@ window.crmOpenClient = function(clientId) {
                 </div>
             </div>
             <button onclick="document.getElementById('crmClientCard').style.display='none'"
-                style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px;font-size:1rem;">✕</button>
+                style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px;font-size:1rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
 
         <!-- Контакти -->
@@ -3116,7 +3116,7 @@ async function _renderActivitiesTab() {
                             const sl = (crm.pipeline?.stages||[]);
                             const fromL = sl.find(s=>s.id===a.from)?.label || a.from;
                             const toL   = sl.find(s=>s.id===a.to)?.label   || a.to;
-                            return `<div style="font-size:0.78rem;color:#6b7280;margin-top:3px;">📍 ${_esc(fromL)} → ${_esc(toL)}</div>`;
+                            return `<div style="font-size:0.78rem;color:#6b7280;margin-top:3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${_esc(fromL)} → ${_esc(toL)}</div>`;
                         }
                         if (a.note || a.text) return `<div style="font-size:0.8rem;color:#6b7280;margin-top:3px;">${_esc(a.note||a.text)}</div>`;
                         return '';
@@ -3446,7 +3446,7 @@ function _renderAnalytics() {
         <!-- Причини програшу — повний блок -->
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;margin-bottom:0.75rem;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-                <div style="font-weight:700;font-size:0.85rem;color:#111827;">❌ Причини програшу</div>
+                <div style="font-weight:700;font-size:0.85rem;color:#111827;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Причини програшу</div>
                 <div style="display:flex;gap:0.5rem;align-items:center;">
                     <span style="font-size:0.72rem;color:#9ca3af;">${lostDealsAll.length} угод</span>
                     ${lostDealsAll.length>0 ? `<span style="font-size:0.72rem;font-weight:700;color:#ef4444;">${_fmt(lostDealsAll.reduce((s,d)=>s+(d.amount||0),0))} грн втрачено</span>` : ''}
@@ -3473,7 +3473,7 @@ function _renderAnalytics() {
         })() : '<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1rem;">Програних угод ще немає</div>'}
             ${lostDealsAll.filter(d=>!d.lostReason&&!d.lostReasonLabel).length>0 ? `
             <div style="margin-top:0.5rem;padding:0.5rem 0.65rem;background:#fffbeb;border:1px solid #fde68a;border-radius:7px;font-size:0.72rem;color:#92400e;">
-                ⚠️ ${lostDealsAll.filter(d=>!d.lostReason&&!d.lostReasonLabel).length} угод без причини — попросіть менеджерів вказувати причину при закритті
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️ ${lostDealsAll.filter(d=>!d.lostReason&&!d.lostReasonLabel).length} угод без причини — попросіть менеджерів вказувати причину при закритті
             </div>` : ''}
         </div>
 
@@ -3653,7 +3653,7 @@ function _renderCRMSettings() {
             el2.innerHTML = window.crmRenderTaskTemplatesSettings();
         var el3 = document.getElementById('crmSettingsSaveTasksBlock');
         if (el3 && typeof window.crmSaveTaskTemplates === 'function')
-            el3.innerHTML = '<button onclick="crmSaveTaskTemplates()" style="padding:0.55rem;width:100%;background:#3b82f6;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.83rem;">💾 Зберегти шаблони задач</button>';
+            el3.innerHTML = '<button onclick="crmSaveTaskTemplates()" style="padding:0.55rem;width:100%;background:#3b82f6;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.83rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти шаблони задач</button>';
     });
 }
 
@@ -4225,15 +4225,15 @@ function _checkContactReminders() {
     if (overdue.length > 0) {
         const label = overdue[0].clientName || overdue[0].title || window.t('crmDeal');
         const msg = overdue.length === 1
-            ? `🔴 Прострочений контакт: ${label}`
-            : `🔴 ${overdue.length} прострочених контактів`;
+            ? `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> Прострочений контакт: ${label}`
+            : `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> ${overdue.length} прострочених контактів`;
         if (typeof showToast === 'function') showToast(msg, 'error');
     }
     if (dueToday.length > 0) {
         const label = dueToday[0].clientName || dueToday[0].title || window.t('crmDeal');
         const msg = dueToday.length === 1
-            ? `📅 Контакт сьогодні: ${label}`
-            : `📅 ${dueToday.length} контактів на сьогодні`;
+            ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Контакт сьогодні: ${label}`
+            : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${dueToday.length} контактів на сьогодні`;
         if (typeof showToast === 'function') showToast(msg, 'warning');
     }
 
@@ -4246,8 +4246,8 @@ function _checkContactReminders() {
         if (all.length > 0) {
             const first = all[0];
             const title = overdue.length > 0
-                ? `🔴 ${overdue.length} прострочених контактів CRM`
-                : `📅 ${dueToday.length} контактів на сьогодні`;
+                ? `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> ${overdue.length} прострочених контактів CRM`
+                : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${dueToday.length} контактів на сьогодні`;
             const body = first.clientName || first.title || '';
             window.sendBrowserNotif({
                 title,

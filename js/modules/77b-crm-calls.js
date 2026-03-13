@@ -56,7 +56,7 @@ function _crmShowCallLogModal() {
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
             <div style="width:44px;height:44px;background:#f0fdf4;border-radius:50%;
                 display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">
-                📞
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </div>
             <div style="flex:1;">
                 <div style="font-weight:700;font-size:0.92rem;color:#111827;">${_escStr(call.clientName || 'Клієнт')}</div>
@@ -70,10 +70,10 @@ function _crmShowCallLogModal() {
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">Результат дзвінка</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;">
                 ${[
-                    ['answered',  '✅ Взяв трубку',   '#f0fdf4', '#16a34a', '#bbf7d0'],
-                    ['missed',    '❌ Не відповів',    '#fef2f2', '#ef4444', '#fecaca'],
-                    ['busy',      '🔔 Зайнято',        '#fff7ed', '#ea580c', '#fed7aa'],
-                    ['callback',  '📞 Передзвонити',   '#eff6ff', '#2563eb', '#bfdbfe'],
+                    ['answered',  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Взяв трубку',   '#f0fdf4', '#16a34a', '#bbf7d0'],
+                    ['missed',    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Не відповів',    '#fef2f2', '#ef4444', '#fecaca'],
+                    ['busy',      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Зайнято',        '#fff7ed', '#ea580c', '#fed7aa'],
+                    ['callback',  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Передзвонити',   '#eff6ff', '#2563eb', '#bfdbfe'],
                 ].map(([val, label, bg, color, border]) => `
                 <button onclick="crmSelectCallResult('${val}')" id="crmCallResult_${val}"
                     style="padding:0.5rem;background:${bg};color:${color};border:1px solid ${border};
@@ -117,7 +117,7 @@ function _crmShowCallLogModal() {
             <button onclick="crmSaveCallLog()"
                 style="flex:2;padding:0.6rem;background:#22c55e;color:white;border:none;
                 border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:700;">
-                💾 Зберегти дзвінок
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти дзвінок
             </button>
         </div>
     </div>`;
@@ -221,7 +221,7 @@ window.crmSaveCallLog = async function () {
         window._crmActiveCall = null;
     } catch (e) {
         if (window.showToast) showToast('Помилка: ' + e.message, 'error');
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 Зберегти дзвінок'; }
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти дзвінок'; }
     }
 };
 

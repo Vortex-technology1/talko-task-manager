@@ -101,14 +101,14 @@ function _crmRenderTasksList(container, tasks, dealId) {
                 </div>
                 <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:2px;">
                     ${t.dueDate ? `<span style="font-size:0.68rem;color:${overdue?'#ef4444':'#9ca3af'};">
-                        📅 ${t.dueDate}${overdue?' ⚠️':''}</span>` : ''}
-                    ${assignee ? `<span style="font-size:0.68rem;color:#6b7280;">👤 ${assignee.name||assignee.email}</span>` : ''}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${t.dueDate}${overdue?' <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️':''}</span>` : ''}
+                    ${assignee ? `<span style="font-size:0.68rem;color:#6b7280;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${assignee.name||assignee.email}</span>` : ''}
                     ${t.autoCreated ? `<span style="font-size:0.65rem;background:#f0fdf4;color:#16a34a;padding:1px 5px;border-radius:3px;">авто</span>` : ''}
                 </div>
             </div>
             <button onclick="crmDeleteDealTask('${dealId}','${t.id}')"
                 style="background:none;border:none;cursor:pointer;color:#d1d5db;font-size:0.8rem;
-                flex-shrink:0;padding:2px;" title="Видалити">✕</button>
+                flex-shrink:0;padding:2px;" title="Видалити"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>`;
     };
 
@@ -133,7 +133,7 @@ function _crmRenderTasksList(container, tasks, dealId) {
     ${done.length ? `
     <div style="margin-top:0.75rem;">
         <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.4rem;font-weight:600;">
-            ✅ Виконані (${done.length})
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Виконані (${done.length})
         </div>
         ${done.map(taskHtml).join('')}
     </div>` : ''}`;
@@ -200,7 +200,7 @@ window.crmRenderTaskTemplatesSettings = function () {
     return `
     <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
         <div style="font-weight:700;font-size:0.82rem;color:#111827;margin-bottom:0.3rem;">
-            ⚡ Авто-задачі при переході стадії
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Авто-задачі при переході стадії
         </div>
         <div style="font-size:0.71rem;color:#9ca3af;margin-bottom:0.85rem;">
             При переході угоди в стадію — задачі створюються автоматично
@@ -242,7 +242,7 @@ function _taskTemplateRow(t, i, stages) {
             <option value="me"       ${t.assignTo==='me'?'selected':''}>Мені</option>
         </select>
         <button onclick="crmRemoveTaskTemplate(${i})"
-            style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px;font-size:1rem;">✕</button>
+            style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px;font-size:1rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>`;
 }
 

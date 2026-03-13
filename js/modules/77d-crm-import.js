@@ -27,11 +27,11 @@ window.crmOpenImport = function () {
         <div style="display:flex;align-items:center;justify-content:space-between;
             padding:1rem 1.25rem;border-bottom:1px solid #e8eaed;flex-shrink:0;">
             <div>
-                <div style="font-weight:700;font-size:0.95rem;color:#111827;">📥 Імпорт клієнтів / угод</div>
+                <div style="font-weight:700;font-size:0.95rem;color:#111827;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Імпорт клієнтів / угод</div>
                 <div style="font-size:0.72rem;color:#9ca3af;margin-top:1px;">CSV або Excel (.xlsx)</div>
             </div>
             <button onclick="document.getElementById('crmImportModal').remove()"
-                style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;padding:4px;">✕</button>
+                style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;padding:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
 
         <!-- Body -->
@@ -55,7 +55,7 @@ function _crmImportStepUpload() {
             ondrop="event.preventDefault();this.style.background='#f8fafc';this.style.borderColor='#e8eaed';crmImportHandleFile(event.dataTransfer.files[0])"
             style="border:2px dashed #e8eaed;border-radius:10px;padding:2.5rem;text-align:center;
             cursor:pointer;background:#f8fafc;transition:all 0.15s;">
-            <div style="font-size:2rem;margin-bottom:0.5rem;">📄</div>
+            <div style="font-size:2rem;margin-bottom:0.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
             <div style="font-weight:600;color:#374151;font-size:0.88rem;">Перетягніть файл або натисніть</div>
             <div style="color:#9ca3af;font-size:0.75rem;margin-top:0.25rem;">CSV, XLSX — до 10 МБ</div>
         </div>
@@ -111,7 +111,7 @@ window.crmImportHandleFile = async function (file) {
     } catch (e) {
         body.innerHTML = `
         <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:1rem;color:#dc2626;font-size:0.82rem;">
-            ❌ ${e.message}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ${e.message}
         </div>
         <button id="crmImportBackBtn"
             style="margin-top:0.75rem;padding:0.4rem 1rem;background:#f4f5f7;border:1px solid #e8eaed;
@@ -243,7 +243,7 @@ function _crmImportStepMapping(rows) {
                 border:1px solid #e8eaed;border-radius:8px;cursor:pointer;background:#f8fafc;">
                 <input type="radio" name="crmImportType" value="clients" checked style="accent-color:#22c55e;">
                 <div>
-                    <div style="font-size:0.8rem;font-weight:600;color:#111827;">👥 Клієнти</div>
+                    <div style="font-size:0.8rem;font-weight:600;color:#111827;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Клієнти</div>
                     <div style="font-size:0.68rem;color:#6b7280;">Тільки картки клієнтів</div>
                 </div>
             </label>
@@ -251,7 +251,7 @@ function _crmImportStepMapping(rows) {
                 border:1px solid #e8eaed;border-radius:8px;cursor:pointer;background:#f8fafc;">
                 <input type="radio" name="crmImportType" value="deals" style="accent-color:#22c55e;">
                 <div>
-                    <div style="font-size:0.8rem;font-weight:600;color:#111827;">💼 Угоди</div>
+                    <div style="font-size:0.8rem;font-weight:600;color:#111827;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Угоди</div>
                     <div style="font-size:0.68rem;color:#6b7280;">Клієнти + угоди у воронці</div>
                 </div>
             </label>
@@ -434,7 +434,7 @@ window.crmImportExecute = async function () {
 
     body.innerHTML = `
     <div style="text-align:center;padding:1.5rem;">
-        <div style="font-size:2rem;margin-bottom:0.75rem;">✅</div>
+        <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
         <div style="font-weight:700;font-size:1rem;color:#111827;margin-bottom:0.5rem;">Імпорт завершено</div>
         <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem;">
             <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.65rem 1.25rem;">
