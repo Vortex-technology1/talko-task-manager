@@ -513,6 +513,17 @@ window._crmTodoSave = async function(dealId) {
         await ref.update(updates);
         await ref.collection('history').add(hist);
 
+        // Пишемо в Реєстр дій (Контроль)
+        if (typeof window.trackAction === 'function') {
+            const deal = window.crm?.deals?.find(x=>x.id===dealId);
+            const clientName = deal?.clientName || deal?.title || dealId.slice(-6);
+            const arType =
+                result==='answered' ? 'crm_call_done' :
+                result==='missed'   ? 'crm_call'      :
+                result==='sms'      ? 'crm_sms'       : 'crm_note';
+            window.trackAction(arType, { dealId, clientName, nextDate });
+        }
+
         // Оновлюємо local state одразу — не чекаємо Firestore snapshot
         const localDeal = window.crm && window.crm.deals && window.crm.deals.find(x=>x.id===dealId);
         if (localDeal) {

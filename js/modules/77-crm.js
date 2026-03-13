@@ -986,6 +986,14 @@ window.crmDrop = async function(e, newStage) {
         }
         if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
         if (crm.subTab === 'todo' && typeof renderCrmTodo === 'function') renderCrmTodo();
+        if (typeof window.trackAction === 'function') {
+            window.trackAction('crm_stage', {
+                dealId: deal.id,
+                clientName: deal.clientName || deal.title || '',
+                from: oldStage, to: newStage,
+                fromLabel: _stageLabel(oldStage), toLabel: _stageLabel(newStage),
+            });
+        }
     } catch(err) {
         console.error('[CRM drop]', err);
         deal.stage = oldStage;
@@ -1219,6 +1227,15 @@ window.crmConfirmLost = async function(dealId, newStage, oldStage) {
                 lostReason: reason, amount: deal.amount,
                 clientId: deal.clientId || null,          // FIX CF
                 assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
+            });
+        }
+        if (typeof window.trackAction === 'function') {
+            window.trackAction('crm_stage', {
+                dealId: deal.id,
+                clientName: deal.clientName || deal.title || '',
+                from: oldStage, to: newStage,
+                fromLabel: _stageLabel(oldStage), toLabel: 'Програно',
+                lostReason: reasonLabel || '',
             });
         }
         if (typeof showToast === 'function') showToast('Угоду закрито: ' + (reasonLabel || window.t('crmLostBtn')), 'error');
@@ -1557,6 +1574,13 @@ window.crmSaveDeal = async function(dealId) {
                 by: window.currentUser?.email || 'manager',
                 at: firebase.firestore.FieldValue.serverTimestamp(),
             });
+            if (typeof window.trackAction === 'function') {
+                window.trackAction('crm_stage', {
+                    dealId, clientName: deal.clientName || deal.title || '',
+                    from: deal.stage, to: stage,
+                    fromLabel: _stageLabel(deal.stage), toLabel: _stageLabel(stage),
+                });
+            }
             if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
                 await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
                     dealId, fromStage:deal.stage, toStage:stage,
@@ -1829,6 +1853,11 @@ window.crmAddActivity = async function(dealId) {
     try {
         await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).collection('history')
             .add({ type, text, by: window.currentUser?.email||'manager', at: firebase.firestore.FieldValue.serverTimestamp() });
+        if (typeof window.trackAction === 'function') {
+            const arDeal = crm.deals.find(d=>d.id===dealId);
+            const arType = type==='call'?'crm_call': type==='meeting'?'crm_meeting': type==='email'?'crm_email': 'crm_note';
+            window.trackAction(arType, { dealId, clientName: arDeal?.clientName||arDeal?.title||'', note: text||'' });
+        }
         const deal = crm.deals.find(d => d.id === dealId);
         if (deal) _loadActivityTab(deal);
     } catch(e) {
@@ -2055,6 +2084,13 @@ window.crmCreateDeal = async function() {
         if (typeof showToast === 'function') showToast(window.t('crmDealCreated'), 'success');
         if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
             emitTalkoEvent(window.TALKO_EVENTS.DEAL_CREATED, { dealId:ref.id, clientName:client||title, stage, amount });
+        }
+        if (typeof window.trackAction === 'function') {
+            window.trackAction('crm_deal_created', {
+                dealId: ref.id,
+                clientName: client || title || '',
+                stage, amount,
+            });
         }
     } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
 };
@@ -2484,6 +2520,11 @@ async function _renderActivitiesTab() {
                         by: window.currentUser?.email || 'manager',
                         at: firebase.firestore.FieldValue.serverTimestamp(),
                     });
+                if (typeof window.trackAction === 'function') {
+                    const aDeal = crm.deals.find(x=>x.id===dealId);
+                    const arType = type==='call'?'crm_call': type==='meeting'?'crm_meeting': type==='email'?'crm_email': 'crm_note';
+                    window.trackAction(arType, { dealId, clientName: aDeal?.clientName||aDeal?.title||'', note: note||'' });
+                }
                 if (window.showToast) showToast(window.t('crmActivitySaved'), 'success');
                 await _renderActivitiesTab();
             } catch(e2) { if(window.showToast) showToast(window.t('errPrefix') + e2.message, 'error'); }
