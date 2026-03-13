@@ -167,18 +167,18 @@ document.addEventListener('mousedown', function(e) {
         document.querySelectorAll('.hdr-dropdown-menu').forEach(function(m) { m.classList.remove('show'); });
     }
     var _navKeyMap = {
-        tabCoordination: { ua:'Координація', ru:'Координация', pl:'Koordynacja', en:'Coordination', de:'Koordination' },
-        navAnalytics:    { ua:'Аналітика',   ru:'Аналитика',   pl:'Analityka',   en:'Analytics',    de:'Analytik' },
-        tabBusiness:     { ua:'Бізнес',       ru:'Бизнес',       pl:'Biznes',       en:'Business',     de:'Business' },
-        tabMarketing:    { ua:'Маркетинг',    ru:'Маркетинг',    pl:'Marketing',    en:'Marketing',    de:'Marketing' },
-        tabBots:         { ua:'Боти',         ru:'Боты',         pl:'Boty',         en:'Bots',         de:'Bots' },
-        tabSites:        { ua:'Сайти',        ru:'Сайты',        pl:'Strony',       en:'Sites',        de:'Websites' },
-        tabIntegrations: { ua:'Інтеграції',   ru:'Интеграции',   pl:'Integracje',   en:'Integrations', de:'Integrationen' }
+        tabCoordination: { ua:'Координація', ru:'Координация', pl:'Koordynacja', en:'Coordination', de:'Koordination', cs:'Koordinace' },
+        navAnalytics:    { ua:'Аналітика',   ru:'Аналитика',   pl:'Analityka',   en:'Analytics',    de:'Analytik',     cs:'Analytika' },
+        tabBusiness:     { ua:'Бізнес',       ru:'Бизнес',       pl:'Biznes',       en:'Business',     de:'Business',     cs:'Byznys' },
+        tabMarketing:    { ua:'Маркетинг',    ru:'Маркетинг',    pl:'Marketing',    en:'Marketing',    de:'Marketing',    cs:'Marketing' },
+        tabBots:         { ua:'Боти',         ru:'Боты',         pl:'Boty',         en:'Bots',         de:'Bots',         cs:'Boty' },
+        tabSites:        { ua:'Сайти',        ru:'Сайты',        pl:'Strony',       en:'Sites',        de:'Websites',     cs:'Weby' },
+        tabIntegrations: { ua:'Інтеграції',   ru:'Интеграции',   pl:'Integracje',   en:'Integrations', de:'Integrationen',cs:'Integrace' }
     };
     // Patch missing keys into translations object (fixes old cached JS files)
     function _patchTranslations() {
         if (typeof translations === 'undefined') return;
-        ['ua','ru','pl','en','de'].forEach(function(l) {
+        ['ua','ru','pl','en','de','cs'].forEach(function(l) {
             if (!translations[l]) return;
             Object.keys(_navKeyMap).forEach(function(key) {
                 if (!translations[l][key]) translations[l][key] = _navKeyMap[key][l] || '';
@@ -205,7 +205,7 @@ document.addEventListener('mousedown', function(e) {
         });
     }
     function _syncAuthLangBtns(active) {
-        ['ua','ru','en','pl','de'].forEach(code => {
+        ['ua','ru','en','pl','de','cs'].forEach(code => {
             document.getElementById('langBtn_' + code)?.classList.toggle('active', code === active);
         });
     }
@@ -214,7 +214,7 @@ document.addEventListener('mousedown', function(e) {
         _patchTranslations(); // patch BEFORE setLanguage so it finds the keys
         if (typeof setLanguage === 'function') setLanguage(lang);
         applyNavTranslations(lang); // apply AFTER setLanguage as final guarantee
-        var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE' };
+        var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE', cs: 'CS' };
         var el = document.getElementById('currentLangLabel');
         if (el) el.textContent = labels[lang] || lang.toUpperCase();
         document.querySelectorAll('.lang-opt').forEach(function(b) {
@@ -313,6 +313,9 @@ document.addEventListener('mousedown', function(e) {
                         <button class="hdr-dropdown-item lang-opt" data-lang="de" onclick="event.stopPropagation();setLanguageFromDropdown('de')">
                             <span class="lang-flag"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;background:#374151;color:white;font-size:0.6rem;font-weight:700;border-radius:3px;letter-spacing:0.03em;">DE</span></span> Deutsch
                         </button>
+                        <button class="hdr-dropdown-item lang-opt" id="langCS" data-lang="cs" onclick="event.stopPropagation();setLanguageFromDropdown('cs')">
+                            <span class="lang-flag"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;background:#374151;color:white;font-size:0.6rem;font-weight:700;border-radius:3px;letter-spacing:0.03em;">CS</span></span> Čeština
+                        </button>
                     </div>
                 </div>
                 <!-- Mobile Search Button -->
@@ -353,6 +356,7 @@ document.addEventListener('mousedown', function(e) {
                     <button class="auth-lang-btn" id="langBtn_en" onclick="setLanguageFromDropdown('en');_syncAuthLangBtns('en')">EN</button>
                     <button class="auth-lang-btn" id="langBtn_pl" onclick="setLanguageFromDropdown('pl');_syncAuthLangBtns('pl')">PL</button>
                     <button class="auth-lang-btn" id="langBtn_de" onclick="setLanguageFromDropdown('de');_syncAuthLangBtns('de')">DE</button>
+                    <button class="auth-lang-btn" id="langBtn_cs" onclick="setLanguageFromDropdown('cs');_syncAuthLangBtns('cs')">CS</button>
                 </div>
                 <div class="auth-header">
                     <div class="auth-logo-mark">
@@ -2461,7 +2465,7 @@ document.addEventListener('mousedown', function(e) {
 
 
     <!-- Scripts (modular) -->
-    <script src="js/modules/01-translations-v2.js?v=20260313e" defer></script>
+    <script src="js/modules/01-translations-v2.js?v=20260313cs1" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260311s" defer></script>
     <script src="js/modules/03-app-state.js?v=20260313u" defer></script>
     <script src="js/modules/04-google-calendar-config.js?v=20260311s" defer></script>
@@ -2980,6 +2984,7 @@ document.addEventListener('mousedown', function(e) {
                         <button onclick="setLanguageFromDropdown('pl');closeMobileMenu();" id="mLangPL" style="flex:1;padding:0.55rem;background:white;border:1.5px solid #e5e7eb;border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;color:#374151;">PL</button>
                         <button onclick="setLanguageFromDropdown('en');closeMobileMenu();" id="mLangEN" style="flex:1;padding:0.55rem;background:white;border:1.5px solid #e5e7eb;border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;color:#374151;">EN</button>
                         <button onclick="setLanguageFromDropdown('de');closeMobileMenu();" id="mLangDE" style="flex:1;padding:0.55rem;background:white;border:1.5px solid #e5e7eb;border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;color:#374151;">DE</button>
+                        <button onclick="setLanguageFromDropdown('cs');closeMobileMenu();" id="mLangCS" style="flex:1;padding:0.55rem;background:white;border:1.5px solid #e5e7eb;border-radius:10px;cursor:pointer;font-size:0.8rem;font-weight:600;color:#374151;">CS</button>
                     </div>
                 </div>
 
