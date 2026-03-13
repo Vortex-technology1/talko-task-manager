@@ -5067,13 +5067,101 @@
         learningProgress[moduleId].homeworkText = ta.value;
         learningProgress[moduleId].homeworkDone = newHomeworkDone;
         saveLearningProgress();
+
+        // ── Зберігаємо профільні поля компанії ─────────────────
+        // Модуль 10: Ціль і Задум → companyGoal, companyConcept
+        // Модуль 11: ЦКП → companyCKP
+        if (moduleId === 10 || moduleId === 11) {
+            _saveLearningCompanyProfile(moduleId);
+        }
+
         setTimeout(() => window._openLearningModule(moduleId), 2100);
     };
+
+    // ── Збереження профільних полів компанії з уроків 10/11 ──
+    async function _saveLearningCompanyProfile(moduleId) {
+        const cid = _companyId();
+        if (!cid || !_db()) return;
+
+        const updates = {};
+
+        if (moduleId === 10) {
+            const goalEl    = document.getElementById('learningCompanyGoal');
+            const conceptEl = document.getElementById('learningCompanyConcept');
+            const idealEl   = document.getElementById('learningCompanyIdeal');
+            if (goalEl    && goalEl.value.trim())    updates.companyGoal    = goalEl.value.trim();
+            if (conceptEl && conceptEl.value.trim()) updates.companyConcept = conceptEl.value.trim();
+            if (idealEl   && idealEl.value.trim())   updates.companyIdeal   = idealEl.value.trim();
+        }
+
+        if (moduleId === 11) {
+            const ckpEl = document.getElementById('learningCompanyCKP');
+            if (ckpEl && ckpEl.value.trim()) updates.companyCKP = ckpEl.value.trim();
+        }
+
+        if (Object.keys(updates).length === 0) return;
+
+        updates.profileUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
+        updates.profileUpdatedBy = window.currentUser?.email || 'owner';
+
+        try {
+            await _db().collection('companies').doc(cid).update(updates);
+
+            // Оновлюємо кеш
+            if (!window._cachedCompanyProfile) window._cachedCompanyProfile = {};
+            Object.assign(window._cachedCompanyProfile, updates);
+
+            // Синхронізуємо поля в Системі → Компанія якщо вони відкриті
+            const fieldMap = {
+                companyGoal:    'settingGoal',
+                companyConcept: 'settingConcept',
+                companyCKP:     'settingCKP',
+                companyIdeal:   'settingIdealPicture',
+            };
+            Object.entries(updates).forEach(([key, val]) => {
+                if (fieldMap[key]) {
+                    const el = document.getElementById(fieldMap[key]);
+                    if (el && typeof val === 'string') {
+                        el.value = val;
+                        // Підсвічуємо поле на секунду
+                        el.style.borderColor = '#22c55e';
+                        setTimeout(() => { el.style.borderColor = ''; }, 1500);
+                    }
+                }
+            });
+
+            if (window.showToast) {
+                const labels = {
+                    10: 'Ціль і задум збережено в профіль компанії ✓',
+                    11: 'ЦКП збережено в профіль компанії ✓',
+                };
+                showToast(labels[moduleId] || 'Збережено', 'success');
+            }
+        } catch(e) {
+            console.warn('[Learning] Company profile save error:', e);
+        }
+    }
+    window._saveLearningCompanyProfile = _saveLearningCompanyProfile;
 
     // ── Init (called when tab opens) ──────────────────────────
     window.initLearning = function() {
         loadLearningProgress();
+        // Завантажуємо профіль компанії для підтягування в поля уроків 10/11
+        _loadCompanyProfileCache();
     };
+
+    // Кешуємо профіль компанії для уроків 10/11
+    async function _loadCompanyProfileCache() {
+        const cid = _companyId();
+        if (!cid || !_db()) return;
+        try {
+            const snap = await _db().collection('companies').doc(cid).get();
+            if (snap.exists) {
+                window._cachedCompanyProfile = snap.data();
+            }
+        } catch(e) { /* ignore */ }
+    }
+    window._loadCompanyProfileCache = _loadCompanyProfileCache;
 
     // ── Re-render on tab switch ───────────────────────────────
     window.renderLearning = renderLearning;
@@ -5194,6 +5282,55 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                         : `<div class="l-homework-desc">${hwHtml}</div>`
                     }
                     ${hwLinkUrl ? `<a href="${hwLinkUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;font-size:0.875rem;color:#16a34a;text-decoration:none;font-weight:600;margin-bottom:0.75rem;">${hwLinkName || '→ AI-асистент'}</a>` : ''}
+
+                    ${/* Модуль 10: Ціль і задум — профільні поля */ moduleId === 10 ? `
+                    <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:1rem;margin-bottom:0.75rem;">
+                        <div style="font-size:0.72rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.75rem;display:flex;align-items:center;gap:6px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                            Профіль компанії — зберігається автоматично при збереженні
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+                            <div>
+                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Ціль компанії <span style="color:#ef4444;">*</span></label>
+                                <input id="learningCompanyGoal" type="text"
+                                    placeholder="напр. Стати лідером ринку медичних послуг у регіоні до 2027 року"
+                                    value="${(window._cachedCompanyProfile?.companyGoal||'').replace(/"/g,'&quot;')}"
+                                    style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;background:#fff;">
+                            </div>
+                            <div>
+                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Задум компанії</label>
+                                <textarea id="learningCompanyConcept" rows="2"
+                                    placeholder="Чому ви створили цей бізнес? Яка ваша місія?"
+                                    style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;resize:vertical;background:#fff;">${(window._cachedCompanyProfile?.companyConcept||'')}</textarea>
+                            </div>
+                            <div>
+                                <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">Ідеальна картина компанії</label>
+                                <textarea id="learningCompanyIdeal" rows="2"
+                                    placeholder="Опишіть як виглядає ваш бізнес через 3-5 років у деталях..."
+                                    style="width:100%;padding:0.45rem 0.6rem;border:1px solid #86efac;border-radius:7px;font-size:0.85rem;box-sizing:border-box;resize:vertical;background:#fff;">${(window._cachedCompanyProfile?.companyIdeal||'')}</textarea>
+                            </div>
+                        </div>
+                    </div>` : ''}
+
+                    ${/* Модуль 11: ЦКП — профільне поле */ moduleId === 11 ? `
+                    <div style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:10px;padding:1rem;margin-bottom:0.75rem;">
+                        <div style="font-size:0.72rem;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.05em;margin-bottom:0.75rem;display:flex;align-items:center;gap:6px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            ЦКП — Цінний Кінцевий Продукт
+                        </div>
+                        <div>
+                            <label style="font-size:0.72rem;font-weight:600;color:#374151;display:block;margin-bottom:0.25rem;">
+                                Головний ЦКП вашої компанії <span style="color:#ef4444;">*</span>
+                            </label>
+                            <textarea id="learningCompanyCKP" rows="3"
+                                placeholder="Приклад: «Власник бізнесу виходить з операційки за 65 днів»&#10;або: «Готовий об'єкт у встановлені терміни, з гарантією якості, без додаткових витрат понад кошторис»"
+                                style="width:100%;padding:0.45rem 0.6rem;border:1px solid #7dd3fc;border-radius:7px;font-size:0.85rem;box-sizing:border-box;resize:vertical;background:#fff;">${(window._cachedCompanyProfile?.companyCKP||'')}</textarea>
+                            <div style="font-size:0.72rem;color:#6b7280;margin-top:0.3rem;">
+                                Формула: конкретна зміна + умови + без чого (якщо є)
+                            </div>
+                        </div>
+                    </div>` : ''}
+
                     <textarea class="l-homework-textarea" id="learningHwTextarea" placeholder="${t('learningHwPlaceholder')}">${hwText}</textarea>
                     <div class="l-homework-actions">
                         ${hwDone ? `<span class="l-hw-done-badge"><i data-lucide="check" class="icon" style="width:14px;height:14px;"></i> ${t('learningDone')}</span>` : ''}

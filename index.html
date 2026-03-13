@@ -1425,6 +1425,10 @@ document.addEventListener('mousedown', function(e) {
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
                                         Мета компанії
                                         <span title="Відповідає на питання 'що зробити для клієнта'. Результат, а не процес. 1-2 речення"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                        <span onclick="switchTab('learning');setTimeout(function(){window._openLearningModule&&window._openLearningModule(10)},400)"
+                                            style="margin-left:auto;font-size:0.68rem;color:#16a34a;cursor:pointer;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1px 7px;">
+                                            ← Урок 10
+                                        </span>
                                     </label>
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
                                         Приклад: «Допомагати власникам бізнесу вибудовувати систему управління, яка працює без їхньої постійної участі»
@@ -1451,6 +1455,10 @@ document.addEventListener('mousedown', function(e) {
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
                                         Цінний Кінцевий Продукт (ЦКП)
                                         <span title="Що отримує клієнт як завершений результат. Не процес, а результат"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                                        <span onclick="switchTab('learning');setTimeout(function(){window._openLearningModule&&window._openLearningModule(11)},400)"
+                                            style="margin-left:auto;font-size:0.68rem;color:#0369a1;cursor:pointer;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:1px 7px;">
+                                            ← Урок 11
+                                        </span>
                                     </label>
                                     <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:0.4rem;">
                                         Приклад: «Готовий об'єкт у встановлені терміни, з гарантією якості, без додаткових витрат понад кошторис»
@@ -3845,7 +3853,7 @@ document.addEventListener('mousedown', function(e) {
             document.body.appendChild(s);
         }
         loadScript('js/modules/80-learning-data.js?v=20260312j', function() {
-            loadScript('js/modules/80-learning-engine.js?v=20260312j', function() {
+            loadScript('js/modules/80-learning-engine.js?v=20260313f', function() {
                 window._learningLoaded = true;
                 cb && cb();
             });
