@@ -33,6 +33,26 @@ function _tomorrowStr() {
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
+// SLA — кількість днів без контакту після яких лід вважається "застряглим"
+const CRM_SLA_DAYS = 3;
+
+function _slaBreached(d) {
+    // Лід без будь-якого контакту більше CRM_SLA_DAYS днів
+    const today = _todayStr();
+    // Якщо є nextContactDate і він прострочений більше ніж SLA_DAYS
+    if (d.nextContactDate && d.nextContactDate < today) {
+        const diff = Math.round((new Date(today) - new Date(d.nextContactDate)) / 86400000);
+        if (diff >= CRM_SLA_DAYS) return diff;
+    }
+    // Якщо немає жодного контакту і лід старий
+    if (!d.nextContactDate && d.createdAt) {
+        const created = d.createdAt.toDate ? d.createdAt.toDate() : new Date(d.createdAt);
+        const diff = Math.floor((new Date() - created) / 86400000);
+        if (diff >= CRM_SLA_DAYS) return diff;
+    }
+    return 0;
+}
+
 // 0=прострочений, 1=сьогодні, 2=без дати, 3=майбутнє
 function _priority(d) {
     const today = _todayStr();
@@ -126,6 +146,7 @@ window.renderCrmTodo = function() {
         ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} прострочено</div>`:''}
         ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} на сьогодні</div>`:''}
         ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} нових</div>`:''}
+        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;">⚠️ ${sla.length} SLA порушено</div>`:''})()}
       </div>
 
       <!-- Фільтр по стадіях -->
@@ -184,6 +205,8 @@ function _renderRow(d, i) {
         const diff=Math.floor((new Date()-e)/86400000);
         if(diff>0)daysInStage=diff+' дн.';
     }
+    const slaDays = _slaBreached(d);
+    const slaTag = slaDays>0 ? `<span style="background:#fdf4ff;border:1px solid #e9d5ff;color:#7c3aed;font-size:0.65rem;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:4px;">SLA +${slaDays}д</span>` : '';
 
     return `
     <div onclick="crmTodoOpenCard('${d.id}')"
@@ -227,6 +250,7 @@ function _renderRow(d, i) {
       </div>
 
       ${daysInStage?`<div style="font-size:0.68rem;color:#9ca3af;flex-shrink:0;white-space:nowrap;">${daysInStage}</div>`:''}
+      ${slaTag}
 
       <div style="color:#d1d5db;flex-shrink:0;">${TI.arrow}</div>
     </div>`;
