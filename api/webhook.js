@@ -616,7 +616,7 @@ module.exports = async (req, res) => {
                     await sendMsg(channel, botToken, normalized.senderId, endText);
                     await saveBotMessage(compRef, contactId, endText);
                 }
-                await finish(session, flow, compRef, channel);
+                await finish(session, flow, compRef, channel, _compData);
                 nodeId = null;
                 break;
 
@@ -1007,7 +1007,7 @@ async function saveIncomingMessage(compRef, channel, normalized, botId) {
     }
 }
 
-async function finish(session, flow, compRef, channel) {
+async function finish(session, flow, compRef, channel, compData = {}) {
     try {
         const d = session.data || {};
 
@@ -1047,15 +1047,12 @@ async function finish(session, flow, compRef, channel) {
             contactData, { merge: true }
         );
 
-        // createdAt тільки при першому записі
+        // createdAt тільки при першому записі — set merge з serverTimestamp, Firestore не перезапише існуюче поле
         const contactRef = compRef.collection('contacts').doc(contactId);
-        const existing = await contactRef.get();
-        if (!existing.exists || !existing.data().createdAt) {
-            await contactRef.set(
-                { createdAt: admin.firestore.FieldValue.serverTimestamp() },
-                { merge: true }
-            );
-        }
+        await contactRef.set(
+            { createdAt: admin.firestore.FieldValue.serverTimestamp() },
+            { merge: true }
+        );
 
         // ── AUTO CRM: записуємо в crm_clients + crm_deals ───
         try {
@@ -1139,8 +1136,8 @@ async function finish(session, flow, compRef, channel) {
                     pipelineId,                                          // FIX CB: critical for kanban query
                     probability:     firstStage.probability || 10,
                     stageEnteredAt:  admin.firestore.FieldValue.serverTimestamp(),
-                    assignedToId:    _compData.ownerId || null,          // FIX CB: assign to owner by default
-                    assignedToName:  _compData.ownerName || '',
+                    assignedToId:    compData.ownerId || null,          // FIX B: compData passed as param (was race condition with outer _compData)
+                    assignedToName:  compData.ownerName || '',
                     createdAt:       admin.firestore.FieldValue.serverTimestamp(),
                     updatedAt:       admin.firestore.FieldValue.serverTimestamp(),
                 });
