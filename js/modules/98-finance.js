@@ -924,17 +924,17 @@ function renderTransactions(el, type) {
       <div style="display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;">
         <select id="txFilterMonth" onchange="window._txFilterChange('month',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">Всі місяці</option>
+          <option value="">${window.t('finAllMonths')}</option>
           ${monthOpts.join('')}
         </select>
         <select id="txFilterCat" onchange="window._txFilterChange('categoryId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">Всі категорії</option>
+          <option value="">${window.t('finAllCategories')}</option>
           ${cats.map(c => `<option value="${c.id}" ${_txFilter.categoryId===c.id?'selected':''}>${c.name}</option>`).join('')}
         </select>
         <select id="txFilterAcc" onchange="window._txFilterChange('accountId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">Всі рахунки</option>
+          <option value="">${window.t('finAllAccounts')}</option>
           ${_state.accounts.map(a => `<option value="${a.id}" ${_txFilter.accountId===a.id?'selected':''}>${a.name}</option>`).join('')}
         </select>
         <button onclick="window._exportTx('${type}')"
@@ -1075,7 +1075,7 @@ async function loadAndRenderTxList(type) {
     }).join('');
 
     if (summaryEl) {
-      summaryEl.innerHTML = `Всього: <strong style="color:${color};">${fmt(total)}</strong> &bull; ${txs.length} операцій`;
+      summaryEl.innerHTML = `${window.t('finTotal')}: <strong style="color:${color};">${fmt(total)}</strong> &bull; ${txs.length} ${window.t('finOperationsCount')}`;
     }
 
   } catch(e) {
@@ -1302,7 +1302,7 @@ window._financeTransfer = function() {
   modal.innerHTML = `
     <div style="background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">⇄ Переказ між рахунками</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTransferTitle')}</div>
         <button onclick="document.getElementById('transferModal')?.remove()"
           style="background:none;border:none;font-size:1.2rem;color:#9ca3af;cursor:pointer;padding:2px;">✕</button>
       </div>
@@ -1374,7 +1374,7 @@ window._doTransfer = async function() {
     const db = getDb();
     const companyId = _state.companyId;
     const ts = firebase.firestore.Timestamp.now();
-    const desc = note || `Переказ між рахунками`;
+    const desc = note || `${window.t('finTransferBetween')}`;
 
     // Два оновлення балансу + запис в finance_transfers
     // Атомарно: batch щоб обидва update або жоден
@@ -1415,7 +1415,7 @@ window._doTransfer = async function() {
         <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
       </div>`).join('');
 
-    if (typeof showToast === 'function') showToast(`Переказ ${fmt(amount)} виконано`, 'success');
+    if (typeof showToast === 'function') showToast(`${window.t('finTransferDone').replace('{sum}', fmt(amount))}`, 'success');
   } catch(e) {
     if (btn) { btn.disabled = false; btn.textContent = 'Переказати'; }
     alert('Помилка переказу: ' + e.message);
@@ -1450,7 +1450,7 @@ function renderInvoices(el) {
         <div style="margin-bottom:16px;">
           <button onclick="window._invoiceAdd()"
             style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:0.9rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            ${I.plus} Новий рахунок
+            ${I.plus} ${window.t('finNewAccount')}
           </button>
         </div>` : ''}
 
@@ -1459,8 +1459,8 @@ function renderInvoices(el) {
         ${invoices.length === 0 ? `
           <div style="text-align:center;padding:40px;color:#9ca3af;">
             <div style="font-size:2rem;margin-bottom:8px;">📄</div>
-            <div style="font-weight:600;margin-bottom:4px;">Рахунків ще немає</div>
-            <div style="font-size:0.85rem;">Натисніть «Новий рахунок» щоб створити перший</div>
+            <div style="font-weight:600;margin-bottom:4px;">${window.t('finNoAccountsYet')}</div>
+            <div style="font-size:0.85rem;">${window.t('finNoAccountsHint')}</div>
           </div>` :
           invoices.map(inv => _invoiceRow(inv, currency)).join('<div style="border-top:1px solid #f3f4f6;"></div>')
         }
@@ -1525,7 +1525,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
     <div style="background:#fff;border-radius:18px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f3f4f6;">
-        <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a;">${isEdit ? 'Редагувати рахунок' : 'Новий рахунок'}</div>
+        <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a;">${isEdit ? window.t('finEditAccount') : window.t('finNewAccount')}</div>
         <button onclick="document.getElementById('invoiceModal')?.remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
       </div>
 
@@ -1595,7 +1595,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <button onclick="document.getElementById('invoiceModal')?.remove()"
           style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">Скасувати</button>
         <button id="inv_save_btn" onclick="window._invoiceSave('${inv?.id || ''}')"
-          style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? 'Зберегти' : 'Створити'}</button>
+          style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? window.t('finSave') : window.t('finCreate')}</button>
       </div>
     </div>`;
 
@@ -1683,8 +1683,8 @@ window._invoiceSave = async function(editId) {
     updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
   };
   if (!editId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-  if (!data.number) { alert(window.t('finEnterInvNum')); if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; } return; }
-  if (!data.clientName) { alert(window.t('finEnterClient')); if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; } return; }
+  if (!data.number) { alert(window.t('finEnterInvNum')); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } return; }
+  if (!data.clientName) { alert(window.t('finEnterClient')); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } return; }
 
   // Видаляємо undefined
   if (editId) delete data.status;
@@ -1703,7 +1703,7 @@ window._invoiceSave = async function(editId) {
   } catch(e) {
     console.error('[Invoice] save error:', e);
     alert('Помилка: ' + e.message);
-    if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; }
+    if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
   }
 };
 
@@ -1888,7 +1888,7 @@ function renderRecurring(el) {
       <!-- Заголовок -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
         <div>
-          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">Регулярні платежі</h3>
+          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabRecurring')}</h3>
           <p style="margin:0.25rem 0 0;font-size:0.82rem;color:#6b7280;">Автоматичне списання/нарахування в заданий день місяця</p>
         </div>
         ${isOwnerOrManager() ? `
@@ -1931,12 +1931,12 @@ function _recurringStats(items, currency) {
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1rem;">
       <div style="font-size:0.75rem;color:#9ca3af;margin-bottom:0.35rem;">${label}</div>
       <div style="font-size:1.25rem;font-weight:700;color:${color};">${fmt(value, currency)}</div>
-      <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">щомісяця</div>
+      <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">${window.t('finPerMonth')}</div>
     </div>
   `;
-  return card('Регулярні витрати', monthlyExpense, '#ef4444', 'expense')
-       + card('Регулярні доходи',  monthlyIncome,  '#22c55e', 'income')
-       + card('Чисто/міс',         monthlyIncome - monthlyExpense, monthlyIncome >= monthlyExpense ? '#22c55e' : '#ef4444', 'wallet');
+  return card(window.t('finRecurringExpenses'), monthlyExpense, '#ef4444', 'expense')
+       + card(window.t('finRecurringIncomes'),  monthlyIncome,  '#22c55e', 'income')
+       + card(window.t('finNetPerMonth'),         monthlyIncome - monthlyExpense, monthlyIncome >= monthlyExpense ? '#22c55e' : '#ef4444', 'wallet');
 }
 
 function _recurringUpcoming(items, currency) {
@@ -2320,10 +2320,10 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
     <div style="width:100%;">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Фінанси по функціях</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finByFunction')}</div>
         <select id="funcFilterMonth" onchange="window._funcMonthChange(this.value)"
           style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">Всі місяці</option>
+          <option value="">${window.t('finAllMonths')}</option>
           ${monthOpts}
         </select>
       </div>
@@ -2334,10 +2334,10 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
           background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
           padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;">
           <div>${window.t('finFunctionLbl')}</div>
-          <div style="text-align:right;">Дохід</div>
+          <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
           <div style="text-align:right;">${window.t('finExpense')}</div>
-          <div style="text-align:right;">Маржа</div>
-          <div style="text-align:right;">% від загальних</div>
+          <div style="text-align:right;">${window.t('finMargin')}</div>
+          <div style="text-align:right;">${window.t('finPctOfTotal')}</div>
         </div>
         <div id="funcTableBody">
           <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${window.t('finLoading')}</div>
@@ -2406,7 +2406,7 @@ async function loadFunctionsData(monthVal) {
       }
     });
     if (byFunc['__none__'] && (byFunc['__none__'].income > 0 || byFunc['__none__'].expense > 0)) {
-      rows.push({ name: 'Без функції', ...byFunc['__none__'] });
+      rows.push({ name: window.t('finNoFunction'), ...byFunc['__none__'] });
     }
 
     if (rows.length === 0) {
@@ -2509,7 +2509,7 @@ function renderPlanning(el) {
     <div style="width:100%;">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Планування бюджету</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finBudgetPlanning')}</div>
         <div style="display:flex;gap:0.5rem;align-items:center;">
           <select id="planMonthSel" onchange="window._planMonthChange(this.value)"
             style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
@@ -2517,7 +2517,7 @@ function renderPlanning(el) {
           </select>
           <button onclick="window._savePlanBudget()"
             style="padding:0.35rem 0.9rem;background:#22c55e;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">
-            Зберегти
+            ${window.t('finSave')}
           </button>
         </div>
       </div>
@@ -2529,15 +2529,15 @@ function renderPlanning(el) {
       <div style="display:flex;gap:6px;margin-bottom:1rem;">
         <button onclick="window._planMode('budget')" id="planModeBtn_budget"
           style="padding:6px 14px;border-radius:8px;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          Бюджет по категоріях
+          ${window.t('finBudgetByCategory')}
         </button>
         <button onclick="window._planMode('functions')" id="planModeBtn_functions"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          Бюджет по функціях
+          ${window.t('finBudgetByFunction')}
         </button>
         <button onclick="window._planMode('cashflow')" id="planModeBtn_cashflow"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          Cashflow 30/60/90 днів
+          ${window.t('finCashflow3060')}
         </button>
       </div>
 
@@ -2550,9 +2550,9 @@ function renderPlanning(el) {
             padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;
             display:grid;grid-template-columns:1fr 110px 110px 90px;">
             <div>${window.t('finCategoryLbl')}</div>
-            <div style="text-align:right;">Бюджет</div>
-            <div style="text-align:right;">Факт</div>
-            <div style="text-align:right;">Відхилення</div>
+            <div style="text-align:right;">${window.t('finBudgetLbl')}</div>
+            <div style="text-align:right;">${window.t('finActual')}</div>
+            <div style="text-align:right;">${window.t('finVariance')}</div>
           </div>
           <div id="planBudgetBody">
             <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${window.t('finLoading')}</div>
@@ -2564,7 +2564,7 @@ function renderPlanning(el) {
 
           <!-- Cashflow прогноз -->
           <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Cashflow місяця</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finCashflowMonth')}</div>
             <div id="planCashflow">
               <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
             </div>
@@ -2572,9 +2572,9 @@ function renderPlanning(el) {
 
           <!-- Фінансова ціль -->
           <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">Фінансова ціль місяця</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finMonthlyGoal')}</div>
             <div style="margin-bottom:0.5rem;">
-              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">Цільовий прибуток (EUR)</label>
+              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">${window.t('finTargetProfit')}</label>
               <input id="planGoalInput" type="number" min="0" placeholder="напр. 5000"
                 style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
             </div>
@@ -2649,7 +2649,7 @@ window._savePlanBudget = async function() {
     loadPlanningData(_planMonth);
     // Короткий feedback
     const btn = document.querySelector('[onclick="window._savePlanBudget()"]');
-    if (btn) { btn.textContent = window.t('finSaved'); setTimeout(()=>{ btn.textContent = 'Зберегти'; }, 1500); }
+    if (btn) { btn.textContent = window.t('finSaved'); setTimeout(()=>{ btn.textContent = window.t('finSave'); }, 1500); }
   } catch(e) {
     alert('Помилка збереження: ' + e.message);
   }
@@ -2749,13 +2749,13 @@ async function loadPlanningData(monthVal) {
             <span style="font-weight:600;color:#ef4444;">${fmt(totalExpense)}</span>
           </div>
           <div style="border-top:1px solid #f3f4f6;padding-top:0.5rem;display:flex;justify-content:space-between;font-size:0.85rem;">
-            <span style="color:#1a1a1a;font-weight:600;">Прибуток</span>
+            <span style="color:#1a1a1a;font-weight:600;">${window.t('finProfit')}</span>
             <span style="font-weight:700;color:${profit>=0?'#22c55e':'#ef4444'};">${profit>=0?'+':''}${fmt(profit)}</span>
           </div>
           ${goalVal > 0 ? `
           <div style="margin-top:0.5rem;">
             <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;">
-              <span>Виконання цілі</span>
+              <span>${window.t('finGoalExec')}</span>
               <span>${Math.min(Math.round(profit/goalVal*100),100)}%</span>
             </div>
             <div style="height:6px;background:#f3f4f6;border-radius:3px;">
@@ -2781,7 +2781,7 @@ async function loadPlanningData(monthVal) {
             border-radius:4px;width:${pct}%;transition:width 0.3s;"></div>
         </div>
         <div style="font-size:0.75rem;color:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
-          margin-top:0.2rem;font-weight:600;">${pct}% виконано</div>
+          margin-top:0.2rem;font-weight:600;">${pct}% ${window.t('finDone')}</div>
       `;
     }
 
@@ -2865,7 +2865,7 @@ async function _renderFunctionsBudget(monthVal) {
           <div style="text-align:right;">Норма %</div>
           <div style="text-align:right;">Факт сума</div>
           <div style="text-align:right;">Факт %</div>
-          <div style="text-align:right;">Відхилення</div>
+          <div style="text-align:right;">${window.t('finVariance')}</div>
         </div>
         ${funcs.map((f, i) => {
           const fact = byFunc[f.id] || 0;
@@ -2893,7 +2893,7 @@ async function _renderFunctionsBudget(monthVal) {
         ${byFunc['__none__'] ? `
           <div style="display:grid;grid-template-columns:1fr 80px 110px 80px 90px;
             padding:0.55rem 1rem;background:#fafafa;border-bottom:1px solid #f3f4f6;align-items:center;">
-            <div style="font-size:0.78rem;color:#9ca3af;">Без функції</div>
+            <div style="font-size:0.78rem;color:#9ca3af;">${window.t('finNoFunction')}</div>
             <div></div>
             <div style="text-align:right;font-size:0.82rem;color:#9ca3af;">${fmt(byFunc['__none__'], currency)}</div>
             <div style="text-align:right;font-size:0.78rem;color:#9ca3af;">
@@ -2905,7 +2905,7 @@ async function _renderFunctionsBudget(monthVal) {
       <div style="margin-top:10px;text-align:right;">
         <button onclick="window._saveFuncNorms()"
           style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">
-          Зберегти норми
+          ${window.t('finSaveNorms')}
         </button>
       </div>`;
   } catch(e) {
@@ -2997,7 +2997,7 @@ async function _renderCashflowForecast() {
           <span style="font-weight:700;color:#22c55e;">${fmt(totalBalance, currency)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
-          <span style="color:#6b7280;">Регулярні витрати / міс.</span>
+          <span style="color:#6b7280;">${window.t('finRecurringExpensesMonth')}</span>
           <span style="font-weight:600;color:#ef4444;">
             ${fmt(recurring.filter(r=>r.active!==false&&r.frequency==='monthly').reduce((s,r)=>s+(r.amount||0),0), currency)}
           </span>
@@ -3020,11 +3020,11 @@ function renderAnalytics(el) {
   el.innerHTML = `
     <div style="width:100%;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">Аналітика</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabAnalytics')}</div>
         <div style="display:flex;gap:6px;">
           <select id="analyticsPeriodSel" onchange="window._analyticsPeriodChange(this.value)"
             style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-            <option value="month">Цей місяць</option>
+            <option value="month">${window.t('finThisMonth')}</option>
             <option value="quarter">Цей квартал</option>
             <option value="year">Цей рік</option>
           </select>
@@ -3035,15 +3035,15 @@ function renderAnalytics(el) {
       <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;">
         <button onclick="window._analyticsMode('pnl')" id="anlBtn_pnl"
           style="padding:6px 14px;border-radius:8px;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          P&L звіт
+          ${window.t('finPLReport')}
         </button>
         <button onclick="window._analyticsMode('projects')" id="anlBtn_projects"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          Маржа по проектах
+          ${window.t('finMarginByProject')}
         </button>
         <button onclick="window._analyticsMode('trends')" id="anlBtn_trends"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          Тренд витрат
+          ${window.t('finExpenseTrend')}
         </button>
       </div>
 
@@ -3163,7 +3163,7 @@ function _renderPnl(el, txs, currency, from, to) {
 
       <!-- Доходи -->
       <div style="background:#f0fdf4;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;">
-        <span>ДОХОДИ</span><span>${fmt(totalInc, currency)}</span>
+        <span>${window.t('finIncome').toUpperCase()}</span><span>${fmt(totalInc, currency)}</span>
       </div>
       ${incCats.filter(c => byIncCat[c.id]).map(c => catRow(c, byIncCat[c.id] || 0, '#22c55e')).join('')}
       ${!incCats.filter(c => byIncCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає доходів</div>' : ''}
@@ -3221,11 +3221,11 @@ async function _renderProjectsMargin(el, txs, currency) {
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
       <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;padding:10px 14px;
         display:grid;grid-template-columns:1fr 100px 100px 100px 70px;text-transform:uppercase;">
-        <div>Проект</div>
-        <div style="text-align:right;">Дохід</div>
+        <div>${window.t('finProjectLbl')}</div>
+        <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
         <div style="text-align:right;">Витрати</div>
-        <div style="text-align:right;">Прибуток</div>
-        <div style="text-align:right;">Маржа</div>
+        <div style="text-align:right;">${window.t('finProfit')}</div>
+        <div style="text-align:right;">${window.t('finMargin')}</div>
       </div>
       ${rows.map((r, i) => {
         const profitColor = r.profit >= 0 ? '#22c55e' : '#ef4444';
@@ -3492,7 +3492,7 @@ function renderRatesBlock() {
           <button onclick="window._saveRates()"
             style="padding:0.35rem 0.7rem;border:none;border-radius:7px;background:#22c55e;
             color:#fff;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            Зберегти
+            ${window.t('finSave')}
           </button>
         </div>
       </div>
@@ -4113,7 +4113,7 @@ function addTransaction(forceType) {
           </button>
           <button id="fmSaveBtn" onclick="window._financeSaveTx()"
             style="flex:2;padding:0.65rem;border:none;border-radius:8px;background:${color};color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
-            Зберегти
+            ${window.t('finSave')}
           </button>
         </div>
 
@@ -4211,7 +4211,7 @@ window._financeSaveTx = async function() {
   } catch(e) {
     console.error('[Finance] saveTx error:', e);
     alert('Помилка збереження: ' + e.message);
-    if (btn) { btn.disabled = false; btn.textContent = 'Зберегти'; }
+    if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
   }
 };
 
