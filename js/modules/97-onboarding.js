@@ -35,7 +35,7 @@ const OB_STEPS = [
         { id:'sc4', text:'Увімкнути щотижневий звіт власнику', detail:'Щопонеділка отримуєте зведення по виконанню.' },
     ],
     action: { label:'Відкрити налаштування', tab:'users' },
-    tip: '💡 Налаштування компанії — 5 хвилин один раз. Без правильного часового поясу всі нагадування будуть зміщені.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Налаштування компанії — 5 хвилин один раз. Без правильного часового поясу всі нагадування будуть зміщені.'
 },
 {
     id: 'setup_telegram', block: 'start', color: '#6366f1',
@@ -49,7 +49,7 @@ const OB_STEPS = [
         { id:'tg4', text:'Попросити кожного співробітника підключити Telegram після реєстрації', detail:'Без цього нотифікації не працюють. Зробіть це обов\'язковою умовою.' },
     ],
     action: { label:'Відкрити профіль', tab:'myday' },
-    tip: '⚠️ Telegram — не бонус, це обов\'язок. Якщо хтось не підключив — вони поза системою.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><path d=\"M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z\"/><line x1=\"12\" y1=\"9\" x2=\"12\" y2=\"13\"/><line x1=\"12\" y1=\"17\" x2=\"12.01\" y2=\"17\"/></svg> Telegram — не бонус, це обов\'язок. Якщо хтось не підключив — вони поза системою.'
 },
 {
     id: 'setup_invite', block: 'start', color: '#6366f1',
@@ -63,7 +63,7 @@ const OB_STEPS = [
         { id:'inv4', text:'Призначити новому співробітнику перше тестове завдання', detail:'Це закріпить навичку і покаже що система живе.' },
     ],
     action: { label:'Відкрити співробітники', tab:'users' },
-    tip: '⚠️ Помилка: запрошувати всіх одразу. Краще 3-5 ключових → налагодити процес → решта.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><path d=\"M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z\"/><line x1=\"12\" y1=\"9\" x2=\"12\" y2=\"13\"/><line x1=\"12\" y1=\"17\" x2=\"12.01\" y2=\"17\"/></svg> Помилка: запрошувати всіх одразу. Краще 3-5 ключових → налагодити процес → решта.'
 },
 
 // ══ БЛОК 1 — ЗАВДАННЯ ════════════════════════════════════════
@@ -79,7 +79,7 @@ const OB_STEPS = [
         { id:'v4', text:'Знайти завдання через глобальний пошук', detail:'Рядок пошуку зверху. Шукає по назві, коментарях, іменах. Працює миттєво.' },
     ],
     action: { label:'Відкрити завдання', tab:'tasks' },
-    tip: '💡 Канбан-вид — ідеальний для щотижневого огляду з командою. Видно де стопор і чому не рухається.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Канбан-вид — ідеальний для щотижневого огляду з командою. Видно де стопор і чому не рухається.'
 },
 {
     id: 'tasks_anatomy', block: 'tasks', color: '#22c55e',
@@ -94,7 +94,7 @@ const OB_STEPS = [
         { id:'a5', text:'Написати коментар і прикріпити файл', detail:'Вся переписка залишається всередині завдання назавжди.' },
     ],
     action: { label:'Відкрити завдання', tab:'tasks' },
-    tip: '💡 Правило: якщо виконавець може зробити завдання без жодного додаткового питання — поставлено правильно.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Правило: якщо виконавець може зробити завдання без жодного додаткового питання — поставлено правильно.'
 },
 {
     id: 'regular_tasks', block: 'tasks', color: '#22c55e',
@@ -108,7 +108,7 @@ const OB_STEPS = [
         { id:'reg4', text:'Перевірити що завдання автоматично з\'явилось у виконавця', detail:'Фільтр по виконавцю → регулярне завдання вже там з дедлайном.' },
     ],
     action: { label:'Відкрити регулярні', tab:'tasks' },
-    tip: '💡 Золоте правило: будь-яке завдання що ви ставите більше 2 разів — автоматизуйте.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Золоте правило: будь-яке завдання що ви ставите більше 2 разів — автоматизуйте.'
 },
 
 // ══ БЛОК 2 — МІЙ ДЕНЬ ════════════════════════════════════════
@@ -122,37 +122,68 @@ const OB_STEPS = [
         { id:'m2', text:'Перемкнути в режим «Фокус» і виконати одне завдання', detail:'Кнопка «Фокус» вгорі вкладки. Натисніть «Готово» — система переходить до наступного.' },
     ],
     action: { label:'Відкрити Мій день', tab:'myday' },
-    tip: '💡 Попросіть команду починати день з «Мого дня». 5 хвилин зранку — і кожен знає свій план.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Попросіть команду починати день з «Мого дня». 5 хвилин зранку — і кожен знає свій план.'
 },
 
 // ══ БЛОК 3 — СИСТЕМА ══════════════════════════════════════════
 {
     id: 'functions', block: 'system', color: '#8b5cf6',
-    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-    title: 'Функції: відділи, KPI і відповідальні', subtitle: 'Блок 3 · Система', est: '15 хв',
-    description: '<b>Біль без цього:</b> завдання висять без прив\'язки до відділу. Немає розуміння де навантаження, де прогалини.<br><br><b>Функції</b> — відділи вашого бізнесу з відповідальними і KPI.<br><br>Приклади: Продажі, Маркетинг, Фінанси, HR, IT, Клієнтський сервіс.<br><br><b>KPI</b> — конкретні цифри результату. Не «добре продавати», а «20 нових клієнтів на місяць».<br><br><a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента</a>',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>',
+    title: 'Функції: відділи і KPI бізнесу', subtitle: 'Блок 3 · Система', est: '15 хв',
+    description: '<b>Біль без цього:</b> завдання висять «у повітрі» без прив\'язки до відділу. Аналітика не показує де навантаження і де прогалини.<br><br><b>Функції</b> — це відділи вашого бізнесу. Кожна функція має:<br>— <b>Відповідального</b> — хто керує цим напрямком<br>— <b>KPI</b> — конкретні цифри результату<br>— <b>Завдання</b> — все що виконується в цьому відділі<br><br><b>Приклади функцій:</b> Продажі, Маркетинг, Фінанси, HR, Операційна, Клієнтський сервіс.<br><br><b>KPI — це числа, не побажання:</b><br>— Правильно: «20 нових клієнтів на місяць»<br>— Неправильно: «Збільшити продажі»<br><br><b>Два режими перегляду:</b><br>— <b>Картки</b> — детальна інформація по кожній функції<br>— <b>Структура</b> — схема зв\'язків між відділами<br><br><a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#8b5cf6;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>',
     tasks: [
-        { id:'f1', text:'Відкрити Система → Функції і переглянути наявні', detail:'Якщо функцій немає — без них аналітика не працює коректно.' },
-        { id:'f2', text:'Створити або відредагувати 3 ключові функції свого бізнесу', detail:'Назва + відповідальний + 1-3 KPI.' },
-        { id:'f3', text:'Переключитись між «Картка» і «Структура»', detail:'Картка — детально. Структура — схема зв\'язків.' },
-        { id:'f4', text:'До кожної функції додати мінімум 1 KPI з конкретним числом', detail:'«25 угод на місяць» — KPI. «Збільшити продажі» — ціль.' },
+        { id:'f1', text:'Відкрити Система → Функції', detail:'Якщо функцій немає — аналітика по відділах не працює. Без цього кроку завдання не прив\'язуються до напрямків бізнесу.' },
+        { id:'f2', text:'Визначити і створити мінімум 3 ключові функції свого бізнесу', detail:'Кнопка «+ Функція» → назва відділу → призначити відповідального. Починайте з найважливіших: Продажі, Операційна, Фінанси.' },
+        { id:'f3', text:'До кожної функції додати мінімум 1 KPI з конкретним числом', detail:'Всередині функції → розділ «KPI» → «+ Додати KPI». Формат: «Назва — ціль — одиниця виміру». Приклад: Нові угоди — 20 — шт/місяць.' },
+        { id:'f4', text:'Переключитись в режим «Структура» і перевірити схему', detail:'Кнопка «Структура» вгорі вкладки. Видно ієрархію відділів і зв\'язки між ними. Якщо щось не так — поверніться в картки і виправте.' },
+        { id:'f5', text:'Прив\'язати існуючі завдання до відповідних функцій', detail:'Відкрийте будь-яке завдання → поле «Функція» → оберіть відділ. Без цього завдання «висять» поза структурою.' },
     ],
     action: { label:'Відкрити функції', tab:'functions' },
-    tip: '💡 Мінімум: 3-5 функцій з KPI. Це фундамент для всієї аналітики.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Мінімум: 3–5 функцій з KPI. Це фундамент аналітики. Без функцій звіт по відділах порожній — ви не бачите де реально губиться час і гроші.'
 },
 {
-    id: 'structure_users', block: 'system', color: '#8b5cf6',
-    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-    title: 'Структура компанії та співробітники', subtitle: 'Блок 3 · Система', est: '15 хв',
-    description: '<b>Біль без цього:</b> доступи налаштовані неправильно, хтось бачить чуже, хтось не бачить своє.<br><br><b>Структура</b> — візуальна схема: відділи, підрозділи, ієрархія.<br><b>Ролі:</b> Owner (все) → Manager (своя команда) → Employee (тільки свої завдання).<br><br><a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;">🤖 Запитати AI-асистента</a>',
+    id: 'bizstructure', block: 'system', color: '#8b5cf6',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><rect x="1" y="18" width="6" height="4" rx="1"/><rect x="9" y="18" width="6" height="4" rx="1"/><rect x="17" y="18" width="6" height="4" rx="1"/><path d="M4 18v-3a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3"/><line x1="12" y1="6" x2="12" y2="14"/></svg>',
+    title: 'Структура: організаційна схема компанії', subtitle: 'Блок 3 · Система', est: '10 хв',
+    description: '<b>Біль без цього:</b> команда не розуміє хто кому підпорядковується. Новий співробітник не знає до кого звертатись. Керівник не бачить всю картину одразу.<br><br><b>Структура</b> — це інтерактивна організаційна схема вашої компанії:<br>— Відділи і підрозділи<br>— Ієрархія підпорядкування<br>— Кожен співробітник на своєму місці<br>— Кількість завдань і навантаження по кожному<br><br><b>Структура будується автоматично</b> на основі функцій і співробітників. Якщо функції заповнені — структура вже є.<br><br><b>Що видно в картці співробітника:</b><br>— Роль і відділ<br>— Активні завдання і статуси<br>— Навантаження і ефективність<br><br><a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#8b5cf6;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>',
     tasks: [
-        { id:'s1', text:'Переглянути схему структури компанії', detail:'Система → Структура. Якщо порожня — заповнити відділи.' },
-        { id:'s2', text:'Відкрити картку будь-якого співробітника', detail:'Клік на картку — бачите роль, статус, завдання. Звідси можна змінити роль.' },
-        { id:'s3', text:'Запросити тестового співробітника (або переглянути процес)', detail:'Кнопка «Запросити» → email → підтвердіть.' },
-        { id:'s4', text:'Перевірити ролі і переконатись у правильному доступі', detail:'Налаштуйте правильно з першого разу.' },
+        { id:'bs1', text:'Відкрити Система → Структура', detail:'Відображається організаційна схема. Якщо порожня — спочатку заповніть Функції (попередній крок).' },
+        { id:'bs2', text:'Перевірити що всі відділи і підрозділи відображаються коректно', detail:'Порівняйте з реальною структурою бізнесу. Відділи мають відповідати вашим функціям.' },
+        { id:'bs3', text:'Клікнути на картку будь-якого співробітника і переглянути деталі', detail:'Бачите: роль, відділ, активні завдання, навантаження. Звідси можна одразу перейти до завдань цієї людини.' },
+        { id:'bs4', text:'Перевірити що кожен співробітник прив\'язаний до свого відділу', detail:'Якщо хтось «без відділу» — відкрийте його картку → змініть функцію/відділ.' },
     ],
     action: { label:'Відкрити структуру', tab:'bizstructure' },
-    tip: '⚠️ Помилка №1: всім дають Owner. Потім дивуються чому співробітники бачать зарплати одне одного.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Структура — перше що показуйте новому менеджеру. Людина одразу розуміє де вона, хто поряд, хто вище. Економить 2–3 тижні адаптації.'
+},
+{
+    id: 'team_management', block: 'system', color: '#8b5cf6',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    title: 'Співробітники: ролі, доступи і запрошення', subtitle: 'Блок 3 · Система', est: '15 хв',
+    description: '<b>Біль без цього:</b> всі бачать все — або навпаки, хтось не бачить потрібне. Доступи «на підозрі», а не на логіці.<br><br><b>Вкладка Співробітники</b> має 4 підрозділи:<br><br><div style="display:grid;gap:6px;margin:6px 0;"><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.55rem .85rem;"><b style="color:#7c3aed;font-size:.72rem;">СПИСОК</b><br>Всі співробітники з роллю, відділом, статусом і навантаженням. Звідси — в картку кожного.</div><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.55rem .85rem;"><b style="color:#7c3aed;font-size:.72rem;">ЗАПРОСИТИ</b><br>Відправити email-запрошення → людина реєструється → одразу в системі з потрібною роллю.</div><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.55rem .85rem;"><b style="color:#7c3aed;font-size:.72rem;">РОЛІ</b><br><b>Owner</b> — повний доступ до всього. <b>Manager</b> — свій відділ і аналітика. <b>Employee</b> — тільки свої завдання. Встановлюйте мінімально необхідне.</div><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.55rem .85rem;"><b style="color:#7c3aed;font-size:.72rem;">КОМПАНІЯ</b><br>Назва, часовий пояс, щотижневий звіт власнику. Видно тільки Owner.</div></div><a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#8b5cf6;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>',
+    tasks: [
+        { id:'tm1', text:'Відкрити Система → Співробітники → вкладка «Список»', detail:'Перевірте всіх активних. Кожна картка — роль, відділ, кількість завдань.' },
+        { id:'tm2', text:'Перевірити ролі кожного: чи відповідають реальним обов\'язкам', detail:'Клік на співробітника → «Змінити роль». Правило: мінімально необхідний доступ. Manager не потребує Owner.' },
+        { id:'tm3', text:'Перейти на вкладку «Ролі» і вивчити матрицю доступів', detail:'Таблиця: хто що бачить. Owner — все. Manager — свій відділ + аналітика. Employee — тільки свої завдання і проєкти.' },
+        { id:'tm4', text:'Запросити нового співробітника через вкладку «Запросити»', detail:'Email → роль → функція → «Надіслати». Людина отримає лист з інструкцією. Після реєстрації — одразу в списку.' },
+        { id:'tm5', text:'Відкрити вкладку «Компанія» і перевірити налаштування (тільки Owner)', detail:'Назва компанії, часовий пояс, щотижневий звіт. Якщо часовий пояс неправильний — всі нагадування зміщені.' },
+    ],
+    action: { label:'Відкрити співробітників', tab:'users' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Помилка №1: всім дають Owner. Потім дивуються чому рядовий співробітник бачить фінанси і зарплати колег. Ролі — налаштуйте один раз правильно.'
+},
+{
+    id: 'system_integrations', block: 'system', color: '#8b5cf6',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+    title: 'Інтеграції: підключення зовнішніх сервісів', subtitle: 'Блок 3 · Система', est: '15 хв',
+    description: '<b>Біль без цього:</b> дані розкидані по різних сервісах. Дзвінок в телефонії — окремо. Подія в календарі — окремо. TALKO не знає що відбувається поза системою.<br><br><b>Доступні інтеграції:</b><br><br><div style="display:grid;gap:6px;margin:6px 0;"><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.55rem .85rem;"><b style="color:#7c3aed;font-size:.72rem;">TELEGRAM</b><br>Нотифікації про нові завдання, дедлайни, рішення координацій. Підключає кожен співробітник самостійно в своєму профілі.</div><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.55rem .85rem;"><b style="color:#7c3aed;font-size:.72rem;">GOOGLE CALENDAR</b><br>Синхронізація дедлайнів завдань з календарем. Всі дедлайни — автоматично в Google Calendar.</div><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.55rem .85rem;"><b style="color:#7c3aed;font-size:.72rem;">ТЕЛЕФОНІЯ: BINOTEL / RINGOSTAT / STREAM</b><br>Дзвінки автоматично фіксуються. Пропущений дзвінок → завдання «Передзвонити» → виконавець → дедлайн. Нуль ручної роботи.</div><div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.55rem .85rem;"><b style="color:#7c3aed;font-size:.72rem;">WEBHOOK API</b><br>Підключення будь-яких зовнішніх систем: власний сайт, форми, інші CRM. Ліди і події — автоматично в TALKO.</div></div><a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#8b5cf6;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>',
+    tasks: [
+        { id:'int1', text:'Відкрити Бізнес → Інтеграції і переглянути всі доступні', detail:'Побачите список сервісів зі статусом «Підключено» або «Не підключено».' },
+        { id:'int2', text:'Перевірити що Telegram підключений у вашому профілі', detail:'Клік на своє ім\'я вгорі праворуч → «Telegram сповіщення» → має бути «Підключено». Якщо ні — підключити прямо зараз.' },
+        { id:'int3', text:'Підключити Google Calendar або переглянути інструкцію підключення', detail:'Інтеграції → Google Calendar → «Підключити» → авторизація Google. Після цього дедлайни синхронізуються автоматично.' },
+        { id:'int4', text:'Якщо використовуєте Binotel, Ringostat або Stream — підключити телефонію', detail:'Інтеграції → оберіть провайдера → API ключ (в особистому кабінеті провайдера) → зберегти. Тестовий дзвінок → перевірити чи з\'явилось завдання.' },
+        { id:'int5', text:'Попросити кожного співробітника підключити Telegram після реєстрації', detail:'Без цього нотифікації не приходять. Зробіть обов\'язковою умовою при онбордингу нового члена команди.' },
+    ],
+    action: { label:'Відкрити інтеграції', tab:'integrations' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Телефонія — найбільша точка втрат для бізнесів з вхідними дзвінками. Без інтеграції: пропущений дзвінок = втрачений клієнт. З інтеграцією: пропущений дзвінок → автозавдання → передзвін за 5 хвилин.'
 },
 
 // ══ БЛОК 4 — ПРОЄКТИ ══════════════════════════════════════════
@@ -167,7 +198,7 @@ const OB_STEPS = [
         { id:'pr3', text:'Додати кілька завдань і перевірити прогрес', detail:'Додайте 3-4 завдання → перевірте таймлайн.' },
     ],
     action: { label:'Відкрити проєкти', tab:'projects' },
-    tip: '💡 Таймлайн — відразу видно де «вузьке місце» і хто блокує решту команди.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Таймлайн — відразу видно де «вузьке місце» і хто блокує решту команди.'
 },
 {
     id: 'processes', block: 'projects', color: '#3b82f6',
@@ -181,7 +212,7 @@ const OB_STEPS = [
         { id:'proc4', text:'Запустити процес і перевірити що завдання створились', detail:'Перейдіть в «Всі завдання» — завдання вже там з виконавцями і дедлайнами.' },
     ],
     action: { label:'Відкрити процеси', tab:'processes' },
-    tip: '💡 1 налаштований процес = сотні годин зекономлених за рік.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 1 налаштований процес = сотні годин зекономлених за рік.'
 },
 
 // ══ БЛОК 5 — КООРДИНАЦІЇ ═════════════════════════════════════
@@ -196,7 +227,7 @@ const OB_STEPS = [
         { id:'ct3', text:'Налаштувати регулярну щотижневу координацію', detail:'Кнопка «Нова координація» → тип → день → час → учасники.' },
     ],
     action: { label:'Відкрити координації', tab:'coordination' },
-    tip: '💡 Щотижнева планерка — базовий ритм бізнесу. Без неї команда «розсипається» на острівці.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Щотижнева планерка — базовий ритм бізнесу. Без неї команда «розсипається» на острівці.'
 },
 {
     id: 'coordination_process', block: 'coordination', color: '#f59e0b',
@@ -211,7 +242,7 @@ const OB_STEPS = [
         { id:'cp5', text:'Відкрити автоматично сформований протокол', detail:'В архіві → завершена координація → кнопка «Протокол». Готовий PDF.' },
     ],
     action: { label:'Відкрити координації', tab:'coordination' },
-    tip: '💡 Правило: кожна нарада закінчується протоколом із завданнями.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Правило: кожна нарада закінчується протоколом із завданнями.'
 },
 {
     id: 'control', block: 'coordination', color: '#f59e0b',
@@ -225,7 +256,7 @@ const OB_STEPS = [
         { id:'ctrl4', text:'Додати перший запис в «Журнал управлінських збоїв»', detail:'Факт → причина → рішення. Через 3 місяці видно системні патерни.' },
     ],
     action: { label:'Відкрити контроль', tab:'control' },
-    tip: '💡 Щоранковий ритуал: 5 хвилин в «Критичній увазі» — стан бізнесу без єдиної наради.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Щоранковий ритуал: 5 хвилин в «Критичній увазі» — стан бізнесу без єдиної наради.'
 },
 
 // ══ БЛОК 6 — АНАЛІТИКА ════════════════════════════════════════
@@ -240,7 +271,7 @@ const OB_STEPS = [
         { id:'an3', text:'Переключити метрики між День / Тиждень / Місяць', detail:'Місяць показує тренд, день — поточний пульс.' },
     ],
     action: { label:'Відкрити аналітику', tab:'analytics' },
-    tip: '💡 Якщо метрика не вимірюється — нею неможливо управляти. 3 цифри щодня — мінімум.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Якщо метрика не вимірюється — нею неможливо управляти. 3 цифри щодня — мінімум.'
 },
 
 // ══ БЛОК 7 — ФІНАНСИ ══════════════════════════════════════════
@@ -255,7 +286,7 @@ const OB_STEPS = [
         { id:'fin3', text:'Налаштувати рахунки (каса, банк, картка)', detail:'Фінанси → Налаштування → Рахунки. Додайте мінімум 2: готівка і поточний рахунок.' },
     ],
     action: { label:'Відкрити фінанси', tab:'finance' },
-    tip: '💡 Фінанси без даних — красивий але порожній дашборд. Починайте вносити транзакції з сьогодні.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Фінанси без даних — красивий але порожній дашборд. Починайте вносити транзакції з сьогодні.'
 },
 {
     id: 'finance_transactions', block: 'finance', color: '#10b981',
@@ -269,7 +300,7 @@ const OB_STEPS = [
         { id:'fin7', text:'Перевірити дашборд після внесення даних', detail:'Тепер графіки і топ витрат заповнені реальними даними.' },
     ],
     action: { label:'Відкрити фінанси', tab:'finance' },
-    tip: '💡 Стандарт: вносити транзакції щодня або мінімум раз на 2-3 дні.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Стандарт: вносити транзакції щодня або мінімум раз на 2-3 дні.'
 },
 {
     id: 'finance_planning', block: 'finance', color: '#10b981',
@@ -283,7 +314,7 @@ const OB_STEPS = [
         { id:'fin14', text:'Переглянути P&L звіт за поточний місяць', detail:'Якщо є транзакції — P&L заповниться автоматично.' },
     ],
     action: { label:'Відкрити фінанси', tab:'finance' },
-    tip: '💡 P&L — перший документ при розмові з інвестором або банком. Тепер формується автоматично.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> P&L — перший документ при розмові з інвестором або банком. Тепер формується автоматично.'
 },
 
 // ══ БЛОК 8 — БІЗНЕС ══════════════════════════════════════════
@@ -299,7 +330,7 @@ const OB_STEPS = [
         { id:'crm4', text:'З угоди створити завдання «Передзвонити» з дедлайном', detail:'Відкрийте угоду → «Задача». З\'являється в системі.' },
     ],
     action: { label:'Відкрити CRM', tab:'crm' },
-    tip: '💡 Головне правило CRM: будь-яка взаємодія з клієнтом — фіксується. Через 6 місяців цей журнал стає найціннішим активом.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Головне правило CRM: будь-яка взаємодія з клієнтом — фіксується. Через 6 місяців цей журнал стає найціннішим активом.'
 },
 {
     id: 'bots_sites', block: 'business', color: '#3b82f6',
@@ -312,7 +343,7 @@ const OB_STEPS = [
         { id:'b3', text:'Відкрити «Мої сайти» і переглянути конструктор', detail:'Сайти → «+ Новий сайт». Шаблон → редагувати → опублікувати. Форма → в CRM.' },
     ],
     action: { label:'Відкрити боти', tab:'bots' },
-    tip: '💡 Навіть простий бот що відповідає і передає контакт в CRM — вже краще ніж нічого.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Навіть простий бот що відповідає і передає контакт в CRM — вже краще ніж нічого.'
 },
 
 // ══ БЛОК 9 — НАВЧАННЯ (НОВІ) ══════════════════════════════════
@@ -328,7 +359,7 @@ const OB_STEPS = [
         { id:'lr4', text:'Запланувати проходження решти модулів — по 1 на тиждень', detail:'Не намагайтесь пройти все одразу. 1 модуль на тиждень = засвоєно і впроваджено.' },
     ],
     action: { label:'Відкрити навчання', tab:'learning' },
-    tip: '💡 Навчання і впровадження — паралельно. Пройшли модуль → одразу налаштували в системі → закріпилось.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Навчання і впровадження — паралельно. Пройшли модуль → одразу налаштували в системі → закріпилось.'
 },
 {
     id: 'learning_ai', block: 'learning', color: '#0ea5e9',
@@ -341,7 +372,7 @@ const OB_STEPS = [
         { id:'ai3', text:'Підключити Google Calendar або переконатись що Telegram підключений', detail:'Обрати інтеграцію → дотримуватись інструкції. 3-5 хвилин.' },
     ],
     action: { label:'Відкрити інтеграції', tab:'integrations' },
-    tip: '💡 AI-асистент 24/7 — перша точка допомоги. Перш ніж писати розробнику — запитайте асистента.'
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> AI-асистент 24/7 — перша точка допомоги. Перш ніж писати розробнику — запитайте асистента.'
 },
 
 ]; // end OB_STEPS
