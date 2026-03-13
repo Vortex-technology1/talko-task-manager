@@ -256,3 +256,26 @@
         
         window.openMobileMenu = openMobileMenu;
         window.closeMobileMenu = closeMobileMenu;
+
+        // ── CRM нагадування через browser push ────────────────
+        // Публічна функція — викликається з 77-crm.js
+        window.sendBrowserNotif = function(opts) {
+            // opts: { title, body, tag, onClick }
+            if (!('Notification' in window)) return;
+            if (Notification.permission !== 'granted') return;
+            try {
+                const n = new Notification(opts.title || 'TALKO', {
+                    body: opts.body || '',
+                    icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
+                    tag:  opts.tag  || 'crm-reminder',
+                    requireInteraction: true,
+                });
+                n.onclick = () => {
+                    window.focus();
+                    if (typeof opts.onClick === 'function') opts.onClick();
+                    n.close();
+                };
+            } catch(e) {
+                console.warn('[sendBrowserNotif]', e.message);
+            }
+        };

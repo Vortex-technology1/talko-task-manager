@@ -2114,6 +2114,70 @@ window.crmRunAI = async function(dealId) {
 // ══════════════════════════════════════════════════════════
 // СТВОРЕННЯ УГОДИ
 // ══════════════════════════════════════════════════════════
+// ── Client autocomplete для форми створення угоди ─────────
+window.crmClientAutocomplete = function(q) {
+    const dd  = document.getElementById('nd_clientDropdown');
+    const ov  = document.getElementById('crmCreateDealOverlay');
+    if (!dd) return;
+
+    // Скидаємо прив'язку при зміні тексту
+    if (ov) { delete ov.dataset.clientId; delete ov.dataset.clientLinked; }
+    document.getElementById('nd_clientLinked').style.display = 'none';
+
+    const all = crm.clients || [];
+    const filtered = q.length < 1 ? all.slice(0, 8) :
+        all.filter(c => (c.name||'').toLowerCase().includes(q.toLowerCase()) ||
+                        (c.phone||'').includes(q) ||
+                        (c.email||'').toLowerCase().includes(q.toLowerCase())).slice(0, 8);
+
+    if (filtered.length === 0) { dd.style.display = 'none'; return; }
+
+    dd.innerHTML = filtered.map(c => `
+        <div onclick="crmSelectClient('${c.id}','${_esc(c.name||'')}','${_esc(c.phone||'')}','${_esc(c.email||'')}')"
+            style="padding:0.45rem 0.75rem;cursor:pointer;font-size:0.8rem;border-bottom:1px solid #f3f4f6;
+            display:flex;align-items:center;gap:0.5rem;"
+            onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='white'">
+            <div style="width:24px;height:24px;border-radius:50%;background:#22c55e;
+                display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:white;flex-shrink:0;">
+                ${(c.name||'?').charAt(0).toUpperCase()}
+            </div>
+            <div>
+                <div style="font-weight:600;">${_esc(c.name||'—')}</div>
+                ${c.phone ? `<div style="font-size:0.68rem;color:#9ca3af;">${_esc(c.phone)}</div>` : ''}
+            </div>
+        </div>`).join('');
+    dd.style.display = 'block';
+
+    // Закриваємо при кліку поза
+    setTimeout(() => {
+        const hide = (e) => {
+            if (!dd.contains(e.target) && e.target.id !== 'nd_client') {
+                dd.style.display = 'none';
+                document.removeEventListener('click', hide);
+            }
+        };
+        document.addEventListener('click', hide);
+    }, 0);
+};
+
+window.crmSelectClient = function(clientId, name, phone, email) {
+    const inp  = document.getElementById('nd_client');
+    const dd   = document.getElementById('nd_clientDropdown');
+    const ov   = document.getElementById('crmCreateDealOverlay');
+    const lnk  = document.getElementById('nd_clientLinked');
+    const lnkN = document.getElementById('nd_clientLinkedName');
+    if (inp)  inp.value = name;
+    if (dd)   dd.style.display = 'none';
+    if (ov)   { ov.dataset.clientId = clientId; ov.dataset.clientLinked = '1'; }
+    if (lnkN) lnkN.textContent = name;
+    if (lnk)  lnk.style.display = 'block';
+    // Підставляємо контакти якщо порожні
+    const phEl = document.getElementById('nd_phone');
+    const emEl = document.getElementById('nd_email');
+    if (phEl && !phEl.value && phone) phEl.value = phone;
+    if (emEl && !emEl.value && email) emEl.value = email;
+};
+
 window.crmOpenCreateDeal = function(defaultStage) {
     document.getElementById('crmCreateDealOverlay')?.remove();
     const stages = crm.pipeline?.stages || [];
@@ -2139,7 +2203,18 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 </div>
                 <div>
                     <label style="${lbl}">Клієнт</label>
-                    <input id="nd_client" placeholder="${window.t('crmClientNamePh')}" style="${inp}">
+                    <div style="position:relative;">
+                        <input id="nd_client" placeholder="${window.t('crmClientNamePh')}" style="${inp}"
+                            autocomplete="off"
+                            oninput="crmClientAutocomplete(this.value)"
+                            onfocus="crmClientAutocomplete(this.value)">
+                        <div id="nd_clientDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;
+                            background:white;border:1px solid #e8eaed;border-radius:0 0 8px 8px;
+                            box-shadow:0 4px 12px rgba(0,0,0,0.1);z-index:100;max-height:160px;overflow-y:auto;"></div>
+                    </div>
+                    <div id="nd_clientLinked" style="display:none;margin-top:4px;font-size:0.68rem;color:#16a34a;font-weight:600;">
+                        ✓ <span id="nd_clientLinkedName"></span> — клієнт прив'язаний
+                    </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                     <div>
@@ -2213,36 +2288,69 @@ window.crmCreateDeal = async function() {
     const email    = document.getElementById('nd_email')?.value.trim() || '';
     const telegram = document.getElementById('nd_telegram')?.value.trim() || '';
     const source   = document.getElementById('nd_source')?.value || 'manual';
-    const clientId = document.getElementById('crmCreateDealOverlay')?.dataset?.clientId || null;
-    if (!title && !client) { if(window.showToast)showToast(window.t('crmEnterNameOrClient'),'warning'); else alert(window.t('crmEnterNameOrClient')); return; }
+    const ov       = document.getElementById('crmCreateDealOverlay');
+    let clientId   = ov?.dataset?.clientId || null;
+    const isLinked = ov?.dataset?.clientLinked === '1';
+
+    if (!title && !client) {
+        if (window.showToast) showToast(window.t('crmEnterNameOrClient'), 'warning');
+        return;
+    }
     try {
-        const nowTs = firebase.firestore.FieldValue.serverTimestamp();
+        // ── Автоматична прив'язка клієнта ──────────────────
+        if (!isLinked && client) {
+            const existing = crm.clients.find(c =>
+                (c.name && c.name.toLowerCase() === client.toLowerCase()) ||
+                (phone && c.phone && c.phone.replace(/\D/g,'') === phone.replace(/\D/g,''))
+            );
+            if (existing) {
+                clientId = existing.id;
+                const upd = {};
+                if (phone && !existing.phone) upd.phone = phone;
+                if (email && !existing.email) upd.email = email;
+                if (Object.keys(upd).length) {
+                    await window.companyRef().collection('crm_clients').doc(clientId)
+                        .update({ ...upd, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                }
+            } else {
+                const clientRef = await window.companyRef().collection('crm_clients').add({
+                    name: client, phone: phone||'', email: email||'',
+                    telegram: telegram||'', niche: niche||'',
+                    type: 'person', source: source||'manual',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+                clientId = clientRef.id;
+            }
+        }
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add({
-                title: title||client, clientName: client||title, clientNiche: niche||'',
-                phone: phone||'', email: email||'', telegram: telegram||'',
-                clientId: clientId || null,
-                stage, pipelineId: crm.pipeline?.id || '',
-                amount, source: source||'manual',
-                assigneeId: window.currentUser?.uid || null,
-                creatorId:  window.currentUser?.uid || null,
-                stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), // FIX
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-        await ref.collection('history').add({ type:'created', by: window.currentUser?.email||'manager', at: firebase.firestore.FieldValue.serverTimestamp() });
+            title: title||client, clientName: client||title, clientNiche: niche||'',
+            phone: phone||'', email: email||'', telegram: telegram||'',
+            clientId: clientId || null,
+            stage, pipelineId: crm.pipeline?.id || '',
+            amount, source: source||'manual',
+            assigneeId: window.currentUser?.uid || null,
+            creatorId:  window.currentUser?.uid || null,
+            stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await ref.collection('history').add({
+            type: 'created', by: window.currentUser?.email||'manager',
+            at: firebase.firestore.FieldValue.serverTimestamp(),
+        });
         document.getElementById('crmCreateDealOverlay')?.remove();
         if (typeof showToast === 'function') showToast(window.t('crmDealCreated'), 'success');
         if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
             emitTalkoEvent(window.TALKO_EVENTS.DEAL_CREATED, { dealId:ref.id, clientName:client||title, stage, amount });
         }
         if (typeof window.trackAction === 'function') {
-            window.trackAction('crm_deal_created', {
-                dealId: ref.id,
-                clientName: client || title || '',
-                stage, amount,
-            });
+            window.trackAction('crm_deal_created', { dealId:ref.id, clientName:client||title||'', stage, amount });
         }
-    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
+    } catch(e) {
+        if (window.showToast) showToast(window.t('errPrefix') + e.message, 'error');
+        else alert(window.t('errPrefix') + e.message);
+    }
 };
 
 // ══════════════════════════════════════════════════════════
@@ -3657,19 +3765,61 @@ window.crmSaveTaskFromDeal = async function(dealId) {
 // ══════════════════════════════════════════════════════════
 function _checkContactReminders() {
     const today = new Date().toISOString().split('T')[0];
+
+    // Прострочені (до сьогодні) і сьогоднішні — окремо
     const overdue = crm.deals.filter(d =>
-        d.nextContactDate && d.nextContactDate <= today &&
+        d.nextContactDate && d.nextContactDate < today &&
         d.stage !== 'won' && d.stage !== 'lost'
     );
-    if (!overdue.length) return;
+    const dueToday = crm.deals.filter(d =>
+        d.nextContactDate === today &&
+        d.stage !== 'won' && d.stage !== 'lost'
+    );
 
-    const count = overdue.length;
-    const label = overdue[0].clientName || overdue[0].title || window.t('crmDeal');
-    const msg = count === 1
-        ? `📅 Потрібен контакт: ${label}`
-        : `📅 ${count} угод потребують контакту сьогодні`;
+    // Toast — завжди показуємо
+    if (overdue.length > 0) {
+        const label = overdue[0].clientName || overdue[0].title || window.t('crmDeal');
+        const msg = overdue.length === 1
+            ? `🔴 Прострочений контакт: ${label}`
+            : `🔴 ${overdue.length} прострочених контактів`;
+        if (typeof showToast === 'function') showToast(msg, 'error');
+    }
+    if (dueToday.length > 0) {
+        const label = dueToday[0].clientName || dueToday[0].title || window.t('crmDeal');
+        const msg = dueToday.length === 1
+            ? `📅 Контакт сьогодні: ${label}`
+            : `📅 ${dueToday.length} контактів на сьогодні`;
+        if (typeof showToast === 'function') showToast(msg, 'warning');
+    }
 
-    if (typeof showToast === 'function') showToast(msg, 'warning');
+    // Browser Push — тільки якщо дозвіл є + не дублюємо (localStorage ключ per day)
+    const notifKey = `crm-reminder-${today}`;
+    const alreadySent = localStorage.getItem(notifKey);
+    if (!alreadySent && typeof window.sendBrowserNotif === 'function') {
+        const all = [...overdue, ...dueToday];
+        if (all.length > 0) {
+            const first = all[0];
+            const title = overdue.length > 0
+                ? `🔴 ${overdue.length} прострочених контактів CRM`
+                : `📅 ${dueToday.length} контактів на сьогодні`;
+            const body = first.clientName || first.title || '';
+            window.sendBrowserNotif({
+                title,
+                body: body + (all.length > 1 ? ` та ще ${all.length - 1}...` : ''),
+                tag: notifKey,
+                onClick: () => {
+                    // Відкриваємо CRM вкладку з todo (черга дзвінків)
+                    if (typeof window.crmSwitchTab === 'function') {
+                        const crmTab = document.querySelector('[data-tab="crm"]') ||
+                                       document.getElementById('tab-crm');
+                        if (crmTab) crmTab.click();
+                        setTimeout(() => window.crmSwitchTab('todo'), 300);
+                    }
+                },
+            });
+            localStorage.setItem(notifKey, '1');
+        }
+    }
 }
 
 // FIX: запускаємо нагадування при завантаженні і кожні 30 хв (не тільки раз за сесію)
