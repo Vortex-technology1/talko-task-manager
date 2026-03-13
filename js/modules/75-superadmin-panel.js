@@ -269,9 +269,20 @@
                     ['gemini-1.5-flash', 'Gemini 1.5 Flash'],
                 ]
             };
-            const m = modelsDoc.exists ? modelsDoc.data() : defaultModels;
+            // Firestore не підтримує nested arrays — конвертуємо {id,name} → [id,name] для роботи в UI
+            const _fromFirestore = (data) => {
+                const result = {};
+                ["openai","anthropic","google"].forEach(p => {
+                    if (!data[p]) return;
+                    result[p] = data[p].map(m => Array.isArray(m) ? m : [m.id||m[0]||"", m.name||m[1]||""]);
+                });
+                return result;
+            };
+            const rawModels = modelsDoc.exists ? modelsDoc.data() : defaultModels;
+            const _mConverted = _fromFirestore(rawModels);
+            const _mFinal = Object.keys(_mConverted).length ? _mConverted : defaultModels;
             // Зберігаємо в глобальну змінну для доступу з функцій
-            window._editingModels = JSON.parse(JSON.stringify(m));
+            window._editingModels = JSON.parse(JSON.stringify(_mFinal));
 
             document.getElementById('globalAIOverlay')?.remove();
             const overlay = document.createElement('div');
@@ -471,11 +482,18 @@
                 saUpdate,
                 { merge: true }
             );
-            // Моделі
+            // Моделі — конвертуємо [id,name] → {id,name} бо Firestore не підтримує nested arrays
             if (window._editingModels) {
+                const _toFirestore = (data) => {
+                    const result = {};
+                    Object.keys(data).forEach(p => {
+                        result[p] = (data[p] || []).map(m => Array.isArray(m) ? {id: m[0], name: m[1]} : m);
+                    });
+                    return result;
+                };
                 batch.set(
                     firebase.firestore().collection('settings').doc('aiModels'),
-                    window._editingModels
+                    _toFirestore(window._editingModels)
                 );
             }
             await batch.commit();
