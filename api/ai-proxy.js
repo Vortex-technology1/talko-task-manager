@@ -66,7 +66,7 @@ async function getSuperadminSettings() {
     const now = Date.now();
     if (_saCache && now - _saCacheAt < SA_CACHE_TTL) return _saCache;
     try {
-        const snap = await db.doc('superadmin/settings').get();
+        const snap = await db.doc('settings/platform').get();
         _saCache = snap.exists ? snap.data() : {};
         _saCacheAt = now;
         return _saCache;

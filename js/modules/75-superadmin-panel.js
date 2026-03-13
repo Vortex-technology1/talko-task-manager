@@ -236,7 +236,7 @@
             const [aiDoc, modelsDoc, saDoc] = await Promise.all([
                 firebase.firestore().collection('settings').doc('ai').get(),
                 firebase.firestore().collection('settings').doc('aiModels').get(),
-                firebase.firestore().collection('superadmin').doc('settings').get(),
+                firebase.firestore().collection('settings').doc('platform').get(),
             ]);
             const s = aiDoc.exists ? aiDoc.data() : {};
             const saSettings = saDoc.exists ? saDoc.data() : {};
@@ -439,7 +439,7 @@
                 saUpdate.keyUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
             }
             batch.set(
-                firebase.firestore().collection('superadmin').doc('settings'),
+                firebase.firestore().collection('settings').doc('platform'),
                 saUpdate,
                 { merge: true }
             );
@@ -566,7 +566,7 @@
     window.clearPlatformKey = async function() {
         if (!confirm('Видалити платформний OpenAI ключ? Компанії без власного ключа втратять доступ до AI.')) return;
         try {
-            await firebase.firestore().collection('superadmin').doc('settings').update({
+            await firebase.firestore().collection('settings').doc('platform').update({
                 openaiApiKey: firebase.firestore.FieldValue.delete(),
             });
             showToast && showToast('Ключ видалено', 'success');
