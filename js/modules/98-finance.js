@@ -3403,7 +3403,7 @@ function renderSettings(el) {
                     style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">
                     ${I.trash}
                   </button>
-                ` : '<span style="font-size:0.7rem;color:#9ca3af;">системна</span>'}
+                ` : `<span style="font-size:0.7rem;color:#9ca3af;">${window.t('finSystem')}</span>`}
               </div>
             `).join('')
           }
@@ -3416,7 +3416,7 @@ function renderSettings(el) {
     return `
       <div style="margin-bottom:1.5rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Рахунки та каси</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finAccountsAndCash')}</div>
           <button onclick="window._financeAddAccount()"
             style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
             background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
@@ -3467,7 +3467,7 @@ function renderRatesBlock() {
         <div style="flex:1;font-size:0.78rem;color:#6b7280;">1 ${cur} =</div>
         <input type="number" min="0" step="0.0001"
           id="rate_${cur}" value="${r}"
-          placeholder="курс"
+          placeholder="${window.t('finRatePlaceholder')}"
           style="width:90px;padding:4px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;text-align:right;">
         <div style="font-size:0.78rem;color:#6b7280;">${base}</div>
       </div>`;
@@ -3477,8 +3477,8 @@ function renderRatesBlock() {
     <div style="margin-bottom:1.5rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
         <div>
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">Курси валют</div>
-          <div style="font-size:0.72rem;color:#6b7280;margin-top:2px;">Базова валюта: <b>${base}</b>. Скільки ${base} за 1 одиницю іноземної валюти.</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finExchangeRates')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-top:2px;">${window.t('finBaseCurrency')}: <b>${base}</b>. ${window.t('finBaseCurrencyHint').replace('{base}', base)}</div>
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button onclick="window._fetchRates()"
@@ -3487,7 +3487,7 @@ function renderRatesBlock() {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
             </svg>
-            Актуальні курси
+            ${window.t('finActualRates')}
           </button>
           <button onclick="window._saveRates()"
             style="padding:0.35rem 0.7rem;border:none;border-radius:7px;background:#22c55e;
@@ -3617,10 +3617,10 @@ function renderAI(el) {
   }
 
   const quickBtns = [
-    { label: 'Аналіз поточного місяця', q: 'Зроби детальний аналіз фінансів за поточний місяць: доходи, витрати, маржа, тренди.' },
-    { label: 'Де витікають гроші?', q: 'Знайди категорії з найбільшими витратами і порівняй з попередніми місяцями. Де найбільший перевитрат?' },
-    { label: 'Прогноз на наступний місяць', q: 'На основі поточних даних зроби прогноз доходів і витрат на наступний місяць.' },
-    { label: 'Рекомендації по оптимізації', q: 'Дай конкретні рекомендації як збільшити прибуток і скоротити витрати на основі моїх даних.' },
+    { label: window.t('finAIBtn1'), q: window.t('finAIQ1') },
+    { label: window.t('finAIBtn2'), q: window.t('finAIQ2') },
+    { label: window.t('finAIBtn3'), q: window.t('finAIQ3') },
+    { label: window.t('finAIBtn4'), q: window.t('finAIQ4') },
   ];
 
   el.innerHTML = `
@@ -3629,12 +3629,12 @@ function renderAI(el) {
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div>
-          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">AI-аналітик фінансів</div>
-          <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.1rem;">Аналізує ваші реальні фінансові дані</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finAITitle')}</div>
+          <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.1rem;">${window.t('finAISubtitle')}</div>
         </div>
         <button onclick="window._aiFinClear()"
           style="padding:0.3rem 0.7rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;font-size:0.75rem;cursor:pointer;color:#6b7280;">
-          Очистити чат
+          ${window.t('finAIClear')}
         </button>
       </div>
 
@@ -3653,20 +3653,20 @@ function renderAI(el) {
       <div id="aiFinChat" style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;
         min-height:300px;max-height:500px;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem;">
         <div style="text-align:center;color:#9ca3af;font-size:0.82rem;margin:auto;">
-          Задайте питання або оберіть швидкий аналіз вище
+          ${window.t('finAIEmptyHint')}
         </div>
       </div>
 
       <!-- Input -->
       <div style="display:flex;gap:0.5rem;">
-        <input id="aiFinInput" type="text" placeholder="Задайте питання про ваші фінанси..."
+        <input id="aiFinInput" type="text" placeholder="${window.t('finAIPlaceholder')}"
           onkeydown="if(event.key==='Enter')window._aiFinSend()"
           style="flex:1;padding:0.6rem 0.9rem;border:1px solid #e5e7eb;border-radius:10px;
             font-size:0.85rem;outline:none;">
         <button onclick="window._aiFinSend()"
           style="padding:0.6rem 1.2rem;background:#22c55e;color:#fff;border:none;border-radius:10px;
             font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;">
-          Надіслати
+          ${window.t('finAISend')}
         </button>
       </div>
     </div>
@@ -4395,7 +4395,7 @@ window._updateCurrencyHint = function() {
   const converted = toBase(amt, cur);
   const rates = _state.rates || {};
   if (!rates[cur]) {
-    hint.innerHTML = `<span style="color:#f59e0b;">⚠ Курс для ${cur} не встановлено. Перейдіть у Налаштування → Курси валют.</span>`;
+    hint.innerHTML = `<span style="color:#f59e0b;">⚠ ${window.t('finRateNotSet').replace('{cur}', cur)}</span>`;
   } else {
     hint.textContent = `≈ ${converted.toFixed(2)} ${base} (курс: 1 ${cur} = ${rates[cur]} ${base})`;
   }
