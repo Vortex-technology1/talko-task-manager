@@ -1283,19 +1283,23 @@
 
     // Open generic modal (reuses existing modal system)
     function openModal(id, bodyHtml, title) {
-        // Use metricModal or create temp
-        let modal = document.getElementById('metricModal');
+        // Шукаємо саме той modal що переданий по id
+        let modal = document.getElementById(id);
         if (!modal) {
-            // Use quick input modal as fallback
-            modal = document.getElementById('quickInputModal');
+            // fallback — metricModal
+            modal = document.getElementById('metricModal');
         }
         if (!modal) return;
 
-        // Override modal content
-        const body = modal.querySelector('.modal-body') || modal.querySelector('[class*="body"]');
-        const titleEl = modal.querySelector('.modal-title') || modal.querySelector('h3');
-        if (body) body.innerHTML = bodyHtml;
-        if (titleEl) titleEl.textContent = title || '';
+        // Override modal content тільки якщо передані дані
+        if (bodyHtml !== undefined) {
+            const body = modal.querySelector('.modal-body') || modal.querySelector('[class*="body"]');
+            if (body) body.innerHTML = bodyHtml;
+        }
+        if (title !== undefined) {
+            const titleEl = modal.querySelector('.modal-title') || modal.querySelector('h3');
+            if (titleEl) titleEl.textContent = title;
+        }
         modal.style.display = 'flex';
     }
 
