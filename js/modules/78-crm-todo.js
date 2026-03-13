@@ -339,7 +339,7 @@ window.crmTodoOpenCard = async function(dealId) {
 
         <!-- Кнопки -->
         <div style="padding:0.75rem 1.25rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-          <button onclick="if(window.crmOpenDealDetail)crmOpenDealDetail('${dealId}');else _crmTodoCloseCard()"
+          <button onclick="if(window.crmOpenDeal){_crmTodoCloseCard();crmOpenDeal('${dealId}');}"
             style="display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;border:1.5px solid #e5e7eb;background:#fff;color:#374151;font-size:0.8rem;font-weight:500;cursor:pointer;">
             Відкрити угоду ${TI.arrow}</button>
           <div style="display:flex;gap:0.4rem;">
