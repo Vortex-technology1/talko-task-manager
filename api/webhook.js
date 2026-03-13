@@ -357,6 +357,7 @@ module.exports = async (req, res) => {
                         phone:        normalPhone,
                         pipelineId:   pipelineId,
                         stageId:      firstStageId,
+                        stage:        firstStageId, // FIX CRITICAL: CRM kanban читає d.stage, не stageId
                         source:       providerLabel,
                         status:       'active',
                         assigneeId:   assigneeId,
