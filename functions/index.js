@@ -1349,20 +1349,32 @@ exports.dailyReport = functions
             const tasksSnap = await companyDoc.ref.collection('tasks').get();
             for (const td of tasksSnap.docs) {
                 const t = td.data();
-                if (t.deadlineDate === todayStr && t.status !== 'done') todayTasks++;
-                if (t.deadline && t.status !== 'done') {
-                    const dl = t.deadline.toDate ? t.deadline.toDate() : new Date(t.deadline);
-                    if (dl < now) {
-                        overdueTasks++;
-                        if (t.assigneeId) {
-                            if (!userStats[t.assigneeId]) userStats[t.assigneeId] = { name: t.assigneeName, completed: 0, overdue: 0 };
-                            userStats[t.assigneeId].overdue++;
-                        }
+
+                // BUG 1 FIX: звіт рахував status!='done' — але "Мій день" також виключає 'review'
+                // BUG 2 FIX: звіт використовував t.deadline (Timestamp) — але завдання зберігають t.deadlineDate (string YYYY-MM-DD)
+                // Тепер використовуємо deadlineDate для консистентності з клієнтом
+
+                // На сьогодні: дедлайн = сьогодні, не виконано і не на перевірці
+                if (t.deadlineDate === todayStr && t.status !== 'done' && t.status !== 'review') todayTasks++;
+
+                // Прострочено: дедлайн < сьогодні, статус активний (не done, не review)
+                if (t.deadlineDate && t.deadlineDate < todayStr &&
+                    t.status !== 'done' && t.status !== 'review') {
+                    overdueTasks++;
+                    if (t.assigneeId) {
+                        if (!userStats[t.assigneeId]) userStats[t.assigneeId] = { name: t.assigneeName, completed: 0, overdue: 0 };
+                        userStats[t.assigneeId].overdue++;
                     }
                 }
+
+                // BUG 3 FIX: completedAt порівнювався через toISOString() — повертає UTC
+                // Якщо виконано о 23:30 Kyiv = 00:30 UTC наступного дня → не потрапляло у вчора
+                // Фіксуємо: конвертуємо в локальну дату Kyiv (+3/+2)
                 if (t.status === 'done' && t.completedAt) {
                     const cd = t.completedAt.toDate ? t.completedAt.toDate() : new Date(t.completedAt);
-                    if (cd.toISOString().split('T')[0] === yesterdayStr) {
+                    // Конвертуємо в Kyiv time для порівняння дат
+                    const kyivDateStr = cd.toLocaleDateString('sv-SE', { timeZone: 'Europe/Kyiv' });
+                    if (kyivDateStr === yesterdayStr) {
                         completedYesterday++;
                         if (t.assigneeId) {
                             if (!userStats[t.assigneeId]) userStats[t.assigneeId] = { name: t.assigneeName, completed: 0, overdue: 0 };
@@ -1371,6 +1383,30 @@ exports.dailyReport = functions
                     }
                 }
             }
+
+            // BUG 4 FIX: регулярні задачі — "Мій день" показує їх, звіт не рахував
+            // Рахуємо скільки регулярних задач на сьогодні (по period/dayOfWeek/dayOfMonth)
+            const regularSnap = await companyDoc.ref.collection('regularTasks').get();
+            const todayDate = new Date(todayStr + 'T00:00:00');
+            const todayDayOfWeek = todayDate.getDay(); // 0=Sun, 1=Mon...
+            const todayDayOfMonth = todayDate.getDate();
+            let regularTodayCount = 0;
+
+            for (const rd of regularSnap.docs) {
+                const rt = rd.data();
+                if (rt.status === 'archived') continue;
+                let isToday = false;
+                if (rt.period === 'daily') {
+                    isToday = true;
+                } else if (rt.period === 'weekly') {
+                    const days = rt.daysOfWeek || (rt.dayOfWeek ? [rt.dayOfWeek] : []);
+                    isToday = days.map(String).includes(String(todayDayOfWeek));
+                } else if (rt.period === 'monthly') {
+                    isToday = rt.dayOfMonth === todayDayOfMonth;
+                }
+                if (isToday) regularTodayCount++;
+            }
+            todayTasks += regularTodayCount;
 
             // Active processes
             const procSnap = await companyDoc.ref.collection('processes')
