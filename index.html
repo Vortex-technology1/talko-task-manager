@@ -204,6 +204,12 @@ document.addEventListener('mousedown', function(e) {
             if (el && _navKeyMap[k][lang]) el.textContent = _navKeyMap[k][lang];
         });
     }
+    function _syncAuthLangBtns(active) {
+        ['uk','en','pl','de'].forEach(code => {
+            document.getElementById('langBtn_' + code)?.classList.toggle('active', code === active);
+        });
+    }
+
     function setLanguageFromDropdown(lang) {
         _patchTranslations(); // patch BEFORE setLanguage so it finds the keys
         if (typeof setLanguage === 'function') setLanguage(lang);
@@ -342,10 +348,10 @@ document.addEventListener('mousedown', function(e) {
             <div class="auth-card">
                 <!-- Language switcher -->
                 <div class="auth-lang-bar">
-                    <button class="auth-lang-btn active" id="langBtn_uk" onclick="setLang('uk')">УКР</button>
-                    <button class="auth-lang-btn" id="langBtn_en" onclick="setLang('en')">ENG</button>
-                    <button class="auth-lang-btn" id="langBtn_pl" onclick="setLang('pl')">POL</button>
-                    <button class="auth-lang-btn" id="langBtn_de" onclick="setLang('de')">DEU</button>
+                    <button class="auth-lang-btn active" id="langBtn_uk" onclick="setLanguageFromDropdown('ua');_syncAuthLangBtns('uk')">УКР</button>
+                    <button class="auth-lang-btn" id="langBtn_en" onclick="setLanguageFromDropdown('en');_syncAuthLangBtns('en')">ENG</button>
+                    <button class="auth-lang-btn" id="langBtn_pl" onclick="setLanguageFromDropdown('pl');_syncAuthLangBtns('pl')">POL</button>
+                    <button class="auth-lang-btn" id="langBtn_de" onclick="setLanguageFromDropdown('de');_syncAuthLangBtns('de')">DEU</button>
                 </div>
                 <div class="auth-header">
                     <div class="auth-logo-mark">

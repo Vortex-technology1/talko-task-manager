@@ -7619,23 +7619,3 @@ en: {
             }
         }
         window.setLanguage = setLanguage;
-        // Аліас для auth lang bar
-        window.setLang = function(lang) {
-            // map uk → ua
-            const map = { uk: 'ua', en: 'en', pl: 'pl', de: 'de' };
-            const l = map[lang] || lang;
-            setLanguage(l);
-            // оновлюємо активну кнопку в auth bar
-            ['uk','en','pl','de'].forEach(code => {
-                document.getElementById('langBtn_' + code)?.classList.toggle('active', code === lang);
-            });
-        };
-        // Ставимо активну кнопку на старті
-        document.addEventListener('DOMContentLoaded', () => {
-            const stored = localStorage.getItem('talko_lang') || 'ua';
-            const rev = { ua:'uk', en:'en', pl:'pl', de:'de' };
-            const active = rev[stored] || 'uk';
-            ['uk','en','pl','de'].forEach(code => {
-                document.getElementById('langBtn_' + code)?.classList.toggle('active', code === active);
-            });
-        });
