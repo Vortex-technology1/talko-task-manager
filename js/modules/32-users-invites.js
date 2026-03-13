@@ -346,6 +346,10 @@
         function openUserModal(userId = null) {
             editingUserId = userId;
             const modal = document.getElementById('userModal');
+
+            // Приховуємо/показуємо опцію admin залежно від ролі поточного юзера
+            const adminOpt = document.querySelector('#userRole option[value="admin"]');
+            if (adminOpt) adminOpt.style.display = currentUserData?.role === 'owner' ? '' : 'none';
             
             // Заповнюємо список функцій
             const userFunctionsDiv = document.getElementById('userFunctions');
@@ -388,6 +392,12 @@
             const name = document.getElementById('userName').value.trim();
             const role = document.getElementById('userRole').value;
             const position = document.getElementById('userPosition').value.trim();
+
+            // Тільки owner може призначати admin
+            if (role === 'admin' && currentUserData?.role !== 'owner') {
+                showAlertModal('Тільки власник компанії може призначати роль Адміністратора');
+                return;
+            }
             
             try {
                 // Оновлюємо дані користувача
