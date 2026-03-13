@@ -99,7 +99,7 @@
         .dashboard-number { font-size: 1.75rem; font-weight: 700; }
         
         /* ── AUTH — TALKO OS Premium ── */
-        .auth-container {
+        #authPage.auth-container {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -112,7 +112,7 @@
         }
 
         /* Ambient background glow */
-        .auth-container::before {
+        #authPage.auth-container::before {
             content: '';
             position: absolute;
             top: -20%;
@@ -124,7 +124,7 @@
             pointer-events: none;
             animation: authPulse 6s ease-in-out infinite;
         }
-        .auth-container::after {
+        #authPage.auth-container::after {
             content: '';
             position: absolute;
             bottom: -10%;
@@ -142,7 +142,7 @@
         }
 
         /* Grid pattern overlay */
-        .auth-bg-grid {
+        #authPage .auth-bg-grid {
             position: absolute;
             inset: 0;
             background-image:

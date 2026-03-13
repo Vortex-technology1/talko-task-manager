@@ -139,7 +139,7 @@ document.addEventListener('mousedown', function(e) {
     <link rel="stylesheet" href="css/filters-structure.css">
     <link rel="stylesheet" href="css/projects.css">
     <link rel="stylesheet" href="css/tables-forms.css">
-    <link rel="stylesheet" href="css/modals-auth.css?v=20260313os2">
+    <link rel="stylesheet" href="css/modals-auth.css?v=20260313os3">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/kanban-calendar.css">
@@ -205,7 +205,7 @@ document.addEventListener('mousedown', function(e) {
         });
     }
     function _syncAuthLangBtns(active) {
-        ['uk','en','pl','de'].forEach(code => {
+        ['ua','ru','en','pl','de'].forEach(code => {
             document.getElementById('langBtn_' + code)?.classList.toggle('active', code === active);
         });
     }
@@ -348,10 +348,11 @@ document.addEventListener('mousedown', function(e) {
             <div class="auth-card">
                 <!-- Language switcher -->
                 <div class="auth-lang-bar">
-                    <button class="auth-lang-btn active" id="langBtn_uk" onclick="setLanguageFromDropdown('ua');_syncAuthLangBtns('uk')">УКР</button>
-                    <button class="auth-lang-btn" id="langBtn_en" onclick="setLanguageFromDropdown('en');_syncAuthLangBtns('en')">ENG</button>
-                    <button class="auth-lang-btn" id="langBtn_pl" onclick="setLanguageFromDropdown('pl');_syncAuthLangBtns('pl')">POL</button>
-                    <button class="auth-lang-btn" id="langBtn_de" onclick="setLanguageFromDropdown('de');_syncAuthLangBtns('de')">DEU</button>
+                    <button class="auth-lang-btn active" id="langBtn_ua" onclick="setLanguageFromDropdown('ua');_syncAuthLangBtns('ua')">UA</button>
+                    <button class="auth-lang-btn" id="langBtn_ru" onclick="setLanguageFromDropdown('ru');_syncAuthLangBtns('ru')">RU</button>
+                    <button class="auth-lang-btn" id="langBtn_en" onclick="setLanguageFromDropdown('en');_syncAuthLangBtns('en')">EN</button>
+                    <button class="auth-lang-btn" id="langBtn_pl" onclick="setLanguageFromDropdown('pl');_syncAuthLangBtns('pl')">PL</button>
+                    <button class="auth-lang-btn" id="langBtn_de" onclick="setLanguageFromDropdown('de');_syncAuthLangBtns('de')">DE</button>
                 </div>
                 <div class="auth-header">
                     <div class="auth-logo-mark">
