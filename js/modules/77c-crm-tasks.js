@@ -67,7 +67,7 @@ window.crmRenderDealTasks = async function (dealId) {
         const snap = await window.companyRef()
             .collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
             .doc(dealId).collection('tasks')
-            .orderBy('createdAt', 'desc').get();
+            .orderBy('createdAt', 'desc').limit(200).get(); // safety limit
 
         const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         _crmRenderTasksList(c, tasks, dealId);

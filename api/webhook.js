@@ -131,18 +131,27 @@ module.exports = async (req, res) => {
                         (fbData.field_data || []).forEach(f => { fields[f.name] = f.values?.[0] || ''; });
                         const compRef = db.collection('companies').doc(companyId);
                         const DB_COLS = { CRM_DEALS: 'crm_deals' };
+                        // FIX: підтягуємо default pipeline щоб угода потрапила в kanban
+                        const fbPipSnap = await compRef.collection('crm_pipelines')
+                            .where('isDefault', '==', true).limit(1).get();
+                        const fbPipeline    = fbPipSnap.empty ? null : fbPipSnap.docs[0].data();
+                        const fbPipelineId  = fbPipSnap.empty ? '' : fbPipSnap.docs[0].id;
+                        const fbFirstStage  = fbPipeline?.stages?.[0]?.id || 'new';
                         await compRef.collection(DB_COLS.CRM_DEALS).add({
                             title:      `FB Lead: ${fields.full_name || fields.name || leadId}`,
                             clientName: fields.full_name || fields.name || '',
                             phone:      fields.phone_number || fields.phone || '',
                             email:      fields.email || '',
                             source:     'facebook_lead',
-                            stage:      'new',
-                            pipelineId: '',
+                            stage:      fbFirstStage,
+                            stageId:    fbFirstStage,
+                            pipelineId: fbPipelineId,
                             fbLeadId:   leadId,
                             fbFormId:   formId || '',
                             fbPageId:   pageId || '',
                             leadData:   fields,
+                            status:     'active',
+                            createdBy:  'system',
                             createdAt:  admin.firestore.FieldValue.serverTimestamp(),
                             updatedAt:  admin.firestore.FieldValue.serverTimestamp(),
                             stageEnteredAt: admin.firestore.FieldValue.serverTimestamp(),

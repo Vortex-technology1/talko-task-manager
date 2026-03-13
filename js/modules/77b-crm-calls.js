@@ -16,10 +16,15 @@ window._crmActiveCall = null;
 window.crmStartCall = function (dealId, phone, clientName) {
     if (!dealId || !phone) return;
 
-    // 1. Ініціюємо реальний дзвінок через tel:
-    window.location.href = `tel:${phone}`;
+    // FIX: <a> + click() замість window.location.href — не перезавантажує SPA в Safari
+    const telLink = document.createElement('a');
+    telLink.href = `tel:${phone}`;
+    telLink.style.display = 'none';
+    document.body.appendChild(telLink);
+    telLink.click();
+    setTimeout(() => telLink.remove(), 500);
 
-    // 2. Зберігаємо стан і показуємо форму логу через 1.5с
+    // Зберігаємо стан і показуємо форму логу через 1.5с
     window._crmActiveCall = {
         dealId,
         phone,
@@ -124,17 +129,18 @@ function _crmShowCallLogModal() {
 
     document.body.appendChild(modal);
 
-    // Таймер
+    // FIX: MutationObserver замість 'remove' event (DOM .remove() не fireвить custom events)
     const timerEl = document.getElementById('crmCallTimer');
     const timerInterval = setInterval(() => {
+        if (!document.getElementById('crmCallLogModal')) {
+            clearInterval(timerInterval); // modal видалено — зупиняємо timer
+            return;
+        }
         const sec = Math.floor((Date.now() - startTs) / 1000);
         const m = Math.floor(sec / 60);
         const s = sec % 60;
         if (timerEl) timerEl.textContent = `${m}:${String(s).padStart(2,'0')}`;
-        else clearInterval(timerInterval);
     }, 1000);
-
-    modal.addEventListener('remove', () => clearInterval(timerInterval));
 
     // Автовибір "answered" за замовчуванням
     setTimeout(() => crmSelectCallResult('answered'), 100);

@@ -1000,24 +1000,36 @@ window.crmBulkDelete = async function() {
 
 async function _bulkUpdateDeals(updates) {
     const ids = Array.from(crm.selectedIds);
-    // FIX #2: окремо — що пишемо в Firestore (з FieldValue), що в локальний стан (без FieldValue)
     const fsUpdates    = { ...updates, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
     const localUpdates = { ...updates, updatedAt: { toDate: () => new Date(), toMillis: () => Date.now() } };
-    // FieldValue.serverTimestamp sentinel не можна класти в local state
     Object.keys(localUpdates).forEach(k => {
         if (localUpdates[k] && typeof localUpdates[k] === 'object' && localUpdates[k]._methodName) {
             localUpdates[k] = { toDate: () => new Date(), toMillis: () => Date.now() };
         }
     });
+
+    // FIX N+1: Firestore batch замість sequential writes (500 ops max per batch)
     let done = 0;
-    for (const dealId of ids) {
-        const deal = crm.deals.find(function(d){ return d.id === dealId; });
-        if (!deal) continue;
-        try {
-            await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).update(fsUpdates);
-            Object.assign(deal, localUpdates);
-            done++;
-        } catch(e) { console.error('[Bulk update]', dealId, e); }
+    const BATCH_SIZE = 400; // залишаємо запас до ліміту 500
+    try {
+        for (let i = 0; i < ids.length; i += BATCH_SIZE) {
+            const chunk = ids.slice(i, i + BATCH_SIZE);
+            const batch = firebase.firestore().batch();
+            chunk.forEach(dealId => {
+                const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId);
+                batch.update(ref, fsUpdates);
+            });
+            await batch.commit();
+            // Оновлюємо локальний стан після успішного commit
+            chunk.forEach(dealId => {
+                const deal = crm.deals.find(function(d){ return d.id === dealId; });
+                if (deal) { Object.assign(deal, localUpdates); done++; }
+            });
+        }
+    } catch(e) {
+        console.error('[Bulk update] batch error:', e);
+        if (typeof showToast === 'function') showToast('Помилка оновлення: ' + e.message, 'error');
+        return;
     }
     if (typeof showToast === 'function') showToast('Оновлено ' + done + ' угод', 'success');
     crm.selectedIds = new Set();
@@ -1036,7 +1048,7 @@ window.crmDuplicateDeal = async function(dealId) {
             clientName:      deal.clientName || '',
             clientNiche:     deal.clientNiche || '',
             clientId:        deal.clientId || null,
-            stage:           'new',
+            stage:           crm.pipeline?.stages?.[0]?.id || 'new', // FIX: перша стадія, не хардкод
             pipelineId:      deal.pipelineId || crm.pipeline?.id || '',
             amount:          deal.amount || 0,
             source:          deal.source || 'manual',

@@ -341,7 +341,8 @@ window.crmImportExecute = async function () {
     // Існуючі клієнти для перевірки дублікатів
     let existingPhones = new Set();
     if (skipDups) {
-        const snap = await compRef.collection('crm_clients').get().catch(() => null);
+        // FIX: limit(5000) замість безмежного get() — великі компанії
+        const snap = await compRef.collection('crm_clients').limit(5000).get().catch(() => null);
         if (snap) snap.forEach(d => {
             const p = (d.data().phone || '').replace(/\D/g, '');
             if (p) existingPhones.add(p);
@@ -358,8 +359,9 @@ window.crmImportExecute = async function () {
     let imported = 0, skipped = 0, errors = 0;
     const now = firebase.firestore.FieldValue.serverTimestamp();
 
-    // Batch по 499
-    const BATCH_SIZE = 499;
+    // FIX: при type='deals' кожен рядок = 2 ops (client + deal)
+    // Ліміт Firestore = 500 ops per batch → безпечний розмір = 249
+    const BATCH_SIZE = 249;
     let batch = db.batch();
     let batchCount = 0;
 
@@ -410,11 +412,14 @@ window.crmImportExecute = async function () {
                     email:       rec.email  || '',
                     source:      rec.source || 'import',
                     stage:       stageId,
+                    stageId:     stageId,   // FIX: CRM reads d.stage, зберігаємо обидва
+                    status:      'active',
                     amount:      rec.amount ? parseFloat(rec.amount.replace(/[^\d.]/g,'')) || 0 : 0,
                     note:        rec.note   || '',
                     pipelineId:  pipeline.id,
                     assigneeId:  uid,
                     creatorId:   uid,
+                    stageEnteredAt: now,
                     createdAt:   now,
                     updatedAt:   now,
                     tags:        [],
