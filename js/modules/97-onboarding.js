@@ -492,7 +492,7 @@ function renderOnboarding() {
     if (!c) return;
     const pct = totalProgress();
     const completedSteps = OB_STEPS.filter(s => stepComplete(s)).length;
-    const step = OB_STEPS[ob.activeStep];
+    const step = (typeof getLocalizedStep === 'function') ? getLocalizedStep(OB_STEPS[ob.activeStep]) : OB_STEPS[ob.activeStep];
     const blockGroups = OB_BLOCKS.map(b => ({
         ...b,
         steps: OB_STEPS.map((s,i) => ({...s,_idx:i})).filter(s => s.block===b.id),
@@ -581,7 +581,7 @@ function renderOnboarding() {
           </div>`;
         }).join('')}
       </div>
-      <div style="background:${step.color}08;border:1px solid ${step.color}25;border-radius:9px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.81rem;color:#374151;line-height:1.6;">${step.tip}</div>
+      <div style="background:${step.color}08;border:1px solid ${step.color}25;border-radius:9px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.81rem;color:#374151;line-height:1.6;">${step._tipText ? OB_STEPS[ob.activeStep].tip.replace(/<\/svg>\s*.+/, '<\/svg> '+step._tipText) : step.tip}</div>
       <div style="display:flex;gap:.65rem;justify-content:space-between;">
         <button onclick="obPrevStep()" ${ob.activeStep===0?'disabled':''} style="padding:.55rem 1.1rem;background:white;color:#374151;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:600;opacity:${ob.activeStep===0?'0.4':'1'};">← Попередній</button>
         ${stepComplete(step)&&ob.activeStep<OB_STEPS.length-1
