@@ -71,11 +71,8 @@ function _getTodayDeals() {
             const nad = d.nextActionDate.toDate ? d.nextActionDate.toDate() : new Date(d.nextActionDate);
             return nad <= tomorrow;
         }
-        // Немає nextActionDate — показуємо якщо активна угода і немає активності 3+ дні
-        const upd = d.updatedAt?.toDate ? d.updatedAt.toDate() : (d.updatedAt ? new Date(d.updatedAt) : null);
-        if (!upd) return true;
-        const daysSince = (now - upd) / 86400000;
-        return daysSince >= 3;
+        // Немає nextActionDate — показуємо всі активні (не won/lost)
+        return d.stage !== 'won';
     });
 }
 
