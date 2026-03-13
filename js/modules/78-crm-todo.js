@@ -85,6 +85,34 @@ function _sortDeals(deals) {
     });
 }
 
+// ── Helper: pipeline move button (уникаємо nested template literals) ──
+function _crmTodoPipelineBtnHtml(dealId) {
+    const crmObj = window.crm;
+    if (!crmObj || !crmObj.pipelines || crmObj.pipelines.length <= 1) return '';
+    const otherPipelines = crmObj.pipelines.filter(p => p.id !== crmObj.pipeline?.id);
+    if (!otherPipelines.length) return '';
+    const items = otherPipelines.map(p =>
+        '<button onclick="_crmTodoMoveToPipeline(\'' + dealId + '\',\'' + p.id + '\',\'' + _esc(p.name) + '\')"' +
+        ' style="width:100%;text-align:left;padding:0.5rem 0.75rem;border:none;background:none;' +
+        'font-size:0.82rem;color:#374151;cursor:pointer;border-radius:7px;display:flex;align-items:center;gap:6px;"' +
+        ' onmouseover="this.style.background=\'#f3f4f6\'" onmouseout="this.style.background=\'none\'">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+        _esc(p.name) + '</button>'
+    ).join('');
+    return '<div style="position:relative;display:inline-block;">' +
+        '<button onclick="_crmTodoTogglePipelineMenu(\'' + dealId + '\',this)"' +
+        ' style="display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;' +
+        'border:1.5px solid #8b5cf6;background:#faf5ff;color:#7c3aed;' +
+        'font-size:0.8rem;font-weight:600;cursor:pointer;">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>' +
+        '→ Воронка</button>' +
+        '<div id="pipelineMenu_' + dealId + '" style="display:none;position:absolute;bottom:calc(100% + 4px);left:0;' +
+        'background:white;border:1px solid #e5e7eb;border-radius:10px;' +
+        'box-shadow:0 8px 24px rgba(0,0,0,0.12);min-width:180px;z-index:10100;padding:0.3rem;">' +
+        items +
+        '</div></div>';
+}
+
 // ── Render ─────────────────────────────────────────────────
 window.renderCrmTodo = function() {
     const el = document.getElementById('crmViewTodo');
@@ -433,13 +461,16 @@ window.crmTodoOpenCard = async function(dealId) {
 
         <!-- Кнопки дій -->
         <div style="padding:0.75rem 1.25rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-          <!-- Швидке створення ліда -->
-          <button onclick="_crmTodoCreateLead('${dealId}')"
-            style="display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;
-            border:1.5px solid #3b82f6;background:#eff6ff;color:#1d4ed8;
-            font-size:0.8rem;font-weight:600;cursor:pointer;">
-            ${TI.plus} ${TI.user} Новий лід
-          </button>
+          <!-- Ліва група дій -->
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+            <button onclick="_crmTodoCreateLead('${dealId}')"
+              style="display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;
+              border:1.5px solid #3b82f6;background:#eff6ff;color:#1d4ed8;
+              font-size:0.8rem;font-weight:600;cursor:pointer;">
+              ${TI.plus} ${TI.user} Новий лід
+            </button>
+            ${_crmTodoPipelineBtnHtml(dealId)}
+          </div>
 
           <div style="display:flex;gap:0.4rem;">
             <button onclick="_crmTodoCloseCard()"
@@ -677,6 +708,87 @@ window._crmTodoSave = async function(dealId) {
 // ── Закрити картку ────────────────────────────────────────
 window._crmTodoCloseCard = function() {
     document.getElementById('crmTodoCardOverlay')?.remove();
+};
+
+// ── Переміщення ліда між воронками ────────────────────────
+window._crmTodoTogglePipelineMenu = function(dealId, btn) {
+    const menu = document.getElementById('pipelineMenu_' + dealId);
+    if (!menu) return;
+    const isOpen = menu.style.display !== 'none';
+    // Закриваємо всі відкриті меню
+    document.querySelectorAll('[id^="pipelineMenu_"]').forEach(m => m.style.display = 'none');
+    if (!isOpen) {
+        menu.style.display = 'block';
+        // Закриваємо при кліку поза меню
+        setTimeout(() => {
+            const handler = (e) => {
+                if (!menu.contains(e.target) && e.target !== btn) {
+                    menu.style.display = 'none';
+                    document.removeEventListener('click', handler);
+                }
+            };
+            document.addEventListener('click', handler);
+        }, 10);
+    }
+};
+
+window._crmTodoMoveToPipeline = async function(dealId, targetPipelineId, targetPipelineName) {
+    const crmObj = window.crm;
+    if (!crmObj) return;
+
+    const deal = crmObj.deals.find(d => d.id === dealId);
+    if (!deal) return;
+
+    const targetPipeline = (crmObj.pipelines || []).find(p => p.id === targetPipelineId);
+    if (!targetPipeline) return;
+
+    // Беремо першу стадію цільової воронки
+    const firstStage = targetPipeline.stages?.[0]?.id || 'new';
+
+    const confirmed = confirm(
+        `Перемістити "${deal.clientName || deal.title || 'лід'}" у воронку "${targetPipelineName}"?\n\nЛід буде переміщено на стадію: "${targetPipeline.stages?.[0]?.label || firstStage}"`
+    );
+    if (!confirmed) return;
+
+    try {
+        // Закриваємо картку
+        _crmTodoCloseCard();
+
+        // Оновлюємо в Firebase
+        await window.companyRef()
+            .collection(window.DB_COLS.CRM_DEALS)
+            .doc(dealId)
+            .update({
+                pipelineId: targetPipelineId,
+                stage: firstStage,
+                movedToPipelineAt: firebase.firestore.FieldValue.serverTimestamp(),
+                movedFromPipelineId: crmObj.pipeline?.id || '',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+
+        // Додаємо запис в history
+        try {
+            await window.companyRef()
+                .collection(window.DB_COLS.CRM_DEALS)
+                .doc(dealId).collection('history').add({
+                    type: 'pipeline_move',
+                    text: `Переміщено у воронку "${targetPipelineName}"`,
+                    from: crmObj.pipeline?.name || '',
+                    to: targetPipelineName,
+                    at: firebase.firestore.FieldValue.serverTimestamp(),
+                    by: window.currentUser?.email || '',
+                });
+        } catch(e) { /* history не критично */ }
+
+        if (window.showToast) showToast(`Лід переміщено → ${targetPipelineName}`, 'success');
+
+        // Оновлюємо todo — лід більше не в поточній воронці
+        if (typeof renderCrmTodo === 'function') renderCrmTodo();
+
+    } catch(e) {
+        console.error('[CRM move pipeline]', e);
+        if (window.showToast) showToast('Помилка переміщення: ' + e.message, 'error');
+    }
 };
 
 // ── Швидке створення ліда ─────────────────────────────────

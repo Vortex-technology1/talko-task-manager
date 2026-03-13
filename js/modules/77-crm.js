@@ -901,6 +901,27 @@ function _dealCard(deal) {
                 cursor:pointer;font-size:0.65rem;color:#6b7280;display:flex;align-items:center;justify-content:center;gap:3px;">
                 ${I.arrow} <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px;">${_stageLabel(deal.stage)}</span>
             </button>
+            ${crm.pipelines && crm.pipelines.length > 1 ? `
+            <div style="position:relative;" onclick="event.stopPropagation()">
+                <button onclick="crmTogglePipelineMenu(event,'${deal.id}')"
+                    title="Перемістити у іншу воронку"
+                    style="padding:2px 5px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:4px;
+                    cursor:pointer;font-size:0.65rem;color:#7c3aed;display:flex;align-items:center;gap:2px;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                </button>
+                <div id="kanbanPipelineMenu_${deal.id}" style="display:none;position:absolute;bottom:calc(100% + 4px);right:0;
+                    background:white;border:1px solid #e5e7eb;border-radius:10px;
+                    box-shadow:0 8px 24px rgba(0,0,0,0.14);min-width:160px;z-index:1000;padding:0.3rem;">
+                    ${crm.pipelines.filter(p => p.id !== crm.pipeline?.id).map(p => `
+                    <button onclick="crmMoveDealToPipeline('${deal.id}','${p.id}','${_esc(p.name)}')"
+                        style="width:100%;text-align:left;padding:0.45rem 0.65rem;border:none;background:none;
+                        font-size:0.78rem;color:#374151;cursor:pointer;border-radius:7px;display:flex;align-items:center;gap:6px;"
+                        onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        ${_esc(p.name)}
+                    </button>`).join('')}
+                </div>
+            </div>` : ''}
         </div>
     </div>`;
 }
@@ -2778,6 +2799,68 @@ function _renderCRMSettings() {
 }
 
 // ── Pipeline CRUD ──────────────────────────────────────────
+// ── Переміщення угоди між воронками ──────────────────────
+window.crmTogglePipelineMenu = function(e, dealId) {
+    e.stopPropagation();
+    const menu = document.getElementById('kanbanPipelineMenu_' + dealId);
+    if (!menu) return;
+    const isOpen = menu.style.display !== 'none';
+    document.querySelectorAll('[id^="kanbanPipelineMenu_"]').forEach(m => m.style.display = 'none');
+    if (!isOpen) {
+        menu.style.display = 'block';
+        setTimeout(() => {
+            const handler = (ev) => {
+                if (!menu.contains(ev.target)) {
+                    menu.style.display = 'none';
+                    document.removeEventListener('click', handler);
+                }
+            };
+            document.addEventListener('click', handler);
+        }, 10);
+    }
+};
+
+window.crmMoveDealToPipeline = async function(dealId, targetPipelineId, targetPipelineName) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    const targetPipeline = crm.pipelines.find(p => p.id === targetPipelineId);
+    if (!targetPipeline) return;
+    const firstStage = targetPipeline.stages?.[0]?.id || 'new';
+
+    const confirmed = confirm(
+        `Перемістити "${deal.clientName || deal.title || 'лід'}" у воронку "${targetPipelineName}"?\n→ Стадія: "${targetPipeline.stages?.[0]?.label || firstStage}"`
+    );
+    if (!confirmed) return;
+
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).update({
+            pipelineId: targetPipelineId,
+            stage: firstStage,
+            movedToPipelineAt: firebase.firestore.FieldValue.serverTimestamp(),
+            movedFromPipelineId: crm.pipeline?.id || '',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        // Запис в history
+        try {
+            await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
+                .doc(dealId).collection('history').add({
+                    type: 'pipeline_move',
+                    text: `Переміщено у воронку "${targetPipelineName}"`,
+                    from: crm.pipeline?.name || '',
+                    to: targetPipelineName,
+                    at: firebase.firestore.FieldValue.serverTimestamp(),
+                    by: window.currentUser?.email || '',
+                });
+        } catch(e) { /* history не критично */ }
+
+        if (typeof showToast === 'function') showToast(`→ ${targetPipelineName}`, 'success');
+        // onSnapshot автоматично оновить kanban (лід зникне з поточної воронки)
+    } catch(err) {
+        console.error('[CRM movePipeline]', err);
+        if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
+    }
+};
+
 window.crmSelectPipeline = async function(pipelineId) {
     // FIX: при кліку на активну — не відкриваємо Settings, просто ігноруємо
     if (crm.pipeline?.id === pipelineId) return;
