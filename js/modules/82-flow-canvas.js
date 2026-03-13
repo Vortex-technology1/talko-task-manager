@@ -1250,13 +1250,25 @@ window.fcRunAiFunnel = async function(mode) {
 Мова — українська.`;
 
     try {
-        const result = await window.aiProxy({
-            messages:     [{ role: 'user', content: input }],
-            systemPrompt: systemPrompt,
-            model:        'gpt-4o-mini',
-            maxTokens:    2000,
-            module:       'flow-canvas',
+        // Flow Canvas використовує ключ компанії (клієнт налаштовує сам)
+        const compSnap = await window.companyRef().get();
+        const apiKey = compSnap.data()?.openaiApiKey || compSnap.data()?.anthropicApiKey || '';
+        if (!apiKey) throw new Error('AI ключ не налаштований. Додайте в Налаштування → Інтеграції.');
+
+        const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+            body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                max_tokens: 2000,
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user',   content: input }
+                ]
+            })
         });
+        const data = await resp.json();
+        const result = data.choices?.[0]?.message?.content || 'Помилка генерації';
         document.getElementById('fcAiFunnelResultText').textContent = result;
         document.getElementById('fcAiFunnelResult').style.display = 'block';
     } catch(e) {

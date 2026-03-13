@@ -1436,19 +1436,15 @@
             '<div style="text-align:center;padding:1.5rem 0;color:#6b7280;font-size:0.88rem;">' +
             '<div class="spinner" style="margin:0 auto 0.75rem;"></div>AI аналізує метрики...</div></div>';
 
-        // Реальний API call через aiAssistant Cloud Function
+        // Викликаємо через платформний ai-proxy
         try {
-            const aiAssistantFn = firebase.functions().httpsCallable('aiAssistant');
-            const result = await aiAssistantFn({
-                companyId: currentCompany,
-                assistantId: 'statistics-analyst',
-                userMessage: prompt,
-                contextData: { period: pk, metrics: md }
+            const aiText = await window.aiProxy({
+                messages:     [{ role: 'user', content: prompt }],
+                systemPrompt: null, // береться з superadmin/settings.agents.statistics
+                model:        'gpt-4o-mini',
+                maxTokens:    1000,
+                module:       'statistics',
             });
-
-            const aiText = result.data && result.data.content
-                ? result.data.content
-                : (result.data || 'Відповідь отримана');
 
             if (ct) ct.innerHTML = '<div style="padding:1rem;">' + metricsHtml +
                 '<div style="background:white;padding:1rem;border-radius:12px;border:1px solid #e5e7eb;">' +

@@ -1,16 +1,15 @@
 // ============================================================
-// api/ai-proxy.js — TALKO Universal AI Proxy v1.0
+// api/ai-proxy.js — TALKO Universal AI Proxy v2.0
 // Vercel Serverless Function
 //
-// Ключ НІКОЛИ не йде в браузер:
-//   1. companies/{cid}/settings/ai → openaiApiKey  (компанія)
-//   2. superadmin/settings         → openaiApiKey  (платформа)
+// Ключ:   superadmin/settings.openaiApiKey  (платформа)
+//         companies/{cid}/settings/ai.openaiApiKey (компанія)
+// Промпт: superadmin/settings.agents.{module}.systemPrompt
+//         fallback → systemPrompt з запиту
 //
 // Flow: Browser → POST /api/ai-proxy
 //   { messages[], model?, systemPrompt?, companyId, module }
 //   + Authorization: Bearer <Firebase ID Token>
-//   → verifyIdToken → verify member → get key → call OpenAI
-//   → return { text }
 // ============================================================
 
 const admin = require('firebase-admin');
@@ -43,8 +42,8 @@ const ALLOWED_ORIGINS = [
 
 // ── Rate limit (per uid, in-memory) ─────────────────────────
 const uidRequests = new Map();
-const RATE_LIMIT  = 30;      // max requests per window
-const RATE_WINDOW = 60000;   // 1 хвилина
+const RATE_LIMIT  = 30;
+const RATE_WINDOW = 60000;
 
 function checkRateLimit(uid) {
     const now = Date.now();
@@ -58,31 +57,38 @@ function checkRateLimit(uid) {
     return true;
 }
 
-// ── Get API key (company → superadmin → env fallback) ───────
-async function getApiKey(companyId) {
-    // 1. Ключ компанії
-    try {
-        const snap = await db
-            .doc(`companies/${companyId}/settings/ai`)
-            .get();
-        const key = snap.data()?.openaiApiKey;
-        if (key) return key;
-    } catch(_) {}
+// ── Superadmin settings cache (10 хв) ───────────────────────
+let _saCache = null;
+let _saCacheAt = 0;
+const SA_CACHE_TTL = 10 * 60 * 1000;
 
-    // 2. Платформний ключ суперадміна
+async function getSuperadminSettings() {
+    const now = Date.now();
+    if (_saCache && now - _saCacheAt < SA_CACHE_TTL) return _saCache;
     try {
         const snap = await db.doc('superadmin/settings').get();
+        _saCache = snap.exists ? snap.data() : {};
+        _saCacheAt = now;
+        return _saCache;
+    } catch(_) { return {}; }
+}
+
+// ── Get API key ──────────────────────────────────────────────
+async function getApiKey(companyId, saSettings) {
+    // 1. Ключ компанії
+    try {
+        const snap = await db.doc(`companies/${companyId}/settings/ai`).get();
         const key = snap.data()?.openaiApiKey;
         if (key) return key;
     } catch(_) {}
-
+    // 2. Платформний ключ суперадміна
+    if (saSettings.openaiApiKey) return saSettings.openaiApiKey;
     // 3. Vercel ENV fallback
     return process.env.OPENAI_API_KEY || '';
 }
 
 // ── Main handler ─────────────────────────────────────────────
 module.exports = async function handler(req, res) {
-    // CORS
     const origin = req.headers.origin || '';
     if (ALLOWED_ORIGINS.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -114,11 +120,11 @@ module.exports = async function handler(req, res) {
     // Params
     const {
         companyId,
-        messages,       // [{ role, content }]
-        systemPrompt,   // опційно — додається як system message
-        model,          // default: gpt-4o-mini
-        maxTokens,      // default: 800
-        module: mod,    // для логування: 'incidents'|'finance'|'coordination'|'flow'
+        messages,
+        systemPrompt: clientSystemPrompt,
+        model: clientModel,
+        maxTokens,
+        module: mod,
     } = req.body || {};
 
     if (!companyId || !messages || !Array.isArray(messages)) {
@@ -135,19 +141,25 @@ module.exports = async function handler(req, res) {
         return res.status(403).json({ error: 'Forbidden: cannot verify membership' });
     }
 
-    // Get key
-    const apiKey = await getApiKey(companyId);
+    // Superadmin settings (ключ + агенти)
+    const saSettings = await getSuperadminSettings();
+
+    // Get API key
+    const apiKey = await getApiKey(companyId, saSettings);
     if (!apiKey) {
         return res.status(400).json({
             error: 'OpenAI ключ не налаштований. Зверніться до адміністратора платформи.'
         });
     }
 
+    // Промпт агента: superadmin → fallback на клієнтський
+    const agentSettings = saSettings.agents?.[mod] || {};
+    const systemPrompt  = agentSettings.systemPrompt || clientSystemPrompt || null;
+    const model         = agentSettings.model        || clientModel        || 'gpt-4o-mini';
+
     // Build messages
     const finalMessages = [];
-    if (systemPrompt) {
-        finalMessages.push({ role: 'system', content: systemPrompt });
-    }
+    if (systemPrompt) finalMessages.push({ role: 'system', content: systemPrompt });
     finalMessages.push(...messages);
 
     // Call OpenAI
@@ -156,19 +168,18 @@ module.exports = async function handler(req, res) {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type':  'application/json',
                 'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model:      model      || 'gpt-4o-mini',
-                max_tokens: maxTokens  || 800,
+                model,
+                max_tokens:  maxTokens || 800,
                 temperature: 0.3,
-                messages: finalMessages,
+                messages:    finalMessages,
             }),
         });
 
         const data = await response.json();
-
         if (!response.ok) {
             console.error(`[ai-proxy:${mod}] OpenAI error:`, response.status, JSON.stringify(data).slice(0, 200));
             return res.status(502).json({
@@ -184,8 +195,7 @@ module.exports = async function handler(req, res) {
         return res.status(500).json({ error: 'Network error: ' + e.message });
     }
 
-    // Log usage (опційно)
-    console.log(`[ai-proxy] module=${mod} uid=${uid} company=${companyId} model=${model||'gpt-4o-mini'}`);
-
+    console.log(`[ai-proxy] module=${mod} uid=${uid} company=${companyId} model=${model}`);
     return res.status(200).json({ text });
 };
+

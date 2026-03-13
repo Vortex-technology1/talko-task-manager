@@ -330,20 +330,22 @@
             };
 
             overlay.innerHTML = `
-                <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
                     <h3 style="margin:0 0 1rem;font-size:1rem;font-weight:700;">⚙️ Глобальні AI налаштування</h3>
 
                     <!-- TABS -->
                     <div style="display:flex;gap:4px;background:#f3f4f6;border-radius:10px;padding:3px;margin-bottom:1rem;">
-                        <button onclick="document.getElementById('aiTab_general').style.display='';document.getElementById('aiTab_models').style.display='none';this.style.background='white';this.style.color='#111';document.getElementById('aiTabBtn_models').style.background='transparent';document.getElementById('aiTabBtn_models').style.color='#6b7280';"
-                            id="aiTabBtn_general"
-                            style="flex:1;padding:6px;background:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                        <button onclick="window._switchAiTab('general')" id="aiTabBtn_general"
+                            style="flex:1;padding:6px;background:white;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
                             Загальні
                         </button>
-                        <button onclick="document.getElementById('aiTab_models').style.display='';document.getElementById('aiTab_general').style.display='none';this.style.background='white';this.style.color='#111';document.getElementById('aiTabBtn_general').style.background='transparent';document.getElementById('aiTabBtn_general').style.color='#6b7280';"
-                            id="aiTabBtn_models"
-                            style="flex:1;padding:6px;background:transparent;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#6b7280;">
-                            <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></span> Моделі AI
+                        <button onclick="window._switchAiTab('agents')" id="aiTabBtn_agents"
+                            style="flex:1;padding:6px;background:transparent;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;color:#6b7280;">
+                            🤖 AI Агенти
+                        </button>
+                        <button onclick="window._switchAiTab('models')" id="aiTabBtn_models"
+                            style="flex:1;padding:6px;background:transparent;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;color:#6b7280;">
+                            Моделі
                         </button>
                     </div>
 
@@ -382,6 +384,15 @@
                         </div>
                     </div>
 
+                    <!-- TAB: AGENTS -->
+                    <div id="aiTab_agents" style="display:none;">
+                        <div style="font-size:11px;color:#6b7280;margin-bottom:12px;">
+                            Налаштуй промпт і модель для кожного AI агента платформи.<br>
+                            Якщо промпт порожній — використовується вбудований дефолт.
+                        </div>
+                        ${window._renderAgentsTab(saSettings.agents || {})}
+                    </div>
+
                     <!-- TAB: MODELS -->
                     <div id="aiTab_models" style="display:none;">
                         <div style="font-size:11px;color:#6b7280;margin-bottom:8px;">
@@ -404,6 +415,15 @@
         const daily    = parseInt(document.getElementById('globalDailyLimit')?.value) || 0;
         const monthly  = parseInt(document.getElementById('globalMonthlyLimit')?.value) || 0;
         const newKey   = document.getElementById('platformOpenAiKey')?.value?.trim() || '';
+
+        // Збираємо агентів
+        const agents = {};
+        Object.keys(DEFAULT_AGENTS).forEach(key => {
+            const prompt = document.getElementById(`agent_prompt_${key}`)?.value?.trim() || '';
+            const model  = document.getElementById(`agent_model_${key}`)?.value?.trim() || 'gpt-4o-mini';
+            agents[key] = { systemPrompt: prompt, model };
+        });
+
         try {
             const batch = firebase.firestore().batch();
             // Загальні налаштування
@@ -412,15 +432,18 @@
                 { globalAiEnabled: enabled, defaultDailyLimit: daily, defaultMonthlyLimit: monthly },
                 { merge: true }
             );
-            // Платформний OpenAI ключ → superadmin/settings (тільки якщо введено)
+            // Платформний ключ + агенти → superadmin/settings
+            const saUpdate = { agents, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
             if (newKey) {
-                batch.set(
-                    firebase.firestore().collection('superadmin').doc('settings'),
-                    { openaiApiKey: newKey, keyUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() },
-                    { merge: true }
-                );
+                saUpdate.openaiApiKey = newKey;
+                saUpdate.keyUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
             }
-            // Моделі — якщо є що зберігати
+            batch.set(
+                firebase.firestore().collection('superadmin').doc('settings'),
+                saUpdate,
+                { merge: true }
+            );
+            // Моделі
             if (window._editingModels) {
                 batch.set(
                     firebase.firestore().collection('settings').doc('aiModels'),
@@ -429,10 +452,115 @@
             }
             await batch.commit();
             document.getElementById('globalAIOverlay')?.remove();
-            // Оновлюємо кеш моделей для canvas
             window._cachedAiModels = window._editingModels || null;
             showToast && showToast('Збережено ✓', 'success');
         } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+    };
+
+    // ── AI Агенти — дефолтні промпти ────────────────────────
+    const DEFAULT_AGENTS = {
+        statistics: {
+            label:       '📊 Аналіз статистики',
+            where:       'Статистика → кнопка AI',
+            defaultPrompt: `Ти бізнес-аналітик. Проаналізуй метрики компанії за вказаний період.
+Дай відповідь структуровано:
+📊 Діагноз — що відбувається з ключовими показниками
+🔍 Причини — чому метрики відхиляються від цілей
+⚠️ Ризики — що станеться якщо не змінити
+✅ Дії — 3 конкретні кроки з очікуваним результатом (+/- сума або %)
+📈 Прогноз — що буде через місяць якщо впровадити рекомендації
+Відповідай українською, коротко і по суті. Максимум 5 речень на блок.`,
+        },
+        incidents: {
+            label:       '⚠️ Журнал збоїв',
+            where:       'Контроль → Збої → AI режим',
+            defaultPrompt: `Ти бізнес-аналітик систем і процесів. Допомагаєш фіксувати збої в роботі компанії.
+Твоя задача — поставити уточнюючі питання і зібрати структурований опис інциденту.
+Збери: що сталося, хто учасники, який процес провалився, причина, наслідки, що потрібно змінити.
+Коли зібрав достатньо — поверни JSON з полями: title, category, severity, responsible, description, participants, failedProcess, cause, consequences, toChange.
+Спілкуйся коротко, по-діловому, українською мовою.`,
+        },
+        finance: {
+            label:       '💰 Фінансовий аналіз',
+            where:       'Фінанси → AI чат',
+            defaultPrompt: `Ти фінансовий аналітик малого бізнесу. Аналізуєш P&L, маржинальність, cashflow.
+Принципи роботи:
+- Завжди порівнюй маржу з бенчмарком ніші
+- Якщо маржа нижче норми — шукай причину в конкретних категоріях витрат
+- Якщо маржа вище норми — поясни чому і як утримати
+- Давай числові прогнози (+/- скільки грошей від конкретної дії)
+Відповідай українською, коротко і по суті.
+Формат: 📊 Діагноз → 🔍 Причина → ⚠️ Наслідок → ✅ Дія. Максимум 4-5 речень на блок.`,
+        },
+        coordination: {
+            label:       '🤝 Координація',
+            where:       'Координація → AI аналіз патернів',
+            defaultPrompt: `Ти AI-аналітик TALKO. Аналізуєш патерни координаційних зустрічей компанії.
+Дай конкретні рекомендації на основі даних:
+- Які рішення повторюються — чому процес не закріплено
+- Які питання хронічно не вирішуються — де системна проблема
+- Скільки часу витрачається на зустрічі — чи ефективно
+Відповідь: 3-5 конкретних рекомендацій з очікуваним результатом.
+Мова — українська, коротко.`,
+        },
+    };
+
+    // ── Рендер вкладки Агенти ───────────────────────────────
+    window._renderAgentsTab = function(savedAgents) {
+        return Object.entries(DEFAULT_AGENTS).map(([key, agent]) => {
+            const saved = savedAgents[key] || {};
+            const prompt = saved.systemPrompt || '';
+            const model  = saved.model || 'gpt-4o-mini';
+            return `
+            <div style="border:1px solid #e5e7eb;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
+                <div style="font-weight:700;font-size:0.85rem;margin-bottom:2px;">${agent.label}</div>
+                <div style="font-size:0.7rem;color:#6b7280;margin-bottom:8px;">
+                    Використовується: <span style="background:#f3f4f6;padding:1px 6px;border-radius:4px;">${agent.where}</span>
+                </div>
+                <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">
+                    <label style="font-size:0.72rem;font-weight:600;color:#374151;white-space:nowrap;">Модель:</label>
+                    <input id="agent_model_${key}" value="${model}"
+                        placeholder="gpt-4o-mini"
+                        style="flex:1;padding:4px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.78rem;font-family:monospace;">
+                </div>
+                <div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <label style="font-size:0.72rem;font-weight:600;color:#374151;">Системний промпт:</label>
+                        <button onclick="window._resetAgentPrompt('${key}')"
+                            style="font-size:0.68rem;color:#6b7280;background:none;border:none;cursor:pointer;text-decoration:underline;">
+                            ↺ Дефолт
+                        </button>
+                    </div>
+                    <textarea id="agent_prompt_${key}" rows="4"
+                        placeholder="${agent.defaultPrompt.slice(0, 80)}..."
+                        style="width:100%;padding:6px 8px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.75rem;line-height:1.4;resize:vertical;box-sizing:border-box;font-family:inherit;">${prompt}</textarea>
+                    ${!prompt ? `<div style="font-size:0.68rem;color:#9ca3af;">Порожньо = використовується вбудований дефолт</div>` : ''}
+                </div>
+            </div>`;
+        }).join('');
+    };
+
+    window._resetAgentPrompt = function(key) {
+        const el = document.getElementById(`agent_prompt_${key}`);
+        if (el) {
+            el.value = DEFAULT_AGENTS[key]?.defaultPrompt || '';
+            showToast && showToast('Промпт відновлено', 'success');
+        }
+    };
+
+    // ── Перемикання табів ────────────────────────────────────
+    window._switchAiTab = function(tab) {
+        ['general', 'agents', 'models'].forEach(t => {
+            const btn = document.getElementById(`aiTabBtn_${t}`);
+            const panel = document.getElementById(`aiTab_${t}`);
+            const active = t === tab;
+            if (btn) {
+                btn.style.background = active ? 'white' : 'transparent';
+                btn.style.color = active ? '#111' : '#6b7280';
+                btn.style.boxShadow = active ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
+            }
+            if (panel) panel.style.display = active ? '' : 'none';
+        });
     };
 
     window.clearPlatformKey = async function() {
