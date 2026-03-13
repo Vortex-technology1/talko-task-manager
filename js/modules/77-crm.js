@@ -496,7 +496,7 @@ function _renderListView() {
     const today = new Date().toISOString().split('T')[0];
 
     listEl.innerHTML = `
-    <div style="padding:0.75rem;max-width:1200px;margin:0 auto;">
+    <div style="padding:0.75rem 1rem;">
         <!-- Фільтр-бар -->
         <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;align-items:center;">
             <select onchange="crm.filters.assignee=this.value;crmSetViewMode('list')"
@@ -2344,7 +2344,7 @@ async function _renderActivitiesTab() {
             </div>`;
         }).join('') : '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Активностей не знайдено</div>';
 
-        c.innerHTML = `<div style="max-width:680px;margin:0 auto;">${addForm}${filterBar}${timeline}</div>`;
+        c.innerHTML = `<div style="padding:0 1rem;">${addForm}${filterBar}${timeline}</div>`;
 
         // FIX I: скидаємо тип до 'note' після кожного ре-рендеру
         crm._actCurrentType = 'note';
@@ -2482,7 +2482,7 @@ function _renderAnalytics() {
     const lostColors = ['#ef4444','#f97316','#f59e0b','#6b7280','#8b5cf6','#3b82f6','#22c55e'];
 
     c.innerHTML = `
-    <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:0.75rem;padding-bottom:2rem;">
+    <div style="padding:0 1rem 2rem;display:flex;flex-direction:column;gap:0.75rem;">
 
         <!-- KPI картки -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;">
@@ -2689,7 +2689,7 @@ function _renderCRMSettings() {
     const sectionTitle = 'font-weight:700;font-size:0.82rem;color:#111827;margin-bottom:0.65rem;';
 
     c.innerHTML = `
-    <div style="max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:1rem;">
+    <div style="padding:0 1rem;display:flex;flex-direction:column;gap:1rem;">
 
         <!-- Воронки -->
         <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
