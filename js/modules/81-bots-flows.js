@@ -800,7 +800,7 @@
 
             // Встановлюємо вебхук через Telegram API
             const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram`;
-            const tgRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+            const tgRes = await _tgFetch(`https://api.telegram.org/bot${token}/setWebhook`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message', 'callback_query'] }),
@@ -809,7 +809,7 @@
             if (!tgData.ok) throw new Error(tgData.description || 'Telegram error');
 
             // Отримуємо інфо про бота
-            const meRes = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+            const meRes = await _tgFetch(`https://api.telegram.org/bot${token}/getMe`);
             const meData = await meRes.json();
             const botName = meData.result?.username || 'bot';
 
@@ -1713,7 +1713,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
 
             // Встановлюємо вебхук через Telegram API
             const webhookUrl = `${location.origin}/api/webhook?companyId=${window.currentCompanyId}&channel=telegram`;
-            const tgRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+            const tgRes = await _tgFetch(`https://api.telegram.org/bot${token}/setWebhook`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message', 'callback_query'] }),
@@ -1722,7 +1722,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
             if (!tgData.ok) throw new Error(tgData.description || 'Telegram error');
 
             // Отримуємо інфо про бота
-            const meRes = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+            const meRes = await _tgFetch(`https://api.telegram.org/bot${token}/getMe`);
             const meData = await meRes.json();
             const botName = meData.result?.username || 'bot';
 
@@ -1829,3 +1829,12 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
     };
 
 })();
+
+// FIX: helper з timeout для Telegram API (10s)
+async function _tgFetch(url, opts = {}) {
+    const ctrl  = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 10000);
+    try {
+        return await fetch(url, { ...opts, signal: ctrl.signal });
+    } finally { clearTimeout(timer); }
+}

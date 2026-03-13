@@ -528,12 +528,12 @@ window.createAndConnectBot = async function() {
 
         if (channel === 'telegram') {
             // Verify token + set webhook
-            const meRes = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+            const meRes = await _tgFetch(`https://api.telegram.org/bot${token}/getMe`);
             const meData = await meRes.json();
             if (!meData.ok) throw new Error(window.t('botsInvalidToken') + (meData.description||''));
             username = meData.result.username || '';
 
-            const whRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+            const whRes = await _tgFetch(`https://api.telegram.org/bot${token}/setWebhook`, {
                 method:'POST', headers:{'Content-Type':'application/json'},
                 body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message','callback_query'] }),
             });
@@ -2250,7 +2250,7 @@ window.bpSendBroadcast = async function() {
             if (j > 0) await new Promise(r => setTimeout(r, 40));
 
             try {
-                const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                const res = await _tgFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -2565,11 +2565,11 @@ window.bpCheckBotStatus = async function(botId) {
 
     try {
         // Перевіряємо бота через Telegram
-        const meRes = await fetch(`https://api.telegram.org/bot${bot.token}/getMe`);
+        const meRes = await _tgFetch(`https://api.telegram.org/bot${bot.token}/getMe`);
         const me = await meRes.json();
 
         // Перевіряємо webhook
-        const whRes = await fetch(`https://api.telegram.org/bot${bot.token}/getWebhookInfo`);
+        const whRes = await _tgFetch(`https://api.telegram.org/bot${bot.token}/getWebhookInfo`);
         const wh = await whRes.json();
         const whInfo = wh.result || {};
 
@@ -2616,7 +2616,7 @@ window.bpReinstallWebhook = async function(botId) {
 
     try {
         const webhookUrl = `https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`;
-        const res = await fetch(`https://api.telegram.org/bot${bot.token}/setWebhook`, {
+        const res = await _tgFetch(`https://api.telegram.org/bot${bot.token}/setWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message', 'callback_query'] }),
@@ -2647,12 +2647,12 @@ window.bpReconnectBot = async function(botId) {
     if (!token || token.includes('•')) { if(window.showToast)showToast(window.t('botsNewToken'),'warning'); else alert(window.t('botsNewToken')); return; }
 
     try {
-        const meRes = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+        const meRes = await _tgFetch(`https://api.telegram.org/bot${token}/getMe`);
         const me = await meRes.json();
         if (!me.ok) throw new Error(me.description);
 
         const webhookUrl = `https://europe-west1-task-manager-44e84.cloudfunctions.net/telegramWebhook`;
-        const whRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+        const whRes = await _tgFetch(`https://api.telegram.org/bot${token}/setWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: webhookUrl, allowed_updates: ['message', 'callback_query'] }),
@@ -2776,3 +2776,12 @@ window.onSwitchTab && window.onSwitchTab('bots', function() {
     }
 
 })();
+
+// FIX: helper з timeout для Telegram API (10s — публічний API)
+async function _tgFetch(url, opts = {}) {
+    const ctrl  = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 10000);
+    try {
+        return await fetch(url, { ...opts, signal: ctrl.signal });
+    } finally { clearTimeout(timer); }
+}

@@ -1255,18 +1255,24 @@ window.fcRunAiFunnel = async function(mode) {
         const apiKey = compSnap.data()?.openaiApiKey || compSnap.data()?.anthropicApiKey || '';
         if (!apiKey) throw new Error('AI ключ не налаштований. Додайте в Налаштування → Інтеграції.');
 
-        const resp = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-            body: JSON.stringify({
-                model: 'gpt-4o-mini',
-                max_tokens: 2000,
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user',   content: input }
-                ]
-            })
-        });
+        const _fcCtrl = new AbortController();
+        const _fcTimer = setTimeout(() => _fcCtrl.abort(), 30000);
+        let resp;
+        try {
+            resp = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                body: JSON.stringify({
+                    model: 'gpt-4o-mini',
+                    max_tokens: 2000,
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user',   content: input }
+                    ]
+                }),
+                signal: _fcCtrl.signal,
+            });
+        } finally { clearTimeout(_fcTimer); }
         const data = await resp.json();
         const result = data.choices?.[0]?.message?.content || 'Помилка генерації';
         document.getElementById('fcAiFunnelResultText').textContent = result;
@@ -1918,17 +1924,21 @@ function pushHistory() {
 function undo() {
     if (fc.historyIdx <= 0) return;
     fc.historyIdx--;
-    const state = JSON.parse(fc.history[fc.historyIdx]);
-    fc.nodes = state.nodes; fc.edges = state.edges;
-    renderAll();
+    try {
+        const state = JSON.parse(fc.history[fc.historyIdx]);
+        fc.nodes = state.nodes; fc.edges = state.edges;
+        renderAll();
+    } catch(e) { console.error('[canvas] undo parse error', e); }
 }
 
 function redo() {
     if (fc.historyIdx >= fc.history.length-1) return;
     fc.historyIdx++;
-    const state = JSON.parse(fc.history[fc.historyIdx]);
-    fc.nodes = state.nodes; fc.edges = state.edges;
-    renderAll();
+    try {
+        const state = JSON.parse(fc.history[fc.historyIdx]);
+        fc.nodes = state.nodes; fc.edges = state.edges;
+        renderAll();
+    } catch(e) { console.error('[canvas] redo parse error', e); }
 }
 
 // ── Keyboard ───────────────────────────────────────────────

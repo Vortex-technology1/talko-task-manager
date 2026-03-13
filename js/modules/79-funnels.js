@@ -522,14 +522,20 @@
             if (isTest) return 'Тестовий режим: AI відповідь буде тут.';
             try {
                 const _funnelIdToken = await (firebase.auth().currentUser?.getIdToken().catch(()=>null));
-                const response = await fetch('/api/funnel-ai', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ..._funnelIdToken ? { 'Authorization': 'Bearer ' + _funnelIdToken } : {},
-                    },
-                    body: JSON.stringify({ companyId: cId, stepPrompt: step.systemPrompt || '', leadData: data, provider: step.aiProvider || 'openai' })
-                });
+                const _funnelCtrl = new AbortController();
+                const _funnelTimer = setTimeout(() => _funnelCtrl.abort(), 30000);
+                let response;
+                try {
+                    response = await fetch('/api/funnel-ai', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ..._funnelIdToken ? { 'Authorization': 'Bearer ' + _funnelIdToken } : {},
+                        },
+                        body: JSON.stringify({ companyId: cId, stepPrompt: step.systemPrompt || '', leadData: data, provider: step.aiProvider || 'openai' }),
+                        signal: _funnelCtrl.signal,
+                    });
+                } finally { clearTimeout(_funnelTimer); }
                 if (!response.ok) throw new Error('AI error');
                 const json = await response.json();
                 return json.response || 'Вибачте, спробуйте ще раз.';

@@ -3777,14 +3777,20 @@ ${context}
     } catch(proxyErr) {
       // fallback — пряме звернення якщо є ключ компанії
       if (!apiKey) throw proxyErr;
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini', max_tokens: 1000,
-          messages: [{ role: 'system', content: systemPrompt }, ..._aiFinHistory]
-        })
-      });
+      const _oaiCtrl = new AbortController();
+      const _oaiTimer = setTimeout(() => _oaiCtrl.abort(), 30000); // 30s для LLM
+      let response;
+      try {
+        response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini', max_tokens: 1000,
+            messages: [{ role: 'system', content: systemPrompt }, ..._aiFinHistory]
+          }),
+          signal: _oaiCtrl.signal,
+        });
+      } finally { clearTimeout(_oaiTimer); }
       const data = await response.json();
       aiText = data.choices?.[0]?.message?.content || data.error?.message || 'Не вдалося отримати відповідь.';
     }

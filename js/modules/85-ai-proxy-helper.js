@@ -31,21 +31,28 @@ window.aiProxy = async function({
     if (!user) throw new Error('Користувач не авторизований');
     const idToken = await user.getIdToken();
 
-    const response = await fetch('/api/ai-proxy', {
-        method: 'POST',
-        headers: {
-            'Content-Type':  'application/json',
-            'Authorization': `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({
-            companyId,
-            messages,
-            systemPrompt,
-            model,
-            maxTokens,
-            module: mod,
-        }),
-    });
+    // FIX: AbortController timeout — LLM може відповідати до 60s
+    const _ctrl  = new AbortController();
+    const _timer = setTimeout(() => _ctrl.abort(), 60000);
+    let response;
+    try {
+        response = await fetch('/api/ai-proxy', {
+            method: 'POST',
+            headers: {
+                'Content-Type':  'application/json',
+                'Authorization': `Bearer ${idToken}`,
+            },
+            body: JSON.stringify({
+                companyId,
+                messages,
+                systemPrompt,
+                model,
+                maxTokens,
+                module: mod,
+            }),
+            signal: _ctrl.signal,
+        });
+    } finally { clearTimeout(_timer); }
 
     const data = await response.json();
 
