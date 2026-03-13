@@ -63,6 +63,21 @@ window.initCRMModule = async function () {
     if (!window.currentCompanyId) return;
     // FIX: guard порівнює companyId — при logout/login скидається
     if (crm._initializingFor === window.currentCompanyId && crm.pipeline) return;
+
+    // Якщо companyRef ще не готовий — чекаємо до 5с
+    if (!window.companyRef || !window.companyRef()) {
+        let waited = 0;
+        await new Promise(res => {
+            const t = setInterval(() => {
+                waited += 200;
+                if ((window.companyRef && window.companyRef()) || waited >= 5000) {
+                    clearInterval(t); res();
+                }
+            }, 200);
+        });
+        if (!window.companyRef || !window.companyRef()) return; // так і не з'явився
+    }
+
     crm._initializingFor = window.currentCompanyId;
     crm.saving = false; // FIX: скидаємо saving guard при реініціалізації
     crm._remindersChecked = false;
@@ -74,11 +89,19 @@ window.initCRMModule = async function () {
     } catch(e) {
         console.error('[CRM]', e.message);
         crm._initializingFor = null; // FIX: дозволяємо повторну ініціалізацію
-        const c = document.getElementById('crmViewKanban');
-        if (c) c.innerHTML = `<div style="padding:2rem;text-align:center;color:#ef4444;font-size:0.82rem;">
-            Помилка: ${window.htmlEsc ? window.htmlEsc(e.message) : e.message}<br>
-            <button onclick="crm._initializingFor=null;window.initCRMModule()" style="margin-top:0.75rem;padding:0.4rem 1rem;
-            background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;">Повторити</button></div>`;
+        const c = document.getElementById('crmViewKanban') || document.getElementById('crmContainer');
+        if (c) c.innerHTML = `<div style="padding:3rem 2rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.75rem;">⚡</div>
+            <div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.4rem;">CRM не завантажилась</div>
+            <div style="font-size:0.8rem;color:#6b7280;margin-bottom:1.25rem;line-height:1.5;">
+                ${window.htmlEsc ? window.htmlEsc(e.message) : e.message}
+            </div>
+            <button onclick="crm._initializingFor=null;window.initCRMModule()"
+                style="padding:0.55rem 1.5rem;background:#22c55e;color:white;border:none;
+                border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+                🔄 Спробувати ще раз
+            </button>
+        </div>`;
         crm.loading = false;
     }
     _listenEventBus();
@@ -282,7 +305,13 @@ async function _loadAll() {
     if (crm.dealUnsub)   { crm.dealUnsub();   crm.dealUnsub   = null; }
     if (crm.clientUnsub) { crm.clientUnsub(); crm.clientUnsub = null; }
 
-    const pipSnap = await base.collection('crm_pipeline').get();
+    // Timeout 10с — якщо Firestore недоступний, не висимо безкінечно
+    const _withTimeout = (promise, ms) => Promise.race([
+        promise,
+        new Promise((_, rej) => setTimeout(() => rej(new Error('Немає зʼєднання з сервером. Перевірте інтернет і спробуйте ще раз.')), ms))
+    ]);
+
+    const pipSnap = await _withTimeout(base.collection('crm_pipeline').get(), 10000);
     crm.pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     window.crm = crm; // expose після завантаження pipelines
     if (!crm.pipelines.length) await _createDefaultPipeline();
