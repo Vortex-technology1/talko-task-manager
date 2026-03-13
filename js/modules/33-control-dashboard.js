@@ -595,7 +595,7 @@
                     <!-- Активні записи -->
                     <!-- Онбординг: як працює AI агент -->
                     <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:0.75rem 1rem;margin-bottom:0.75rem;display:flex;align-items:flex-start;gap:0.75rem;">
-                        <div style="font-size:1.2rem;flex-shrink:0;">🤖</div>
+                        <div style="flex-shrink:0;color:#0369a1;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></div>
                         <div>
                             <div style="font-size:0.8rem;font-weight:700;color:#0369a1;margin-bottom:0.2rem;">Як записати збій через AI</div>
                             <div style="font-size:0.75rem;color:#0c4a6e;line-height:1.5;">
@@ -608,7 +608,7 @@
 
                     ${active.length === 0 ? `
                     <div style="text-align:center;padding:1.5rem;background:#f0fdf4;border-radius:10px;border:1px dashed #bbf7d0;margin-bottom:0.75rem;">
-                        <div style="font-size:1.5rem;">✅</div>
+                        <div style="display:flex;justify-content:center;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
                         <div style="font-size:0.82rem;color:#16a34a;font-weight:600;margin-top:0.25rem;">Немає відкритих збоїв</div>
                         <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.25rem;">Якщо щось пішло не так — зафіксуй тут</div>
                     </div>` : `

@@ -4,7 +4,7 @@
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const INCIDENTS_COL = 'incidents';
 
-const SEVERITY_LABELS = { 1: '🟡 Низька', 2: '🟠 Середня', 3: '🔴 Критична' };
+const SEVERITY_LABELS = { 1: 'Низька', 2: 'Середня', 3: 'Критична' };
 const STATUS_LABELS = {
   new:        'Новий',
   in_review:  'На розгляді',
@@ -12,12 +12,12 @@ const STATUS_LABELS = {
   resolved:   'Вирішено',
 };
 const CATEGORY_LABELS = {
-  people:   '👥 Люди',
-  process:  '⚙️ Процеси',
-  finance:  '💰 Фінанси',
-  clients:  '🤝 Клієнти',
-  quality:  '✅ Якість',
-  other:    '📌 Інше',
+  people:   'Люди',
+  process:  'Процеси',
+  finance:  'Фінанси',
+  clients:  'Клієнти',
+  quality:  'Якість',
+  other:    'Інше',
 };
 
 // Поточний стан AI-чату
@@ -103,19 +103,19 @@ function _openModeChooser(incidentId) {
 
   const modal = _createModal('incident-mode-chooser', `
     <div class="incident-modal-header">
-      <h3>📋 Записати управлінський збій</h3>
+      <h3>Записати управлінський збій</h3>
       <button class="incident-close-btn" onclick="_closeIncidentModal('incident-mode-chooser')">✕</button>
     </div>
     <div class="incident-mode-body">
       <p class="incident-mode-hint">Оберіть спосіб запису:</p>
       <div class="incident-mode-cards">
         <div class="incident-mode-card" onclick="_closeIncidentModal('incident-mode-chooser'); _openAiMode()">
-          <div class="incident-mode-icon">🤖</div>
+          <div class="incident-mode-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></div>
           <div class="incident-mode-title">Описати голосом / текстом (AI)</div>
           <div class="incident-mode-desc">Опишіть що сталося — AI структурує запис автоматично</div>
         </div>
         <div class="incident-mode-card" onclick="_closeIncidentModal('incident-mode-chooser'); _openManualForm(null)">
-          <div class="incident-mode-icon">✏️</div>
+          <div class="incident-mode-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
           <div class="incident-mode-title">Заповнити вручну</div>
           <div class="incident-mode-desc">Самостійно заповніть всі поля форми</div>
         </div>
@@ -133,7 +133,7 @@ function _openAiMode() {
 
   const modal = _createModal('incident-ai-mode', `
     <div class="incident-modal-header">
-      <h3>🤖 AI-запис збою</h3>
+      <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg> AI-запис збою</h3>
       <button class="incident-close-btn" onclick="_closeIncidentModal('incident-ai-mode')">✕</button>
     </div>
     <div class="incident-ai-body">
@@ -152,9 +152,9 @@ function _openAiMode() {
       </div>
       <div id="incidentAiPreview" style="display:none"></div>
       <div class="incident-ai-actions" id="incidentAiActions" style="display:none">
-        <button class="btn-primary" onclick="_saveIncidentFromAi()">💾 Зберегти в журнал</button>
-        <button class="btn-secondary" onclick="_copyIncidentText()">📋 Копіювати текст</button>
-        <button class="btn-ghost" onclick="_resetAiMode()">🔄 Переробити</button>
+        <button class="btn-primary" onclick="_saveIncidentFromAi()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти в журнал</button>
+        <button class="btn-secondary" onclick="_copyIncidentText()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Копіювати текст</button>
+        <button class="btn-ghost" onclick="_resetAiMode()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Переробити</button>
       </div>
     </div>
   `);
@@ -177,8 +177,8 @@ window._sendAiMessage = async function () {
   const typingId = _appendChatMsg('assistant', '⏳ Аналізую...');
 
   try {
-    const apiKey = _getAiKey();
-    if (!apiKey) throw new Error('AI ключ не налаштований. Додайте OpenAI API Key в Налаштуваннях.');
+    const apiKey = await _getAiKey();
+    if (!apiKey) throw new Error('AI ключ не налаштований. Перейдіть в Налаштування → AI і введіть OpenAI ключ.');
 
     const functions = _getFunctionsList();
     const systemPrompt = _buildSystemPrompt(functions);
@@ -213,7 +213,7 @@ window._sendAiMessage = async function () {
     const parsed = _tryParseJson(reply);
     if (parsed) {
       aiChat.parsedData = parsed;
-      _appendChatMsg('assistant', '✅ Готово! Перевірте попередній перегляд нижче і відредагуйте при потребі.');
+      _appendChatMsg('assistant', 'Готово! Перевірте попередній перегляд нижче і відредагуйте при потребі.');
       _showAiPreview(parsed);
     } else {
       _appendChatMsg('assistant', reply);
@@ -283,7 +283,7 @@ function _showAiPreview(data) {
 
   preview.innerHTML = `
     <div class="incident-preview-card">
-      <div class="incident-preview-title">👁 Попередній перегляд — відредагуйте при потребі</div>
+      <div class="incident-preview-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Попередній перегляд — відредагуйте при потребі</div>
       <div class="incident-preview-grid">
         ${_previewField('Назва збою', 'prev_title', data.title || '', 'input')}
         ${_previewField('Категорія', 'prev_category', data.category || 'other', 'select-category')}
@@ -363,7 +363,7 @@ window._saveIncidentFromAi = async function () {
 window._copyIncidentText = function () {
   const get = id => document.getElementById(id)?.value || '';
   const text = [
-    `📋 УПРАВЛІНСЬКИЙ ЗБІЙ`,
+    `УПРАВЛІНСЬКИЙ ЗБІЙ`,
     `Назва: ${get('prev_title')}`,
     `Категорія: ${CATEGORY_LABELS[get('prev_category')] || get('prev_category')}`,
     `Серйозність: ${SEVERITY_LABELS[get('prev_severity')] || get('prev_severity')}`,
@@ -408,7 +408,7 @@ async function _openManualForm(incidentId) {
 
   const modal = _createModal('incident-manual-form', `
     <div class="incident-modal-header">
-      <h3>${incidentId ? '✏️ Редагувати збій' : '✏️ Новий збій'}</h3>
+      <h3>${incidentId ? 'Редагувати збій' : 'Новий збій'}</h3>
       <button class="incident-close-btn" onclick="_closeIncidentModal('incident-manual-form')">✕</button>
     </div>
     <div class="incident-form-body">
@@ -499,7 +499,7 @@ async function _openManualForm(incidentId) {
 
       <div class="incident-form-footer">
         <button class="btn-primary" onclick="_saveManualIncident('${incidentId || ''}')">
-          💾 ${incidentId ? 'Зберегти зміни' : 'Зберегти в журнал'}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> ${incidentId ? 'Зберегти зміни' : 'Зберегти в журнал'}
         </button>
         <button class="btn-ghost" onclick="_closeIncidentModal('incident-manual-form')">Скасувати</button>
       </div>
@@ -569,10 +569,18 @@ async function _saveIncident(data) {
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 
 function _getAiKey() {
+  // Читаємо з кешу якщо вже завантажили
+  if (window._cachedAiKey) return Promise.resolve(window._cachedAiKey);
+  // Читаємо з Firebase settings/ai (як 98-finance.js)
   try {
-    const settings = JSON.parse(localStorage.getItem('settings') || '{}');
-    return settings?.ai?.openaiApiKey || '';
-  } catch (_) { return ''; }
+    return window.companyRef().collection('settings').doc('ai').get()
+      .then(snap => {
+        const key = snap.data()?.openaiApiKey || snap.data()?.apiKey || '';
+        if (key) window._cachedAiKey = key;
+        return key;
+      })
+      .catch(() => '');
+  } catch(_) { return Promise.resolve(''); }
 }
 
 function _getFunctionsList() {
