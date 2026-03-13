@@ -582,11 +582,11 @@
                 content.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.4rem;">
                         <div>
-                            <h3 style="margin:0;">Журнал збоїв</h3>
-                            <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">Тут фіксується те, що пішло не так — факт, причина, відповідальний, рішення</div>
+                            <h3 style="margin:0;">${window.t('failureJournal')||'Журнал збоїв'}</h3>
+                            <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${window.t('incidentJournalDesc')||'Тут фіксується те, що пішло не так'}</div>
                         </div>
                         <button class="btn btn-success btn-small" onclick="if(typeof showIncidentModal==='function')showIncidentModal();else toggleAddIncidentForm();" style="display:flex;align-items:center;gap:0.3rem;">
-                            + Записати збій
+                            ${window.t('writeIncident')||'+ Записати збій'}
                         </button>
                     </div>
 
@@ -597,10 +597,10 @@
                     <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:0.75rem 1rem;margin-bottom:0.75rem;display:flex;align-items:flex-start;gap:0.75rem;">
                         <div style="flex-shrink:0;color:#0369a1;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></div>
                         <div>
-                            <div style="font-size:0.8rem;font-weight:700;color:#0369a1;margin-bottom:0.2rem;">Як записати збій через AI</div>
+                            <div style="font-size:0.8rem;font-weight:700;color:#0369a1;margin-bottom:0.2rem;">${window.t('incidentAiOnboardTitle')||'Як записати збій через AI'}</div>
                             <div style="font-size:0.75rem;color:#0c4a6e;line-height:1.5;">
-                                Натисни <b>+ Записати збій</b> → вибери <b>AI режим</b> → опиши своїми словами що сталося → AI задасть 1-3 уточнюючих питання → сформує структурований запис → ти переглянеш і збережеш.<br>
-                                <span style="color:#0284c7;">Або одразу <b>Ручний режим</b> — заповнити форму самостійно.</span>
+                                ${window.t('incidentAiOnboardText')||'Натисни + Записати збій → AI режим → опиши → збережи'}<br>
+                                <span style="color:#0284c7;">${window.t('incidentAiOnboardText2')||'Або одразу Ручний режим'}</span>
                             </div>
                         </div>
                         <button onclick="this.parentElement.style.display='none'" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1rem;flex-shrink:0;padding:0;">✕</button>
@@ -609,8 +609,8 @@
                     ${active.length === 0 ? `
                     <div style="text-align:center;padding:1.5rem;background:#f0fdf4;border-radius:10px;border:1px dashed #bbf7d0;margin-bottom:0.75rem;">
                         <div style="display:flex;justify-content:center;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-                        <div style="font-size:0.82rem;color:#16a34a;font-weight:600;margin-top:0.25rem;">Немає відкритих збоїв</div>
-                        <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.25rem;">Якщо щось пішло не так — зафіксуй тут</div>
+                        <div style="font-size:0.82rem;color:#16a34a;font-weight:600;margin-top:0.25rem;">${window.t('noOpenIncidents')||'Немає відкритих збоїв'}</div>
+                        <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.25rem;">${window.t('noOpenIncidentsHint')||'Якщо щось пішло не так — зафіксуй тут'}</div>
                     </div>` : `
                     <div style="margin-bottom:0.75rem;">
                         ${active.sort((a,b) => (b.severity||1)-(a.severity||1)).map(mi => {
@@ -632,7 +632,7 @@
                                     </div>
                                     <button onclick="resolveIncident('${escId(mi.id)}')"
                                         style="background:#16a34a;color:white;border:none;border-radius:6px;padding:0.3rem 0.6rem;cursor:pointer;font-size:0.72rem;font-weight:600;white-space:nowrap;flex-shrink:0;">
-                                        ✓ Вирішено
+                                        ✓ ${window.t('markResolved')||'Вирішено'}
                                     </button>
                                 </div>
                             </div>`;
@@ -643,8 +643,8 @@
                     ${autoSignals.length > 0 ? `
                     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;">
                         <div style="font-size:0.72rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">
-                            ⚡ Авто-сигнали з задач (${autoSignals.length})
-                            <span style="font-weight:400;font-style:italic;"> — для контексту, детально дивись у Брифінгу</span>
+                            ⚡ ${window.t('autoSignals')||'Авто-сигнали з задач'} (${autoSignals.length})
+                            <span style="font-weight:400;font-style:italic;"> — ${window.t('forContext')||'для контексту, детально дивись у Брифінгу'}</span>
                         </div>
                         ${autoSignals.slice(0,5).map(s => `
                         <div style="display:flex;align-items:center;gap:0.4rem;padding:0.25rem 0;border-bottom:1px solid #e8eaed;cursor:pointer;"
@@ -653,14 +653,14 @@
                             <span style="font-size:0.76rem;color:#374151;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(s.text)}</span>
                             ${s.person ? `<span style="font-size:0.68rem;color:#9ca3af;flex-shrink:0;">${esc(s.person)}</span>` : ''}
                         </div>`).join('')}
-                        ${autoSignals.length > 5 ? `<div style="font-size:0.7rem;color:#9ca3af;padding:0.25rem 0;">+${autoSignals.length - 5} ще — відкрий Брифінг</div>` : ''}
+                        ${autoSignals.length > 5 ? `<div style="font-size:0.7rem;color:#9ca3af;padding:0.25rem 0;">+${autoSignals.length - 5} ${window.t('moreItems')||'ще'} — ${window.t('openBriefing')||'відкрий Брифінг'}</div>` : ''}
                     </div>` : ''}
 
                     <!-- Архів вирішених -->
                     ${resolved.length > 0 ? `
                     <details style="margin-top:0.25rem;">
                         <summary style="font-size:0.76rem;color:#9ca3af;cursor:pointer;padding:0.3rem 0;">
-                            📁 Вирішені збої (${resolved.length})
+                            📁 ${window.t('resolvedIncidentsLabel')||'Вирішені збої'} (${resolved.length})
                         </summary>
                         <div style="margin-top:0.4rem;">
                         ${resolved.slice(-10).reverse().map(mi => {
