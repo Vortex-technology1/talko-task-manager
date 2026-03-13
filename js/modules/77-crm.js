@@ -1955,11 +1955,11 @@ window.crmOpenCreateDeal = function(defaultStage) {
             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                 <div>
                     <label style="${lbl}">Назва угоди</label>
-                    <input id="nd_title" placeholder=window.t('crmDealTitlePh') style="${inp}" autofocus>
+                    <input id="nd_title" placeholder="${window.t('crmDealTitlePh')}" style="${inp}" autofocus>
                 </div>
                 <div>
                     <label style="${lbl}">Клієнт</label>
-                    <input id="nd_client" placeholder=window.t('crmClientNamePh') style="${inp}">
+                    <input id="nd_client" placeholder="${window.t('crmClientNamePh')}" style="${inp}">
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                     <div>
@@ -1975,12 +1975,22 @@ window.crmOpenCreateDeal = function(defaultStage) {
                 </div>
                 <div>
                     <label style="${lbl}">Ніша</label>
-                    <input id="nd_niche" placeholder=window.t('crmNichePh') style="${inp}">
+                    <input id="nd_niche" placeholder="${window.t('crmNichePh')}" style="${inp}">
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                     <div>
                         <label style="${lbl}">${window.t('crmPhone')}</label>
                         <input id="nd_phone" type="tel" placeholder="+38 (___) ___-__-__" style="${inp}">
+                    </div>
+                    <div>
+                        <label style="${lbl}">Email</label>
+                        <input id="nd_email" type="email" placeholder="name@company.com" style="${inp}">
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                    <div>
+                        <label style="${lbl}">Telegram</label>
+                        <input id="nd_telegram" placeholder="@username" style="${inp}">
                     </div>
                     <div>
                         <label style="${lbl}">${window.t('crmSource')}</label>
@@ -2020,13 +2030,15 @@ window.crmCreateDeal = async function() {
     const amount   = parseFloat(document.getElementById('nd_amount')?.value) || 0;
     const niche    = document.getElementById('nd_niche')?.value.trim();
     const phone    = document.getElementById('nd_phone')?.value.trim() || '';
+    const email    = document.getElementById('nd_email')?.value.trim() || '';
+    const telegram = document.getElementById('nd_telegram')?.value.trim() || '';
     const source   = document.getElementById('nd_source')?.value || 'manual';
     const clientId = document.getElementById('crmCreateDealOverlay')?.dataset?.clientId || null;
     if (!title && !client) { if(window.showToast)showToast(window.t('crmEnterNameOrClient'),'warning'); else alert(window.t('crmEnterNameOrClient')); return; }
     try {
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add({
                 title: title||client, clientName: client||title, clientNiche: niche||'',
-                phone: phone||'', email:'',
+                phone: phone||'', email: email||'', telegram: telegram||'',
                 clientId: clientId || null,
                 stage, pipelineId: crm.pipeline?.id || '',
                 amount, source: source||'manual',
@@ -2373,7 +2385,7 @@ async function _renderActivitiesTab() {
 
         const filterBar = `
         <div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.75rem;">
-            ${[['all',window.t('crmAll')],...Object.entries(ACT_LABELS)].map(([k,v]) => `
+            ${[['all',window.t('crmAll')],['call',ACT_LABELS.call],['meeting',ACT_LABELS.meeting],['email',ACT_LABELS.email],['note',ACT_LABELS.note],['task',ACT_LABELS.task],['stage_changed',ACT_LABELS.stage_changed]].map(([k,v]) => `
             <button data-actfilter="${k}"
                 style="padding:0.3rem 0.65rem;border-radius:999px;border:1.5px solid ${k===filter?'#22c55e':'#e8eaed'};
                 background:${k===filter?'#f0fdf4':'white'};color:${k===filter?'#16a34a':'#6b7280'};
@@ -2382,7 +2394,7 @@ async function _renderActivitiesTab() {
             </button>`).join('')}
         </div>`;
 
-        const timeline = filtered.length ? filtered.slice(0, 60).map(a => {
+        const timeline = filtered.length ? filtered.slice(0, 100).map(a => {
             const ts = a.at?.toDate ? a.at.toDate().toLocaleDateString('uk-UA',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
             const type = a.type || 'note';
             const icon = ACT_ICONS[type] || ACT_ICONS.note;
@@ -2411,7 +2423,7 @@ async function _renderActivitiesTab() {
             </div>`;
         }).join('') : '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Активностей не знайдено</div>';
 
-        c.innerHTML = `<div style="padding:0 1rem;">${addForm}${filterBar}${timeline}</div>`;
+        c.innerHTML = `<div>${addForm}${filterBar}${timeline}</div>`;
 
         // FIX I: скидаємо тип до 'note' після кожного ре-рендеру
         crm._actCurrentType = 'note';
@@ -2442,6 +2454,8 @@ async function _renderActivitiesTab() {
     };
 
     // actSave через delegation на кнопку — FIX BF: guard щоб не накопичувати listeners
+    // Завжди скидаємо listener — вкладка може перерендеритись
+    c._actSaveListenerSet = false;
     if (!c._actSaveListenerSet) {
         c._actSaveListenerSet = true;
         c.addEventListener('click', async function actSaveDelegate(e) {
