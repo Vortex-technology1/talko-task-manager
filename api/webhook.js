@@ -1011,6 +1011,23 @@ async function finish(session, flow, compRef, channel, compData = {}) {
     try {
         const d = session.data || {};
 
+        // BUG B FIX: idempotency guard — якщо finish вже запущено для цієї сесії/флоу, виходимо
+        // Захищає від race condition коли два Telegram updates приходять одночасно і обидва тригерять finish()
+        const finishLockId = `finish_${channel}_${session.senderId}_${flow?.id || 'noflow'}`;
+        const lockRef = compRef.collection('_finish_locks').doc(finishLockId);
+        const lockResult = await db.runTransaction(async (tx) => {
+            const lockDoc = await tx.get(lockRef);
+            if (lockDoc.exists) return false; // вже виконується або виконано
+            tx.set(lockRef, { at: admin.firestore.FieldValue.serverTimestamp() });
+            return true;
+        });
+        if (!lockResult) {
+            console.log('[finish] skipped (idempotency lock):', finishLockId);
+            return;
+        }
+        // Автоматично видаляємо lock через 60 секунд (не блокуємо повторний запуск назавжди)
+        setTimeout(() => lockRef.delete().catch(() => {}), 60000);
+
         // Зберігаємо лід (audit trail)
         await compRef.collection('leads').add({
             senderId: session.senderId, senderName: session.senderName || '',
@@ -1043,14 +1060,10 @@ async function finish(session, flow, compRef, channel, compData = {}) {
             updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
         };
 
-        await compRef.collection('contacts').doc(contactId).set(
-            contactData, { merge: true }
-        );
-
-        // createdAt тільки при першому записі — set merge з serverTimestamp, Firestore не перезапише існуюче поле
+        // BUG B FIX: один set() замість двох — Firestore merge не перезаписує існуюче createdAt
         const contactRef = compRef.collection('contacts').doc(contactId);
         await contactRef.set(
-            { createdAt: admin.firestore.FieldValue.serverTimestamp() },
+            { ...contactData, createdAt: admin.firestore.FieldValue.serverTimestamp() },
             { merge: true }
         );
 
