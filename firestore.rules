@@ -431,9 +431,20 @@ service cloud.firestore {
       // CRM — DEALS + підколекція history
       // =====================
       match /crm_deals/{dealId} {
-        allow read: if isCompanyMember(companyId);
+        // Manager з accessMode="own" бачить тільки свої угоди на рівні БД
+        allow read: if isManagerOrOwner(companyId) ||
+          (isCompanyMember(companyId) && (
+            resource.data.assigneeId == userId() ||
+            resource.data.responsibleId == userId() ||
+            resource.data.createdBy == userId()
+          ));
         allow create: if isCompanyMember(companyId);
-        allow update: if isCompanyMember(companyId);
+        // Manager може редагувати тільки свої угоди
+        allow update: if isManagerOrOwner(companyId) ||
+          (isCompanyMember(companyId) && (
+            resource.data.assigneeId == userId() ||
+            resource.data.responsibleId == userId()
+          ));
         allow delete: if isManagerOrOwner(companyId);
 
         // Підколекція: хронологія змін стадій (immutable — тільки create)
@@ -442,12 +453,34 @@ service cloud.firestore {
           allow create: if isCompanyMember(companyId);
           allow update, delete: if false;
         }
+
+        // Підколекція: авто-задачі по стадіях (77c-crm-tasks.js)
+        match /tasks/{taskId} {
+          allow read: if isCompanyMember(companyId);
+          allow create: if isCompanyMember(companyId);
+          allow update: if isManagerOrOwner(companyId) ||
+            (isCompanyMember(companyId) && resource.data.assigneeId == userId());
+          allow delete: if isManagerOrOwner(companyId);
+        }
       }
 
       // =====================
-      // CRM — PIPELINES (стадії воронки)
+      // CRM — PIPELINES (стадії воронки) — обидві назви колекцій
       // =====================
       match /crm_pipeline/{pipelineId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      match /crm_pipelines/{pipelineId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // =====================
+      // CRM — ПУБЛІЧНІ ФОРМИ (77g-crm-forms.js)
+      // =====================
+      match /crm_forms/{formId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
@@ -546,6 +579,55 @@ service cloud.firestore {
         allow delete: if isSuperAdmin();
       }
 
+      // =====================
+      // FINANCE MODULE (всередині companies/{companyId})
+      // =====================
+
+      // Транзакції
+      match /finance_transactions/{txId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId) && (
+          isManagerOrOwner(companyId) ||
+          (request.resource.data.type == 'expense' &&
+           (request.resource.data.projectId != null || request.resource.data.taskId != null))
+        );
+        allow update, delete: if isManagerOrOwner(companyId);
+      }
+
+      match /finance_categories/{catId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if isManagerOrOwner(companyId);
+      }
+
+      match /finance_budgets/{budgetId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if isCompanyOwner(companyId);
+      }
+
+      match /finance_accounts/{accId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if isManagerOrOwner(companyId);
+      }
+
+      match /finance_recurring/{recId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if isManagerOrOwner(companyId);
+      }
+
+      match /finance_function_budgets/{fbudId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if isCompanyOwner(companyId);
+      }
+
+      match /finance_ai_history/{aiId} {
+        allow read, write: if isManagerOrOwner(companyId);
+      }
+
+      match /finance_settings/{doc} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if isManagerOrOwner(companyId);
+      }
+
       // FALLBACK: будь-яка subcollection компанії — члени читають, менеджери пишуть
       // (для нових колекцій до деплою специфічних правил)
       match /{subcollection}/{docId} {
@@ -553,10 +635,7 @@ service cloud.firestore {
         allow write: if isManagerOrOwner(companyId);
       }
     }
-    
-    // =====================
-    // INVITES
-    // =====================
+
     match /invites/{inviteId} {
       // GDPR FIX: тільки власний invite, manager компанії або superadmin
       allow read: if isAuthenticated() && (
@@ -614,62 +693,6 @@ service cloud.firestore {
     match /telegramIndex/{doc} {
       allow read: if request.auth != null;
       allow write: if request.auth != null;
-    }
-
-    // =====================
-    // FINANCE MODULE
-    // =====================
-
-    // Транзакції
-    match /finance_transactions/{txId} {
-      allow read: if isManagerOrOwner(companyId);
-      allow create: if isCompanyMember(companyId) && (
-        isManagerOrOwner(companyId) ||
-        (request.resource.data.type == 'expense' &&
-         (request.resource.data.projectId != null || request.resource.data.taskId != null))
-      );
-      allow update, delete: if isManagerOrOwner(companyId);
-    }
-
-    // Категорії: всі члени читають; manager/owner пишуть
-    match /finance_categories/{catId} {
-      allow read: if isCompanyMember(companyId);
-      allow write: if isManagerOrOwner(companyId);
-    }
-
-    // Бюджети
-    match /finance_budgets/{budgetId} {
-      allow read: if isManagerOrOwner(companyId);
-      allow write: if isCompanyOwner(companyId);
-    }
-
-    // Рахунки/каси
-    match /finance_accounts/{accId} {
-      allow read: if isManagerOrOwner(companyId);
-      allow write: if isManagerOrOwner(companyId);
-    }
-
-    // Регулярні фінансові операції
-    match /finance_recurring/{recId} {
-      allow read: if isManagerOrOwner(companyId);
-      allow write: if isManagerOrOwner(companyId);
-    }
-
-    // Бюджети по функціях
-    match /finance_function_budgets/{fbudId} {
-      allow read: if isManagerOrOwner(companyId);
-      allow write: if isCompanyOwner(companyId);
-    }
-
-    // AI-аналітика
-    match /finance_ai_history/{aiId} {
-      allow read, write: if isManagerOrOwner(companyId);
-    }
-
-    // Налаштування модуля фінансів
-    match /finance_settings/{doc} {
-      allow read: if isCompanyMember(companyId);
-      allow write: if isManagerOrOwner(companyId);
     }
   }
 }
