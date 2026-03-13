@@ -77,6 +77,22 @@ window.renderCrmTodo = function() {
     const el = document.getElementById('crmViewTodo');
     if (!el) return;
 
+    // Якщо дані ще завантажуються — показуємо spinner і чекаємо
+    if (window.crm && window.crm.loading) {
+        el.innerHTML = `<div style="padding:3rem;text-align:center;color:#9ca3af;">
+            <div style="font-size:0.85rem;">Завантаження лідів...</div></div>`;
+        setTimeout(() => { if (document.getElementById('crmViewTodo')) renderCrmTodo(); }, 400);
+        return;
+    }
+
+    // Якщо crm взагалі не ініціалізовано — чекаємо
+    if (!window.crm || !window.crm.deals) {
+        el.innerHTML = `<div style="padding:3rem;text-align:center;color:#9ca3af;">
+            <div style="font-size:0.85rem;">Ініціалізація CRM...</div></div>`;
+        setTimeout(() => { if (document.getElementById('crmViewTodo')) renderCrmTodo(); }, 600);
+        return;
+    }
+
     const all    = _getActiveDeals();
     const filter = window._crmTodoFilter || '';
     const deals  = filter ? all.filter(d => d.stage === filter) : all;
