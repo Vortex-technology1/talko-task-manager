@@ -4,6 +4,11 @@
 
 (function() {
     'use strict';
+
+    // i18n helper — читає поточну мову через window.t
+    function gs_t(key, fallback) {
+        return (window.t && window.t(key)) || fallback;
+    }
     let activeIndex = -1;
     let currentResults = [];
 
@@ -118,10 +123,10 @@
                 const today = (typeof getLocalDateStr==='function') ? getLocalDateStr(new Date()) : '';
                 const isOverdue = t.deadlineDate && t.deadlineDate < today && t.status !== 'done';
                 results.push({
-                    category:'Завдання', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>',
+                    category: gs_t('gsSearchTasks','Завдання'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>',
                     title: t.title||'(без назви)',
                     subtitle: [assigneeName, t.deadlineDate].filter(Boolean).join(' · '),
-                    badge: t.status==='done'?'Виконано':t.status==='progress'?'В роботі':'Нове',
+                    badge: t.status==='done'?gs_t('gsStatusDone','Виконано'):t.status==='progress'?gs_t('gsStatusProgress','В роботі'):gs_t('gsStatusNew','Нове'),
                     badgeColor: statusColor, overdue: isOverdue,
                     action: () => { if (typeof openTaskModal==='function') openTaskModal(t.id); }
                 });
@@ -136,12 +141,12 @@
                 (u.role||'').toLowerCase().includes(q)
             ).slice(0, 4).forEach(u => {
                 const userTasks = (typeof tasks!=='undefined') ? tasks.filter(t=>t.assigneeId===u.id&&t.status!=='done') : [];
-                const roleMap = {owner:'Власник',manager:'Менеджер',admin:'Адмін',employee:'Співробітник'};
+                const roleMap = {owner:gs_t('roleOwner','Власник'),manager:gs_t('roleManager','Менеджер'),admin:gs_t('roleAdmin','Адмін'),employee:gs_t('roleEmployee','Співробітник')};
                 results.push({
-                    category:'Співробітники', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>',
+                    category: gs_t('gsSearchUsers','Співробітники'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>',
                     title: u.name||u.email,
-                    subtitle: `${u.email} · ${userTasks.length} активних`,
-                    badge: roleMap[u.role]||u.role,
+                    subtitle: `${u.email} · ${userTasks.length} ${gs_t('gsActive','активних')}`,
+                    badge: (roleMap[u.role]||u.role),
                     badgeColor: u.role==='owner'?'#22c55e':u.role==='manager'?'#f97316':'#6b7280',
                     action: () => {
                         if (typeof switchTab==='function') switchTab('users');
@@ -169,9 +174,9 @@
                     ? ids.map(id=>{const u=users.find(u=>u.id===id);return u?(u.name||u.email).split(' ')[0]:null;}).filter(Boolean).join(', ')
                     : '';
                 results.push({
-                    category:'Функції', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>️',
-                    title: f.name, subtitle: names||'Без відповідального',
-                    badge:'Функція', badgeColor:'#8b5cf6',
+                    category: gs_t('gsSearchFunctions','Функції'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>️',
+                    title: f.name, subtitle: names||gs_t('gsNoAssignee','Без відповідального'),
+                    badge: gs_t('gsSearchFunctionBadge','Функція'), badgeColor:'#8b5cf6',
                     // FIX БАГ E: scroll до функції після switchTab
                     action: () => {
                         if (typeof switchTab==='function') switchTab('functions');
@@ -200,9 +205,9 @@
             ).slice(0, 3).forEach(p => {
                 const taskCount = (typeof tasks!=='undefined') ? tasks.filter(t=>t.projectId===p.id&&t.status!=='done').length : 0;
                 results.push({
-                    category:'Проєкти', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>',
-                    title: p.name, subtitle:`${taskCount} активних завдань`,
-                    badge:'Проєкт', badgeColor:'#3b82f6',
+                    category: gs_t('gsSearchProjects','Проєкти'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>',
+                    title: p.name, subtitle:`${taskCount} ${gs_t('gsActiveTasks','активних завдань')}`,
+                    badge: gs_t('gsSearchProjectBadge','Проєкт'), badgeColor:'#3b82f6',
                     action: () => {
                         if (typeof switchTab==='function') switchTab('projects');
                         setTimeout(() => {
@@ -230,10 +235,10 @@
             ).slice(0, 2).forEach(p => {
                 const desc = p.description||'';
                 results.push({
-                    category:'Процеси', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>',
+                    category: gs_t('gsSearchProcesses','Процеси'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>',
                     title: p.name,
                     subtitle: desc.length>60 ? desc.substring(0,60)+'…' : desc,
-                    badge:'Процес', badgeColor:'#06b6d4',
+                    badge: gs_t('gsSearchProcessBadge','Процес'), badgeColor:'#06b6d4',
                     action: () => {
                         if (typeof switchTab==='function') switchTab('processes');
                         setTimeout(() => {
@@ -262,10 +267,10 @@
             ).slice(0, 3).forEach(t => {
                 const assignee = (typeof users!=='undefined') ? users.find(u=>u.id===t.assigneeId) : null;
                 results.push({
-                    category:'Регулярні', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>',
+                    category: gs_t('gsSearchRegular','Регулярні'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>',
                     title: t.title||'(без назви)',
                     subtitle: assignee ? (assignee.name||assignee.email) : '',
-                    badge: 'Регулярне', badgeColor:'#06b6d4',
+                    badge: gs_t('gsSearchRegularBadge','Регулярне'), badgeColor:'#06b6d4',
                     action: () => { if (typeof switchTab==='function') switchTab('regular'); }
                 });
             });
@@ -278,10 +283,10 @@
                 (c.name||'').toLowerCase().includes(q)||(c.description||'').toLowerCase().includes(q)
             ).slice(0, 3).forEach(c => {
                 results.push({
-                    category:'Координація', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>',
+                    category: gs_t('gsSearchCoordination','Координація'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>',
                     title: c.name||'(без назви)',
                     subtitle: c.type||'',
-                    badge: c.status==='active'?'Активна':'Завершена',
+                    badge: c.status==='active'?gs_t('gsStatusActive','Активна'):gs_t('gsStatusDone2','Завершена'),
                     badgeColor: c.status==='active'?'#22c55e':'#9ca3af',
                     action: () => {
                         if (typeof switchTab==='function') switchTab('coordination');
@@ -298,10 +303,10 @@
                 (m.name||'').toLowerCase().includes(q)
             ).slice(0, 3).forEach(m => {
                 results.push({
-                    category:'Статистика', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>',
+                    category: gs_t('gsSearchStatistics','Статистика'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>',
                     title: m.name,
-                    subtitle: m.unit ? 'Одиниця: ' + m.unit : '',
-                    badge:'Метрика', badgeColor:'#8b5cf6',
+                    subtitle: m.unit ? gs_t('gsUnit','Одиниця: ') + m.unit : '',
+                    badge: gs_t('gsSearchMetric','Метрика'), badgeColor:'#8b5cf6',
                     action: () => { if (typeof switchTab==='function') switchTab('statistics'); }
                 });
             });
@@ -309,32 +314,33 @@
 
         // НАВІГАЦІЯ по вкладках
         const navItems = [
-            {keys:['мій день','myday','my day'], label:'Мій день', tab:'myday'},
-            {keys:['завдання','tasks','задачі'], label:'Завдання', tab:'tasks'},
-            {keys:['регулярні','regular'], label:'Регулярні завдання', tab:'regular'},
-            {keys:['проект','projects'], label:'Проєкти', tab:'projects'},
-            {keys:['процес','processes'], label:'Процеси', tab:'processes'},
-            {keys:['координація','coordination','нарада'], label:'Координація', tab:'coordination'},
-            {keys:['контроль','control','дашборд'], label:'Контроль', tab:'control'},
-            {keys:['аналітика','analytics'], label:'Аналітика', tab:'analytics'},
-            {keys:['статистика','statistics','метрики'], label:'Статистика', tab:'statistics'},
-            {keys:['функції','functions'], label:'Функції', tab:'functions'},
-            {keys:['структура','bizstructure'], label:'Структура', tab:'bizstructure'},
-            {keys:['співробітники','users','команда'], label:'Співробітники', tab:'users'},
-            {keys:['навчання','learning'], label:'Навчання', tab:'learning'},
-            {keys:['crm','клієнти','угоди'], label:'CRM', tab:'crm'},
-            {keys:['маркетинг','marketing'], label:'Маркетинг', tab:'marketing'},
-            {keys:['боти','bots'], label:'Боти', tab:'bots'},
-            {keys:['сайти','sites'], label:'Сайти', tab:'sites'},
-            {keys:['інтеграції','integrations'], label:'Інтеграції', tab:'integrations'},
+            {keys:['мій день','myday','my day','mein tag','mon jour','mój dzień'], label: gs_t('tabMyDay','Мій день'), tab:'myday'},
+            {keys:['завдання','tasks','задачі','aufgaben','tâches','zadania'], label: gs_t('tabTasks','Завдання'), tab:'tasks'},
+            {keys:['регулярні','regular','wiederkehrend','récurrent','cykliczne'], label: gs_t('tabRegular','Регулярні завдання'), tab:'regular'},
+            {keys:['проект','projects','projekte','projets','projekty'], label: gs_t('tabProjects','Проєкти'), tab:'projects'},
+            {keys:['процес','processes','prozesse','processus','procesy'], label: gs_t('tabProcesses','Процеси'), tab:'processes'},
+            {keys:['координація','coordination','нарада','koordination','koordinacja'], label: gs_t('tabCoordination','Координація'), tab:'coordination'},
+            {keys:['контроль','control','дашборд','kontrolle','dashboard'], label: gs_t('tabControl','Контроль'), tab:'control'},
+            {keys:['аналітика','analytics','analytik','analytique','analityka'], label: gs_t('navAnalytics','Аналітика'), tab:'analytics'},
+            {keys:['статистика','statistics','метрики','statistik','statystyki'], label: gs_t('tabStatistics','Статистика'), tab:'statistics'},
+            {keys:['функції','functions','funktionen','fonctions','funkcje'], label: gs_t('tabFunctions','Функції'), tab:'functions'},
+            {keys:['структура','bizstructure','struktur','struktura'], label: gs_t('tabStructure','Структура'), tab:'bizstructure'},
+            {keys:['співробітники','users','команда','mitarbeiter','employés','pracownicy'], label: gs_t('tabUsers','Співробітники'), tab:'users'},
+            {keys:['навчання','learning','lernen','apprentissage','nauka'], label: gs_t('tabLearning','Навчання'), tab:'learning'},
+            {keys:['crm','клієнти','угоди','kunden','klienci'], label:'CRM', tab:'crm'},
+            {keys:['фінанси','finance','finanzen','finances','finanse'], label: gs_t('finFinances','Фінанси'), tab:'finance'},
+            {keys:['маркетинг','marketing'], label: gs_t('tabMarketing','Маркетинг'), tab:'marketing'},
+            {keys:['боти','bots'], label: gs_t('tabBots','Боти'), tab:'bots'},
+            {keys:['сайти','sites','websites'], label: gs_t('tabSites','Сайти'), tab:'sites'},
+            {keys:['інтеграції','integrations','integrationen'], label: gs_t('tabIntegrations','Інтеграції'), tab:'integrations'},
         ];
         navItems.forEach(item => {
             if (item.keys.some(k => k.includes(q) || q.includes(k))) {
                 results.push({
-                    category:'Перейти', categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>',
+                    category: gs_t('gsSearchNav','Перейти'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>',
                     title: item.label,
-                    subtitle: 'Відкрити вкладку',
-                    badge:'Навігація', badgeColor:'#6b7280',
+                    subtitle: gs_t('gsOpenTab','Відкрити вкладку'),
+                    badge: gs_t('gsSearchNavBadge','Навігація'), badgeColor:'#6b7280',
                     action: () => {
                         if (typeof switchTab==='function') switchTab(item.tab);
                         if (item.tab==='coordination' && window._initCoordTab) setTimeout(window._initCoordTab,100);
@@ -354,7 +360,7 @@
             r.style.display = 'block';
             r.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#9ca3af;font-size:0.85rem;">
                 <div style="font-size:1.5rem;margin-bottom:0.5rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span></div>
-                Нічого не знайдено за "<strong>${safeEsc(q)}</strong>"
+                ${gs_t('gsNoResults','Нічого не знайдено за')} "<strong>${safeEsc(q)}</strong>"
             </div>`;
             return;
         }
@@ -390,7 +396,7 @@
         r.style.display = 'block';
         r.innerHTML = `<div style="padding:4px 0;">${html}</div>
             <div style="padding:0.4rem 0.75rem;border-top:1px solid #f3f4f6;font-size:0.7rem;color:#d1d5db;display:flex;justify-content:space-between;">
-                <span>↑↓ навігація · Enter · Esc</span><span>${results.length} результатів</span>
+                <span>${gs_t('gsNavHint','↑↓ навігація · Enter · Esc')}</span><span>${results.length} ${gs_t('gsResults','результатів')}</span>
             </div>`;
     }
 
@@ -412,8 +418,8 @@
         container.style.display = 'block';
         container.innerHTML = `
             <div style="padding:0.5rem 0.75rem;font-size:0.72rem;color:#9ca3af;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;">
-                <span>Останні запити</span>
-                <button onclick="clearSearchHistory('${containerId}')" style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:0.72rem;padding:0;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> очистити</button>
+                <span>${gs_t('gsRecentQueries','Останні запити')}</span>
+                <button onclick="clearSearchHistory('${containerId}')" style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:0.72rem;padding:0;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> ${gs_t('gsClear','очистити')}</button>
             </div>
             ${history.map(h => `
                 <div class="gsearch-item" onclick="fillSearchQuery(${JSON.stringify(h)})" 
