@@ -256,14 +256,14 @@ window.crmTodoOpenCard = async function(dealId) {
     document.body.insertAdjacentHTML('beforeend',`
     <div id="crmTodoCardOverlay" onclick="if(event.target===this)_crmTodoCloseCard()"
       style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10050;
-      display:flex;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto;">
-      <div style="background:#fff;border-radius:12px;width:100%;max-width:540px;box-shadow:0 24px 64px rgba(0,0,0,0.18);margin:auto;">
+      display:flex;align-items:flex-start;justify-content:center;padding:2rem 1.5rem;overflow-y:auto;">
+      <div style="background:#fff;border-radius:14px;width:100%;max-width:780px;box-shadow:0 24px 64px rgba(0,0,0,0.18);margin:auto;">
 
         <!-- Хедер картки -->
         <div style="padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div>
-              <div style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:0.25rem;">
+              <div style="font-size:1.2rem;font-weight:700;color:#111827;margin-bottom:0.25rem;">
                 ${_esc(deal.clientName||deal.title||'(без імені)')}</div>
               <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
                 <span style="font-size:0.72rem;font-weight:600;color:${stageClr};background:${stageClr}18;border-radius:4px;padding:2px 8px;border:1px solid ${stageClr}33;">
@@ -296,10 +296,22 @@ window.crmTodoOpenCard = async function(dealId) {
             ${fmt.overdue?`<span style="margin-left:auto;">${fmt.label}</span>`:''}
           </div>`:''}
 
-          <!-- Нотатка -->
-          ${(deal.note||deal.notes)?`<div style="margin-top:0.5rem;background:#f9fafb;border-radius:6px;padding:0.4rem 0.75rem;font-size:0.78rem;color:#374151;">${_esc(deal.note||deal.notes)}</div>`:''}
+          <!-- Нотатка з розгортанням -->
+          ${(deal.note||deal.notes)?`
+          <div style="margin-top:0.6rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:0.5rem 0.75rem;cursor:pointer;"
+              onclick="const b=document.getElementById('crmTodoNoteBody_${dealId}');if(b){b.style.display=b.style.display==='none'?'block':'none';this.querySelector('.crmNoteToggle').textContent=b.style.display==='none'?'Розгорнути ▼':'Згорнути ▲';}">
+              <span style="font-size:0.75rem;font-weight:700;color:#92400e;">📋 Примітки/Звіт</span>
+              <span class="crmNoteToggle" style="font-size:0.7rem;color:#b45309;">Розгорнути ▼</span>
+            </div>
+            <div id="crmTodoNoteBody_${dealId}" style="display:none;background:#fffbeb;border:1px solid #fde68a;border-top:none;border-radius:0 0 8px 8px;padding:0.65rem 0.75rem;font-size:0.8rem;color:#374151;line-height:1.6;white-space:pre-wrap;">${_esc(deal.note||deal.notes)}</div>
+          </div>`:''}
         </div>
 
+        <!-- Body: 2 колонки -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #f1f5f9;">
+        <!-- Ліва колонка: результат + деталі -->
+        <div style="border-right:1px solid #f1f5f9;">
         <!-- Результат контакту -->
         <div style="padding:0.75rem 1.25rem;border-bottom:1px solid #f1f5f9;">
           <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;margin-bottom:0.5rem;">Результат контакту</div>
@@ -319,6 +331,9 @@ window.crmTodoOpenCard = async function(dealId) {
         <!-- Деталі -->
         <div id="crmTodoDetailForm" style="display:none;padding:0.75rem 1.25rem;border-bottom:1px solid #f1f5f9;"></div>
 
+        </div><!-- end left col -->
+        <!-- Права колонка: наступний контакт + кнопки -->
+        <div>
         <!-- Наступний контакт -->
         <div style="padding:0.75rem 1.25rem;border-bottom:1px solid #f1f5f9;background:#f9fafb;">
           <div style="font-size:0.7rem;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:.04em;margin-bottom:0.5rem;">
@@ -349,6 +364,8 @@ window.crmTodoOpenCard = async function(dealId) {
               style="padding:7px 18px;border-radius:7px;border:none;background:#d1d5db;color:#9ca3af;font-size:0.82rem;font-weight:600;cursor:not-allowed;">Зберегти</button>
           </div>
         </div>
+        </div><!-- end right col -->
+        </div><!-- end 2col grid -->
 
         <!-- Історія -->
         ${history.length?`
