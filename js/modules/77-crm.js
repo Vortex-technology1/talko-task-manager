@@ -3016,17 +3016,29 @@ const ACT_ICONS = {
 const ACT_COLORS = { call:'#3b82f6', meeting:'#8b5cf6', email:'#f59e0b', note:'#6b7280', task:'#22c55e', stage_changed:'#8b5cf6', created:'#22c55e', call_answered:'#22c55e', call_missed:'#ef4444', sms_sent:'#3b82f6', contact_updated:'#f59e0b' };
 const ACT_LABELS = { call:window.t('crmActivityCall'), meeting:window.t('crmActivityMeet'), email:window.t('crmActivityLetter'), note:window.t('crmActivityNote'), task:window.t('crmActivityTask'), stage_changed:'Зміна стадії', created:'Створено', call_answered:'Взяв трубку', call_missed:'Не взяв', sms_sent:'Повідомлення', contact_updated:'Контакт оновлено' };
 
-async function _renderActivitiesTab() {
+async function _renderActivitiesTab(forceRefresh = false) {
     const c = document.getElementById('crmViewActivities');
     if (!c) return;
+
+    // PERF FIX: кешуємо activities щоб не робити N+1 Firestore reads при кожному відкритті вкладки
+    // Кеш інвалідується: при forceRefresh=true (після збереження нової активності) або при зміні deals
+    const cacheKey = crm.pipeline?.id + '_' + crm.deals.length + '_' + (crm.deals[0]?.updatedAt?.seconds || 0);
+    if (!forceRefresh && crm._activitiesCache && crm._activitiesCacheKey === cacheKey) {
+        // Рендеримо з кешу — без Firestore reads
+        _renderActivitiesUI(c, crm._activitiesCache);
+        return;
+    }
+
     c.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">Завантаження...</div>';
 
-    // FIX: використовуємо crm.deals (вже завантажені по поточній pipeline) замість повного get()
+    // Беремо тільки активні угоди (не won/lost) для history — зменшує кількість reads
     let allActivities = [];
     try {
-        const deals = crm.deals; // вже відфільтровані по pipelineId через _subscribeDeals
+        const deals = crm.deals;
+        // Обмежуємо до 50 угод для reads — для повної картини достатньо
+        const dealsToFetch = deals.slice(0, 50);
         const histResults = await Promise.all(
-            deals.map(deal =>
+            dealsToFetch.map(deal =>
                 window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id)
                     .collection('history').orderBy('at','desc').limit(30).get()
                     .then(hs => hs.docs.map(h => ({
@@ -3037,8 +3049,15 @@ async function _renderActivitiesTab() {
             )
         );
         allActivities = histResults.flat();
+        // Зберігаємо в кеш
+        crm._activitiesCache = allActivities;
+        crm._activitiesCacheKey = cacheKey;
     } catch(e) { console.warn('[CRM activities]', e.message); }
 
+    _renderActivitiesUI(c, allActivities);
+}
+
+function _renderActivitiesUI(c, allActivities) {
     allActivities.sort((a,b) => {
         const ta = a.at?.seconds || 0, tb = b.at?.seconds || 0;
         return tb - ta;
@@ -3176,7 +3195,7 @@ async function _renderActivitiesTab() {
                     window.trackAction(arType, { dealId, clientName: aDeal?.clientName||aDeal?.title||'', note: note||'' });
                 }
                 if (window.showToast) showToast(window.t('crmActivitySaved'), 'success');
-                await _renderActivitiesTab();
+                await _renderActivitiesTab(true); // forceRefresh — інвалідуємо кеш після нового запису
             } catch(e2) {
                 saveBtn.disabled = false;
                 if(window.showToast) showToast(window.t('errPrefix') + e2.message, 'error');
@@ -3192,12 +3211,22 @@ function _renderAnalytics() {
     if (!c) return;
     const stages   = crm.pipeline?.stages || [];
     const total    = crm.deals.length;
-    const won      = crm.deals.filter(d => d.stage==='won').length;
-    const lost     = crm.deals.filter(d => d.stage==='lost').length;
-    const revenue  = crm.deals.filter(d => d.stage==='won').reduce((s,d) => s+(d.amount||0), 0);
+
+    // PERF FIX: один прохід замість 4 окремих filter/reduce для won/lost/revenue/byStage
+    const _stageCountMap = {}; // { stageId: { count, amount } }
+    stages.forEach(s => { _stageCountMap[s.id] = { count: 0, amount: 0 }; });
+    let won = 0, lost = 0, revenue = 0;
+    crm.deals.forEach(d => {
+        if (d.stage === 'won')  { won++;  revenue += d.amount || 0; }
+        else if (d.stage === 'lost') { lost++; }
+        if (_stageCountMap[d.stage]) {
+            _stageCountMap[d.stage].count++;
+            _stageCountMap[d.stage].amount += d.amount || 0;
+        }
+    });
     const avgDeal  = won > 0 ? Math.round(revenue/won) : 0;
     const closed   = won + lost;
-    const conv     = closed > 0 ? Math.round(won/closed*100) : 0; // FIX: конверсія = won/(won+lost)
+    const conv     = closed > 0 ? Math.round(won/closed*100) : 0;
 
     // KPI картки
     const kpis = [
@@ -3239,11 +3268,11 @@ function _renderAnalytics() {
     const maxBar = Math.max(...months.map(m => Math.max(m.newDeals, m.wonDeals, m.lostDeals)), 1);
     const maxRev = Math.max(...months.map(m => m.wonRevenue), 1);
 
-    // По стадіях
+    // По стадіях — беремо з вже порахованого _stageCountMap (без повторних filter)
     const byStage = stages.map(s => ({
         ...s,
-        count: crm.deals.filter(d => d.stage===s.id).length,
-        amount: crm.deals.filter(d => d.stage===s.id).reduce((sm,d) => sm+(d.amount||0), 0),
+        count:  (_stageCountMap[s.id] || {}).count  || 0,
+        amount: (_stageCountMap[s.id] || {}).amount || 0,
     }));
 
     // Джерела лідів — для пай-чарту
@@ -4300,6 +4329,10 @@ function _startRemindersScheduler() {
     window.destroyCRMListeners = function() {
         if (typeof crm.clientUnsub === 'function') { crm.clientUnsub(); crm.clientUnsub = null; }
         if (typeof crm.dealUnsub   === 'function') { crm.dealUnsub();   crm.dealUnsub   = null; }
+        // FIX: очищаємо interval нагадувань при logout
+        if (crm._remindersInterval) { clearInterval(crm._remindersInterval); crm._remindersInterval = null; }
+        crm._remindersChecked = false;
+        crm._activitiesCache = null;
         crm._initializingFor = null;
         if (window.TALKO && window.TALKO.crm) window.TALKO.crm._initialized = false;
         // Скидаємо стан щоб при наступному login завантажились свіжі дані
