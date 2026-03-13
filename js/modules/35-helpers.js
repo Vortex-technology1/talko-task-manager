@@ -227,7 +227,9 @@
                 case 'functions': renderFunctions(); if (currentFunctionsView === 'structure') renderFunctionsStructure(); break;
                 case 'users': renderUsers(); break;
                 case 'analytics': renderAnalytics(); break;
-                case 'statistics': renderStatistics(); break;
+                case 'statistics':
+                    lazyLoad('statistics', function() { if (typeof renderStatistics === 'function') renderStatistics(); });
+                    break;
                 case 'admin': renderAdminPanel(); break;
                 case 'bizstructure': if (typeof showBizStructureTab === 'function') showBizStructureTab(); break;
                 case 'ownerDashboard': if (typeof renderOwnerDashboard === 'function') renderOwnerDashboard(); break;
@@ -240,12 +242,39 @@
                         window.initLearning();
                     }
                     break;
-                case 'onboarding': if (typeof window.initOnboarding === 'function') window.initOnboarding(); break;
-                case 'marketing': if (typeof window.initLandingPagesModule === 'function') window.initLandingPagesModule(); break;
-                case 'sites': if (typeof window.initSitesModule === 'function') window.initSitesModule(); break;
-                case 'integrations': if (typeof window.initIntegrationsModule === 'function') window.initIntegrationsModule(); break;
-                case 'crm': if (typeof window.initCRMModule === 'function') window.initCRMModule(); break;
-                case 'bots': if (typeof window.initBotsModule === 'function') window.initBotsModule(); break;
+                case 'onboarding':
+                    lazyLoad('onboarding', function() { if (typeof window.initOnboarding === 'function') window.initOnboarding(); });
+                    break;
+                case 'marketing':
+                    lazyLoad('funnels', function() { if (typeof window.initLandingPagesModule === 'function') window.initLandingPagesModule(); });
+                    break;
+                case 'sites':
+                    lazyLoad('sites', function() { if (typeof window.initSitesModule === 'function') window.initSitesModule(); });
+                    break;
+                case 'integrations':
+                    lazyLoad('integrations', function() { if (typeof window.initIntegrationsModule === 'function') window.initIntegrationsModule(); });
+                    break;
+                case 'crm':
+                    lazyLoad('crm', function() { if (typeof window.initCRMModule === 'function') window.initCRMModule(); });
+                    break;
+                case 'bots':
+                    lazyLoad('bots', function() { if (typeof window.initBotsModule === 'function') window.initBotsModule(); });
+                    break;
+                case 'finance':
+                    if (window.__lazyLoaded && window.__lazyLoaded['finance']) {
+                        // Вже завантажено — renderFinanceContainer напряму
+                        if (typeof window.renderFinanceContainer === 'function') {
+                            setTimeout(function(){ window.renderFinanceContainer(); }, 50);
+                        }
+                    } else {
+                        lazyLoad('finance', function() {
+                            // Після першого завантаження — запускаємо render
+                            if (typeof window.renderFinanceContainer === 'function') {
+                                setTimeout(function(){ window.renderFinanceContainer(); }, 50);
+                            }
+                        });
+                    }
+                    break;
             }
             
             updateOverdueBadges();
