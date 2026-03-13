@@ -106,7 +106,7 @@ window.renderCrmTodo = function() {
     const stages    = (window.crm&&window.crm.pipeline&&window.crm.pipeline.stages) || [];
 
     el.innerHTML = `
-    <div style="padding:1rem;max-width:900px;margin:0 auto;">
+    <div style="padding:1rem 1.5rem;">
 
       <!-- Хедер -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
