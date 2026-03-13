@@ -12,7 +12,7 @@
                 cleanupAllListeners();
                 
                 // Встановлюємо isSuperAdmin на основі email
-                isSuperAdmin = (user.email === SUPERADMIN_EMAIL);
+                isSuperAdmin = window.isSuperAdmin = (user.email === 'management.talco@gmail.com'); // FIX: sync to window for cross-script access
                 
                 if (isSuperAdmin) {
                     const superBtn = document.getElementById('superadminBtn');

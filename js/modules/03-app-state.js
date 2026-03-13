@@ -92,6 +92,7 @@
         let currentCompany = null;
         let currentUserData = null;
         let isSuperAdmin = false;
+        window.isSuperAdmin = false; // FIX: expose to window so defer scripts can share
         let tasks = [];
         let users = []; window.users = users; // FIX CH: event-bus needs access to users
         let functions = [];

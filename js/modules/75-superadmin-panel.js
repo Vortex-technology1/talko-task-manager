@@ -20,8 +20,7 @@ const FEATURES = [
 ];
 
 window.deleteEmptyCompanies = async function() {
-    if (!isSuperAdmin) return;
-    const confirmed = confirm('Видалити всі компанії з 0 юзерів і 0 завдань?');
+    if (!window.isSuperAdmin) return;
     if (!confirmed) return;
 
     try {
@@ -47,7 +46,7 @@ window.deleteEmptyCompanies = async function() {
 };
 
 window.openSuperadminPanel = async function() {
-    if (!isSuperAdmin) return;
+    if (!window.isSuperAdmin) return;
     // Відкриваємо модальне вікно напряму (openModal — локальна в statistics.js)
     const modal = document.getElementById('superadminModal');
     if (modal) {
