@@ -374,7 +374,7 @@ function _kanbanCol(stage) {
                     <button onclick="crmOpenCreateDeal('${stage.id}')"
                         style="width:20px;height:20px;background:#f4f5f7;border:none;border-radius:4px;
                         cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;"
-                        title=window.t('crmAddDeal')>${I.plus}</button>
+                        title="${window.t('crmAddDeal')}">${I.plus}</button>
                 </div>
             </div>
             ${amt > 0 ? `<div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${_fmt(amt)}</div>` : ''}
@@ -985,6 +985,7 @@ window.crmDrop = async function(e, newStage) {
             });
         }
         if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
+        if (crm.subTab === 'todo' && typeof renderCrmTodo === 'function') renderCrmTodo();
     } catch(err) {
         console.error('[CRM drop]', err);
         deal.stage = oldStage;
@@ -1266,7 +1267,7 @@ window.crmOpenDeal = function(dealId) {
                     <button onclick="crmDeleteDeal('${deal.id}')"
                         style="padding:0.35rem;background:none;border:1px solid #e8eaed;border-radius:6px;
                         cursor:pointer;color:#9ca3af;display:flex;align-items:center;"
-                        title=window.t('crmDelete')>${I.trash}</button>
+                        title="${window.t('crmDelete')}">${I.trash}</button>
                     <button onclick="crmCloseDeal()"
                         style="padding:0.35rem;background:none;border:1px solid #e8eaed;border-radius:6px;
                         cursor:pointer;color:#9ca3af;display:flex;align-items:center;">${I.close}</button>
@@ -2036,6 +2037,7 @@ window.crmCreateDeal = async function() {
     const clientId = document.getElementById('crmCreateDealOverlay')?.dataset?.clientId || null;
     if (!title && !client) { if(window.showToast)showToast(window.t('crmEnterNameOrClient'),'warning'); else alert(window.t('crmEnterNameOrClient')); return; }
     try {
+        const nowTs = firebase.firestore.FieldValue.serverTimestamp();
         const ref = await window.companyRef().collection(window.DB_COLS.CRM_DEALS).add({
                 title: title||client, clientName: client||title, clientNiche: niche||'',
                 phone: phone||'', email: email||'', telegram: telegram||'',
@@ -2417,7 +2419,16 @@ async function _renderActivitiesTab() {
                         </div>
                         <span style="font-size:0.68rem;color:#9ca3af;">${ts}</span>
                     </div>
-                    ${a.note ? `<div style="font-size:0.8rem;color:#6b7280;margin-top:3px;">${_esc(a.note)}</div>` : ''}
+                    ${(()=>{
+                        if (a.type==='stage_changed' && a.from && a.to) {
+                            const sl = (crm.pipeline?.stages||[]);
+                            const fromL = sl.find(s=>s.id===a.from)?.label || a.from;
+                            const toL   = sl.find(s=>s.id===a.to)?.label   || a.to;
+                            return `<div style="font-size:0.78rem;color:#6b7280;margin-top:3px;">📍 ${_esc(fromL)} → ${_esc(toL)}</div>`;
+                        }
+                        if (a.note || a.text) return `<div style="font-size:0.8rem;color:#6b7280;margin-top:3px;">${_esc(a.note||a.text)}</div>`;
+                        return '';
+                    })()}
                     ${a.by ? `<div style="font-size:0.68rem;color:#9ca3af;margin-top:2px;">${_esc(a.by)}</div>` : ''}
                 </div>
             </div>`;
@@ -2554,7 +2565,7 @@ function _renderAnalytics() {
             const closed = u.won + u.lost;
             return { ...u,
                 conv: closed>0 ? Math.round(u.won/closed*100) : null,
-                name: (typeof users!=='undefined' ? users.find(x=>x.id===u.uid) : null)?.name || window.t('crmUnknown')
+                name: (window.users||[]).find(x=>x.id===u.uid)?.name || (window.users||[]).find(x=>x.uid===u.uid)?.name || u.uid.slice(0,8) || window.t('crmUnknown')
             };
         });
     const maxMgr = topManagers[0]?.amount || 1;
@@ -2571,7 +2582,7 @@ function _renderAnalytics() {
     const lostColors = ['#ef4444','#f97316','#f59e0b','#6b7280','#8b5cf6','#3b82f6','#22c55e'];
 
     c.innerHTML = `
-    <div style="padding:0 1rem 2rem;display:flex;flex-direction:column;gap:0.75rem;">
+    <div style="padding-bottom:2rem;display:flex;flex-direction:column;gap:0.75rem;">
 
         <!-- KPI картки -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;">
@@ -2798,7 +2809,7 @@ function _renderCRMSettings() {
     const sectionTitle = 'font-weight:700;font-size:0.82rem;color:#111827;margin-bottom:0.65rem;';
 
     c.innerHTML = `
-    <div style="padding:0 1rem;display:flex;flex-direction:column;gap:1rem;">
+    <div style="display:flex;flex-direction:column;gap:1rem;">
 
         <!-- Воронки -->
         <div style="background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;">
@@ -2825,7 +2836,7 @@ function _renderCRMSettings() {
                     <span style="font-size:0.72rem;color:#9ca3af;">${(p.stages||[]).length} стадій</span>
                     ${!p.isDefault ? `<button onclick="event.stopPropagation();crmDeletePipeline('${p.id}','${_esc(p.name)}')"
                         style="background:none;border:none;cursor:pointer;color:#fca5a5;padding:2px;
-                        display:flex;align-items:center;" title=window.t('crmDelete')>${I.trash}</button>` : ''}
+                        display:flex;align-items:center;" title="${window.t('crmDelete')}">${I.trash}</button>` : ''}
                 </div>`).join('')}
             </div>
         </div>
@@ -2860,11 +2871,11 @@ function _renderCRMSettings() {
                     <input type="color" value="${s.color}"
                         onchange="crmUpdateStageColor('${s.id}',this.value)"
                         style="width:26px;height:26px;border:none;border-radius:4px;cursor:pointer;padding:0;background:none;"
-                        title=window.t('crmStageColor')>
+                        title="${window.t('crmStageColor')}">
                     ${!['won','lost'].includes(s.id) ? `
                     <button onclick="crmRemoveStage('${s.id}')"
                         style="background:none;border:none;cursor:pointer;color:#fca5a5;
-                        display:flex;align-items:center;padding:2px;" title=window.t('crmDelete')>${I.trash}</button>` : ''}
+                        display:flex;align-items:center;padding:2px;" title="${window.t('crmDelete')}">${I.trash}</button>` : ''}
                 </div>`).join('')}
             </div>
             <button onclick="crmSaveStages()"
