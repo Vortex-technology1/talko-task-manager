@@ -204,6 +204,101 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         </div>
     </div>
 
+    <!-- Nova Poshta -->
+    <div style="${card}">
+        <div style="${sTitle}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Нова Пошта ${badge(!!s.novaPoshtaApiKey)}
+        </div>
+        <div style="margin-bottom:0.6rem;">
+            <label style="${lbl}">API ключ</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input id="intg_np_key" type="password" value="${s.novaPoshtaApiKey||''}"
+                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_np_key')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">
+                Отримати: <a href="https://my.novaposhta.ua/settings/index#apikeys" target="_blank" style="color:#e30613;">my.novaposhta.ua</a> → Налаштування → API
+            </div>
+        </div>
+        <div style="display:flex;gap:0.4rem;margin-bottom:0.75rem;">
+            <button onclick="intgSaveNP()"
+                style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.save} Зберегти
+            </button>
+            <button onclick="intgTestNP()"
+                style="padding:0.4rem 0.9rem;background:#fef2f2;color:#e30613;border:1px solid #fecaca;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.test} Тест
+            </button>
+        </div>
+        ${s.novaPoshtaApiKey ? `
+        <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.6rem 0.75rem;">
+            <div style="font-size:0.72rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">🔍 Перевірити ТТН</div>
+            <div style="display:flex;gap:0.4rem;">
+                <input id="intg_np_ttn" type="text" placeholder="59000000000000"
+                    style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgTrackNP()"
+                    style="padding:0.35rem 0.75rem;background:#e30613;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;white-space:nowrap;">
+                    Відстежити
+                </button>
+            </div>
+            <div id="intg_np_result" style="margin-top:0.5rem;display:none;font-size:0.78rem;line-height:1.5;"></div>
+        </div>` : ''}
+    </div>
+
+    <!-- Monobank / LiqPay -->
+    <div style="${card}">
+        <div style="${sTitle}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Оплата (Monobank / LiqPay) ${badge(!!(s.monobankToken || s.liqpayPublicKey))}
+        </div>
+
+        <!-- Monobank -->
+        <div style="margin-bottom:0.75rem;">
+            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.35rem;">🏦 Monobank</div>
+            <label style="${lbl}">X-Token</label>
+            <div style="display:flex;gap:0.4rem;margin-bottom:0.35rem;">
+                <input id="intg_mono_token" type="password" value="${s.monobankToken||''}"
+                    placeholder="uqvH..." style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_mono_token')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;">
+                <a href="https://api.monobank.ua" target="_blank" style="color:#1f3950;">api.monobank.ua</a> → Отримати токен
+            </div>
+        </div>
+
+        <!-- LiqPay -->
+        <div style="margin-bottom:0.75rem;padding-top:0.75rem;border-top:1px solid #f1f5f9;">
+            <div style="font-size:0.72rem;font-weight:700;color:#374151;margin-bottom:0.35rem;">💳 LiqPay</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.35rem;">
+                <div>
+                    <label style="${lbl}">Public Key</label>
+                    <input id="intg_liqpay_pub" type="text" value="${s.liqpayPublicKey||''}"
+                        placeholder="sandbox_..." style="${inp}font-family:monospace;">
+                </div>
+                <div>
+                    <label style="${lbl}">Private Key</label>
+                    <div style="display:flex;gap:0.25rem;">
+                        <input id="intg_liqpay_priv" type="password" value="${s.liqpayPrivateKey||''}"
+                            placeholder="sandbox_..." style="${inp}flex:1;font-family:monospace;">
+                        <button onclick="intgToggleVisibility('intg_liqpay_priv')"
+                            style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+                    </div>
+                </div>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;">
+                <a href="https://www.liqpay.ua/uk/registration" target="_blank" style="color:#009e3c;">liqpay.ua</a> → Мій бізнес → Ключі
+            </div>
+        </div>
+
+        <button onclick="intgSavePayments()"
+            style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+            ${I.save} Зберегти
+        </button>
+    </div>
+
     <!-- Zapier / Make -->
     <div style="${card}">
         <div style="${sTitle}">${I.zapier} Zapier / Make (автоматизації)</div>
@@ -297,6 +392,166 @@ window.intgSave = async function(field, inputId, isSecret = true) {
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+// ── Nova Poshta ────────────────────────────────────────────
+window.intgSaveNP = async function() {
+    const key = document.getElementById('intg_np_key')?.value.trim();
+    if (!key) { if (typeof showToast === 'function') showToast('Введіть API ключ Нової Пошти', 'error'); return; }
+    try {
+        await window.companyRef().update({
+            novaPoshtaApiKey: key,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        intg.settings.novaPoshtaApiKey = key;
+        if (typeof showToast === 'function') showToast('Nova Poshta API збережено ✅', 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+window.intgTestNP = async function() {
+    const key = document.getElementById('intg_np_key')?.value.trim() || intg.settings?.novaPoshtaApiKey;
+    if (!key) { if (typeof showToast === 'function') showToast('Введіть API ключ', 'error'); return; }
+    try {
+        const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                apiKey: key,
+                modelName: 'CommonGeneral',
+                calledMethod: 'getTimeIntervals',
+                methodProperties: { RecipientCityRef: 'db5c88e0-391c-11dd-90d9-001a92567626', DateTime: new Date().toLocaleDateString('uk-UA') },
+            }),
+        });
+        const data = await res.json();
+        if (data.success) {
+            if (typeof showToast === 'function') showToast('Nova Poshta API працює ✅', 'success');
+        } else {
+            if (typeof showToast === 'function') showToast('Помилка: ' + (data.errors?.[0] || 'невірний ключ'), 'error');
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+window.intgTrackNP = async function() {
+    const key = intg.settings?.novaPoshtaApiKey;
+    const ttn = document.getElementById('intg_np_ttn')?.value.trim();
+    const resultEl = document.getElementById('intg_np_result');
+    if (!ttn) { if (typeof showToast === 'function') showToast('Введіть номер ТТН', 'warning'); return; }
+    if (resultEl) { resultEl.style.display = 'block'; resultEl.innerHTML = '⏳ Запит...'; }
+    try {
+        const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                apiKey: key,
+                modelName: 'TrackingDocument',
+                calledMethod: 'getStatusDocuments',
+                methodProperties: { Documents: [{ DocumentNumber: ttn, Phone: '' }] },
+            }),
+        });
+        const data = await res.json();
+        if (data.success && data.data?.[0]) {
+            const d = data.data[0];
+            const statusColor = d.StatusCode === '9' ? '#16a34a' : d.StatusCode === '7' ? '#f59e0b' : '#3b82f6';
+            if (resultEl) resultEl.innerHTML = `
+                <div style="background:white;border:1px solid #e8eaed;border-radius:6px;padding:0.5rem 0.65rem;">
+                    <div style="font-weight:700;color:${statusColor};margin-bottom:0.25rem;">📦 ${d.Status || '—'}</div>
+                    <div style="color:#374151;">ТТН: <b>${ttn}</b></div>
+                    ${d.RecipientFullName ? `<div style="color:#6b7280;">Отримувач: ${d.RecipientFullName}</div>` : ''}
+                    ${d.CityRecipient ? `<div style="color:#6b7280;">Місто: ${d.CityRecipient}</div>` : ''}
+                    ${d.ScheduledDeliveryDate ? `<div style="color:#6b7280;">Дата доставки: ${d.ScheduledDeliveryDate}</div>` : ''}
+                    ${d.WarehouseRecipient ? `<div style="color:#6b7280;font-size:0.72rem;">${d.WarehouseRecipient}</div>` : ''}
+                </div>`;
+        } else {
+            if (resultEl) resultEl.innerHTML = `<span style="color:#ef4444;">ТТН не знайдено або помилка API</span>`;
+        }
+    } catch(e) {
+        if (resultEl) resultEl.innerHTML = `<span style="color:#ef4444;">${e.message}</span>`;
+    }
+};
+
+// ── Nova Poshta пошук ТТН з картки угоди ──────────────────
+window.crmTrackNP = async function(ttn) {
+    if (!ttn) return;
+    const key = (await window.companyRef().get().then(d => d.data()?.novaPoshtaApiKey));
+    if (!key) { if (typeof showToast === 'function') showToast('Nova Poshta API ключ не налаштовано', 'warning'); return; }
+    try {
+        const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                apiKey: key,
+                modelName: 'TrackingDocument',
+                calledMethod: 'getStatusDocuments',
+                methodProperties: { Documents: [{ DocumentNumber: ttn, Phone: '' }] },
+            }),
+        });
+        const data = await res.json();
+        if (data.success && data.data?.[0]) {
+            const d = data.data[0];
+            if (typeof showToast === 'function') showToast(`📦 ${ttn}: ${d.Status}`, 'info');
+        } else {
+            if (typeof showToast === 'function') showToast('ТТН не знайдено', 'warning');
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+// ── Payments (Monobank / LiqPay) ───────────────────────────
+window.intgSavePayments = async function() {
+    const mono    = document.getElementById('intg_mono_token')?.value.trim();
+    const liqPub  = document.getElementById('intg_liqpay_pub')?.value.trim();
+    const liqPriv = document.getElementById('intg_liqpay_priv')?.value.trim();
+    if (!mono && !liqPub) {
+        if (typeof showToast === 'function') showToast('Введіть хоча б один ключ', 'warning'); return;
+    }
+    try {
+        const upd = { updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+        if (mono)    { upd.monobankToken     = mono;    intg.settings.monobankToken    = mono; }
+        if (liqPub)  { upd.liqpayPublicKey   = liqPub;  intg.settings.liqpayPublicKey  = liqPub; }
+        if (liqPriv) { upd.liqpayPrivateKey  = liqPriv; intg.settings.liqpayPrivateKey = liqPriv; }
+        await window.companyRef().update(upd);
+        if (typeof showToast === 'function') showToast('Платіжні ключі збережено ✅', 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+// ── Генерація Monobank посилання на оплату ─────────────────
+window.crmMonoPayLink = async function(amount, description, dealId) {
+    const token = intg.settings?.monobankToken;
+    if (!token) { if (typeof showToast === 'function') showToast('Monobank не налаштовано — Інтеграції → Оплата', 'warning'); return null; }
+    try {
+        const res = await fetch('https://api.monobank.ua/api/merchant/invoice/create', {
+            method: 'POST',
+            headers: { 'X-Token': token, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                amount: Math.round(amount * 100), // копійки
+                ccy: 980, // UAH
+                merchantPaymInfo: { reference: dealId || '', destination: description || 'Оплата' },
+                redirectUrl: window.location.origin,
+                webHookUrl: `https://taskmanagerai-vert.vercel.app/api/webhook?channel=monobank&cid=${window.currentCompanyId}`,
+            }),
+        });
+        const data = await res.json();
+        if (data.pageUrl) {
+            navigator.clipboard?.writeText(data.pageUrl);
+            if (typeof showToast === 'function') showToast('Посилання скопійовано ✅', 'success');
+            return data.pageUrl;
+        } else {
+            if (typeof showToast === 'function') showToast('Помилка: ' + (data.errText || JSON.stringify(data)), 'error');
+            return null;
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+        return null;
     }
 };
 

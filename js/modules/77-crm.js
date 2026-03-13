@@ -1629,6 +1629,40 @@ function _renderDealDetails(deal) {
         <label style="${lbl}">Нотатка</label>
         <textarea id="dd_note" rows="3" style="${inp}resize:vertical;">${_esc(deal.note||'')}</textarea>
     </div>
+
+    <!-- Доставка / Оплата -->
+    <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
+        <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">📦 Доставка та оплата</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
+            <div>
+                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">ТТН Нова Пошта</label>
+                <div style="display:flex;gap:0.3rem;">
+                    <input id="dd_ttn" value="${_esc(deal.ttn||'')}" placeholder="59000000000000"
+                        style="${inp}flex:1;font-family:monospace;font-size:0.78rem;">
+                    ${deal.ttn ? `<button onclick="crmTrackNP('${_esc(deal.ttn)}')"
+                        title="Відстежити"
+                        style="padding:0.3rem 0.5rem;background:#e30613;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.7rem;font-weight:600;white-space:nowrap;">
+                        📦 Статус
+                    </button>` : ''}
+                </div>
+            </div>
+            <div>
+                <label style="font-size:0.68rem;font-weight:600;color:#6b7280;display:block;margin-bottom:0.2rem;">Статус оплати</label>
+                <select id="dd_payStatus" style="${inp}background:white;cursor:pointer;font-size:0.78rem;">
+                    <option value="" ${!deal.payStatus?'selected':''}>— не встановлено —</option>
+                    <option value="pending"  ${deal.payStatus==='pending' ?'selected':''}>⏳ Очікує оплати</option>
+                    <option value="paid"     ${deal.payStatus==='paid'    ?'selected':''}>✅ Оплачено</option>
+                    <option value="partial"  ${deal.payStatus==='partial' ?'selected':''}>🔶 Частково</option>
+                    <option value="refunded" ${deal.payStatus==='refunded'?'selected':''}>↩️ Повернено</option>
+                </select>
+            </div>
+        </div>
+        ${deal.amount ? `
+        <button onclick="crmMonoPayLink(${deal.amount||0},'${_esc(deal.title||deal.clientName||'')}','${deal.id}')"
+            style="padding:0.3rem 0.75rem;background:#1f3950;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+            💳 Monobank — посилання на оплату ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
+        </button>` : ''}
+    </div>
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;margin-bottom:0.9rem;">
         <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Дані з боту</div>
@@ -1700,6 +1734,8 @@ window.crmSaveDeal = async function(dealId) {
     const telegram = document.getElementById('dd_telegram')?.value.trim() || deal.telegram || '';
     const instagram= document.getElementById('dd_instagram')?.value.trim() || deal.instagram || '';
     const source   = document.getElementById('dd_source')?.value || deal.source || 'manual';
+    const ttn      = document.getElementById('dd_ttn')?.value.trim() || deal.ttn || '';
+    const payStatus= document.getElementById('dd_payStatus')?.value || deal.payStatus || '';
 
     try {
         const stageChanged = stage && stage !== deal.stage;
@@ -1707,6 +1743,7 @@ window.crmSaveDeal = async function(dealId) {
             title: title||deal.title, stage: stage||deal.stage, amount,
             clientName: client||deal.clientName, clientNiche: niche, note,
             phone, email, telegram, instagram, source,
+            ttn: ttn || null, payStatus: payStatus || null,
             expectedClose: expClose||null, nextContactDate: nextContact||null,
             assigneeId: assigneeId||deal.assigneeId||null,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
