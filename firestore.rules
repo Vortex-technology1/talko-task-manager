@@ -417,6 +417,14 @@ service cloud.firestore {
         allow read, write: if false;
       }
 
+      // WEBHOOK — IDEMPOTENCY LOCKS (BUG B fix, api/webhook.js)
+      // Writes через Admin SDK (ігнорує rules) — rule нижче для читання з JS клієнту (debug)
+      // write: false — тільки сервер може писати
+      match /_finish_locks/{lockId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if false; // Admin SDK only
+      }
+
       // =====================
       // CRM — CLIENTS
       // =====================
@@ -693,6 +701,15 @@ service cloud.firestore {
     match /telegramIndex/{doc} {
       allow read: if request.auth != null;
       allow write: if request.auth != null;
+    }
+
+    // =====================
+    // WEBHOOK IDEMPOTENCY LOCKS (_finish_locks)
+    // Тільки Cloud Functions (Admin SDK) читають/пишуть напряму.
+    // З клієнта — заборонено.
+    // =====================
+    match /_finish_locks/{lockId} {
+      allow read, write: if false;
     }
   }
 }
