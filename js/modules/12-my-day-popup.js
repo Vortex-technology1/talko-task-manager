@@ -14,7 +14,7 @@
             );
             
             // Завдання на сьогодні
-            const todayTasks = myTasks.filter(t => t.deadlineDate === today && t.status !== 'done');
+            const todayTasks = myTasks.filter(t => t.deadlineDate === today && t.status !== 'done' && t.status !== 'review');
             
             // Прострочені
             const overdueTasks = myTasks.filter(t => t.deadlineDate < today && t.status !== 'done' && t.status !== 'review');

@@ -50,7 +50,7 @@
                 // BUG-O FIX: include coExecutor tasks, not only assignee
                 const isParticipant = t.assigneeId === uid || (t.coExecutorIds && t.coExecutorIds.includes(uid));
                 if (!isParticipant) return false;
-                if (t.deadlineDate === todayStr) return true;
+                if (t.deadlineDate === todayStr && t.status !== 'review') return true;
                 if (t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review') return true;
                 return false;
             }).forEach(t => {

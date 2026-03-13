@@ -218,7 +218,7 @@
                 });
                 
                 // 3. TODAY: tasks due today
-                const todayTasks = allTasks.filter(t => t.deadlineDate === todayStr && t.status !== 'done');
+                const todayTasks = allTasks.filter(t => t.deadlineDate === todayStr && t.status !== 'done' && t.status !== 'review');
                 
                 // 4. ON REVIEW: waiting for approval
                 const onReview = allTasks.filter(t => t.status === 'review');
@@ -358,7 +358,7 @@
 
                 // Загальні лічильники
                 const totalActive = allVisible.filter(t => t.status !== 'done').length;
-                const totalOverdue = allVisible.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').length;
+                const totalOverdue = allVisible.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review').length;
                 const totalReturned = allVisible.filter(t => t.reviewRejectedAt).length;
 
                 content.innerHTML = `
@@ -571,7 +571,7 @@
 
                 // Авто-сигнали (для контексту внизу, коротко)
                 const autoSignals = [];
-                allVisible.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done').forEach(tk => {
+                allVisible.filter(tk => tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done' && tk.status !== 'review').forEach(tk => {
                     const d = Math.floor((new Date() - new Date(tk.deadlineDate)) / 86400000);
                     if (d >= 3) autoSignals.push({ icon: '🔴', text: `Прострочено ${d}д: ${tk.title}`, person: tk.assigneeName || '', taskId: tk.id });
                 });

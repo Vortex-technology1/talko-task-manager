@@ -264,7 +264,7 @@
         
         function updateOverdueBadges() {
             const todayStr = getLocalDateStr(new Date());
-            const overdue = tasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done' && isTaskVisibleToUser(t)).length;
+            const overdue = tasks.filter(t => t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review' && isTaskVisibleToUser(t)).length;
             const onReview = tasks.filter(t => t.status === 'review' && isTaskVisibleToUser(t)).length;
             
             // Control tab badge
