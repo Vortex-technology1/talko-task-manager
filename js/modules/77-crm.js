@@ -2875,7 +2875,7 @@ window.crmClientToggleChat = function(contactId) {
     }
 };
 
-
+window.crmNewDealFromClient = function(clientName, clientId) {
     crmOpenCreateDeal();
     setTimeout(() => {
         const inp  = document.getElementById('nd_client');
