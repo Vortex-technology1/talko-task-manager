@@ -99,8 +99,6 @@
         .dashboard-number { font-size: 1.75rem; font-weight: 700; }
         
         /* ── AUTH — TALKO OS Premium ── */
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
-
         .auth-container {
             display: flex;
             justify-content: center;
@@ -433,7 +431,6 @@
             margin-top: 0.5rem;
         }
         
-        .main-interface { display: none; }
         
         .loading {
             display: flex;
