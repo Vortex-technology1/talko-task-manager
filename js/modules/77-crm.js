@@ -1366,7 +1366,7 @@ function _renderDealDetails(deal) {
         </div>
     </div>
     <!-- Омніканал — швидкі дії по контакту -->
-    ${(deal.phone||deal.email) ? `
+    ${(deal.phone||deal.email||deal.telegram||deal.instagram) ? `
     <div style="margin-bottom:0.75rem;">
         <label style="${lbl}">Зв'язатись</label>
         <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.3rem;">
@@ -2710,24 +2710,22 @@ function _renderAnalytics() {
                 </div>
             </div>
             ${lostReasonEntries.length ? (function(){
-            var html = '<div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;margin-bottom:0.75rem;">' +
-                '<div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">' + 'Причини програшу (' + lostDealsAll.length + ' угод)' + '</div>';
+            var html = '';
             lostReasonEntries.forEach(function(entry, i){
                 var reason = entry[0]; var count = entry[1];
                 var col = lostColors[i % lostColors.length];
                 var pct = Math.round(count/totalLost*100);
-                html += '<div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;">' +
+                html += '<div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;">' +
                     '<div style="width:10px;height:10px;border-radius:50%;background:' + col + ';flex-shrink:0;"></div>' +
                     '<div style="flex:1;">' +
-                        '<div style="display:flex;justify-content:space-between;margin-bottom:2px;">' +
-                            '<span style="font-size:0.78rem;color:#374151;">' + _esc(reason) + '</span>' +
+                        '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">' +
+                            '<span style="font-size:0.78rem;color:#374151;font-weight:500;">' + _esc(reason) + '</span>' +
                             '<span style="font-size:0.72rem;font-weight:700;color:' + col + ';margin-left:0.5rem;">' + count + ' (' + pct + '%)</span>' +
                         '</div>' +
                         '<div style="background:#f1f5f9;border-radius:3px;height:6px;">' +
                             '<div style="height:100%;background:' + col + ';width:' + pct + '%;border-radius:3px;"></div>' +
                         '</div></div></div>';
             });
-            html += '';
             return html;
         })() : '<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1rem;">Програних угод ще немає</div>'}
             ${lostDealsAll.filter(d=>!d.lostReason&&!d.lostReasonLabel).length>0 ? `

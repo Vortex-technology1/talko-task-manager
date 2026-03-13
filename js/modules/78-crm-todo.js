@@ -146,7 +146,7 @@ window.renderCrmTodo = function() {
         ${overdue.length?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.warn} ${overdue.length} прострочено</div>`:''}
         ${todayList.length?`<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#ea580c;font-weight:600;display:flex;align-items:center;gap:4px;">${TI.clock} ${todayList.length} на сьогодні</div>`:''}
         ${noDate.length?`<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#6b7280;display:flex;align-items:center;gap:4px;">+ ${noDate.length} нових</div>`:''}
-        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;">⚠️ ${sla.length} SLA порушено</div>`:''})()}
+        ${(()=>{const sla=all.filter(d=>_slaBreached(d)>0&&!d.nextContactDate);return sla.length?`<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:4px;">🔕 ${sla.length} забутих лідів</div>`:''})()}
       </div>
 
       <!-- Фільтр по стадіях -->
@@ -513,9 +513,19 @@ window._crmTodoSave = async function(dealId) {
         await ref.update(updates);
         await ref.collection('history').add(hist);
 
+        // Оновлюємо local state одразу — не чекаємо Firestore snapshot
+        const localDeal = window.crm && window.crm.deals && window.crm.deals.find(x=>x.id===dealId);
+        if (localDeal) {
+            localDeal.nextContactDate = nextDate;
+            if (nextNote) localDeal.note = nextNote;
+            if (result==='answered') {
+                const ns = document.getElementById('crmTodoNewStage')&&document.getElementById('crmTodoNewStage').value;
+                if (ns) { localDeal.stage = ns; localDeal.stageEnteredAt = { toDate:()=>new Date(), toMillis:()=>Date.now() }; }
+            }
+        }
         _crmTodoCloseCard();
         if (window.showToast) showToast('Збережено','success');
-        setTimeout(()=>{ if(typeof renderCrmTodo==='function')renderCrmTodo(); },300);
+        if (typeof renderCrmTodo==='function') renderCrmTodo();
 
     } catch(e) {
         if(btn){btn.disabled=false;btn.textContent='Зберегти';}
