@@ -193,7 +193,7 @@
             document.getElementById('featureFlagsOverlay')?.remove();
             const overlay = document.createElement('div');
             overlay.id = 'featureFlagsOverlay';
-            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10020;display:flex;align-items:center;justify-content:center;padding:1rem;';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10030;display:flex;align-items:center;justify-content:center;padding:1rem;';
             overlay.innerHTML = `
                 <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:440px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
@@ -276,7 +276,7 @@
             document.getElementById('globalAIOverlay')?.remove();
             const overlay = document.createElement('div');
             overlay.id = 'globalAIOverlay';
-            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10020;display:flex;align-items:center;justify-content:center;padding:1rem;';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10030;display:flex;align-items:center;justify-content:center;padding:1rem;';
 
             const renderModelsTab = (provider) => {
                 const list = (window._editingModels[provider] || []);
