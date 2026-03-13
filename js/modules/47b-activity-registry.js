@@ -207,10 +207,11 @@ async function loadARData() {
     content.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;">Завантаження...</div>';
 
     try {
+        // Уникаємо composite index: фільтруємо category/date через where,
+        // userId — client-side (немає composite index userId+at)
         let q = window.companyRef().collection('activity_log')
-            .orderBy('at', 'desc').limit(_arFilters.limit || 100);
+            .orderBy('at', 'desc').limit(500); // беремо більше для client-side фільтру
 
-        if (_arFilters.userId)   q = q.where('userId', '==', _arFilters.userId);
         if (_arFilters.category) q = q.where('category', '==', _arFilters.category);
         if (_arFilters.date)     q = q.where('date', '==', _arFilters.date);
 
@@ -218,7 +219,12 @@ async function loadARData() {
         const entries = [];
         snap.forEach(doc => entries.push({ id: doc.id, ...doc.data() }));
 
-        renderAREntries(entries, content);
+        // Client-side фільтр по userId (уникаємо composite index)
+        const filtered = _arFilters.userId
+            ? entries.filter(e => e.userId === _arFilters.userId)
+            : entries;
+        // Обрізаємо до ліміту після фільтрації
+        renderAREntries(filtered.slice(0, _arFilters.limit || 100), content);
     } catch(e) {
         content.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;font-size:0.85rem;">Помилка: ${e.message}</div>`;
     }
@@ -330,10 +336,14 @@ function renderAREntries(entries, content) {
 
         // Деталі в залежності від типу
         let detail = '';
-        if (meta.taskTitle)  detail = meta.taskTitle;
-        if (meta.dealTitle)  detail = meta.dealTitle;
-        if (meta.text)       detail = meta.text.slice(0, 60) + (meta.text.length > 60 ? '…' : '');
-        if (meta.stageFrom && meta.stageTo) detail = `${_arEsc(meta.stageFrom)} → ${_arEsc(meta.stageTo)}`;
+        if (meta.taskTitle)    detail = meta.taskTitle;
+        if (meta.clientName)   detail = meta.clientName;  // CRM: ім'я клієнта
+        if (meta.note)         detail = meta.note.slice(0, 60) + (meta.note.length > 60 ? '…' : '');
+        if (meta.text)         detail = meta.text.slice(0, 60) + (meta.text.length > 60 ? '…' : '');
+        // CRM stage_changed: пишемо fromLabel/toLabel
+        if (meta.fromLabel && meta.toLabel) detail = `${_arEsc(meta.fromLabel)} → ${_arEsc(meta.toLabel)}`;
+        else if (meta.stageFrom && meta.stageTo) detail = `${_arEsc(meta.stageFrom)} → ${_arEsc(meta.stageTo)}`;
+        if (meta.lostReason)   detail += (detail ? ' · ' : '') + _arEsc(meta.lostReason);
 
         html += `
         <div style="display:flex;align-items:flex-start;gap:0.6rem;padding:0.45rem 0;border-bottom:1px solid #f1f5f9;">
