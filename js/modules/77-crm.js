@@ -309,6 +309,60 @@ function _listenEventBus() {
 // ══════════════════════════════════════════════════════════
 // KANBAN
 // ══════════════════════════════════════════════════════════
+function _kanbanFilterBar() {
+    const f = crm.filters;
+    const userList  = typeof users !== 'undefined' ? users : [];
+    const sources   = [...new Set(crm.deals.map(d => d.source).filter(Boolean))];
+    const tags      = [...new Set(crm.deals.flatMap(d => d.tags || []))].sort();
+    const hasFilter = f.assignee || f.tag || f.source || f.amountMin || f.amountMax || f.search;
+    const sel = 'padding:0.25rem 0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;';
+
+    const assigneeOpts = userList.map(u =>
+        `<option value="${u.id}" ${f.assignee === u.id ? 'selected' : ''}>${_esc(u.name || u.email)}</option>`
+    ).join('');
+
+    const sourceOpts = sources.map(s =>
+        `<option value="${_esc(s)}" ${f.source === s ? 'selected' : ''}>${_esc(s)}</option>`
+    ).join('');
+
+    const tagOpts = tags.map(tg =>
+        `<option value="${_esc(tg)}" ${f.tag === tg ? 'selected' : ''}>${_esc(tg)}</option>`
+    ).join('');
+
+    return `
+    <div id="crmKanbanFilters" style="background:white;border-bottom:1px solid #e8eaed;padding:0.4rem 0.75rem;display:flex;flex-wrap:wrap;gap:0.35rem;align-items:center;flex-shrink:0;">
+        <select id="crmKanbanFilterAssignee" onchange="crmApplyFilters(true)" style="${sel}">
+            <option value="">Всі відповідальні</option>
+            ${assigneeOpts}
+        </select>
+        <select id="crmKanbanFilterSource" onchange="crmApplyFilters(true)" style="${sel}">
+            <option value="">Всі джерела</option>
+            ${sourceOpts}
+        </select>
+        <select id="crmKanbanFilterTag" onchange="crmApplyFilters(true)" style="${sel}">
+            <option value="">Всі теги</option>
+            ${tagOpts}
+        </select>
+        <div style="display:flex;align-items:center;gap:0.25rem;">
+            <span style="font-size:0.72rem;color:#9ca3af;">₴</span>
+            <input id="crmKanbanFilterAmountMin" type="number" placeholder="від" value="${f.amountMin || ''}"
+                oninput="crmApplyFilters(true)"
+                style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
+            <span style="font-size:0.72rem;color:#9ca3af;">—</span>
+            <input id="crmKanbanFilterAmountMax" type="number" placeholder="до" value="${f.amountMax || ''}"
+                oninput="crmApplyFilters(true)"
+                style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
+        </div>
+        ${hasFilter ? `
+        <button onclick="crmResetFilters()"
+            style="padding:0.25rem 0.6rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;border-radius:6px;font-size:0.73rem;cursor:pointer;font-weight:600;">
+            × Скинути фільтри
+        </button>
+        <span style="font-size:0.72rem;color:#6b7280;font-weight:600;">${_filteredDeals().length} / ${crm.deals.length}</span>
+        ` : `<span style="font-size:0.72rem;color:#9ca3af;margin-left:auto;">${crm.deals.length} угод</span>`}
+    </div>`;
+}
+
 function _renderKanban() {
     const c = document.getElementById('crmViewKanban');
     if (!c) return;
@@ -337,6 +391,8 @@ function _renderKanban() {
 
     // Висота kanban board залежить від наявності switcher рядка
     const switcherHeight = crm.pipelines.length > 1 ? 89 : 57;
+    const filterBarH = 41; // filter bar висота
+    const bulkBarH   = crm.selectedIds.size > 0 ? 41 : 0;
 
     c.innerHTML = `
     ${limitBanner}
@@ -369,41 +425,8 @@ function _renderKanban() {
         </div>
     </div>
 
-    <!-- Kanban Filter Bar -->
-    <div id="crmKanbanFilters" style="background:white;border-bottom:1px solid #e8eaed;padding:0.4rem 0.75rem;display:flex;flex-wrap:wrap;gap:0.35rem;align-items:center;">
-        <select id="crmKanbanFilterAssignee" onchange="crmApplyFilters(true)"
-            style="padding:0.25rem 0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;">
-            <option value="">${window.t('allAssignees')||'Всі відповідальні'}</option>
-            \${(typeof users!=='undefined'?users:[]).map(u=>\`<option value="\${u.id}" \${crm.filters.assignee===u.id?'selected':''}>\${_esc(u.name||u.email)}</option>\`).join('')}
-        </select>
-        <select id="crmKanbanFilterSource" onchange="crmApplyFilters(true)"
-            style="padding:0.25rem 0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;">
-            <option value="">Всі джерела</option>
-            \${ [...new Set(crm.deals.map(d=>d.source).filter(Boolean))].map(s=>\`<option value="\${_esc(s)}" \${crm.filters.source===s?'selected':''}>\${_esc(s)}</option>\`).join('') }
-        </select>
-        <select id="crmKanbanFilterTag" onchange="crmApplyFilters(true)"
-            style="padding:0.25rem 0.4rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;">
-            <option value="">Всі теги</option>
-            \${ [...new Set(crm.deals.flatMap(d=>d.tags||[]))].sort().map(tg=>\`<option value="\${_esc(tg)}" \${crm.filters.tag===tg?'selected':''}>\${_esc(tg)}</option>\`).join('') }
-        </select>
-        <div style="display:flex;align-items:center;gap:0.25rem;">
-            <span style="font-size:0.72rem;color:#9ca3af;">₴</span>
-            <input id="crmKanbanFilterAmountMin" type="number" placeholder="від" value="\${crm.filters.amountMin||''}"
-                oninput="crmApplyFilters(true)"
-                style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
-            <span style="font-size:0.72rem;color:#9ca3af;">—</span>
-            <input id="crmKanbanFilterAmountMax" type="number" placeholder="до" value="\${crm.filters.amountMax||''}"
-                oninput="crmApplyFilters(true)"
-                style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
-        </div>
-        \${ (crm.filters.assignee||crm.filters.tag||crm.filters.source||crm.filters.amountMin||crm.filters.amountMax||crm.filters.search) ? \`
-        <button onclick="crmResetFilters()"
-            style="padding:0.25rem 0.6rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;border-radius:6px;font-size:0.73rem;cursor:pointer;font-weight:600;">
-            × Скинути фільтри
-        </button>
-        <span style="font-size:0.72rem;color:#6b7280;font-weight:600;">\${_filteredDeals().length} / \${crm.deals.length}</span>
-        \` : \`<span style="font-size:0.72rem;color:#9ca3af;margin-left:auto;">\${crm.deals.length} угод</span>\` }
-    </div>
+    <!-- Kanban Filter Bar (генерується JS) -->
+    ${_kanbanFilterBar()}
 
     <!-- Bulk action bar -->
     ${crm.selectedIds.size > 0 ? `
@@ -437,7 +460,7 @@ function _renderKanban() {
     </div>` : ''}
 
     <!-- Kanban board -->
-    <div style="display:flex;gap:0;height:calc(100% - ${switcherHeight + 41 + (crm.selectedIds.size>0 ? 41 : 0)}px);overflow-x:auto;">
+    <div style="display:flex;gap:0;height:calc(100% - ${switcherHeight + filterBarH + bulkBarH}px);overflow-x:auto;">
         ${mainStages.map(s => _kanbanCol(s)).join('')}
         ${lostStage ? _kanbanColLost(lostStage) : ''}
     </div>`;
