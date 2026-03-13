@@ -73,7 +73,7 @@
                 }
                 
                 const [usersSnap, funcsSnap, tasksSnap, regSnap, templatesSnap, processesSnap, projectsSnap] = await Promise.all([
-                    base.collection('users').get()
+                    base.collection('users').limit(1000).get() // safety limit
                         .catch(() => ({ docs: [] })),
                     base.collection('functions').get()
                         .catch(() => ({ docs: [] })),

@@ -3527,11 +3527,17 @@ window._fetchRates = async function() {
   try {
     // Використовуємо відкритий API без ключа
     let resp;
+    // FIX: AbortController 8s timeout — публічні API можуть не відповідати
+    const _mkFetch = (url) => {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 8000);
+      return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(timer));
+    };
     try {
-      resp = await fetch(`https://api.frankfurter.app/latest?from=${base}`);
+      resp = await _mkFetch(`https://api.frankfurter.app/latest?from=${base}`);
     } catch(netErr) {
       // Fallback — exchangerate-api (без ключа, обмежений)
-      resp = await fetch(`https://open.er-api.com/v6/latest/${base}`);
+      resp = await _mkFetch(`https://open.er-api.com/v6/latest/${base}`);
     }
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const data = await resp.json();

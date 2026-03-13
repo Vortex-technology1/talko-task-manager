@@ -76,10 +76,15 @@
         
         // Load offline data
         function loadOfflineData() {
-            const saved = localStorage.getItem('offlineData');
-            if (saved) {
-                offlineData = JSON.parse(saved);
-                return true;
+            try {
+                const saved = localStorage.getItem('offlineData');
+                if (saved) {
+                    offlineData = JSON.parse(saved);
+                    return true;
+                }
+            } catch(e) {
+                // Safari ITP або QuotaExceeded — продовжуємо без офлайн даних
+                console.warn('[offline] loadOfflineData error:', e.name);
             }
             return false;
         }

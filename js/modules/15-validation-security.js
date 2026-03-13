@@ -471,7 +471,7 @@
                 
                 // P1 FIX: cascade — видаляємо підзавдання разом з батьком через batch
                 const _subtasksSnap = await db.collection('companies').doc(currentCompany)
-                    .collection('tasks').where('parentId', '==', id).get();
+                    .collection('tasks').where('parentId', '==', id).limit(500).get(); // safety: Firestore batch limit
                 
                 if (_subtasksSnap.empty) {
                     // Немає підзавдань — просте видалення

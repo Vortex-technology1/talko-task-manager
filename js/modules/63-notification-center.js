@@ -185,7 +185,7 @@
     function checkIOSInstallHint() {
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        const dismissed = localStorage.getItem('talko_ios_install_dismissed');
+        let dismissed = false; try { dismissed = !!localStorage.getItem('talko_ios_install_dismissed'); } catch(e) { /* Safari ITP */ }
         
         if (isIOS && !isStandalone && !dismissed) {
             setTimeout(() => {
@@ -217,7 +217,7 @@
     }
     
     function dismissIOSHint() {
-        localStorage.setItem('talko_ios_install_dismissed', '1');
+        try { localStorage.setItem('talko_ios_install_dismissed', '1'); } catch(e) { /* Safari ITP */ }
         dismissInstallBanner();
     }
     
