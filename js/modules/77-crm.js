@@ -2371,7 +2371,7 @@ async function _renderActivitiesTab() {
         const deals = crm.deals; // вже відфільтровані по pipelineId через _subscribeDeals
         const histResults = await Promise.all(
             deals.map(deal =>
-                window.companyRef().collection('crm_deals').doc(deal.id)
+                window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id)
                     .collection('history').orderBy('at','desc').limit(30).get()
                     .then(hs => hs.docs.map(h => ({
                         ...h.data(), id: h.id, dealId: deal.id,
@@ -2514,7 +2514,7 @@ async function _renderActivitiesTab() {
             const type   = crm._actCurrentType || 'note';
             if (!dealId) { if(window.showToast) showToast(window.t('crmSelectDeal'),'error'); return; }
             try {
-                await window.companyRef().collection('crm_deals').doc(dealId)
+                await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
                     .collection('history').add({
                         type, note: note || '',
                         by: window.currentUser?.email || 'manager',
@@ -3481,7 +3481,7 @@ window.crmSaveTaskFromDeal = async function(dealId) {
         const ref = await window.companyRef().collection('tasks').add(taskData);
 
         // Логуємо в history угоди
-        await window.companyRef().collection('crm_deals').doc(dealId)
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
             .collection('history').add({
                 type: 'task', text: title, taskId: ref.id,
                 by: window.currentUser?.email || 'manager',
