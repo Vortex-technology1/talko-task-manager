@@ -567,7 +567,13 @@ document.addEventListener('mousedown', function(e) {
                     </div>
                 </div>
 
-                <!-- 7. Система — dropdown: Функції, Структура, Співробітники -->
+                <!-- 7. Навчання — окрема кнопка між Аналітика і Система -->
+                <button class="tab-btn" onclick="lazyLoad('learning',function(){switchTab('learning');});" data-tab="learning" aria-label="Навчання">
+                    <i data-lucide="graduation-cap" class="icon"></i>
+                    <span data-i18n="tabLearning">Навчання</span>
+                </button>
+
+                <!-- 8. Система — dropdown: Функції, Структура, Співробітники -->
                 <div style="position:relative;display:inline-block;" id="sysTabDropdown">
                     <button class="tab-btn" onclick="toggleNavDropdown('sysTabMenu','sysTabDropdown',event)" id="sysTabBtn" aria-label="Система">
                         <i data-lucide="settings-2" class="icon"></i>
@@ -583,9 +589,6 @@ document.addEventListener('mousedown', function(e) {
                         </button>
                         <button class="tab-btn _ntab" onclick="event.stopPropagation();switchTab('users');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="users" class="icon icon-sm"></i><span data-i18n="tabUsers">Співробітники</span>
-                        </button>
-                        <button class="tab-btn _ntab" onclick="event.stopPropagation();switchTab('learning');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
-                            <i data-lucide="graduation-cap" class="icon icon-sm"></i><span data-i18n="tabLearning">Навчання</span>
                         </button>
                         <button class="tab-btn _ntab" onclick="event.stopPropagation();switchTab('onboarding');closeNavDropdowns();" style="width:100%;text-align:left;border-radius:8px;padding:0.5rem 0.75rem;gap:0.6rem;">
                             <i data-lucide="map" class="icon icon-sm"></i><span data-i18n="tabOnboarding">Онбординг</span>
