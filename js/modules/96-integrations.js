@@ -31,7 +31,7 @@ function _renderShell() {
     if (!c) return;
     c.innerHTML = `
     <div style="min-height:100%;background:#f4f5f7;padding:1rem;">
-        <div style="max-width:680px;margin:0 auto;">
+        <div style="max-width:100%;padding:0 0.5rem;">
             <div style="margin-bottom:1rem;">
                 <div style="font-weight:700;font-size:1rem;color:#111827;">Інтеграції</div>
                 <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">API ключі, Webhook, Telegram, автоматизації</div>
@@ -58,12 +58,13 @@ function _renderAll() {
 
     const inp = 'width:100%;padding:0.45rem 0.6rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.82rem;box-sizing:border-box;font-family:monospace;background:white;';
     const lbl = 'font-size:0.68rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.25rem;letter-spacing:0.03em;';
-    const card = 'background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;margin-bottom:0.75rem;';
+    const card = 'background:white;border-radius:10px;padding:1.1rem;border:1px solid #e8eaed;height:fit-content;';
     const sTitle = 'display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.9rem;';
     const badge = (ok) => ok
         ? `<span style="font-size:0.65rem;background:#f0fdf4;color:#16a34a;padding:1px 7px;border-radius:4px;font-weight:600;">${I.check} Підключено</span>`
         : `<span style="font-size:0.65rem;background:#f9fafb;color:#9ca3af;padding:1px 7px;border-radius:4px;">Не налаштовано</span>`;
 
+    c.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:0.75rem;align-items:start;';
     c.innerHTML = `
 
     <!-- AI / Anthropic API -->
