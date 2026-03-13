@@ -713,7 +713,7 @@
                 const leftPx = startOffset * dayWidth;
                 const widthPx = barWidth * dayWidth - 4;
                 
-                const isOverdue = task.deadlineDate < todayStr && task.status !== 'done';
+                const isOverdue = task.deadlineDate < todayStr && task.status !== 'done' && task.status !== 'review';
                 
                 return `<div style="display:flex;align-items:center;height:36px;border-bottom:1px solid #f3f4f6;position:relative;">
                     <div style="position:absolute;left:${leftPx + 2}px;width:${widthPx}px;height:24px;background:${color.bg};border:1.5px solid ${color.border};border-radius:4px;display:flex;align-items:center;padding:0 6px;cursor:pointer;overflow:hidden;${isOverdue ? 'border-color:#ef4444;background:#fef2f2;' : ''}" onclick="openTaskModal('${escId(task.id)}')" title="${esc(task.title)} — ${statusLabels[task.status] || task.status}${assignee ? ' (' + assignee + ')' : ''}">

@@ -123,7 +123,7 @@
                     const assignee = users.find(u => u.id === tk.assigneeId);
                     const assigneeName = assignee ? (assignee.name || assignee.email || '').split(' ')[0] : (tk.assigneeName || '').split(' ')[0];
                     const funcName = tk.function || '';
-                    const isOverdue = tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done';
+                    const isOverdue = tk.deadlineDate && tk.deadlineDate < todayStr && tk.status !== 'done' && tk.status !== 'review';
                     const isToday = tk.deadlineDate === todayStr;
                     const escalation = getEscalationLevel(tk);
                     

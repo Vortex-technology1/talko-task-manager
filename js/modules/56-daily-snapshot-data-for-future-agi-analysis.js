@@ -53,7 +53,7 @@
             // If step has SLA and task exists and is overdue
             return step?.slaMinutes && tasks.some(t => 
                 t.processId === p.id && t.processStep === (p.currentStep || 0) && 
-                t.status !== 'done' && t.deadlineDate && t.deadlineDate < todayStr
+                t.status !== 'done' && t.status !== 'review' && t.deadlineDate && t.deadlineDate < todayStr
             );
         }).length;
         

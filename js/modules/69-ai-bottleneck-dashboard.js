@@ -52,7 +52,7 @@
 
             // Overdue tasks
             const today = getLocalDateStr(new Date());
-            const overdue = pTasks.filter(t => t.status !== 'done' && t.deadlineDate && t.deadlineDate < today);
+            const overdue = pTasks.filter(t => t.status !== 'done' && t.status !== 'review' && t.deadlineDate && t.deadlineDate < today);
             if (overdue.length > 0) {
                 alerts.push({
                     type: 'overdue',
@@ -225,7 +225,7 @@
 
         // 2. Overdue tasks by function — pattern detection
         const funcOverdue = {};
-        scope.tasks.filter(t => t.status !== 'done' && t.deadlineDate && t.deadlineDate < today).forEach(t => {
+        scope.tasks.filter(t => t.status !== 'done' && t.status !== 'review' && t.deadlineDate && t.deadlineDate < today).forEach(t => {
             const f = t.function || 'Без функції';
             if (!funcOverdue[f]) funcOverdue[f] = [];
             funcOverdue[f].push(t);
@@ -459,7 +459,7 @@
         score -= pStages.filter(s => s.status === 'blocked').length * 15;
 
         // Overdue tasks: -3 each
-        score -= pTasks.filter(t => t.status !== 'done' && t.deadlineDate && t.deadlineDate < today).length * 3;
+        score -= pTasks.filter(t => t.status !== 'done' && t.status !== 'review' && t.deadlineDate && t.deadlineDate < today).length * 3;
 
         // Late materials: -5 each
         score -= pMats.filter(m => m.status !== 'delivered' && m.status !== 'used' && m.plannedDeliveryDate && m.plannedDeliveryDate < today).length * 5;

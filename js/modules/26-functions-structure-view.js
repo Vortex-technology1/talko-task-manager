@@ -87,7 +87,7 @@
                         ${allFuncs.map(f => {
                             const fTasks = tasks.filter(t => t.function === f.name && t.status !== 'done').length;
                             const fReg = regularTasks.filter(rt => rt.function === f.name).length;
-                            const overdue = tasks.filter(t => t.function === f.name && t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done').length;
+                            const overdue = tasks.filter(t => t.function === f.name && t.deadlineDate && t.deadlineDate < todayStr && t.status !== 'done' && t.status !== 'review').length;
                             return `
                             <div class="struct-func-card" draggable="true" data-func-id="${escId(f.id)}"
                                 ondragstart="dragFunction(event, '${escId(f.id)}')"

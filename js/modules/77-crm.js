@@ -1642,7 +1642,7 @@ async function _loadTasksTab(deal) {
             rows = '<div style="text-align:center;padding:2rem;background:#f8fafc;border-radius:10px;border:2px dashed #e8eaed;"><div style="color:#9ca3af;font-size:0.82rem;">Задач ще немає</div></div>';
         } else {
             rows = dealTasks.map(function(task) {
-                const isOverdue = task.deadlineDate && task.deadlineDate < today && task.status !== 'done';
+                const isOverdue = task.deadlineDate && task.deadlineDate < today && task.status !== 'done' && task.status !== 'review';
                 const eff = isOverdue ? 'overdue' : (task.status || 'new');
                 const col = statusColors[eff] || '#6b7280';
                 const asgn = usersArr.find(function(u){return u.id===task.assigneeId;});
