@@ -430,7 +430,30 @@ function renderWelcome() {
     const allTasks  = OB_STEPS.reduce((s,st) => s + st.tasks.length, 0);
     const alreadyStarted = doneTasks > 0;
     const totalMins = OB_STEPS.reduce((s,st) => s + (parseInt(st.est)||0), 0);
-    const timeLabel = `~${Math.floor(totalMins/60)} год ${totalMins%60} хв`;
+    const ui = typeof getOBUI === 'function' ? getOBUI : () => '';
+    const lang = (typeof currentLang !== 'undefined' ? currentLang : null) || localStorage.getItem('talko_lang') || 'ua';
+    const timeLabel = lang === 'en'
+        ? `~${Math.floor(totalMins/60)}h ${totalMins%60}min`
+        : lang === 'ru'
+        ? `~${Math.floor(totalMins/60)} ч ${totalMins%60} мин`
+        : `~${Math.floor(totalMins/60)} год ${totalMins%60} хв`;
+    const txt = {
+        title:    lang==='en' ? 'TALKO OS Onboarding'          : lang==='ru' ? 'TALKO OS Онбординг'         : 'TALKO OS Онбординг',
+        subtitle: lang==='en' ? 'Step-by-step system setup. From first login to business on autopilot.'
+                              : lang==='ru' ? 'Пошаговая настройка системы. От первого входа до бизнеса на автопилоте.'
+                              : 'Покрокове налаштування системи. Від першого входу до бізнесу на автопілоті.',
+        steps:    lang==='en' ? 'steps'    : lang==='ru' ? 'шагов'    : 'кроків',
+        totalTime:lang==='en' ? 'total time': lang==='ru' ? 'общее время': 'загальний час',
+        progress: lang==='en' ? 'Your progress' : lang==='ru' ? 'Ваш прогресс' : 'Ваш прогрес',
+        ofTasks:  lang==='en' ? 'of tasks'  : lang==='ru' ? 'из заданий' : 'з завдань',
+        whats:    lang==='en' ? 'What\'s included in onboarding' : lang==='ru' ? 'Что входит в онбординг' : 'Що входить в онбординг',
+        start:    lang==='en' ? 'Start setup'    : lang==='ru' ? 'Начать настройку'    : 'Почати налаштування',
+        resume:   lang==='en' ? 'Continue setup' : lang==='ru' ? 'Продолжить настройку': 'Продовжити налаштування',
+        fromStart:lang==='en' ? 'view from beginning' : lang==='ru' ? 'просмотреть с начала' : 'переглянути з початку',
+        or:       lang==='en' ? 'or' : lang==='ru' ? 'или' : 'або',
+        completed: ui('completed') || (lang==='en'?'completed':lang==='ru'?'выполнено':'виконано'),
+        stepsOf:   ui('stepsOf')   || (lang==='en'?'steps':lang==='ru'?'шаги':'кроки'),
+    };
 
     c.innerHTML = `
 <div style="min-height:calc(100vh - 56px);background:linear-gradient(135deg,#f0f9ff,#f8fafc 50%,#f0fdf4);display:flex;align-items:center;justify-content:center;padding:2rem 1rem;">
@@ -439,47 +462,47 @@ function renderWelcome() {
     <div style="display:inline-flex;align-items:center;justify-content:center;width:68px;height:68px;background:linear-gradient(135deg,#22c55e,#0ea5e9);border-radius:18px;margin-bottom:1rem;box-shadow:0 8px 24px rgba(34,197,94,.3);">
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
-    <h1 style="font-size:1.8rem;font-weight:900;color:#0c1a2e;margin:0 0 .4rem;line-height:1.2;">TALKO OS Онбординг</h1>
-    <p style="font-size:.95rem;color:#6b7280;max-width:460px;margin:0 auto;line-height:1.6;">Покрокове налаштування системи. Від першого входу до бізнесу на автопілоті.</p>
+    <h1 style="font-size:1.8rem;font-weight:900;color:#0c1a2e;margin:0 0 .4rem;line-height:1.2;">${txt.title}</h1>
+    <p style="font-size:.95rem;color:#6b7280;max-width:460px;margin:0 auto;line-height:1.6;">${txt.subtitle}</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1.25rem;">
     <div style="background:white;border-radius:12px;padding:1rem;text-align:center;border:1px solid #e8eaed;box-shadow:0 2px 8px rgba(0,0,0,.05);">
       <div style="font-size:1.7rem;font-weight:900;color:#22c55e;">${OB_STEPS.length}</div>
-      <div style="font-size:.75rem;color:#9ca3af;">кроків</div>
+      <div style="font-size:.75rem;color:#9ca3af;">${txt.steps}</div>
     </div>
     <div style="background:white;border-radius:12px;padding:1rem;text-align:center;border:1px solid #e8eaed;box-shadow:0 2px 8px rgba(0,0,0,.05);">
       <div style="font-size:1.7rem;font-weight:900;color:#0ea5e9;">${timeLabel}</div>
-      <div style="font-size:.75rem;color:#9ca3af;">загальний час</div>
+      <div style="font-size:.75rem;color:#9ca3af;">${txt.totalTime}</div>
     </div>
     <div style="background:white;border-radius:12px;padding:1rem;text-align:center;border:1px solid #e8eaed;box-shadow:0 2px 8px rgba(0,0,0,.05);">
       <div style="font-size:1.7rem;font-weight:900;color:#8b5cf6;">${pct}%</div>
-      <div style="font-size:.75rem;color:#9ca3af;">${(typeof getOBUI==='function'&&getOBUI('completed'))||'виконано'}</div>
+      <div style="font-size:.75rem;color:#9ca3af;">${txt.completed}</div>
     </div>
   </div>
   ${alreadyStarted ? `<div style="background:white;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.25rem;border:1px solid #bbf7d0;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;">
-      <div style="font-weight:700;font-size:.85rem;color:#15803d;">Ваш прогрес</div>
-      <div style="font-size:.75rem;color:#6b7280;">${doneTasks} з ${allTasks} завдань</div>
+      <div style="font-weight:700;font-size:.85rem;color:#15803d;">${txt.progress}</div>
+      <div style="font-size:.75rem;color:#6b7280;">${doneTasks} ${txt.ofTasks} ${allTasks}</div>
     </div>
     <div style="background:#f1f5f9;border-radius:999px;height:8px;margin-bottom:.75rem;">
       <div style="height:100%;background:linear-gradient(90deg,#22c55e,#16a34a);width:${Math.round(doneTasks/allTasks*100)}%;border-radius:999px;"></div>
     </div>
     <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
-      ${OB_BLOCKS.map(b => { const bp = blockProgress(b.id); if(!bp) return ''; const done = bp.done===bp.total&&bp.done>0; return `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:999px;font-size:.7rem;font-weight:600;background:${done?b.color+'18':'#f1f5f9'};color:${done?b.color:'#9ca3af'};border:1px solid ${done?b.color+'40':'#e5e7eb'};">${b.icon} ${b.label} ${bp.done}/${bp.total}</span>`; }).join('')}
+      ${OB_BLOCKS.map(b => { const bp = blockProgress(b.id); if(!bp) return ''; const done = bp.done===bp.total&&bp.done>0; const lbl = (typeof getOBBlockLabel==='function'?getOBBlockLabel(b.id):b.label); return `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:999px;font-size:.7rem;font-weight:600;background:${done?b.color+'18':'#f1f5f9'};color:${done?b.color:'#9ca3af'};border:1px solid ${done?b.color+'40':'#e5e7eb'};">${b.icon} ${lbl} ${bp.done}/${bp.total}</span>`; }).join('')}
     </div>
   </div>` : ''}
   <div style="background:white;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.25rem;border:1px solid #e8eaed;">
-    <div style="font-weight:700;font-size:.85rem;color:#111827;margin-bottom:.75rem;">Що входить в онбординг</div>
+    <div style="font-weight:700;font-size:.85rem;color:#111827;margin-bottom:.75rem;">${txt.whats}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;">
-      ${OB_BLOCKS.map(b => { const bp = blockProgress(b.id); if(!bp) return ''; const done = bp.done===bp.total&&bp.done>0; const lbl = (typeof getOBBlockLabel==='function'?getOBBlockLabel(b.id):b.label); const stepsWord = (typeof getOBUI==='function'&&getOBUI('stepsOf'))||'кроки'; return `<div style="display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;border-radius:9px;background:${done?b.color+'0d':'#f8fafc'};border:1px solid ${done?b.color+'30':'#f1f5f9'};"><span style="font-size:.9rem;">${b.icon}</span><div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:${done?b.color:'#374151'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${lbl}</div><div style="font-size:.65rem;color:#9ca3af;">${bp.total} ${stepsWord}</div></div>${done?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="'+b.color+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>':''}</div>`; }).join('')}
+      ${OB_BLOCKS.map(b => { const bp = blockProgress(b.id); if(!bp) return ''; const done = bp.done===bp.total&&bp.done>0; const lbl = (typeof getOBBlockLabel==='function'?getOBBlockLabel(b.id):b.label); return `<div style="display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;border-radius:9px;background:${done?b.color+'0d':'#f8fafc'};border:1px solid ${done?b.color+'30':'#f1f5f9'};"><span style="font-size:.9rem;">${b.icon}</span><div style="flex:1;min-width:0;"><div style="font-size:.78rem;font-weight:600;color:${done?b.color:'#374151'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${lbl}</div><div style="font-size:.65rem;color:#9ca3af;">${bp.total} ${txt.stepsOf}</div></div>${done?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="'+b.color+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>':''}</div>`; }).join('')}
     </div>
   </div>
   <div style="text-align:center;">
     <button onclick="obStartOnboarding()" style="display:inline-flex;align-items:center;gap:.65rem;padding:.9rem 2.25rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border:none;border-radius:12px;cursor:pointer;font-size:.95rem;font-weight:800;box-shadow:0 8px 24px rgba(34,197,94,.4);">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      ${alreadyStarted ? 'Продовжити налаштування' : 'Почати налаштування'}
+      ${alreadyStarted ? txt.resume : txt.start}
     </button>
-    ${alreadyStarted ? `<div style="margin-top:.6rem;font-size:.75rem;color:#9ca3af;">або <span onclick="obSelectStep(0)" style="color:#22c55e;cursor:pointer;font-weight:600;text-decoration:underline;">переглянути з початку</span></div>` : ''}
+    ${alreadyStarted ? `<div style="margin-top:.6rem;font-size:.75rem;color:#9ca3af;">${txt.or} <span onclick="obSelectStep(0)" style="color:#22c55e;cursor:pointer;font-weight:600;text-decoration:underline;">${txt.fromStart}</span></div>` : ''}
   </div>
 </div>
 </div>`;
