@@ -945,21 +945,28 @@ window.crmBulkDelete = async function() {
 
 async function _bulkUpdateDeals(updates) {
     const ids = Array.from(crm.selectedIds);
-    updates.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+    // FIX #2: окремо — що пишемо в Firestore (з FieldValue), що в локальний стан (без FieldValue)
+    const fsUpdates    = { ...updates, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    const localUpdates = { ...updates, updatedAt: { toDate: () => new Date(), toMillis: () => Date.now() } };
+    // FieldValue.serverTimestamp sentinel не можна класти в local state
+    Object.keys(localUpdates).forEach(k => {
+        if (localUpdates[k] && typeof localUpdates[k] === 'object' && localUpdates[k]._methodName) {
+            localUpdates[k] = { toDate: () => new Date(), toMillis: () => Date.now() };
+        }
+    });
     let done = 0;
     for (const dealId of ids) {
         const deal = crm.deals.find(function(d){ return d.id === dealId; });
         if (!deal) continue;
         try {
-            await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).update(updates);
-            Object.assign(deal, updates);
+            await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId).update(fsUpdates);
+            Object.assign(deal, localUpdates);
             done++;
         } catch(e) { console.error('[Bulk update]', dealId, e); }
     }
     if (typeof showToast === 'function') showToast('Оновлено ' + done + ' угод', 'success');
     crm.selectedIds = new Set();
     crm._bulkMode = false;
-    // FIX: рендеримо поточний режим, не завжди list
     if (crm.viewMode === 'kanban') _renderKanban();
     else _renderListView();
 }
@@ -1762,6 +1769,17 @@ window.crmSaveDeal = async function(dealId) {
 
     try {
         const stageChanged = stage && stage !== deal.stage;
+
+        // FIX #3: якщо юзер змінює стадію на "lost" через форму — показуємо модал причини
+        if (stageChanged && stage === 'lost') {
+            crm.saving = false;
+            // Скидаємо select назад
+            const stageEl = document.getElementById('dd_stage');
+            if (stageEl) stageEl.value = deal.stage;
+            _showLostReasonModal(deal.id, 'lost', deal.stage);
+            return;
+        }
+
         const updates = {
             title: title||deal.title, stage: stage||deal.stage, amount,
             clientName: client||deal.clientName, clientNiche: niche, note,
@@ -2584,17 +2602,27 @@ window.crmOpenClient = function(clientId) {
 window.crmNewDealFromClient = function(clientName, clientId) {
     crmOpenCreateDeal();
     setTimeout(() => {
-        const inp = document.getElementById('nd_client');
-        if (inp) { inp.value = clientName; inp.focus(); }
-        if (clientId) {
-            const ov = document.getElementById('crmCreateDealOverlay');
-            if (ov) ov.dataset.clientId = clientId;
+        const inp  = document.getElementById('nd_client');
+        const ov   = document.getElementById('crmCreateDealOverlay');
+        const lnk  = document.getElementById('nd_clientLinked');
+        const lnkN = document.getElementById('nd_clientLinkedName');
+        if (inp) { inp.value = clientName; }
+        if (clientId && ov) {
+            // FIX #4: встановлюємо обидва флаги — без цього crmCreateDeal ігнорує clientId
+            ov.dataset.clientId     = clientId;
+            ov.dataset.clientLinked = '1';
         }
+        if (lnkN) lnkN.textContent = clientName;
+        if (lnk)  lnk.style.display = 'block';
     }, 50);
 };
 
 window.crmDeleteClient = async function(clientId) {
-    if (!confirm(window.t('crmDeleteClient'))) return;
+    // FIX #12: використовуємо showConfirmModal як весь інший код, не нативний confirm()
+    const confirmed = await (window.showConfirmModal
+        ? showConfirmModal(window.t('crmDeleteClient'), { danger: true })
+        : Promise.resolve(confirm(window.t('crmDeleteClient'))));
+    if (!confirmed) return;
     try {
         await window.companyRef().collection('crm_clients').doc(clientId).delete();
         crm.clients = crm.clients.filter(c => c.id !== clientId);
@@ -2646,13 +2674,18 @@ window.crmSaveNewClient = async function() {
     const name = v('name');
     if (!name) { if(window.showToast) showToast('Вкажіть ім\'я','error'); return; }
     try {
+        const now = firebase.firestore.FieldValue.serverTimestamp();
         const ref = await window.companyRef().collection('crm_clients').add({
             name, phone: v('phone'), email: v('email'), niche: v('niche'),
             telegram: v('telegram'), note: v('note'), source: 'manual',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: now,
+            updatedAt: now, // FIX #5: додано updatedAt
         });
+        // FIX #5: локальний стан теж з updatedAt
         crm.clients.unshift({ id: ref.id, name, phone: v('phone'), email: v('email'),
-            niche: v('niche'), telegram: v('telegram'), note: v('note'), source: 'manual' });
+            niche: v('niche'), telegram: v('telegram'), note: v('note'), source: 'manual',
+            updatedAt: { toDate: () => new Date(), toMillis: () => Date.now() },
+        });
         document.getElementById('crmCreateClientOverlay')?.remove();
         _renderClients();
         if (window.showToast) showToast(window.t('crmClientAdded'), 'success');
@@ -2797,7 +2830,8 @@ async function _renderActivitiesTab() {
     render(activeFilter);
 
     // FIX I: event delegation на контейнер — не перезаписуємо window функції при кожному ре-рендері
-    c.onclick = function(e) {
+    // FIX #1: єдиний onclick — без addEventListener, без накопичення listeners
+    c.onclick = async function(e) {
         // Тип активності
         const typeBtn = e.target.closest('button[id^="actType_"]');
         if (typeBtn) {
@@ -2816,21 +2850,14 @@ async function _renderActivitiesTab() {
         // Фільтр
         const filterBtn = e.target.closest('button[data-actfilter]');
         if (filterBtn) { activeFilter = filterBtn.dataset.actfilter; render(activeFilter); return; }
-    };
-
-    // actSave через delegation на кнопку — FIX BF: guard щоб не накопичувати listeners
-    // Завжди скидаємо listener — вкладка може перерендеритись
-    c._actSaveListenerSet = false;
-    if (!c._actSaveListenerSet) {
-        c._actSaveListenerSet = true;
-        c.addEventListener('click', async function actSaveDelegate(e) {
-            if (!e.target.matches && !e.target.closest) return;
-            const saveBtn = e.target.id === 'actSaveBtn' ? e.target : e.target.closest('#actSaveBtn');
-            if (!saveBtn) return;
+        // Зберегти активність
+        const saveBtn = e.target.closest('#actSaveBtn');
+        if (saveBtn) {
             const dealId = document.getElementById('actDealSelect')?.value;
             const note   = document.getElementById('actNoteText')?.value?.trim();
             const type   = crm._actCurrentType || 'note';
             if (!dealId) { if(window.showToast) showToast(window.t('crmSelectDeal'),'error'); return; }
+            saveBtn.disabled = true;
             try {
                 await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
                     .collection('history').add({
@@ -2839,15 +2866,18 @@ async function _renderActivitiesTab() {
                         at: firebase.firestore.FieldValue.serverTimestamp(),
                     });
                 if (typeof window.trackAction === 'function') {
-                    const aDeal = crm.deals.find(x=>x.id===dealId);
+                    const aDeal = crm.deals.find(x => x.id === dealId);
                     const arType = type==='call'?'crm_call': type==='meeting'?'crm_meeting': type==='email'?'crm_email': 'crm_note';
                     window.trackAction(arType, { dealId, clientName: aDeal?.clientName||aDeal?.title||'', note: note||'' });
                 }
                 if (window.showToast) showToast(window.t('crmActivitySaved'), 'success');
                 await _renderActivitiesTab();
-            } catch(e2) { if(window.showToast) showToast(window.t('errPrefix') + e2.message, 'error'); }
-        });
-    }
+            } catch(e2) {
+                saveBtn.disabled = false;
+                if(window.showToast) showToast(window.t('errPrefix') + e2.message, 'error');
+            }
+        }
+    };
 }
 
 
