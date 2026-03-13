@@ -331,7 +331,7 @@
 
             overlay.innerHTML = `
                 <div style="background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-                    <h3 style="margin:0 0 1rem;font-size:1rem;font-weight:700;">⚙️ Глобальні AI налаштування</h3>
+                    <h3 style="margin:0 0 1rem;font-size:1rem;font-weight:700;"><span style="display:inline-flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 1 21 12a10 10 0 0 1-1.93 7.07M4.93 4.93A10 10 0 0 0 3 12a10 10 0 0 0 1.93 7.07M12 2v2M12 20v2M2 12h2M20 12h2"/></svg> Глобальні AI налаштування</span></h3>
 
                     <!-- TABS -->
                     <div style="display:flex;gap:4px;background:#f3f4f6;border-radius:10px;padding:3px;margin-bottom:1rem;">
@@ -341,7 +341,7 @@
                         </button>
                         <button onclick="window._switchAiTab('agents')" id="aiTabBtn_agents"
                             style="flex:1;padding:6px;background:transparent;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;color:#6b7280;">
-                            🤖 AI Агенти
+                            <span style="display:inline-flex;align-items:center;gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg> AI Агенти</span>
                         </button>
                         <button onclick="window._switchAiTab('models')" id="aiTabBtn_models"
                             style="flex:1;padding:6px;background:transparent;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;color:#6b7280;">
@@ -403,7 +403,7 @@
 
                     <div style="display:flex;gap:0.5rem;margin-top:1rem;">
                         <button onclick="document.getElementById('globalAIOverlay').remove()" style="flex:1;padding:0.55rem;border:1px solid #e5e7eb;background:white;border-radius:8px;cursor:pointer;">Скасувати</button>
-                        <button onclick="saveGlobalAISettings()" style="flex:2;padding:0.55rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Зберегти все</button>
+                        <button onclick="saveGlobalAISettings()" style="flex:2;padding:0.55rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;"><span style="display:inline-flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Зберегти все</span></button>
                     </div>
                 </div>`;
             document.body.appendChild(overlay);
@@ -460,7 +460,7 @@
     // ── AI Агенти — дефолтні промпти ────────────────────────
     const DEFAULT_AGENTS = {
         statistics: {
-            label:       '📊 Аналіз статистики',
+            label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Аналіз статистики</span>',
             where:       'Статистика → кнопка AI',
             defaultPrompt: `Ти бізнес-аналітик. Проаналізуй метрики компанії за вказаний період.
 Дай відповідь структуровано:
@@ -472,7 +472,7 @@
 Відповідай українською, коротко і по суті. Максимум 5 речень на блок.`,
         },
         incidents: {
-            label:       '⚠️ Журнал збоїв',
+            label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Журнал збоїв</span>',
             where:       'Контроль → Збої → AI режим',
             defaultPrompt: `Ти бізнес-аналітик систем і процесів. Допомагаєш фіксувати збої в роботі компанії.
 Твоя задача — поставити уточнюючі питання і зібрати структурований опис інциденту.
@@ -481,7 +481,7 @@
 Спілкуйся коротко, по-діловому, українською мовою.`,
         },
         finance: {
-            label:       '💰 Фінансовий аналіз',
+            label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Фінансовий аналіз</span>',
             where:       'Фінанси → AI чат',
             defaultPrompt: `Ти фінансовий аналітик малого бізнесу. Аналізуєш P&L, маржинальність, cashflow.
 Принципи роботи:
@@ -493,7 +493,7 @@
 Формат: 📊 Діагноз → 🔍 Причина → ⚠️ Наслідок → ✅ Дія. Максимум 4-5 речень на блок.`,
         },
         coordination: {
-            label:       '🤝 Координація',
+            label:       '<span style="display:inline-flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Координація</span>',
             where:       'Координація → AI аналіз патернів',
             defaultPrompt: `Ти AI-аналітик TALKO. Аналізуєш патерни координаційних зустрічей компанії.
 Дай конкретні рекомендації на основі даних:
@@ -528,7 +528,7 @@
                         <label style="font-size:0.72rem;font-weight:600;color:#374151;">Системний промпт:</label>
                         <button onclick="window._resetAgentPrompt('${key}')"
                             style="font-size:0.68rem;color:#6b7280;background:none;border:none;cursor:pointer;text-decoration:underline;">
-                            ↺ Дефолт
+                            <span style="display:inline-flex;align-items:center;gap:3px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Дефолт</span>
                         </button>
                     </div>
                     <textarea id="agent_prompt_${key}" rows="4"
