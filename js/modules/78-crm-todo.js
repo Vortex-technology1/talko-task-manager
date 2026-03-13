@@ -97,6 +97,8 @@ window.renderCrmTodo = function() {
     const filter = window._crmTodoFilter || '';
     const deals  = filter ? all.filter(d => d.stage === filter) : all;
     const today  = _todayStr();
+    // Debug
+    console.log("[CrmTodo] total deals:", window.crm.deals.length, "| active:", all.length, "| pipeline:", window.crm.pipeline&&window.crm.pipeline.id);
 
     const overdue   = all.filter(d => d.nextContactDate && d.nextContactDate < today);
     const todayList = all.filter(d => d.nextContactDate === today);
@@ -149,7 +151,10 @@ window.renderCrmTodo = function() {
             ?`<div style="padding:3rem;text-align:center;color:#9ca3af;">
                 <div style="font-size:2rem;margin-bottom:0.5rem;">✓</div>
                 <div style="font-weight:600;color:#374151;">Все зроблено!</div>
-                <div style="font-size:0.82rem;margin-top:0.25rem;">Немає активних лідів</div>
+                <div style="font-size:0.82rem;margin-top:0.25rem;">Лідів немає або всі у статусі "Виграно/Програно"</div>
+                <div style="margin-top:0.75rem;font-size:0.72rem;color:#d1d5db;">Всього в CRM: ${window.crm&&window.crm.deals?window.crm.deals.length:0} лідів</div>
+                <button onclick="crmOpenCreateDeal()" style="margin-top:0.75rem;background:#22c55e;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">+ Додати лід</button>
+                <button onclick="_crmTodoAddTestDeals()" style="margin-top:0.5rem;margin-left:0.5rem;background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:8px 16px;font-size:0.82rem;cursor:pointer;">+ Тестові ліди</button>
               </div>`
             :deals.map((d,i)=>_renderRow(d,i)).join('')
         }
@@ -507,3 +512,47 @@ window._getCrmTodoForMyDay = function() {
 };
 
 })();
+
+// ── Додати тестові ліди (для демо) ───────────────────────
+window._crmTodoAddTestDeals = async function() {
+    if (!window.companyRef || !window.DB_COLS || !window.crm || !window.crm.pipeline) {
+        alert('CRM не ініціалізовано');
+        return;
+    }
+    const pipelineId = window.crm.pipeline.id;
+    const today = _todayStr();
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    const yStr = yesterday.getFullYear()+'-'+String(yesterday.getMonth()+1).padStart(2,'0')+'-'+String(yesterday.getDate()).padStart(2,'0');
+    const tomorrow = _tomorrowStr();
+
+    const testDeals = [
+        { clientName:'Іванченко Марія', phone:'+380671234567', stage:'new',         note:'Цікавиться імплантацією',  nextContactDate: yStr,     source:'instagram' },
+        { clientName:'Петров Олексій',  phone:'+380502345678', stage:'contact',      note:'Просив передзвонити',      nextContactDate: today,    source:'telegram' },
+        { clientName:'Коваль Світлана', phone:'+380931234567', stage:'negotiation',  note:'Обговорити ціну на брекети', nextContactDate: tomorrow, source:'site_form' },
+        { clientName:'Мороз Дмитро',    phone:'+380661234567', stage:'new',         note:'',                         nextContactDate: null,     source:'manual' },
+        { clientName:'Бойко Наталія',   phone:'+380731234567', stage:'proposal',     note:'Відправити КП по протезуванню', nextContactDate: tomorrow, source:'referral' },
+    ];
+
+    const base = window.companyRef().collection(window.DB_COLS.CRM_DEALS);
+    let count = 0;
+    for (const d of testDeals) {
+        try {
+            await base.add({
+                ...d,
+                pipelineId,
+                title: d.clientName,
+                amount: 0,
+                email: '',
+                telegram: '',
+                clientNiche: 'Стоматологія',
+                assigneeId: window.currentUser&&window.currentUser.uid||null,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(),
+                tags: [],
+            });
+            count++;
+        } catch(e) { console.error('seed error', e); }
+    }
+    if (window.showToast) showToast(`Додано ${count} тестових лідів`, 'success');
+};
