@@ -313,20 +313,24 @@
             };
 
             window._currentModelProvider = 'openai';
+            const _rerenderModels = (p) => {
+                const tab = document.getElementById('aiTab_models');
+                if (tab) tab.innerHTML = `<div style="font-size:11px;color:#6b7280;margin-bottom:8px;">
+                        Редагуй список моделей — зміни одразу видні всім клієнтам без деплою коду.
+                    </div>` + renderModelsTab(p);
+            };
             window._switchModelsProvider = (p) => {
                 window._currentModelProvider = p;
-                document.getElementById('modelsTabContent').outerHTML = renderModelsTab(p);
-                // Перевішуємо функції після rerenderу
-                window._switchModelsProvider = window._switchModelsProvider; // keep ref
+                _rerenderModels(p);
             };
             window._addModel = () => {
                 if (!window._editingModels[window._currentModelProvider]) window._editingModels[window._currentModelProvider] = [];
                 window._editingModels[window._currentModelProvider].push(['', 'Нова модель']);
-                document.getElementById('modelsTabContent').outerHTML = renderModelsTab(window._currentModelProvider);
+                _rerenderModels(window._currentModelProvider);
             };
             window._removeModel = (i) => {
                 window._editingModels[window._currentModelProvider].splice(i, 1);
-                document.getElementById('modelsTabContent').outerHTML = renderModelsTab(window._currentModelProvider);
+                _rerenderModels(window._currentModelProvider);
             };
 
             overlay.innerHTML = `
@@ -426,6 +430,28 @@
             agents[key] = { systemPrompt: prompt, model };
         });
 
+        // Зберігаємо input-значення моделей перед збереженням (onchange може не спрацювати)
+        const provider = window._currentModelProvider || 'openai';
+        const modelInputs = document.querySelectorAll('#modelsList [id^="mId_"], #modelsList input');
+        // Синхронізуємо моделі з DOM якщо є відкрита вкладка
+        try {
+            const rows = document.querySelectorAll('#modelsList > div');
+            if (rows.length && window._editingModels && window._currentModelProvider) {
+                const prov = window._currentModelProvider;
+                if (!window._editingModels[prov]) window._editingModels[prov] = [];
+                rows.forEach((row, i) => {
+                    const inputs = row.querySelectorAll('input');
+                    if (inputs[0] && inputs[1] && window._editingModels[prov][i]) {
+                        window._editingModels[prov][i][0] = inputs[0].value;
+                        window._editingModels[prov][i][1] = inputs[1].value;
+                    }
+                });
+            }
+        } catch(_) {}
+
+        const saveBtn = document.querySelector('#globalAIOverlay button[onclick="saveGlobalAISettings()"]');
+        if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Збереження...'; }
+
         try {
             const batch = firebase.firestore().batch();
             // Загальні налаштування
@@ -456,7 +482,15 @@
             document.getElementById('globalAIOverlay')?.remove();
             window._cachedAiModels = window._editingModels || null;
             showToast && showToast('Збережено ✓', 'success');
-        } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+        } catch(e) {
+            console.error('[saveGlobalAISettings] error:', e);
+            if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Зберегти все</span>'; }
+            const msg = e.code === 'permission-denied'
+                ? 'Немає прав для збереження. Переконайся що залогінений як SuperAdmin (management.talco@gmail.com)'
+                : 'Помилка: ' + e.message;
+            showToast && showToast(msg, 'error');
+            alert(msg);
+        }
     };
 
     // ── AI Агенти — дефолтні промпти ────────────────────────
