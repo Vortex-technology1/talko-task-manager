@@ -235,6 +235,7 @@ async function _loadAll() {
 
     const pipSnap = await base.collection('crm_pipeline').get();
     crm.pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    window.crm = crm; // expose після завантаження pipelines
     if (!crm.pipelines.length) await _createDefaultPipeline();
     crm.pipeline = crm.pipelines.find(p => p.isDefault) || crm.pipelines[0];
 
@@ -2800,12 +2801,14 @@ function _subscribeDeals() {
             crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}))
                 .sort((a,b) => (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
             crm.loading = false;
+            window.crm = crm; // expose для 78-crm-todo і інших модулів
             // FIX B: індикатор якщо досягнуто ліміт
             crm._dealsLimitReached = snap.docs.length >= DEALS_LIMIT;
             // FIX G: ре-рендеримо поточний subTab при оновленні deals
             if (crm.subTab === 'kanban')     _renderKanban();
             else if (crm.subTab === 'list')  _renderListView();
             else if (crm.subTab === 'analytics')  _renderAnalytics();
+            else if (crm.subTab === 'todo' && typeof renderCrmTodo === 'function') renderCrmTodo();
             // activities і settings не ре-рендеримо автоматично — вони мають власне завантаження
         }, err => { console.error('[CRM deals]', err); crm.loading = false; });
 }
