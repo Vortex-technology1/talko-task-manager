@@ -2523,18 +2523,26 @@ function _renderAnalytics() {
     const srcLabels = { telegram:'Telegram', instagram:'Instagram', site_form:window.t('sitesSite'), manual:window.t('crmManual') };
     const totalSrc = Object.values(sources).reduce((s,v)=>s+v, 0) || 1;
 
-    // Топ-5 менеджерів
+    // KPI менеджерів — won, lost, active, conversion, revenue
     const byUser = {};
-    crm.deals.filter(d=>d.stage==='won').forEach(d => {
+    crm.deals.forEach(d => {
         const uid = d.assigneeId || d.creatorId || 'unknown';
-        if (!byUser[uid]) byUser[uid] = { uid, amount: 0, count: 0 };
-        byUser[uid].amount += d.amount||0;
-        byUser[uid].count++;
+        if (!byUser[uid]) byUser[uid] = { uid, amount:0, won:0, lost:0, active:0 };
+        if (d.stage==='won')  { byUser[uid].amount += d.amount||0; byUser[uid].won++; }
+        else if (d.stage==='lost') { byUser[uid].lost++; }
+        else { byUser[uid].active++; }
     });
     const topManagers = Object.values(byUser)
+        .filter(u => u.won > 0 || u.active > 0)
         .sort((a,b) => b.amount - a.amount)
-        .slice(0, 5)
-        .map(u => ({ ...u, name: (typeof users!=='undefined' ? users.find(x=>x.id===u.uid) : null)?.name || window.t('crmUnknown') }));
+        .slice(0, 7)
+        .map(u => {
+            const closed = u.won + u.lost;
+            return { ...u,
+                conv: closed>0 ? Math.round(u.won/closed*100) : null,
+                name: (typeof users!=='undefined' ? users.find(x=>x.id===u.uid) : null)?.name || window.t('crmUnknown')
+            };
+        });
     const maxMgr = topManagers[0]?.amount || 1;
 
     // Причини програшу
@@ -2692,8 +2700,16 @@ function _renderAnalytics() {
             </div>
         </div>
 
-        <!-- Причини програшу -->
-        ${lostReasonEntries.length ? (function(){
+        <!-- Причини програшу — повний блок -->
+        <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;margin-bottom:0.75rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+                <div style="font-weight:700;font-size:0.85rem;color:#111827;">❌ Причини програшу</div>
+                <div style="display:flex;gap:0.5rem;align-items:center;">
+                    <span style="font-size:0.72rem;color:#9ca3af;">${lostDealsAll.length} угод</span>
+                    ${lostDealsAll.length>0 ? `<span style="font-size:0.72rem;font-weight:700;color:#ef4444;">${_fmt(lostDealsAll.reduce((s,d)=>s+(d.amount||0),0))} грн втрачено</span>` : ''}
+                </div>
+            </div>
+            ${lostReasonEntries.length ? (function(){
             var html = '<div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;margin-bottom:0.75rem;">' +
                 '<div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">' + 'Причини програшу (' + lostDealsAll.length + ' угод)' + '</div>';
             lostReasonEntries.forEach(function(entry, i){
@@ -2707,32 +2723,46 @@ function _renderAnalytics() {
                             '<span style="font-size:0.78rem;color:#374151;">' + _esc(reason) + '</span>' +
                             '<span style="font-size:0.72rem;font-weight:700;color:' + col + ';margin-left:0.5rem;">' + count + ' (' + pct + '%)</span>' +
                         '</div>' +
-                        '<div style="background:#f1f5f9;border-radius:3px;height:5px;">' +
+                        '<div style="background:#f1f5f9;border-radius:3px;height:6px;">' +
                             '<div style="height:100%;background:' + col + ';width:' + pct + '%;border-radius:3px;"></div>' +
                         '</div></div></div>';
             });
-            html += '</div>';
+            html += '';
             return html;
-        })() : ''}
+        })() : '<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1rem;">Програних угод ще немає</div>'}
+            ${lostDealsAll.filter(d=>!d.lostReason&&!d.lostReasonLabel).length>0 ? `
+            <div style="margin-top:0.5rem;padding:0.5rem 0.65rem;background:#fffbeb;border:1px solid #fde68a;border-radius:7px;font-size:0.72rem;color:#92400e;">
+                ⚠️ ${lostDealsAll.filter(d=>!d.lostReason&&!d.lostReasonLabel).length} угод без причини — попросіть менеджерів вказувати причину при закритті
+            </div>` : ''}
+        </div>
 
         <!-- Топ-5 менеджерів -->
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
             <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span> Топ менеджери (виграні угоди)</div>
             ${topManagers.length ? topManagers.map((u,i) => `
-            <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;">
-                <div style="width:22px;height:22px;border-radius:50%;background:${['#f59e0b','#9ca3af','#cd7c2b','#22c55e','#3b82f6'][i]};
+            <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.65rem;">
+                <div style="width:24px;height:24px;border-radius:50%;background:${['#f59e0b','#9ca3af','#cd7c2b','#22c55e','#3b82f6','#8b5cf6','#ef4444'][i]};
                     display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;color:white;flex-shrink:0;">${i+1}</div>
                 <div style="flex:1;min-width:0;">
-                    <div style="font-size:0.8rem;font-weight:600;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(u.name)}</div>
-                    <div style="background:#f1f5f9;border-radius:3px;height:4px;margin-top:3px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+                        <div style="font-size:0.8rem;font-weight:600;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(u.name)}</div>
+                        <div style="display:flex;gap:0.35rem;flex-shrink:0;margin-left:0.5rem;">
+                            ${u.conv!==null ? `<span style="font-size:0.68rem;padding:1px 5px;border-radius:8px;background:#f0fdf4;color:#16a34a;font-weight:700;">${u.conv}%</span>` : ''}
+                            ${u.active>0 ? `<span style="font-size:0.68rem;padding:1px 5px;border-radius:8px;background:#eff6ff;color:#2563eb;">${u.active} акт.</span>` : ''}
+                        </div>
+                    </div>
+                    <div style="background:#f1f5f9;border-radius:3px;height:5px;">
                         <div style="height:100%;background:#22c55e;width:${Math.round(u.amount/maxMgr*100)}%;border-radius:3px;"></div>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;margin-top:3px;">
+                        <span style="font-size:0.65rem;color:#9ca3af;">${u.won} виграно</span>
+                        ${u.lost>0 ? `<span style="font-size:0.65rem;color:#fca5a5;">${u.lost} програно</span>` : ''}
                     </div>
                 </div>
                 <div style="text-align:right;flex-shrink:0;">
                     <div style="font-size:0.78rem;font-weight:700;color:#22c55e;">${_fmt(u.amount)}</div>
-                    <div style="font-size:0.65rem;color:#9ca3af;">${u.count} угод</div>
                 </div>
-            </div>`).join('') : '<div style="color:#9ca3af;font-size:0.8rem;">Ще немає закритих угод</div>'}
+            </div>`).join('') : '<div style="color:#9ca3af;font-size:0.8rem;">Ще немає угод з відповідальними</div>'}
         </div>
 
     </div>`;
