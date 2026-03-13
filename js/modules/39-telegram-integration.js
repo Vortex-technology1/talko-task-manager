@@ -349,7 +349,7 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 });
                 if (currentUserData) currentUserData.extension = val;
-                if (typeof showToast === 'function') showToast(val ? `Внутрішній номер ${val} збережено ✅` : 'Номер видалено', 'success');
+                if (typeof showToast === 'function') showToast(val ? `Внутрішній номер ${val} збережено` : 'Номер видалено', 'success');
             } catch(e) {
                 if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
             }

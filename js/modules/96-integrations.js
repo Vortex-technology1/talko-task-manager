@@ -235,7 +235,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         </div>
         ${s.novaPoshtaApiKey ? `
         <div style="background:#f8fafc;border:1px solid #e8eaed;border-radius:8px;padding:0.6rem 0.75rem;">
-            <div style="font-size:0.72rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">🔍 Перевірити ТТН</div>
+            <div style="font-size:0.72rem;font-weight:600;color:#374151;margin-bottom:0.4rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Перевірити ТТН</div>
             <div style="display:flex;gap:0.4rem;">
                 <input id="intg_np_ttn" type="text" placeholder="59000000000000"
                     style="${inp}flex:1;font-family:monospace;">
@@ -632,7 +632,7 @@ window.intgSaveFacebook = async function() {
         intg.settings.fbPageAccessToken = token;
         intg.settings.fbPageId          = pageId;
         intg.settings.fbVerifyToken     = verify;
-        if (typeof showToast === 'function') showToast('Facebook Lead Ads збережено ✅', 'success');
+        if (typeof showToast === 'function') showToast('Facebook Lead Ads збережено', 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -648,7 +648,7 @@ window.intgSaveNP = async function() {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
         intg.settings.novaPoshtaApiKey = key;
-        if (typeof showToast === 'function') showToast('Nova Poshta API збережено ✅', 'success');
+        if (typeof showToast === 'function') showToast('Nova Poshta API збережено', 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -671,7 +671,7 @@ window.intgTestNP = async function() {
         });
         const data = await res.json();
         if (data.success) {
-            if (typeof showToast === 'function') showToast('Nova Poshta API працює ✅', 'success');
+            if (typeof showToast === 'function') showToast('Nova Poshta API працює', 'success');
         } else {
             if (typeof showToast === 'function') showToast('Помилка: ' + (data.errors?.[0] || 'невірний ключ'), 'error');
         }
@@ -685,7 +685,7 @@ window.intgTrackNP = async function() {
     const ttn = document.getElementById('intg_np_ttn')?.value.trim();
     const resultEl = document.getElementById('intg_np_result');
     if (!ttn) { if (typeof showToast === 'function') showToast('Введіть номер ТТН', 'warning'); return; }
-    if (resultEl) { resultEl.style.display = 'block'; resultEl.innerHTML = '⏳ Запит...'; }
+    if (resultEl) { resultEl.style.display = 'block'; resultEl.innerHTML = 'Завантаження...'; }
     try {
         const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
             method: 'POST',
@@ -703,7 +703,7 @@ window.intgTrackNP = async function() {
             const statusColor = d.StatusCode === '9' ? '#16a34a' : d.StatusCode === '7' ? '#f59e0b' : '#3b82f6';
             if (resultEl) resultEl.innerHTML = `
                 <div style="background:white;border:1px solid #e8eaed;border-radius:6px;padding:0.5rem 0.65rem;">
-                    <div style="font-weight:700;color:${statusColor};margin-bottom:0.25rem;">📦 ${d.Status || '—'}</div>
+                    <div style="font-weight:700;color:${statusColor};margin-bottom:0.25rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${d.Status || '—'}</div>
                     <div style="color:#374151;">ТТН: <b>${ttn}</b></div>
                     ${d.RecipientFullName ? `<div style="color:#6b7280;">Отримувач: ${d.RecipientFullName}</div>` : ''}
                     ${d.CityRecipient ? `<div style="color:#6b7280;">Місто: ${d.CityRecipient}</div>` : ''}
@@ -737,7 +737,7 @@ window.crmTrackNP = async function(ttn) {
         const data = await res.json();
         if (data.success && data.data?.[0]) {
             const d = data.data[0];
-            if (typeof showToast === 'function') showToast(`📦 ${ttn}: ${d.Status}`, 'info');
+            if (typeof showToast === 'function') showToast(`${ttn}: ${d.Status}`, 'info');
         } else {
             if (typeof showToast === 'function') showToast('ТТН не знайдено', 'warning');
         }
@@ -760,7 +760,7 @@ window.intgSavePayments = async function() {
         if (liqPub)  { upd.liqpayPublicKey   = liqPub;  intg.settings.liqpayPublicKey  = liqPub; }
         if (liqPriv) { upd.liqpayPrivateKey  = liqPriv; intg.settings.liqpayPrivateKey = liqPriv; }
         await window.companyRef().update(upd);
-        if (typeof showToast === 'function') showToast('Платіжні ключі збережено ✅', 'success');
+        if (typeof showToast === 'function') showToast('Платіжні ключі збережено', 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -786,7 +786,7 @@ window.crmMonoPayLink = async function(amount, description, dealId) {
         const data = await res.json();
         if (data.pageUrl) {
             navigator.clipboard?.writeText(data.pageUrl);
-            if (typeof showToast === 'function') showToast('Посилання скопійовано ✅', 'success');
+            if (typeof showToast === 'function') showToast('Посилання скопійовано', 'success');
             return data.pageUrl;
         } else {
             if (typeof showToast === 'function') showToast('Помилка: ' + (data.errText || JSON.stringify(data)), 'error');
@@ -833,12 +833,12 @@ window.intgTestViber = async function() {
                 min_api_version: 1,
                 sender: { name: 'TALKO CRM' },
                 type: 'text',
-                text: '✅ TALKO: тестове повідомлення. Viber Bot працює!',
+                text: 'TALKO: тестове повідомлення. Viber Bot працює!',
             }),
         });
         const data = await res.json();
         if (data.status === 0) {
-            if (typeof showToast === 'function') showToast('Повідомлення відправлено у Viber ✅', 'success');
+            if (typeof showToast === 'function') showToast('Повідомлення відправлено у Viber', 'success');
         } else {
             if (typeof showToast === 'function') showToast('Viber помилка: ' + (data.status_message || data.status), 'error');
         }
@@ -863,7 +863,7 @@ window.intgSetViberWebhook = async function() {
         });
         const data = await res.json();
         if (data.status === 0) {
-            if (typeof showToast === 'function') showToast('Webhook підключено ✅ Viber бот активний', 'success');
+            if (typeof showToast === 'function') showToast('Webhook підключено — Viber бот активний', 'success');
         } else {
             if (typeof showToast === 'function') showToast('Помилка webhook: ' + (data.status_message || data.status), 'error');
         }
@@ -931,7 +931,7 @@ window.intgSaveBinotel = async function() {
         });
         intg.settings.binotelKey    = key;
         intg.settings.binotelSecret = secret;
-        if (typeof showToast === 'function') showToast('Binotel збережено ✅', 'success');
+        if (typeof showToast === 'function') showToast('Binotel збережено', 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
@@ -953,7 +953,7 @@ window.intgTestBinotel = async function() {
         });
         const data = await res.json();
         if (data.status === 'success' || data.generalStats) {
-            if (typeof showToast === 'function') showToast('Binotel з\'єднання OK ✅', 'success');
+            if (typeof showToast === 'function') showToast('Binotel з\'єднання OK', 'success');
         } else {
             if (typeof showToast === 'function') showToast('Binotel помилка: ' + (data.message || JSON.stringify(data)), 'error');
         }
@@ -977,7 +977,7 @@ window.intgSaveRingostat = async function() {
         });
         intg.settings.ringostatApiKey    = key;
         intg.settings.ringostatProjectId = project;
-        if (typeof showToast === 'function') showToast('Ringostat збережено ✅', 'success');
+        if (typeof showToast === 'function') showToast('Ringostat збережено', 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
@@ -995,7 +995,7 @@ window.intgTestRingostat = async function() {
             headers: { 'Authorization': 'Token ' + key, 'Content-Type': 'application/json' },
         });
         if (res.status === 200 || res.status === 204) {
-            if (typeof showToast === 'function') showToast('Ringostat з\'єднання OK ✅', 'success');
+            if (typeof showToast === 'function') showToast('Ringostat з\'єднання OK', 'success');
         } else if (res.status === 401) {
             if (typeof showToast === 'function') showToast('Ringostat: невірний токен', 'error');
         } else {
@@ -1021,7 +1021,7 @@ window.intgSaveStreamTelecom = async function() {
         });
         intg.settings.streamTelecomLogin    = login;
         intg.settings.streamTelecomPassword = pass;
-        if (typeof showToast === 'function') showToast('Stream Telecom збережено ✅', 'success');
+        if (typeof showToast === 'function') showToast('Stream Telecom збережено', 'success');
         _renderAll();
     } catch(e) {
         if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
@@ -1038,13 +1038,13 @@ window.intgTestStreamTelecom = async function() {
         // Stream Telecom API: перевірка балансу як тест з'єднання
         const res = await fetch(`https://example.stream-telecom.ua/balance?login=${encodeURIComponent(login)}&password=${encodeURIComponent(pass)}`);
         if (res.ok) {
-            if (typeof showToast === 'function') showToast('Stream Telecom з\'єднання OK ✅', 'success');
+            if (typeof showToast === 'function') showToast('Stream Telecom з\'єднання OK', 'success');
         } else {
             if (typeof showToast === 'function') showToast('Stream Telecom: помилка авторизації (' + res.status + ')', 'error');
         }
     } catch(e) {
         // CORS — очікувано з браузера, ключі збережено — webhook сервер перевірить сам
-        if (typeof showToast === 'function') showToast('Ключі збережено. Webhook перевірить з\'єднання при першому дзвінку ✅', 'info');
+        if (typeof showToast === 'function') showToast('Ключі збережено. Webhook перевірить з\'єднання при першому дзвінку', 'info');
     }
 };
 
