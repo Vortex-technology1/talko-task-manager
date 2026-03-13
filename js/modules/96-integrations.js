@@ -323,6 +323,55 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
         </div>
     </div>
 
+    <!-- Facebook Lead Ads -->
+    <div style="${card}">
+        <div style="${sTitle}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            Facebook Lead Ads ${badge(!!(s.fbPageAccessToken && s.fbPageId))}
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
+            Нові ліди з Facebook форм автоматично потрапляють у CRM як угоди.
+        </div>
+
+        <div style="margin-bottom:0.6rem;">
+            <label style="${lbl}">Page Access Token</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input id="intg_fb_token" type="password" value="${s.fbPageAccessToken||''}"
+                    placeholder="EAAxxxxx..." style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_fb_token')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+            </div>
+        </div>
+        <div style="margin-bottom:0.6rem;">
+            <label style="${lbl}">Page ID</label>
+            <input id="intg_fb_pageid" type="text" value="${s.fbPageId||''}"
+                placeholder="123456789012345" style="${inp}font-family:monospace;">
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="${lbl}">Verify Token (придумай будь-який рядок)</label>
+            <input id="intg_fb_verify" type="text" value="${s.fbVerifyToken||''}"
+                placeholder="my_verify_token_123" style="${inp}">
+        </div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.75rem;font-size:0.75rem;color:#1e40af;line-height:1.6;">
+            <strong>Як підключити:</strong><br>
+            1. Збережи токени нижче<br>
+            2. У Meta for Developers → Webhooks → Page → підпишись на <code>leadgen</code><br>
+            3. Callback URL: <code style="background:#dbeafe;padding:1px 4px;border-radius:3px;">https://taskmanagerai-vert.vercel.app/api/webhook?channel=facebook&cid=${window.currentCompanyId||''}</code><br>
+            4. Verify Token: той що вказав вище<br>
+            5. Підпишися на свою Facebook сторінку
+        </div>
+        <div style="display:flex;gap:0.4rem;">
+            <button onclick="intgSaveFacebook()"
+                style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.save} Зберегти
+            </button>
+            <button onclick="intgCopy('https://taskmanagerai-vert.vercel.app/api/webhook?channel=facebook&cid=${window.currentCompanyId||''}')"
+                style="padding:0.4rem 0.9rem;background:#f0f9ff;color:#0369a1;border:1px solid #bae6fd;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.copy} Webhook URL
+            </button>
+        </div>
+    </div>
+
     <!-- Google Sheets -->
     <div style="${card}">
         <div style="${sTitle}">
@@ -396,6 +445,31 @@ window.intgSave = async function(field, inputId, isSecret = true) {
 };
 
 // ── Nova Poshta ────────────────────────────────────────────
+// ── Facebook Lead Ads ─────────────────────────────────────
+window.intgSaveFacebook = async function() {
+    const token   = document.getElementById('intg_fb_token')?.value.trim();
+    const pageId  = document.getElementById('intg_fb_pageid')?.value.trim();
+    const verify  = document.getElementById('intg_fb_verify')?.value.trim();
+    if (!token || !pageId) {
+        if (typeof showToast === 'function') showToast('Заповніть Page Access Token і Page ID', 'error'); return;
+    }
+    try {
+        await window.companyRef().update({
+            fbPageAccessToken: token,
+            fbPageId:          pageId,
+            fbVerifyToken:     verify || '',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        intg.settings.fbPageAccessToken = token;
+        intg.settings.fbPageId          = pageId;
+        intg.settings.fbVerifyToken     = verify;
+        if (typeof showToast === 'function') showToast('Facebook Lead Ads збережено ✅', 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
 window.intgSaveNP = async function() {
     const key = document.getElementById('intg_np_key')?.value.trim();
     if (!key) { if (typeof showToast === 'function') showToast('Введіть API ключ Нової Пошти', 'error'); return; }

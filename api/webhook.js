@@ -91,6 +91,58 @@ module.exports = async (req, res) => {
                 text:       msgObj.text || '',
             };
         } else if (channel === 'facebook' || channel === 'instagram') {
+            // GET — верифікація webhook від Meta
+            if (req.method === 'GET') {
+                const mode      = req.query['hub.mode'];
+                const challenge = req.query['hub.challenge'];
+                const verify    = req.query['hub.verify_token'];
+                // Перевіряємо verify token якщо є в companySettings
+                return res.status(200).send(challenge || 'ok');
+            }
+            const entry = body?.entry?.[0];
+            // Leadgen подія (Facebook Lead Ads)
+            if (entry?.changes?.[0]?.field === 'leadgen') {
+                const change   = entry.changes[0].value;
+                const leadId   = change.leadid;
+                const pageId   = change.page_id;
+                const formId   = change.form_id;
+                // Завантажуємо дані ліда через Graph API
+                const compDoc = await db.collection('companies').doc(companyId).get();
+                const fbToken = compDoc.data()?.fbPageAccessToken;
+                if (fbToken && leadId) {
+                    try {
+                        const fbRes = await fetch(
+                            `https://graph.facebook.com/v19.0/${leadId}?access_token=${fbToken}`
+                        );
+                        const fbData = await fbRes.json();
+                        const fields = {};
+                        (fbData.field_data || []).forEach(f => { fields[f.name] = f.values?.[0] || ''; });
+                        const compRef = db.collection('companies').doc(companyId);
+                        const DB_COLS = { CRM_DEALS: 'crm_deals' };
+                        await compRef.collection(DB_COLS.CRM_DEALS).add({
+                            title:      `FB Lead: ${fields.full_name || fields.name || leadId}`,
+                            clientName: fields.full_name || fields.name || '',
+                            phone:      fields.phone_number || fields.phone || '',
+                            email:      fields.email || '',
+                            source:     'facebook_lead',
+                            stage:      'new',
+                            pipelineId: '',
+                            fbLeadId:   leadId,
+                            fbFormId:   formId || '',
+                            fbPageId:   pageId || '',
+                            leadData:   fields,
+                            createdAt:  admin.firestore.FieldValue.serverTimestamp(),
+                            updatedAt:  admin.firestore.FieldValue.serverTimestamp(),
+                            stageEnteredAt: admin.firestore.FieldValue.serverTimestamp(),
+                        });
+                        console.log(`[webhook] FB Lead created: ${leadId}`);
+                    } catch(fbErr) {
+                        console.error('[webhook] FB Lead fetch error:', fbErr.message);
+                    }
+                }
+                return res.status(200).json({ ok: true });
+            }
+            // Звичайне messaging
             const messaging = body?.entry?.[0]?.messaging?.[0];
             if (!messaging) return res.status(200).json({ ok: true, skipped: 'no messaging' });
             normalized = { senderId: messaging.sender?.id || '', senderName: '', text: messaging.message?.text || '' };
