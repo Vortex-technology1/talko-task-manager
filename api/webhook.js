@@ -160,7 +160,128 @@ module.exports = async (req, res) => {
             normalized = { senderId: messaging.sender?.id || '', senderName: '', text: messaging.message?.text || '' };
         }
 
-        if (!normalized) return res.status(200).json({ ok: true, skipped: 'unsupported channel' });
+        // ── Telephony channels ───────────────────────────────
+        // Binotel, Ringostat, Stream Telecom
+        // Повертають 200 одразу, створюють контакт + угоду + активність асинхронно
+        if (channel === 'binotel' || channel === 'ringostat' || channel === 'stream_telecom') {
+            res.status(200).json({ ok: true, received: channel });
+
+            try {
+                const compRef = db.collection('companies').doc(companyId);
+                const ts = admin.firestore.FieldValue.serverTimestamp();
+                const now = new Date();
+
+                // Нормалізуємо payload кожного провайдера
+                let phone = '';
+                let callType = 'incoming'; // incoming | outgoing | missed
+                let duration = 0;
+                let callId = '';
+
+                if (channel === 'binotel') {
+                    // Binotel payload: { event, callType, internalNumber, externalNumber, callDuration, uniqueId }
+                    phone    = body.externalNumber || body.callerIdNum || '';
+                    callType = body.callType === '0' ? 'incoming' : body.callType === '1' ? 'outgoing' : 'missed';
+                    duration = parseInt(body.billsec || body.callDuration || 0);
+                    callId   = body.uniqueId || body.generalCallID || '';
+                    // Пропускаємо якщо дзвінок ще не завершений (event не HANGUP)
+                    if (body.event && body.event !== 'HANGUP' && body.event !== 'hangup') return;
+                } else if (channel === 'ringostat') {
+                    // Ringostat payload: { call_type, caller_number, called_number, duration, call_id }
+                    phone    = body.caller_number || body.called_number || '';
+                    callType = body.call_type === 'in' ? 'incoming' : body.call_type === 'out' ? 'outgoing' : 'missed';
+                    duration = parseInt(body.duration || 0);
+                    callId   = body.call_id || body.uid || '';
+                    // Тільки завершені дзвінки
+                    if (body.event && !['call_hangup','hangup','finish'].includes(body.event)) return;
+                } else if (channel === 'stream_telecom') {
+                    // Stream Telecom payload: { src, dst, duration, uniqueid, disposition }
+                    phone    = body.src || body.dst || '';
+                    callType = body.disposition === 'ANSWERED' ? (body.src?.startsWith('0') || body.src?.startsWith('+') ? 'incoming' : 'outgoing') : 'missed';
+                    duration = parseInt(body.duration || body.billsec || 0);
+                    callId   = body.uniqueid || '';
+                }
+
+                if (!phone) return;
+                // Нормалізуємо номер: лишаємо цифри, додаємо +
+                const cleanPhone = phone.replace(/\D/g, '');
+                const normalPhone = cleanPhone.startsWith('380') ? '+' + cleanPhone
+                    : cleanPhone.startsWith('0') ? '+38' + cleanPhone
+                    : '+' + cleanPhone;
+
+                // 1. Шукаємо існуючий контакт
+                const contactsSnap = await compRef.collection('crm_clients')
+                    .where('phone', '==', normalPhone)
+                    .limit(1).get();
+
+                let clientId = '';
+                let clientName = normalPhone;
+
+                if (!contactsSnap.empty) {
+                    const cl = contactsSnap.docs[0];
+                    clientId   = cl.id;
+                    clientName = cl.data().name || normalPhone;
+                } else {
+                    // Створюємо новий контакт
+                    const newClient = await compRef.collection('crm_clients').add({
+                        name:      normalPhone,
+                        phone:     normalPhone,
+                        source:    channel,
+                        createdAt: ts,
+                        updatedAt: ts,
+                    });
+                    clientId = newClient.id;
+                }
+
+                // 2. Логуємо дзвінок в crm_activities
+                const callTypeLabel = callType === 'incoming' ? '📞 Вхідний' : callType === 'outgoing' ? '📲 Вихідний' : '📵 Пропущений';
+                const durationLabel = duration > 0 ? ` (${Math.floor(duration/60)}:${String(duration%60).padStart(2,'0')})` : '';
+                const providerLabel = channel === 'binotel' ? 'Binotel' : channel === 'ringostat' ? 'Ringostat' : 'Stream Telecom';
+
+                await compRef.collection('crm_activities').add({
+                    type:       'call',
+                    clientId:   clientId,
+                    clientName: clientName,
+                    note:       `${callTypeLabel} дзвінок${durationLabel} — ${providerLabel}`,
+                    phone:      normalPhone,
+                    callType:   callType,
+                    duration:   duration,
+                    callId:     callId,
+                    provider:   channel,
+                    createdAt:  ts,
+                    userId:     'system',
+                });
+
+                // 3. Якщо пропущений дзвінок — створюємо угоду
+                if (callType === 'missed') {
+                    // Шукаємо pipeline за замовчуванням
+                    const pipelineSnap = await compRef.collection('crm_pipelines').orderBy('createdAt').limit(1).get();
+                    const pipelineId   = pipelineSnap.empty ? '' : pipelineSnap.docs[0].id;
+                    const stages       = pipelineSnap.empty ? [] : (pipelineSnap.docs[0].data().stages || []);
+                    const firstStageId = stages[0]?.id || '';
+
+                    await compRef.collection('crm_deals').add({
+                        title:      `Пропущений дзвінок ${normalPhone}`,
+                        clientId:   clientId,
+                        clientName: clientName,
+                        phone:      normalPhone,
+                        pipelineId: pipelineId,
+                        stageId:    firstStageId,
+                        source:     channel,
+                        status:     'active',
+                        createdBy:  'system',
+                        createdAt:  ts,
+                        updatedAt:  ts,
+                    });
+                }
+
+                console.log(`[webhook:${channel}] call logged: ${normalPhone} type=${callType} duration=${duration}s`);
+            } catch(err) {
+                console.error(`[webhook:${channel}] error:`, err.message);
+            }
+            return;
+        }
+
+
 
         console.debug(`[webhook] ${channel} from ${normalized.senderId}: "${normalized.text}"`);
 

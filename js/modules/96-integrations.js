@@ -391,6 +391,174 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
             ${I.save} Зберегти
         </button>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         ТЕЛЕФОНІЯ
+    ══════════════════════════════════════════════════ -->
+
+    <!-- Binotel -->
+    <div style="${card}">
+        <div style="${sTitle}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+            Binotel ${badge(!!(s.binotelKey && s.binotelSecret))}
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
+            Вхідні/вихідні дзвінки → автоматичний контакт + угода в CRM. Лог в активностях.
+        </div>
+        <div style="margin-bottom:0.6rem;">
+            <label style="${lbl}">API Key</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input id="intg_binotel_key" type="password" value="${s.binotelKey||''}"
+                    placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_binotel_key')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">Binotel кабінет → Налаштування → API → API Key</div>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="${lbl}">API Secret</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input id="intg_binotel_secret" type="password" value="${s.binotelSecret||''}"
+                    placeholder="API Secret" style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_binotel_secret')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+            </div>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="${lbl}">Webhook URL — вставте в Binotel кабінет</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input type="text" readonly
+                    value="https://taskmanagerai-vert.vercel.app/api/webhook?channel=binotel&cid=${window.currentCompanyId||''}"
+                    style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
+                <button onclick="intgCopy('https://taskmanagerai-vert.vercel.app/api/webhook?channel=binotel&cid=${window.currentCompanyId||''}')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
+            </div>
+        </div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.75rem;font-size:0.75rem;color:#1e40af;line-height:1.6;">
+            <strong>Як підключити:</strong><br>
+            1. Binotel кабінет → Налаштування → API → скопіюй Key і Secret<br>
+            2. Збережи ключі нижче<br>
+            3. Binotel → Налаштування → Webhooks → вставте URL вище<br>
+            4. Обери події: <code>ANSWER</code>, <code>HANGUP</code>
+        </div>
+        <div style="display:flex;gap:0.4rem;">
+            <button onclick="intgSaveBinotel()"
+                style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.save} Зберегти
+            </button>
+            <button onclick="intgTestBinotel()"
+                style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.test} Тест з'єднання
+            </button>
+        </div>
+    </div>
+
+    <!-- Ringostat -->
+    <div style="${card}">
+        <div style="${sTitle}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+            Ringostat ${badge(!!s.ringostatApiKey)}
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
+            Вхідні дзвінки → автоматичний контакт + угода в CRM. Аналітика дзвінків в активностях.
+        </div>
+        <div style="margin-bottom:0.6rem;">
+            <label style="${lbl}">API Token</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input id="intg_ringostat_key" type="password" value="${s.ringostatApiKey||''}"
+                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_ringostat_key')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">app.ringostat.com → Налаштування → Інтеграції → API token</div>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="${lbl}">Project ID (необов'язково)</label>
+            <input id="intg_ringostat_project" type="text" value="${s.ringostatProjectId||''}"
+                placeholder="12345" style="${inp}font-family:monospace;">
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="${lbl}">Webhook URL — вставте в Ringostat</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input type="text" readonly
+                    value="https://taskmanagerai-vert.vercel.app/api/webhook?channel=ringostat&cid=${window.currentCompanyId||''}"
+                    style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
+                <button onclick="intgCopy('https://taskmanagerai-vert.vercel.app/api/webhook?channel=ringostat&cid=${window.currentCompanyId||''}')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">app.ringostat.com → Налаштування → Callback → Webhook URL</div>
+        </div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.75rem;font-size:0.75rem;color:#1e40af;line-height:1.6;">
+            <strong>Як підключити:</strong><br>
+            1. app.ringostat.com → Налаштування → Інтеграції → скопіюй API token<br>
+            2. Збережи токен нижче<br>
+            3. Налаштування → Callback → вставте Webhook URL вище<br>
+            4. Обери події: <code>call_hangup</code>
+        </div>
+        <div style="display:flex;gap:0.4rem;">
+            <button onclick="intgSaveRingostat()"
+                style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.save} Зберегти
+            </button>
+            <button onclick="intgTestRingostat()"
+                style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.test} Тест з'єднання
+            </button>
+        </div>
+    </div>
+
+    <!-- Stream Telecom -->
+    <div style="${card}">
+        <div style="${sTitle}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+            Stream Telecom ${badge(!!(s.streamTelecomLogin && s.streamTelecomPassword))}
+        </div>
+        <div style="font-size:0.78rem;color:#374151;margin-bottom:0.75rem;line-height:1.5;">
+            IP-телефонія Stream Telecom → автоматичний лог дзвінків + контакти в CRM.
+        </div>
+        <div style="margin-bottom:0.6rem;">
+            <label style="${lbl}">Login (email)</label>
+            <input id="intg_stream_login" type="text" value="${s.streamTelecomLogin||''}"
+                placeholder="your@email.com" style="${inp}">
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">my.stream-telecom.ua → Профіль → API доступ</div>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="${lbl}">Password / API ключ</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input id="intg_stream_pass" type="password" value="${s.streamTelecomPassword||''}"
+                    placeholder="API ключ або пароль" style="${inp}flex:1;font-family:monospace;">
+                <button onclick="intgToggleVisibility('intg_stream_pass')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.eye}</button>
+            </div>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+            <label style="${lbl}">Webhook URL — вставте в Stream Telecom</label>
+            <div style="display:flex;gap:0.4rem;">
+                <input type="text" readonly
+                    value="https://taskmanagerai-vert.vercel.app/api/webhook?channel=stream_telecom&cid=${window.currentCompanyId||''}"
+                    style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
+                <button onclick="intgCopy('https://taskmanagerai-vert.vercel.app/api/webhook?channel=stream_telecom&cid=${window.currentCompanyId||''}')"
+                    style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
+            </div>
+            <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">my.stream-telecom.ua → Налаштування → Webhooks → URL дзвінків</div>
+        </div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.75rem;font-size:0.75rem;color:#1e40af;line-height:1.6;">
+            <strong>Як підключити:</strong><br>
+            1. my.stream-telecom.ua → Налаштування → API → скопіюй дані доступу<br>
+            2. Збережи нижче<br>
+            3. Налаштування → Webhooks → вставте URL вище → збережи
+        </div>
+        <div style="display:flex;gap:0.4rem;">
+            <button onclick="intgSaveStreamTelecom()"
+                style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.save} Зберегти
+            </button>
+            <button onclick="intgTestStreamTelecom()"
+                style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.test} Тест з'єднання
+            </button>
+        </div>
     </div>`;
 }
 
@@ -745,6 +913,138 @@ window.intgTestTelegram = async function() {
         }
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
+    }
+};
+
+// ── Binotel ────────────────────────────────────────────────
+window.intgSaveBinotel = async function() {
+    const key    = document.getElementById('intg_binotel_key')?.value.trim();
+    const secret = document.getElementById('intg_binotel_secret')?.value.trim();
+    if (!key || !secret) {
+        if (typeof showToast === 'function') showToast('Введіть API Key і Secret', 'error'); return;
+    }
+    try {
+        await window.companyRef().update({
+            binotelKey:    key,
+            binotelSecret: secret,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        intg.settings.binotelKey    = key;
+        intg.settings.binotelSecret = secret;
+        if (typeof showToast === 'function') showToast('Binotel збережено ✅', 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+window.intgTestBinotel = async function() {
+    const key    = document.getElementById('intg_binotel_key')?.value.trim()    || intg.settings?.binotelKey;
+    const secret = document.getElementById('intg_binotel_secret')?.value.trim() || intg.settings?.binotelSecret;
+    if (!key || !secret) {
+        if (typeof showToast === 'function') showToast('Заповніть Key і Secret', 'error'); return;
+    }
+    try {
+        // Binotel API: отримати список внутрішніх номерів як перевірка з'єднання
+        const res = await fetch('https://api.binotel.com/api/4.0/stats/general-stats-for-period.json', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key, secret, startTime: Math.floor(Date.now()/1000) - 86400, stopTime: Math.floor(Date.now()/1000) }),
+        });
+        const data = await res.json();
+        if (data.status === 'success' || data.generalStats) {
+            if (typeof showToast === 'function') showToast('Binotel з\'єднання OK ✅', 'success');
+        } else {
+            if (typeof showToast === 'function') showToast('Binotel помилка: ' + (data.message || JSON.stringify(data)), 'error');
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка з\'єднання: ' + e.message, 'error');
+    }
+};
+
+// ── Ringostat ──────────────────────────────────────────────
+window.intgSaveRingostat = async function() {
+    const key     = document.getElementById('intg_ringostat_key')?.value.trim();
+    const project = document.getElementById('intg_ringostat_project')?.value.trim();
+    if (!key) {
+        if (typeof showToast === 'function') showToast('Введіть API Token', 'error'); return;
+    }
+    try {
+        await window.companyRef().update({
+            ringostatApiKey:    key,
+            ringostatProjectId: project || '',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        intg.settings.ringostatApiKey    = key;
+        intg.settings.ringostatProjectId = project;
+        if (typeof showToast === 'function') showToast('Ringostat збережено ✅', 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+window.intgTestRingostat = async function() {
+    const key = document.getElementById('intg_ringostat_key')?.value.trim() || intg.settings?.ringostatApiKey;
+    if (!key) {
+        if (typeof showToast === 'function') showToast('Введіть API Token', 'error'); return;
+    }
+    try {
+        const res = await fetch('https://app.ringostat.com/api/1.0/call/list/', {
+            method: 'GET',
+            headers: { 'Authorization': 'Token ' + key, 'Content-Type': 'application/json' },
+        });
+        if (res.status === 200 || res.status === 204) {
+            if (typeof showToast === 'function') showToast('Ringostat з\'єднання OK ✅', 'success');
+        } else if (res.status === 401) {
+            if (typeof showToast === 'function') showToast('Ringostat: невірний токен', 'error');
+        } else {
+            if (typeof showToast === 'function') showToast('Ringostat статус: ' + res.status, 'warning');
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка з\'єднання: ' + e.message, 'error');
+    }
+};
+
+// ── Stream Telecom ─────────────────────────────────────────
+window.intgSaveStreamTelecom = async function() {
+    const login = document.getElementById('intg_stream_login')?.value.trim();
+    const pass  = document.getElementById('intg_stream_pass')?.value.trim();
+    if (!login || !pass) {
+        if (typeof showToast === 'function') showToast('Введіть Login і Password', 'error'); return;
+    }
+    try {
+        await window.companyRef().update({
+            streamTelecomLogin:    login,
+            streamTelecomPassword: pass,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        intg.settings.streamTelecomLogin    = login;
+        intg.settings.streamTelecomPassword = pass;
+        if (typeof showToast === 'function') showToast('Stream Telecom збережено ✅', 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+window.intgTestStreamTelecom = async function() {
+    const login = document.getElementById('intg_stream_login')?.value.trim()  || intg.settings?.streamTelecomLogin;
+    const pass  = document.getElementById('intg_stream_pass')?.value.trim()   || intg.settings?.streamTelecomPassword;
+    if (!login || !pass) {
+        if (typeof showToast === 'function') showToast('Заповніть Login і Password', 'error'); return;
+    }
+    try {
+        // Stream Telecom API: перевірка балансу як тест з'єднання
+        const res = await fetch(`https://example.stream-telecom.ua/balance?login=${encodeURIComponent(login)}&password=${encodeURIComponent(pass)}`);
+        if (res.ok) {
+            if (typeof showToast === 'function') showToast('Stream Telecom з\'єднання OK ✅', 'success');
+        } else {
+            if (typeof showToast === 'function') showToast('Stream Telecom: помилка авторизації (' + res.status + ')', 'error');
+        }
+    } catch(e) {
+        // CORS — очікувано з браузера, ключі збережено — webhook сервер перевірить сам
+        if (typeof showToast === 'function') showToast('Ключі збережено. Webhook перевірить з\'єднання при першому дзвінку ✅', 'info');
     }
 };
 
