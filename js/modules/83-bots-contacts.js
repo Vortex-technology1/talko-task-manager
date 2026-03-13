@@ -34,21 +34,20 @@ window.initBotsModule = async function () {
 };
 
 window.destroyBotsModule = function() {
-    // Відписуємо всі Firestore listeners
-    if (typeof bp.botsUnsub === 'function')      { bp.botsUnsub();       bp.botsUnsub      = null; }
-    else bp.botsUnsub = null;
-    if (typeof bp.flowsUnsub === 'function')     { bp.flowsUnsub();       bp.flowsUnsub     = null; }
-    else bp.flowsUnsub = null;
-    if (typeof bp.chatUnsub === 'function')      { bp.chatUnsub();         bp.chatUnsub      = null; }
-    else bp.chatUnsub = null;
-    // FIX 1: clean chat message + chat contacts listeners
-    if (typeof chat.msgsUnsub === 'function')    { chat.msgsUnsub();       chat.msgsUnsub    = null; }
-    else chat.msgsUnsub = null;
-    if (typeof chat.contactsUnsub === 'function'){ chat.contactsUnsub();   chat.contactsUnsub= null; }
-    else chat.contactsUnsub = null;
-    // FIX 2: clean contacts realtime counter
-    if (typeof cts.unsub === 'function')         { cts.unsub();             cts.unsub         = null; }
-    else cts.unsub = null;
+    // CRASH FIX: typeof guard недостатньо — onSnapshot може повертати не-функцію.
+    // Централізований safe-unsub щоб один зламаний listener не крашив весь logout.
+    const _safeUnsub = (fn, name) => {
+        if (!fn) return null;
+        try { if (typeof fn === 'function') fn(); }
+        catch(e) { console.warn('[destroyBots] unsub error:', name, e.message); }
+        return null;
+    };
+    bp.botsUnsub       = _safeUnsub(bp.botsUnsub,       'botsUnsub');
+    bp.flowsUnsub      = _safeUnsub(bp.flowsUnsub,      'flowsUnsub');
+    bp.chatUnsub       = _safeUnsub(bp.chatUnsub,       'chatUnsub');
+    chat.msgsUnsub     = _safeUnsub(chat.msgsUnsub,     'msgsUnsub');
+    chat.contactsUnsub = _safeUnsub(chat.contactsUnsub, 'contactsUnsub');
+    cts.unsub          = _safeUnsub(cts.unsub,          'cts.unsub');
     // FIX 3: clear pending search timers
     clearTimeout(_ctsSearchTimer);
     clearTimeout(_chatSearchTimer);
