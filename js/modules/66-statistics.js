@@ -872,7 +872,7 @@
             <div class="stats-header-actions">
                 ${canEdit ? `<button class="stats-pill accent" onclick="openMetricModal()" style="background:var(--primary);color:white;border-color:var(--primary);font-weight:700;padding:0.45rem 1rem;">${SVG.plus} Метрика</button>` : ''}
                 <button class="stats-pill" onclick="openQuickInputModal()" style="font-weight:600;">${SVG.edit} Внести дані</button>
-                <button class="stats-pill" onclick="runAIAnalysis()" style="color:#7c3aed;border-color:#e9d5ff;">${SVG.sparkles} AI</button>
+                <button class="stats-pill" onclick="event.stopPropagation();runAIAnalysis()" style="color:#7c3aed;border-color:#e9d5ff;">${SVG.sparkles} AI</button>
                 <button class="stats-pill" onclick="openTrendsChart(window._statsGetFirstMetricId ? window._statsGetFirstMetricId() : '')" style="color:#3b82f6;border-color:#dbeafe;">${SVG.barChart} Тренди</button>
                 <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title="Експорт CSV">⬇ CSV</button>
                 <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title="Експорт Excel">⬇ Excel</button>
@@ -968,7 +968,6 @@
     async function renderStatistics() {
         if (!currentCompany) return;
         showStatsTabIfAllowed();
-        renderHeaderBar();
         renderScopeBar();
 
         const c = document.getElementById('statisticsContainer');
@@ -994,6 +993,8 @@
         } catch (e) {
             console.error('[STATS] load error:', e);
         }
+        // Рендеримо header ПІСЛЯ завантаження метрик — щоб metricCount був правильний
+        renderHeaderBar();
 
         const ms = statsMetrics.filter(m => canViewMetric(m));
         if (ms.length === 0) {
@@ -1404,8 +1405,9 @@
     // ========================
     async function runAIAnalysis() {
         const pk = getStatsPeriodKey(statsPeriodOffset);
-        const vis = statsMetrics.filter(m => canViewMetric(m));
-        if (!vis.length) { showToast(t('noMetrics') || 'Немає метрик', 'error'); return; }
+        let vis = statsMetrics.filter(m => canViewMetric(m));
+        if (!vis.length) vis = statsMetrics; // fallback - show all if filter gives nothing
+        if (!vis.length) { showToast('Немає метрик для аналізу. Спочатку додайте метрики.', 'error'); return; }
 
         openModal('aiAnalysisModal');
         const ct = document.getElementById('aiAnalysisContent');
