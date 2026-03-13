@@ -191,5 +191,7 @@ window.renderOwnerReportInto = function(el) {
 window.initOwnerReportOption = function() {
     const role = typeof currentUserData !== 'undefined' ? currentUserData?.role : null;
     const opt = document.getElementById('ownerReportOption');
-    if (opt) opt.style.display = (role === 'owner' || role === 'manager') ? '' : 'none';
+    if (!opt) return;
+    const showDisplay = opt.dataset.showDisplay || 'flex';
+    opt.style.display = (role === 'owner' || role === 'manager') ? showDisplay : 'none';
 };

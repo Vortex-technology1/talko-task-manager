@@ -470,86 +470,19 @@
                     }).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
                 `;
             } else if (viewType === 'pipeline') {
-                // Delegation Pipeline
-                const todayStr = getLocalDateStr(new Date());
-                const allVisible = tasks.filter(task => {
-                    if (!isTaskVisibleToUser(task)) return false;
-                    if (af && task.assigneeId !== af) return false;
-                    if (ff && task.function !== ff) return false;
-                    return true;
-                });
-
-                const statuses = [
-                    { key: 'new', label: t('statusNew'), color: '#3b82f6', bg: '#eff6ff' },
-                    { key: 'progress', label: t('inProgressStatus'), color: '#f59e0b', bg: '#fefce8' },
-                    { key: 'review', label: t('statusOnReview'), color: '#8b5cf6', bg: '#f5f3ff' },
-                    { key: 'done', label: t('statusDone'), color: '#16a34a', bg: '#f0fdf4' }
-                ];
-
-                const byPerson = {};
-                allVisible.forEach(task => {
-                    const uid = task.assigneeId || 'unassigned';
-                    const name = task.assigneeName || t('notAssigned');
-                    if (!byPerson[uid]) byPerson[uid] = { name, new: [], progress: [], review: [], done: [] };
-                    if (byPerson[uid][task.status]) byPerson[uid][task.status].push(task);
-                });
-
-                content.innerHTML = `
-                    <h3 style="margin-bottom:1rem;">${t('delegationPipeline')}</h3>
-                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:1.5rem;text-align:center;">
-                        ${statuses.map(s => {
-                            const cnt = allVisible.filter(t => t.status === s.key).length;
-                            return `<div style="background:${s.bg};padding:0.6rem;border-radius:8px;">
-                                <div style="font-size:1.4rem;font-weight:700;color:${s.color};">${cnt}</div>
-                                <div style="font-size:0.72rem;color:#6b7280;">${s.label}</div>
-                            </div>`;
-                        }).join('')}
-                    </div>
-                    ${Object.entries(byPerson).sort((a,b) => {
-                        const aAct = a[1].new.length + a[1].progress.length + a[1].review.length;
-                        const bAct = b[1].new.length + b[1].progress.length + b[1].review.length;
-                        return bAct - aAct;
-                    }).map(([uid, data]) => {
-                        const doneCount = data.done.length;
-                        const doneClean = data.done.filter(t => !t.reviewRejectedAt).length;
-                        const autonomy = doneCount > 0 ? Math.round(doneClean / doneCount * 100) : 0;
-                        const autoColor = autonomy >= 80 ? '#16a34a' : autonomy >= 50 ? '#f59e0b' : '#ef4444';
-                        const overdue = [...data.new, ...data.progress].filter(t => t.deadlineDate && t.deadlineDate < todayStr).length;
-                        const returned = [...data.progress, ...data.done].filter(t => t.reviewRejectedAt).length;
-
-                        return `
-                        <div class="control-row" onclick="this.classList.toggle('expanded')" style="margin-bottom:0.5rem;">
-                            <div class="control-row-header" style="flex-wrap:wrap;gap:0.4rem;">
-                                <span><i data-lucide="user" class="icon icon-sm"></i> ${esc(data.name)}</span>
-                                <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;">
-                                    ${overdue > 0 ? `<span style="background:#fef2f2;color:#ef4444;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:600;display:inline-flex;align-items:center;gap:2px;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${overdue}</span>` : ''}
-                                    ${returned > 0 ? `<span style="background:#fffbeb;color:#b45309;padding:2px 8px;border-radius:10px;font-size:0.72rem;display:inline-flex;align-items:center;gap:2px;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${returned}</span>` : ''}
-                                    <span style="font-weight:600;color:${autoColor};font-size:0.78rem;">${autonomy}%</span>
-                                    <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i>
-                                </div>
-                            </div>
-                            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:0.3rem 0.5rem;">
-                                ${statuses.map(s => `<div style="text-align:center;font-size:0.85rem;font-weight:600;color:${s.color};">${data[s.key].length}</div>`).join('')}
-                            </div>
-                            <div class="control-row-tasks">
-                                ${statuses.filter(s => data[s.key].length > 0).map(s => `
-                                    <div style="margin-bottom:0.5rem;">
-                                        <div style="font-size:0.75rem;font-weight:600;color:${s.color};padding:0.3rem 0;border-bottom:2px solid ${s.color};">${s.label} (${data[s.key].length})</div>
-                                        ${data[s.key].slice(0, 10).map(t => {
-                                            const isOverdue = t.deadlineDate && t.deadlineDate < todayStr && s.key !== 'done';
-                                            return `<div class="control-task-item ${isOverdue ? 'overdue' : ''}" onclick="event.stopPropagation();openTaskModal('${escId(t.id)}')" style="display:flex;align-items:center;gap:0.3rem;">
-                                                ${t.reviewRejectedAt ? '<i data-lucide="rotate-ccw" class="icon icon-sm" style="color:#f59e0b;width:12px;height:12px;"></i>' : ''}
-                                                <span class="task-title" style="flex:1;">${esc(t.title)}</span>
-                                                <span style="font-size:0.7rem;color:#9ca3af;">${t.deadlineDate || ''}</span>
-                                            </div>`;
-                                        }).join('')}
-                                        ${data[s.key].length > 10 ? `<div style="font-size:0.72rem;color:#9ca3af;padding:0.2rem;">+${data[s.key].length - 10} ${t('more')}...</div>` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>`;
-                    }).join('')}
-                `;
+                // alias → people view (воронка делегування = по людях без coExecutors)
+                // Перерендерюємо через people
+                const _selBak = document.getElementById('controlViewType');
+                if (_selBak) _selBak.value = 'people';
+                viewType = 'people'; // eslint-disable-line no-fallthrough
+                // fall through to people rendering below via re-render
+                if (typeof renderControlContent === 'function') {
+                    const _sel = document.getElementById('controlViewType');
+                    if (_sel) _sel.value = 'workload';
+                    renderControlContent();
+                    if (_sel) _sel.value = 'pipeline';
+                }
+                return; // already rendered
             } else if (viewType === 'journal') {
                 // ── ЖУРНАЛ ЗБОЇВ: ручні записи власника + авто-сигнали як контекст ──
                 const todayStr = getLocalDateStr(new Date());
@@ -678,11 +611,12 @@
                 
             } else if (viewType === 'ownerreport') {
                 // ЗВІТ ВЛАСНИКА — тижневий/місячний зріз
-                if (typeof renderOwnerDashboard === 'function') {
-                    // Рендеримо в controlContent
-                    const origEl = document.getElementById('ownerDashboardContent');
+                if (typeof renderOwnerReportInto === 'function') {
                     content.innerHTML = '';
                     renderOwnerReportInto(content);
+                } else if (typeof renderOwnerDashboard === 'function') {
+                    content.innerHTML = '';
+                    renderOwnerDashboard(content);
                 } else {
                     content.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Завантаження...</div>';
                 }
