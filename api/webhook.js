@@ -160,121 +160,185 @@ module.exports = async (req, res) => {
             normalized = { senderId: messaging.sender?.id || '', senderName: '', text: messaging.message?.text || '' };
         }
 
-        // ── Telephony channels ───────────────────────────────
+        // ── Telephony channels ─────────────────────────────────────────────
         // Binotel, Ringostat, Stream Telecom
-        // Повертають 200 одразу, створюють контакт + угоду + активність асинхронно
+        // Відповідаємо 200 одразу — обробляємо асинхронно
         if (channel === 'binotel' || channel === 'ringostat' || channel === 'stream_telecom') {
             res.status(200).json({ ok: true, received: channel });
 
             try {
-                const compRef = db.collection('companies').doc(companyId);
-                const ts = admin.firestore.FieldValue.serverTimestamp();
-                const now = new Date();
+                const compRef  = db.collection('companies').doc(companyId);
+                const ts       = admin.firestore.FieldValue.serverTimestamp();
+                const providerLabel = channel === 'binotel' ? 'Binotel'
+                    : channel === 'ringostat' ? 'Ringostat' : 'Stream Telecom';
 
-                // Нормалізуємо payload кожного провайдера
-                let phone = '';
-                let callType = 'incoming'; // incoming | outgoing | missed
-                let duration = 0;
-                let callId = '';
+                // 1. Нормалізуємо payload провайдера
+                let phone       = '';
+                let callType    = 'incoming'; // incoming | outgoing | missed
+                let duration    = 0;
+                let callId      = '';
+                let internalNum = ''; // внутрішній номер менеджера
 
                 if (channel === 'binotel') {
-                    // Binotel payload: { event, callType, internalNumber, externalNumber, callDuration, uniqueId }
-                    phone    = body.externalNumber || body.callerIdNum || '';
-                    callType = body.callType === '0' ? 'incoming' : body.callType === '1' ? 'outgoing' : 'missed';
-                    duration = parseInt(body.billsec || body.callDuration || 0);
-                    callId   = body.uniqueId || body.generalCallID || '';
-                    // Пропускаємо якщо дзвінок ще не завершений (event не HANGUP)
-                    if (body.event && body.event !== 'HANGUP' && body.event !== 'hangup') return;
+                    if (body.event && body.event.toUpperCase() !== 'HANGUP') return;
+                    phone       = body.externalNumber || body.callerIdNum || '';
+                    internalNum = body.internalNumber || (body.internalNumbers && body.internalNumbers[0]) || '';
+                    const answered = !!body.billsec && parseInt(body.billsec) > 0;
+                    callType    = !answered ? 'missed' : body.callType === '1' ? 'outgoing' : 'incoming';
+                    duration    = parseInt(body.billsec || body.callDuration || 0);
+                    callId      = body.uniqueId || body.generalCallID || '';
+
                 } else if (channel === 'ringostat') {
-                    // Ringostat payload: { call_type, caller_number, called_number, duration, call_id }
-                    phone    = body.caller_number || body.called_number || '';
-                    callType = body.call_type === 'in' ? 'incoming' : body.call_type === 'out' ? 'outgoing' : 'missed';
-                    duration = parseInt(body.duration || 0);
-                    callId   = body.call_id || body.uid || '';
-                    // Тільки завершені дзвінки
-                    if (body.event && !['call_hangup','hangup','finish'].includes(body.event)) return;
+                    if (body.event && !['call_hangup','hangup','finish','HANGUP'].includes(body.event)) return;
+                    phone       = body.caller_number || body.called_number || '';
+                    internalNum = body.internal_number || body.extension || '';
+                    const answered = parseInt(body.duration || 0) > 0;
+                    callType    = !answered ? 'missed' : body.call_type === 'out' ? 'outgoing' : 'incoming';
+                    duration    = parseInt(body.duration || 0);
+                    callId      = body.call_id || body.uid || '';
+
                 } else if (channel === 'stream_telecom') {
-                    // Stream Telecom payload: { src, dst, duration, uniqueid, disposition }
-                    phone    = body.src || body.dst || '';
-                    callType = body.disposition === 'ANSWERED' ? (body.src?.startsWith('0') || body.src?.startsWith('+') ? 'incoming' : 'outgoing') : 'missed';
-                    duration = parseInt(body.duration || body.billsec || 0);
-                    callId   = body.uniqueid || '';
+                    phone       = body.src || body.dst || '';
+                    internalNum = body.dst && /^\d{3,5}$/.test(body.dst) ? body.dst : '';
+                    const answered = body.disposition === 'ANSWERED' || parseInt(body.billsec || 0) > 0;
+                    const isOut = body.src && !/^[0+]/.test(body.src) && body.src.length <= 6;
+                    callType    = !answered ? 'missed' : isOut ? 'outgoing' : 'incoming';
+                    duration    = parseInt(body.billsec || body.duration || 0);
+                    callId      = body.uniqueid || '';
+                    if (callType === 'outgoing') phone = body.dst || phone;
                 }
 
-                if (!phone) return;
-                // Нормалізуємо номер: лишаємо цифри, додаємо +
-                const cleanPhone = phone.replace(/\D/g, '');
+                if (!phone) { console.warn(`[webhook:${channel}] no phone`); return; }
+
+                // 2. Нормалізуємо номер
+                const cleanPhone  = phone.replace(/\D/g, '');
                 const normalPhone = cleanPhone.startsWith('380') ? '+' + cleanPhone
-                    : cleanPhone.startsWith('0') ? '+38' + cleanPhone
-                    : '+' + cleanPhone;
+                    : cleanPhone.startsWith('0')  ? '+38' + cleanPhone
+                    : cleanPhone.length >= 10     ? '+' + cleanPhone
+                    : phone;
 
-                // 1. Шукаємо існуючий контакт
+                // 3. Налаштування компанії
+                const compDoc  = await compRef.get();
+                const compData = compDoc.data() || {};
+                const tgToken  = compData.telegramBotToken || compData.botToken || '';
+
+                // 4. Знаходимо менеджера по extension
+                let assigneeId   = '';
+                let assigneeName = '';
+                let assigneeTgId = '';
+                if (internalNum) {
+                    const usersSnap = await compRef.collection('users')
+                        .where('extension', '==', internalNum).limit(1).get();
+                    if (!usersSnap.empty) {
+                        const u      = usersSnap.docs[0].data();
+                        assigneeId   = usersSnap.docs[0].id;
+                        assigneeName = u.name || u.displayName || '';
+                        assigneeTgId = u.telegramChatId || u.tgChatId || '';
+                    }
+                }
+
+                // 5. Контакт — знайти або створити
                 const contactsSnap = await compRef.collection('crm_clients')
-                    .where('phone', '==', normalPhone)
-                    .limit(1).get();
+                    .where('phone', '==', normalPhone).limit(1).get();
 
-                let clientId = '';
-                let clientName = normalPhone;
+                let clientId    = '';
+                let clientName  = normalPhone;
+                let isNewClient = false;
 
                 if (!contactsSnap.empty) {
                     const cl = contactsSnap.docs[0];
                     clientId   = cl.id;
                     clientName = cl.data().name || normalPhone;
                 } else {
-                    // Створюємо новий контакт
-                    const newClient = await compRef.collection('crm_clients').add({
+                    isNewClient = true;
+                    const ref = await compRef.collection('crm_clients').add({
                         name:      normalPhone,
                         phone:     normalPhone,
-                        source:    channel,
+                        source:    providerLabel,
                         createdAt: ts,
                         updatedAt: ts,
                     });
-                    clientId = newClient.id;
+                    clientId = ref.id;
                 }
 
-                // 2. Логуємо дзвінок в crm_activities
-                const callTypeLabel = callType === 'incoming' ? '📞 Вхідний' : callType === 'outgoing' ? '📲 Вихідний' : '📵 Пропущений';
-                const durationLabel = duration > 0 ? ` (${Math.floor(duration/60)}:${String(duration%60).padStart(2,'0')})` : '';
-                const providerLabel = channel === 'binotel' ? 'Binotel' : channel === 'ringostat' ? 'Ringostat' : 'Stream Telecom';
+                // 6. Угода — знайти відкриту або створити
+                let dealId = '';
+                const openDealSnap = await compRef.collection('crm_deals')
+                    .where('clientId', '==', clientId)
+                    .where('status', '==', 'active')
+                    .limit(1).get();
 
-                await compRef.collection('crm_activities').add({
-                    type:       'call',
-                    clientId:   clientId,
-                    clientName: clientName,
-                    note:       `${callTypeLabel} дзвінок${durationLabel} — ${providerLabel}`,
-                    phone:      normalPhone,
-                    callType:   callType,
-                    duration:   duration,
-                    callId:     callId,
-                    provider:   channel,
-                    createdAt:  ts,
-                    userId:     'system',
-                });
-
-                // 3. Якщо пропущений дзвінок — створюємо угоду
-                if (callType === 'missed') {
-                    // Шукаємо pipeline за замовчуванням
-                    const pipelineSnap = await compRef.collection('crm_pipelines').orderBy('createdAt').limit(1).get();
+                if (!openDealSnap.empty) {
+                    dealId = openDealSnap.docs[0].id;
+                } else {
+                    const pipelineSnap = await compRef.collection('crm_pipelines')
+                        .orderBy('createdAt').limit(1).get();
                     const pipelineId   = pipelineSnap.empty ? '' : pipelineSnap.docs[0].id;
                     const stages       = pipelineSnap.empty ? [] : (pipelineSnap.docs[0].data().stages || []);
-                    const firstStageId = stages[0]?.id || '';
+                    const firstStageId = stages.length > 0 ? stages[0].id || '' : '';
+                    const callTypeTitle = callType === 'missed' ? 'Пропущений дзвінок' : 'Дзвінок';
 
-                    await compRef.collection('crm_deals').add({
-                        title:      `Пропущений дзвінок ${normalPhone}`,
-                        clientId:   clientId,
-                        clientName: clientName,
-                        phone:      normalPhone,
-                        pipelineId: pipelineId,
-                        stageId:    firstStageId,
-                        source:     channel,
-                        status:     'active',
-                        createdBy:  'system',
-                        createdAt:  ts,
-                        updatedAt:  ts,
+                    const dealRef = await compRef.collection('crm_deals').add({
+                        title:       `${callTypeTitle} — ${clientName}`,
+                        clientId:    clientId,
+                        clientName:  clientName,
+                        phone:       normalPhone,
+                        pipelineId:  pipelineId,
+                        stageId:     firstStageId,
+                        source:      providerLabel,
+                        status:      'active',
+                        assigneeId:  assigneeId,
+                        assigneeName:assigneeName,
+                        createdBy:   'system',
+                        isMissed:    callType === 'missed',
+                        createdAt:   ts,
+                        updatedAt:   ts,
                     });
+                    dealId = dealRef.id;
                 }
 
-                console.log(`[webhook:${channel}] call logged: ${normalPhone} type=${callType} duration=${duration}s`);
+                // 7. Лог дзвінка в crm_activities
+                const callLabel   = callType === 'incoming' ? 'Вхідний' : callType === 'outgoing' ? 'Вихідний' : 'Пропущений';
+                const callEmoji   = callType === 'incoming' ? '📞' : callType === 'outgoing' ? '📲' : '📵';
+                const durationStr = duration > 0 ? ` (${Math.floor(duration/60)}:${String(duration%60).padStart(2,'0')})` : '';
+
+                await compRef.collection('crm_activities').add({
+                    type:         'call',
+                    clientId:     clientId,
+                    clientName:   clientName,
+                    dealId:       dealId,
+                    note:         `${callEmoji} ${callLabel} дзвінок${durationStr} — ${providerLabel}`,
+                    phone:        normalPhone,
+                    callType:     callType,
+                    duration:     duration,
+                    callId:       callId,
+                    provider:     channel,
+                    assigneeId:   assigneeId,
+                    createdAt:    ts,
+                    userId:       assigneeId || 'system',
+                });
+
+                // 8. Telegram сповіщення при пропущеному або новому клієнті
+                if (tgToken && (callType === 'missed' || isNewClient)) {
+                    const chatIds = [];
+                    if (assigneeTgId) chatIds.push(assigneeTgId);
+                    const companyChatId = compData.managerChatId || compData.telegramChatId || '';
+                    if (companyChatId && !chatIds.includes(companyChatId)) chatIds.push(companyChatId);
+
+                    if (chatIds.length > 0) {
+                        const header = callType === 'missed' ? '📵 Пропущений дзвінок!' : '🆕 Новий клієнт';
+                        const msgText = `${header}\n\n📱 ${normalPhone}\n👤 ${clientName}${assigneeName ? '\n👨‍💼 ' + assigneeName : ''}\n📊 ${providerLabel}${callType === 'missed' ? '\n\n⚡ Передзвоніть якомога швидше!' : ''}`;
+                        for (const chatId of chatIds) {
+                            await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ chat_id: chatId, text: msgText }),
+                            }).catch(e => console.warn('[webhook:telephony] tg error:', e.message));
+                        }
+                    }
+                }
+
+                console.log(`[webhook:${channel}] ${callLabel} ${normalPhone} dur=${duration}s deal=${dealId}`);
             } catch(err) {
                 console.error(`[webhook:${channel}] error:`, err.message);
             }

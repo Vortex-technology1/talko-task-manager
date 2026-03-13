@@ -331,7 +331,26 @@
             
             // Check Telegram status
             checkTelegramStatus();
+
+            // Load extension field
+            const extEl = document.getElementById('profileExtension');
+            if (extEl && currentUserData) extEl.value = currentUserData.extension || '';
             
             modal.style.display = 'flex';
             refreshIcons();
         }
+
+        window.saveProfileExtension = async function() {
+            const val = document.getElementById('profileExtension')?.value.trim();
+            if (!currentUser || !window.currentCompanyId) return;
+            try {
+                await window.companyRef().collection('users').doc(currentUser.uid).update({
+                    extension: val || '',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+                if (currentUserData) currentUserData.extension = val;
+                if (typeof showToast === 'function') showToast(val ? `Внутрішній номер ${val} збережено ✅` : 'Номер видалено', 'success');
+            } catch(e) {
+                if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+            }
+        };
