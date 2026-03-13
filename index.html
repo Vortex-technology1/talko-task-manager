@@ -1449,7 +1449,7 @@ document.addEventListener('mousedown', function(e) {
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
                                         Мета компанії
                                         <span title="Відповідає на питання 'що зробити для клієнта'. Результат, а не процес. 1-2 речення"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
-                                        <span onclick="switchTab('learning');setTimeout(function(){window._openLearningModule&&window._openLearningModule(10)},400)"
+                                        <span onclick="window.loadLearningModules(function(){switchTab('learning');setTimeout(function(){window._openLearningModule&&window._openLearningModule(10)},400);})"
                                             style="margin-left:auto;font-size:0.68rem;color:#16a34a;cursor:pointer;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1px 7px;">
                                             ← Урок 10
                                         </span>
@@ -1479,7 +1479,7 @@ document.addEventListener('mousedown', function(e) {
                                     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:flex;align-items:center;gap:0.4rem;margin-bottom:0.25rem;">
                                         Цінний Кінцевий Продукт (ЦКП)
                                         <span title="Що отримує клієнт як завершений результат. Не процес, а результат"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
-                                        <span onclick="switchTab('learning');setTimeout(function(){window._openLearningModule&&window._openLearningModule(11)},400)"
+                                        <span onclick="window.loadLearningModules(function(){switchTab('learning');setTimeout(function(){window._openLearningModule&&window._openLearningModule(11)},400);})"
                                             style="margin-left:auto;font-size:0.68rem;color:#0369a1;cursor:pointer;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:1px 7px;">
                                             ← Урок 11
                                         </span>
@@ -2557,7 +2557,7 @@ document.addEventListener('mousedown', function(e) {
                 <i data-lucide="folder" class="icon"></i>
                 <span data-i18n="tabProjects">Проєкти</span>
             </button>
-            <button class="bottom-nav-btn" onclick="switchTab('learning')" data-tab="learning" role="tab" aria-label="Навчання">
+            <button class="bottom-nav-btn" onclick="window.loadLearningModules(function(){switchTab('learning');})" data-tab="learning" role="tab" aria-label="Навчання">
                 <i data-lucide="graduation-cap" class="icon"></i>
                 <span data-i18n="tabLearning">Навчання</span>
             </button>
@@ -3955,11 +3955,11 @@ document.addEventListener('mousedown', function(e) {
     // ── Групи модулів ──────────────────────────────────────────────────────
     window.LAZY_GROUPS = {
         crm:          ["js/modules/77-crm.js?v=20260313aa", "js/modules/77b-crm-calls.js?v=20260313aa", "js/modules/77c-crm-tasks.js?v=20260313aa", "js/modules/77d-crm-import.js?v=20260313aa", "js/modules/77e-crm-access.js?v=20260313b", "js/modules/77f-crm-mobile.js?v=20260313b", "js/modules/77g-crm-forms.js?v=20260313c", "js/modules/78-crm-todo.js?v=20260313g"],
-        bots:         ["js/modules/81-bots-flows.js?v=20260313aa", "js/modules/82-flow-canvas.js?v=20260313aa", "js/modules/83-bots-contacts.js?v=20260313aa"],
+        bots:         ["js/modules/81-bots-flows.js?v=20260313aa", "js/modules/82-flow-canvas.js?v=20260313fix1", "js/modules/83-bots-contacts.js?v=20260313aa"],
         finance:      ["js/modules/98-finance.js?v=20260313aa"],
         statistics:   ["js/modules/66-statistics.js?v=20260313t"],
         coordination: ["js/modules/76-coordination.js?v=20260313a"],
-        onboarding:   ["js/modules/97-onboarding.js?v=20260311s"],
+        onboarding:   ["js/modules/97-onboarding.js?v=20260313ob3"],
         demo:         ["js/modules/41-demo-data.js?v=20260311s", "js/modules/42-demo-niches.js?v=20260312a"],
         sites:        ["js/modules/94-sites-builder.js?v=20260311s"],
         funnels:      ["js/modules/79-funnels.js?v=20260313aa"],
