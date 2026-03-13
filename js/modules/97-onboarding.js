@@ -586,7 +586,7 @@ window.obPrevStep = function() { if(ob.activeStep>0){ob.activeStep--;renderOnboa
 window.obGoToTab = function(tab) {
     if(typeof switchTab==='function') switchTab(tab);
     if(tab==='coordination'&&window._initCoordTab) setTimeout(window._initCoordTab,100);
-    if(tab==='learning') lazyLoad('learning',function(){});
+    if(tab==='learning') { window.loadLearningModules && window.loadLearningModules(function(){}); }
 };
 
 // ─── INIT ──────────────────────────────────────────────────

@@ -568,7 +568,7 @@ document.addEventListener('mousedown', function(e) {
                 </div>
 
                 <!-- 7. Навчання — окрема кнопка між Аналітика і Система -->
-                <button class="tab-btn" onclick="lazyLoad('learning',function(){switchTab('learning');});" data-tab="learning" aria-label="Навчання">
+                <button class="tab-btn" onclick="window.loadLearningModules(function(){switchTab('learning');});" data-tab="learning" aria-label="Навчання">
                     <i data-lucide="graduation-cap" class="icon"></i>
                     <span data-i18n="tabLearning">Навчання</span>
                 </button>
