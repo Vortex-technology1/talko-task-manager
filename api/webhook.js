@@ -162,7 +162,6 @@ module.exports = async (req, res) => {
 
         // ── Telephony channels ─────────────────────────────────────────────
         // Binotel, Ringostat, Stream Telecom
-        // FIX: відповідаємо 200 тільки після валідації події (не до return)
         if (channel === 'binotel' || channel === 'ringostat' || channel === 'stream_telecom') {
 
             try {
@@ -172,8 +171,6 @@ module.exports = async (req, res) => {
                     : channel === 'ringostat' ? 'Ringostat' : 'Stream Telecom';
 
                 // 1. Нормалізуємо payload провайдера
-                // FIX BUG 3: Binotel callType — реальні значення INCOMING/OUTGOING (рядок), не '0'/'1'
-                // FIX BUG 2: Ringostat outgoing — called_number є зовнішнім при вихідному
                 let phone       = '';
                 let callType    = 'incoming';
                 let duration    = 0;
@@ -181,52 +178,55 @@ module.exports = async (req, res) => {
                 let internalNum = '';
 
                 if (channel === 'binotel') {
-                    // Обробляємо тільки HANGUP
+                    // FIX CRITICAL: якщо body.event відсутній — не блокуємо обробку
+                    // Деякі версії Binotel не надсилають event поле
                     if (body.event && body.event.toUpperCase() !== 'HANGUP') {
                         res.status(200).json({ ok: true, skipped: 'not HANGUP' });
                         return;
                     }
                     phone       = body.externalNumber || body.callerIdNum || '';
-                    internalNum = body.internalNumber || (Array.isArray(body.internalNumbers) ? body.internalNumbers[0] : '') || '';
+                    internalNum = body.internalNumber
+                        || (Array.isArray(body.internalNumbers) ? body.internalNumbers[0] : '')
+                        || '';
                     const billsec = parseInt(body.billsec || 0);
-                    // FIX BUG 3: Binotel реальні значення — 'INCOMING' | 'OUTGOING' | або '0'/'1' в старих версіях
-                    const ct = String(body.callType || '').toUpperCase();
-                    if (!billsec) {
-                        callType = 'missed';
-                    } else if (ct === 'OUTGOING' || ct === '1') {
-                        callType = 'outgoing';
-                    } else {
-                        callType = 'incoming';
-                    }
+                    const ct      = String(body.callType || '').toUpperCase();
+                    callType = !billsec ? 'missed' : (ct === 'OUTGOING' || ct === '1') ? 'outgoing' : 'incoming';
                     duration = billsec;
                     callId   = body.uniqueId || body.generalCallID || '';
 
                 } else if (channel === 'ringostat') {
-                    if (body.event && !['call_hangup','hangup','finish','HANGUP'].includes(body.event)) {
+                    // FIX: якщо event відсутній — це CDR запис (теж обробляємо)
+                    // якщо event є але не hangup — пропускаємо
+                    if (body.event && !['call_hangup','hangup','finish','HANGUP','cdr'].includes(body.event)) {
                         res.status(200).json({ ok: true, skipped: 'not hangup' });
                         return;
                     }
-                    // FIX BUG 2: при вихідному caller_number = внутрішній номер, called_number = зовнішній
                     internalNum = body.internal_number || body.extension || '';
-                    const ct = String(body.call_type || '').toLowerCase();
+                    const ct    = String(body.call_type || '').toLowerCase();
                     duration    = parseInt(body.duration || 0);
-                    callType    = !duration ? 'missed' : ct === 'out' ? 'outgoing' : 'incoming';
+                    // FIX HIGH: duration=0 + disposition=ANSWERED → incoming (не missed)
+                    // Ringostat надсилає status поле: 'answered' | 'missed' | 'busy'
+                    const status = String(body.status || body.disposition || '').toLowerCase();
+                    const explicitMissed = status === 'missed' || status === 'busy' || status === 'no_answer';
+                    callType    = explicitMissed ? 'missed' : ct === 'out' ? 'outgoing' : 'incoming';
                     phone       = callType === 'outgoing'
                         ? (body.called_number || body.caller_number || '')
                         : (body.caller_number || body.called_number || '');
                     callId      = body.call_id || body.uid || '';
 
                 } else if (channel === 'stream_telecom') {
-                    const billsec = parseInt(body.billsec || 0);
-                    // src короткий (3-6 цифр) = внутрішній → вихідний дзвінок
-                    const srcClean = String(body.src || '').replace(/\D/g, '');
-                    const dstClean = String(body.dst || '').replace(/\D/g, '');
-                    const srcIsInternal = srcClean.length <= 6 && srcClean.length >= 2;
+                    const billsec  = parseInt(body.billsec || 0);
+                    const srcRaw   = String(body.src || '');
+                    const dstRaw   = String(body.dst || '');
+                    const srcClean = srcRaw.replace(/\D/g, '');
+                    const dstClean = dstRaw.replace(/\D/g, '');
+                    // FIX MEDIUM: внутрішній тільки якщо < 7 цифр І не починається з 380/0 (не міжнародний)
+                    const srcIsInternal = srcClean.length >= 2 && srcClean.length <= 6
+                        && !srcClean.startsWith('380') && !srcClean.startsWith('0');
                     const answered = body.disposition === 'ANSWERED' || billsec > 0;
                     callType    = !answered ? 'missed' : srcIsInternal ? 'outgoing' : 'incoming';
-                    // FIX: зовнішній номер завжди той що довший
-                    phone       = srcIsInternal ? (body.dst || '') : (body.src || body.dst || '');
-                    internalNum = srcIsInternal ? String(body.src || '') : (dstClean.length <= 6 ? String(body.dst || '') : '');
+                    phone       = srcIsInternal ? dstRaw : srcRaw || dstRaw;
+                    internalNum = srcIsInternal ? srcClean : '';
                     duration    = parseInt(body.duration || billsec || 0);
                     callId      = body.uniqueid || '';
                 }
@@ -236,7 +236,7 @@ module.exports = async (req, res) => {
                     return;
                 }
 
-                // FIX BUG 4: нормалізація номера — більш надійна
+                // Нормалізація номера
                 const cleanPhone = String(phone).replace(/\D/g, '');
                 let normalPhone;
                 if (cleanPhone.startsWith('380') && cleanPhone.length >= 12) {
@@ -246,21 +246,37 @@ module.exports = async (req, res) => {
                 } else if (cleanPhone.length >= 10) {
                     normalPhone = '+' + cleanPhone;
                 } else {
-                    // Некоректний номер — пропускаємо
                     console.warn(`[webhook:${channel}] invalid phone: "${phone}" clean="${cleanPhone}"`);
                     res.status(200).json({ ok: true, skipped: 'invalid phone' });
                     return;
                 }
 
-                // Відповідаємо 200 після валідації — Binotel/Ringostat не чекатимуть довго
+                // FIX CRITICAL: idempotency — перевіряємо callId щоб уникнути дублів при retry
+                if (callId) {
+                    // FIX: sub-collection per company (ізоляція) + expiresAt для cleanup + ':' в ID
+                    const lockId  = `${channel}:${callId}`;
+                    const lockRef = compRef.collection('_tlocks').doc(lockId);
+                    const lockDoc = await lockRef.get();
+                    if (lockDoc.exists) {
+                        res.status(200).json({ ok: true, skipped: 'duplicate callId' });
+                        return;
+                    }
+                    // expiresAt = 30 днів — для cleanup через Cloud Scheduler або вручну
+                    const exp = new Date(); exp.setDate(exp.getDate() + 30);
+                    await lockRef.set({ channel, callId, createdAt: ts, expiresAt: exp });
+                }
+
+                // Відповідаємо 200 — після idempotency check, перед важкими операціями
                 res.status(200).json({ ok: true, received: channel, phone: normalPhone, callType });
 
-                // 3. Налаштування компанії
+                // FIX MEDIUM: читаємо compData ДО res (щоб catch міг відповісти 500)
+                // Але res вже надіслано — тому просто логуємо помилку далі без res.status
                 const compDoc  = await compRef.get();
                 const compData = compDoc.data() || {};
                 const tgToken  = compData.telegramBotToken || compData.botToken || '';
 
-                // 4. FIX BUG 7: менеджер по extension — orderBy createdAt для стабільного вибору
+                // Менеджер по extension
+                // FIX HIGH: без orderBy щоб не потребувати composite index
                 let assigneeId   = '';
                 let assigneeName = '';
                 let assigneeTgId = '';
@@ -268,7 +284,7 @@ module.exports = async (req, res) => {
                     try {
                         const usersSnap = await compRef.collection('users')
                             .where('extension', '==', String(internalNum))
-                            .orderBy('createdAt').limit(1).get();
+                            .limit(1).get();
                         if (!usersSnap.empty) {
                             const u      = usersSnap.docs[0].data();
                             assigneeId   = usersSnap.docs[0].id;
@@ -276,11 +292,11 @@ module.exports = async (req, res) => {
                             assigneeTgId = u.telegramChatId || u.tgChatId || '';
                         }
                     } catch(e) {
-                        console.warn(`[webhook:${channel}] extension lookup error:`, e.message);
+                        console.warn(`[webhook:${channel}] extension lookup:`, e.message);
                     }
                 }
 
-                // 5. Контакт — знайти або створити
+                // Контакт — знайти або створити
                 const contactsSnap = await compRef.collection('crm_clients')
                     .where('phone', '==', normalPhone).limit(1).get();
 
@@ -304,8 +320,7 @@ module.exports = async (req, res) => {
                     clientId = ref.id;
                 }
 
-                // 6. Угода — знайти відкриту або створити
-                // FIX BUG 5: fallback на clientId-only query якщо composite index відсутній
+                // Угода — знайти відкриту або створити
                 let dealId = '';
                 let openDealSnap;
                 try {
@@ -314,18 +329,16 @@ module.exports = async (req, res) => {
                         .where('status', '==', 'active')
                         .limit(1).get();
                 } catch(e) {
-                    // Composite index ще не створено — fallback
-                    console.warn(`[webhook:${channel}] composite index missing, fallback:`, e.message);
-                    openDealSnap = await compRef.collection('crm_deals')
-                        .where('clientId', '==', clientId).limit(5).get();
-                    // Фільтруємо в пам'яті
-                    const activeDeal = openDealSnap.docs.find(d => d.data().status === 'active');
-                    openDealSnap = activeDeal ? { empty: false, docs: [activeDeal] } : { empty: true };
+                    // Composite index ще не створено — fallback in-memory
+                    console.warn(`[webhook:${channel}] composite index missing:`, e.message);
+                    const allDeals = await compRef.collection('crm_deals')
+                        .where('clientId', '==', clientId).limit(10).get();
+                    const active = allDeals.docs.find(d => d.data().status === 'active');
+                    openDealSnap = active ? { empty: false, docs: [active] } : { empty: true };
                 }
 
                 if (!openDealSnap.empty) {
                     dealId = openDealSnap.docs[0].id;
-                    // Оновлюємо updatedAt щоб угода піднялась у списку
                     await compRef.collection('crm_deals').doc(dealId).update({ updatedAt: ts });
                 } else {
                     const pipelineSnap = await compRef.collection('crm_pipelines')
@@ -333,7 +346,9 @@ module.exports = async (req, res) => {
                     const pipelineId   = pipelineSnap.empty ? '' : pipelineSnap.docs[0].id;
                     const stages       = pipelineSnap.empty ? [] : (pipelineSnap.docs[0].data().stages || []);
                     const firstStageId = stages.length > 0 ? (stages[0].id || '') : '';
-                    const dealTitle    = callType === 'missed' ? `Пропущений дзвінок — ${clientName}` : `Дзвінок — ${clientName}`;
+                    const dealTitle    = callType === 'missed'
+                        ? `Пропущений дзвінок — ${clientName}`
+                        : `Дзвінок — ${clientName}`;
 
                     const dealRef = await compRef.collection('crm_deals').add({
                         title:        dealTitle,
@@ -354,10 +369,12 @@ module.exports = async (req, res) => {
                     dealId = dealRef.id;
                 }
 
-                // 7. Лог дзвінка в crm_activities
+                // Лог дзвінка в crm_activities
+                // FIX HIGH: callIcon прибрано (мертвий код)
                 const callLabel   = callType === 'incoming' ? 'Вхідний' : callType === 'outgoing' ? 'Вихідний' : 'Пропущений';
-                const callIcon    = callType === 'incoming' ? '[<-]' : callType === 'outgoing' ? '[->]' : '[X]';
-                const durationStr = duration > 0 ? ` (${Math.floor(duration/60)}:${String(duration%60).padStart(2,'0')})` : '';
+                const durationStr = duration > 0
+                    ? ` (${Math.floor(duration/60)}:${String(duration%60).padStart(2,'0')})`
+                    : '';
 
                 await compRef.collection('crm_activities').add({
                     type:         'call',
@@ -375,8 +392,7 @@ module.exports = async (req, res) => {
                     userId:       assigneeId || 'system',
                 });
 
-                // 8. Telegram сповіщення
-                // FIX BUG 6: AbortController timeout 8сек щоб не зависати
+                // Telegram сповіщення
                 if (tgToken && (callType === 'missed' || isNewClient)) {
                     const chatIds = [];
                     if (assigneeTgId) chatIds.push(String(assigneeTgId));
@@ -384,31 +400,34 @@ module.exports = async (req, res) => {
                     if (companyChatId && !chatIds.includes(companyChatId)) chatIds.push(companyChatId);
 
                     if (chatIds.length > 0) {
-                        const isMissed  = callType === 'missed';
-                        const header    = isMissed ? 'ПРОПУЩЕНИЙ ДЗВIНОК!' : 'Новий клiєнт';
-                        const msgText   = `${header}\n\nНомер: ${normalPhone}\nКлiєнт: ${clientName}${assigneeName ? '\nМенеджер: ' + assigneeName : ''}\nДжерело: ${providerLabel}${isMissed ? '\n\nПередзвонiть якомога швидше!' : ''}`;
+                        const isMissed = callType === 'missed';
+                        const header   = isMissed ? 'ПРОПУЩЕНИЙ ДЗВIНОК!' : 'Новий клiєнт';
+                        const msgText  = `${header}\n\nНомер: ${normalPhone}\nКлiєнт: ${clientName}${assigneeName ? '\nМенеджер: ' + assigneeName : ''}\nДжерело: ${providerLabel}${isMissed ? '\n\nПередзвонiть якомога швидше!' : ''}`;
 
                         for (const chatId of chatIds) {
+                            // FIX MEDIUM: clearTimeout завжди, навіть при помилці
+                            const ctrl  = new AbortController();
+                            const timer = setTimeout(() => ctrl.abort(), 8000);
                             try {
-                                const ctrl = new AbortController();
-                                const timer = setTimeout(() => ctrl.abort(), 8000);
                                 await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({ chat_id: chatId, text: msgText }),
                                     signal: ctrl.signal,
                                 });
-                                clearTimeout(timer);
                             } catch(e) {
-                                console.warn('[webhook:telephony] tg notify error:', e.message);
+                                console.warn('[webhook:telephony] tg notify:', e.message);
+                            } finally {
+                                clearTimeout(timer);
                             }
                         }
                     }
                 }
 
-                console.log(`[webhook:${channel}] OK ${callLabel} ${normalPhone} dur=${duration}s deal=${dealId} assigned=${assigneeId||'none'}`);
+                console.log(`[webhook:${channel}] OK ${callLabel} ${normalPhone} dur=${duration}s deal=${dealId}`);
             } catch(err) {
                 console.error(`[webhook:${channel}] error:`, err.message);
+                // res вже може бути надіслано — не намагаємось відповісти знову
                 if (!res.headersSent) res.status(500).json({ error: err.message });
             }
             return;

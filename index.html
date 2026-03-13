@@ -2427,7 +2427,9 @@ document.addEventListener('mousedown', function(e) {
                         </div>
                     </div>
                     <div style="display:flex;gap:0.5rem;">
-                        <input id="profileExtension" type="text" placeholder="101" maxlength="6"
+                        <input id="profileExtension" type="text" placeholder="101" maxlength="8"
+                            pattern="[0-9]*" inputmode="numeric"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'')"
                             style="flex:1;padding:0.5rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;font-family:monospace;">
                         <button onclick="saveProfileExtension()"
                             style="padding:0.5rem 1rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">

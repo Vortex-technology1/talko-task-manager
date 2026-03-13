@@ -720,5 +720,12 @@ service cloud.firestore {
     match /_finish_locks/{lockId} {
       allow read, write: if false;
     }
+
+    // TELEPHONY CALL LOCKS (_tlocks sub-collection per company)
+    // Записуються тільки через Admin SDK (webhook server).
+    // Клієнтський код не має доступу.
+    match /companies/{companyId}/_tlocks/{lockId} {
+      allow read, write: if false;
+    }
   }
 }

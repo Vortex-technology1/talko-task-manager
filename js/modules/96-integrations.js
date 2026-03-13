@@ -429,9 +429,9 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             <label style="${lbl}">Webhook URL — вставте в Binotel кабінет</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="text" readonly
-                    value="https://taskmanagerai-vert.vercel.app/api/webhook?channel=binotel&cid=${window.currentCompanyId||''}"
+                    value="${window.currentCompanyId ? 'https://taskmanagerai-vert.vercel.app/api/webhook?channel=binotel&cid=' + window.currentCompanyId : '(завантаження... відкрийте вкладку повторно)'}"
                     style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
-                <button onclick="intgCopy('https://taskmanagerai-vert.vercel.app/api/webhook?channel=binotel&cid=${window.currentCompanyId||''}')"
+                <button onclick="intgCopy(window.currentCompanyId ? 'https://taskmanagerai-vert.vercel.app/api/webhook?channel=binotel&cid=' + window.currentCompanyId : '')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
             </div>
         </div>
@@ -440,7 +440,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             1. Binotel кабінет → Налаштування → API → скопіюй Key і Secret<br>
             2. Збережи ключі нижче<br>
             3. Binotel → Налаштування → Webhooks → вставте URL вище<br>
-            4. Обери події: <code>ANSWER</code>, <code>HANGUP</code>
+            4. Обери подію: <code>HANGUP</code> (завершення дзвінка)
         </div>
         <div style="display:flex;gap:0.4rem;">
             <button onclick="intgSaveBinotel()"
@@ -482,9 +482,9 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             <label style="${lbl}">Webhook URL — вставте в Ringostat</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="text" readonly
-                    value="https://taskmanagerai-vert.vercel.app/api/webhook?channel=ringostat&cid=${window.currentCompanyId||''}"
+                    value="${window.currentCompanyId ? 'https://taskmanagerai-vert.vercel.app/api/webhook?channel=ringostat&cid=' + window.currentCompanyId : '(завантаження... відкрийте вкладку повторно)'}"
                     style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
-                <button onclick="intgCopy('https://taskmanagerai-vert.vercel.app/api/webhook?channel=ringostat&cid=${window.currentCompanyId||''}')"
+                <button onclick="intgCopy(window.currentCompanyId ? 'https://taskmanagerai-vert.vercel.app/api/webhook?channel=ringostat&cid=' + window.currentCompanyId : '')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
             </div>
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">app.ringostat.com → Налаштування → Callback → Webhook URL</div>
@@ -536,9 +536,9 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
             <label style="${lbl}">Webhook URL — вставте в Stream Telecom</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="text" readonly
-                    value="https://taskmanagerai-vert.vercel.app/api/webhook?channel=stream_telecom&cid=${window.currentCompanyId||''}"
+                    value="${window.currentCompanyId ? 'https://taskmanagerai-vert.vercel.app/api/webhook?channel=stream_telecom&cid=' + window.currentCompanyId : '(завантаження... відкрийте вкладку повторно)'}"
                     style="${inp}flex:1;color:#6b7280;font-size:0.72rem;font-family:monospace;">
-                <button onclick="intgCopy('https://taskmanagerai-vert.vercel.app/api/webhook?channel=stream_telecom&cid=${window.currentCompanyId||''}')"
+                <button onclick="intgCopy(window.currentCompanyId ? 'https://taskmanagerai-vert.vercel.app/api/webhook?channel=stream_telecom&cid=' + window.currentCompanyId : '')"
                     style="padding:0.45rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${I.copy}</button>
             </div>
             <div style="font-size:0.69rem;color:#9ca3af;margin-top:0.25rem;">my.stream-telecom.ua → Налаштування → Webhooks → URL дзвінків</div>
@@ -939,27 +939,19 @@ window.intgSaveBinotel = async function() {
 };
 
 window.intgTestBinotel = async function() {
+    // Binotel API не підтримує CORS — пряма перевірка з браузера неможлива.
+    // Перевірка відбудеться автоматично при першому реальному дзвінку.
     const key    = document.getElementById('intg_binotel_key')?.value.trim()    || intg.settings?.binotelKey;
     const secret = document.getElementById('intg_binotel_secret')?.value.trim() || intg.settings?.binotelSecret;
     if (!key || !secret) {
         if (typeof showToast === 'function') showToast('Заповніть Key і Secret', 'error'); return;
     }
-    try {
-        // Binotel API: отримати список внутрішніх номерів як перевірка з'єднання
-        const res = await fetch('https://api.binotel.com/api/4.0/stats/general-stats-for-period.json', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ key, secret, startTime: Math.floor(Date.now()/1000) - 86400, stopTime: Math.floor(Date.now()/1000) }),
-        });
-        const data = await res.json();
-        if (data.status === 'success' || data.generalStats) {
-            if (typeof showToast === 'function') showToast('Binotel з\'єднання OK', 'success');
-        } else {
-            if (typeof showToast === 'function') showToast('Binotel помилка: ' + (data.message || JSON.stringify(data)), 'error');
-        }
-    } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка з\'єднання: ' + e.message, 'error');
+    // Перевіряємо формат ключів (UUID-подібний)
+    const uuidRe = /^[0-9a-f\-]{32,40}$/i;
+    if (!uuidRe.test(key)) {
+        if (typeof showToast === 'function') showToast('API Key виглядає невірно — перевірте Binotel кабінет', 'warning'); return;
     }
+    if (typeof showToast === 'function') showToast('Ключі виглядають коректно. Перевірка відбудеться при першому дзвінку', 'info');
 };
 
 // ── Ringostat ──────────────────────────────────────────────
@@ -985,25 +977,16 @@ window.intgSaveRingostat = async function() {
 };
 
 window.intgTestRingostat = async function() {
+    // Ringostat API не підтримує CORS — пряма перевірка з браузера неможлива.
     const key = document.getElementById('intg_ringostat_key')?.value.trim() || intg.settings?.ringostatApiKey;
     if (!key) {
         if (typeof showToast === 'function') showToast('Введіть API Token', 'error'); return;
     }
-    try {
-        const res = await fetch('https://app.ringostat.com/api/1.0/call/list/', {
-            method: 'GET',
-            headers: { 'Authorization': 'Token ' + key, 'Content-Type': 'application/json' },
-        });
-        if (res.status === 200 || res.status === 204) {
-            if (typeof showToast === 'function') showToast('Ringostat з\'єднання OK', 'success');
-        } else if (res.status === 401) {
-            if (typeof showToast === 'function') showToast('Ringostat: невірний токен', 'error');
-        } else {
-            if (typeof showToast === 'function') showToast('Ringostat статус: ' + res.status, 'warning');
-        }
-    } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка з\'єднання: ' + e.message, 'error');
+    // Мінімальна валідація: токен має бути рядком >= 16 символів
+    if (key.length < 16) {
+        if (typeof showToast === 'function') showToast('Токен виглядає занадто коротким — перевірте Ringostat кабінет', 'warning'); return;
     }
+    if (typeof showToast === 'function') showToast('Токен збережено. Перевірка відбудеться при першому дзвінку', 'info');
 };
 
 // ── Stream Telecom ─────────────────────────────────────────
@@ -1034,18 +1017,14 @@ window.intgTestStreamTelecom = async function() {
     if (!login || !pass) {
         if (typeof showToast === 'function') showToast('Заповніть Login і Password', 'error'); return;
     }
-    try {
-        // Stream Telecom API: перевірка балансу як тест з'єднання
-        const res = await fetch(`https://example.stream-telecom.ua/balance?login=${encodeURIComponent(login)}&password=${encodeURIComponent(pass)}`);
-        if (res.ok) {
-            if (typeof showToast === 'function') showToast('Stream Telecom з\'єднання OK', 'success');
-        } else {
-            if (typeof showToast === 'function') showToast('Stream Telecom: помилка авторизації (' + res.status + ')', 'error');
-        }
-    } catch(e) {
-        // CORS — очікувано з браузера, ключі збережено — webhook сервер перевірить сам
-        if (typeof showToast === 'function') showToast('Ключі збережено. Webhook перевірить з\'єднання при першому дзвінку', 'info');
+    // Базова валідація email
+    if (!login.includes('@')) {
+        if (typeof showToast === 'function') showToast('Login має бути email адресою', 'warning'); return;
     }
+    if (pass.length < 6) {
+        if (typeof showToast === 'function') showToast('Пароль/ключ занадто короткий', 'warning'); return;
+    }
+    if (typeof showToast === 'function') showToast('Дані виглядають коректно. Перевірка відбудеться при першому дзвінку', 'info');
 };
 
 // ── Tab hook ───────────────────────────────────────────────

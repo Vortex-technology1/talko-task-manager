@@ -340,17 +340,35 @@
             refreshIcons();
         }
 
+        let _extSaving = false;
         window.saveProfileExtension = async function() {
-            const val = document.getElementById('profileExtension')?.value.trim();
-            if (!currentUser || !window.currentCompanyId) return;
+            if (_extSaving) return; // debounce подвійного кліку
+            // Guard: перевіряємо auth і company
+            if (!currentUser || !window.currentCompanyId) {
+                if (typeof showToast === 'function') showToast('Зачекайте — дані компанії завантажуються', 'warning');
+                return;
+            }
+            const raw = document.getElementById('profileExtension')?.value.trim() || '';
+            // Тільки цифри, 0-8 символів
+            const val = raw.replace(/\D/g, '').slice(0, 8);
+            _extSaving = true;
             try {
-                await window.companyRef().collection('users').doc(currentUser.uid).update({
-                    extension: val || '',
+                const userRef = typeof window.companyRef === 'function'
+                    ? window.companyRef().collection('users').doc(currentUser.uid)
+                    : null;
+                if (!userRef) throw new Error('companyRef недоступний');
+                await userRef.update({
+                    extension: val,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 });
                 if (currentUserData) currentUserData.extension = val;
+                // Синхронізуємо input з очищеним значенням
+                const el = document.getElementById('profileExtension');
+                if (el) el.value = val;
                 if (typeof showToast === 'function') showToast(val ? `Внутрішній номер ${val} збережено` : 'Номер видалено', 'success');
             } catch(e) {
                 if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+            } finally {
+                _extSaving = false;
             }
         };
