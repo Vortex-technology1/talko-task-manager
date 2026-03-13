@@ -3758,32 +3758,30 @@ ${context}
     // Читаємо OpenAI ключ з settings/ai
     const sSnap = await getDb().collection('settings').doc('ai').get();
     const apiKey = sSnap.data()?.openaiApiKey || sSnap.data()?.apiKey || '';
-    if (!apiKey) {
-      const loadElNoKey = document.getElementById('aiFinLoading');
-      if (loadElNoKey) loadElNoKey.remove();
-      _appendAiMsg(chat, 'error', 'API ключ не налаштований. Перейдіть в Налаштування → AI і введіть OpenAI ключ.');
-      chat.scrollTop = chat.scrollHeight;
-      return;
+
+    let aiText;
+    try {
+      aiText = await window.aiProxy({
+        messages:     _aiFinHistory,
+        systemPrompt: systemPrompt,
+        model:        'gpt-4o-mini',
+        maxTokens:    1000,
+        module:       'finance',
+      });
+    } catch(proxyErr) {
+      // fallback — пряме звернення якщо є ключ компанії
+      if (!apiKey) throw proxyErr;
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini', max_tokens: 1000,
+          messages: [{ role: 'system', content: systemPrompt }, ..._aiFinHistory]
+        })
+      });
+      const data = await response.json();
+      aiText = data.choices?.[0]?.message?.content || data.error?.message || 'Не вдалося отримати відповідь.';
     }
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + apiKey
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        max_tokens: 1000,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ..._aiFinHistory
-        ]
-      })
-    });
-
-    const data = await response.json();
-    const aiText = data.choices?.[0]?.message?.content || data.error?.message || 'Не вдалося отримати відповідь.';
 
     // Видаляємо індикатор
     const loadElDone = document.getElementById('aiFinLoading');

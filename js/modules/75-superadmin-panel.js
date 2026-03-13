@@ -233,11 +233,14 @@
 
     window.openGlobalAISettings = async function() {
         try {
-            const [aiDoc, modelsDoc] = await Promise.all([
+            const [aiDoc, modelsDoc, saDoc] = await Promise.all([
                 firebase.firestore().collection('settings').doc('ai').get(),
-                firebase.firestore().collection('settings').doc('aiModels').get()
+                firebase.firestore().collection('settings').doc('aiModels').get(),
+                firebase.firestore().collection('superadmin').doc('settings').get(),
             ]);
             const s = aiDoc.exists ? aiDoc.data() : {};
+            const saSettings = saDoc.exists ? saDoc.data() : {};
+            const platformKeyStored = !!saSettings.openaiApiKey;
 
             // Дефолтні моделі якщо ще немає в Firebase
             const defaultModels = {
@@ -346,6 +349,23 @@
 
                     <!-- TAB: GENERAL -->
                     <div id="aiTab_general">
+                        <!-- Платформний OpenAI ключ -->
+                        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:0.75rem;margin-bottom:1rem;">
+                            <div style="font-size:0.78rem;font-weight:700;color:#1d4ed8;margin-bottom:6px;">
+                                🔑 Платформний OpenAI API Key
+                            </div>
+                            <div style="font-size:0.72rem;color:#1e40af;margin-bottom:8px;">
+                                Діє на всі компанії платформи. Компанія може перевизначити власним ключем.
+                                ${platformKeyStored ? '<span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-weight:600;">✓ Ключ збережено</span>' : '<span style="background:#fef2f2;color:#dc2626;padding:2px 6px;border-radius:4px;font-weight:600;">⚠ Не встановлено</span>'}
+                            </div>
+                            <div style="display:flex;gap:6px;">
+                                <input type="password" id="platformOpenAiKey" placeholder="${platformKeyStored ? '••••••••••••••••' : 'sk-...'}"
+                                    style="flex:1;padding:0.45rem 0.6rem;border:1px solid #bfdbfe;border-radius:8px;font-size:0.85rem;font-family:monospace;box-sizing:border-box;">
+                                ${platformKeyStored ? `<button onclick="clearPlatformKey()" style="padding:0.45rem 0.7rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">✕ Очистити</button>` : ''}
+                            </div>
+                            <div style="font-size:0.7rem;color:#6b7280;margin-top:4px;">Залиш порожнім щоб не змінювати поточний ключ</div>
+                        </div>
+
                         <label style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;cursor:pointer;">
                             <input type="checkbox" id="globalAiEnabled" ${s.globalAiEnabled !== false ? 'checked' : ''} style="width:16px;height:16px;accent-color:#22c55e;">
                             <span style="font-weight:600;">AI увімкнено глобально</span>
@@ -380,9 +400,10 @@
     };
 
     window.saveGlobalAISettings = async function() {
-        const enabled = document.getElementById('globalAiEnabled')?.checked ?? true;
-        const daily = parseInt(document.getElementById('globalDailyLimit')?.value) || 0;
-        const monthly = parseInt(document.getElementById('globalMonthlyLimit')?.value) || 0;
+        const enabled  = document.getElementById('globalAiEnabled')?.checked ?? true;
+        const daily    = parseInt(document.getElementById('globalDailyLimit')?.value) || 0;
+        const monthly  = parseInt(document.getElementById('globalMonthlyLimit')?.value) || 0;
+        const newKey   = document.getElementById('platformOpenAiKey')?.value?.trim() || '';
         try {
             const batch = firebase.firestore().batch();
             // Загальні налаштування
@@ -391,6 +412,14 @@
                 { globalAiEnabled: enabled, defaultDailyLimit: daily, defaultMonthlyLimit: monthly },
                 { merge: true }
             );
+            // Платформний OpenAI ключ → superadmin/settings (тільки якщо введено)
+            if (newKey) {
+                batch.set(
+                    firebase.firestore().collection('superadmin').doc('settings'),
+                    { openaiApiKey: newKey, keyUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() },
+                    { merge: true }
+                );
+            }
             // Моделі — якщо є що зберігати
             if (window._editingModels) {
                 batch.set(
@@ -403,6 +432,17 @@
             // Оновлюємо кеш моделей для canvas
             window._cachedAiModels = window._editingModels || null;
             showToast && showToast('Збережено ✓', 'success');
+        } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+    };
+
+    window.clearPlatformKey = async function() {
+        if (!confirm('Видалити платформний OpenAI ключ? Компанії без власного ключа втратять доступ до AI.')) return;
+        try {
+            await firebase.firestore().collection('superadmin').doc('settings').update({
+                openaiApiKey: firebase.firestore.FieldValue.delete(),
+            });
+            showToast && showToast('Ключ видалено', 'success');
+            document.getElementById('globalAIOverlay')?.remove();
         } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
     };
 

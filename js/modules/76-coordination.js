@@ -1244,22 +1244,16 @@
             if(!sessions.length){el.innerHTML=`<div style="text-align:center;padding:2rem;color:#9ca3af;">Проведіть хоча б одну координацію</div>`;return;}
             const patterns=analyzePatterns(sessions);
 
-            // Try Anthropic API via settings
+            // Try AI via proxy (OpenAI)
             let aiText='';
             try {
-                const sSnap=await db().collection('settings').doc('ai').get();
-                const apiKey=sSnap.data()?.anthropicApiKey||sSnap.data()?.apiKey;
-                if(apiKey){
-                    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-                        method:'POST',
-                        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
-                        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,
-                            messages:[{role:'user',content:buildPrompt(patterns)}]})
-                    });
-                    const data=await resp.json();
-                    aiText=data.content?.[0]?.text||'';
-                }
-            } catch(ae){console.warn('[COORD] AI API:',ae);}
+                aiText = await window.aiProxy({
+                    messages:  [{ role: 'user', content: buildPrompt(patterns) }],
+                    model:     'gpt-4o-mini',
+                    maxTokens: 800,
+                    module:    'coordination',
+                });
+            } catch(ae){ console.warn('[COORD] AI proxy:', ae); }
 
             el.innerHTML=`
             ${aiText?`<div style="background:linear-gradient(135deg,#7c3aed15,#a855f715);border:1.5px solid #e9d5ff;border-radius:12px;padding:.9rem;margin-bottom:.85rem;">

@@ -1250,18 +1250,13 @@ window.fcRunAiFunnel = async function(mode) {
 Мова — українська.`;
 
     try {
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-6',
-                max_tokens: 2000,
-                system: systemPrompt,
-                messages: [{ role: 'user', content: input }]
-            })
+        const result = await window.aiProxy({
+            messages:     [{ role: 'user', content: input }],
+            systemPrompt: systemPrompt,
+            model:        'gpt-4o-mini',
+            maxTokens:    2000,
+            module:       'flow-canvas',
         });
-        const data = await resp.json();
-        const result = data.content?.[0]?.text || 'Помилка генерації';
         document.getElementById('fcAiFunnelResultText').textContent = result;
         document.getElementById('fcAiFunnelResult').style.display = 'block';
     } catch(e) {

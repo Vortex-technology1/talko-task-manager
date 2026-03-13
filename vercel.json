@@ -90,6 +90,10 @@
     {
       "source": "/api/funnel-ai",
       "destination": "/api/funnel-ai"
+    },
+    {
+      "source": "/api/ai-proxy",
+      "destination": "/api/ai-proxy"
     }
   ],
   "functions": {
@@ -100,6 +104,10 @@
     "api/ping.js": {
       "maxDuration": 5,
       "memory": 128
+    },
+    "api/ai-proxy.js": {
+      "maxDuration": 30,
+      "memory": 256
     }
   },
   "regions": [

@@ -177,39 +177,21 @@ window._sendAiMessage = async function () {
   const typingId = _appendChatMsg('assistant', '⏳ Аналізую...');
 
   try {
-    const apiKey = await _getAiKey();
-    if (!apiKey) throw new Error('AI ключ не налаштований. Перейдіть в Налаштування → AI і введіть OpenAI ключ.');
-
     const functions = _getFunctionsList();
     const systemPrompt = _buildSystemPrompt(functions);
 
-    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...aiChat.messages,
-        ],
-        temperature: 0.3,
-        max_tokens: 800,
-      }),
+    const reply = await window.aiProxy({
+      messages:     aiChat.messages,
+      systemPrompt: systemPrompt,
+      model:        'gpt-4o-mini',
+      maxTokens:    800,
+      module:       'incidents',
     });
-
-    if (!resp.ok) throw new Error(`OpenAI error: ${resp.status}`);
-    const data = await resp.json();
-    const reply = data.choices?.[0]?.message?.content || '';
 
     aiChat.messages.push({ role: 'assistant', content: reply });
 
-    // Видаляємо "Аналізую..."
     document.getElementById(typingId)?.remove();
 
-    // Перевіряємо чи це JSON або питання
     const parsed = _tryParseJson(reply);
     if (parsed) {
       aiChat.parsedData = parsed;
