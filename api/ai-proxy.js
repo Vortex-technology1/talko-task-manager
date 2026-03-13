@@ -152,10 +152,41 @@ module.exports = async function handler(req, res) {
         });
     }
 
+    // ── Читаємо профіль компанії ─────────────────────────────
+    let companyContext = '';
+    try {
+        const [compSnap, finSnap] = await Promise.all([
+            db.doc(`companies/${companyId}`).get(),
+            db.doc(`companies/${companyId}/finance_settings/main`).get(),
+        ]);
+
+        const c  = compSnap.exists  ? compSnap.data()  : {};
+        const fs = finSnap.exists   ? finSnap.data()   : {};
+
+        const lines = [];
+        if (c.name)            lines.push(`Компанія: ${c.name}`);
+        if (c.niche)           lines.push(`Ніша: ${c.niche}`);
+        if (fs.currency || c.currency) lines.push(`Валюта: ${fs.currency || c.currency}`);
+        if (fs.region  || c.region)    lines.push(`Регіон: ${fs.region  || c.region}`);
+        if (c.companyGoal)     lines.push(`Мета компанії: ${c.companyGoal}`);
+        if (c.companyConcept)  lines.push(`Задум: ${c.companyConcept}`);
+        if (c.companyCKP)      lines.push(`ЦКП: ${c.companyCKP}`);
+        if (c.companyIdeal)    lines.push(`Ідеальна картина: ${c.companyIdeal}`);
+
+        if (lines.length) {
+            companyContext = `КОНТЕКСТ КОМПАНІЇ (використовуй при аналізі):\n${lines.join('\n')}\n`;
+        }
+    } catch(e) {
+        console.warn(`[ai-proxy] company profile read error:`, e.message);
+    }
+
     // Промпт агента: superadmin → fallback на клієнтський
     const agentSettings = saSettings.agents?.[mod] || {};
-    const systemPrompt  = agentSettings.systemPrompt || clientSystemPrompt || null;
+    const agentPrompt   = agentSettings.systemPrompt || clientSystemPrompt || '';
     const model         = agentSettings.model        || clientModel        || 'gpt-4o-mini';
+
+    // Фінальний системний промпт = контекст компанії + промпт агента
+    const systemPrompt = [companyContext, agentPrompt].filter(Boolean).join('\n---\n') || null;
 
     // Build messages
     const finalMessages = [];
