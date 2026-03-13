@@ -25,7 +25,7 @@
                 
                 if (!companyId && !isSuperAdmin) {
                     document.getElementById('loadingPage').style.display = 'none';
-                    document.getElementById('authPage').style.display = 'flex';
+                    document.getElementById('authPage').style.display = 'flex'; document.getElementById('mainHeader') && (document.getElementById('mainHeader').style.display = 'none');
                     document.getElementById('mainInterface').style.display = 'none';
                     showNoAccess();
                     return;
@@ -71,7 +71,7 @@
                 
                 // Перевірка чи компанія заблокована
                 if (companyData?.disabled && !isSuperAdmin) {
-                    document.getElementById('authPage').style.display = 'flex';
+                    document.getElementById('authPage').style.display = 'flex'; document.getElementById('mainHeader') && (document.getElementById('mainHeader').style.display = 'none');
                     document.getElementById('mainInterface').style.display = 'none';
                     const authErr = document.getElementById('authError') || document.createElement('p');
                     authErr.id = 'authError';
@@ -181,7 +181,7 @@
                 window.currentUser = null;    // cleanup аліасів
                 window.currentCompany = null;
                 document.getElementById('loadingPage').style.display = 'none';
-                document.getElementById('authPage').style.display = 'flex';
+                document.getElementById('authPage').style.display = 'flex'; document.getElementById('mainHeader') && (document.getElementById('mainHeader').style.display = 'none');
                 document.getElementById('mainInterface').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 document.getElementById('adminTabBtn').style.display = 'none';
@@ -219,6 +219,7 @@
         function showMainInterface() {
             document.getElementById('loadingPage').style.display = 'none';
             document.getElementById('authPage').style.display = 'none';
+            document.getElementById('mainHeader').style.display = '';
             document.getElementById('mainInterface').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'block';
             document.getElementById('currentUserInfo').style.display = 'flex';
