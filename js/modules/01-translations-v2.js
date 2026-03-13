@@ -587,6 +587,8 @@
                 finInvoiceDetails: 'ЄДРПОУ, адреса, IBAN...',
                 finPayDetails: 'IBAN, банк, призначення платежу...',
                 finSaveChanges: 'Зберегти зміни',
+                finAddLine: '+ Додати рядок',
+                finExportLimit: 'Показано перші {n} записів. Для повного експорту виберіть місяць.',
                 finAddPayment: 'Додати платіж',
                 finItemDesc: 'Опис послуги/товару',
                 finItemQty: 'Кіл.',
@@ -2447,6 +2449,8 @@ ru: {
                 finInvoiceDetails: 'ИНН, адрес, IBAN...',
                 finPayDetails: 'IBAN, банк, назначение платежа...',
                 finSaveChanges: 'Сохранить изменения',
+                finAddLine: '+ Добавить строку',
+                finExportLimit: 'Показаны первые {n} записей. Для полного экспорта выберите месяц.',
                 finAddPayment: 'Добавить платёж',
                 finItemDesc: 'Описание услуги/товара',
                 finItemQty: 'Кол.',
@@ -4563,6 +4567,8 @@ pl: {
                 finInvoiceDetails: 'NIP, adres, IBAN...',
                 finPayDetails: 'IBAN, bank, cel płatności...',
                 finSaveChanges: 'Zapisz zmiany',
+                finAddLine: '+ Dodaj linię',
+                finExportLimit: 'Pokazano pierwsze {n} rekordów. Wybierz miesiąc dla pełnego eksportu.',
                 finAddPayment: 'Dodaj płatność',
                 finItemDesc: 'Opis usługi/towaru',
                 finItemQty: 'Il.',
@@ -6574,6 +6580,8 @@ en: {
                 finInvoiceDetails: 'Tax ID, address, IBAN...',
                 finPayDetails: 'IBAN, bank, payment purpose...',
                 finSaveChanges: 'Save changes',
+                finAddLine: '+ Add line',
+                finExportLimit: 'Showing first {n} records. Select a month for full export.',
                 finAddPayment: 'Add payment',
                 finItemDesc: 'Service/product description',
                 finItemQty: 'Qty',
@@ -8397,6 +8405,8 @@ en: {
                 finInvoiceDetails: 'Steuernr., Adresse, IBAN...',
                 finPayDetails: 'IBAN, Bank, Verwendungszweck...',
                 finSaveChanges: 'Änderungen speichern',
+                finAddLine: '+ Zeile hinzufügen',
+                finExportLimit: 'Erste {n} Einträge angezeigt. Für vollständigen Export Monat wählen.',
                 finAddPayment: 'Zahlung hinzufügen',
                 finItemDesc: 'Leistungs-/Produktbeschreibung',
                 finItemQty: 'Anz.',
@@ -9564,6 +9574,7 @@ en: {
             return (translations[currentLang] && translations[currentLang][key]) || translations['ua'][key] || key;
         }
         window.t = t;
+        window.getLocale = getLocale;
         window.getFinanceLang = function() { return currentLang; };
 
         

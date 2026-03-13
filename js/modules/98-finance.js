@@ -62,7 +62,7 @@ let _state = {
 // ── Утиліти ────────────────────────────────────────────────
 function fmt(amount, currency) {
   const cur = currency || _state.currency || 'EUR';
-  const locale = _state.region === 'US' ? 'en-US' : 'uk-UA';
+  const locale = _state.region === 'US' ? 'en-US' : (window.getLocale ? window.getLocale() : 'uk-UA');
   try {
     return new Intl.NumberFormat(locale, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(amount || 0);
   } catch(e) {
@@ -74,7 +74,7 @@ function fmtDate(ts) {
   if (!ts) return '—';
   const d = ts.toDate ? ts.toDate() : new Date(ts);
   if (_state.region === 'US') return d.toLocaleDateString('en-US');
-  return d.toLocaleDateString('uk-UA');
+  return d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA');
 }
 
 function isOwnerOrManager() {
@@ -303,7 +303,7 @@ function renderFinanceContainer() {
             border:none;border-radius:8px;cursor:pointer;
             font-size:0.82rem;font-weight:600;
             flex-shrink:0;
-          ">${I.plus} Додати</button>
+          ">${I.plus} ${window.t('finAddBtn')}</button>
         ` : ''}
       </div>
 
@@ -352,7 +352,7 @@ function renderSubTab(tab) {
 // ── Дашборд — Етап 3 ──────────────────────────────────────
 function renderDashboard(el) {
   const now = new Date();
-  const monthLabel = now.toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' });
+  const monthLabel = now.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', { month: 'long', year: 'numeric' });
   const totalBalance = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
 
   el.innerHTML = `
@@ -370,7 +370,7 @@ function renderDashboard(el) {
             ${Array.from({length:6},(_,i)=>{
               const d=new Date(now.getFullYear(),now.getMonth()-i,1);
               const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-              const lbl=d.toLocaleDateString('uk-UA',{month:'long',year:'numeric'});
+              const lbl=d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', {month:'long',year:'numeric'});
               return `<option value="${val}" ${i===0?'selected':''}>${lbl}</option>`;
             }).join('')}
           </select>
@@ -378,7 +378,7 @@ function renderDashboard(el) {
             <button onclick="window._financeAddTransaction()"
               style="display:flex;align-items:center;gap:0.35rem;padding:0.35rem 0.8rem;
               background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-              ${I.plus} Додати
+              ${I.plus} ${window.t('finAddBtn')}
             </button>
           ` : ''}
         </div>
@@ -808,7 +808,7 @@ async function loadChartData() {
       return {
         year: d.getFullYear(),
         month: d.getMonth()+1,
-        label: d.toLocaleDateString('uk-UA', {month:'short'}),
+        label: d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', {month:'short'}),
         income: 0,
         expense: 0,
       };
@@ -901,7 +901,7 @@ function renderTransactions(el, type) {
   for (let i = 0; i < 6; i++) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    const lbl = d.toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' });
+    const lbl = d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', { month: 'long', year: 'numeric' });
     monthOpts.push(`<option value="${val}" ${_txFilter.month===val?'selected':''}>${lbl}</option>`);
   }
 
@@ -916,7 +916,7 @@ function renderTransactions(el, type) {
             display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;
             background:${color};color:#fff;border:none;border-radius:8px;
             cursor:pointer;font-size:0.82rem;font-weight:600;flex-shrink:0;
-          ">${I.plus} Додати</button>
+          ">${I.plus} ${window.t('finAddBtn')}</button>
         ` : ''}
       </div>
 
@@ -1159,7 +1159,7 @@ async function _getTxForExport(type) {
   // Попередження якщо досягли ліміту — дані можуть бути обрізані
   if (!_txFilter.month && snap.docs.length >= EXPORT_LIMIT) {
     if (typeof showToast === 'function')
-      showToast(`⚠ Показано перші ${EXPORT_LIMIT} записів. Для повного експорту виберіть конкретний місяць.`, 'warn', 6000);
+      showToast(`⚠ ${window.t('finExportLimit').replace('{n}', EXPORT_LIMIT)}`, 'warn', 6000);
   }
 
   const catMap = {};
@@ -1171,7 +1171,7 @@ async function _getTxForExport(type) {
     const tx = d.data();
     const dt = tx.date?.toDate ? tx.date.toDate() : new Date((tx.date?.seconds || 0) * 1000);
     return {
-      Дата:             dt.toLocaleDateString('uk-UA'),
+      Дата:             dt.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA'),
       Тип:              tx.type === 'income' ? window.t('finTransactionIncome') : window.t('finTransactionExpense'),
       Сума:             tx.amount || 0,
       Валюта:           tx.currency || _state.currency || 'EUR',
@@ -1564,7 +1564,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:8px;">Позиції</label>
           <div id="inv_items_list" style="display:flex;flex-direction:column;gap:6px;"></div>
-          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ Додати рядок</button>
+          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ ${window.t('finAddLine')}</button>
         </div>
 
         <!-- ПДВ -->
@@ -1893,7 +1893,7 @@ function renderRecurring(el) {
         </div>
         ${isOwnerOrManager() ? `
           <button onclick="window._finAddRecurring()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;">
-            ${I.plus} Додати платіж
+            ${I.plus} ${window.t('finAddPayment')}
           </button>
         ` : ''}
       </div>
@@ -2312,7 +2312,7 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
   const monthOpts = Array.from({length:6},(_,i)=>{
     const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
     const val = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    const lbl = d.toLocaleDateString('uk-UA',{month:'long',year:'numeric'});
+    const lbl = d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', {month:'long',year:'numeric'});
     return `<option value="${val}" ${_funcFilter.month===val?'selected':''}>${lbl}</option>`;
   }).join('');
 
@@ -2501,7 +2501,7 @@ function renderPlanning(el) {
   const monthOpts = Array.from({length:6},(_,i)=>{
     const d = new Date(now.getFullYear(), now.getMonth()-i+1, 1);
     const val = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    const lbl = d.toLocaleDateString('uk-UA',{month:'long',year:'numeric'});
+    const lbl = d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', {month:'long',year:'numeric'});
     return `<option value="${val}" ${_planMonth===val?'selected':''}>${lbl}</option>`;
   }).join('');
 
@@ -3252,13 +3252,13 @@ function _renderTrends(el, txs, currency, from, to, period) {
   if (period === 'year') {
     for (let m = 0; m < 12; m++) {
       const d = new Date(from.getFullYear(), m, 1);
-      buckets.push({ key: d.getFullYear() + '-' + String(m+1).padStart(2,'0'), label: d.toLocaleDateString('uk-UA',{month:'short'}) });
+      buckets.push({ key: d.getFullYear() + '-' + String(m+1).padStart(2,'0'), label: d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA',{month:'short'}) });
     }
   } else if (period === 'quarter') {
     // 3 місяці
     for (let m = 0; m < 3; m++) {
       const d = new Date(from.getFullYear(), from.getMonth() + m, 1);
-      buckets.push({ key: d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'), label: d.toLocaleDateString('uk-UA',{month:'short'}) });
+      buckets.push({ key: d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'), label: d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA',{month:'short'}) });
     }
   } else {
     // Місяць — тижні
@@ -3420,7 +3420,7 @@ function renderSettings(el) {
           <button onclick="window._financeAddAccount()"
             style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
             background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            ${I.plus} Додати
+            ${I.plus} ${window.t('finAddBtn')}
           </button>
         </div>
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
@@ -3515,7 +3515,7 @@ window._saveRates = async function() {
   try {
     await colRef('finance_settings').doc('main').set({ rates }, { merge: true });
     const st = document.getElementById('ratesStatus');
-    if (st) st.textContent = 'Збережено ' + new Date().toLocaleTimeString('uk-UA');
+    if (st) st.textContent = 'Збережено ' + new Date().toLocaleTimeString(window.getLocale ? window.getLocale() : 'uk-UA');
     if (typeof showToast === 'function') showToast(window.t('finRateSaved'), 'success');
   } catch(e) { alert('Помилка збереження: ' + e.message); }
 };
