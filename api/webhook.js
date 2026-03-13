@@ -147,7 +147,7 @@ module.exports = async (req, res) => {
                             updatedAt:  admin.firestore.FieldValue.serverTimestamp(),
                             stageEnteredAt: admin.firestore.FieldValue.serverTimestamp(),
                         });
-                        console.log(`[webhook] FB Lead created: ${leadId}`);
+                        console.debug(`[webhook] FB Lead created: ${leadId}`);
                     } catch(fbErr) {
                         console.error('[webhook] FB Lead fetch error:', fbErr.message);
                     }
@@ -162,7 +162,7 @@ module.exports = async (req, res) => {
 
         if (!normalized) return res.status(200).json({ ok: true, skipped: 'unsupported channel' });
 
-        console.log(`[webhook] ${channel} from ${normalized.senderId}: "${normalized.text}"`);
+        console.debug(`[webhook] ${channel} from ${normalized.senderId}: "${normalized.text}"`);
 
         const compRef = db.collection('companies').doc(companyId);
 
@@ -230,7 +230,7 @@ module.exports = async (req, res) => {
         // FIX 1: Deduplication — ігноруємо повторний update_id від Telegram
         const updateId = body?.update_id || body?.entry?.[0]?.id || null;
         if (updateId && session.lastUpdateId === updateId) {
-            console.log('[webhook] Duplicate update_id, skipping:', updateId);
+            console.debug('[webhook] Duplicate update_id, skipping:', updateId);
             return res.status(200).json({ ok: true, skipped: 'duplicate' });
         }
         if (updateId) session.lastUpdateId = updateId;
@@ -351,8 +351,8 @@ module.exports = async (req, res) => {
             });
         }
 
-        console.log(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
-        console.log(`[webhook] Nodes:`, runtimeNodes.map(n => `${n.id}:${n.type}`).join(', '));
+        console.debug(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
+        console.debug(`[webhook] Nodes:`, runtimeNodes.map(n => `${n.id}:${n.type}`).join(', '));
 
         const nodeMap = {};
         runtimeNodes.forEach(n => { if (n.id) nodeMap[n.id] = n; });
@@ -399,8 +399,8 @@ module.exports = async (req, res) => {
         let safety = 0;
         while (nodeId && safety++ < 30) {
             const n = nodeMap[nodeId];
-            if (!n) { console.log(`[webhook] Node not found: ${nodeId}`); break; }
-            console.log(`[webhook] Executing node ${nodeId} type=${n.type}`);
+            if (!n) { console.debug(`[webhook] Node not found: ${nodeId}`); break; }
+            console.debug(`[webhook] Executing node ${nodeId} type=${n.type}`);
 
             if (n.type === 'message') {
                 const text = interp(n.text || '', session.data);
@@ -477,7 +477,7 @@ module.exports = async (req, res) => {
 
                 if (isDone && n.nextNode) {
                     // AI завершив — іти до наступного вузла в ланцюгу
-                    console.log('[webhook] AI DONE → next node:', n.nextNode);
+                    console.debug('[webhook] AI DONE → next node:', n.nextNode);
                     nodeId = n.nextNode;
                     // FIX 4: явно очищаємо waitingForInput щоб не застрягти в AI вузлі
                     session.waitingForInput = null;
@@ -549,7 +549,7 @@ module.exports = async (req, res) => {
                         updatedAt:    admin.firestore.FieldValue.serverTimestamp(),
                     };
                     await compRef.collection('tasks').add(taskData);
-                    console.log('[webhook] talko_task created:', taskTitle);
+                    console.debug('[webhook] talko_task created:', taskTitle);
                 } catch(e) { console.error('[webhook] talko_task error:', e.message); }
                 nodeId = n.nextNode || null;
 
@@ -599,7 +599,7 @@ module.exports = async (req, res) => {
                             createdAt:     admin.firestore.FieldValue.serverTimestamp(),
                             updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
                         });
-                        console.log('[webhook] talko_deal created:', dealTitle);
+                        console.debug('[webhook] talko_deal created:', dealTitle);
                     } else {
                         // Оновлюємо стадію якщо угода вже є
                         await existingDeals.docs[0].ref.update({
@@ -752,7 +752,7 @@ async function callAI(node, userText, session, compRef, compData) {
             || compData.openaiApiKey
             || process.env.OPENAI_API_KEY;
 
-        console.log('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
+        console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
         if (!apiKey) return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний.';
 
         const sysPrompt = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.')
@@ -789,7 +789,7 @@ async function callAI(node, userText, session, compRef, compData) {
             });
             clearTimeout(aiTimeout);
             const d = await r.json();
-            console.log('[callAI] status:', r.status, 'error:', d.error?.message || 'none');
+            console.debug('[callAI] status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.choices?.[0]?.message?.content || null;
 
         // ── Anthropic Claude ──────────────────────────────────
@@ -810,7 +810,7 @@ async function callAI(node, userText, session, compRef, compData) {
             });
             clearTimeout(aiTimeout);
             const d = await r.json();
-            console.log('[callAI] Anthropic status:', r.status, 'error:', d.error?.message || 'none');
+            console.debug('[callAI] Anthropic status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.content?.[0]?.text || null;
 
         // ── Google Gemini ─────────────────────────────────────
@@ -824,7 +824,7 @@ async function callAI(node, userText, session, compRef, compData) {
                 })
             });
             const d = await r.json();
-            console.log('[callAI] Google status:', r.status, 'error:', d.error?.message || 'none');
+            console.debug('[callAI] Google status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.candidates?.[0]?.content?.parts?.[0]?.text || null;
         }
 
@@ -1001,7 +1001,7 @@ async function saveIncomingMessage(compRef, channel, normalized, botId) {
             updatedAt:       admin.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
 
-        console.log(`[saveIncoming] ${contactId}: "${normalized.text.slice(0, 50)}"`);
+        console.debug(`[saveIncoming] ${contactId}: "${normalized.text.slice(0, 50)}"`);
     } catch(e) {
         console.error('[saveIncoming]', e.message);
     }

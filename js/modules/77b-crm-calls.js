@@ -173,6 +173,7 @@ window.crmSaveCallLog = async function () {
 
     try {
         const compRef = window.companyRef();
+        if (!compRef) throw new Error('companyRef не готовий');
         const dealCol = window.DB_COLS?.CRM_DEALS || 'crm_deals';
         const ref     = compRef.collection(dealCol).doc(call.dealId);
         const now     = firebase.firestore.FieldValue.serverTimestamp();

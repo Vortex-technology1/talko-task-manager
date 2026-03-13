@@ -265,16 +265,14 @@ window.crmCopyEmbed = function (formId) {
     });
 };
 
-// ── Додаємо таб "Форми" в Settings ─────────────────────────
-// Патчимо crmSwitchTab щоб при 'forms' рендерити _renderFormsTab
-const _origSwitchTab = window.crmSwitchTab;
-window.crmSwitchTab = function (tab) {
+// ── Додаємо кнопку "Форми" в Settings через hook ───────────
+// Замість monkey-patch — реєструємо в crmSwitchTabHooks[]
+if (!window.crmSwitchTabHooks) window.crmSwitchTabHooks = [];
+window.crmSwitchTabHooks.push(function (tab) {
     if (tab === 'settings') {
-        // Додаємо кнопку Форми в settings якщо немає
-        setTimeout(_ensureFormsTabInSettings, 100);
+        setTimeout(_ensureFormsTabInSettings, 150);
     }
-    _origSwitchTab(tab);
-};
+});
 
 function _ensureFormsTabInSettings() {
     const settingsEl = document.getElementById('crmViewSettings');

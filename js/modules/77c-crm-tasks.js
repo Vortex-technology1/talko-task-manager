@@ -21,6 +21,7 @@ window.crmAutoTasksOnStageChange = async function (deal, newStage) {
     if (!templates.length) return;
 
     const compRef = window.companyRef();
+    if (!compRef) return; // компанія не завантажена
     const uid     = window.currentUser?.uid || '';
     const email   = window.currentUser?.email || '';
 

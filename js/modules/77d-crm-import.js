@@ -113,15 +113,13 @@ window.crmImportHandleFile = async function (file) {
         <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:1rem;color:#dc2626;font-size:0.82rem;">
             ❌ ${e.message}
         </div>
-        <button onclick="document.getElementById('crmImportBody').innerHTML = _crmImportStepUpload ? window._crmImportStepUpload() : ''"
+        <button id="crmImportBackBtn"
             style="margin-top:0.75rem;padding:0.4rem 1rem;background:#f4f5f7;border:1px solid #e8eaed;
-            border-radius:7px;cursor:pointer;font-size:0.8rem;"
-            onclick="document.getElementById('crmImportBody').innerHTML = '${_crmImportStepUpload().replace(/'/g,"\\'")}'"
-        >← Назад</button>`;
-        // Simpler back button
-        body.querySelector('button').onclick = () => {
+            border-radius:7px;cursor:pointer;font-size:0.8rem;">← Назад</button>`;
+        document.getElementById('crmImportBackBtn').onclick = function () {
             body.innerHTML = _crmImportStepUpload();
-            document.getElementById('crmImportFileInput').onchange = e => crmImportHandleFile(e.target.files[0]);
+            var inp = document.getElementById('crmImportFileInput');
+            if (inp) inp.onchange = function (ev) { crmImportHandleFile(ev.target.files[0]); };
         };
     }
 };
@@ -330,6 +328,10 @@ window.crmImportExecute = async function () {
 
     const db       = firebase.firestore();
     const compRef  = window.companyRef();
+    if (!compRef) {
+        if (window.showToast) showToast('Помилка: компанія не завантажена', 'error');
+        return;
+    }
     const uid      = window.currentUser?.uid || '';
     const email    = window.currentUser?.email || '';
     const pipeline = window.crm?.pipeline;

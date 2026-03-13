@@ -268,6 +268,10 @@ window.crmSwitchTab = function(tab) {
     if (tab === 'activities') _renderActivitiesTab();
     if (tab === 'analytics')  _renderAnalytics();
     if (tab === 'settings')   _renderCRMSettings();
+    // Хуки для зовнішніх модулів (77g-crm-forms та ін.)
+    if (Array.isArray(window.crmSwitchTabHooks)) {
+        window.crmSwitchTabHooks.forEach(function (fn) { try { fn(tab); } catch(e) {} });
+    }
 };
 
 // ── Load ───────────────────────────────────────────────────
@@ -1534,6 +1538,10 @@ window.crmOpenDeal = function(dealId) {
     </div>`);
 
     crmDealTab(deal.id, 'details');
+    // Хуки для зовнішніх модулів (77f-crm-mobile та ін.)
+    if (Array.isArray(window.crmOpenDealHooks)) {
+        window.crmOpenDealHooks.forEach(function (fn) { try { fn(deal.id); } catch(e) {} });
+    }
 };
 
 window.crmDealTab = function(dealId, tab) {
@@ -3451,20 +3459,28 @@ function _renderCRMSettings() {
             }).join('')}
         </div>
 
-        <!-- Права доступу менеджерів -->
-        ${(window.crmRenderAccessSettings ? window.crmRenderAccessSettings() : '')}
+        <!-- Права доступу менеджерів (lazy) -->
+        <div id="crmSettingsAccessBlock"></div>
 
-        <!-- Авто-задачі по стадіях -->
-        ${(window.crmRenderTaskTemplatesSettings ? window.crmRenderTaskTemplatesSettings() : '')}
+        <!-- Авто-задачі по стадіях (lazy) -->
+        <div id="crmSettingsTasksBlock"></div>
 
-        ${(window.crmRenderTaskTemplatesSettings && window.crmRenderAccessSettings) ? `
-        <button onclick="crmSaveTaskTemplates()"
-            style="padding:0.55rem;width:100%;background:#3b82f6;color:white;border:none;
-            border-radius:8px;cursor:pointer;font-weight:600;font-size:0.83rem;">
-            💾 Зберегти шаблони задач
-        </button>` : ''}
+        <div id="crmSettingsSaveTasksBlock"></div>
 
     </div>`;
+
+    // Lazy inject — модулі можуть завантажитись пізніше через defer
+    requestAnimationFrame(function () {
+        var el = document.getElementById('crmSettingsAccessBlock');
+        if (el && typeof window.crmRenderAccessSettings === 'function')
+            el.innerHTML = window.crmRenderAccessSettings();
+        var el2 = document.getElementById('crmSettingsTasksBlock');
+        if (el2 && typeof window.crmRenderTaskTemplatesSettings === 'function')
+            el2.innerHTML = window.crmRenderTaskTemplatesSettings();
+        var el3 = document.getElementById('crmSettingsSaveTasksBlock');
+        if (el3 && typeof window.crmSaveTaskTemplates === 'function')
+            el3.innerHTML = '<button onclick="crmSaveTaskTemplates()" style="padding:0.55rem;width:100%;background:#3b82f6;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.83rem;">💾 Зберегти шаблони задач</button>';
+    });
 }
 
 // ── Pipeline CRUD ──────────────────────────────────────────
