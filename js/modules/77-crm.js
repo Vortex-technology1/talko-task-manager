@@ -99,7 +99,7 @@ function _renderShell() {
     ];
 
     container.innerHTML = `
-    <div style="height:calc(100vh - 56px);display:flex;flex-direction:column;background:#f4f5f7;">
+    <div style="height:100%;display:flex;flex-direction:column;background:#f4f5f7;overflow:hidden;">
 
         <!-- Top bar -->
         <div style="background:white;border-bottom:1px solid #e8eaed;padding:0 1rem;
@@ -183,22 +183,33 @@ function _filteredDeals() {
     return deals;
 }
 
-window.crmApplyFilters = function(fromKanbanBar) {
-    const q = document.getElementById('crmSearchInput')?.value || '';
-    crm.filters.search = q;
-    // Зчитуємо kanban filter bar якщо є
-    const assigneeEl = document.getElementById('crmKanbanFilterAssignee');
-    const tagEl      = document.getElementById('crmKanbanFilterTag');
-    const sourceEl   = document.getElementById('crmKanbanFilterSource');
-    const minEl      = document.getElementById('crmKanbanFilterAmountMin');
-    const maxEl      = document.getElementById('crmKanbanFilterAmountMax');
-    if (assigneeEl) crm.filters.assignee  = assigneeEl.value;
-    if (tagEl)      crm.filters.tag       = tagEl.value;
-    if (sourceEl)   crm.filters.source    = sourceEl.value;
-    if (minEl)      crm.filters.amountMin = minEl.value;
-    if (maxEl)      crm.filters.amountMax = maxEl.value;
-    if (crm.viewMode === 'kanban') _renderKanban();
-    else _renderListView();
+// IMP 1: debounce для текстового пошуку і числових фільтрів (select — без debounce, реагує одразу)
+let _crmFilterDebounceTimer = null;
+window.crmApplyFilters = function(fromKanbanBar, immediate) {
+    const _apply = () => {
+        const q = document.getElementById('crmSearchInput')?.value || '';
+        crm.filters.search = q;
+        const assigneeEl = document.getElementById('crmKanbanFilterAssignee');
+        const tagEl      = document.getElementById('crmKanbanFilterTag');
+        const sourceEl   = document.getElementById('crmKanbanFilterSource');
+        const minEl      = document.getElementById('crmKanbanFilterAmountMin');
+        const maxEl      = document.getElementById('crmKanbanFilterAmountMax');
+        if (assigneeEl) crm.filters.assignee  = assigneeEl.value;
+        if (tagEl)      crm.filters.tag       = tagEl.value;
+        if (sourceEl)   crm.filters.source    = sourceEl.value;
+        if (minEl)      crm.filters.amountMin = minEl.value;
+        if (maxEl)      crm.filters.amountMax = maxEl.value;
+        if (crm.viewMode === 'kanban') _renderKanban();
+        else _renderListView();
+    };
+    // select (onchange) і скидання — відразу; oninput (текст/числа) — debounce 250ms
+    if (immediate || fromKanbanBar === true) {
+        clearTimeout(_crmFilterDebounceTimer);
+        _apply();
+    } else {
+        clearTimeout(_crmFilterDebounceTimer);
+        _crmFilterDebounceTimer = setTimeout(_apply, 250);
+    }
 };
 
 window.crmResetFilters = function() {
@@ -346,11 +357,11 @@ function _kanbanFilterBar() {
         <div style="display:flex;align-items:center;gap:0.25rem;">
             <span style="font-size:0.72rem;color:#9ca3af;">₴</span>
             <input id="crmKanbanFilterAmountMin" type="number" placeholder="від" value="${f.amountMin || ''}"
-                oninput="crmApplyFilters(true)"
+                oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
             <span style="font-size:0.72rem;color:#9ca3af;">—</span>
             <input id="crmKanbanFilterAmountMax" type="number" placeholder="до" value="${f.amountMax || ''}"
-                oninput="crmApplyFilters(true)"
+                oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
         </div>
         ${hasFilter ? `
@@ -389,10 +400,8 @@ function _renderKanban() {
     const revenue  = crm.deals.filter(d => d.stage === 'won').reduce((s,d) => s+(d.amount||0), 0);
     const pipeline = crm.deals.filter(d => d.stage !== 'won' && d.stage !== 'lost').reduce((s,d) => s+(d.amount||0), 0);
 
-    // Висота kanban board залежить від наявності switcher рядка
-    const switcherHeight = crm.pipelines.length > 1 ? 89 : 57;
     // PROB 2 FIX: filterBarH видалено — board тепер flex:1, висота авторозрахунок
-    // bulkBarH видалено — board тепер flex:1, calc() не потрібен (PROB 2 FIX)
+    // switcherHeight видалено — мертва змінна після PROB 2 FIX
 
     c.innerHTML = `
     ${limitBanner}
@@ -2450,7 +2459,7 @@ function _renderClients() {
     const c = document.getElementById('crmViewClients');
     if (!c) return;
     c.innerHTML = `
-    <div style="display:flex;gap:1rem;height:calc(100vh - 104px);overflow:hidden;">
+    <div style="display:flex;gap:1rem;height:100%;overflow:hidden;">
         <!-- Список -->
         <div style="flex:1;min-width:0;overflow-y:auto;">
             <div style="padding:0 0.5rem;">
@@ -2987,25 +2996,35 @@ function _renderAnalytics() {
         [window.t('crmStageLost'), lost, '#ef4444'],
     ];
 
-    // По місяцях (останні 6)
-    // FIX: використовуємо lostAt/wonAt для точної дати закриття, createdAt для нових
+    // IMP 2 FIX: один прохід по crm.deals замість 4×6=24
     const _dealDate = (dl, field) => {
         const ts = dl[field];
         return ts?.toDate ? ts.toDate() : (ts ? new Date(ts) : null);
     };
-    const months = [];
+    const monthKeys = [];
     const now = new Date();
     for (let i = 5; i >= 0; i--) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-        const label = d.toLocaleString('uk-UA', {month:'short'});
-        const newDeals  = crm.deals.filter(dl => (_dealDate(dl,'createdAt')||new Date(0)).toISOString().startsWith(key)).length;
-        // BUG A FIX: wonDeals НЕ використовує lostAt — угода won ніколи не мала lostAt як дату виграшу
-        const wonDeals  = crm.deals.filter(dl => dl.stage==='won'  && (_dealDate(dl,'wonAt')  || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).length;
-        const lostDeals = crm.deals.filter(dl => dl.stage==='lost' && (_dealDate(dl,'lostAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).length;
-        const wonRevenue = crm.deals.filter(dl => dl.stage==='won' && (_dealDate(dl,'wonAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().startsWith(key)).reduce((s,dl)=>s+(dl.amount||0),0);
-        months.push({ label, newDeals, wonDeals, lostDeals, wonRevenue });
+        monthKeys.push({
+            key:   `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,
+            label: d.toLocaleString('uk-UA', { month: 'short' }),
+        });
     }
+    // Один groupBy прохід
+    const monthMap = {};
+    monthKeys.forEach(({ key }) => { monthMap[key] = { newDeals:0, wonDeals:0, lostDeals:0, wonRevenue:0 }; });
+    crm.deals.forEach(dl => {
+        const createdKey = (_dealDate(dl,'createdAt') || new Date(0)).toISOString().slice(0,7);
+        if (monthMap[createdKey]) monthMap[createdKey].newDeals++;
+        if (dl.stage === 'won') {
+            const wonKey = (_dealDate(dl,'wonAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().slice(0,7);
+            if (monthMap[wonKey]) { monthMap[wonKey].wonDeals++; monthMap[wonKey].wonRevenue += dl.amount||0; }
+        } else if (dl.stage === 'lost') {
+            const lostKey = (_dealDate(dl,'lostAt') || _dealDate(dl,'updatedAt') || new Date(0)).toISOString().slice(0,7);
+            if (monthMap[lostKey]) monthMap[lostKey].lostDeals++;
+        }
+    });
+    const months = monthKeys.map(({ key, label }) => ({ label, ...monthMap[key] }));
     const maxBar = Math.max(...months.map(m => Math.max(m.newDeals, m.wonDeals, m.lostDeals)), 1);
     const maxRev = Math.max(...months.map(m => m.wonRevenue), 1);
 

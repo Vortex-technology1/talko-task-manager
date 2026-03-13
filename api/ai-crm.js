@@ -87,15 +87,20 @@ module.exports = async function handler(req, res) {
     }
     const deal = { id: dealId, ...dealSnap.data() };
 
-    // ── Get Anthropic API key from company settings ──────────
-    // Key зберігається в Firestore, читається тут — ніколи не в браузері
-    const compSnap = await db.doc(`companies/${companyId}`).get().catch(() => null);
-    const apiKey = compSnap?.data()?.anthropicApiKey || compSnap?.data()?.openaiApiKey
-                   || process.env.ANTHROPIC_API_KEY;
+    // ── Get API key from company settings ───────────────────
+    const compData = compSnap?.data() || {};
+    // Пріоритет: anthropicApiKey → openaiApiKey → env fallback
+    const anthropicKey = compData.anthropicApiKey || process.env.ANTHROPIC_API_KEY;
+    const openaiKey    = compData.openaiApiKey;
+    const apiKey       = anthropicKey || openaiKey;
 
     if (!apiKey) {
         return res.status(400).json({ error: 'API ключ не встановлений. Додайте в Інтеграціях.' });
     }
+
+    // PROB 7 FIX: надійне визначення провайдера по джерелу ключа
+    // Anthropic ключі: sk-ant-api03-... або якщо є anthropicApiKey в Firestore
+    const isAnthropic = !!anthropicKey;
 
     // ── Build prompt ─────────────────────────────────────────
     const stageLabels = {
@@ -120,10 +125,9 @@ ${deal.leadData?.mainProblem ? 'Проблема клієнта: ' + deal.leadDa
 
 Відповідь: лаконічно, 150-200 слів, українською.`;
 
-    // ── Call Anthropic ───────────────────────────────────────
+    // ── Call AI provider ─────────────────────────────────────
     let analysis;
     try {
-        const isAnthropic = !apiKey.startsWith('sk-') || apiKey.startsWith('sk-ant');
         let response, data;
 
         if (isAnthropic) {

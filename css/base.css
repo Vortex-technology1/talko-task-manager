@@ -173,6 +173,17 @@
             box-sizing: border-box;
         }
 
+        /* CRM — на повну висоту без внутрішніх відступів (kanban потребує flex stretch) */
+        #crmTab {
+            height: 100%;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+        #crmContainer {
+            height: 100%;
+        }
+
         /* Фінанси — на всю ширину без внутрішніх відступів контейнера */
         #financeTab {
             margin: -1rem;
