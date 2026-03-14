@@ -494,12 +494,12 @@
                 const resolved = manualIncidents.filter(mi => mi.resolved);
 
                 const catConfig = {
-                    people:  { icon: 'users',         color: '#dc2626', bg: '#fef2f2', label: 'Люди' },
-                    process: { icon: 'git-branch',    color: '#ea580c', bg: '#fff7ed', label: 'Процес' },
-                    finance: { icon: 'dollar-sign',   color: '#b45309', bg: '#fffbeb', label: '💰 Фінанси' },
-                    clients: { icon: 'user-x',        color: '#9333ea', bg: '#faf5ff', label: '😤 Клієнти' },
-                    quality: { icon: 'alert-octagon', color: '#dc2626', bg: '#fef2f2', label: '🎯 Якість' },
-                    other:   { icon: 'flag',          color: '#6b7280', bg: '#f9fafb', label: '📌 Інше' },
+                    people:  { icon: 'users',         color: '#dc2626', bg: '#fef2f2', label: t('ctrlCatPeople') },
+                    process: { icon: 'git-branch',    color: '#ea580c', bg: '#fff7ed', label: t('ctrlCatProcess') },
+                    finance: { icon: 'dollar-sign',   color: '#b45309', bg: '#fffbeb', label: t('ctrlCatFinance') },
+                    clients: { icon: 'user-x',        color: '#9333ea', bg: '#faf5ff', label: t('ctrlCatClients') },
+                    quality: { icon: 'alert-octagon', color: '#dc2626', bg: '#fef2f2', label: t('ctrlCatQuality') },
+                    other:   { icon: 'flag',          color: '#6b7280', bg: '#f9fafb', label: t('ctrlCatOther') },
                 };
 
                 // Авто-сигнали (для контексту внизу, коротко)
@@ -658,34 +658,34 @@ window.setControlView = function(viewType) {
 // ── Tooltip підказки ──────────────────────────────────────
 const CTRL_TOOLTIPS = {
     briefing: {
-        title: 'Брифінг — щоранковий огляд',
-        text: 'Показує тільки те що горить: прострочені задачі (3 рівні критичності), застряглі без старту >3 днів, задачі на сьогодні. Відкривай першим — 2 хвилини і картина дня зрозуміла.',
-        when: 'Щоранку перед початком роботи'
+        title: t('ctrlTipBriefingTitle'),
+        text:  t('ctrlTipBriefingText'),
+        when:  t('ctrlTipBriefingWhen'),
     },
     people: {
-        title: 'По людях — навантаження + якість делегування',
-        text: 'Показує скільки задач у кожного (нові / в роботі / перевірка / виконано) + % автономності (виконав без повернень). Червоний % — людина не вміє здавати роботу з першого разу або перевантажена.',
-        when: 'На планьорці, коли є питання "хто чим зайнятий"'
+        title: t('ctrlTipPeopleTitle'),
+        text:  t('ctrlTipPeopleText'),
+        when:  t('ctrlTipPeopleWhen'),
     },
     functions: {
-        title: 'По функціях — де бізнес буксує',
-        text: 'Групує задачі по напрямках (маркетинг, продажі, виробництво). Якщо функція переповнена — це системна проблема, не людська. Відповідь на "чому не виконується план по відділу".',
-        when: 'Щотижневий аналіз — де системний затор'
+        title: t('ctrlTipFunctionsTitle'),
+        text:  t('ctrlTipFunctionsText'),
+        when:  t('ctrlTipFunctionsWhen'),
     },
     journal: {
-        title: 'Журнал збоїв — хронологія факапів',
-        text: 'Тут ти сам фіксуєш що пішло не так: факт, причина, хто відповідальний, що вирішено. Не дублює Брифінг — там поточне, тут — записи для аналізу і розбору на планьорці.',
-        when: 'Після будь-якого значущого збою — зафіксуй одразу'
+        title: t('ctrlTipJournalTitle'),
+        text:  t('ctrlTipJournalText'),
+        when:  t('ctrlTipJournalWhen'),
     },
     ownerreport: {
-        title: 'Звіт власника — тижневий/місячний підсумок',
-        text: 'Зведені KPI бізнесу: виконання планів, динаміка, відхилення. Не для щоденного використання — для стратегічного аналізу раз на тиждень чи місяць.',
-        when: 'П\'ятниця/кінець місяця — стратегічний огляд'
+        title: t('ctrlTipOwnerReportTitle'),
+        text:  t('ctrlTipOwnerReportText'),
+        when:  t('ctrlTipOwnerReportWhen'),
     },
     registry: {
-        title: 'Реєстр дій — хронологія активності команди',
-        text: 'Всі дії кожного співробітника: виконані задачі, дзвінки в CRM, SMS, зміни стадій угод, коментарі. Бачиш хто що робив і скільки дзвінків зробив за день.',
-        when: 'Коли хочеш зрозуміти що реально робила людина за день'
+        title: t('ctrlTipRegistryTitle'),
+        text:  t('ctrlTipRegistryText'),
+        when:  t('ctrlTipRegistryWhen'),
     },
 };
 
