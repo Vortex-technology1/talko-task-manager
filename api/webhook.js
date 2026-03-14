@@ -534,14 +534,86 @@ module.exports = async (req, res) => {
             // Lock is stale (> 8s) — proceed
         }
         const sessionDoc = await sessionRef.get();
+        const _isNewContact = !sessionDoc.exists;
         let session = sessionDoc.exists ? sessionDoc.data() : {
             senderId: normalized.senderId, senderName: normalized.senderName || '',
             channel, currentFlowId: null, currentBotId: null,
             currentNodeId: null, waitingForInput: null,
-            data: {}, tags: [],
+            data: {}, aiHistory: [], tags: [],
         };
         // FIX CE: refresh senderName on every message (user may rename in Telegram)
         if (normalized.senderName) session.senderName = normalized.senderName;
+
+        // ── Авто-лід при першому повідомленні ───────────────
+        // Якщо це новий контакт (перше повідомлення) — одразу створюємо
+        // клієнта і угоду в CRM без жодних вузлів у флоу
+        if (_isNewContact) {
+            try {
+                const _ts = admin.firestore.FieldValue.serverTimestamp();
+                const _name = normalized.senderName || normalized.senderId || 'Новий контакт';
+                const _source = channel === 'telegram' ? 'telegram_bot'
+                    : channel === 'instagram' ? 'instagram_bot' : 'bot';
+
+                // Перевіряємо чи вже є клієнт з таким contactId (захист від race)
+                const _existingClient = await compRef.collection('crm_clients')
+                    .where('botContactId', '==', contactId).limit(1).get().catch(() => null);
+
+                if (!_existingClient || _existingClient.empty) {
+                    // Створюємо клієнта
+                    const _clientRef = await compRef.collection('crm_clients').add({
+                        name:         _name,
+                        phone:        '',
+                        email:        '',
+                        source:       _source,
+                        botContactId: contactId,
+                        channel:      channel,
+                        telegramId:   channel === 'telegram' ? String(normalized.senderId) : '',
+                        createdAt:    _ts,
+                        updatedAt:    _ts,
+                    });
+
+                    // Знаходимо дефолтний pipeline
+                    const _pipSnap = await compRef.collection('crm_pipeline')
+                        .where('isDefault', '==', true).limit(1).get().catch(() => null);
+                    const _pip = _pipSnap && !_pipSnap.empty ? _pipSnap.docs[0] : null;
+                    const _pipId = _pip ? _pip.id : '';
+                    const _stages = _pip ? (_pip.data().stages || []) : [];
+                    const _stageId = _stages.length ? (_stages[0].id || '') : 'new';
+
+                    // Створюємо угоду
+                    const _dealRef = compRef.collection('crm_deals').doc();
+                    await _dealRef.set({
+                        id:           _dealRef.id,
+                        title:        `${_name} — ${_source}`,
+                        clientId:     _clientRef.id,
+                        clientName:   _name,
+                        botContactId: contactId,
+                        contactId:    contactId,
+                        phone:        '',
+                        pipelineId:   _pipId,
+                        stage:        _stageId,
+                        stageId:      _stageId,
+                        source:       _source,
+                        status:       'open',
+                        amount:       0,
+                        currency:     'UAH',
+                        channel:      channel,
+                        autoCreated:  true,
+                        createdBy:    'system:auto_lead',
+                        createdAt:    _ts,
+                        updatedAt:    _ts,
+                    });
+
+                    // Зберігаємо clientId в session для подальших вузлів
+                    session.data._autoClientId = _clientRef.id;
+                    session.data._autoDealId   = _dealRef.id;
+                    console.log(`[auto_lead] Created client=${_clientRef.id} deal=${_dealRef.id} for ${contactId}`);
+                }
+            } catch(e) {
+                console.error('[auto_lead]', e.message);
+                // Не блокуємо основний флоу якщо авто-лід впав
+            }
+        }
 
         // FIX 1: Deduplication — ігноруємо повторний update_id від Telegram
         const updateId = body?.update_id || body?.entry?.[0]?.id || null;
@@ -1407,22 +1479,38 @@ async function finish(session, flow, compRef, channel, compData = {}) {
         try {
             const clientName = session.senderName || d.name || d.phone || 'Лід з бота';
 
-            // Перевіряємо чи вже є клієнт з таким senderId
-            const existingClients = await compRef.collection('crm_clients')
-                .where('senderId', '==', String(session.senderId)).limit(1).get();
+            // Спочатку шукаємо авто-клієнта по botContactId (створений при першому повідомленні)
+            // Якщо не знайшли — шукаємо по senderId (старий шлях)
+            let existingClients = await compRef.collection('crm_clients')
+                .where('botContactId', '==', contactId).limit(1).get().catch(() => null);
+            if (!existingClients || existingClients.empty) {
+                existingClients = await compRef.collection('crm_clients')
+                    .where('senderId', '==', String(session.senderId)).limit(1).get()
+                    .catch(() => ({ empty: true, docs: [] }));
+            }
 
             let clientId;
             if (!existingClients.empty) {
                 clientId = existingClients.docs[0].id;
                 // Оновлюємо поля якщо з'явились нові дані
                 await compRef.collection('crm_clients').doc(clientId).set({
+                    name:        clientName,
                     phone:       d.phone || '',
                     niche:       d.business_type || d.niche || '',
                     mainProblem: d.main_problem || '',
                     mainGoal:    d.main_goal || '',
                     aiSummary:   d.ai_response || '',
+                    telegram:    session.username ? `@${session.username}` : '',
                     updatedAt:   admin.firestore.FieldValue.serverTimestamp(),
                 }, { merge: true });
+                // Також оновлюємо авто-deal якщо він був
+                if (session.data?._autoDealId) {
+                    await compRef.collection('crm_deals').doc(session.data._autoDealId).set({
+                        clientName: clientName,
+                        phone:      d.phone || '',
+                        updatedAt:  admin.firestore.FieldValue.serverTimestamp(),
+                    }, { merge: true }).catch(() => {});
+                }
             } else {
                 // Новий клієнт
                 const clientRef = compRef.collection('crm_clients').doc();
