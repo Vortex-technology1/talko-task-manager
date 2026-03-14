@@ -249,8 +249,8 @@
     function _isLinked(f, colId) {
         if (colId === 'site')    return !!_sites.find(s => s.funnelId === f.id);
         if (colId === 'bot')     return !!f.botId;
-        if (colId === 'ai')      return (f.steps||[]).length > 0;
-        if (colId === 'crm')     return (f.leadsCount||0) > 0;
+        if (colId === 'ai')      return (f.steps||[]).length > 0 || !!f.botId;
+        if (colId === 'crm')     return true; // CRM is always available in TALKO
         if (colId === 'process') return !!f.processTemplateId;
         return false;
     }
@@ -271,7 +271,8 @@
             return { title: 'AI Ланцюг', subtitle: n+' кроків', stat: f.leadsCount||null, statLabel:'завершили' };
         }
         if (colId === 'crm') {
-            return { title: 'Лід в CRM', subtitle: 'автоматично', stat: f.leadsCount||null, statLabel:'угод' };
+            const cnt = f.leadsCount || 0;
+            return { title: 'Лід в CRM', subtitle: cnt > 0 ? 'автоматично' : 'готово до роботи', stat: cnt > 0 ? cnt : null, statLabel:'угод' };
         }
         if (colId === 'process') {
             const t = _templates.find(t => t.id === f.processTemplateId);
@@ -339,7 +340,17 @@
             : confirm(`Видалити воронку "${f?.name}"?`);
         if (!confirmed) return;
         try {
-            await window.companyRef().collection('funnels').doc(funnelId).delete();
+            const base = window.companyRef();
+            // FIX 4: cleanup funnelId from linked sites before deleting
+            const linkedSites = _sites.filter(s => s.funnelId === funnelId);
+            await Promise.all(linkedSites.map(s =>
+                base.collection('landingPages').doc(s.id)
+                    .update({ funnelId: firebase.firestore.FieldValue.delete() })
+            ));
+            // Cleanup local _sites
+            linkedSites.forEach(s => { delete s.funnelId; });
+            await base.collection('funnels').doc(funnelId).delete();
+            // onSnapshot will update _funnels automatically
             if (window.showToast) showToast('Видалено','success');
         } catch(e) {
             if (window.showToast) showToast('Помилка: '+e.message,'error');
@@ -439,6 +450,10 @@
         try {
             await window.companyRef().collection('landingPages').doc(siteId)
                 .update({ funnelId, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            // FIX 1: update local _sites immediately so cell re-renders without waiting
+            const s = _sites.find(x => x.id === siteId);
+            if (s) s.funnelId = funnelId;
+            _renderHub();
             if (window.showToast) showToast('Сайт прив\'язано ✓','success');
         } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
     };
@@ -448,6 +463,10 @@
         try {
             await window.companyRef().collection('funnels').doc(funnelId)
                 .update({ [field]: value, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            // FIX 2: update local _funnels[] immediately for instant UI feedback
+            const f = _funnels.find(x => x.id === funnelId);
+            if (f) f[field] = value;
+            _renderHub();
             if (window.showToast) showToast('Збережено ✓','success');
         } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
     };

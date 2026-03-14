@@ -14,8 +14,7 @@
         funnelEditorId = funnelId;
 
         // Load funnel
-        const doc = await firebase.firestore()
-            window.companyRef()
+        const doc = await window.companyRef()
             .collection('funnels').doc(funnelId).get();
 
         if (!doc.exists) { if(window.showToast)showToast('Воронку не знайдено','warning'); else alert('Воронку не знайдено'); return; }
