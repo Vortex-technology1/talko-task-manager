@@ -546,11 +546,12 @@ module.exports = async (req, res) => {
         // FIX CE: refresh senderName on every message (user may rename in Telegram)
         if (normalized.senderName) session.senderName = normalized.senderName;
 
-        // ── Авто-лід при першому повідомленні (fire-and-forget) ──
-        // Не await — не блокуємо відповідь боту
-        // Клієнт і угода створяться асинхронно поки бот відповідає
+        // ── Авто-лід при першому повідомленні ──────────────────
+        // AWAITED щоб _autoClientId/_autoDealId були в session
+        // до того як флоу почне виконуватись
+        // Типовий час: ~200ms (2 parallel Firestore writes)
         if (_isNewContact) {
-            (async () => { try {
+            await (async () => { try {
                 const _ts = admin.firestore.FieldValue.serverTimestamp();
                 const _name = normalized.senderName || normalized.senderId || 'Новий контакт';
                 const _source = channel === 'telegram' ? 'telegram_bot'
@@ -1399,14 +1400,21 @@ async function sendViber(token, receiverId, text, buttons) {
         };
     }
     try {
+        const _vAbort = new AbortController();
+        const _vTimer = setTimeout(() => _vAbort.abort(), 8000);
         const r = await fetch('https://chatapi.viber.com/pa/send_message', {
             method: 'POST',
             headers: { 'X-Viber-Auth-Token': token, 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
+            signal: _vAbort.signal,
         });
+        clearTimeout(_vTimer);
         const result = await r.json();
         if (result.status !== 0) console.error('[sendViber] Error:', result.status_message, result.status);
-    } catch(e) { console.error('[sendViber] fetch error:', e.message); }
+    } catch(e) {
+        if (e.name === 'AbortError') console.error('[sendViber] TIMEOUT 8s');
+        else console.error('[sendViber] fetch error:', e.message);
+    }
 }
 
 // Єдина точка відправки — вибирає канал автоматично
@@ -1432,10 +1440,14 @@ async function sendTgGetId(token, chatId, text) {
     if (!token || !chatId) return null;
     let safeText = (text || ' ').trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     try {
+        const _ctrl = new AbortController();
+        const _t = setTimeout(() => _ctrl.abort(), 8000);
         const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, text: safeText, parse_mode: 'HTML' })
+            body: JSON.stringify({ chat_id: chatId, text: safeText, parse_mode: 'HTML' }),
+            signal: _ctrl.signal,
         });
+        clearTimeout(_t);
         const result = await r.json();
         return result.ok ? result.result?.message_id : null;
     } catch(e) { return null; }
@@ -1457,10 +1469,16 @@ async function editTg(token, chatId, messageId, text, buttons) {
         ])};
     }
     try {
+        const _eAbort = new AbortController();
+        const _eTimer = setTimeout(() => _eAbort.abort(), 8000);
         await fetch(`https://api.telegram.org/bot${token}/editMessageText`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload), signal: _eAbort.signal,
         });
-    } catch(e) { console.error('[editTg]', e.message); }
+        clearTimeout(_eTimer);
+    } catch(e) {
+        if (e.name !== 'AbortError') console.error('[editTg]', e.message);
+    }
 }
 
 // ─────────────────────────────────────────
@@ -1510,7 +1528,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
             return;
         }
         // Автоматично видаляємо lock через 60 секунд (не блокуємо повторний запуск назавжди)
-        setTimeout(() => lockRef.delete().catch(() => {}), 60000);
+        setTimeout(() => lockRef.delete().catch(() => {}), 120000); // 2 min TTL
 
         // Зберігаємо лід (audit trail)
         await compRef.collection('leads').add({
@@ -1757,7 +1775,8 @@ async function handleSendMessage(req, res, _authUser) {
 
         // Відправляємо в Telegram
         let telegramOk = false;
-        const token = botToken || contact.botToken;
+        // SECURITY: ігноруємо botToken з req.body — завжди беремо з Firestore
+        const token = contact.botToken || contact.integrations?.telegram?.botToken;
         const senderId = contact.senderId;
 
         if (token && senderId && contact.channel === 'telegram') {
