@@ -133,7 +133,7 @@ function _renderBuilderShell() {
 async function _loadSite() {
     try {
         const doc = await window.companyRef()
-            .collection(window.DB_COLS.SITES).doc( + '/sites/' + sb.siteId).get();
+            .collection(window.DB_COLS.SITES).doc(sb.siteId).get();
         if (!doc.exists) { (window.showToast && showToast(window.t('sitesNotFound'),'warning')); window.initSitesModule(); return; }
         sb.site   = { id: doc.id, ...doc.data() };
         sb.blocks = sb.site.blocks || [];
