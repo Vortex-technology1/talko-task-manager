@@ -23,10 +23,16 @@ if (!admin.apps.length) {
         });
     } catch(e) {
         console.error('[site.js] Firebase init error:', e.message);
+        // Зберігаємо помилку щоб показати в response
+        global._siteInitError = e.message;
     }
 }
 
-const _db = () => admin.firestore();
+const _db = () => {
+    if (global._siteInitError) throw new Error('Firebase init failed: ' + global._siteInitError);
+    if (!admin.apps.length) throw new Error('Firebase not initialized');
+    return admin.firestore();
+};
 
 // ── HTML escape ──────────────────────────────────────────────
 function esc(s) {
