@@ -527,19 +527,16 @@ module.exports = async (req, res) => {
             if (startPayload) session.data._startRef = startPayload;
         }
         if (normalized.text && !normalized.text.startsWith('/start') && normalized.text !== 'start') {
-            try {
-                await compRef
-                    .collection('contacts').doc(contactId)
-                    .collection('messages').add({
-                        text:      normalized.text,
-                        from:      'user',
-                        direction: 'in',
-                        read:      false,
-                        timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                    });
-                // lastMessage + unreadCount (тільки якщо не в активному флоу — перевіримо пізніше)
-                // unreadCount оновлюється в saveIncomingMessage якщо флоу завершений
-            } catch(e) { console.error('[saveMsg]', e.message); }
+            // PERF: fire-and-forget — запис повідомлення не блокує обробку (-15ms)
+            compRef
+                .collection('contacts').doc(contactId)
+                .collection('messages').add({
+                    text:      normalized.text,
+                    from:      'user',
+                    direction: 'in',
+                    read:      false,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                }).catch(e => console.error('[saveMsg]', e.message));
         }
 
         // Підтверджуємо callback_query одразу (прибирає "годинник" на кнопці)
@@ -747,11 +744,13 @@ module.exports = async (req, res) => {
         }
 
         if (!flow) {
-            if (isStart) await sendMsg(channel, botToken, normalized.senderId, 'Вітаємо! Бот активний ✅');
-            // Немає активного флоу — зберігаємо як вхідне повідомлення для ручного чату
-            await saveIncomingMessage(compRef, channel, normalized, botDocId);
-            // Зберігаємо lastUpdateId щоб уникнути повторної обробки при Telegram retry
-            if (updateId) await sessionRef.set({ lastUpdateId: updateId }, { merge: true }).catch(()=>{});
+            // PERF: sendMsg + saveIncoming + session паралельно
+            const _noFlowOps = [
+                saveIncomingMessage(compRef, channel, normalized, botDocId),
+            ];
+            if (isStart) _noFlowOps.push(sendMsg(channel, botToken, normalized.senderId, 'Вітаємо! Бот активний ✅'));
+            if (updateId) { session.lastUpdateId = updateId; _noFlowOps.push(sessionRef.set(session, { merge: true }).catch(()=>{})); }
+            await Promise.all(_noFlowOps);
             lockRef.delete().catch(()=>{});
             return res.status(200).json({ ok: true, saved: 'no-flow-incoming' });
         }
@@ -887,8 +886,11 @@ module.exports = async (req, res) => {
         }
 
         if (!nodeId) {
-            await sessionRef.set(session, { merge: true });
-            lockRef.delete().catch(()=>{});
+            // PERF: fire-and-forget — немає вузла для обробки
+            Promise.all([
+                sessionRef.set(session, { merge: true }),
+                lockRef.delete().catch(()=>{}),
+            ]).catch(e => console.error('[webhook] session no-node:', e.message));
             return res.status(200).json({ ok: true });
         }
 
@@ -994,15 +996,13 @@ module.exports = async (req, res) => {
                 session.data.ai_response = cleanReply;
 
                 if (cleanReply) {
-                    // FIX 6: редагуємо ⏳ повідомлення якщо є message_id, інакше новим
-                    if (thinkingMsgId) {
-                        await editTg(botToken, normalized.senderId, thinkingMsgId, cleanReply, aiBtns.length ? aiBtns : null);
-                    } else {
-                        await Promise.all([
-                            sendMsg(channel, botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null),
-                            saveBotMessage(compRef, contactId, cleanReply),
-                        ]);
-                    }
+                    // PERF: editTg/sendMsg + saveBotMessage паралельно (-15ms)
+                    await Promise.all([
+                        thinkingMsgId
+                            ? editTg(botToken, normalized.senderId, thinkingMsgId, cleanReply, aiBtns.length ? aiBtns : null)
+                            : sendMsg(channel, botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null),
+                        saveBotMessage(compRef, contactId, cleanReply),
+                    ]);
                 }
 
                 if (isDone && n.nextNode) {
@@ -1215,7 +1215,9 @@ module.exports = async (req, res) => {
                         saveBotMessage(compRef, contactId, endText),
                     ]);
                 }
-                await finish(session, flow, compRef, channel, _compData);
+                // PERF: finish() fire-and-forget — CRM запис не блокує відповідь
+                finish(session, flow, compRef, channel, _compData)
+                    .catch(e => console.error('[webhook] finish error:', e.message));
                 nodeId = null;
                 break;
 
