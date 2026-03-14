@@ -1376,6 +1376,47 @@ window.crmDragLeave = function(e) {
     const col = e.currentTarget;
     col.style.background = col.dataset.stage === 'lost' ? '#fef2f2' : '#f4f5f7';
 };
+// ── Спільна логіка зміни стадії (DRY) ────────────────────
+// Використовується: crmDrop, crmQuickSetStage
+async function _doStageChange(deal, newStage, oldStage) {
+    const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
+    const upd = {
+        stage: newStage,
+        stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    if (newStage === 'won') upd.wonAt = firebase.firestore.FieldValue.serverTimestamp();
+    await ref.update(upd);
+    deal.stageEnteredAt = { toMillis: () => Date.now() };
+
+    await ref.collection('history').add({
+        type: 'stage_changed', from: oldStage, to: newStage,
+        by: window.currentUser?.email || 'manager',
+        at: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
+        await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
+            dealId: deal.id, clientName: deal.clientName,
+            fromStage: oldStage, toStage: newStage,
+            pipelineId: deal.pipelineId, amount: deal.amount,
+            clientId: deal.clientId || null,
+            assignedToId: deal.assignedToId || deal.assigneeId || null,
+        });
+    }
+    if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
+    if (typeof window.crmAutoTasksOnStageChange === 'function')
+        window.crmAutoTasksOnStageChange(deal, newStage);
+    if (typeof window.trackAction === 'function') {
+        window.trackAction('crm_stage', {
+            dealId: deal.id,
+            clientName: deal.clientName || deal.title || '',
+            from: oldStage, to: newStage,
+            fromLabel: _stageLabel(oldStage), toLabel: _stageLabel(newStage),
+        });
+    }
+}
+
 window.crmDrop = async function(e, newStage) {
     e.preventDefault();
     const col = e.currentTarget;
@@ -1395,43 +1436,13 @@ window.crmDrop = async function(e, newStage) {
     deal.stage = newStage;
     _renderKanban();
     try {
-        // Перевірка обов'язкових полів
         const ok = await _checkRequiredFields(deal, newStage);
         if (!ok) { deal.stage = oldStage; _renderKanban(); return; }
-
-        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
-        const stageUpdate = { stage: newStage, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-        if (newStage === 'won') stageUpdate.wonAt = firebase.firestore.FieldValue.serverTimestamp(); // FIX
-        await ref.update(stageUpdate);
-        deal.stageEnteredAt = { toMillis: () => Date.now() };
-        await ref.collection('history').add({
-            type:'stage_changed', from:oldStage, to:newStage,
-            by: window.currentUser?.email || 'manager',
-            at: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
-            await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
-                dealId:deal.id, clientName:deal.clientName,
-                fromStage:oldStage, toStage:newStage,
-                pipelineId:deal.pipelineId, amount:deal.amount,
-                clientId: deal.clientId || null,          // FIX CF: required for task creation
-                assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
-            });
-        }
-        if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
-        if (typeof window.crmAutoTasksOnStageChange === 'function') window.crmAutoTasksOnStageChange(deal, newStage);
+        await _doStageChange(deal, newStage, oldStage);
         if (crm.subTab === 'todo' && typeof renderCrmTodo === 'function') renderCrmTodo();
-        if (typeof window.trackAction === 'function') {
-            window.trackAction('crm_stage', {
-                dealId: deal.id,
-                clientName: deal.clientName || deal.title || '',
-                from: oldStage, to: newStage,
-                fromLabel: _stageLabel(oldStage), toLabel: _stageLabel(newStage),
-            });
-        }
     } catch(err) {
         console.error('[CRM drop]', err);
-        deal.stage = oldStage; // rollback on error
+        deal.stage = oldStage;
         _renderKanban();
         if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
     }
@@ -1501,31 +1512,9 @@ window.crmQuickSetStage = async function(dealId, newStage) {
     _renderKanban();
 
     try {
-        // Перевірка обов'язкових полів
         const ok = await _checkRequiredFields(deal, newStage);
         if (!ok) { deal.stage = oldStage; _renderKanban(); return; }
-
-        const ref = window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(deal.id);
-        const stageUpdate2 = { stage: newStage, stageEnteredAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-        if (newStage === 'won') stageUpdate2.wonAt = firebase.firestore.FieldValue.serverTimestamp(); // FIX
-        await ref.update(stageUpdate2);
-        deal.stageEnteredAt = { toMillis: () => Date.now() };
-        await ref.collection('history').add({
-            type: 'stage_changed', from: oldStage, to: newStage,
-            by: window.currentUser?.email || 'manager',
-            at: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
-            emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
-                dealId: deal.id, clientName: deal.clientName,
-                fromStage: oldStage, toStage: newStage,
-                pipelineId: deal.pipelineId, amount: deal.amount,
-                clientId: deal.clientId || null,          // FIX CF
-                assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
-            });
-        }
-        if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
-        if (typeof window.crmAutoTasksOnStageChange === 'function') window.crmAutoTasksOnStageChange(deal, newStage);
+        await _doStageChange(deal, newStage, oldStage);
     } catch(err) {
         console.error('[CRM quickStage]', err);
         deal.stage = oldStage;

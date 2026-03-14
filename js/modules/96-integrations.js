@@ -19,6 +19,11 @@ const I = {
 
 let intg = { settings: null, saving: false };
 
+// ── Base webhook URL ────────────────────────────────────
+const _TALKO_BASE_URL = (typeof window !== 'undefined' && window.location?.hostname !== 'localhost')
+    ? 'https://taskmanagerai-vert.vercel.app'
+    : 'http://localhost:3000';
+
 window.initIntegrationsModule = async function () {
     if (!window.currentCompanyId) return;
     _renderShell();
@@ -659,8 +664,11 @@ window.intgTestNP = async function() {
     const key = document.getElementById('intg_np_key')?.value.trim() || intg.settings?.novaPoshtaApiKey;
     if (!key) { if (typeof showToast === 'function') showToast('Введіть API ключ', 'error'); return; }
     try {
+        const _npCtrl = new AbortController();
+        setTimeout(() => _npCtrl.abort(), 10000); // 10s timeout
         const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
             method: 'POST',
+            signal: _npCtrl.signal,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 apiKey: key,
