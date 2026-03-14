@@ -227,7 +227,7 @@ window.sfCreate = async function () {
         sf.forms.unshift({ id: ref.id, name, fields, crmIntegration, telegramNotify, submissionsCount: 0 });
         if (typeof showToast === 'function') showToast(window.t('sitesFormCreated'), 'success');
         sfOpenEditor(ref.id);
-    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
+    } catch(e) { if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error'); }
 };
 
 // ── Редактор форми ─────────────────────────────────────────

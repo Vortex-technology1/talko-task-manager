@@ -2694,7 +2694,7 @@ window.bpReconnectBot = async function(botId) {
         if (typeof showToast === 'function') showToast(`<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> Токен оновлено, @${me.result.username} підключено`, 'success');
         document.getElementById('bpSettingsToken').value = '';
         renderSettingsTab();
-    } catch(e) { if(window.showToast)showToast(window.t('errPrefix') + e.message,'error'); else alert(window.t('errPrefix') + e.message); }
+    } catch(e) { if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error'); }
 };
 
 // ─────────────────────────────────────────

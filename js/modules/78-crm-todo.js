@@ -579,7 +579,7 @@ window._getCrmTodoForMyDay = function() {
 // ── Додати тестові ліди (для демо) ───────────────────────
 window._crmTodoAddTestDeals = async function() {
     if (!window.companyRef || !window.DB_COLS || !window.crm || !window.crm.pipeline) {
-        alert('CRM не ініціалізовано');
+        if (typeof showToast === 'function') showToast('CRM не ініціалізовано', 'error'); else console.error('CRM не ініціалізовано');
         return;
     }
     const pipelineId = window.crm.pipeline.id;

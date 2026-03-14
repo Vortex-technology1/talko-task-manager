@@ -337,7 +337,7 @@
         if (invalid.length > 0) {
             const names = invalid.map(s => s.name || s.type).join(', ');
             if (window.showToast) showToast(`Заповніть обов'язкові поля: ${names}`, 'warning');
-            else alert(`Заповніть обов'язкові поля: ${names}`);
+            else if (typeof showToast === 'function') showToast(`Заповніть обов'язкові поля: ${names}`, 'warning');
             return;
         }
         try {

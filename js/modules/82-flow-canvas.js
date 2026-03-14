@@ -367,7 +367,7 @@ function mountCanvas() {
                 statusBtn.style.background = next === 'active' ? '#dcfce7' : '#334155';
                 statusBtn.style.color = next === 'active' ? '#16a34a' : '#94a3b8';
                 if (typeof showToast === 'function') showToast(next === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Флоу активовано' : '⚫ Флоу на паузі', 'success');
-            } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+            } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');; }
         };
     }
     document.getElementById('fcBtnZoomIn').onclick = () => doZoom(0.15);
@@ -1791,6 +1791,8 @@ window.fcDeleteNode = async function(nodeId) {
 
 // ── Save ───────────────────────────────────────────────────
 async function saveFlow() {
+    if (window._fcSaving) return; // guard проти подвійного збереження
+    window._fcSaving = true;
     const btn = document.getElementById('fcBtnSave');
     if (btn) btn.textContent = t('botsFlowSaving');
 
@@ -1904,13 +1906,15 @@ async function saveFlow() {
                 triggerKeyword: triggerKeyword || '/start',
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
-        if (btn) btn.textContent = 'Зберегти';
         if (typeof showToast === 'function') showToast(t('botsFlowSaved'), 'success');
         // Перемальовуємо canvas після збереження — preview на вузлах оновлюється
         renderAll();
     } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
+        console.error('[saveFlow]', e.message);
+    } finally {
         if (btn) btn.textContent = 'Зберегти';
-        if(window.showToast)showToast('Помилка: '+e.message,'error'); else alert('Помилка: '+e.message);
+        window._fcSaving = false;
     }
 }
 

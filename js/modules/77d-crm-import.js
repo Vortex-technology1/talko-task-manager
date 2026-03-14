@@ -105,6 +105,7 @@ window.crmImportHandleFile = async function (file) {
         }
 
         if (rows.length < 2) throw new Error('Файл порожній або немає даних.');
+        if (rows.length > 10001) throw new Error(`Занадто багато рядків (${rows.length - 1}). Максимум 10 000 записів за один імпорт.`);
 
         window._crmImportRows = rows;
         _crmImportStepMapping(rows);

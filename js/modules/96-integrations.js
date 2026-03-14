@@ -188,7 +188,7 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
       ...data
     })
   });
-  alert('Дякуємо! Ми зв\'яжемося з вами найближчим часом.');
+  if (typeof showToast === 'function') showToast('Дякуємо! Ми зв\'яжемося з вами найближчим часом.', 'error'); else console.error('Дякуємо! Ми зв\'яжемося з вами найближчим часом.');
   this.reset();
 });
 &lt;/script&gt;</pre>

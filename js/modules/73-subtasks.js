@@ -243,7 +243,7 @@
             }
         } catch(err) {
             console.error('saveSubtask error:', err);
-            if(window.showToast)showToast('Помилка збереження: '+err.message,'error'); else alert('Помилка збереження: '+err.message);
+            if(window.showToast)showToast('Помилка збереження: '+err.message,'error'); else if (typeof showToast === 'function') showToast('Помилка збереження: '+err.message, 'error');;
         } finally {
             // Розблоковуємо кнопку
             const _saveBtnF = document.querySelector('#subtaskFormOverlay button[onclick*="saveSubtask"]');
