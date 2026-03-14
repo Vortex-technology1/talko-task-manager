@@ -57,22 +57,25 @@ window.openSuperadminPanel = async function() {
 };
 
 // ── НОВА loadSuperadminData — збирає дані для всіх табів ──────────────────
+// ══════════════════════════════════════════════════════════
+// SUPERADMIN PANEL v4.0 — Full Control Center
+// Tabs: Overview | Companies | Users | Activity | AI | Health | Alerts | System
+// ══════════════════════════════════════════════════════════
+
+// ── loadSuperadminData ──────────────────────────────────────
 async function loadSuperadminData() {
     const container = document.getElementById('superadminContent');
     if (!container) return;
     container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:200px;gap:0.75rem;color:#6b7280;"><div class="spinner"></div> Завантаження даних...</div>';
 
     try {
-        const today      = new Date().toISOString().split('T')[0];
-        const monthKey   = today.slice(0, 7);
-        const weekAgo    = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
-        const db         = firebase.firestore();
+        const today    = new Date().toISOString().split('T')[0];
+        const monthKey = today.slice(0, 7);
+        const db       = firebase.firestore();
 
-        // 1. Всі компанії
         const companiesSnap = await db.collection('companies').limit(500).get();
         const compDocs = companiesSnap.docs;
 
-        // 2. Per-company дані (паралельно)
         const perCompany = await Promise.all(compDocs.map(async doc => {
             const cid = doc.id;
             const c   = doc.data();
@@ -80,7 +83,8 @@ async function loadSuperadminData() {
                 const [
                     usersSnap, tasksSnap, eventsSnap,
                     aiRecSnap, snapshotSnap, weeklyLogSnap,
-                    aiUsageTodaySnap, aiUsageMonthSnap
+                    aiUsageTodaySnap, aiUsageMonthSnap,
+                    notesSnap
                 ] = await Promise.all([
                     db.collection('companies').doc(cid).collection('users').get().catch(()=>({docs:[]})),
                     db.collection('companies').doc(cid).collection('tasks')
@@ -95,9 +99,9 @@ async function loadSuperadminData() {
                         .where('date','==',today).get().catch(()=>({docs:[]})),
                     db.collection('companies').doc(cid).collection('aiUsageLog')
                         .where('month','==',monthKey).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('sa_notes').orderBy('createdAt','desc').limit(5).get().catch(()=>({docs:[]})),
                 ]);
 
-                // Агрегуємо events по типу
                 const eventCounts = {};
                 eventsSnap.docs.forEach(d => {
                     const n = d.data().event_name || d.data().type || '?';
@@ -105,32 +109,67 @@ async function loadSuperadminData() {
                 });
 
                 const users = usersSnap.docs.map(d => ({id:d.id,...d.data()}));
-                const ownerCount   = users.filter(u => u.role === 'owner').length;
-                const managerCount = users.filter(u => u.role === 'manager').length;
-                const telegramCount = users.filter(u => u.telegramChatId).length;
+                const activeTasks  = tasksSnap.docs.length;
+                const overdueTasks = tasksSnap.docs.filter(d => d.data().deadlineDate && d.data().deadlineDate < today).length;
+                const todayTokens  = aiUsageTodaySnap.docs.reduce((s,d)=>s+(d.data().tokens||0),0);
+                const monthTokens  = aiUsageMonthSnap.docs.reduce((s,d)=>s+(d.data().tokens||0),0);
+                const snap         = snapshotSnap?.exists ? snapshotSnap.data() : null;
+
+                // ── Health Score (0–100) ─────────────────────────────
+                // Компосит: активність + задачі + AI + TG + відсутність просроченого
+                const tgLinked = users.filter(u=>u.telegramChatId).length;
+                const hasEvents = eventsSnap.docs.length > 0;
+                const overdueRatio = activeTasks > 0 ? overdueTasks / activeTasks : 0;
+                const ownerRatio = snap?.signals?.ownerTaskRatio || 0;
+
+                let health = 100;
+                if (!hasEvents) health -= 30;                          // немає активності
+                else if (eventsSnap.docs.length < 10) health -= 15;   // мало активності
+                if (overdueRatio > 0.3) health -= 20;                 // >30% просрочено
+                else if (overdueRatio > 0.1) health -= 10;
+                if (ownerRatio > 0.4) health -= 15;                   // власник завантажений
+                if (users.length > 0 && tgLinked === 0) health -= 10; // ніхто не підключив TG
+                if (c.aiEnabled === false) health -= 5;               // AI вимкнено
+                health = Math.max(0, Math.min(100, health));
+
+                // ── Feature adoption (які вкладки відкривали) ────────
+                const usedModules = new Set(eventsSnap.docs.map(d => d.data().module || d.data().tab || '').filter(Boolean));
+
+                // ── Last activity ────────────────────────────────────
+                const lastEvent = eventsSnap.docs.length > 0
+                    ? Math.max(...eventsSnap.docs.map(d => d.data()._localTs || 0))
+                    : (c.createdAt?.toMillis?.() || 0);
+                const daysSinceActivity = lastEvent > 0
+                    ? Math.floor((Date.now() - lastEvent) / 86400000)
+                    : 999;
 
                 return {
-                    id:   cid,
-                    data: c,
-                    users, ownerCount, managerCount, telegramCount,
-                    activeTasks:  tasksSnap.docs.length,
-                    overdueTasks: tasksSnap.docs.filter(d => d.data().deadlineDate && d.data().deadlineDate < today).length,
-                    eventCounts,
-                    totalEvents7d: eventsSnap.docs.length,
-                    aiRecs:     aiRecSnap.docs.map(d=>d.data()),
-                    snapshot:   snapshotSnap?.exists ? snapshotSnap.data() : null,
+                    id: cid, data: c,
+                    users,
+                    ownerCount:    users.filter(u=>u.role==='owner').length,
+                    managerCount:  users.filter(u=>u.role==='manager').length,
+                    telegramCount: tgLinked,
+                    activeTasks, overdueTasks,
+                    eventCounts, totalEvents7d: eventsSnap.docs.length,
+                    aiRecs:     aiRecSnap.docs.map(d=>({id:d.id,...d.data()})),
+                    snapshot:   snap,
                     weeklyLog:  weeklyLogSnap?.exists ? weeklyLogSnap.data() : null,
-                    todayTokens: aiUsageTodaySnap.docs.reduce((s,d)=>s+(d.data().tokens||0),0),
-                    monthTokens: aiUsageMonthSnap.docs.reduce((s,d)=>s+(d.data().tokens||0),0),
+                    todayTokens, monthTokens,
+                    health, usedModules, daysSinceActivity,
+                    notes: notesSnap.docs.map(d=>({id:d.id,...d.data()})),
+                    createdAt: c.createdAt?.toMillis?.() || 0,
                 };
             } catch(e) {
-                return { id: cid, data: c, users:[], ownerCount:0, managerCount:0, telegramCount:0,
+                return {
+                    id:cid, data:c, users:[], ownerCount:0, managerCount:0, telegramCount:0,
                     activeTasks:0, overdueTasks:0, eventCounts:{}, totalEvents7d:0,
-                    aiRecs:[], snapshot:null, weeklyLog:null, todayTokens:0, monthTokens:0 };
+                    aiRecs:[], snapshot:null, weeklyLog:null, todayTokens:0, monthTokens:0,
+                    health:0, usedModules:new Set(), daysSinceActivity:999, notes:[], createdAt:0,
+                };
             }
         }));
 
-        window._saData = { compDocs, perCompany, today, weekAgo };
+        window._saData = { compDocs, perCompany, today, monthKey };
         renderSuperadminPanel(compDocs, {}, perCompany);
 
     } catch(e) {
@@ -139,70 +178,183 @@ async function loadSuperadminData() {
 }
 window.loadSuperadminData = loadSuperadminData;
 
-// ── ГОЛОВНИЙ РЕНДЕР — таби ────────────────────────────────────────────────
+// ── renderSuperadminPanel ────────────────────────────────────
 function renderSuperadminPanel(compDocs, usageMap, perCompany) {
     const container = document.getElementById('superadminContent');
     if (!container) return;
 
     const pc = perCompany || window._saData?.perCompany || [];
-    const totalUsers   = pc.reduce((s,c) => s + c.users.length, 0);
-    const totalActive  = pc.reduce((s,c) => s + c.activeTasks, 0);
-    const totalOverdue = pc.reduce((s,c) => s + c.overdueTasks, 0);
-    const totalEvents  = pc.reduce((s,c) => s + c.totalEvents7d, 0);
-    const totalTgLinked = pc.reduce((s,c) => s + c.telegramCount, 0);
-    const planCounts   = { basic:0, pro:0, enterprise:0 };
-    pc.forEach(c => { const p = c.data.plan||'pro'; planCounts[p] = (planCounts[p]||0)+1; });
+    const totalUsers    = pc.reduce((s,c)=>s+c.users.length, 0);
+    const totalActive   = pc.reduce((s,c)=>s+c.activeTasks, 0);
+    const totalOverdue  = pc.reduce((s,c)=>s+c.overdueTasks, 0);
+    const totalEvents   = pc.reduce((s,c)=>s+c.totalEvents7d, 0);
+    const totalTg       = pc.reduce((s,c)=>s+c.telegramCount, 0);
+    const avgHealth     = pc.length ? Math.round(pc.reduce((s,c)=>s+c.health,0)/pc.length) : 0;
+    const alertCount    = pc.filter(c=>c.health < 50 || c.daysSinceActivity > 3).length;
+    const planCounts    = {basic:0,pro:0,enterprise:0};
+    pc.forEach(c=>{const p=c.data.plan||'pro'; planCounts[p]=(planCounts[p]||0)+1;});
+
+    const TABS = [
+        {id:'overview',   label:'Огляд',      icon:'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'},
+        {id:'companies',  label:'Компанії',   icon:'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'},
+        {id:'users',      label:'Юзери',      icon:'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'},
+        {id:'activity',   label:'Активність', icon:'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'},
+        {id:'ai',         label:'AI',         icon:'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H4a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2h-1'},
+        {id:'health',     label:'Health',     icon:'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'},
+        {id:'alerts',     label:`Алерти${alertCount>0?` <span style="background:#ef4444;color:white;border-radius:9px;padding:0 5px;font-size:0.65rem;">${alertCount}</span>`:''}`, icon:'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'},
+        {id:'system',     label:'Система',    icon:'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'},
+    ];
+
+    const svgIcon = (path, size=13) =>
+        `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;flex-shrink:0;"><path d="${path}"/></svg>`;
 
     container.innerHTML = `
-<!-- KPI рядок -->
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.6rem;margin-bottom:1.25rem;">
-    ${_saKpi('Компаній', compDocs.length, '#3b82f6')}
-    ${_saKpi('Користувачів', totalUsers, '#8b5cf6')}
-    ${_saKpi('Активних задач', totalActive, '#f59e0b')}
-    ${_saKpi('Прострочених', totalOverdue, totalOverdue>0?'#ef4444':'#22c55e')}
-    ${_saKpi('Events (7д)', totalEvents, '#06b6d4')}
-    ${_saKpi('Telegram підкл.', totalTgLinked, '#22c55e')}
+<!-- KPI Strip -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0.5rem;margin-bottom:1rem;">
+    ${_saKpi('Компаній',   compDocs.length,          '#3b82f6')}
+    ${_saKpi('Юзерів',     totalUsers,               '#8b5cf6')}
+    ${_saKpi('Задач',      totalActive,              '#f59e0b')}
+    ${_saKpi('Простроч.',  totalOverdue, totalOverdue>0?'#ef4444':'#22c55e')}
+    ${_saKpi('Health avg', avgHealth+'%', avgHealth>=70?'#22c55e':avgHealth>=40?'#f59e0b':'#ef4444')}
+    ${_saKpi('Events 7д',  totalEvents,              '#06b6d4')}
+    ${_saKpi('TG підкл.',  totalTg,                  '#22c55e')}
+    ${_saKpi('Алертів',    alertCount, alertCount>0?'#ef4444':'#22c55e')}
 </div>
 
-<!-- Таби -->
-<div style="display:flex;gap:2px;border-bottom:2px solid #e5e7eb;margin-bottom:1rem;overflow-x:auto;">
-    ${['companies','users','activity','ai','diagnostic','system'].map((t,i) => `
-    <button id="saTab_${t}" onclick="saSwitchTab('${t}')"
-        style="padding:0.5rem 0.9rem;border:none;border-radius:6px 6px 0 0;cursor:pointer;
-        font-size:0.8rem;font-weight:600;white-space:nowrap;transition:all .15s;
+<!-- Tab Bar -->
+<div style="display:flex;gap:1px;background:#f3f4f6;border-radius:10px;padding:3px;margin-bottom:1rem;overflow-x:auto;">
+    ${TABS.map((t,i)=>`
+    <button id="saTab_${t.id}" onclick="saSwitchTab('${t.id}')"
+        style="display:flex;align-items:center;gap:5px;padding:0.45rem 0.7rem;border:none;border-radius:7px;cursor:pointer;
+        font-size:0.78rem;font-weight:600;white-space:nowrap;transition:all .15s;
         background:${i===0?'white':'transparent'};color:${i===0?'#111':'#6b7280'};
-        box-shadow:${i===0?'0 -2px 0 #3b82f6 inset':''};border-bottom:${i===0?'2px solid white':'2px solid transparent'};">
-        ${ {companies:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Компанії',users:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Юзери',activity:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Активність',ai:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> AI',diagnostic:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Діагностика',system:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg> Система'}[t] }
+        box-shadow:${i===0?'0 1px 3px rgba(0,0,0,0.1)':'none'};">
+        ${svgIcon(t.icon, 12)} ${t.label}
     </button>`).join('')}
-    <button onclick="loadSuperadminData()" style="margin-left:auto;padding:0.4rem 0.7rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;font-size:0.75rem;" style="display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Оновити</button>
+    <button onclick="loadSuperadminData()" title="Оновити"
+        style="margin-left:auto;padding:0.45rem 0.6rem;border:none;border-radius:7px;cursor:pointer;background:transparent;color:#6b7280;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+    </button>
 </div>
 
-<!-- Контент табів -->
-<div id="saTabContent_companies">${_saRenderCompanies(pc)}</div>
-<div id="saTabContent_users"    style="display:none;">${_saRenderUsers(pc)}</div>
-<div id="saTabContent_activity" style="display:none;">${_saRenderActivity(pc)}</div>
-<div id="saTabContent_ai"       style="display:none;">${_saRenderAI(pc)}</div>
-<div id="saTabContent_diagnostic" style="display:none;">${_saRenderDiagnostic(pc)}</div>
-<div id="saTabContent_system"   style="display:none;">${_saRenderSystem()}</div>
+<!-- Tab Contents -->
+<div id="saTabContent_overview">${_saRenderOverview(pc, planCounts)}</div>
+<div id="saTabContent_companies" style="display:none;">${_saRenderCompanies(pc)}</div>
+<div id="saTabContent_users"     style="display:none;">${_saRenderUsers(pc)}</div>
+<div id="saTabContent_activity"  style="display:none;">${_saRenderActivity(pc)}</div>
+<div id="saTabContent_ai"        style="display:none;">${_saRenderAI(pc)}</div>
+<div id="saTabContent_health"    style="display:none;">${_saRenderHealth(pc)}</div>
+<div id="saTabContent_alerts"    style="display:none;">${_saRenderAlerts(pc)}</div>
+<div id="saTabContent_system"    style="display:none;">${_saRenderSystem()}</div>
 `;
 }
 
 window.saSwitchTab = function(tab) {
-    ['companies','users','activity','ai','diagnostic','system'].forEach(t => {
-        const btn = document.getElementById(`saTab_${t}`);
+    const tabs = ['overview','companies','users','activity','ai','health','alerts','system'];
+    tabs.forEach(t => {
+        const btn   = document.getElementById(`saTab_${t}`);
         const panel = document.getElementById(`saTabContent_${t}`);
         const active = t === tab;
         if (btn) {
             btn.style.background  = active ? 'white' : 'transparent';
             btn.style.color       = active ? '#111' : '#6b7280';
-            btn.style.boxShadow   = active ? '0 -2px 0 #3b82f6 inset' : '';
-            btn.style.borderBottom= active ? '2px solid white' : '2px solid transparent';
+            btn.style.boxShadow   = active ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
         }
         if (panel) panel.style.display = active ? '' : 'none';
     });
 };
 
-// ── ТАБ 1: КОМПАНІЇ ──────────────────────────────────────────────────────
+// ── TAB 1: OVERVIEW ─────────────────────────────────────────
+function _saRenderOverview(pc, planCounts) {
+    // Top 5 by health (lowest = need attention)
+    const needAttention = [...pc].sort((a,b)=>a.health-b.health).slice(0,5);
+    // Top 5 by activity
+    const mostActive = [...pc].sort((a,b)=>b.totalEvents7d-a.totalEvents7d).slice(0,5);
+    // Silent (no activity 3+ days)
+    const silent = pc.filter(c=>c.daysSinceActivity >= 3 && c.users.length > 0);
+    // AI usage top
+    const aiTop = [...pc].sort((a,b)=>b.monthTokens-a.monthTokens).slice(0,5);
+
+    const planBar = `
+    <div style="margin-bottom:1rem;">
+        <div style="font-size:0.7rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.4rem;">Плани</div>
+        <div style="display:flex;gap:0.5rem;">
+            ${Object.entries(planCounts).map(([p,n])=>{
+                const colors={basic:'#6b7280',pro:'#22c55e',enterprise:'#8b5cf6'};
+                return `<div style="flex:${n||0.1};background:${colors[p]||'#e5e7eb'};height:8px;border-radius:4px;" title="${p}: ${n}"></div>`;
+            }).join('')}
+        </div>
+        <div style="display:flex;gap:1rem;margin-top:0.35rem;">
+            ${Object.entries(planCounts).map(([p,n])=>`<span style="font-size:0.72rem;color:#6b7280;"><strong style="color:#111;">${n}</strong> ${p}</span>`).join('')}
+        </div>
+    </div>`;
+
+    const attentionCards = needAttention.map(c=>_saCompanyMiniCard(c,'#ef4444')).join('');
+    const activeCards    = mostActive.map(c=>_saCompanyMiniCard(c,'#22c55e')).join('');
+    const silentList     = silent.slice(0,5).map(c=>`
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;border-bottom:1px solid #f3f4f6;">
+            <span style="font-size:0.78rem;flex:1;">${_saEsc(c.data.name||c.id)}</span>
+            <span style="font-size:0.7rem;color:#9ca3af;">${c.daysSinceActivity===999?'ніколи':c.daysSinceActivity+'д тому'}</span>
+            <span style="font-size:0.7rem;background:#fef9c3;color:#92400e;padding:1px 6px;border-radius:4px;">${c.users.length} юз.</span>
+        </div>`).join('') || '<div style="color:#9ca3af;font-size:0.78rem;padding:0.5rem 0;">Всі активні</div>';
+
+    return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="grid-column:1/-1;">${planBar}</div>
+        <div>
+            <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                Потребують уваги
+            </div>
+            ${attentionCards}
+        </div>
+        <div>
+            <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                Найактивніші (7д)
+            </div>
+            ${activeCards}
+        </div>
+        <div>
+            <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                Мовчать 3+ дні (${silent.length})
+            </div>
+            ${silentList}
+        </div>
+        <div>
+            <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H4a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2h-1"/></svg>
+                AI топ (місяць)
+            </div>
+            ${aiTop.map(c=>`
+            <div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid #f3f4f6;">
+                <span style="font-size:0.78rem;flex:1;">${_saEsc(c.data.name||c.id)}</span>
+                <span style="font-size:0.72rem;font-weight:700;color:#8b5cf6;">${c.monthTokens.toLocaleString()}</span>
+            </div>`).join('')}
+        </div>
+    </div>`;
+}
+
+function _saCompanyMiniCard(c, accentColor) {
+    const healthColor = c.health>=70?'#22c55e':c.health>=40?'#f59e0b':'#ef4444';
+    return `
+    <div onclick="saOpenCompanyDetail('${c.id}')" style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.5rem;
+        border:1px solid #f3f4f6;border-radius:8px;margin-bottom:0.3rem;cursor:pointer;
+        transition:all .15s;" onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background=''">
+        <div style="width:6px;height:28px;background:${accentColor};border-radius:3px;flex-shrink:0;"></div>
+        <div style="flex:1;min-width:0;">
+            <div style="font-size:0.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${_saEsc(c.data.name||c.id)}</div>
+            <div style="font-size:0.68rem;color:#9ca3af;">${c.users.length} юз. · ${c.totalEvents7d} events</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+            <div style="font-size:0.82rem;font-weight:800;color:${healthColor};">${c.health}%</div>
+            <div style="font-size:0.65rem;color:#9ca3af;">health</div>
+        </div>
+    </div>`;
+}
+
+// ── TAB 2: COMPANIES ────────────────────────────────────────
 function _saRenderCompanies(pc) {
     const rows = pc.map(c => {
         const d = c.data;
@@ -210,147 +362,143 @@ function _saRenderCompanies(pc) {
         const planBadge = {
             basic:      '<span style="background:#f3f4f6;color:#6b7280;padding:1px 6px;border-radius:4px;font-size:0.7rem;">Basic</span>',
             pro:        '<span style="background:#dcfce7;color:#16a34a;padding:1px 6px;border-radius:4px;font-size:0.7rem;">Pro</span>',
-            enterprise: '<span style="background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;font-size:0.7rem;"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:inline-flex;vertical-align:middle;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Ent/span>',
+            enterprise: '<span style="background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;font-size:0.7rem;">★ Ent</span>',
         }[plan] || plan;
-        const safeId   = c.id.replace(/['\"]/g,'');
+        const safeId   = c.id.replace(/['"]/g,'');
         const safeName = (d.name||c.id).replace(/'/g,"\\'");
-        const overdueColor = c.overdueTasks > 5 ? '#ef4444' : c.overdueTasks > 0 ? '#f97316' : '#22c55e';
+        const overdueColor = c.overdueTasks>5?'#ef4444':c.overdueTasks>0?'#f97316':'#22c55e';
+        const healthColor  = c.health>=70?'#22c55e':c.health>=40?'#f59e0b':'#ef4444';
         const snap = c.snapshot;
         const ownerRatio = snap?.signals?.ownerTaskRatio ? Math.round(snap.signals.ownerTaskRatio*100)+'%' : '—';
+        const actBadge = c.daysSinceActivity >= 7
+            ? `<span style="background:#fee2e2;color:#dc2626;padding:1px 5px;border-radius:4px;font-size:0.65rem;">${c.daysSinceActivity===999?'ніколи':c.daysSinceActivity+'д'}</span>`
+            : c.daysSinceActivity >= 3
+            ? `<span style="background:#fef9c3;color:#92400e;padding:1px 5px;border-radius:4px;font-size:0.65rem;">${c.daysSinceActivity}д</span>`
+            : `<span style="background:#dcfce7;color:#16a34a;padding:1px 5px;border-radius:4px;font-size:0.65rem;">today</span>`;
 
         return `<tr data-name="${(d.name||c.id).toLowerCase()}" style="border-bottom:1px solid #f3f4f6;cursor:pointer;"
             onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
-            <td style="padding:0.45rem 0.5rem;font-weight:600;font-size:0.82rem;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" onclick="saOpenCompanyDetail('${c.id}')" title="Деталі компанії">${_saEsc(d.name||c.id)}</td>
-            <td style="padding:0.45rem 0.5rem;">${planBadge}</td>
-            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.users.length}</td>
-            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.activeTasks}</td>
-            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;font-weight:600;color:${overdueColor};">${c.overdueTasks||'—'}</td>
-            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${ownerRatio}</td>
-            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.totalEvents7d||0}</td>
-            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.telegramCount||0}</td>
-            <td style="padding:0.45rem 0.5rem;">
+            <td style="padding:0.4rem 0.5rem;font-weight:600;font-size:0.8rem;cursor:pointer;" onclick="saOpenCompanyDetail('${c.id}')">${_saEsc(d.name||c.id)}</td>
+            <td style="padding:0.4rem 0.5rem;">${planBadge}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${c.users.length}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${c.activeTasks}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;font-weight:600;color:${overdueColor};">${c.overdueTasks||'—'}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${ownerRatio}</td>
+            <td style="padding:0.4rem 0.5rem;">${actBadge}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;font-weight:700;color:${healthColor};">${c.health}%</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.78rem;">${c.telegramCount}</td>
+            <td style="padding:0.4rem 0.5rem;">
                 <div style="display:flex;gap:3px;flex-wrap:wrap;">
                     <select onchange="updateCompanyPlan('${safeId}',this.value)"
-                        style="padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.72rem;cursor:pointer;">
+                        style="padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.7rem;cursor:pointer;">
                         <option value="basic"      ${plan==='basic'?'selected':''}>Basic</option>
                         <option value="pro"        ${plan==='pro'?'selected':''}>Pro</option>
                         <option value="enterprise" ${plan==='enterprise'?'selected':''}>Ent</option>
                     </select>
                     <button onclick="openFeatureFlags('${safeId}','${safeName}')"
-                        style="padding:2px 6px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:5px;cursor:pointer;font-size:0.72rem;">Модулі</button>
+                        style="padding:2px 5px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:5px;cursor:pointer;font-size:0.7rem;">Модулі</button>
+                    <button onclick="saAddNote('${safeId}')"
+                        style="padding:2px 5px;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:5px;cursor:pointer;font-size:0.7rem;">Нотатка</button>
                     <button onclick="toggleCompanyAI('${safeId}',${d.aiEnabled!==false?'false':'true'})"
-                        style="padding:2px 6px;background:${d.aiEnabled!==false?'#fef2f2':'#f0fdf4'};color:${d.aiEnabled!==false?'#ef4444':'#16a34a'};border:1px solid ${d.aiEnabled!==false?'#fecaca':'#bbf7d0'};border-radius:5px;cursor:pointer;font-size:0.72rem;">
+                        style="padding:2px 5px;background:${d.aiEnabled!==false?'#fef2f2':'#f0fdf4'};color:${d.aiEnabled!==false?'#ef4444':'#16a34a'};border:1px solid ${d.aiEnabled!==false?'#fecaca':'#bbf7d0'};border-radius:5px;cursor:pointer;font-size:0.7rem;">
                         AI ${d.aiEnabled!==false?'вимк':'увімк'}</button>
                 </div>
             </td>
         </tr>`;
     }).join('');
 
-    return `<div style="margin-bottom:0.6rem;">
-    <input id="saCompanySearch" placeholder="Пошук по назві компанії..." oninput="saFilterCompanies(this.value)"
-        style="width:100%;padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;box-sizing:border-box;">
-</div>
-<div style="overflow-x:auto;">
-    <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
-        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.72rem;color:#6b7280;text-transform:uppercase;">
-            <th style="padding:0.45rem 0.5rem;text-align:left;">Компанія</th>
-            <th style="padding:0.45rem 0.5rem;text-align:left;">План</th>
-            <th style="padding:0.45rem 0.5rem;text-align:left;">Юзери</th>
-            <th style="padding:0.45rem 0.5rem;text-align:left;">Задачі</th>
-            <th style="padding:0.45rem 0.5rem;text-align:left;">Простр.</th>
-            <th style="padding:0.45rem 0.5rem;text-align:left;">Owner%</th>
-            <th style="padding:0.45rem 0.5rem;text-align:left;">Events7д</th>
-            <th style="padding:0.45rem 0.5rem;text-align:left;">TG</th>
-            <th style="padding:0.45rem 0.5rem;text-align:left;">Дії</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-    </table></div>
-    <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
-        <button onclick="deleteEmptyCompanies()" style="padding:0.3rem 0.7rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Видалити пусті</button>
-    </div>`;
-}
-
-// ── ТАБ 2: ЮЗЕРИ ─────────────────────────────────────────────────────────
-function _saRenderUsers(pc) {
-    const allUsers = [];
-    pc.forEach(c => {
-        c.users.forEach(u => allUsers.push({...u, companyName: c.data.name||c.id, companyId: c.id}));
-    });
-    allUsers.sort((a,b) => (a.companyName||'').localeCompare(b.companyName||''));
-
-    const roleColors = {owner:'#7c3aed', manager:'#2563eb', employee:'#374151', admin:'#dc2626'};
-    const rows = allUsers.map(u => {
-        const tgBadge = u.telegramChatId
-            ? '<span style="background:#dcfce7;color:#16a34a;padding:1px 5px;border-radius:4px;font-size:0.68rem;">TG ✓</span>'
-            : '<span style="color:#d1d5db;font-size:0.72rem;">—</span>';
-        return `<tr style="border-bottom:1px solid #f3f4f6;">
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${_saEsc(u.companyName)}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:500;">${_saEsc(u.name||'—')}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;color:#6b7280;">${_saEsc(u.email||'—')}</td>
-            <td style="padding:0.4rem 0.5rem;">
-                <span style="font-size:0.7rem;font-weight:600;color:${roleColors[u.role]||'#374151'};
-                    background:${roleColors[u.role]||'#374151'}15;padding:1px 6px;border-radius:4px;">
-                    ${_saEsc(u.role||'—')}</span>
-            </td>
-            <td style="padding:0.4rem 0.5rem;">${tgBadge}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;color:#9ca3af;">${u.language||'ua'}</td>
-        </tr>`;
-    }).join('');
-
-    const byRole = {};
-    allUsers.forEach(u => { byRole[u.role||'?'] = (byRole[u.role||'?']||0)+1; });
-
     return `
-    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem;">
-        ${Object.entries(byRole).map(([r,n])=>`<span style="background:#f3f4f6;padding:3px 10px;border-radius:6px;font-size:0.78rem;"><strong>${n}</strong> ${r}</span>`).join('')}
-        <span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:6px;font-size:0.78rem;"><strong>${allUsers.filter(u=>u.telegramChatId).length}</strong> TG</span>
+    <div style="margin-bottom:0.6rem;display:flex;gap:0.5rem;">
+        <input id="saCompanySearch" placeholder="Пошук по назві..." oninput="saFilterCompanies(this.value)"
+            style="flex:1;padding:0.4rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;">
+        <button onclick="deleteEmptyCompanies()"
+            style="padding:0.4rem 0.75rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;cursor:pointer;font-size:0.78rem;font-weight:600;white-space:nowrap;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg> Видалити пусті
+        </button>
     </div>
     <div style="overflow-x:auto;">
-    <table style="width:100%;border-collapse:collapse;">
-        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.7rem;color:#6b7280;text-transform:uppercase;">
+    <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.68rem;color:#6b7280;text-transform:uppercase;">
             <th style="padding:0.4rem 0.5rem;text-align:left;">Компанія</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">Ім'я</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">Email</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">Роль</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">TG</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">Мова</th>
+            <th style="padding:0.4rem 0.5rem;">План</th>
+            <th style="padding:0.4rem 0.5rem;">Юзери</th>
+            <th style="padding:0.4rem 0.5rem;">Задачі</th>
+            <th style="padding:0.4rem 0.5rem;">Прост.</th>
+            <th style="padding:0.4rem 0.5rem;">Owner%</th>
+            <th style="padding:0.4rem 0.5rem;">Акт.</th>
+            <th style="padding:0.4rem 0.5rem;">Health</th>
+            <th style="padding:0.4rem 0.5rem;">TG</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Дії</th>
         </tr></thead>
         <tbody>${rows}</tbody>
     </table></div>`;
 }
 
-// ── ТАБ 3: АКТИВНІСТЬ (events 7 днів) ────────────────────────────────────
+// ── TAB 3: USERS (без змін структури, покращений) ───────────
+function _saRenderUsers(pc) {
+    const allUsers = [];
+    pc.forEach(c => c.users.forEach(u => allUsers.push({...u, companyName:c.data.name||c.id, companyId:c.id})));
+    allUsers.sort((a,b)=>(a.companyName||'').localeCompare(b.companyName||''));
+
+    const roleColors = {owner:'#7c3aed',manager:'#2563eb',employee:'#374151',admin:'#dc2626'};
+    const byRole = {};
+    allUsers.forEach(u=>{byRole[u.role||'?']=(byRole[u.role||'?']||0)+1;});
+
+    const rows = allUsers.map(u=>`
+        <tr style="border-bottom:1px solid #f3f4f6;">
+            <td style="padding:0.35rem 0.5rem;font-size:0.78rem;">${_saEsc(u.companyName)}</td>
+            <td style="padding:0.35rem 0.5rem;font-size:0.78rem;font-weight:500;">${_saEsc(u.name||'—')}</td>
+            <td style="padding:0.35rem 0.5rem;font-size:0.72rem;color:#6b7280;">${_saEsc(u.email||'—')}</td>
+            <td style="padding:0.35rem 0.5rem;">
+                <span style="font-size:0.68rem;font-weight:600;color:${roleColors[u.role]||'#374151'};background:${roleColors[u.role]||'#374151'}15;padding:1px 5px;border-radius:4px;">${u.role||'—'}</span>
+            </td>
+            <td style="padding:0.35rem 0.5rem;">${u.telegramChatId
+                ? '<span style="background:#dcfce7;color:#16a34a;padding:1px 5px;border-radius:4px;font-size:0.68rem;">TG ✓</span>'
+                : '<span style="color:#d1d5db;font-size:0.7rem;">—</span>'}</td>
+            <td style="padding:0.35rem 0.5rem;font-size:0.7rem;color:#9ca3af;">${u.language||'ua'}</td>
+        </tr>`).join('');
+
+    return `
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+        ${Object.entries(byRole).map(([r,n])=>`<span style="background:#f3f4f6;padding:3px 10px;border-radius:6px;font-size:0.78rem;"><strong>${n}</strong> ${r}</span>`).join('')}
+        <span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:6px;font-size:0.78rem;"><strong>${allUsers.filter(u=>u.telegramChatId).length}</strong> TG підкл.</span>
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.68rem;color:#6b7280;text-transform:uppercase;">
+            <th style="padding:0.35rem 0.5rem;text-align:left;">Компанія</th>
+            <th style="padding:0.35rem 0.5rem;text-align:left;">Ім'я</th>
+            <th style="padding:0.35rem 0.5rem;text-align:left;">Email</th>
+            <th style="padding:0.35rem 0.5rem;text-align:left;">Роль</th>
+            <th style="padding:0.35rem 0.5rem;">TG</th>
+            <th style="padding:0.35rem 0.5rem;">Мова</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+    </table></div>`;
+}
+
+// ── TAB 4: ACTIVITY ─────────────────────────────────────────
 function _saRenderActivity(pc) {
     const eventTotals = {};
-    pc.forEach(c => {
-        Object.entries(c.eventCounts||{}).forEach(([k,v]) => {
-            eventTotals[k] = (eventTotals[k]||0) + v;
-        });
-    });
-    const sorted = Object.entries(eventTotals).sort((a,b)=>b[1]-a[1]).slice(0,20);
+    pc.forEach(c=>Object.entries(c.eventCounts||{}).forEach(([k,v])=>{eventTotals[k]=(eventTotals[k]||0)+v;}));
+    const sorted  = Object.entries(eventTotals).sort((a,b)=>b[1]-a[1]).slice(0,20);
+    const maxVal  = sorted[0]?.[1] || 1;
+    const maxComp = Math.max(1,...pc.map(x=>x.totalEvents7d));
 
-    const maxVal = sorted[0]?.[1] || 1;
-    const evRows = sorted.map(([name, cnt]) => {
-        const pct = Math.round(cnt/maxVal*100);
-        return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid #f3f4f6;">
-            <span style="font-size:0.78rem;font-family:monospace;min-width:200px;color:#374151;">${_saEsc(name)}</span>
-            <div style="flex:1;background:#f3f4f6;border-radius:3px;height:6px;overflow:hidden;">
-                <div style="width:${pct}%;background:#3b82f6;height:100%;border-radius:3px;"></div>
-            </div>
-            <span style="font-size:0.78rem;font-weight:700;min-width:40px;text-align:right;">${cnt}</span>
-        </div>`;
-    }).join('');
-
-    // Активність по компаніях
-    const compActivity = pc
-        .filter(c => c.totalEvents7d > 0)
-        .sort((a,b) => b.totalEvents7d - a.totalEvents7d)
-        .map(c => `
+    const evRows = sorted.map(([name,cnt])=>`
         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid #f3f4f6;">
-            <span style="font-size:0.78rem;min-width:180px;">${_saEsc(c.data.name||c.id)}</span>
+            <span style="font-size:0.75rem;font-family:monospace;min-width:190px;color:#374151;">${_saEsc(name)}</span>
             <div style="flex:1;background:#f3f4f6;border-radius:3px;height:6px;overflow:hidden;">
-                <div style="width:${Math.round(c.totalEvents7d/Math.max(1,...pc.map(x=>x.totalEvents7d))*100)}%;
-                    background:#22c55e;height:100%;border-radius:3px;"></div>
+                <div style="width:${Math.round(cnt/maxVal*100)}%;background:#3b82f6;height:100%;border-radius:3px;"></div>
+            </div>
+            <span style="font-size:0.78rem;font-weight:700;min-width:36px;text-align:right;">${cnt}</span>
+        </div>`).join('');
+
+    const compAct = [...pc].filter(c=>c.totalEvents7d>0).sort((a,b)=>b.totalEvents7d-a.totalEvents7d).map(c=>`
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid #f3f4f6;">
+            <span style="font-size:0.75rem;min-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_saEsc(c.data.name||c.id)}</span>
+            <div style="flex:1;background:#f3f4f6;border-radius:3px;height:6px;overflow:hidden;">
+                <div style="width:${Math.round(c.totalEvents7d/maxComp*100)}%;background:#22c55e;height:100%;border-radius:3px;"></div>
             </div>
             <span style="font-size:0.78rem;font-weight:700;">${c.totalEvents7d}</span>
         </div>`).join('');
@@ -358,158 +506,261 @@ function _saRenderActivity(pc) {
     return `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div>
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;color:#111;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Топ-20 подій (7 днів)</div>
+            <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;">Топ-20 подій (7 днів)</div>
             <div style="max-height:400px;overflow-y:auto;">${evRows||'<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає даних</div>'}</div>
         </div>
         <div>
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;color:#111;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Активність по компаніях</div>
-            <div style="max-height:400px;overflow-y:auto;">${compActivity||'<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає даних</div>'}</div>
+            <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.5rem;">Активність по компаніях</div>
+            <div style="max-height:400px;overflow-y:auto;">${compAct||'<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає даних</div>'}</div>
         </div>
     </div>`;
 }
 
-// ── ТАБ 4: AI ВИКОРИСТАННЯ ───────────────────────────────────────────────
+// ── TAB 5: AI ───────────────────────────────────────────────
 function _saRenderAI(pc) {
-    const rows = pc
-        .sort((a,b) => b.todayTokens - a.todayTokens)
-        .map(c => {
-            const d = c.data;
-            const dailyLimit  = d.aiDailyTokenLimit || 0;
-            const monthLimit  = d.aiMonthlyTokenLimit || 0;
-            const pctDay = dailyLimit > 0 ? Math.min(100, Math.round(c.todayTokens/dailyLimit*100)) : 0;
-            const pctMon = monthLimit > 0 ? Math.min(100, Math.round(c.monthTokens/monthLimit*100)) : 0;
-            const safeId = c.id.replace(/['\"]/g,'');
-            return `<tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:500;">${_saEsc(d.name||c.id)}</td>
-                <td style="padding:0.4rem 0.5rem;">
-                    <span style="font-size:0.72rem;padding:1px 6px;border-radius:4px;
-                        background:${d.aiEnabled!==false?'#dcfce7':'#fee2e2'};
-                        color:${d.aiEnabled!==false?'#16a34a':'#dc2626'};">
-                        ${d.aiEnabled!==false?'✓ ON':'✗ OFF'}</span>
-                </td>
-                <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${c.todayTokens.toLocaleString()}
-                    ${pctDay>0?`<div style="height:3px;background:#f3f4f6;border-radius:2px;width:60px;margin-top:2px;">
-                        <div style="height:100%;width:${pctDay}%;background:${pctDay>90?'#ef4444':'#3b82f6'};border-radius:2px;"></div></div>`:''}
-                </td>
-                <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${c.monthTokens.toLocaleString()}</td>
-                <td style="padding:0.4rem 0.5rem;">
-                    <input type="number" value="${d.aiDailyTokenLimit||''}" placeholder="∞" min="0" step="1000"
-                        style="width:80px;padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.75rem;"
-                        onchange="updateAILimit('${safeId}','aiDailyTokenLimit',this.value)">
-                </td>
-                <td style="padding:0.4rem 0.5rem;">
-                    <input type="number" value="${d.aiMonthlyTokenLimit||''}" placeholder="∞" min="0" step="10000"
-                        style="width:90px;padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.75rem;"
-                        onchange="updateAILimit('${safeId}','aiMonthlyTokenLimit',this.value)">
-                </td>
-            </tr>`;
-        }).join('');
-
     const totalToday = pc.reduce((s,c)=>s+c.todayTokens,0);
     const totalMonth = pc.reduce((s,c)=>s+c.monthTokens,0);
 
+    const rows = [...pc].sort((a,b)=>b.monthTokens-a.monthTokens).map(c=>{
+        const d = c.data;
+        const safeId = c.id.replace(/['"]/g,'');
+        const pctDay = d.aiDailyTokenLimit>0 ? Math.min(100,Math.round(c.todayTokens/d.aiDailyTokenLimit*100)) : 0;
+        return `<tr style="border-bottom:1px solid #f3f4f6;">
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:500;">${_saEsc(d.name||c.id)}</td>
+            <td style="padding:0.4rem 0.5rem;">
+                <span style="font-size:0.7rem;padding:1px 6px;border-radius:4px;background:${d.aiEnabled!==false?'#dcfce7':'#fee2e2'};color:${d.aiEnabled!==false?'#16a34a':'#dc2626'};">
+                    ${d.aiEnabled!==false?'ON':'OFF'}</span>
+            </td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${c.todayTokens.toLocaleString()}
+                ${pctDay>0?`<div style="height:3px;background:#f3f4f6;border-radius:2px;width:60px;margin-top:2px;"><div style="height:100%;width:${pctDay}%;background:${pctDay>90?'#ef4444':'#3b82f6'};border-radius:2px;"></div></div>`:''}
+            </td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:600;">${c.monthTokens.toLocaleString()}</td>
+            <td style="padding:0.4rem 0.5rem;">
+                <input type="number" value="${d.aiDailyTokenLimit||''}" placeholder="∞" min="0" step="1000"
+                    style="width:80px;padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.72rem;"
+                    onchange="updateAILimit('${safeId}','aiDailyTokenLimit',this.value)">
+            </td>
+            <td style="padding:0.4rem 0.5rem;">
+                <input type="number" value="${d.aiMonthlyTokenLimit||''}" placeholder="∞" min="0" step="10000"
+                    style="width:90px;padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.72rem;"
+                    onchange="updateAILimit('${safeId}','aiMonthlyTokenLimit',this.value)">
+            </td>
+        </tr>`;
+    }).join('');
+
     return `
-    <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;">
+    <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;align-items:center;">
         ${_saKpi('Сьогодні токенів', totalToday.toLocaleString(), '#3b82f6')}
         ${_saKpi('Місяць токенів', totalMonth.toLocaleString(), '#8b5cf6')}
         <div style="flex:1;text-align:right;">
-            <button onclick="openGlobalAISettings()"
-                style="padding:0.4rem 0.9rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg> Глобальні налаштування AI
+            <button onclick="openGlobalAISettings()" style="padding:0.4rem 0.9rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">
+                Глобальні налаштування AI
             </button>
         </div>
     </div>
     <div style="overflow-x:auto;">
     <table style="width:100%;border-collapse:collapse;">
-        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.7rem;color:#6b7280;text-transform:uppercase;">
+        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.68rem;color:#6b7280;text-transform:uppercase;">
             <th style="padding:0.4rem 0.5rem;text-align:left;">Компанія</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">AI</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">Сьогодні</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">Місяць</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">Ліміт/день</th>
-            <th style="padding:0.4rem 0.5rem;text-align:left;">Ліміт/міс</th>
+            <th style="padding:0.4rem 0.5rem;">AI</th>
+            <th style="padding:0.4rem 0.5rem;">Сьогодні</th>
+            <th style="padding:0.4rem 0.5rem;">Місяць</th>
+            <th style="padding:0.4rem 0.5rem;">Ліміт/день</th>
+            <th style="padding:0.4rem 0.5rem;">Ліміт/міс</th>
         </tr></thead>
         <tbody>${rows}</tbody>
     </table></div>`;
 }
 
-// ── ТАБ 5: ДІАГНОСТИКА ───────────────────────────────────────────────────
-function _saRenderDiagnostic(pc) {
-    const withRecs = pc.filter(c => c.aiRecs && c.aiRecs.length > 0);
-    const withSnapshot = pc.filter(c => c.snapshot);
+// ── TAB 6: HEALTH SCORE ─────────────────────────────────────
+function _saRenderHealth(pc) {
+    const sorted = [...pc].sort((a,b)=>a.health-b.health);
 
-    const recCards = withRecs.map(c => {
-        const criticals = c.aiRecs.filter(r => r.severity === 'critical');
-        const warnings  = c.aiRecs.filter(r => r.severity === 'warning');
-        return `<div style="border:1px solid #e5e7eb;border-radius:8px;padding:0.75rem;margin-bottom:0.5rem;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
-                <span style="font-weight:700;font-size:0.82rem;">${_saEsc(c.data.name||c.id)}</span>
-                <div style="display:flex;gap:4px;">
-                    ${criticals.length?`<span style="background:#fee2e2;color:#dc2626;padding:1px 7px;border-radius:4px;font-size:0.7rem;font-weight:700;">🔴 ${criticals.length}</span>`:''}
-                    ${warnings.length?`<span style="background:#fef9c3;color:#ca8a04;padding:1px 7px;border-radius:4px;font-size:0.7rem;font-weight:700;">🟡 ${warnings.length}</span>`:''}
-                </div>
-            </div>
-            ${c.aiRecs.slice(0,3).map(r=>`
-            <div style="font-size:0.75rem;color:#374151;padding:2px 0;border-top:1px solid #f3f4f6;">
-                ${r.severity==='critical'?'🔴':'🟡'} ${_saEsc(r.signalText||r.signal||'—')}
-            </div>`).join('')}
-        </div>`;
-    }).join('') || '<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає активних рекомендацій</div>';
+    const rows = sorted.map(c=>{
+        const h = c.health;
+        const healthColor = h>=70?'#22c55e':h>=40?'#f59e0b':'#ef4444';
+        const healthBg    = h>=70?'#dcfce7':h>=40?'#fef9c3':'#fee2e2';
+        const snap = c.snapshot?.signals || {};
 
-    const snapRows = withSnapshot.map(c => {
-        const s = c.snapshot.signals || {};
-        const totals = c.snapshot.totals || {};
+        // Причини низького health
+        const reasons = [];
+        if (c.totalEvents7d === 0)    reasons.push('Немає активності');
+        else if (c.totalEvents7d < 10) reasons.push('Мало активності');
+        if (c.overdueTasks > 0)        reasons.push(`${c.overdueTasks} прострочених задач`);
+        if ((snap.ownerTaskRatio||0) > 0.4) reasons.push('Власник перевантажений');
+        if (c.telegramCount === 0 && c.users.length > 0) reasons.push('TG не підключено');
+        if (c.data.aiEnabled === false) reasons.push('AI вимкнено');
+
         return `<tr style="border-bottom:1px solid #f3f4f6;">
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:500;">${_saEsc(c.data.name||c.id)}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${totals.active||0}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;color:${(totals.overdue||0)>0?'#ef4444':'#22c55e'};font-weight:600;">${totals.overdue||0}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${s.ownerTaskCount||0} <span style="color:#9ca3af;">(${s.ownerTaskRatio?Math.round(s.ownerTaskRatio*100)+'%':'—'})</span></td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${(s.functionsWithHighReturn||[]).length||'—'}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${(s.processBottlenecks||[]).length||'—'}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${totals.slaBreaches||'—'}</td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;color:#9ca3af;">${c.weeklyLog?'✓ надіслано':'—'}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:600;cursor:pointer;" onclick="saOpenCompanyDetail('${c.id}')">${_saEsc(c.data.name||c.id)}</td>
+            <td style="padding:0.4rem 0.5rem;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <div style="flex:1;background:#f3f4f6;border-radius:4px;height:8px;overflow:hidden;max-width:80px;">
+                        <div style="width:${h}%;background:${healthColor};height:100%;border-radius:4px;transition:width .3s;"></div>
+                    </div>
+                    <span style="font-size:0.82rem;font-weight:800;color:${healthColor};min-width:35px;">${h}%</span>
+                </div>
+            </td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.72rem;color:#6b7280;">${reasons.slice(0,2).join(' · ')||'—'}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;">${c.totalEvents7d}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;color:${c.overdueTasks>0?'#ef4444':'#374151'};">${c.overdueTasks||'—'}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;">${c.telegramCount}</td>
+            <td style="padding:0.4rem 0.5rem;">
+                <span style="font-size:0.68rem;padding:1px 6px;border-radius:4px;background:${healthBg};color:${healthColor};">
+                    ${h>=70?'Добре':h>=40?'Увага':'Критично'}
+                </span>
+            </td>
         </tr>`;
     }).join('');
 
+    const distribution = {good:0,warn:0,crit:0};
+    pc.forEach(c=>{if(c.health>=70)distribution.good++;else if(c.health>=40)distribution.warn++;else distribution.crit++;});
+
     return `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div>
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> AI рекомендації (сьогодні)</div>
-            <div style="max-height:420px;overflow-y:auto;">${recCards}</div>
-        </div>
-        <div>
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Snapshot сьогодні</div>
-            <div style="overflow-x:auto;">
-            <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
-                <thead><tr style="background:#f9fafb;font-size:0.68rem;color:#6b7280;text-transform:uppercase;">
-                    <th style="padding:0.35rem 0.4rem;text-align:left;">Компанія</th>
-                    <th style="padding:0.35rem 0.4rem;">Актив</th>
-                    <th style="padding:0.35rem 0.4rem;">Простр</th>
-                    <th style="padding:0.35rem 0.4rem;">Owner</th>
-                    <th style="padding:0.35rem 0.4rem;">Return</th>
-                    <th style="padding:0.35rem 0.4rem;">Bottlnck</th>
-                    <th style="padding:0.35rem 0.4rem;">SLA</th>
-                    <th style="padding:0.35rem 0.4rem;">Звіт</th>
-                </tr></thead>
-                <tbody>${snapRows||'<tr><td colspan="8" style="padding:1rem;text-align:center;color:#9ca3af;">Немає snapshot</td></tr>'}</tbody>
-            </table></div>
-        </div>
-    </div>`;
+    <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;">
+        ${_saKpi('Добре (70%+)',     distribution.good, '#22c55e')}
+        ${_saKpi('Увага (40-70%)',   distribution.warn, '#f59e0b')}
+        ${_saKpi('Критично (<40%)',  distribution.crit, '#ef4444')}
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.68rem;color:#6b7280;text-transform:uppercase;">
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Компанія</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;min-width:140px;">Health Score</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Причини</th>
+            <th style="padding:0.4rem 0.5rem;">Events</th>
+            <th style="padding:0.4rem 0.5rem;">Прострочені</th>
+            <th style="padding:0.4rem 0.5rem;">TG</th>
+            <th style="padding:0.4rem 0.5rem;">Статус</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+    </table></div>`;
 }
 
-// ── ТАБ 6: СИСТЕМА ───────────────────────────────────────────────────────
+// ── TAB 7: ALERTS ───────────────────────────────────────────
+function _saRenderAlerts(pc) {
+    const alerts = [];
+
+    pc.forEach(c => {
+        // Тиша 3+ днів
+        if (c.daysSinceActivity >= 3 && c.users.length > 0) {
+            alerts.push({
+                company: c.data.name||c.id, id: c.id,
+                severity: c.daysSinceActivity >= 7 ? 'critical' : 'warning',
+                type: 'silence',
+                text: `Немає активності ${c.daysSinceActivity === 999 ? '(ніколи)' : c.daysSinceActivity + ' днів'}`,
+                action: null,
+            });
+        }
+        // Багато прострочених
+        if (c.overdueTasks > 0) {
+            const pct = c.activeTasks > 0 ? Math.round(c.overdueTasks/c.activeTasks*100) : 100;
+            alerts.push({
+                company: c.data.name||c.id, id: c.id,
+                severity: pct > 30 ? 'critical' : 'warning',
+                type: 'overdue',
+                text: `${c.overdueTasks} прострочених задач (${pct}%)`,
+                action: null,
+            });
+        }
+        // Власник перевантажений
+        const ownerR = c.snapshot?.signals?.ownerTaskRatio || 0;
+        if (ownerR > 0.5) {
+            alerts.push({
+                company: c.data.name||c.id, id: c.id,
+                severity: 'warning',
+                type: 'owner_overload',
+                text: `Власник на ${Math.round(ownerR*100)}% задач — потрібна делегація`,
+                action: null,
+            });
+        }
+        // AI limit майже вичерпано
+        if (c.data.aiDailyTokenLimit > 0) {
+            const pct = c.todayTokens / c.data.aiDailyTokenLimit;
+            if (pct > 0.85) {
+                alerts.push({
+                    company: c.data.name||c.id, id: c.id,
+                    severity: pct > 0.95 ? 'critical' : 'warning',
+                    type: 'ai_limit',
+                    text: `AI токени ${Math.round(pct*100)}% денного ліміту`,
+                    action: null,
+                });
+            }
+        }
+        // Health критично низький
+        if (c.health < 30) {
+            alerts.push({
+                company: c.data.name||c.id, id: c.id,
+                severity: 'critical',
+                type: 'low_health',
+                text: `Health Score критично низький: ${c.health}%`,
+                action: null,
+            });
+        }
+    });
+
+    alerts.sort((a,b)=>{
+        if(a.severity==='critical'&&b.severity!=='critical') return -1;
+        if(b.severity==='critical'&&a.severity!=='critical') return 1;
+        return a.company.localeCompare(b.company);
+    });
+
+    if (alerts.length === 0) {
+        return `<div style="text-align:center;padding:3rem;color:#22c55e;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 1rem;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">Все добре</div>
+            <div style="font-size:0.82rem;color:#6b7280;">Критичних алертів немає</div>
+        </div>`;
+    }
+
+    const typeIcons = {
+        silence:       'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z',
+        overdue:       'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+        owner_overload:'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z',
+        ai_limit:      'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H4a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2h-1',
+        low_health:    'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z',
+    };
+
+    const rows = alerts.map(a=>`
+        <div style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.65rem;
+            border:1px solid ${a.severity==='critical'?'#fecaca':'#fef9c3'};
+            background:${a.severity==='critical'?'#fff5f5':'#fffdf0'};
+            border-radius:8px;margin-bottom:0.4rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${a.severity==='critical'?'#dc2626':'#ca8a04'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><path d="${typeIcons[a.type]||typeIcons.silence}"/></svg>
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:0.78rem;font-weight:700;color:#111;cursor:pointer;" onclick="saOpenCompanyDetail('${a.id}')">${_saEsc(a.company)}</div>
+                <div style="font-size:0.73rem;color:#6b7280;margin-top:1px;">${_saEsc(a.text)}</div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;
+                background:${a.severity==='critical'?'#dc2626':'#f59e0b'};color:white;">
+                ${a.severity==='critical'?'Критично':'Увага'}</span>
+        </div>`).join('');
+
+    const critCount = alerts.filter(a=>a.severity==='critical').length;
+    const warnCount = alerts.filter(a=>a.severity==='warning').length;
+
+    return `
+    <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;">
+        ${_saKpi('Критично', critCount, '#ef4444')}
+        ${_saKpi('Увага',    warnCount, '#f59e0b')}
+        ${_saKpi('Всього',   alerts.length, '#374151')}
+    </div>
+    <div style="max-height:500px;overflow-y:auto;">${rows}</div>`;
+}
+
+// ── TAB 8: SYSTEM ───────────────────────────────────────────
 function _saRenderSystem() {
     return `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;">
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg> AI Налаштування</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">AI Налаштування</div>
             <button onclick="openGlobalAISettings()"
-                style="width:100%;padding:0.55rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg> Глобальні налаштування (ключі, агенти, моделі)
+                style="width:100%;padding:0.55rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
+                Глобальні налаштування (ключі, агенти, моделі)
             </button>
         </div>
         <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;">
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Обслуговування</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">Обслуговування</div>
             <button onclick="deleteEmptyCompanies()"
                 style="width:100%;padding:0.55rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
                 Видалити порожні компанії
@@ -518,11 +769,11 @@ function _saRenderSystem() {
     </div>`;
 }
 
-// ── HELPERS ───────────────────────────────────────────────────────────────
+// ── HELPERS ──────────────────────────────────────────────────
 function _saKpi(label, value, color) {
-    return `<div style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:0.7rem 0.9rem;border-top:3px solid ${color};">
-        <div style="font-size:0.68rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;">${_saEsc(label)}</div>
-        <div style="font-size:1.5rem;font-weight:800;color:${color};line-height:1.2;margin-top:2px;">${value}</div>
+    return `<div style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:0.65rem 0.85rem;border-top:3px solid ${color};">
+        <div style="font-size:0.65rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;">${_saEsc(label)}</div>
+        <div style="font-size:1.4rem;font-weight:800;color:${color};line-height:1.2;margin-top:2px;">${value}</div>
     </div>`;
 }
 function _saEsc(s) {
@@ -530,91 +781,35 @@ function _saEsc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-
 window.saFilterCompanies = function(query) {
-    const q = (query || '').toLowerCase().trim();
-    document.querySelectorAll('#saTabContent_companies table tbody tr').forEach(tr => {
-        const name = tr.dataset.name || '';
-        tr.style.display = (!q || name.includes(q)) ? '' : 'none';
+    const q = (query||'').toLowerCase().trim();
+    document.querySelectorAll('#saTabContent_companies table tbody tr').forEach(tr=>{
+        tr.style.display = (!q || (tr.dataset.name||'').includes(q)) ? '' : 'none';
     });
 };
 
-window.saOpenCompanyDetail = function(companyId) {
-    const pc = window._saData?.perCompany || [];
-    const c  = pc.find(x => x.id === companyId);
-    if (!c) return;
-    const d  = c.data;
-
-    const userRows = c.users.map(u => `
-        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;border-bottom:1px solid #f3f4f6;">
-            <span style="font-size:0.75rem;font-weight:600;min-width:120px;">${_saEsc(u.name||u.email||'—')}</span>
-            <span style="font-size:0.7rem;background:#f3f4f6;padding:1px 6px;border-radius:4px;">${_saEsc(u.role||'—')}</span>
-            <span style="font-size:0.7rem;color:#9ca3af;">${u.telegramChatId ? '✓ TG' : ''}</span>
-            <span style="font-size:0.7rem;color:#9ca3af;margin-left:auto;">${_saEsc(u.language||'ua')}</span>
-        </div>`).join('') || '<div style="color:#9ca3af;font-size:0.78rem;">Немає юзерів</div>';
-
-    const evRows = Object.entries(c.eventCounts||{})
-        .sort((a,b)=>b[1]-a[1]).slice(0,10)
-        .map(([k,v]) => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:0.75rem;border-bottom:1px solid #f9f9f9;">
-            <span style="font-family:monospace;color:#374151;">${_saEsc(k)}</span>
-            <strong>${v}</strong>
-        </div>`).join('') || '<div style="color:#9ca3af;font-size:0.78rem;">Немає подій</div>';
-
-    const aiRecRows = (c.aiRecs||[]).map(r => `
-        <div style="padding:0.4rem 0;border-bottom:1px solid #f3f4f6;font-size:0.75rem;">
-            <span style="color:${r.severity==='critical'?'#dc2626':'#ca8a04'};">${r.severity==='critical'?'🔴':'🟡'}</span>
-            ${_saEsc(r.signalText||r.signal||'—')}
-        </div>`).join('') || '<div style="color:#9ca3af;font-size:0.78rem;">Немає рекомендацій</div>';
-
-    const snap = c.snapshot;
-    const snapHtml = snap ? `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:0.75rem;">
-            <div>Активних: <strong>${snap.totals?.active||0}</strong></div>
-            <div>Прострочених: <strong style="color:${(snap.totals?.overdue||0)>0?'#ef4444':'#22c55e'}">${snap.totals?.overdue||0}</strong></div>
-            <div>Owner%: <strong>${snap.signals?.ownerTaskRatio?Math.round(snap.signals.ownerTaskRatio*100)+'%':'—'}</strong></div>
-            <div>SLA: <strong>${snap.totals?.slaBreaches||0}</strong></div>
-        </div>` : '<div style="color:#9ca3af;font-size:0.78rem;">Немає snapshot</div>';
-
-    document.getElementById('saDetailOverlay')?.remove();
-    const ov = document.createElement('div');
-    ov.id = 'saDetailOverlay';
-    ov.onclick = e => { if(e.target===ov) ov.remove(); };
-    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10020;display:flex;align-items:center;justify-content:center;padding:1rem;';
-    ov.innerHTML = `
-    <div style="background:white;border-radius:14px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-        <div style="padding:1rem 1.25rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1;">
-            <div>
-                <div style="font-weight:700;font-size:1rem;">${_saEsc(d.name||c.id)}</div>
-                <div style="font-size:0.72rem;color:#9ca3af;margin-top:1px;">${c.id} · план: ${d.plan||'pro'} · AI: ${d.aiEnabled!==false?'ON':'OFF'}</div>
-            </div>
-            <button onclick="document.getElementById('saDetailOverlay').remove()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#9ca3af;">×</button>
-        </div>
-        <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-            <div>
-                <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.5rem;color:#374151;">Користувачі (${c.users.length})</div>
-                ${userRows}
-            </div>
-            <div>
-                <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.5rem;color:#374151;">Events 7д (${c.totalEvents7d})</div>
-                ${evRows}
-            </div>
-            <div>
-                <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.5rem;color:#374151;">AI рекомендації</div>
-                ${aiRecRows}
-            </div>
-            <div>
-                <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.5rem;color:#374151;">Snapshot сьогодні</div>
-                ${snapHtml}
-                <div style="margin-top:0.5rem;font-size:0.75rem;">
-                    <div>AI токени сьогодні: <strong>${c.todayTokens.toLocaleString()}</strong></div>
-                    <div>AI токени місяць: <strong>${c.monthTokens.toLocaleString()}</strong></div>
-                    <div>Tижневий звіт: <strong>${c.weeklyLog?'✓ надіслано':'не надіслано'}</strong></div>
-                </div>
-            </div>
-        </div>
-    </div>`;
-    document.body.appendChild(ov);
+// ── Нотатки суперадміна ──────────────────────────────────────
+window.saAddNote = async function(companyId) {
+    const text = await (window.showInputModal
+        ? showInputModal('Нотатка для компанії', '', {placeholder:'Введіть нотатку...', multiline:true})
+        : (async()=>prompt('Нотатка:'))());
+    if (!text?.trim()) return;
+    try {
+        await firebase.firestore().collection('companies').doc(companyId)
+            .collection('sa_notes').add({
+                text: text.trim(),
+                by:   window.currentUser?.email || 'superadmin',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+        if (typeof showToast === 'function') showToast('Нотатку збережено ✓', 'success');
+        // Оновлюємо дані цієї компанії в _saData
+        const pc = window._saData?.perCompany?.find(c=>c.id===companyId);
+        if (pc) pc.notes.unshift({text:text.trim(), by:window.currentUser?.email||'superadmin'});
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: '+e.message, 'error');
+    }
 };
+
 
 window.updateCompanyPlan = async function(companyId, plan) {
     const validPlans = ['basic', 'pro', 'enterprise'];
