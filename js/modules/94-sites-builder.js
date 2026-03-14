@@ -25,6 +25,7 @@ const BLOCK_TYPES = [
     { type:'prices',    icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>', label:window.t('sitesBlockPrices') },
     { type:'gallery',   icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>', label:'Галерея' },
     { type:'about',     icon:'ℹ️',  label:window.t('sitesBlockAbout') },
+    { type:'html',      icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>', label:'HTML блок' },
 ];
 
 // ── Init ───────────────────────────────────────────────────
@@ -275,6 +276,21 @@ function _renderBlockEditor(idx) {
         <div style="font-size:0.72rem;color:#6b7280;background:#f9fafb;padding:0.4rem;border-radius:7px;margin-top:0.2rem;">
             Для редагування елементів — натисни на блок у прев'ю
         </div>`;
+    } else if (block.type === 'html') {
+        fields = `
+        <div>
+            <label style="${lbl}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;margin-right:3px;"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                HTML код блоку
+            </label>
+            <textarea rows="12" style="width:100%;padding:0.45rem;border:1.5px solid #8b5cf6;border-radius:7px;font-size:0.72rem;font-family:monospace;box-sizing:border-box;line-height:1.5;resize:vertical;background:#faf5ff;"
+                placeholder="<!-- Вставте будь-який HTML сюди -->&#10;<section>&#10;  <h2>Заголовок</h2>&#10;  <p>Текст</p>&#10;</section>"
+                oninput="sbUpdateBlock(${idx},'rawHtml',this.value)">${_esc(block.rawHtml||'')}</textarea>
+            <div style="font-size:0.68rem;color:#9ca3af;margin-top:4px;line-height:1.4;">
+                Вставляється прямо між блоками сторінки.
+                Підтримка: iframe, скрипти, будь-який HTML/CSS.
+            </div>
+        </div>`;
     } else {
         fields = `
         <div><label style="${lbl}">Заголовок</label>
@@ -348,6 +364,7 @@ function _defaultBlock(type, order) {
         prices:   { type:'prices',   order, title:window.t('sitesBlockPrices'), items:[{title:'Базовий',price:window.t('sitesPrice4'),features:[window.t('sitesOption1'),window.t('sitesOption2')]}]},
         gallery:  { type:'gallery',  order, title:window.t('sitesOurWorks'), items:[]},
         about:    { type:'about',    order, title:window.t('sitesBlockAbout'), text:window.t('sitesAboutPh'), photo:''},
+        html:     { type:'html',     order, rawHtml: '' },
     };
     return defaults[type] || { type, order, title: type };
 }
@@ -514,6 +531,15 @@ function _renderPreview() {
                     </div>`).join('')}
                 </div>
             </div>`);
+        }
+        // HTML блок — рендеримо rawHtml напряму
+        if (block.type === 'html') {
+            return block.rawHtml
+                ? `<div class="site-block site-block--html">${block.rawHtml}</div>`
+                : wrapper('<div style="padding:1.5rem;text-align:center;background:#faf5ff;border:2px dashed #c4b5fd;">'
+                    + '<div style="font-size:0.8rem;font-weight:600;color:#8b5cf6;">HTML блок (порожній)</div>'
+                    + '<div style="font-size:0.7rem;color:#9ca3af;margin-top:4px;">Вставте HTML у лівій панелі</div>'
+                    + '</div>');
         }
         // Дефолт для gallery, about, etc.
         return wrapper(`
