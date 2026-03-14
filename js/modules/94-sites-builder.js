@@ -757,6 +757,21 @@ window.sbBuildPublicHtml = function(site, blocksHtml) {
     ${gtm ? `<!-- GTM noscript --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtm}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>` : ''}
     ${blocksHtml || ''}
 </body>
+    <script>
+    (function(){
+        try {
+            var _sid = '${s.id || ''}';
+            var _cid = '${s.companyId || ''}';
+            if (_sid && _cid) {
+                fetch('/api/track-visit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ siteId: _sid, companyId: _cid })
+                }).catch(function(){});
+            }
+        } catch(e){}
+    })();
+    </script>
 </html>`;
 };
 

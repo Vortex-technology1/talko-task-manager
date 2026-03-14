@@ -112,6 +112,10 @@
     "api/ai-crm.js": {
       "maxDuration": 30,
       "memory": 256
+    },
+    "api/track-visit.js": {
+      "maxDuration": 5,
+      "memory": 128
     }
   },
   "regions": [
