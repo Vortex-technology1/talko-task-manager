@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
             normalized = {
                 senderId: String(from.id),
                 senderName: [from.first_name, from.last_name].filter(Boolean).join(' ') || from.username || '',
-                text: msg?.text || cb?.data || '',
+                text: msg?.text || cb?.data || msg?.caption || (msg?.photo ? '[фото]' : '') || (msg?.voice ? '[голос]' : '') || (msg?.document ? '[файл]' : '') || (msg?.sticker ? '[стікер]' : '') || '',
             };
             if (cb) callbackQueryId = cb.id;
         } else if (channel === 'viber') {
@@ -473,6 +473,11 @@ module.exports = async (req, res) => {
         // для перегляду в чаті менеджером (незалежно від стану флоу)
         const contactId = `${channel}_${normalized.senderId}`;
         // Не зберігаємо /start і технічні команди
+        // FIX: capture /start deep link payload (e.g. /start ref_abc)
+        if (normalized.text && normalized.text.startsWith('/start') && normalized.text !== '/start') {
+            const startPayload = normalized.text.split(' ')[1] || null;
+            if (startPayload) session.data._startRef = startPayload;
+        }
         if (normalized.text && !normalized.text.startsWith('/start') && normalized.text !== 'start') {
             try {
                 await db.collection('companies').doc(companyId)
@@ -991,7 +996,7 @@ function resolveNext(node, userText) {
 function interp(text, data) {
     // FIX 6: замінюємо змінні але екрануємо щоб не ламати HTML в sendTg
     return (text || '').replace(/\{\{(\w+)\}\}/g, (_, k) => {
-        const val = data[k] || '';
+        const val = (data[k] !== undefined && data[k] !== null) ? data[k] : '';
         // Якщо значення вже містить HTML теги — не чіпаємо (наприклад ai_response)
         return String(val);
     });
@@ -1002,7 +1007,7 @@ function evalFilter(node, data) {
     const varName = node.condVar || node.variable || node.conditionField || '';
     const op = node.condOp || node.operator || node.conditionOp || 'exists';
     const expected = node.condVal || node.value || node.conditionValue || '';
-    const val = data[varName] || '';
+    const val = (data[varName] !== undefined && data[varName] !== null) ? String(data[varName]) : '';
     switch(op) {
         case 'eq': case 'equals': return String(val) === String(expected);
         case 'neq': return String(val) !== String(expected);
@@ -1475,10 +1480,15 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                     by:   'system',
                     at:   admin.firestore.FieldValue.serverTimestamp(),
                 });
-                // FIX: increment leadsCount on the funnel
+                // FIX: increment leadsCount + leadsToday on the funnel
                 if (flow?.id) {
+                    const today = new Date().toISOString().slice(0,10);
                     await compRef.collection('funnels').doc(flow.id)
-                        .update({ leadsCount: admin.firestore.FieldValue.increment(1) })
+                        .update({
+                            leadsCount: admin.firestore.FieldValue.increment(1),
+                            leadsToday: admin.firestore.FieldValue.increment(1),
+                            leadsLastDate: today,
+                        })
                         .catch(e => console.warn('[finish] leadsCount increment:', e.message));
                 }
             }

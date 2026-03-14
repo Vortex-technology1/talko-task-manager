@@ -345,7 +345,7 @@ window.sitesTogglePublish = async function (siteId, currentStatus) {
     const newStatus = currentStatus === 'published' ? 'draft' : 'published';
     try {
         await window.companyRef()
-            .collection(window.DB_COLS.SITES).doc( + '/sites/' + siteId)
+            .collection(window.DB_COLS.SITES).doc(siteId)
             .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         if (typeof showToast === 'function')
             showToast(newStatus === 'published' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span> Сайт опублікований!' : 'Сайт знято з публікації', 'success');
@@ -357,8 +357,15 @@ window.sitesTogglePublish = async function (siteId, currentStatus) {
 window.sitesDelete = async function (siteId, name) {
     if (!(await (window.showConfirmModal ? showConfirmModal('Видалити сайт "' + name + '"?\nВсі блоки та форми будуть видалені.',{danger:true}) : Promise.resolve(confirm('Видалити сайт "' + name + '"?\nВсі блоки та форми будуть видалені.'))))) return;
     try {
+        // FIX 7: delete HTML from Firebase Storage if path exists
+        const siteDoc = sl.sites.find(s => s.id === siteId);
+        if (siteDoc?.htmlStoragePath) {
+            try {
+                await firebase.storage().ref(siteDoc.htmlStoragePath).delete();
+            } catch(e) { /* storage file may not exist, ignore */ }
+        }
         await window.companyRef()
-            .collection(window.DB_COLS.SITES).doc( + '/sites/' + siteId).delete();
+            .collection(window.DB_COLS.SITES).doc(siteId).delete();
         if (typeof showToast === 'function') showToast(window.t('sitesDeleted'), 'success');
     } catch (e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');

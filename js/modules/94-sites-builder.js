@@ -515,7 +515,7 @@ window.sbSave = async function () {
     if (btn) { btn.textContent = window.t('saving'); btn.disabled = true; }
     try {
         await window.companyRef()
-            .collection(window.DB_COLS.SITES).doc( + '/sites/' + sb.siteId)
+            .collection(window.DB_COLS.SITES).doc(sb.siteId)
             .update({
                 blocks:    sb.blocks,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),

@@ -1001,7 +1001,7 @@ function _ctsCardHTML(ct) {
 // ─────────────────────────────────────────
 // ДЕТАЛЬНА КАРТКА КОНТАКТУ
 // ─────────────────────────────────────────
-window.ctsOpenCard = function(contactId) {
+window.ctsOpenCard = async function(contactId) {
     cts.activeContactId = contactId;
     const ct = cts.items.find(c => c.id === contactId);
     if (!ct) return;
@@ -1137,7 +1137,25 @@ window.ctsOpenCard = function(contactId) {
                 border:1.5px solid #fecaca;border-radius:9px;cursor:pointer;font-size:0.76rem;font-weight:600;">
                 Видалити контакт
             </button>
-        </div>`;
+        </div>`
+
+    // FIX 9: async lookup CRM deal linked to this contact
+    try {
+        const dealSnap = await window.companyRef()
+            .collection(window.DB_COLS ? window.DB_COLS.CRM_DEALS : 'crm_deals')
+            .where('contactId', '==', contactId)
+            .limit(1).get();
+        if (!dealSnap.empty) {
+            const deal = dealSnap.docs[0].data();
+            const dealId = dealSnap.docs[0].id;
+            const crmBtn = document.createElement('div');
+            crmBtn.style.cssText = 'margin:0.75rem 1rem 0;padding:0.5rem 0.75rem;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:0.5rem;';
+            crmBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div style="flex:1"><div style="font-size:0.78rem;font-weight:700;color:#16a34a;">CRM угода</div><div style="font-size:0.7rem;color:#374151;">' + (deal.title || deal.clientName || '—') + ' · ' + (deal.stage || '—') + '</div></div>';
+            crmBtn.onclick = function() { if (typeof switchTab === 'function') switchTab('crm'); };
+            const panelEl = document.getElementById('ctsDetailPanel');
+            if (panelEl) panelEl.appendChild(crmBtn);
+        }
+    } catch(e) { /* silently ignore */ };
 };
 
 window.ctsCloseCard = function() {

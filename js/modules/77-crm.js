@@ -3993,7 +3993,7 @@ function _subscribeDeals() {
     if (!crm.pipeline) return;
     const DEALS_LIMIT = 500; // FIX B: збільшено з 200 до 500
     crm.dealUnsub = window.companyRef().collection(window.DB_COLS.CRM_DEALS)
-        .where('pipelineId','==', crm.pipeline.id).limit(DEALS_LIMIT)
+        .where('pipelineId','==', crm.pipeline.id).orderBy('createdAt','desc').limit(DEALS_LIMIT)
         .onSnapshot(snap => {
             crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}))
                 .sort((a,b) => (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
