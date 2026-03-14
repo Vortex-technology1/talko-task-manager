@@ -701,22 +701,24 @@ function _kanbanColLost(stage) {
 // ══════════════════════════════════════════════════════════
 function _renderListView() {
     const isMobile = window.innerWidth < 768;
-    // Прибираємо kanban з поля зору
+    // Render directly into crmViewKanban (it's already visible from crmSwitchTab)
     const kanbanEl = document.getElementById('crmViewKanban');
-    if (kanbanEl) kanbanEl.style.display = 'none';
+    if (kanbanEl) { kanbanEl.style.display = ''; kanbanEl.style.overflowY = 'auto'; }
+    // Hide legacy separate list div if exists
+    const legacyList = document.getElementById('crmListView');
+    if (legacyList) legacyList.style.display = 'none';
+    // Use kanban element as our list container
+    let listEl = kanbanEl;
+    if (!listEl) return;
     const container = document.getElementById('crmContainer');
-    if (!container) return;
-    let listEl = document.getElementById('crmListView');
-    if (!listEl) {
+    if (false) {  // legacy block - kept for reference
         listEl = document.createElement('div');
         listEl.id = 'crmListView';
         listEl.style.cssText = 'flex:1;overflow-y:auto;background:#f4f5f7;';
         // Вставляємо після kanban view
         const kanban = document.getElementById('crmViewKanban');
         if (kanban && kanban.parentNode) kanban.parentNode.insertBefore(listEl, kanban.nextSibling);
-        else container.appendChild(listEl);
     }
-    listEl.style.display = '';
 
     const deals = _filteredDeals();
     // Сортування
