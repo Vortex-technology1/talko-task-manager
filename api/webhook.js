@@ -72,6 +72,9 @@ module.exports = async (req, res) => {
 
     const { companyId, channel } = req.query;
     if (!companyId || !channel) return res.status(400).json({ error: 'Missing params' });
+    // Basic sanitization — Firestore doc IDs не можуть містити / або бути порожніми
+    if (typeof companyId !== 'string' || companyId.includes('/') || companyId.length > 128)
+        return res.status(400).json({ error: 'Invalid companyId' });
 
     try {
         const body = req.body;
@@ -87,8 +90,10 @@ module.exports = async (req, res) => {
             const from = msg?.from || cb?.from;
             if (!from) return res.status(200).json({ ok: true, skipped: 'no from' });
             normalized = {
-                senderId: String(from.id),
-                senderName: [from.first_name, from.last_name].filter(Boolean).join(' ') || from.username || '',
+                senderId:   String(from.id),
+                senderName: ([from.first_name, from.last_name].filter(Boolean).join(' ') || from.username || '')
+                    .replace(/[<>"']/g, '').slice(0, 100),
+                username:   (from.username || '').replace(/[^a-zA-Z0-9_]/g, '').slice(0, 50),
                 text: msg?.text || cb?.data || msg?.caption || (msg?.photo ? '[фото]' : '') || (msg?.voice ? '[голос]' : '') || (msg?.document ? '[файл]' : '') || (msg?.sticker ? '[стікер]' : '') || '',
             };
             if (cb) callbackQueryId = cb.id;
@@ -551,8 +556,9 @@ module.exports = async (req, res) => {
             currentNodeId: null, waitingForInput: null,
             data: {}, aiHistory: [], tags: [],
         };
-        // FIX CE: refresh senderName on every message (user may rename in Telegram)
+        // FIX CE: refresh senderName/username (user may rename in Telegram)
         if (normalized.senderName) session.senderName = normalized.senderName;
+        if (normalized.username)   session.username   = normalized.username;
 
         // ── Авто-лід при першому повідомленні ──────────────────
         // AWAITED щоб _autoClientId/_autoDealId були в session
@@ -870,8 +876,13 @@ module.exports = async (req, res) => {
                     thinkingMsgId = await sendTgGetId(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...');
                 }
 
-                const rawReply = await callAI(n, normalized.text, session, compRef, _compData);
-                typingActive = false; // зупиняємо typing loop
+                let rawReply;
+                try {
+                    rawReply = await callAI(n, normalized.text, session, compRef, _compData);
+                } finally {
+                    typingActive = false; // завжди зупиняємо typing loop
+                }
+                if (!rawReply) rawReply = n.config?.fallback || n.fallback || '';
 
                 // Парсимо спеціальні теги з відповіді AI:
                 // [BTN:текст] — динамічна кнопка
@@ -991,7 +1002,12 @@ module.exports = async (req, res) => {
                         senderName:   session.senderName || '',
                         senderId:     session.senderId || '',
                         channel:      session.channel || '',
-                        contactData:  session.data || {},
+                        contactData:  {
+                            name:     session.data?.name || '',
+                            phone:    session.data?.phone || '',
+                            email:    session.data?.email || '',
+                            message:  (session.data?.message || session.data?.main_problem || '').slice(0, 500),
+                        },
                         createdAt:    admin.firestore.FieldValue.serverTimestamp(),
                         updatedAt:    admin.firestore.FieldValue.serverTimestamp(),
                     };
@@ -1143,6 +1159,11 @@ module.exports = async (req, res) => {
                     session.data[k] = session.data[k].slice(0, 2000);
                 }
             }
+        }
+        // Обмежуємо aiHistory перед збереженням (Firestore 1MB limit)
+        if (Array.isArray(session.aiHistory)) {
+            const _ahChars = session.aiHistory.reduce((s,m) => s + (m.content||'').length, 0);
+            if (_ahChars > 30000) session.aiHistory = session.aiHistory.slice(-6);
         }
         // FIX 3: видаляємо технічні поля перед збереженням
         const { _botToken, ...sessionToSave } = session;
