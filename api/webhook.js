@@ -481,6 +481,7 @@ module.exports = async (req, res) => {
                 ? _compData?.viberBotToken
                 : _compData?.integrations?.telegram?.botToken;
         }
+        } // end botToken scope
         if (!botToken) return res.status(200).json({ ok: true, skipped: 'no token' });
 
         // ── Зберігаємо ВСІ вхідні повідомлення від юзера ───
@@ -673,15 +674,14 @@ module.exports = async (req, res) => {
         // ── Підвантажуємо canvasData + nodePrompts з підколекцій ──
         const flowDocRef = compRef.collection('bots').doc(currentBotId).collection('flows').doc(flow.id);
 
-        // FIX 1: canvasData зберігається в підколекції, не в основному документі
-        if (!flow.canvasData?.nodes?.length) {
-            try {
-                const canvasDoc = await flowDocRef.collection('canvasData').doc('layout').get();
-                if (canvasDoc.exists) flow.canvasData = canvasDoc.data();
-            } catch(e) { console.warn('[webhook] canvasData load error:', e.message); }
-        }
-
-        const promptsSnap = await flowDocRef.collection('nodePrompts').get();
+        // PERF: canvasData + nodePrompts паралельно (економимо ~150ms)
+        const [_canvasDoc, promptsSnap] = await Promise.all([
+            flow.canvasData?.nodes?.length
+                ? Promise.resolve(null)
+                : flowDocRef.collection('canvasData').doc('layout').get().catch(() => null),
+            flowDocRef.collection('nodePrompts').get().catch(() => ({ forEach: () => {} })),
+        ]);
+        if (_canvasDoc?.exists) flow.canvasData = _canvasDoc.data();
         const nodePromptsMap = {};
         promptsSnap.forEach(doc => { nodePromptsMap[doc.id] = doc.data().aiSystem || ''; });
 
@@ -1565,9 +1565,8 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                 }
 
                 const dealRef = compRef.collection('crm_deals').doc();
-                // FIX CB: pipelineId is required — CRM _subscribeDeals filters .where('pipelineId','==',...)
+                // pipelineId вже оголошено вище (з кешу або з query)
                 // Without it deal is created but NEVER appears on CRM kanban board
-                const pipelineId = !pipSnap.empty ? pipSnap.docs[0].id : 'default';
                 await dealRef.set({
                     id:              dealRef.id,
                     title:           `Лід: ${clientName}`,
