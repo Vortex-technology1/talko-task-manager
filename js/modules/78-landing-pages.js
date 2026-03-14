@@ -53,6 +53,11 @@
             _renderHub();
             return;
         }
+        // Reset if company changed
+        if (_initCompanyId && _initCompanyId !== window.currentCompanyId) {
+            _initialized = false;
+            _funnels = []; _sites = []; _bots = []; _templates = [];
+        }
         c.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:200px;color:#9ca3af;font-size:.85rem;">Завантаження...</div>';
         _initialized = false;
         await _loadAll();
@@ -402,13 +407,20 @@
     window.mktDeleteStage = async function(funnelId, idx) {
         const f = _funnels.find(x=>x.id===funnelId);
         if (!f) return;
-        const stages = (f.stages||[]).filter((_,i)=>i!==idx);
+        const original = [...(f.stages||[])];
+        const stages = original.filter((_,i)=>i!==idx);
+        // Optimistic update
+        f.stages = stages;
+        _renderHub();
         try {
             await window.companyRef().collection('funnels').doc(funnelId)
                 .update({ stages, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            f.stages = stages;
+        } catch(e) {
+            // Rollback on error
+            f.stages = original;
             _renderHub();
-        } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+            if(window.showToast) showToast('Помилка видалення: '+e.message,'error');
+        }
     };
 
     // ══════════════════════════════════════════════════════

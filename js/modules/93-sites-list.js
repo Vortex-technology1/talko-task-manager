@@ -292,6 +292,7 @@ window.sitesCreate = async function () {
                 nicheKey: _selectedNiche,
                 status:   'draft',
                 blocks,
+                companyId: window.currentCompanyId || '',  // FIX: needed for track-visit
                 theme: { primaryColor: '#22c55e', fontFamily: 'Inter', borderRadius: '12px' },
                 visits:           0,
                 formSubmissions:  0,

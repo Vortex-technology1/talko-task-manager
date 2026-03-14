@@ -1428,6 +1428,8 @@ window.crmDrop = async function(e, newStage) {
         }
     } catch(err) {
         console.error('[CRM drop]', err);
+        deal.stage = oldStage; // FIX: rollback on error
+        _renderKanban();
         deal.stage = oldStage;
         _renderKanban();
     }

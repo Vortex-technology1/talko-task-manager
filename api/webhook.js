@@ -705,6 +705,9 @@ module.exports = async (req, res) => {
                 if (!session.aiHistory) session.aiHistory = [];
                 session.aiHistory.push({ role: 'user', content: normalized.text });
                 if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
+                // FIX: also limit by total chars to avoid token overflow
+                const _histChars = session.aiHistory.reduce((s,m)=>s+(m.content||'').length,0);
+                if (_histChars > 15000) session.aiHistory = session.aiHistory.slice(-10);
 
                 // Typing індикатор — шле кожні 4 сек поки AI думає (Telegram показує max 5 сек)
                 let typingActive = true;

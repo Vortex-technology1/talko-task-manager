@@ -107,6 +107,7 @@
         funnelEditorId = null;
         funnelEditorData = null;
         funnelSteps = [];
+        selectedStepId = null;  // FIX: prevent stale highlight on reopen
     };
 
     // ── Steps List ─────────────────────────────────────────
@@ -146,7 +147,7 @@
     };
 
     window.addFunnelStep = function (type) {
-        const id = 'step_' + Date.now();
+        const id = 'step_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
         const defaultNames = { message: 'Повідомлення', buttons: 'Вибір', text_input: 'Введення тексту', phone: 'Телефон', email: 'Email', ai_response: 'AI відповідь', calendly: 'Запис', end: 'Завершення' };
         const step = { id, type, name: defaultNames[type] || type, message: '', options: [], saveAs: null, systemPrompt: '', nextStep: null };
         funnelSteps.push(step);
