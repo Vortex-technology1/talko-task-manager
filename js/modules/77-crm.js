@@ -285,7 +285,10 @@ function _filteredDeals() {
             (d.title||'').toLowerCase().includes(q) ||
             (d.clientName||'').toLowerCase().includes(q) ||
             (d.clientNiche||'').toLowerCase().includes(q) ||
-            (d.note||'').toLowerCase().includes(q)
+            (d.note||'').toLowerCase().includes(q) ||
+            (d.phone||'').replace(/\D/g,'').includes(q.replace(/\D/g,'')) ||
+            (d.email||'').toLowerCase().includes(q) ||
+            (d.telegram||'').toLowerCase().includes(q)
         );
     }
     if (f.assignee) deals = deals.filter(d => d.assigneeId === f.assignee);
@@ -421,7 +424,7 @@ async function _loadAll() {
         new Promise((_, rej) => setTimeout(() => rej(new Error('Немає зʼєднання з сервером. Перевірте інтернет і спробуйте ще раз.')), ms))
     ]);
 
-    const pipSnap = await _withTimeout(base.collection('crm_pipeline').get(), 10000);
+    const pipSnap = await _withTimeout(base.collection(window.DB_COLS.CRM_PIPELINE).get(), 10000);
     crm.pipelines = pipSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     window.crm = crm; // expose після завантаження pipelines
     if (!crm.pipelines.length) await _createDefaultPipeline();
@@ -2379,7 +2382,7 @@ async function _loadTasksTab(deal) {
     try {
         let dealTasks = [];
         try {
-            const snap = await window.companyRef().collection('tasks')
+            const snap = await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks')
                 .where('crmDealId','==', deal.id).orderBy('createdAt','desc').get();
             dealTasks = snap.docs.map(d => ({ id:d.id, ...d.data() }));
         } catch(qErr) {
@@ -2444,7 +2447,7 @@ async function _loadTasksTab(deal) {
 window.crmMarkTaskDone = async function(taskId) {
     try {
         const todayStr = new Date().toISOString().split('T')[0];
-        await window.companyRef().collection('tasks').doc(taskId).update({
+        await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks').doc(taskId).update({
             status: 'done',
             completedDate: todayStr, // FIX BH: потрібен для статистики, owner dashboard, аналітики
             completedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -2600,8 +2603,10 @@ async function _loadAITab(deal) {
 }
 
 window.crmRunAI = async function(dealId) {
+    if (crm._aiRunning === dealId) return; // guard проти подвійного кліку
+    crm._aiRunning = dealId;
     const deal    = crm.deals.find(d => d.id === dealId);
-    if (!deal) return;
+    if (!deal) { crm._aiRunning = null; return; }
     const contentEl = document.getElementById('crmDealContent');
     if (contentEl) contentEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#6b7280;font-size:0.82rem;">Аналізую угоду...</div>';
     try {
@@ -2634,6 +2639,8 @@ window.crmRunAI = async function(dealId) {
     } catch(e) {
         if (contentEl) contentEl.innerHTML = `<div style="color:#ef4444;padding:1rem;font-size:0.8rem;">Помилка: ${_esc(e.message)}</div>`;
         console.error('[CRM] crmRunAI error:', e.message);
+    } finally {
+        crm._aiRunning = null;
     }
 };
 
@@ -3981,7 +3988,9 @@ window.crmMoveDealToPipeline = async function(dealId, targetPipelineId, targetPi
 window.crmSelectPipeline = async function(pipelineId) {
     // FIX: при кліку на активну — не відкриваємо Settings, просто ігноруємо
     if (crm.pipeline?.id === pipelineId) return;
-    crm.pipeline = crm.pipelines.find(p => p.id === pipelineId) || crm.pipeline;
+    const found = crm.pipelines.find(p => p.id === pipelineId);
+    if (!found) { if (typeof showToast === 'function') showToast('Воронку не знайдено', 'error'); return; }
+    crm.pipeline = found;
     _subscribeDeals(); // subscribe запустить _renderKanban або _renderListView через onSnapshot
     // FIX: рендеримо поточний subTab, не Settings
     if (crm.subTab === 'settings') _renderCRMSettings();
@@ -4437,7 +4446,7 @@ window.crmSaveTaskFromDeal = async function(dealId) {
             createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt:  firebase.firestore.FieldValue.serverTimestamp(),
         };
-        const ref = await window.companyRef().collection('tasks').add(taskData);
+        const ref = await window.companyRef().collection(window.DB_COLS.TASKS || 'tasks').add(taskData);
 
         // Логуємо в history угоди
         await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
