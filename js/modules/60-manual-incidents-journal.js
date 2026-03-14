@@ -49,7 +49,10 @@ window.resolveIncident = async function (id) {
 };
 
 window.deleteIncident = async function (id) {
-  if (!confirm('Видалити цей запис збою?')) return;
+  const _ok = window.showConfirmModal
+      ? await showConfirmModal('Видалити цей запис збою?', {danger:true})
+      : confirm('Видалити цей запис збою?');
+  if (!_ok) return;
   try {
     await window.companyRef().collection(INCIDENTS_COL).doc(id).delete();
     if (typeof showToast === 'function') showToast('Запис видалено', 'success');

@@ -245,7 +245,10 @@ window.crmToggleFormDisabled = async function (formId, disabled) {
 };
 
 window.crmDeleteForm = async function (formId) {
-    if (!confirm('Видалити форму? Вбудований код перестане працювати.')) return;
+    const _ok = window.showConfirmModal
+        ? await showConfirmModal('Видалити форму? Вбудований код перестане працювати.', {danger:true})
+        : confirm('Видалити форму? Вбудований код перестане працювати.');
+    if (!_ok) return;
     try {
         await window.companyRef().collection('crm_forms').doc(formId).delete();
         if (window.showToast) showToast('Форму видалено', 'success');

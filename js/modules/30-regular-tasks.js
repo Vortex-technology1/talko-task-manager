@@ -482,7 +482,7 @@
                     priority: rt.priority || 'medium',
                     regularTaskId: id,
                     createdDate: getLocalDateStr(),
-                    createdAt: new Date()
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
             });
             

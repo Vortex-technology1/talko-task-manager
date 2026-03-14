@@ -2882,7 +2882,7 @@ window.crmCreateDeal = async function() {
         }
     } catch(e) {
         if (window.showToast) showToast(window.t('errPrefix') + e.message, 'error');
-        else alert(window.t('errPrefix') + e.message);
+        else if (typeof showToast==='function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };
 

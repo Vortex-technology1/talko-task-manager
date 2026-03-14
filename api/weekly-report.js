@@ -91,7 +91,7 @@ async function buildAndSendReport(companyId) {
     if (recipients.length === 0) return { companyId, skipped: 'no_telegram_recipients' };
 
     // ── 2. Задачі за цей тиждень ─────────────────────────
-    const tasksSnap = await compRef.collection('tasks').get();
+    const tasksSnap = await compRef.collection('tasks').limit(2000).get();
     const allTasks  = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     let created = 0, completed = 0, overdue = 0;

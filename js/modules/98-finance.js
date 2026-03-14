@@ -86,7 +86,7 @@ function getDb() { return window.db || (window.firebase && firebase.firestore())
 function colRef(name) {
   const db = getDb();
   if (!db || !_state.companyId) return null;
-  return db.collection('companies').doc(_state.companyId).collection(name);
+  return window.companyRef().collection(name);
 }
 
 // ── Системні категорії (дефолт при ініціалізації) ──────────
@@ -120,7 +120,7 @@ async function initFirestoreCollections() {
   const db = getDb();
   if (!db || !_state.companyId) return;
 
-  const settingsRef = db.collection('companies').doc(_state.companyId)
+  const settingsRef = window.companyRef()
     .collection('finance_settings').doc('main');
 
   const snap = await settingsRef.get();
@@ -1092,7 +1092,7 @@ async function _loadFunctionsCache() {
   try {
     const db = getDb();
     if (!db || !_state.companyId) return;
-    const snap = await db.collection('companies').doc(_state.companyId)
+    const snap = await window.companyRef()
       .collection('functions').orderBy('name').get();
     _state.functions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(e) {
@@ -2202,7 +2202,7 @@ window._finSaveRecurring = async function(editId) {
   };
 
   try {
-    const colRef = db.collection('companies').doc(_state.companyId).collection('finance_recurring');
+    const colRef = window.companyRef().collection('finance_recurring');
     if (editId) {
       await colRef.doc(editId).update(data);
     } else {
@@ -2228,7 +2228,7 @@ window._finToggleRecurring = async function(id) {
   if (!item) return;
   const newActive = item.active === false ? true : false;
   try {
-    await db.collection('companies').doc(_state.companyId)
+    await window.companyRef()
       .collection('finance_recurring').doc(id)
       .update({ active: newActive, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     await _loadRecurring();
@@ -2242,7 +2242,7 @@ window._finToggleRecurring = async function(id) {
 window._finDeleteRecurring = async function(id) {
   if (!await showConfirmModal(window.t('finDeleteRecurring'), { danger: true })) return;
   try {
-    await db.collection('companies').doc(_state.companyId)
+    await window.companyRef()
       .collection('finance_recurring').doc(id).delete();
     _state.recurring = (_state.recurring || []).filter(r => r.id !== id);
     renderSubTab('recurring');
@@ -2262,8 +2262,8 @@ async function _processRecurringAutopost() {
   const today = now.getDate();
   const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
 
-  const colRef = db.collection('companies').doc(_state.companyId).collection('finance_transactions');
-  const recurRef = db.collection('companies').doc(_state.companyId).collection('finance_recurring');
+  const colRef = window.companyRef().collection('finance_transactions');
+  const recurRef = window.companyRef().collection('finance_recurring');
 
   for (const item of items) {
     if (item.dayOfMonth !== today) continue;
@@ -2304,7 +2304,7 @@ async function _processRecurringAutopost() {
 async function _loadRecurring() {
   if (!_state.companyId) return;
   try {
-    const snap = await db.collection('companies').doc(_state.companyId)
+    const snap = await window.companyRef()
       .collection('finance_recurring').orderBy('createdAt','asc').get();
     _state.recurring = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(e) {
@@ -2373,7 +2373,7 @@ async function loadFunctionsData(monthVal) {
   try {
     // 1. Завантажуємо функції з Firestore
     const db = getDb();
-    const funcsSnap = await db.collection('companies').doc(_state.companyId)
+    const funcsSnap = await window.companyRef()
       .collection('functions').orderBy('name').get();
     const funcs = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
@@ -4281,14 +4281,14 @@ async function detectUserRole() {
   const db = getDb();
   if (!db || !_state.companyId || !_state.currentUser) return;
   try {
-    const snap = await db.collection('companies').doc(_state.companyId)
+    const snap = await window.companyRef()
       .collection('users').doc(_state.currentUser.uid).get();
     if (snap.exists && snap.data().role) {
       _state.userRole = snap.data().role;
       return;
     }
     // Перевіряємо чи owner через компанію
-    const cSnap = await db.collection('companies').doc(_state.companyId).get();
+    const cSnap = await window.companyRef().get();
     if (cSnap.exists && cSnap.data().ownerId === _state.currentUser.uid) {
       _state.userRole = 'owner';
     } else {
@@ -4305,7 +4305,7 @@ async function detectRegionAndCurrency() {
   const db = getDb();
   if (!db || !_state.companyId) return;
   try {
-    const snap = await db.collection('companies').doc(_state.companyId)
+    const snap = await window.companyRef()
       .collection('finance_settings').doc('main').get();
     if (snap.exists) {
       _state.region   = snap.data().region   || 'EU';
@@ -4313,7 +4313,7 @@ async function detectRegionAndCurrency() {
       _state.niche    = snap.data().niche    || null;
       _state.rates    = snap.data().rates    || {};
     } else {
-      const cSnap = await db.collection('companies').doc(_state.companyId).get();
+      const cSnap = await window.companyRef().get();
       if (cSnap.exists) {
         _state.region   = cSnap.data().region   || 'EU';
         _state.currency = cSnap.data().currency || 'EUR';

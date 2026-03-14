@@ -38,10 +38,10 @@ window.deleteEmptyCompanies = async function() {
                 console.log('[Admin] Deleted empty company:', doc.id, data.name || '—');
             }
         }
-        alert(`Видалено ${deleted} пустих компаній.`);
+        if (typeof showToast==='function') showToast(`Видалено ${deleted} пустих компаній ✓`, 'success');
         loadSuperadminData();
     } catch(e) {
-        alert('Помилка: ' + e.message);
+        if (typeof showToast==='function') showToast('Помилка: ' + e.message, 'error');
     }
 };
 
@@ -1415,7 +1415,7 @@ window.saveGlobalAISettings = async function() {
             ? 'Немає прав для збереження. Переконайся що залогінений як SuperAdmin (management.talco@gmail.com)'
             : 'Помилка: ' + e.message;
         showToast && showToast(msg, 'error');
-        alert(msg);
+        if (typeof showToast==='function') showToast(msg, 'success'); else console.log(msg);
     }
 };
 

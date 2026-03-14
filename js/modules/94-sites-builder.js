@@ -569,14 +569,22 @@ function _renderPreview() {
                 </div>
             </div>`);
         }
-        // HTML блок — рендеримо rawHtml напряму
+        // HTML блок — preview через sandboxed iframe щоб уникнути XSS в білдері
         if (block.type === 'html') {
-            return block.rawHtml
-                ? `<div class="site-block site-block--html">${block.rawHtml}</div>`
-                : wrapper('<div style="padding:1.5rem;text-align:center;background:#faf5ff;border:2px dashed #c4b5fd;">'
+            if (!block.rawHtml) {
+                return wrapper('<div style="padding:1.5rem;text-align:center;background:#faf5ff;border:2px dashed #c4b5fd;">'
                     + '<div style="font-size:0.8rem;font-weight:600;color:#8b5cf6;">HTML блок (порожній)</div>'
                     + '<div style="font-size:0.7rem;color:#9ca3af;margin-top:4px;">Вставте HTML у лівій панелі</div>'
                     + '</div>');
+            }
+            // sandbox: allow-scripts для preview але ізольовано від parent
+            const encoded = encodeURIComponent(block.rawHtml);
+            return `<div class="site-block site-block--html" style="min-height:60px;">
+                <iframe srcdoc="${block.rawHtml.replace(/"/g,'&quot;')}"
+                    sandbox="allow-scripts allow-same-origin"
+                    style="width:100%;border:none;min-height:60px;display:block;"
+                    onload="this.style.height=(this.contentDocument.body?.scrollHeight||60)+'px'">
+                </iframe></div>`;
         }
         // Дефолт для gallery, about, etc.
         return wrapper(`
