@@ -5,20 +5,30 @@
 
 const admin = require('firebase-admin');
 
+// Firebase init — точна копія робочого webhook.js патерну
 let _db = null;
-function db() {
-    if (!_db) {
-        if (!admin.apps.length) {
-            admin.initializeApp({
-                credential: admin.credential.cert({
-                    projectId:   process.env.FIREBASE_PROJECT_ID,
-                    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-                    privateKey:  (process.env.FIREBASE_PRIVATE_KEY||'').replace(/\\n/g,'\n'),
-                }),
-            });
-        }
-        _db = admin.firestore();
+let _initError = null;
+
+if (!admin.apps.length) {
+    try {
+        let pk = process.env.FIREBASE_PRIVATE_KEY || '';
+        pk = pk.replace(/\\n/g, '\n');  // Vercel зберігає \n як \\n
+        admin.initializeApp({
+            credential: admin.credential.cert({
+                projectId:   process.env.FIREBASE_PROJECT_ID || 'task-manager-44e84',
+                clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                privateKey:  pk || undefined,
+            }),
+        });
+    } catch(e) {
+        _initError = e.message;
+        console.error('[site.js] Firebase init error:', e.message);
     }
+}
+
+function db() {
+    if (_initError) throw new Error('Firebase not initialized: ' + _initError);
+    if (!_db) _db = admin.firestore();
     return _db;
 }
 
