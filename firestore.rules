@@ -645,6 +645,57 @@ service cloud.firestore {
         allow update, delete: if isManagerOrOwner(companyId);
       }
 
+      // =====================
+      // SESSION LOCKS (webhook race condition prevention)
+      // Admin SDK only — клієнт не має доступу
+      // =====================
+      match /_session_locks/{lockId} {
+        allow read, write: if false;
+      }
+
+      // =====================
+      // SUPERADMIN NOTES (sa_notes per company)
+      // =====================
+      match /sa_notes/{noteId} {
+        allow read: if isSuperAdmin();
+        allow create: if isSuperAdmin();
+        allow update, delete: if isSuperAdmin();
+      }
+
+      // =====================
+      // AI USAGE LOG (токени per company)
+      // =====================
+      match /aiUsageLog/{docId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if false; // Admin SDK only (ai-proxy.js)
+      }
+
+      // =====================
+      // AI RECOMMENDATIONS (87-ai-diagnostic-agent)
+      // =====================
+      match /ai_recommendations/{docId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if isManagerOrOwner(companyId);
+      }
+
+      // =====================
+      // WEEKLY REPORT LOG
+      // =====================
+      match /weekly_report_log/{docId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow write: if false; // Admin SDK only (weekly-report.js)
+      }
+
+      // =====================
+      // FINANCE INVOICES
+      // =====================
+      match /finance_invoices/{invoiceId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId);
+        allow update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
       // FALLBACK: будь-яка subcollection компанії — члени читають, менеджери пишуть
       // (для нових колекцій до деплою специфічних правил)
       match /{subcollection}/{docId} {
@@ -702,6 +753,15 @@ service cloud.firestore {
     match /settings/{doc}/{sub=**} {
       allow read: if isSuperAdmin() || isAuthenticated();
       allow write: if isSuperAdmin();
+    }
+
+    // =====================
+    // TELEGRAM BROADCAST (superadmin broadcast queue)
+    // =====================
+    match /telegramBroadcast/{docId} {
+      allow read: if isSuperAdmin();
+      allow create: if isSuperAdmin();
+      allow update, delete: if false; // processed by webhook/cron
     }
 
     // =====================

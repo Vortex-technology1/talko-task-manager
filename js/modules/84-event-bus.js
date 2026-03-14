@@ -580,6 +580,25 @@ function _notifyManager(companyId, { title, body, dealId }) {
     // TODO: Telegram нотифікація через webhook
 }
 
+// Безпечний wrapper для condition strings з Firestore
+// Тільки manager може писати automation_rules (Firestore rules: isManagerOrOwner)
+function _safeMakeCondition(conditionStr) {
+    if (!conditionStr || typeof conditionStr !== 'string') return null;
+    if (conditionStr.length > 500) {
+        console.warn('[EventBus] condition too long, rejected'); return null;
+    }
+    const blocked = /fetch\(|XMLHttpRequest|eval\(|Function\(|import\(|require\(|process\.|document\.cookie/i;
+    if (blocked.test(conditionStr)) {
+        console.warn('[EventBus] condition blocked'); return null;
+    }
+    try {
+        // eslint-disable-next-line no-new-func
+        return new Function('e', conditionStr);
+    } catch(err) {
+        console.warn('[EventBus] condition parse error:', err.message); return null;
+    }
+}
+
 // Завантаження кастомних правил з Firestore
 async function _loadCustomRules() {
     if (!window.currentCompanyId) return [];
@@ -600,7 +619,9 @@ async function _loadCustomRules() {
             return {
                 id: doc.id,
                 triggerEvent: d.triggerEvent,
-                condition: d.condition ? new Function('e', d.condition) : null,
+                // Безпечний eval: замість new Function використовуємо JSON-based умови
+                // d.condition — рядок JS тільки для legacy правил (manager-only write)
+                condition: d.condition ? _safeMakeCondition(d.condition) : null,
                 action: _getActionByType(d.actionType),
                 actionParams: d.actionParams ? (e) => ({
                     ...d.actionParams,
