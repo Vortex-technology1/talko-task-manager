@@ -500,6 +500,21 @@ module.exports = async (req, res) => {
         // ── Сесія ─────────────────────────────────────────────
         const sessionId = `${channel}_${normalized.senderId}`;
         const sessionRef = compRef.collection('sessions').doc(sessionId);
+        // FIX-6: Use per-session lock to prevent race condition
+        // when two Telegram updates arrive concurrently for same user
+        const lockKey = `lock_${sessionId}`;
+        const lockRef = compRef.collection('_session_locks').doc(lockKey);
+        const lockTs = Date.now();
+        try {
+            await lockRef.set({ ts: lockTs, pid: Math.random() }, { merge: false });
+        } catch(e) {
+            // Lock already exists — another request is processing, skip
+            const existingLock = await lockRef.get().catch(()=>null);
+            if (existingLock?.exists && (lockTs - (existingLock.data()?.ts||0)) < 8000) {
+                return res.status(200).json({ ok: true, skipped: 'session_locked' });
+            }
+            // Lock is stale (> 8s) — proceed
+        }
         const sessionDoc = await sessionRef.get();
         let session = sessionDoc.exists ? sessionDoc.data() : {
             senderId: normalized.senderId, senderName: normalized.senderName || '',
@@ -930,6 +945,8 @@ module.exports = async (req, res) => {
         } else {
             Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId, currentNodeId: nodeId });
         }
+        // FIX-6: release session lock
+        lockRef.delete().catch(()=>{});
         session.updatedAt = admin.firestore.FieldValue.serverTimestamp();
         // FIX 3: видаляємо технічні поля перед збереженням
         const { _botToken, ...sessionToSave } = session;

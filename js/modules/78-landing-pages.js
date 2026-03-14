@@ -95,7 +95,12 @@
     // ══════════════════════════════════════════════════════
     function _renderHub() {
         const c = document.getElementById('marketingContainer');
-        if (!c) return;
+        // Guard: if container gone (tab switched away), unsubscribe and stop
+        if (!c) {
+            _unsubs.forEach(u=>{ try{u();}catch(e){} });
+            _unsubs = [];
+            return;
+        }
         // FIX-1: skip re-render if any modal overlay is open (would orphan modal DOM)
         if (document.getElementById('mktPickOv') ||
             document.getElementById('mktStageOv') ||
@@ -637,10 +642,23 @@
     // ── Tab registration ───────────────────────────────────
     (function reg() {
         const fn = ()=>{ if(typeof window.initLandingPagesModule==='function') window.initLandingPagesModule(); };
-        if (window.onSwitchTab) { window.onSwitchTab('marketing', fn); return; }
+        // Cleanup onSnapshot when leaving marketing tab
+        const cleanup = ()=>{
+            _unsubs.forEach(u=>{ try{u();}catch(e){} });
+            _unsubs = [];
+            _initialized = false; // force reload on next visit
+        };
+        if (window.onSwitchTab) {
+            window.onSwitchTab('marketing', fn);
+            if (typeof window.onLeaveTab === 'function') window.onLeaveTab('marketing', cleanup);
+            return;
+        }
         let i=0, iv=setInterval(()=>{
-            if (window.onSwitchTab) { window.onSwitchTab('marketing', fn); clearInterval(iv); }
-            else if (++i>50) clearInterval(iv);
+            if (window.onSwitchTab) {
+                window.onSwitchTab('marketing', fn);
+                if (typeof window.onLeaveTab === 'function') window.onLeaveTab('marketing', cleanup);
+                clearInterval(iv);
+            } else if (++i>50) clearInterval(iv);
         }, 100);
     })();
 

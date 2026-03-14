@@ -1810,9 +1810,18 @@ window.crmOpenDeal = function(dealId) {
     }
     // Mobile: auto-open chat if deal came from bot
     if (window.innerWidth < 768 && (deal.contactId || deal.botContactId)) {
-        requestAnimationFrame(function() {
-            setTimeout(function() { crmToggleDealChat(deal.id); }, 300);
-        });
+        // Poll until crmDealChatPane exists (avoids race on slow devices)
+        let _attempts = 0;
+        const _tryOpenChat = function() {
+            _attempts++;
+            const pane = document.getElementById('crmDealChatPane');
+            if (pane) {
+                crmToggleDealChat(deal.id);
+            } else if (_attempts < 20) {
+                requestAnimationFrame(_tryOpenChat);
+            }
+        };
+        requestAnimationFrame(_tryOpenChat);
     }
 };
 

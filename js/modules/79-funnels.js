@@ -326,6 +326,18 @@
     // ── Save Funnel ────────────────────────────────────────
     window.saveFunnelSteps = async function () {
         if (!funnelEditorId) return;
+        // FIX-7: validate required fields before save
+        const invalid = funnelSteps.filter(s => {
+            if ((s.type === 'message' || s.type === 'text_input' || s.type === 'phone' || s.type === 'email') && !s.message?.trim()) return true;
+            if (s.type === 'ai_response' && !s.systemPrompt?.trim()) return true;
+            return false;
+        });
+        if (invalid.length > 0) {
+            const names = invalid.map(s => s.name || s.type).join(', ');
+            if (window.showToast) showToast(`Заповніть обов'язкові поля: ${names}`, 'warning');
+            else alert(`Заповніть обов'язкові поля: ${names}`);
+            return;
+        }
         try {
             await window.companyRef()
                 .collection('funnels').doc(funnelEditorId)

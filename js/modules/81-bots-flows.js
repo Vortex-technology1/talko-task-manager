@@ -10,6 +10,15 @@
     let botsCurrentFlowId = null;
     let botsCurrentBotId = null; // FIX: track botId for correct Firestore path
     let botsFlowNodes = [];
+
+// Debounce helper for saveFlow
+let _saveFlowTimer = null;
+function debouncedSaveFlow() {
+    clearTimeout(_saveFlowTimer);
+    _saveFlowTimer = setTimeout(function() {
+        if (typeof window.saveFlow === 'function') window.saveFlow();
+    }, 600);
+}
     let botsSelectedNodeId = null;
     let botsSubTab = 'list'; // list | editor | sessions
 
@@ -262,6 +271,7 @@
     window.openFlowEditor = async function (flowId, botId) {
         botsCurrentFlowId = flowId;
         botsSelectedNodeId = null;
+        botsFlowNodes = []; // FIX-4: always clear before load to prevent stale state
         const resolvedBotId = botId || botsCurrentBotId || window._currentBotId || null;
 
         // FIX: читаємо з правильного шляху
@@ -506,12 +516,15 @@
             const _stageOpts = _pipeStages.length
                 ? _pipeStages.map(s => `<option value="${s.id}" ${(node.dealStage||'new')===s.id?'selected':''}>${s.label}</option>`).join('')
                 : `<option value="new" selected>new</option>`;
+            const _stageHint = _pipeStages.length === 0
+                ? `<div style="font-size:0.72rem;color:#f59e0b;margin-top:2px;">⚠️ Відкрийте вкладку CRM для завантаження стадій</div>`
+                : `<div style="font-size:0.7rem;color:#9ca3af;margin-top:2px;">${_pipeStages.length} стадій завантажено</div>`;
             specific = field(window.t('botsFieldDealName')) + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
                 field(window.t('botsFieldStage')) +
                 `<select onchange="updateNode('${nodeId}','dealStage',this.value)"
-                    style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;background:white;cursor:pointer;margin-bottom:0.5rem;">
+                    style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;background:white;cursor:pointer;margin-bottom:0.25rem;">
                     ${_stageOpts}
-                </select>`;
+                </select>${_stageHint}`;
         }
 
         if (node.type === 'tag') {
@@ -1182,6 +1195,7 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
 
     // ── Flow Node Editor (slide-in panel) ──────────────────
     window.openFlowEditor = async function (flowId, botId) {
+        botsFlowNodes = []; // FIX-4 (mobile): clear before load
         botsCurrentFlowId = flowId;
         botsSelectedNodeId = null;
         const resolvedBotId = botId || botsCurrentBotId || window._currentBotId || null;
@@ -1428,12 +1442,15 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
             const _stageOpts = _pipeStages.length
                 ? _pipeStages.map(s => `<option value="${s.id}" ${(node.dealStage||'new')===s.id?'selected':''}>${s.label}</option>`).join('')
                 : `<option value="new" selected>new</option>`;
+            const _stageHint = _pipeStages.length === 0
+                ? `<div style="font-size:0.72rem;color:#f59e0b;margin-top:2px;">⚠️ Відкрийте вкладку CRM для завантаження стадій</div>`
+                : `<div style="font-size:0.7rem;color:#9ca3af;margin-top:2px;">${_pipeStages.length} стадій завантажено</div>`;
             specific = field(window.t('botsFieldDealName')) + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
                 field(window.t('botsFieldStage')) +
                 `<select onchange="updateNode('${nodeId}','dealStage',this.value)"
-                    style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;background:white;cursor:pointer;margin-bottom:0.5rem;">
+                    style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;background:white;cursor:pointer;margin-bottom:0.25rem;">
                     ${_stageOpts}
-                </select>`;
+                </select>${_stageHint}`;
         }
 
         if (node.type === 'tag') {
