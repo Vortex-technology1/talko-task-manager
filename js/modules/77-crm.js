@@ -429,7 +429,7 @@ async function _loadAll() {
 
     _subscribeDeals();
 
-    crm.clientUnsub = base.collection('crm_clients').orderBy('createdAt', 'desc').limit(500)
+    crm.clientUnsub = base.collection(window.DB_COLS.CRM_CLIENTS).orderBy('createdAt', 'desc').limit(500)
         .onSnapshot(snap => {
             crm.clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             if (crm.subTab === 'clients') _renderClients();
@@ -1428,10 +1428,9 @@ window.crmDrop = async function(e, newStage) {
         }
     } catch(err) {
         console.error('[CRM drop]', err);
-        deal.stage = oldStage; // FIX: rollback on error
+        deal.stage = oldStage; // rollback on error
         _renderKanban();
-        deal.stage = oldStage;
-        _renderKanban();
+        if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
     }
 };
 
@@ -1626,6 +1625,8 @@ window.crmSelectLostReason = function(reasonId) {
 };
 
 window.crmConfirmLost = async function(dealId, newStage, oldStage) {
+    if (crm._lostSaving) return; // guard проти подвійного кліку
+    crm._lostSaving = true;
     const reason = window._selectedLostReason;
     const note = document.getElementById('lostReasonNote')?.value.trim() || '';
     const reasonLabel = reason ? (LOST_REASONS.find(function(r){ return r.id === reason; })?.label || reason) : '';
@@ -1679,6 +1680,8 @@ window.crmConfirmLost = async function(dealId, newStage, oldStage) {
         deal.stage = oldStage || 'new';
         _renderKanban();
         if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
+    } finally {
+        crm._lostSaving = false;
     }
 };
 
@@ -2843,11 +2846,11 @@ window.crmCreateDeal = async function() {
                 if (phone && !existing.phone) upd.phone = phone;
                 if (email && !existing.email) upd.email = email;
                 if (Object.keys(upd).length) {
-                    await window.companyRef().collection('crm_clients').doc(clientId)
+                    await window.companyRef().collection(window.DB_COLS.CRM_CLIENTS).doc(clientId)
                         .update({ ...upd, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
                 }
             } else {
-                const clientRef = await window.companyRef().collection('crm_clients').add({
+                const clientRef = await window.companyRef().collection(window.DB_COLS.CRM_CLIENTS).add({
                     name: client, phone: phone||'', email: email||'',
                     telegram: telegram||'', niche: niche||'',
                     type: 'person', source: source||'manual',
@@ -3153,7 +3156,7 @@ window.crmDeleteClient = async function(clientId) {
         : Promise.resolve(confirm(window.t('crmDeleteClient'))));
     if (!confirmed) return;
     try {
-        await window.companyRef().collection('crm_clients').doc(clientId).delete();
+        await window.companyRef().collection(window.DB_COLS.CRM_CLIENTS).doc(clientId).delete();
         crm.clients = crm.clients.filter(c => c.id !== clientId);
         document.getElementById('crmClientCard').style.display = 'none';
         _renderClients();
@@ -3204,7 +3207,7 @@ window.crmSaveNewClient = async function() {
     if (!name) { if(window.showToast) showToast('Вкажіть ім\'я','error'); return; }
     try {
         const now = firebase.firestore.FieldValue.serverTimestamp();
-        const ref = await window.companyRef().collection('crm_clients').add({
+        const ref = await window.companyRef().collection(window.DB_COLS.CRM_CLIENTS).add({
             name, phone: v('phone'), email: v('email'), niche: v('niche'),
             telegram: v('telegram'), note: v('note'), source: 'manual',
             createdAt: now,
@@ -4230,7 +4233,7 @@ async function _checkRequiredFields(deal, newStage) {
                     const phoneVal = document.getElementById('crmReqField_phone')?.value?.trim();
                     if (phoneVal && deal.clientId) {
                         try {
-                            await window.companyRef().collection('crm_clients').doc(deal.clientId)
+                            await window.companyRef().collection(window.DB_COLS.CRM_CLIENTS).doc(deal.clientId)
                                 .update({ phone: phoneVal, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
                             const cl = crm.clients.find(c => c.id === deal.clientId);
                             if (cl) cl.phone = phoneVal;
