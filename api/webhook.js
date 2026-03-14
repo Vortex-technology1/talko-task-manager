@@ -861,6 +861,7 @@ module.exports = async (req, res) => {
                             }
                         } catch(e) { console.warn('[talko_deal] pipeline fetch error:', e.message); }
                         const dealRef = compRef.collection('crm_deals').doc();
+                        const _botContactId = session.channel + '_' + session.senderId;
                         await dealRef.set({
                             id:            dealRef.id,
                             title:         dealTitle,
@@ -871,10 +872,12 @@ module.exports = async (req, res) => {
                             currency:      'UAH',
                             source:        'telegram_bot',
                             flowId:        flow?.id || null,
-                            botContactId:  session.channel + '_' + session.senderId,
+                            botContactId:  _botContactId,
+                            contactId:     _botContactId,   // FIX: direct link for crmToggleDealChat
                             clientName:    session.senderName || '',
+                            phone:         session.data?.phone || '',
                             description:   session.data?.ai_response || session.data?.main_problem || '',
-                            pipelineId:    ccPipelineId,          // FIX CC: required for CRM kanban
+                            pipelineId:    ccPipelineId,
                             probability:   ccProbability,
                             stageEnteredAt: admin.firestore.FieldValue.serverTimestamp(),
                             assignedToId:  _compData.ownerId || null,
@@ -1427,6 +1430,8 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                     flowId:          flow?.id || null,
                     flowName:        flow?.name || '',
                     botContactId:    contactId,
+                    contactId:       contactId,     // FIX: direct link for chat
+                    phone:           d.phone || '',
                     description:     d.ai_response || d.main_problem || '',
                     tags:            session.tags || [],
                     pipelineId,                                          // FIX CB: critical for kanban query

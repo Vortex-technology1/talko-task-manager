@@ -1693,15 +1693,17 @@ window.crmOpenDeal = function(dealId) {
     const inp = 'width:100%;padding:0.45rem 0.55rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.82rem;box-sizing:border-box;font-family:inherit;background:white;';
     const lbl = 'font-size:0.68rem;font-weight:600;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:0.25rem;letter-spacing:0.03em;';
 
+    const _isMob = window.innerWidth < 768;
     document.body.insertAdjacentHTML('beforeend', `
     <div id="crmDealOverlay" onclick="if(event.target===this)crmCloseDeal()"
         style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10020;
-        display:flex;align-items:stretch;justify-content:flex-end;">
+        display:flex;align-items:stretch;${_isMob ? 'flex-direction:column;justify-content:flex-end;' : 'justify-content:flex-end;'}">
 
-        <!-- ПРАВА ЧАСТИНА: чат (прихована поки немає contactId) -->
-        <div id="crmDealChatPane" style="display:none;width:380px;min-width:320px;max-width:45vw;
-            background:#f8fafc;border-left:1px solid #e8eaed;display:flex;flex-direction:column;
-            overflow:hidden;flex-shrink:0;">
+        <!-- ЧАТ ПАНЕЛЬ -->
+        <div id="crmDealChatPane" style="display:none;${_isMob
+            ? 'width:100%;height:65vh;border-top:1px solid #e8eaed;flex-shrink:0;'
+            : 'width:380px;min-width:320px;max-width:45vw;border-left:1px solid #e8eaed;flex-shrink:0;'}
+            background:#f8fafc;display:flex;flex-direction:column;overflow:hidden;">
             <div id="chatMsgHeader_crmdeal"
                 style="padding:0.75rem 1rem;border-bottom:1px solid #e8eaed;
                 display:flex;align-items:center;gap:0.5rem;background:white;flex-shrink:0;min-height:56px;"></div>
@@ -1724,9 +1726,10 @@ window.crmOpenDeal = function(dealId) {
             </div>
         </div>
 
-        <!-- ЛІВА ЧАСТИНА: картка угоди -->
-        <div style="background:white;width:100%;max-width:520px;display:flex;flex-direction:column;
-            box-shadow:-8px 0 32px rgba(0,0,0,0.12);">
+        <!-- КАРТКА УГОДИ -->
+        <div style="background:white;${_isMob ? 'width:100%;max-height:65vh;' : 'width:100%;max-width:520px;'}
+            display:flex;flex-direction:column;
+            box-shadow:${_isMob ? '0 -4px 24px rgba(0,0,0,0.12)' : '-8px 0 32px rgba(0,0,0,0.12)'};">
 
             <!-- Header -->
             <div style="padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;
@@ -1802,6 +1805,12 @@ window.crmOpenDeal = function(dealId) {
     // Хуки для зовнішніх модулів (77f-crm-mobile та ін.)
     if (Array.isArray(window.crmOpenDealHooks)) {
         window.crmOpenDealHooks.forEach(function (fn) { try { fn(deal.id); } catch(e) {} });
+    }
+    // Mobile: auto-open chat if deal came from bot
+    if (window.innerWidth < 768 && (deal.contactId || deal.botContactId)) {
+        requestAnimationFrame(function() {
+            setTimeout(function() { crmToggleDealChat(deal.id); }, 150);
+        });
     }
 };
 
@@ -2068,7 +2077,8 @@ window.crmToggleDealChat = async function (dealId) {
     // 2. crm_clients[deal.clientId].botContactId
     // 3. contacts collection — шукаємо по телефону
 
-    let contactId = deal.contactId || null;
+    // Direct lookup: contactId saved on deal by bot
+    let contactId = deal.contactId || deal.botContactId || null;
 
     if (!contactId && deal.clientId) {
         const client = crm.clients.find(function (c) { return c.id === deal.clientId; });
