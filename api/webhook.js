@@ -66,6 +66,7 @@ module.exports = async (req, res) => {
     if (req.query.action === 'mark-read') {
         const _authUser2 = await _verifyAuth(req);
         if (!_authUser2) return res.status(401).json({ error: 'Unauthorized' });
+        req._authUid = _authUser2.uid;
         return handleMarkRead(req, res);
     }
 
@@ -716,9 +717,9 @@ module.exports = async (req, res) => {
             if (hasRef) {
                 const refId = (sysConfig.startsWith('__ref:') ? sysConfig : sysTop).replace('__ref:', '');
                 const realPrompt = nodePromptsMap[refId] || '';
-                const restored = JSON.parse(JSON.stringify(n));
-                // Відновлюємо в обох місцях
-                if (restored.config) restored.config.aiSystem = realPrompt;
+                // Shallow clone + deep clone тільки config (менш витратно ніж JSON.parse/stringify)
+                const restored = { ...n };
+                if (restored.config) restored.config = { ...restored.config, aiSystem: realPrompt };
                 restored.aiSystem = realPrompt;
                 return restored;
             }
@@ -753,14 +754,18 @@ module.exports = async (req, res) => {
         // Патчимо nextNode з canvasData.edges
         const edges = flow.canvasData?.edges || [];
         if (edges.length > 0) {
+            // O(1) lookup замість O(n²) edges.find()
+            const edgeMap = {};
+            edges.forEach(e => { edgeMap[`${e.fromNode}::${e.fromPort}`] = e.toNode; });
+
             runtimeNodes.forEach(n => {
-                const outEdge = edges.find(e => e.fromNode === n.id && e.fromPort === 'out');
-                if (outEdge && !n.nextNode) n.nextNode = outEdge.toNode;
+                const outTarget = edgeMap[`${n.id}::out`];
+                if (outTarget && !n.nextNode) n.nextNode = outTarget;
                 if (n.buttons?.length) {
                     n.buttons = n.buttons.map((b, i) => {
                         if (b.nextNode) return b;
-                        const btnEdge = edges.find(e => e.fromNode === n.id && e.fromPort === `btn_${i}`);
-                        return btnEdge ? { ...b, nextNode: btnEdge.toNode } : b;
+                        const target = edgeMap[`${n.id}::btn_${i}`];
+                        return target ? { ...b, nextNode: target } : b;
                     });
                     n.options = n.buttons.map(b => ({ label: b.label, nextNode: b.nextNode }));
                 }
@@ -1149,10 +1154,8 @@ module.exports = async (req, res) => {
         // Якщо повідомлення прийшло коли флоу вже завершений (не /start, не кнопка)
         // і воно не було оброблено флоу — зберігаємо для ручного чату менеджера
         if (!isStart && !session.waitingForInput && sessionToSave.currentFlowId === null) {
-            const wasFlowMessage = session._handledByFlow;
-            if (!wasFlowMessage) {
-                await saveIncomingMessage(compRef, channel, normalized, botDocId || session.currentBotId);
-            }
+            // Зберігаємо для ручного чату менеджера
+            await saveIncomingMessage(compRef, channel, normalized, botDocId || session.currentBotId);
         }
         return res.status(200).json({ ok: true });
 
@@ -1871,8 +1874,16 @@ async function handleMarkRead(req, res) {
     if (!companyId || !contactId) return res.status(400).json({ error: 'Missing params' });
     if (!db) return res.status(500).json({ error: 'DB not initialized' });
 
+    // Перевіряємо _authUser переданий через req
+    const _uid = req._authUid;
     try {
         const compRef = db.collection('companies').doc(companyId);
+
+        // SECURITY: перевіряємо що юзер є членом цієї компанії
+        if (_uid) {
+            const memberDoc = await compRef.collection('users').doc(_uid).get();
+            if (!memberDoc.exists) return res.status(403).json({ error: 'Not a member' });
+        }
 
         // Скидаємо лічильник непрочитаних
         await compRef.collection('contacts').doc(contactId).update({
