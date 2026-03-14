@@ -509,14 +509,73 @@ function _defaultBlock(type, order) {
 }
 
 // ── Дії з сайтом ──────────────────────────────────────────
+// ── Modal з публічним URL сайту ────────────────────────
+function _showPublicUrlModal(url, siteId) {
+    document.getElementById('siteUrlModal')?.remove();
+    const m = document.createElement('div');
+    m.id = 'siteUrlModal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10040;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    m.innerHTML = `
+    <div style="background:white;border-radius:14px;padding:1.75rem;max-width:500px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="text-align:center;margin-bottom:1.25rem;">
+            <div style="font-size:2.5rem;margin-bottom:0.5rem;">🚀</div>
+            <div style="font-weight:800;font-size:1.1rem;">Сайт опубліковано!</div>
+            <div style="color:#6b7280;font-size:0.85rem;margin-top:4px;">Ваш сайт доступний за посиланням:</div>
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-bottom:1.25rem;">
+            <input id="sitePublicUrlInput" value="${url}" readonly
+                style="flex:1;padding:0.6rem 0.75rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.8rem;font-family:monospace;background:#f9fafb;">
+            <button onclick="navigator.clipboard?.writeText('${url}');this.textContent='✓';setTimeout(()=>this.textContent='Копіювати',1500);"
+                style="padding:0.6rem 1rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;white-space:nowrap;">
+                Копіювати
+            </button>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+            <button onclick="window.open('${url}','_blank');"
+                style="flex:1;padding:0.55rem;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+                🌐 Відкрити сайт
+            </button>
+            <button onclick="document.getElementById('siteUrlModal').remove()"
+                style="flex:1;padding:0.55rem;background:#f9fafb;color:#374151;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.85rem;">
+                Закрити
+            </button>
+        </div>
+    </div>`;
+    document.body.appendChild(m);
+}
+
 window.sitesTogglePublish = async function (siteId, currentStatus) {
     const newStatus = currentStatus === 'published' ? 'draft' : 'published';
     try {
+        const BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+            ? `${location.origin}`
+            : 'https://taskmanagerai-vert.vercel.app';
+        const cid = window.currentCompanyId || window.currentCompany || '';
+        const publicUrl = newStatus === 'published'
+            ? `${BASE}/api/site?id=${siteId}&cid=${cid}`
+            : null;
+
         await window.companyRef()
             .collection(window.DB_COLS.SITES).doc(siteId)
-            .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-        if (typeof showToast === 'function')
-            showToast(newStatus === 'published' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span> Сайт опублікований!' : 'Сайт знято з публікації', 'success');
+            .update({
+                status: newStatus,
+                publicUrl: publicUrl,
+                publishedAt: newStatus === 'published' ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+
+        // Показуємо URL при публікації
+        if (newStatus === 'published' && publicUrl) {
+            try { navigator.clipboard?.writeText(publicUrl); } catch(e) {}
+            if (typeof showToast === 'function')
+                showToast('🚀 Сайт опубліковано! URL скопійовано', 'success');
+            // Показуємо modal з посиланням
+            _showPublicUrlModal(publicUrl, siteId);
+        } else {
+            if (typeof showToast === 'function')
+                showToast('Сайт знято з публікації', 'info');
+        }
     } catch (e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }

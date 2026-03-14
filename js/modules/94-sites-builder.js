@@ -608,14 +608,45 @@ window.sbTogglePublish = async function() {
     if (!sb.site) return;
     const newStatus = sb.site.status === 'published' ? 'draft' : 'published';
     try {
+        const _base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+            ? location.origin : 'https://taskmanagerai-vert.vercel.app';
+        const _cid  = window.currentCompanyId || window.currentCompany || '';
+        const _pub  = newStatus === 'published';
+        const _pubUrl = _pub ? `${_base}/api/site?id=${sb.siteId}&cid=${_cid}` : null;
         await window.companyRef()
             .collection(window.DB_COLS?.SITES || 'sites').doc(sb.siteId)
-            .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            .update({
+                status: newStatus,
+                publicUrl: _pubUrl,
+                publishedAt: _pub ? firebase.firestore.FieldValue.serverTimestamp() : null,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
         sb.site.status = newStatus;
+        sb.site.publicUrl = _pubUrl;
         _updatePublishBtn();
-        const pub = newStatus === 'published';
-        if (typeof showToast === 'function')
-            showToast(pub ? '🚀 Сайт опубліковано!' : 'Сайт знято з публікації', pub ? 'success' : 'info');
+        const pub = _pub;
+        if (pub && _pubUrl) {
+            try { navigator.clipboard?.writeText(_pubUrl); } catch(e) {}
+            if (typeof showToast === 'function')
+                showToast('🚀 Сайт опубліковано! URL скопійовано', 'success');
+            // Показуємо посилання в badge
+            const badge = document.getElementById('sbStatusBadge');
+            if (badge) badge.title = _pubUrl;
+            // Відкриваємо URL modal якщо є функція
+            if (typeof _showPublicUrlModal === 'function') _showPublicUrlModal(_pubUrl, sb.siteId);
+            else {
+                const a = document.createElement('a');
+                a.href = _pubUrl; a.target = '_blank';
+                a.style.cssText = 'position:fixed;bottom:70px;right:20px;z-index:9999;background:#22c55e;color:white;padding:0.6rem 1.25rem;border-radius:10px;font-weight:700;font-size:0.85rem;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.2);';
+                a.textContent = '🌐 Відкрити сайт';
+                a.id = 'sbSiteLinkBtn';
+                document.getElementById('sbSiteLinkBtn')?.remove();
+                document.body.appendChild(a);
+                setTimeout(() => a.remove(), 8000);
+            }
+        } else if (!pub) {
+            if (typeof showToast === 'function') showToast('Сайт знято з публікації', 'info');
+        }
         // Оновлюємо badge
         const badge = document.getElementById('sbStatusBadge');
         if (badge) {

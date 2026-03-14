@@ -80,6 +80,10 @@
   ],
   "rewrites": [
     {
+      "source": "/s/:siteId",
+      "destination": "/api/site"
+    },
+    {
       "source": "/api/webhook",
       "destination": "/api/webhook"
     },
@@ -119,6 +123,10 @@
     },
     "api/weekly-report.js": {
       "maxDuration": 60,
+      "memory": 256
+    },
+    "api/site.js": {
+      "maxDuration": 10,
       "memory": 256
     }
   },
