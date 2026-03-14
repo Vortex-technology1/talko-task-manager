@@ -40,6 +40,7 @@ function _renderBuilderShell() {
     const c = document.getElementById('sitesContainer');
     if (!c) return;
     c.innerHTML = `
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
     <div style="display:flex;flex-direction:column;height:calc(100vh - 100px);">
         <!-- Топ хедер -->
         <div style="display:flex;align-items:center;justify-content:space-between;
@@ -260,9 +261,11 @@ window.sbSelectBlock = function (idx) {
     _renderBlockList();
     _renderBlockEditor(idx);
     _renderPreview();
-    // Scroll preview до блоку
-    const el = document.getElementById('sbPreviewBlock_' + idx);
-    if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+    // Scroll після render — setTimeout щоб DOM встиг оновитись
+    setTimeout(() => {
+        const el = document.getElementById('sbPreviewBlock_' + idx);
+        if (el) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    }, 0);
 };
 
 function _renderBlockEditor(idx) {
@@ -345,10 +348,13 @@ function _renderBlockEditor(idx) {
 const lbl = 'font-size:0.67rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.2rem;';
 
 // ── Операції з блоками ─────────────────────────────────────
+let _sbPreviewTimer = null;
 window.sbUpdateBlock = function (idx, field, value) {
     if (!sb.blocks[idx]) return;
     sb.blocks[idx][field] = value;
-    _renderPreview();
+    // Debounce 150ms для text/textarea inputs — не rebuild при кожному keypress
+    clearTimeout(_sbPreviewTimer);
+    _sbPreviewTimer = setTimeout(_renderPreview, 150);
 };
 
 window.sbToggleFormField = function (idx, field, checked) {
@@ -604,7 +610,7 @@ window.sbSave = async function () {
     if (sb.saving) return;
     sb.saving = true;
     const btn = document.getElementById('sbSaveBtn');
-    if (btn) { btn.textContent = window.t('saving'); btn.disabled = true; }
+    if (btn) { btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Збереження...'; btn.disabled = true; }
     try {
         await window.companyRef()
             .collection(window.DB_COLS.SITES).doc(sb.siteId)
@@ -1016,13 +1022,17 @@ function _renderCodePanel() {
 
 // Додати HTML блок з табу Код → переключитись на Блоки
 window.sbAddHtmlBlockFromCode = function() {
-    sbAddBlock('html');          // додає блок стандартним способом
-    sbPanelTab('blocks');        // переключає на таб Блоки
-    // Автоматично вибирає останній доданий блок (html)
+    sbAddBlock('html');              // додає блок
+    sbPanelTab('blocks');            // переключає таб (без зайвого render)
     const idx = sb.blocks.length - 1;
-    if (idx >= 0) sbSelectBlock(idx);
+    if (idx >= 0) {
+        sb.activeBlockIdx = idx;     // встановлюємо активний напряму
+        _renderBlockList();          // один render списку
+        _renderBlockEditor(idx);     // відкриваємо editor
+        _renderPreview();            // один render preview
+    }
     if (typeof showToast === 'function')
-        showToast('HTML блок додано — редагуй вміст зліва', 'success');
+        showToast('HTML блок додано — вставте код зліва', 'success');
 };
 
 window.sbSaveCode = async function() {
@@ -1065,6 +1075,10 @@ window.sbSaveSeo = async function() {
             .update(updates);
         Object.assign(sb.site, updates);
         if (typeof showToast === 'function') showToast(window.t('sitesSeoSaved'), 'success');
+        // Оновлюємо header — customDomain міг змінитись, URL кнопка потребує оновлення
+        _updateHeader();
+        // Якщо SEO таб відкритий — перерендеримо щоб показати нову інструкцію по домену
+        if (sb.panelTab === 'seo') _renderSeoPanel();
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
