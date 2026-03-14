@@ -1,648 +1,483 @@
+// ============================================================
+// 78-landing-pages.js  — TALKO Marketing Hub v3
+// Головний екран: Kanban-конструктор воронок
+// Колонки: 🌐Сайт → 🤖Бот → 💼CRM → ⚙️Процес
+// ============================================================
 (function () {
     'use strict';
 
-    let lpPages = [];
-    let lpFunnels = [];
-    let lpUnsubscribe = null;
-    let lpCurrentTab = 'pages'; // pages | funnels
+    // ── State ──────────────────────────────────────────────
+    let _sites      = [];   // landingPages
+    let _bots       = [];   // bots
+    let _funnels    = [];   // funnels
+    let _templates  = [];   // processTemplates
+    let _deals      = [];   // crm_deals (counts only)
+    let _unsubs     = [];
+    let _activeBoard = null; // currently open funnel board id
 
     // ── Init ───────────────────────────────────────────────
     window.initLandingPagesModule = async function () {
         if (!window.currentCompanyId) return;
-        renderLPShell();
-        await loadLPData();
+        const c = document.getElementById('marketingContainer');
+        if (!c) return;
+        c.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:200px;color:#9ca3af;">Завантаження...</div>';
+        await _loadAll();
+        _renderHub();
     };
 
-    function renderLPShell() {
-        const container = document.getElementById('marketingContainer');
-        if (!container) return;
-        container.innerHTML = `
-            <div id="lpModule" style="padding:0.75rem;">
-                <!-- Sub-tabs -->
-                <div style="display:flex;gap:0.5rem;margin-bottom:1rem;background:white;border-radius:12px;padding:0.4rem;box-shadow:var(--shadow);">
-                    <button onclick="lpSwitchTab('pages')" id="lpTabPages"
-                        style="flex:1;padding:0.5rem;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;background:#22c55e;color:white;transition:all 0.2s;">
-                        <i data-lucide="layout" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>Лендінги
-                    </button>
-                    <button onclick="lpSwitchTab('funnels')" id="lpTabFunnels"
-                        style="flex:1;padding:0.5rem;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;background:transparent;color:#525252;transition:all 0.2s;">
-                        <i data-lucide="git-branch" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>Воронки
-                    </button>
-                </div>
-                <div id="lpPagesView"></div>
-                <div id="lpFunnelsView" style="display:none;"></div>
-            </div>
-        `;
-        if (window.lucide) lucide.createIcons();
-    }
-
-    window.lpSwitchTab = function (tab) {
-        lpCurrentTab = tab;
-        ['pages', 'funnels'].forEach(t => {
-            const btn = document.getElementById('lpTab' + t.charAt(0).toUpperCase() + t.slice(1));
-            const view = document.getElementById('lp' + t.charAt(0).toUpperCase() + t.slice(1) + 'View');
-            if (btn) { btn.style.background = t === tab ? '#22c55e' : 'transparent'; btn.style.color = t === tab ? 'white' : '#525252'; }
-            if (view) view.style.display = t === tab ? '' : 'none';
-        });
-        if (tab === 'pages') renderPagesView();
-        if (tab === 'funnels') renderFunnelsView();
-        if (window.lucide) lucide.createIcons();
-    };
-
-    // ── Load Data ──────────────────────────────────────────
-    async function loadLPData() {
-        if (!window.currentCompanyId) return;
+    async function _loadAll() {
         const base = window.companyRef();
+        _unsubs.forEach(u => { try { u(); } catch(e){} });
+        _unsubs = [];
 
-        // Live landing pages
-        if (lpUnsubscribe) lpUnsubscribe();
-        lpUnsubscribe = base.collection('landingPages').orderBy('createdAt', 'desc')
+        const [sitesSnap, botsSnap, funnelsSnap, tplSnap] = await Promise.all([
+            base.collection('landingPages').orderBy('createdAt','desc').get(),
+            base.collection('bots').get(),
+            base.collection('funnels').orderBy('createdAt','desc').get(),
+            base.collection('processTemplates').get(),
+        ]);
+        _sites     = sitesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        _bots      = botsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        _funnels   = funnelsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        _templates = tplSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // Live funnels
+        _unsubs.push(base.collection('funnels').orderBy('createdAt','desc')
             .onSnapshot(snap => {
-                lpPages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                if (lpCurrentTab === 'pages') renderPagesView();
-            });
-
-        // Load funnels
-        const fSnap = await base.collection('funnels').orderBy('createdAt', 'desc').get();
-        lpFunnels = fSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        renderPagesView();
+                _funnels = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                _renderHub();
+            }));
     }
 
-    // ── Pages View ─────────────────────────────────────────
-    function renderPagesView() {
-        const container = document.getElementById('lpPagesView');
-        if (!container || lpCurrentTab !== 'pages') return;
+    // ══════════════════════════════════════════════════════
+    // MAIN HUB RENDER
+    // ══════════════════════════════════════════════════════
+    function _renderHub() {
+        const c = document.getElementById('marketingContainer');
+        if (!c) return;
+        const isMobile = window.innerWidth < 768;
 
-        container.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-                <div>
-                    <div style="font-weight:700;font-size:1rem;color:#1a1a1a;">Лендінги</div>
-                    <div style="font-size:0.78rem;color:#6b7280;">${lpPages.length} сторінок</div>
-                </div>
-                <button onclick="openCreatePageModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                    <i data-lucide="plus" style="width:16px;height:16px;"></i> Новий лендінг
-                </button>
+        c.innerHTML = `
+<div style="height:100%;display:flex;flex-direction:column;background:#f4f5f7;overflow:hidden;">
+
+    <!-- Top bar -->
+    <div style="background:white;border-bottom:1px solid #e8eaed;padding:0 1rem;
+        display:flex;align-items:center;justify-content:space-between;height:48px;flex-shrink:0;">
+        <div style="font-weight:700;font-size:.95rem;color:#111827;">
+            📊 Маркетинг
+        </div>
+        <button onclick="mktNewFunnel()"
+            style="display:flex;align-items:center;gap:.35rem;padding:.4rem .85rem;
+            background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;
+            font-size:.81rem;font-weight:600;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Нова воронка
+        </button>
+    </div>
+
+    <!-- Kanban board -->
+    <div style="flex:1;overflow-x:auto;overflow-y:hidden;display:flex;gap:0;min-height:0;">
+        ${_funnels.length === 0 ? _renderEmpty() : _renderColumns()}
+    </div>
+</div>`;
+    }
+
+    function _renderEmpty() {
+        return `
+<div style="flex:1;display:flex;align-items:center;justify-content:center;">
+    <div style="text-align:center;padding:2rem;max-width:400px;">
+        <div style="font-size:3rem;margin-bottom:1rem;">🎯</div>
+        <div style="font-weight:700;font-size:1.1rem;color:#111827;margin-bottom:.5rem;">Ще немає воронок</div>
+        <div style="font-size:.85rem;color:#6b7280;margin-bottom:1.5rem;line-height:1.6;">
+            Створіть воронку і підключіть сайт, бота, CRM і процес —<br>
+            отримаєте повний ланцюг від ліда до клієнта
+        </div>
+        <button onclick="mktNewFunnel()"
+            style="padding:.6rem 1.5rem;background:#22c55e;color:white;border:none;
+            border-radius:10px;cursor:pointer;font-weight:700;font-size:.9rem;">
+            + Створити першу воронку
+        </button>
+    </div>
+</div>`;
+    }
+
+    // ══════════════════════════════════════════════════════
+    // KANBAN COLUMNS
+    // ══════════════════════════════════════════════════════
+    const COLS = [
+        { id: 'site',    icon: '🌐', label: 'Сайт',    color: '#3b82f6', bg: '#eff6ff' },
+        { id: 'bot',     icon: '🤖', label: 'Бот',     color: '#8b5cf6', bg: '#f5f3ff' },
+        { id: 'crm',     icon: '💼', label: 'CRM',     color: '#22c55e', bg: '#f0fdf4' },
+        { id: 'process', icon: '⚙️', label: 'Процес',  color: '#f59e0b', bg: '#fffbeb' },
+    ];
+
+    function _renderColumns() {
+        return COLS.map((col, ci) => {
+            const cards = _funnels.map(f => _renderCard(f, col, ci)).join('');
+            return `
+<div style="min-width:260px;flex:1;display:flex;flex-direction:column;
+    border-right:1px solid #e8eaed;background:#f8fafc;overflow:hidden;">
+
+    <!-- Col header -->
+    <div style="padding:.65rem .85rem;background:white;border-bottom:1px solid #e8eaed;
+        border-top:3px solid ${col.color};flex-shrink:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:.4rem;">
+                <span style="font-size:1.1rem;">${col.icon}</span>
+                <span style="font-weight:700;font-size:.82rem;color:#374151;">${col.label}</span>
             </div>
+            <span style="font-size:.68rem;color:#9ca3af;background:#f1f5f9;
+                padding:2px 7px;border-radius:10px;">${_funnels.length}</span>
+        </div>
+    </div>
 
-            ${lpPages.length === 0 ? `
-                <div style="text-align:center;padding:3rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
-                    <div style="font-size:2.5rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span></div>
-                    <div style="font-weight:600;color:#1a1a1a;margin-bottom:0.4rem;">Ще немає лендінгів</div>
-                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">Створіть перший лендінг і підключіть AI воронку</div>
-                    <button onclick="openCreatePageModal()" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">+ Створити лендінг</button>
-                </div>` : `
-                <div style="display:flex;flex-direction:column;gap:0.75rem;">
-                    ${lpPages.map(page => renderPageCard(page)).join('')}
-                </div>`}
-        `;
-        if (window.lucide) lucide.createIcons();
+    <!-- Cards -->
+    <div style="flex:1;overflow-y:auto;padding:.5rem;display:flex;flex-direction:column;gap:.4rem;">
+        ${cards}
+    </div>
+</div>`;
+        }).join('') +
+        // Arrow connector between columns (visual only, on top of border)
+        '';
     }
 
-    function renderPageCard(page) {
-        const funnel = lpFunnels.find(f => f.id === page.funnelId);
-        const publicUrl = getPublicUrl(page);
-        const statusColor = page.status === 'active' ? '#22c55e' : '#9ca3af';
-        const statusLabel = page.status === 'active' ? 'Активний' : 'Чернетка';
+    // ══════════════════════════════════════════════════════
+    // CARD PER FUNNEL PER COLUMN
+    // ══════════════════════════════════════════════════════
+    function _renderCard(funnel, col, ci) {
+        const leads  = funnel.leadsCount || 0;
+        const linked = _isLinked(funnel, col.id);
+
+        // What's shown in each column slot
+        const info   = _getColInfo(funnel, col.id);
 
         return `
-            <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);border-left:3px solid ${statusColor};">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;">
-                    <div style="flex:1;min-width:0;">
-                        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
-                            <span style="font-weight:700;font-size:0.95rem;color:#1a1a1a;">${escHtml(page.name)}</span>
-                            <span style="font-size:0.7rem;background:${statusColor}22;color:${statusColor};padding:0.15rem 0.5rem;border-radius:20px;font-weight:600;">${statusLabel}</span>
-                        </div>
-                        <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.4rem;">
-                            /${escHtml(page.slug)} ${funnel ? `· <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span> ${escHtml(funnel.name)}` : '· без воронки'}
-                        </div>
-                        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-                            <span style="font-size:0.78rem;color:#3b82f6;background:#eff6ff;padding:0.15rem 0.5rem;border-radius:6px;">
-                                ${escHtml(publicUrl)}
-                            </span>
-                            <button onclick="copyToClipboard('${escHtml(publicUrl)}')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px;" title="Копіювати посилання">
-                                <i data-lucide="copy" style="width:13px;height:13px;"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div style="display:flex;gap:0.4rem;align-items:center;">
-                        <button onclick="togglePageStatus('${page.id}','${page.status}')"
-                            style="padding:0.35rem 0.65rem;background:${page.status === 'active' ? '#fee2e2' : '#f0fdf4'};color:${page.status === 'active' ? '#ef4444' : '#16a34a'};border:none;border-radius:8px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-                            ${page.status === 'active' ? 'Деактивувати' : 'Активувати'}
-                        </button>
-                        <button onclick="openEditPageModal('${page.id}')"
-                            style="padding:0.35rem 0.65rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.78rem;">
-                            Редагувати
-                        </button>
-                        <button onclick="confirmDeletePage('${page.id}')"
-                            style="padding:0.35rem 0.5rem;background:#fee2e2;color:#ef4444;border:none;border-radius:8px;cursor:pointer;">
-                            <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
-                        </button>
-                    </div>
+<div onclick="mktCardClick('${funnel.id}','${col.id}')"
+    style="background:white;border-radius:9px;cursor:pointer;
+    border:1.5px solid ${linked ? col.color+'35' : '#e8eaed'};
+    transition:box-shadow .15s,border-color .15s;overflow:hidden;"
+    onmouseenter="this.style.boxShadow='0 2px 10px rgba(0,0,0,.1)';this.style.borderColor='${col.color}60'"
+    onmouseleave="this.style.boxShadow='none';this.style.borderColor='${linked ? col.color+'35' : '#e8eaed'}'">
+
+    <!-- Card top: funnel name (only first col) + status badge -->
+    ${ci === 0 ? `
+    <div style="padding:.5rem .7rem;border-bottom:1px solid #f1f5f9;
+        display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:.78rem;font-weight:700;color:#111827;
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">
+            ${_esc(funnel.name)}
+        </div>
+        <span style="font-size:.62rem;padding:2px 6px;border-radius:8px;flex-shrink:0;margin-left:.35rem;
+            background:${leads>0?'#f0fdf4':'#f1f5f9'};color:${leads>0?'#16a34a':'#9ca3af'};font-weight:600;">
+            ${leads} лідів
+        </span>
+    </div>` : `
+    <div style="padding:.4rem .7rem;border-bottom:1px solid #f1f5f9;
+        font-size:.72rem;color:#9ca3af;
+        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        ${_esc(funnel.name)}
+    </div>`}
+
+    <!-- Col content -->
+    <div style="padding:.6rem .7rem;">
+        ${linked ? `
+        <!-- Linked state -->
+        <div style="display:flex;align-items:center;gap:.45rem;margin-bottom:.4rem;">
+            <div style="width:28px;height:28px;border-radius:7px;background:${col.bg};
+                display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-size:.95rem;">${col.icon}</span>
+            </div>
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:.76rem;font-weight:600;color:#111827;
+                    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                    ${info.title}
                 </div>
-                <div style="display:flex;gap:1rem;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid #f0f0f0;">
-                    <span style="font-size:0.78rem;color:#6b7280;">
-                        <i data-lucide="users" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i>
-                        ${page.leadsCount || 0} лідів
-                    </span>
-                    <span style="font-size:0.78rem;color:#6b7280;">
-                        Створено: ${page.createdAt?.toDate ? page.createdAt.toDate().toLocaleDateString('uk-UA') : '—'}
-                    </span>
-                </div>
-            </div>`;
+                <div style="font-size:.65rem;color:#9ca3af;">${info.subtitle}</div>
+            </div>
+        </div>
+        ${info.stat ? `
+        <div style="display:flex;align-items:center;justify-content:space-between;
+            background:${col.bg};border-radius:6px;padding:.3rem .5rem;">
+            <span style="font-size:.68rem;color:${col.color};font-weight:700;">${info.stat}</span>
+            <span style="font-size:.62rem;color:#9ca3af;">${info.statLabel}</span>
+        </div>` : ''}
+        ` : `
+        <!-- Empty / not linked state -->
+        <div style="display:flex;flex-direction:column;align-items:center;
+            padding:.5rem 0;text-align:center;">
+            <div style="width:32px;height:32px;border:2px dashed #d1d5db;border-radius:8px;
+                display:flex;align-items:center;justify-content:center;
+                font-size:.9rem;color:#d1d5db;margin-bottom:.3rem;">+</div>
+            <div style="font-size:.7rem;color:#9ca3af;">Прив'язати</div>
+        </div>`}
+    </div>
+</div>`;
     }
 
-    function getPublicUrl(page) {
-        const host = window.location.hostname === 'localhost' ? 'localhost:3000' : window.location.hostname;
-        return `https://${host}/p/${window.currentCompanyId}/${page.slug}`;
+    // ── Helpers ────────────────────────────────────────────
+    function _isLinked(funnel, colId) {
+        if (colId === 'site')    return !!(_sites.find(s => s.funnelId === funnel.id));
+        if (colId === 'bot')     return !!(funnel.botId);
+        if (colId === 'crm')     return (funnel.leadsCount || 0) > 0;
+        if (colId === 'process') return !!(funnel.processTemplateId);
+        return false;
     }
 
-    window.copyToClipboard = function (text) {
-        navigator.clipboard.writeText(text).then(() => {
-            if (typeof showToast === 'function') showToast('Посилання скопійовано', 'success');
-        });
-    };
-
-    window.togglePageStatus = async function (pageId, currentStatus) {
-        const newStatus = currentStatus === 'active' ? 'draft' : 'active';
-        try {
-            await window.companyRef()
-                .collection('landingPages').doc(pageId)
-                .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            if (typeof showToast === 'function') showToast(newStatus === 'active' ? 'Лендінг активовано' : 'Лендінг деактивовано', 'success');
-        } catch (e) { console.error(e); }
-    };
-
-    window.confirmDeletePage = async function (pageId) {
-        if (!(await (window.showConfirmModal ? showConfirmModal('Видалити лендінг? Це незворотно.',{danger:true}) : Promise.resolve(confirm('Видалити лендінг? Це незворотно.'))))) return;
-        window.companyRef()
-            .collection('landingPages').doc(pageId).delete()
-            .then(() => { if (typeof showToast === 'function') showToast('Видалено', 'success'); })
-            .catch(e => console.error(e));
-    };
-
-    // ── Create/Edit Page Modal ─────────────────────────────
-    window.openCreatePageModal = function () { openPageModal(null); };
-    window.openEditPageModal = function (pageId) {
-        const page = lpPages.find(p => p.id === pageId);
-        openPageModal(page);
-    };
-
-    function openPageModal(page) {
-        const isEdit = !!page;
-        const html = `
-            <div id="lpPageOverlay" onclick="if(event.target===this)closeLPPageModal()"
-                style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;">
-                <div style="background:white;border-radius:16px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2);margin:auto;">
-                    <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1;border-radius:16px 16px 0 0;">
-                        <div style="font-weight:700;font-size:1rem;">${isEdit ? 'Редагувати лендінг' : 'Новий лендінг'}</div>
-                        <button onclick="closeLPPageModal()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
-                    </div>
-                    <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
-
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА ЛЕНДІНГУ *</label>
-                            <input id="lpPageName" value="${escHtml(page?.name || '')}" placeholder="Наприклад: Лендінг для стоматології"
-                                style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;"
-                                oninput="lpAutoSlug(this.value)">
-                        </div>
-
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">SLUG (URL) *</label>
-                            <div style="display:flex;align-items:center;gap:0.5rem;">
-                                <span style="font-size:0.82rem;color:#6b7280;white-space:nowrap;">/p/${window.currentCompanyId}/</span>
-                                <input id="lpPageSlug" value="${escHtml(page?.slug || '')}" placeholder="moya-klinika"
-                                    style="flex:1;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;"
-                                    oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
-                            </div>
-                            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">Тільки латиниця, цифри, дефіс</div>
-                        </div>
-
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ВОРОНКА (AI чат)</label>
-                            <select id="lpPageFunnel" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
-                                <option value="">— Без воронки —</option>
-                                ${lpFunnels.map(f => `<option value="${f.id}" ${page?.funnelId === f.id ? 'selected' : ''}>${escHtml(f.name)}</option>`).join('')}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">HTML КОД ЛЕНДІНГУ</label>
-                            <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:0.5rem;margin-bottom:0.4rem;">
-                                <div style="font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span> Підказка: додайте кнопку з <code style="background:#f0fdf4;padding:1px 4px;border-radius:3px;">data-talko-funnel="open"</code> щоб відкривати чат</div>
-                                <div style="font-size:0.75rem;color:#6b7280;">Приклад: <code style="background:#f0fdf4;padding:1px 4px;border-radius:3px;">&lt;button data-talko-funnel="open"&gt;Записатися&lt;/button&gt;</code></div>
-                            </div>
-                            <textarea id="lpPageHtml" placeholder="&lt;!DOCTYPE html&gt;&#10;&lt;html&gt;...&lt;/html&gt;"
-                                style="width:100%;min-height:200px;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;font-family:monospace;resize:vertical;box-sizing:border-box;">${escHtml(page?.htmlContent || lpDefaultTemplate())}</textarea>
-                            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.2rem;">Максимум 500KB</div>
-                        </div>
-
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">СТАТУС</label>
-                            <select id="lpPageStatus" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
-                                <option value="draft" ${(!page || page.status === 'draft') ? 'selected' : ''}>Чернетка</option>
-                                <option value="active" ${page?.status === 'active' ? 'selected' : ''}>Активний</option>
-                            </select>
-                        </div>
-
-                    </div>
-                    <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;position:sticky;bottom:0;background:white;border-radius:0 0 16px 16px;">
-                        <button onclick="closeLPPageModal()" style="padding:0.55rem 1rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Скасувати</button>
-                        <button onclick="previewLPHtml()" style="padding:0.55rem 1rem;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> Прев'ю</button>
-                        <button onclick="saveLandingPage('${page?.id || ''}')" style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Зберегти</button>
-                    </div>
-                </div>
-            </div>`;
-        document.body.insertAdjacentHTML('beforeend', html);
-        if (window.lucide) lucide.createIcons();
-    }
-
-    window.closeLPPageModal = function () {
-        document.getElementById('lpPageOverlay')?.remove();
-    };
-
-    window.lpAutoSlug = function (name) {
-        const slugInput = document.getElementById('lpPageSlug');
-        if (!slugInput || slugInput.value) return; // don't overwrite existing
-        slugInput.value = name.toLowerCase()
-            .replace(/[іїєа-яёА-ЯЁІЇЄa-zA-Z0-9]/g, c => {
-                const map = { 'і': 'i', 'ї': 'yi', 'є': 'ye', 'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ж': 'zh', 'з': 'z', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ю': 'yu', 'я': 'ya' };
-                return map[c] || c;
-            })
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '')
-            .replace(/-+/g, '-')
-            .slice(0, 50);
-    };
-
-    window.previewLPHtml = function () {
-        const html = document.getElementById('lpPageHtml')?.value;
-        if (!html) return;
-        const win = window.open('', '_blank');
-        win.document.write(html);
-        win.document.close();
-    };
-
-    window.saveLandingPage = async function (existingId) {
-        const name = document.getElementById('lpPageName')?.value.trim();
-        const slug = document.getElementById('lpPageSlug')?.value.trim();
-        const htmlContent = document.getElementById('lpPageHtml')?.value.trim();
-        const funnelId = document.getElementById('lpPageFunnel')?.value || null;
-        const status = document.getElementById('lpPageStatus')?.value || 'draft';
-
-        if (!name) { if(window.showToast)showToast('Введіть назву','warning'); else alert('Введіть назву'); return; }
-        if (!slug) { if(window.showToast)showToast('Введіть slug','warning'); else alert('Введіть slug'); return; }
-        if (!/^[a-z0-9-]+$/.test(slug)) { if(window.showToast)showToast('Slug: тільки латиниця, цифри, дефіс','warning'); else alert('Slug: тільки латиниця, цифри, дефіс'); return; }
-
-        // Check HTML size
-        const htmlBytes = new Blob([htmlContent || '']).size;
-        if (htmlBytes > 500 * 1024) { if(window.showToast)showToast('HTML занадто великий (максимум 500KB)','warning'); else alert('HTML занадто великий (максимум 500KB)'); return; }
-
-        const btn = document.querySelector('#lpPageOverlay button[onclick*="saveLandingPage"]');
-        if (btn) { btn.textContent = 'Зберігаємо...'; btn.disabled = true; }
-
-        try {
-            const base = window.companyRef();
-
-            // Check slug uniqueness (exclude current page)
-            const slugCheck = await base.collection('landingPages').where('slug', '==', slug).get();
-            const conflict = slugCheck.docs.find(d => d.id !== existingId);
-            if (conflict) { if(window.showToast)showToast('Такий slug вже зайнятий','warning'); else alert('Такий slug вже зайнятий'); if(btn) { btn.textContent = '✓ Зберегти'; btn.disabled = false; } return; }
-
-            // Save HTML to Firebase Storage
-            let storageRef = null;
-            if (htmlContent) {
-                const storage = firebase.storage();
-                const path = window.currentCompanyId + '/landingPages/${slug}/index.html';
-                storageRef = storage.ref(path);
-                await storageRef.putString(htmlContent, 'raw', { contentType: 'text/html' });
-            }
-
-            const data = {
-                name, slug, funnelId: funnelId || null, status,
-                htmlStoragePath: storageRef ? window.currentCompanyId + '/landingPages/${slug}/index.html' : null,
-                htmlContent: htmlContent ? htmlContent.slice(0, 10000) : '', // store preview in firestore, full in storage
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    function _getColInfo(funnel, colId) {
+        if (colId === 'site') {
+            const site = _sites.find(s => s.funnelId === funnel.id);
+            if (!site) return { title:'', subtitle:'', stat:null, statLabel:'' };
+            return {
+                title:     site.name || 'Лендінг',
+                subtitle:  site.slug ? '/' + site.slug : 'лендінг',
+                stat:      site.views ? site.views : null,
+                statLabel: 'переглядів',
             };
+        }
+        if (colId === 'bot') {
+            const bot = _bots.find(b => b.id === funnel.botId);
+            if (!bot) return { title:'', subtitle:'', stat:null, statLabel:'' };
+            return {
+                title:     bot.name || 'Бот',
+                subtitle:  bot.username ? '@' + bot.username : 'Telegram бот',
+                stat:      funnel.leadsCount ? funnel.leadsCount : null,
+                statLabel: 'запусків',
+            };
+        }
+        if (colId === 'crm') {
+            return {
+                title:     'Лід в CRM',
+                subtitle:  'автоматично',
+                stat:      funnel.leadsCount || null,
+                statLabel: 'угод',
+            };
+        }
+        if (colId === 'process') {
+            const tpl = _templates.find(t => t.id === funnel.processTemplateId);
+            if (!tpl) return { title:'', subtitle:'', stat:null, statLabel:'' };
+            return {
+                title:     tpl.name || 'Процес',
+                subtitle:  'шаблон процесу',
+                stat:      funnel.processLaunched || null,
+                statLabel: 'запущено',
+            };
+        }
+        return { title:'', subtitle:'', stat:null, statLabel:'' };
+    }
 
-            if (existingId) {
-                await base.collection('landingPages').doc(existingId).update(data);
+    function _esc(s) {
+        if (!s) return '';
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ══════════════════════════════════════════════════════
+    // CARD CLICK → open editor for that column
+    // ══════════════════════════════════════════════════════
+    window.mktCardClick = function(funnelId, colId) {
+        const funnel = _funnels.find(f => f.id === funnelId);
+        if (!funnel) return;
+
+        if (colId === 'site') {
+            const site = _sites.find(s => s.funnelId === funnelId);
+            if (site) {
+                lpEditPage(site.id);
             } else {
-                data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                data.leadsCount = 0;
-                await base.collection('landingPages').add(data);
+                _openLinkSiteModal(funnelId);
             }
-
-            closeLPPageModal();
-            if (typeof showToast === 'function') showToast(existingId ? 'Лендінг оновлено ✓' : 'Лендінг створено ✓', 'success');
-        } catch (err) {
-            console.error('saveLandingPage error:', err);
-            if(window.showToast)showToast('Помилка: '+err.message,'error'); else alert('Помилка: '+err.message);
-            if (btn) { btn.textContent = '✓ Зберегти'; btn.disabled = false; }
+        } else if (colId === 'bot') {
+            if (funnel.botId) {
+                if (typeof switchTab === 'function') switchTab('bots');
+            } else {
+                _openLinkBotModal(funnelId);
+            }
+        } else if (colId === 'crm') {
+            if (typeof switchTab === 'function') switchTab('crm');
+        } else if (colId === 'process') {
+            if (funnel.processTemplateId) {
+                if (typeof switchTab === 'function') switchTab('processes');
+            } else {
+                _openLinkProcessModal(funnelId);
+            }
         }
     };
 
-    function lpDefaultTemplate() {
-        return `<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Лендінг</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; }
-        .hero { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; text-align: center; padding: 4rem 2rem; }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-        .hero p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem; }
-        .cta-btn { background: white; color: #16a34a; padding: 1rem 2.5rem; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
-        .cta-btn:hover { transform: scale(1.05); }
-    </style>
-</head>
-<body>
-    <section class="hero">
-        <h1>Заголовок вашого лендінгу</h1>
-        <p>Опис вашої пропозиції. Що отримає клієнт?</p>
-        <!-- data-talko-funnel="open" — ця кнопка відкриє AI чат -->
-        <button class="cta-btn" data-talko-funnel="open">Записатися безкоштовно</button>
-    </section>
-</body>
-</html>`;
-    }
-
-    // ── Funnels View ───────────────────────────────────────
-    function renderFunnelsView() {
-        const container = document.getElementById('lpFunnelsView');
-        if (!container || lpCurrentTab !== 'funnels') return;
-
-        container.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-                <div>
-                    <div style="font-weight:700;font-size:1rem;color:#1a1a1a;">AI Воронки</div>
-                    <div style="font-size:0.78rem;color:#6b7280;">${lpFunnels.length} воронок</div>
-                </div>
-                <button onclick="openCreateFunnelModal()" style="display:flex;align-items:center;gap:0.4rem;padding:0.55rem 1rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">
-                    <i data-lucide="plus" style="width:16px;height:16px;"></i> Нова воронка
-                </button>
-            </div>
-
-            ${lpFunnels.length === 0 ? `
-                <div style="text-align:center;padding:3rem;background:white;border-radius:12px;box-shadow:var(--shadow);">
-                    <div style="font-size:2.5rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span></div>
-                    <div style="font-weight:600;color:#1a1a1a;margin-bottom:0.4rem;">Ще немає воронок</div>
-                    <div style="font-size:0.85rem;color:#6b7280;margin-bottom:1rem;">Створіть AI воронку для збору лідів</div>
-                    <button onclick="openCreateFunnelModal()" style="padding:0.6rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">+ Створити воронку</button>
-                </div>` : `
-                <div style="display:flex;flex-direction:column;gap:0.75rem;">
-                    ${lpFunnels.map(f => renderFunnelCard(f)).join('')}
-                </div>`}
-        `;
-        if (window.lucide) lucide.createIcons();
-    }
-
-    function renderFunnelCard(funnel) {
-        const stepsCount  = (funnel.steps || []).length;
-        const linkedPages = lpPages.filter(p => p.funnelId === funnel.id).length;
-        const leads       = funnel.leadsCount || 0;
-        const bots        = (typeof window.bots !== 'undefined' ? window.bots : []);
-        const sites       = lpPages.filter(p => p.funnelId === funnel.id);
-        // Pipeline chain: site → bot → crm → process
-        const chain = [
-            {
-                type: 'site',
-                icon: '🌐',
-                color: '#3b82f6',
-                bg: '#eff6ff',
-                label: sites.length ? escHtml(sites[0].name || 'Сайт') : 'Сайт',
-                count: sites.length ? (sites[0].views || '—') : null,
-                countLabel: 'переглядів',
-                click: sites.length ? `lpEditPage('${sites[0].id}')` : `switchTab('sites')`,
-                linked: sites.length > 0,
-            },
-            {
-                type: 'bot',
-                icon: '🤖',
-                color: '#8b5cf6',
-                bg: '#f5f3ff',
-                label: funnel.botId ? (bots.find(b=>b.id===funnel.botId)?.name || 'Бот') : 'Бот',
-                count: leads,
-                countLabel: 'старти',
-                click: funnel.botId ? `switchTab('bots')` : `switchTab('bots')`,
-                linked: !!funnel.botId,
-            },
-            {
-                type: 'ai',
-                icon: '🧠',
-                color: '#06b6d4',
-                bg: '#ecfeff',
-                label: funnel.aiEnabled ? 'AI Ланцюг' : 'AI Ланцюг',
-                count: stepsCount > 0 ? stepsCount : null,
-                countLabel: 'кроків',
-                click: `openFunnelEditor('${funnel.id}')`,
-                linked: stepsCount > 0,
-            },
-            {
-                type: 'crm',
-                icon: '💼',
-                color: '#22c55e',
-                bg: '#f0fdf4',
-                label: 'CRM Лід',
-                count: leads,
-                countLabel: 'угод',
-                click: `switchTab('crm')`,
-                linked: leads > 0,
-            },
-            {
-                type: 'process',
-                icon: '⚙️',
-                color: '#f59e0b',
-                bg: '#fffbeb',
-                label: funnel.processId ? 'Процес' : 'Процес',
-                count: funnel.processLaunched || null,
-                countLabel: 'запущено',
-                click: `switchTab('processes')`,
-                linked: !!funnel.processId,
-            },
-        ];
-
-        const chainHtml = chain.map((step, i) => `
-            <div style="display:flex;align-items:center;gap:0;">
-                <div onclick="${step.click}" title="${step.linked ? 'Відкрити' : 'Прив\u0027язати'}"
-                    style="display:flex;flex-direction:column;align-items:center;gap:3px;
-                    padding:.55rem .65rem;border-radius:10px;cursor:pointer;
-                    background:${step.linked ? step.bg : '#f9fafb'};
-                    border:1.5px solid ${step.linked ? step.color+'40' : '#e5e7eb'};
-                    min-width:68px;transition:all .15s;position:relative;"
-                    onmouseenter="this.style.boxShadow='0 2px 8px rgba(0,0,0,.1)'"
-                    onmouseleave="this.style.boxShadow='none'">
-                    ${!step.linked ? `<div style="position:absolute;top:-5px;right:-5px;width:14px;height:14px;
-                        background:#e5e7eb;border-radius:50%;display:flex;align-items:center;
-                        justify-content:center;font-size:.55rem;color:#9ca3af;">+</div>` : ''}
-                    <span style="font-size:1.1rem;line-height:1;">${step.icon}</span>
-                    <div style="font-size:.67rem;font-weight:700;color:${step.linked ? step.color : '#9ca3af'};
-                        text-align:center;white-space:nowrap;max-width:64px;
-                        overflow:hidden;text-overflow:ellipsis;">${step.label}</div>
-                    ${step.count !== null ? `<div style="font-size:.6rem;color:${step.linked ? step.color : '#d1d5db'};font-weight:600;">
-                        ${step.count} ${step.countLabel}</div>` : `<div style="font-size:.6rem;color:#d1d5db;">не підключено</div>`}
-                </div>
-                ${i < chain.length - 1 ? `
-                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 2px;">
-                    <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
-                        <line x1="0" y1="6" x2="16" y2="6" stroke="${chain[i].linked && chain[i+1].linked ? '#22c55e' : '#d1d5db'}" stroke-width="1.5" stroke-dasharray="${chain[i].linked && chain[i+1].linked ? 'none' : '3,2'}"/>
-                        <polyline points="12,2 18,6 12,10" stroke="${chain[i].linked && chain[i+1].linked ? '#22c55e' : '#d1d5db'}" stroke-width="1.5" fill="none"/>
-                    </svg>
-                    ${chain[i].linked && chain[i+1].linked && chain[i].count && chain[i+1].count ?
-                        `<div style="font-size:.55rem;color:#22c55e;font-weight:700;white-space:nowrap;">
-                            ${Math.round((chain[i+1].count / chain[i].count) * 100)}%
-                        </div>` : ''}
-                </div>` : ''}
-            </div>`).join('');
-
-        return `
-            <div style="background:white;border-radius:14px;padding:1rem 1.1rem;box-shadow:var(--shadow);
-                border:1px solid #f1f5f9;">
-                <!-- Header -->
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem;">
-                    <div>
-                        <div style="font-weight:700;font-size:.95rem;color:#111827;">${escHtml(funnel.name)}</div>
-                        <div style="font-size:.72rem;color:#9ca3af;margin-top:1px;">
-                            ${leads} лідів · ${linkedPages} сайтів
-                        </div>
-                    </div>
-                    <div style="display:flex;gap:.35rem;">
-                        <button onclick="openFunnelEditor('${funnel.id}')"
-                            style="padding:.35rem .7rem;background:#22c55e;color:white;border:none;
-                            border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:600;
-                            display:flex;align-items:center;gap:3px;">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                            Редагувати
-                        </button>
-                        <button onclick="confirmDeleteFunnel('${funnel.id}')"
-                            style="padding:.35rem .5rem;background:#fee2e2;color:#ef4444;border:none;
-                            border-radius:7px;cursor:pointer;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Pipeline chain -->
-                <div style="display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:4px;
-                    scrollbar-width:none;">
-                    ${chainHtml}
-                </div>
-
-                <!-- Stats bar -->
-                ${leads > 0 ? `
-                <div style="margin-top:.75rem;padding:.5rem .65rem;background:#f8fafc;border-radius:8px;
-                    display:flex;gap:1rem;flex-wrap:wrap;">
-                    <div style="font-size:.7rem;color:#6b7280;">
-                        <span style="font-weight:700;color:#111827;">${leads}</span> лідів всього
-                    </div>
-                    ${funnel.leadsToday ? `<div style="font-size:.7rem;color:#6b7280;">
-                        <span style="font-weight:700;color:#22c55e;">+${funnel.leadsToday}</span> сьогодні
-                    </div>` : ''}
-                    ${funnel.convRate ? `<div style="font-size:.7rem;color:#6b7280;">
-                        <span style="font-weight:700;color:#f59e0b;">${funnel.convRate}%</span> конверсія
-                    </div>` : ''}
-                </div>` : ''}
-            </div>`;
-    }
-
-    window.confirmDeleteFunnel = async function (funnelId) {
-        if (!(await (window.showConfirmModal ? showConfirmModal('Видалити воронку?',{danger:true}) : Promise.resolve(confirm('Видалити воронку?'))))) return;
-        window.companyRef()
-            .collection('funnels').doc(funnelId).delete()
-            .then(async () => {
-                lpFunnels = lpFunnels.filter(f => f.id !== funnelId);
-                renderFunnelsView();
-                if (typeof showToast === 'function') showToast('Видалено', 'success');
-            });
+    // ══════════════════════════════════════════════════════
+    // NEW FUNNEL
+    // ══════════════════════════════════════════════════════
+    window.mktNewFunnel = function() {
+        const ov = document.createElement('div');
+        ov.id = 'mktNewFunnelOv';
+        ov.onclick = e => { if(e.target===ov) ov.remove(); };
+        ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;';
+        ov.innerHTML = `
+<div style="background:white;border-radius:16px;width:100%;max-width:420px;
+    box-shadow:0 24px 64px rgba(0,0,0,.2);">
+    <div style="padding:1.1rem 1.25rem;border-bottom:1px solid #f0f0f0;
+        display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-weight:700;font-size:.95rem;">Нова воронка</div>
+        <button onclick="document.getElementById('mktNewFunnelOv').remove()"
+            style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">×</button>
+    </div>
+    <div style="padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:.75rem;">
+        <div>
+            <label style="font-size:.72rem;font-weight:700;color:#6b7280;display:block;margin-bottom:.25rem;">
+                НАЗВА *
+            </label>
+            <input id="mktFunnelName" placeholder="Наприклад: Запис на консультацію"
+                style="width:100%;padding:.55rem .65rem;border:1px solid #e5e7eb;border-radius:8px;
+                font-size:.88rem;box-sizing:border-box;outline:none;"
+                onkeydown="if(event.key==='Enter')mktSaveNewFunnel()">
+        </div>
+    </div>
+    <div style="padding:.85rem 1.25rem;border-top:1px solid #f0f0f0;
+        display:flex;gap:.5rem;justify-content:flex-end;">
+        <button onclick="document.getElementById('mktNewFunnelOv').remove()"
+            style="padding:.5rem 1rem;background:#f9fafb;color:#525252;
+            border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:.82rem;">
+            Скасувати
+        </button>
+        <button onclick="mktSaveNewFunnel()"
+            style="padding:.5rem 1.1rem;background:#22c55e;color:white;
+            border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:.82rem;">
+            Створити
+        </button>
+    </div>
+</div>`;
+        document.body.appendChild(ov);
+        setTimeout(() => document.getElementById('mktFunnelName')?.focus(), 50);
     };
 
-    // ── Create Funnel Modal (quick) ────────────────────────
-    window.openCreateFunnelModal = function () {
-        const html = `
-            <div id="lpCreateFunnelOverlay" onclick="if(event.target===this)document.getElementById('lpCreateFunnelOverlay').remove()"
-                style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;">
-                <div style="background:white;border-radius:16px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,0.2);">
-                    <div style="padding:1.25rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-                        <div style="font-weight:700;">Нова воронка</div>
-                        <button onclick="document.getElementById('lpCreateFunnelOverlay').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.3rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span></button>
-                    </div>
-                    <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА ВОРОНКИ *</label>
-                            <input id="newFunnelName" placeholder="Наприклад: Запис на консультацію"
-                                style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
-                        </div>
-                        <div>
-                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ПОСИЛАННЯ CALENDLY (опційно)</label>
-                            <input id="newFunnelCalendly" placeholder="https://calendly.com/your-link"
-                                style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
-                        </div>
-                    </div>
-                    <div style="padding:1rem 1.25rem;border-top:1px solid #f0f0f0;display:flex;gap:0.5rem;justify-content:flex-end;">
-                        <button onclick="document.getElementById('lpCreateFunnelOverlay').remove()" style="padding:0.55rem 1rem;background:#f9fafb;color:#525252;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;">Скасувати</button>
-                        <button onclick="saveNewFunnel()" style="padding:0.55rem 1.25rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">✓ Створити</button>
-                    </div>
-                </div>
-            </div>`;
-        document.body.insertAdjacentHTML('beforeend', html);
-        document.getElementById('newFunnelName')?.focus();
-    };
-
-    window.saveNewFunnel = async function () {
-        const name = document.getElementById('newFunnelName')?.value.trim();
-        if (!name) { if(window.showToast)showToast('Введіть назву','warning'); else alert('Введіть назву'); return; }
+    window.mktSaveNewFunnel = async function() {
+        const name = document.getElementById('mktFunnelName')?.value.trim();
+        if (!name) { if(window.showToast) showToast('Введіть назву','warning'); return; }
         try {
-            const ref = await window.companyRef()
-                .collection('funnels').add({
-                    name,
-                    calendlyUrl: document.getElementById('newFunnelCalendly')?.value.trim() || null,
-                    steps: [],
-                    leadsCount: 0,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            document.getElementById('lpCreateFunnelOverlay')?.remove();
-            // Redirect to editor
-            const newFunnel = { id: ref.id, name, steps: [], leadsCount: 0 };
-            lpFunnels.unshift(newFunnel);
-            openFunnelEditor(ref.id);
-            if (typeof showToast === 'function') showToast('Воронку створено ✓', 'success');
-        } catch (err) { if(window.showToast)showToast('Помилка: ' + err.message,'error'); else alert('Помилка: ' + err.message); }
+            const ref = await window.companyRef().collection('funnels').add({
+                name, steps: [], leadsCount: 0,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            document.getElementById('mktNewFunnelOv')?.remove();
+            if (window.showToast) showToast('Воронку створено ✓','success');
+        } catch(e) {
+            if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        }
     };
 
-    // ── Funnel Editor → module 79 ──────────────────────────
-    window.openFunnelEditor = function (funnelId) {
-        if (typeof openFunnelEditorModule === 'function') {
-            openFunnelEditorModule(funnelId);
-        } else { if(window.showToast)showToast('Редактор воронок завантажується... Спробуйте ще раз.','info'); else alert('Редактор воронок завантажується... Спробуйте ще раз.'); }
-    };
-
-    // ── Utilities ──────────────────────────────────────────
-    function escHtml(str) {
-        if (!str && str !== 0) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    // ══════════════════════════════════════════════════════
+    // LINK MODALS (bot / process)
+    // ══════════════════════════════════════════════════════
+    function _openLinkBotModal(funnelId) {
+        const ov = document.createElement('div');
+        ov.onclick = e => { if(e.target===ov) ov.remove(); };
+        ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;';
+        const botOptions = _bots.map(b =>
+            `<div onclick="mktLinkBot('${funnelId}','${b.id}',this)"
+                style="padding:.55rem .75rem;border:1.5px solid #e8eaed;border-radius:8px;
+                cursor:pointer;display:flex;align-items:center;gap:.5rem;font-size:.82rem;"
+                onmouseenter="this.style.borderColor='#8b5cf6';this.style.background='#f5f3ff'"
+                onmouseleave="this.style.borderColor='#e8eaed';this.style.background='white'">
+                <span style="font-size:1rem;">🤖</span>
+                <div>
+                    <div style="font-weight:600;color:#111827;">${_esc(b.name||'Бот')}</div>
+                    ${b.username?`<div style="font-size:.68rem;color:#9ca3af;">@${_esc(b.username)}</div>`:''}
+                </div>
+            </div>`
+        ).join('') || `<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:.82rem;">
+            Ботів ще немає.<br>
+            <button onclick="switchTab('bots')" style="margin-top:.5rem;padding:.35rem .75rem;
+                background:#8b5cf6;color:white;border:none;border-radius:6px;cursor:pointer;font-size:.78rem;">
+                Створити бота
+            </button>
+        </div>`;
+        ov.innerHTML = `
+<div style="background:white;border-radius:14px;width:100%;max-width:380px;
+    box-shadow:0 20px 60px rgba(0,0,0,.2);">
+    <div style="padding:1rem 1.25rem;border-bottom:1px solid #f0f0f0;
+        display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-weight:700;">🤖 Вибрати бота</div>
+        <button onclick="this.closest('[style*=fixed]').remove()"
+            style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">×</button>
+    </div>
+    <div style="padding:1rem;display:flex;flex-direction:column;gap:.4rem;">${botOptions}</div>
+</div>`;
+        document.body.appendChild(ov);
     }
 
-
-    window.destroyLandingPagesModule = function () {
-        if (lpUnsubscribe) lpUnsubscribe();
-        lpUnsubscribe = null;
+    window.mktLinkBot = async function(funnelId, botId, el) {
+        el.closest('[style*=fixed]')?.remove();
+        try {
+            await window.companyRef().collection('funnels').doc(funnelId)
+                .update({ botId, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            if (window.showToast) showToast('Бота прив\'язано ✓','success');
+        } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
     };
+
+    function _openLinkProcessModal(funnelId) {
+        const ov = document.createElement('div');
+        ov.onclick = e => { if(e.target===ov) ov.remove(); };
+        ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;';
+        const tplOptions = _templates.map(t =>
+            `<div onclick="mktLinkProcess('${funnelId}','${t.id}',this)"
+                style="padding:.55rem .75rem;border:1.5px solid #e8eaed;border-radius:8px;
+                cursor:pointer;font-size:.82rem;"
+                onmouseenter="this.style.borderColor='#f59e0b';this.style.background='#fffbeb'"
+                onmouseleave="this.style.borderColor='#e8eaed';this.style.background='white'">
+                <div style="font-weight:600;color:#111827;">⚙️ ${_esc(t.name)}</div>
+                ${t.description?`<div style="font-size:.68rem;color:#9ca3af;margin-top:2px;">${_esc(t.description.slice(0,60))}</div>`:''}
+            </div>`
+        ).join('') || `<div style="text-align:center;padding:1.5rem;color:#9ca3af;font-size:.82rem;">
+            Шаблонів процесів ще немає.<br>
+            <button onclick="switchTab('processes')" style="margin-top:.5rem;padding:.35rem .75rem;
+                background:#f59e0b;color:white;border:none;border-radius:6px;cursor:pointer;font-size:.78rem;">
+                Створити шаблон
+            </button>
+        </div>`;
+        ov.innerHTML = `
+<div style="background:white;border-radius:14px;width:100%;max-width:380px;
+    box-shadow:0 20px 60px rgba(0,0,0,.2);">
+    <div style="padding:1rem 1.25rem;border-bottom:1px solid #f0f0f0;
+        display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-weight:700;">⚙️ Вибрати процес</div>
+        <button onclick="this.closest('[style*=fixed]').remove()"
+            style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">×</button>
+    </div>
+    <div style="padding:1rem;display:flex;flex-direction:column;gap:.4rem;">${tplOptions}</div>
+</div>`;
+        document.body.appendChild(ov);
+    }
+
+    window.mktLinkProcess = async function(funnelId, tplId, el) {
+        el.closest('[style*=fixed]')?.remove();
+        try {
+            await window.companyRef().collection('funnels').doc(funnelId)
+                .update({ processTemplateId: tplId, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            if (window.showToast) showToast('Процес прив\'язано ✓','success');
+        } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+    };
+
+    function _openLinkSiteModal(funnelId) {
+        // Open sites tab — user creates/links site there
+        if (typeof switchTab === 'function') switchTab('sites');
+        if (window.showToast) showToast('Створіть або відкрийте сайт і прив\'яжіть до воронки','info');
+    }
+
+    // ── lpEditPage compatibility ───────────────────────────
+    window.lpEditPage = function(pageId) {
+        if (window.showToast) showToast('Відкрити редактор сайту...','info');
+        if (typeof switchTab === 'function') switchTab('sites');
+    };
+
+    // ── Tab registration ───────────────────────────────────
+    function _lpRegisterTab(tabName, fn) {
+        if (window.onSwitchTab) {
+            window.onSwitchTab(tabName, fn);
+        } else {
+            let iv = setInterval(() => {
+                if (window.onSwitchTab) { window.onSwitchTab(tabName, fn); clearInterval(iv); }
+            }, 100);
+        }
+    }
+    _lpRegisterTab('marketing', function() {
+        if (typeof window.initLandingPagesModule === 'function') window.initLandingPagesModule();
+    });
 
 })();
-
-// ── Tab registration (after IIFE so window.initLandingPagesModule is defined) ──
-function _lpRegisterTab(tabName, fn) {
-    if (window.onSwitchTab) {
-        window.onSwitchTab(tabName, fn);
-    } else {
-        var t = 0;
-        var iv = setInterval(function() {
-            if (window.onSwitchTab) { window.onSwitchTab(tabName, fn); clearInterval(iv); }
-            else if (++t > 30) clearInterval(iv);
-        }, 100);
-    }
-}
-_lpRegisterTab('marketing', function() { if (typeof window.initLandingPagesModule === 'function') window.initLandingPagesModule(); });
