@@ -84,6 +84,12 @@
             METRIC_ENTRIES:  'metricEntries',
             BROADCASTS:      'broadcasts',
             EVENTS:          'events',
+            SNAPSHOTS:        'snapshots',
+            AI_RECOMMENDATIONS: 'ai_recommendations',
+            WEEKLY_REPORT_LOG:  'weekly_report_log',
+            DECISIONS:          'decisions',
+            ACTIVITY_LOG:       'activity_log',
+            AUDIT_LOG:          'audit_log',
         };
         // APP STATE
         // =====================

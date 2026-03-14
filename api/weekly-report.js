@@ -71,6 +71,14 @@ async function buildAndSendReport(companyId) {
 
     const compRef = db.collection('companies').doc(companyId);
 
+    // ── 0. Dedup guard: вже відправляли сьогодні? ────────
+    try {
+        const logDoc = await compRef.collection('weekly_report_log').doc(todayStr).get();
+        if (logDoc.exists && logDoc.data()?.sentAt) {
+            return { companyId, skipped: 'already_sent_today' };
+        }
+    } catch(e) { /* не критично — продовжуємо */ }
+
     // ── 1. Знаходимо owner/manager з telegramChatId ──────
     const usersSnap = await compRef.collection('users')
         .where('role', 'in', ['owner', 'manager'])

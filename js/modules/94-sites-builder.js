@@ -815,7 +815,7 @@ window.sbSaveSeo = async function() {
     };
     try {
         await window.companyRef()
-            .collection(window.DB_COLS.SITES).doc( + '/sites/' + sb.siteId)
+            .collection(window.DB_COLS.SITES).doc(sb.siteId)
             .update(updates);
         Object.assign(sb.site, updates);
         if (typeof showToast === 'function') showToast(window.t('sitesSeoSaved'), 'success');

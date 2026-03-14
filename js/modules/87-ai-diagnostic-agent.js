@@ -610,6 +610,8 @@ async function runAIDiagnostic(force = false) {
 
     } catch (e) {
         console.error('[DiagAgent] runAIDiagnostic error:', e);
+        // При помилці НЕ кешуємо — щоб наступний виклик спробував знову
+        window[DIAG_CACHE_KEY] = null;
         container.innerHTML = `
         <div style="background:#fff5f5;border-radius:12px;padding:0.85rem 1.25rem;border:1px solid #fecaca;font-size:0.85rem;color:#dc2626;">
             AI-діагностика тимчасово недоступна. <button onclick="runAIDiagnostic(true)" style="background:none;border:none;color:#2563eb;cursor:pointer;text-decoration:underline;">Спробувати знову</button>

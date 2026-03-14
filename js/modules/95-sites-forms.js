@@ -378,7 +378,8 @@ window.sfSaveForm = async function (formId) {
     };
     try {
         await window.companyRef()
-            .collection(window.DB_COLS.SITES).doc( + '/sites/' + sf.siteId + '/forms/' + formId)
+            .collection(window.DB_COLS.SITES).doc(sf.siteId)
+            .collection('forms').doc(formId)
             .update(data);
         // Оновлюємо кеш
         const idx = sf.forms.findIndex(f => f.id === formId);
@@ -458,7 +459,8 @@ window.sfDelete = async function (formId, name) {
     if (!(await (window.showConfirmModal ? showConfirmModal('Видалити форму "' + name + '"?\nВсі заявки будуть видалені.',{danger:true}) : Promise.resolve(confirm('Видалити форму "' + name + '"?\nВсі заявки будуть видалені.'))))) return;
     try {
         await window.companyRef()
-            .collection(window.DB_COLS.SITES).doc( + '/sites/' + sf.siteId + '/forms/' + formId).delete();
+            .collection(window.DB_COLS.SITES).doc(sf.siteId)
+            .collection('forms').doc(formId).delete();
         sf.forms = sf.forms.filter(f => f.id !== formId);
         if (typeof showToast === 'function') showToast(window.t('sitesFormDeleted'), 'success');
         _renderFormsList();

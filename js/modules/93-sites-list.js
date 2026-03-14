@@ -406,7 +406,7 @@ window.sitesCreate = async function () {
             return;
         }
         try {
-            const ref = await window.companyRef().collection('sites').add({
+            const ref = await window.companyRef().collection(window.DB_COLS?.SITES || 'sites').add({
                 name,
                 description: '',
                 niche: 'custom',
