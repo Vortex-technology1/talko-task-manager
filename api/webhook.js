@@ -160,20 +160,40 @@ module.exports = async (req, res) => {
                         const fbPipeline    = fbPipSnap.empty ? null : fbPipSnap.docs[0].data();
                         const fbPipelineId  = fbPipSnap.empty ? '' : fbPipSnap.docs[0].id;
                         const fbFirstStage  = fbPipeline?.stages?.[0]?.id || 'new';
+                        // Створюємо клієнта
+                        const _fbName = fields.full_name || fields.name || 'FB Lead';
+                        const _fbClientRef = compRef.collection('crm_clients').doc();
+                        await _fbClientRef.set({
+                            id:     _fbClientRef.id,
+                            name:   _fbName,
+                            type:   'person',
+                            phone:  fields.phone_number || fields.phone || '',
+                            email:  fields.email || '',
+                            source: 'facebook_lead',
+                            fbLeadId: leadId,
+                            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        });
+                        // Створюємо угоду
                         await compRef.collection(DB_COLS.CRM_DEALS).add({
-                            title:      `FB Lead: ${fields.full_name || fields.name || leadId}`,
-                            clientName: fields.full_name || fields.name || '',
+                            title:      `FB Lead: ${_fbName}`,
+                            clientId:   _fbClientRef.id,
+                            clientName: _fbName,
                             phone:      fields.phone_number || fields.phone || '',
                             email:      fields.email || '',
                             source:     'facebook_lead',
                             stage:      fbFirstStage,
                             stageId:    fbFirstStage,
+                            stageColor: fbPipeline?.stages?.[0]?.color || '#6b7280',
+                            probability: fbPipeline?.stages?.[0]?.probability || 10,
                             pipelineId: fbPipelineId,
                             fbLeadId:   leadId,
                             fbFormId:   formId || '',
                             fbPageId:   pageId || '',
                             leadData:   fields,
-                            status:     'active',
+                            status:     'open',
+                            amount:     0,
+                            currency:   'UAH',
                             createdBy:  'system',
                             createdAt:  admin.firestore.FieldValue.serverTimestamp(),
                             updatedAt:  admin.firestore.FieldValue.serverTimestamp(),
@@ -560,6 +580,8 @@ module.exports = async (req, res) => {
             currentNodeId: null, waitingForInput: null,
             data: {}, aiHistory: [], tags: [],
         };
+        // Завжди оновлюємо botId (може змінитись якщо компанія має кілька ботів)
+        if (botDocId) session.botId = botDocId;
         // FIX CE: refresh senderName/username (user may rename in Telegram)
         if (normalized.senderName) session.senderName = normalized.senderName;
         if (normalized.username)   session.username   = normalized.username;
@@ -1045,7 +1067,7 @@ module.exports = async (req, res) => {
                         autoSource:   'bot_flow',
                         flowId:       flow?.id || null,
                         senderName:   session.senderName || '',
-                        senderId:     session.senderId || '',
+                        senderId:     String(session.senderId || ''),
                         channel:      session.channel || '',
                         contactData:  {
                             name:     session.data?.name || '',
@@ -1072,9 +1094,10 @@ module.exports = async (req, res) => {
                     // Спочатку шукаємо авто-лід (autoCreated=true, flowId=null)
                     // щоб оновити його замість створення дубля
                     let _tdAutoLid = null;
-                    if (session._autoDealId   || session.data?._autoDealId) {
+                    const _tdDealId = session._autoDealId || session.data?._autoDealId;
+                    if (_tdDealId) {
                         const _tdDoc = await compRef.collection('crm_deals')
-                            .doc(session.data._autoDealId).get().catch(() => null);
+                            .doc(_tdDealId).get().catch(() => null);
                         if (_tdDoc?.exists && !_tdDoc.data()?.flowId) _tdAutoLid = _tdDoc;
                     }
                     // Потім шукаємо по botContactId + flowId
@@ -1331,7 +1354,7 @@ async function doAction(node, session, flow, botToken) {
                 });
             // Загальний truncate повідомлення
             if (text.length > 4000) text = text.slice(0, 4000) + '...';
-            await sendTg(adminToken, chatId, text).catch(() => {});
+            await sendTg(adminToken, chatId, text).catch(e => console.warn('[notify_admin]', e.message));
         }
     }
 }
@@ -1661,11 +1684,11 @@ async function finish(session, flow, compRef, channel, compData = {}) {
         // Upsert контакт по senderId — всі поля по ТЗ
         const contactId = `${channel}_${session.senderId}`;
         const contactData = {
-            senderId:      session.senderId,
+            senderId:      String(session.senderId),
             senderName:    session.senderName || '',
             username:      session.username   || '',
             channel,
-            botId:         session.botId      || null,
+            botId:         session.botId      || botDocId || null,
             flowId:        flow?.id           || null,
             flowName:      flow?.name         || '',
             // Поля зібрані через [SAVE:key=value] в флоу
@@ -1691,7 +1714,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                 { merge: true }
             ),
             compRef.collection('leads').add({
-                senderId: session.senderId, senderName: session.senderName || '',
+                senderId: String(session.senderId), senderName: session.senderName || '',
                 channel, flowId: flow?.id || null, flowName: flow?.name || '',
                 data: _leadData, tags: session.tags || [],
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -1745,7 +1768,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                         description: d.ai_response || d.main_problem || '',
                         tags:        session.tags || [],
                         updatedAt:   admin.firestore.FieldValue.serverTimestamp(),
-                    }, { merge: true }).catch(() => {});
+                    }, { merge: true }).catch(e => console.warn('[finish:autoLidUpdate]', e.message));
                 }
             } else {
                 // Новий клієнт
@@ -1774,15 +1797,16 @@ async function finish(session, flow, compRef, channel, compData = {}) {
 
             // Спочатку шукаємо авто-лід угоду (autoCreated=true) для цього контакту
             // щоб оновити її замість дублювання
-            const _autoLidDeal = session._autoDealId   || session.data?._autoDealId
-                ? await compRef.collection('crm_deals').doc(session.data._autoDealId).get().catch(() => null)
+            const _adIdLocal = session._autoDealId || session.data?._autoDealId;
+            const _autoLidDeal = _adIdLocal
+                ? await compRef.collection('crm_deals').doc(_adIdLocal).get().catch(() => null)
                 : null;
             // Якщо є авто-лід deal — оновлюємо його flowId і вважаємо 'existing'
             let existingDeals;
             if (_autoLidDeal?.exists && !_autoLidDeal.data()?.flowId) {
-                await compRef.collection('crm_deals').doc(_adIdForCheck)
+                await compRef.collection('crm_deals').doc(_adIdLocal)
                     .update({ flowId: flow?.id || null, updatedAt: admin.firestore.FieldValue.serverTimestamp() })
-                    .catch(() => {});
+                    .catch(e => console.warn('[finish:flowId]', e.message));
                 existingDeals = { empty: false, docs: [_autoLidDeal] };
             } else {
                 existingDeals = await compRef.collection('crm_deals')
