@@ -522,6 +522,119 @@ function renderOnboarding() {
         progress: blockProgress(b.id)
     })).filter(bg => bg.steps.length > 0);
 
+    const isMobile = window.innerWidth < 768;
+
+    // ─── MOBILE: single-panel (list OR content) ───────────────
+    if (isMobile) {
+        // ob._mobilePanel: 'list' | 'content'  (default 'content')
+        if (!ob._mobilePanel) ob._mobilePanel = 'content';
+
+        if (ob._mobilePanel === 'list') {
+            // ── LIST PANEL ──────────────────────────────────────
+            c.innerHTML = `
+<div style="display:flex;flex-direction:column;height:calc(100vh - 56px);background:#f8fafc;overflow:hidden;">
+  <div style="background:white;border-bottom:1px solid #e8eaed;padding:.65rem .85rem;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+      <button onclick="ob.activeStep=-1;ob._mobilePanel='content';renderOnboarding();" style="display:flex;align-items:center;gap:4px;padding:.25rem .55rem;border:1px solid #e8eaed;border-radius:7px;background:white;cursor:pointer;font-size:.72rem;color:#6b7280;font-weight:600;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> ${(typeof getOBUI==='function'&&getOBUI('overview'))||'Огляд'}
+      </button>
+      <div style="flex:1;text-align:right;font-size:.68rem;color:#9ca3af;">${completedSteps}/${OB_STEPS.length} · ${pct}%</div>
+      <button onclick="ob._mobilePanel='content';renderOnboarding();" style="padding:.25rem .7rem;background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;font-size:.72rem;font-weight:700;">✕</button>
+    </div>
+    <div style="background:#f1f5f9;border-radius:999px;height:5px;">
+      <div style="height:100%;background:linear-gradient(90deg,#22c55e,#16a34a);width:${pct}%;border-radius:999px;transition:width .4s;"></div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:.4rem .5rem;">
+    ${blockGroups.map(bg => {
+      const bp = bg.progress;
+      return `<div style="margin-bottom:.15rem;">
+        <div style="display:flex;align-items:center;gap:.4rem;padding:.35rem .5rem;margin-bottom:1px;">
+          <span style="font-size:.8rem;">${bg.icon}</span>
+          <div style="flex:1;font-size:.68rem;font-weight:800;color:${bg.color};text-transform:uppercase;letter-spacing:.05em;">${(typeof getOBBlockLabel==='function'?getOBBlockLabel(bg.id):bg.label)}</div>
+          <span style="font-size:.62rem;color:#9ca3af;">${bp?bp.done:0}/${bp?bp.total:0}</span>
+        </div>
+        ${bg.steps.map(s => {
+          const done = stepComplete(s); const active = s._idx===ob.activeStep;
+          return `<div onclick="ob.activeStep=${s._idx};ob._mobilePanel='content';renderOnboarding();obSave();" style="display:flex;align-items:center;gap:.45rem;padding:.5rem .55rem;border-radius:8px;cursor:pointer;margin-bottom:1px;background:${active?bg.color+'12':'transparent'};border:1px solid ${active?bg.color+'35':'transparent'};">
+            <div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;background:${done?'#22c55e':active?bg.color+'20':'#f1f5f9'};display:flex;align-items:center;justify-content:center;">
+              ${done?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>':`<span style="font-size:.6rem;font-weight:800;color:${active?bg.color:'#9ca3af'};">${s._idx+1}</span>`}
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:.78rem;font-weight:${active?'700':'500'};color:${done?'#22c55e':active?'#111827':'#374151'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${(typeof getLocalizedStep==='function'?getLocalizedStep(s):s).title}</div>
+              <div style="font-size:.62rem;color:#9ca3af;">${s.est} · ${stepDoneCount(s)}/${s.tasks.length}</div>
+            </div>
+            ${active?`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${bg.color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>`:''}
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('')}
+  </div>
+</div>`;
+            return;
+        }
+
+        // ── CONTENT PANEL (mobile) ──────────────────────────────
+        c.innerHTML = `
+<div style="display:flex;flex-direction:column;height:calc(100vh - 56px);background:#f8fafc;overflow:hidden;">
+  <!-- mobile top bar -->
+  <div style="background:white;border-bottom:1px solid #e8eaed;padding:.5rem .75rem;flex-shrink:0;display:flex;align-items:center;gap:.5rem;">
+    <button onclick="ob._mobilePanel='list';renderOnboarding();" style="display:flex;align-items:center;gap:4px;padding:.3rem .6rem;border:1px solid #e8eaed;border-radius:7px;background:white;cursor:pointer;font-size:.72rem;color:#6b7280;font-weight:600;flex-shrink:0;">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      ${ob.activeStep+1}/${OB_STEPS.length}
+    </button>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:.68rem;font-weight:700;color:${step.color};text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${step.subtitle}</div>
+      <div style="font-size:.82rem;font-weight:800;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${step.title}</div>
+    </div>
+    <button onclick="obGoToTab('${step.action.tab}')" style="padding:.3rem .65rem;background:${step.color};color:white;border:none;border-radius:7px;cursor:pointer;font-size:.72rem;font-weight:700;flex-shrink:0;white-space:nowrap;">
+      ${step.action.label}
+    </button>
+  </div>
+  <!-- progress bar -->
+  <div style="background:#f1f5f9;height:3px;flex-shrink:0;">
+    <div style="height:100%;background:linear-gradient(90deg,#22c55e,#16a34a);width:${pct}%;transition:width .4s;"></div>
+  </div>
+  <!-- scrollable content -->
+  <div style="flex:1;overflow-y:auto;padding:.85rem .9rem;">
+    <div style="background:white;border-radius:10px;padding:.8rem .95rem;border:1px solid #e8eaed;margin-bottom:.85rem;font-size:.83rem;color:#374151;line-height:1.65;">${step.description}</div>
+    <div style="background:white;border-radius:10px;border:1px solid #e8eaed;margin-bottom:.85rem;overflow:hidden;">
+      <div style="padding:.6rem .95rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-weight:700;font-size:.82rem;color:#111827;">${(typeof getOBUI==='function'&&getOBUI('stepsLabel'))||'Кроки виконання'}</div>
+        <div style="font-size:.7rem;color:#9ca3af;">${stepDoneCount(step)}/${step.tasks.length} ${(typeof getOBUI==='function'&&getOBUI('completed'))||'виконано'}</div>
+      </div>
+      ${step.tasks.map((task,ti) => {
+        const checked = ob.progress[step.id]?.tasks?.[task.id]||false;
+        return `<div style="padding:.75rem .95rem;border-bottom:${ti<step.tasks.length-1?'1px solid #f9fafb':'none'};">
+          <div style="display:flex;align-items:flex-start;gap:.6rem;">
+            <div onclick="obToggleTask('${step.id}','${task.id}')" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;margin-top:1px;cursor:pointer;border:2px solid ${checked?step.color:'#d1d5db'};background:${checked?step.color:'white'};display:flex;align-items:center;justify-content:center;">
+              ${checked?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>':''}
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:.84rem;font-weight:600;color:${checked?'#9ca3af':'#111827'};text-decoration:${checked?'line-through':'none'};margin-bottom:${task.detail?'.3rem':'0'};">${task.text}</div>
+              ${task.detail?`<div style="font-size:.76rem;color:#6b7280;line-height:1.5;background:#f8fafc;border-radius:6px;padding:.35rem .6rem;border-left:3px solid ${step.color}40;">${task.detail}</div>`:''}
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="background:${step.color}08;border:1px solid ${step.color}25;border-radius:9px;padding:.7rem .9rem;margin-bottom:1rem;font-size:.81rem;color:#374151;line-height:1.6;">${step._tipText ? OB_STEPS[ob.activeStep].tip.replace(/<\/svg>\s*.+/, '</svg> '+step._tipText) : step.tip}</div>
+    <!-- nav buttons -->
+    <div style="display:flex;gap:.5rem;justify-content:space-between;padding-bottom:.5rem;">
+      <button onclick="obPrevStep()" ${ob.activeStep===0?'disabled':''} style="flex:1;padding:.6rem;background:white;color:#374151;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600;opacity:${ob.activeStep===0?'0.4':'1'};">← ${(typeof getOBUI==='function'&&getOBUI('prev'))||'Попередній'}</button>
+      ${stepComplete(step)&&ob.activeStep<OB_STEPS.length-1
+        ? `<button onclick="obNextStep()" style="flex:2;padding:.6rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:700;">${(typeof getOBUI==='function'&&getOBUI('next'))||'Наступний крок'} →</button>`
+        : ob.activeStep<OB_STEPS.length-1
+        ? `<button onclick="obNextStep()" style="flex:2;padding:.6rem;background:white;color:#9ca3af;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600;">${(typeof getOBUI==='function'&&getOBUI('skip'))||'Пропустити'} →</button>`
+        : `<div onclick="ob.activeStep=-1;ob._mobilePanel='content';renderOnboarding();" style="flex:2;cursor:pointer;padding:.6rem;background:#f0fdf4;color:#22c55e;border:1.5px solid #bbf7d0;border-radius:8px;font-size:.82rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ${(typeof getOBUI==='function'&&getOBUI('done'))||'Онбординг завершено!'}</div>`
+      }
+    </div>
+  </div>
+</div>`;
+        return;
+    }
+
+    // ─── DESKTOP: two-panel layout ────────────────────────────
     c.innerHTML = `
 <div style="display:flex;height:calc(100vh - 56px);background:#f8fafc;overflow:hidden;">
   <!-- LEFT -->
@@ -573,7 +686,7 @@ function renderOnboarding() {
         <div style="flex:1;">
           <div style="font-size:.7rem;font-weight:700;color:${step.color};text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;">${step.subtitle}</div>
           <div style="font-size:1.2rem;font-weight:800;color:#111827;line-height:1.3;">${step.title}</div>
-          <div style="font-size:.72rem;color:#9ca3af;margin-top:2px;">Орієнтовний час: <b>${step.est}</b></div>
+          <div style="font-size:.72rem;color:#9ca3af;margin-top:2px;">${(typeof getOBUI==='function'&&getOBUI('estLabel'))||'Орієнтовний час:'} <b>${step.est}</b></div>
         </div>
         <button onclick="obGoToTab('${step.action.tab}')" style="padding:.45rem .9rem;background:${step.color};color:white;border:none;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:5px;flex-shrink:0;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
