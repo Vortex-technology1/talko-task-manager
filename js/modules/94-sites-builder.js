@@ -54,6 +54,11 @@ function _renderBuilderShell() {
                 <button onclick="sbTogglePreview()"
                     style="padding:0.4rem 0.7rem;background:#f1f5f9;border:none;border-radius:8px;
                     cursor:pointer;font-size:0.78rem;" title="Прев'ю"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> Прев'ю</button>
+                <button id="sbPublishBtn" onclick="sbTogglePublish()"
+                    style="padding:0.4rem 0.9rem;background:#f1f5f9;border:1px solid #e5e7eb;border-radius:8px;
+                    cursor:pointer;font-size:0.78rem;font-weight:600;transition:all .15s;">
+                    <span id="sbPublishBtnLabel">Публікувати</span>
+                </button>
                 <button onclick="sbSave()"
                     style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;
                     border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">
@@ -75,7 +80,15 @@ function _renderBuilderShell() {
                         cursor:pointer;font-size:0.75rem;font-weight:600;color:#22c55e;">Блоки</button>
                     <button onclick="sbPanelTab('seo')" id="sbPanelTab_seo"
                         style="flex:1;padding:0.5rem;background:none;border:none;border-bottom:2px solid transparent;
-                        cursor:pointer;font-size:0.75rem;font-weight:500;color:#6b7280;">SEO & Аналітика</button>
+                        cursor:pointer;font-size:0.75rem;font-weight:500;color:#6b7280;">SEO</button>
+                    <button onclick="sbPanelTab('code')" id="sbPanelTab_code"
+                        style="flex:1;padding:0.5rem;background:none;border:none;border-bottom:2px solid transparent;
+                        cursor:pointer;font-size:0.75rem;font-weight:500;color:#6b7280;">
+                        <span style="display:inline-flex;align-items:center;gap:3px;vertical-align:middle;">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            Код
+                        </span>
+                    </button>
                 </div>
 
                 <!-- Панель блоків (blocks tab) -->
@@ -118,6 +131,11 @@ function _renderBuilderShell() {
                     <div id="sbSeoContent"></div>
                 </div>
 
+                <!-- Code panel -->
+                <div id="sbPanelCode" style="display:none;flex-direction:column;flex:1;padding:0.75rem;gap:0.75rem;overflow-y:auto;">
+                    <div id="sbCodeContent"></div>
+                </div>
+
             <!-- Право: прев'ю -->
             <div id="sbPreview" style="flex:1;overflow-y:auto;background:#e5e7eb;padding:1rem;">
                 <div id="sbPreviewInner"
@@ -153,6 +171,9 @@ function _updateHeader() {
     if (statusEl) {
         const pub = sb.site.status === 'published';
         statusEl.textContent = pub ? window.t('sitesPublishedBadge') : window.t('sitesDraftBadge');
+        statusEl.style.background = pub ? '#dcfce7' : '#f3f4f6';
+        statusEl.style.color = pub ? '#16a34a' : '#6b7280';
+        if (typeof _updatePublishBtn === 'function') _updatePublishBtn();
         statusEl.style.background = pub ? '#f0fdf4' : '#f9fafb';
         statusEl.style.color      = pub ? '#16a34a' : '#9ca3af';
     }
@@ -536,14 +557,61 @@ window.sbPanelTab = function(tab) {
     sb.panelTab = tab;
     const blocksEl = document.getElementById('sbPanelBlocks');
     const seoEl    = document.getElementById('sbPanelSeo');
+    const codeEl   = document.getElementById('sbPanelCode');
     const bBtn     = document.getElementById('sbPanelTab_blocks');
     const sBtn     = document.getElementById('sbPanelTab_seo');
+    const cBtn     = document.getElementById('sbPanelTab_code');
     if (blocksEl) blocksEl.style.display = tab === 'blocks' ? 'flex' : 'none';
     if (seoEl)    seoEl.style.display    = tab === 'seo'    ? 'flex' : 'none';
+    if (codeEl)   codeEl.style.display   = tab === 'code'   ? 'flex' : 'none';
+    const _tabStyle = (btn, active) => {
+        if (!btn) return;
+        btn.style.borderBottomColor = active ? '#8b5cf6' : 'transparent';
+        btn.style.color = active ? '#8b5cf6' : '#6b7280';
+        btn.style.fontWeight = active ? '600' : '500';
+    };
     if (bBtn) { bBtn.style.borderBottomColor = tab==='blocks'?'#22c55e':'transparent'; bBtn.style.color=tab==='blocks'?'#22c55e':'#6b7280'; bBtn.style.fontWeight=tab==='blocks'?'600':'500'; }
     if (sBtn) { sBtn.style.borderBottomColor = tab==='seo'?'#22c55e':'transparent'; sBtn.style.color=tab==='seo'?'#22c55e':'#6b7280'; sBtn.style.fontWeight=tab==='seo'?'600':'500'; }
-    if (tab === 'seo') _renderSeoPanel();
+    _tabStyle(cBtn, tab === 'code');
+    if (tab === 'seo')  _renderSeoPanel();
+    if (tab === 'code') _renderCodePanel();
 };
+
+// ── PUBLISH TOGGLE (з білдера) ────────────────────────────
+window.sbTogglePublish = async function() {
+    if (!sb.site) return;
+    const newStatus = sb.site.status === 'published' ? 'draft' : 'published';
+    try {
+        await window.companyRef()
+            .collection(window.DB_COLS?.SITES || 'sites').doc(sb.siteId)
+            .update({ status: newStatus, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        sb.site.status = newStatus;
+        _updatePublishBtn();
+        const pub = newStatus === 'published';
+        if (typeof showToast === 'function')
+            showToast(pub ? '🚀 Сайт опубліковано!' : 'Сайт знято з публікації', pub ? 'success' : 'info');
+        // Оновлюємо badge
+        const badge = document.getElementById('sbStatusBadge');
+        if (badge) {
+            badge.textContent = pub ? (window.t?.('sitesPublishedBadge') || 'Опубліковано') : (window.t?.('sitesDraftBadge') || 'Чернетка');
+            badge.style.background = pub ? '#dcfce7' : '#f3f4f6';
+            badge.style.color = pub ? '#16a34a' : '#6b7280';
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+function _updatePublishBtn() {
+    const btn   = document.getElementById('sbPublishBtn');
+    const label = document.getElementById('sbPublishBtnLabel');
+    if (!btn || !sb.site) return;
+    const pub = sb.site.status === 'published';
+    btn.style.background   = pub ? '#fef2f2' : '#f0fdf4';
+    btn.style.borderColor  = pub ? '#fecaca' : '#bbf7d0';
+    btn.style.color        = pub ? '#dc2626' : '#16a34a';
+    if (label) label.textContent = pub ? 'Зняти з публікації' : 'Публікувати';
+}
 
 function _renderSeoPanel() {
     const c = document.getElementById('sbSeoContent');
@@ -651,6 +719,87 @@ function _renderSeoPanel() {
     </button>`;
 }
 
+// ── CODE PANEL ───────────────────────────────────────────
+function _renderCodePanel() {
+    const c = document.getElementById('sbCodeContent');
+    if (!c || !sb.site) return;
+    const s = sb.site;
+    const ta = 'width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.75rem;font-family:monospace;box-sizing:border-box;line-height:1.5;resize:vertical;';
+    const lbl = 'font-size:0.72rem;font-weight:700;color:#374151;display:block;margin-bottom:4px;';
+    const hint = 'font-size:0.65rem;color:#9ca3af;margin-top:3px;';
+
+    c.innerHTML = `
+    <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:0.75rem;letter-spacing:.04em;">
+        Вставка HTML / Скрипти
+    </div>
+
+    <!-- HEAD code -->
+    <div style="margin-bottom:1rem;">
+        <label style="${lbl}">
+            <span style="display:inline-flex;align-items:center;gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                Код у &lt;head&gt;
+            </span>
+        </label>
+        <textarea id="code_headcode" rows="5" placeholder="<!-- Google Analytics, Pixel, Hotjar, LiveChat, будь-який скрипт -->"
+            style="${ta}">${_esc(s.analyticsHeadCode||'')}</textarea>
+        <div style="${hint}">Вставляється перед &lt;/head&gt; на кожній сторінці сайту</div>
+    </div>
+
+    <!-- BODY code -->
+    <div style="margin-bottom:1rem;">
+        <label style="${lbl}">
+            <span style="display:inline-flex;align-items:center;gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+                Код у &lt;body&gt;
+            </span>
+        </label>
+        <textarea id="code_bodycode" rows="5" placeholder="<!-- Chat widget, popup, або будь-який HTML блок -->"
+            style="${ta}">${_esc(s.bodyCode||'')}</textarea>
+        <div style="${hint}">Вставляється перед &lt;/body&gt; — для чат-віджетів, попапів тощо</div>
+    </div>
+
+    <!-- Embed блок -->
+    <div style="margin-bottom:1rem;padding:0.6rem;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
+        <div style="font-size:0.72rem;font-weight:700;color:#475569;margin-bottom:0.4rem;">💡 Приклади що сюди вставляти:</div>
+        <div style="font-size:0.7rem;color:#64748b;display:flex;flex-direction:column;gap:3px;">
+            <span>• Google Analytics / GA4 (gtag.js)</span>
+            <span>• Meta Pixel / TikTok Pixel</span>
+            <span>• Hotjar, Microsoft Clarity</span>
+            <span>• LiveChat, Intercom, Tawk.to</span>
+            <span>• Google Tag Manager</span>
+            <span>• Будь-який &lt;script&gt; або &lt;style&gt;</span>
+        </div>
+    </div>
+
+    <button onclick="sbSaveCode()"
+        style="width:100%;padding:0.5rem;background:#8b5cf6;color:white;border:none;
+        border-radius:7px;cursor:pointer;font-weight:700;font-size:0.82rem;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+        Зберегти код
+    </button>`;
+}
+
+window.sbSaveCode = async function() {
+    if (!sb.site || !sb.siteId) return;
+    const headCode = document.getElementById('code_headcode')?.value || '';
+    const bodyCode = document.getElementById('code_bodycode')?.value || '';
+    try {
+        await window.companyRef()
+            .collection(window.DB_COLS?.SITES || 'sites').doc(sb.siteId)
+            .update({
+                analyticsHeadCode: headCode,
+                bodyCode:          bodyCode,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+        sb.site.analyticsHeadCode = headCode;
+        sb.site.bodyCode          = bodyCode;
+        if (typeof showToast === 'function') showToast('Код збережено ✓', 'success');
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
 window.sbSaveSeo = async function() {
     const updates = {
         seoTitle:          document.getElementById('seo_title')?.value.trim()    || '',
@@ -756,6 +905,7 @@ window.sbBuildPublicHtml = function(site, blocksHtml) {
 <body>
     ${gtm ? `<!-- GTM noscript --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtm}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>` : ''}
     ${blocksHtml || ''}
+    ${s.bodyCode ? `<!-- Custom body code -->\n${s.bodyCode}` : ''}
 </body>
     <script>
     (function(){
