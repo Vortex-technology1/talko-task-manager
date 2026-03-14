@@ -768,6 +768,37 @@ function _renderSeoPanel() {
         </div>
     </div>
 
+    <!-- Custom Domain -->
+    <div class="seo-section">
+        <div style="${head}">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Власний домен
+        </div>
+        <div style="margin-bottom:0.5rem;">
+            <label style="${lbl}">Домен</label>
+            <input id="seo_domain" value="${_esc(s.customDomain||'')}" placeholder="clinic.com.ua або www.clinic.com.ua" style="${inp}">
+            <div style="font-size:0.65rem;color:#9ca3af;margin-top:3px;">Введіть домен без https://</div>
+        </div>
+        ${s.customDomain ? `
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:0.65rem;font-size:0.7rem;line-height:1.6;">
+            <div style="font-weight:700;color:#0369a1;margin-bottom:0.35rem;">Як підключити домен:</div>
+            <div>1. Зайдіть до реєстратора домену (Namecheap, GoDaddy, Hosting.ua тощо)</div>
+            <div>2. Відкрийте DNS налаштування для <strong>${_esc(s.customDomain)}</strong></div>
+            <div>3. Додайте CNAME запис:</div>
+            <div style="background:white;border-radius:6px;padding:0.4rem 0.6rem;margin:0.35rem 0;font-family:monospace;font-size:0.68rem;border:1px solid #e0f2fe;">
+                Тип: <strong>CNAME</strong><br>
+                Ім'я: <strong>${_esc(s.customDomain.startsWith('www.')?'www':'@')}</strong><br>
+                Значення: <strong>cname.vercel-dns.com</strong><br>
+                TTL: 3600
+            </div>
+            <div>4. Напишіть нам — ми підключимо домен в Vercel</div>
+            <div style="margin-top:0.35rem;color:#6b7280;">⏱ DNS розповсюджується 15хв–48год</div>
+        </div>` : `
+        <div style="font-size:0.68rem;color:#9ca3af;background:#f9fafb;border-radius:7px;padding:0.5rem;">
+            Після введення домену ми покажемо інструкцію по підключенню
+        </div>`}
+    </div>
+
     <!-- Save -->
     <button onclick="sbSaveSeo()"
         style="width:100%;padding:0.5rem;background:#22c55e;color:white;border:none;
@@ -915,6 +946,7 @@ window.sbSaveSeo = async function() {
         analyticsMetaPixel:document.getElementById('seo_fbpixel')?.value.trim()  || '',
         analyticsTikTok:   document.getElementById('seo_tiktok')?.value.trim()   || '',
         analyticsHeadCode: document.getElementById('seo_headcode')?.value        || '',
+        customDomain:      (document.getElementById('seo_domain')?.value.trim()  || '').replace(/^https?:\/\//,'').replace(/\/$/,''),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
     try {

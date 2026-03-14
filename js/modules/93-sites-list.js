@@ -140,6 +140,19 @@ function _siteCard(site) {
                 ${site.description ? `<div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.4rem;
                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_esc(site.description)}</div>` : ''}
 
+                ${isPublished && (site.customDomain || site.publicUrl) ? `
+                <div style="display:flex;align-items:center;gap:5px;margin-bottom:0.4rem;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span style="font-size:0.72rem;color:#0ea5e9;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;"
+                        title="${site.customDomain ? 'https://'+_esc(site.customDomain) : _esc(site.publicUrl||'')}">
+                        ${site.customDomain ? site.customDomain : (site.publicUrl||'').replace(/^https:\/\/[^/]+/,'').slice(0,40)+'...'}
+                    </span>
+                    <button onclick="navigator.clipboard?.writeText('${site.customDomain ? 'https://'+_esc(site.customDomain) : _esc(site.publicUrl||'')}');event.stopPropagation();if(typeof showToast==='function')showToast('URL скопійовано','success');"
+                        style="background:none;border:none;cursor:pointer;color:#0ea5e9;padding:1px;flex-shrink:0;" title="Копіювати URL">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    </button>
+                </div>` : ''}
+
                 <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
                     <span style="font-size:0.72rem;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16.5 9.4-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span> ${blocksCount} блоків</span>
                     ${site.visits ? `<span style="font-size:0.72rem;color:#9ca3af;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> ${site.visits} відвідувань</span>` : ''}

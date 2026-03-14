@@ -23,15 +23,46 @@ function db() {
 }
 
 module.exports = async (req, res) => {
-    const { id: siteId, cid: companyId } = req.query;
+    let { id: siteId, cid: companyId } = req.query;
 
+    // Якщо немає параметрів — шукаємо по Host header (custom domain)
     if (!siteId || !companyId) {
-        return res.status(400).send(`
-            <html><body style="font-family:sans-serif;text-align:center;padding:3rem;">
-                <h2>Сайт не знайдено</h2>
-                <p style="color:#6b7280;">Невірне посилання</p>
-            </body></html>
-        `);
+        const host = (req.headers.host || '').replace(/:\d+$/, '').toLowerCase();
+        const isVercel = host.includes('vercel.app') || host === 'localhost';
+
+        if (!isVercel && host) {
+            try {
+                // Шукаємо сайт з таким customDomain
+                const companiesSnap = await db().collection('companies').limit(200).get();
+                let found = false;
+                for (const comp of companiesSnap.docs) {
+                    const sitesSnap = await db()
+                        .collection('companies').doc(comp.id)
+                        .collection('sites')
+                        .where('customDomain', '==', host)
+                        .where('status', '==', 'published')
+                        .limit(1).get();
+                    if (!sitesSnap.empty) {
+                        siteId = sitesSnap.docs[0].id;
+                        companyId = comp.id;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    return res.status(404).send('<html><body style="font-family:sans-serif;text-align:center;padding:3rem;"><h2>Сайт не знайдено</h2><p style="color:#6b7280;">Домен не підключено до жодного сайту</p></body></html>');
+                }
+            } catch(e) {
+                return res.status(500).send('<html><body>Помилка: ' + escHtml(e.message) + '</body></html>');
+            }
+        } else {
+            return res.status(400).send(`
+                <html><body style="font-family:sans-serif;text-align:center;padding:3rem;">
+                    <h2>Сайт не знайдено</h2>
+                    <p style="color:#6b7280;">Невірне посилання</p>
+                </body></html>
+            `);
+        }
     }
 
     try {
