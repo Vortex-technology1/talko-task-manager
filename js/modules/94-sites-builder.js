@@ -44,26 +44,63 @@ function _renderBuilderShell() {
         <!-- Топ хедер -->
         <div style="display:flex;align-items:center;justify-content:space-between;
             padding:0.5rem 0.75rem;background:white;border-bottom:1.5px solid #f1f5f9;flex-shrink:0;">
-            <div style="display:flex;align-items:center;gap:0.5rem;">
+            <!-- Ліво: назад + назва + статус -->
+            <div style="display:flex;align-items:center;gap:0.5rem;min-width:0;flex:1;">
                 <button onclick="window.initSitesModule()"
                     style="padding:0.35rem 0.6rem;background:#f9fafb;border:1px solid #e5e7eb;
-                    border-radius:8px;cursor:pointer;font-size:0.8rem;">← Назад</button>
-                <span id="sbSiteName" style="font-weight:700;font-size:0.9rem;color:#1a1a1a;"></span>
-                <span id="sbStatusBadge" style="font-size:0.65rem;padding:2px 8px;border-radius:8px;"></span>
+                    border-radius:8px;cursor:pointer;font-size:0.78rem;white-space:nowrap;flex-shrink:0;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;margin-right:2px;"><polyline points="15 18 9 12 15 6"/></svg>Назад
+                </button>
+                <span id="sbSiteName" style="font-weight:700;font-size:0.88rem;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;"></span>
+                <span id="sbStatusBadge" style="font-size:0.62rem;padding:2px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;"></span>
             </div>
-            <div style="display:flex;gap:0.4rem;">
-                <button onclick="sbTogglePreview()"
-                    style="padding:0.4rem 0.7rem;background:#f1f5f9;border:none;border-radius:8px;
-                    cursor:pointer;font-size:0.78rem;" title="Прев'ю"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> Прев'ю</button>
+            <!-- Право: кнопки дій -->
+            <div style="display:flex;gap:0.35rem;flex-shrink:0;align-items:center;">
+
+                <!-- Прев'ю -->
+                <button onclick="sbTogglePreview()" id="sbPreviewBtn"
+                    style="display:flex;align-items:center;gap:5px;padding:0.4rem 0.7rem;
+                    background:#f1f5f9;border:1px solid #e5e7eb;border-radius:8px;
+                    cursor:pointer;font-size:0.78rem;color:#374151;white-space:nowrap;"
+                    onmouseenter="this.style.background='#e5e7eb'" onmouseleave="this.style.background='#f1f5f9'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    Прев'ю
+                </button>
+
+                <!-- URL сайту (тільки якщо опублікований) -->
+                <button id="sbUrlBtn" onclick="sbOpenPublicUrl()" style="display:none;
+                    align-items:center;gap:5px;padding:0.4rem 0.75rem;
+                    background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:8px;
+                    cursor:pointer;font-size:0.75rem;font-weight:600;color:#2563eb;
+                    white-space:nowrap;max-width:180px;"
+                    title="Відкрити публічний сайт">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span id="sbUrlLabel" style="overflow:hidden;text-overflow:ellipsis;max-width:120px;">Відкрити сайт</span>
+                </button>
+
+                <!-- Публікувати АБО Зняти з публікації -->
                 <button id="sbPublishBtn" onclick="sbTogglePublish()"
-                    style="padding:0.4rem 0.9rem;background:#f1f5f9;border:1px solid #e5e7eb;border-radius:8px;
-                    cursor:pointer;font-size:0.78rem;font-weight:600;transition:all .15s;">
+                    style="display:flex;align-items:center;gap:5px;padding:0.4rem 0.9rem;
+                    background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:8px;
+                    cursor:pointer;font-size:0.78rem;font-weight:700;color:#16a34a;
+                    white-space:nowrap;transition:all .15s;">
+                    <svg id="sbPublishIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                    </svg>
                     <span id="sbPublishBtnLabel">Публікувати</span>
                 </button>
+
+                <!-- Зберегти -->
                 <button id="sbSaveBtn" onclick="sbSave()"
-                    style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;
-                    border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">
-                    💾 Зберегти
+                    style="display:flex;align-items:center;gap:5px;padding:0.4rem 1rem;
+                    background:#1a1a1a;color:white;border:none;border-radius:8px;
+                    cursor:pointer;font-weight:700;font-size:0.78rem;white-space:nowrap;"
+                    onmouseenter="this.style.opacity='0.85'" onmouseleave="this.style.opacity='1'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Зберегти
                 </button>
             </div>
         </div>
@@ -667,15 +704,59 @@ window.sbTogglePublish = async function() {
 };
 
 function _updatePublishBtn() {
-    const btn   = document.getElementById('sbPublishBtn');
-    const label = document.getElementById('sbPublishBtnLabel');
+    const btn    = document.getElementById('sbPublishBtn');
+    const label  = document.getElementById('sbPublishBtnLabel');
+    const urlBtn = document.getElementById('sbUrlBtn');
+    const urlLbl = document.getElementById('sbUrlLabel');
+    const icon   = document.getElementById('sbPublishIcon');
     if (!btn || !sb.site) return;
-    const pub = sb.site.status === 'published';
-    btn.style.background   = pub ? '#fef2f2' : '#f0fdf4';
-    btn.style.borderColor  = pub ? '#fecaca' : '#bbf7d0';
-    btn.style.color        = pub ? '#dc2626' : '#16a34a';
-    if (label) label.textContent = pub ? 'Зняти з публікації' : 'Публікувати';
+    const pub    = sb.site.status === 'published';
+    const pubUrl = sb.site.publicUrl || null;
+
+    // Publish/Unpublish кнопка
+    if (pub) {
+        // Опублікований → показуємо "Зняти з публікації" червоним
+        btn.style.background  = '#fef2f2';
+        btn.style.borderColor = '#fecaca';
+        btn.style.color       = '#dc2626';
+        if (label) label.textContent = 'Зняти з публікації';
+        if (icon)  icon.innerHTML = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>';
+    } else {
+        // Чернетка → показуємо "Публікувати" зеленим
+        btn.style.background  = '#f0fdf4';
+        btn.style.borderColor = '#bbf7d0';
+        btn.style.color       = '#16a34a';
+        if (label) label.textContent = 'Публікувати';
+        if (icon)  icon.innerHTML = '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>';
+    }
+
+    // URL кнопка — показується тільки якщо опублікований і є URL
+    if (urlBtn) {
+        if (pub && pubUrl) {
+            urlBtn.style.display = 'flex';
+            // Показуємо домен або скорочений URL
+            const displayUrl = sb.site.customDomain
+                ? sb.site.customDomain
+                : pubUrl.replace(/^https?:\/\/[^/]+/, '').slice(0, 28) + '...';
+            if (urlLbl) urlLbl.textContent = displayUrl;
+            urlBtn.title = pubUrl;
+        } else {
+            urlBtn.style.display = 'none';
+        }
+    }
 }
+
+// Відкрити/скопіювати публічний URL
+window.sbOpenPublicUrl = function() {
+    const pubUrl = sb.site?.publicUrl;
+    if (!pubUrl) return;
+    // Показуємо modal з URL
+    if (typeof _showPublicUrlModal === 'function') {
+        _showPublicUrlModal(pubUrl, sb.siteId);
+    } else {
+        window.open(pubUrl, '_blank');
+    }
+};
 
 function _renderSeoPanel() {
     const c = document.getElementById('sbSeoContent');
