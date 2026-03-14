@@ -580,9 +580,7 @@ module.exports = async (req, res) => {
                             .where('isDefault', '==', true).limit(1).get().catch(() => null),
                     ]);
                     const _clientRef = _newClientRef;
-                    // pipeline result
-                    const _pipSnap2 = _pipSnap;
-                    const _pip = _pipSnap2 && !_pipSnap2.empty ? _pipSnap2.docs[0] : null;
+                    const _pip = _pipSnap && !_pipSnap.empty ? _pipSnap.docs[0] : null;
                     const _pipId = _pip ? _pip.id : '';
                     const _stages = _pip ? (_pip.data().stages || []) : [];
                     const _stageId = _stages.length ? (_stages[0].id || '') : 'new';
@@ -611,7 +609,11 @@ module.exports = async (req, res) => {
                         updatedAt:    _ts,
                     });
 
-                    // Зберігаємо botContactId в deal → finish() знайде по ньому
+                    // Кешуємо pipeline в session — finish() не буде робити зайвий read
+                    session.data._autoClientId = _clientRef.id;
+                    session.data._autoDealId   = _dealRef.id;
+                    session.data._autoPipId    = _pipId;
+                    session.data._autoStageId  = _stageId;
                     console.log(`[auto_lead] Created client=${_clientRef.id} deal=${_dealRef.id} for ${contactId}`);
                 }
             } catch(e) {
@@ -1545,11 +1547,24 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                 });
             }
 
-            // Перевіряємо чи вже є відкрита угода з цим клієнтом з цієї воронки
-            const existingDeals = await compRef.collection('crm_deals')
-                .where('botContactId', '==', contactId)
-                .where('flowId', '==', flow?.id || '')
-                .limit(1).get();
+            // Спочатку шукаємо авто-лід угоду (autoCreated=true) для цього контакту
+            // щоб оновити її замість дублювання
+            const _autoLidDeal = session.data?._autoDealId
+                ? await compRef.collection('crm_deals').doc(session.data._autoDealId).get().catch(() => null)
+                : null;
+            // Якщо є авто-лід deal — оновлюємо його flowId і вважаємо 'existing'
+            let existingDeals;
+            if (_autoLidDeal?.exists && !_autoLidDeal.data()?.flowId) {
+                await compRef.collection('crm_deals').doc(session.data._autoDealId)
+                    .update({ flowId: flow?.id || null, updatedAt: admin.firestore.FieldValue.serverTimestamp() })
+                    .catch(() => {});
+                existingDeals = { empty: false, docs: [_autoLidDeal] };
+            } else {
+                existingDeals = await compRef.collection('crm_deals')
+                    .where('botContactId', '==', contactId)
+                    .where('flowId', '==', flow?.id || '')
+                    .limit(1).get();
+            }
 
             if (existingDeals.empty) {
                 // Кешований pipeline з авто-ліду — уникаємо дублювання reads
