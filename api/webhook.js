@@ -660,10 +660,14 @@ module.exports = async (req, res) => {
                     }, { merge: true });
 
                     // Кешуємо pipeline в session — finish() не буде робити зайвий read
+                    // Зберігаємо в root сесії (не в data{}) — щоб не губились при reset
+                    session._autoClientId = _clientRef.id;
+                    session._autoDealId   = _dealRef.id;
+                    session._autoPipId    = _pipId;
+                    session._autoStageId  = _stageId;
+                    // Також в data для зворотної сумісності
                     session.data._autoClientId = _clientRef.id;
                     session.data._autoDealId   = _dealRef.id;
-                    session.data._autoPipId    = _pipId;
-                    session.data._autoStageId  = _stageId;
                     console.log(`[auto_lead] Created client=${_clientRef.id} deal=${_dealRef.id} contact=${contactId}`);
                 }
             } catch(e) {
@@ -1060,14 +1064,15 @@ module.exports = async (req, res) => {
             } else if (n.type === 'talko_deal') {
                 // FIX BX: create/update CRM deal from bot flow node
                 try {
-                    const dealTitle = interp(n.dealTitle || ('{contact.name} — запит з боту'), session.data)
-                        .replace('{contact.name}', session.senderName || session.senderId || 'Лід');
+                    // {contact.name} → interp шукає data.name або data (через contact.* alias)
+                    const _dealData = { ...session.data, name: session.data.name || session.senderName || session.senderId || 'Лід' };
+                    const dealTitle = interp(n.dealTitle || '{contact.name} — запит з боту', _dealData);
                     const targetStage = n.dealStage || 'new';
                     const _tdContactId = session.channel + '_' + session.senderId;
                     // Спочатку шукаємо авто-лід (autoCreated=true, flowId=null)
                     // щоб оновити його замість створення дубля
                     let _tdAutoLid = null;
-                    if (session.data?._autoDealId) {
+                    if (session._autoDealId   || session.data?._autoDealId) {
                         const _tdDoc = await compRef.collection('crm_deals')
                             .doc(session.data._autoDealId).get().catch(() => null);
                         if (_tdDoc?.exists && !_tdDoc.data()?.flowId) _tdAutoLid = _tdDoc;
@@ -1085,7 +1090,7 @@ module.exports = async (req, res) => {
                         try {
                             // Кеш pipeline з авто-ліду (якщо є) — уникаємо зайвого read
                             let _tdPipSnap = null;
-                            if (session.data?._autoPipId && session.data?._autoStageId) {
+                            if (session._autoPipId    || session.data?._autoPipId && session._autoStageId  || session.data?._autoStageId) {
                                 ccPipelineId = session.data._autoPipId;
                                 ccStageColor  = '#6b7280';
                                 ccProbability = 10;
@@ -1137,9 +1142,8 @@ module.exports = async (req, res) => {
                         }
                     } else {
                         // Оновлюємо угоду (авто-лід або існуючу)
-                        const _tdTitle = interp(
-                            n.dealTitle || '{contact.name} — запит з боту', session.data
-                        ).replace('{contact.name}', session.senderName || session.senderId || 'Лід');
+                        const _tdData = { ...session.data, name: session.data.name || session.senderName || session.senderId || 'Лід' };
+                        const _tdTitle = interp(n.dealTitle || '{contact.name} — запит з боту', _tdData);
                         await existingDeals.docs[0].ref.update({
                             title:     _tdTitle,
                             stage:     targetStage,
@@ -1176,9 +1180,14 @@ module.exports = async (req, res) => {
         // ── Зберігаємо сесію ─────────────────────────────────
         if (!nodeId) {
             // FIX 5: очищаємо дані сесії після завершення флоу
+            // Зберігаємо _auto* — потрібні для наступного finish()
+            const _savedAutoClientId = session._autoClientId || session.data?._autoClientId;
+            const _savedAutoDealId   = session._autoDealId   || session.data?._autoDealId;
             Object.assign(session, {
                 currentFlowId: null, currentNodeId: null, waitingForInput: null,
                 data: {}, aiHistory: [], tags: [],
+                _autoClientId: _savedAutoClientId || null,
+                _autoDealId:   _savedAutoDealId   || null,
             });
         } else {
             Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId, currentNodeId: nodeId });
@@ -1255,10 +1264,11 @@ function resolveNext(node, userText) {
 function interp(text, data) {
     if (!text) return '';
     if (!data || typeof data !== 'object') return String(text);
-    // Підтримка {{var}} і {var} форматів
+    // Підтримка {{var}}, {var} і {contact.field} форматів
     return (text || '')
-        .replace(/\{\{(\w+)\}\}/g, (_, k) => (data[k] != null ? String(data[k]) : ''))
-        .replace(/\{(\w+)\}/g,   (_, k) => (data[k] != null ? String(data[k]) : `{${k}}`));
+        .replace(/\{\{(\w+)\}\}/g,        (_, k) => (data[k] != null ? String(data[k]) : ''))
+        .replace(/\{contact\.(\w+)\}/g, (_, k) => (data[k] != null ? String(data[k]) : data.name || ''))
+        .replace(/\{(\w+)\}/g,            (_, k) => (data[k] != null ? String(data[k]) : `{${k}}`));
 }
 
 function evalFilter(node, data) {
@@ -1602,7 +1612,7 @@ async function saveIncomingMessage(compRef, channel, normalized, botId) {
         // BUG G FIX: повідомлення вже записане в ранньому блоці (рядок ~181).
         // Тут тільки оновлюємо метадані контакту — без дублів в messages.
         await compRef.collection('contacts').doc(contactId).set({
-            senderId:        normalized.senderId,
+            senderId:        String(normalized.senderId),
             senderName:      normalized.senderName || '',
             channel,
             botId:           botId || null,
@@ -1690,7 +1700,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
 
             // Якщо авто-лід створив клієнта — використовуємо його ID без зайвого query
             let existingClients = null;
-            if (session.data?._autoClientId) {
+            if (session._autoClientId || session.data?._autoClientId) {
                 // Fast path: клієнт вже є, беремо напряму
                 existingClients = { empty: false, docs: [{ id: session.data._autoClientId, data: () => ({}) }] };
             } else {
@@ -1719,7 +1729,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                     updatedAt:   admin.firestore.FieldValue.serverTimestamp(),
                 }, { merge: true });
                 // Також оновлюємо авто-deal якщо він був
-                if (session.data?._autoDealId) {
+                if (session._autoDealId   || session.data?._autoDealId) {
                     await compRef.collection('crm_deals').doc(session.data._autoDealId).set({
                         clientName: clientName,
                         phone:      d.phone || '',
@@ -1753,7 +1763,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
 
             // Спочатку шукаємо авто-лід угоду (autoCreated=true) для цього контакту
             // щоб оновити її замість дублювання
-            const _autoLidDeal = session.data?._autoDealId
+            const _autoLidDeal = session._autoDealId   || session.data?._autoDealId
                 ? await compRef.collection('crm_deals').doc(session.data._autoDealId).get().catch(() => null)
                 : null;
             // Якщо є авто-лід deal — оновлюємо його flowId і вважаємо 'existing'
@@ -1772,9 +1782,9 @@ async function finish(session, flow, compRef, channel, compData = {}) {
 
             if (existingDeals.empty) {
                 // Кешований pipeline з авто-ліду — уникаємо дублювання reads
-                let pipelineId = session.data?._autoPipId || 'default';
-                let firstStage = { id: session.data?._autoStageId || 'new', label: 'Новий', color: '#6b7280' };
-                if (!session.data?._autoPipId) {
+                let pipelineId = session._autoPipId    || session.data?._autoPipId || 'default';
+                let firstStage = { id: session._autoStageId  || session.data?._autoStageId || 'new', label: 'Новий', color: '#6b7280' };
+                if (!session._autoPipId    || session.data?._autoPipId) {
                     const pipSnap = await compRef.collection('crm_pipeline')
                         .where('isDefault', '==', true).limit(1).get().catch(() => null);
                     if (pipSnap && !pipSnap.empty) {
