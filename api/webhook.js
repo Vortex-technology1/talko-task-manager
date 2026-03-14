@@ -562,17 +562,22 @@ module.exports = async (req, res) => {
         const lockKey = `lock_${sessionId}`;
         const lockRef = compRef.collection('_session_locks').doc(lockKey);
         const lockTs = Date.now();
+        // PERF: lock.set + session.get паралельно (~15ms замість ~30ms)
+        let sessionDoc;
         try {
-            await lockRef.set({ ts: lockTs, pid: Math.random() }, { merge: false });
+            [, sessionDoc] = await Promise.all([
+                lockRef.set({ ts: lockTs, pid: Math.random() }, { merge: false }),
+                sessionRef.get(),
+            ]);
         } catch(e) {
             // Lock already exists — another request is processing, skip
             const existingLock = await lockRef.get().catch(()=>null);
             if (existingLock?.exists && (lockTs - (existingLock.data()?.ts||0)) < 8000) {
                 return res.status(200).json({ ok: true, skipped: 'session_locked' });
             }
-            // Lock is stale (> 8s) — proceed
+            // Lock is stale (> 8s) — continue, отримуємо session окремо
+            if (!sessionDoc) sessionDoc = await sessionRef.get();
         }
-        const sessionDoc = await sessionRef.get();
         const _isNewContact = !sessionDoc.exists;
         let session = sessionDoc.exists ? sessionDoc.data() : {
             senderId: String(normalized.senderId), senderName: normalized.senderName || '',
@@ -899,7 +904,8 @@ module.exports = async (req, res) => {
             if (n.type === 'message') {
                 const text = interp(n.text || '', session.data);
                 if (!text.trim()) { nodeId = n.nextNode || null; continue; }
-                await sendTyping(botToken, normalized.senderId);
+                // PERF: sendTyping fire-and-forget — UX ефект, не чекаємо підтвердження
+                sendTyping(botToken, normalized.senderId).catch(()=>{});
                 const btns = n.buttons?.length ? n.buttons : (n.options?.length ? n.options : null);
                 await Promise.all([
                     sendMsg(channel, botToken, normalized.senderId, text, btns),
@@ -908,8 +914,11 @@ module.exports = async (req, res) => {
                 if (btns?.length) {
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                         currentNodeId: nodeId, waitingForInput: nodeId });
-                    await sessionRef.set(session, { merge: true });
-                    lockRef.delete().catch(()=>{});
+                    // PERF: session.set + lockRef.delete паралельно, res відразу
+                    Promise.all([
+                        sessionRef.set(session, { merge: true }),
+                        lockRef.delete().catch(()=>{}),
+                    ]).catch(e => console.error('[webhook] session save after btns:', e.message));
                     return res.status(200).json({ ok: true });
                 }
                 nodeId = n.nextNode || null;
@@ -934,16 +943,23 @@ module.exports = async (req, res) => {
 
                 // FIX 6: відправляємо ⏳ і зберігаємо message_id щоб потім відредагувати
                 const isFirstAiMsg = !session.aiHistory || session.aiHistory.length <= 1;
+                // PERF: sendTgGetId і callAI паралельно — не чекаємо TG підтвердження
                 let thinkingMsgId = null;
-                if (isFirstAiMsg) {
-                    thinkingMsgId = await sendTgGetId(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...');
-                }
-
                 let rawReply;
                 try {
-                    rawReply = await callAI(n, normalized.text, session, compRef, _compData);
+                    if (isFirstAiMsg) {
+                        // Запускаємо обидва одночасно — AI не чекає TG API
+                        const [_msgId, _reply] = await Promise.all([
+                            sendTgGetId(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...'),
+                            callAI(n, normalized.text, session, compRef, _compData),
+                        ]);
+                        thinkingMsgId = _msgId;
+                        rawReply = _reply;
+                    } else {
+                        rawReply = await callAI(n, normalized.text, session, compRef, _compData);
+                    }
                 } finally {
-                    typingActive = false; // завжди зупиняємо typing loop
+                    typingActive = false;
                 }
                 if (!rawReply) rawReply = n.config?.fallback || n.fallback || '';
 
@@ -1002,16 +1018,22 @@ module.exports = async (req, res) => {
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                         currentNodeId: nodeId, waitingForInput: nodeId,
                         aiHistory: session.aiHistory });
-                    await sessionRef.set(session, { merge: true });
-                    lockRef.delete().catch(()=>{});
+                    // PERF: fire-and-forget — Telegram вже отримав відповідь
+                    Promise.all([
+                        sessionRef.set(session, { merge: true }),
+                        lockRef.delete().catch(()=>{}),
+                    ]).catch(e => console.error('[webhook] session save AI cont:', e.message));
                     return res.status(200).json({ ok: true });
                 }
 
             } else if (n.type === 'pause') {
                 Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                     currentNodeId: n.nextNode || null, waitingForInput: nodeId });
-                await sessionRef.set(session, { merge: true });
-                lockRef.delete().catch(()=>{});
+                // PERF: fire-and-forget — pause не потребує синхронного збереження
+                Promise.all([
+                    sessionRef.set(session, { merge: true }),
+                    lockRef.delete().catch(()=>{}),
+                ]).catch(e => console.error('[webhook] session save pause:', e.message));
                 return res.status(200).json({ ok: true });
 
             } else if (n.type === 'filter') {
@@ -1354,7 +1376,8 @@ async function doAction(node, session, flow, botToken) {
                 });
             // Загальний truncate повідомлення
             if (text.length > 4000) text = text.slice(0, 4000) + '...';
-            await sendTg(adminToken, chatId, text).catch(e => console.warn('[notify_admin]', e.message));
+            // PERF: notify_admin fire-and-forget — не блокує наступний вузол
+            sendTg(adminToken, chatId, text).catch(e => console.warn('[notify_admin]', e.message));
         }
     }
 }
