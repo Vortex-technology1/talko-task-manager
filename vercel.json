@@ -80,8 +80,8 @@
   ],
   "rewrites": [
     {
-      "source": "/s/:siteId",
-      "destination": "/api/site"
+      "source": "/s/:slug",
+      "destination": "/api/site?slug=:slug"
     },
     {
       "source": "/api/webhook",

@@ -762,9 +762,16 @@ function _updatePublishBtn() {
             urlBtn.style.alignItems  = 'center';
             const displayUrl = sb.site.customDomain
                 ? sb.site.customDomain
-                : _pubUrl.replace(/^https?:\/\/[^/]+/, '').slice(0, 30) || 'Відкрити сайт';
+                : sb.site.slug
+                    ? '/s/' + sb.site.slug
+                    : _pubUrl.replace(/^https?:\/\/[^/]+/, '').slice(0, 30) || 'Відкрити сайт';
             if (urlLbl) urlLbl.textContent = displayUrl || 'Відкрити сайт';
-            urlBtn.title = _pubUrl;
+            // Якщо є slug — slug URL пріоритетніший для показу
+            const _displayUrl = sb.site.slug
+                ? 'https://taskmanagerai-vert.vercel.app/s/' + sb.site.slug
+                : _pubUrl;
+            urlBtn.title = _displayUrl;
+            urlBtn._href = _displayUrl;
         } else {
             urlBtn.style.display = 'none';
         }
@@ -774,9 +781,12 @@ function _updatePublishBtn() {
 // Відкрити/скопіювати публічний URL
 window.sbOpenPublicUrl = function() {
     // Fallback: генеруємо URL якщо немає
-    const pubUrl = sb.site?.publicUrl || (
-        sb.siteId ? `https://taskmanagerai-vert.vercel.app/api/site?id=${sb.siteId}&cid=${window.currentCompanyId||window.currentCompany||''}` : null
-    );
+    // Пріоритет: slug → customDomain → publicUrl
+    const _slug = sb.site?.slug;
+    const pubUrl = _slug
+        ? 'https://taskmanagerai-vert.vercel.app/s/' + _slug
+        : (document.getElementById('sbUrlBtn')?._href || sb.site?.publicUrl ||
+           (sb.siteId ? `https://taskmanagerai-vert.vercel.app/api/site?id=${sb.siteId}&cid=${window.currentCompanyId||window.currentCompany||''}` : null));
     if (!pubUrl) return;
     // Показуємо modal з URL
     if (typeof _showPublicUrlModal === 'function') {
@@ -882,6 +892,31 @@ function _renderSeoPanel() {
                 Підтримка: Hotjar, Clarity, LiveChat, Intercom, будь-який інший pixel
             </div>
         </div>
+    </div>
+
+    <!-- Slug — коротке посилання -->
+    <div class="seo-section">
+        <div style="${head}">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Коротке посилання (slug)
+        </div>
+        <div style="margin-bottom:0.5rem;">
+            <label style="${lbl}">Slug</label>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:0.72rem;color:#9ca3af;white-space:nowrap;">/s/</span>
+                <input id="seo_slug" value="${_esc(s.slug||'')}" placeholder="clinic або talko-system"
+                    style="${inp}" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
+            </div>
+            <div style="font-size:0.65rem;color:#9ca3af;margin-top:3px;">Тільки латиниця, цифри, дефіс. Унікальне для всіх сайтів.</div>
+        </div>
+        ${s.slug ? `
+        <div style="display:flex;align-items:center;gap:6px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:0.5rem 0.75rem;">
+            <span style="font-size:0.72rem;color:#7c3aed;font-family:monospace;flex:1;">taskmanagerai-vert.vercel.app/s/${_esc(s.slug)}</span>
+            <button onclick="navigator.clipboard?.writeText('https://taskmanagerai-vert.vercel.app/s/${_esc(s.slug)}');if(typeof showToast==='function')showToast('Скопійовано','success');"
+                style="background:none;border:none;cursor:pointer;color:#7c3aed;padding:2px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+        </div>` : ''}
     </div>
 
     <!-- Custom Domain -->
@@ -1067,6 +1102,7 @@ window.sbSaveSeo = async function() {
         analyticsTikTok:   document.getElementById('seo_tiktok')?.value.trim()   || '',
         analyticsHeadCode: document.getElementById('seo_headcode')?.value        || '',
         customDomain:      (document.getElementById('seo_domain')?.value.trim()  || '').replace(/^https?:\/\//,'').replace(/\/$/,''),
+        slug:              (document.getElementById('seo_slug')?.value.trim()    || '').toLowerCase().replace(/[^a-z0-9-]/g,''),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
     try {

@@ -76,9 +76,26 @@ module.exports = async (req, res) => {
         });
     }
 
-    let { id: siteId, cid: companyId } = req.query;
+    let { id: siteId, cid: companyId, slug } = req.query;
 
-    // Custom domain lookup
+    // ── Slug lookup: /s/clinic або ?slug=clinic ────────────
+    if (slug && !siteId) {
+        try {
+            const snap = await _db()
+                .collectionGroup('sites')
+                .where('slug', '==', slug.toLowerCase().trim())
+                .where('status', '==', 'published')
+                .limit(1).get();
+            if (snap.empty) return res.status(404).send(errPage('Сайт не знайдено: /' + slug));
+            const parts = snap.docs[0].ref.path.split('/');
+            companyId = parts[1];
+            siteId    = parts[3];
+        } catch(e) {
+            return res.status(500).send(errPage(e.message));
+        }
+    }
+
+    // ── Custom domain lookup ────────────────────────────────
     if (!siteId || !companyId) {
         const host = (req.headers.host || '').replace(/:\d+$/, '').toLowerCase();
         const isOwn = host.includes('vercel.app') || host.includes('localhost');
@@ -90,7 +107,6 @@ module.exports = async (req, res) => {
                     .where('customDomain', '==', host)
                     .where('status', '==', 'published')
                     .limit(1).get();
-
                 if (snap.empty) return res.status(404).send(errPage('Домен не підключено'));
                 const parts = snap.docs[0].ref.path.split('/');
                 companyId = parts[1];
