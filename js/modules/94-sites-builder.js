@@ -68,16 +68,24 @@ function _renderBuilderShell() {
                     Прев'ю
                 </button>
 
-                <!-- URL сайту (тільки якщо опублікований) -->
-                <button id="sbUrlBtn" onclick="sbOpenPublicUrl()"
-                    style="display:none;align-items:center;gap:5px;padding:0.4rem 0.75rem;
-                    background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:8px;
-                    cursor:pointer;font-size:0.75rem;font-weight:600;color:#2563eb;
-                    white-space:nowrap;max-width:180px;"
-                    title="Відкрити публічний сайт">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    <span id="sbUrlLabel" style="overflow:hidden;text-overflow:ellipsis;max-width:120px;">Відкрити сайт</span>
-                </button>
+                <!-- Slug input + URL (завжди видимий якщо опублікований) -->
+                <div id="sbUrlBtn" style="display:none;align-items:center;gap:4px;
+                    background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:8px;
+                    padding:0.25rem 0.25rem 0.25rem 0.6rem;max-width:220px;">
+                    <span style="font-size:0.7rem;color:#7c3aed;white-space:nowrap;font-weight:600;">/s/</span>
+                    <input id="sbSlugInput" placeholder="slug" title="Коротке посилання"
+                        style="width:80px;border:none;background:transparent;font-size:0.75rem;
+                        color:#4c1d95;font-weight:600;outline:none;font-family:monospace;padding:2px 0;"
+                        oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"
+                        onblur="sbSaveSlug(this.value)"
+                        onkeydown="if(event.key==='Enter'){this.blur();}">
+                    <button onclick="sbOpenPublicUrl()"
+                        style="display:flex;align-items:center;padding:0.25rem 0.4rem;background:#7c3aed;
+                        color:white;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;"
+                        title="Відкрити сайт">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </button>
+                </div>
 
                 <!-- Публікувати АБО Зняти з публікації -->
                 <button id="sbPublishBtn" onclick="sbTogglePublish()"
@@ -757,26 +765,48 @@ function _updatePublishBtn() {
     }
 
     if (urlBtn) {
-        if (pub && _pubUrl) {
-            urlBtn.style.display     = 'flex';
-            urlBtn.style.alignItems  = 'center';
-            const displayUrl = sb.site.customDomain
-                ? sb.site.customDomain
-                : sb.site.slug
-                    ? '/s/' + sb.site.slug
-                    : _pubUrl.replace(/^https?:\/\/[^/]+/, '').slice(0, 30) || 'Відкрити сайт';
-            if (urlLbl) urlLbl.textContent = displayUrl || 'Відкрити сайт';
-            // Якщо є slug — slug URL пріоритетніший для показу
-            const _displayUrl = sb.site.slug
+        if (pub) {
+            urlBtn.style.display    = 'flex';
+            urlBtn.style.alignItems = 'center';
+            // Заповнюємо slug input поточним значенням
+            const slugInput = document.getElementById('sbSlugInput');
+            if (slugInput && slugInput !== document.activeElement) {
+                slugInput.value = sb.site.slug || '';
+            }
+            // Зберігаємо URL для кнопки відкрити
+            const _href = sb.site.slug
                 ? 'https://taskmanagerai-vert.vercel.app/s/' + sb.site.slug
-                : _pubUrl;
-            urlBtn.title = _displayUrl;
-            urlBtn._href = _displayUrl;
+                : _pubUrl || '';
+            urlBtn._href = _href;
+            urlBtn.title = _href;
         } else {
             urlBtn.style.display = 'none';
         }
     }
 }
+
+// Зберегти slug з header input
+window.sbSaveSlug = async function(val) {
+    const slug = (val || '').toLowerCase().replace(/[^a-z0-9-]/g, '').trim();
+    if (!sb.site || !sb.siteId) return;
+    if (slug === (sb.site.slug || '')) return; // не змінився
+    try {
+        await window.companyRef()
+            .collection(window.DB_COLS?.SITES || 'sites').doc(sb.siteId)
+            .update({ slug, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        sb.site.slug = slug;
+        // Оновлюємо title кнопки
+        const urlBtn = document.getElementById('sbUrlBtn');
+        if (urlBtn && slug) {
+            urlBtn._href = 'https://taskmanagerai-vert.vercel.app/s/' + slug;
+            urlBtn.title = urlBtn._href;
+        }
+        if (typeof showToast === 'function')
+            showToast(slug ? `Slug збережено: /s/${slug}` : 'Slug видалено', 'success');
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
 
 // Відкрити/скопіювати публічний URL
 window.sbOpenPublicUrl = function() {
