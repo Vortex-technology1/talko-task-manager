@@ -32,26 +32,20 @@ module.exports = async (req, res) => {
 
         if (!isVercel && host) {
             try {
-                // Шукаємо сайт з таким customDomain
-                const companiesSnap = await db().collection('companies').limit(200).get();
-                let found = false;
-                for (const comp of companiesSnap.docs) {
-                    const sitesSnap = await db()
-                        .collection('companies').doc(comp.id)
-                        .collection('sites')
-                        .where('customDomain', '==', host)
-                        .where('status', '==', 'published')
-                        .limit(1).get();
-                    if (!sitesSnap.empty) {
-                        siteId = sitesSnap.docs[0].id;
-                        companyId = comp.id;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
+                // Ефективний lookup через collectionGroup — один запит замість O(N*M)
+                const sitesSnap = await db()
+                    .collectionGroup('sites')
+                    .where('customDomain', '==', host)
+                    .where('status', '==', 'published')
+                    .limit(1).get();
+
+                if (sitesSnap.empty) {
                     return res.status(404).send('<html><body style="font-family:sans-serif;text-align:center;padding:3rem;"><h2>Сайт не знайдено</h2><p style="color:#6b7280;">Домен не підключено до жодного сайту</p></body></html>');
                 }
+                // path: companies/{companyId}/sites/{siteId}
+                const pathParts = sitesSnap.docs[0].ref.path.split('/');
+                companyId = pathParts[1]; // companies/{companyId}/...
+                siteId    = pathParts[3]; // .../sites/{siteId}
             } catch(e) {
                 return res.status(500).send('<html><body>Помилка: ' + escHtml(e.message) + '</body></html>');
             }
@@ -112,7 +106,7 @@ module.exports = async (req, res) => {
         // ── Блок режим — збираємо HTML ──────────────────────
         const blocks  = site.blocks || [];
         const theme   = site.theme  || { primaryColor: '#22c55e', fontFamily: 'Inter', borderRadius: '12px' };
-        const primary = theme.primaryColor || '#22c55e';
+        const primary = _cssVal(theme.primaryColor, '#22c55e');
         const font    = theme.fontFamily   || 'Inter';
 
         // Рендеримо блоки
@@ -179,12 +173,23 @@ function escHtml(s) {
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// Sanitize CSS value — тільки безпечні символи для кольорів/розмірів
+// Блокує: expression(), url(), javascript:, </style> injection
+function _cssVal(v, fallback) {
+    const s = String(v || fallback || '');
+    // Дозволяємо тільки: літери, цифри, #, %, px, em, rem, ., -, (), пробіл, кома
+    if (/[^a-zA-Z0-9#%.\-(),\s]/.test(s)) return fallback || '';
+    // Блокуємо небезпечні CSS функції
+    if (/expression|javascript|url\s*\(|import|@/i.test(s)) return fallback || '';
+    return s;
+}
+
 function renderBlock(block, primary, site, companyId) {
-    const br = site.theme?.borderRadius || '12px';
+    const br = _cssVal(site.theme?.borderRadius, '12px');
 
     switch(block.type) {
         case 'hero':
-            return `<section style="background:${block.bgColor||'#0a0f1a'};color:${block.textColor||'#ffffff'};padding:5rem 1.5rem;text-align:center;">
+            return `<section style="background:${_cssVal(block.bgColor,'#0a0f1a')};color:${_cssVal(block.textColor,'#ffffff')};padding:5rem 1.5rem;text-align:center;">
                 <div style="max-width:800px;margin:0 auto;">
                     <h1 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:800;margin-bottom:1rem;">${escHtml(block.title||'')}</h1>
                     ${block.subtitle?`<p style="font-size:clamp(1rem,2.5vw,1.25rem);opacity:.85;margin-bottom:2rem;">${escHtml(block.subtitle)}</p>`:''}

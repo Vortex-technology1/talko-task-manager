@@ -60,7 +60,7 @@ function _renderBuilderShell() {
                     cursor:pointer;font-size:0.78rem;font-weight:600;transition:all .15s;">
                     <span id="sbPublishBtnLabel">Публікувати</span>
                 </button>
-                <button onclick="sbSave()"
+                <button id="sbSaveBtn" onclick="sbSave()"
                     style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;
                     border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">
                     💾 Зберегти
@@ -558,7 +558,7 @@ window.sbTogglePreview = function () {
 window.sbSave = async function () {
     if (sb.saving) return;
     sb.saving = true;
-    const btn = document.querySelector('[onclick="sbSave()"]');
+    const btn = document.getElementById('sbSaveBtn');
     if (btn) { btn.textContent = window.t('saving'); btn.disabled = true; }
     try {
         await window.companyRef()
@@ -605,7 +605,11 @@ window.sbPanelTab = function(tab) {
 
 // ── PUBLISH TOGGLE (з білдера) ────────────────────────────
 window.sbTogglePublish = async function() {
-    if (!sb.site) return;
+    if (sb._publishing) return; // double-click guard
+    sb._publishing = true;
+    const _publishBtn = document.getElementById('sbPublishBtn');
+    if (_publishBtn) { _publishBtn.disabled = true; _publishBtn.style.opacity = '0.6'; }
+    if (!sb.site) { sb._publishing = false; return; }
     const newStatus = sb.site.status === 'published' ? 'draft' : 'published';
     try {
         const _base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
@@ -656,6 +660,9 @@ window.sbTogglePublish = async function() {
         }
     } catch(e) {
         if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    } finally {
+        sb._publishing = false;
+        if (_publishBtn) { _publishBtn.disabled = false; _publishBtn.style.opacity = ''; }
     }
 };
 
