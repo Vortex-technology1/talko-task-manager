@@ -465,7 +465,7 @@ module.exports = async (req, res) => {
         // PERF: читаємо compData + bots паралельно (~20ms замість ~40ms)
         const [_compDoc, botsSnap] = await Promise.all([
             compRef.get(),
-            compRef.collection('bots').where('channel', '==', channel).limit(5).get(),
+            compRef.collection('bots').where('channel', '==', channel).limit(10).get(),
         ]);
         const _compData = _compDoc.data() || {};
 
@@ -511,9 +511,13 @@ module.exports = async (req, res) => {
 
         // Підтверджуємо callback_query одразу (прибирає "годинник" на кнопці)
         if (callbackQueryId && botToken) {
+            // fire-and-forget з timeout
+            const _aqAbort = new AbortController();
+            setTimeout(() => _aqAbort.abort(), 5000);
             fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ callback_query_id: callbackQueryId })
+                body: JSON.stringify({ callback_query_id: callbackQueryId }),
+                signal: _aqAbort.signal,
             }).catch(() => {});
         }
 
@@ -678,15 +682,28 @@ module.exports = async (req, res) => {
         const flowDocRef = compRef.collection('bots').doc(currentBotId).collection('flows').doc(flow.id);
 
         // PERF: canvasData + nodePrompts паралельно (економимо ~150ms)
+        // Перевіряємо чи є AI вузли — якщо немає, не читаємо nodePrompts (економимо read)
+        const _nodes = flow.canvasData?.nodes || [];
+        const _hasAiNodes = _nodes.some(n => n.type === 'ai' || n.type === 'ai_response'
+            || n.config?.aiSystem || n.aiSystem);
+        const _hasRefNodes = _nodes.some(n => {
+            const s = n.config?.aiSystem || n.aiSystem || '';
+            return s.startsWith('__ref:');
+        });
+
         const [_canvasDoc, promptsSnap] = await Promise.all([
             flow.canvasData?.nodes?.length
                 ? Promise.resolve(null)
                 : flowDocRef.collection('canvasData').doc('layout').get().catch(() => null),
-            flowDocRef.collection('nodePrompts').get().catch(() => ({ forEach: () => {} })),
+            (_hasAiNodes && _hasRefNodes)
+                ? flowDocRef.collection('nodePrompts').get().catch(() => ({ forEach: () => {} }))
+                : Promise.resolve({ forEach: () => {} }),
         ]);
         if (_canvasDoc?.exists) flow.canvasData = _canvasDoc.data();
         const nodePromptsMap = {};
         promptsSnap.forEach(doc => { nodePromptsMap[doc.id] = doc.data().aiSystem || ''; });
+        // Оновлюємо _nodes після можливого завантаження canvasData
+        const _allNodes = flow.canvasData?.nodes || [];
 
         const restorePrompts = (nodesList) => nodesList.map(n => {
             // FIX 2+3: перевіряємо обидва місця де може бути __ref
@@ -1138,6 +1155,7 @@ module.exports = async (req, res) => {
 // ── Helpers ───────────────────────────────────────────────
 
 function resolveNext(node, userText) {
+    if (!node) return null;
     // Пошук по btn_N індексу (формат callback_data)
     const btnMatch = String(userText || '').match(/^btn_(\d+)/);
     const idx = btnMatch ? parseInt(btnMatch[1]) : -1;
@@ -1156,6 +1174,8 @@ function resolveNext(node, userText) {
 }
 
 function interp(text, data) {
+    if (!text) return '';
+    if (!data || typeof data !== 'object') return String(text);
     // Підтримка {{var}} і {var} форматів
     return (text || '')
         .replace(/\{\{(\w+)\}\}/g, (_, k) => (data[k] != null ? String(data[k]) : ''))
@@ -1163,6 +1183,7 @@ function interp(text, data) {
 }
 
 function evalFilter(node, data) {
+    if (!node || !data) return false;
     // Підтримуємо обидва формати полів: condVar/condOp/condVal і variable/operator/value
     const varName = node.condVar || node.variable || node.conditionField || '';
     const op = node.condOp || node.operator || node.conditionOp || 'exists';
@@ -1185,11 +1206,20 @@ async function doAction(node, session, flow, botToken) {
     if (node.actionType === 'set_var') {
         try {
             const p = typeof node.actionPayload === 'string' ? JSON.parse(node.actionPayload) : node.actionPayload;
-            if (p?.variable) session.data[p.variable] = p.value || '';
+            if (p?.variable) {
+                const _k = String(p.variable).slice(0, 50);
+                if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(_k) && !['__proto__','constructor','prototype'].includes(_k)) {
+                    session.data[_k] = String(p.value || '').slice(0, 500);
+                }
+            }
         } catch {}
     } else if (node.actionType === 'set_tag' || node.actionType === 'add_tag') {
         if (!session.tags) session.tags = [];
-        if (node.actionPayload) session.tags.push(node.actionPayload);
+        if (node.actionPayload) {
+            const _tag = String(node.actionPayload).trim().slice(0, 50);
+            if (_tag && !session.tags.includes(_tag)) session.tags.push(_tag);
+            if (session.tags.length > 20) session.tags = session.tags.slice(-20);
+        }
     } else if (node.actionType === 'notify_admin') {
         const chatId = node.config?.notifyChatId || node.notifyChatId;
         // Використовуємо окремий адмін бот для сповіщень
@@ -1530,13 +1560,18 @@ async function finish(session, flow, compRef, channel, compData = {}) {
         // Автоматично видаляємо lock через 60 секунд (не блокуємо повторний запуск назавжди)
         setTimeout(() => lockRef.delete().catch(() => {}), 120000); // 2 min TTL
 
-        // Зберігаємо лід (audit trail)
+        // Зберігаємо лід (audit trail) — обрізаємо великі поля
+        const _leadData = {};
+        for (const [k, v] of Object.entries(d)) {
+            if (typeof v === 'string' && v.length > 500) _leadData[k] = v.slice(0, 500);
+            else if (typeof v !== 'object') _leadData[k] = v;
+        }
         await compRef.collection('leads').add({
             senderId: session.senderId, senderName: session.senderName || '',
             channel, flowId: flow?.id || null, flowName: flow?.name || '',
-            data: d, tags: session.tags || [],
+            data: _leadData, tags: session.tags || [],
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
+        }).catch(e => console.warn('[finish] leads.add:', e.message));
 
         // Upsert контакт по senderId — всі поля по ТЗ
         const contactId = `${channel}_${session.senderId}`;
