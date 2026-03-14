@@ -501,8 +501,17 @@
         }
 
         if (node.type === 'talko_deal') {
+            // Build stage options from real pipeline
+            const _pipeStages = (window.crm?.pipeline?.stages || []).filter(s => s.id !== 'lost' && s.id !== 'won');
+            const _stageOpts = _pipeStages.length
+                ? _pipeStages.map(s => `<option value="${s.id}" ${(node.dealStage||'new')===s.id?'selected':''}>${s.label}</option>`).join('')
+                : `<option value="new" selected>new</option>`;
             specific = field(window.t('botsFieldDealName')) + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
-                field(window.t('botsFieldStage')) + input(node.dealStage||'new', `updateNode('${nodeId}','dealStage',this.value)`, 'new');
+                field(window.t('botsFieldStage')) +
+                `<select onchange="updateNode('${nodeId}','dealStage',this.value)"
+                    style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;background:white;cursor:pointer;margin-bottom:0.5rem;">
+                    ${_stageOpts}
+                </select>`;
         }
 
         if (node.type === 'tag') {
@@ -1414,8 +1423,17 @@ window.onSwitchTab && window.onSwitchTab('flows', function() {
         }
 
         if (node.type === 'talko_deal') {
+            // Build stage options from real pipeline
+            const _pipeStages = (window.crm?.pipeline?.stages || []).filter(s => s.id !== 'lost' && s.id !== 'won');
+            const _stageOpts = _pipeStages.length
+                ? _pipeStages.map(s => `<option value="${s.id}" ${(node.dealStage||'new')===s.id?'selected':''}>${s.label}</option>`).join('')
+                : `<option value="new" selected>new</option>`;
             specific = field(window.t('botsFieldDealName')) + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
-                field(window.t('botsFieldStage')) + input(node.dealStage||'new', `updateNode('${nodeId}','dealStage',this.value)`, 'new');
+                field(window.t('botsFieldStage')) +
+                `<select onchange="updateNode('${nodeId}','dealStage',this.value)"
+                    style="width:100%;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;background:white;cursor:pointer;margin-bottom:0.5rem;">
+                    ${_stageOpts}
+                </select>`;
         }
 
         if (node.type === 'tag') {

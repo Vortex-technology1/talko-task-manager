@@ -132,7 +132,7 @@ module.exports = async (req, res) => {
                         const compRef = db.collection('companies').doc(companyId);
                         const DB_COLS = { CRM_DEALS: 'crm_deals' };
                         // FIX: підтягуємо default pipeline щоб угода потрапила в kanban
-                        const fbPipSnap = await compRef.collection('crm_pipelines')
+                        const fbPipSnap = await compRef.collection('crm_pipeline')
                             .where('isDefault', '==', true).limit(1).get();
                         const fbPipeline    = fbPipSnap.empty ? null : fbPipSnap.docs[0].data();
                         const fbPipelineId  = fbPipSnap.empty ? '' : fbPipSnap.docs[0].id;
@@ -350,8 +350,8 @@ module.exports = async (req, res) => {
                     dealId = openDealSnap.docs[0].id;
                     await compRef.collection('crm_deals').doc(dealId).update({ updatedAt: ts });
                 } else {
-                    const pipelineSnap = await compRef.collection('crm_pipelines')
-                        .orderBy('createdAt').limit(1).get();
+                    const pipelineSnap = await compRef.collection('crm_pipeline')
+                        .where('isDefault','==',true).limit(1).get();
                     const pipelineId   = pipelineSnap.empty ? '' : pipelineSnap.docs[0].id;
                     const stages       = pipelineSnap.empty ? [] : (pipelineSnap.docs[0].data().stages || []);
                     const firstStageId = stages.length > 0 ? (stages[0].id || '') : '';
