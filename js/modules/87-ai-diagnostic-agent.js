@@ -272,9 +272,9 @@ function _buildDiagnosticContext() {
     });
 
     // ── Статистика (функції без метрик) ──────────────
-    const statsData   = window.statisticsData || window.metricsData || [];
+    const statsData   = window._metrics || window.statisticsData || window.metricsData || [];
     const funcNames   = allFuncs.map(f => f.name).filter(Boolean);
-    const funcsWithStats = new Set(statsData.map(s => s.function || s.functionName).filter(Boolean));
+    const funcsWithStats = new Set(statsData.map(s => s.function || s.functionName || s.functionId).filter(Boolean));
     const functionsWithoutData = funcNames.filter(n => !funcsWithStats.has(n));
 
     return {

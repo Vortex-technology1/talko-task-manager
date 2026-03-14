@@ -57,6 +57,86 @@
             );
         }).length;
         
+        // ── Signals (для AI-агента та тижневого звіту) ──────────
+        const ownerUid = currentUser.uid;
+        const ownerTasks = activeTasks.filter(t => t.assigneeId === ownerUid);
+        const ownerTaskRatio = activeTasks.length > 0
+            ? ownerTasks.length / activeTasks.length
+            : 0;
+
+        // Функції з returnRate > 20%
+        const functionsWithHighReturn = (() => {
+            const funcReturnMap = {};
+            tasks.forEach(t => {
+                const fn = t.function;
+                if (!fn) return;
+                if (!funcReturnMap[fn]) funcReturnMap[fn] = { active: 0, returned: 0 };
+                if (t.status !== 'done') funcReturnMap[fn].active++;
+                if (t.reviewRejectedAt) funcReturnMap[fn].returned++;
+            });
+            return Object.entries(funcReturnMap)
+                .filter(([, v]) => v.active >= 3 && (v.returned / v.active) > 0.2)
+                .map(([name, v]) => ({
+                    name,
+                    returnRate: Math.round((v.returned / v.active) * 100),
+                }));
+        })();
+
+        // Процеси-вузькі місця (стоять >24 год)
+        const processBottlenecks = (() => {
+            const now = Date.now();
+            return processes
+                .filter(p => {
+                    if (p.status !== 'active') return false;
+                    if (!p.updatedAt) return false;
+                    const updMs = p.updatedAt?.toMillis
+                        ? p.updatedAt.toMillis()
+                        : new Date(p.updatedAt).getTime();
+                    return (now - updMs) > 24 * 3600 * 1000;
+                })
+                .map(p => {
+                    const tmpl = processTemplates.find(t => t.id === p.templateId);
+                    const step = tmpl?.steps?.[p.currentStep || 0];
+                    return {
+                        processId: p.id,
+                        processName: p.name || '',
+                        stepFunction: step?.function || '',
+                        currentStep: p.currentStep || 0,
+                    };
+                });
+        })();
+
+        // Юзери з нульовою активністю 3+ дні
+        const threeDaysAgo = new Date(); threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+        const threeDaysAgoStr = getLocalDateStr(threeDaysAgo);
+        const usersWithZeroActivity = users
+            .filter(u => u.role !== 'owner')
+            .filter(u => {
+                const lastDone = tasks
+                    .filter(t => t.assigneeId === u.id && t.status === 'done' && t.completedDate)
+                    .map(t => t.completedDate)
+                    .sort()
+                    .pop();
+                return !lastDone || lastDone < threeDaysAgoStr;
+            })
+            .map(u => ({ uid: u.id, name: u.name || u.email }));
+
+        // Зупинені процеси (ті самі що і bottlenecks — зберігаємо IDs для посилань)
+        const stalledProcesses = processBottlenecks.map(p => p.processId);
+
+        const signals = {
+            ownerTaskRatio:           Math.round(ownerTaskRatio * 100) / 100,
+            ownerTaskCount:           ownerTasks.length,
+            overdueRatio:             activeTasks.length > 0
+                ? Math.round((overdueTasks.length / activeTasks.length) * 100) / 100
+                : 0,
+            functionsWithHighReturn,
+            processBottlenecks,
+            usersWithZeroActivity,
+            stalledProcesses,
+            slaBreaches,
+        };
+
         const snapshot = {
             date: todayStr,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -73,6 +153,7 @@
             },
             userLoads,
             funcLoads,
+            signals,          // ← НОВИЙ БЛОК: операційні сигнали для AI-агента
             createdBy: currentUser.uid
         };
         
