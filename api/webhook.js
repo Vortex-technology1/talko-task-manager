@@ -287,14 +287,18 @@ module.exports = async (req, res) => {
                     // FIX: sub-collection per company (ізоляція) + expiresAt для cleanup + ':' в ID
                     const lockId  = `${channel}:${callId}`;
                     const lockRef = compRef.collection('_tlocks').doc(lockId);
-                    const lockDoc = await lockRef.get();
-                    if (lockDoc.exists) {
+                    // Transaction для атомарного check-and-set (race condition protection)
+                    const _lockAcquired = await db.runTransaction(async tx => {
+                        const existing = await tx.get(lockRef);
+                        if (existing.exists) return false;
+                        const exp = new Date(); exp.setDate(exp.getDate() + 30);
+                        tx.set(lockRef, { channel, callId, createdAt: ts, expiresAt: exp });
+                        return true;
+                    }).catch(() => false);
+                    if (!_lockAcquired) {
                         res.status(200).json({ ok: true, skipped: 'duplicate callId' });
                         return;
                     }
-                    // expiresAt = 30 днів — для cleanup через Cloud Scheduler або вручну
-                    const exp = new Date(); exp.setDate(exp.getDate() + 30);
-                    await lockRef.set({ channel, callId, createdAt: ts, expiresAt: exp });
                 }
 
                 // Відповідаємо 200 — після idempotency check, перед важкими операціями
@@ -650,7 +654,7 @@ module.exports = async (req, res) => {
                         lastMessage:     normalized.text || '',
                         lastMessageAt:   _ts,
                         lastMessageFrom: 'user',
-                        unreadCount:     1,
+                        unreadCount:     normalized.text && !normalized.text.startsWith('/start') ? 1 : 0,
                         createdAt:       _ts,
                         updatedAt:       _ts,
                     }, { merge: true });
@@ -715,6 +719,8 @@ module.exports = async (req, res) => {
             if (isStart) await sendMsg(channel, botToken, normalized.senderId, 'Вітаємо! Бот активний ✅');
             // Немає активного флоу — зберігаємо як вхідне повідомлення для ручного чату
             await saveIncomingMessage(compRef, channel, normalized, botDocId);
+            // Зберігаємо lastUpdateId щоб уникнути повторної обробки при Telegram retry
+            if (updateId) await sessionRef.set({ lastUpdateId: updateId }, { merge: true }).catch(()=>{});
             lockRef.delete().catch(()=>{});
             return res.status(200).json({ ok: true, saved: 'no-flow-incoming' });
         }
@@ -869,8 +875,10 @@ module.exports = async (req, res) => {
                 if (!text.trim()) { nodeId = n.nextNode || null; continue; }
                 await sendTyping(botToken, normalized.senderId);
                 const btns = n.buttons?.length ? n.buttons : (n.options?.length ? n.options : null);
-                await sendMsg(channel, botToken, normalized.senderId, text, btns);
-                await saveBotMessage(compRef, contactId, text);
+                await Promise.all([
+                    sendMsg(channel, botToken, normalized.senderId, text, btns),
+                    saveBotMessage(compRef, contactId, text),
+                ]);
                 if (btns?.length) {
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                         currentNodeId: nodeId, waitingForInput: nodeId });
@@ -948,8 +956,10 @@ module.exports = async (req, res) => {
                     if (thinkingMsgId) {
                         await editTg(botToken, normalized.senderId, thinkingMsgId, cleanReply, aiBtns.length ? aiBtns : null);
                     } else {
-                        await sendMsg(channel, botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null);
-                        await saveBotMessage(compRef, contactId, cleanReply);
+                        await Promise.all([
+                            sendMsg(channel, botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null),
+                            saveBotMessage(compRef, contactId, cleanReply),
+                        ]);
                     }
                 }
 
@@ -1149,8 +1159,10 @@ module.exports = async (req, res) => {
             } else if (n.type === 'end' || n.type === 'finish') {
                 if (n.text) {
                     const endText = interp(n.text, session.data);
-                    await sendMsg(channel, botToken, normalized.senderId, endText);
-                    await saveBotMessage(compRef, contactId, endText);
+                    await Promise.all([
+                        sendMsg(channel, botToken, normalized.senderId, endText),
+                        saveBotMessage(compRef, contactId, endText),
+                    ]);
                 }
                 await finish(session, flow, compRef, channel, _compData);
                 nodeId = null;
