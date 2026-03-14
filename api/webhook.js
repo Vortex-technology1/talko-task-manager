@@ -481,7 +481,6 @@ module.exports = async (req, res) => {
                 ? _compData?.viberBotToken
                 : _compData?.integrations?.telegram?.botToken;
         }
-        } // end botToken scope
         if (!botToken) return res.status(200).json({ ok: true, skipped: 'no token' });
 
         // ── Зберігаємо ВСІ вхідні повідомлення від юзера ───
