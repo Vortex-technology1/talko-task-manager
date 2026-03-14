@@ -559,22 +559,36 @@ module.exports = async (req, res) => {
         const lockKey = `lock_${sessionId}`;
         const lockRef = compRef.collection('_session_locks').doc(lockKey);
         const lockTs = Date.now();
-        // PERF: lock.set + session.get паралельно (~15ms замість ~30ms)
+
+        // Atomic check-and-set using transaction to prevent race conditions
         let sessionDoc;
-        try {
-            [, sessionDoc] = await Promise.all([
-                lockRef.set({ ts: lockTs, pid: Math.random() }, { merge: false }),
-                sessionRef.get(),
+        const lockAcquired = await db.runTransaction(async tx => {
+            const [existingLock, session] = await Promise.all([
+                tx.get(lockRef),
+                tx.get(sessionRef)
             ]);
-        } catch(e) {
-            // Lock already exists — another request is processing, skip
-            const existingLock = await lockRef.get().catch(()=>null);
-            if (existingLock?.exists && (lockTs - (existingLock.data()?.ts||0)) < 8000) {
-                return res.status(200).json({ ok: true, skipped: 'session_locked' });
+
+            // Якщо lock існує і не застарілий (< 8s), skip цей запит
+            if (existingLock.exists) {
+                const lockData = existingLock.data();
+                if (lockTs - (lockData?.ts || 0) < 8000) {
+                    return { acquired: false, sessionDoc: null };
+                }
             }
-            // Lock is stale (> 8s) — continue, отримуємо session окремо
-            if (!sessionDoc) sessionDoc = await sessionRef.get();
+
+            // Встановлюємо lock атомарно
+            tx.set(lockRef, { ts: lockTs, pid: Math.random() }, { merge: false });
+            return { acquired: true, sessionDoc: session };
+        }).catch(e => {
+            console.error('[webhook] lock transaction failed:', e.message);
+            return { acquired: false, sessionDoc: null };
+        });
+
+        if (!lockAcquired.acquired) {
+            return res.status(200).json({ ok: true, skipped: 'session_locked' });
         }
+
+        sessionDoc = lockAcquired.sessionDoc;
         const _isNewContact = !sessionDoc.exists;
         let session = sessionDoc.exists ? sessionDoc.data() : {
             senderId: String(normalized.senderId), senderName: normalized.senderName || '',
@@ -936,10 +950,17 @@ module.exports = async (req, res) => {
 
                 // Typing індикатор — шле кожні 4 сек поки AI думає (Telegram показує max 5 сек)
                 let typingActive = true;
+                let typingTimeoutId = null;
                 const typingLoop = (async () => {
                     while (typingActive) {
                         await sendTyping(botToken, normalized.senderId);
-                        await new Promise(r => setTimeout(r, 4000));
+                        if (!typingActive) break; // Double-check перед setTimeout
+                        await new Promise(r => {
+                            typingTimeoutId = setTimeout(() => {
+                                typingTimeoutId = null;
+                                r();
+                            }, 4000);
+                        });
                     }
                 })();
 
@@ -959,6 +980,10 @@ module.exports = async (req, res) => {
                     rawReply = _reply;
                 } finally {
                     typingActive = false;
+                    if (typingTimeoutId) {
+                        clearTimeout(typingTimeoutId);
+                        typingTimeoutId = null;
+                    }
                 }
                 if (!rawReply) rawReply = n.config?.fallback || n.fallback || '';
 
@@ -1707,7 +1732,7 @@ async function saveIncomingMessage(compRef, channel, normalized, botId) {
             senderName:      normalized.senderName || '',
             channel,
             botId:           botId || null,
-            lastMessage:     normalized.text.slice(0, 100),
+            lastMessage:     (normalized.text || '').slice(0, 100),
             lastMessageAt:   admin.firestore.FieldValue.serverTimestamp(),
             lastMessageFrom: 'user',
             unreadCount:     admin.firestore.FieldValue.increment(1),
@@ -1754,7 +1779,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
             senderName:    session.senderName || '',
             username:      session.username   || '',
             channel,
-            botId:         session.botId      || botDocId || null,
+            botId:         session.botId      || null,
             flowId:        flow?.id           || null,
             flowName:      flow?.name         || '',
             // Поля зібрані через [SAVE:key=value] в флоу
