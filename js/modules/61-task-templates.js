@@ -26,7 +26,7 @@
     async function loadTaskTemplates() {
         if (!currentCompany) return;
         try {
-            const snap = await db.collection('companies').doc(currentCompany).collection('taskTemplates').orderBy('title').get();
+            const snap = await window.companyRef().collection('taskTemplates').orderBy('title').get();
             taskTemplates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         } catch(e) { console.error('loadTaskTemplates:', e); }
     }
@@ -199,11 +199,11 @@
         
         try {
             if (id) {
-                await db.collection('companies').doc(currentCompany).collection('taskTemplates').doc(id).update(data);
+                await window.companyRef().collection('taskTemplates').doc(id).update(data);
             } else {
                 data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                 data.createdBy = currentUser?.uid || '';
-                await db.collection('companies').doc(currentCompany).collection('taskTemplates').add(data);
+                await window.companyRef().collection('taskTemplates').add(data);
             }
             await loadTaskTemplates();
             document.getElementById('templateEditorArea').innerHTML = '';
@@ -218,7 +218,7 @@
     async function deleteTemplate(id) {
         if (!await showConfirmModal(t('confirmDelete'), { danger: true })) return;
         try {
-            await db.collection('companies').doc(currentCompany).collection('taskTemplates').doc(id).delete();
+            await window.companyRef().collection('taskTemplates').doc(id).delete();
             taskTemplates = taskTemplates.filter(t => t.id !== id);
             renderManageTemplates();
         } catch(e) {

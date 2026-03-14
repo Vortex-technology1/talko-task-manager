@@ -201,6 +201,10 @@ module.exports = async function handler(req, res) {
     try {
         let response, data;
 
+        // Timeout 55s
+        const _ctrl = new AbortController();
+        const _tout = setTimeout(() => _ctrl.abort(), 55000);
+
         if (provider === 'anthropic') {
             // Anthropic API — system prompt окремим полем
             const anthropicMsgs = finalMessages.filter(m => m.role !== 'system');
@@ -208,6 +212,7 @@ module.exports = async function handler(req, res) {
             const anthropicModel = /^claude/.test(model) ? model : 'claude-sonnet-4-20250514';
             response = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
+                signal: _ctrl.signal,
                 headers: {
                     'Content-Type': 'application/json',
                     'x-api-key': apiKey,
@@ -234,6 +239,7 @@ module.exports = async function handler(req, res) {
             if (!isNewModel) bodyObj.temperature = 0.3;
             response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
+                signal: _ctrl.signal,
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
                 body: JSON.stringify(bodyObj),
             });

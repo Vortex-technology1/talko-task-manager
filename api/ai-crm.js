@@ -128,7 +128,10 @@ ${deal.leadData?.mainProblem ? 'Проблема клієнта: ' + deal.leadDa
     // ── Call AI provider ─────────────────────────────────────
     let analysis;
     try {
-        let response, data;
+        // Timeout 45s — LLM може відповідати довго
+    const _ctrl = new AbortController();
+    const _tout = setTimeout(() => _ctrl.abort(), 45000);
+    let response, data;
 
         if (isAnthropic) {
             response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -138,7 +141,8 @@ ${deal.leadData?.mainProblem ? 'Проблема клієнта: ' + deal.leadDa
                     'x-api-key': apiKey,
                     'anthropic-version': '2023-06-01',
                 },
-                body: JSON.stringify({
+                signal: _ctrl.signal,
+            body: JSON.stringify({
                     model: 'claude-sonnet-4-20250514',
                     max_tokens: 600,
                     messages: [{ role: 'user', content: prompt }],
@@ -166,6 +170,7 @@ ${deal.leadData?.mainProblem ? 'Проблема клієнта: ' + deal.leadDa
             return res.status(502).json({ error: 'AI API error: ' + (data.error?.message || response.status) });
         }
     } catch(e) {
+        clearTimeout(_tout);
         console.error('[ai-crm] fetch error:', e.message);
         return res.status(500).json({ error: 'Network error: ' + e.message });
     }
@@ -178,6 +183,7 @@ ${deal.leadData?.mainProblem ? 'Проблема клієнта: ' + deal.leadDa
             aiAnalyzedBy:  uid,
         });
     } catch(e) {
+        clearTimeout(_tout);
         console.error('[ai-crm] Firestore write error:', e.message);
         // Не фейлимо запит — аналіз є, тільки save не вдалося
     }

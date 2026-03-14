@@ -454,14 +454,17 @@ async function tg(method, body) {
         body: JSON.stringify(body),
     }).then(r => r.json());
 }
+const TG_MAX = 4096;
+const _tgTrunc = (t) => (typeof t === 'string' && t.length > TG_MAX)
+    ? t.slice(0, TG_MAX - 3) + '...' : t;
 const send = (chatId, text, opts = {}) =>
-    tg('sendMessage', { chat_id: chatId, text, parse_mode: 'HTML', ...opts });
+    tg('sendMessage', { chat_id: chatId, text: _tgTrunc(text), parse_mode: 'HTML', ...opts });
 
 const sendButtons = (chatId, text, buttons) =>
     send(chatId, text, { reply_markup: { inline_keyboard: buttons } });
 
 const editMsg = (chatId, msgId, text, opts = {}) =>
-    tg('editMessageText', { chat_id: chatId, message_id: msgId, text, parse_mode: 'HTML', ...opts });
+    tg('editMessageText', { chat_id: chatId, message_id: msgId, text: _tgTrunc(text), parse_mode: 'HTML', ...opts });
 
 const answerCallback = (cbId, text) =>
     tg('answerCallbackQuery', { callback_query_id: cbId, text });
