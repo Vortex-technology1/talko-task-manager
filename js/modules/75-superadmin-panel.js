@@ -56,120 +56,476 @@ window.openSuperadminPanel = async function() {
     await loadSuperadminData();
 };
 
+// ── НОВА loadSuperadminData — збирає дані для всіх табів ──────────────────
 async function loadSuperadminData() {
     const container = document.getElementById('superadminContent');
     if (!container) return;
-    container.innerHTML = '<div class="spinner"></div>';
+    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:200px;gap:0.75rem;color:#6b7280;"><div class="spinner"></div> Завантаження даних...</div>';
+
     try {
-        const today = new Date().toISOString().split('T')[0];
-        const monthKey = today.slice(0, 7);
-        const companiesSnap = await firebase.firestore().collection('companies').limit(500).get();
+        const today      = new Date().toISOString().split('T')[0];
+        const monthKey   = today.slice(0, 7);
+        const weekAgo    = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+        const db         = firebase.firestore();
 
-        const usagePromises = companiesSnap.docs.map(async doc => {
+        // 1. Всі компанії
+        const companiesSnap = await db.collection('companies').limit(500).get();
+        const compDocs = companiesSnap.docs;
+
+        // 2. Per-company дані (паралельно)
+        const perCompany = await Promise.all(compDocs.map(async doc => {
+            const cid = doc.id;
+            const c   = doc.data();
             try {
-                const [todaySnap, monthSnap] = await Promise.all([
-                    firebase.firestore().collection('companies').doc(doc.id)
-                        .collection('aiUsageLog').where('date', '==', today).get(),
-                    firebase.firestore().collection('companies').doc(doc.id)
-                        .collection('aiUsageLog').where('month', '==', monthKey).get()
+                const [
+                    usersSnap, tasksSnap, eventsSnap,
+                    aiRecSnap, snapshotSnap, weeklyLogSnap,
+                    aiUsageTodaySnap, aiUsageMonthSnap
+                ] = await Promise.all([
+                    db.collection('companies').doc(cid).collection('users').get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('tasks')
+                        .where('status','!=','done').get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('events')
+                        .where('_localTs','>=', Date.now() - 7*86400000).limit(200).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('ai_recommendations')
+                        .where('dismissed','==',false).limit(10).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('snapshots').doc(today).get().catch(()=>null),
+                    db.collection('companies').doc(cid).collection('weekly_report_log').doc(today).get().catch(()=>null),
+                    db.collection('companies').doc(cid).collection('aiUsageLog')
+                        .where('date','==',today).get().catch(()=>({docs:[]})),
+                    db.collection('companies').doc(cid).collection('aiUsageLog')
+                        .where('month','==',monthKey).get().catch(()=>({docs:[]})),
                 ]);
-                return {
-                    id: doc.id,
-                    todayTokens: todaySnap.docs.reduce((s, d) => s + (d.data().tokens || 0), 0),
-                    monthTokens: monthSnap.docs.reduce((s, d) => s + (d.data().tokens || 0), 0)
-                };
-            } catch(e) { return { id: doc.id, todayTokens: 0, monthTokens: 0 }; }
-        });
 
-        const usageData = await Promise.all(usagePromises);
-        const usageMap = {};
-        usageData.forEach(u => { usageMap[u.id] = u; });
-        renderSuperadminPanel(companiesSnap.docs, usageMap);
+                // Агрегуємо events по типу
+                const eventCounts = {};
+                eventsSnap.docs.forEach(d => {
+                    const n = d.data().event_name || d.data().type || '?';
+                    eventCounts[n] = (eventCounts[n] || 0) + 1;
+                });
+
+                const users = usersSnap.docs.map(d => ({id:d.id,...d.data()}));
+                const ownerCount   = users.filter(u => u.role === 'owner').length;
+                const managerCount = users.filter(u => u.role === 'manager').length;
+                const telegramCount = users.filter(u => u.telegramChatId).length;
+
+                return {
+                    id:   cid,
+                    data: c,
+                    users, ownerCount, managerCount, telegramCount,
+                    activeTasks:  tasksSnap.docs.length,
+                    overdueTasks: tasksSnap.docs.filter(d => d.data().deadlineDate && d.data().deadlineDate < today).length,
+                    eventCounts,
+                    totalEvents7d: eventsSnap.docs.length,
+                    aiRecs:     aiRecSnap.docs.map(d=>d.data()),
+                    snapshot:   snapshotSnap?.exists ? snapshotSnap.data() : null,
+                    weeklyLog:  weeklyLogSnap?.exists ? weeklyLogSnap.data() : null,
+                    todayTokens: aiUsageTodaySnap.docs.reduce((s,d)=>s+(d.data().tokens||0),0),
+                    monthTokens: aiUsageMonthSnap.docs.reduce((s,d)=>s+(d.data().tokens||0),0),
+                };
+            } catch(e) {
+                return { id: cid, data: c, users:[], ownerCount:0, managerCount:0, telegramCount:0,
+                    activeTasks:0, overdueTasks:0, eventCounts:{}, totalEvents7d:0,
+                    aiRecs:[], snapshot:null, weeklyLog:null, todayTokens:0, monthTokens:0 };
+            }
+        }));
+
+        window._saData = { compDocs, perCompany, today, weekAgo };
+        renderSuperadminPanel(compDocs, {}, perCompany);
+
     } catch(e) {
-        if (container) container.innerHTML = `<p style="color:red;padding:1rem;">Помилка: ${e.message}</p>`;
+        if (container) container.innerHTML = `<p style="color:red;padding:1rem;">Помилка: ${_saEsc(e.message)}</p>`;
     }
 }
 window.loadSuperadminData = loadSuperadminData;
 
-function renderSuperadminPanel(companyDocs, usageMap) {
+// ── ГОЛОВНИЙ РЕНДЕР — таби ────────────────────────────────────────────────
+function renderSuperadminPanel(compDocs, usageMap, perCompany) {
     const container = document.getElementById('superadminContent');
     if (!container) return;
 
-    const rows = companyDocs.map(doc => {
-        const c = doc.data();
-        const usage = usageMap[doc.id] || { todayTokens: 0, monthTokens: 0 };
-        const dailyLimit = c.aiDailyTokenLimit || 0;
-        const pct = dailyLimit > 0 ? Math.min(100, Math.round(usage.todayTokens / dailyLimit * 100)) : 0;
-        const pctColor = pct > 90 ? '#ef4444' : pct > 70 ? '#f97316' : '#22c55e';
-        const safeId = doc.id.replace(/['"]/g, '');
-        const safeName = (c.name || doc.id).replace(/'/g, "\\'");
+    const pc = perCompany || window._saData?.perCompany || [];
+    const totalUsers   = pc.reduce((s,c) => s + c.users.length, 0);
+    const totalActive  = pc.reduce((s,c) => s + c.activeTasks, 0);
+    const totalOverdue = pc.reduce((s,c) => s + c.overdueTasks, 0);
+    const totalEvents  = pc.reduce((s,c) => s + c.totalEvents7d, 0);
+    const totalTgLinked = pc.reduce((s,c) => s + c.telegramCount, 0);
+    const planCounts   = { basic:0, pro:0, enterprise:0 };
+    pc.forEach(c => { const p = c.data.plan||'pro'; planCounts[p] = (planCounts[p]||0)+1; });
 
-        return `<tr data-company-id="${safeId}" style="border-bottom:1px solid #f3f4f6;">
-            <td style="font-weight:600;padding:0.55rem 0.5rem;font-size:0.85rem;">${c.name || doc.id}</td>
-            <td style="padding:0.4rem 0.5rem;">
-                <label class="toggle-switch" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
-                    <input type="checkbox" ${c.aiEnabled !== false ? 'checked' : ''}
-                        onchange="toggleCompanyAI('${safeId}', this.checked)"
-                        style="width:16px;height:16px;accent-color:#22c55e;cursor:pointer;">
-                </label>
-            </td>
-            <td style="padding:0.4rem 0.5rem;">
-                <input type="number" value="${c.aiDailyTokenLimit || ''}" placeholder="∞"
-                    min="0" step="1000"
-                    style="width:90px;padding:0.3rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;"
-                    onchange="updateAILimit('${safeId}', 'aiDailyTokenLimit', this.value)">
-            </td>
-            <td style="padding:0.4rem 0.5rem;">
-                <input type="number" value="${c.aiMonthlyTokenLimit || ''}" placeholder="∞"
-                    min="0" step="10000"
-                    style="width:100px;padding:0.3rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;"
-                    onchange="updateAILimit('${safeId}', 'aiMonthlyTokenLimit', this.value)">
-            </td>
-            <td style="padding:0.4rem 0.5rem;">
-                <div style="font-size:0.82rem;font-weight:600;">${usage.todayTokens.toLocaleString()}</div>
-                ${dailyLimit > 0 ? `<div style="height:4px;background:#e5e7eb;border-radius:2px;width:80px;margin-top:3px;">
-                    <div style="height:100%;width:${pct}%;background:${pctColor};border-radius:2px;"></div></div>` : ''}
-            </td>
-            <td style="padding:0.4rem 0.5rem;font-size:0.82rem;">${usage.monthTokens.toLocaleString()}</td>
-            <td style="padding:0.4rem 0.5rem;">
-                <select onchange="updateCompanyPlan('${safeId}', this.value)"
-                    style="padding:0.25rem 0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.78rem;cursor:pointer;background:white;">
-                    <option value="basic"      ${(c.plan||'pro')==='basic'      ? 'selected' : ''}>Basic</option>
-                    <option value="pro"        ${(c.plan||'pro')==='pro'        ? 'selected' : ''}>Pro</option>
-                    <option value="enterprise" ${(c.plan||'pro')==='enterprise' ? 'selected' : ''}>Enterprise</option>
-                </select>
-            </td>
-            <td style="padding:0.4rem 0.5rem;">
-                <button onclick="openFeatureFlags('${safeId}', '${safeName}')"
-                    style="padding:0.3rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;white-space:nowrap;">
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span> Модулі
-                </button>
+    container.innerHTML = `
+<!-- KPI рядок -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.6rem;margin-bottom:1.25rem;">
+    ${_saKpi('Компаній', compDocs.length, '#3b82f6')}
+    ${_saKpi('Користувачів', totalUsers, '#8b5cf6')}
+    ${_saKpi('Активних задач', totalActive, '#f59e0b')}
+    ${_saKpi('Прострочених', totalOverdue, totalOverdue>0?'#ef4444':'#22c55e')}
+    ${_saKpi('Events (7д)', totalEvents, '#06b6d4')}
+    ${_saKpi('Telegram підкл.', totalTgLinked, '#22c55e')}
+</div>
+
+<!-- Таби -->
+<div style="display:flex;gap:2px;border-bottom:2px solid #e5e7eb;margin-bottom:1rem;overflow-x:auto;">
+    ${['companies','users','activity','ai','diagnostic','system'].map((t,i) => `
+    <button id="saTab_${t}" onclick="saSwitchTab('${t}')"
+        style="padding:0.5rem 0.9rem;border:none;border-radius:6px 6px 0 0;cursor:pointer;
+        font-size:0.8rem;font-weight:600;white-space:nowrap;transition:all .15s;
+        background:${i===0?'white':'transparent'};color:${i===0?'#111':'#6b7280'};
+        box-shadow:${i===0?'0 -2px 0 #3b82f6 inset':''};border-bottom:${i===0?'2px solid white':'2px solid transparent'};">
+        ${ {companies:'🏢 Компанії',users:'👥 Юзери',activity:'📊 Активність',ai:'🤖 AI',diagnostic:'🔍 Діагностика',system:'⚙️ Система'}[t] }
+    </button>`).join('')}
+    <button onclick="loadSuperadminData()" style="margin-left:auto;padding:0.4rem 0.7rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;font-size:0.75rem;">↻</button>
+</div>
+
+<!-- Контент табів -->
+<div id="saTabContent_companies">${_saRenderCompanies(pc)}</div>
+<div id="saTabContent_users"    style="display:none;">${_saRenderUsers(pc)}</div>
+<div id="saTabContent_activity" style="display:none;">${_saRenderActivity(pc)}</div>
+<div id="saTabContent_ai"       style="display:none;">${_saRenderAI(pc)}</div>
+<div id="saTabContent_diagnostic" style="display:none;">${_saRenderDiagnostic(pc)}</div>
+<div id="saTabContent_system"   style="display:none;">${_saRenderSystem()}</div>
+`;
+}
+
+window.saSwitchTab = function(tab) {
+    ['companies','users','activity','ai','diagnostic','system'].forEach(t => {
+        const btn = document.getElementById(`saTab_${t}`);
+        const panel = document.getElementById(`saTabContent_${t}`);
+        const active = t === tab;
+        if (btn) {
+            btn.style.background  = active ? 'white' : 'transparent';
+            btn.style.color       = active ? '#111' : '#6b7280';
+            btn.style.boxShadow   = active ? '0 -2px 0 #3b82f6 inset' : '';
+            btn.style.borderBottom= active ? '2px solid white' : '2px solid transparent';
+        }
+        if (panel) panel.style.display = active ? '' : 'none';
+    });
+};
+
+// ── ТАБ 1: КОМПАНІЇ ──────────────────────────────────────────────────────
+function _saRenderCompanies(pc) {
+    const rows = pc.map(c => {
+        const d = c.data;
+        const plan = d.plan || 'pro';
+        const planBadge = {
+            basic:      '<span style="background:#f3f4f6;color:#6b7280;padding:1px 6px;border-radius:4px;font-size:0.7rem;">Basic</span>',
+            pro:        '<span style="background:#dcfce7;color:#16a34a;padding:1px 6px;border-radius:4px;font-size:0.7rem;">Pro</span>',
+            enterprise: '<span style="background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;font-size:0.7rem;">★ Ent</span>',
+        }[plan] || plan;
+        const safeId   = c.id.replace(/['\"]/g,'');
+        const safeName = (d.name||c.id).replace(/'/g,"\\'");
+        const overdueColor = c.overdueTasks > 5 ? '#ef4444' : c.overdueTasks > 0 ? '#f97316' : '#22c55e';
+        const snap = c.snapshot;
+        const ownerRatio = snap?.signals?.ownerTaskRatio ? Math.round(snap.signals.ownerTaskRatio*100)+'%' : '—';
+
+        return `<tr style="border-bottom:1px solid #f3f4f6;cursor:pointer;"
+            onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
+            <td style="padding:0.45rem 0.5rem;font-weight:600;font-size:0.82rem;">${_saEsc(d.name||c.id)}</td>
+            <td style="padding:0.45rem 0.5rem;">${planBadge}</td>
+            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.users.length}</td>
+            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.activeTasks}</td>
+            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;font-weight:600;color:${overdueColor};">${c.overdueTasks||'—'}</td>
+            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${ownerRatio}</td>
+            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.totalEvents7d||0}</td>
+            <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.telegramCount||0}</td>
+            <td style="padding:0.45rem 0.5rem;">
+                <div style="display:flex;gap:3px;flex-wrap:wrap;">
+                    <select onchange="updateCompanyPlan('${safeId}',this.value)"
+                        style="padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.72rem;cursor:pointer;">
+                        <option value="basic"      ${plan==='basic'?'selected':''}>Basic</option>
+                        <option value="pro"        ${plan==='pro'?'selected':''}>Pro</option>
+                        <option value="enterprise" ${plan==='enterprise'?'selected':''}>Ent</option>
+                    </select>
+                    <button onclick="openFeatureFlags('${safeId}','${safeName}')"
+                        style="padding:2px 6px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:5px;cursor:pointer;font-size:0.72rem;">Модулі</button>
+                    <button onclick="toggleCompanyAI('${safeId}',${d.aiEnabled!==false?'false':'true'})"
+                        style="padding:2px 6px;background:${d.aiEnabled!==false?'#fef2f2':'#f0fdf4'};color:${d.aiEnabled!==false?'#ef4444':'#16a34a'};border:1px solid ${d.aiEnabled!==false?'#fecaca':'#bbf7d0'};border-radius:5px;cursor:pointer;font-size:0.72rem;">
+                        AI ${d.aiEnabled!==false?'вимк':'увімк'}</button>
+                </div>
             </td>
         </tr>`;
     }).join('');
 
-    container.innerHTML = `
-    <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem;">
-        <span style="font-size:0.85rem;color:#6b7280;">Компаній: <strong>${companyDocs.length}</strong></span>
-        <button onclick="loadSuperadminData()" style="margin-left:auto;padding:0.35rem 0.8rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.8rem;">↻ Оновити</button>
-        <button onclick="deleteEmptyCompanies()" style="padding:0.35rem 0.8rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">🗑 Видалити пусті (0 юзерів)</button>
-        <button onclick="openGlobalAISettings()" style="padding:0.35rem 0.8rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Глобальні налаштування</button>
+    return `<div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.72rem;color:#6b7280;text-transform:uppercase;">
+            <th style="padding:0.45rem 0.5rem;text-align:left;">Компанія</th>
+            <th style="padding:0.45rem 0.5rem;text-align:left;">План</th>
+            <th style="padding:0.45rem 0.5rem;text-align:left;">Юзери</th>
+            <th style="padding:0.45rem 0.5rem;text-align:left;">Задачі</th>
+            <th style="padding:0.45rem 0.5rem;text-align:left;">Простр.</th>
+            <th style="padding:0.45rem 0.5rem;text-align:left;">Owner%</th>
+            <th style="padding:0.45rem 0.5rem;text-align:left;">Events7д</th>
+            <th style="padding:0.45rem 0.5rem;text-align:left;">TG</th>
+            <th style="padding:0.45rem 0.5rem;text-align:left;">Дії</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+    </table></div>
+    <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+        <button onclick="deleteEmptyCompanies()" style="padding:0.3rem 0.7rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">🗑 Видалити пусті</button>
+    </div>`;
+}
+
+// ── ТАБ 2: ЮЗЕРИ ─────────────────────────────────────────────────────────
+function _saRenderUsers(pc) {
+    const allUsers = [];
+    pc.forEach(c => {
+        c.users.forEach(u => allUsers.push({...u, companyName: c.data.name||c.id, companyId: c.id}));
+    });
+    allUsers.sort((a,b) => (a.companyName||'').localeCompare(b.companyName||''));
+
+    const roleColors = {owner:'#7c3aed', manager:'#2563eb', employee:'#374151', admin:'#dc2626'};
+    const rows = allUsers.map(u => {
+        const tgBadge = u.telegramChatId
+            ? '<span style="background:#dcfce7;color:#16a34a;padding:1px 5px;border-radius:4px;font-size:0.68rem;">TG ✓</span>'
+            : '<span style="color:#d1d5db;font-size:0.72rem;">—</span>';
+        return `<tr style="border-bottom:1px solid #f3f4f6;">
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${_saEsc(u.companyName)}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:500;">${_saEsc(u.name||'—')}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;color:#6b7280;">${_saEsc(u.email||'—')}</td>
+            <td style="padding:0.4rem 0.5rem;">
+                <span style="font-size:0.7rem;font-weight:600;color:${roleColors[u.role]||'#374151'};
+                    background:${roleColors[u.role]||'#374151'}15;padding:1px 6px;border-radius:4px;">
+                    ${_saEsc(u.role||'—')}</span>
+            </td>
+            <td style="padding:0.4rem 0.5rem;">${tgBadge}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;color:#9ca3af;">${u.language||'ua'}</td>
+        </tr>`;
+    }).join('');
+
+    const byRole = {};
+    allUsers.forEach(u => { byRole[u.role||'?'] = (byRole[u.role||'?']||0)+1; });
+
+    return `
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+        ${Object.entries(byRole).map(([r,n])=>`<span style="background:#f3f4f6;padding:3px 10px;border-radius:6px;font-size:0.78rem;"><strong>${n}</strong> ${r}</span>`).join('')}
+        <span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:6px;font-size:0.78rem;"><strong>${allUsers.filter(u=>u.telegramChatId).length}</strong> TG</span>
     </div>
     <div style="overflow-x:auto;">
-    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
-        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;">
-            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Компанія</th>
-            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">AI</th>
-            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">План</th>
-            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Ліміт/день</th>
-            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Ліміт/міс</th>
-            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Сьогодні</th>
-            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Цей місяць</th>
-            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Доступ</th>
+    <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.7rem;color:#6b7280;text-transform:uppercase;">
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Компанія</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Ім'я</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Email</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Роль</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">TG</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Мова</th>
         </tr></thead>
         <tbody>${rows}</tbody>
     </table></div>`;
 }
+
+// ── ТАБ 3: АКТИВНІСТЬ (events 7 днів) ────────────────────────────────────
+function _saRenderActivity(pc) {
+    const eventTotals = {};
+    pc.forEach(c => {
+        Object.entries(c.eventCounts||{}).forEach(([k,v]) => {
+            eventTotals[k] = (eventTotals[k]||0) + v;
+        });
+    });
+    const sorted = Object.entries(eventTotals).sort((a,b)=>b[1]-a[1]).slice(0,20);
+
+    const maxVal = sorted[0]?.[1] || 1;
+    const evRows = sorted.map(([name, cnt]) => {
+        const pct = Math.round(cnt/maxVal*100);
+        return `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid #f3f4f6;">
+            <span style="font-size:0.78rem;font-family:monospace;min-width:200px;color:#374151;">${_saEsc(name)}</span>
+            <div style="flex:1;background:#f3f4f6;border-radius:3px;height:6px;overflow:hidden;">
+                <div style="width:${pct}%;background:#3b82f6;height:100%;border-radius:3px;"></div>
+            </div>
+            <span style="font-size:0.78rem;font-weight:700;min-width:40px;text-align:right;">${cnt}</span>
+        </div>`;
+    }).join('');
+
+    // Активність по компаніях
+    const compActivity = pc
+        .filter(c => c.totalEvents7d > 0)
+        .sort((a,b) => b.totalEvents7d - a.totalEvents7d)
+        .map(c => `
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid #f3f4f6;">
+            <span style="font-size:0.78rem;min-width:180px;">${_saEsc(c.data.name||c.id)}</span>
+            <div style="flex:1;background:#f3f4f6;border-radius:3px;height:6px;overflow:hidden;">
+                <div style="width:${Math.round(c.totalEvents7d/Math.max(1,...pc.map(x=>x.totalEvents7d))*100)}%;
+                    background:#22c55e;height:100%;border-radius:3px;"></div>
+            </div>
+            <span style="font-size:0.78rem;font-weight:700;">${c.totalEvents7d}</span>
+        </div>`).join('');
+
+    return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;color:#111;">📈 Топ-20 подій (7 днів)</div>
+            <div style="max-height:400px;overflow-y:auto;">${evRows||'<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає даних</div>'}</div>
+        </div>
+        <div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;color:#111;">🏢 Активність по компаніях</div>
+            <div style="max-height:400px;overflow-y:auto;">${compActivity||'<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає даних</div>'}</div>
+        </div>
+    </div>`;
+}
+
+// ── ТАБ 4: AI ВИКОРИСТАННЯ ───────────────────────────────────────────────
+function _saRenderAI(pc) {
+    const rows = pc
+        .sort((a,b) => b.todayTokens - a.todayTokens)
+        .map(c => {
+            const d = c.data;
+            const dailyLimit  = d.aiDailyTokenLimit || 0;
+            const monthLimit  = d.aiMonthlyTokenLimit || 0;
+            const pctDay = dailyLimit > 0 ? Math.min(100, Math.round(c.todayTokens/dailyLimit*100)) : 0;
+            const pctMon = monthLimit > 0 ? Math.min(100, Math.round(c.monthTokens/monthLimit*100)) : 0;
+            const safeId = c.id.replace(/['\"]/g,'');
+            return `<tr style="border-bottom:1px solid #f3f4f6;">
+                <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:500;">${_saEsc(d.name||c.id)}</td>
+                <td style="padding:0.4rem 0.5rem;">
+                    <span style="font-size:0.72rem;padding:1px 6px;border-radius:4px;
+                        background:${d.aiEnabled!==false?'#dcfce7':'#fee2e2'};
+                        color:${d.aiEnabled!==false?'#16a34a':'#dc2626'};">
+                        ${d.aiEnabled!==false?'✓ ON':'✗ OFF'}</span>
+                </td>
+                <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${c.todayTokens.toLocaleString()}
+                    ${pctDay>0?`<div style="height:3px;background:#f3f4f6;border-radius:2px;width:60px;margin-top:2px;">
+                        <div style="height:100%;width:${pctDay}%;background:${pctDay>90?'#ef4444':'#3b82f6'};border-radius:2px;"></div></div>`:''}
+                </td>
+                <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${c.monthTokens.toLocaleString()}</td>
+                <td style="padding:0.4rem 0.5rem;">
+                    <input type="number" value="${d.aiDailyTokenLimit||''}" placeholder="∞" min="0" step="1000"
+                        style="width:80px;padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.75rem;"
+                        onchange="updateAILimit('${safeId}','aiDailyTokenLimit',this.value)">
+                </td>
+                <td style="padding:0.4rem 0.5rem;">
+                    <input type="number" value="${d.aiMonthlyTokenLimit||''}" placeholder="∞" min="0" step="10000"
+                        style="width:90px;padding:2px 4px;border:1px solid #e5e7eb;border-radius:5px;font-size:0.75rem;"
+                        onchange="updateAILimit('${safeId}','aiMonthlyTokenLimit',this.value)">
+                </td>
+            </tr>`;
+        }).join('');
+
+    const totalToday = pc.reduce((s,c)=>s+c.todayTokens,0);
+    const totalMonth = pc.reduce((s,c)=>s+c.monthTokens,0);
+
+    return `
+    <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;">
+        ${_saKpi('Сьогодні токенів', totalToday.toLocaleString(), '#3b82f6')}
+        ${_saKpi('Місяць токенів', totalMonth.toLocaleString(), '#8b5cf6')}
+        <div style="flex:1;text-align:right;">
+            <button onclick="openGlobalAISettings()"
+                style="padding:0.4rem 0.9rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">
+                ⚙️ Глобальні налаштування AI
+            </button>
+        </div>
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.7rem;color:#6b7280;text-transform:uppercase;">
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Компанія</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">AI</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Сьогодні</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Місяць</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Ліміт/день</th>
+            <th style="padding:0.4rem 0.5rem;text-align:left;">Ліміт/міс</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+    </table></div>`;
+}
+
+// ── ТАБ 5: ДІАГНОСТИКА ───────────────────────────────────────────────────
+function _saRenderDiagnostic(pc) {
+    const withRecs = pc.filter(c => c.aiRecs && c.aiRecs.length > 0);
+    const withSnapshot = pc.filter(c => c.snapshot);
+
+    const recCards = withRecs.map(c => {
+        const criticals = c.aiRecs.filter(r => r.severity === 'critical');
+        const warnings  = c.aiRecs.filter(r => r.severity === 'warning');
+        return `<div style="border:1px solid #e5e7eb;border-radius:8px;padding:0.75rem;margin-bottom:0.5rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+                <span style="font-weight:700;font-size:0.82rem;">${_saEsc(c.data.name||c.id)}</span>
+                <div style="display:flex;gap:4px;">
+                    ${criticals.length?`<span style="background:#fee2e2;color:#dc2626;padding:1px 7px;border-radius:4px;font-size:0.7rem;font-weight:700;">🔴 ${criticals.length}</span>`:''}
+                    ${warnings.length?`<span style="background:#fef9c3;color:#ca8a04;padding:1px 7px;border-radius:4px;font-size:0.7rem;font-weight:700;">🟡 ${warnings.length}</span>`:''}
+                </div>
+            </div>
+            ${c.aiRecs.slice(0,3).map(r=>`
+            <div style="font-size:0.75rem;color:#374151;padding:2px 0;border-top:1px solid #f3f4f6;">
+                ${r.severity==='critical'?'🔴':'🟡'} ${_saEsc(r.signalText||r.signal||'—')}
+            </div>`).join('')}
+        </div>`;
+    }).join('') || '<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає активних рекомендацій</div>';
+
+    const snapRows = withSnapshot.map(c => {
+        const s = c.snapshot.signals || {};
+        const totals = c.snapshot.totals || {};
+        return `<tr style="border-bottom:1px solid #f3f4f6;">
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;font-weight:500;">${_saEsc(c.data.name||c.id)}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${totals.active||0}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;color:${(totals.overdue||0)>0?'#ef4444':'#22c55e'};font-weight:600;">${totals.overdue||0}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${s.ownerTaskCount||0} <span style="color:#9ca3af;">(${s.ownerTaskRatio?Math.round(s.ownerTaskRatio*100)+'%':'—'})</span></td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${(s.functionsWithHighReturn||[]).length||'—'}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${(s.processBottlenecks||[]).length||'—'}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.8rem;">${totals.slaBreaches||'—'}</td>
+            <td style="padding:0.4rem 0.5rem;font-size:0.75rem;color:#9ca3af;">${c.weeklyLog?'✓ надіслано':'—'}</td>
+        </tr>`;
+    }).join('');
+
+    return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;">🔍 AI рекомендації (сьогодні)</div>
+            <div style="max-height:420px;overflow-y:auto;">${recCards}</div>
+        </div>
+        <div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;">📸 Snapshot сьогодні</div>
+            <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+                <thead><tr style="background:#f9fafb;font-size:0.68rem;color:#6b7280;text-transform:uppercase;">
+                    <th style="padding:0.35rem 0.4rem;text-align:left;">Компанія</th>
+                    <th style="padding:0.35rem 0.4rem;">Актив</th>
+                    <th style="padding:0.35rem 0.4rem;">Простр</th>
+                    <th style="padding:0.35rem 0.4rem;">Owner</th>
+                    <th style="padding:0.35rem 0.4rem;">Return</th>
+                    <th style="padding:0.35rem 0.4rem;">Bottlnck</th>
+                    <th style="padding:0.35rem 0.4rem;">SLA</th>
+                    <th style="padding:0.35rem 0.4rem;">Звіт</th>
+                </tr></thead>
+                <tbody>${snapRows||'<tr><td colspan="8" style="padding:1rem;text-align:center;color:#9ca3af;">Немає snapshot</td></tr>'}</tbody>
+            </table></div>
+        </div>
+    </div>`;
+}
+
+// ── ТАБ 6: СИСТЕМА ───────────────────────────────────────────────────────
+function _saRenderSystem() {
+    return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">🤖 AI Налаштування</div>
+            <button onclick="openGlobalAISettings()"
+                style="width:100%;padding:0.55rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">
+                ⚙️ Глобальні налаштування (ключі, агенти, моделі)
+            </button>
+        </div>
+        <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">🗑 Обслуговування</div>
+            <button onclick="deleteEmptyCompanies()"
+                style="width:100%;padding:0.55rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
+                Видалити порожні компанії
+            </button>
+        </div>
+    </div>`;
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function _saKpi(label, value, color) {
+    return `<div style="background:white;border:1px solid #e5e7eb;border-radius:10px;padding:0.7rem 0.9rem;border-top:3px solid ${color};">
+        <div style="font-size:0.68rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;">${_saEsc(label)}</div>
+        <div style="font-size:1.5rem;font-weight:800;color:${color};line-height:1.2;margin-top:2px;">${value}</div>
+    </div>`;
+}
+function _saEsc(s) {
+    if (!s && s !== 0) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 
 window.updateCompanyPlan = async function(companyId, plan) {
     const validPlans = ['basic', 'pro', 'enterprise'];
