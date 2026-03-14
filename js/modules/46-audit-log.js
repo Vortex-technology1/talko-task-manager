@@ -61,7 +61,7 @@
                     entry.details = details;
                 }
                 
-                await db.collection('companies').doc(currentCompany)
+                await window.companyRef()
                     .collection('tasks').doc(taskId)
                     .collection('history').add(entry);
             } catch (e) {
@@ -80,7 +80,7 @@
             container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:0.5rem;" data-i18n="uploading">Завантаження...</p>';
             
             try {
-                const snap = await db.collection('companies').doc(currentCompany)
+                const snap = await window.companyRef()
                     .collection('tasks').doc(taskId)
                     .collection('history')
                     .orderBy('timestamp', 'desc')

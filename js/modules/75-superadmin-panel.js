@@ -1526,7 +1526,10 @@ window._switchAiTab = function(tab) {
 };
 
 window.clearPlatformKey = async function() {
-    if (!confirm('Видалити платформний OpenAI ключ? Компанії без власного ключа втратять доступ до AI.')) return;
+    const _delOk = window.showConfirmModal
+        ? await showConfirmModal('Видалити платформний OpenAI ключ?\nКомпанії без власного ключа втратять доступ до AI.',{danger:true})
+        : confirm('Видалити платформний OpenAI ключ?');
+    if (!_delOk) return;
     try {
         await firebase.firestore().collection('settings').doc('platform').update({
             openaiApiKey: firebase.firestore.FieldValue.delete(),

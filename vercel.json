@@ -128,6 +128,18 @@
     "api/site.js": {
       "maxDuration": 10,
       "memory": 256
+    },
+    "api/crm-form.js": {
+      "maxDuration": 15,
+      "memory": 256
+    },
+    "api/funnel-ai.js": {
+      "maxDuration": 30,
+      "memory": 256
+    },
+    "api/telegram.js": {
+      "maxDuration": 30,
+      "memory": 512
     }
   },
   "regions": [

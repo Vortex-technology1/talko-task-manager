@@ -19,7 +19,7 @@
         function checkGoogleCalendarStatus() {
             if (!currentUser || !currentCompany) return;
             
-            db.collection('companies').doc(currentCompany)
+            window.companyRef()
                 .collection('users').doc(currentUser.uid)
                 .get()
                 .then(doc => {
@@ -87,7 +87,7 @@
                 const email = userInfo.email || currentUser.email || t('connected');
                 
                 // Save to Firestore using set with merge
-                return db.collection('companies').doc(currentCompany)
+                return window.companyRef()
                     .collection('users').doc(currentUser.uid)
                     .set({
                         googleCalendarConnected: true,
@@ -103,7 +103,7 @@
             .catch(err => {
                 console.error('Error saving calendar connection:', err);
                 // Try to save without email
-                db.collection('companies').doc(currentCompany)
+                window.companyRef()
                     .collection('users').doc(currentUser.uid)
                     .set({
                         googleCalendarConnected: true,
@@ -134,7 +134,7 @@
             }
             
             // Update Firestore
-            db.collection('companies').doc(currentCompany)
+            window.companyRef()
                 .collection('users').doc(currentUser.uid)
                 .set({
                     googleCalendarConnected: false,

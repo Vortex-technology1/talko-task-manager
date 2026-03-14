@@ -2421,8 +2421,11 @@
                 const snap = await db.collection('companies').doc(currentCompany).collection(col).get();
                 const batch = db.batch();
                 let count = 0;
-                snap.docs.forEach(d => { batch.delete(d.ref); count++; });
-                if (count > 0) await batch.commit();
+                for (let _i=0; _i<snap.docs.length; _i+=450) {
+                    const _b=db.batch();
+                    snap.docs.slice(_i,_i+450).forEach(d=>_b.delete(d.ref));
+                    await _b.commit(); count+=Math.min(450,snap.docs.length-_i);
+                }
             }
             statsMetrics = []; statsEntries = []; statsTargets = []; statsAggregates = [];
             showToast('Всі Stats дані видалені', 'success');

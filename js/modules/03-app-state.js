@@ -148,3 +148,13 @@
                 updateOverdueBadges();
             });
         }
+// ── Глобальний обробник необроблених помилок ──────────────
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('[TALKO] Unhandled Promise:', e.reason);
+    // Не показуємо користувачу — тільки логуємо
+    // Критичні помилки Firebase/Auth мають власний catch
+});
+window.addEventListener('error', function(e) {
+    if (e.message && e.message.includes('Script error')) return; // cross-origin
+    console.error('[TALKO] Global error:', e.message, e.filename, e.lineno);
+});
