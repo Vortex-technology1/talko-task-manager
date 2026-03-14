@@ -1208,7 +1208,7 @@ window._exportTx = async function(type) {
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
     if (typeof showToast === 'function') showToast(`Експортовано ${rows.length} записів`, 'success');
-  } catch(e) { alert('Помилка експорту: ' + e.message); }
+  } catch(e) { if (typeof showToast === 'function') showToast('Помилка експорту: ' + e.message, 'error'); }
 };
 
 window._exportTxXlsx = async function(type) {
@@ -1279,7 +1279,7 @@ window._exportTxXlsx = async function(type) {
       document.head.appendChild(script);
       if (typeof showToast === 'function') showToast(window.t('finLibLoading'), 'info', 2000);
     }
-  } catch(e) { alert('Помилка Excel експорту: ' + e.message); }
+  } catch(e) { if (typeof showToast === 'function') showToast('Помилка Excel експорту: ' + e.message, 'error'); }
 };
 
 // ── Переказ між рахунками ─────────────────────────────────
@@ -1418,7 +1418,7 @@ window._doTransfer = async function() {
     if (typeof showToast === 'function') showToast(`${window.t('finTransferDone').replace('{sum}', fmt(amount))}`, 'success');
   } catch(e) {
     if (btn) { btn.disabled = false; btn.textContent = 'Переказати'; }
-    alert('Помилка переказу: ' + e.message);
+    if (typeof showToast === 'function') showToast('Помилка переказу: ' + e.message, 'error');
   }
 };
 
@@ -1661,6 +1661,8 @@ window._invRecalc = function() {
 
 // ── Збереження ─────────────────────────────────────────────
 window._invoiceSave = async function(editId) {
+  if (window._invoiceSaving) return; // guard проти подвійного кліку
+  window._invoiceSaving = true;
   const btn = document.getElementById('inv_save_btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Зберігаємо...'; }
 
@@ -1683,8 +1685,8 @@ window._invoiceSave = async function(editId) {
     updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
   };
   if (!editId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-  if (!data.number) { alert(window.t('finEnterInvNum')); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } return; }
-  if (!data.clientName) { alert(window.t('finEnterClient')); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } return; }
+  if (!data.number) { if (typeof showToast === 'function') showToast(window.t('finEnterInvNum'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } window._invoiceSaving = false; return; }
+  if (!data.clientName) { if (typeof showToast === 'function') showToast(window.t('finEnterClient'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } window._invoiceSaving = false; return; }
 
   // Видаляємо undefined
   if (editId) delete data.status;
@@ -1702,8 +1704,10 @@ window._invoiceSave = async function(editId) {
     renderSubTab('invoices');
   } catch(e) {
     console.error('[Invoice] save error:', e);
-    alert('Помилка: ' + e.message);
+    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
     if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
+  } finally {
+    window._invoiceSaving = false;
   }
 };
 
@@ -1733,12 +1737,15 @@ window._invoiceMarkPaid = async function(id) {
 
 // ── Видалення ─────────────────────────────────────────────
 window._invoiceDelete = async function(id) {
-  if (!confirm(window.t('finDeleteInvoice'))) return;
+  const _delConfirmed = typeof showConfirmModal === 'function'
+    ? await showConfirmModal(window.t('finDeleteInvoice'), { danger: true })
+    : confirm(window.t('finDeleteInvoice'));
+  if (!_delConfirmed) return;
   try {
     await colRef('finance_invoices').doc(id).delete();
     _state.invoices = _state.invoices.filter(i => i.id !== id);
     renderSubTab('invoices');
-  } catch(e) { alert('Помилка: ' + e.message); }
+  } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
 };
 
 // ── PDF через jsPDF (клієнтський, без API) ─────────────────
@@ -2651,7 +2658,7 @@ window._savePlanBudget = async function() {
     const btn = document.querySelector('[onclick="window._savePlanBudget()"]');
     if (btn) { btn.textContent = window.t('finSaved'); setTimeout(()=>{ btn.textContent = window.t('finSave'); }, 1500); }
   } catch(e) {
-    alert('Помилка збереження: ' + e.message);
+    if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
   }
 };
 
@@ -2920,7 +2927,7 @@ window._saveFuncNorms = async function() {
   try {
     await colRef('finance_budgets').doc(_planMonth).set(data, { merge: true });
     if (typeof showToast === 'function') showToast(window.t('finNormsSaved'), 'success');
-  } catch(e) { alert('Помилка: ' + e.message); }
+  } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
 };
 
 // ── Cashflow прогноз 30/60/90 днів ───────────────────────
@@ -3517,7 +3524,7 @@ window._saveRates = async function() {
     const st = document.getElementById('ratesStatus');
     if (st) st.textContent = 'Збережено ' + new Date().toLocaleTimeString(window.getLocale ? window.getLocale() : 'uk-UA');
     if (typeof showToast === 'function') showToast(window.t('finRateSaved'), 'success');
-  } catch(e) { alert('Помилка збереження: ' + e.message); }
+  } catch(e) { if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error'); }
 };
 
 window._fetchRates = async function() {
@@ -3574,19 +3581,22 @@ window._financeAddCategory = async function(type) {
     _state.categories[type].push({ id: ref.id, name: name.trim(), type, system: false });
     renderSubTab('settings');
   } catch(e) {
-    alert('Помилка: ' + e.message);
+    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
   }
 };
 
 // Видалення категорії
 window._financeDeleteCategory = async function(catId, type) {
-  if (!confirm(window.t('finDeleteCat'))) return;
+  const _catConfirmed = typeof showConfirmModal === 'function'
+    ? await showConfirmModal(window.t('finDeleteCat'), { danger: true })
+    : confirm(window.t('finDeleteCat'));
+  if (!_catConfirmed) return;
   try {
     await colRef('finance_categories').doc(catId).delete();
     _state.categories[type] = _state.categories[type].filter(c => c.id !== catId);
     renderSubTab('settings');
   } catch(e) {
-    alert('Помилка: ' + e.message);
+    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
   }
 };
 
@@ -3608,7 +3618,7 @@ window._financeAddAccount = async function() {
     _state.accounts.push({ id: ref.id, name: name.trim(), type: typeAcc, currency: currency.toUpperCase(), balance: 0 });
     renderSubTab('settings');
   } catch(e) {
-    alert('Помилка: ' + e.message);
+    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
   }
 };
 
@@ -4159,9 +4169,9 @@ window._financeSaveTx = async function() {
   const dateVal = document.getElementById('fmDate')?.value;
 
   // Валідація
-  if (!amount || amount <= 0) { alert(window.t('finTransferAmount')); return; }
-  if (!catId)                 { alert(window.t('finSelectCategory')); return; }
-  if (!dateVal)               { alert(window.t('finSelectDate')); return; }
+  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast(window.t('finTransferAmount'), 'warning'); return; }
+  if (!catId)                 { if (typeof showToast === 'function') showToast(window.t('finSelectCategory'), 'warning'); return; }
+  if (!dateVal)               { if (typeof showToast === 'function') showToast(window.t('finSelectDate'), 'warning'); return; }
 
   const btn = document.getElementById('fmSaveBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
@@ -4220,14 +4230,17 @@ window._financeSaveTx = async function() {
 
   } catch(e) {
     console.error('[Finance] saveTx error:', e);
-    alert('Помилка збереження: ' + e.message);
+    if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
     if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
   }
 };
 
 // Видалення транзакції
 window._financeDeleteTx = async function(txId, type) {
-  if (!confirm(window.t('finDeleteTx'))) return;
+  const _txConfirmed = typeof showConfirmModal === 'function'
+    ? await showConfirmModal(window.t('finDeleteTx'), { danger: true })
+    : confirm(window.t('finDeleteTx'));
+  if (!_txConfirmed) return;
   try {
     const snap = await colRef('finance_transactions').doc(txId).get();
     if (!snap.exists) return;
@@ -4253,7 +4266,7 @@ window._financeDeleteTx = async function(txId, type) {
 
   } catch(e) {
     console.error('[Finance] deleteTx error:', e);
-    alert('Помилка видалення: ' + e.message);
+    if (typeof showToast === 'function') showToast('Помилка видалення: ' + e.message, 'error');
   }
 };
 
@@ -4577,7 +4590,7 @@ window._addEntityTx = function(entityId, field, type) {
       const tx = {
         type:          'income',
         amount:        parseFloat(p.amount) || 0,
-        currency:      _state.currency || 'EUR',
+        currency:      p.currency || _state.currency || 'EUR', // deal currency priority
         date:          firebase.firestore.Timestamp.now(),
         description:   `CRM: ${p.clientName || 'Угода'} — оплата`,
         counterparty:  p.clientName || '',
