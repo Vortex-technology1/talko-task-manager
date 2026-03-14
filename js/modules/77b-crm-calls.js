@@ -18,7 +18,8 @@ window.crmStartCall = function (dealId, phone, clientName) {
 
     // FIX: <a> + click() замість window.location.href — не перезавантажує SPA в Safari
     const telLink = document.createElement('a');
-    telLink.href = `tel:${phone}`;
+    const _cleanPhone = String(phone).replace(/[^\d+]/g, '');
+    telLink.href = `tel:${_cleanPhone}`;
     telLink.style.display = 'none';
     document.body.appendChild(telLink);
     telLink.click();

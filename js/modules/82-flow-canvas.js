@@ -49,6 +49,8 @@ const PORT_LABELS = {
 
 // ── Open ───────────────────────────────────────────────────
 window.openFlowCanvas = async function(flowId, botId) {
+    // FIX: remove previous overlay before opening new one
+    document.getElementById('botsEditorOverlay')?.remove();
     fc.flowId = flowId;
     fc.botId = botId || window._currentBotId || null;
     // Зберігаємо стан canvas для відновлення після рефрешу

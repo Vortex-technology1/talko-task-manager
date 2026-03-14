@@ -111,7 +111,7 @@ window.crmImportHandleFile = async function (file) {
     } catch (e) {
         body.innerHTML = `
         <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:1rem;color:#dc2626;font-size:0.82rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ${e.message}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ${escHtml(e.message)}
         </div>
         <button id="crmImportBackBtn"
             style="margin-top:0.75rem;padding:0.4rem 1rem;background:#f4f5f7;border:1px solid #e8eaed;
@@ -451,7 +451,7 @@ window.crmImportExecute = async function () {
                 <div style="font-size:0.72rem;color:#6b7280;">Дублікати / порожні</div>
             </div>` : ''}
             ${errors ? `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:0.65rem 1.25rem;">
-                <div style="font-size:1.5rem;font-weight:700;color:#ef4444;">${errors}</div>
+                <div style="font-size:1.5rem;font-weight:700;color:#ef4444;">${escHtml(String(errors))}</div>
                 <div style="font-size:0.72rem;color:#6b7280;">Помилки</div>
             </div>` : ''}
         </div>
