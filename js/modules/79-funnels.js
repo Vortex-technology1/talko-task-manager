@@ -15,7 +15,7 @@
 
         // Load funnel
         const doc = await window.companyRef()
-            .collection('funnels').doc(funnelId).get();
+            .collection(window.DB_COLS?.FUNNELS || 'funnels').doc(funnelId).get();
 
         if (!doc.exists) { if(window.showToast)showToast('Воронку не знайдено','warning'); else alert('Воронку не знайдено'); return; }
         funnelEditorData = { id: doc.id, ...doc.data() };
@@ -342,7 +342,7 @@
         }
         try {
             await window.companyRef()
-                .collection('funnels').doc(funnelEditorId)
+                .collection(window.DB_COLS?.FUNNELS || 'funnels').doc(funnelEditorId)
                 .update({
                     steps: funnelSteps,
                     calendlyUrl: document.getElementById('funnelCalendlyUrl')?.value.trim() || null,

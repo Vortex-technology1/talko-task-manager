@@ -47,7 +47,11 @@ module.exports = async function handler(req, res) {
     // Валідація обов'язкових полів
     if (!formId || !companyId) return res.status(400).json({ error: 'formId і companyId обовʼязкові' });
     if (!name || String(name).trim().length < 2) return res.status(400).json({ error: 'Вкажіть ім\'я' });
+    if (String(name).trim().length > 200) return res.status(400).json({ error: 'Ім\'я занадто довге' });
     if (!phone && !email) return res.status(400).json({ error: 'Вкажіть телефон або email' });
+    if (phone  && String(phone).length  > 30)   return res.status(400).json({ error: 'Телефон занадто довгий' });
+    if (email  && String(email).length  > 200)  return res.status(400).json({ error: 'Email занадто довгий' });
+    if (message && String(message).length > 5000) return res.status(400).json({ error: 'Повідомлення занадто довге' });
 
     // Rate limit по IP
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
@@ -78,22 +82,29 @@ module.exports = async function handler(req, res) {
 
         if (phone) {
             const cleanPhone = String(phone).replace(/\D/g, '');
-            const existSnap = await clientsRef.get().catch(() => null);
-            if (existSnap) {
-                const existing = existSnap.docs.find(d => (d.data().phone||'').replace(/\D/g,'') === cleanPhone);
-                if (existing) clientId = existing.id;
+            // FIX CRITICAL: query by phone field directly — не читаємо всю колекцію
+            const byPhone = await clientsRef
+                .where('phone', '==', phone).limit(1).get().catch(() => null);
+            if (byPhone && !byPhone.empty) {
+                clientId = byPhone.docs[0].id;
+            } else if (cleanPhone.length >= 7) {
+                // Fallback: пошук по нормалізованому номеру (без пробілів/дефісів)
+                const byClean = await clientsRef
+                    .where('phoneNormalized', '==', cleanPhone).limit(1).get().catch(() => null);
+                if (byClean && !byClean.empty) clientId = byClean.docs[0].id;
             }
         }
 
         if (!clientId) {
             const clientDoc = await clientsRef.add({
-                name:      String(name).trim(),
-                phone:     phone  || '',
-                email:     email  || '',
-                source:    source || formData.defaultSource || 'web_form',
-                note:      message || '',
-                createdAt: now,
-                createdBy: 'form:' + formId,
+                name:            String(name).trim().slice(0, 200),
+                phone:           phone  ? String(phone).slice(0, 30)  : '',
+                phoneNormalized: phone  ? String(phone).replace(/\D/g, '').slice(0, 20) : '',
+                email:           email  ? String(email).slice(0, 200) : '',
+                source:          source || formData.defaultSource || 'web_form',
+                note:            message ? String(message).slice(0, 2000) : '',
+                createdAt:       now,
+                createdBy:       'form:' + formId,
             });
             clientId = clientDoc.id;
         }
@@ -106,7 +117,7 @@ module.exports = async function handler(req, res) {
             phone:       phone  || '',
             email:       email  || '',
             source:      source || formData.defaultSource || 'web_form',
-            note:        message || '',
+            note:        message ? String(message).slice(0, 2000) : '',
             stage:       stageId,
             pipelineId:  pipelineId,
             assigneeId:  assigneeId,
