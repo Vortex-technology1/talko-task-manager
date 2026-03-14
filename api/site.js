@@ -2,14 +2,18 @@
 const admin = require('firebase-admin');
 
 // ── Firebase init (перевірений патерн з webhook.js) ─────────
+// Firebase init — точна копія telegram.js (перевірений патерн)
 if (!admin.apps.length) {
+    let pk = process.env.FIREBASE_PRIVATE_KEY || '';
+    // Якщо ключ в base64 (деякі Vercel конфіги) — декодуємо
+    if (pk && !pk.includes('-----BEGIN')) {
+        try { pk = Buffer.from(pk, 'base64').toString('utf8'); } catch(e) {}
+    }
+    // Замінюємо literal \n на реальні переноси рядків
+    if (pk && pk.includes('\\n')) {
+        pk = pk.replace(/\\n/g, '\n');
+    }
     try {
-        let pk = process.env.FIREBASE_PRIVATE_KEY || '';
-        // Vercel може зберігати \n як літерал або як escape
-        pk = pk.replace(/\\n/g, '\n').replace(/\\\\n/g, '\n').trim();
-        // Якщо ключ обгорнутий в лапки — прибираємо
-        if (pk.startsWith('"') && pk.endsWith('"')) pk = pk.slice(1, -1);
-        if (pk.startsWith("'") && pk.endsWith("'")) pk = pk.slice(1, -1);
         admin.initializeApp({
             credential: admin.credential.cert({
                 projectId:   process.env.FIREBASE_PROJECT_ID || 'task-manager-44e84',
@@ -18,7 +22,7 @@ if (!admin.apps.length) {
             }),
         });
     } catch(e) {
-        console.error('[site.js] Firebase init:', e.message);
+        console.error('[site.js] Firebase init error:', e.message);
     }
 }
 
@@ -46,15 +50,23 @@ module.exports = async (req, res) => {
     // Debug endpoint — тільки для superadmin
     if (req.query.debug === 'firebase_init') {
         const pk = process.env.FIREBASE_PRIVATE_KEY || '';
+        let pkDecoded = pk;
+        if (pk && !pk.includes('-----BEGIN')) {
+            try { pkDecoded = Buffer.from(pk, 'base64').toString('utf8'); } catch(e) {}
+        }
         return res.status(200).json({
-            hasProjectId:   !!process.env.FIREBASE_PROJECT_ID,
-            hasClientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
-            hasPrivateKey:  !!pk,
-            pkLength:       pk.length,
-            pkStart:        pk.substring(0, 30),
-            pkHasLiteralN:  pk.includes('\\n'),
-            pkHasNewline:   pk.includes('\n'),
-            appsCount:      admin.apps.length,
+            hasProjectId:    !!process.env.FIREBASE_PROJECT_ID,
+            projectId:       process.env.FIREBASE_PROJECT_ID || '(missing)',
+            hasClientEmail:  !!process.env.FIREBASE_CLIENT_EMAIL,
+            hasPrivateKey:   !!pk,
+            pkLength:        pk.length,
+            pkFirst40:       pk.substring(0, 40),
+            pkIsBase64:      !pk.includes('-----BEGIN'),
+            pkDecodedStart:  pkDecoded.substring(0, 40),
+            pkHasLiteralN:   pk.includes('\\n'),
+            pkHasNewline:    pk.includes('\n'),
+            appsInitialized: admin.apps.length,
+            nodeVersion:     process.version,
         });
     }
 
