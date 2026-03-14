@@ -5,7 +5,11 @@ const admin = require('firebase-admin');
 if (!admin.apps.length) {
     try {
         let pk = process.env.FIREBASE_PRIVATE_KEY || '';
-        pk = pk.replace(/\\n/g, '\n');
+        // Vercel може зберігати \n як літерал або як escape
+        pk = pk.replace(/\\n/g, '\n').replace(/\\\\n/g, '\n').trim();
+        // Якщо ключ обгорнутий в лапки — прибираємо
+        if (pk.startsWith('"') && pk.endsWith('"')) pk = pk.slice(1, -1);
+        if (pk.startsWith("'") && pk.endsWith("'")) pk = pk.slice(1, -1);
         admin.initializeApp({
             credential: admin.credential.cert({
                 projectId:   process.env.FIREBASE_PROJECT_ID || 'task-manager-44e84',
@@ -38,6 +42,21 @@ module.exports = async (req, res) => {
     // CORS для preview
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.method === 'OPTIONS') return res.status(200).end();
+
+    // Debug endpoint — тільки для superadmin
+    if (req.query.debug === 'firebase_init') {
+        const pk = process.env.FIREBASE_PRIVATE_KEY || '';
+        return res.status(200).json({
+            hasProjectId:   !!process.env.FIREBASE_PROJECT_ID,
+            hasClientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
+            hasPrivateKey:  !!pk,
+            pkLength:       pk.length,
+            pkStart:        pk.substring(0, 30),
+            pkHasLiteralN:  pk.includes('\\n'),
+            pkHasNewline:   pk.includes('\n'),
+            appsCount:      admin.apps.length,
+        });
+    }
 
     let { id: siteId, cid: companyId } = req.query;
 
