@@ -20,6 +20,15 @@ if (!admin.apps.length) {
 }
 const db = initError ? null : admin.firestore();
 
+// ── Auth helper ─────────────────────────────────────────
+async function _verifyAuth(req) {
+    const h = req.headers.authorization || '';
+    if (!h.startsWith('Bearer ')) return null;
+    try {
+        return await admin.auth().verifyIdToken(h.slice(7));
+    } catch { return null; }
+}
+
 module.exports = async (req, res) => {
     // ── GET: діагностика ─────────────────────────────────────
     if (req.method === 'GET') {
@@ -47,12 +56,16 @@ module.exports = async (req, res) => {
     // ── POST /api/webhook?action=send-message ────────────────
     // Відправка повідомлення від менеджера через бота
     if (req.query.action === 'send-message') {
-        return handleSendMessage(req, res);
+        const _authUser = await _verifyAuth(req);
+        if (!_authUser) return res.status(401).json({ error: 'Unauthorized' });
+        return handleSendMessage(req, res, _authUser);
     }
 
     // ── POST /api/webhook?action=mark-read ──────────────────
     // Позначити повідомлення як прочитані
     if (req.query.action === 'mark-read') {
+        const _authUser2 = await _verifyAuth(req);
+        if (!_authUser2) return res.status(401).json({ error: 'Unauthorized' });
         return handleMarkRead(req, res);
     }
 
@@ -1505,10 +1518,13 @@ async function finish(session, flow, compRef, channel, compData = {}) {
 // POST /api/webhook?action=send-message
 // Body: { companyId, contactId, text, botToken }
 // ─────────────────────────────────────────
-async function handleSendMessage(req, res) {
+async function handleSendMessage(req, res, _authUser) {
     const { companyId, contactId, text, botToken } = req.body || {};
     if (!companyId || !contactId || !text) {
         return res.status(400).json({ error: 'Missing: companyId, contactId, text' });
+    }
+    if (typeof text !== 'string' || text.length > 4000) {
+        return res.status(400).json({ error: 'text: max 4000 chars' });
     }
     if (!db) return res.status(500).json({ error: 'DB not initialized' });
 
@@ -1516,6 +1532,14 @@ async function handleSendMessage(req, res) {
         const compRef = db.collection('companies').doc(companyId);
 
         // Отримуємо контакт щоб дізнатись senderId і канал
+        // Перевіряємо чи юзер є членом компанії
+        const memberDoc = await compRef.collection('users').doc(_authUser?.uid || '').get();
+        if (!memberDoc.exists) return res.status(403).json({ error: 'Not a company member' });
+        const memberRole = memberDoc.data()?.role || 'employee';
+        if (!['owner','admin','manager'].includes(memberRole)) {
+            return res.status(403).json({ error: 'Insufficient permissions' });
+        }
+
         const contactDoc = await compRef.collection('contacts').doc(contactId).get();
         if (!contactDoc.exists) return res.status(404).json({ error: 'Contact not found' });
         const contact = contactDoc.data();
