@@ -150,11 +150,18 @@ function _siteCard(site) {
 
             <!-- Право: кнопки -->
             <div style="display:flex;flex-direction:column;gap:0.35rem;flex-shrink:0;">
+                ${site.mode === 'html' ? `
+                <button onclick="sitesEditHtml('${site.id}')"
+                    style="padding:0.4rem 0.7rem;background:#8b5cf6;color:white;border:none;
+                    border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:4px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    Редагувати HTML
+                </button>` : `
                 <button onclick="sitesOpenBuilder('${site.id}')"
                     style="padding:0.4rem 0.7rem;background:#22c55e;color:white;border:none;
                     border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;white-space:nowrap;">
                     <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>️ Редагувати
-                </button>
+                </button>`}
                 <button onclick="sitesOpenForms('${site.id}')"
                     style="padding:0.4rem 0.7rem;background:#eff6ff;color:#3b82f6;border:none;
                     border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:600;">
@@ -213,6 +220,43 @@ window.sitesOpenCreate = function () {
                     <input id="sc_name" placeholder="Стоматологія Dr.Іваненко, Ремонт квартир Київ..."
                         style="${inp}" autofocus>
                 </div>
+
+                <!-- Режим створення -->
+                <div>
+                    <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.4rem;">Режим</label>
+                    <div style="display:flex;gap:0.4rem;">
+                        <button id="sc_mode_blocks" onclick="sitesSetCreateMode('blocks')"
+                            style="flex:1;padding:0.55rem;border:2px solid #22c55e;border-radius:10px;
+                            background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:700;cursor:pointer;
+                            display:flex;align-items:center;justify-content:center;gap:0.35rem;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            Блоки
+                        </button>
+                        <button id="sc_mode_html" onclick="sitesSetCreateMode('html')"
+                            style="flex:1;padding:0.55rem;border:2px solid #e5e7eb;border-radius:10px;
+                            background:white;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;
+                            display:flex;align-items:center;justify-content:center;gap:0.35rem;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            Вставити HTML
+                        </button>
+                    </div>
+                </div>
+
+                <!-- HTML textarea (прихований по дефолту) -->
+                <div id="sc_html_section" style="display:none;">
+                    <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">HTML код сторінки</label>
+                    <textarea id="sc_html" rows="10"
+                        placeholder="<!DOCTYPE html>&#10;<html>&#10;  <head>...</head>&#10;  <body>&#10;    <!-- Ваш HTML сюди -->&#10;  </body>&#10;</html>"
+                        style="width:100%;padding:0.5rem;border:1.5px solid #e5e7eb;border-radius:9px;
+                        font-size:0.72rem;font-family:monospace;box-sizing:border-box;resize:vertical;
+                        line-height:1.5;min-height:180px;"></textarea>
+                    <div style="font-size:0.65rem;color:#9ca3af;margin-top:3px;">
+                        Вставте повний HTML — сайт буде одразу опублікований
+                    </div>
+                </div>
+
+                <!-- Блоки секція (видима по дефолту) -->
+                <div id="sc_blocks_section">
                 <div>
                     <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Опис (необов'язково)</label>
                     <input id="sc_desc" placeholder=window.t('sitesDescPh')
@@ -230,6 +274,7 @@ window.sitesOpenCreate = function () {
                         </div>`).join('')}
                     </div>
                 </div>
+                </div><!-- /sc_blocks_section -->
             </div>
             <div style="padding:0.75rem 1.25rem;border-top:1px solid #f1f5f9;display:flex;justify-content:flex-end;gap:0.4rem;">
                 <button onclick="document.getElementById('sitesCreateOverlay').remove()"
@@ -264,9 +309,132 @@ window.sitesSelectNiche = function (key) {
     }
 };
 
+// Редагування HTML сайту
+window.sitesEditHtml = function(siteId) {
+    const site = sl.sites?.find(s => s.id === siteId);
+    if (!site) return;
+
+    document.getElementById('sitesEditHtmlOverlay')?.remove();
+    const ov = document.createElement('div');
+    ov.id = 'sitesEditHtmlOverlay';
+    ov.onclick = e => { if(e.target===ov) ov.remove(); };
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10030;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    ov.innerHTML = `
+    <div style="background:white;border-radius:14px;width:100%;max-width:860px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="padding:0.85rem 1.25rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+            <div>
+                <div style="font-weight:700;font-size:0.95rem;">HTML код: ${_esc(site.name)}</div>
+                <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">Вставте або відредагуйте HTML — натисніть Зберегти</div>
+            </div>
+            <button onclick="document.getElementById('sitesEditHtmlOverlay').remove()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#9ca3af;">×</button>
+        </div>
+        <div style="flex:1;padding:1rem;overflow:hidden;display:flex;flex-direction:column;gap:0.75rem;">
+            <textarea id="editHtml_code" style="flex:1;width:100%;padding:0.6rem;border:1.5px solid #e5e7eb;border-radius:8px;
+                font-size:0.75rem;font-family:monospace;box-sizing:border-box;resize:none;line-height:1.5;min-height:400px;"
+                placeholder="<!DOCTYPE html>&#10;<html>...</html>">${_esc(site.rawHtml||'')}</textarea>
+        </div>
+        <div style="padding:0.75rem 1.25rem;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;cursor:pointer;">
+                <input type="checkbox" id="editHtml_publish" ${site.status==='published'?'checked':''} style="width:15px;height:15px;accent-color:#22c55e;">
+                Опублікований
+            </label>
+            <div style="display:flex;gap:0.5rem;">
+                <button onclick="document.getElementById('sitesEditHtmlOverlay').remove()"
+                    style="padding:0.45rem 1rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;font-size:0.82rem;">
+                    Скасувати
+                </button>
+                <button onclick="sitesSaveHtml('${siteId}')"
+                    style="padding:0.45rem 1.25rem;background:#8b5cf6;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">
+                    Зберегти →
+                </button>
+            </div>
+        </div>
+    </div>`;
+    document.body.appendChild(ov);
+};
+
+window.sitesSaveHtml = async function(siteId) {
+    const rawHtml = document.getElementById('editHtml_code')?.value || '';
+    const publish = document.getElementById('editHtml_publish')?.checked;
+    const status  = publish ? 'published' : 'draft';
+    try {
+        await window.companyRef().collection(window.DB_COLS?.SITES||'sites').doc(siteId).update({
+            rawHtml,
+            status,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        document.getElementById('sitesEditHtmlOverlay')?.remove();
+        if (typeof showToast === 'function') showToast('HTML збережено ✓', 'success');
+        if (typeof window.initSitesModule === 'function') window.initSitesModule();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
+let _createMode = 'blocks'; // 'blocks' | 'html'
+
+window.sitesSetCreateMode = function(mode) {
+    _createMode = mode;
+    const btnBlocks = document.getElementById('sc_mode_blocks');
+    const btnHtml   = document.getElementById('sc_mode_html');
+    const secBlocks = document.getElementById('sc_blocks_section');
+    const secHtml   = document.getElementById('sc_html_section');
+
+    if (mode === 'html') {
+        if (btnHtml)   { btnHtml.style.borderColor='#8b5cf6'; btnHtml.style.background='#f5f3ff'; btnHtml.style.color='#7c3aed'; btnHtml.style.fontWeight='700'; }
+        if (btnBlocks) { btnBlocks.style.borderColor='#e5e7eb'; btnBlocks.style.background='white'; btnBlocks.style.color='#6b7280'; btnBlocks.style.fontWeight='600'; }
+        if (secBlocks) secBlocks.style.display = 'none';
+        if (secHtml)   secHtml.style.display   = '';
+        setTimeout(() => document.getElementById('sc_html')?.focus(), 50);
+    } else {
+        if (btnBlocks) { btnBlocks.style.borderColor='#22c55e'; btnBlocks.style.background='#f0fdf4'; btnBlocks.style.color='#16a34a'; btnBlocks.style.fontWeight='700'; }
+        if (btnHtml)   { btnHtml.style.borderColor='#e5e7eb'; btnHtml.style.background='white'; btnHtml.style.color='#6b7280'; btnHtml.style.fontWeight='600'; }
+        if (secHtml)   secHtml.style.display   = 'none';
+        if (secBlocks) secBlocks.style.display  = '';
+    }
+};
+
 window.sitesCreate = async function () {
     const name = document.getElementById('sc_name')?.value.trim();
     if (!name) { if(window.showToast)showToast(window.t('sitesEnterName'),'warning'); else alert(window.t('sitesEnterName')); return; }
+
+    // ── HTML режим ────────────────────────────────────────
+    if (_createMode === 'html') {
+        const rawHtml = document.getElementById('sc_html')?.value.trim() || '';
+        if (!rawHtml) {
+            if(window.showToast) showToast('Вставте HTML код', 'warning');
+            return;
+        }
+        try {
+            const ref = await window.companyRef().collection('sites').add({
+                name,
+                description: '',
+                niche: 'custom',
+                nicheKey: 'custom',
+                status: 'published',          // одразу публікуємо
+                mode: 'html',                  // маркер режиму
+                rawHtml,                       // повний HTML код
+                blocks: [],
+                companyId: window.currentCompanyId || '',
+                theme: { primaryColor: '#22c55e', fontFamily: 'Inter', borderRadius: '12px' },
+                visits: 0,
+                formSubmissions: 0,
+                analyticsHeadCode: '',
+                bodyCode: '',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            document.getElementById('sitesCreateOverlay')?.remove();
+            if (typeof showToast === 'function') showToast('🚀 Сайт створено і опубліковано!', 'success');
+            // Оновлюємо список — не відкриваємо білдер (HTML режим)
+            if (typeof window.initSitesModule === 'function') window.initSitesModule();
+        } catch(e) {
+            if(window.showToast) showToast('Помилка: ' + e.message, 'error');
+        }
+        return;
+    }
+
+    // ── Блоки режим ───────────────────────────────────────
     const desc = document.getElementById('sc_desc')?.value.trim() || '';
 
     const nicheTemplates = {

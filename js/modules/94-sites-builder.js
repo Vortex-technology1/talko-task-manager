@@ -829,6 +829,12 @@ window.sbSaveSeo = async function() {
 // ══════════════════════════════════════════════════════════
 window.sbBuildPublicHtml = function(site, blocksHtml) {
     const s = site || sb.site || {};
+
+    // HTML режим: повертаємо rawHtml без обробки
+    if (s.mode === 'html' && s.rawHtml) {
+        return s.rawHtml;
+    }
+
     const ga4     = s.analyticsGA4       || '';
     const gtm     = s.analyticsGTM       || '';
     const fbPixel = s.analyticsMetaPixel || '';
