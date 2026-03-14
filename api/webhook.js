@@ -582,12 +582,16 @@ module.exports = async (req, res) => {
                         _newClientRef.set({
                             id:           _newClientRef.id,
                             name:         _name,
+                            type:         'person',
                             phone:        '',
                             email:        '',
+                            telegram:     normalized.username ? `@${normalized.username}` : '',
                             source:       _source,
                             botContactId: contactId,
+                            senderId:     String(normalized.senderId),
                             channel:      channel,
                             telegramId:   channel === 'telegram' ? String(normalized.senderId) : '',
+                            tags:         [],
                             createdAt:    _ts,
                             updatedAt:    _ts,
                         }),
@@ -602,34 +606,61 @@ module.exports = async (req, res) => {
 
                     // Створюємо угоду
                     const _dealRef = compRef.collection('crm_deals').doc();
+                    // Беремо stageColor/probability з першої стадії pipeline
+                    const _firstStage = _stages[0] || {};
+                    const _stageColor = _firstStage.color || '#6b7280';
+                    const _probability = _firstStage.probability || 10;
+
                     await _dealRef.set({
-                        id:           _dealRef.id,
-                        title:        `${_name} — ${_source}`,
-                        clientId:     _clientRef.id,
-                        clientName:   _name,
-                        botContactId: contactId,
-                        contactId:    contactId,
-                        phone:        '',
-                        pipelineId:   _pipId,
-                        stage:        _stageId,
-                        stageId:      _stageId,
-                        source:       _source,
-                        status:       'open',
-                        amount:       0,
-                        currency:     'UAH',
-                        channel:      channel,
-                        autoCreated:  true,
-                        createdBy:    'system:auto_lead',
-                        createdAt:    _ts,
-                        updatedAt:    _ts,
+                        id:              _dealRef.id,
+                        title:           `${_name} — ${_source}`,
+                        clientId:        _clientRef.id,
+                        clientName:      _name,
+                        botContactId:    contactId,
+                        contactId:       contactId,
+                        phone:           '',
+                        pipelineId:      _pipId,
+                        stage:           _stageId,
+                        stageId:         _stageId,
+                        stageColor:      _stageColor,
+                        probability:     _probability,
+                        source:          _source,
+                        status:          'open',
+                        amount:          0,
+                        currency:        'UAH',
+                        channel:         channel,
+                        tags:            [],
+                        assignedToId:    _compData?.ownerId || null,
+                        assignedToName:  _compData?.ownerName || '',
+                        stageEnteredAt:  _ts,
+                        autoCreated:     true,
+                        createdBy:       'system:auto_lead',
+                        createdAt:       _ts,
+                        updatedAt:       _ts,
                     });
+
+                    // Створюємо contacts document — щоб CRM chat відкривався одразу
+                    await compRef.collection('contacts').doc(contactId).set({
+                        senderId:        String(normalized.senderId),
+                        senderName:      normalized.senderName || '',
+                        username:        normalized.username || '',
+                        channel,
+                        botId:           botDocId || null,
+                        crmClientId:     _clientRef.id,
+                        lastMessage:     normalized.text || '',
+                        lastMessageAt:   _ts,
+                        lastMessageFrom: 'user',
+                        unreadCount:     1,
+                        createdAt:       _ts,
+                        updatedAt:       _ts,
+                    }, { merge: true });
 
                     // Кешуємо pipeline в session — finish() не буде робити зайвий read
                     session.data._autoClientId = _clientRef.id;
                     session.data._autoDealId   = _dealRef.id;
                     session.data._autoPipId    = _pipId;
                     session.data._autoStageId  = _stageId;
-                    console.log(`[auto_lead] Created client=${_clientRef.id} deal=${_dealRef.id} for ${contactId}`);
+                    console.log(`[auto_lead] Created client=${_clientRef.id} deal=${_dealRef.id} contact=${contactId}`);
                 }
             } catch(e) {
                 console.error('[auto_lead]', e.message);
