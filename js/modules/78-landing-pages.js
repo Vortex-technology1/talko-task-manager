@@ -384,6 +384,9 @@
     window.mktSaveNewFunnel = async function() {
         const name = document.getElementById('mktFunnelNameInp')?.value.trim();
         if (!name) { if(window.showToast) showToast('Введіть назву','warning'); return; }
+        // FIX: disable button to prevent double submit
+        const btn = document.querySelector('#mktNewFunnelOv button[onclick*="mktSaveNewFunnel"]');
+        if (btn) { btn.disabled = true; btn.textContent = '...'; }
         try {
             await window.companyRef().collection('funnels').add({
                 name, steps:[], leadsCount:0,
@@ -392,6 +395,7 @@
             document.getElementById('mktNewFunnelOv')?.remove();
             if (window.showToast) showToast('Воронку створено ✓','success');
         } catch(e) {
+            if (btn) { btn.disabled = false; btn.textContent = 'Створити'; }
             if (window.showToast) showToast('Помилка: '+e.message,'error');
         }
     };

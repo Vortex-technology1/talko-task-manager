@@ -886,6 +886,12 @@ module.exports = async (req, res) => {
                             updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
                         });
                         console.debug('[webhook] talko_deal created:', dealTitle);
+                        // FIX: increment leadsCount on the funnel
+                        if (flow?.id) {
+                            await compRef.collection('funnels').doc(flow.id)
+                                .update({ leadsCount: admin.firestore.FieldValue.increment(1) })
+                                .catch(e => console.warn('[talko_deal] leadsCount:', e.message));
+                        }
                     } else {
                         // Оновлюємо стадію якщо угода вже є
                         await existingDeals.docs[0].ref.update({
@@ -1449,6 +1455,12 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                     by:   'system',
                     at:   admin.firestore.FieldValue.serverTimestamp(),
                 });
+                // FIX: increment leadsCount on the funnel
+                if (flow?.id) {
+                    await compRef.collection('funnels').doc(flow.id)
+                        .update({ leadsCount: admin.firestore.FieldValue.increment(1) })
+                        .catch(e => console.warn('[finish] leadsCount increment:', e.message));
+                }
             }
         } catch(crmErr) {
             console.error('[finish][auto-crm]', crmErr.message);

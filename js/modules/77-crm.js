@@ -1809,7 +1809,7 @@ window.crmOpenDeal = function(dealId) {
     // Mobile: auto-open chat if deal came from bot
     if (window.innerWidth < 768 && (deal.contactId || deal.botContactId)) {
         requestAnimationFrame(function() {
-            setTimeout(function() { crmToggleDealChat(deal.id); }, 150);
+            setTimeout(function() { crmToggleDealChat(deal.id); }, 300);
         });
     }
 };
@@ -2057,105 +2057,112 @@ window.crmCloseDeal = function() {
 
 // ── Split-view чат в картці угоди ──────────────────────────
 window.crmToggleDealChat = async function (dealId) {
-    const chatPane = document.getElementById('crmDealChatPane');
-    const chatBtn  = document.getElementById('crmDealChatBtn');
-    if (!chatPane) return;
+    try {
 
-    // Якщо вже відкритий — закриваємо
-    const isOpen = chatPane.style.display !== 'none' && chatPane.style.display !== '';
-    if (isOpen) {
-        chatPane.style.display = 'none';
-        if (chatBtn) { chatBtn.style.background = 'none'; chatBtn.style.color = '#9ca3af'; chatBtn.style.borderColor = '#e8eaed'; }
-        return;
-    }
+        const chatPane = document.getElementById('crmDealChatPane');
+        const chatBtn  = document.getElementById('crmDealChatBtn');
+        if (!chatPane) return;
 
-    const deal = crm.deals.find(function (d) { return d.id === dealId; });
-    if (!deal) return;
+        // Якщо вже відкритий — закриваємо
+        const isOpen = chatPane.style.display !== 'none' && chatPane.style.display !== '';
+        if (isOpen) {
+            chatPane.style.display = 'none';
+            if (chatBtn) { chatBtn.style.background = 'none'; chatBtn.style.color = '#9ca3af'; chatBtn.style.borderColor = '#e8eaed'; }
+            return;
+        }
 
-    // Знаходимо contactId — 3 джерела:
-    // 1. deal.contactId (прямо на угоді)
-    // 2. crm_clients[deal.clientId].botContactId
-    // 3. contacts collection — шукаємо по телефону
+        const deal = crm.deals.find(function (d) { return d.id === dealId; });
+        if (!deal) return;
 
-    // Direct lookup: contactId saved on deal by bot
-    let contactId = deal.contactId || deal.botContactId || null;
+        // Знаходимо contactId — 3 джерела:
+        // 1. deal.contactId (прямо на угоді)
+        // 2. crm_clients[deal.clientId].botContactId
+        // 3. contacts collection — шукаємо по телефону
 
-    if (!contactId && deal.clientId) {
-        const client = crm.clients.find(function (c) { return c.id === deal.clientId; });
-        if (client) {
-            contactId = client.botContactId || client.contactId || null;
-            // Якщо є senderId — будуємо contactId
-            if (!contactId && client.senderId) {
-                contactId = (client.channel || 'telegram') + '_' + client.senderId;
+        // Direct lookup: contactId saved on deal by bot
+        let contactId = deal.contactId || deal.botContactId || null;
+
+        if (!contactId && deal.clientId) {
+            const client = crm.clients.find(function (c) { return c.id === deal.clientId; });
+            if (client) {
+                contactId = client.botContactId || client.contactId || null;
+                // Якщо є senderId — будуємо contactId
+                if (!contactId && client.senderId) {
+                    contactId = (client.channel || 'telegram') + '_' + client.senderId;
+                }
             }
         }
-    }
 
-    // Якщо не знайшли через клієнта — шукаємо в contacts по телефону
-    if (!contactId && deal.phone) {
-        const phone = String(deal.phone).replace(/\D/g, '');
-        try {
-            const snap = await window.companyRef().collection('contacts')
-                .where('phone', '==', deal.phone).limit(1).get();
-            if (!snap.empty) contactId = snap.docs[0].id;
-            // Якщо не знайшли з форматом — шукаємо по senderId (Telegram ID може бути в phone)
-            if (!contactId && phone) {
-                const snap2 = await window.companyRef().collection('contacts')
-                    .where('senderId', '==', phone).limit(1).get();
-                if (!snap2.empty) contactId = snap2.docs[0].id;
-            }
-        } catch (e) { /* ігноруємо */ }
-    }
+        // Якщо не знайшли через клієнта — шукаємо в contacts по телефону
+        if (!contactId && deal.phone) {
+            const phone = String(deal.phone).replace(/\D/g, '');
+            try {
+                const snap = await window.companyRef().collection('contacts')
+                    .where('phone', '==', deal.phone).limit(1).get();
+                if (!snap.empty) contactId = snap.docs[0].id;
+                // Якщо не знайшли з форматом — шукаємо по senderId (Telegram ID може бути в phone)
+                if (!contactId && phone) {
+                    const snap2 = await window.companyRef().collection('contacts')
+                        .where('senderId', '==', phone).limit(1).get();
+                    if (!snap2.empty) contactId = snap2.docs[0].id;
+                }
+            } catch (e) { /* ігноруємо */ }
+        }
 
-    if (!contactId) {
-        // Показуємо пане з повідомленням — клієнт не прив'язаний до бота
+        if (!contactId) {
+            // Показуємо пане з повідомленням — клієнт не прив'язаний до бота
+            chatPane.style.display = 'flex';
+            const msgsEl = document.getElementById('chatMsgs_crmdeal');
+            const headerEl = document.getElementById('chatMsgHeader_crmdeal');
+            if (headerEl) headerEl.innerHTML = '<div style="font-size:0.8rem;color:#6b7280;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Чат з клієнтом</div>';
+            if (msgsEl) msgsEl.innerHTML = `
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                    height:100%;text-align:center;padding:2rem;color:#9ca3af;">
+                    <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                    <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Чат не підключено</div>
+                    <div style="font-size:0.75rem;line-height:1.5;">
+                        Клієнт ще не писав через бота.<br>
+                        Коли він напише — переписка з'явиться тут автоматично.
+                    </div>
+                    ${deal.phone ? `
+                    <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.4rem;width:100%;">
+                        <a href="https://t.me/+${String(deal.phone).replace(/\D/g,'')}" target="_blank"
+                            style="padding:0.45rem;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;
+                            border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>️ Написати в Telegram
+                        </a>
+                        <a href="https://wa.me/${String(deal.phone).replace(/\D/g,'')}" target="_blank"
+                            style="padding:0.45rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
+                            border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Написати в WhatsApp
+                        </a>
+                        <a href="viber://chat?number=${String(deal.phone).replace(/\D/g,'')}" 
+                            style="padding:0.45rem;background:#f5f0ff;color:#7c3aed;border:1px solid #ddd6fe;
+                            border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Написати в Viber
+                        </a>
+                    </div>` : ''}
+                </div>`;
+            const inputArea = document.getElementById('chatInputArea_crmdeal');
+            if (inputArea) inputArea.style.display = 'none';
+            if (chatBtn) { chatBtn.style.background = '#f0fdf4'; chatBtn.style.color = '#16a34a'; chatBtn.style.borderColor = '#bbf7d0'; }
+            return;
+        }
+
+        // Відкриваємо чат
         chatPane.style.display = 'flex';
-        const msgsEl = document.getElementById('chatMsgs_crmdeal');
-        const headerEl = document.getElementById('chatMsgHeader_crmdeal');
-        if (headerEl) headerEl.innerHTML = '<div style="font-size:0.8rem;color:#6b7280;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Чат з клієнтом</div>';
-        if (msgsEl) msgsEl.innerHTML = `
-            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                height:100%;text-align:center;padding:2rem;color:#9ca3af;">
-                <div style="font-size:2rem;margin-bottom:0.75rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                <div style="font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">Чат не підключено</div>
-                <div style="font-size:0.75rem;line-height:1.5;">
-                    Клієнт ще не писав через бота.<br>
-                    Коли він напише — переписка з'явиться тут автоматично.
-                </div>
-                ${deal.phone ? `
-                <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.4rem;width:100%;">
-                    <a href="https://t.me/+${String(deal.phone).replace(/\D/g,'')}" target="_blank"
-                        style="padding:0.45rem;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;
-                        border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>️ Написати в Telegram
-                    </a>
-                    <a href="https://wa.me/${String(deal.phone).replace(/\D/g,'')}" target="_blank"
-                        style="padding:0.45rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;
-                        border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Написати в WhatsApp
-                    </a>
-                    <a href="viber://chat?number=${String(deal.phone).replace(/\D/g,'')}" 
-                        style="padding:0.45rem;background:#f5f0ff;color:#7c3aed;border:1px solid #ddd6fe;
-                        border-radius:7px;text-decoration:none;font-size:0.75rem;font-weight:600;text-align:center;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Написати в Viber
-                    </a>
-                </div>` : ''}
-            </div>`;
         const inputArea = document.getElementById('chatInputArea_crmdeal');
-        if (inputArea) inputArea.style.display = 'none';
+        if (inputArea) inputArea.style.display = '';
         if (chatBtn) { chatBtn.style.background = '#f0fdf4'; chatBtn.style.color = '#16a34a'; chatBtn.style.borderColor = '#bbf7d0'; }
-        return;
-    }
 
-    // Відкриваємо чат
-    chatPane.style.display = 'flex';
-    const inputArea = document.getElementById('chatInputArea_crmdeal');
-    if (inputArea) inputArea.style.display = '';
-    if (chatBtn) { chatBtn.style.background = '#f0fdf4'; chatBtn.style.color = '#16a34a'; chatBtn.style.borderColor = '#bbf7d0'; }
+        // Викликаємо існуючу систему чату з instanceId 'crmdeal'
+        if (typeof window.bpOpenChat === 'function') {
+            await window.bpOpenChat(contactId, 'crmdeal');
+        }
 
-    // Викликаємо існуючу систему чату з instanceId 'crmdeal'
-    if (typeof window.bpOpenChat === 'function') {
-        await window.bpOpenChat(contactId, 'crmdeal');
+    } catch(e) {
+        console.error('[crmToggleDealChat]', e);
+        if (window.showToast) showToast('Помилка відкриття чату: ' + e.message, 'error');
     }
 };
 
