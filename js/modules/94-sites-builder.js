@@ -205,16 +205,16 @@ async function _loadSite() {
 function _updateHeader() {
     const nameEl   = document.getElementById('sbSiteName');
     const statusEl = document.getElementById('sbStatusBadge');
-    if (nameEl)   nameEl.textContent = sb.site.name || window.t('botsNoTitle');
+    if (nameEl) nameEl.textContent = sb.site.name || window.t('botsNoTitle');
     if (statusEl) {
         const pub = sb.site.status === 'published';
-        statusEl.textContent = pub ? window.t('sitesPublishedBadge') : window.t('sitesDraftBadge');
-        statusEl.style.background = pub ? '#dcfce7' : '#f3f4f6';
-        statusEl.style.color = pub ? '#16a34a' : '#6b7280';
-        if (typeof _updatePublishBtn === 'function') _updatePublishBtn();
+        statusEl.textContent      = pub ? (window.t?.('sitesPublishedBadge') || 'Опубліковано') : (window.t?.('sitesDraftBadge') || 'Чернетка');
         statusEl.style.background = pub ? '#f0fdf4' : '#f9fafb';
         statusEl.style.color      = pub ? '#16a34a' : '#9ca3af';
+        statusEl.style.border     = pub ? '1px solid #bbf7d0' : '1px solid #e5e7eb';
     }
+    // Оновлюємо кнопки окремо — після statusEl щоб не перебивати
+    if (typeof _updatePublishBtn === 'function') _updatePublishBtn();
 }
 
 // ── Список блоків ──────────────────────────────────────────
@@ -738,16 +738,28 @@ function _updatePublishBtn() {
         if (icon)  icon.innerHTML = '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>';
     }
 
-    // URL кнопка — показується тільки якщо опублікований і є URL
+    // URL кнопка — показується якщо опублікований
+    // Якщо publicUrl відсутній (старий сайт) — генеруємо на льоту
+    let _pubUrl = pubUrl;
+    if (pub && !_pubUrl && sb.siteId) {
+        const _base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+            ? location.origin : 'https://taskmanagerai-vert.vercel.app';
+        const _cid  = window.currentCompanyId || window.currentCompany || '';
+        _pubUrl = `${_base}/api/site?id=${sb.siteId}&cid=${_cid}`;
+        // Зберігаємо в Firestore щоб наступного разу вже було
+        window.companyRef().collection(window.DB_COLS?.SITES || 'sites').doc(sb.siteId)
+            .update({ publicUrl: _pubUrl }).catch(() => {});
+        sb.site.publicUrl = _pubUrl;
+    }
+
     if (urlBtn) {
-        if (pub && pubUrl) {
+        if (pub && _pubUrl) {
             urlBtn.style.display = 'flex';
-            // Показуємо домен або скорочений URL
             const displayUrl = sb.site.customDomain
                 ? sb.site.customDomain
-                : pubUrl.replace(/^https?:\/\/[^/]+/, '').slice(0, 28) + '...';
-            if (urlLbl) urlLbl.textContent = displayUrl;
-            urlBtn.title = pubUrl;
+                : _pubUrl.replace(/^https?:\/\/[^/]+/, '').slice(0, 30) || 'Відкрити сайт';
+            if (urlLbl) urlLbl.textContent = displayUrl || 'Відкрити сайт';
+            urlBtn.title = _pubUrl;
         } else {
             urlBtn.style.display = 'none';
         }
