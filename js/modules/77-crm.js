@@ -112,6 +112,8 @@ function _renderShell() {
     const container = document.getElementById('crmContainer');
     if (!container) return;
 
+    const isMobile = window.innerWidth < 768;
+
     const tabs = [
         ['todo',       I.task,      window.t('crmTabTodo')],
         ['kanban',     I.funnel,    window.t('crmTabFunnel')],
@@ -121,7 +123,79 @@ function _renderShell() {
         ['settings',   I.settings,  window.t('crmTabSettings')],
     ];
 
-    container.innerHTML = `
+    if (isMobile) {
+        // ── MOBILE SHELL ─────────────────────────────────────
+        // Top bar: search + add button
+        // Tab row: scrollable icon+label tabs
+        // Content: full height
+        container.innerHTML = `
+    <div style="height:100%;display:flex;flex-direction:column;background:#f4f5f7;overflow:hidden;">
+
+        <!-- Mobile top bar -->
+        <div style="background:white;border-bottom:1px solid #e8eaed;padding:0 .75rem;
+            display:flex;align-items:center;gap:.5rem;height:48px;flex-shrink:0;">
+            <div id="crmSearchWrap" style="flex:1;display:flex;align-items:center;gap:.3rem;
+                background:#f4f5f7;border-radius:7px;padding:.3rem .6rem;">
+                ${I.search}
+                <input id="crmSearchInput" placeholder="${window.t('crmSearchPh')||'Пошук...'}"
+                    oninput="crmApplyFilters()"
+                    style="border:none;background:none;outline:none;font-size:.8rem;flex:1;min-width:0;">
+                <button onclick="document.getElementById('crmSearchInput').value='';crmApplyFilters()"
+                    style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:.9rem;line-height:1;">×</button>
+            </div>
+            <button onclick="crmOpenCreateDeal()"
+                style="display:flex;align-items:center;justify-content:center;
+                width:34px;height:34px;background:#22c55e;color:white;border:none;
+                border-radius:8px;cursor:pointer;flex-shrink:0;">
+                ${I.plus}
+            </button>
+        </div>
+
+        <!-- Mobile tab bar: scrollable -->
+        <div style="background:white;border-bottom:1px solid #e8eaed;flex-shrink:0;
+            display:flex;overflow-x:auto;scrollbar-width:none;">
+            ${tabs.map(([id, icon, label]) => `
+            <button onclick="crmSwitchTab('${id}')" id="crmTab_${id}"
+                style="display:flex;flex-direction:column;align-items:center;gap:2px;
+                padding:.45rem .7rem;background:none;border:none;border-bottom:2px solid transparent;
+                cursor:pointer;font-size:.65rem;font-weight:500;color:#6b7280;
+                white-space:nowrap;flex-shrink:0;min-width:52px;transition:all .15s;">
+                <span style="font-size:1rem;line-height:1;">${icon}</span>
+                ${label}
+            </button>`).join('')}
+        </div>
+
+        <!-- View toggle (shown only on kanban tab) -->
+        <div id="crmViewToggle" style="display:none;background:#f8fafc;border-bottom:1px solid #e8eaed;
+            padding:.4rem .75rem;gap:.4rem;align-items:center;flex-shrink:0;">
+            <button id="crmToggleList" onclick="crmSetViewMode('list')"
+                style="display:flex;align-items:center;gap:.3rem;padding:.3rem .65rem;
+                border:1px solid #22c55e;border-radius:6px;background:#f0fdf4;
+                color:#16a34a;cursor:pointer;font-size:.75rem;font-weight:600;">
+                ${I.list} Список
+            </button>
+            <button id="crmToggleKanban" onclick="crmSetViewMode('kanban')"
+                style="display:flex;align-items:center;gap:.3rem;padding:.3rem .65rem;
+                border:1px solid #e8eaed;border-radius:6px;background:white;
+                color:#6b7280;cursor:pointer;font-size:.75rem;font-weight:600;">
+                ${I.kanban} Kanban
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div style="flex:1;overflow:hidden;">
+            <div id="crmViewTodo" style="height:100%;overflow:auto;display:none;"></div>
+            <div id="crmViewKanban" style="height:100%;display:flex;flex-direction:column;overflow:hidden;"></div>
+            <div id="crmViewClients" style="height:100%;overflow:auto;display:none;padding:.75rem;"></div>
+            <div id="crmViewActivities" style="height:100%;overflow:auto;display:none;padding:.75rem;"></div>
+            <div id="crmViewAnalytics" style="height:100%;overflow:auto;display:none;padding:.75rem;"></div>
+            <div id="crmViewSettings" style="height:100%;overflow:auto;display:none;padding:.75rem;"></div>
+        </div>
+    </div>`;
+
+    } else {
+        // ── DESKTOP SHELL ────────────────────────────────────
+        container.innerHTML = `
     <div style="height:100%;display:flex;flex-direction:column;background:#f4f5f7;overflow:hidden;">
 
         <!-- Top bar -->
@@ -138,17 +212,15 @@ function _renderShell() {
                 </button>`).join('')}
             </div>
             <div style="display:flex;align-items:center;gap:0.5rem;">
-                <!-- Пошук -->
                 <div id="crmSearchWrap" style="display:none;align-items:center;gap:0.3rem;
                     background:#f4f5f7;border-radius:7px;padding:0.3rem 0.6rem;">
                     ${I.search}
-                    <input id="crmSearchInput" placeholder="Пошук угод..."
+                    <input id="crmSearchInput" placeholder="${window.t('crmSearchPh')||'Пошук угод...'}"
                         oninput="crmApplyFilters()"
                         style="border:none;background:none;outline:none;font-size:0.8rem;width:160px;">
                     <button onclick="document.getElementById('crmSearchInput').value='';crmApplyFilters()"
                         style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:0.9rem;line-height:1;">×</button>
                 </div>
-                <!-- Toggle kanban/list -->
                 <div id="crmViewToggle" style="display:none;gap:2px;">
                     <button id="crmToggleKanban" onclick="crmSetViewMode('kanban')"
                         title="Kanban" style="padding:0.3rem 0.5rem;border:1px solid #e8eaed;border-radius:6px 0 0 6px;
@@ -172,7 +244,7 @@ function _renderShell() {
                         style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
                         background:#22c55e;color:white;border:none;border-radius:7px;cursor:pointer;
                         font-size:0.81rem;font-weight:600;">
-                        ${I.plus} Угода
+                        ${I.plus} ${window.t('crmAddDeal')||'Угода'}
                     </button>
                 </div>
             </div>
@@ -188,11 +260,18 @@ function _renderShell() {
             <div id="crmViewSettings" style="height:100%;overflow:auto;display:none;padding:1rem;"></div>
         </div>
     </div>`;
+    }
 
-    crmSwitchTab('kanban');
+    // Mobile default: list view; Desktop: kanban
+    if (isMobile) {
+        crm.viewMode = crm.viewMode || 'list';
+        crmSwitchTab('kanban');
+    } else {
+        crmSwitchTab('kanban');
+    }
 }
 
-// Фільтрація угод з урахуванням filters state + прав доступу
+// Фільтрація угод// Фільтрація угод з урахуванням filters state + прав доступу
 function _filteredDeals() {
     // Права доступу: менеджер бачить тільки свої угоди
     let deals = (window.crmAccessFilter && window.crm?.pipeline?.accessMode === 'own')
@@ -257,10 +336,18 @@ window.crmResetFilters = function() {
 
 window.crmSetViewMode = function(mode) {
     crm.viewMode = mode;
-    document.getElementById('crmToggleKanban').style.background = mode==='kanban' ? '#f0fdf4' : 'white';
-    document.getElementById('crmToggleKanban').style.color = mode==='kanban' ? '#16a34a' : '#6b7280';
-    document.getElementById('crmToggleList').style.background = mode==='list' ? '#f0fdf4' : 'white';
-    document.getElementById('crmToggleList').style.color = mode==='list' ? '#16a34a' : '#6b7280';
+    const isMobile = window.innerWidth < 768;
+    // Update toggle buttons (null-safe)
+    const kb = document.getElementById('crmToggleKanban');
+    const lb = document.getElementById('crmToggleList');
+    if (isMobile) {
+        // Mobile: list button is primary (green = active)
+        if (lb) { lb.style.background = mode==='list' ? '#f0fdf4' : 'white'; lb.style.color = mode==='list' ? '#16a34a' : '#6b7280'; lb.style.borderColor = mode==='list' ? '#22c55e' : '#e8eaed'; }
+        if (kb) { kb.style.background = mode==='kanban' ? '#f0fdf4' : 'white'; kb.style.color = mode==='kanban' ? '#16a34a' : '#6b7280'; kb.style.borderColor = mode==='kanban' ? '#22c55e' : '#e8eaed'; }
+    } else {
+        if (kb) { kb.style.background = mode==='kanban' ? '#f0fdf4' : 'white'; kb.style.color = mode==='kanban' ? '#16a34a' : '#6b7280'; }
+        if (lb) { lb.style.background = mode==='list' ? '#f0fdf4' : 'white'; lb.style.color = mode==='list' ? '#16a34a' : '#6b7280'; }
+    }
     const kanbanView = document.getElementById('crmViewKanban');
     if (!kanbanView) return;
     if (mode === 'kanban') {
@@ -275,6 +362,7 @@ window.crmSetViewMode = function(mode) {
 
 window.crmSwitchTab = function(tab) {
     crm.subTab = tab;
+    const isMobile = window.innerWidth < 768;
     ['todo','kanban','clients','activities','analytics','settings'].forEach(t => {
         const view = document.getElementById('crmView' + t.charAt(0).toUpperCase() + t.slice(1));
         const btn  = document.getElementById('crmTab_' + t);
@@ -283,8 +371,30 @@ window.crmSwitchTab = function(tab) {
             btn.style.borderBottomColor = t === tab ? '#22c55e' : 'transparent';
             btn.style.color = t === tab ? '#22c55e' : '#6b7280';
             btn.style.fontWeight = t === tab ? '600' : '500';
+            if (isMobile) {
+                btn.style.background = t === tab ? '#f0fdf4' : 'transparent';
+                btn.style.borderRadius = t === tab ? '6px 6px 0 0' : '0';
+            }
         }
     });
+    // Show/hide search and view toggle depending on tab
+    const searchWrap = document.getElementById('crmSearchWrap');
+    const viewToggle = document.getElementById('crmViewToggle');
+    if (tab === 'kanban') {
+        if (searchWrap && !isMobile) searchWrap.style.display = 'flex';
+        if (viewToggle) viewToggle.style.display = 'flex';
+        // On mobile: update toggle button states
+        if (isMobile && viewToggle) {
+            const listBtn   = document.getElementById('crmToggleList');
+            const kanbanBtn = document.getElementById('crmToggleKanban');
+            const isKanban  = crm.viewMode === 'kanban';
+            if (listBtn)   { listBtn.style.background   = isKanban ? 'white'    : '#f0fdf4'; listBtn.style.color   = isKanban ? '#6b7280' : '#16a34a'; listBtn.style.borderColor = isKanban ? '#e8eaed' : '#22c55e'; }
+            if (kanbanBtn) { kanbanBtn.style.background = isKanban ? '#f0fdf4' : 'white';   kanbanBtn.style.color = isKanban ? '#16a34a' : '#6b7280'; kanbanBtn.style.borderColor = isKanban ? '#22c55e' : '#e8eaed'; }
+        }
+    } else {
+        if (searchWrap && !isMobile) searchWrap.style.display = 'none';
+        if (viewToggle) viewToggle.style.display = 'none';
+    }
     if (tab === 'todo')       { if (typeof renderCrmTodo === 'function') renderCrmTodo(); }
     if (tab === 'kanban')     _renderKanban();
     if (tab === 'clients')    _renderClients();
@@ -422,7 +532,9 @@ function _kanbanFilterBar() {
 function _renderKanban() {
     const c = document.getElementById('crmViewKanban');
     if (!c) return;
+    // On mobile: auto-switch to list if viewMode not explicitly set to kanban
     if (crm.viewMode === 'list') { _renderListView(); return; }
+    if (window.innerWidth < 768 && crm.viewMode !== 'kanban') { crm.viewMode = 'list'; _renderListView(); return; }
 
     if (crm.loading) {
         c.innerHTML = '<div style="text-align:center;padding:4rem;color:#9ca3af;font-size:0.85rem;">Завантаження...</div>';
@@ -515,7 +627,7 @@ function _renderKanban() {
 
     <!-- Kanban board -->
     <!-- PROB 2 FIX: board отримує flex:1 замість calc(). Батько crmViewKanban — flex-column → висота автоматична. -->
-    <div id="crmKanbanBoard" style="display:flex;gap:0;flex:1;min-height:0;overflow-x:auto;">
+    <div id="crmKanbanBoard" style="display:flex;gap:0;flex:1;min-height:0;overflow-x:auto;-webkit-overflow-scrolling:touch;">
         ${mainStages.map(s => _kanbanCol(s)).join('')}
         ${lostStage ? _kanbanColLost(lostStage) : ''}
     </div>`;
@@ -527,7 +639,7 @@ function _kanbanCol(stage) {
 
     return `
     <div data-stage="${stage.id}"
-        style="min-width:220px;flex:1;background:#f4f5f7;border-right:1px solid #e8eaed;
+        style="min-width:${window.innerWidth<768?'160px':'220px'};flex:1;background:#f4f5f7;border-right:1px solid #e8eaed;
         display:flex;flex-direction:column;max-height:100%;"
         ondragover="crmDragOver(event)" ondragleave="crmDragLeave(event)" ondrop="crmDrop(event,'${stage.id}')">
 
@@ -588,10 +700,10 @@ function _kanbanColLost(stage) {
 // LIST VIEW (таблиця угод — альтернатива kanban)
 // ══════════════════════════════════════════════════════════
 function _renderListView() {
+    const isMobile = window.innerWidth < 768;
     // Прибираємо kanban з поля зору
     const kanbanEl = document.getElementById('crmViewKanban');
     if (kanbanEl) kanbanEl.style.display = 'none';
-    // Або render в existing container
     const container = document.getElementById('crmContainer');
     if (!container) return;
     let listEl = document.getElementById('crmListView');
@@ -662,6 +774,76 @@ function _renderListView() {
     const stages = crm.pipeline?.stages || [];
     const today = new Date().toISOString().split('T')[0];
 
+    // ── MOBILE: card list instead of table ──────────────
+    if (isMobile) {
+        const stages = crm.pipeline?.stages || [];
+        const today = new Date().toISOString().split('T')[0];
+        listEl.innerHTML = `
+    <div style="padding:.6rem .75rem;">
+        <!-- Mobile filter row -->
+        <div style="display:flex;gap:.4rem;margin-bottom:.6rem;overflow-x:auto;padding-bottom:2px;">
+            <select onchange="crm.filters.stage=this.value;crmSetViewMode('list')"
+                style="padding:.3rem .45rem;border:1px solid #e8eaed;border-radius:6px;font-size:.75rem;background:white;cursor:pointer;flex-shrink:0;">
+                <option value="">${window.t('crmAll')||'Всі'} стадії</option>
+                ${stages.map(s=>`<option value="${s.id}" ${crm.filters.stage===s.id?'selected':''}>${_esc(s.label)}</option>`).join('')}
+            </select>
+            <select onchange="crm.filters.assignee=this.value;crmSetViewMode('list')"
+                style="padding:.3rem .45rem;border:1px solid #e8eaed;border-radius:6px;font-size:.75rem;background:white;cursor:pointer;flex-shrink:0;">
+                <option value="">${window.t('crmAll')||'Всі'}</option>
+                ${(typeof users!=='undefined'?users:[]).map(u=>`<option value="${u.id}" ${crm.filters.assignee===u.id?'selected':''}>${_esc(u.name||u.email)}</option>`).join('')}
+            </select>
+            ${crm.filters.stage||crm.filters.assignee||crm.filters.search?`
+            <button onclick="crm.filters={assignee:'',stage:'',tag:'',search:''};document.getElementById('crmSearchInput').value='';crmSetViewMode('list')"
+                style="padding:.3rem .55rem;border:1px solid #e8eaed;border-radius:6px;font-size:.73rem;background:white;cursor:pointer;color:#6b7280;flex-shrink:0;">× Скинути</button>`:''}
+            <span style="margin-left:auto;font-size:.72rem;color:#9ca3af;white-space:nowrap;align-self:center;">${deals.length} угод</span>
+        </div>
+
+        ${deals.length === 0 ? `
+        <div style="text-align:center;padding:3rem 1rem;color:#9ca3af;font-size:.83rem;">
+            <div style="font-size:2rem;margin-bottom:.5rem;">📋</div>
+            Угод не знайдено
+        </div>` :
+        deals.map(d => {
+            const stage = stages.find(s=>s.id===d.stage);
+            const isOverdue = d.nextContactDate && d.nextContactDate < today && d.stage!=='won' && d.stage!=='lost';
+            const upd = d.updatedAt?.toDate ? _relTime(d.updatedAt.toDate()) : '';
+            const colors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4','#ec4899'];
+            const color = colors[(d.clientName||'a').charCodeAt(0) % colors.length];
+            const initial = (d.clientName||d.title||'?').charAt(0).toUpperCase();
+            return `
+        <div onclick="crmOpenDeal('${d.id}')"
+            style="background:white;border-radius:10px;border:1.5px solid ${d.isHot?'#f97316':'#e8eaed'};
+            padding:.65rem .8rem;margin-bottom:.4rem;cursor:pointer;
+            box-shadow:0 1px 3px rgba(0,0,0,.04);">
+            <div style="display:flex;align-items:center;gap:.55rem;margin-bottom:.4rem;">
+                <div style="width:30px;height:30px;border-radius:50%;background:${color};
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:.75rem;font-weight:700;color:white;flex-shrink:0;">${initial}</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:.82rem;font-weight:700;color:#111827;
+                        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                        ${d.isHot?'🔥 ':''}${_esc(d.title||d.clientName||window.t('crmDeal'))}
+                    </div>
+                    <div style="font-size:.7rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                        ${_esc(d.clientName||'')}
+                    </div>
+                </div>
+                ${d.amount ? `<div style="font-size:.8rem;font-weight:700;color:#16a34a;flex-shrink:0;">${_fmt(d.amount)}</div>` : ''}
+            </div>
+            <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">
+                ${stage ? `<span style="font-size:.68rem;font-weight:600;padding:2px 7px;border-radius:10px;
+                    background:${stage.color}18;color:${stage.color};">${_esc(stage.label)}</span>` : ''}
+                ${d.nextContactDate ? `<span style="font-size:.68rem;padding:2px 7px;border-radius:10px;font-weight:600;
+                    background:${isOverdue?'#fef2f2':'#eff6ff'};color:${isOverdue?'#ef4444':'#3b82f6'};">
+                    📅 ${d.nextContactDate}</span>` : ''}
+                ${upd ? `<span style="font-size:.67rem;color:#9ca3af;margin-left:auto;">${upd}</span>` : ''}
+            </div>
+        </div>`; }).join('')}
+    </div>`;
+        return;
+    }
+
+    // ── Desktop: table view ───────────────────────────────
     listEl.innerHTML = `
     <div style="padding:0.75rem 1rem;">
         <!-- Фільтр-бар -->
