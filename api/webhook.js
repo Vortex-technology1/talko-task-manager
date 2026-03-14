@@ -462,13 +462,15 @@ module.exports = async (req, res) => {
 
         const compRef = db.collection('companies').doc(companyId);
 
-        // FIX 5: читаємо compData один раз для всього запиту
-        const _compDoc = await compRef.get();
+        // PERF: читаємо compData + bots паралельно (~20ms замість ~40ms)
+        const [_compDoc, botsSnap] = await Promise.all([
+            compRef.get(),
+            compRef.collection('bots').where('channel', '==', channel).limit(5).get(),
+        ]);
         const _compData = _compDoc.data() || {};
 
         // ── Знаходимо бот токен ──────────────────────────────
         let botToken = null, botDocId = null;
-        let botsSnap = await compRef.collection('bots').where('channel', '==', channel).limit(5).get();
         if (!botsSnap.empty) {
             const bd = botsSnap.docs[0];
             botDocId = bd.id;
@@ -544,11 +546,11 @@ module.exports = async (req, res) => {
         // FIX CE: refresh senderName on every message (user may rename in Telegram)
         if (normalized.senderName) session.senderName = normalized.senderName;
 
-        // ── Авто-лід при першому повідомленні ───────────────
-        // Якщо це новий контакт (перше повідомлення) — одразу створюємо
-        // клієнта і угоду в CRM без жодних вузлів у флоу
+        // ── Авто-лід при першому повідомленні (fire-and-forget) ──
+        // Не await — не блокуємо відповідь боту
+        // Клієнт і угода створяться асинхронно поки бот відповідає
         if (_isNewContact) {
-            try {
+            (async () => { try {
                 const _ts = admin.firestore.FieldValue.serverTimestamp();
                 const _name = normalized.senderName || normalized.senderId || 'Новий контакт';
                 const _source = channel === 'telegram' ? 'telegram_bot'
@@ -604,15 +606,16 @@ module.exports = async (req, res) => {
                         updatedAt:    _ts,
                     });
 
-                    // Зберігаємо clientId в session для подальших вузлів
+                    // Зберігаємо IDs в session для подальших вузлів
                     session.data._autoClientId = _clientRef.id;
                     session.data._autoDealId   = _dealRef.id;
+                    session.data._autoPipId    = _pipId;
+                    session.data._autoStageId  = _stageId;
                     console.log(`[auto_lead] Created client=${_clientRef.id} deal=${_dealRef.id} for ${contactId}`);
                 }
             } catch(e) {
                 console.error('[auto_lead]', e.message);
-                // Не блокуємо основний флоу якщо авто-лід впав
-            }
+            }})();
         }
 
         // FIX 1: Deduplication — ігноруємо повторний update_id від Telegram
@@ -1479,14 +1482,20 @@ async function finish(session, flow, compRef, channel, compData = {}) {
         try {
             const clientName = session.senderName || d.name || d.phone || 'Лід з бота';
 
-            // Спочатку шукаємо авто-клієнта по botContactId (створений при першому повідомленні)
-            // Якщо не знайшли — шукаємо по senderId (старий шлях)
-            let existingClients = await compRef.collection('crm_clients')
-                .where('botContactId', '==', contactId).limit(1).get().catch(() => null);
-            if (!existingClients || existingClients.empty) {
+            // Якщо авто-лід створив клієнта — використовуємо його ID без зайвого query
+            let existingClients = null;
+            if (session.data?._autoClientId) {
+                // Fast path: клієнт вже є, беремо напряму
+                existingClients = { empty: false, docs: [{ id: session.data._autoClientId, data: () => ({}) }] };
+            } else {
+                // Fallback: шукаємо по botContactId або senderId
                 existingClients = await compRef.collection('crm_clients')
-                    .where('senderId', '==', String(session.senderId)).limit(1).get()
-                    .catch(() => ({ empty: true, docs: [] }));
+                    .where('botContactId', '==', contactId).limit(1).get().catch(() => null);
+                if (!existingClients || existingClients.empty) {
+                    existingClients = await compRef.collection('crm_clients')
+                        .where('senderId', '==', String(session.senderId)).limit(1).get()
+                        .catch(() => ({ empty: true, docs: [] }));
+                }
             }
 
             let clientId;
@@ -1543,11 +1552,17 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                 .limit(1).get();
 
             if (existingDeals.empty) {
-                // Отримуємо першу стадію воронки
-                const pipSnap = await compRef.collection('crm_pipeline')
-                    .where('isDefault', '==', true).limit(1).get();
-                const pipeline = !pipSnap.empty ? pipSnap.docs[0].data() : null;
-                const firstStage = pipeline?.stages?.[0] || { id: 'new', label: 'Новий', color: '#6b7280' };
+                // Кешований pipeline з авто-ліду — уникаємо дублювання reads
+                let pipelineId = session.data?._autoPipId || 'default';
+                let firstStage = { id: session.data?._autoStageId || 'new', label: 'Новий', color: '#6b7280' };
+                if (!session.data?._autoPipId) {
+                    const pipSnap = await compRef.collection('crm_pipeline')
+                        .where('isDefault', '==', true).limit(1).get().catch(() => null);
+                    if (pipSnap && !pipSnap.empty) {
+                        pipelineId = pipSnap.docs[0].id;
+                        firstStage = pipSnap.docs[0].data().stages?.[0] || firstStage;
+                    }
+                }
 
                 const dealRef = compRef.collection('crm_deals').doc();
                 // FIX CB: pipelineId is required — CRM _subscribeDeals filters .where('pipelineId','==',...)
