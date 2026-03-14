@@ -943,23 +943,20 @@ module.exports = async (req, res) => {
                     }
                 })();
 
-                // FIX 6: відправляємо ⏳ і зберігаємо message_id щоб потім відредагувати
-                const isFirstAiMsg = !session.aiHistory || session.aiHistory.length <= 1;
-                // PERF: sendTgGetId і callAI паралельно — не чекаємо TG підтвердження
+                // PERF: sendTgGetId і callAI завжди паралельно
+                // ⏳ показуємо при кожному AI повідомленні — діалог може займати 5-15s
                 let thinkingMsgId = null;
                 let rawReply;
                 try {
-                    if (isFirstAiMsg) {
-                        // Запускаємо обидва одночасно — AI не чекає TG API
-                        const [_msgId, _reply] = await Promise.all([
-                            sendTgGetId(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...'),
-                            callAI(n, normalized.text, session, compRef, _compData),
-                        ]);
-                        thinkingMsgId = _msgId;
-                        rawReply = _reply;
-                    } else {
-                        rawReply = await callAI(n, normalized.text, session, compRef, _compData);
-                    }
+                    // Запускаємо обидва одночасно — AI не чекає TG API
+                    const [_msgId, _reply] = await Promise.all([
+                        channel === 'telegram'
+                            ? sendTgGetId(botToken, normalized.senderId, '⏳ Секунду, готую відповідь...')
+                            : Promise.resolve(null),
+                        callAI(n, normalized.text, session, compRef, _compData),
+                    ]);
+                    thinkingMsgId = _msgId;
+                    rawReply = _reply;
                 } finally {
                     typingActive = false;
                 }
@@ -991,17 +988,20 @@ module.exports = async (req, res) => {
                     .replace(/\[SAVE:[^\]]+\]/g, '')
                     .trim();
 
-                session.aiHistory.push({ role: 'assistant', content: cleanReply });
+                if (cleanReply) session.aiHistory.push({ role: 'assistant', content: cleanReply });
                 // Зберігаємо останню AI відповідь для {{ai_response}} в наступних вузлах
                 session.data.ai_response = cleanReply;
 
-                if (cleanReply) {
+                // Якщо cleanReply порожній (тільки [DONE]/[BTN]/[SAVE]) — беремо fallback
+                const _replyText = cleanReply || (isDone ? '' : (n.config?.fallback || n.fallback || ''));
+                if (_replyText || thinkingMsgId) {
                     // PERF: editTg/sendMsg + saveBotMessage паралельно (-15ms)
+                    const _sendText = _replyText || '...';
                     await Promise.all([
                         thinkingMsgId
-                            ? editTg(botToken, normalized.senderId, thinkingMsgId, cleanReply, aiBtns.length ? aiBtns : null)
-                            : sendMsg(channel, botToken, normalized.senderId, cleanReply, aiBtns.length ? aiBtns : null),
-                        saveBotMessage(compRef, contactId, cleanReply),
+                            ? editTg(botToken, normalized.senderId, thinkingMsgId, _sendText, aiBtns.length ? aiBtns : null)
+                            : sendMsg(channel, botToken, normalized.senderId, _sendText, aiBtns.length ? aiBtns : null),
+                        _replyText ? saveBotMessage(compRef, contactId, _replyText) : Promise.resolve(),
                     ]);
                 }
 
@@ -1395,8 +1395,8 @@ async function callAI(node, userText, session, compRef, compData) {
         const model = node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini';
         const apiKey = node.config?.aiApiKey || node.aiApiKey
             || compData[provider + 'ApiKey']
-            || compData.openaiApiKey
-            || process.env.OPENAI_API_KEY;
+            || (provider === 'openai' || provider === 'deepseek' ? compData.openaiApiKey : null)
+            || (provider === 'openai' || provider === 'deepseek' ? process.env.OPENAI_API_KEY : null);
 
         process.env.WEBHOOK_DEBUG && console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
         if (!apiKey) return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний.';
@@ -1462,15 +1462,27 @@ async function callAI(node, userText, session, compRef, compData) {
         // ── Google Gemini ─────────────────────────────────────
         } else if (provider === 'google' || model.startsWith('gemini')) {
             const geminiModel = model || 'gemini-2.0-flash';
+            // Gemini: конвертуємо aiHistory в Gemini contents format
+            const _geminiHistory = (session.aiHistory || []).map(m => ({
+                role: m.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: m.content }],
+            }));
+            const _geminiContents = [
+                ..._geminiHistory,
+                { role: 'user', parts: [{ text: userText }] },
+            ];
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 signal: aiAbort.signal,
                 body: JSON.stringify({
-                    contents: [{ role: 'user', parts: [{ text: sysPrompt + '\n\n' + userText }] }]
+                    system_instruction: { parts: [{ text: sysPrompt }] },
+                    contents: _geminiContents,
+                    generationConfig: { maxOutputTokens: 1500 },
                 })
             });
             const d = await r.json();
+            clearTimeout(aiTimeout);
             process.env.WEBHOOK_DEBUG && console.debug('[callAI] Google status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.candidates?.[0]?.content?.parts?.[0]?.text || null;
         }
@@ -1493,34 +1505,44 @@ async function saveBotMessage(compRef, contactId, text) {
     if (!compRef || !contactId || !text) return;
     try {
         const clean = (text||'').replace(/<[^>]+>/g, '').trim(); // strip HTML теги
-        await compRef.collection('contacts').doc(contactId)
-            .collection('messages').add({
-                text:      clean.slice(0, 2000),
-                from:      'bot',
-                direction: 'out',
-                read:      true,
-                timestamp: admin.firestore.FieldValue.serverTimestamp(),
-            });
-        await compRef.collection('contacts').doc(contactId).set({
-            lastMessage:     clean.slice(0, 100),
-            lastMessageAt:   admin.firestore.FieldValue.serverTimestamp(),
-            lastMessageFrom: 'bot',
-        }, { merge: true });
+        // PERF: messages.add + contacts.set паралельно
+        await Promise.all([
+            compRef.collection('contacts').doc(contactId)
+                .collection('messages').add({
+                    text:      clean.slice(0, 2000),
+                    from:      'bot',
+                    direction: 'out',
+                    read:      true,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                }),
+            compRef.collection('contacts').doc(contactId).set({
+                lastMessage:     clean.slice(0, 100),
+                lastMessageAt:   admin.firestore.FieldValue.serverTimestamp(),
+                lastMessageFrom: 'bot',
+            }, { merge: true }),
+        ]);
     } catch(e) { console.error('[saveBotMsg]', e.message); }
 }
 
 async function sendTg(token, chatId, text, buttons) {
     if (!token || !chatId) return;
-    // Конвертуємо markdown bold/italic в HTML для Telegram
-    let safeText = (text || ' ').trim()
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-    // Відновлюємо тільки базові теги які Telegram підтримує
-    safeText = safeText
-        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-        .replace(/\*(.*?)\*/g, '<i>$1</i>')
-        .replace(/`(.*?)`/g, '<code>$1</code>');
+    // Конвертуємо markdown → HTML для Telegram
+    // Якщо текст вже містить HTML теги — не escapeємо (AI міг відповісти в HTML)
+    const _hasHtml = /<(b|i|code|pre|a|s|u|tg-spoiler)[\s>]/.test(text || '');
+    let safeText;
+    if (_hasHtml) {
+        // Текст вже в HTML — тільки обрізаємо до 4096
+        safeText = (text || ' ').trim();
+    } else {
+        // Plain text або markdown — конвертуємо
+        safeText = (text || ' ').trim()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\*(.*?)\*/g, '<i>$1</i>')
+            .replace(/`(.*?)`/g, '<code>$1</code>');
+    }
     const payload = { chat_id: chatId, text: safeText, parse_mode: 'HTML' };
     if (buttons?.length) {
         // Кожна кнопка на окремому рядку (Telegram обрізає довгі рядки)
