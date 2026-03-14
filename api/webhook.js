@@ -136,8 +136,11 @@ module.exports = async (req, res) => {
                 const fbToken = compDoc.data()?.fbPageAccessToken;
                 if (fbToken && leadId) {
                     try {
+                        const _fbAbort = new AbortController();
+                        setTimeout(() => _fbAbort.abort(), 10000);
                         const fbRes = await fetch(
-                            `https://graph.facebook.com/v19.0/${leadId}?access_token=${fbToken}`
+                            `https://graph.facebook.com/v19.0/${leadId}?access_token=${fbToken}`,
+                            { signal: _fbAbort.signal }
                         );
                         const fbData = await fbRes.json();
                         const fields = {};
@@ -944,10 +947,17 @@ module.exports = async (req, res) => {
 
             } else if (n.type === 'api') {
                 try {
-                    const r = await fetch(n.url, { method: n.method || 'GET',
+                    if (!n.url || !/^https?:\/\//.test(n.url)) throw new Error('Invalid URL');
+                    const _apiAbort = new AbortController();
+                    setTimeout(() => _apiAbort.abort(), 10000);
+                    const r = await fetch(n.url, {
+                        method: n.method || 'GET',
                         headers: { 'Content-Type': 'application/json' },
-                        ...(n.body ? { body: interp(n.body, session.data) } : {}) });
-                    session.data._apiResponse = await r.text();
+                        signal: _apiAbort.signal,
+                        ...(n.body ? { body: interp(n.body, session.data) } : {})
+                    });
+                    session.data._apiResponse = (await r.text()).slice(0, 2000);
+                    session.data._apiStatus = r.status;
                 } catch(e) { session.data._apiError = e.message; }
                 nodeId = n.nextNode || null;
 
@@ -1816,12 +1826,15 @@ async function handleSendMessage(req, res, _authUser) {
 
         if (token && senderId && contact.channel === 'telegram') {
             try {
+                const _smAbort = new AbortController();
+                setTimeout(() => _smAbort.abort(), 8000);
                 const tgRes = await fetch(
                     `https://api.telegram.org/bot${token}/sendMessage`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ chat_id: senderId, text, parse_mode: 'HTML' }),
+                        signal: _smAbort.signal,
                     }
                 );
                 const tgData = await tgRes.json();
