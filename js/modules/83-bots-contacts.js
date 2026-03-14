@@ -504,10 +504,10 @@ window.updateBotTokenHint = function(channel) {
     const hint = document.getElementById('bpTokenHint');
     if (channel === 'telegram') {
         if (label) label.textContent = window.t('botsBotTokenLabel');
-        if (hint) hint.textContent = '1. Відкрий @BotFather <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> /newbot <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> скопіюй токен';
+        if (hint) hint.textContent = '1. Відкрий @BotFather → /newbot → скопіюй токен';
     } else if (channel === 'instagram') {
         if (label) label.textContent = 'PAGE ACCESS TOKEN';
-        if (hint) hint.textContent = 'Отримай в Meta Developer Console <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> Instagram <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i> Page Access Token';
+        if (hint) hint.textContent = 'Отримай в Meta Developer Console → Instagram → Page Access Token';
     }
 };
 

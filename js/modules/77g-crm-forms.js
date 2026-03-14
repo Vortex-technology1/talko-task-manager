@@ -282,7 +282,7 @@ function _ensureFormsTabInSettings() {
     // Додаємо кнопку "Форми" в кінець Settings
     const btn = document.createElement('button');
     btn.setAttribute('data-crm-forms', '1');
-    btn.textContent = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Управління формами →';
+    btn.innerHTML = '🌐 Управління формами →';
     btn.style.cssText = 'width:100%;padding:0.6rem;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;';
     btn.onclick = () => window.crmRenderFormsSettings();
     settingsEl.querySelector('div')?.appendChild(btn);

@@ -63,7 +63,7 @@ function _renderBuilderShell() {
                 <button onclick="sbSave()"
                     style="padding:0.4rem 1rem;background:#22c55e;color:white;border:none;
                     border-radius:8px;cursor:pointer;font-weight:700;font-size:0.82rem;">
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Зберегти
+                    💾 Зберегти
                 </button>
             </div>
         </div>
@@ -572,7 +572,7 @@ window.sbSave = async function () {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     } finally {
         sb.saving = false;
-        if (btn) { btn.textContent = '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Зберегти'; btn.disabled = false; }
+        if (btn) { btn.innerHTML = '💾 Зберегти'; btn.disabled = false; }
     }
 };
 
