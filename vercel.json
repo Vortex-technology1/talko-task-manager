@@ -116,9 +116,19 @@
     "api/track-visit.js": {
       "maxDuration": 5,
       "memory": 128
+    },
+    "api/weekly-report.js": {
+      "maxDuration": 60,
+      "memory": 256
     }
   },
   "regions": [
     "fra1"
+  ],
+  "crons": [
+    {
+      "path": "/api/weekly-report",
+      "schedule": "0 9 * * 0"
+    }
   ]
 }
