@@ -172,9 +172,9 @@ function renderSuperadminPanel(compDocs, usageMap, perCompany) {
         font-size:0.8rem;font-weight:600;white-space:nowrap;transition:all .15s;
         background:${i===0?'white':'transparent'};color:${i===0?'#111':'#6b7280'};
         box-shadow:${i===0?'0 -2px 0 #3b82f6 inset':''};border-bottom:${i===0?'2px solid white':'2px solid transparent'};">
-        ${ {companies:'🏢 Компанії',users:'👥 Юзери',activity:'📊 Активність',ai:'🤖 AI',diagnostic:'🔍 Діагностика',system:'⚙️ Система'}[t] }
+        ${ {companies:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Компанії',users:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Юзери',activity:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Активність',ai:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> AI',diagnostic:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Діагностика',system:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg> Система'}[t] }
     </button>`).join('')}
-    <button onclick="loadSuperadminData()" style="margin-left:auto;padding:0.4rem 0.7rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;font-size:0.75rem;">↻</button>
+    <button onclick="loadSuperadminData()" style="margin-left:auto;padding:0.4rem 0.7rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;cursor:pointer;font-size:0.75rem;" style="display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Оновити</button>
 </div>
 
 <!-- Контент табів -->
@@ -210,7 +210,7 @@ function _saRenderCompanies(pc) {
         const planBadge = {
             basic:      '<span style="background:#f3f4f6;color:#6b7280;padding:1px 6px;border-radius:4px;font-size:0.7rem;">Basic</span>',
             pro:        '<span style="background:#dcfce7;color:#16a34a;padding:1px 6px;border-radius:4px;font-size:0.7rem;">Pro</span>',
-            enterprise: '<span style="background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;font-size:0.7rem;">★ Ent</span>',
+            enterprise: '<span style="background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;font-size:0.7rem;"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:inline-flex;vertical-align:middle;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Ent/span>',
         }[plan] || plan;
         const safeId   = c.id.replace(/['\"]/g,'');
         const safeName = (d.name||c.id).replace(/'/g,"\\'");
@@ -218,9 +218,9 @@ function _saRenderCompanies(pc) {
         const snap = c.snapshot;
         const ownerRatio = snap?.signals?.ownerTaskRatio ? Math.round(snap.signals.ownerTaskRatio*100)+'%' : '—';
 
-        return `<tr style="border-bottom:1px solid #f3f4f6;cursor:pointer;"
+        return `<tr data-name="${(d.name||c.id).toLowerCase()}" style="border-bottom:1px solid #f3f4f6;cursor:pointer;"
             onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background=''">
-            <td style="padding:0.45rem 0.5rem;font-weight:600;font-size:0.82rem;">${_saEsc(d.name||c.id)}</td>
+            <td style="padding:0.45rem 0.5rem;font-weight:600;font-size:0.82rem;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" onclick="saOpenCompanyDetail('${c.id}')" title="Деталі компанії">${_saEsc(d.name||c.id)}</td>
             <td style="padding:0.45rem 0.5rem;">${planBadge}</td>
             <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.users.length}</td>
             <td style="padding:0.45rem 0.5rem;font-size:0.8rem;">${c.activeTasks}</td>
@@ -246,7 +246,11 @@ function _saRenderCompanies(pc) {
         </tr>`;
     }).join('');
 
-    return `<div style="overflow-x:auto;">
+    return `<div style="margin-bottom:0.6rem;">
+    <input id="saCompanySearch" placeholder="Пошук по назві компанії..." oninput="saFilterCompanies(this.value)"
+        style="width:100%;padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.82rem;box-sizing:border-box;">
+</div>
+<div style="overflow-x:auto;">
     <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
         <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;font-size:0.72rem;color:#6b7280;text-transform:uppercase;">
             <th style="padding:0.45rem 0.5rem;text-align:left;">Компанія</th>
@@ -262,7 +266,7 @@ function _saRenderCompanies(pc) {
         <tbody>${rows}</tbody>
     </table></div>
     <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
-        <button onclick="deleteEmptyCompanies()" style="padding:0.3rem 0.7rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">🗑 Видалити пусті</button>
+        <button onclick="deleteEmptyCompanies()" style="padding:0.3rem 0.7rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Видалити пусті</button>
     </div>`;
 }
 
@@ -354,11 +358,11 @@ function _saRenderActivity(pc) {
     return `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div>
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;color:#111;">📈 Топ-20 подій (7 днів)</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;color:#111;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Топ-20 подій (7 днів)</div>
             <div style="max-height:400px;overflow-y:auto;">${evRows||'<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає даних</div>'}</div>
         </div>
         <div>
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;color:#111;">🏢 Активність по компаніях</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;color:#111;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Активність по компаніях</div>
             <div style="max-height:400px;overflow-y:auto;">${compActivity||'<div style="color:#9ca3af;padding:1rem;text-align:center;">Немає даних</div>'}</div>
         </div>
     </div>`;
@@ -411,7 +415,7 @@ function _saRenderAI(pc) {
         <div style="flex:1;text-align:right;">
             <button onclick="openGlobalAISettings()"
                 style="padding:0.4rem 0.9rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:7px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                ⚙️ Глобальні налаштування AI
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg> Глобальні налаштування AI
             </button>
         </div>
     </div>
@@ -470,11 +474,11 @@ function _saRenderDiagnostic(pc) {
     return `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div>
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;">🔍 AI рекомендації (сьогодні)</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> AI рекомендації (сьогодні)</div>
             <div style="max-height:420px;overflow-y:auto;">${recCards}</div>
         </div>
         <div>
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;">📸 Snapshot сьогодні</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.5rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Snapshot сьогодні</div>
             <div style="overflow-x:auto;">
             <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
                 <thead><tr style="background:#f9fafb;font-size:0.68rem;color:#6b7280;text-transform:uppercase;">
@@ -498,14 +502,14 @@ function _saRenderSystem() {
     return `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;">
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">🤖 AI Налаштування</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg> AI Налаштування</div>
             <button onclick="openGlobalAISettings()"
                 style="width:100%;padding:0.55rem;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;">
-                ⚙️ Глобальні налаштування (ключі, агенти, моделі)
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg> Глобальні налаштування (ключі, агенти, моделі)
             </button>
         </div>
         <div style="border:1px solid #e5e7eb;border-radius:10px;padding:1rem;">
-            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;">🗑 Обслуговування</div>
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.75rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Обслуговування</div>
             <button onclick="deleteEmptyCompanies()"
                 style="width:100%;padding:0.55rem;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
                 Видалити порожні компанії
@@ -526,6 +530,91 @@ function _saEsc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+
+window.saFilterCompanies = function(query) {
+    const q = (query || '').toLowerCase().trim();
+    document.querySelectorAll('#saTabContent_companies table tbody tr').forEach(tr => {
+        const name = tr.dataset.name || '';
+        tr.style.display = (!q || name.includes(q)) ? '' : 'none';
+    });
+};
+
+window.saOpenCompanyDetail = function(companyId) {
+    const pc = window._saData?.perCompany || [];
+    const c  = pc.find(x => x.id === companyId);
+    if (!c) return;
+    const d  = c.data;
+
+    const userRows = c.users.map(u => `
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;border-bottom:1px solid #f3f4f6;">
+            <span style="font-size:0.75rem;font-weight:600;min-width:120px;">${_saEsc(u.name||u.email||'—')}</span>
+            <span style="font-size:0.7rem;background:#f3f4f6;padding:1px 6px;border-radius:4px;">${_saEsc(u.role||'—')}</span>
+            <span style="font-size:0.7rem;color:#9ca3af;">${u.telegramChatId ? '✓ TG' : ''}</span>
+            <span style="font-size:0.7rem;color:#9ca3af;margin-left:auto;">${_saEsc(u.language||'ua')}</span>
+        </div>`).join('') || '<div style="color:#9ca3af;font-size:0.78rem;">Немає юзерів</div>';
+
+    const evRows = Object.entries(c.eventCounts||{})
+        .sort((a,b)=>b[1]-a[1]).slice(0,10)
+        .map(([k,v]) => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:0.75rem;border-bottom:1px solid #f9f9f9;">
+            <span style="font-family:monospace;color:#374151;">${_saEsc(k)}</span>
+            <strong>${v}</strong>
+        </div>`).join('') || '<div style="color:#9ca3af;font-size:0.78rem;">Немає подій</div>';
+
+    const aiRecRows = (c.aiRecs||[]).map(r => `
+        <div style="padding:0.4rem 0;border-bottom:1px solid #f3f4f6;font-size:0.75rem;">
+            <span style="color:${r.severity==='critical'?'#dc2626':'#ca8a04'};">${r.severity==='critical'?'🔴':'🟡'}</span>
+            ${_saEsc(r.signalText||r.signal||'—')}
+        </div>`).join('') || '<div style="color:#9ca3af;font-size:0.78rem;">Немає рекомендацій</div>';
+
+    const snap = c.snapshot;
+    const snapHtml = snap ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:0.75rem;">
+            <div>Активних: <strong>${snap.totals?.active||0}</strong></div>
+            <div>Прострочених: <strong style="color:${(snap.totals?.overdue||0)>0?'#ef4444':'#22c55e'}">${snap.totals?.overdue||0}</strong></div>
+            <div>Owner%: <strong>${snap.signals?.ownerTaskRatio?Math.round(snap.signals.ownerTaskRatio*100)+'%':'—'}</strong></div>
+            <div>SLA: <strong>${snap.totals?.slaBreaches||0}</strong></div>
+        </div>` : '<div style="color:#9ca3af;font-size:0.78rem;">Немає snapshot</div>';
+
+    document.getElementById('saDetailOverlay')?.remove();
+    const ov = document.createElement('div');
+    ov.id = 'saDetailOverlay';
+    ov.onclick = e => { if(e.target===ov) ov.remove(); };
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10020;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    ov.innerHTML = `
+    <div style="background:white;border-radius:14px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="padding:1rem 1.25rem;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1;">
+            <div>
+                <div style="font-weight:700;font-size:1rem;">${_saEsc(d.name||c.id)}</div>
+                <div style="font-size:0.72rem;color:#9ca3af;margin-top:1px;">${c.id} · план: ${d.plan||'pro'} · AI: ${d.aiEnabled!==false?'ON':'OFF'}</div>
+            </div>
+            <button onclick="document.getElementById('saDetailOverlay').remove()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#9ca3af;">×</button>
+        </div>
+        <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+                <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.5rem;color:#374151;">Користувачі (${c.users.length})</div>
+                ${userRows}
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.5rem;color:#374151;">Events 7д (${c.totalEvents7d})</div>
+                ${evRows}
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.5rem;color:#374151;">AI рекомендації</div>
+                ${aiRecRows}
+            </div>
+            <div>
+                <div style="font-weight:700;font-size:0.82rem;margin-bottom:0.5rem;color:#374151;">Snapshot сьогодні</div>
+                ${snapHtml}
+                <div style="margin-top:0.5rem;font-size:0.75rem;">
+                    <div>AI токени сьогодні: <strong>${c.todayTokens.toLocaleString()}</strong></div>
+                    <div>AI токени місяць: <strong>${c.monthTokens.toLocaleString()}</strong></div>
+                    <div>Tижневий звіт: <strong>${c.weeklyLog?'✓ надіслано':'не надіслано'}</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+    document.body.appendChild(ov);
+};
 
 window.updateCompanyPlan = async function(companyId, plan) {
     const validPlans = ['basic', 'pro', 'enterprise'];
