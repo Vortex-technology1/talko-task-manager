@@ -785,9 +785,45 @@ function _renderCodePanel() {
         <div style="${hint}">Вставляється перед &lt;/body&gt; — для чат-віджетів, попапів тощо</div>
     </div>
 
-    <!-- Embed блок -->
+    <!-- Роздільник -->
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+        <div style="flex:1;height:1px;background:#e5e7eb;"></div>
+        <span style="font-size:0.65rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;">або</span>
+        <div style="flex:1;height:1px;background:#e5e7eb;"></div>
+    </div>
+
+    <!-- HTML блок між блоками -->
+    <div style="margin-bottom:1rem;border:1.5px solid #ede9fe;border-radius:10px;padding:0.85rem;background:#faf5ff;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+            <label style="${lbl}">
+                <span style="display:inline-flex;align-items:center;gap:5px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    <span style="color:#7c3aed;">HTML блок між блоками сторінки</span>
+                </span>
+            </label>
+            <span style="font-size:0.62rem;background:#ede9fe;color:#7c3aed;padding:1px 7px;border-radius:10px;font-weight:700;">як Tilda T123</span>
+        </div>
+        <div style="font-size:0.68rem;color:#6b7280;margin-bottom:0.5rem;line-height:1.5;">
+            Вставляється <strong>між блоками</strong> сторінки — після Hero, перед Формою тощо.<br>
+            Підтримка: iframe, embed, кастомні секції, будь-який HTML.
+        </div>
+        <button onclick="sbAddHtmlBlockFromCode()"
+            style="width:100%;padding:0.45rem;background:#8b5cf6;color:white;border:none;
+            border-radius:7px;cursor:pointer;font-weight:700;font-size:0.8rem;
+            display:flex;align-items:center;justify-content:center;gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Додати HTML блок → перейти в Блоки
+        </button>
+        ${sb.blocks.filter(b=>b.type==='html').length > 0 ? `
+        <div style="margin-top:0.5rem;font-size:0.7rem;color:#7c3aed;text-align:center;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-flex;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg>
+            ${sb.blocks.filter(b=>b.type==='html').length} HTML блок(ів) вже є в структурі сторінки
+        </div>` : ''}
+    </div>
+
+    <!-- Підказки -->
     <div style="margin-bottom:1rem;padding:0.6rem;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
-        <div style="font-size:0.72rem;font-weight:700;color:#475569;margin-bottom:0.4rem;">💡 Приклади що сюди вставляти:</div>
+        <div style="font-size:0.72rem;font-weight:700;color:#475569;margin-bottom:0.4rem;">💡 Код у &lt;head&gt;/&lt;body&gt; — для:</div>
         <div style="font-size:0.7rem;color:#64748b;display:flex;flex-direction:column;gap:3px;">
             <span>• Google Analytics / GA4 (gtag.js)</span>
             <span>• Meta Pixel / TikTok Pixel</span>
@@ -805,6 +841,17 @@ function _renderCodePanel() {
         Зберегти код
     </button>`;
 }
+
+// Додати HTML блок з табу Код → переключитись на Блоки
+window.sbAddHtmlBlockFromCode = function() {
+    sbAddBlock('html');          // додає блок стандартним способом
+    sbPanelTab('blocks');        // переключає на таб Блоки
+    // Автоматично вибирає останній доданий блок (html)
+    const idx = sb.blocks.length - 1;
+    if (idx >= 0) sbSelectBlock(idx);
+    if (typeof showToast === 'function')
+        showToast('HTML блок додано — редагуй вміст зліва', 'success');
+};
 
 window.sbSaveCode = async function() {
     if (!sb.site || !sb.siteId) return;
