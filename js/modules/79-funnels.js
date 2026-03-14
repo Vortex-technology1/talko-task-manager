@@ -108,6 +108,8 @@
         funnelEditorData = null;
         funnelSteps = [];
         selectedStepId = null;  // FIX: prevent stale highlight on reopen
+        // Повертаємо на вкладку Маркетинг
+        if (typeof window.switchTab === 'function') window.switchTab('marketing');
     };
 
     // ── Steps List ─────────────────────────────────────────

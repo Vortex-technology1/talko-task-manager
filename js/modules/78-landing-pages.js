@@ -289,6 +289,7 @@
     <div style="margin-top:3px;font-size:.63rem;font-weight:700;color:${col.color};">
         ${info.stat} <span style="font-weight:400;color:${col.color}80;">${info.statLabel}</span>
     </div>` : ''}
+    ${info.stagesHtml ? `<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:1px;">${info.stagesHtml}</div>` : ''}
 </div>`;
         }
         return `
@@ -330,7 +331,11 @@
         }
         if (id==='crm') {
             const cnt = f.leadsCount||0;
-            return { title:'Лід в CRM', subtitle:cnt>0?'автоматично':'готово до роботи', stat:cnt||null, statLabel:'угод' };
+            const stages = f.stages || [];
+            const stagesHtml = stages.length > 0
+                ? stages.map(st => `<span title="${_esc(st.name)}" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${st.color||'#9ca3af'};margin-right:2px;"></span>`).join('')
+                : '';
+            return { title:'Лід в CRM', subtitle:cnt>0?'автоматично':'готово до роботи', stat:cnt||null, statLabel:'угод', stagesHtml };
         }
         if (id==='process') {
             const t = _templates.find(t=>t.id===f.processTemplateId);
