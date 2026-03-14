@@ -41,12 +41,23 @@
     ];
 
     // ── Init ───────────────────────────────────────────────
+    let _initialized = false;
+    let _initCompanyId = null;
+
     window.initLandingPagesModule = async function () {
         if (!window.currentCompanyId) return;
         const c = document.getElementById('marketingContainer');
         if (!c) return;
+        // FIX-7: skip full reload if already initialized for this company
+        if (_initialized && _initCompanyId === window.currentCompanyId) {
+            _renderHub();
+            return;
+        }
         c.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:200px;color:#9ca3af;font-size:.85rem;">Завантаження...</div>';
+        _initialized = false;
         await _loadAll();
+        _initialized = true;
+        _initCompanyId = window.currentCompanyId;
         _renderHub();
     };
 
@@ -54,11 +65,12 @@
         const base = window.companyRef();
         _unsubs.forEach(u => { try { u(); } catch(e){} });
         _unsubs = [];
+        const empty = () => ({ docs: [] });
         const [sitesSnap, botsSnap, funnelsSnap, tplSnap] = await Promise.all([
-            base.collection('landingPages').orderBy('createdAt','desc').get(),
-            base.collection('bots').get(),
-            base.collection('funnels').orderBy('createdAt','desc').get(),
-            base.collection('processTemplates').get().catch(()=>({docs:[]})),
+            base.collection('landingPages').orderBy('createdAt','desc').get().catch(empty),
+            base.collection('bots').get().catch(empty),
+            base.collection('funnels').orderBy('createdAt','desc').get().catch(empty),
+            base.collection('processTemplates').get().catch(empty),
         ]);
         _sites     = sitesSnap.docs.map(d=>({id:d.id,...d.data()}));
         _bots      = botsSnap.docs.map(d=>({id:d.id,...d.data()}));
@@ -79,6 +91,10 @@
     function _renderHub() {
         const c = document.getElementById('marketingContainer');
         if (!c) return;
+        // FIX-1: skip re-render if any modal overlay is open (would orphan modal DOM)
+        if (document.getElementById('mktPickOv') ||
+            document.getElementById('mktStageOv') ||
+            document.getElementById('mktNewFunnelOv')) return;
         c.innerHTML = `
 <div style="height:100%;display:flex;flex-direction:column;background:#f4f5f7;overflow:hidden;">
 
@@ -181,7 +197,7 @@
                 <span style="color:${st.color||'#9ca3af'};display:flex;">${I.stage}</span>
                 <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px;"
                     title="${_esc(st.name)}">${_esc(st.name)}</span>
-                <button onclick="mktDeleteStage('${f.id}',${si})"
+                <button onclick="event.stopPropagation();mktDeleteStage('${f.id}',${si})"
                     style="margin-left:auto;padding:0;background:none;border:none;
                     cursor:pointer;color:#d1d5db;display:flex;line-height:1;"
                     onmouseenter="this.style.color='#ef4444'"
@@ -341,10 +357,12 @@
                         ${STAGE_COLORS.map((c,i) => `
                         <label style="cursor:pointer;">
                             <input type="radio" name="stageColor" value="${c}" ${i===0?'checked':''} style="display:none;">
-                            <div style="width:22px;height:22px;border-radius:50%;background:${c};
-                                border:2.5px solid transparent;transition:border-color .15s;"
+                            <div class="mktColorDot" data-color="${c}"
+                                style="width:22px;height:22px;border-radius:50%;background:${c};
+                                border:2.5px solid ${i===0?'#111827':'transparent'};transition:border-color .15s;cursor:pointer;"
                                 onclick="this.parentNode.querySelector('input').checked=true;
-                                    document.querySelectorAll('[name=stageColor]~div').forEach(d=>d.style.borderColor='transparent');
+                                    var ov=document.getElementById('mktStageOv');
+                                    if(ov)ov.querySelectorAll('.mktColorDot').forEach(function(d){d.style.borderColor='transparent';});
                                     this.style.borderColor='#111827';">
                             </div>
                         </label>`).join('')}
@@ -366,7 +384,7 @@
     window.mktSaveStage = async function(funnelId) {
         const name = document.getElementById('mktStageNameInp')?.value.trim();
         if (!name) { if(window.showToast) showToast('Введіть назву','warning'); return; }
-        const colorInput = document.querySelector('[name=stageColor]:checked');
+        const colorInput = (document.getElementById('mktStageOv') || document).querySelector('[name=stageColor]:checked');
         const color = colorInput ? colorInput.value : '#22c55e';
         const f = _funnels.find(x=>x.id===funnelId);
         if (!f) return;
@@ -406,8 +424,14 @@
             if (f.botId) { if(typeof switchTab==='function') switchTab('bots'); }
             else _modalPickBot(funnelId);
         } else if (colId==='ai') {
-            if (typeof openFunnelEditorModule==='function') openFunnelEditorModule(funnelId);
-            else if(window.showToast) showToast('Редактор завантажується...','info');
+            if (typeof openFunnelEditorModule==='function') {
+                openFunnelEditorModule(funnelId);
+            } else if (typeof lazyLoad === 'function') {
+                if(window.showToast) showToast('Завантажую редактор...','info');
+                lazyLoad('funnels', function() {
+                    if (typeof openFunnelEditorModule==='function') openFunnelEditorModule(funnelId);
+                });
+            } else if(window.showToast) showToast('Редактор недоступний','warning');
         } else if (colId==='crm') {
             if(typeof switchTab==='function') switchTab('crm');
         } else if (colId==='process') {
