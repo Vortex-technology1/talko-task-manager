@@ -68,8 +68,8 @@ function _renderBuilderShell() {
                 </button>
 
                 <!-- URL сайту (тільки якщо опублікований) -->
-                <button id="sbUrlBtn" onclick="sbOpenPublicUrl()" style="display:none;
-                    align-items:center;gap:5px;padding:0.4rem 0.75rem;
+                <button id="sbUrlBtn" onclick="sbOpenPublicUrl()"
+                    style="display:none;align-items:center;gap:5px;padding:0.4rem 0.75rem;
                     background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:8px;
                     cursor:pointer;font-size:0.75rem;font-weight:600;color:#2563eb;
                     white-space:nowrap;max-width:180px;"
@@ -617,7 +617,10 @@ window.sbSave = async function () {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     } finally {
         sb.saving = false;
-        if (btn) { btn.innerHTML = '💾 Зберегти'; btn.disabled = false; }
+        if (btn) {
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти';
+            btn.disabled = false;
+        }
     }
 };
 
@@ -696,13 +699,8 @@ window.sbTogglePublish = async function() {
         } else if (!pub) {
             if (typeof showToast === 'function') showToast('Сайт знято з публікації', 'info');
         }
-        // Оновлюємо badge
-        const badge = document.getElementById('sbStatusBadge');
-        if (badge) {
-            badge.textContent = pub ? (window.t?.('sitesPublishedBadge') || 'Опубліковано') : (window.t?.('sitesDraftBadge') || 'Чернетка');
-            badge.style.background = pub ? '#dcfce7' : '#f3f4f6';
-            badge.style.color = pub ? '#16a34a' : '#6b7280';
-        }
+        // Оновлюємо весь header через єдину функцію
+        _updateHeader();
     } catch(e) {
         if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
     } finally {
@@ -754,7 +752,8 @@ function _updatePublishBtn() {
 
     if (urlBtn) {
         if (pub && _pubUrl) {
-            urlBtn.style.display = 'flex';
+            urlBtn.style.display     = 'flex';
+            urlBtn.style.alignItems  = 'center';
             const displayUrl = sb.site.customDomain
                 ? sb.site.customDomain
                 : _pubUrl.replace(/^https?:\/\/[^/]+/, '').slice(0, 30) || 'Відкрити сайт';
@@ -768,7 +767,10 @@ function _updatePublishBtn() {
 
 // Відкрити/скопіювати публічний URL
 window.sbOpenPublicUrl = function() {
-    const pubUrl = sb.site?.publicUrl;
+    // Fallback: генеруємо URL якщо немає
+    const pubUrl = sb.site?.publicUrl || (
+        sb.siteId ? `https://taskmanagerai-vert.vercel.app/api/site?id=${sb.siteId}&cid=${window.currentCompanyId||window.currentCompany||''}` : null
+    );
     if (!pubUrl) return;
     // Показуємо modal з URL
     if (typeof _showPublicUrlModal === 'function') {
