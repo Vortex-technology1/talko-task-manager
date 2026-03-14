@@ -961,22 +961,44 @@ module.exports = async (req, res) => {
                     const dealTitle = interp(n.dealTitle || ('{contact.name} — запит з боту'), session.data)
                         .replace('{contact.name}', session.senderName || session.senderId || 'Лід');
                     const targetStage = n.dealStage || 'new';
-                    // Перевіряємо чи вже є deal з цим контактом + флоу
-                    const existingDeals = await compRef.collection('crm_deals')
-                        .where('botContactId', '==', session.channel + '_' + session.senderId)
-                        .where('flowId', '==', flow?.id || '')
-                        .limit(1).get();
+                    const _tdContactId = session.channel + '_' + session.senderId;
+                    // Спочатку шукаємо авто-лід (autoCreated=true, flowId=null)
+                    // щоб оновити його замість створення дубля
+                    let _tdAutoLid = null;
+                    if (session.data?._autoDealId) {
+                        const _tdDoc = await compRef.collection('crm_deals')
+                            .doc(session.data._autoDealId).get().catch(() => null);
+                        if (_tdDoc?.exists && !_tdDoc.data()?.flowId) _tdAutoLid = _tdDoc;
+                    }
+                    // Потім шукаємо по botContactId + flowId
+                    const existingDeals = _tdAutoLid
+                        ? { empty: false, docs: [_tdAutoLid] }
+                        : await compRef.collection('crm_deals')
+                            .where('botContactId', '==', _tdContactId)
+                            .where('flowId', '==', flow?.id || '')
+                            .limit(1).get();
                     if (existingDeals.empty) {
                         // FIX CC: fetch pipeline to get pipelineId (required for CRM kanban query)
                         let ccPipelineId = 'default', ccStageColor = '#6b7280', ccProbability = 10;
                         try {
-                            const ccPipSnap = await compRef.collection('crm_pipeline').where('isDefault','==',true).limit(1).get();
-                            if (!ccPipSnap.empty) {
-                                ccPipelineId = ccPipSnap.docs[0].id;
-                                const ccStages = ccPipSnap.docs[0].data().stages || [];
-                                const ccStage = ccStages.find(s => s.id === targetStage) || ccStages[0];
-                                ccStageColor = ccStage?.color || '#6b7280';
-                                ccProbability = ccStage?.probability || 10;
+                            // Кеш pipeline з авто-ліду (якщо є) — уникаємо зайвого read
+                            let _tdPipSnap = null;
+                            if (session.data?._autoPipId && session.data?._autoStageId) {
+                                ccPipelineId = session.data._autoPipId;
+                                ccStageColor  = '#6b7280';
+                                ccProbability = 10;
+                            } else {
+                                _tdPipSnap = await compRef.collection('crm_pipeline')
+                                    .where('isDefault','==',true).limit(1).get();
+                                if (_tdPipSnap && !_tdPipSnap.empty) {
+                                    ccPipelineId = _tdPipSnap.docs[0].id;
+                                    const ccStages = _tdPipSnap.docs[0].data().stages || [];
+                                    const ccStage = ccStages.find(s => s.id === targetStage) || ccStages[0];
+                                    ccStageColor = ccStage?.color || '#6b7280';
+                                    ccProbability = ccStage?.probability || 10;
+                                    // Кешуємо для наступних вузлів
+                                    session.data._autoPipId = ccPipelineId;
+                                }
                             }
                         } catch(e) { console.warn('[talko_deal] pipeline fetch error:', e.message); }
                         const dealRef = compRef.collection('crm_deals').doc();
@@ -1012,11 +1034,22 @@ module.exports = async (req, res) => {
                                 .catch(e => console.warn('[talko_deal] leadsCount:', e.message));
                         }
                     } else {
-                        // Оновлюємо стадію якщо угода вже є
+                        // Оновлюємо угоду (авто-лід або існуючу)
+                        const _tdTitle = interp(
+                            n.dealTitle || '{contact.name} — запит з боту', session.data
+                        ).replace('{contact.name}', session.senderName || session.senderId || 'Лід');
                         await existingDeals.docs[0].ref.update({
-                            stage: targetStage,
+                            title:     _tdTitle,
+                            stage:     targetStage,
+                            flowId:    flow?.id || null,
+                            clientName: session.senderName || '',
+                            phone:     session.data?.phone || existingDeals.docs[0].data()?.phone || '',
                             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                         });
+                        // Кешуємо dealId для finish()
+                        if (!session.data._autoDealId) {
+                            session.data._autoDealId = existingDeals.docs[0].id;
+                        }
                     }
                 } catch(e) { console.error('[webhook] talko_deal error:', e.message); }
                 nodeId = n.nextNode || null;
