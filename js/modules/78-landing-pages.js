@@ -401,26 +401,150 @@
     }
 
     function renderFunnelCard(funnel) {
-        const stepsCount = (funnel.steps || []).length;
+        const stepsCount  = (funnel.steps || []).length;
         const linkedPages = lpPages.filter(p => p.funnelId === funnel.id).length;
+        const leads       = funnel.leadsCount || 0;
+        const bots        = (typeof window.bots !== 'undefined' ? window.bots : []);
+        const sites       = lpPages.filter(p => p.funnelId === funnel.id);
+        // Pipeline chain: site → bot → crm → process
+        const chain = [
+            {
+                type: 'site',
+                icon: '🌐',
+                color: '#3b82f6',
+                bg: '#eff6ff',
+                label: sites.length ? escHtml(sites[0].name || 'Сайт') : 'Сайт',
+                count: sites.length ? (sites[0].views || '—') : null,
+                countLabel: 'переглядів',
+                click: sites.length ? `lpEditPage('${sites[0].id}')` : `switchTab('sites')`,
+                linked: sites.length > 0,
+            },
+            {
+                type: 'bot',
+                icon: '🤖',
+                color: '#8b5cf6',
+                bg: '#f5f3ff',
+                label: funnel.botId ? (bots.find(b=>b.id===funnel.botId)?.name || 'Бот') : 'Бот',
+                count: leads,
+                countLabel: 'старти',
+                click: funnel.botId ? `switchTab('bots')` : `switchTab('bots')`,
+                linked: !!funnel.botId,
+            },
+            {
+                type: 'ai',
+                icon: '🧠',
+                color: '#06b6d4',
+                bg: '#ecfeff',
+                label: funnel.aiEnabled ? 'AI Ланцюг' : 'AI Ланцюг',
+                count: stepsCount > 0 ? stepsCount : null,
+                countLabel: 'кроків',
+                click: `openFunnelEditor('${funnel.id}')`,
+                linked: stepsCount > 0,
+            },
+            {
+                type: 'crm',
+                icon: '💼',
+                color: '#22c55e',
+                bg: '#f0fdf4',
+                label: 'CRM Лід',
+                count: leads,
+                countLabel: 'угод',
+                click: `switchTab('crm')`,
+                linked: leads > 0,
+            },
+            {
+                type: 'process',
+                icon: '⚙️',
+                color: '#f59e0b',
+                bg: '#fffbeb',
+                label: funnel.processId ? 'Процес' : 'Процес',
+                count: funnel.processLaunched || null,
+                countLabel: 'запущено',
+                click: `switchTab('processes')`,
+                linked: !!funnel.processId,
+            },
+        ];
+
+        const chainHtml = chain.map((step, i) => `
+            <div style="display:flex;align-items:center;gap:0;">
+                <div onclick="${step.click}" title="${step.linked ? 'Відкрити' : 'Прив\u0027язати'}"
+                    style="display:flex;flex-direction:column;align-items:center;gap:3px;
+                    padding:.55rem .65rem;border-radius:10px;cursor:pointer;
+                    background:${step.linked ? step.bg : '#f9fafb'};
+                    border:1.5px solid ${step.linked ? step.color+'40' : '#e5e7eb'};
+                    min-width:68px;transition:all .15s;position:relative;"
+                    onmouseenter="this.style.boxShadow='0 2px 8px rgba(0,0,0,.1)'"
+                    onmouseleave="this.style.boxShadow='none'">
+                    ${!step.linked ? `<div style="position:absolute;top:-5px;right:-5px;width:14px;height:14px;
+                        background:#e5e7eb;border-radius:50%;display:flex;align-items:center;
+                        justify-content:center;font-size:.55rem;color:#9ca3af;">+</div>` : ''}
+                    <span style="font-size:1.1rem;line-height:1;">${step.icon}</span>
+                    <div style="font-size:.67rem;font-weight:700;color:${step.linked ? step.color : '#9ca3af'};
+                        text-align:center;white-space:nowrap;max-width:64px;
+                        overflow:hidden;text-overflow:ellipsis;">${step.label}</div>
+                    ${step.count !== null ? `<div style="font-size:.6rem;color:${step.linked ? step.color : '#d1d5db'};font-weight:600;">
+                        ${step.count} ${step.countLabel}</div>` : `<div style="font-size:.6rem;color:#d1d5db;">не підключено</div>`}
+                </div>
+                ${i < chain.length - 1 ? `
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 2px;">
+                    <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
+                        <line x1="0" y1="6" x2="16" y2="6" stroke="${chain[i].linked && chain[i+1].linked ? '#22c55e' : '#d1d5db'}" stroke-width="1.5" stroke-dasharray="${chain[i].linked && chain[i+1].linked ? 'none' : '3,2'}"/>
+                        <polyline points="12,2 18,6 12,10" stroke="${chain[i].linked && chain[i+1].linked ? '#22c55e' : '#d1d5db'}" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    ${chain[i].linked && chain[i+1].linked && chain[i].count && chain[i+1].count ?
+                        `<div style="font-size:.55rem;color:#22c55e;font-weight:700;white-space:nowrap;">
+                            ${Math.round((chain[i+1].count / chain[i].count) * 100)}%
+                        </div>` : ''}
+                </div>` : ''}
+            </div>`).join('');
 
         return `
-            <div style="background:white;border-radius:12px;padding:1rem;box-shadow:var(--shadow);">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;">
+            <div style="background:white;border-radius:14px;padding:1rem 1.1rem;box-shadow:var(--shadow);
+                border:1px solid #f1f5f9;">
+                <!-- Header -->
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem;">
                     <div>
-                        <div style="font-weight:700;font-size:0.95rem;color:#1a1a1a;margin-bottom:0.3rem;">${escHtml(funnel.name)}</div>
-                        <div style="font-size:0.78rem;color:#6b7280;">${stepsCount} кроків · ${linkedPages} лендінгів · ${funnel.leadsCount || 0} лідів</div>
+                        <div style="font-weight:700;font-size:.95rem;color:#111827;">${escHtml(funnel.name)}</div>
+                        <div style="font-size:.72rem;color:#9ca3af;margin-top:1px;">
+                            ${leads} лідів · ${linkedPages} сайтів
+                        </div>
                     </div>
-                    <div style="display:flex;gap:0.4rem;">
-                        <button onclick="openFunnelEditor('${funnel.id}')" style="padding:0.4rem 0.75rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">
-                            <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>️ Редагувати
+                    <div style="display:flex;gap:.35rem;">
+                        <button onclick="openFunnelEditor('${funnel.id}')"
+                            style="padding:.35rem .7rem;background:#22c55e;color:white;border:none;
+                            border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:600;
+                            display:flex;align-items:center;gap:3px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                            Редагувати
                         </button>
-                        <button onclick="confirmDeleteFunnel('${funnel.id}')" style="padding:0.4rem 0.5rem;background:#fee2e2;color:#ef4444;border:none;border-radius:8px;cursor:pointer;">
-                            <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                        <button onclick="confirmDeleteFunnel('${funnel.id}')"
+                            style="padding:.35rem .5rem;background:#fee2e2;color:#ef4444;border:none;
+                            border-radius:7px;cursor:pointer;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                         </button>
                     </div>
                 </div>
-                ${funnel.calendlyUrl ? `<div style="margin-top:0.5rem;font-size:0.75rem;color:#6b7280;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Calendly: ${escHtml(funnel.calendlyUrl)}</div>` : ''}
+
+                <!-- Pipeline chain -->
+                <div style="display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:4px;
+                    scrollbar-width:none;">
+                    ${chainHtml}
+                </div>
+
+                <!-- Stats bar -->
+                ${leads > 0 ? `
+                <div style="margin-top:.75rem;padding:.5rem .65rem;background:#f8fafc;border-radius:8px;
+                    display:flex;gap:1rem;flex-wrap:wrap;">
+                    <div style="font-size:.7rem;color:#6b7280;">
+                        <span style="font-weight:700;color:#111827;">${leads}</span> лідів всього
+                    </div>
+                    ${funnel.leadsToday ? `<div style="font-size:.7rem;color:#6b7280;">
+                        <span style="font-weight:700;color:#22c55e;">+${funnel.leadsToday}</span> сьогодні
+                    </div>` : ''}
+                    ${funnel.convRate ? `<div style="font-size:.7rem;color:#6b7280;">
+                        <span style="font-weight:700;color:#f59e0b;">${funnel.convRate}%</span> конверсія
+                    </div>` : ''}
+                </div>` : ''}
             </div>`;
     }
 
