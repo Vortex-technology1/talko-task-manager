@@ -539,6 +539,22 @@ function _renderSignals(container, signals, ctx) {
 // ГОЛОВНА ФУНКЦІЯ
 // ─────────────────────────────────────────
 async function runAIDiagnostic(force = false) {
+    // Plan gate: AI-діагностика доступна тільки для pro/enterprise
+    if (typeof window.isPlanAllowed === 'function' && !window.isPlanAllowed('ai_diagnostic')) {
+        const container = _renderContainer();
+        if (container) {
+            container.innerHTML = `
+            <div style="background:#f8fafc;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e2e8f0;display:flex;align-items:center;gap:0.75rem;">
+                <span style="font-size:1.2rem;">🔒</span>
+                <div>
+                    <div style="font-weight:600;font-size:0.88rem;color:#475569;">AI-діагностика — план Pro</div>
+                    <div style="font-size:0.78rem;color:#94a3b8;margin-top:0.1rem;">Перейдіть на план Pro щоб отримувати щоденний аналіз операційних збоїв</div>
+                </div>
+            </div>`;
+        }
+        return;
+    }
+
     // Cooldown: не запускати частіше 5 хв якщо не force
     if (!force) {
         const cache = window[DIAG_CACHE_KEY];

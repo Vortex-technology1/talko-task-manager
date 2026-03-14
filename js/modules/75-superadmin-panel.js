@@ -132,6 +132,14 @@ function renderSuperadminPanel(companyDocs, usageMap) {
             </td>
             <td style="padding:0.4rem 0.5rem;font-size:0.82rem;">${usage.monthTokens.toLocaleString()}</td>
             <td style="padding:0.4rem 0.5rem;">
+                <select onchange="updateCompanyPlan('${safeId}', this.value)"
+                    style="padding:0.25rem 0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.78rem;cursor:pointer;background:white;">
+                    <option value="basic"      ${(c.plan||'pro')==='basic'      ? 'selected' : ''}>Basic</option>
+                    <option value="pro"        ${(c.plan||'pro')==='pro'        ? 'selected' : ''}>Pro</option>
+                    <option value="enterprise" ${(c.plan||'pro')==='enterprise' ? 'selected' : ''}>Enterprise</option>
+                </select>
+            </td>
+            <td style="padding:0.4rem 0.5rem;">
                 <button onclick="openFeatureFlags('${safeId}', '${safeName}')"
                     style="padding:0.3rem 0.7rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;white-space:nowrap;">
                     <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span> Модулі
@@ -152,6 +160,7 @@ function renderSuperadminPanel(companyDocs, usageMap) {
         <thead><tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;">
             <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Компанія</th>
             <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">AI</th>
+            <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">План</th>
             <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Ліміт/день</th>
             <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Ліміт/міс</th>
             <th style="padding:0.5rem;text-align:left;font-size:0.8rem;">Сьогодні</th>
@@ -161,6 +170,16 @@ function renderSuperadminPanel(companyDocs, usageMap) {
         <tbody>${rows}</tbody>
     </table></div>`;
 }
+
+window.updateCompanyPlan = async function(companyId, plan) {
+    const validPlans = ['basic', 'pro', 'enterprise'];
+    if (!validPlans.includes(plan)) return;
+    try {
+        await firebase.firestore().collection('companies').doc(companyId).update({ plan });
+        const badge = { basic: '🔵 Basic', pro: '🟢 Pro', enterprise: '⭐ Enterprise' };
+        showToast && showToast('План змінено: ' + (badge[plan] || plan), 'success');
+    } catch(e) { showToast && showToast('Помилка: ' + e.message, 'error'); }
+};
 
 window.toggleCompanyAI = async function(companyId, enabled) {
     try {

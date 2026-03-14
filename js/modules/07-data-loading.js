@@ -94,11 +94,36 @@
                 try {
                     const compDoc = await base.get();
                     if (compDoc.exists) {
-                        window.companyFeatures = compDoc.data().features || {};
+                        const cd = compDoc.data();
+                        window.companyFeatures    = cd.features || {};
+                        // Tier-модель: basic | pro | enterprise (default: pro до впровадження billing)
+                        window.currentPlan        = cd.plan || 'pro';
+                        window.currentCompanyData = window.currentCompanyData || { id: window.currentCompanyId, ...cd };
                     }
                 } catch(e) { console.error('[07-data-loading]', e.message); }
+
                 window.isFeatureEnabled = window.isFeatureEnabled || function(key) {
                     return !window.companyFeatures || window.companyFeatures[key] !== false;
+                };
+
+                // isPlanAllowed(feature) — перевірка доступу по плану
+                // basic:      операційна ОС без AI-діагностики
+                // pro:        basic + AI Diagnostic Agent + тижневі звіти
+                // enterprise: pro + кастомний агент + пріоритетна підтримка
+                const PLAN_FEATURES = {
+                    ai_diagnostic:  ['pro', 'enterprise'],
+                    weekly_report:  ['pro', 'enterprise'],
+                    custom_agent:   ['enterprise'],
+                    event_tracking: ['pro', 'enterprise'],
+                    advanced_stats: ['pro', 'enterprise'],
+                };
+                window.PLAN_FEATURES  = PLAN_FEATURES;
+                window.isPlanAllowed  = function(feature) {
+                    const plan = window.currentPlan || 'pro';
+                    if (plan === 'enterprise') return true;
+                    const allowed = PLAN_FEATURES[feature];
+                    if (!allowed) return true; // невідома фіча — дозволяємо
+                    return allowed.includes(plan);
                 };
 
                 
