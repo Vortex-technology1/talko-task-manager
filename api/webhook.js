@@ -1090,8 +1090,9 @@ module.exports = async (req, res) => {
                         try {
                             // Кеш pipeline з авто-ліду (якщо є) — уникаємо зайвого read
                             let _tdPipSnap = null;
-                            if (session._autoPipId    || session.data?._autoPipId && session._autoStageId  || session.data?._autoStageId) {
-                                ccPipelineId = session.data._autoPipId;
+                            const _hasPipCache = (session._autoPipId || session.data?._autoPipId);
+                            if (_hasPipCache) {
+                                ccPipelineId = session._autoPipId || session.data._autoPipId;
                                 ccStageColor  = '#6b7280';
                                 ccProbability = 10;
                             } else {
@@ -1153,7 +1154,8 @@ module.exports = async (req, res) => {
                             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                         });
                         // Кешуємо dealId для finish()
-                        if (!session.data._autoDealId) {
+                        if (!session._autoDealId && !session.data._autoDealId) {
+                            session._autoDealId = existingDeals.docs[0].id;
                             session.data._autoDealId = existingDeals.docs[0].id;
                         }
                     }
@@ -1656,13 +1658,6 @@ async function finish(session, flow, compRef, channel, compData = {}) {
             if (typeof v === 'string' && v.length > 500) _leadData[k] = v.slice(0, 500);
             else if (typeof v !== 'object') _leadData[k] = v;
         }
-        await compRef.collection('leads').add({
-            senderId: session.senderId, senderName: session.senderName || '',
-            channel, flowId: flow?.id || null, flowName: flow?.name || '',
-            data: _leadData, tags: session.tags || [],
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        }).catch(e => console.warn('[finish] leads.add:', e.message));
-
         // Upsert контакт по senderId — всі поля по ТЗ
         const contactId = `${channel}_${session.senderId}`;
         const contactData = {
@@ -1689,10 +1684,19 @@ async function finish(session, flow, compRef, channel, compData = {}) {
 
         // BUG B FIX: один set() замість двох — Firestore merge не перезаписує існуюче createdAt
         const contactRef = compRef.collection('contacts').doc(contactId);
-        await contactRef.set(
-            { ...contactData, createdAt: admin.firestore.FieldValue.serverTimestamp() },
-            { merge: true }
-        );
+        // PERF: leads.add і contactRef.set паралельно — незалежні операції
+        await Promise.all([
+            contactRef.set(
+                { ...contactData, createdAt: admin.firestore.FieldValue.serverTimestamp() },
+                { merge: true }
+            ),
+            compRef.collection('leads').add({
+                senderId: session.senderId, senderName: session.senderName || '',
+                channel, flowId: flow?.id || null, flowName: flow?.name || '',
+                data: _leadData, tags: session.tags || [],
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            }).catch(e => console.warn('[finish] leads.add:', e.message)),
+        ]);
 
         // ── AUTO CRM: записуємо в crm_clients + crm_deals ───
         try {
@@ -1724,16 +1728,23 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                     niche:       d.business_type || d.niche || '',
                     mainProblem: d.main_problem || '',
                     mainGoal:    d.main_goal || '',
+                    searchTime:  d.search_time || '',
+                    role:        d.role || '',
                     aiSummary:   d.ai_response || '',
                     telegram:    session.username ? `@${session.username}` : '',
+                    senderId:    String(session.senderId),
+                    tags:        session.tags?.length ? session.tags : undefined,
                     updatedAt:   admin.firestore.FieldValue.serverTimestamp(),
                 }, { merge: true });
                 // Також оновлюємо авто-deal якщо він був
-                if (session._autoDealId   || session.data?._autoDealId) {
-                    await compRef.collection('crm_deals').doc(session.data._autoDealId).set({
-                        clientName: clientName,
-                        phone:      d.phone || '',
-                        updatedAt:  admin.firestore.FieldValue.serverTimestamp(),
+                const _adId = session._autoDealId || session.data?._autoDealId;
+                if (_adId) {
+                    await compRef.collection('crm_deals').doc(_adId).set({
+                        clientName:  clientName,
+                        phone:       d.phone || '',
+                        description: d.ai_response || d.main_problem || '',
+                        tags:        session.tags || [],
+                        updatedAt:   admin.firestore.FieldValue.serverTimestamp(),
                     }, { merge: true }).catch(() => {});
                 }
             } else {
@@ -1769,7 +1780,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
             // Якщо є авто-лід deal — оновлюємо його flowId і вважаємо 'existing'
             let existingDeals;
             if (_autoLidDeal?.exists && !_autoLidDeal.data()?.flowId) {
-                await compRef.collection('crm_deals').doc(session.data._autoDealId)
+                await compRef.collection('crm_deals').doc(_adIdForCheck)
                     .update({ flowId: flow?.id || null, updatedAt: admin.firestore.FieldValue.serverTimestamp() })
                     .catch(() => {});
                 existingDeals = { empty: false, docs: [_autoLidDeal] };
@@ -1784,7 +1795,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                 // Кешований pipeline з авто-ліду — уникаємо дублювання reads
                 let pipelineId = session._autoPipId    || session.data?._autoPipId || 'default';
                 let firstStage = { id: session._autoStageId  || session.data?._autoStageId || 'new', label: 'Новий', color: '#6b7280' };
-                if (!session._autoPipId    || session.data?._autoPipId) {
+                if (!session._autoPipId && !session.data?._autoPipId) { // зчитуємо pipeline тільки якщо кешу нема
                     const pipSnap = await compRef.collection('crm_pipeline')
                         .where('isDefault', '==', true).limit(1).get().catch(() => null);
                     if (pipSnap && !pipSnap.empty) {
