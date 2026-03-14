@@ -158,7 +158,21 @@
     function _renderBoard() {
         const colMinW = 'min-width:200px;flex:1;';
 
-        const headers = COLS.map(col => `
+        // ── Динамічні stage-колонки: збираємо унікальні stages по всіх воронках ──
+        // Структура: [ { key: 'fid:si', funnelId, stageIdx, name, color } ]
+        // Але колонки мають бути per-funnel — тому вставляємо stage-колонки
+        // тільки якщо хоча б одна воронка має stages.
+        // Кожна воронка має свої stages → колонки динамічні per-row.
+        // Для header: показуємо "Етапи" як одну групу-заголовок.
+        const hasAnyStages = _funnels.some(f => (f.stages||[]).length > 0);
+        const maxStages    = Math.max(0, ..._funnels.map(f => (f.stages||[]).length));
+
+        // Статичні колонки до CRM (site, bot, ai, crm)
+        const COLS_BEFORE = COLS.filter(c => c.id !== 'process');
+        const COL_PROCESS = COLS.find(c => c.id === 'process');
+
+        // Заголовки фіксованих колонок
+        const renderColHeader = col => `
 <div style="${colMinW}padding:.55rem .75rem;background:white;
     border-right:1px solid #e8eaed;border-top:3px solid ${col.color};flex-shrink:0;">
     <div style="display:flex;align-items:center;gap:.4rem;">
@@ -169,14 +183,79 @@
                 text-overflow:ellipsis;max-width:130px;">${col.hint}</div>
         </div>
     </div>
-</div>`).join('');
+</div>`;
+
+        // Заголовки stage-колонок (порожні — заповнюються per-row)
+        const stageHeaders = hasAnyStages
+            ? Array.from({ length: maxStages }, (_, i) => `
+<div style="${colMinW}padding:.55rem .75rem;background:#fafaf5;
+    border-right:1px solid #e8eaed;border-top:3px solid #f59e0b;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:.4rem;">
+        <span style="color:#f59e0b;display:flex;">${I.stage}</span>
+        <div>
+            <div style="font-size:.77rem;font-weight:700;color:#374151;">Етап ${i+1}</div>
+            <div style="font-size:.58rem;color:#9ca3af;">кваліфікація / продаж</div>
+        </div>
+    </div>
+</div>`).join('')
+            : '';
+
+        const headers = [
+            ...COLS_BEFORE.map(renderColHeader),
+            stageHeaders,
+            COL_PROCESS ? renderColHeader(COL_PROCESS) : '',
+        ].join('');
 
         const rows = _funnels.map(f => {
             const stages = f.stages || [];
-            const cells = COLS.map(col => `
+
+            // Клітинки фіксованих колонок до process
+            const fixedCells = COLS_BEFORE.map(col => `
 <div style="${colMinW}border-right:1px solid #e8eaed;padding:.3rem .35rem;flex-shrink:0;">
     ${_renderCell(f, col)}
 </div>`).join('');
+
+            // Клітинки stage-колонок (по maxStages штук)
+            const stageCells = hasAnyStages ? Array.from({ length: maxStages }, (_, i) => {
+                const st = stages[i];
+                if (!st) return `
+<div style="${colMinW}border-right:1px solid #e8eaed;padding:.3rem .35rem;flex-shrink:0;">
+    <div style="border-radius:8px;padding:.42rem .52rem;border:1.5px dashed #f3f4f6;
+        min-height:46px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:.6rem;color:#d1d5db;">—</span>
+    </div>
+</div>`;
+                return `
+<div style="${colMinW}border-right:1px solid #e8eaed;padding:.3rem .35rem;flex-shrink:0;">
+    <div style="border-radius:8px;padding:.42rem .52rem;
+        background:#fffbf0;border:1.5px solid ${st.color||'#f59e0b'}40;cursor:default;">
+        <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:2px;">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;
+                background:${st.color||'#f59e0b'};flex-shrink:0;"></span>
+            <div style="font-size:.71rem;font-weight:600;color:${st.color||'#f59e0b'};
+                overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">
+                ${_esc(st.name)}
+            </div>
+            <button onclick="event.stopPropagation();mktDeleteStage('${f.id}',${i})"
+                style="padding:0;background:none;border:none;cursor:pointer;
+                color:#d1d5db;display:flex;line-height:1;flex-shrink:0;"
+                onmouseenter="this.style.color='#ef4444'"
+                onmouseleave="this.style.color='#d1d5db'">${I.close}</button>
+        </div>
+        <div style="font-size:.6rem;color:${st.color||'#f59e0b'}90;">
+            клік → CRM
+        </div>
+    </div>
+</div>`;
+            }).join('') : '';
+
+            // Process колонка
+            const processCell = COL_PROCESS ? `
+<div style="${colMinW}border-right:1px solid #e8eaed;padding:.3rem .35rem;flex-shrink:0;">
+    ${_renderCell(f, COL_PROCESS)}
+</div>` : '';
+
+            const cells = fixedCells + stageCells + processCell;
 
             return `
 <div style="display:flex;border-bottom:1px solid #f1f5f9;background:white;
@@ -199,23 +278,7 @@
             </span>
         </div>
 
-        <!-- Stages list -->
-        ${stages.length ? `
-        <div style="margin-top:5px;display:flex;flex-direction:column;gap:2px;">
-            ${stages.map((st,si) => `
-            <div style="display:flex;align-items:center;gap:3px;font-size:.6rem;color:#6b7280;">
-                <span style="color:${st.color||'#9ca3af'};display:flex;">${I.stage}</span>
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px;"
-                    title="${_esc(st.name)}">${_esc(st.name)}</span>
-                <button onclick="event.stopPropagation();mktDeleteStage('${f.id}',${si})"
-                    style="margin-left:auto;padding:0;background:none;border:none;
-                    cursor:pointer;color:#d1d5db;display:flex;line-height:1;"
-                    onmouseenter="this.style.color='#ef4444'"
-                    onmouseleave="this.style.color='#d1d5db'">${I.close}</button>
-            </div>`).join('')}
-        </div>` : ''}
-
-        <!-- Add stage btn -->
+        <!-- Add stage btn (stages тепер як колонки в канбані) -->
         <button onclick="mktAddStage('${f.id}')"
             style="margin-top:5px;display:flex;align-items:center;gap:3px;
             padding:2px 5px;background:none;border:1px dashed #d1d5db;
