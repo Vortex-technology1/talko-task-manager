@@ -561,23 +561,28 @@ module.exports = async (req, res) => {
                     .where('botContactId', '==', contactId).limit(1).get().catch(() => null);
 
                 if (!_existingClient || _existingClient.empty) {
-                    // Створюємо клієнта
-                    const _clientRef = await compRef.collection('crm_clients').add({
-                        name:         _name,
-                        phone:        '',
-                        email:        '',
-                        source:       _source,
-                        botContactId: contactId,
-                        channel:      channel,
-                        telegramId:   channel === 'telegram' ? String(normalized.senderId) : '',
-                        createdAt:    _ts,
-                        updatedAt:    _ts,
-                    });
-
-                    // Знаходимо дефолтний pipeline
-                    const _pipSnap = await compRef.collection('crm_pipeline')
-                        .where('isDefault', '==', true).limit(1).get().catch(() => null);
-                    const _pip = _pipSnap && !_pipSnap.empty ? _pipSnap.docs[0] : null;
+                    // PERF: client.add + pipeline.get паралельно
+                    const _newClientRef = compRef.collection('crm_clients').doc();
+                    const [, _pipSnap] = await Promise.all([
+                        _newClientRef.set({
+                            id:           _newClientRef.id,
+                            name:         _name,
+                            phone:        '',
+                            email:        '',
+                            source:       _source,
+                            botContactId: contactId,
+                            channel:      channel,
+                            telegramId:   channel === 'telegram' ? String(normalized.senderId) : '',
+                            createdAt:    _ts,
+                            updatedAt:    _ts,
+                        }),
+                        compRef.collection('crm_pipeline')
+                            .where('isDefault', '==', true).limit(1).get().catch(() => null),
+                    ]);
+                    const _clientRef = _newClientRef;
+                    // pipeline result
+                    const _pipSnap2 = _pipSnap;
+                    const _pip = _pipSnap2 && !_pipSnap2.empty ? _pipSnap2.docs[0] : null;
                     const _pipId = _pip ? _pip.id : '';
                     const _stages = _pip ? (_pip.data().stages || []) : [];
                     const _stageId = _stages.length ? (_stages[0].id || '') : 'new';
@@ -606,11 +611,7 @@ module.exports = async (req, res) => {
                         updatedAt:    _ts,
                     });
 
-                    // Зберігаємо IDs в session для подальших вузлів
-                    session.data._autoClientId = _clientRef.id;
-                    session.data._autoDealId   = _dealRef.id;
-                    session.data._autoPipId    = _pipId;
-                    session.data._autoStageId  = _stageId;
+                    // Зберігаємо botContactId в deal → finish() знайде по ньому
                     console.log(`[auto_lead] Created client=${_clientRef.id} deal=${_dealRef.id} for ${contactId}`);
                 }
             } catch(e) {
