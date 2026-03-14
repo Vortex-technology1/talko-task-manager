@@ -414,7 +414,7 @@ module.exports = async (req, res) => {
                         stageId:      firstStageId,
                         stage:        firstStageId, // FIX CRITICAL: CRM kanban читає d.stage, не stageId
                         source:       providerLabel,
-                        status:       'active',
+                        status:       'open',  // FIX: kanban шукає status='open'
                         assigneeId:   assigneeId,
                         assigneeName: assigneeName,
                         createdBy:    'system',
@@ -1543,6 +1543,8 @@ async function sendTg(token, chatId, text, buttons) {
             .replace(/\*(.*?)\*/g, '<i>$1</i>')
             .replace(/`(.*?)`/g, '<code>$1</code>');
     }
+    // Telegram limit: 4096 chars. Обрізаємо з позначкою
+    if (safeText.length > 4096) safeText = safeText.slice(0, 4090) + '...';
     const payload = { chat_id: chatId, text: safeText, parse_mode: 'HTML' };
     if (buttons?.length) {
         // Кожна кнопка на окремому рядку (Telegram обрізає довгі рядки)
@@ -1561,7 +1563,19 @@ async function sendTg(token, chatId, text, buttons) {
         });
         clearTimeout(_tgTimer);
         const result = await r.json();
-        if (!result.ok) console.error('[sendTg] Error:', result.description, JSON.stringify(payload).slice(0, 200));
+        if (!result.ok) {
+            if (result.error_code === 429) {
+                // Rate limit — чекаємо і повторюємо один раз
+                const retryAfter = (result.parameters?.retry_after || 3) * 1000;
+                await new Promise(res => setTimeout(res, Math.min(retryAfter, 10000)));
+                const r2 = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                }).catch(() => null);
+                return r2 ? await r2.json().catch(() => null) : null;
+            }
+            console.error('[sendTg] Error:', result.description, JSON.stringify(payload).slice(0, 200));
+        }
         return result;
     } catch(e) {
         if (e.name === 'AbortError') console.error('[sendTg] TIMEOUT 8s');
@@ -1631,6 +1645,7 @@ async function sendTyping(token, chatId) {
 async function sendTgGetId(token, chatId, text) {
     if (!token || !chatId) return null;
     let safeText = (text || ' ').trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if (safeText.length > 4096) safeText = safeText.slice(0, 4090) + '...';
     try {
         const _ctrl = new AbortController();
         const _t = setTimeout(() => _ctrl.abort(), 8000);
@@ -1648,11 +1663,15 @@ async function sendTgGetId(token, chatId, text) {
 // Редагує існуюче повідомлення
 async function editTg(token, chatId, messageId, text, buttons) {
     if (!token || !chatId || !messageId) return;
-    let safeText = (text || ' ').trim()
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        .replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')
-        .replace(/\*(.*?)\*/g,'<i>$1</i>')
-        .replace(/`(.*?)`/g,'<code>$1</code>');
+    const _eHasHtml = /<(b|i|code|pre|a|s|u)[\s>]/.test(text || '');
+    let safeText = _eHasHtml
+        ? (text || ' ').trim()
+        : (text || ' ').trim()
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')
+            .replace(/\*(.*?)\*/g,'<i>$1</i>')
+            .replace(/`(.*?)`/g,'<code>$1</code>');
+    if (safeText.length > 4096) safeText = safeText.slice(0, 4090) + '...';
     const payload = { chat_id: chatId, message_id: messageId, text: safeText, parse_mode: 'HTML' };
     if (buttons?.length) {
         payload.reply_markup = { inline_keyboard: buttons.map((b,i) => [
@@ -1945,6 +1964,11 @@ async function handleSendMessage(req, res, _authUser) {
     if (typeof text !== 'string' || text.length > 4000) {
         return res.status(400).json({ error: 'text: max 4000 chars' });
     }
+    // Sanitize IDs — Firestore doc IDs не можуть містити / або бути порожніми
+    if (typeof companyId !== 'string' || companyId.includes('/') || companyId.length > 128)
+        return res.status(400).json({ error: 'Invalid companyId' });
+    if (typeof contactId !== 'string' || contactId.includes('/') || contactId.length > 200)
+        return res.status(400).json({ error: 'Invalid contactId' });
     if (!db) return res.status(500).json({ error: 'DB not initialized' });
 
     try {
@@ -2032,6 +2056,10 @@ async function handleSendMessage(req, res, _authUser) {
 async function handleMarkRead(req, res) {
     const { companyId, contactId } = req.body || {};
     if (!companyId || !contactId) return res.status(400).json({ error: 'Missing params' });
+    if (typeof companyId !== 'string' || companyId.includes('/') || companyId.length > 128)
+        return res.status(400).json({ error: 'Invalid companyId' });
+    if (typeof contactId !== 'string' || contactId.includes('/') || contactId.length > 200)
+        return res.status(400).json({ error: 'Invalid contactId' });
     if (!db) return res.status(500).json({ error: 'DB not initialized' });
 
     // Перевіряємо _authUser переданий через req
