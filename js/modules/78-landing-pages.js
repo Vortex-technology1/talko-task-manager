@@ -12,6 +12,7 @@
         bot:     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg>',
         ai:      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
         crm:     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>',
+        project: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
         process: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>',
         plus:    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
         edit:    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>',
@@ -37,7 +38,7 @@
         { id:'bot',     icon:()=>I.bot,     label:'Бот',       color:'#8b5cf6', bg:'#f5f3ff', hint:'Telegram бот для обробки ліда' },
         { id:'ai',      icon:()=>I.ai,      label:'AI Ланцюг', color:'#06b6d4', bg:'#ecfeff', hint:'Кроки: питання, AI відповідь, збір даних' },
         { id:'crm',     icon:()=>I.crm,     label:'CRM',       color:'#22c55e', bg:'#f0fdf4', hint:'Автоматичне створення угоди' },
-        { id:'process', icon:()=>I.process, label:'Процес',    color:'#f59e0b', bg:'#fffbeb', hint:'Запуск процесу після воронки' },
+        { id:'process', icon:()=>I.process, label:'Процес / Проект', color:'#f59e0b', bg:'#fffbeb', hint:'Процес або проект після воронки' },
     ];
 
     // ── Init ───────────────────────────────────────────────
@@ -374,7 +375,7 @@
         if (id==='bot')     return !!f.botId;
         if (id==='ai')      return (f.steps||[]).length>0 || !!f.botId;
         if (id==='crm')     return true;
-        if (id==='process') return !!f.processTemplateId;
+        if (id==='process') return !!f.processTemplateId || !!f.linkedProjectId;
         return false;
     }
     function _getColInfo(f, id) {
@@ -401,9 +402,17 @@
             return { title:'Лід в CRM', subtitle:cnt>0?'автоматично':'готово до роботи', stat:cnt||null, statLabel:'угод', stagesHtml };
         }
         if (id==='process') {
-            const t = _templates.find(t=>t.id===f.processTemplateId);
-            if (!t) return _mt();
-            return { title:t.name||'Процес', subtitle:'шаблон', stat:f.processLaunched||null, statLabel:'запущено' };
+            if (f.processTemplateId) {
+                const t = _templates.find(t=>t.id===f.processTemplateId);
+                if (!t) return _mt();
+                return { title:t.name||'Процес', subtitle:'шаблон процесу', stat:f.processLaunched||null, statLabel:'запущено' };
+            }
+            if (f.linkedProjectId) {
+                const p = (window.projects||[]).find(p=>p.id===f.linkedProjectId);
+                if (!p) return _mt();
+                return { title:p.name||'Проект', subtitle:'проект', stat:null, statLabel:'' };
+            }
+            return _mt();
         }
         return _mt();
     }
@@ -521,6 +530,7 @@
             if(typeof switchTab==='function') switchTab('crm');
         } else if (colId==='process') {
             if (f.processTemplateId) { if(typeof switchTab==='function') switchTab('processes'); }
+            else if (f.linkedProjectId) { if(typeof switchTab==='function') switchTab('projects'); }
             else _modalPickProcess(funnelId);
         }
     };
@@ -613,7 +623,8 @@
     }
 
     function _modalPickProcess(fid) {
-        const items = _templates.map(t=>`
+        // Таб: Процес
+        const processItems = _templates.map(t=>`
 <div onclick="mktLinkField('${fid}','processTemplateId','${t.id}','mktPickOv')"
     style="padding:.52rem .7rem;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;"
     onmouseenter="this.style.borderColor='#f59e0b';this.style.background='#fffbeb'"
@@ -622,9 +633,61 @@
         ${I.process} ${_esc(t.name)}
     </div>
     ${t.description?`<div style="font-size:.67rem;color:#9ca3af;margin-top:2px;">${_esc(t.description.slice(0,60))}</div>`:''}
-</div>`).join('') || _noItems('шаблон','processes','#f59e0b');
-        _showModal('mktPickOv',`<div style="font-weight:700;display:flex;align-items:center;gap:.4rem;">${I.process} Вибрати процес</div>`,items,'');
+</div>`).join('') || _noItems('шаблон процесу','processes','#f59e0b');
+
+        // Таб: Проект
+        const allProjects = window.projects || [];
+        const projectItems = allProjects.map(p=>`
+<div onclick="mktLinkField('${fid}','linkedProjectId','${p.id}','mktPickOv')"
+    style="padding:.52rem .7rem;border:1.5px solid #e8eaed;border-radius:8px;cursor:pointer;"
+    onmouseenter="this.style.borderColor='#8b5cf6';this.style.background='#f5f3ff'"
+    onmouseleave="this.style.borderColor='#e8eaed';this.style.background='white'">
+    <div style="font-size:.82rem;font-weight:600;color:#111827;display:flex;align-items:center;gap:.35rem;">
+        ${I.project} ${_esc(p.name)}
+    </div>
+    ${p.description?`<div style="font-size:.67rem;color:#9ca3af;margin-top:2px;">${_esc(p.description.slice(0,60))}</div>`:''}
+</div>`).join('') || _noItems('проект','projects','#8b5cf6');
+
+        // Два таби в одному модалі
+        const tabsHtml = `
+<div style="display:flex;gap:.4rem;margin-bottom:.75rem;">
+    <button id="mktTabProcess" onclick="mktSwitchPickTab('process')"
+        style="flex:1;padding:.38rem .5rem;border-radius:7px;border:1.5px solid #f59e0b;
+        background:#fffbeb;color:#d97706;font-size:.78rem;font-weight:700;cursor:pointer;">
+        ${I.process} Процес
+    </button>
+    <button id="mktTabProject" onclick="mktSwitchPickTab('project')"
+        style="flex:1;padding:.38rem .5rem;border-radius:7px;border:1.5px solid #e8eaed;
+        background:white;color:#6b7280;font-size:.78rem;font-weight:600;cursor:pointer;">
+        ${I.project} Проект
+    </button>
+</div>
+<div id="mktPickProcessList">${processItems}</div>
+<div id="mktPickProjectList" style="display:none;">${projectItems}</div>`;
+
+        _showModal('mktPickOv',
+            `<div style="font-weight:700;display:flex;align-items:center;gap:.4rem;">${I.process} Процес або Проект</div>`,
+            tabsHtml, '');
     }
+
+    window.mktSwitchPickTab = function(tab) {
+        const procList = document.getElementById('mktPickProcessList');
+        const projList = document.getElementById('mktPickProjectList');
+        const btnProc  = document.getElementById('mktTabProcess');
+        const btnProj  = document.getElementById('mktTabProject');
+        if (!procList || !projList) return;
+        if (tab === 'process') {
+            procList.style.display = '';
+            projList.style.display = 'none';
+            if (btnProc) { btnProc.style.borderColor='#f59e0b'; btnProc.style.background='#fffbeb'; btnProc.style.color='#d97706'; }
+            if (btnProj) { btnProj.style.borderColor='#e8eaed'; btnProj.style.background='white'; btnProj.style.color='#6b7280'; }
+        } else {
+            procList.style.display = 'none';
+            projList.style.display = '';
+            if (btnProj) { btnProj.style.borderColor='#8b5cf6'; btnProj.style.background='#f5f3ff'; btnProj.style.color='#7c3aed'; }
+            if (btnProc) { btnProc.style.borderColor='#e8eaed'; btnProc.style.background='white'; btnProc.style.color='#6b7280'; }
+        }
+    };
 
     function _modalPickSite(fid) {
         const unlinked = _sites.filter(s=>!s.funnelId||s.funnelId===fid);
