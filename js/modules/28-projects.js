@@ -51,7 +51,7 @@
             if (!data.name) { isSavingProject = false; if (submitBtn) submitBtn.disabled = false; return; }
             
             try {
-                const base = db.collection('companies').doc(currentCompany).collection('projects');
+                const base = window.companyRef().collection('projects');
                 if (id) {
                     // Не перезаписуємо status при редагуванні
                     data.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
@@ -87,7 +87,7 @@
             if (stageCount > 0) msg += `\n\nТакож буде видалено ${stageCount} етапів та пов'язані матеріали.`;
             if (!await showConfirmModal(msg, { danger: true })) return;
             try {
-                const base = db.collection('companies').doc(currentCompany);
+                const base = window.companyRef();
                 const orphaned = tasks.filter(t => t.projectId === projectId);
                 const pStages = (typeof window.projectStages !== 'undefined' ? window.projectStages : []).filter(st => st.projectId === projectId);
                 const pMats = (typeof window.projectMaterials !== 'undefined' ? window.projectMaterials : []).filter(m => m.projectId === projectId);
@@ -194,7 +194,7 @@
                 const oldStatus = project.status;
                 project.status = newStatus;
                 try {
-                    const projRef = db.collection('companies').doc(currentCompany).collection('projects').doc(projectId);
+                    const projRef = window.companyRef().collection('projects').doc(projectId);
                     await db.runTransaction(async (tx) => {
                         const doc = await tx.get(projRef);
                         if (!doc.exists) return;
@@ -774,7 +774,7 @@
                 }
             }
             try {
-                await db.collection('companies').doc(currentCompany).collection('projects').doc(projectId).update({ status });
+                await window.companyRef().collection('projects').doc(projectId).update({ status });
                 const proj = projects.find(x => x.id === projectId);
                 if (proj) proj.status = status;
                 renderProjectDetail(projectId);
@@ -1065,11 +1065,11 @@
                 };
                 
                 if (templateId) {
-                    await db.collection('companies').doc(currentCompany).collection('processTemplates').doc(templateId).update(data);
+                    await window.companyRef().collection('processTemplates').doc(templateId).update(data);
                 } else {
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     data.createdBy = currentUser.uid;
-                    await db.collection('companies').doc(currentCompany).collection('processTemplates').add(data);
+                    await window.companyRef().collection('processTemplates').add(data);
                 }
                 
                 closeModal('editProcessTemplateModal');
@@ -1089,7 +1089,7 @@
             }
             
             try {
-                await db.collection('companies').doc(currentCompany).collection('processTemplates').doc(templateId).delete();
+                await window.companyRef().collection('processTemplates').doc(templateId).delete();
                 await loadProcessData();
                 renderTemplatesList();
                 renderProcessBoard();
@@ -1204,7 +1204,7 @@
                     createdBy: currentUser.uid
                 };
                 
-                const processRef = await db.collection('companies').doc(currentCompany).collection('processes').add(processData);
+                const processRef = await window.companyRef().collection('processes').add(processData);
                 
                 // Smart assign or head
                 const assigneeId = firstStep.smartAssign !== false
@@ -1263,7 +1263,7 @@
                     creatorName: currentUserData?.name || currentUser?.email || '' // BUG-AK FIX: was t('systemUser')
                 };
                 
-                await db.collection('companies').doc(currentCompany).collection('tasks').add(taskData);
+                await window.companyRef().collection('tasks').add(taskData);
                 
                 closeModal('startProcessModal');
                 await loadProcessData();
@@ -1407,14 +1407,14 @@
             if (!await showConfirmModal(t('deleteProcessConfirm'), { danger: true })) return;
             
             try {
-                await db.collection('companies').doc(currentCompany).collection('processes').doc(processId).delete();
+                await window.companyRef().collection('processes').doc(processId).delete();
                 
                 // Cleanup: знімаємо processId з пов'язаних задач
                 const linkedTasks = tasks.filter(tk => tk.processId === processId);
                 for (const tk of linkedTasks) {
                     tk.processId = '';
                     tk.processStep = null;
-                    db.collection('companies').doc(currentCompany).collection('tasks').doc(tk.id)
+                    window.companyRef().collection('tasks').doc(tk.id)
                         .update({ processId: '', processStep: null }).catch(() => {});
                 }
                 

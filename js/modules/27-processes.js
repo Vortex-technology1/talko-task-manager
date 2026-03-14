@@ -11,12 +11,12 @@
             
             try {
                 // Завантажуємо шаблони
-                const templatesSnap = await db.collection('companies').doc(currentCompany)
+                const templatesSnap = await window.companyRef()
                     .collection('processTemplates').orderBy('name').get();
                 processTemplates = templatesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 // Завантажуємо процеси (активні або всі в залежності від фільтру)
-                let processQuery = db.collection('companies').doc(currentCompany).collection('processes');
+                let processQuery = window.companyRef().collection('processes');
                 if (!showCompletedProcesses) {
                     processQuery = processQuery.where('status', '==', 'active');
                 }

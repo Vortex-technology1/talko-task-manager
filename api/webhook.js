@@ -547,6 +547,7 @@ module.exports = async (req, res) => {
         const updateId = body?.update_id || body?.entry?.[0]?.id || null;
         if (updateId && session.lastUpdateId === updateId) {
             console.debug('[webhook] Duplicate update_id, skipping:', updateId);
+            lockRef.delete().catch(()=>{});
             return res.status(200).json({ ok: true, skipped: 'duplicate' });
         }
         if (updateId) session.lastUpdateId = updateId;
@@ -590,6 +591,7 @@ module.exports = async (req, res) => {
             if (isStart) await sendMsg(channel, botToken, normalized.senderId, 'Вітаємо! Бот активний ✅');
             // Немає активного флоу — зберігаємо як вхідне повідомлення для ручного чату
             await saveIncomingMessage(compRef, channel, normalized, botDocId);
+            lockRef.delete().catch(()=>{});
             return res.status(200).json({ ok: true, saved: 'no-flow-incoming' });
         }
 
@@ -706,6 +708,7 @@ module.exports = async (req, res) => {
 
         if (!nodeId) {
             await sessionRef.set(session, { merge: true });
+            lockRef.delete().catch(()=>{});
             return res.status(200).json({ ok: true });
         }
 
@@ -729,6 +732,7 @@ module.exports = async (req, res) => {
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                         currentNodeId: nodeId, waitingForInput: nodeId });
                     await sessionRef.set(session, { merge: true });
+                    lockRef.delete().catch(()=>{});
                     return res.status(200).json({ ok: true });
                 }
                 nodeId = n.nextNode || null;
@@ -808,6 +812,7 @@ module.exports = async (req, res) => {
                         currentNodeId: nodeId, waitingForInput: nodeId,
                         aiHistory: session.aiHistory });
                     await sessionRef.set(session, { merge: true });
+                    lockRef.delete().catch(()=>{});
                     return res.status(200).json({ ok: true });
                 }
 
@@ -815,6 +820,7 @@ module.exports = async (req, res) => {
                 Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                     currentNodeId: n.nextNode || null, waitingForInput: nodeId });
                 await sessionRef.set(session, { merge: true });
+                lockRef.delete().catch(()=>{});
                 return res.status(200).json({ ok: true });
 
             } else if (n.type === 'filter') {

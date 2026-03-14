@@ -22,7 +22,7 @@
             
             // Re-read from Firestore to prevent stale state after auto-advance
             try {
-                const freshDoc = await db.collection('companies').doc(currentCompany).collection('processes').doc(processId).get();
+                const freshDoc = await window.companyRef().collection('processes').doc(processId).get();
                 if (freshDoc.exists) {
                     const freshData = freshDoc.data();
                     process.currentStep = freshData.currentStep || 0;
@@ -65,7 +65,7 @@
             const nextStep = template.steps[nextStepIndex];
             
             try {
-                const processRef = db.collection('companies').doc(currentCompany).collection('processes').doc(processId);
+                const processRef = window.companyRef().collection('processes').doc(processId);
                 
                 // runTransaction — race protection: два менеджери не просунуть крок двічі
                 const raceDetected = await db.runTransaction(async (tx) => {
@@ -150,7 +150,7 @@
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                             creatorName: currentUserData?.name || currentUser.email || t('systemUser') // FIX BN
                         };
-                        const docRef = await db.collection('companies').doc(currentCompany).collection('tasks').add(newTaskData);
+                        const docRef = await window.companyRef().collection('tasks').add(newTaskData);
                         // Локально додаємо задачу — без повного loadAllData()
                         tasks.unshift({ id: docRef.id, ...newTaskData, createdAt: new Date(), updatedAt: new Date() });
                     } else {
