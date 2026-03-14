@@ -169,7 +169,7 @@ module.exports = async (req, res) => {
                             updatedAt:  admin.firestore.FieldValue.serverTimestamp(),
                             stageEnteredAt: admin.firestore.FieldValue.serverTimestamp(),
                         });
-                        console.debug(`[webhook] FB Lead created: ${leadId}`);
+                        process.env.WEBHOOK_DEBUG && console.debug(`[webhook] FB Lead created: ${leadId}`);
                     } catch(fbErr) {
                         console.error('[webhook] FB Lead fetch error:', fbErr.message);
                     }
@@ -458,7 +458,7 @@ module.exports = async (req, res) => {
 
 
 
-        console.debug(`[webhook] ${channel} from ${normalized.senderId}: "${normalized.text}"`);
+        process.env.WEBHOOK_DEBUG && console.debug(`[webhook] ${channel} from ${normalized.senderId}: "${normalized.text}"`);
 
         const compRef = db.collection('companies').doc(companyId);
 
@@ -495,7 +495,7 @@ module.exports = async (req, res) => {
         }
         if (normalized.text && !normalized.text.startsWith('/start') && normalized.text !== 'start') {
             try {
-                await db.collection('companies').doc(companyId)
+                await compRef
                     .collection('contacts').doc(contactId)
                     .collection('messages').add({
                         text:      normalized.text,
@@ -538,7 +538,7 @@ module.exports = async (req, res) => {
         const sessionDoc = await sessionRef.get();
         const _isNewContact = !sessionDoc.exists;
         let session = sessionDoc.exists ? sessionDoc.data() : {
-            senderId: normalized.senderId, senderName: normalized.senderName || '',
+            senderId: String(normalized.senderId), senderName: normalized.senderName || '',
             channel, currentFlowId: null, currentBotId: null,
             currentNodeId: null, waitingForInput: null,
             data: {}, aiHistory: [], tags: [],
@@ -624,7 +624,7 @@ module.exports = async (req, res) => {
         // FIX 1: Deduplication — ігноруємо повторний update_id від Telegram
         const updateId = body?.update_id || body?.entry?.[0]?.id || null;
         if (updateId && session.lastUpdateId === updateId) {
-            console.debug('[webhook] Duplicate update_id, skipping:', updateId);
+            process.env.WEBHOOK_DEBUG && console.debug('[webhook] Duplicate update_id, skipping:', updateId);
             lockRef.delete().catch(()=>{});
             return res.status(200).json({ ok: true, skipped: 'duplicate' });
         }
@@ -746,8 +746,8 @@ module.exports = async (req, res) => {
             });
         }
 
-        console.debug(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
-        console.debug(`[webhook] Nodes:`, runtimeNodes.map(n => `${n.id}:${n.type}`).join(', '));
+        process.env.WEBHOOK_DEBUG && console.debug(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
+        process.env.WEBHOOK_DEBUG && console.debug(`[webhook] Nodes:`, runtimeNodes.map(n => `${n.id}:${n.type}`).join(', '));
 
         const nodeMap = {};
         runtimeNodes.forEach(n => { if (n.id) nodeMap[n.id] = n; });
@@ -773,7 +773,12 @@ module.exports = async (req, res) => {
                         const btn = waitNode.buttons?.[btnIdx] || waitNode.options?.[btnIdx];
                         if (btn) userInput = btn.label || btn.text || userInput;
                     }
-                    if (waitNode.saveAs) session.data[waitNode.saveAs] = userInput;
+                    if (waitNode.saveAs) {
+                        const _sk = String(waitNode.saveAs).slice(0, 50);
+                        if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(_sk) && !['__proto__','constructor','prototype'].includes(_sk)) {
+                            session.data[_sk] = String(userInput).slice(0, 500);
+                        }
+                    }
                     normalized.text = userInput;
                     nodeId = resolveNext(waitNode, normalized.text);
                     session.waitingForInput = null;
@@ -793,10 +798,10 @@ module.exports = async (req, res) => {
         // FIX 3: _botToken НЕ зберігаємо в сесії (security) — передаємо через env
         // session._botToken = botToken; — ВИДАЛЕНО
         let safety = 0;
-        while (nodeId && safety++ < 30) {
+        while (nodeId && safety++ < 50) {  // 50 вузлів max
             const n = nodeMap[nodeId];
-            if (!n) { console.debug(`[webhook] Node not found: ${nodeId}`); break; }
-            console.debug(`[webhook] Executing node ${nodeId} type=${n.type}`);
+            if (!n) { process.env.WEBHOOK_DEBUG && console.debug(`[webhook] Node not found: ${nodeId}`); break; }
+            process.env.WEBHOOK_DEBUG && console.debug(`[webhook] Executing node ${nodeId} type=${n.type}`);
 
             if (n.type === 'message') {
                 const text = interp(n.text || '', session.data);
@@ -852,7 +857,14 @@ module.exports = async (req, res) => {
 
                 // Парсимо [SAVE:key=value] теги
                 const saveMatches = [...rawReply.matchAll(/\[SAVE:([^=\]]+)=([^\]]+)\]/g)];
-                saveMatches.forEach(m => { session.data[m[1].trim()] = m[2].trim(); });
+                const _SAFE_KEYS = /^[a-zA-Z_][a-zA-Z0-9_]{0,49}$/;
+                saveMatches.forEach(m => {
+                    const k = m[1].trim();
+                    // Sanitize: тільки безпечні ключі, без __proto__/constructor тощо
+                    if (_SAFE_KEYS.test(k) && !['__proto__','constructor','prototype'].includes(k)) {
+                        session.data[k] = m[2].trim().slice(0, 500);
+                    }
+                });
 
                 // Чистимо відповідь від службових тегів
                 const cleanReply = rawReply
@@ -877,7 +889,7 @@ module.exports = async (req, res) => {
 
                 if (isDone && n.nextNode) {
                     // AI завершив — іти до наступного вузла в ланцюгу
-                    console.debug('[webhook] AI DONE → next node:', n.nextNode);
+                    process.env.WEBHOOK_DEBUG && console.debug('[webhook] AI DONE → next node:', n.nextNode);
                     nodeId = n.nextNode;
                     // FIX 4: явно очищаємо waitingForInput щоб не застрягти в AI вузлі
                     session.waitingForInput = null;
@@ -951,7 +963,7 @@ module.exports = async (req, res) => {
                         updatedAt:    admin.firestore.FieldValue.serverTimestamp(),
                     };
                     await compRef.collection('tasks').add(taskData);
-                    console.debug('[webhook] talko_task created:', taskTitle);
+                    process.env.WEBHOOK_DEBUG && console.debug('[webhook] talko_task created:', taskTitle);
                 } catch(e) { console.error('[webhook] talko_task error:', e.message); }
                 nodeId = n.nextNode || null;
 
@@ -1026,7 +1038,7 @@ module.exports = async (req, res) => {
                             createdAt:     admin.firestore.FieldValue.serverTimestamp(),
                             updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
                         });
-                        console.debug('[webhook] talko_deal created:', dealTitle);
+                        process.env.WEBHOOK_DEBUG && console.debug('[webhook] talko_deal created:', dealTitle);
                         // FIX: increment leadsCount on the funnel
                         if (flow?.id) {
                             await compRef.collection('funnels').doc(flow.id)
@@ -1082,9 +1094,29 @@ module.exports = async (req, res) => {
         // FIX-6: release session lock
         lockRef.delete().catch(()=>{});
         session.updatedAt = admin.firestore.FieldValue.serverTimestamp();
+        // Обмежуємо розмір session.data — видаляємо великі поля
+        if (session.data) {
+            const _dataKeys = Object.keys(session.data);
+            if (_dataKeys.length > 50) {
+                // Зберігаємо тільки останні 50 ключів
+                const _keep = new Set(_dataKeys.slice(-50));
+                session.data = Object.fromEntries(
+                    Object.entries(session.data).filter(([k]) => _keep.has(k))
+                );
+            }
+            // Обрізаємо значення що перевищують 2000 символів
+            for (const k of Object.keys(session.data)) {
+                if (typeof session.data[k] === 'string' && session.data[k].length > 2000) {
+                    session.data[k] = session.data[k].slice(0, 2000);
+                }
+            }
+        }
         // FIX 3: видаляємо технічні поля перед збереженням
         const { _botToken, ...sessionToSave } = session;
         await sessionRef.set(sessionToSave, { merge: true });
+
+        // Safety limit warning
+        if (safety > 50) console.error('[webhook] SAFETY LIMIT reached for session:', sessionId, 'last nodeId:', nodeId);
 
         // Якщо повідомлення прийшло коли флоу вже завершений (не /start, не кнопка)
         // і воно не було оброблено флоу — зберігаємо для ручного чату менеджера
@@ -1123,12 +1155,10 @@ function resolveNext(node, userText) {
 }
 
 function interp(text, data) {
-    // FIX 6: замінюємо змінні але екрануємо щоб не ламати HTML в sendTg
-    return (text || '').replace(/\{\{(\w+)\}\}/g, (_, k) => {
-        const val = (data[k] !== undefined && data[k] !== null) ? data[k] : '';
-        // Якщо значення вже містить HTML теги — не чіпаємо (наприклад ai_response)
-        return String(val);
-    });
+    // Підтримка {{var}} і {var} форматів
+    return (text || '')
+        .replace(/\{\{(\w+)\}\}/g, (_, k) => (data[k] != null ? String(data[k]) : ''))
+        .replace(/\{(\w+)\}/g,   (_, k) => (data[k] != null ? String(data[k]) : `{${k}}`));
 }
 
 function evalFilter(node, data) {
@@ -1198,7 +1228,7 @@ async function callAI(node, userText, session, compRef, compData) {
             || compData.openaiApiKey
             || process.env.OPENAI_API_KEY;
 
-        console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
+        process.env.WEBHOOK_DEBUG && console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
         if (!apiKey) return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний.';
 
         const sysPrompt = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.')
@@ -1235,7 +1265,7 @@ async function callAI(node, userText, session, compRef, compData) {
             });
             clearTimeout(aiTimeout);
             const d = await r.json();
-            console.debug('[callAI] status:', r.status, 'error:', d.error?.message || 'none');
+            process.env.WEBHOOK_DEBUG && console.debug('[callAI] status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.choices?.[0]?.message?.content || null;
 
         // ── Anthropic Claude ──────────────────────────────────
@@ -1256,7 +1286,7 @@ async function callAI(node, userText, session, compRef, compData) {
             });
             clearTimeout(aiTimeout);
             const d = await r.json();
-            console.debug('[callAI] Anthropic status:', r.status, 'error:', d.error?.message || 'none');
+            process.env.WEBHOOK_DEBUG && console.debug('[callAI] Anthropic status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.content?.[0]?.text || null;
 
         // ── Google Gemini ─────────────────────────────────────
@@ -1270,7 +1300,7 @@ async function callAI(node, userText, session, compRef, compData) {
                 })
             });
             const d = await r.json();
-            console.debug('[callAI] Google status:', r.status, 'error:', d.error?.message || 'none');
+            process.env.WEBHOOK_DEBUG && console.debug('[callAI] Google status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.candidates?.[0]?.content?.parts?.[0]?.text || null;
         }
 
@@ -1330,12 +1360,20 @@ async function sendTg(token, chatId, text, buttons) {
         ])};
     }
     try {
+        const _tgAbort = new AbortController();
+        const _tgTimer = setTimeout(() => _tgAbort.abort(), 8000);
         const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload), signal: _tgAbort.signal
         });
+        clearTimeout(_tgTimer);
         const result = await r.json();
         if (!result.ok) console.error('[sendTg] Error:', result.description, JSON.stringify(payload).slice(0, 200));
-    } catch(e) { console.error('[sendTg] fetch error:', e.message); }
+        return result;
+    } catch(e) {
+        if (e.name === 'AbortError') console.error('[sendTg] TIMEOUT 8s');
+        else console.error('[sendTg] fetch error:', e.message);
+    }
 }
 
 async function sendViber(token, receiverId, text, buttons) {
@@ -1447,7 +1485,7 @@ async function saveIncomingMessage(compRef, channel, normalized, botId) {
             updatedAt:       admin.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
 
-        console.debug(`[saveIncoming] ${contactId}: "${normalized.text.slice(0, 50)}"`);
+        process.env.WEBHOOK_DEBUG && console.debug(`[saveIncoming] ${contactId}: "${normalized.text.slice(0, 50)}"`);
     } catch(e) {
         console.error('[saveIncoming]', e.message);
     }
