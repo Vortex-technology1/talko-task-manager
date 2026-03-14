@@ -143,11 +143,12 @@ module.exports = async (req, res) => {
                 if (fbToken && leadId) {
                     try {
                         const _fbAbort = new AbortController();
-                        setTimeout(() => _fbAbort.abort(), 10000);
+                        const _fbTimer = setTimeout(() => _fbAbort.abort(), 10000);
                         const fbRes = await fetch(
                             `https://graph.facebook.com/v19.0/${leadId}?access_token=${fbToken}`,
                             { signal: _fbAbort.signal }
                         );
+                        clearTimeout(_fbTimer);
                         const fbData = await fbRes.json();
                         const fields = {};
                         (fbData.field_data || []).forEach(f => { fields[f.name] = f.values?.[0] || ''; });
@@ -250,7 +251,6 @@ module.exports = async (req, res) => {
                     const srcRaw   = String(body.src || '');
                     const dstRaw   = String(body.dst || '');
                     const srcClean = srcRaw.replace(/\D/g, '');
-                    const dstClean = dstRaw.replace(/\D/g, '');
                     // FIX MEDIUM: внутрішній тільки якщо < 7 цифр І не починається з 380/0 (не міжнародний)
                     const srcIsInternal = srcClean.length >= 2 && srcClean.length <= 6
                         && !srcClean.startsWith('380') && !srcClean.startsWith('0');
@@ -713,8 +713,6 @@ module.exports = async (req, res) => {
         const nodePromptsMap = {};
         promptsSnap.forEach(doc => { nodePromptsMap[doc.id] = doc.data().aiSystem || ''; });
         // Оновлюємо _nodes після можливого завантаження canvasData
-        const _allNodes = flow.canvasData?.nodes || [];
-
         const restorePrompts = (nodesList) => nodesList.map(n => {
             // FIX 2+3: перевіряємо обидва місця де може бути __ref
             const sysConfig = n.config?.aiSystem || '';
@@ -955,7 +953,10 @@ module.exports = async (req, res) => {
             } else if (n.type === 'action') {
                 // Зберігаємо останню AI відповідь в session.data для {{ai_response}}
                 if (session.aiHistory?.length) {
-                    const lastAI = [...session.aiHistory].reverse().find(m => m.role === 'assistant');
+                    let lastAI = null;
+                    for (let _hi = session.aiHistory.length - 1; _hi >= 0; _hi--) {
+                        if (session.aiHistory[_hi].role === 'assistant') { lastAI = session.aiHistory[_hi]; break; }
+                    }
                     if (lastAI) session.data.ai_response = lastAI.content;
                 }
                 await doAction(n, session, flow, botToken);
@@ -965,13 +966,14 @@ module.exports = async (req, res) => {
                 try {
                     if (!n.url || !/^https?:\/\//.test(n.url)) throw new Error('Invalid URL');
                     const _apiAbort = new AbortController();
-                    setTimeout(() => _apiAbort.abort(), 10000);
+                    const _apiTimer = setTimeout(() => _apiAbort.abort(), 10000);
                     const r = await fetch(n.url, {
                         method: n.method || 'GET',
                         headers: { 'Content-Type': 'application/json' },
                         signal: _apiAbort.signal,
                         ...(n.body ? { body: interp(n.body, session.data) } : {})
                     });
+                    clearTimeout(_apiTimer);
                     session.data._apiResponse = (await r.text()).slice(0, 2000);
                     session.data._apiStatus = r.status;
                 } catch(e) { session.data._apiError = e.message; }
@@ -981,8 +983,6 @@ module.exports = async (req, res) => {
                 // FIX BX: create TALKO task from bot flow node
                 try {
                     const taskTitle = interp(n.taskTitle || n.text || 'Задача з боту', session.data);
-                    // Знаходимо assignee по ролі: owner/manager → беремо з compData
-                    const assignRole = n.taskAssignRole || 'owner';
                     const ownerId = _compData.ownerId || null;
                     // FIX CD: add required rendering fields: assigneeName, creatorName, deadlineDate, createdDate
                     const _today = new Date().toISOString().split('T')[0];
@@ -1178,10 +1178,12 @@ module.exports = async (req, res) => {
             // Зберігаємо для ручного чату менеджера
             await saveIncomingMessage(compRef, channel, normalized, botDocId || session.currentBotId);
         }
+        lockRef.delete().catch(()=>{});
         return res.status(200).json({ ok: true });
 
     } catch(err) {
         console.error('[webhook] ERROR:', err.message, err.stack);
+        if (typeof lockRef !== 'undefined') lockRef.delete().catch(()=>{});
         return res.status(200).json({ ok: true }); // завжди 200 щоб Telegram не ретраїв
     }
 };
@@ -1328,8 +1330,8 @@ async function callAI(node, userText, session, compRef, compData) {
                     messages
                 })
             });
-            clearTimeout(aiTimeout);
             const d = await r.json();
+            clearTimeout(aiTimeout);
             process.env.WEBHOOK_DEBUG && console.debug('[callAI] status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.choices?.[0]?.message?.content || null;
 
@@ -1349,8 +1351,8 @@ async function callAI(node, userText, session, compRef, compData) {
                     messages: (session.aiHistory || []).concat([{ role: 'user', content: userText }])
                 })
             });
-            clearTimeout(aiTimeout);
             const d = await r.json();
+            clearTimeout(aiTimeout);
             process.env.WEBHOOK_DEBUG && console.debug('[callAI] Anthropic status:', r.status, 'error:', d.error?.message || 'none');
             responseText = d.content?.[0]?.text || null;
 
@@ -1360,6 +1362,7 @@ async function callAI(node, userText, session, compRef, compData) {
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: aiAbort.signal,
                 body: JSON.stringify({
                     contents: [{ role: 'user', parts: [{ text: sysPrompt + '\n\n' + userText }] }]
                 })
@@ -1851,7 +1854,7 @@ async function handleSendMessage(req, res, _authUser) {
         if (token && senderId && contact.channel === 'telegram') {
             try {
                 const _smAbort = new AbortController();
-                setTimeout(() => _smAbort.abort(), 8000);
+                const _smTimer = setTimeout(() => _smAbort.abort(), 8000);
                 const tgRes = await fetch(
                     `https://api.telegram.org/bot${token}/sendMessage`,
                     {
@@ -1861,6 +1864,7 @@ async function handleSendMessage(req, res, _authUser) {
                         signal: _smAbort.signal,
                     }
                 );
+                clearTimeout(_smTimer);
                 const tgData = await tgRes.json();
                 telegramOk = tgData.ok;
                 if (!tgData.ok) {
