@@ -291,6 +291,10 @@
                                     to: data.assigneeId,
                                     function: data.function
                                 });
+                                // ET: перепризначення задачі
+                                if (typeof window.trackTaskReassigned === 'function') {
+                                    window.trackTaskReassigned(currentEditingId, existingTask.assigneeId, data.assigneeId, data);
+                                }
                             }
                             if (changes.deadlineDate) {
                                 logDecision('deadline_change', {
@@ -300,6 +304,10 @@
                                     to: data.deadlineDate,
                                     assignee: data.assigneeId
                                 });
+                                // ET: зміна дедлайну
+                                if (typeof window.trackTaskDeadlineChanged === 'function') {
+                                    window.trackTaskDeadlineChanged(currentEditingId, existingTask.deadlineDate, data.deadlineDate, data);
+                                }
                             }
                             if (changes.priority) {
                                 logDecision('priority_change', {
@@ -330,6 +338,11 @@
                     
                     // AUDIT LOG — створення задачі
                     logTaskChange(newDocRef.id, 'created', { title: data.title, assigneeId: data.assigneeId, deadlineDate: data.deadlineDate }, null).catch(err => console.warn("[AuditLog]", err));
+                    
+                    // ET: задача створена
+                    if (typeof window.trackTaskCreated === 'function') {
+                        window.trackTaskCreated(newDocRef.id, data);
+                    }
                     
                     // Sync with Google Calendar (only if date is set)
                     if (deadlineDate && googleAccessToken) {
@@ -362,6 +375,10 @@
                 // Автопросування процесу якщо завдання завершили через форму
                 if (currentEditingId && data.status === 'done') {
                     advanceProcessIfLinked(currentEditingId);
+                    // ET: задача виконана
+                    if (typeof window.trackTaskCompleted === 'function') {
+                        window.trackTaskCompleted(currentEditingId, data, existingTask);
+                    }
                     // Delete calendar event when task completed
                     const completedTask = tasks.find(t => t.id === currentEditingId);
                     if (completedTask?.calendarEventId && googleAccessToken) {

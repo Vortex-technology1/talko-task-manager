@@ -187,6 +187,11 @@
                 // AUDIT LOG
                 logTaskChange(taskId, 'status', { status: updateData.status }, { status: 'review' }).catch(err => console.warn("[AuditLog]", err));
                 
+                // ET: задача повернута на доопрацювання
+                if (typeof window.trackTaskReturned === 'function') {
+                    window.trackTaskReturned(taskId, tasks[taskIndex], reason);
+                }
+                
                 showToast(t('taskRejected'), 'warning');
             } catch (e) {
                 tasks[taskIndex] = originalTask;

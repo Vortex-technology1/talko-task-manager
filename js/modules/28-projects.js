@@ -1270,6 +1270,17 @@
                 renderProcessBoard();
                 renderMyDay();
                 refreshCurrentView();
+                
+                // ET: процес запущено
+                if (typeof window.trackProcessStarted === 'function') {
+                    window.trackProcessStarted(processRef.id, {
+                        templateId:   templateId,
+                        templateName: template.name || name,
+                        function:     firstStep.function || '',
+                        totalSteps:   template.steps.length,
+                    });
+                }
+                
                 showToast(t('processStarted'), 'success');
                 
             } catch (error) {

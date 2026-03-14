@@ -101,6 +101,18 @@
                     return;
                 }
                 
+                // ET: крок процесу виконано
+                if (typeof window.trackProcessStepDone === 'function') {
+                    window.trackProcessStepDone(processId, currentStepIndex, currentStep.function || '');
+                }
+                // ET: процес завершено (якщо немає наступного кроку)
+                if (!nextStep && typeof window.trackProcessCompleted === 'function') {
+                    window.trackProcessCompleted(processId, {
+                        templateId: process.templateId || '',
+                        totalSteps: template.steps.length,
+                    });
+                }
+                
                 // Якщо є наступний етап - створюємо завдання
                 if (nextStep) {
                     const func = functions.find(f => f.name === nextStep.function);
