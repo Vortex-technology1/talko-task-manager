@@ -281,13 +281,13 @@ function renderBotsTab() {
                             Відкрити
                         </button>
                         <button onclick="openBotSettings('${bot.id}')"
-                            title="Налаштування"
+                            title=window.t('flowSettings')
                             style="width:30px;height:30px;background:#f9fafb;border:1px solid #e5e7eb;
                             border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
                             <i data-lucide="settings" style="width:13px;height:13px;"></i>
                         </button>
                         <button onclick="confirmDeleteBot('${bot.id}')"
-                            title="Видалити"
+                            title=window.t('flowDelete')
                             style="width:30px;height:30px;background:#fff0f0;border:1px solid #fecaca;
                             border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
                             <i data-lucide="trash-2" style="width:12px;height:12px;color:#ef4444;"></i>

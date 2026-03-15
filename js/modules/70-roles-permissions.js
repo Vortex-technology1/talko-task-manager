@@ -114,7 +114,7 @@ const DEFAULT_ROLE_PERMISSIONS = {
 // ---- PERMISSION LABELS (для UI) ----
 const PERMISSION_GROUPS = [
     {
-        group: 'Статистика',
+        group: window.t('permStats'),
         items: [
             { key: 'viewStats',         label: 'Переглядати статистику' },
             { key: 'viewAllMetrics',    label: 'Бачити всі метрики' },
@@ -124,7 +124,7 @@ const PERMISSION_GROUPS = [
         ]
     },
     {
-        group: 'Завдання',
+        group: window.t('actTask'),
         items: [
             { key: 'viewAllTasks',  label: 'Бачити всі завдання компанії' },
             { key: 'assignTasks',   label: 'Призначати виконавців' },
@@ -159,7 +159,7 @@ const PERMISSION_GROUPS = [
         ]
     },
     {
-        group: 'Система',
+        group: window.t('permSystem'),
         items: [
             { key: 'viewAdminPanel', label: 'Доступ до адмін панелі' },
             { key: 'editRoles',      label: 'Редагувати ролі та дозволи' },
@@ -339,7 +339,7 @@ window.updateRolePermission = async function(role, key, value) {
     }
     try {
         await saveRolePermission(role, key, value);
-        showToast('Збережено', 'success');
+        showToast(window.t('savedOk2'), 'success');
     } catch(e) {
         showToast('Помилка збереження: ' + e.message, 'error');
     }

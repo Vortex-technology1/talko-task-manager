@@ -4,20 +4,20 @@
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const INCIDENTS_COL = 'incidents';
 
-const SEVERITY_LABELS = { 1: 'Низька', 2: 'Середня', 3: 'Критична' };
+const SEVERITY_LABELS = { 1: window.t('sevLow2'), 2: window.t('sevMedium2'), 3: window.t('sevCritical2') };
 const STATUS_LABELS = {
-  new:        'Новий',
+  new:        window.t('incStatusNew'),
   in_review:  'На розгляді',
-  fixing:     'Виправляється',
-  resolved:   'Вирішено',
+  fixing:     window.t('incStatusFixing'),
+  resolved:   window.t('incResolved2'),
 };
 const CATEGORY_LABELS = {
   people:   'Люди',
-  process:  'Процеси',
-  finance:  'Фінанси',
+  process:  window.t('permProcesses'),
+  finance:  window.t('permFinance'),
   clients:  'Клієнти',
   quality:  'Якість',
-  other:    'Інше',
+  other:    window.t('finOther'),
 };
 
 // Поточний стан AI-чату
@@ -275,7 +275,7 @@ function _showAiPreview(data) {
         ${_previewField('Серйозність', 'prev_severity', data.severity || 2, 'select-severity')}
         ${_previewField('Статус', 'prev_status', data.status || 'new', 'select-status')}
         ${_previewField('Функція бізнесу', 'prev_functionName', data.functionName || '', 'input')}
-        ${_previewField('Відповідальний', 'prev_responsible', data.responsible || '', 'input')}
+        ${_previewField(window.t('crmColAssignee'), 'prev_responsible', data.responsible || '', 'input')}
         ${_previewField('Залучені', 'prev_participants', participants, 'input')}
         ${_previewField('Процес/задача що зламались', 'prev_failedProcess', data.failedProcess || '', 'textarea')}
         ${_previewField('Причина', 'prev_cause', data.cause || '', 'textarea')}

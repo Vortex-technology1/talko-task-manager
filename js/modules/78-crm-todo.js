@@ -567,11 +567,11 @@ window._crmTodoSave = async function(dealId) {
             if (updates.stage) { localDeal.stage = updates.stage; localDeal.stageEnteredAt = { toDate:()=>new Date(), toMillis:()=>Date.now() }; }
         }
         _crmTodoCloseCard();
-        if (window.showToast) showToast('Збережено','success');
+        if (window.showToast) showToast(window.t('savedOk2'),'success');
         if (typeof renderCrmTodo==='function') renderCrmTodo();
 
     } catch(e) {
-        if(btn){btn.disabled=false;btn.textContent='Зберегти';}
+        if(btn){btn.disabled=false;btn.textContent=window.t('flowSave');}
         if(window.showToast)showToast('Помилка: '+e.message,'error');
     }
 };

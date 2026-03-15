@@ -77,7 +77,7 @@ const AR_LABELS = {
     crm_call_done:    'Дзвінок (дозвон)',
     crm_sms:          'SMS',
     crm_email:        'Email',
-    crm_meeting:      'Зустріч',
+    crm_meeting:      window.t('crmMeeting2'),
     crm_note:         'Нотатка в CRM',
     crm_stage:        'Зміна стадії угоди',
     crm_deal_created: 'Створив угоду',

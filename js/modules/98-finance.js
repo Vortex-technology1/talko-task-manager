@@ -99,7 +99,7 @@ const DEFAULT_CATEGORIES = {
     { id: 'inc_goods',      name: window.t('finCatGoods'),       icon: 'package' },
     { id: 'inc_prepay',     name: window.t('finCatPrepay'),          icon: 'credit-card' },
     { id: 'inc_royalty',    name: window.t('finCatRoyalty'),      icon: 'building-2' },
-    { id: 'inc_other',      name: 'Інше',                 icon: 'plus-circle' },
+    { id: 'inc_other',      name: window.t('finOther'),                 icon: 'plus-circle' },
   ],
   expense: [
     { id: 'exp_materials',  name: window.t('finCatMaterials'), icon: 'wrench' },
@@ -114,7 +114,7 @@ const DEFAULT_CATEGORIES = {
     { id: 'exp_tax',        name: window.t('finCatTax'),        icon: 'bar-chart-2' },
     { id: 'exp_reserve',    name: window.t('finCatReserve'),       icon: 'shield' },
     { id: 'exp_dividends',  name: window.t('finCatDividends'),   icon: 'coins' },
-    { id: 'exp_other',      name: 'Інше',                 icon: 'plus-circle' },
+    { id: 'exp_other',      name: window.t('finOther'),                 icon: 'plus-circle' },
   ],
 };
 
@@ -638,7 +638,7 @@ async function loadDashboardData(monthVal) {
     const donutEl = document.getElementById('dashDonut');
     if (donutEl) {
       const sorted = Object.entries(expByCat)
-        .map(([id, amt]) => ({ name: catMap[id] || 'Інше', amt }))
+        .map(([id, amt]) => ({ name: catMap[id] || window.t('finOther'), amt }))
         .sort((a, b) => b.amt - a.amt).slice(0, 6);
       if (sorted.length === 0) {
         donutEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Витрат немає</div>';
@@ -1067,7 +1067,7 @@ async function loadAndRenderTxList(type) {
           ${isOwnerOrManager() ? `
             <button onclick="window._financeDeleteTx('${tx.id}','${type}')"
               style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.25rem;border-radius:6px;flex-shrink:0;"
-              title="Видалити">
+              title=window.t('flowDelete')>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
               </svg>
@@ -1254,7 +1254,7 @@ window._exportTxXlsx = async function(type) {
 
     const ssXml = `<?xml version="1.0" encoding="UTF-8"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${sharedStrings.length}" uniqueCount="${sharedStrings.length}">${sharedStrings.map(s=>`<si><t>${esc(s)}</t></si>`).join('')}</sst>`;
     const sheetXml = `<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${xmlRows}</sheetData></worksheet>`;
-    const wbXml = `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Фінанси" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+    const wbXml = `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name=window.t('permFinance') sheetId="1" r:id="rId1"/></sheets></workbook>`;
     const relsXml = `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>`;
     const contentTypes = `<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>`;
 
@@ -1489,9 +1489,9 @@ function _invoiceRow(inv, currency) {
         ${isOwnerOrManager() ? `
           ${inv.status !== 'paid' ? `<button onclick="window._invoiceMarkPaid('${inv.id}')" title="Оплачено"
             style="border:1px solid #d1fae5;background:#f0fdf4;border-radius:7px;padding:5px 8px;cursor:pointer;color:#16a34a;">${I.check}</button>` : ''}
-          <button onclick="window._invoiceEdit('${inv.id}')" title="Редагувати"
+          <button onclick="window._invoiceEdit('${inv.id}')" title=window.t('flowEdit')
             style="border:1px solid #e5e7eb;background:#fff;border-radius:7px;padding:5px 8px;cursor:pointer;color:#6b7280;">${I.edit}</button>
-          <button onclick="window._invoiceDelete('${inv.id}')" title="Видалити"
+          <button onclick="window._invoiceDelete('${inv.id}')" title=window.t('flowDelete')
             style="border:1px solid #fee2e2;background:#fef2f2;border-radius:7px;padding:5px 8px;cursor:pointer;color:#ef4444;">${I.trash}</button>
         ` : ''}
       </div>
@@ -1823,7 +1823,7 @@ window._invoicePdf = async function(id) {
   doc.text('Опис', margin + 3, y + 5.5);
   doc.text('Кіл.', pageW - margin - 55, y + 5.5);
   doc.text('Ціна', pageW - margin - 38, y + 5.5);
-  doc.text('Сума', pageW - margin - 16, y + 5.5);
+  doc.text(window.t('crmColAmount'), pageW - margin - 16, y + 5.5);
 
   y += 8;
   doc.setFont('helvetica', 'normal');
@@ -1988,7 +1988,7 @@ function _recurringCard(item, currency) {
   const active = item.active !== false;
   const freqLabel = { monthly: 'Щомісяця', quarterly: 'Щоквартально', yearly: 'Щороку' }[item.frequency] || 'Щомісяця';
   const typeColor = item.type === 'expense' ? '#ef4444' : '#22c55e';
-  const typeLabel = item.type === 'expense' ? 'Витрата' : 'Дохід';
+  const typeLabel = item.type === 'expense' ? window.t('finExpense2') : window.t('finIncome2');
 
   return `
     <div style="background:#fff;border:1px solid ${active ? '#e5e7eb' : '#f3f4f6'};border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;opacity:${active ? '1' : '0.55'};">
@@ -2024,11 +2024,11 @@ function _recurringCard(item, currency) {
             style="width:30px;height:30px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
             ${active ? I.pause : I.play}
           </button>
-          <button onclick="window._finEditRecurring('${item.id}')" title="Редагувати"
+          <button onclick="window._finEditRecurring('${item.id}')" title=window.t('flowEdit')
             style="width:30px;height:30px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
             ${I.edit}
           </button>
-          <button onclick="window._finDeleteRecurring('${item.id}')" title="Видалити"
+          <button onclick="window._finDeleteRecurring('${item.id}')" title=window.t('flowDelete')
             style="width:30px;height:30px;border:1px solid #fecaca;border-radius:8px;background:#fef2f2;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;">
             ${I.trash}
           </button>
@@ -2061,7 +2061,7 @@ window._finAddRecurring = function(editId) {
   overlay.innerHTML = `
     <div style="background:#fff;border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
-        <h3 style="margin:0;font-size:1rem;font-weight:700;">${existing ? 'Редагувати' : 'Новий'} регулярний платіж</h3>
+        <h3 style="margin:0;font-size:1rem;font-weight:700;">${existing ? window.t('flowEdit') : window.t('incStatusNew')} регулярний платіж</h3>
         <button onclick="document.getElementById('recurringModal')?.remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
       </div>
       <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
@@ -3898,7 +3898,7 @@ async function _buildAiFinContext() {
       if (tx.type==='income')  byMonth[mk].income  += tx.amount||0;
       if (tx.type==='expense') {
         byMonth[mk].expense += tx.amount||0;
-        const cn = tx.categoryName || tx.categoryId || 'Інше';
+        const cn = tx.categoryName || tx.categoryId || window.t('finOther');
         byMonth[mk].cats[cn] = (byMonth[mk].cats[cn]||0) + (tx.amount||0);
       }
     });

@@ -348,7 +348,7 @@ window.crmExportCSV = function() {
     const userMap = {};
     (typeof users !== 'undefined' ? users : []).forEach(u => { userMap[u.id] = u.name || u.email || u.id; });
 
-    const headers = ['Назва', 'Клієнт', 'Телефон', 'Email', 'Стадія', 'Сума', 'Валюта', 'Відповідальний', 'Джерело', 'Теги', 'Дата створення', 'Остання активність'];
+    const headers = [window.t('crmColName'), window.t('crmColClient'), window.t('crmColPhone'), 'Email', window.t('crmStage2'), window.t('crmColAmount'), window.t('crmColCurrency'), window.t('crmColAssignee'), window.t('crmColSource'), window.t('crmColTags'), 'Дата створення', 'Остання активність'];
 
     const rows = deals.map(d => [
         d.title || d.clientName || '',
@@ -3294,7 +3294,7 @@ const ACT_ICONS = {
     contact_updated: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
 };
 const ACT_COLORS = { call:'#3b82f6', meeting:'#8b5cf6', email:'#f59e0b', note:'#6b7280', task:'#22c55e', stage_changed:'#8b5cf6', created:'#22c55e', call_answered:'#22c55e', call_missed:'#ef4444', sms_sent:'#3b82f6', contact_updated:'#f59e0b' };
-const ACT_LABELS = { call:window.t('crmActivityCall'), meeting:window.t('crmActivityMeet'), email:window.t('crmActivityLetter'), note:window.t('crmActivityNote'), task:window.t('crmActivityTask'), stage_changed:'Зміна стадії', created:'Створено', call_answered:'Взяв трубку', call_missed:'Не взяв', sms_sent:'Повідомлення', contact_updated:'Контакт оновлено' };
+const ACT_LABELS = { call:window.t('crmActivityCall'), meeting:window.t('crmActivityMeet'), email:window.t('crmActivityLetter'), note:window.t('crmActivityNote'), task:window.t('crmActivityTask'), stage_changed:'Зміна стадії', created:window.t('crmCreated2'), call_answered:'Взяв трубку', call_missed:'Не взяв', sms_sent:window.t('crmMessage'), contact_updated:'Контакт оновлено' };
 
 async function _renderActivitiesTab(forceRefresh = false) {
     const c = document.getElementById('crmViewActivities');
@@ -4237,7 +4237,7 @@ window.crmRemoveStage = async function(stageId) {
     const dealsInStage = crm.deals.filter(d => d.stage === stageId);
     let confirmMsg = window.t('crmDeleteStage');
     if (dealsInStage.length > 0) {
-        confirmMsg = `В стадії "${_stageLabel(stageId)}" є ${dealsInStage.length} угод(и). Вони будуть переміщені в "Новий". Продовжити?`;
+        confirmMsg = `В стадії "${_stageLabel(stageId)}" є ${dealsInStage.length} угод(и). Вони будуть переміщені в window.t('incStatusNew'). Продовжити?`;
     }
     if (!(await (window.showConfirmModal ? showConfirmModal(confirmMsg, {danger:true}) : Promise.resolve(confirm(confirmMsg))))) return;
     // FIX: переміщуємо угоди в 'new' перед видаленням стадії

@@ -67,7 +67,7 @@
             return d1 + '.' + m1 + '-' + d2 + '.' + m2 + '.' + y2;
         }
         if (k.length === 7) {
-            const ms = ['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+            const ms = [window.t('month01'),window.t('month02'),window.t('month03'),window.t('month04'),window.t('month05'),window.t('month06'),window.t('month07'),window.t('month08'),window.t('month09'),window.t('month10'),window.t('month11'),window.t('month12')];
             const [y, m] = k.split('-');
             return ms[parseInt(m) - 1] + ' ' + y;
         }
@@ -447,7 +447,7 @@
                 }
             }
             closeModal('metricModal');
-            showToast(window.t('saved') || 'Збережено', 'success');
+            showToast(window.t('saved') || window.t('savedOk2'), 'success');
             await loadMetrics();
             renderStatistics();
         } catch (e) {
@@ -671,7 +671,7 @@
 
         closeModal('quickInputModal');
         if (saved > 0) {
-            showToast((window.t('saved') || 'Збережено') + ': ' + saved, 'success');
+            showToast((window.t('saved') || window.t('savedOk2')) + ': ' + saved, 'success');
             await loadEntries(getStatsPeriodKey(statsPeriodOffset));
             renderStatistics();
         }
@@ -902,7 +902,7 @@
             { id: 'function', label: window.t('scopeFunction') || 'Функції' },
         ];
         if (role === 'owner' || role === 'manager' || role === 'admin') {
-            scopes.push({ id: 'project', label: 'Проєкт' });
+            scopes.push({ id: 'project', label: window.t('statsProject') });
             scopes.push({ id: 'company', label: window.t('scopeCompany') || 'Компанія' });
         }
 
@@ -1084,8 +1084,8 @@
                     </div>
                 </div>
                 <div class="th-actions" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);display:flex;gap:1px;opacity:0;transition:opacity 0.1s;">
-                    ${canEdit ? `<button class="stats-comment-btn" onclick="openMetricModal('${m.id}')" title="Редагувати" style="width:18px;height:18px;padding:1px;">${SVG.settings}</button>` : ''}
-                    ${canEdit ? `<button class="stats-comment-btn" onclick="deleteMetric('${m.id}')" title="Видалити" style="color:#e03e3e;width:18px;height:18px;padding:1px;">${SVG.trash}</button>` : ''}
+                    ${canEdit ? `<button class="stats-comment-btn" onclick="openMetricModal('${m.id}')" title=window.t('flowEdit') style="width:18px;height:18px;padding:1px;">${SVG.settings}</button>` : ''}
+                    ${canEdit ? `<button class="stats-comment-btn" onclick="deleteMetric('${m.id}')" title=window.t('flowDelete') style="color:#e03e3e;width:18px;height:18px;padding:1px;">${SVG.trash}</button>` : ''}
                     <button class="stats-comment-btn" onclick="openTrendsChart('${m.id}')" title="Графік" style="width:18px;height:18px;padding:1px;">${SVG.barChart}</button>
                 </div>
             </th>`;
@@ -1133,7 +1133,7 @@
                             <div class="stats-cell-row">
                                 <span class="stats-cell-val">${formatted}</span>
                                 <span class="stats-cell-pct ${pctCls}">${pct}%</span>
-                                ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title="Видалити">${SVG.trash}</button>` : ''}
+                                ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title=window.t('flowDelete')>${SVG.trash}</button>` : ''}
                             </div>
                             <div class="stats-mini-bar">
                                 <div class="stats-mini-bar-fill ${barCls}" style="width:${Math.min(pct,100)}%;"></div>
@@ -1142,7 +1142,7 @@
                     } else {
                         cellHtml = `<div class="stats-cell-row" onclick="openMetricDetail('${m.id}','${pk}')">
                             <span class="stats-cell-val">${formatted}</span>
-                            ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title="Видалити">${SVG.trash}</button>` : ''}
+                            ${entryId ? `<button class="stats-comment-btn stats-entry-del" onclick="event.stopPropagation();deleteEntry('${entryId}')" title=window.t('flowDelete')>${SVG.trash}</button>` : ''}
                         </div>`;
                     }
                 } else {
@@ -1249,7 +1249,7 @@
                 <div class="stats-detail-card-value" style="color:${color};">${val !== '' ? formatValue(val, m.unit) : '—'}</div>
             </div>
             <div class="stats-detail-card">
-                <div class="stats-detail-card-label">${window.t('target') || 'Ціль'}</div>
+                <div class="stats-detail-card-label">${window.t('target') || window.t('statsTarget')}</div>
                 <div class="stats-detail-card-value" style="color:#6b7280;">${tgt !== '' ? formatValue(tgt, m.unit) : '—'}</div>
             </div>
             <div class="stats-detail-card">
@@ -1274,7 +1274,7 @@
                 <textarea id="metricDetailComment" class="stats-comment-area" placeholder="${window.t('commentHint') || 'Додайте коментар до цього періоду...'}">${esc(entry?.comment || '')}</textarea>
             </div>
             <button class="stats-pill accent" style="justify-content:center;padding:0.6rem;" onclick="saveMetricDetail('${metricId}','${periodKey}')">
-                ${SVG.check} ${window.t('saveAll') || 'Зберегти'}
+                ${SVG.check} ${window.t('saveAll') || window.t('flowSave')}
             </button>
         </div>`;
 
@@ -1389,7 +1389,7 @@
             const qm = document.getElementById('quickInputModal');
             if (qm) qm.style.display = 'none';
 
-            showToast(window.t('saved') || 'Збережено', 'success');
+            showToast(window.t('saved') || window.t('savedOk2'), 'success');
             await renderStatistics();
         } catch (e) {
             console.error('[STATS] saveMetricDetail:', e);
@@ -1696,7 +1696,7 @@
         // Рядок 1: заголовки — "Звітний період" + назви метрик (з одиницями)
         const header1 = ['Звітний період', ...ms.map(m => m.name + (m.unit ? ' (' + m.unit + ')' : ''))];
         // Рядок 2: цілі
-        const header2 = ['Ціль', ...ms.map(m => m.target ?? '')];
+        const header2 = [window.t('statsTarget'), ...ms.map(m => m.target ?? '')];
 
         // Будуємо lookup: metricId → period → value
         const lookup = {};
@@ -1762,7 +1762,7 @@
             if (ws[h2]) ws[h2].s = { font: { bold: true, italic: true }, fill: { fgColor: { rgb: 'FFF9C4' } } };
         }
 
-        XLSX.utils.book_append_sheet(wb, ws, 'Статистика');
+        XLSX.utils.book_append_sheet(wb, ws, window.t('permStats'));
         XLSX.writeFile(wb, `TALKO_statistics_${new Date().toISOString().slice(0,10)}.xlsx`);
         showToast('Excel експортовано', 'success');
     }
@@ -2001,7 +2001,7 @@
                 { name:'Брак продукції',            unit:'шт',   freq:'weekly',  target:1,      imp:'high',     inv:true,  v:0.70 },
                 { name:'Ефективність виробництва',  unit:'%',    freq:'weekly',  target:87,     imp:'high',     inv:false, v:0.07 },
                 { name:'Простій обладнання',        unit:'год',  freq:'weekly',  target:4,      imp:'medium',   inv:true,  v:0.45 },
-                { name:'NPS клієнтів',              unit:'балів',freq:'monthly', target:74,     imp:'high',     inv:false, v:0.09 },
+                { name:'NPS клієнтів',              unit:window.t('metricPoints'),freq:'monthly', target:74,     imp:'high',     inv:false, v:0.09 },
                 { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:185000, imp:'critical', inv:false, v:0.18 },
                 { name:'Маржинальність',            unit:'%',    freq:'monthly', target:38,     imp:'critical', inv:false, v:0.09 },
                 { name:'Виробіток/працівник',       unit:'грн',  freq:'monthly', target:42000,  imp:'medium',   inv:false, v:0.14 },
@@ -2024,7 +2024,7 @@
                 { name:'Витрати субпідряд',         unit:'грн',  freq:'weekly',  target:95000,  imp:'high',     inv:false, v:0.28 },
                 { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:22000,  imp:'medium',   inv:false, v:0.18 },
                 { name:'Фото до/після',             unit:'шт',   freq:'weekly',  target:6,      imp:'low',      inv:false, v:0.32 },
-                { name:'NPS клієнтів',              unit:'балів',freq:'monthly', target:68,     imp:'high',     inv:false, v:0.11 },
+                { name:'NPS клієнтів',              unit:window.t('metricPoints'),freq:'monthly', target:68,     imp:'high',     inv:false, v:0.11 },
                 { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:320000, imp:'critical', inv:false, v:0.20 },
                 { name:'Маржинальність',            unit:'%',    freq:'monthly', target:35,     imp:'critical', inv:false, v:0.09 },
                 { name:'Відгуки Google',            unit:'шт',   freq:'monthly', target:8,      imp:'medium',   inv:false, v:0.38 },
@@ -2047,7 +2047,7 @@
                 { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:35000,  imp:'high',     inv:false, v:0.18 },
                 { name:'Вартість ліда',             unit:'грн',  freq:'weekly',  target:280,    imp:'high',     inv:true,  v:0.22 },
                 { name:'Витрати матеріали',         unit:'грн',  freq:'weekly',  target:85000,  imp:'high',     inv:false, v:0.14 },
-                { name:'NPS пацієнтів',             unit:'балів',freq:'monthly', target:82,     imp:'high',     inv:false, v:0.07 },
+                { name:'NPS пацієнтів',             unit:window.t('metricPoints'),freq:'monthly', target:82,     imp:'high',     inv:false, v:0.07 },
                 { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:380000, imp:'critical', inv:false, v:0.18 },
                 { name:'Відгуки Google',            unit:'шт',   freq:'monthly', target:12,     imp:'medium',   inv:false, v:0.32 },
                 { name:'Плинність персоналу',       unit:'%',    freq:'monthly', target:4,      imp:'high',     inv:true,  v:0.28 },
@@ -2112,7 +2112,7 @@
                     const noise = 1 + (Math.random() * 2 - 1) * dm.v;
                     let value = Math.round(dm.target * trend * seasonal * noise);
                     if (dm.unit === '%') value = Math.max(8, Math.min(97, value));
-                    else if (dm.unit === 'балів') value = Math.max(35, Math.min(94, value));
+                    else if (dm.unit === window.t('metricPoints')) value = Math.max(35, Math.min(94, value));
                     else value = Math.max(0, value);
 
                     const targetValue = Math.round(dm.target * (0.94 + Math.random() * 0.12));
@@ -2166,7 +2166,7 @@
         auto_tasks_overdue:    { label: 'Прострочені задачі', unit: 'шт' },
         auto_tasks_review:     { label: 'На перевірці',       unit: 'шт' },
         auto_completion_rate:  { label: '% виконання',        unit: '%'  },
-        finance_income:        { label: 'Дохід',              unit: '€'  },
+        finance_income:        { label: window.t('finIncome2'),              unit: '€'  },
         finance_expense:       { label: 'Витрати',            unit: '€'  },
         finance_profit:        { label: 'Прибуток',           unit: '€'  },
         finance_margin:        { label: 'Маржа %',            unit: '%'  },

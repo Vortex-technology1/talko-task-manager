@@ -498,7 +498,7 @@
         if (typeof renderProjectDetail === 'function' || typeof window.renderProjectDetail === 'function') {
             (window.renderProjectDetail || renderProjectDetail)(projectId);
         }
-        showToast('Збережено', 'success');
+        showToast(window.t('savedOk2'), 'success');
     };
 
     // ========================
@@ -522,7 +522,7 @@
         label.textContent = message;
 
         const btn = document.createElement('button');
-        btn.textContent = 'Скасувати';
+        btn.textContent = window.t('flowCancel');
         btn.style.cssText = `
             background:#22c55e;color:white;border:none;padding:4px 12px;
             border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;
@@ -683,7 +683,7 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
                 <div>
                     <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Постачальник</label>
-                    <input type="text" id="mqSupplier" class="form-input" placeholder="Назва" style="border-radius:12px;">
+                    <input type="text" id="mqSupplier" class="form-input" placeholder=window.t('crmColName') style="border-radius:12px;">
                 </div>
                 <div>
                     <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Планова дата</label>

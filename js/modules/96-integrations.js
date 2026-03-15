@@ -173,9 +173,9 @@ function _renderAll() {
             <div style="position:relative;">
                 <pre id="intg_form_code" style="background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:0.85rem 1rem;font-size:0.68rem;overflow-x:auto;margin:0;line-height:1.6;">&lt;form id="talko-lead-form"&gt;
   &lt;input name="name" placeholder="Ваше ім'я" required&gt;
-  &lt;input name="phone" placeholder="Телефон" required&gt;
+  &lt;input name="phone" placeholder=window.t('crmColPhone') required&gt;
   &lt;input name="email" placeholder="Email"&gt;
-  &lt;textarea name="message" placeholder="Повідомлення"&gt;&lt;/textarea&gt;
+  &lt;textarea name="message" placeholder=window.t('crmMessage')&gt;&lt;/textarea&gt;
   &lt;button type="submit"&gt;Відправити&lt;/button&gt;
 &lt;/form&gt;
 
