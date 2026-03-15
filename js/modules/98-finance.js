@@ -28,18 +28,22 @@ const I = {
 // ── Константи ──────────────────────────────────────────────
 const FINANCE_VERSION = '1.0.0';
 const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'analytics', 'ai', 'settings'];
+
+// FIX: Безпечний доступ до t() з fallback
+const t = (key) => (window.t ? t(key) : key);
+
 function getTabLabels() {
   return {
-    dashboard:  { icon: 'chart',     label: window.t('finTabDashboard') },
-    income:     { icon: 'income',    label: window.t('finTabIncome')    },
-    expense:    { icon: 'expense',   label: window.t('finTabExpense')   },
-    recurring:  { icon: 'repeat',    label: window.t('finTabRecurring') },
-    invoices:   { icon: 'invoice',   label: window.t('finTabInvoices')  },
-    functions:  { icon: 'func',      label: window.t('finTabFunctions') },
-    planning:   { icon: 'plan',      label: window.t('finTabPlanning')  },
-    analytics:  { icon: 'chart',     label: window.t('finTabAnalytics') },
+    dashboard:  { icon: 'chart',     label: t('finTabDashboard') },
+    income:     { icon: 'income',    label: t('finTabIncome')    },
+    expense:    { icon: 'expense',   label: t('finTabExpense')   },
+    recurring:  { icon: 'repeat',    label: t('finTabRecurring') },
+    invoices:   { icon: 'invoice',   label: t('finTabInvoices')  },
+    functions:  { icon: 'func',      label: t('finTabFunctions') },
+    planning:   { icon: 'plan',      label: t('finTabPlanning')  },
+    analytics:  { icon: 'chart',     label: t('finTabAnalytics') },
     ai:         { icon: 'ai',        label: 'AI'                        },
-    settings:   { icon: 'settings',  label: window.t('finTabSettings')  },
+    settings:   { icon: 'settings',  label: t('finTabSettings')  },
   };
 }
 
@@ -86,31 +90,33 @@ function getDb() { return window.db || (window.firebase && firebase.firestore())
 function colRef(name) {
   const db = getDb();
   if (!db || !_state.companyId) return null;
+  // FIX: Перевірка існування window.companyRef перед викликом
+  if (!window.companyRef || typeof window.companyRef !== 'function') return null;
   return window.companyRef().collection(name);
 }
 
 // ── Системні категорії (дефолт при ініціалізації) ──────────
 const DEFAULT_CATEGORIES = {
   income: [
-    { id: 'inc_services',   name: window.t('finCatServices'),    icon: 'briefcase' },
-    { id: 'inc_goods',      name: window.t('finCatGoods'),       icon: 'package' },
-    { id: 'inc_prepay',     name: window.t('finCatPrepay'),          icon: 'credit-card' },
-    { id: 'inc_royalty',    name: window.t('finCatRoyalty'),      icon: 'building-2' },
+    { id: 'inc_services',   name: t('finCatServices'),    icon: 'briefcase' },
+    { id: 'inc_goods',      name: t('finCatGoods'),       icon: 'package' },
+    { id: 'inc_prepay',     name: t('finCatPrepay'),          icon: 'credit-card' },
+    { id: 'inc_royalty',    name: t('finCatRoyalty'),      icon: 'building-2' },
     { id: 'inc_other',      name: 'Інше',                 icon: 'plus-circle' },
   ],
   expense: [
-    { id: 'exp_materials',  name: window.t('finCatMaterials'), icon: 'wrench' },
-    { id: 'exp_salary',     name: window.t('finCatSalary'),       icon: 'user' },
-    { id: 'exp_rent',       name: window.t('finRent'),               icon: 'home' },
-    { id: 'exp_transport',  name: window.t('finCatTransport'),   icon: 'car' },
-    { id: 'exp_marketing',  name: window.t('finCatMarketing'),  icon: 'megaphone' },
-    { id: 'exp_equipment',  name: window.t('finCatEquipment'),           icon: 'settings' },
-    { id: 'exp_utilities',  name: window.t('finCatUtilities'),   icon: 'lightbulb' },
-    { id: 'exp_admin',      name: window.t('finCatAdmin'),      icon: 'clipboard-list' },
-    { id: 'exp_subcontract',name: window.t('finCatSubcontract'),            icon: 'handshake' },
-    { id: 'exp_tax',        name: window.t('finCatTax'),        icon: 'bar-chart-2' },
-    { id: 'exp_reserve',    name: window.t('finCatReserve'),       icon: 'shield' },
-    { id: 'exp_dividends',  name: window.t('finCatDividends'),   icon: 'coins' },
+    { id: 'exp_materials',  name: t('finCatMaterials'), icon: 'wrench' },
+    { id: 'exp_salary',     name: t('finCatSalary'),       icon: 'user' },
+    { id: 'exp_rent',       name: t('finRent'),               icon: 'home' },
+    { id: 'exp_transport',  name: t('finCatTransport'),   icon: 'car' },
+    { id: 'exp_marketing',  name: t('finCatMarketing'),  icon: 'megaphone' },
+    { id: 'exp_equipment',  name: t('finCatEquipment'),           icon: 'settings' },
+    { id: 'exp_utilities',  name: t('finCatUtilities'),   icon: 'lightbulb' },
+    { id: 'exp_admin',      name: t('finCatAdmin'),      icon: 'clipboard-list' },
+    { id: 'exp_subcontract',name: t('finCatSubcontract'),            icon: 'handshake' },
+    { id: 'exp_tax',        name: t('finCatTax'),        icon: 'bar-chart-2' },
+    { id: 'exp_reserve',    name: t('finCatReserve'),       icon: 'shield' },
+    { id: 'exp_dividends',  name: t('finCatDividends'),   icon: 'coins' },
     { id: 'exp_other',      name: 'Інше',                 icon: 'plus-circle' },
   ],
 };
@@ -153,7 +159,7 @@ async function initFirestoreCollections() {
   // 4. Рахунок за замовчуванням
   const accRef = colRef('finance_accounts').doc('acc_main');
   batch.set(accRef, {
-    name: _state.region === 'US' ? window.t('finBankAccount') : window.t('finBankAccount'),
+    name: _state.region === 'US' ? t('finBankAccount') : t('finBankAccount'),
     type: 'bank',
     currency: _state.currency,
     balance: 0,
@@ -164,7 +170,7 @@ async function initFirestoreCollections() {
   // 5. Готівкова каса
   const cashRef = colRef('finance_accounts').doc('acc_cash');
   batch.set(cashRef, {
-    name: _state.region === 'US' ? window.t('finCashAccount') : window.t('finCashAccount'),
+    name: _state.region === 'US' ? t('finCashAccount') : t('finCashAccount'),
     type: 'cash',
     currency: _state.currency,
     balance: 0,
@@ -303,7 +309,7 @@ function renderFinanceContainer() {
             border:none;border-radius:8px;cursor:pointer;
             font-size:0.82rem;font-weight:600;
             flex-shrink:0;
-          ">${I.plus} ${window.t('finAddBtn')}</button>
+          ">${I.plus} ${t('finAddBtn')}</button>
         ` : ''}
       </div>
 
@@ -361,7 +367,7 @@ function renderDashboard(el) {
       <!-- Header рядок -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.5rem;">
         <div>
-          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabDashboard')}</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finTabDashboard')}</div>
           <div style="font-size:0.78rem;color:#6b7280;margin-top:0.1rem;">${monthLabel}</div>
         </div>
         <div style="display:flex;align-items:center;gap:0.5rem;">
@@ -378,7 +384,7 @@ function renderDashboard(el) {
             <button onclick="window._financeAddTransaction()"
               style="display:flex;align-items:center;gap:0.35rem;padding:0.35rem 0.8rem;
               background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-              ${I.plus} ${window.t('finAddBtn')}
+              ${I.plus} ${t('finAddBtn')}
             </button>
           ` : ''}
         </div>
@@ -387,22 +393,22 @@ function renderDashboard(el) {
       <!-- KPI картки -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finIncome')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${t('finIncome')}</div>
           <div id="kpiIncome" style="font-size:1.5rem;font-weight:800;color:#22c55e;">...</div>
           <div id="kpiIncomeSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finExpense')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${t('finExpense')}</div>
           <div id="kpiExpense" style="font-size:1.5rem;font-weight:800;color:#ef4444;">...</div>
           <div id="kpiExpenseSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finProfit')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${t('finProfit')}</div>
           <div id="kpiProfit" style="font-size:1.5rem;font-weight:800;color:#3b82f6;">...</div>
           <div id="kpiProfitSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finMargin')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${t('finMargin')}</div>
           <div id="kpiMargin" style="font-size:1.5rem;font-weight:800;color:#f59e0b;">...</div>
           <div id="kpiMarginSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
@@ -413,13 +419,13 @@ function renderDashboard(el) {
 
         <!-- Графік доходів/витрат за 6 місяців -->
         <div style="flex:1;min-width:280px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;overflow:hidden;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finIncVsExp')}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finIncVsExp')}</div>
           <div id="dashChart" style="width:100%;overflow:hidden;">
-            <div style="color:#9ca3af;font-size:0.78rem;">${window.t('finLoading')}</div>
+            <div style="color:#9ca3af;font-size:0.78rem;">${t('finLoading')}</div>
           </div>
           <div style="display:flex;gap:1rem;margin-top:0.5rem;">
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
-              <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>${window.t('finIncome')}
+              <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>${t('finIncome')}
             </div>
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
               <div style="width:10px;height:10px;border-radius:2px;background:#ef4444;"></div>Витрати
@@ -430,11 +436,11 @@ function renderDashboard(el) {
         <!-- Рахунки -->
         <div style="width:240px;flex-shrink:0;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finAccountsLabel')}</div>
-            ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ ${window.t('finTransfer')}</button>` : ''}
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${t('finAccountsLabel')}</div>
+            ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ ${t('finTransfer')}</button>` : ''}
           </div>
           <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #f3f4f6;">
-            <div style="font-size:0.72rem;color:#6b7280;">${window.t('finTotalBalance')}</div>
+            <div style="font-size:0.72rem;color:#6b7280;">${t('finTotalBalance')}</div>
             <div id="dashTotalBalance" style="font-size:1.25rem;font-weight:800;color:#1a1a1a;">${fmt(totalBalance)}</div>
           </div>
           <div id="dashAccounts">
@@ -453,7 +459,7 @@ function renderDashboard(el) {
 
         <!-- Сигнали -->
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finSignals')}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finSignals')}</div>
           <div id="dashAlerts">
             <div style="color:#9ca3af;font-size:0.8rem;">Перевірка...</div>
           </div>
@@ -461,9 +467,9 @@ function renderDashboard(el) {
 
         <!-- Топ витрат по категоріях -->
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finTopExpenses')}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finTopExpenses')}</div>
           <div id="dashTopExpense">
-            <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
+            <div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div>
           </div>
         </div>
       </div>
@@ -471,19 +477,19 @@ function renderDashboard(el) {
       <!-- Donut + Проекти за маржею -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finExpStructure')}</div>
-          <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finExpStructure')}</div>
+          <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div></div>
         </div>
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finProjMargin')}</div>
-          <div id="dashProjects"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finProjMargin')}</div>
+          <div id="dashProjects"><div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div></div>
         </div>
       </div>
 
       <!-- План-факт KPI -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;margin-bottom:1.25rem;">
-        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finPlanVsFact')}</div>
-        <div id="dashPlanFact"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finPlanVsFact')}</div>
+        <div id="dashPlanFact"><div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div></div>
       </div>
 
     </div>
@@ -542,29 +548,29 @@ async function loadDashboardData(monthVal) {
     };
     const incCount = snap.docs.filter(d=>d.data().type==='income').length;
     const expCount = snap.docs.filter(d=>d.data().type==='expense').length;
-    set('kpiIncome',  fmt(income),  incCount + ` ${window.t('finOperations')}`, '#22c55e');
-    set('kpiExpense', fmt(expense), expCount + ` ${window.t('finOperations')}`, '#ef4444');
-    set('kpiProfit',  fmt(profit),  profit >= 0 ? window.t('finProfitWord') : window.t('finLossWord'), pColor);
-    set('kpiMargin',  margin+'%',   income > 0 ? `${window.t('finFromIncome')} ${fmt(income)}` : window.t('finNoRevenue'), profit>=0?'#22c55e':'#ef4444');
+    set('kpiIncome',  fmt(income),  incCount + ` ${t('finOperations')}`, '#22c55e');
+    set('kpiExpense', fmt(expense), expCount + ` ${t('finOperations')}`, '#ef4444');
+    set('kpiProfit',  fmt(profit),  profit >= 0 ? t('finProfitWord') : t('finLossWord'), pColor);
+    set('kpiMargin',  margin+'%',   income > 0 ? `${t('finFromIncome')} ${fmt(income)}` : t('finNoRevenue'), profit>=0?'#22c55e':'#ef4444');
 
     // Сигнали
     const alerts = [];
     if (income === 0 && expense === 0) {
-      alerts.push({ type: 'info', text: window.t('finNoOps') });
+      alerts.push({ type: 'info', text: t('finNoOps') });
     }
     _state.accounts.forEach(acc => {
       if ((acc.balance || 0) < 0) {
-        alerts.push({ type: 'error', text: `${window.t('finNegBalance')} ${acc.name} (${fmt(acc.balance, acc.currency)})` });
+        alerts.push({ type: 'error', text: `${t('finNegBalance')} ${acc.name} (${fmt(acc.balance, acc.currency)})` });
       }
     });
     if (expense > income && income > 0) {
-      alerts.push({ type: 'warn', text: `${window.t('finOverspend')} ${fmt(expense - income)}` });
+      alerts.push({ type: 'warn', text: `${t('finOverspend')} ${fmt(expense - income)}` });
     }
     if (margin < 10 && income > 0) {
       alerts.push({ type: 'warn', text: `Низька маржа: ${margin}% (норма > 15%)` });
     }
     if (alerts.length === 0) {
-      alerts.push({ type: 'ok', text: window.t('finAllOk') });
+      alerts.push({ type: 'ok', text: t('finAllOk') });
     }
 
     const alertColors = { error: '#ef4444', warn: '#f59e0b', ok: '#22c55e', info: '#6b7280' };
@@ -696,7 +702,7 @@ async function loadDashboardData(monthVal) {
         })).sort((a, b) => b.margin - a.margin).slice(0, 5);
 
         if (projRows.length === 0) {
-          projEl.innerHTML = `<div style="color:#9ca3af;font-size:0.8rem;">${window.t('finNoProjData')}</div>`;
+          projEl.innerHTML = `<div style="color:#9ca3af;font-size:0.8rem;">${t('finNoProjData')}</div>`;
         } else {
           // Підтягуємо назви проектів
           let projNames = {};
@@ -735,8 +741,8 @@ async function loadDashboardData(monthVal) {
           pfEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Бюджет не встановлено. Перейдіть у «Планування».</div>';
         } else {
           const rows = [
-            { label: window.t('finPlanExpense'), plan: totalBudget, fact: expense, inverse: true },
-            { label: window.t('finPlanProfit'), plan: goalProfit, fact: profit, inverse: false },
+            { label: t('finPlanExpense'), plan: totalBudget, fact: expense, inverse: true },
+            { label: t('finPlanProfit'), plan: goalProfit, fact: profit, inverse: false },
           ].filter(r => r.plan > 0);
 
           pfEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px;">` +
@@ -891,7 +897,7 @@ async function loadDashboardKPI() {
 let _txFilter = { month: '', categoryId: '', accountId: '' };
 
 function renderTransactions(el, type) {
-  const label = type === 'income' ? window.t('finIncome') : window.t('finExpense');
+  const label = type === 'income' ? t('finIncome') : t('finExpense');
   const color  = type === 'income' ? '#22c55e' : '#ef4444';
   const cats   = _state.categories[type] || [];
 
@@ -916,7 +922,7 @@ function renderTransactions(el, type) {
             display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;
             background:${color};color:#fff;border:none;border-radius:8px;
             cursor:pointer;font-size:0.82rem;font-weight:600;flex-shrink:0;
-          ">${I.plus} ${window.t('finAddBtn')}</button>
+          ">${I.plus} ${t('finAddBtn')}</button>
         ` : ''}
       </div>
 
@@ -924,17 +930,17 @@ function renderTransactions(el, type) {
       <div style="display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;">
         <select id="txFilterMonth" onchange="window._txFilterChange('month',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${window.t('finAllMonths')}</option>
+          <option value="">${t('finAllMonths')}</option>
           ${monthOpts.join('')}
         </select>
         <select id="txFilterCat" onchange="window._txFilterChange('categoryId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${window.t('finAllCategories')}</option>
+          <option value="">${t('finAllCategories')}</option>
           ${cats.map(c => `<option value="${c.id}" ${_txFilter.categoryId===c.id?'selected':''}>${c.name}</option>`).join('')}
         </select>
         <select id="txFilterAcc" onchange="window._txFilterChange('accountId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${window.t('finAllAccounts')}</option>
+          <option value="">${t('finAllAccounts')}</option>
           ${_state.accounts.map(a => `<option value="${a.id}" ${_txFilter.accountId===a.id?'selected':''}>${a.name}</option>`).join('')}
         </select>
         <button onclick="window._exportTx('${type}')"
@@ -963,7 +969,7 @@ function renderTransactions(el, type) {
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;display:block;margin-left:auto;margin-right:auto;">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
-          <div style="font-size:0.85rem;">${window.t('finLoading')}</div>
+          <div style="font-size:0.85rem;">${t('finLoading')}</div>
         </div>
       </div>
 
@@ -1075,7 +1081,7 @@ async function loadAndRenderTxList(type) {
     }).join('');
 
     if (summaryEl) {
-      summaryEl.innerHTML = `${window.t('finTotal')}: <strong style="color:${color};">${fmt(total)}</strong> &bull; ${txs.length} ${window.t('finOperationsCount')}`;
+      summaryEl.innerHTML = `${t('finTotal')}: <strong style="color:${color};">${fmt(total)}</strong> &bull; ${txs.length} ${t('finOperationsCount')}`;
     }
 
   } catch(e) {
@@ -1120,11 +1126,11 @@ function _nextInvoiceNumber(invoices) {
 
 function _invoiceStatusBadge(status) {
   const map = {
-    draft:    { label: window.t('finInvoiceDraft'),  bg: '#f3f4f6', color: '#6b7280' },
-    sent:     { label: window.t('finInvoiceSent'), bg: '#eff6ff', color: '#3b82f6' },
-    paid:     { label: window.t('finInvoicePaid'),  bg: '#f0fdf4', color: '#16a34a' },
-    overdue:  { label: window.t('finInvoiceOverdue'), bg: '#fef2f2', color: '#dc2626' },
-    cancelled:{ label: window.t('finInvoiceCancelled'), bg: '#f9fafb', color: '#9ca3af' },
+    draft:    { label: t('finInvoiceDraft'),  bg: '#f3f4f6', color: '#6b7280' },
+    sent:     { label: t('finInvoiceSent'), bg: '#eff6ff', color: '#3b82f6' },
+    paid:     { label: t('finInvoicePaid'),  bg: '#f0fdf4', color: '#16a34a' },
+    overdue:  { label: t('finInvoiceOverdue'), bg: '#fef2f2', color: '#dc2626' },
+    cancelled:{ label: t('finInvoiceCancelled'), bg: '#f9fafb', color: '#9ca3af' },
   };
   const s = map[status] || map.draft;
   return `<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:${s.bg};color:${s.color};">${s.label}</span>`;
@@ -1159,7 +1165,7 @@ async function _getTxForExport(type) {
   // Попередження якщо досягли ліміту — дані можуть бути обрізані
   if (!_txFilter.month && snap.docs.length >= EXPORT_LIMIT) {
     if (typeof showToast === 'function')
-      showToast(`⚠ ${window.t('finExportLimit').replace('{n}', EXPORT_LIMIT)}`, 'warn', 6000);
+      showToast(`⚠ ${t('finExportLimit').replace('{n}', EXPORT_LIMIT)}`, 'warn', 6000);
   }
 
   const catMap = {};
@@ -1172,17 +1178,17 @@ async function _getTxForExport(type) {
     const dt = tx.date?.toDate ? tx.date.toDate() : new Date((tx.date?.seconds || 0) * 1000);
     return {
       Дата:             dt.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA'),
-      Тип:              tx.type === 'income' ? window.t('finTransactionIncome') : window.t('finTransactionExpense'),
+      Тип:              tx.type === 'income' ? t('finTransactionIncome') : t('finTransactionExpense'),
       Сума:             tx.amount || 0,
       Валюта:           tx.currency || _state.currency || 'EUR',
       'Сума (базова)':  tx.amountBase != null ? tx.amountBase : (tx.amount || 0),
       'Баз. валюта':    _state.currency || 'EUR',
-      [ window.t('finCategoryLbl') ]: catMap[tx.categoryId] || tx.categoryName || '',
+      [ t('finCategoryLbl') ]: catMap[tx.categoryId] || tx.categoryName || '',
       Рахунок:          accMap[tx.accountId] || '',
-      [ window.t('finCounterpartyLbl') ]: tx.counterparty || '',
+      [ t('finCounterpartyLbl') ]: tx.counterparty || '',
       Опис:             tx.description || '',
       Проект:           tx.projectId || '',
-      [ window.t('finFunctionLbl') ]: tx.functionId || '',
+      [ t('finFunctionLbl') ]: tx.functionId || '',
     };
   });
 }
@@ -1277,7 +1283,7 @@ window._exportTxXlsx = async function(type) {
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
       script.onload = () => window._exportTxXlsx(type);
       document.head.appendChild(script);
-      if (typeof showToast === 'function') showToast(window.t('finLibLoading'), 'info', 2000);
+      if (typeof showToast === 'function') showToast(t('finLibLoading'), 'info', 2000);
     }
   } catch(e) { if (typeof showToast === 'function') showToast('Помилка Excel експорту: ' + e.message, 'error'); }
 };
@@ -1302,7 +1308,7 @@ window._financeTransfer = function() {
   modal.innerHTML = `
     <div style="background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTransferTitle')}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finTransferTitle')}</div>
         <button onclick="document.getElementById('transferModal')?.remove()"
           style="background:none;border:none;font-size:1.2rem;color:#9ca3af;cursor:pointer;padding:2px;">✕</button>
       </div>
@@ -1351,15 +1357,15 @@ window._financeTransfer = function() {
 };
 
 window._doTransfer = async function() {
-  if (!_state.companyId || !_state.initialized) { if (typeof showToast === 'function') showToast(window.t('finNotInit'), 'error'); return; }
+  if (!_state.companyId || !_state.initialized) { if (typeof showToast === 'function') showToast(t('finNotInit'), 'error'); return; }
   const fromId = document.getElementById('trFrom')?.value;
   const toId   = document.getElementById('trTo')?.value;
   const amount = parseFloat(document.getElementById('trAmount')?.value || 0);
   const note   = document.getElementById('trNote')?.value?.trim() || '';
 
   if (!fromId || !toId) return;
-  if (fromId === toId) { if (typeof showToast === 'function') showToast(window.t('finTransferDiff'), 'warn'); return; }
-  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast(window.t('finTransferAmount'), 'warn'); return; }
+  if (fromId === toId) { if (typeof showToast === 'function') showToast(t('finTransferDiff'), 'warn'); return; }
+  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast(t('finTransferAmount'), 'warn'); return; }
 
   const fromAcc = _state.accounts.find(a => a.id === fromId);
   if (fromAcc && (fromAcc.balance || 0) < amount) {
@@ -1374,7 +1380,7 @@ window._doTransfer = async function() {
     const db = getDb();
     const companyId = _state.companyId;
     const ts = firebase.firestore.Timestamp.now();
-    const desc = note || `${window.t('finTransferBetween')}`;
+    const desc = note || `${t('finTransferBetween')}`;
 
     // Два оновлення балансу + запис в finance_transfers
     // Атомарно: batch щоб обидва update або жоден
@@ -1415,7 +1421,7 @@ window._doTransfer = async function() {
         <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
       </div>`).join('');
 
-    if (typeof showToast === 'function') showToast(`${window.t('finTransferDone').replace('{sum}', fmt(amount))}`, 'success');
+    if (typeof showToast === 'function') showToast(`${t('finTransferDone').replace('{sum}', fmt(amount))}`, 'success');
   } catch(e) {
     if (btn) { btn.disabled = false; btn.textContent = 'Переказати'; }
     if (typeof showToast === 'function') showToast('Помилка переказу: ' + e.message, 'error');
@@ -1435,9 +1441,9 @@ function renderInvoices(el) {
       <!-- Статистика -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
         ${[
-          { label: window.t('finInvoiceIssued'),   val: fmt(total, currency),   color: '#22c55e' },
-          { label: window.t('finInvoicePaid'),     val: fmt(paid, currency),    color: '#16a34a' },
-          { label: window.t('finInvoiceAwaiting'),val: fmt(pending, currency), color: '#f59e0b' },
+          { label: t('finInvoiceIssued'),   val: fmt(total, currency),   color: '#22c55e' },
+          { label: t('finInvoicePaid'),     val: fmt(paid, currency),    color: '#16a34a' },
+          { label: t('finInvoiceAwaiting'),val: fmt(pending, currency), color: '#f59e0b' },
         ].map(s => `
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;">
             <div style="font-size:0.75rem;color:#6b7280;margin-bottom:4px;">${s.label}</div>
@@ -1450,7 +1456,7 @@ function renderInvoices(el) {
         <div style="margin-bottom:16px;">
           <button onclick="window._invoiceAdd()"
             style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:0.9rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            ${I.plus} ${window.t('finNewAccount')}
+            ${I.plus} ${t('finNewAccount')}
           </button>
         </div>` : ''}
 
@@ -1459,8 +1465,8 @@ function renderInvoices(el) {
         ${invoices.length === 0 ? `
           <div style="text-align:center;padding:40px;color:#9ca3af;">
             <div style="font-size:2rem;margin-bottom:8px;">📄</div>
-            <div style="font-weight:600;margin-bottom:4px;">${window.t('finNoAccountsYet')}</div>
-            <div style="font-size:0.85rem;">${window.t('finNoAccountsHint')}</div>
+            <div style="font-weight:600;margin-bottom:4px;">${t('finNoAccountsYet')}</div>
+            <div style="font-size:0.85rem;">${t('finNoAccountsHint')}</div>
           </div>` :
           invoices.map(inv => _invoiceRow(inv, currency)).join('<div style="border-top:1px solid #f3f4f6;"></div>')
         }
@@ -1525,7 +1531,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
     <div style="background:#fff;border-radius:18px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f3f4f6;">
-        <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a;">${isEdit ? window.t('finEditAccount') : window.t('finNewAccount')}</div>
+        <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a;">${isEdit ? t('finEditAccount') : t('finNewAccount')}</div>
         <button onclick="document.getElementById('invoiceModal')?.remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
       </div>
 
@@ -1564,7 +1570,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:8px;">Позиції</label>
           <div id="inv_items_list" style="display:flex;flex-direction:column;gap:6px;"></div>
-          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ ${window.t('finAddLine')}</button>
+          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ ${t('finAddLine')}</button>
         </div>
 
         <!-- ПДВ -->
@@ -1595,7 +1601,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <button onclick="document.getElementById('invoiceModal')?.remove()"
           style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">Скасувати</button>
         <button id="inv_save_btn" onclick="window._invoiceSave('${inv?.id || ''}')"
-          style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? window.t('finSave') : window.t('finCreate')}</button>
+          style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? t('finSave') : t('finCreate')}</button>
       </div>
     </div>`;
 
@@ -1685,8 +1691,8 @@ window._invoiceSave = async function(editId) {
     updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
   };
   if (!editId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-  if (!data.number) { if (typeof showToast === 'function') showToast(window.t('finEnterInvNum'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } window._invoiceSaving = false; return; }
-  if (!data.clientName) { if (typeof showToast === 'function') showToast(window.t('finEnterClient'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } window._invoiceSaving = false; return; }
+  if (!data.number) { if (typeof showToast === 'function') showToast(t('finEnterInvNum'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = t('finSave'); } window._invoiceSaving = false; return; }
+  if (!data.clientName) { if (typeof showToast === 'function') showToast(t('finEnterClient'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = t('finSave'); } window._invoiceSaving = false; return; }
 
   // Видаляємо undefined
   if (editId) delete data.status;
@@ -1705,7 +1711,7 @@ window._invoiceSave = async function(editId) {
   } catch(e) {
     console.error('[Invoice] save error:', e);
     if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
-    if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
+    if (btn) { btn.disabled = false; btn.textContent = t('finSave'); }
   } finally {
     window._invoiceSaving = false;
   }
@@ -1715,8 +1721,8 @@ window._invoiceSave = async function(editId) {
 window._invoiceMarkPaid = async function(id) {
   // FIX CA: use showConfirmModal instead of native confirm + emit INVOICE_PAID for automation
   const confirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal(window.t('finMarkPaid'))
-    : confirm(window.t('finMarkPaid'));
+    ? await showConfirmModal(t('finMarkPaid'))
+    : confirm(t('finMarkPaid'));
   if (!confirmed) return;
   try {
     await colRef('finance_invoices').doc(id).update({ status: 'paid', paidAt: firebase.firestore.FieldValue.serverTimestamp() });
@@ -1738,8 +1744,8 @@ window._invoiceMarkPaid = async function(id) {
 // ── Видалення ─────────────────────────────────────────────
 window._invoiceDelete = async function(id) {
   const _delConfirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal(window.t('finDeleteInvoice'), { danger: true })
-    : confirm(window.t('finDeleteInvoice'));
+    ? await showConfirmModal(t('finDeleteInvoice'), { danger: true })
+    : confirm(t('finDeleteInvoice'));
   if (!_delConfirmed) return;
   try {
     await colRef('finance_invoices').doc(id).delete();
@@ -1895,12 +1901,12 @@ function renderRecurring(el) {
       <!-- Заголовок -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
         <div>
-          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabRecurring')}</h3>
+          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">${t('finTabRecurring')}</h3>
           <p style="margin:0.25rem 0 0;font-size:0.82rem;color:#6b7280;">Автоматичне списання/нарахування в заданий день місяця</p>
         </div>
         ${isOwnerOrManager() ? `
           <button onclick="window._finAddRecurring()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;">
-            ${I.plus} ${window.t('finAddPayment')}
+            ${I.plus} ${t('finAddPayment')}
           </button>
         ` : ''}
       </div>
@@ -1938,12 +1944,12 @@ function _recurringStats(items, currency) {
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1rem;">
       <div style="font-size:0.75rem;color:#9ca3af;margin-bottom:0.35rem;">${label}</div>
       <div style="font-size:1.25rem;font-weight:700;color:${color};">${fmt(value, currency)}</div>
-      <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">${window.t('finPerMonth')}</div>
+      <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">${t('finPerMonth')}</div>
     </div>
   `;
-  return card(window.t('finRecurringExpenses'), monthlyExpense, '#ef4444', 'expense')
-       + card(window.t('finRecurringIncomes'),  monthlyIncome,  '#22c55e', 'income')
-       + card(window.t('finNetPerMonth'),         monthlyIncome - monthlyExpense, monthlyIncome >= monthlyExpense ? '#22c55e' : '#ef4444', 'wallet');
+  return card(t('finRecurringExpenses'), monthlyExpense, '#ef4444', 'expense')
+       + card(t('finRecurringIncomes'),  monthlyIncome,  '#22c55e', 'income')
+       + card(t('finNetPerMonth'),         monthlyIncome - monthlyExpense, monthlyIncome >= monthlyExpense ? '#22c55e' : '#ef4444', 'wallet');
 }
 
 function _recurringUpcoming(items, currency) {
@@ -2017,7 +2023,7 @@ function _recurringCard(item, currency) {
       <!-- Дії -->
       ${isOwnerOrManager() ? `
         <div style="display:flex;gap:0.4rem;flex-shrink:0;">
-          <button onclick="window._finToggleRecurring('${item.id}')" title="${active ? window.t('finPause') : window.t('finActivate')}"
+          <button onclick="window._finToggleRecurring('${item.id}')" title="${active ? t('finPause') : t('finActivate')}"
             style="width:30px;height:30px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
             ${active ? I.pause : I.play}
           </button>
@@ -2103,7 +2109,7 @@ window._finAddRecurring = function(editId) {
 
         <!-- Категорія -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCategoryLbl')}</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${t('finCategoryLbl')}</label>
           <select id="rec_category" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
             <option value="">— Оберіть категорію —</option>
             ${allCats.map(c => `<option ${existing?.category===c?'selected':''}>${c}</option>`).join('')}
@@ -2128,14 +2134,14 @@ window._finAddRecurring = function(editId) {
 
         <!-- Контрагент -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCounterpartyLbl')}</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${t('finCounterpartyLbl')}</label>
           <input id="rec_counterparty" value="${escHtml(existing?.counterparty || '')}" placeholder="Орендодавець, постачальник..."
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
         <!-- Коментар -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCommentLbl')}</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${t('finCommentLbl')}</label>
           <input id="rec_comment" value="${escHtml(existing?.comment || '')}" placeholder="Необов'язково"
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
@@ -2156,14 +2162,23 @@ window._finAddRecurring = function(editId) {
           </button>
           <button onclick="window._finSaveRecurring('${editId || ''}')"
             style="flex:2;padding:10px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:700;">
-            ${existing ? window.t('finSaveChanges') : window.t('finAddPayment')}
+            ${existing ? t('finSaveChanges') : t('finAddPayment')}
           </button>
         </div>
       </div>
     </div>
   `;
+
+  // FIX: Очищення event listener при закритті (захист від memory leak)
+  const handleOverlayClick = (e) => {
+    if (e.target === overlay) {
+      overlay.removeEventListener('click', handleOverlayClick);
+      overlay.remove();
+    }
+  };
+
   document.body.appendChild(overlay);
-  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  overlay.addEventListener('click', handleOverlayClick);
 };
 
 window._recSetType = function(type) {
@@ -2183,8 +2198,8 @@ window._recSetType = function(type) {
 window._finSaveRecurring = async function(editId) {
   const name   = document.getElementById('rec_name')?.value?.trim();
   const amount = parseFloat(document.getElementById('rec_amount')?.value);
-  if (!name) { showToast(window.t('finEnterPayName'), 'error'); return; }
-  if (!amount || amount <= 0) { showToast(window.t('finTransferAmount'), 'error'); return; }
+  if (!name) { showToast(t('finEnterPayName'), 'error'); return; }
+  if (!amount || amount <= 0) { showToast(t('finTransferAmount'), 'error'); return; }
 
   const data = {
     name,
@@ -2212,7 +2227,7 @@ window._finSaveRecurring = async function(editId) {
     document.getElementById('recurringModal')?.remove();
     await _loadRecurring();
     renderSubTab('recurring');
-    showToast(editId ? window.t('finPaymentUpdated') : window.t('finPaymentAdded'), 'success');
+    showToast(editId ? t('finPaymentUpdated') : t('finPaymentAdded'), 'success');
   } catch(e) {
     console.error('[Recurring save]', e);
     showToast('Помилка: ' + e.message, 'error');
@@ -2233,20 +2248,20 @@ window._finToggleRecurring = async function(id) {
       .update({ active: newActive, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     await _loadRecurring();
     renderSubTab('recurring');
-    showToast(newActive ? window.t('finPaymentActivated') : window.t('finPaymentPaused'), 'success');
+    showToast(newActive ? t('finPaymentActivated') : t('finPaymentPaused'), 'success');
   } catch(e) {
     showToast('Помилка: ' + e.message, 'error');
   }
 };
 
 window._finDeleteRecurring = async function(id) {
-  if (!await showConfirmModal(window.t('finDeleteRecurring'), { danger: true })) return;
+  if (!await showConfirmModal(t('finDeleteRecurring'), { danger: true })) return;
   try {
     await window.companyRef()
       .collection('finance_recurring').doc(id).delete();
     _state.recurring = (_state.recurring || []).filter(r => r.id !== id);
     renderSubTab('recurring');
-    showToast(window.t('finDeleted'), 'success');
+    showToast(t('finDeleted'), 'success');
   } catch(e) {
     showToast('Помилка: ' + e.message, 'error');
   }
@@ -2327,10 +2342,10 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
     <div style="width:100%;">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finByFunction')}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finByFunction')}</div>
         <select id="funcFilterMonth" onchange="window._funcMonthChange(this.value)"
           style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${window.t('finAllMonths')}</option>
+          <option value="">${t('finAllMonths')}</option>
           ${monthOpts}
         </select>
       </div>
@@ -2340,22 +2355,22 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
         <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
           background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
           padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;">
-          <div>${window.t('finFunctionLbl')}</div>
-          <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
-          <div style="text-align:right;">${window.t('finExpense')}</div>
-          <div style="text-align:right;">${window.t('finMargin')}</div>
-          <div style="text-align:right;">${window.t('finPctOfTotal')}</div>
+          <div>${t('finFunctionLbl')}</div>
+          <div style="text-align:right;">${t('finTransactionIncome')}</div>
+          <div style="text-align:right;">${t('finExpense')}</div>
+          <div style="text-align:right;">${t('finMargin')}</div>
+          <div style="text-align:right;">${t('finPctOfTotal')}</div>
         </div>
         <div id="funcTableBody">
-          <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${window.t('finLoading')}</div>
+          <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${t('finLoading')}</div>
         </div>
       </div>
 
       <!-- Графік по функціях -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">${window.t('finExpByFunction')}</div>
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">${t('finExpByFunction')}</div>
         <div id="funcChart">
-          <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
+          <div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div>
         </div>
       </div>
     </div>
@@ -2413,14 +2428,14 @@ async function loadFunctionsData(monthVal) {
       }
     });
     if (byFunc['__none__'] && (byFunc['__none__'].income > 0 || byFunc['__none__'].expense > 0)) {
-      rows.push({ name: window.t('finNoFunction'), ...byFunc['__none__'] });
+      rows.push({ name: t('finNoFunction'), ...byFunc['__none__'] });
     }
 
     if (rows.length === 0) {
       tableEl.innerHTML = `
         <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">
           Транзакцій з прив'язкою до функцій немає.<br>
-          <span style="font-size:0.78rem;">${window.t('finFunctionHint')}</span>
+          <span style="font-size:0.78rem;">${t('finFunctionHint')}</span>
         </div>`;
       if (chartEl) chartEl.innerHTML = '';
       return;
@@ -2516,7 +2531,7 @@ function renderPlanning(el) {
     <div style="width:100%;">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finBudgetPlanning')}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finBudgetPlanning')}</div>
         <div style="display:flex;gap:0.5rem;align-items:center;">
           <select id="planMonthSel" onchange="window._planMonthChange(this.value)"
             style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
@@ -2524,7 +2539,7 @@ function renderPlanning(el) {
           </select>
           <button onclick="window._savePlanBudget()"
             style="padding:0.35rem 0.9rem;background:#22c55e;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">
-            ${window.t('finSave')}
+            ${t('finSave')}
           </button>
         </div>
       </div>
@@ -2536,15 +2551,15 @@ function renderPlanning(el) {
       <div style="display:flex;gap:6px;margin-bottom:1rem;">
         <button onclick="window._planMode('budget')" id="planModeBtn_budget"
           style="padding:6px 14px;border-radius:8px;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${window.t('finBudgetByCategory')}
+          ${t('finBudgetByCategory')}
         </button>
         <button onclick="window._planMode('functions')" id="planModeBtn_functions"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${window.t('finBudgetByFunction')}
+          ${t('finBudgetByFunction')}
         </button>
         <button onclick="window._planMode('cashflow')" id="planModeBtn_cashflow"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${window.t('finCashflow3060')}
+          ${t('finCashflow3060')}
         </button>
       </div>
 
@@ -2556,13 +2571,13 @@ function renderPlanning(el) {
           <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
             padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;
             display:grid;grid-template-columns:1fr 110px 110px 90px;">
-            <div>${window.t('finCategoryLbl')}</div>
-            <div style="text-align:right;">${window.t('finBudgetLbl')}</div>
-            <div style="text-align:right;">${window.t('finActual')}</div>
-            <div style="text-align:right;">${window.t('finVariance')}</div>
+            <div>${t('finCategoryLbl')}</div>
+            <div style="text-align:right;">${t('finBudgetLbl')}</div>
+            <div style="text-align:right;">${t('finActual')}</div>
+            <div style="text-align:right;">${t('finVariance')}</div>
           </div>
           <div id="planBudgetBody">
-            <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${window.t('finLoading')}</div>
+            <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${t('finLoading')}</div>
           </div>
         </div>
 
@@ -2571,17 +2586,17 @@ function renderPlanning(el) {
 
           <!-- Cashflow прогноз -->
           <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finCashflowMonth')}</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finCashflowMonth')}</div>
             <div id="planCashflow">
-              <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
+              <div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div>
             </div>
           </div>
 
           <!-- Фінансова ціль -->
           <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finMonthlyGoal')}</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finMonthlyGoal')}</div>
             <div style="margin-bottom:0.5rem;">
-              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">${window.t('finTargetProfit')}</label>
+              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">${t('finTargetProfit')}</label>
               <input id="planGoalInput" type="number" min="0" placeholder="напр. 5000"
                 style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
             </div>
@@ -2594,14 +2609,14 @@ function renderPlanning(el) {
       <!-- Бюджет по функціях -->
       <div id="planModeView_functions" style="display:none;">
         <div id="planFunctionsBody">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>
         </div>
       </div>
 
       <!-- Cashflow 30/60/90 -->
       <div id="planModeView_cashflow" style="display:none;">
         <div id="planCashflowForecast">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>
         </div>
       </div>
 
@@ -2656,7 +2671,7 @@ window._savePlanBudget = async function() {
     loadPlanningData(_planMonth);
     // Короткий feedback
     const btn = document.querySelector('[onclick="window._savePlanBudget()"]');
-    if (btn) { btn.textContent = window.t('finSaved'); setTimeout(()=>{ btn.textContent = window.t('finSave'); }, 1500); }
+    if (btn) { btn.textContent = t('finSaved'); setTimeout(()=>{ btn.textContent = t('finSave'); }, 1500); }
   } catch(e) {
     if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
   }
@@ -2727,7 +2742,7 @@ async function loadPlanningData(monthVal) {
       }).join('') + `
         <div style="display:grid;grid-template-columns:1fr 110px 110px 90px;
           padding:0.65rem 1rem;background:#fafafa;border-top:2px solid #e5e7eb;align-items:center;">
-          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;">${window.t('finTotalExpenses')}</div>
+          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;">${t('finTotalExpenses')}</div>
           <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#374151;">${fmt(totalBudget)}</div>
           <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#ef4444;">${fmt(totalExpense)}</div>
           <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${totalBudget>=totalExpense?'#22c55e':'#ef4444'};">
@@ -2752,17 +2767,17 @@ async function loadPlanningData(monthVal) {
             <span style="font-weight:600;color:#22c55e;">${fmt(totalIncome)}</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
-            <span style="color:#6b7280;">${window.t('finExpFact')}</span>
+            <span style="color:#6b7280;">${t('finExpFact')}</span>
             <span style="font-weight:600;color:#ef4444;">${fmt(totalExpense)}</span>
           </div>
           <div style="border-top:1px solid #f3f4f6;padding-top:0.5rem;display:flex;justify-content:space-between;font-size:0.85rem;">
-            <span style="color:#1a1a1a;font-weight:600;">${window.t('finProfit')}</span>
+            <span style="color:#1a1a1a;font-weight:600;">${t('finProfit')}</span>
             <span style="font-weight:700;color:${profit>=0?'#22c55e':'#ef4444'};">${profit>=0?'+':''}${fmt(profit)}</span>
           </div>
           ${goalVal > 0 ? `
           <div style="margin-top:0.5rem;">
             <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;">
-              <span>${window.t('finGoalExec')}</span>
+              <span>${t('finGoalExec')}</span>
               <span>${Math.min(Math.round(profit/goalVal*100),100)}%</span>
             </div>
             <div style="height:6px;background:#f3f4f6;border-radius:3px;">
@@ -2788,7 +2803,7 @@ async function loadPlanningData(monthVal) {
             border-radius:4px;width:${pct}%;transition:width 0.3s;"></div>
         </div>
         <div style="font-size:0.75rem;color:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
-          margin-top:0.2rem;font-weight:600;">${pct}% ${window.t('finDone')}</div>
+          margin-top:0.2rem;font-weight:600;">${pct}% ${t('finDone')}</div>
       `;
     }
 
@@ -2872,7 +2887,7 @@ async function _renderFunctionsBudget(monthVal) {
           <div style="text-align:right;">Норма %</div>
           <div style="text-align:right;">Факт сума</div>
           <div style="text-align:right;">Факт %</div>
-          <div style="text-align:right;">${window.t('finVariance')}</div>
+          <div style="text-align:right;">${t('finVariance')}</div>
         </div>
         ${funcs.map((f, i) => {
           const fact = byFunc[f.id] || 0;
@@ -2900,7 +2915,7 @@ async function _renderFunctionsBudget(monthVal) {
         ${byFunc['__none__'] ? `
           <div style="display:grid;grid-template-columns:1fr 80px 110px 80px 90px;
             padding:0.55rem 1rem;background:#fafafa;border-bottom:1px solid #f3f4f6;align-items:center;">
-            <div style="font-size:0.78rem;color:#9ca3af;">${window.t('finNoFunction')}</div>
+            <div style="font-size:0.78rem;color:#9ca3af;">${t('finNoFunction')}</div>
             <div></div>
             <div style="text-align:right;font-size:0.82rem;color:#9ca3af;">${fmt(byFunc['__none__'], currency)}</div>
             <div style="text-align:right;font-size:0.78rem;color:#9ca3af;">
@@ -2912,7 +2927,7 @@ async function _renderFunctionsBudget(monthVal) {
       <div style="margin-top:10px;text-align:right;">
         <button onclick="window._saveFuncNorms()"
           style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">
-          ${window.t('finSaveNorms')}
+          ${t('finSaveNorms')}
         </button>
       </div>`;
   } catch(e) {
@@ -2926,7 +2941,7 @@ window._saveFuncNorms = async function() {
   inputs.forEach(inp => { data['func_norm_' + inp.dataset.funcNorm] = parseFloat(inp.value) || 0; });
   try {
     await colRef('finance_budgets').doc(_planMonth).set(data, { merge: true });
-    if (typeof showToast === 'function') showToast(window.t('finNormsSaved'), 'success');
+    if (typeof showToast === 'function') showToast(t('finNormsSaved'), 'success');
   } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
 };
 
@@ -3004,7 +3019,7 @@ async function _renderCashflowForecast() {
           <span style="font-weight:700;color:#22c55e;">${fmt(totalBalance, currency)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
-          <span style="color:#6b7280;">${window.t('finRecurringExpensesMonth')}</span>
+          <span style="color:#6b7280;">${t('finRecurringExpensesMonth')}</span>
           <span style="font-weight:600;color:#ef4444;">
             ${fmt(recurring.filter(r=>r.active!==false&&r.frequency==='monthly').reduce((s,r)=>s+(r.amount||0),0), currency)}
           </span>
@@ -3027,11 +3042,11 @@ function renderAnalytics(el) {
   el.innerHTML = `
     <div style="width:100%;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabAnalytics')}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finTabAnalytics')}</div>
         <div style="display:flex;gap:6px;">
           <select id="analyticsPeriodSel" onchange="window._analyticsPeriodChange(this.value)"
             style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-            <option value="month">${window.t('finThisMonth')}</option>
+            <option value="month">${t('finThisMonth')}</option>
             <option value="quarter">Цей квартал</option>
             <option value="year">Цей рік</option>
           </select>
@@ -3042,20 +3057,20 @@ function renderAnalytics(el) {
       <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;">
         <button onclick="window._analyticsMode('pnl')" id="anlBtn_pnl"
           style="padding:6px 14px;border-radius:8px;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${window.t('finPLReport')}
+          ${t('finPLReport')}
         </button>
         <button onclick="window._analyticsMode('projects')" id="anlBtn_projects"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${window.t('finMarginByProject')}
+          ${t('finMarginByProject')}
         </button>
         <button onclick="window._analyticsMode('trends')" id="anlBtn_trends"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${window.t('finExpenseTrend')}
+          ${t('finExpenseTrend')}
         </button>
       </div>
 
       <div id="analyticsContent">
-        <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
+        <div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>
       </div>
     </div>`;
 
@@ -3083,7 +3098,7 @@ window._analyticsPeriodChange = function(val) {
 async function _loadAnalytics(mode, period) {
   const el = document.getElementById('analyticsContent');
   if (!el) return;
-  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>`;
+  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>`;
 
   try {
     const currency = _state.currency || 'EUR';
@@ -3154,10 +3169,10 @@ function _renderPnl(el, txs, currency, from, to) {
     <!-- KPI рядок -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
       ${[
-        { label: window.t('finTransactionIncome'), val: fmt(totalInc, currency), color: '#22c55e' },
-        { label: window.t('finTabExpense'),  val: fmt(totalExp, currency),  color: '#ef4444' },
-        { label: window.t('finProfit'), val: fmt(profit, currency),    color: profitColor },
-        { label: window.t('finMargin'),    val: margin + '%',             color: profitColor },
+        { label: t('finTransactionIncome'), val: fmt(totalInc, currency), color: '#22c55e' },
+        { label: t('finTabExpense'),  val: fmt(totalExp, currency),  color: '#ef4444' },
+        { label: t('finProfit'), val: fmt(profit, currency),    color: profitColor },
+        { label: t('finMargin'),    val: margin + '%',             color: profitColor },
       ].map(k => `
         <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;text-align:center;">
           <div style="font-size:0.72rem;color:#6b7280;margin-bottom:4px;">${k.label}</div>
@@ -3170,21 +3185,21 @@ function _renderPnl(el, txs, currency, from, to) {
 
       <!-- Доходи -->
       <div style="background:#f0fdf4;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;">
-        <span>${window.t('finIncome').toUpperCase()}</span><span>${fmt(totalInc, currency)}</span>
+        <span>${t('finIncome').toUpperCase()}</span><span>${fmt(totalInc, currency)}</span>
       </div>
       ${incCats.filter(c => byIncCat[c.id]).map(c => catRow(c, byIncCat[c.id] || 0, '#22c55e')).join('')}
       ${!incCats.filter(c => byIncCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає доходів</div>' : ''}
 
       <!-- Витрати -->
       <div style="background:#fef2f2;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;margin-top:4px;">
-        <span>${window.t('finExpense').toUpperCase()}</span><span>${fmt(totalExp, currency)}</span>
+        <span>${t('finExpense').toUpperCase()}</span><span>${fmt(totalExp, currency)}</span>
       </div>
       ${expCats.filter(c => byExpCat[c.id]).map(c => catRow(c, byExpCat[c.id] || 0, '#ef4444')).join('')}
       ${!expCats.filter(c => byExpCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає витрат</div>' : ''}
 
       <!-- Підсумок -->
       <div style="background:#1f2937;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:0.85rem;font-weight:700;">${window.t('finProfitLoss')}</span>
+        <span style="font-size:0.85rem;font-weight:700;">${t('finProfitLoss')}</span>
         <span style="font-size:1rem;font-weight:700;color:${profitColor};">${profit >= 0 ? '+' : ''}${fmt(profit, currency)}</span>
       </div>
     </div>`;
@@ -3219,7 +3234,7 @@ async function _renderProjectsMargin(el, txs, currency) {
     el.innerHTML = `
       <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;text-align:center;color:#9ca3af;">
         Немає транзакцій прив'язаних до проектів.<br>
-        <span style="font-size:0.78rem;">${window.t('finProjectHint')}</span>
+        <span style="font-size:0.78rem;">${t('finProjectHint')}</span>
       </div>`;
     return;
   }
@@ -3228,11 +3243,11 @@ async function _renderProjectsMargin(el, txs, currency) {
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
       <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;padding:10px 14px;
         display:grid;grid-template-columns:1fr 100px 100px 100px 70px;text-transform:uppercase;">
-        <div>${window.t('finProjectLbl')}</div>
-        <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
+        <div>${t('finProjectLbl')}</div>
+        <div style="text-align:right;">${t('finTransactionIncome')}</div>
         <div style="text-align:right;">Витрати</div>
-        <div style="text-align:right;">${window.t('finProfit')}</div>
-        <div style="text-align:right;">${window.t('finMargin')}</div>
+        <div style="text-align:right;">${t('finProfit')}</div>
+        <div style="text-align:right;">${t('finMargin')}</div>
       </div>
       ${rows.map((r, i) => {
         const profitColor = r.profit >= 0 ? '#22c55e' : '#ef4444';
@@ -3387,20 +3402,20 @@ function renderSettings(el) {
   const renderCatList = (type) => {
     const cats = _state.categories[type] || [];
     const color = type === 'income' ? '#22c55e' : '#ef4444';
-    const label = type === 'income' ? window.t('finIncome') : window.t('finExpense');
+    const label = type === 'income' ? t('finIncome') : t('finExpense');
     return `
       <div style="margin-bottom:1.5rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finCategoriesOf')} — ${label}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${t('finCategoriesOf')} — ${label}</div>
           <button onclick="window._financeAddCategory('${type}')"
             style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
             background:${color};color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            ${I.plus} ${window.t('finAddBtn')}
+            ${I.plus} ${t('finAddBtn')}
           </button>
         </div>
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
           ${cats.length === 0
-            ? `<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">${window.t('finNoCategories')}</div>`
+            ? `<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">${t('finNoCategories')}</div>`
             : cats.map((cat, i) => `
               <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
                 background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
@@ -3410,7 +3425,7 @@ function renderSettings(el) {
                     style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">
                     ${I.trash}
                   </button>
-                ` : `<span style="font-size:0.7rem;color:#9ca3af;">${window.t('finSystem')}</span>`}
+                ` : `<span style="font-size:0.7rem;color:#9ca3af;">${t('finSystem')}</span>`}
               </div>
             `).join('')
           }
@@ -3423,11 +3438,11 @@ function renderSettings(el) {
     return `
       <div style="margin-bottom:1.5rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finAccountsAndCash')}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${t('finAccountsAndCash')}</div>
           <button onclick="window._financeAddAccount()"
             style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
             background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            ${I.plus} ${window.t('finAddBtn')}
+            ${I.plus} ${t('finAddBtn')}
           </button>
         </div>
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
@@ -3474,7 +3489,7 @@ function renderRatesBlock() {
         <div style="flex:1;font-size:0.78rem;color:#6b7280;">1 ${cur} =</div>
         <input type="number" min="0" step="0.0001"
           id="rate_${cur}" value="${r}"
-          placeholder="${window.t('finRatePlaceholder')}"
+          placeholder="${t('finRatePlaceholder')}"
           style="width:90px;padding:4px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;text-align:right;">
         <div style="font-size:0.78rem;color:#6b7280;">${base}</div>
       </div>`;
@@ -3484,8 +3499,8 @@ function renderRatesBlock() {
     <div style="margin-bottom:1.5rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
         <div>
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finExchangeRates')}</div>
-          <div style="font-size:0.72rem;color:#6b7280;margin-top:2px;">${window.t('finBaseCurrency')}: <b>${base}</b>. ${window.t('finBaseCurrencyHint').replace('{base}', base)}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${t('finExchangeRates')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-top:2px;">${t('finBaseCurrency')}: <b>${base}</b>. ${t('finBaseCurrencyHint').replace('{base}', base)}</div>
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button onclick="window._fetchRates()"
@@ -3494,12 +3509,12 @@ function renderRatesBlock() {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
             </svg>
-            ${window.t('finActualRates')}
+            ${t('finActualRates')}
           </button>
           <button onclick="window._saveRates()"
             style="padding:0.35rem 0.7rem;border:none;border-radius:7px;background:#22c55e;
             color:#fff;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            ${window.t('finSave')}
+            ${t('finSave')}
           </button>
         </div>
       </div>
@@ -3523,14 +3538,14 @@ window._saveRates = async function() {
     await colRef('finance_settings').doc('main').set({ rates }, { merge: true });
     const st = document.getElementById('ratesStatus');
     if (st) st.textContent = 'Збережено ' + new Date().toLocaleTimeString(window.getLocale ? window.getLocale() : 'uk-UA');
-    if (typeof showToast === 'function') showToast(window.t('finRateSaved'), 'success');
+    if (typeof showToast === 'function') showToast(t('finRateSaved'), 'success');
   } catch(e) { if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error'); }
 };
 
 window._fetchRates = async function() {
   const base = _state.currency || 'EUR';
   const st = document.getElementById('ratesStatus');
-  if (st) st.textContent = window.t('finLoading');
+  if (st) st.textContent = t('finLoading');
   try {
     // Використовуємо відкритий API без ключа
     let resp;
@@ -3588,8 +3603,8 @@ window._financeAddCategory = async function(type) {
 // Видалення категорії
 window._financeDeleteCategory = async function(catId, type) {
   const _catConfirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal(window.t('finDeleteCat'), { danger: true })
-    : confirm(window.t('finDeleteCat'));
+    ? await showConfirmModal(t('finDeleteCat'), { danger: true })
+    : confirm(t('finDeleteCat'));
   if (!_catConfirmed) return;
   try {
     await colRef('finance_categories').doc(catId).delete();
@@ -3633,10 +3648,10 @@ function renderAI(el) {
   }
 
   const quickBtns = [
-    { label: window.t('finAIBtn1'), q: window.t('finAIQ1') },
-    { label: window.t('finAIBtn2'), q: window.t('finAIQ2') },
-    { label: window.t('finAIBtn3'), q: window.t('finAIQ3') },
-    { label: window.t('finAIBtn4'), q: window.t('finAIQ4') },
+    { label: t('finAIBtn1'), q: t('finAIQ1') },
+    { label: t('finAIBtn2'), q: t('finAIQ2') },
+    { label: t('finAIBtn3'), q: t('finAIQ3') },
+    { label: t('finAIBtn4'), q: t('finAIQ4') },
   ];
 
   el.innerHTML = `
@@ -3645,12 +3660,12 @@ function renderAI(el) {
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div>
-          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finAITitle')}</div>
-          <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.1rem;">${window.t('finAISubtitle')}</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finAITitle')}</div>
+          <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.1rem;">${t('finAISubtitle')}</div>
         </div>
         <button onclick="window._aiFinClear()"
           style="padding:0.3rem 0.7rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;font-size:0.75rem;cursor:pointer;color:#6b7280;">
-          ${window.t('finAIClear')}
+          ${t('finAIClear')}
         </button>
       </div>
 
@@ -3669,20 +3684,20 @@ function renderAI(el) {
       <div id="aiFinChat" style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;
         min-height:300px;max-height:500px;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem;">
         <div style="text-align:center;color:#9ca3af;font-size:0.82rem;margin:auto;">
-          ${window.t('finAIEmptyHint')}
+          ${t('finAIEmptyHint')}
         </div>
       </div>
 
       <!-- Input -->
       <div style="display:flex;gap:0.5rem;">
-        <input id="aiFinInput" type="text" placeholder="${window.t('finAIPlaceholder')}"
+        <input id="aiFinInput" type="text" placeholder="${t('finAIPlaceholder')}"
           onkeydown="if(event.key==='Enter')window._aiFinSend()"
           style="flex:1;padding:0.6rem 0.9rem;border:1px solid #e5e7eb;border-radius:10px;
             font-size:0.85rem;outline:none;">
         <button onclick="window._aiFinSend()"
           style="padding:0.6rem 1.2rem;background:#22c55e;color:#fff;border:none;border-radius:10px;
             font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;">
-          ${window.t('finAISend')}
+          ${t('finAISend')}
         </button>
       </div>
     </div>
@@ -3930,7 +3945,7 @@ async function _buildAiFinContext() {
         if (totalBudg > 0) {
           const budExec = Math.round(totalFact/totalBudg*100);
           budgetCtx = `
-${window.t('finBudgetCtx').replace('{month}',curMonth).replace('{plan}',totalBudg).replace('{fact}',totalFact).replace('{pct}',budExec)}`;
+${t('finBudgetCtx').replace('{month}',curMonth).replace('{plan}',totalBudg).replace('{fact}',totalFact).replace('{pct}',budExec)}`;
           if (bd.goal) budgetCtx += `, ціль прибутку=${bd.goal}`;
         }
       }
@@ -4066,7 +4081,7 @@ function addTransaction(forceType) {
 
         <!-- Категорія -->
         <div id="fmCatWrap">
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCategoryLbl')} *</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${t('finCategoryLbl')} *</label>
           <select id="fmCategory"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             <option value="">— оберіть категорію —</option>
@@ -4101,7 +4116,7 @@ function addTransaction(forceType) {
 
         <!-- Функція -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finFunctionLbl')}</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${t('finFunctionLbl')}</label>
           <select id="fmFunction"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             ${functionsHtml}
@@ -4133,7 +4148,7 @@ function addTransaction(forceType) {
           </button>
           <button id="fmSaveBtn" onclick="window._financeSaveTx()"
             style="flex:2;padding:0.65rem;border:none;border-radius:8px;background:${color};color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
-            ${window.t('finSave')}
+            ${t('finSave')}
           </button>
         </div>
 
@@ -4141,8 +4156,15 @@ function addTransaction(forceType) {
     </div>
   `;
 
-  // Закриття по кліку на overlay
-  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  // FIX: Очищення event listener при закритті (захист від memory leak)
+  const handleModalClick = (e) => {
+    if (e.target === modal) {
+      modal.removeEventListener('click', handleModalClick);
+      modal.remove();
+    }
+  };
+
+  modal.addEventListener('click', handleModalClick);
   document.body.appendChild(modal);
   setTimeout(() => { const a = document.getElementById('fmAmount'); if (a) a.focus(); }, 100);
 
@@ -4169,9 +4191,9 @@ window._financeSaveTx = async function() {
   const dateVal = document.getElementById('fmDate')?.value;
 
   // Валідація
-  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast(window.t('finTransferAmount'), 'warning'); return; }
-  if (!catId)                 { if (typeof showToast === 'function') showToast(window.t('finSelectCategory'), 'warning'); return; }
-  if (!dateVal)               { if (typeof showToast === 'function') showToast(window.t('finSelectDate'), 'warning'); return; }
+  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast(t('finTransferAmount'), 'warning'); return; }
+  if (!catId)                 { if (typeof showToast === 'function') showToast(t('finSelectCategory'), 'warning'); return; }
+  if (!dateVal)               { if (typeof showToast === 'function') showToast(t('finSelectDate'), 'warning'); return; }
 
   const btn = document.getElementById('fmSaveBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
@@ -4231,15 +4253,15 @@ window._financeSaveTx = async function() {
   } catch(e) {
     console.error('[Finance] saveTx error:', e);
     if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
-    if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
+    if (btn) { btn.disabled = false; btn.textContent = t('finSave'); }
   }
 };
 
 // Видалення транзакції
 window._financeDeleteTx = async function(txId, type) {
   const _txConfirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal(window.t('finDeleteTx'), { danger: true })
-    : confirm(window.t('finDeleteTx'));
+    ? await showConfirmModal(t('finDeleteTx'), { danger: true })
+    : confirm(t('finDeleteTx'));
   if (!_txConfirmed) return;
   try {
     const snap = await colRef('finance_transactions').doc(txId).get();
@@ -4418,7 +4440,7 @@ window._updateCurrencyHint = function() {
   const converted = toBase(amt, cur);
   const rates = _state.rates || {};
   if (!rates[cur]) {
-    hint.innerHTML = `<span style="color:#f59e0b;">⚠ ${window.t('finRateNotSet').replace('{cur}', cur)}</span>`;
+    hint.innerHTML = `<span style="color:#f59e0b;">⚠ ${t('finRateNotSet').replace('{cur}', cur)}</span>`;
   } else {
     hint.textContent = `≈ ${converted.toFixed(2)} ${base} (курс: 1 ${cur} = ${rates[cur]} ${base})`;
   }
@@ -4460,7 +4482,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
   const filterField = mode === 'function' ? 'functionId' : 'projectId';
 
   if (!entityId || !el) return;
-  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>`;
+  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>`;
 
   try {
     const db = getDb();
@@ -4487,10 +4509,10 @@ window._renderProjectFinance = async function(projectId, el, opts) {
         <!-- KPI -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
           ${[
-            { label: window.t('finTransactionIncome'), val: fmt(income, currency), color: '#22c55e' },
-            { label: window.t('finTabExpense'),  val: fmt(expense, currency), color: '#ef4444' },
-            { label: window.t('finProfit'), val: fmt(profit, currency),  color: profit >= 0 ? '#16a34a' : '#ef4444' },
-            { label: window.t('finMargin'),    val: margin + '%',           color: margin >= 20 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444' },
+            { label: t('finTransactionIncome'), val: fmt(income, currency), color: '#22c55e' },
+            { label: t('finTabExpense'),  val: fmt(expense, currency), color: '#ef4444' },
+            { label: t('finProfit'), val: fmt(profit, currency),  color: profit >= 0 ? '#16a34a' : '#ef4444' },
+            { label: t('finMargin'),    val: margin + '%',           color: margin >= 20 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444' },
           ].map(k => `
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;">
               <div style="font-size:0.72rem;color:#6b7280;margin-bottom:3px;">${k.label}</div>
@@ -4518,7 +4540,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
                   <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap;">
                     <div style="width:8px;height:8px;border-radius:50%;background:${isIncome ? '#22c55e' : '#ef4444'};flex-shrink:0;"></div>
                     <div style="flex:1;min-width:100px;">
-                      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(tx.description || tx.counterparty || (isIncome ? window.t('finTransactionIncome') : window.t('finTransactionExpense')))}</div>
+                      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(tx.description || tx.counterparty || (isIncome ? t('finTransactionIncome') : t('finTransactionExpense')))}</div>
                       <div style="font-size:0.72rem;color:#9ca3af;">${dateStr}${tx.categoryName ? ' · ' + escHtml(tx.categoryName) : ''}</div>
                     </div>
                     <div style="font-size:0.95rem;font-weight:700;color:${isIncome ? '#22c55e' : '#ef4444'};">
