@@ -488,7 +488,7 @@ document.addEventListener('mousedown', function(e) {
                     <span id="currentUserRole" style="opacity:0.8;font-size:0.8rem;"></span>
                 </div>
                 <button class="header-btn" onclick="logout()" id="logoutBtn" style="display:none;"><i data-lucide="log-out" class="icon"></i> <span data-i18n="logout">Вийти</span></button>
-                <button class="header-btn" onclick="openDemoDataModal()" id="demoDataBtnDesktop" style="display:none;background:rgba(239,68,68,0.3);"><i data-lucide="database" class="icon"></i> Демо</button>
+                <button class="header-btn" onclick="if(typeof openDemoDataModal==='function'){openDemoDataModal();}else{lazyLoad('demo',function(){openDemoDataModal();});}" id="demoDataBtnDesktop" style="display:none;background:rgba(239,68,68,0.3);"><i data-lucide="database" class="icon"></i> Демо</button>
                 <button class="header-btn" onclick="openSuperadminPanel()" id="superadminBtn" style="display:none;background:rgba(139,92,246,0.3);"><i data-lucide="shield" class="icon"></i> Адмін</button>
                 <button class="mobile-logout-btn" onclick="logout()"><i data-lucide="log-out" class="icon" style="width:18px;height:18px;"></i></button>
             </div>
@@ -3212,7 +3212,7 @@ document.addEventListener('mousedown', function(e) {
 
                 <!-- Демо + Вийти -->
                 <div style="display:flex;flex-direction:column;gap:0.5rem;">
-                    <button class="btn" id="demoDataBtn" onclick="openDemoDataModal();closeMobileMenu();" style="justify-content:center;width:100%;padding:0.65rem;font-size:0.83rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:12px;">
+                    <button class="btn" id="demoDataBtn" onclick="if(typeof openDemoDataModal==='function'){openDemoDataModal();closeMobileMenu();}else{lazyLoad('demo',function(){openDemoDataModal();closeMobileMenu();});}" style="justify-content:center;width:100%;padding:0.65rem;font-size:0.83rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:12px;">
                         <i data-lucide="database" class="icon icon-sm"></i> Демо-дані / Очистити
                     </button>
                     <button class="btn btn-danger" onclick="if(confirm(t('logoutConfirm'))){auth.signOut();closeMobileMenu();}" style="justify-content:center;width:100%;padding:0.65rem;font-size:0.85rem;border-radius:12px;">
