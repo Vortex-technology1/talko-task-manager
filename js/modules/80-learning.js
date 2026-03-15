@@ -159,7 +159,7 @@
                 id: 1,
                 title: "ЯК ПРАЦЮВАТИ З GOOGLE ДИСКОМ",
                 title_ru: "КАК РАБОТАТЬ С GOOGLE ДИСКОМ",
-                subtitle: "Підготовка робочого середовища програми",
+                subtitle: (getLearningLang()==='ru'?'Подготовка рабочей среды программы':'Підготовка робочого середовища програми'),
                 subtitle_ru: "Подготовка рабочей среды программы",
                 hideAiBlock: true,
 
@@ -549,7 +549,7 @@
     </div>
     <div class="lesson-block-content">
         <p>У бізнесі нерозуміння термінів часто створює проблеми.</p>
-        <p style="margin-top:0.75rem;">Наприклад, ви говорите співробітнику: <em>"Підготуй план продажів"</em>. Але у вас різні концепти слова «план»:</p>
+        <p style="margin-top:0.75rem;">Наприклад, ви говорите співробітнику: <em>(getLearningLang()==='ru'?'Подготовь план продаж':'Підготуй план продажів')</em>. Але у вас різні концепти слова «план»:</p>
         <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
             <div style="padding:0.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;">
                 <div style="font-size:0.72rem;font-weight:700;color:#16a34a;letter-spacing:0.06em;margin-bottom:0.3rem;">ДЛЯ ВАС</div>
@@ -976,7 +976,7 @@
                 id: 4,
                 title: "СИСТЕМА РОЗПОРЯДЖЕНЬ",
                 title_ru: "СИСТЕМА РАСПОРЯЖЕНИЙ",
-                subtitle: "Як ставити завдання так, щоб їх виконували",
+                subtitle: (getLearningLang()==='ru'?'Как ставить задачи так, чтобы их выполняли':'Як ставити завдання так, щоб їх виконували'),
                 subtitle_ru: "Как ставить задачи так, чтобы их выполняли",
                 hideAiBlock: true,
 
@@ -1316,7 +1316,7 @@
                 id: 5,
                 title: "СИСТЕМА РАДАР",
                 title_ru: "СИСТЕМА РАДАР",
-                subtitle: "Як перестати бути «пожежником» для власної команди",
+                subtitle: (getLearningLang()==='ru'?'Как перестать быть «пожарником» для своей команды':'Як перестати бути «пожежником» для власної команди'),
                 subtitle_ru: "Как перестать быть «пожарным» для собственной команды",
                 hideAiBlock: true,
 
@@ -1395,7 +1395,7 @@
 <div class="l5-divider"></div>
 
 <div class="l5-section">
-    <div class="l5-section-label">(window.currentLang==='ru'?'Решение':'Рішення')</div>
+    <div class="l5-section-label">(window.currentLang==='ru'?'Решение':(getLearningLang()==='ru'?'Решение':'Рішення'))</div>
     <div class="l5-section-title">Що таке ЗРС — Закінчена робота співробітника</div>
     <div class="l5-card">
         <p>ЗРС — це принцип, за яким співробітник несе до керівника вже не «сиру проблему», а підготовлену управлінську одиницю.</p>
@@ -1405,7 +1405,7 @@
         <div class="l5-flow-arrow">→</div>
         <div class="l5-flow-item"><span>Дані</span><span style="font-size:0.72rem;color:#6b7280;font-weight:400;margin-top:0.2rem;">факти і цифри</span></div>
         <div class="l5-flow-arrow">→</div>
-        <div class="l5-flow-item active"><span>(window.currentLang==='ru'?'Решение':'Рішення')</span><span style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:400;margin-top:0.2rem;">пропозиція</span></div>
+        <div class="l5-flow-item active"><span>(window.currentLang==='ru'?'Решение':(getLearningLang()==='ru'?'Решение':'Рішення'))</span><span style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:400;margin-top:0.2rem;">пропозиція</span></div>
     </div>
     <p style="font-size:0.82rem;color:#525252;margin-top:0.75rem;line-height:1.5;">ЗРС = проблема, яку вже пропрацювали до рівня рішення. Не питання до керівника, а готова пропозиція на схвалення або відхилення.</p>
 </div>
@@ -1439,7 +1439,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             </div>
             <div>
-                <div class="l5-block-title">(window.currentLang==='ru'?'Решение':'Рішення')</div>
+                <div class="l5-block-title">(window.currentLang==='ru'?'Решение':(getLearningLang()==='ru'?'Решение':'Рішення'))</div>
                 <div class="l5-block-text">Не «що робити?», а «я пропоную зробити ось так». Конкретно: що саме, хто робить, коли, за які гроші, на яких умовах.</div>
             </div>
         </div>
@@ -2200,7 +2200,7 @@
                 id: 7,
                 title: "ПІДГОТОВКА КОМАНДИ ДО ЗМІН",
                 title_ru: "ПОДГОТОВКА КОМАНДЫ К ИЗМЕНЕНИЯМ",
-                subtitle: "Як познайомити співробітників з проектом систематизації",
+                subtitle: (getLearningLang()==='ru'?'Как познакомить сотрудников с проектом систематизации':'Як познайомити співробітників з проектом систематизації'),
                 subtitle_ru: "Как познакомить сотрудников с проектом систематизации",
                 
                 videoLink: null,
@@ -2248,7 +2248,7 @@
                 
                 <div style="padding: 16px; background: #fef2f2; border-radius: 8px; margin-bottom: 20px;">
                     <p style="margin: 0; font-weight: 600;">Тут важливо зрозуміти одну неприємну річ:</p>
-                    <p style="margin: 8px 0 0 0;">Більшість дорослих працює з психікою 12-річної дитини.<br>Виглядає 30+. Працює 20+. А реагує як школяр, якому вчитель сказав: "Треба підтягнути математику."</p>
+                    <p style="margin: 8px 0 0 0;">Більшість дорослих працює з психікою 12-річної дитини.<br>Виглядає 30+. Працює 20+. А реагує як школяр, якому вчитель сказав: (getLearningLang()==='ru'?'Нужно подтянуть математику.':'Треба підтягнути математику.')</p>
                 </div>
                 
                 <h4 style="margin-bottom: 12px;">Чому так?</h4>
@@ -2299,11 +2299,11 @@
                         </tr>
                         <tr>
                             <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Ваше:</strong> "Виправ помилку."</td>
-                            <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Їхнє:</strong> "Мене не цінують."</td>
+                            <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Їхнє:</strong> (getLearningLang()==='ru'?'Меня не ценят.':'Мене не цінують.')</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Ваше:</strong> "Потрібно навчатися."</td>
-                            <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Їхнє:</strong> "Я недостатній."</td>
+                            <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Ваше:</strong> (getLearningLang()==='ru'?'Нужно учиться.':'Потрібно навчатися.')</td>
+                            <td style="padding: 8px; border: 1px solid #e5e7eb;"><strong>Їхнє:</strong> (getLearningLang()==='ru'?'Я недостаточен.':'Я недостатній.')</td>
                         </tr>
                     </table>
                 </div>
@@ -3338,7 +3338,7 @@
                 id: 9,
                 title: "ЦІЛЬ, ЗАДУМ, ПРОДУКТ ОРГАНІЗАЦІЇ. ФУНКЦІОНАЛЬНА СТРУКТУРА ТА РОЛІ",
                 title_ru: "ЦЕЛЬ, ЗАМЫСЕЛ, ПРОДУКТ ОРГАНИЗАЦИИ. ФУНКЦИОНАЛЬНАЯ СТРУКТУРА И РОЛИ",
-                subtitle: "Фундамент системного бізнесу",
+                subtitle: (getLearningLang()==='ru'?'Фундамент системного бизнеса':'Фундамент системного бізнесу'),
                 subtitle_ru: "Фундамент системного бизнеса",
                 
                 videoLink: null,
@@ -3402,7 +3402,7 @@
         <div style="display: grid; gap: 8px; margin: 12px 0;">
             <div style="display: flex; gap: 10px; padding: 10px; background: #fef2f2; border-radius: 8px;">
                 
-                <span>"Хочу більше заробляти" — це не ціль, це бажання</span>
+                <span>(getLearningLang()==='ru'?'Хочу больше зарабатывать':'Хочу більше заробляти') — це не ціль, це бажання</span>
             </div>
             <div style="display: flex; gap: 10px; padding: 10px; background: #fef2f2; border-radius: 8px;">
                 
@@ -3410,7 +3410,7 @@
             </div>
             <div style="display: flex; gap: 10px; padding: 10px; background: #fef2f2; border-radius: 8px;">
                 
-                <span>"Хочу вільний час" — це не ціль, це мрія</span>
+                <span>(getLearningLang()==='ru'?'Хочу свободное время':'Хочу вільний час') — це не ціль, це мрія</span>
             </div>
         </div>
         <p><strong>Без чіткої цілі</strong> неможливо побудувати систему, бо незрозуміло куди вона має вести.</p>
@@ -3461,7 +3461,7 @@
         <div class="lesson-block-title">ЧАСТИНА 3. ПРОДУКТ ОРГАНІЗАЦІЇ</div>
     </div>
     <div class="lesson-block-content">
-        <p><strong>(window.currentLang==='ru'?'Продукт организации':'Продукт організації')</strong> — це кінцевий результат діяльності компанії, те, за що клієнт платить гроші.</p>
+        <p><strong>(window.currentLang==='ru'?'Продукт организации':(getLearningLang()==='ru'?'Продукт организации':'Продукт організації'))</strong> — це кінцевий результат діяльності компанії, те, за що клієнт платить гроші.</p>
         
         <div style="background: #fef3c7; padding: 14px; border-radius: 8px; margin: 14px 0; border-left: 4px solid #f59e0b;">
             <p style="margin: 0; font-weight: 600;">Критично важливо:</p>
@@ -3683,7 +3683,7 @@
         <div style="display: grid; gap: 16px; margin: 16px 0;">
             <div style="padding: 16px; background: #eff6ff; border-radius: 10px; border: 1px solid #bfdbfe;">
                 <p style="margin: 0; font-weight: 700; color: #1e40af; font-size: 15px;">ФУНКЦІЯ</p>
-                <p style="margin: 8px 0 0 0; font-size: 13px;">Це <strong>область роботи</strong>, яка існує незалежно від людей. Функція "Продажі" існує завжди — хтось має її виконувати.</p>
+                <p style="margin: 8px 0 0 0; font-size: 13px;">Це <strong>область роботи</strong>, яка існує незалежно від людей. Функція (getLearningLang()==='ru'?'Продажи':'Продажі') існує завжди — хтось має її виконувати.</p>
             </div>
             <div style="padding: 16px; background: #faf5ff; border-radius: 10px; border: 1px solid #e9d5ff;">
                 <p style="margin: 0; font-weight: 700; color: #7c3aed; font-size: 15px;">РОЛЬ</p>
@@ -3791,7 +3791,7 @@
         </div>
         
         <div style="margin-top: 14px; padding: 12px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
-            <p style="margin: 0; font-size: 13px;"><strong>Без політик:</strong> "А мені ніхто не казав". <strong>З політиками:</strong> "Це правило компанії, ви його підписали".</p>
+            <p style="margin: 0; font-size: 13px;"><strong>Без політик:</strong> (getLearningLang()==='ru'?'А мне никто не говорил':'А мені ніхто не казав'). <strong>З політиками:</strong> (getLearningLang()==='ru'?'Это правило компании, вы его подписали':'Це правило компанії, ви його підписали').</p>
         </div>
     </div>
 </div>
@@ -5648,7 +5648,7 @@
             <thead><tr><th>Функція</th><th>ЦКП</th><th>Статистика</th></tr></thead>
             <tbody>
                 <tr><td>Секретар</td><td>Правильно спрямовані дзвінки</td><td>Кількість правильно спрямованих дзвінків</td></tr>
-                <tr><td>(window.currentLang==='ru'?'Продажи':'Продажі')</td><td>Підписані договори</td><td>Сума замовлень за договорами (грн)</td></tr>
+                <tr><td>(window.currentLang==='ru'?'Продажи':(getLearningLang()==='ru'?'Продажи':'Продажі'))</td><td>Підписані договори</td><td>Сума замовлень за договорами (грн)</td></tr>
                 <tr><td>Фінанси</td><td>Отримані оплати</td><td>Сума отриманих оплат (грн)</td></tr>
                 <tr><td>Дизайн</td><td>Затверджені макети</td><td>Кількість макетів, схвалених клієнтом</td></tr>
                 <tr><td>Доставка</td><td>Вчасно доставлена продукція</td><td>Вартість доставленої продукції (грн)</td></tr>
@@ -5918,7 +5918,8 @@
     let currentLearningModule = null;
     // Use TALKO main lang - read from localStorage key used by translations module
     function getLearningLang() {
-        return localStorage.getItem('talko_lang') || 'ua';
+        // FIX: читаємо правильний ключ (talko_language), fallback на старий (talko_lang)
+        return localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || window.currentLang || 'ua';
     }
 
     // ── Firestore helpers ─────────────────────────────────────
@@ -7193,7 +7194,7 @@
                                     <span class="tool-name">AI-асистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Пройти асистента "Ціль, задум та ідеальна картина" та сформувати політику</td>
+                            <td class="task-text">Пройти асистента (getLearningLang()==='ru'?'Цель, замысел и идеальная картина':'Ціль, задум та ідеальна картина') та сформувати політику</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
@@ -7293,7 +7294,7 @@
                                 <div class="step-cell">
                                     <div class="step-number">14</div>
                                     <div class="step-info">
-                                        <h4>(window.currentLang==='ru'?'Продукт организации':'Продукт організації')</h4>
+                                        <h4>(window.currentLang==='ru'?'Продукт организации':(getLearningLang()==='ru'?'Продукт организации':'Продукт організації'))</h4>
                                         <p>Політика продукту</p>
                                     </div>
                                 </div>
@@ -7312,7 +7313,7 @@
                                     <span class="tool-name">AI-асистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Пройти асистента "Продукт організації" та створити політику</td>
+                            <td class="task-text">Пройти асистента (getLearningLang()==='ru'?'Продукт организации':'Продукт організації') та створити політику</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
@@ -7940,7 +7941,7 @@
                                     <span class="tool-name">AI-асистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Журнал управлінських збоїв"</td>
+                            <td class="task-text">Розібрати AI-асистента (getLearningLang()==='ru'?'Журнал управленческих сбоев':'Журнал управлінських збоїв')</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
@@ -8070,7 +8071,7 @@
                                     <span class="tool-name">AI-асистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Створення пропозицій"</td>
+                            <td class="task-text">Розібрати AI-асистента (getLearningLang()==='ru'?'Создание предложений':'Створення пропозицій')</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
@@ -8313,7 +8314,7 @@
                                     <span class="tool-name">AI-асистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Утримання співробітників"</td>
+                            <td class="task-text">Розібрати AI-асистента (getLearningLang()==='ru'?'Удержание сотрудников':'Утримання співробітників')</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
@@ -8394,7 +8395,7 @@
                                     <span class="tool-name">AI-асистент</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Співбесіда та випробування"</td>
+                            <td class="task-text">Розібрати AI-асистента (getLearningLang()==='ru'?'Собеседование и испытание':'Співбесіда та випробування')</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>
@@ -8556,7 +8557,7 @@
                                     <span class="tool-name">AI Онбордінг</span>
                                 </div>
                             </td>
-                            <td class="task-text">Розібрати AI-асистента "Онбордінг"</td>
+                            <td class="task-text">Розібрати AI-асистента (getLearningLang()==='ru'?'Онбординг':'Онбордінг')</td>
                             <td class="date-cell">
                                 <input type="date" class="date-input">
                             </td>

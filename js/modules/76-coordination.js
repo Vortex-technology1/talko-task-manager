@@ -42,31 +42,31 @@
     // ── i18n for Coordination module ──────────────────────
     const COORD_I18N = {
         ua: {
-            title:'Координації', newCoord:'Нова координація', emptyText:'Координацій ще немає',
-            addFirst:'+ Додати першу', modalTitle:'Нова координація', modalEdit:'Редагувати',
-            labelName:'Назва координації', placeholderName:'Щоденна координація команди',
+            title:window.t('coordKoordyna'), newCoord:window.t('coordNovaKoordyna'), emptyText:window.t('coordKoordynaShcheNemaye'),
+            addFirst:'+ Додати першу', modalTitle:window.t('coordNovaKoordyna'), modalEdit:'Редагувати',
+            labelName:window.t('coordNazvaKoordyna'), placeholderName:window.t('coordShchodennaKoordynaKomandy'),
             labelType:'Тип', labelStatus:'Статус', statusActive:'Активна', statusPaused:'Призупинена',
-            labelChairman:'Голова координації', selectChairman:'— Оберіть відповідального —',
+            labelChairman:window.t('coordHolovaKoordyna'), selectChairman:window.t('coordOberitVidpovid'),
             labelParticipants:'Учасники', labelDay:'День тижня', anyDay:'— Будь-який —',
-            labelTime:'Час початку', labelFilter:'Фільтр завдань',
-            filterFunctions:'По функціях', filterProjects:'По проектах',
-            filterAssignees:'По виконавцях', filterOverdue:'Прострочені', filterReview:'На перевірці',
-            labelEscal:'Ескалація до', escalAuto:'— Авто по типу —',
-            escalHint:'Невирішені питання автоматично потраплять вгору по ланцюжку',
-            labelTelegram:'Telegram Chat ID', telegramHint:'Протокол надсилається автоматично після завершення',
+            labelTime:'Час початку', labelFilter:window.t('coordFiltrZavdan'),
+            filterFunctions:window.t('coordPoFunktsiyakh'), filterProjects:'По проектах',
+            filterAssignees:'По виконавцях', filterOverdue:window.t('coordProstroch'), filterReview:window.t('coordNaPerevirts'),
+            labelEscal:window.t('coordEskalatsiDo'), escalAuto:'— Авто по типу —',
+            escalHint:window.t('coordNevyrishePytannyaAvtomaty'),
+            labelTelegram:'Telegram Chat ID', telegramHint:window.t('coordProtokolNadsylayeAvtomaty'),
             btnCancel:'Скасувати', btnSave:'Зберегти',
-            agendaTitle:'Порядок денний', agendaHint:'Учасники додають питання до початку координації',
+            agendaTitle:'Порядок денний', agendaHint:window.t('coordUchasnykyDodayutPytannya'),
             btnFinish:'Завершити', agendaSection:'Порядок денний', participantsLbl:'Учасники',
-            decisionsLbl:'Рішення', escalLbl:'Ескалація (невирішені питання)',
-            protocolTitle:'Протокол координації', protocolsTitle:'Протоколи', noProtocols:'Протоколів ще немає',
-            aiTitle:'AI Рекомендації', escalated:'Ескальовано',
-            statsLbl:'Статистики учасників', execLbl:'Виконання попередніх завдань',
-            reportsLbl:'Звіти учасників', questionsLbl:'Питання від учасників',
-            decisionsAgLbl:'Рішення', tasksAgLbl:'Нові завдання',
-            typeDaily:'Щоденна', typeWeekly:'Щотижнева', typeMonthly:'Місячна',
-            typeCouncilRec:'Рекомендаційна рада', typeCouncilDir:'Рада директора',
-            typeCouncilExe:'Виконавча рада', typeCouncilOwn:'Рада засновників', typeOneoff:'Разова',
-            analyticsTitle:'Аналітика',
+            decisionsLbl:window.t('coordRishennya'), escalLbl:window.t('coordEskalatsiNevyrishePytannya'),
+            protocolTitle:window.t('coordProtokolKoordyna'), protocolsTitle:'Протоколи', noProtocols:window.t('coordProtokolShcheNemaye'),
+            aiTitle:window.t('coordRekomend'), escalated:'Ескальовано',
+            statsLbl:window.t('coordStatystyUchasnyki'), execLbl:window.t('coordVykonannPoperednZavdan'),
+            reportsLbl:window.t('coordZvityUchasnyki'), questionsLbl:window.t('coordPytannyaVidUchasnyki'),
+            decisionsAgLbl:window.t('coordRishennya'), tasksAgLbl:window.t('coordNoviZavdannya'),
+            typeDaily:'Щоденна', typeWeekly:'Щотижнева', typeMonthly:window.t('coordMisyachna'),
+            typeCouncilRec:window.t('coordRekomendRada'), typeCouncilDir:'Рада директора',
+            typeCouncilExe:'Виконавча рада', typeCouncilOwn:window.t('coordRadaZasnovny'), typeOneoff:'Разова',
+            analyticsTitle:window.t('coordAnalityk'),
             statsSummary:'Координацій: {total} · Рішень: {decisions} · Ескальовано: {unresolved} · Середня тривалість: {avg}хв',
         },
         ru: {
@@ -219,7 +219,7 @@
         const roleEl = document.getElementById('currentUserRole');
         const roleText = roleEl ? roleEl.textContent : '';
         if (roleText.includes('Власник') || roleText.includes('owner') ||
-            roleText.includes((window.currentLang==='ru'?'Админ':'Адмін')) || roleText.includes('admin') ||
+            roleText.includes((window.currentLang==='ru'?'Админ':window.t('coordAdmin'))) || roleText.includes('admin') ||
             roleText.includes('Менеджер') || roleText.includes('manager')) return true;
         // Fallback: coordUsers array (available after load)
         const u = coordUsers.find(x => x.id === uid());
@@ -531,7 +531,7 @@
                 <select id="coordEscalTarget" style="${fieldStyle}cursor:pointer;">
                   <option value="">${ct('escalAuto')}</option>${cOpts}
                 </select>
-                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">(window.currentLang==='ru'?'Нерешённые вопросы автоматически поднимутся вверх по цепочке':'Невирішені питання автоматично потраплять вгору по ланцюжку')</div>
+                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">(window.currentLang==='ru'?'Нерешённые вопросы автоматически поднимутся вверх по цепочке':window.t('coordNevyrishePytannyaAvtomaty'))</div>
               </div>
 
               <!-- Telegram -->
@@ -540,7 +540,7 @@
                 <input id="coordTelegramChat" type="text" placeholder="-100xxxxxxxxxx"
                   style="${fieldStyle}"
                   onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">(window.currentLang==='ru'?'Протокол отправляется автоматически после завершения':'Протокол надсилається автоматично після завершення')</div>
+                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">(window.currentLang==='ru'?'Протокол отправляется автоматически после завершения':window.t('coordProtokolNadsylayeAvtomaty'))</div>
               </div>
 
               <!-- Buttons -->
@@ -610,19 +610,19 @@
             </div>
             <!-- Decisions -->
             <div style="margin-top:.8rem;border-top:1px solid #f0f0f0;padding-top:.7rem;">
-              <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="zap" style="width:12px;height:12px;margin-right:4px;"></i>(window.currentLang==='ru'?'Решение':'Рішення')</div>
+              <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="zap" style="width:12px;height:12px;margin-right:4px;"></i>(window.currentLang==='ru'?'Решение':window.t('coordRishennya'))</div>
               <div id="coordDecisions" style="display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;"></div>
               <div style="display:flex;gap:.45rem;">
-                <input id="coordNewDecision" type="text" class="form-control" placeholder="Зафіксувати рішення..." style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addCoordDecision()">
+                <input id="coordNewDecision" type="text" class="form-control" placeholder=window.t('coordZafiksuvRishennya') style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addCoordDecision()">
                 <button onclick="addCoordDecision()" class="btn btn-success" style="padding:.35rem .65rem;font-size:.8rem;">Додати</button>
               </div>
             </div>
             <!-- Unresolved / Escalation -->
             <div style="margin-top:.8rem;border-top:1px solid #f0f0f0;padding-top:.7rem;">
-              <div style="font-weight:700;font-size:.78rem;color:#d97706;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="arrow-up-circle" style="width:12px;height:12px;margin-right:4px;color:#d97706;"></i>(window.currentLang==='ru'?'Эскалация (нерешённые вопросы)':'Ескалація (невирішені питання)')</div>
+              <div style="font-weight:700;font-size:.78rem;color:#d97706;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="arrow-up-circle" style="width:12px;height:12px;margin-right:4px;color:#d97706;"></i>(window.currentLang==='ru'?'Эскалация (нерешённые вопросы)':window.t('coordEskalatsiNevyrishePytannya'))</div>
               <div id="coordUnresolved" style="display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;"></div>
               <div style="display:flex;gap:.45rem;">
-                <input id="coordNewUnresolved" type="text" class="form-control" placeholder="Питання що потребує ескалації вгору..." style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addUnresolved()">
+                <input id="coordNewUnresolved" type="text" class="form-control" placeholder=window.t('coordPytannyaShchoPotrebuye') style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addUnresolved()">
                 <button onclick="addUnresolved()" class="btn" style="padding:.35rem .65rem;font-size:.8rem;background:#fef3c7;border:1.5px solid #fbbf24;color:#92400e;">Додати</button>
               </div>
             </div>
@@ -717,7 +717,7 @@
         if (_saveCoordLock) return;
         _saveCoordLock = true;
         const name = document.getElementById('coordName').value.trim();
-        if (!name) { _saveCoordLock = false; toast((window.currentLang==='ru'?'Введите название':'Введіть назву'),'error'); return; }
+        if (!name) { _saveCoordLock = false; toast((window.currentLang==='ru'?'Введите название':window.t('coordVveditNazvu')),'error'); return; }
         if (!window.currentCompanyId) { _saveCoordLock = false; return; }
         const participantIds = Array.from(document.querySelectorAll('.coord-participant-cb:checked')).map(cb=>cb.value);
         const filters={};
@@ -743,7 +743,7 @@
                 data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
                 data.createdBy=uid();
                 await col('coordinations').add(data);
-                toast((window.currentLang==='ru'?'Координация создана':'Координацію створено'));
+                toast((window.currentLang==='ru'?'Координация создана':window.t('coordKoordynaStvoreno')));
             }
             closeCoordModal();
         } catch(e) { toast('Помилка: '+e.message,'error'); }
@@ -752,7 +752,7 @@
 
     window.deleteCoord = async function(coordId) {
         const ok = window.showConfirmModal
-            ? await window.showConfirmModal((window.currentLang==='ru'?'Удалить координацию?':'Видалити координацію?'),{danger:true})
+            ? await window.showConfirmModal((window.currentLang==='ru'?'Удалить координацию?':window.t('coordVydalytyKoordyna')),{danger:true})
             : (window.showConfirmModal ? await showConfirmModal('Видалити?',{danger:true}) : confirm('Видалити?'));
         if (!ok) return;
         try { await col('coordinations').doc(coordId).delete(); toast('Видалено'); }
@@ -931,7 +931,7 @@
         const el=document.getElementById('coordTaskList'); if(!el) return;
         if(!filtered.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;text-align:center;padding:.4rem;">Завдань немає</div>`;return;}
         const sc={new:'#3b82f6',progress:'#f59e0b',review:'#8b5cf6',done:'#22c55e'};
-        const sl={new:'Нове',progress:'В роботі',review:'Перевірка',done:'Виконано'};
+        const sl={new:'Нове',progress:window.t('coordVRoboti'),review:window.t('coordPerevirk'),done:'Виконано'};
         el.innerHTML=filtered.slice(0,40).map(t=>{
             const ov=t.deadlineDate&&t.deadlineDate<today;
             const a=coordUsers.find(u=>u.id===t.assigneeId);
@@ -1094,7 +1094,7 @@
 
         const taskRows=(session.taskSnapshot||[]).map(t=>{
             const a=coordUsers.find(u=>u.id===t.assigneeId);
-            const sl={new:'Нове',progress:'В роботі',review:'Перевірка',done:'Виконано'};
+            const sl={new:'Нове',progress:window.t('coordVRoboti'),review:window.t('coordPerevirk'),done:'Виконано'};
             const ov=t.deadlineDate&&t.deadlineDate<todayStr();
             return `<tr>
               <td style="padding:4px 7px;border-bottom:1px solid #f0f0f0;font-size:.78rem;${ov?'color:#ef4444;':''}">${esc(t.title)}</td>
@@ -1249,10 +1249,10 @@
             window.closeCoordAnalysis && window.closeCoordAnalysis();
             window.openAiChat({
                 module:         'coordination',
-                title:          '✦ AI Аналіз координацій',
+                title:          window.t('coordAnalizKoordyna'),
                 contextText:    buildPrompt(patterns),
                 systemPrompt:   null,
-                initialMessage: 'Проаналізуй ці дані координацій. Дай 3-4 конкретні рекомендації що змінити.',
+                initialMessage: window.t('coordProanaliTsiDani'),
             });
         } catch(e){el.innerHTML=`<div style="color:#ef4444;padding:1rem;">Помилка: ${esc(e.message)}</div>`;}
     };
@@ -1277,8 +1277,8 @@
         return `Ти AI-аналітик TALKO. Дай конкретні рекомендації по координаціях (українська, коротко).
 
 Дані: ${p.total} координацій, ${p.totalDecisions} рішень, ${p.totalUnresolved} ескальовано, середня тривалість ${p.avgDur}хв.
-Повторювані рішення: ${p.repD.map(([k,c])=>`"${k}"(${c}р)`).join(', ')||'немає'}
-Повторювані проблеми: ${p.repU.map(([k,c])=>`"${k}"(${c}р)`).join(', ')||'немає'}
+Повторювані рішення: ${p.repD.map(([k,c])=>`"${k}"(${c}р)`).join(', ')||window.t('coordNemaye')}
+Повторювані проблеми: ${p.repU.map(([k,c])=>`"${k}"(${c}р)`).join(', ')||window.t('coordNemaye')}
 
 3-4 конкретні рекомендації що зробити. Без зайвих слів.`;
     }

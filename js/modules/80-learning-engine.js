@@ -14,7 +14,7 @@
     let currentLearningModule = null;
     // Use TALKO main lang - read from localStorage key used by translations module
     function getLearningLang() {
-        return localStorage.getItem('talko_lang') || 'ua';
+        return localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || window.currentLang || 'ua';
     }
 
     // Universal helper: module.title_de || module.title_en || module.title_ru || module.title
