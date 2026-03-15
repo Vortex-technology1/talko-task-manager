@@ -285,7 +285,8 @@ window.openBot = function(botId) {
         .collection('bots').doc(botId)
         .collection('flows')
         .orderBy('createdAt','desc')
-        .onSnapshot(snap => {
+                .limit(100) // BUG FIX: обмеження флоу
+.onSnapshot(snap => {
             bp.flows = snap.docs.map(d=>({id:d.id,...d.data()}));
             if (bp.subTab==='flows') renderFlowsTab();
         });
@@ -2187,27 +2188,42 @@ window.bpSendBroadcast = async function() {
 
     // FIX: Обгорнуто в try/catch для обробки async помилок
     try {
-        // Завантажуємо всіх цільових контактів з Firestore (не з bp.contacts)
-        let q = window.companyCol('contacts')
-            .where('botStatus', '!=', 'blocked');
+        // BUG FIX: прибрали .where('botStatus','!=','blocked') — потребує composite index
+        // Тепер фільтруємо client-side (blocked = мало, не критично для продуктивності)
+        // BUG FIX 2: limit підвищено до 3000 + попередження якщо досягнуто
+        const BCAST_LIMIT = 3000;
+        let q = window.companyCol('contacts');
 
+        // Додаємо server-side фільтри тільки де є прості індекси
         if (channel) q = q.where('channel', '==', channel);
-        if (flowId)  q = q.where('flowId', '==', flowId);
-        q = q.limit(2000);
+        else if (flowId) q = q.where('flowId', '==', flowId); // не можна поєднувати без index
+        q = q.limit(BCAST_LIMIT);
 
         const snap = await q.get();
-    let targets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (snap.size >= BCAST_LIMIT) {
+            if (window.showToast) showToast(`⚠️ Показано перші ${BCAST_LIMIT} контактів. Використовуйте фільтри для звуження аудиторії.`, 'warning');
+        }
 
-    // Фільтрація на клієнті
-    if (niche) targets = targets.filter(ct => ct.business_type === niche);
-    if (tag)   targets = targets.filter(ct => (ct.tags || []).includes(tag));
+        let targets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-    // Тільки Telegram (поки)
-    targets = targets.filter(ct => ct.channel === 'telegram' || ct.source === 'telegram');
+        // Фільтрація на клієнті
+        targets = targets.filter(ct => ct.botStatus !== 'blocked'); // виключаємо заблокованих
+        if (channel && flowId) targets = targets.filter(ct => ct.flowId === flowId); // якщо обидва фільтри
+        else if (!channel && flowId) { /* вже в query */ }
+        if (niche) targets = targets.filter(ct => ct.business_type === niche);
+        if (tag)   targets = targets.filter(ct => (ct.tags || []).includes(tag));
+
+        // Тільки Telegram (поки)
+        targets = targets.filter(ct => ct.channel === 'telegram' || ct.source === 'telegram');
 
     if (targets.length === 0) { if(window.showToast)showToast(window.t('botsNoBroadcastContacts'),'warning'); else alert(window.t('botsNoBroadcastContacts')); return; }
 
-    if (!(await (window.showConfirmModal ? showConfirmModal(`Надіслати розсилку ${targets.length} контактам?`) : Promise.resolve(confirm(`Надіслати розсилку ${targets.length} контактам?`))))) return;
+    // BUG FIX: попереджаємо про тривалість і необхідність не закривати вкладку
+    const _bcastMins = Math.ceil(targets.length / 25 / 60);
+    const _bcastMsg = targets.length > 100
+        ? `Надіслати розсилку ${targets.length} контактам?\n\n⚠️ Орієнтовний час: ~${_bcastMins} хв.\nНЕ закривайте вкладку до завершення!`
+        : `Надіслати розсилку ${targets.length} контактам?`;
+    if (!(await (window.showConfirmModal ? showConfirmModal(_bcastMsg) : Promise.resolve(confirm(_bcastMsg))))) return;
 
     // Отримуємо токен бота
     const compDoc = await         window.companyRef().get();

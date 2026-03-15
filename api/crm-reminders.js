@@ -248,16 +248,32 @@ module.exports = async (req, res) => {
             });
         }
 
-        // Cleanup старих _rate_limits (> 1 год) — fire-and-forget
-        const _rlCutoff = admin.firestore.Timestamp.fromMillis(Date.now() - 3600000);
-        db.collectionGroup('_rate_limits').where('windowStart', '<', _rlCutoff.toMillis()).limit(500).get()
-            .then(snap => {
-                if (snap.empty) return;
-                const batch = db.batch();
-                snap.docs.forEach(d => batch.delete(d.ref));
-                return batch.commit();
-            })
-            .catch(e => console.warn('[crm-reminders] rate_limits cleanup:', e.message));
+        // ── Daily cleanup — видаляємо протухлі lock документи ──────────
+        const _now = Date.now();
+        const _cleanupCollections = ['_rate_limits', '_session_locks', '_finish_locks'];
+        for (const colName of _cleanupCollections) {
+            try {
+                let q;
+                if (colName === '_rate_limits') {
+                    // rate_limits: windowStart + 1 год
+                    q = db.collectionGroup(colName)
+                        .where('windowStart', '<', _now - 3600000).limit(300);
+                } else {
+                    // locks: expiresAt вже в минулому
+                    q = db.collectionGroup(colName)
+                        .where('expiresAt', '<', _now).limit(300);
+                }
+                const snap = await q.get().catch(() => null);
+                if (snap && !snap.empty) {
+                    const batch = db.batch();
+                    snap.docs.forEach(d => batch.delete(d.ref));
+                    await batch.commit();
+                    console.log(`[crm-reminders] cleaned ${snap.size} docs from ${colName}`);
+                }
+            } catch(e) {
+                console.warn(`[crm-reminders] cleanup ${colName}:`, e.message);
+            }
+        }
 
         const duration = Date.now() - startTs;
         console.log(`[crm-reminders] Done in ${duration}ms. Sent: ${totalSent}, Skipped: ${totalSkipped}, Errors: ${totalErrors}`);

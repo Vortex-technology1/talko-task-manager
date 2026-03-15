@@ -597,7 +597,11 @@ module.exports = async (req, res) => {
                 }
             }
 
-            tx.set(lockRef, { ts: lockTs, pid: Math.random() }, { merge: false });
+            tx.set(lockRef, {
+                ts: lockTs,
+                pid: Math.random(),
+                expiresAt: lockTs + 35000, // 35s TTL — більше за max AI час
+            }, { merge: false });
             return { acquired: true, sessionDoc: session };
         }).catch(e => {
             console.error('[webhook] lock transaction failed:', e.message);
@@ -609,6 +613,22 @@ module.exports = async (req, res) => {
         }
 
         if (!lockAcquired.acquired) {
+            // callback_query — підтверджуємо щоб Telegram прибрав loader на кнопці
+            if (callbackQueryId && botToken) {
+                fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ callback_query_id: callbackQueryId }),
+                }).catch(() => {});
+            }
+            // Показуємо typing indicator — юзер бачить що бот ще думає
+            if (botToken && normalized?.senderId && channel === 'telegram' && !callbackQueryId) {
+                fetch(`https://api.telegram.org/bot${botToken}/sendChatAction`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: String(normalized.senderId), action: 'typing' }),
+                }).catch(() => {});
+            }
             return res.status(200).json({ ok: true, skipped: 'session_locked' });
         }
 
@@ -905,17 +925,23 @@ module.exports = async (req, res) => {
         process.env.WEBHOOK_DEBUG && console.debug(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
         process.env.WEBHOOK_DEBUG && console.debug(`[webhook] Nodes:`, runtimeNodes.map(n => `${n.id}:${n.type}`).join(', '));
 
-        // PERF 5: кешуємо ноди в сесії (без промптів — можуть бути великими)
-        // Зберігаємо тільки структуру (id, type, nextNode, buttons) без aiSystem
-        const _cacheNodes = runtimeNodes.map(n => ({
-            id: n.id, type: n.type, text: n.text || '',
+        // PERF 5: кешуємо ноди в сесії — тільки структура, без промптів
+        // BUG FIX: обмежуємо до 20 нод щоб не перевищити 1MB Firestore ліміт
+        const _cacheNodes = runtimeNodes.slice(0, 20).map(n => ({
+            id: n.id, type: n.type,
+            text: (n.text || '').slice(0, 100), // тільки початок для preview
             nextNode: n.nextNode || null,
-            buttons: n.buttons || [],
+            buttons: (n.buttons || []).map(b => ({ label: b.label || '', nextNode: b.nextNode || null })),
             saveAs: n.saveAs || null,
             conditionField: n.conditionField, conditionOp: n.conditionOp, conditionValue: n.conditionValue,
             trueNode: n.trueNode, falseNode: n.falseNode,
         }));
-        session._cachedFlow = { id: flow.id, nodes: _cacheNodes, edges: flow.canvasData?.edges || [] };
+        // Кешуємо тільки якщо не надто великий флоу
+        if (runtimeNodes.length <= 20) {
+            session._cachedFlow = { id: flow.id, nodes: _cacheNodes, edges: [] }; // edges не кешуємо — вже вбудовані в nextNode
+        } else {
+            session._cachedFlow = null; // великий флоу — завжди читаємо з Firestore
+        }
 
         const nodeMap = {};
         runtimeNodes.forEach(n => { if (n.id) nodeMap[n.id] = n; });
@@ -1057,13 +1083,19 @@ module.exports = async (req, res) => {
                 const isDone = rawReply.includes('[DONE]');
 
                 // Парсимо [SAVE:key=value] теги
-                const saveMatches = [...rawReply.matchAll(/\[SAVE:([^=\]]+)=([^\]]+)\]/g)];
+                const saveMatches = [...rawReply.matchAll(/\[SAVE:([^=\]]{1,50})=([^\]]{0,500})\]/g)];
                 const _SAFE_KEYS = /^[a-zA-Z_][a-zA-Z0-9_]{0,49}$/;
                 saveMatches.forEach(m => {
                     const k = m[1].trim();
                     // Sanitize: тільки безпечні ключі, без __proto__/constructor тощо
                     if (_SAFE_KEYS.test(k) && !['__proto__','constructor','prototype'].includes(k)) {
-                        session.data[k] = m[2].trim().slice(0, 500);
+                        // BUG FIX: очищаємо значення від можливих вкладених тегів
+                        const v = m[2].trim()
+                            .replace(/\[DONE\]/g, '')
+                            .replace(/\[BTN:[^\]]+\]/g, '')
+                            .replace(/\[SAVE:[^\]]+\]/g, '')
+                            .slice(0, 500);
+                        if (v) session.data[k] = v;
                     }
                 });
 
@@ -1142,16 +1174,45 @@ module.exports = async (req, res) => {
                     if (!n.url || !/^https?:\/\//.test(n.url)) throw new Error('Invalid URL');
                     const _apiAbort = new AbortController();
                     const _apiTimer = setTimeout(() => _apiAbort.abort(), 10000);
+                    // BUG FIX: валідуємо body як JSON перед відправкою
+                    let _apiBody;
+                    if (n.body) {
+                        const _bodyInterped = interp(n.body, session.data);
+                        try { JSON.parse(_bodyInterped); _apiBody = _bodyInterped; }
+                        catch { _apiBody = JSON.stringify({ text: _bodyInterped }); } // fallback
+                    }
+                    // Підтримка custom headers з ноди (наприклад Authorization)
+                    const _apiHeaders = { 'Content-Type': 'application/json' };
+                    if (n.headers && typeof n.headers === 'object') {
+                        Object.assign(_apiHeaders, n.headers);
+                    }
+                    if (n.authToken) _apiHeaders['Authorization'] = `Bearer ${n.authToken}`;
                     const r = await fetch(n.url, {
                         method: n.method || 'GET',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: _apiHeaders,
                         signal: _apiAbort.signal,
-                        ...(n.body ? { body: interp(n.body, session.data) } : {})
+                        ...(_apiBody ? { body: _apiBody } : {})
                     });
                     clearTimeout(_apiTimer);
-                    session.data._apiResponse = (await r.text()).slice(0, 2000);
+                    const _apiText = (await r.text()).slice(0, 2000);
+                    session.data._apiResponse = _apiText;
                     session.data._apiStatus = r.status;
-                } catch(e) { session.data._apiError = e.message; }
+                    // Якщо відповідь JSON — розпаковуємо першу пару ключів в session.data
+                    try {
+                        const _apiJson = JSON.parse(_apiText);
+                        if (_apiJson && typeof _apiJson === 'object' && !Array.isArray(_apiJson)) {
+                            // Беремо тільки прості значення (рядки/числа), не рекурсивно
+                            Object.entries(_apiJson).slice(0, 10).forEach(([k, v]) => {
+                                if (typeof v !== 'object' && /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(k)) {
+                                    session.data[`api_${k}`] = String(v).slice(0, 500);
+                                }
+                            });
+                        }
+                    } catch { /* не JSON — ок */ }
+                } catch(e) {
+                    session.data._apiError = e.message;
+                    console.warn('[webhook] api node error:', e.message);
+                }
                 nodeId = n.nextNode || null;
 
             } else if (n.type === 'talko_task') {
@@ -1460,8 +1521,11 @@ module.exports = async (req, res) => {
             if (_ahChars > 30000) session.aiHistory = session.aiHistory.slice(-6);
         }
         // FIX 3: видаляємо технічні поля перед збереженням
+        // BUG FIX: обмежуємо розмір сесії — не зберігаємо великі технічні поля
         // PERF 8: session.set fire-and-forget — відповідь вже надіслана юзеру
-        const { _botToken, ...sessionToSave } = session;
+        const { _botToken, _cachedFlow: _cf, ...sessionToSave } = session;
+        // Повертаємо _cachedFlow тільки якщо він невеликий (< 20 нод)
+        if (_cf && _cf.nodes?.length <= 20) sessionToSave._cachedFlow = _cf;
         sessionRef.set(sessionToSave, { merge: true }).catch(e => console.error('[webhook] final session.set:', e.message));
 
         // Safety limit warning
@@ -1507,14 +1571,21 @@ function resolveNext(node, userText) {
 function interp(text, data) {
     if (!text) return '';
     if (!data || typeof data !== 'object') return String(text);
-    // BUG 5 FIX: підтримка {{var}}, {{contact.field}}, {contact.field}, {var}
-    // {{contact.name}} раніше шукало data["contact.name"] (з крапкою) — порожньо
-    // Тепер: {contact.field} і {{contact.field}} → data[field] або data.name як fallback
+    // Sanitize helper — очищаємо HTML теги з підставлюваних значень
+    // щоб не зламати Telegram HTML parse_mode при підстановці AI відповіді
+    const _sanitize = (val) => {
+        if (val == null) return '';
+        return String(val)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .slice(0, 1000); // обмежуємо довжину одного значення
+    };
     return (text || '')
-        .replace(/\{\{contact\.(\w+)\}\}/g, (_, k) => (data[k] != null ? String(data[k]) : data.name || ''))
-        .replace(/\{\{(\w+)\}\}/g,            (_, k) => (data[k] != null ? String(data[k]) : ''))
-        .replace(/\{contact\.(\w+)\}/g,      (_, k) => (data[k] != null ? String(data[k]) : data.name || ''))
-        .replace(/\{(\w+)\}/g,                (_, k) => (data[k] != null ? String(data[k]) : `{${k}}`));
+        .replace(/\{\{contact\.(\w+)\}\}/g, (_, k) => _sanitize(data[k] ?? data.name ?? ''))
+        .replace(/\{\{(\w+)\}\}/g,            (_, k) => _sanitize(data[k] ?? ''))
+        .replace(/\{contact\.(\w+)\}/g,      (_, k) => _sanitize(data[k] ?? data.name ?? ''))
+        .replace(/\{(\w+)\}/g,                (_, k) => (data[k] != null ? _sanitize(data[k]) : `{${k}}`));
 }
 
 function evalFilter(node, data) {
@@ -1629,23 +1700,35 @@ async function callAI(node, userText, session, compRef, compData) {
             const baseUrl = (provider === 'deepseek' || model.startsWith('deepseek'))
                 ? 'https://api.deepseek.com/v1/chat/completions'
                 : 'https://api.openai.com/v1/chat/completions';
-            const r = await fetch(baseUrl, {
+            const _oaBody = JSON.stringify({
+                model,
+                ...(model.startsWith('o3') || model.startsWith('o4') || model.startsWith('gpt-5')
+                    ? { max_completion_tokens: _maxTok }
+                    : { max_tokens: _maxTok }),
+                temperature: node.config?.temperature ?? 0.7,
+                messages
+            });
+            let r = await fetch(baseUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
                 signal: aiAbort.signal,
-                body: JSON.stringify({
-                    model,
-                    // PERF 3: adaptive max_tokens
-                    ...(model.startsWith('o3') || model.startsWith('o4') || model.startsWith('gpt-5')
-                        ? { max_completion_tokens: _maxTok }
-                        : { max_tokens: _maxTok }),
-                    temperature: node.config?.temperature ?? 0.7,
-                    messages
-                })
+                body: _oaBody,
             });
+            // BUG FIX: retry при 429 (rate limit) — чекаємо retry-after
+            if (r.status === 429) {
+                const _retryAfter = parseInt(r.headers.get('retry-after') || '3') * 1000;
+                console.warn('[callAI] OpenAI 429, retry after', _retryAfter, 'ms');
+                await new Promise(res => setTimeout(res, Math.min(_retryAfter, 10000)));
+                r = await fetch(baseUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                    body: _oaBody,
+                });
+            }
             const d = await r.json();
             clearTimeout(aiTimeout);
-            process.env.WEBHOOK_DEBUG && console.debug('[callAI] status:', r.status, 'error:', d.error?.message || 'none');
+            if (!r.ok) console.error('[callAI] OpenAI error', r.status, d.error?.message || d.error || '');
+            else process.env.WEBHOOK_DEBUG && console.debug('[callAI] status:', r.status, 'tokens:', d.usage?.total_tokens);
             responseText = d.choices?.[0]?.message?.content || null;
 
         // ── Anthropic Claude ──────────────────────────────────
@@ -1942,18 +2025,30 @@ async function finish(session, flow, compRef, channel, compData = {}) {
         // Захищає від race condition коли два Telegram updates приходять одночасно і обидва тригерять finish()
         const finishLockId = `finish_${channel}_${session.senderId}_${flow?.id || 'noflow'}`;
         const lockRef = compRef.collection('_finish_locks').doc(finishLockId);
+        // BUG FIX: setTimeout скидається при cold start → lock ніколи не видалявся
+        // Тепер зберігаємо expiresAt в документ — перевіряємо при read (TTL = 5 хв)
+        const _finishNow = Date.now();
         const lockResult = await db.runTransaction(async (tx) => {
             const lockDoc = await tx.get(lockRef);
-            if (lockDoc.exists) return false; // вже виконується або виконано
-            tx.set(lockRef, { at: admin.firestore.FieldValue.serverTimestamp() });
+            if (lockDoc.exists) {
+                // Перевіряємо чи lock не протух (TTL 5 хв)
+                const _lockExp = lockDoc.data()?.expiresAt || 0;
+                if (_finishNow < _lockExp) return false; // ще живий — пропускаємо
+                // Lock протух — перезаписуємо
+            }
+            tx.set(lockRef, {
+                at: admin.firestore.FieldValue.serverTimestamp(),
+                expiresAt: _finishNow + 300000, // 5 хв TTL
+            });
             return true;
         });
         if (!lockResult) {
             console.log('[finish] skipped (idempotency lock):', finishLockId);
             return;
         }
-        // Автоматично видаляємо lock через 60 секунд (не блокуємо повторний запуск назавжди)
-        setTimeout(() => lockRef.delete().catch(() => {}), 120000); // 2 min TTL
+        // Видаляємо lock після завершення (fire-and-forget)
+        // Навіть якщо не видалиться — expiresAt гарантує повторний запуск через 5 хв
+        setTimeout(() => lockRef.delete().catch(() => {}), 10000);
 
         // Зберігаємо лід (audit trail) — обрізаємо великі поля
         const _leadData = {};
