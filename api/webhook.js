@@ -848,17 +848,25 @@ module.exports = async (req, res) => {
 
             // Шукаємо по тригеру
             if (!flow) {
-                const allFlows = await flowsRef.where('status', '==', 'active').orderBy('createdAt', 'asc').limit(20).get();
-                for (const fd of allFlows.docs) {
+                // FIX: orderBy + where вимагає composite index — сортуємо client-side
+        const allFlows = await flowsRef.where('status', '==', 'active').limit(20).get();
+    // FIX 3: сортуємо client-side по createdAt для детермінованого вибору
+            const _sortedFlows = allFlows.docs.slice().sort((a, b) => {
+                const ta = a.data()?.createdAt?.toMillis?.() || 0;
+                const tb = b.data()?.createdAt?.toMillis?.() || 0;
+                return ta - tb; // asc — старіший флоу має перевагу
+            });
+            for (const fd of _sortedFlows) {
                     const trigger = fd.data()?.triggerKeyword || '/start';
                     if (isStart || normalized.text === trigger) {
                         flow = { id: fd.id, botId: currentBotId, ...fd.data() };
                         break;
                     }
                 }
-                // Fallback — перший активний флоу
-                if (!flow && !allFlows.empty) {
-                    flow = { id: allFlows.docs[0].id, botId: currentBotId, ...allFlows.docs[0].data() };
+                // Fallback — перший активний флоу (після сортування)
+                if (!flow && _sortedFlows.length > 0) {
+                    const first = _sortedFlows[0];
+                    flow = { id: first.id, botId: currentBotId, ...first.data() };
                 }
             }
         }
@@ -1691,31 +1699,26 @@ module.exports = async (req, res) => {
 
         // FIX 2b: після AI — перевіряємо pending messages (черга)
         // Підхоплюємо і відправляємо typing для кожного
-        try {
-            const _pendingQuery = await compRef.collection('_pending_messages')
-                .where('senderId', '==', String(normalized.senderId))
-                .where('channel', '==', channel)
-                .orderBy('at', 'asc')
-                .limit(5)
-                .get().catch(() => null);
-            if (_pendingQuery && !_pendingQuery.empty) {
-                const _now = Date.now();
-                const _validPending = _pendingQuery.docs.filter(d => (d.data().expiresAt || 0) > _now);
-                // Видаляємо всі (і expired і valid)
-                const _batch = compRef.firestore.batch();
-                _pendingQuery.docs.forEach(d => _batch.delete(d.ref));
-                await _batch.commit().catch(() => {});
-                // Якщо є валідні — показуємо typing (наступне повідомлення прийде само)
-                if (_validPending.length > 0 && botToken) {
-                    const _lastMsg = _validPending[_validPending.length - 1].data().text;
-                    console.log(`[webhook] ${_validPending.length} pending msgs recovered, last: ${_lastMsg?.slice(0, 30)}`);
+        // FIX: pending_messages — simple .get() by docId, no composite index needed
+        // fire-and-forget: не блокує відповідь юзеру
+        ;(async () => { try {
+            const _pendingRef = compRef.collection('_pending_messages')
+                .doc(`${channel}_${normalized.senderId}`);
+            const _pendingDoc = await _pendingRef.get();
+            if (_pendingDoc.exists) {
+                await _pendingRef.delete().catch(() => {});
+                const _pm = _pendingDoc.data();
+                const _notExpired = (_pm.expiresAt || 0) > Date.now();
+                if (_notExpired && _pm.text && botToken) {
+                    console.log(`[webhook] pending msg recovered: ${_pm.text.slice(0,30)}`);
+                    // Показуємо typing — Telegram повторно надішле повідомлення
                     fetch(`https://api.telegram.org/bot${botToken}/sendChatAction`, {
                         method: 'POST', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ chat_id: String(normalized.senderId), action: 'typing' }),
                     }).catch(() => {});
                 }
             }
-        } catch(e) { /* pending є додатковим захистом, не критично */ }
+        } catch(e) { /* не критично */ } })();
 
         // Safety limit warning
         if (safety > 50) console.error('[webhook] SAFETY LIMIT reached for session:', sessionId, 'last nodeId:', nodeId);

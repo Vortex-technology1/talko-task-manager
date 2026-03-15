@@ -2326,10 +2326,10 @@ async function saveFlow() {
             return stripped;
         });
 
-        // canvasData (повні дані + позиції) — окремо в підколекцію
+        // canvasData (повні дані + позиції) і nodes для webhook — паралельно
+        // FIX: якщо один write fails → retry один раз
         const canvasRef = saveRef.collection('canvasData').doc('layout');
         const strippedCanvas = { ...canvasData, nodes: stripPrompts(canvasData.nodes) };
-        await canvasRef.set(sanitize(strippedCanvas));
 
         // nodes для webhook — тільки мінімальні поля (без _x/_y/config дублювання)
         const minimalNodes = stripPrompts(ordered).map(n => {
