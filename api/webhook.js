@@ -1352,24 +1352,32 @@ module.exports = async (req, res) => {
 
             } else if (n.type === 'api') {
                 try {
-                    if (!n.url || !/^https?:\/\//.test(n.url)) throw new Error('Invalid URL');
+                    // FIX 5: minimalNodes зберігає apiUrl/apiMethod/apiBody/apiHeaders, не url/method/body/headers
+                    const _reqUrl = n.apiUrl || n.url || '';
+                    if (!_reqUrl || !/^https?:\/\//.test(_reqUrl)) throw new Error('Invalid URL');
                     const _apiAbort = new AbortController();
                     const _apiTimer = setTimeout(() => _apiAbort.abort(), 10000);
+                    // Підтримка custom headers (рядок JSON або об'єкт)
+                    const _apiHeaders = { 'Content-Type': 'application/json' };
+                    const _rawHeaders = n.apiHeaders || n.headers;
+                    if (_rawHeaders) {
+                        try {
+                            const _parsedHeaders = typeof _rawHeaders === 'string' ? JSON.parse(_rawHeaders) : _rawHeaders;
+                            if (typeof _parsedHeaders === 'object') Object.assign(_apiHeaders, _parsedHeaders);
+                        } catch { /* ігноруємо невалідний JSON headers */ }
+                    }
+                    if (n.authToken) _apiHeaders['Authorization'] = `Bearer ${n.authToken}`;
                     // BUG FIX: валідуємо body як JSON перед відправкою
+                    const _rawBody = n.apiBody || n.body;
                     let _apiBody;
-                    if (n.body) {
-                        const _bodyInterped = interp(n.body, session.data);
+                    if (_rawBody) {
+                        const _bodyInterped = interp(_rawBody, session.data);
                         try { JSON.parse(_bodyInterped); _apiBody = _bodyInterped; }
                         catch { _apiBody = JSON.stringify({ text: _bodyInterped }); } // fallback
                     }
-                    // Підтримка custom headers з ноди (наприклад Authorization)
-                    const _apiHeaders = { 'Content-Type': 'application/json' };
-                    if (n.headers && typeof n.headers === 'object') {
-                        Object.assign(_apiHeaders, n.headers);
-                    }
-                    if (n.authToken) _apiHeaders['Authorization'] = `Bearer ${n.authToken}`;
-                    const r = await fetch(n.url, {
-                        method: n.method || 'GET',
+                    const _reqMethod = n.apiMethod || n.method || 'GET';
+                    const r = await fetch(_reqUrl, {
+                        method: _reqMethod,
                         headers: _apiHeaders,
                         signal: _apiAbort.signal,
                         ...(_apiBody ? { body: _apiBody } : {})
@@ -1518,9 +1526,10 @@ module.exports = async (req, res) => {
                             .where('botContactId', '==', _tdContactId)
                             .where('flowId', '==', flow?.id || '')
                             .limit(1).get();
+                    // FIX: declare outside if/else so update branch can use ccStageColor
+                    let ccPipelineId = _cfgPipelineId || 'default', ccStageColor = '#6b7280', ccProbability = 10;
                     if (existingDeals.empty) {
                         // FIX CC: fetch pipeline to get pipelineId (required for CRM kanban query)
-                        let ccPipelineId = _cfgPipelineId || 'default', ccStageColor = '#6b7280', ccProbability = 10;
                         try {
                             let _tdPipSnap = null;
                             // Якщо pipelineId вказано явно в конфігу — не шукаємо default
@@ -1585,10 +1594,29 @@ module.exports = async (req, res) => {
                         const _tdTitle = interp(n.dealTitle || '{contact.name} — запит з боту', _tdData);
                         const _tdClientIdUpd = session._autoClientId || session.data?._autoClientId
                             || existingDeals.docs[0].data()?.clientId || null;
+                        // FIX: fetch pipeline to get correct stageColor for new targetStage
+                        try {
+                            const _updPipId = _cfgPipelineId || existingDeals.docs[0].data()?.pipelineId || session._autoPipId || session.data?._autoPipId;
+                            if (_updPipId && _updPipId !== 'default') {
+                                const _updPipSnap = await compRef.collection('crm_pipeline').doc(_updPipId).get().catch(() => null);
+                                if (_updPipSnap?.exists) {
+                                    const _updStages = _updPipSnap.data()?.stages || [];
+                                    const _updStage = _updStages.find(s => s.id === targetStage) || _updStages[0];
+                                    if (_updStage?.color) ccStageColor = _updStage.color;
+                                }
+                            } else {
+                                const _updPipSnap = await compRef.collection('crm_pipeline').where('isDefault','==',true).limit(1).get().catch(() => null);
+                                if (_updPipSnap && !_updPipSnap.empty) {
+                                    const _updStages = _updPipSnap.docs[0].data()?.stages || [];
+                                    const _updStage = _updStages.find(s => s.id === targetStage) || _updStages[0];
+                                    if (_updStage?.color) ccStageColor = _updStage.color;
+                                }
+                            }
+                        } catch(e) { console.warn('[talko_deal] update stageColor fetch:', e.message); }
                         await existingDeals.docs[0].ref.update({
                             title:     interp(_tdTitle, { ...session.data, name: session.data.name || session.senderName || '' }),
                             stage:     targetStage,
-                            stageColor: ccStageColor || existingDeals.docs[0].data()?.stageColor || '#6b7280',
+                            stageColor: ccStageColor,
                             flowId:    flow?.id || null,
                             clientId:  _tdClientIdUpd,
                             clientName: session.senderName || (session.username ? '@'+session.username : '') || '',
@@ -2043,11 +2071,11 @@ async function callAI(node, userText, session, compRef, compData) {
         // PERF 4: обрізаємо aiHistory до historyLimit
         const _histLimit = node.config?.historyLimit ?? node.historyLimit ?? 6;
         // FIX 7: sanitize ролі — тільки 'user' і 'assistant', ігноруємо 'system'/'bot'
-        const _trimmedHistory = (session.aiHistory || [])
+        const _trimmedHistory = _histLimit === 0 ? [] : (session.aiHistory || [])
             .filter(m => m?.content && (m.role === 'user' || m.role === 'assistant'))
             .map(m => ({ role: m.role, content: String(m.content).slice(0, 2000) })) // БАГ 7: 2000 max per msg
-            .slice(_histLimit > 0 ? -_histLimit : _histLimit === 0 ? 0 : -6);
-        // _histLimit=0 → slice(0..0) = [] (без пам'яті)
+            .slice(_histLimit > 0 ? -_histLimit : -6);
+        // _histLimit=0 → [] (без пам'яті)
         // _histLimit=6 → slice(-6) = останні 6
 
         // FIX 5+B: порожній або технічний userText — нормалізуємо
@@ -2181,6 +2209,7 @@ async function callAI(node, userText, session, compRef, compData) {
                 await new Promise(res => setTimeout(res, 2000));
                 const _r2 = await fetch('https://api.anthropic.com/v1/messages', {
                     method: 'POST',
+                    signal: aiAbort.signal, // FIX: timeout applies to retry too
                     headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
                     body: JSON.stringify({ model, max_tokens: _maxTok, temperature: node.config?.temperature ?? 0.7, system: sysPrompt,
                         messages: (() => {
@@ -2208,8 +2237,8 @@ async function callAI(node, userText, session, compRef, compData) {
             // Gemini: конвертуємо aiHistory в Gemini contents format
             // FIX 10b: фільтруємо порожні повідомлення — Gemini відхиляє їх
             // FIX 2: Gemini також застосовує _histLimit (раніше ігнорував)
-            const _geminiHistory = (session.aiHistory || [])
-                .slice(_histLimit > 0 ? -_histLimit : _histLimit === 0 ? 0 : -6)
+            const _geminiHistory = (_histLimit === 0 ? [] : (session.aiHistory || [])
+                .slice(_histLimit > 0 ? -_histLimit : -6))
                 .filter(m => m.content && m.content.trim())
                 .map(m => ({
                     role: m.role === 'assistant' ? 'model' : 'user',
