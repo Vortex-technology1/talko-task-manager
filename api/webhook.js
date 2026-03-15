@@ -731,8 +731,15 @@ module.exports = async (req, res) => {
                             .where('isDefault', '==', true).limit(1).get().catch(() => null),
                     ]);
                     const _clientRef = _newClientRef;
-                    const _pip = _pipSnap && !_pipSnap.empty ? _pipSnap.docs[0] : null;
-                    const _pipId = _pip ? _pip.id : '';
+                    let _pip = _pipSnap && !_pipSnap.empty ? _pipSnap.docs[0] : null;
+                    // FIX: якщо нема isDefault pipeline — беремо будь-який перший
+                    if (!_pip) {
+                        try {
+                            const _anyPip = await compRef.collection('crm_pipeline').limit(1).get();
+                            if (!_anyPip.empty) _pip = _anyPip.docs[0];
+                        } catch { /* ігноруємо */ }
+                    }
+                    const _pipId = _pip ? _pip.id : 'default';
                     const _stages = _pip ? (_pip.data()?.stages || []) : [];
                     // FIX: якщо немає стадій — перевіряємо pipeline ще раз і беремо першу стадію
                     const _stageId = _stages.length ? (_stages[0].id || 'new') : 'new';
@@ -1278,6 +1285,13 @@ module.exports = async (req, res) => {
                 // Зберігаємо останню AI відповідь для {{ai_response}} в наступних вузлах
                 session.data.ai_response = cleanReply;
 
+                // FIX 6: _finalAiBtns оголошуємо ДО першого використання
+                // якщо [DONE] — кнопки ігноруємо (вони тільки для non-done відповідей)
+                const _finalAiBtns = isDone ? [] : aiBtns;
+                if (_finalAiBtns.length !== aiBtns.length && aiBtns.length) {
+                    console.log('[webhook] AI DONE with BTN — buttons ignored, proceeding to nextNode');
+                }
+
                 // Якщо cleanReply порожній (тільки [DONE]/[BTN]/[SAVE]) — беремо fallback
                 const _replyText = cleanReply || (isDone ? '' : (n.config?.fallback || n.fallback || ''));
                 if (_replyText || thinkingMsgId) {
@@ -1289,12 +1303,6 @@ module.exports = async (req, res) => {
                             : sendMsg(channel, botToken, normalized.senderId, _sendText, _finalAiBtns.length ? _finalAiBtns : null),
                         _replyText ? saveBotMessage(compRef, contactId, _replyText) : Promise.resolve(),
                     ]);
-                }
-
-                // FIX 5: якщо [DONE] і є AI кнопки — ігноруємо кнопки (вони для non-done відповідей)
-                const _finalAiBtns = isDone ? [] : aiBtns;
-                if (_finalAiBtns.length !== aiBtns.length && aiBtns.length) {
-                    console.log('[webhook] AI DONE with BTN — buttons ignored, proceeding to nextNode');
                 }
 
                 if (isDone && n.nextNode) {
@@ -1410,23 +1418,40 @@ module.exports = async (req, res) => {
 
             // ════ Google Sheets ════
             } else if (n.type === 'sheets') {
-                // FIX 2: Sheets вузол — записуємо дані в Google Sheets через Apps Script URL
+                // Sheets вузол — POST до Google Apps Script URL
                 try {
-                    const _sheetUrl = n.config?.sheetsUrl || n.sheetsUrl || n.config?.sheetsId || n.sheetsId;
-                    if (_sheetUrl && /^https?:\/\//.test(_sheetUrl)) {
-                        const _sheetData = {};
-                        // Маппінг полів: sheetsMapping = "A:{{name}},B:{{phone}}"
-                        const _mapping = n.config?.sheetsMapping || n.sheetsMapping || '';
-                        if (_mapping) {
-                            _mapping.split(',').forEach(pair => {
-                                const [col, varExpr] = pair.split(':');
-                                if (col && varExpr) _sheetData[col.trim()] = interp(varExpr.trim(), session.data);
-                            });
+                    const _sheetUrl = n.sheetsId || n.config?.sheetsId || n.sheetsUrl || n.config?.sheetsUrl || '';
+                    if (!_sheetUrl || !/^https?:\/\//.test(_sheetUrl)) {
+                        console.warn('[sheets] invalid or missing Apps Script URL:', _sheetUrl);
+                    } else {
+                        // Маппінг: підтримуємо обидва формати
+                        // Старий: "A:{{name}},B:{{phone}}" (рядок через кому)
+                        // Новий: {"A":"{{name}}","B":"{{phone}}"} (JSON)
+                        const _rawMapping = n.sheetsMapping || n.config?.sheetsMapping || '';
+                        const _sheetData = { _sheet: n.sheetsName || n.config?.sheetsName || 'Leads' };
+                        if (_rawMapping) {
+                            try {
+                                const _jsonMap = typeof _rawMapping === 'object' ? _rawMapping : JSON.parse(_rawMapping);
+                                Object.entries(_jsonMap).forEach(([col, expr]) => {
+                                    _sheetData[col.trim()] = interp(String(expr), session.data);
+                                });
+                            } catch {
+                                // fallback: старий формат "A:{{name}},B:{{phone}}"
+                                String(_rawMapping).split(',').forEach(pair => {
+                                    const sep = pair.indexOf(':');
+                                    if (sep > 0) {
+                                        const col = pair.slice(0, sep).trim();
+                                        const expr = pair.slice(sep + 1).trim();
+                                        _sheetData[col] = interp(expr, session.data);
+                                    }
+                                });
+                            }
                         } else {
-                            // Дефолт: всі session.data поля
+                            // Дефолт: всі session.data поля + мета
                             Object.assign(_sheetData, session.data);
                             _sheetData.senderName = session.senderName || '';
                             _sheetData.senderId = String(session.senderId || '');
+                            _sheetData.channel = session.channel || '';
                         }
                         const _sheetAbort = new AbortController();
                         const _sheetTimer = setTimeout(() => _sheetAbort.abort(), 8000);
@@ -1547,8 +1572,18 @@ module.exports = async (req, res) => {
                                     const ccStage = ccStages.find(s => s.id === targetStage) || ccStages[0];
                                     ccStageColor = ccStage?.color || '#6b7280';
                                     ccProbability = ccStage?.probability || 10;
-                                    // Кешуємо для наступних вузлів
                                     session.data._autoPipId = ccPipelineId;
+                                } else {
+                                    // FIX: fallback — будь-який pipeline якщо нема isDefault
+                                    const _anyPip = await compRef.collection('crm_pipeline').limit(1).get().catch(() => null);
+                                    if (_anyPip && !_anyPip.empty) {
+                                        ccPipelineId = _anyPip.docs[0].id;
+                                        const _anyStages = _anyPip.docs[0].data()?.stages || [];
+                                        const _anyStage = _anyStages.find(s => s.id === targetStage) || _anyStages[0];
+                                        ccStageColor = _anyStage?.color || '#6b7280';
+                                        ccProbability = _anyStage?.probability || 10;
+                                        session.data._autoPipId = ccPipelineId;
+                                    }
                                 }
                             }
                         } catch(e) { console.warn('[talko_deal] pipeline fetch error:', e.message); }
@@ -1764,6 +1799,12 @@ module.exports = async (req, res) => {
             } else {
                 nodeId = n.nextNode || null;
             }
+        }
+
+        // FIX: safety overflow = infinite loop in flow — reset session, don't persist stuck nodeId
+        if (safety >= 50 && nodeId) {
+            console.error('[webhook] SAFETY OVERFLOW (50 nodes) flowId:', flow?.id, 'last nodeId:', nodeId, 'companyId:', companyId);
+            nodeId = null; // force clean session
         }
 
         // ── Зберігаємо сесію ─────────────────────────────────
@@ -2712,6 +2753,13 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                     if (pipSnap && !pipSnap.empty) {
                         pipelineId = pipSnap.docs[0].id;
                         firstStage = pipSnap.docs[0].data()?.stages?.[0] || firstStage;
+                    } else {
+                        // FIX: fallback — будь-який перший pipeline якщо нема isDefault
+                        const anyPip = await compRef.collection('crm_pipeline').limit(1).get().catch(() => null);
+                        if (anyPip && !anyPip.empty) {
+                            pipelineId = anyPip.docs[0].id;
+                            firstStage = anyPip.docs[0].data()?.stages?.[0] || firstStage;
+                        }
                     }
                 }
 

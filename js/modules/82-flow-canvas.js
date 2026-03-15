@@ -2095,7 +2095,7 @@ function renderPropPanel() {
                 + fld('Зберегти response у змінну', inp('saveAs', d.saveAs, 'api_response'));
             break;
         case 'sheets':
-            fields = fld('Spreadsheet ID', inp('sheetsId', d.sheetsId, '1BxiMV...'))
+            fields = fld('Apps Script URL', inp('sheetsId', d.sheetsId, 'https://script.google.com/macros/s/.../exec'))
                 + fld('Назва листа', inp('sheetsName', d.sheetsName, 'Leads'))
                 + fld('Маппінг колонок (JSON)', ta('sheetsMapping', d.sheetsMapping,
                     '{"A":"{{name}}","B":"{{phone}}","C":"{{date}}"}', 3));
