@@ -928,6 +928,7 @@ module.exports = async (req, res) => {
                     aiProvider:           n.config?.aiProvider || n.aiProvider || 'openai',
                     temperature:          n.config?.temperature ?? n.temperature ?? 0.7,
                     historyLimit:         n.config?.historyLimit ?? n.historyLimit ?? 6,
+                    maxTokens:            n.config?.maxTokens || n.maxTokens || null,
                     firstMessage:         n.config?.firstMessage || n.firstMessage || '',
                     firstMessageEnabled:  n.config?.firstMessageEnabled || n.firstMessageEnabled || false,
                     saveAs:               n.config?.saveAs || n.saveAs || null,
@@ -1137,6 +1138,20 @@ module.exports = async (req, res) => {
                     ]);
                     thinkingMsgId = _msgId;
                     rawReply = _reply;
+                } catch(_aiError) {
+                    // БАГ 1+10 FIX: callAI throw/timeout → замінюємо ⏳ на fallback
+                    typingActive = false;
+                    const _fallbackReply = n.config?.fallback || n.fallback || 'Вибачте, спробуйте ще раз.';
+                    const _isTimeout = _aiError?.name === 'AbortError' || _aiError?.message?.includes('abort');
+                    console.error('[webhook] callAI error:', _isTimeout ? 'TIMEOUT' : _aiError?.message);
+                    if (thinkingMsgId) {
+                        // Замінюємо ⏳ на fallback повідомлення
+                        await editTg(botToken, normalized.senderId, thinkingMsgId, _fallbackReply).catch(()=>{});
+                        await saveBotMessage(compRef, contactId, _fallbackReply).catch(()=>{});
+                    } else {
+                        await sendMsg(channel, botToken, normalized.senderId, _fallbackReply).catch(()=>{});
+                    }
+                    rawReply = _fallbackReply;
                 } finally {
                     typingActive = false;
                     if (typingTimeoutId) {
@@ -1177,11 +1192,22 @@ module.exports = async (req, res) => {
                     .replace(/\[DONE\]/g, '')
                     .replace(/\[SAVE:[^\]]+\]/g, '')
                     .trim();
+                // БАГ 8 FIX: конвертуємо Markdown → Telegram HTML
+                // AI часто відповідає з markdown, Telegram HTML mode показує **зірочки**
+                const _toTgHtml = (t) => t
+                    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')        // **bold**
+                    .replace(/\*(.+?)\*/g, '<i>$1</i>')              // *italic*
+                    .replace(/\_(.+?)\_/g, '<i>$1</i>')              // _italic_
+                    .replace(/`([^`]+)`/g, '<code>$1</code>');        // `code`
+                const _sendCleanReply = channel === 'telegram' ? _toTgHtml(cleanReply) : cleanReply;
 
-                // FIX E: зберігаємо user + assistant в history після отримання відповіді
-                // (не до callAI щоб уникнути дублікату в messages[])
-                const _userMsg = normalized.text || '';
-                if (_userMsg) session.aiHistory.push({ role: 'user', content: _userMsg });
+                // FIX E + БАГ 4: зберігаємо в history той самий текст що отримав AI
+                // (не normalized.text='btn_0', а реальний текст юзера)
+                const _isSystemMsg = /^\/(start|help|menu|back)$/i.test((normalized.text||'').trim())
+                    || /^btn_\d+$/.test((normalized.text||'').trim())
+                    || normalized.text === 'start';
+                const _userMsgForHistory = _isSystemMsg ? '' : (normalized.text || '');
+                if (_userMsgForHistory) session.aiHistory.push({ role: 'user', content: _userMsgForHistory });
                 if (cleanReply) session.aiHistory.push({ role: 'assistant', content: cleanReply });
 
                 // Обмежуємо розмір history
@@ -1195,8 +1221,8 @@ module.exports = async (req, res) => {
                 // Якщо cleanReply порожній (тільки [DONE]/[BTN]/[SAVE]) — беремо fallback
                 const _replyText = cleanReply || (isDone ? '' : (n.config?.fallback || n.fallback || ''));
                 if (_replyText || thinkingMsgId) {
-                    // PERF: editTg/sendMsg + saveBotMessage паралельно (-15ms)
-                    const _sendText = _replyText || '...';
+                    // БАГ 8: використовуємо HTML-конвертовану версію для Telegram
+                    const _sendText = (channel === 'telegram' ? _sendCleanReply : cleanReply) || _replyText || '...';
                     await Promise.all([
                         thinkingMsgId
                             ? editTg(botToken, normalized.senderId, thinkingMsgId, _sendText, aiBtns.length ? aiBtns : null)
@@ -1821,7 +1847,7 @@ async function callAI(node, userText, session, compRef, compData) {
         // FIX 7: sanitize ролі — тільки 'user' і 'assistant', ігноруємо 'system'/'bot'
         const _trimmedHistory = (session.aiHistory || [])
             .filter(m => m?.content && (m.role === 'user' || m.role === 'assistant'))
-            .map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }))
+            .map(m => ({ role: m.role, content: String(m.content).slice(0, 2000) })) // БАГ 7: 2000 max per msg
             .slice(_histLimit > 0 ? -_histLimit : _histLimit === 0 ? 0 : -6);
         // _histLimit=0 → slice(0..0) = [] (без пам'яті)
         // _histLimit=6 → slice(-6) = останні 6
