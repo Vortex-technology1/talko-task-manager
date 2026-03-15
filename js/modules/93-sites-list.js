@@ -380,7 +380,7 @@ window.sitesSaveHtml = async function(siteId) {
         if (typeof showToast === 'function') showToast('HTML збережено ✓', 'success');
         if (typeof window.initSitesModule === 'function') window.initSitesModule();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 
@@ -442,7 +442,7 @@ window.sitesCreate = async function () {
             // Оновлюємо список — не відкриваємо білдер (HTML режим)
             if (typeof window.initSitesModule === 'function') window.initSitesModule();
         } catch(e) {
-            if(window.showToast) showToast('Помилка: ' + e.message, 'error');
+            if(window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
         }
         return;
     }

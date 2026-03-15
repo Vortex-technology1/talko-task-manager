@@ -19,8 +19,8 @@
                 .collection(window.DB_COLS?.FUNNELS || 'funnels').doc(funnelId).get();
 
             if (!doc.exists) {
-                if(window.showToast) showToast('Воронку не знайдено','warning');
-                else alert('Воронку не знайдено');
+                if(window.showToast) showToast(window.t('fnnlNF'),'warning');
+                else alert(window.t('fnnlNF'));
                 return;
             }
             funnelEditorData = { id: doc.id, ...doc.data() };

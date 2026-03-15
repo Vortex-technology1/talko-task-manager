@@ -378,7 +378,7 @@
         try {
         if (!canEditMetrics()) { showToast(window.t('noPermission') || 'Немає доступу', 'error'); return; }
         const name = document.getElementById('metricName')?.value?.trim();
-        if (!name) { showToast(window.t('enterName') || 'Введіть назву', 'error'); return; }
+        if (!name) { showToast(window.t('enterName') || window.t('enterNm2'), 'error'); return; }
 
         // Metric limit: max 50 per company
         if (!statsEditingMetricId && statsMetrics.length >= 50) {
@@ -1393,7 +1393,7 @@
             await renderStatistics();
         } catch (e) {
             console.error('[STATS] saveMetricDetail:', e);
-            showToast('Помилка: ' + e.message, 'error');
+            showToast(window.t('errPfx2') + e.message, 'error');
         } finally {
             _saveMetricDetailLock = false;
         }
@@ -1456,7 +1456,7 @@
             await renderStatistics();
         } catch (e) {
             console.error('[STATS] deleteEntry:', e);
-            showToast('Помилка: ' + e.message, 'error');
+            showToast(window.t('errPfx2') + e.message, 'error');
         }
     };
 
@@ -1483,7 +1483,7 @@
             await renderStatistics();
         } catch (e) {
             console.error('[STATS] deleteStatsPeriodRow:', e);
-            showToast('Помилка: ' + e.message, 'error');
+            showToast(window.t('errPfx2') + e.message, 'error');
         }
     };
 
@@ -1693,8 +1693,8 @@
         });
         const periods = Array.from(periodsSet).sort();
 
-        // Рядок 1: заголовки — "Звітний період" + назви метрик (з одиницями)
-        const header1 = ['Звітний період', ...ms.map(m => m.name + (m.unit ? ' (' + m.unit + ')' : ''))];
+        // Рядок 1: заголовки — window.t('statsRpPer') + назви метрик (з одиницями)
+        const header1 = [window.t('statsRpPer'), ...ms.map(m => m.name + (m.unit ? ' (' + m.unit + ')' : ''))];
         // Рядок 2: цілі
         const header2 = [window.t('statsTarget'), ...ms.map(m => m.target ?? '')];
 
@@ -1872,7 +1872,7 @@
     async function statsImportMatrix(allRows) {
         if (!currentCompany || allRows.length < 2) { showToast('Файл порожній або некоректний', 'error'); return; }
         const header = allRows[0];
-        // Знаходимо індекс колонки "Звітний період" (або першої колонки)
+        // Знаходимо індекс колонки window.t('statsRpPer') (або першої колонки)
         const periodColIdx = 0;
         // Рядок 2 — цілі (пропускаємо)
         const dataStartRow = header[1] && isNaN(parseFloat(allRows[1]?.[1])) ? 2 : 1;
@@ -1966,7 +1966,7 @@
             if (!ov) return;
             ov.innerHTML = `<div style="background:white;border-radius:20px;padding:1.5rem;max-width:340px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
                 <div style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:#111;">Оберіть нішу для демо</div>
-                ${[['1','Меблевий бізнес','#f59e0b'],['2','Будівництво та ремонти','#3b82f6'],['3','Медична клініка','#22c55e']].map(([k,n,c])=>`
+                ${[['1',window.t('nicheFurn3'),'#f59e0b'],['2',window.t('nicheConst3'),'#3b82f6'],['3',window.t('nicheClinic3'),'#22c55e']].map(([k,n,c])=>`
                 <button data-k="${k}" style="width:100%;text-align:left;padding:0.75rem 1rem;border:2px solid #e5e7eb;border-radius:12px;background:white;cursor:pointer;font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.75rem;transition:all 0.15s;"
                     onmouseenter="this.style.borderColor='${c}';this.style.background='#f8fafc';"
                     onmouseleave="this.style.borderColor='#e5e7eb';this.style.background='white';">
@@ -1988,68 +1988,68 @@
 
         // ── ДАНІ ПО НІШАХ ─────────────────────────────────────────
         const NICHES = {
-            '1': { name: 'Меблевий бізнес', metrics: [
-                { name:'Нові замовлення',          unit:'шт',   freq:'weekly',  target:28,     imp:'critical', inv:false, v:0.28 },
+            '1': { name: window.t('nicheFurn3'), metrics: [
+                { name:window.t('mNewOrders'),          unit:'шт',   freq:'weekly',  target:28,     imp:'critical', inv:false, v:0.28 },
                 { name:'Виготовлено одиниць',       unit:'шт',   freq:'weekly',  target:24,     imp:'critical', inv:false, v:0.20 },
                 { name:'Виручка',                   unit:'грн',  freq:'weekly',  target:320000, imp:'critical', inv:false, v:0.22 },
-                { name:'Середній чек',              unit:'грн',  freq:'weekly',  target:12500,  imp:'high',     inv:false, v:0.14 },
-                { name:'Ліди з сайту',              unit:'шт',   freq:'weekly',  target:85,     imp:'high',     inv:false, v:0.32 },
-                { name:'Конверсія лід→замовлення',  unit:'%',    freq:'weekly',  target:33,     imp:'critical', inv:false, v:0.16 },
-                { name:'Рекламації',                unit:'шт',   freq:'weekly',  target:2,      imp:'high',     inv:true,  v:0.55 },
-                { name:'Витрати матеріали',         unit:'грн',  freq:'weekly',  target:145000, imp:'high',     inv:false, v:0.14 },
+                { name:window.t('mAvgCheck'),              unit:'грн',  freq:'weekly',  target:12500,  imp:'high',     inv:false, v:0.14 },
+                { name:window.t('mSiteLeads'),              unit:'шт',   freq:'weekly',  target:85,     imp:'high',     inv:false, v:0.32 },
+                { name:window.t('mConvLead'),  unit:'%',    freq:'weekly',  target:33,     imp:'critical', inv:false, v:0.16 },
+                { name:window.t('mComplaints'),                unit:'шт',   freq:'weekly',  target:2,      imp:'high',     inv:true,  v:0.55 },
+                { name:window.t('mMatCosts'),         unit:'грн',  freq:'weekly',  target:145000, imp:'high',     inv:false, v:0.14 },
                 { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:18000,  imp:'medium',   inv:false, v:0.18 },
-                { name:'Брак продукції',            unit:'шт',   freq:'weekly',  target:1,      imp:'high',     inv:true,  v:0.70 },
-                { name:'Ефективність виробництва',  unit:'%',    freq:'weekly',  target:87,     imp:'high',     inv:false, v:0.07 },
-                { name:'Простій обладнання',        unit:'год',  freq:'weekly',  target:4,      imp:'medium',   inv:true,  v:0.45 },
-                { name:'NPS клієнтів',              unit:window.t('metricPoints'),freq:'monthly', target:74,     imp:'high',     inv:false, v:0.09 },
+                { name:window.t('mDefects'),            unit:'шт',   freq:'weekly',  target:1,      imp:'high',     inv:true,  v:0.70 },
+                { name:window.t('mProdEff'),  unit:'%',    freq:'weekly',  target:87,     imp:'high',     inv:false, v:0.07 },
+                { name:window.t('mEquipIdle'),        unit:'год',  freq:'weekly',  target:4,      imp:'medium',   inv:true,  v:0.45 },
+                { name:window.t('mNPS'),              unit:window.t('metricPoints'),freq:'monthly', target:74,     imp:'high',     inv:false, v:0.09 },
                 { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:185000, imp:'critical', inv:false, v:0.18 },
-                { name:'Маржинальність',            unit:'%',    freq:'monthly', target:38,     imp:'critical', inv:false, v:0.09 },
-                { name:'Виробіток/працівник',       unit:'грн',  freq:'monthly', target:42000,  imp:'medium',   inv:false, v:0.14 },
-                { name:'Відгуки Google',            unit:'шт',   freq:'monthly', target:6,      imp:'medium',   inv:false, v:0.38 },
-                { name:'Нові дзвінки',              unit:'шт',   freq:'daily',   target:12,     imp:'high',     inv:false, v:0.32 },
-                { name:'Відправлено КП',            unit:'шт',   freq:'daily',   target:5,      imp:'medium',   inv:false, v:0.38 },
-                { name:'Заміри/виїзди',             unit:'шт',   freq:'daily',   target:4,      imp:'medium',   inv:false, v:0.42 },
+                { name:window.t('mMargin2'),            unit:'%',    freq:'monthly', target:38,     imp:'critical', inv:false, v:0.09 },
+                { name:window.t('mOutput'),       unit:'грн',  freq:'monthly', target:42000,  imp:'medium',   inv:false, v:0.14 },
+                { name:window.t('mGoogleRev'),            unit:'шт',   freq:'monthly', target:6,      imp:'medium',   inv:false, v:0.38 },
+                { name:window.t('mNewCalls'),              unit:'шт',   freq:'daily',   target:12,     imp:'high',     inv:false, v:0.32 },
+                { name:window.t('mSentCP'),            unit:'шт',   freq:'daily',   target:5,      imp:'medium',   inv:false, v:0.38 },
+                { name:window.t('mSiteVisits'),             unit:'шт',   freq:'daily',   target:4,      imp:'medium',   inv:false, v:0.42 },
             ]},
-            '2': { name: 'Будівництво та ремонти', metrics: [
-                { name:'Нові заявки',               unit:'шт',   freq:'weekly',  target:35,     imp:'critical', inv:false, v:0.28 },
+            '2': { name: window.t('nicheConst3'), metrics: [
+                { name:window.t('mNewApps'),               unit:'шт',   freq:'weekly',  target:35,     imp:'critical', inv:false, v:0.28 },
                 { name:"Виїзди на об'єкт",          unit:'шт',   freq:'weekly',  target:18,     imp:'high',     inv:false, v:0.24 },
-                { name:'Підписані договори',        unit:'шт',   freq:'weekly',  target:8,      imp:'critical', inv:false, v:0.28 },
+                { name:window.t('mSignContr'),        unit:'шт',   freq:'weekly',  target:8,      imp:'critical', inv:false, v:0.28 },
                 { name:'Виручка',                   unit:'грн',  freq:'weekly',  target:480000, imp:'critical', inv:false, v:0.22 },
-                { name:'Середній чек договору',     unit:'грн',  freq:'weekly',  target:62000,  imp:'high',     inv:false, v:0.14 },
-                { name:'Конверсія заявка→договір',  unit:'%',    freq:'weekly',  target:23,     imp:'critical', inv:false, v:0.18 },
-                { name:"Активних об'єктів",         unit:'шт',   freq:'weekly',  target:12,     imp:'high',     inv:false, v:0.14 },
-                { name:"Завершено об'єктів",        unit:'шт',   freq:'weekly',  target:3,      imp:'high',     inv:false, v:0.38 },
-                { name:'Прострочені дедлайни',      unit:'шт',   freq:'weekly',  target:1,      imp:'critical', inv:true,  v:0.65 },
-                { name:'Витрати матеріали',         unit:'грн',  freq:'weekly',  target:210000, imp:'high',     inv:false, v:0.18 },
-                { name:'Витрати субпідряд',         unit:'грн',  freq:'weekly',  target:95000,  imp:'high',     inv:false, v:0.28 },
+                { name:window.t('mAvgContr'),     unit:'грн',  freq:'weekly',  target:62000,  imp:'high',     inv:false, v:0.14 },
+                { name:window.t('mConvApp'),  unit:'%',    freq:'weekly',  target:23,     imp:'critical', inv:false, v:0.18 },
+                { name:window.t('mActiveObj'),         unit:'шт',   freq:'weekly',  target:12,     imp:'high',     inv:false, v:0.14 },
+                { name:window.t('mDoneObj'),        unit:'шт',   freq:'weekly',  target:3,      imp:'high',     inv:false, v:0.38 },
+                { name:window.t('mOverDead'),      unit:'шт',   freq:'weekly',  target:1,      imp:'critical', inv:true,  v:0.65 },
+                { name:window.t('mMatCosts'),         unit:'грн',  freq:'weekly',  target:210000, imp:'high',     inv:false, v:0.18 },
+                { name:window.t('mSubCosts'),         unit:'грн',  freq:'weekly',  target:95000,  imp:'high',     inv:false, v:0.28 },
                 { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:22000,  imp:'medium',   inv:false, v:0.18 },
-                { name:'Фото до/після',             unit:'шт',   freq:'weekly',  target:6,      imp:'low',      inv:false, v:0.32 },
-                { name:'NPS клієнтів',              unit:window.t('metricPoints'),freq:'monthly', target:68,     imp:'high',     inv:false, v:0.11 },
+                { name:window.t('mPhotos'),             unit:'шт',   freq:'weekly',  target:6,      imp:'low',      inv:false, v:0.32 },
+                { name:window.t('mNPS'),              unit:window.t('metricPoints'),freq:'monthly', target:68,     imp:'high',     inv:false, v:0.11 },
                 { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:320000, imp:'critical', inv:false, v:0.20 },
-                { name:'Маржинальність',            unit:'%',    freq:'monthly', target:35,     imp:'critical', inv:false, v:0.09 },
-                { name:'Відгуки Google',            unit:'шт',   freq:'monthly', target:8,      imp:'medium',   inv:false, v:0.38 },
-                { name:'Нові дзвінки',              unit:'шт',   freq:'daily',   target:8,      imp:'high',     inv:false, v:0.32 },
-                { name:'Виїзди на замір',           unit:'шт',   freq:'daily',   target:3,      imp:'medium',   inv:false, v:0.42 },
-                { name:'Відправлено КП',            unit:'шт',   freq:'daily',   target:4,      imp:'medium',   inv:false, v:0.38 },
+                { name:window.t('mMargin2'),            unit:'%',    freq:'monthly', target:35,     imp:'critical', inv:false, v:0.09 },
+                { name:window.t('mGoogleRev'),            unit:'шт',   freq:'monthly', target:8,      imp:'medium',   inv:false, v:0.38 },
+                { name:window.t('mNewCalls'),              unit:'шт',   freq:'daily',   target:8,      imp:'high',     inv:false, v:0.32 },
+                { name:window.t('mMeasTrips'),           unit:'шт',   freq:'daily',   target:3,      imp:'medium',   inv:false, v:0.42 },
+                { name:window.t('mSentCP'),            unit:'шт',   freq:'daily',   target:4,      imp:'medium',   inv:false, v:0.38 },
             ]},
-            '3': { name: 'Медична клініка', metrics: [
-                { name:'Первинних пацієнтів',       unit:'шт',   freq:'weekly',  target:42,     imp:'critical', inv:false, v:0.22 },
-                { name:'Повторних пацієнтів',       unit:'шт',   freq:'weekly',  target:65,     imp:'critical', inv:false, v:0.18 },
+            '3': { name: window.t('nicheClinic3'), metrics: [
+                { name:window.t('mNewPats'),       unit:'шт',   freq:'weekly',  target:42,     imp:'critical', inv:false, v:0.22 },
+                { name:window.t('mRepPats'),       unit:'шт',   freq:'weekly',  target:65,     imp:'critical', inv:false, v:0.18 },
                 { name:'Дзвінки вхідні',            unit:'шт',   freq:'weekly',  target:180,    imp:'high',     inv:false, v:0.18 },
-                { name:'Конверсія дзвінок→запис',   unit:'%',    freq:'weekly',  target:72,     imp:'critical', inv:false, v:0.09 },
+                { name:window.t('mConvCall'),   unit:'%',    freq:'weekly',  target:72,     imp:'critical', inv:false, v:0.09 },
                 { name:'Конверсія запис→прихід',    unit:'%',    freq:'weekly',  target:85,     imp:'critical', inv:false, v:0.07 },
                 { name:'Виручка',                   unit:'грн',  freq:'weekly',  target:520000, imp:'critical', inv:false, v:0.18 },
-                { name:'Середній чек',              unit:'грн',  freq:'weekly',  target:4800,   imp:'high',     inv:false, v:0.11 },
+                { name:window.t('mAvgCheck'),              unit:'грн',  freq:'weekly',  target:4800,   imp:'high',     inv:false, v:0.11 },
                 { name:'Кількість послуг',          unit:'шт',   freq:'weekly',  target:285,    imp:'high',     inv:false, v:0.14 },
                 { name:'Завантаженість лікарів',    unit:'%',    freq:'weekly',  target:78,     imp:'high',     inv:false, v:0.09 },
                 { name:'Скасовані записи',          unit:'шт',   freq:'weekly',  target:8,      imp:'high',     inv:true,  v:0.38 },
                 { name:'Час очікування',            unit:'хв',   freq:'weekly',  target:12,     imp:'medium',   inv:true,  v:0.28 },
                 { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:35000,  imp:'high',     inv:false, v:0.18 },
                 { name:'Вартість ліда',             unit:'грн',  freq:'weekly',  target:280,    imp:'high',     inv:true,  v:0.22 },
-                { name:'Витрати матеріали',         unit:'грн',  freq:'weekly',  target:85000,  imp:'high',     inv:false, v:0.14 },
+                { name:window.t('mMatCosts'),         unit:'грн',  freq:'weekly',  target:85000,  imp:'high',     inv:false, v:0.14 },
                 { name:'NPS пацієнтів',             unit:window.t('metricPoints'),freq:'monthly', target:82,     imp:'high',     inv:false, v:0.07 },
                 { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:380000, imp:'critical', inv:false, v:0.18 },
-                { name:'Відгуки Google',            unit:'шт',   freq:'monthly', target:12,     imp:'medium',   inv:false, v:0.32 },
+                { name:window.t('mGoogleRev'),            unit:'шт',   freq:'monthly', target:12,     imp:'medium',   inv:false, v:0.32 },
                 { name:'Плинність персоналу',       unit:'%',    freq:'monthly', target:4,      imp:'high',     inv:true,  v:0.28 },
                 { name:'Записів на день',           unit:'шт',   freq:'daily',   target:28,     imp:'high',     inv:false, v:0.22 },
                 { name:'Дзвінків на день',          unit:'шт',   freq:'daily',   target:35,     imp:'medium',   inv:false, v:0.28 },
@@ -2151,7 +2151,7 @@
             renderStatistics();
         } catch(e) {
             console.error('[STATS] demo:', e);
-            showToast('Помилка: ' + e.message, 'error');
+            showToast(window.t('errPfx2') + e.message, 'error');
         }
     }
 
@@ -2432,7 +2432,7 @@
             renderStatistics();
         } catch (e) {
             console.error('[STATS] clearAll:', e);
-            showToast('Помилка: ' + e.message, 'error');
+            showToast(window.t('errPfx2') + e.message, 'error');
         }
     };
     // ── Register in TALKO namespace ──────────────────────────

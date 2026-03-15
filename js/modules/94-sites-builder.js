@@ -716,7 +716,7 @@ window.sbTogglePublish = async function() {
         // Оновлюємо весь header через єдину функцію
         _updateHeader();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
     } finally {
         sb._publishing = false;
         if (_publishBtn) { _publishBtn.disabled = false; _publishBtn.style.opacity = ''; }
@@ -804,7 +804,7 @@ window.sbSaveSlug = async function(val) {
         if (typeof showToast === 'function')
             showToast(slug ? `Slug збережено: /s/${slug}` : 'Slug видалено', 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 
@@ -1116,7 +1116,7 @@ window.sbSaveCode = async function() {
         sb.site.bodyCode          = bodyCode;
         if (typeof showToast === 'function') showToast('Код збережено ✓', 'success');
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 

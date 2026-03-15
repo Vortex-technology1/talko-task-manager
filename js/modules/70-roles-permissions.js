@@ -148,7 +148,7 @@ const PERMISSION_GROUPS = [
         ]
     },
     {
-        group: 'Команда',
+        group: window.t('teamWord'),
         items: [
             { key: 'viewTeamList',         label: 'Бачити список команди' },
             { key: 'viewColleagueEmails',  label: 'Бачити email колег' },

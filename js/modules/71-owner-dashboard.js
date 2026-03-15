@@ -187,7 +187,7 @@ window.renderOwnerReportInto = function(el) {
     }
 };
 
-// Показуємо опцію "Звіт власника" в select тільки для owner/manager
+// Показуємо опцію window.t('ownerRep2') в select тільки для owner/manager
 window.initOwnerReportOption = function() {
     const role = typeof currentUserData !== 'undefined' ? currentUserData?.role : null;
     const opt = document.getElementById('ownerReportOption');

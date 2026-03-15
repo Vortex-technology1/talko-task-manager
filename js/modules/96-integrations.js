@@ -685,7 +685,7 @@ window.intgTestNP = async function() {
         if (data.success) {
             if (typeof showToast === 'function') showToast('Nova Poshta API працює', 'success');
         } else {
-            if (typeof showToast === 'function') showToast('Помилка: ' + (data.errors?.[0] || 'невірний ключ'), 'error');
+            if (typeof showToast === 'function') showToast(window.t('errPfx2') + (data.errors?.[0] || 'невірний ключ'), 'error');
         }
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
@@ -801,7 +801,7 @@ window.crmMonoPayLink = async function(amount, description, dealId) {
             if (typeof showToast === 'function') showToast('Посилання скопійовано', 'success');
             return data.pageUrl;
         } else {
-            if (typeof showToast === 'function') showToast('Помилка: ' + (data.errText || JSON.stringify(data)), 'error');
+            if (typeof showToast === 'function') showToast(window.t('errPfx2') + (data.errText || JSON.stringify(data)), 'error');
             return null;
         }
     } catch(e) {
@@ -946,7 +946,7 @@ window.intgSaveBinotel = async function() {
         if (typeof showToast === 'function') showToast('Binotel збережено', 'success');
         _renderAll();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 
@@ -984,7 +984,7 @@ window.intgSaveRingostat = async function() {
         if (typeof showToast === 'function') showToast('Ringostat збережено', 'success');
         _renderAll();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 
@@ -1019,7 +1019,7 @@ window.intgSaveStreamTelecom = async function() {
         if (typeof showToast === 'function') showToast('Stream Telecom збережено', 'success');
         _renderAll();
     } catch(e) {
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 

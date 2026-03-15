@@ -465,23 +465,23 @@
             if (!u) return;
 
             const PERMISSION_GROUPS = [
-                { group: 'Статистика', items: [
+                { group: window.t('permStat2'), items: [
                     { key: 'viewStats',        label: 'Переглядати статистику' },
                     { key: 'viewAllMetrics',   label: 'Бачити всі метрики' },
                     { key: 'editMetrics',      label: 'Редагувати метрики' },
                     { key: 'deleteMetricRows', label: 'Видаляти рядки' },
                 ]},
-                { group: 'Завдання', items: [
+                { group: window.t('permTsk2'), items: [
                     { key: 'viewAllTasks',  label: 'Бачити всі завдання' },
                     { key: 'assignTasks',   label: 'Призначати виконавців' },
                     { key: 'editAnyTask',   label: 'Редагувати будь-яке завдання' },
                     { key: 'deleteAnyTask', label: 'Видаляти завдання' },
                 ]},
-                { group: 'Контроль', items: [
+                { group: window.t('permCtrl2'), items: [
                     { key: 'viewControl',    label: 'Панель контролю' },
                     { key: 'viewAiAnalysis', label: 'AI Аналіз' },
                 ]},
-                { group: 'Команда', items: [
+                { group: window.t('teamWord'), items: [
                     { key: 'inviteUsers', label: 'Запрошувати співробітників' },
                     { key: 'changeRoles', label: 'Змінювати ролі' },
                 ]},
@@ -536,8 +536,8 @@
                     if (!u.customPermissions) u.customPermissions = {};
                     u.customPermissions[key] = value;
                 }
-                showToast('Збережено', 'success');
+                showToast(window.t('saved2'), 'success');
             } catch(e) {
-                showToast('Помилка: ' + e.message, 'error');
+                showToast(window.t('errPfx2') + e.message, 'error');
             }
         };

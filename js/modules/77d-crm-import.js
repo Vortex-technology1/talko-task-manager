@@ -170,11 +170,11 @@ function _crmImportStepMapping(rows) {
         { id: 'name',   label: "Ім'я клієнта",  required: true  },
         { id: 'phone',  label: 'Телефон',        required: false },
         { id: 'email',  label: 'Email',           required: false },
-        { id: 'source', label: 'Джерело',         required: false },
+        { id: 'source', label: window.t('crmSrc2'),         required: false },
         { id: 'niche',  label: 'Ніша',            required: false },
         { id: 'note',   label: 'Нотатка',         required: false },
         { id: 'amount', label: 'Сума угоди',      required: false },
-        { id: 'stage',  label: 'Стадія',          required: false },
+        { id: 'stage',  label: window.t('crmStg2'),          required: false },
         { id: 'skip',   label: '— Пропустити —',  required: false },
     ];
 
@@ -279,7 +279,7 @@ function _crmImportStepMapping(rows) {
         </div>
     </div>`;
 
-    // Зберігаємо HTML для кнопки "Назад"
+    // Зберігаємо HTML для кнопки window.t('flowBk2')
     window._crmImportStepUploadHtml = _crmImportStepUpload;
     // Відновлюємо file input listener
     setTimeout(() => {

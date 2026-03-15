@@ -43,9 +43,9 @@
     const COORD_I18N = {
         ua: {
             title:window.t('coordKoordyna'), newCoord:window.t('coordNovaKoordyna'), emptyText:window.t('coordKoordynaShcheNemaye'),
-            addFirst:'+ Додати першу', modalTitle:window.t('coordNovaKoordyna'), modalEdit:'Редагувати',
+            addFirst:'+ Додати першу', modalTitle:window.t('coordNovaKoordyna'), modalEdit:window.t('flowEdt2'),
             labelName:window.t('coordNazvaKoordyna'), placeholderName:window.t('coordShchodennaKoordynaKomandy'),
-            labelType:'Тип', labelStatus:'Статус', statusActive:'Активна', statusPaused:'Призупинена',
+            labelType:window.t('flowTyp2'), labelStatus:'Статус', statusActive:'Активна', statusPaused:'Призупинена',
             labelChairman:window.t('coordHolovaKoordyna'), selectChairman:window.t('coordOberitVidpovid'),
             labelParticipants:'Учасники', labelDay:'День тижня', anyDay:'— Будь-який —',
             labelTime:'Час початку', labelFilter:window.t('coordFiltrZavdan'),
@@ -54,7 +54,7 @@
             labelEscal:window.t('coordEskalatsiDo'), escalAuto:'— Авто по типу —',
             escalHint:window.t('coordNevyrishePytannyaAvtomaty'),
             labelTelegram:'Telegram Chat ID', telegramHint:window.t('coordProtokolNadsylayeAvtomaty'),
-            btnCancel:'Скасувати', btnSave:'Зберегти',
+            btnCancel:window.t('flowCncl2'), btnSave:window.t('flowSv2'),
             agendaTitle:'Порядок денний', agendaHint:window.t('coordUchasnykyDodayutPytannya'),
             btnFinish:'Завершити', agendaSection:'Порядок денний', participantsLbl:'Учасники',
             decisionsLbl:window.t('coordRishennya'), escalLbl:window.t('coordEskalatsiNevyrishePytannya'),
@@ -73,7 +73,7 @@
             title:'Координации', newCoord:'Новая координация', emptyText:'Координаций ещё нет',
             addFirst:'+ Добавить первую', modalTitle:'Новая координация', modalEdit:'Редактировать',
             labelName:'Название координации', placeholderName:'Ежедневная координация команды',
-            labelType:'Тип', labelStatus:'Статус', statusActive:'Активная', statusPaused:'Приостановлена',
+            labelType:window.t('flowTyp2'), labelStatus:'Статус', statusActive:'Активная', statusPaused:'Приостановлена',
             labelChairman:'Руководитель координации', selectChairman:'— Выберите ответственного —',
             labelParticipants:'Участники', labelDay:'День недели', anyDay:'— Любой —',
             labelTime:'Время начала', labelFilter:'Фильтр задач',
@@ -197,7 +197,7 @@
         oneoff:      { get label(){ return ct('typeOneoff'); },      icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>', color: '#6b7280', duration: 45 },
     };
 
-    const DAYS_UK = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
+    const DAYS_UK = [window.t('calSunS'),window.t('calMonS'),window.t('calTueS'),window.t('calWedS'),window.t('calThuS'),window.t('calFriS'),window.t('calSatS')];
 
     const AGENDA_BASE = [
         { id: 'stats',     icon: '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>', get label(){ return ct('statsLbl'); } },
@@ -367,7 +367,7 @@
         }
         const groups = {};
         coordinations.forEach(c => {
-            const g = TYPES[c.type]?.label || 'Інше';
+            const g = TYPES[c.type]?.label || window.t('finOth2');
             if (!groups[g]) groups[g] = [];
             groups[g].push(c);
         });
@@ -746,7 +746,7 @@
                 toast((window.currentLang==='ru'?'Координация создана':window.t('coordKoordynaStvoreno')));
             }
             closeCoordModal();
-        } catch(e) { toast('Помилка: '+e.message,'error'); }
+        } catch(e) { toast(window.t('errPfx2')+e.message,'error'); }
         finally { _saveCoordLock = false; }
     };
 
@@ -756,7 +756,7 @@
             : (window.showConfirmModal ? await showConfirmModal('Видалити?',{danger:true}) : confirm('Видалити?'));
         if (!ok) return;
         try { await col('coordinations').doc(coordId).delete(); toast('Видалено'); }
-        catch(e) { toast('Помилка видалення','error'); }
+        catch(e) { toast(window.t('delErr2'),'error'); }
     };
 
     // ── Dynamic Agenda ─────────────────────────────────────
@@ -1073,7 +1073,7 @@
             if (c.telegramChatId) await sendTelegramProto(session,c.telegramChatId);
 
             showProtocol(session);
-        } catch(e) { console.error(e); toast('Помилка: '+e.message,'error'); }
+        } catch(e) { console.error(e); toast(window.t('errPfx2')+e.message,'error'); }
     };
 
     function findEscalTarget(c) {
@@ -1220,7 +1220,7 @@
                 </div>`;
             }).join('')}`;
             document.getElementById('coordProtocolModal').style.display='flex';
-        } catch(e){toast('Помилка завантаження','error');}
+        } catch(e){toast(window.t('loadErr2'),'error');}
     };
 
     window.loadSessionProtocol = async function(sessionId) {

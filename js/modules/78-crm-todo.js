@@ -572,7 +572,7 @@ window._crmTodoSave = async function(dealId) {
 
     } catch(e) {
         if(btn){btn.disabled=false;btn.textContent=window.t('flowSave');}
-        if(window.showToast)showToast('Помилка: '+e.message,'error');
+        if(window.showToast)showToast(window.t('errPfx2')+e.message,'error');
     }
 };
 

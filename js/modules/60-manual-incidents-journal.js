@@ -7,7 +7,7 @@ const INCIDENTS_COL = 'incidents';
 const SEVERITY_LABELS = { 1: window.t('sevLow2'), 2: window.t('sevMedium2'), 3: window.t('sevCritical2') };
 const STATUS_LABELS = {
   new:        window.t('incStatusNew'),
-  in_review:  'На розгляді',
+  in_review:  window.t('incReview2'),
   fixing:     window.t('incStatusFixing'),
   resolved:   window.t('incResolved2'),
 };

@@ -73,7 +73,7 @@
 
         const stage = {
             projectId,
-            name: data.name || 'Новий етап',
+            name: data.name || window.t('stgNew2'),
             order,
             status: 'planned', // planned|in_progress|blocked|done
             plannedStartDate: data.plannedStartDate || null,
@@ -94,7 +94,7 @@
             return ref.id;
         } catch (e) {
             console.error('[STAGES] createStage:', e);
-            showToast('Помилка: ' + e.message, 'error');
+            showToast(window.t('errPfx2') + e.message, 'error');
             return null;
         }
     }
@@ -106,7 +106,7 @@
             await stagesRef().doc(stageId).update(data);
         } catch (e) {
             console.error('[STAGES] updateStage:', e);
-            showToast('Помилка: ' + e.message, 'error');
+            showToast(window.t('errPfx2') + e.message, 'error');
         }
     }
 
@@ -130,10 +130,10 @@
             }
             // Update local state only after successful Firestore writes
             linkedTasks.forEach(t => { t.stageId = ''; });
-            showToast('Етап видалено', 'success');
+            showToast(window.t('stgDel2'), 'success');
         } catch (e) {
             console.error('[STAGES] deleteStage:', e);
-            showToast('Помилка: ' + e.message, 'error');
+            showToast(window.t('errPfx2') + e.message, 'error');
         }
     }
 
@@ -423,7 +423,7 @@
 
         const html = `
         <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;">
-            <h2 style="font-size:1.1rem;font-weight:700;">${stage ? 'Редагувати етап' : 'Новий етап'}</h2>
+            <h2 style="font-size:1.1rem;font-weight:700;">${stage ? 'Редагувати етап' : window.t('stgNew2')}</h2>
             <span class="close" onclick="closeModal('stageModal')" style="font-size:1.5rem;cursor:pointer;">&times;</span>
         </div>
         <div class="form-group">
@@ -476,7 +476,7 @@
 
     window.saveStageFromModal = async function(projectId, stageId) {
         const name = document.getElementById('stageName')?.value?.trim();
-        if (!name) { showToast('Введіть назву', 'error'); return; }
+        if (!name) { showToast(window.t('enterNm2'), 'error'); return; }
 
         const data = {
             name,
@@ -706,7 +706,7 @@
 
     window.saveMaterialQuick = async function(projectId, stageId) {
         const name = document.getElementById('mqName')?.value?.trim();
-        if (!name) { showToast('Введіть назву', 'error'); return; }
+        if (!name) { showToast(window.t('enterNm2'), 'error'); return; }
         const data = {
             name,
             qty: parseFloat(document.getElementById('mqQty')?.value) || 1,

@@ -340,7 +340,7 @@ window.crmResetFilters = function() {
 // ── Експорт угод в CSV ─────────────────────────────────────
 window.crmExportCSV = function() {
     const deals = _filteredDeals();
-    if (!deals.length) { if (typeof showToast === 'function') showToast('Немає угод для експорту', 'error'); return; }
+    if (!deals.length) { if (typeof showToast === 'function') showToast(window.t('crmNoExp'), 'error'); return; }
 
     const stages = crm.pipeline?.stages || [];
     const stageMap = {};
@@ -348,7 +348,7 @@ window.crmExportCSV = function() {
     const userMap = {};
     (typeof users !== 'undefined' ? users : []).forEach(u => { userMap[u.id] = u.name || u.email || u.id; });
 
-    const headers = [window.t('crmColName'), window.t('crmColClient'), window.t('crmColPhone'), 'Email', window.t('crmStage2'), window.t('crmColAmount'), window.t('crmColCurrency'), window.t('crmColAssignee'), window.t('crmColSource'), window.t('crmColTags'), 'Дата створення', 'Остання активність'];
+    const headers = [window.t('crmColName'), window.t('crmColClient'), window.t('crmColPhone'), 'Email', window.t('crmStage2'), window.t('crmColAmount'), window.t('crmColCurrency'), window.t('crmColAssignee'), window.t('crmColSource'), window.t('crmColTags'), window.t('crmCreDt'), 'Остання активність'];
 
     const rows = deals.map(d => [
         d.title || d.clientName || '',
@@ -562,11 +562,11 @@ function _kanbanFilterBar() {
         </select>
         <div style="display:flex;align-items:center;gap:0.25rem;">
             <span style="font-size:0.72rem;color:#9ca3af;">₴</span>
-            <input id="crmKanbanFilterAmountMin" type="number" placeholder="від" value="${f.amountMin || ''}"
+            <input id="crmKanbanFilterAmountMin" type="number" placeholder=window.t('fromWord') value="${f.amountMin || ''}"
                 oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
             <span style="font-size:0.72rem;color:#9ca3af;">—</span>
-            <input id="crmKanbanFilterAmountMax" type="number" placeholder="до" value="${f.amountMax || ''}"
+            <input id="crmKanbanFilterAmountMax" type="number" placeholder=window.t('toWord') value="${f.amountMax || ''}"
                 oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
         </div>
@@ -1174,7 +1174,7 @@ window.crmBulkTag = function() {
     menu.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
     menu.innerHTML = '<div style="background:white;border-radius:12px;padding:1.25rem;width:300px;max-width:95vw;">' +
         '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Додати тег (' + crm.selectedIds.size + ' ' + (window.t('crmDealsWord')||'угод') + ')</div>' +
-        '<input id="bulkTagInput" placeholder="Введіть тег..." autofocus ' +
+        '<input id="bulkTagInput" placeholder="' + window.t('crmTagPh2') + '" autofocus ' +
         'style="width:100%;padding:0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;box-sizing:border-box;margin-bottom:0.5rem;">' +
         '<div style="display:flex;gap:0.5rem;">' +
         '<button id="bulkTagCancel" style="flex:1;padding:0.45rem;background:#f3f4f6;color:#374151;border:none;border-radius:7px;cursor:pointer;font-size:0.8rem;">Скасувати</button>' +
@@ -1308,7 +1308,7 @@ window.crmDuplicateDeal = async function(dealId) {
         await ref.collection('history').add({ type:'created', text:'Дублікат угоди #'+dealId.slice(-6), by: window.currentUser?.email||'manager', at: firebase.firestore.FieldValue.serverTimestamp() });
         if (window.showToast) showToast(window.t('crmDuplicated'), 'success');
     } catch(e) {
-        if (window.showToast) showToast('Помилка: '+e.message, 'error');
+        if (window.showToast) showToast(window.t('errPfx2')+e.message, 'error');
     }
 };
 
@@ -1501,7 +1501,7 @@ window.crmDrop = async function(e, newStage) {
         console.error('[CRM drop]', err);
         deal.stage = oldStage;
         _renderKanban();
-        if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + err.message, 'error');
     }
 };
 
@@ -1576,7 +1576,7 @@ window.crmQuickSetStage = async function(dealId, newStage) {
         console.error('[CRM quickStage]', err);
         deal.stage = oldStage;
         _renderKanban();
-        if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + err.message, 'error');
     }
 };
 
@@ -1728,7 +1728,7 @@ window.crmConfirmLost = async function(dealId, newStage, oldStage) {
         console.error('[CRM lost]', err);
         deal.stage = oldStage || 'new';
         _renderKanban();
-        if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + err.message, 'error');
     } finally {
         crm._lostSaving = false;
     }
@@ -2393,7 +2393,7 @@ window.crmAddTag = async function(dealId) {
         deal.tags = tags;
         if (inp) inp.value = '';
         _renderTagsList(dealId, tags, document.getElementById('dealTagsList'));
-    } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+    } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
 };
 
 window.crmRemoveTag = async function(dealId, tag) {
@@ -2405,7 +2405,7 @@ window.crmRemoveTag = async function(dealId, tag) {
             .update({ tags, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         deal.tags = tags;
         _renderTagsList(dealId, tags, document.getElementById('dealTagsList'));
-    } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+    } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
 };
 window.crmToggleHot = async function(dealId) {
     const deal = crm.deals.find(d => d.id === dealId);
@@ -2417,7 +2417,7 @@ window.crmToggleHot = async function(dealId) {
         deal.isHot = isHot;
         if(window.showToast) showToast(isHot ? window.t('crmHotDealEmoji') : window.t('crmUnmarked'), 'success');
         crmDealTab(dealId, 'details'); // ре-рендер деталей
-    } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+    } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
 };
 
 // ── Задачі по угоді ────────────────────────────────────────
@@ -2505,7 +2505,7 @@ window.crmMarkTaskDone = async function(taskId) {
             const deal = crm.deals.find(function(d){return d.id === crm.activeDealId;});
             if (deal) _loadTasksTab(deal);
         }
-    } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+    } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
 };
 
 
@@ -3138,7 +3138,7 @@ window.crmOpenClient = function(clientId) {
             </div>
             <!-- Поле вводу -->
             <div id="chatInputArea_crm" style="display:flex;gap:0.4rem;align-items:flex-end;">
-                <textarea id="chatInput_crm" rows="1" placeholder="Написати повідомлення... (Enter — відправити)"
+                <textarea id="chatInput_crm" rows="1" placeholder=window.t('botsChatPh')
                     style="flex:1;padding:0.45rem 0.6rem;border:1.5px solid #e5e7eb;
                     border-radius:8px;font-size:0.8rem;resize:none;font-family:inherit;
                     max-height:80px;overflow-y:auto;outline:none;line-height:1.4;box-sizing:border-box;"
@@ -3294,7 +3294,7 @@ const ACT_ICONS = {
     contact_updated: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
 };
 const ACT_COLORS = { call:'#3b82f6', meeting:'#8b5cf6', email:'#f59e0b', note:'#6b7280', task:'#22c55e', stage_changed:'#8b5cf6', created:'#22c55e', call_answered:'#22c55e', call_missed:'#ef4444', sms_sent:'#3b82f6', contact_updated:'#f59e0b' };
-const ACT_LABELS = { call:window.t('crmActivityCall'), meeting:window.t('crmActivityMeet'), email:window.t('crmActivityLetter'), note:window.t('crmActivityNote'), task:window.t('crmActivityTask'), stage_changed:'Зміна стадії', created:window.t('crmCreated2'), call_answered:'Взяв трубку', call_missed:'Не взяв', sms_sent:window.t('crmMessage'), contact_updated:'Контакт оновлено' };
+const ACT_LABELS = { call:window.t('crmActivityCall'), meeting:window.t('crmActivityMeet'), email:window.t('crmActivityLetter'), note:window.t('crmActivityNote'), task:window.t('crmActivityTask'), stage_changed:window.t('crmStgChg'), created:window.t('crmCreated2'), call_answered:window.t('crmPickd'), call_missed:window.t('crmNoAns'), sms_sent:window.t('crmMessage'), contact_updated:window.t('crmContUpd') };
 
 async function _renderActivitiesTab(forceRefresh = false) {
     const c = document.getElementById('crmViewActivities');
@@ -3366,7 +3366,7 @@ function _renderActivitiesUI(c, allActivities) {
                 ${crm.deals.filter(d=>d.stage!=='won'&&d.stage!=='lost').map(d =>
                     `<option value="${d.id}">${_esc(d.title||d.clientName||window.t('crmDeal'))}</option>`).join('')}
             </select>
-            <textarea id="actNoteText" rows="2" placeholder="Нотатка / деталі..."
+            <textarea id="actNoteText" rows="2" placeholder=window.t('crmNoteD')
                 style="width:100%;padding:0.4rem 0.5rem;border:1.5px solid #e8eaed;border-radius:7px;
                 font-size:0.8rem;box-sizing:border-box;resize:vertical;"></textarea>
             <button id="actSaveBtn"
@@ -4093,7 +4093,7 @@ window.crmMoveDealToPipeline = async function(dealId, targetPipelineId, targetPi
         // onSnapshot автоматично оновить kanban (лід зникне з поточної воронки)
     } catch(err) {
         console.error('[CRM movePipeline]', err);
-        if (typeof showToast === 'function') showToast('Помилка: ' + err.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + err.message, 'error');
     }
 };
 
@@ -4101,7 +4101,7 @@ window.crmSelectPipeline = async function(pipelineId) {
     // FIX: при кліку на активну — не відкриваємо Settings, просто ігноруємо
     if (crm.pipeline?.id === pipelineId) return;
     const found = crm.pipelines.find(p => p.id === pipelineId);
-    if (!found) { if (typeof showToast === 'function') showToast('Воронку не знайдено', 'error'); return; }
+    if (!found) { if (typeof showToast === 'function') showToast(window.t('fnnlNF'), 'error'); return; }
     crm.pipeline = found;
     _subscribeDeals(); // subscribe запустить _renderKanban або _renderListView через onSnapshot
     // FIX: рендеримо поточний subTab, не Settings
@@ -4160,7 +4160,7 @@ window.crmLoadMore = async function() {
         else _renderListView();
     } catch(e) {
         console.error('[CRM loadMore]', e);
-        if (typeof showToast === 'function') showToast('Помилка завантаження', 'error');
+        if (typeof showToast === 'function') showToast(window.t('loadErr2'), 'error');
     } finally {
         crm._loadingMore = false;
     }
@@ -4609,7 +4609,7 @@ window.crmSaveTaskFromDeal = async function(dealId) {
             if (typeof scheduleRender === 'function') scheduleRender();
         }
     } catch(e) {
-        if(window.showToast) showToast('Помилка: ' + e.message, 'error');
+        if(window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
         console.error('[CRM] crmSaveTaskFromDeal:', e.message);
     }
 };

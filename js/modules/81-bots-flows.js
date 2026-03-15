@@ -144,11 +144,11 @@
                                         style="padding:0.45rem 0.75rem;background:${flow.status==='active'?'#fee2e2':'#f0fdf4'};color:${flow.status==='active'?'#ef4444':'#16a34a'};border:1.5px solid ${flow.status==='active'?'#fca5a5':'#86efac'};border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
                                         ${flow.status === 'active' ? window.t('botsPauseLabel') : window.t('botsActivateLabel')}
                                     </button>
-                                    <button onclick="openFlowEditor('${flow.id}')" title="Редагувати"
+                                    <button onclick="openFlowEditor('${flow.id}')" title=window.t('flowEdt2')
                                         style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">
                                         Редагувати
                                     </button>
-                                    <button onclick="confirmDeleteFlow('${flow.id}')" title="Видалити"
+                                    <button onclick="confirmDeleteFlow('${flow.id}')" title=window.t('flowDel2')
                                         style="padding:0.45rem 0.6rem;background:#fee2e2;color:#ef4444;border:1px solid #fca5a5;border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:700;letter-spacing:0.05em;">
                                         DEL
                                     </button>
@@ -172,7 +172,7 @@
             if (typeof showToast === 'function') showToast(newStatus === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> Бота активовано' : window.t('botsBotPaused'), 'success');
         } catch (e) {
             console.error('[toggleFlowStatus]', e);
-            if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+            if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
         }
     };
 
@@ -205,7 +205,7 @@
                     <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                         <div>
                             <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА БОТА *</label>
-                            <input id="newFlowName" placeholder="Наприклад: Запис на прийом"
+                            <input id="newFlowName" placeholder=window.t('botsFlowEx')
                                 style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
                         </div>
                         <div>
@@ -219,7 +219,7 @@
                         </div>
                         <div>
                             <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТРИГЕР (ключове слово або /start)</label>
-                            <input id="newFlowTrigger" placeholder="/start або записатись"
+                            <input id="newFlowTrigger" placeholder=window.t('botsTrigEx')
                                 style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
                         </div>
                     </div>
@@ -266,7 +266,7 @@
             document.getElementById('botsCreateOverlay')?.remove();
             if (typeof showToast === 'function') showToast(window.t('botsBotCreatedOk'), 'success');
             openFlowEditor(ref.id, botsCurrentBotId);
-        } catch (err) { if(window.showToast)showToast('Помилка: ' + err.message,'error'); else alert('Помилка: ' + err.message); }
+        } catch (err) { if(window.showToast)showToast(window.t('errPfx2') + err.message,'error'); else alert(window.t('errPfx2') + err.message); }
     };
 
     // ── Flow Node Editor (slide-in panel) ──────────────────
@@ -624,7 +624,7 @@
                 : compRef.collection('flows').doc(botsCurrentFlowId);
             await ref.update({ nodes: botsFlowNodes, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
             if (typeof showToast === 'function') showToast(window.t('botsSavedOk'), 'success');
-        } catch (e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+        } catch (e) { if(window.showToast)showToast(window.t('errPfx2') + e.message,'error'); else alert(window.t('errPfx2') + e.message); }
     };
 
     // ── Sessions View ──────────────────────────────────────
@@ -670,7 +670,7 @@
             renderBotsSessionsView();
         } catch (e) {
             console.error('[resolveHumanSession]', e);
-            if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+            if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
         }
     };
 
@@ -723,7 +723,7 @@
                         ` : `
                         <div style="font-size:0.78rem;color:#6b7280;">
                             1. Створіть бота через <a href="https://t.me/BotFather" target="_blank" style="color:#22c55e;">@BotFather</a> → скопіюйте токен<br>
-                            2. Вставте токен вище → натисніть "Підключити"<br>
+                            2. Вставте токен вище → натисніть window.t('flowConn2')<br>
                             3. Система автоматично встановить вебхук
                         </div>
                         `}
@@ -767,7 +767,7 @@
                         <div style="font-size:0.78rem;color:#6b7280;">
                             1. Створіть додаток на <a href="https://developers.facebook.com" target="_blank" style="color:#22c55e;">developers.facebook.com</a><br>
                             2. Отримайте Page Access Token<br>
-                            3. Вставте токен і Verify Token → "Підключити"<br>
+                            3. Вставте токен і Verify Token → window.t('flowConn2')<br>
                             4. Додайте Webhook URL в Meta Console
                         </div>
                         `}
@@ -910,7 +910,7 @@
             if (typeof showToast === 'function') showToast(`Telegram @${botName} підключено!`, 'success');
             renderBotsSettingsView();
         } catch(e) {
-            if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+            if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
         }
     };
 
@@ -934,7 +934,7 @@
             if (typeof showToast === 'function') showToast(`${channel} підключено! Додайте Webhook URL в Meta Console.`, 'success');
             renderBotsSettingsView();
         } catch(e) {
-            if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+            if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
         }
     };
 
@@ -948,7 +948,7 @@
             if (typeof showToast === 'function') showToast(`${channel} відключено`, 'success');
             renderBotsSettingsView();
         } catch(e) {
-            if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+            if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
         }
     };
 
@@ -964,7 +964,7 @@
                 .update({ [field]: key });
             if (typeof showToast === 'function') showToast(window.t('botsKeySaved'), 'success');
             document.getElementById(inputId).value = '••••••••' + key.slice(-4);
-        } catch (e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else alert('Помилка: ' + e.message); }
+        } catch (e) { if(window.showToast)showToast(window.t('errPfx2') + e.message,'error'); else alert(window.t('errPfx2') + e.message); }
     };
 
     // ── Helpers ────────────────────────────────────────────

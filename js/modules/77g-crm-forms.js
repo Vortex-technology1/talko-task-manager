@@ -173,7 +173,7 @@ window.crmCreateForm = function () {
         <label style="display:block;margin-bottom:1rem;">
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Поля форми</div>
             <div style="display:flex;flex-direction:column;gap:0.3rem;">
-                ${[['name','Ім\'я',true],['phone','Телефон',true],['email','Email',false],['message','Повідомлення',false]].map(([id,label,def]) => `
+                ${[['name','Ім\'я',true],['phone','Телефон',true],['email','Email',false],['message',window.t('flowMsg2'),false]].map(([id,label,def]) => `
                 <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;color:#374151;cursor:pointer;">
                     <input type="checkbox" id="crmFormField_${id}" ${def?'checked':''} style="accent-color:#22c55e;">
                     ${label} ${def?'<span style="color:#ef4444;">*</span>':''}
@@ -229,7 +229,7 @@ window.crmSaveNewForm = async function () {
         if (window.showToast) showToast('Форму створено', 'success');
         window.crmRenderFormsSettings();
     } catch (e) {
-        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        if (window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
         if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Створити форму'; }
     }
 };
@@ -240,7 +240,7 @@ window.crmToggleFormDisabled = async function (formId, disabled) {
         if (window.showToast) showToast(disabled ? 'Форму деактивовано' : 'Форму активовано', 'success');
         window.crmRenderFormsSettings();
     } catch (e) {
-        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        if (window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 
@@ -254,7 +254,7 @@ window.crmDeleteForm = async function (formId) {
         if (window.showToast) showToast('Форму видалено', 'success');
         window.crmRenderFormsSettings();
     } catch (e) {
-        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+        if (window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 

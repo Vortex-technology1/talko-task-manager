@@ -515,7 +515,7 @@
                 content.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.4rem;">
                         <div>
-                            <h3 style="margin:0;">${window.t('failureJournal')||'Журнал збоїв'}</h3>
+                            <h3 style="margin:0;">${window.t('failureJournal')||window.t('failJrnl2')}</h3>
                             <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${window.t('incidentJournalDesc')||'Тут фіксується те, що пішло не так'}</div>
                         </div>
                         <button class="btn btn-success btn-small" onclick="if(typeof showIncidentModal==='function')showIncidentModal();else toggleAddIncidentForm();" style="display:flex;align-items:center;gap:0.3rem;">
@@ -565,7 +565,7 @@
                                     </div>
                                     <button onclick="resolveIncident('${escId(mi.id)}')"
                                         style="background:#16a34a;color:white;border:none;border-radius:6px;padding:0.3rem 0.6rem;cursor:pointer;font-size:0.72rem;font-weight:600;white-space:nowrap;flex-shrink:0;">
-                                        ✓ ${window.t('markResolved')||'Вирішено'}
+                                        ✓ ${window.t('markResolved')||window.t('incResolved3')}
                                     </button>
                                 </div>
                             </div>`;

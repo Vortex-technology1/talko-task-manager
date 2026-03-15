@@ -770,7 +770,7 @@ async function renderContactsTab() {
                 <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
                     <div style="flex:1;position:relative;">
                         <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#9ca3af;" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                        <input id="ctsSearch" type="text" placeholder="Ім'я, телефон, нікнейм..."
+                        <input id="ctsSearch" type="text" placeholder=window.t('botsSearchPh2')
                             value="${escH(cts.search)}"
                             oninput="ctsOnSearch(this.value)"
                             style="width:100%;padding:0.45rem 0.5rem 0.45rem 2rem;border:1.5px solid #e5e7eb;
@@ -1151,7 +1151,7 @@ window.ctsOpenCard = async function(contactId) {
             <!-- Примітка -->
             <div style="margin-bottom:1rem;">
                 <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Примітка менеджера</div>
-                <textarea id="ctsNote" rows="3" placeholder="Додати примітку..."
+                <textarea id="ctsNote" rows="3" placeholder=window.t('botsNotePh2')
                     style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;
                     font-size:0.78rem;resize:vertical;box-sizing:border-box;font-family:inherit;"
                     >${escH(ct.managerNote||'')}</textarea>
@@ -1529,7 +1529,7 @@ async function renderChatTab() {
             <div id="chatInputArea"
                 style="padding:0.6rem;border-top:1px solid #f1f5f9;flex-shrink:0;display:none;">
                 <div style="display:flex;gap:0.4rem;align-items:flex-end;">
-                    <textarea id="chatInput" rows="1" placeholder="Написати повідомлення... (Enter — відправити)"
+                    <textarea id="chatInput" rows="1" placeholder=window.t('botsChatPh')
                         style="flex:1;padding:0.5rem 0.65rem;border:1.5px solid #e5e7eb;
                         border-radius:10px;font-size:0.83rem;resize:none;font-family:inherit;
                         max-height:100px;overflow-y:auto;outline:none;line-height:1.4;"

@@ -469,7 +469,7 @@
 
     window.mktSaveStage = async function(funnelId) {
         const name = document.getElementById('mktStageNameInp')?.value.trim();
-        if (!name) { if(window.showToast) showToast('Введіть назву','warning'); return; }
+        if (!name) { if(window.showToast) showToast(window.t('enterNm2'),'warning'); return; }
         const colorInput = (document.getElementById('mktStageOv') || document).querySelector('[name=stageColor]:checked');
         const color = colorInput ? colorInput.value : '#22c55e';
         const f = _funnels.find(x=>x.id===funnelId);
@@ -482,7 +482,7 @@
             f.stages = stages;
             _renderHub();
             if (window.showToast) showToast('Етап додано ✓','success');
-        } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+        } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
     };
 
     window.mktDeleteStage = async function(funnelId, idx) {
@@ -520,11 +520,11 @@
             if (typeof openFunnelEditorModule==='function') {
                 openFunnelEditorModule(funnelId);
             } else if (typeof lazyLoad === 'function') {
-                if(window.showToast) showToast('Завантажую редактор...','info');
+                if(window.showToast) showToast(window.t('loadEd2'),'info');
                 lazyLoad('funnels', function() {
                     if (typeof openFunnelEditorModule==='function') openFunnelEditorModule(funnelId);
                 });
-            } else if(window.showToast) showToast('Редактор недоступний','warning');
+            } else if(window.showToast) showToast(window.t('edUnavl'),'warning');
         } else if (colId==='crm') {
             if(typeof switchTab==='function') switchTab('crm');
         } else if (colId==='process') {
@@ -554,7 +554,7 @@
             linked.forEach(s=>delete s.funnelId);
             await window.companyRef().collection('funnels').doc(fid).delete();
             if(window.showToast) showToast('Видалено','success');
-        } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+        } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
     };
 
     // ══════════════════════════════════════════════════════
@@ -586,7 +586,7 @@
 
     window.mktSaveNewFunnel = async function() {
         const name = document.getElementById('mktFunnelNameInp')?.value.trim();
-        if (!name) { if(window.showToast) showToast('Введіть назву','warning'); return; }
+        if (!name) { if(window.showToast) showToast(window.t('enterNm2'),'warning'); return; }
         const btn = document.getElementById('mktFunnelSaveBtn');
         if (btn) { btn.disabled=true; btn.textContent='...'; }
         try {
@@ -598,7 +598,7 @@
             if(window.showToast) showToast('Воронку створено ✓','success');
         } catch(e) {
             if (btn) { btn.disabled=false; btn.textContent='Створити'; }
-            if(window.showToast) showToast('Помилка: '+e.message,'error');
+            if(window.showToast) showToast(window.t('errPfx2')+e.message,'error');
         }
     };
 
@@ -712,7 +712,7 @@
             if (s) s.funnelId = fid;
             _renderHub();
             if(window.showToast) showToast("Сайт прив'язано ✓",'success');
-        } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+        } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
     };
 
     window.mktLinkField = async function(fid, field, value, ovId) {
@@ -724,7 +724,7 @@
             if (f) f[field] = value;
             _renderHub();
             if(window.showToast) showToast('Збережено ✓','success');
-        } catch(e) { if(window.showToast) showToast('Помилка: '+e.message,'error'); }
+        } catch(e) { if(window.showToast) showToast(window.t('errPfx2')+e.message,'error'); }
     };
 
     // ── Modal helper ───────────────────────────────────────

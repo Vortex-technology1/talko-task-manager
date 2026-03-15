@@ -507,9 +507,9 @@
                         ${esc(project.name)}
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;">
-                        <button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')" style="min-height:36px;"><i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addTask') || 'Завдання'}</button>
+                        <button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')" style="min-height:36px;"><i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addTask') || window.t('permTsk2')}</button>
                         <select class="filter-select" onchange="updateProjectStatus('${escId(projectId)}', this.value)" style="font-size:0.8rem;padding:0.3rem;min-height:36px;">${statusOptions}</select>
-                        <button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')" style="min-height:36px;" title="${window.t('edit') || 'Редагувати'}" aria-label="${window.t('edit') || 'Редагувати'}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                        <button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')" style="min-height:36px;" title="${window.t('edit') || window.t('flowEdt2')}" aria-label="${window.t('edit') || window.t('flowEdt2')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                         <div style="width:1px;height:24px;background:#e5e7eb;margin:0 12px;"></div>
                         <button class="btn btn-small" onclick="deleteProject('${escId(projectId)}')" title="${window.t('deleteProject') || 'Видалити проєкт'} — незворотна дія" aria-label="${window.t('deleteProject') || 'Видалити проєкт'} — незворотна дія" style="background:#fee2e2;color:#dc2626;border-color:#fecaca;min-height:36px;margin-left:auto;"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                     </div>

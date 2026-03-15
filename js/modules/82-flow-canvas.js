@@ -405,7 +405,7 @@ function mountCanvas() {
                 statusBtn.style.background = next === 'active' ? '#dcfce7' : '#334155';
                 statusBtn.style.color = next === 'active' ? '#16a34a' : '#94a3b8';
                 if (typeof showToast === 'function') showToast(next === 'active' ? '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#22c55e"/></svg></span> Флоу активовано' : '⚫ Флоу на паузі', 'success');
-            } catch(e) { if(window.showToast)showToast('Помилка: ' + e.message,'error'); else if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');; }
+            } catch(e) { if(window.showToast)showToast(window.t('errPfx2') + e.message,'error'); else if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');; }
         };
     }
     document.getElementById('fcBtnZoomIn').onclick = () => doZoom(0.15);
@@ -1359,7 +1359,7 @@ window.fcRunAiFunnel = async function(mode) {
 - Містити правила кваліфікації клієнта
 - Вказувати як збирати контакти
 - Як пропонувати продукт/послугу
-Формат: готовий текст промпту який можна вставити в поле "Системний промпт" AI вузла.
+Формат: готовий текст промпту який можна вставити в поле window.t('flowSysPr') AI вузла.
 Мова — українська.`;
 
     try {
@@ -1391,7 +1391,7 @@ window.fcRunAiFunnel = async function(mode) {
         document.getElementById('fcAiFunnelResultText').textContent = result;
         document.getElementById('fcAiFunnelResult').style.display = 'block';
     } catch(e) {
-        document.getElementById('fcAiFunnelResultText').textContent = 'Помилка: ' + e.message;
+        document.getElementById('fcAiFunnelResultText').textContent = window.t('errPfx2') + e.message;
         document.getElementById('fcAiFunnelResult').style.display = 'block';
     }
     document.getElementById('fcAiFunnelLoader').style.display = 'none';
@@ -1549,7 +1549,7 @@ window.fcTestAiNode = async function(nodeId) {
 
     } catch(e) {
         if (typeof showToast === 'function') showToast('❌ ' + e.message, 'error');
-        else alert('Помилка: ' + e.message);
+        else alert(window.t('errPfx2') + e.message);
     } finally {
         if (testBtn) {
             testBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Тест AI відповіді';
@@ -1938,7 +1938,7 @@ function renderPropPanel() {
                             try{
                                 await firebase.firestore().collection('companies').doc(window.currentCompanyId).update({[providerField]:k});
                                 if(window.showToast)showToast('✅ Збережено для всіх ланцюгів','success');
-                            }catch(e){if(window.showToast)showToast('Помилка: '+e.message,'error');}
+                            }catch(e){if(window.showToast)showToast(window.t('errPfx2')+e.message,'error');}
                         })()">
                         Зберегти для всієї компанії →
                     </span>
@@ -1946,7 +1946,7 @@ function renderPropPanel() {
             </div>`
 
             // ── Системний промпт ──
-            + fld(tip('Системний промпт', 'Скажи боту хто він і що робить. Наприклад: "Ти — менеджер клініки. Запитуй ім\'я, телефон і зручний час. Будь ввічливим. Відповідай тільки українською." Чим конкретніше — тим краще.'),
+            + fld(tip(window.t('flowSysPr'), 'Скажи боту хто він і що робить. Наприклад: "Ти — менеджер клініки. Запитуй ім\'я, телефон і зручний час. Будь ввічливим. Відповідай тільки українською." Чим конкретніше — тим краще.'),
                 ta('aiSystem', d.aiSystem, 'Ти — помічник компанії. Відповідай коротко та по суті українською мовою.', 5))
 
             // ── Модель ──
@@ -2185,7 +2185,7 @@ function renderPropPanel() {
             const _stageMatch = _finalStageOpts.find(([v]) => v === d.dealStage);
             const _selectedStage = _stageMatch ? d.dealStage : (_finalStageOpts[0]?.[0] || 'new');
 
-            fields = fld('Назва угоди', inp('dealTitle', d.dealTitle, '{{name}} — лід з бота'))
+            fields = fld(window.t('flowDealNm'), inp('dealTitle', d.dealTitle, '{{name}} — лід з бота'))
                 + _crmHint
                 + '<div style="margin-bottom:10px;">'
                     + '<div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Воронка</div>'
@@ -2445,7 +2445,7 @@ window._fcSaveTitle = async function(newName) {
         if (typeof showToast === 'function') showToast('✅ Назву збережено', 'success');
     } catch(e) {
         console.error('[fcSaveTitle]', e.message);
-        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+        if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
     }
 };
 

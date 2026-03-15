@@ -61,7 +61,7 @@
 
         const html = `
         <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;">
-            <h2 style="font-size:1.1rem;font-weight:700;">${std ? 'Редагувати стандарт' : 'Новий стандарт'}</h2>
+            <h2 style="font-size:1.1rem;font-weight:700;">${std ? window.t('editStd2') : window.t('newStd2')}</h2>
             <span class="close" onclick="closeModal('standardModal')" style="font-size:1.5rem;cursor:pointer;">&times;</span>
         </div>
         <div class="form-group">
@@ -107,7 +107,7 @@
 
     window.saveStandardFromModal = async function(standardId) {
         const name = document.getElementById('stdName')?.value?.trim();
-        if (!name) { showToast('Введіть назву', 'error'); return; }
+        if (!name) { showToast(window.t('enterNm2'), 'error'); return; }
 
         const data = {
             name,
@@ -130,7 +130,7 @@
             showToast('Стандарт збережено', 'success');
             await loadStandards();
             renderStandardsList();
-        } catch (e) { showToast('Помилка: ' + e.message, 'error'); }
+        } catch (e) { showToast(window.t('errPfx2') + e.message, 'error'); }
     };
 
     window.deleteStandardUI = async function(id) {
@@ -141,7 +141,7 @@
             await loadStandards();
             renderStandardsList();
             showToast('Видалено', 'success');
-        } catch (e) { showToast('Помилка: ' + e.message, 'error'); }
+        } catch (e) { showToast(window.t('errPfx2') + e.message, 'error'); }
     };
 
     function renderStandardsList() {
@@ -302,7 +302,7 @@
             }
 
             showToast(status === 'approved' ? 'QC прийнято' : 'QC відхилено — створена задача на переробку', status === 'approved' ? 'success' : 'error');
-        } catch (e) { showToast('Помилка: ' + e.message, 'error'); }
+        } catch (e) { showToast(window.t('errPfx2') + e.message, 'error'); }
     };
 
     function renderQCList(projectId, stageId) {
@@ -382,7 +382,7 @@
 
     window.saveProjectTemplateFromModal = async function(templateId) {
         const name = document.getElementById('tplName')?.value?.trim();
-        if (!name) { showToast('Введіть назву', 'error'); return; }
+        if (!name) { showToast(window.t('enterNm2'), 'error'); return; }
 
         const stageLines = (document.getElementById('tplStages')?.value || '').split('\n').filter(l => l.trim());
         const stages = stageLines.map((line, i) => {
@@ -412,7 +412,7 @@
             closeModal('projectTemplateModal');
             showToast('Шаблон збережено', 'success');
             await loadProjectTemplates();
-        } catch (e) { showToast('Помилка: ' + e.message, 'error'); }
+        } catch (e) { showToast(window.t('errPfx2') + e.message, 'error'); }
     };
 
     window.deleteProjectTemplateUI = async function(id) {
@@ -422,7 +422,7 @@
             closeModal('projectTemplateModal');
             await loadProjectTemplates();
             showToast('Видалено', 'success');
-        } catch (e) { showToast('Помилка: ' + e.message, 'error'); }
+        } catch (e) { showToast(window.t('errPfx2') + e.message, 'error'); }
     };
 
     // Create project FROM template — stages + QC points
@@ -461,7 +461,7 @@
         const tpl = projectTemplatesData.find(t => t.id === templateId);
         if (!tpl) { showToast("Шаблон не знайдено — можливо його видалили", "error"); closeModal("tplProjectNameModal"); return; }
         const projectName = document.getElementById('tplProjName')?.value?.trim();
-        if (!projectName) { showToast('Введіть назву', 'error'); return; }
+        if (!projectName) { showToast(window.t('enterNm2'), 'error'); return; }
         closeModal('tplProjectNameModal');
 
         const funcs = typeof functions !== 'undefined' ? functions : [];

@@ -7,7 +7,7 @@
         let calendarDate = new Date(); // Currently displayed date
         
         function getDayNames() {
-            const d = { ua: ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота'],
+            const d = { ua: [window.t('calSun'), window.t('calMon'), window.t('calTue'), window.t('calWed'), window.t('calThu'), window.t('calFri'), window.t('calSat')],
                         ru: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
                         pl: ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'],
                         en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -15,15 +15,15 @@
             return d[window.currentLang] || d['ua'];
         }
         function getDayNamesShort() {
-            const d = { ua: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
-                        ru: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+            const d = { ua: [window.t('calMonS'), window.t('calTueS'), window.t('calWedS'), window.t('calThuS'), window.t('calFriS'), window.t('calSatS'), window.t('calSunS')],
+                        ru: [window.t('calMonS'), window.t('calTueS'), window.t('calWedS'), window.t('calThuS'), window.t('calFriS'), window.t('calSatS'), 'Вс'],
                         pl: ['Pn', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Nd'],
                         en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                         de: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] };
             return d[window.currentLang] || d['ua'];
         }
         function getMonthNamesFull() {
-            const m = { ua: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
+            const m = { ua: [window.t('mon01'), window.t('mon02'), window.t('mon03'), window.t('mon04'), window.t('mon05'), window.t('mon06'), window.t('mon07'), window.t('mon08'), window.t('mon09'), window.t('mon10'), window.t('mon11'), window.t('mon12')],
                         ru: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
                         pl: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
                         en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],

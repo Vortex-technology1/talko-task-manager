@@ -18,7 +18,7 @@
         if (btn) {
             btn.style.background = bulkModeActive ? '#ef4444' : '#f3f4f6';
             btn.style.color = bulkModeActive ? 'white' : '#374151';
-            btn.title = bulkModeActive ? 'Вийти з режиму вибору' : 'Виділити кілька задач';
+            btn.title = bulkModeActive ? window.t('bulkExit2') : window.t('bulkSel2');
             btn.innerHTML = bulkModeActive
                 ? '<i data-lucide="x" class="icon icon-sm"></i>'
                 : '<i data-lucide="check-square" class="icon icon-sm"></i>';
@@ -47,7 +47,7 @@
     function updateBulkUI() {
         const count = selectedTaskIds.size;
         const counter = document.getElementById('bulkCounter');
-        if (counter) counter.textContent = count > 0 ? `Обрано: ${count}` : 'Нічого не обрано';
+        if (counter) counter.textContent = count > 0 ? `Обрано: ${count}` : window.t('bulkNone2');
 
         const actBtns = document.querySelectorAll('.bulk-action-btn');
         actBtns.forEach(b => b.disabled = count === 0);
@@ -206,7 +206,7 @@
             showToast(`${editableIds.length} завдань перепризначено → ${assigneeName}`, 'success');
             toggleBulkMode();
         } catch(err) {
-            showAlertModal('Помилка: ' + err.message);
+            showAlertModal(window.t('errPfx2') + err.message);
         }
     };
 
@@ -284,7 +284,7 @@
         if (toolbar && !document.getElementById('bulkModeBtn')) {
             const btn = document.createElement('button');
             btn.id = 'bulkModeBtn';
-            btn.title = 'Виділити кілька задач';
+            btn.title = window.t('bulkSel2');
             btn.onclick = toggleBulkMode;
             btn.style.cssText = 'background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:0.4rem 0.6rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;font-size:0.8rem;color:#374151;';
             btn.innerHTML = '<i data-lucide="check-square" class="icon icon-sm"></i>';
