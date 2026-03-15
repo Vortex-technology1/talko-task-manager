@@ -1370,6 +1370,109 @@ window.fcRemoveButton = function(idx) {
     renderEdges();
 };
 
+// ── Test AI node прямо в канвасі ─────────────────────────
+window.fcTestAiNode = async function(nodeId) {
+    const node = fc.nodes.find(n => n.id === nodeId);
+    if (!node) return;
+
+    // Спочатку зберігаємо поточні дані панелі
+    window.fcApplyNodeData(nodeId);
+
+    const cfg = node.config || {};
+    const provider = cfg.aiProvider || 'openai';
+    const model = cfg.aiModel || 'gpt-4o-mini';
+    const apiKey = cfg.aiApiKey || '';
+    const sysPrompt = cfg.aiSystem || 'You are helpful.';
+
+    if (!apiKey) {
+        if (typeof showToast === 'function') showToast('Введіть API ключ для тесту', 'warning');
+        return;
+    }
+
+    // Показуємо діалог для тестового повідомлення
+    const testMsg = prompt('Введіть тестове повідомлення для AI:', 'Привіт, розкажи про себе');
+    if (!testMsg) return;
+
+    // Кнопка в стан "завантаження"
+    const testBtn = document.querySelector(`button[onclick="fcTestAiNode('${nodeId}')"]`);
+    if (testBtn) { testBtn.textContent = '⏳ Запит...'; testBtn.disabled = true; }
+
+    try {
+        let responseText = '';
+
+        if (provider === 'openai' || model.startsWith('gpt') || model.startsWith('o4') || model.startsWith('o3')) {
+            const r = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                body: JSON.stringify({
+                    model,
+                    max_tokens: 300,
+                    temperature: cfg.temperature ?? 0.7,
+                    messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: testMsg }]
+                })
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error?.message || 'OpenAI error ' + r.status);
+            responseText = d.choices?.[0]?.message?.content || '';
+
+        } else if (provider === 'anthropic' || model.startsWith('claude')) {
+            const r = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+                body: JSON.stringify({
+                    model, max_tokens: 300,
+                    temperature: cfg.temperature ?? 0.7,
+                    system: sysPrompt,
+                    messages: [{ role: 'user', content: testMsg }]
+                })
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error?.message || 'Anthropic error ' + r.status);
+            responseText = d.content?.[0]?.text || '';
+
+        } else if (provider === 'google' || model.startsWith('gemini')) {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    system_instruction: { parts: [{ text: sysPrompt }] },
+                    contents: [{ role: 'user', parts: [{ text: testMsg }] }],
+                    generationConfig: { maxOutputTokens: 300, temperature: cfg.temperature ?? 0.7 }
+                })
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error?.message || 'Gemini error ' + r.status);
+            responseText = d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        }
+
+        // Показуємо результат в красивому popup
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1rem;';
+        overlay.innerHTML = `
+            <div style="background:#1e293b;border:1px solid #334155;border-radius:14px;padding:1.25rem;max-width:480px;width:100%;max-height:80vh;overflow:auto;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                    <div style="font-size:13px;font-weight:700;color:#22c55e;">✅ AI відповів (${model})</div>
+                    <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;">✕</button>
+                </div>
+                <div style="font-size:11px;color:#64748b;margin-bottom:6px;">Ваше повідомлення:</div>
+                <div style="background:#0f172a;border-radius:8px;padding:8px;font-size:12px;color:#94a3b8;margin-bottom:10px;">${testMsg}</div>
+                <div style="font-size:11px;color:#64748b;margin-bottom:6px;">Відповідь AI:</div>
+                <div style="background:#0f172a;border:1px solid #22c55e33;border-radius:8px;padding:10px;font-size:13px;color:white;line-height:1.6;white-space:pre-wrap;">${responseText}</div>
+            </div>`;
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('❌ ' + e.message, 'error');
+        else alert('Помилка: ' + e.message);
+    } finally {
+        if (testBtn) {
+            testBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Тест AI відповіді';
+            testBtn.disabled = false;
+        }
+    }
+};
+
 window.fcSetAiProvider = function(provider) {
     if (!fc.selectedNode) return;
     // Зберігаємо поточний ключ перед перемалюванням
@@ -1649,19 +1752,53 @@ function renderPropPanel() {
                     </div>
                 </div>
             </div>`
-                + fld('Системний промпт', ta('aiSystem', d.aiSystem, 'Ти — помічник компанії {{company_name}}. Відповідай коротко та по суті українською мовою.', 4))
+                + fld('Системний промпт', ta('aiSystem', d.aiSystem, 'Ти — помічник компанії {{company_name}}. Відповідай коротко та по суті українською мовою.', 5))
                 + fld('Модель', sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0]))
-                + fld('Зберегти відповідь у змінну', inp('saveAs', d.saveAs, 'ai_response'))
-                + fld('Запасна відповідь', inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'))
-                + `<div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px;margin-top:8px;">
-                    <div style="font-size:10px;color:#64748b;line-height:1.5;">
-                        <b style="color:#94a3b8;">Як використати:</b><br>
-                        1. Обери провайдера (OpenAI / Anthropic / Google)<br>
-                        2. Вставте API ключ з сайту провайдера<br>
-                        3. Напиши системний промпт — хто цей бот<br>
-                        4. Обери модель — mini/haiku для швидких відповідей
+                + `<div style="display:flex;gap:6px;margin-bottom:12px;">
+                    <div style="flex:1;">
+                        <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
+                            Температура
+                            <span style="color:#475569;font-weight:400;font-size:9px;"> (0=точно, 1=творчо)</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            <input id="fcp_temperature" type="range" min="0" max="1" step="0.1"
+                                value="${d.temperature ?? 0.7}"
+                                style="flex:1;accent-color:#22c55e;cursor:pointer;"
+                                oninput="document.getElementById('fcp_temp_val').textContent=parseFloat(this.value).toFixed(1)">
+                            <span id="fcp_temp_val" style="color:#22c55e;font-size:11px;font-weight:700;min-width:24px;">${(d.temperature ?? 0.7).toFixed(1)}</span>
+                        </div>
                     </div>
-                </div>`;
+                    <div style="flex:1;">
+                        <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
+                            Пам'ять (повід.)
+                            <span style="color:#475569;font-weight:400;font-size:9px;"> (0=без пам'яті)</span>
+                        </div>
+                        <input id="fcp_historyLimit" type="number" min="0" max="20" value="${d.historyLimit ?? 6}"
+                            style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;
+                            border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">
+                    </div>
+                </div>`
+                + fld('Зберегти відповідь у змінну', inp('saveAs', d.saveAs, 'ai_response'))
+                + fld('Запасна відповідь (якщо AI недоступний)', inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'))
+                + `<div style="margin-bottom:12px;">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Тег завершення діалогу</div>
+                    <div style="font-size:10px;color:#475569;margin-bottom:4px;">
+                        Коли AI написати <code style="background:#1e293b;padding:1px 4px;border-radius:3px;color:#22c55e;">[DONE]</code> — флоу переходить до наступного вузла
+                    </div>
+                    <div style="font-size:10px;color:#475569;">
+                        Зберегти дані: <code style="background:#1e293b;padding:1px 4px;border-radius:3px;color:#22c55e;">[SAVE:ключ=значення]</code>
+                    </div>
+                </div>`
+                + `<button onclick="fcTestAiNode('${node.id}')"
+                    style="width:100%;padding:8px;background:transparent;border:1px solid #334155;
+                    border-radius:8px;color:#94a3b8;font-size:11px;font-weight:600;cursor:pointer;
+                    display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;
+                    transition:all 0.15s;"
+                    onmouseenter="this.style.borderColor='#22c55e';this.style.color='#22c55e'"
+                    onmouseleave="this.style.borderColor='#334155';this.style.color='#94a3b8'">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Тест AI відповіді
+                </button>`;
             break;
         }
         case 'api':
@@ -1797,6 +1934,9 @@ window.fcApplyNodeData = function(nodeId) {
             node.config.aiProvider = get('aiProvider') || fc.selectedNode?.config?.aiProvider || 'openai';
             node.config.saveAs = get('saveAs') || null;
             node.config.fallback = get('fallback');
+            // Нові поля
+            node.config.temperature = parseFloat(document.getElementById('fcp_temperature')?.value ?? 0.7);
+            node.config.historyLimit = parseInt(document.getElementById('fcp_historyLimit')?.value ?? 6) || 0;
             break;
         case 'api':
             node.config.apiMethod = get('apiMethod');
