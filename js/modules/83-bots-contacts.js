@@ -1462,13 +1462,24 @@ async function renderChatTab() {
     const c = document.getElementById('bpViewChat');
     if (!c) return;
 
+    // FIX mobile: адаптивний чат — на мобільному список і переписка перемикаються
     c.innerHTML = `
-    <div style="display:flex;gap:0;height:calc(100vh - 180px);min-height:500px;
-        background:white;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;">
+    <style>
+        #chatWrapper { display:flex;height:calc(100dvh - 175px);min-height:400px;background:white;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden; }
+        #chatLeftCol { width:260px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #f1f5f9;transition:transform 0.2s; }
+        #chatRightCol { flex:1;display:flex;flex-direction:column;min-width:0; }
+        @media (max-width:600px) {
+            #chatWrapper { height:calc(100dvh - 160px);border-radius:0; }
+            #chatLeftCol { position:absolute;width:100%;height:100%;z-index:10;background:white;border-right:none; }
+            #chatLeftCol.chat-hidden { transform:translateX(-100%);pointer-events:none; }
+            #chatRightCol { width:100%; }
+            #chatBackBtn { display:flex!important; }
+        }
+    </style>
+    <div id="chatWrapper">
 
         <!-- ЛІВА КОЛОНКА: список контактів -->
-        <div style="width:260px;flex-shrink:0;display:flex;flex-direction:column;
-            border-right:1px solid #f1f5f9;">
+        <div id="chatLeftCol" style="flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #f1f5f9;">
 
             <!-- Хедер + пошук -->
             <div style="padding:0.75rem;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
@@ -1494,12 +1505,17 @@ async function renderChatTab() {
         </div>
 
         <!-- ПРАВА КОЛОНКА: переписка -->
-        <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+        <div id="chatRightCol" style="flex:1;display:flex;flex-direction:column;min-width:0;">
 
             <!-- Хедер контакту -->
             <div id="chatMsgHeader"
-                style="padding:0.65rem 1rem;border-bottom:1px solid #f1f5f9;
-                flex-shrink:0;display:flex;align-items:center;gap:0.6rem;min-height:54px;">
+                style="padding:0.55rem 0.75rem;border-bottom:1px solid #f1f5f9;
+                flex-shrink:0;display:flex;align-items:center;gap:0.5rem;min-height:50px;">
+                <!-- Кнопка назад (тільки мобільний) -->
+                <button id="chatBackBtn" onclick="chatShowContacts()" style="display:none;
+                    background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;color:#6b7280;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
                 <div style="color:#9ca3af;font-size:0.82rem;">Оберіть контакт зліва</div>
             </div>
 
@@ -1594,8 +1610,11 @@ function _chatRenderContactsList() {
     }
 
     list.innerHTML = chat.contacts.map(ct => {
-        const name = ct.senderName || ct.name || window.t('botsAnon');
-        const initial = name.charAt(0).toUpperCase();
+        // FIX 2: якщо немає імені — показуємо @username, якщо є обидва — додаємо @username під іменем
+        const rawName = ct.senderName || ct.name || '';
+        const name = rawName || (ct.username ? '@'+ct.username : window.t('botsAnon'));
+        const displaySub = rawName && ct.username ? '@'+ct.username : '';
+        const initial = (name.charAt(0) === '@' ? (ct.username||'?').charAt(0) : name.charAt(0)).toUpperCase();
         const avatarColors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#06b6d4'];
         const avatarColor = avatarColors[ct.senderId ? ct.senderId.charCodeAt(0) % 6 : 0];
         const isActive = ct.id === chat.activeId;
@@ -1628,14 +1647,14 @@ function _chatRenderContactsList() {
                 <div style="flex:1;min-width:0;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1px;">
                         <span style="font-weight:${unread>0?'700':'600'};font-size:0.82rem;
-                            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px;">
+                            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px;">
                             ${escH(name)}
                         </span>
                         <span style="font-size:0.65rem;color:#9ca3af;flex-shrink:0;margin-left:4px;">${lastTime}</span>
                     </div>
-                    <div style="font-size:0.72rem;color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+                    <div style="font-size:0.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
                         font-weight:${unread>0?'600':'400'};color:${unread>0?'#374151':'#9ca3af'};">
-                        ${escH(lastMsg.slice(0, 45) || window.t('botsNoMessages2'))}
+                        ${displaySub ? '<span style="color:#3b82f6;font-size:0.68rem;">'+escH(displaySub)+'</span> · ' : ''}${escH(lastMsg.slice(0, 40) || window.t('botsNoMessages2'))}
                     </div>
                 </div>
             </div>
@@ -1667,6 +1686,8 @@ window.bpOpenChat = async function(contactId, instanceId = 'main') {
         chat.activeId = contactId;
         bp.activeChatContactId = contactId;
     }
+    // Мобільний: ховаємо список, показуємо переписку
+    if (window.chatShowMessages) chatShowMessages();
 
     // PERF: якщо контакт не в cache — завантажуємо
     let ct = chat.contacts.find(c => c.id === contactId);
@@ -1734,10 +1755,11 @@ function _chatRenderHeader(ct, containerId = 'chatMsgHeader') {
         </div>
         <div style="flex:1;min-width:0;">
             <div style="font-weight:700;font-size:0.88rem;">${escH(name)}</div>
-            <div style="font-size:0.7rem;color:#6b7280;">
-                ${ct.senderId ? 'ID: '+ct.senderId : ''}
-                ${ct.phone ? ' · <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2.17h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span> '+ct.phone : ''}
-                ${ct.business_type ? ' · '+ct.business_type : ''}
+            <div style="font-size:0.7rem;color:#6b7280;display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
+                ${ct.username ? '<span style="color:#3b82f6;font-weight:600;">@'+escH(ct.username)+'</span>' : ''}
+                ${ct.senderId ? '<span>ID: '+escH(ct.senderId)+'</span>' : ''}
+                ${ct.phone ? '<span>· '+escH(ct.phone)+'</span>' : ''}
+                ${ct.business_type ? '<span>· '+escH(ct.business_type)+'</span>' : ''}
             </div>
         </div>
         ${ct.botStatus === 'blocked' ? `
