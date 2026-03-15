@@ -45,6 +45,11 @@ function _crmShowCallLogModal() {
 
     const modal = document.createElement('div');
     modal.id = 'crmCallLogModal';
+    // FIX: Зберігаємо dealId в data-атрибуті (захист від race condition)
+    modal.dataset.dealId = call.dealId;
+    modal.dataset.phone = call.phone || '';
+    modal.dataset.clientName = call.clientName || '';
+    modal.dataset.startTime = call.startTime;
     modal.style.cssText = `
         position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10060;
         display:flex;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom,0);`;
@@ -160,8 +165,14 @@ window.crmSelectCallResult = function (val) {
 };
 
 window.crmSaveCallLog = async function () {
-    const call = window._crmActiveCall;
-    if (!call?.dealId) return;
+    // FIX: Читаємо dealId з модалки (захист від race condition)
+    const modal = document.getElementById('crmCallLogModal');
+    if (!modal) return;
+
+    const dealId = modal.dataset.dealId;
+    const phone = modal.dataset.phone || '';
+    const clientName = modal.dataset.clientName || '';
+    if (!dealId) return;
 
     const result   = window._crmSelectedCallResult || 'answered';
     const duration = parseInt(document.getElementById('crmCallDuration')?.value || '0') || 0;
@@ -182,7 +193,7 @@ window.crmSaveCallLog = async function () {
         const compRef = window.companyRef();
         if (!compRef) throw new Error('companyRef не готовий');
         const dealCol = window.DB_COLS?.CRM_DEALS || 'crm_deals';
-        const ref     = compRef.collection(dealCol).doc(call.dealId);
+        const ref     = compRef.collection(dealCol).doc(dealId);
         const now     = firebase.firestore.FieldValue.serverTimestamp();
 
         // Лог в history
@@ -190,7 +201,7 @@ window.crmSaveCallLog = async function () {
             type:     'call',
             result:   result,
             text:     resultLabels[result] + (note ? ': ' + note : ''),
-            phone:    call.phone,
+            phone:    phone,
             duration: duration,
             note:     note,
             by:       window.currentUser?.email || 'manager',
@@ -207,7 +218,7 @@ window.crmSaveCallLog = async function () {
         await ref.update(upd);
 
         // Оновлення локального стану
-        const deal = window.crm?.deals?.find(d => d.id === call.dealId);
+        const deal = window.crm?.deals?.find(d => d.id === dealId);
         if (deal) {
             deal.lastCallResult  = result;
             if (nextDate) deal.nextContactDate = nextDate;
@@ -217,8 +228,8 @@ window.crmSaveCallLog = async function () {
 
         // Якщо відкрита картка угоди — оновлюємо активності
         const actTab = document.getElementById('crmDealContent');
-        if (actTab && window._crmActiveDealId === call.dealId) {
-            const deal2 = window.crm?.deals?.find(d => d.id === call.dealId);
+        if (actTab && window._crmActiveDealId === dealId) {
+            const deal2 = window.crm?.deals?.find(d => d.id === dealId);
             if (deal2 && typeof window._crmLoadActivityTab === 'function') {
                 window._crmLoadActivityTab(deal2);
             }

@@ -53,25 +53,33 @@ module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     if (req.method === 'OPTIONS') return res.status(200).end();
 
-    // Debug endpoint — тільки для superadmin
+    // Debug endpoint — тільки для superadmin з токеном
     if (req.query.debug === 'firebase_init') {
+        // Перевірка авторизації
+        const authToken = req.headers.authorization || req.query.token || '';
+        const validToken = process.env.DEBUG_TOKEN || 'DISABLED';
+
+        if (!authToken || authToken !== validToken || validToken === 'DISABLED') {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
         const pk = process.env.FIREBASE_PRIVATE_KEY || '';
         let pkDecoded = pk;
         if (pk && !pk.includes('-----BEGIN')) {
             try { pkDecoded = Buffer.from(pk, 'base64').toString('utf8'); } catch(e) {}
         }
+
+        // Безпечний debug - без витоку чутливих даних
         return res.status(200).json({
             hasProjectId:    !!process.env.FIREBASE_PROJECT_ID,
-            projectId:       process.env.FIREBASE_PROJECT_ID || '(missing)',
             hasClientEmail:  !!process.env.FIREBASE_CLIENT_EMAIL,
             hasPrivateKey:   !!pk,
-            pkLength:        pk.length,
-            pkFirst40:       pk.substring(0, 40),
-            pkIsBase64:      !pk.includes('-----BEGIN'),
-            pkDecodedStart:  pkDecoded.substring(0, 40),
-            pkHasLiteralN:   pk.includes('\\n'),
-            pkHasNewline:    pk.includes('\n'),
+            pkLength:        pk ? pk.length : 0,
+            pkIsBase64:      pk ? !pk.includes('-----BEGIN') : false,
+            pkHasLiteralN:   pk ? pk.includes('\\n') : false,
+            pkHasNewline:    pk ? pk.includes('\n') : false,
             appsInitialized: admin.apps.length,
+            initError:       global._siteInitError || null,
             nodeVersion:     process.version,
         });
     }

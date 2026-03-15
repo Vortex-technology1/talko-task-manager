@@ -27,6 +27,7 @@ const db = admin.firestore();
 
 // Простий in-memory rate limit (1 submit / IP / 60s)
 const _ipLastSubmit = new Map();
+const _ipPending = new Set(); // Захист від race condition
 const RATE_LIMIT_MS = 60 * 1000;
 
 const ALLOWED_ORIGINS_RE = /^https?:\/\//; // будь-який сайт (публічна форма)
@@ -53,13 +54,22 @@ module.exports = async function handler(req, res) {
     if (email  && String(email).length  > 200)  return res.status(400).json({ error: 'Email занадто довгий' });
     if (message && String(message).length > 5000) return res.status(400).json({ error: 'Повідомлення занадто довге' });
 
-    // Rate limit по IP
+    // Rate limit по IP (з захистом від race condition)
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+
+    // Перевірка паралельних запитів
+    if (_ipPending.has(ip)) {
+        return res.status(429).json({ error: 'Запит вже обробляється. Зачекайте.' });
+    }
+
+    // Перевірка rate limit
     const lastSubmit = _ipLastSubmit.get(ip);
     if (lastSubmit && Date.now() - lastSubmit < RATE_LIMIT_MS) {
         return res.status(429).json({ error: 'Зачекайте хвилину перед повторною відправкою' });
     }
-    _ipLastSubmit.set(ip, Date.now());
+
+    // Додаємо IP до pending (блокуємо паралельні запити)
+    _ipPending.add(ip);
 
     // Перевіряємо що форма існує і активна
     const formRef  = db.doc(`companies/${companyId}/crm_forms/${formId}`);
@@ -154,5 +164,9 @@ module.exports = async function handler(req, res) {
     } catch (e) {
         console.error('[crm-form]', e.message);
         return res.status(500).json({ error: 'Серверна помилка. Спробуйте пізніше.' });
+    } finally {
+        // Очищаємо pending і оновлюємо timestamp (тільки якщо запит пройшов валідацію)
+        _ipPending.delete(ip);
+        _ipLastSubmit.set(ip, Date.now());
     }
 };
