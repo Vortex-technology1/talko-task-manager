@@ -1833,11 +1833,11 @@ function renderPropPanel() {
             </div>`
 
             // ── Системний промпт ──
-            + fld(tip('Системний промпт', 'Хто цей AI і яка його задача. Пиши чітко: роль, тон, мова. Наприклад: "Ти — менеджер клініки. Відповідай тепло, коротко, тільки українською."'),
+            + fld(tip('Системний промпт', 'Скажи боту хто він і що робить. Наприклад: "Ти — менеджер клініки. Запитуй ім\'я, телефон і зручний час. Будь ввічливим. Відповідай тільки українською." Чим конкретніше — тим краще.'),
                 ta('aiSystem', d.aiSystem, 'Ти — помічник компанії. Відповідай коротко та по суті українською мовою.', 5))
 
             // ── Модель ──
-            + fld(tip('Модель AI', 'Рекомендовано: GPT-4o mini (OpenAI) або Claude Haiku (Anthropic) — швидкі, дешеві, надійні. Не використовуй моделі які ще не вийшли (gpt-5 тощо) — вони можуть не існувати і бот відповість запасною відповіддю.'),
+            + fld(tip('Модель AI', 'Мозок бота. GPT-4o mini — найкращий вибір для більшості: швидкий і недорогий. GPT-4o — розумніший але дорожчий. Якщо не знаєш що обрати — залиш GPT-4o mini.'),
                 sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0])
                 + (d.aiModel && !modelOptions.some(([v]) => v === d.aiModel)
                     ? '<div style="font-size:9px;color:#f59e0b;margin-top:3px;">⚠️ Модель "' + d.aiModel + '" не в списку — може не існувати. Обери нову.</div>'
@@ -1854,7 +1854,7 @@ function renderPropPanel() {
             // ── Точність відповіді (temperature) ──
             + `<div style="margin-bottom:12px;">
                 <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:4px;">
-                    ${tip('Точність відповіді', 'Контролює наскільки AI "творчий". 0.0 — точні, передбачувані відповіді (добре для збору даних). 1.0 — креативні, різноманітні відповіді (добре для контенту). Рекомендовано: 0.7 для чат-ботів.')}
+                    ${tip('Точність відповіді', 'Наскільки бот "по скрипту". Ближче до 0 — відповідає чітко і передбачувано (добре коли збираєш дані: ім\'я, телефон). Ближче до 1 — відповідає більш живо і різноманітно. Для продажів і анкет рекомендуємо 0.4–0.6.')}
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
                     <span style="font-size:10px;color:#64748b;min-width:28px;">0.0</span>
@@ -1878,7 +1878,7 @@ function renderPropPanel() {
             + `<div style="display:flex;gap:8px;margin-bottom:12px;">
                 <div style="flex:1;">
                     <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                        ${tip("Пам'ять діалогу", "Скільки попередніх повідомлень AI пам'ятає. 0 = кожне повідомлення незалежне (найдешевше). 6 = пам'ятає 6 останніх. Для кваліфікаційних ботів — 10-14.")}
+                        ${tip("Пам'ять діалогу", "Скільки кроків розмови бот пам'ятає. Якщо поставити 0 — бот забуває кожну відповідь одразу (дешевше, але не зможе підсумувати). Для анкети на 5-7 питань — постав 14. Для простого привітання — вистачить 4.")}
                     </div>
                     <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
                         <input id="fcp_historyLimit" type="number" min="0" max="20" value="${histLim}"
@@ -1898,7 +1898,7 @@ function renderPropPanel() {
                 </div>
                 <div style="flex:1;">
                     <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                        ${tip('Макс. токени', "Довжина відповіді AI. 200 = 1-2 речення (збір даних). 600 = абзац. 1500 = детально. Менше = швидше і дешевше.")}
+                        ${tip('Макс. токени', "Довжина однієї відповіді бота. Коротко (200) — бот пише 1-2 речення, швидко і дешево. Середньо (600) — абзац тексту. Довго (1500) — детальні пояснення. Для анкет і продажів обирай Коротко.")}
                     </div>
                     <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
                         <input id="fcp_maxTokens" type="number" min="100" max="2000" step="100" value="${d.maxTokens || 600}"
@@ -1922,7 +1922,7 @@ function renderPropPanel() {
             + `<div style="background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px;margin-bottom:12px;">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
                     <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">
-                        ${tip('Бот пише першим', 'Як у SendPulse: коли людина починає діалог (або натискає START) — бот надсилає перше повідомлення до того, як отримає відповідь. Корисно для привітання або пропозиції.')}
+                        ${tip('Бот пише першим', 'Коли клієнт запускає бота — він одразу отримує повідомлення без того щоб щось писати. Увімкни і напиши привітання: "Привіт! Я допоможу записати вас на консультацію..."')}
                     </div>
                     <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
                         <div style="position:relative;width:32px;height:18px;">
@@ -1948,9 +1948,9 @@ function renderPropPanel() {
             </div>`
 
             // ── Зберегти відповідь / Запасна ──
-            + fld(tip('Зберегти відповідь у змінну', 'Остання відповідь AI буде доступна в наступних вузлах через {{ai_response}} або вказану змінну.'),
+            + fld(tip('Зберегти відповідь', 'Остання відповідь бота збережеться під цим іменем. Потім можна використати її в наступних кроках через подвійні дужки. Якщо не знаєш навіщо — залиш як є.'),
                 inp('saveAs', d.saveAs, 'ai_response'))
-            + fld(tip('Запасна відповідь', 'Відправляється якщо AI недоступний або повернув помилку.'),
+            + fld(tip('Запасна відповідь', 'Що напише бот якщо щось піде не так (наприклад, немає інтернету або закінчились гроші на API). Клієнт не побачить помилку — отримає цей текст.'),
                 inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'))
 
             // ── Теги керування ──
