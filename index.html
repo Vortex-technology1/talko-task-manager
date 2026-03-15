@@ -217,6 +217,42 @@ document.addEventListener('mousedown', function(e) {
     function closeAllHdrDropdowns() {
         document.querySelectorAll('.hdr-dropdown-menu').forEach(function(m) { m.classList.remove('show'); });
     }
+    // Мінімальний inline словник для auth сторінки (до завантаження defer translations)
+    var _authI18n = {
+        ua: { authSubtitle:'Операційна система вашого бізнесу', emailLabel:'Email:', password:'Пароль:',
+              signIn:'Увійти', forgotPassword:'Забули пароль?', haveInvite:'Перший вхід?',
+              registerBtn:'Активувати доступ', howToLogin:'Як увійти?', noAccess:'Немає доступу?',
+              contactUs:"Зв'яжіться з нами", signInGoogle:'Увійти через Google' },
+        ru: { authSubtitle:'Управление задачами для бизнеса', emailLabel:'Email:', password:'Пароль:',
+              signIn:'Войти', forgotPassword:'Забыли пароль?', haveInvite:'Первый вход?',
+              registerBtn:'Активировать доступ', howToLogin:'Как войти?', noAccess:'Нет доступа?',
+              contactUs:'Свяжитесь с нами', signInGoogle:'Войти через Google' },
+        en: { authSubtitle:'Business operating system', emailLabel:'Email:', password:'Password:',
+              signIn:'Sign in', forgotPassword:'Forgot password?', haveInvite:'First login?',
+              registerBtn:'Activate access', howToLogin:'How to login?', noAccess:'No access?',
+              contactUs:'Contact us', signInGoogle:'Sign in with Google' },
+        de: { authSubtitle:'Betriebssystem für Ihr Unternehmen', emailLabel:'Email:', password:'Passwort:',
+              signIn:'Anmelden', forgotPassword:'Passwort vergessen?', haveInvite:'Erste Anmeldung?',
+              registerBtn:'Zugang aktivieren', howToLogin:'Wie anmelden?', noAccess:'Kein Zugang?',
+              contactUs:'Kontaktieren Sie uns', signInGoogle:'Mit Google anmelden' },
+        pl: { authSubtitle:'System operacyjny Twojego biznesu', emailLabel:'Email:', password:'Hasło:',
+              signIn:'Zaloguj się', forgotPassword:'Zapomniałeś hasła?', haveInvite:'Pierwsze logowanie?',
+              registerBtn:'Aktywuj dostęp', howToLogin:'Jak się zalogować?', noAccess:'Brak dostępu?',
+              contactUs:'Skontaktuj się z nami', signInGoogle:'Zaloguj przez Google' },
+    };
+
+    function _applyAuthI18n(lang) {
+        var dict = _authI18n[lang] || _authI18n['ua'];
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n');
+            var val = dict[key];
+            if (val) {
+                if (val.indexOf('<') !== -1) el.innerHTML = val;
+                else el.textContent = val;
+            }
+        });
+    }
+
     var _navKeyMap = {
         tabCoordination: { ua:'Координація',  ru:'Координация',  pl:'Koordynacja',  en:'Coordination', de:'Koordination',  cs:'Koordinace' },
         navAnalytics:    { ua:'Аналітика',    ru:'Аналитика',    pl:'Analityka',    en:'Analytics',    de:'Analytik',      cs:'Analytika' },
@@ -294,9 +330,37 @@ document.addEventListener('mousedown', function(e) {
     }
 
     function setLanguageFromDropdown(lang) {
-        _patchTranslations(); // patch BEFORE setLanguage so it finds the keys
-        if (typeof setLanguage === 'function') setLanguage(lang, true); // forceReload=true — юзер свідомо змінює мову
-        applyNavTranslations(lang); // apply AFTER setLanguage as final guarantee
+        // Зберігаємо мову одразу
+        localStorage.setItem('talko_language', lang);
+        if (typeof window !== 'undefined') {
+            window.currentLanguage = lang;
+            window.currentLang = lang;
+        }
+        _patchTranslations();
+
+        // Якщо юзер НЕ залогінений — не робимо reload, просто застосовуємо переклади
+        // FIX: перевіряємо і currentUser І чи auth screen видимий
+        var _authEl = document.getElementById('authScreen');
+        var _authVisible = _authEl && _authEl.style.display !== 'none' && _authEl.offsetParent !== null;
+        var isLoggedIn = !!(window.currentUser) && !_authVisible;
+        if (!isLoggedIn) {
+            // Застосовуємо inline словник (не залежить від defer-файлів)
+            _applyAuthI18n(lang);
+            // Також пробуємо через window.translations якщо вже завантажені
+            applyNavTranslations(lang);
+            // Оновлюємо label і активну кнопку
+            var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE', cs: 'CS' };
+            var el = document.getElementById('currentLangLabel');
+            if (el) el.textContent = labels[lang] || lang.toUpperCase();
+            document.querySelectorAll('.lang-opt, .auth-lang-btn').forEach(function(b) {
+                b.classList.toggle('active', b.dataset.lang === lang || b.textContent.trim() === lang.toUpperCase());
+            });
+            return;
+        }
+
+        // Залогінений — викликаємо setLanguage (робить reload)
+        if (typeof setLanguage === 'function') setLanguage(lang, true);
+        applyNavTranslations(lang);
         var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE', cs: 'CS' };
         var el = document.getElementById('currentLangLabel');
         if (el) el.textContent = labels[lang] || lang.toUpperCase();
@@ -2558,7 +2622,7 @@ document.addEventListener('mousedown', function(e) {
 
 
     <!-- Scripts (modular) -->
-    <script src="js/modules/01-translations-v2.js?v=20260315v6" defer></script>
+    <script src="js/modules/01-translations-v2.js?v=20260315v7" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260311s" defer></script>
     <script src="js/modules/03-app-state.js?v=20260314v2" defer></script>
     <script src="js/modules/04-google-calendar-config.js?v=20260311s" defer></script>
