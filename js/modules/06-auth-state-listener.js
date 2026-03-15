@@ -229,10 +229,11 @@
             const hideBtn = document.getElementById('hideCompletedBtn');
             if (hideBtn && window.hideCompletedTasks) hideBtn.classList.add('active');
             // Re-apply translations AFTER interface is shown (nav spans now visible)
-            // FIX: currentLang → window.currentLang || window.currentLanguage
+            // FIX: застосовуємо переклади без reload — setLanguage(lang, false)
+            // forceReload=false гарантує що тут не буде location.reload()
             const _authLang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || 'ua';
             if (typeof window.setLanguage === 'function') {
-                setTimeout(function() { window.setLanguage(_authLang); }, 100);
+                setTimeout(function() { window.setLanguage(_authLang, false); }, 100);
             }
         }
 

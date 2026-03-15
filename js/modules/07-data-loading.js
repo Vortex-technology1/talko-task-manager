@@ -14,6 +14,15 @@
             const thisLoadVersion = ++loadingVersion;
             const startTime = performance.now();
             
+            // FIX: failsafe timeout — якщо loadAllData завис, скидаємо через 45с
+            const _loadFailsafe = setTimeout(() => {
+                if (isLoading && thisLoadVersion === loadingVersion) {
+                    console.error('[loadAllData] TIMEOUT 45s — force reset isLoading');
+                    isLoading = false;
+                    hideSkeletonLoading();
+                }
+            }, 45000);
+            
             // Показуємо skeleton якщо контент ще порожній
             showSkeletonLoading();
             
@@ -140,6 +149,9 @@
                 // Перевіряємо чи це ще актуальний запит
                 if (thisLoadVersion !== loadingVersion) {
                     dbg('loadAllData: newer load started, discarding results');
+                    // FIX: скидаємо isLoading щоб не застрягти назавжди
+                    isLoading = false;
+                    hideSkeletonLoading();
                     return;
                 }
                 
@@ -177,7 +189,11 @@
                 }
                 
                 // Ще раз перевіряємо актуальність
-                if (thisLoadVersion !== loadingVersion) return;
+                if (thisLoadVersion !== loadingVersion) {
+                    isLoading = false;
+                    hideSkeletonLoading();
+                    return;
+                }
                 
                 // Employee: автоматично ставимо фільтр "Мої" при завантаженні
                 if (currentUserData?.role === 'employee' && currentUser) {
@@ -244,6 +260,7 @@
             } catch (error) {
                 console.error('loadAllData error:', error);
             } finally {
+                clearTimeout(_loadFailsafe); // FIX: завжди чистимо failsafe
                 if (thisLoadVersion === loadingVersion) {
                     isLoading = false;
                     // Check escalations after data is loaded
