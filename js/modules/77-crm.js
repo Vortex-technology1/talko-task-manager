@@ -4605,6 +4605,258 @@ window.crmSaveTaskFromDeal = async function(dealId) {
 };
 
 // ══════════════════════════════════════════════════════════
+// МАСОВИЙ ІМПОРТ КЛІЄНТІВ/УГОД З CSV
+// ══════════════════════════════════════════════════════════
+
+window.crmOpenImport = function() {
+    const modal = document.createElement('div');
+    modal.id = 'crmImportModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    modal.innerHTML = `
+        <div style="background:white;border-radius:14px;padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <h3 style="font-size:1.1rem;font-weight:700;color:#111;">📥 Імпорт клієнтів з CSV</h3>
+                <button onclick="document.getElementById('crmImportModal')?.remove()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#6b7280;">✕</button>
+            </div>
+            <p style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">
+                Файл CSV має містити колонки: <b>name</b> (обов'язково), phone, email, source, amount, stage, nextContactDate, description.<br>
+                Перший рядок — заголовки. Роздільник: кома або крапка з комою.
+            </p>
+            <div style="margin-bottom:0.75rem;">
+                <a href="#" onclick="window.crmDownloadImportTemplate();return false;"
+                   style="font-size:0.81rem;color:#22c55e;font-weight:600;text-decoration:underline;">
+                    ⬇ Завантажити шаблон CSV
+                </a>
+            </div>
+            <div id="crmImportDropzone"
+                style="border:2px dashed #d1d5db;border-radius:10px;padding:2rem;text-align:center;cursor:pointer;margin-bottom:1rem;transition:border-color .2s;"
+                ondragover="event.preventDefault();this.style.borderColor='#22c55e';"
+                ondragleave="this.style.borderColor='#d1d5db';"
+                ondrop="window.crmHandleImportDrop(event);"
+                onclick="document.getElementById('crmImportFileInput').click()">
+                <div style="font-size:2rem;margin-bottom:0.5rem;">📂</div>
+                <div style="font-size:0.9rem;color:#374151;font-weight:600;">Перетягніть CSV або натисніть для вибору</div>
+                <div style="font-size:0.78rem;color:#9ca3af;margin-top:0.25rem;">Підтримується .csv до 5MB</div>
+            </div>
+            <input type="file" id="crmImportFileInput" accept=".csv,text/csv" style="display:none;"
+                onchange="window.crmHandleImportFile(this.files[0])">
+            <div id="crmImportPreview" style="display:none;">
+                <div id="crmImportPreviewInfo" style="font-size:0.85rem;color:#374151;margin-bottom:0.75rem;padding:0.6rem;background:#f0fdf4;border-radius:8px;"></div>
+                <div id="crmImportPreviewTable" style="overflow:auto;max-height:200px;font-size:0.78rem;margin-bottom:1rem;"></div>
+                <div style="display:flex;gap:0.5rem;">
+                    <button onclick="window.crmDoImport()" id="crmImportBtn"
+                        style="flex:1;padding:0.65rem;background:#22c55e;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;">
+                        ✅ Імпортувати
+                    </button>
+                    <button onclick="window.crmResetImport()"
+                        style="padding:0.65rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.9rem;">
+                        Скинути
+                    </button>
+                </div>
+            </div>
+            <div id="crmImportProgress" style="display:none;text-align:center;padding:1rem;">
+                <div style="font-size:0.9rem;color:#374151;" id="crmImportProgressText">Імпортую...</div>
+                <div style="margin-top:0.5rem;background:#e5e7eb;border-radius:99px;height:8px;overflow:hidden;">
+                    <div id="crmImportProgressBar" style="height:100%;background:#22c55e;width:0%;transition:width .3s;"></div>
+                </div>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+};
+
+// Зберігаємо розпарсені рядки між preview і import
+window._crmImportRows = [];
+
+window.crmDownloadImportTemplate = function() {
+    const csv = [
+        'name,phone,email,source,amount,stage,nextContactDate,description',
+        'Іван Петренко,+380501234567,ivan@example.com,website,15000,new,2026-04-01,Зацікавився продуктом',
+        'Марія Коваль,+380671234567,maria@example.com,referral,0,contact,,Повторний клієнт',
+    ].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = 'crm_import_template.csv';
+    a.click();
+};
+
+window.crmHandleImportDrop = function(e) {
+    e.preventDefault();
+    document.getElementById('crmImportDropzone').style.borderColor = '#d1d5db';
+    const file = e.dataTransfer?.files?.[0];
+    if (file) window.crmHandleImportFile(file);
+};
+
+window.crmHandleImportFile = function(file) {
+    if (!file || !file.name.endsWith('.csv')) {
+        if (window.showToast) showToast('Тільки .csv файли', 'error');
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        if (window.showToast) showToast('Файл більше 5MB', 'error');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+        const text = e.target.result.replace(/^﻿/, ''); // strip BOM
+        window._crmImportRows = window.crmParseCSV(text);
+        window.crmShowImportPreview(window._crmImportRows);
+    };
+    reader.readAsText(file, 'UTF-8');
+};
+
+window.crmParseCSV = function(text) {
+    const lines = text.split(/\r?\n/).filter(l => l.trim());
+    if (lines.length < 2) return [];
+    // Автодетект роздільника
+    const sep = lines[0].includes(';') ? ';' : ',';
+    const headers = lines[0].split(sep).map(h => h.trim().toLowerCase().replace(/["\']/g, ''));
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+        // Простий парсер CSV — враховує лапки
+        const vals = [];
+        let cur = '', inQ = false;
+        for (const ch of lines[i] + sep) {
+            if (ch === '"') { inQ = !inQ; continue; }
+            if (ch === sep && !inQ) { vals.push(cur.trim()); cur = ''; }
+            else cur += ch;
+        }
+        if (vals.some(v => v)) {
+            const row = {};
+            headers.forEach((h, idx) => { row[h] = (vals[idx] || '').trim(); });
+            if (row.name || row['ім\'я'] || row['имя']) rows.push(row);
+        }
+    }
+    return rows;
+};
+
+window.crmShowImportPreview = function(rows) {
+    if (!rows.length) {
+        if (window.showToast) showToast('CSV порожній або некоректний', 'error');
+        return;
+    }
+    const preview = document.getElementById('crmImportPreview');
+    const info = document.getElementById('crmImportPreviewInfo');
+    const table = document.getElementById('crmImportPreviewTable');
+
+    info.innerHTML = `✅ Знайдено <b>${rows.length}</b> записів. Перегляд перших 5:`;
+
+    const cols = ['name','phone','email','source','amount','stage'];
+    const shown = rows.slice(0, 5);
+    let html = '<table style="width:100%;border-collapse:collapse;">';
+    html += '<tr>' + cols.map(c => `<th style="padding:3px 6px;background:#f9fafb;border-bottom:1px solid #e5e7eb;text-align:left;font-weight:600;">${c}</th>`).join('') + '</tr>';
+    shown.forEach(r => {
+        html += '<tr>' + cols.map(c => `<td style="padding:3px 6px;border-bottom:1px solid #f3f4f6;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r[c] || '—'}</td>`).join('') + '</tr>';
+    });
+    html += '</table>';
+    table.innerHTML = html;
+    preview.style.display = 'block';
+};
+
+window.crmResetImport = function() {
+    window._crmImportRows = [];
+    document.getElementById('crmImportPreview').style.display = 'none';
+    document.getElementById('crmImportFileInput').value = '';
+};
+
+window.crmDoImport = async function() {
+    const rows = window._crmImportRows;
+    if (!rows.length) return;
+
+    const btn = document.getElementById('crmImportBtn');
+    const progress = document.getElementById('crmImportProgress');
+    const progressText = document.getElementById('crmImportProgressText');
+    const progressBar = document.getElementById('crmImportProgressBar');
+
+    document.getElementById('crmImportPreview').style.display = 'none';
+    progress.style.display = 'block';
+
+    const base = window.companyRef();
+    const pipelineId = crm.pipeline?.id || 'default';
+
+    // Отримуємо стейджи для дефолтного stage
+    const defaultStage = crm.pipeline?.stages?.[0]?.id || 'new';
+    const stageMap = {};
+    (crm.pipeline?.stages || []).forEach(s => {
+        stageMap[s.id] = s;
+        stageMap[(s.label || '').toLowerCase()] = s;
+    });
+
+    let done = 0, errors = 0;
+    const BATCH_SIZE = 20;
+
+    for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+        const batch = db.batch();
+        const chunk = rows.slice(i, i + BATCH_SIZE);
+
+        chunk.forEach(row => {
+            // Нормалізуємо поля
+            const name = (row.name || row['ім\'я'] || row['имя'] || 'Без імені').slice(0, 100);
+            const phone = (row.phone || row['телефон'] || '').slice(0, 30);
+            const email = (row.email || '').toLowerCase().slice(0, 100);
+            const source = (row.source || row['джерело'] || 'import').slice(0, 50);
+            const amount = parseFloat(row.amount || row['сума'] || 0) || 0;
+            const rawStage = (row.stage || row['стадія'] || '').toLowerCase();
+            const stage = stageMap[rawStage]?.id || defaultStage;
+            const nextContactDate = /^\d{4}-\d{2}-\d{2}$/.test(row.nextcontactdate || row.nextContactDate || '') 
+                ? (row.nextcontactdate || row.nextContactDate) : null;
+            const description = (row.description || row['опис'] || '').slice(0, 500);
+
+            // Клієнт
+            const clientRef = base.collection(window.DB_COLS.CRM_CLIENTS || 'crm_clients').doc();
+            batch.set(clientRef, {
+                id: clientRef.id,
+                name, phone, email, source,
+                importedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt:  firebase.firestore.FieldValue.serverTimestamp(),
+            });
+
+            // Угода
+            const dealRef = base.collection(window.DB_COLS.CRM_DEALS || 'crm_deals').doc();
+            batch.set(dealRef, {
+                id: dealRef.id,
+                title:         name + (description ? ' — ' + description.slice(0, 30) : ''),
+                clientName:    name,
+                clientId:      clientRef.id,
+                phone, email, source,
+                amount, currency: 'UAH',
+                stage, pipelineId,
+                status:        'open',
+                description,
+                nextContactDate,
+                importedAt:    firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt:     firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            done++;
+        });
+
+        try {
+            await batch.commit();
+        } catch(e) {
+            errors += chunk.length;
+            done -= chunk.length;
+            console.error('[CRM import] batch error:', e.message);
+        }
+
+        const pct = Math.round(((i + chunk.length) / rows.length) * 100);
+        progressBar.style.width = pct + '%';
+        progressText.textContent = `Імпортую... ${Math.min(i + BATCH_SIZE, rows.length)} / ${rows.length}`;
+    }
+
+    // Завершення
+    const modal = document.getElementById('crmImportModal');
+    if (modal) modal.remove();
+    window._crmImportRows = [];
+
+    const msg = errors > 0
+        ? `Імпортовано ${done} з ${rows.length}. Помилок: ${errors}.`
+        : `✅ Успішно імпортовано ${done} записів!`;
+    if (window.showToast) showToast(msg, errors > 0 ? 'warning' : 'success');
+};
+
+// ══════════════════════════════════════════════════════════
 // НАГАДУВАННЯ ПО nextContactDate — перевірка при відкритті CRM
 // ══════════════════════════════════════════════════════════
 function _checkContactReminders() {
