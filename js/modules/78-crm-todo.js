@@ -20,6 +20,8 @@ const TI = {
     arrow:   '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
     refresh: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
     sms:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    chat:    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="13" y2="14"/></svg>',
+    stage:   '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
 };
 
 const _esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -299,6 +301,12 @@ window.crmTodoOpenCard = async function(dealId) {
                   ${_esc(stageObj?stageObj.label:deal.stage)}</span>
                 ${deal.clientNiche?`<span style="font-size:0.72rem;color:#9ca3af;">${_esc(deal.clientNiche)}</span>`:''}
                 ${deal.amount?`<span style="font-size:0.72rem;font-weight:600;color:#16a34a;">${Number(deal.amount).toLocaleString()} ₴</span>`:''}
+                <!-- СТАДІЯ: зміна прямо з картки -->
+                <select id="crmTodoStageSelect" onchange="_crmTodoValidate()"
+                  style="font-size:0.72rem;font-weight:600;border:1.5px solid ${stageClr}55;border-radius:6px;padding:2px 6px;background:${stageClr}11;color:${stageClr};cursor:pointer;outline:none;">
+                  ${stages.filter(s=>s.id!=='lost').map(s=>`<option value="${s.id}"${s.id===deal.stage?' selected':''}>${_esc(s.label)}</option>`).join('')}
+                  ${stages.find(s=>s.id==='lost')?`<option value="lost"${deal.stage==='lost'?' selected':''}>🔴 ${_esc(stages.find(s=>s.id==='lost').label)}</option>`:''}
+                </select>
               </div>
             </div>
             <button onclick="_crmTodoCloseCard()" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px;">${TI.close}</button>
@@ -384,9 +392,16 @@ window.crmTodoOpenCard = async function(dealId) {
 
         <!-- Кнопки -->
         <div style="padding:0.75rem 1.25rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-          <button onclick="if(window.crmOpenDeal){_crmTodoCloseCard();crmOpenDeal('${dealId}');}"
-            style="display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;border:1.5px solid #e5e7eb;background:#fff;color:#374151;font-size:0.8rem;font-weight:500;cursor:pointer;">
-            Відкрити угоду ${TI.arrow}</button>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+            <button onclick="if(window.crmOpenDeal){_crmTodoCloseCard();crmOpenDeal('${dealId}');}"
+              style="display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;border:1.5px solid #e5e7eb;background:#fff;color:#374151;font-size:0.8rem;font-weight:500;cursor:pointer;">
+              Відкрити угоду ${TI.arrow}</button>
+            ${(deal.contactId||deal.botContactId)?`
+            <button onclick="_crmTodoOpenChat('${dealId}')"
+              style="display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;border:1.5px solid #0ea5e9;background:#f0f9ff;color:#0ea5e9;font-size:0.8rem;font-weight:600;cursor:pointer;">
+              ${TI.chat} Чат</button>
+            `:''}
+          </div>
           <div style="display:flex;gap:0.4rem;">
             <button onclick="_crmTodoCloseCard()" style="padding:7px 14px;border-radius:7px;border:1px solid #e5e7eb;background:#fff;color:#374151;font-size:0.82rem;cursor:pointer;">Скасувати</button>
             <button id="crmTodoSaveBtn" onclick="_crmTodoSave('${dealId}')" disabled
@@ -499,6 +514,14 @@ window._crmTodoSave = async function(dealId) {
         };
         if (nextNote) updates.note = nextNote;
 
+        // НОВИНКА: зберігаємо стадію з select якщо вона змінилась
+        const selectedStage = document.getElementById('crmTodoStageSelect')?.value;
+        const currentDeal = window.crm?.deals?.find(x=>x.id===dealId);
+        if (selectedStage && selectedStage !== currentDeal?.stage) {
+            updates.stage = selectedStage;
+            updates.stageEnteredAt = firebase.firestore.FieldValue.serverTimestamp();
+        }
+
         const hist = { at:firebase.firestore.FieldValue.serverTimestamp(), by:window.currentUser&&window.currentUser.email||'manager' };
 
         if (result === 'answered') {
@@ -512,7 +535,14 @@ window._crmTodoSave = async function(dealId) {
             const txt=(document.getElementById('crmTodoSmsText')&&document.getElementById('crmTodoSmsText').value||'').trim();
             hist.type='sms_sent'; hist.text=txt?'Повідомлення: '+txt:'Надіслано повідомлення';
         } else {
-            hist.type='contact_updated'; hist.text='Контакт заплановано на: '+nextDate;
+            // Якщо стадія змінена вручну — логуємо
+            if (selectedStage && selectedStage !== currentDeal?.stage) {
+                const stages = (window.crm?.pipeline?.stages||[]);
+                const newStageLbl = stages.find(s=>s.id===selectedStage)?.label || selectedStage;
+                hist.type='stage_changed'; hist.text=`Стадія змінена на: ${newStageLbl}`;
+            } else {
+                hist.type='contact_updated'; hist.text='Контакт заплановано на: '+nextDate;
+            }
         }
 
         await ref.update(updates);
@@ -534,10 +564,7 @@ window._crmTodoSave = async function(dealId) {
         if (localDeal) {
             localDeal.nextContactDate = nextDate;
             if (nextNote) localDeal.note = nextNote;
-            if (result==='answered') {
-                const ns = document.getElementById('crmTodoNewStage')&&document.getElementById('crmTodoNewStage').value;
-                if (ns) { localDeal.stage = ns; localDeal.stageEnteredAt = { toDate:()=>new Date(), toMillis:()=>Date.now() }; }
-            }
+            if (updates.stage) { localDeal.stage = updates.stage; localDeal.stageEnteredAt = { toDate:()=>new Date(), toMillis:()=>Date.now() }; }
         }
         _crmTodoCloseCard();
         if (window.showToast) showToast('Збережено','success');
@@ -546,6 +573,35 @@ window._crmTodoSave = async function(dealId) {
     } catch(e) {
         if(btn){btn.disabled=false;btn.textContent='Зберегти';}
         if(window.showToast)showToast('Помилка: '+e.message,'error');
+    }
+};
+
+// НОВИНКА: відкрити чат з клієнтом прямо з картки
+window._crmTodoOpenChat = async function(dealId) {
+    const deal = window.crm?.deals?.find(d=>d.id===dealId);
+    if (!deal) return;
+    const contactId = deal.contactId || deal.botContactId || null;
+    if (!contactId) { if(window.showToast)showToast('Немає прив\'язаного чату','warning'); return; }
+    _crmTodoCloseCard();
+    // Переходимо на вкладку Боти → Чат
+    if (typeof switchTab === 'function') {
+        switchTab('bots');
+        // Чекаємо поки модуль завантажиться
+        let attempts = 0;
+        const tryOpen = () => {
+            attempts++;
+            if (typeof window.bpOpenChat === 'function') {
+                // Переключаємо на sub-tab chat і відкриваємо контакт
+                if (typeof window.bpSwitch === 'function') window.bpSwitch('chat');
+                setTimeout(() => window.bpOpenChat(contactId), 150);
+            } else if (attempts < 15) {
+                setTimeout(tryOpen, 200);
+            }
+        };
+        setTimeout(tryOpen, 300);
+    } else if (typeof window.bpOpenChat === 'function') {
+        if (typeof window.bpSwitch === 'function') window.bpSwitch('chat');
+        setTimeout(() => window.bpOpenChat(contactId), 150);
     }
 };
 
