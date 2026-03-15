@@ -219,7 +219,7 @@
         const roleEl = document.getElementById('currentUserRole');
         const roleText = roleEl ? roleEl.textContent : '';
         if (roleText.includes('Власник') || roleText.includes('owner') ||
-            roleText.includes('Адмін') || roleText.includes('admin') ||
+            roleText.includes((window.currentLang==='ru'?'Админ':'Адмін')) || roleText.includes('admin') ||
             roleText.includes('Менеджер') || roleText.includes('manager')) return true;
         // Fallback: coordUsers array (available after load)
         const u = coordUsers.find(x => x.id === uid());
@@ -531,7 +531,7 @@
                 <select id="coordEscalTarget" style="${fieldStyle}cursor:pointer;">
                   <option value="">${ct('escalAuto')}</option>${cOpts}
                 </select>
-                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">Невирішені питання автоматично потраплять вгору по ланцюжку</div>
+                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">(window.currentLang==='ru'?'Нерешённые вопросы автоматически поднимутся вверх по цепочке':'Невирішені питання автоматично потраплять вгору по ланцюжку')</div>
               </div>
 
               <!-- Telegram -->
@@ -540,7 +540,7 @@
                 <input id="coordTelegramChat" type="text" placeholder="-100xxxxxxxxxx"
                   style="${fieldStyle}"
                   onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
-                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">Протокол надсилається автоматично після завершення</div>
+                <div style="font-size:.75rem;color:#9ca3af;margin-top:.35rem;padding-left:.25rem;">(window.currentLang==='ru'?'Протокол отправляется автоматически после завершения':'Протокол надсилається автоматично після завершення')</div>
               </div>
 
               <!-- Buttons -->
@@ -610,7 +610,7 @@
             </div>
             <!-- Decisions -->
             <div style="margin-top:.8rem;border-top:1px solid #f0f0f0;padding-top:.7rem;">
-              <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="zap" style="width:12px;height:12px;margin-right:4px;"></i>Рішення</div>
+              <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="zap" style="width:12px;height:12px;margin-right:4px;"></i>(window.currentLang==='ru'?'Решение':'Рішення')</div>
               <div id="coordDecisions" style="display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;"></div>
               <div style="display:flex;gap:.45rem;">
                 <input id="coordNewDecision" type="text" class="form-control" placeholder="Зафіксувати рішення..." style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addCoordDecision()">
@@ -619,7 +619,7 @@
             </div>
             <!-- Unresolved / Escalation -->
             <div style="margin-top:.8rem;border-top:1px solid #f0f0f0;padding-top:.7rem;">
-              <div style="font-weight:700;font-size:.78rem;color:#d97706;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="arrow-up-circle" style="width:12px;height:12px;margin-right:4px;color:#d97706;"></i>Ескалація (невирішені питання)</div>
+              <div style="font-weight:700;font-size:.78rem;color:#d97706;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="arrow-up-circle" style="width:12px;height:12px;margin-right:4px;color:#d97706;"></i>(window.currentLang==='ru'?'Эскалация (нерешённые вопросы)':'Ескалація (невирішені питання)')</div>
               <div id="coordUnresolved" style="display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;"></div>
               <div style="display:flex;gap:.45rem;">
                 <input id="coordNewUnresolved" type="text" class="form-control" placeholder="Питання що потребує ескалації вгору..." style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addUnresolved()">
@@ -717,7 +717,7 @@
         if (_saveCoordLock) return;
         _saveCoordLock = true;
         const name = document.getElementById('coordName').value.trim();
-        if (!name) { _saveCoordLock = false; toast('Введіть назву','error'); return; }
+        if (!name) { _saveCoordLock = false; toast((window.currentLang==='ru'?'Введите название':'Введіть назву'),'error'); return; }
         if (!window.currentCompanyId) { _saveCoordLock = false; return; }
         const participantIds = Array.from(document.querySelectorAll('.coord-participant-cb:checked')).map(cb=>cb.value);
         const filters={};
@@ -743,7 +743,7 @@
                 data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
                 data.createdBy=uid();
                 await col('coordinations').add(data);
-                toast('Координацію створено');
+                toast((window.currentLang==='ru'?'Координация создана':'Координацію створено'));
             }
             closeCoordModal();
         } catch(e) { toast('Помилка: '+e.message,'error'); }
@@ -752,7 +752,7 @@
 
     window.deleteCoord = async function(coordId) {
         const ok = window.showConfirmModal
-            ? await window.showConfirmModal('Видалити координацію?',{danger:true})
+            ? await window.showConfirmModal((window.currentLang==='ru'?'Удалить координацию?':'Видалити координацію?'),{danger:true})
             : (window.showConfirmModal ? await showConfirmModal('Видалити?',{danger:true}) : confirm('Видалити?'));
         if (!ok) return;
         try { await col('coordinations').doc(coordId).delete(); toast('Видалено'); }

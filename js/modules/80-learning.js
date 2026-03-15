@@ -1395,7 +1395,7 @@
 <div class="l5-divider"></div>
 
 <div class="l5-section">
-    <div class="l5-section-label">Рішення</div>
+    <div class="l5-section-label">(window.currentLang==='ru'?'Решение':'Рішення')</div>
     <div class="l5-section-title">Що таке ЗРС — Закінчена робота співробітника</div>
     <div class="l5-card">
         <p>ЗРС — це принцип, за яким співробітник несе до керівника вже не «сиру проблему», а підготовлену управлінську одиницю.</p>
@@ -1405,7 +1405,7 @@
         <div class="l5-flow-arrow">→</div>
         <div class="l5-flow-item"><span>Дані</span><span style="font-size:0.72rem;color:#6b7280;font-weight:400;margin-top:0.2rem;">факти і цифри</span></div>
         <div class="l5-flow-arrow">→</div>
-        <div class="l5-flow-item active"><span>Рішення</span><span style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:400;margin-top:0.2rem;">пропозиція</span></div>
+        <div class="l5-flow-item active"><span>(window.currentLang==='ru'?'Решение':'Рішення')</span><span style="font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:400;margin-top:0.2rem;">пропозиція</span></div>
     </div>
     <p style="font-size:0.82rem;color:#525252;margin-top:0.75rem;line-height:1.5;">ЗРС = проблема, яку вже пропрацювали до рівня рішення. Не питання до керівника, а готова пропозиція на схвалення або відхилення.</p>
 </div>
@@ -1439,7 +1439,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.75" width="18" height="18"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             </div>
             <div>
-                <div class="l5-block-title">Рішення</div>
+                <div class="l5-block-title">(window.currentLang==='ru'?'Решение':'Рішення')</div>
                 <div class="l5-block-text">Не «що робити?», а «я пропоную зробити ось так». Конкретно: що саме, хто робить, коли, за які гроші, на яких умовах.</div>
             </div>
         </div>
@@ -3461,7 +3461,7 @@
         <div class="lesson-block-title">ЧАСТИНА 3. ПРОДУКТ ОРГАНІЗАЦІЇ</div>
     </div>
     <div class="lesson-block-content">
-        <p><strong>Продукт організації</strong> — це кінцевий результат діяльності компанії, те, за що клієнт платить гроші.</p>
+        <p><strong>(window.currentLang==='ru'?'Продукт организации':'Продукт організації')</strong> — це кінцевий результат діяльності компанії, те, за що клієнт платить гроші.</p>
         
         <div style="background: #fef3c7; padding: 14px; border-radius: 8px; margin: 14px 0; border-left: 4px solid #f59e0b;">
             <p style="margin: 0; font-weight: 600;">Критично важливо:</p>
@@ -5648,7 +5648,7 @@
             <thead><tr><th>Функція</th><th>ЦКП</th><th>Статистика</th></tr></thead>
             <tbody>
                 <tr><td>Секретар</td><td>Правильно спрямовані дзвінки</td><td>Кількість правильно спрямованих дзвінків</td></tr>
-                <tr><td>Продажі</td><td>Підписані договори</td><td>Сума замовлень за договорами (грн)</td></tr>
+                <tr><td>(window.currentLang==='ru'?'Продажи':'Продажі')</td><td>Підписані договори</td><td>Сума замовлень за договорами (грн)</td></tr>
                 <tr><td>Фінанси</td><td>Отримані оплати</td><td>Сума отриманих оплат (грн)</td></tr>
                 <tr><td>Дизайн</td><td>Затверджені макети</td><td>Кількість макетів, схвалених клієнтом</td></tr>
                 <tr><td>Доставка</td><td>Вчасно доставлена продукція</td><td>Вартість доставленої продукції (грн)</td></tr>
@@ -7293,7 +7293,7 @@
                                 <div class="step-cell">
                                     <div class="step-number">14</div>
                                     <div class="step-info">
-                                        <h4>Продукт організації</h4>
+                                        <h4>(window.currentLang==='ru'?'Продукт организации':'Продукт організації')</h4>
                                         <p>Політика продукту</p>
                                     </div>
                                 </div>
