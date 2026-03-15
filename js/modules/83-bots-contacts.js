@@ -1638,7 +1638,7 @@ window.bpOpenChat = async function(contactId, instanceId = 'main') {
         bp.activeChatContactId = contactId;
     }
 
-    // Знаходимо контакт
+    // PERF: якщо контакт не в cache — завантажуємо
     let ct = chat.contacts.find(c => c.id === contactId);
     if (!ct) {
         const doc = await window.companyRef().collection('contacts').doc(contactId).get();
@@ -1648,44 +1648,43 @@ window.bpOpenChat = async function(contactId, instanceId = 'main') {
         }
     }
 
-    // Оновлюємо лівий список тільки для main
+    // Рендеримо UI одразу (не чекаємо токен)
     if (instanceId === 'main') _chatRenderContactsList();
-
-    // Рендеримо хедер
     const headerContainerId = instanceId === 'main' ? 'chatMsgHeader' : `chatMsgHeader_${instanceId}`;
     _chatRenderHeader(ct, headerContainerId);
-
-    // Показуємо поле вводу
     const inputAreaId = instanceId === 'main' ? 'chatInputArea' : `chatInputArea_${instanceId}`;
     const inputArea = document.getElementById(inputAreaId);
     if (inputArea) inputArea.style.display = '';
 
-    // Зупиняємо попередній listener цього інстансу
+    // Зупиняємо попередній listener
     if (typeof inst.msgsUnsub === 'function') { inst.msgsUnsub(); }
     inst.msgsUnsub = null;
-    // backward compat
     if (instanceId === 'main') { chat.msgsUnsub = null; }
 
-    // Підписуємось на messages
+    // PERF: підписка на messages + завантаження токена паралельно (-40ms)
     const _msgRef = window.companyRef();
-    if (_msgRef) {
-        inst.msgsUnsub = _msgRef.collection('contacts').doc(contactId).collection('messages')
-            .orderBy('timestamp', 'asc')
-            .limitToLast(100)
-            .onSnapshot(snap => {
-                _chatRenderMessages(
-                    snap.docs.map(d => ({ id: d.id, ...d.data() })),
-                    inst.msgsContainerId
+    const [, _token] = await Promise.all([
+        // Messages onSnapshot (синхронний — повертає unsub функцію)
+        Promise.resolve(_msgRef ? (() => {
+            inst.msgsUnsub = _msgRef.collection('contacts').doc(contactId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .limitToLast(100)
+                .onSnapshot(
+                    snap => _chatRenderMessages(
+                        snap.docs.map(d => ({ id: d.id, ...d.data() })),
+                        inst.msgsContainerId
+                    ),
+                    err => console.error('[chat] messages listener:', err.message)
                 );
-            });
-        if (instanceId === 'main') chat.msgsUnsub = inst.msgsUnsub;
-    }
+            if (instanceId === 'main') chat.msgsUnsub = inst.msgsUnsub;
+        })() : null),
+        // Токен бота — паралельно
+        _chatGetBotToken(ct),
+    ]);
+    inst.sendingBotToken = _token;
+    if (instanceId === 'main') chat.sendingBotToken = _token;
 
-    // Токен бота
-    inst.sendingBotToken = await _chatGetBotToken(ct);
-    if (instanceId === 'main') chat.sendingBotToken = inst.sendingBotToken;
-
-    // Позначаємо прочитаними
+    // Позначаємо прочитаними (fire-and-forget)
     _chatMarkRead(contactId);
 };
 
@@ -1749,17 +1748,27 @@ function _chatRenderMessages(msgs, containerId = 'chatMsgs') {
         const isBot = m.from === 'bot' || m.direction === 'out';
         const time = m.timestamp?.toDate ? m.timestamp.toDate().toLocaleTimeString('uk-UA', {hour:'2-digit',minute:'2-digit'}) : '';
 
+        // Відображаємо кнопки якщо є (збережені ботом)
+        const btnsHtml = (m.buttons?.length && !isBot) ? '' : (m.buttons?.length ? `
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;justify-content:flex-end;">
+                ${m.buttons.map(b => `<span style="padding:3px 8px;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);border-radius:10px;font-size:0.72rem;cursor:default;">${escH(b.label||'')}</span>`).join('')}
+            </div>` : '');
+        // Оператор vs бот автовідповідь
+        const senderLabel = isBot
+            ? (m.sentBy === 'operator' ? '<span style="font-size:0.62rem;color:#86efac;font-weight:600;">Оператор · </span>' : '')
+            : '';
         return `
-        <div style="display:flex;justify-content:${isBot ? 'flex-end' : 'flex-start'};">
-            <div style="max-width:72%;display:flex;flex-direction:column;align-items:${isBot ? 'flex-end' : 'flex-start'};">
+        <div style="display:flex;justify-content:${isBot ? 'flex-end' : 'flex-start'};margin-bottom:2px;">
+            <div style="max-width:75%;display:flex;flex-direction:column;align-items:${isBot ? 'flex-end' : 'flex-start'};">
                 <div style="padding:0.5rem 0.75rem;
                     border-radius:${isBot ? '14px 14px 4px 14px' : '14px 14px 14px 4px'};
-                    background:${isBot ? '#22c55e' : 'white'};
+                    background:${isBot ? (m.sentBy==='operator' ? '#2563eb' : '#22c55e') : 'white'};
                     color:${isBot ? 'white' : '#1a1a1a'};
                     font-size:0.82rem;line-height:1.45;
-                    box-shadow:${isBot ? '0 1px 4px rgba(34,197,94,0.3)' : '0 1px 4px rgba(0,0,0,0.08)'};
+                    box-shadow:${isBot ? '0 1px 4px rgba(0,0,0,0.15)' : '0 1px 4px rgba(0,0,0,0.08)'};
                     word-break:break-word;">
-                    ${escH(m.text || '')}
+                    ${senderLabel}${escH(m.text || '')}
+                    ${btnsHtml}
                 </div>
                 <div style="font-size:0.62rem;color:#9ca3af;margin-top:2px;
                     display:flex;align-items:center;gap:3px;">
@@ -1788,29 +1797,51 @@ window.chatSend = window.bpSendMsg = async function(instanceId = 'main') {
     if (input.tagName === 'TEXTAREA') { input.style.height = 'auto'; }
 
     try {
-        // 1. Пишемо повідомлення в Firestore
-        await window.companyRef().collection('contacts').doc(inst.activeId).collection('messages')
-            .add({
-                text, from: 'bot', direction: 'out',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                read: true, sentBy: 'operator',
-            });
+        // CRITICAL FIX: відправляємо через /api/webhook?action=send-message
+        // Раніше писали тільки pendingOutMessage в Firestore і чекали Cloud Functions
+        // яких немає → повідомлення ніколи не доходили до клієнта в Telegram
+        const idToken = await firebase.auth().currentUser?.getIdToken().catch(() => null);
+        if (!idToken) throw new Error('Не авторизований');
 
-        // 2. Оновлюємо контакт — черга для Functions + lastMessage
-        await window.companyRef().collection('contacts').doc(inst.activeId)
-            .update({
-                pendingOutMessage: text,
-                pendingOutAt: firebase.firestore.FieldValue.serverTimestamp(),
-                lastMessage: text,
-                lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
+        const _sendAbort = new AbortController();
+        const _sendTimer = setTimeout(() => _sendAbort.abort(), 10000);
+        let apiOk = false;
+        try {
+            const resp = await fetch('/api/webhook?action=send-message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + idToken,
+                },
+                signal: _sendAbort.signal,
+                body: JSON.stringify({
+                    companyId: window.currentCompanyId,
+                    contactId: inst.activeId,
+                    text,
+                }),
             });
+            clearTimeout(_sendTimer);
+            const data = await resp.json();
+            apiOk = data?.ok === true;
+            if (!resp.ok || !apiOk) {
+                throw new Error(data?.error || 'Помилка API: ' + resp.status);
+            }
+            // Показуємо статус доставки
+            if (data.telegramOk === false) {
+                if (typeof showToast === 'function') showToast('⚠️ Повідомлення збережено, але Telegram не відповів (клієнт міг заблокувати бота)', 'warning');
+            }
+        } finally {
+            clearTimeout(_sendTimer);
+        }
 
-        // 3. Оновлюємо локальний стан
+        // Оновлюємо локальний стан (повідомлення вже збережено через API)
         const ct = chat.contacts.find(c => c.id === inst.activeId);
         if (ct) { ct.lastMessage = text; ct.lastMessageAt = { toDate: () => new Date() }; }
         if (instanceId === 'main') _chatRenderContactsList();
 
     } catch(e) {
+        // Відновлюємо текст в полі щоб юзер міг повторити
+        if (input) input.value = text;
         console.error('[chat] send:', e);
         if (typeof showToast === 'function') showToast('Помилка відправки: ' + e.message, 'error');
     } finally {

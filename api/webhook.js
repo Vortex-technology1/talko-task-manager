@@ -2380,7 +2380,27 @@ async function handleSendMessage(req, res, _authUser) {
         // Відправляємо в Telegram
         let telegramOk = false;
         // SECURITY: ігноруємо botToken з req.body — завжди беремо з Firestore
-        const token = contact.botToken || contact.integrations?.telegram?.botToken;
+        // FIX: шукаємо токен в 3 місцях: contact.botToken → bots/{botId} → companyData
+        let token = contact.botToken || contact.integrations?.telegram?.botToken || null;
+        if (!token && contact.botId) {
+            try {
+                const botDoc = await compRef.collection('bots').doc(contact.botId).get();
+                token = botDoc.data()?.token || botDoc.data()?.botToken || null;
+            } catch(e) { console.warn('[send-message] bot token lookup:', e.message); }
+        }
+        if (!token) {
+            // Fallback: перший активний Telegram бот компанії
+            try {
+                const botsSnap = await compRef.collection('bots')
+                    .where('channel', '==', 'telegram').limit(1).get();
+                if (!botsSnap.empty) token = botsSnap.docs[0].data()?.token || null;
+            } catch(e) { /* не критично */ }
+        }
+        if (!token) {
+            // Last resort: companyData.integrations.telegram
+            const compDoc2 = await compRef.get().catch(() => null);
+            token = compDoc2?.data()?.integrations?.telegram?.botToken || null;
+        }
         const senderId = contact.senderId;
 
         if (token && senderId && contact.channel === 'telegram') {
