@@ -1722,6 +1722,49 @@ function renderPropPanel() {
                     }).catch(() => { window._cachedAiModels = null; });
             }
 
+            // ── Функція завантаження актуальних моделей з API ──
+            if (!window._fcLoadLiveModels) {
+                window._fcLoadLiveModels = async function(prov, key) {
+                    if (!key || key.includes('•')) { if (window.showToast) showToast('Введіть API ключ', 'warning'); return; }
+                    const btn = document.getElementById('fcLoadModelsBtn');
+                    if (btn) { btn.textContent = '⏳ Завантаження...'; btn.disabled = true; }
+                    try {
+                        let models = [];
+                        if (prov === 'openai') {
+                            const r = await fetch('https://api.openai.com/v1/models', { headers: { 'Authorization': 'Bearer ' + key } });
+                            const d = await r.json();
+                            if (!r.ok) throw new Error(d.error?.message || 'Помилка OpenAI: ' + r.status);
+                            models = (d.data || [])
+                                .filter(m => /^(gpt-|o1|o3|o4)/.test(m.id) && !m.id.includes('instruct') && !m.id.includes('vision') && !m.id.includes('audio'))
+                                .sort((a,b) => (b.created||0) - (a.created||0))
+                                .slice(0, 25)
+                                .map(m => [m.id, m.id]);
+                        } else if (prov === 'anthropic') {
+                            const r = await fetch('https://api.anthropic.com/v1/models', { headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01' } });
+                            const d = await r.json();
+                            if (!r.ok) throw new Error(d.error?.message || 'Помилка Anthropic: ' + r.status);
+                            models = (d.data || []).map(m => [m.id, (m.display_name||m.id)]);
+                        } else if (prov === 'google') {
+                            const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?key=' + key);
+                            const d = await r.json();
+                            if (!r.ok) throw new Error(d.error?.message || 'Помилка Google: ' + r.status);
+                            models = (d.models||[])
+                                .filter(m => m.name.includes('gemini') && (m.supportedGenerationMethods||[]).includes('generateContent'))
+                                .map(m => [m.name.replace('models/',''), m.displayName||m.name.replace('models/','')]);
+                        }
+                        if (models.length) {
+                            if (!window._cachedAiModels) window._cachedAiModels = {};
+                            window._cachedAiModels[prov] = models;
+                            if (window.showToast) showToast('✅ Завантажено ' + models.length + ' моделей', 'success');
+                            if (fc.selected) renderPropPanel();
+                        } else { throw new Error('Список моделей порожній'); }
+                    } catch(e) {
+                        if (window.showToast) showToast('❌ ' + e.message, 'error');
+                        if (btn) { btn.textContent = '🔄 Оновити список'; btn.disabled = false; }
+                    }
+                };
+            }
+
             const savedKey = d.aiApiKey || '';
             // Перевіряємо чи є ключ компанії (для відображення статусу)
             const _companyHasKey = !!(window.currentCompanyData?.[aiProvider + 'ApiKey']
@@ -1794,11 +1837,18 @@ function renderPropPanel() {
                 ta('aiSystem', d.aiSystem, 'Ти — помічник компанії. Відповідай коротко та по суті українською мовою.', 5))
 
             // ── Модель ──
-            + fld(tip('Модель AI', 'Рекомендовано: GPT-4o mini (OpenAI) або Claude Haiku (Anthropic) — швидкі, дешеві, надійні. Не використовуй моделі які ще не вийшли (gpt-5 тощо) — вони можуть не існувати і бот відповість "Дякуємо!" замість AI відповіді.'),
+            + fld(tip('Модель AI', 'Рекомендовано: GPT-4o mini (OpenAI) або Claude Haiku (Anthropic) — швидкі, дешеві, надійні. Не використовуй моделі які ще не вийшли (gpt-5 тощо) — вони можуть не існувати і бот відповість запасною відповіддю.'),
                 sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0])
                 + (d.aiModel && !modelOptions.some(([v]) => v === d.aiModel)
-                    ? '<div style="font-size:9px;color:#f59e0b;margin-top:3px;">⚠️ Поточна модель "' + d.aiModel + '" не в списку — може не існувати. Обери зі списку нижче.</div>'
+                    ? '<div style="font-size:9px;color:#f59e0b;margin-top:3px;">⚠️ Модель "' + d.aiModel + '" не в списку — може не існувати. Обери нову.</div>'
                     : '')
+                + '<div style="margin-top:5px;">'
+                    + '<button id="fcLoadModelsBtn" onclick="_fcLoadLiveModels(\'' + aiProvider + '\', document.getElementById(\'fcp_aiApiKey\')?.value)"'
+                    + ' style="width:100%;padding:5px;background:transparent;border:1px solid #334155;border-radius:6px;'
+                    + 'color:#64748b;font-size:10px;cursor:pointer;transition:all .15s;"'
+                    + ' onmouseenter="this.style.borderColor=\'#22c55e\';this.style.color=\'#22c55e\'"'
+                    + ' onmouseleave="this.style.borderColor=\'#334155\';this.style.color=\'#64748b\'">🔄 Завантажити актуальні моделі з API</button>'
+                + '</div>'
             )
 
             // ── Точність відповіді (temperature) ──
