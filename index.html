@@ -277,7 +277,8 @@ document.addEventListener('mousedown', function(e) {
         if (typeof window.translations !== 'undefined' && window.translations[lang]) {
             document.querySelectorAll('[data-i18n]').forEach(function(el) {
                 var key = el.getAttribute('data-i18n');
-                var val = window.translations[lang][key];
+                // FIX: fallback на UA якщо ключ відсутній в обраній мові
+                var val = window.translations[lang][key] || window.translations['ua']?.[key];
                 if (val) el.textContent = val;
             });
         }
@@ -2553,7 +2554,7 @@ document.addEventListener('mousedown', function(e) {
 
 
     <!-- Scripts (modular) -->
-    <script src="js/modules/01-translations-v2.js?v=20260314ctrl1" defer></script>
+    <script src="js/modules/01-translations-v2.js?v=20260315v1" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260311s" defer></script>
     <script src="js/modules/03-app-state.js?v=20260314v2" defer></script>
     <script src="js/modules/04-google-calendar-config.js?v=20260311s" defer></script>

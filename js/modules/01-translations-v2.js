@@ -11620,8 +11620,10 @@
             if (!key) return '';
             const lang = window.currentLanguage || 'ua';
             const translations = window.translations || {};
-            const langPack = translations[lang] || translations['ua'] || {};
-            return langPack[key] || key;
+            const langPack = translations[lang] || {};
+            // FIX: якщо ключ відсутній в обраній мові → fallback на UA (не на сам key)
+            // Це виправляє часткові переклади (RU має ~50% ключів)
+            return langPack[key] || translations['ua']?.[key] || key;
         };
 
         // Зміна мови
