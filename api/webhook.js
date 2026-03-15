@@ -131,6 +131,23 @@ module.exports = async (req, res) => {
                 return res.status(400).send('Bad Request');
             }
             const entry = body?.entry?.[0];
+
+            // FIX 6: Instagram / Facebook Messenger DM (messaging event)
+            const _messaging = entry?.messaging?.[0];
+            if (_messaging?.message && _messaging?.sender?.id) {
+                const _igSenderId = String(_messaging.sender.id);
+                const _igText = _messaging.message.text || (_messaging.message.attachments ? '[медіа]' : '');
+                if (_igText) {
+                    normalized = {
+                        senderId:   _igSenderId,
+                        senderName: '',
+                        username:   '',
+                        text:       _igText.slice(0, 1000),
+                    };
+                    // Переходимо до основної обробки боту нижче
+                }
+            }
+
             // Leadgen подія (Facebook Lead Ads)
             if (entry?.changes?.[0]?.field === 'leadgen') {
                 const change   = entry.changes[0].value;
@@ -773,8 +790,12 @@ module.exports = async (req, res) => {
 
         const isStart = /^\/start/.test(normalized.text) || normalized.text === 'start';
         if (isStart) {
-            // /start скидає humanMode — бот знову активний
-            Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null, data: {}, aiHistory: [], humanMode: false, humanModeAt: null });
+            // FIX 11: /start скидає ВСЕ включно з кешем флоу
+            Object.assign(session, {
+                currentFlowId: null, currentNodeId: null, waitingForInput: null,
+                data: {}, aiHistory: [], humanMode: false, humanModeAt: null,
+                _cachedFlow: null, // FIX: скидаємо кеш флоу
+            });
         }
 
         // BUG 2 FIX: humanMode guard — коли менеджер взяв розмову, бот мовчить
@@ -1008,7 +1029,7 @@ module.exports = async (req, res) => {
                 const btns = n.buttons?.length ? n.buttons : (n.options?.length ? n.options : null);
                 await Promise.all([
                     sendMsg(channel, botToken, normalized.senderId, text, btns),
-                    saveBotMessage(compRef, contactId, text),
+                    saveBotMessage(compRef, contactId, text, btns), // FIX 4: pass buttons
                 ]);
                 if (btns?.length) {
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
@@ -1375,7 +1396,7 @@ module.exports = async (req, res) => {
                     sendTyping(botToken, normalized.senderId).catch(()=>{});
                     await Promise.all([
                         sendMsg(channel, botToken, normalized.senderId, qText),
-                        saveBotMessage(compRef, contactId, qText),
+                        saveBotMessage(compRef, contactId, qText, null),
                     ]);
                 }
                 // Зберігаємо який ключ чекаємо (куди записати відповідь)
@@ -1397,7 +1418,7 @@ module.exports = async (req, res) => {
                     sendTyping(botToken, normalized.senderId).catch(()=>{});
                     await Promise.all([
                         sendMsg(channel, botToken, normalized.senderId, bText || '...', btns.length ? btns : null),
-                        saveBotMessage(compRef, contactId, bText || '...'),
+                        saveBotMessage(compRef, contactId, bText || '...', btns.length ? btns : null), // FIX 4
                     ]);
                 }
                 Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
@@ -1409,22 +1430,9 @@ module.exports = async (req, res) => {
                 return res.status(200).json({ ok: true });
 
             } else if (n.type === 'condition') {
-                // Умовна логіка — перевіряємо умову і переходимо в trueNode або falseNode
-                let condResult = false;
-                try {
-                    const condField = n.conditionField || n.field || '';
-                    const condOp = n.conditionOp || n.operator || 'eq';
-                    const condVal = n.conditionValue || n.value || '';
-                    const actualVal = String(session.data[condField] || '').toLowerCase();
-                    const checkVal = String(condVal).toLowerCase();
-                    if (condOp === 'eq') condResult = actualVal === checkVal;
-                    else if (condOp === 'neq') condResult = actualVal !== checkVal;
-                    else if (condOp === 'contains') condResult = actualVal.includes(checkVal);
-                    else if (condOp === 'exists') condResult = !!session.data[condField];
-                    else if (condOp === 'empty') condResult = !session.data[condField];
-                    else if (condOp === 'gt') condResult = parseFloat(actualVal) > parseFloat(checkVal);
-                    else if (condOp === 'lt') condResult = parseFloat(actualVal) < parseFloat(checkVal);
-                } catch(e) { console.error('[webhook] condition eval:', e.message); }
+                // FIX 1: уніфіковано з evalFilter — однакова логіка, більше операторів
+                // Підтримує: eq, neq, contains, exists, not_exists, empty, gt, lt, starts_with, regex
+                const condResult = evalFilter(n, session.data);
                 nodeId = condResult ? (n.trueNode || n.nextNode || null) : (n.falseNode || n.nextNode || null);
                 continue;
 
@@ -1447,10 +1455,20 @@ module.exports = async (req, res) => {
                     sendMsg(channel, botToken, normalized.senderId, humanText),
                     saveBotMessage(compRef, contactId, humanText),
                 ]);
-                // Нотифікуємо адміна
+                // Нотифікуємо адміна з деталями контакту
                 if (_compData?.managerChatId || _compData?.telegramChatId) {
                     const adminChatId = String(_compData.managerChatId || _compData.telegramChatId);
-                    const adminMsg = `🙋 Клієнт ${session.senderName || session.senderId} просить менеджера`;
+                    const _ctName = session.senderName || session.senderId;
+                    const _ctPhone = session.data?.phone || '';
+                    // FIX 9: додаємо contactId для швидкого переходу в чат
+                    const _ctId = contactId;
+                    let adminMsg = `🙋 <b>${_ctName}</b> просить менеджера`;
+                    if (_ctPhone) adminMsg += `
+📞 ${_ctPhone}`;
+                    if (session.data?.name) adminMsg += `
+👤 ${session.data.name}`;
+                    adminMsg += `
+🔗 ID: <code>${_ctId}</code>`;
                     sendTg(botToken, adminChatId, adminMsg).catch(()=>{});
                 }
                 nodeId = n.nextNode || null;
@@ -1458,19 +1476,28 @@ module.exports = async (req, res) => {
             } else if (n.type === 'tag') {
                 // Тегування контакту
                 try {
-                    const tagValue = interp(n.tagValue || n.tag || '', session.data);
+                    const tagValue = interp(n.tagValue || n.tag || '', session.data).trim().slice(0, 50);
                     if (tagValue && contactId) {
-                        await compRef.collection('contacts').doc(contactId).update({
-                            tags: admin.firestore.FieldValue.arrayUnion(tagValue),
-                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                        }).catch(()=>{});
-                        // Також оновлюємо crm_clients якщо є
-                        if (session._autoClientId) {
-                            await compRef.collection('crm_clients').doc(session._autoClientId).update({
+                        // Зберігаємо в session.tags для finish()
+                        if (!session.tags) session.tags = [];
+                        if (!session.tags.includes(tagValue)) session.tags.push(tagValue);
+
+                        // PERF: оновлюємо contacts + crm_clients паралельно
+                        const _tagOps = [
+                            compRef.collection('contacts').doc(contactId).update({
                                 tags: admin.firestore.FieldValue.arrayUnion(tagValue),
                                 updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                            }).catch(()=>{});
+                            }).catch(()=>{}),
+                        ];
+                        if (session._autoClientId) {
+                            _tagOps.push(
+                                compRef.collection('crm_clients').doc(session._autoClientId).update({
+                                    tags: admin.firestore.FieldValue.arrayUnion(tagValue),
+                                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                                }).catch(()=>{})
+                            );
                         }
+                        await Promise.all(_tagOps);
                     }
                 } catch(e) { console.error('[webhook] tag node:', e.message); }
                 nodeId = n.nextNode || null;
@@ -1556,16 +1583,25 @@ function resolveNext(node, userText) {
     const idx = btnMatch ? parseInt(btnMatch[1]) : -1;
 
     if (node.buttons?.length) {
-        if (idx >= 0 && node.buttons[idx]?.nextNode) return node.buttons[idx].nextNode;
-        const b = node.buttons.find(b => b.label === userText || b.value === userText);
+        // FIX 3: перевіряємо nextNode !== undefined (не null) щоб уникнути циклу
+        if (idx >= 0 && node.buttons[idx] !== undefined) {
+            const btnNext = node.buttons[idx]?.nextNode;
+            if (btnNext) return btnNext; // є конкретний nextNode
+        }
+        const b = node.buttons.find(b => b.label === userText || b.value === userText || b.text === userText);
         if (b?.nextNode) return b.nextNode;
     }
     if (node.options?.length) {
-        if (idx >= 0 && node.options[idx]?.nextNode) return node.options[idx].nextNode;
-        const o = node.options.find(o => o.label === userText || o.value === userText);
+        if (idx >= 0 && node.options[idx] !== undefined) {
+            const optNext = node.options[idx]?.nextNode;
+            if (optNext) return optNext;
+        }
+        const o = node.options.find(o => o.label === userText || o.value === userText || o.text === userText);
         if (o?.nextNode) return o.nextNode;
     }
-    return node.nextNode || null;
+    // FIX 3: nextNode може бути той самий вузол — захист від циклу
+    const fallback = node.nextNode || null;
+    return (fallback && fallback !== node.id) ? fallback : null;
 }
 
 function interp(text, data) {
@@ -1591,20 +1627,36 @@ function interp(text, data) {
 function evalFilter(node, data) {
     if (!node || !data) return false;
     // Підтримуємо обидва формати полів: condVar/condOp/condVal і variable/operator/value
-    const varName = node.condVar || node.variable || node.conditionField || '';
+    const varName = node.condVar || node.variable || node.conditionField || node.field || '';
     const op = node.condOp || node.operator || node.conditionOp || 'exists';
-    const expected = node.condVal || node.value || node.conditionValue || '';
-    const val = (data[varName] !== undefined && data[varName] !== null) ? String(data[varName]) : '';
+    const expected = String(node.condVal ?? node.value ?? node.conditionValue ?? '');
+    const rawVal = data[varName];
+    // FIX: exists/not_exists — число 0 і false мають вважатись existing values
+    const hasVal = rawVal !== undefined && rawVal !== null && rawVal !== '';
+    const val = hasVal ? String(rawVal) : '';
     switch(op) {
-        case 'eq': case 'equals': return String(val) === String(expected);
-        case 'neq': return String(val) !== String(expected);
-        case 'contains': return String(val).toLowerCase().includes(String(expected).toLowerCase());
+        case 'eq': case 'equals':
+            // Case-insensitive порівняння
+            return val.toLowerCase() === expected.toLowerCase();
+        case 'neq': case 'not_equals':
+            return val.toLowerCase() !== expected.toLowerCase();
+        case 'contains':
+            return val.toLowerCase().includes(expected.toLowerCase());
+        case 'not_contains':
+            return !val.toLowerCase().includes(expected.toLowerCase());
         case 'gt': return parseFloat(val) > parseFloat(expected);
         case 'lt': return parseFloat(val) < parseFloat(expected);
-        case 'exists': return !!val;
-        case 'not_exists': return !val;
-        case 'starts_with': return String(val).startsWith(String(expected));
-        default: return !!val;
+        case 'gte': return parseFloat(val) >= parseFloat(expected);
+        case 'lte': return parseFloat(val) <= parseFloat(expected);
+        case 'exists': return hasVal;
+        case 'not_exists': case 'empty': return !hasVal;
+        case 'starts_with': return val.toLowerCase().startsWith(expected.toLowerCase());
+        case 'ends_with': return val.toLowerCase().endsWith(expected.toLowerCase());
+        case 'regex': {
+            try { return new RegExp(expected, 'i').test(val); }
+            catch { return false; }
+        }
+        default: return hasVal;
     }
 }
 
@@ -1632,7 +1684,7 @@ async function doAction(node, session, flow, botToken) {
         const adminToken = process.env.ADMIN_BOT_TOKEN || botToken;
         if (chatId && adminToken) {
             const flowDisplayName = node.config?.notifyFlowName || flow?.name || flow?.title || '';
-        let text = node.config?.notifyText || node.notifyText || '🔔 Новий лід: {{senderName}}';
+            let text = node.config?.notifyText || node.notifyText || '🔔 Новий лід: {{senderName}}';
             text = text
                 .replace(/\{\{senderName\}\}/g, session.senderName || '')
                 .replace(/\{\{senderId\}\}/g, session.senderId || '')
@@ -1743,9 +1795,10 @@ async function callAI(node, userText, session, compRef, compData) {
                 signal: aiAbort.signal,
                 body: JSON.stringify({
                     model,
-                    max_tokens: _maxTok, // PERF 3: adaptive
+                    max_tokens: _maxTok,
+                    temperature: node.config?.temperature ?? 0.7, // FIX 12: temperature for Anthropic
                     system: sysPrompt,
-                    messages: [..._trimmedHistory, { role: 'user', content: userText }] // PERF 4: trimmed
+                    messages: [..._trimmedHistory, { role: 'user', content: userText }]
                 })
             });
             const d = await r.json();
@@ -1755,12 +1808,15 @@ async function callAI(node, userText, session, compRef, compData) {
 
         // ── Google Gemini ─────────────────────────────────────
         } else if (provider === 'google' || model.startsWith('gemini')) {
-            const geminiModel = model || 'gemini-2.0-flash';
+            const geminiModel = model || 'gemini-2.0-flash-lite'; // FIX 10: flash-lite швидший для чат-ботів
             // Gemini: конвертуємо aiHistory в Gemini contents format
-            const _geminiHistory = (session.aiHistory || []).map(m => ({
-                role: m.role === 'assistant' ? 'model' : 'user',
-                parts: [{ text: m.content }],
-            }));
+            // FIX 10b: фільтруємо порожні повідомлення — Gemini відхиляє їх
+            const _geminiHistory = (session.aiHistory || [])
+                .filter(m => m.content && m.content.trim())
+                .map(m => ({
+                    role: m.role === 'assistant' ? 'model' : 'user',
+                    parts: [{ text: m.content.slice(0, 8000) }], // Gemini має менший контекст
+                }));
             const _geminiContents = [
                 ..._geminiHistory,
                 { role: 'user', parts: [{ text: userText }] },
@@ -1798,20 +1854,28 @@ async function callAI(node, userText, session, compRef, compData) {
 }
 
 // Зберегти повідомлення бота в contacts/{id}/messages/
-async function saveBotMessage(compRef, contactId, text) {
+async function saveBotMessage(compRef, contactId, text, buttons) {
     if (!compRef || !contactId || !text) return;
     try {
         const clean = (text||'').replace(/<[^>]+>/g, '').trim(); // strip HTML теги
+        const msgData = {
+            text:      clean.slice(0, 2000),
+            from:      'bot',
+            direction: 'out',
+            read:      true,
+            timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        };
+        // FIX 4: зберігаємо кнопки щоб менеджер бачив їх в чаті
+        if (buttons?.length) {
+            msgData.buttons = buttons.slice(0, 10).map(b => ({
+                label: (b.label || b.text || '').slice(0, 100),
+                nextNode: b.nextNode || null,
+            }));
+        }
         // PERF: messages.add + contacts.set паралельно
         await Promise.all([
             compRef.collection('contacts').doc(contactId)
-                .collection('messages').add({
-                    text:      clean.slice(0, 2000),
-                    from:      'bot',
-                    direction: 'out',
-                    read:      true,
-                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                }),
+                .collection('messages').add(msgData),
             compRef.collection('contacts').doc(contactId).set({
                 lastMessage:     clean.slice(0, 100),
                 lastMessageAt:   admin.firestore.FieldValue.serverTimestamp(),

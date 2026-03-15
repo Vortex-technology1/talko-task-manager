@@ -108,7 +108,7 @@ function loadBots() {
             bp.bots = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             if (bp.subTab === 'bots') renderBotsTab();
             if (bp.activeBotId && bp.subTab === 'flows') renderFlowsTab();
-        });
+        }, err => console.error('[bots] bots listener:', err.message));
 }
 
 // ── Shell ──────────────────────────────────────────────────
@@ -289,7 +289,7 @@ window.openBot = function(botId) {
 .onSnapshot(snap => {
             bp.flows = snap.docs.map(d=>({id:d.id,...d.data()}));
             if (bp.subTab==='flows') renderFlowsTab();
-        });
+        }, err => console.error('[bots] flows listener:', err.message));
 };
 
 // ══════════════════════════════════════════════════════════
