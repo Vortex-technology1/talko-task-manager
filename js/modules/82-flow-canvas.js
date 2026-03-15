@@ -1664,28 +1664,32 @@ function renderPropPanel() {
         case 'ai': {
             const aiProvider = d.aiProvider || 'openai';
 
+            // Реальні моделі станом на березень 2026
+            // ВАЖЛИВО: назви мають збігатись з API провайдерів
             const fallbackModels = {
                 openai: [
-                    ['gpt-4o-mini','GPT-4o mini (стабільний)'],
-                    ['gpt-4o','GPT-4o (розумний)'],
-                    ['gpt-4.1-mini','GPT-4.1 mini (швидкий)'],
-                    ['gpt-4.1','GPT-4.1'],
-                    ['gpt-4.1-nano','GPT-4.1 nano (найдешевший)'],
-                    ['gpt-5-mini-2025-08-07','GPT-5 mini ⭐'],
-                    ['gpt-5.4','GPT-5.4 (найрозумніший)'],
-                    ['o4-mini','o4-mini (мислить)'],
-                    ['o3','o3 (глибоке мислення)'],
-                    ['deepseek-chat','Deepseek Chat (дешевий)'],
+                    ['gpt-4o-mini',        'GPT-4o mini — швидкий, дешевий ✅'],
+                    ['gpt-4o',             'GPT-4o — розумний, стабільний'],
+                    ['gpt-4-turbo',        'GPT-4 Turbo'],
+                    ['gpt-3.5-turbo',      'GPT-3.5 Turbo — найдешевший'],
+                    ['o1-mini',            'o1-mini — міркує (повільно)'],
+                    ['o1',                 'o1 — глибоке мислення'],
+                    ['o3-mini',            'o3-mini — швидке мислення'],
+                    ['deepseek-chat',      'Deepseek Chat — дешевий'],
                 ],
                 anthropic: [
-                    ['claude-haiku-4-5-20251001','Claude Haiku 4.5 (швидкий)'],
-                    ['claude-sonnet-4-6','Claude Sonnet 4.6'],
-                    ['claude-opus-4-6','Claude Opus 4.6'],
+                    ['claude-haiku-4-5-20251001', 'Claude Haiku 4.5 — швидкий ✅'],
+                    ['claude-3-5-haiku-20241022',  'Claude 3.5 Haiku'],
+                    ['claude-3-5-sonnet-20241022',  'Claude 3.5 Sonnet — розумний'],
+                    ['claude-sonnet-4-5',           'Claude Sonnet 4.5'],
+                    ['claude-3-opus-20240229',       'Claude 3 Opus'],
                 ],
                 google: [
-                    ['gemini-2.0-flash-lite','Gemini 2.0 Flash Lite (швидкий)'],
-                    ['gemini-2.0-flash','Gemini 2.0 Flash'],
-                    ['gemini-2.5-pro','Gemini 2.5 Pro'],
+                    ['gemini-2.0-flash-lite',  'Gemini 2.0 Flash Lite — швидкий ✅'],
+                    ['gemini-2.0-flash',       'Gemini 2.0 Flash'],
+                    ['gemini-1.5-flash',       'Gemini 1.5 Flash'],
+                    ['gemini-1.5-pro',         'Gemini 1.5 Pro — розумний'],
+                    ['gemini-2.5-pro-preview', 'Gemini 2.5 Pro Preview (exp)'],
                 ],
             };
             const allModels = window._cachedAiModels || fallbackModels;
@@ -1698,7 +1702,13 @@ function renderPropPanel() {
                     return [String(item), String(item)];
                 }).filter(([v]) => v);
             };
-            const modelOptions = _normalizeModels(allModels[aiProvider] || fallbackModels[aiProvider] || fallbackModels.openai);
+            const _baseModels = _normalizeModels(allModels[aiProvider] || fallbackModels[aiProvider] || fallbackModels.openai);
+            // FIX 2: якщо збережена модель не в списку — додаємо її щоб не втратити
+            const _currentModel = d.aiModel || '';
+            const _modelInList = _baseModels.some(([v]) => v === _currentModel);
+            const modelOptions = (_currentModel && !_modelInList)
+                ? [[_currentModel, _currentModel + ' (збережено)'], ..._baseModels]
+                : _baseModels;
 
             if (!window._cachedAiModels) {
                 firebase.firestore().collection('settings').doc('aiModels').get()
@@ -1784,8 +1794,12 @@ function renderPropPanel() {
                 ta('aiSystem', d.aiSystem, 'Ти — помічник компанії. Відповідай коротко та по суті українською мовою.', 5))
 
             // ── Модель ──
-            + fld(tip('Модель AI', 'GPT-4o mini / Claude Haiku — швидкі й дешеві для більшості задач. GPT-4o / Claude Sonnet — розумніші, але повільніші і дорожчі.'),
-                sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0]))
+            + fld(tip('Модель AI', 'Рекомендовано: GPT-4o mini (OpenAI) або Claude Haiku (Anthropic) — швидкі, дешеві, надійні. Не використовуй моделі які ще не вийшли (gpt-5 тощо) — вони можуть не існувати і бот відповість "Дякуємо!" замість AI відповіді.'),
+                sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0])
+                + (d.aiModel && !modelOptions.some(([v]) => v === d.aiModel)
+                    ? '<div style="font-size:9px;color:#f59e0b;margin-top:3px;">⚠️ Поточна модель "' + d.aiModel + '" не в списку — може не існувати. Обери зі списку нижче.</div>'
+                    : '')
+            )
 
             // ── Точність відповіді (temperature) ──
             + `<div style="margin-bottom:12px;">

@@ -1820,7 +1820,9 @@ async function callAI(node, userText, session, compRef, compData) {
         const _trimmedHistory = (session.aiHistory || [])
             .filter(m => m?.content && (m.role === 'user' || m.role === 'assistant'))
             .map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }))
-            .slice(-Math.max(0, _histLimit));
+            .slice(_histLimit > 0 ? -_histLimit : _histLimit === 0 ? 0 : -6);
+        // _histLimit=0 → slice(0..0) = [] (без пам'яті)
+        // _histLimit=6 → slice(-6) = останні 6
 
         // FIX 5+B: порожній або технічний userText — нормалізуємо
         // /start, start, btn_N — не передаємо в AI як реальне повідомлення юзера
@@ -1882,14 +1884,33 @@ async function callAI(node, userText, session, compRef, compData) {
             const d = await r.json();
             clearTimeout(aiTimeout);
             if (!r.ok) {
-                console.error('[callAI] OpenAI error', r.status, JSON.stringify(d.error || d).slice(0,200));
+                const errMsg = d.error?.message || JSON.stringify(d.error || d).slice(0,200);
+                console.error('[callAI] OpenAI error', r.status, errMsg, 'model:', model);
+                // FIX 2: якщо модель не існує (404) або invalid (400) → retry з gpt-4o-mini
+                if ((r.status === 404 || r.status === 400) && model !== 'gpt-4o-mini') {
+                    console.warn('[callAI] Model not found, retrying with gpt-4o-mini');
+                    const _retryBody = JSON.parse(_oaBody);
+                    _retryBody.model = 'gpt-4o-mini';
+                    delete _retryBody.max_completion_tokens; // gpt-4o-mini uses max_tokens
+                    _retryBody.max_tokens = 600;
+                    const _retryR = await fetch(baseUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                        body: JSON.stringify(_retryBody),
+                    });
+                    const _retryD = await _retryR.json();
+                    if (_retryR.ok) {
+                        responseText = _retryD.choices?.[0]?.message?.content || null;
+                        console.log('[callAI] Fallback to gpt-4o-mini succeeded');
+                    }
+                }
             } else {
                 process.env.WEBHOOK_DEBUG && console.debug('[callAI] status:', r.status, 'tokens:', d.usage?.total_tokens);
                 if (!d.choices?.[0]?.message?.content) {
-                    console.error('[callAI] OpenAI empty content, finish_reason:', d.choices?.[0]?.finish_reason, 'full:', JSON.stringify(d).slice(0,300));
+                    console.error('[callAI] OpenAI empty content, finish_reason:', d.choices?.[0]?.finish_reason, 'model:', model);
                 }
             }
-            responseText = d.choices?.[0]?.message?.content || null;
+            if (!responseText) responseText = d.choices?.[0]?.message?.content || null;
 
         // ── Anthropic Claude ──────────────────────────────────
         } else if (provider === 'anthropic' || model.startsWith('claude')) {
