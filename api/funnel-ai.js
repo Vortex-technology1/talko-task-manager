@@ -51,11 +51,11 @@ module.exports = async function handler(req, res) {
         'http://localhost:3000',
         'http://127.0.0.1:5500',
     ];
-    // Also allow company custom domains (subdomain pattern)
+    // FIX: origin оголошується ДО використання
+    const origin = req.headers.origin || '';
     const _originOk = ALLOWED_ORIGINS.includes(origin)
         || /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app$/.test(origin)
         || /^https:\/\/[a-zA-Z0-9-]+\.talko\.biz$/.test(origin);
-    const origin = req.headers.origin || '';
     if (_originOk) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
@@ -86,6 +86,9 @@ module.exports = async function handler(req, res) {
         return res.status(429).json({ error: 'Забагато запитів. Спробуйте через 10 хвилин.' });
     }
 
+    // FIX: _ctrl/_tout поза try — доступні в catch
+    const _ctrl = new AbortController();
+    const _tout = setTimeout(() => _ctrl.abort(), 45000);
     try {
         const { companyId, stepPrompt, leadData, provider, history, userMessage, model: reqModel } = req.body;
 
@@ -144,13 +147,10 @@ module.exports = async function handler(req, res) {
         // userMessage — останнє повідомлення юзера (якщо є), fallback для сумісності
         const lastUserMsg = userMessage || 'Допоможи мені з вибором.';
 
-        // Timeout 45s — LLM може відповідати довго
-        const _ctrl = new AbortController();
-        const _tout = setTimeout(() => _ctrl.abort(), 45000);
         let responseText = '';
 
         if (resolvedProvider === 'anthropic') {
-            // Anthropic Claude — BUG 4 FIX: real history + userMessage, BUG 3 FIX: clearTimeout
+            // Anthropic Claude
             const _clModel = reqModel || 'claude-haiku-4-5-20251001';
             const _clMessages = [
                 ...safeHistory,

@@ -74,10 +74,10 @@ module.exports = async function handler(req, res) {
     // Перевіряємо що форма існує і активна
     const formRef  = db.doc(`companies/${companyId}/crm_forms/${formId}`);
     const formSnap = await formRef.get().catch(() => null);
-    if (!formSnap?.exists) return res.status(404).json({ error: 'Форму не знайдено' });
+    if (!formSnap?.exists) { _ipPending.delete(ip); return res.status(404).json({ error: 'Форму не знайдено' }); }
 
     const formData = formSnap.data();
-    if (formData.disabled) return res.status(403).json({ error: 'Форма деактивована' });
+    if (formData.disabled) { _ipPending.delete(ip); return res.status(403).json({ error: 'Форма деактивована' }); }
 
     const pipelineId = formData.pipelineId || null;
     const assigneeId = formData.assigneeId || null;
@@ -253,7 +253,7 @@ Email: ${email || '-'}
 
         return res.status(200).json({
             ok: true,
-            dealId:   dealDoc.id,
+            dealId:   dealDoc?.id || existingDealId || null, // FIX: dealDoc is null when existing deal found
             clientId: clientId,
             message:  formData.successMessage || 'Дякуємо! Ми зв\'яжемось з вами найближчим часом.',
         });

@@ -198,18 +198,17 @@ module.exports = async function handler(req, res) {
 
     // Call AI (Anthropic або OpenAI)
     let text;
+    // FIX: _ctrl/_tout поза try — доступні в catch/finally
+    const _ctrl = new AbortController();
+    const _tout = setTimeout(() => _ctrl.abort(), 55000);
     try {
         let response, data;
-
-        // Timeout 55s
-        const _ctrl = new AbortController();
-        const _tout = setTimeout(() => _ctrl.abort(), 55000);
 
         if (provider === 'anthropic') {
             // Anthropic API — system prompt окремим полем
             const anthropicMsgs = finalMessages.filter(m => m.role !== 'system');
             const sysContent = finalMessages.find(m => m.role === 'system')?.content || '';
-            const anthropicModel = /^claude/.test(model) ? model : 'claude-sonnet-4-20250514';
+            const anthropicModel = /^claude/.test(model) ? model : 'claude-haiku-4-5-20251001';
             response = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
                 signal: _ctrl.signal,
@@ -254,8 +253,18 @@ module.exports = async function handler(req, res) {
         if (!text) return res.status(502).json({ error: 'Порожня відповідь від AI' });
 
     } catch(e) {
-        console.error(`[ai-proxy:${mod}] fetch error:`, e.message);
-        return res.status(500).json({ error: 'Network error: ' + e.message });
+        const isTimeout = e.name === 'AbortError';
+        console.error(`[ai-proxy:${mod}]`, isTimeout ? 'TIMEOUT 55s' : 'fetch error: ' + e.message);
+        return res.status(isTimeout ? 504 : 500).json({ error: isTimeout ? 'AI timeout. Спробуйте ще раз.' : 'Network error: ' + e.message });
+    } finally {
+        clearTimeout(_tout); // FIX: завжди чистимо таймер
+        // FIX: очищаємо старі записи rate limit (memory leak prevention)
+        if (uidRequests.size > 1000) {
+            const _now = Date.now();
+            for (const [k, v] of uidRequests) {
+                if (_now - v.t > RATE_WINDOW) uidRequests.delete(k);
+            }
+        }
     }
 
     console.log(`[ai-proxy] module=${mod} uid=${uid} company=${companyId} model=${model}`);
