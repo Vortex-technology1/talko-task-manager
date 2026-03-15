@@ -848,10 +848,13 @@ module.exports = async (req, res) => {
         }
 
         // ── Підвантажуємо canvasData + nodePrompts з підколекцій ──
-        // PERF 5: перевіряємо кеш флоу в сесії — якщо flowId і версія збігаються, не читаємо Firestore
+        // PERF 5: кеш флоу — використовуємо ТІЛЬКИ для навігації (nextNode, buttons)
+        // НЕ використовуємо для AI вузлів — кеш не містить aiSystem, aiApiKey тощо
+        // BUG 9 FIX: якщо в флоу є AI вузли → завжди читаємо повні дані з Firestore
         const _cachedFlow = session._cachedFlow;
-        if (_cachedFlow?.id === flow.id && _cachedFlow?.nodes?.length && !isStart) {
-            // Відновлюємо ноди з кешу — экономимо 1-2 Firestore reads (~40-80ms)
+        const _hasAiInCache = _cachedFlow?.nodes?.some(n => n.type === 'ai' || n.type === 'ai_response');
+        if (_cachedFlow?.id === flow.id && _cachedFlow?.nodes?.length && !isStart && !_hasAiInCache) {
+            // Тільки не-AI флоу використовують кеш
             if (!flow.nodes?.length) flow.nodes = _cachedFlow.nodes;
             if (!flow.canvasData?.nodes?.length) flow.canvasData = { nodes: _cachedFlow.nodes, edges: _cachedFlow.edges || [] };
         }
@@ -860,10 +863,12 @@ module.exports = async (req, res) => {
 
         // PERF: canvasData + nodePrompts паралельно (економимо ~150ms)
         // Перевіряємо чи є AI вузли — якщо немає, не читаємо nodePrompts (економимо read)
+        // FIX 2: перевіряємо ОБА масиви — minimalNodes і canvasData
         const _nodes = flow.canvasData?.nodes || flow.nodes || [];
-        const _hasAiNodes = _nodes.some(n => n.type === 'ai' || n.type === 'ai_response'
+        const _nodesAll = [...(flow.nodes || []), ...(flow.canvasData?.nodes || [])];
+        const _hasAiNodes = _nodesAll.some(n => n.type === 'ai' || n.type === 'ai_response'
             || n.config?.aiSystem || n.aiSystem);
-        const _hasRefNodes = _nodes.some(n => {
+        const _hasRefNodes = _nodesAll.some(n => {
             const s = n.config?.aiSystem || n.aiSystem || '';
             return s.startsWith('__ref:');
         });
@@ -872,7 +877,9 @@ module.exports = async (req, res) => {
             flow.canvasData?.nodes?.length
                 ? Promise.resolve(null)
                 : flowDocRef.collection('canvasData').doc('layout').get().catch(() => null),
-            (_hasAiNodes && _hasRefNodes)
+            // FIX 3: читаємо nodePrompts завжди коли є AI вузли
+            // (навіть якщо поточний промпт короткий — попередній міг бути __ref)
+            _hasAiNodes
                 ? flowDocRef.collection('nodePrompts').get().catch(() => ({ forEach: () => {} }))
                 : Promise.resolve({ forEach: () => {} }),
         ]);
@@ -914,11 +921,27 @@ module.exports = async (req, res) => {
                     buttons: n.buttons || [],
                     options: n.options || [],
                     config: n.config || n,
-                    aiSystem: n.config?.aiSystem || n.aiSystem || n.systemPrompt || '',
-                    aiApiKey: n.config?.aiApiKey || n.aiApiKey || n.apiKey || null,
-                    aiModel: n.config?.aiModel || n.aiModel || n.model || 'gpt-4o-mini',
-                    saveAs: n.config?.saveAs || n.saveAs || null,
-                    fallback: n.config?.fallback || n.fallback || null,
+                    // AI fields — FIX: включаємо всі нові поля
+                    aiSystem:             n.config?.aiSystem || n.aiSystem || n.systemPrompt || '',
+                    aiApiKey:             n.config?.aiApiKey || n.aiApiKey || n.apiKey || null,
+                    aiModel:              n.config?.aiModel || n.aiModel || n.model || 'gpt-4o-mini',
+                    aiProvider:           n.config?.aiProvider || n.aiProvider || 'openai',
+                    temperature:          n.config?.temperature ?? n.temperature ?? 0.7,
+                    historyLimit:         n.config?.historyLimit ?? n.historyLimit ?? 6,
+                    firstMessage:         n.config?.firstMessage || n.firstMessage || '',
+                    firstMessageEnabled:  n.config?.firstMessageEnabled || n.firstMessageEnabled || false,
+                    saveAs:               n.config?.saveAs || n.saveAs || null,
+                    fallback:             n.config?.fallback || n.fallback || null,
+                    // Filter/condition fields
+                    condVar:    n.config?.condVar || n.condVar || null,
+                    condOp:     n.config?.condOp || n.condOp || null,
+                    condVal:    n.config?.condVal || n.condVal || null,
+                    trueNode:   n.config?.trueNode || n.trueNode || null,
+                    falseNode:  n.config?.falseNode || n.falseNode || null,
+                    // Action fields
+                    actionType:    n.config?.actionType || n.actionType || null,
+                    notifyChatId:  n.config?.notifyChatId || n.notifyChatId || null,
+                    notifyText:    n.config?.notifyText || n.notifyText || null,
                 }));
         }
 
@@ -1766,7 +1789,8 @@ async function callAI(node, userText, session, compRef, compData) {
         }
         process.env.WEBHOOK_DEBUG && console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
 
-        const _rawSys = node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.';
+        const _rawSys = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.').slice(0, 6000);
+        // FIX 4: обмежуємо системний промпт щоб не перевищити контекстне вікно
         const sysPrompt = _rawSys + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
 
         // PERF 3: адаптивний max_tokens — коротші відповіді = швидше
@@ -1775,15 +1799,20 @@ async function callAI(node, userText, session, compRef, compData) {
         const _maxTok = (_rawSys.length > 500 || _longKeywords.test(_rawSys) || _longKeywords.test(userText))
             ? 1500 : 600;
 
-        // PERF 4: обрізаємо aiHistory до 6 останніх (3 пари) для швидкості
-        // Повний контекст важливий тільки для довгих діалогів — 6 повідомлень достатньо для більшості
-        const _histLimit = node.config?.historyLimit || 6;
-        const _trimmedHistory = (session.aiHistory || []).slice(-_histLimit);
+        // PERF 4: обрізаємо aiHistory до historyLimit
+        const _histLimit = node.config?.historyLimit ?? node.historyLimit ?? 6;
+        // FIX 7: sanitize ролі — тільки 'user' і 'assistant', ігноруємо 'system'/'bot'
+        const _trimmedHistory = (session.aiHistory || [])
+            .filter(m => m?.content && (m.role === 'user' || m.role === 'assistant'))
+            .map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }))
+            .slice(-Math.max(0, _histLimit));
 
+        // FIX 5: порожній userText (кнопка без тексту) → OpenAI відхиляє
+        const _safeUserText = (userText || '').trim() || '...';
         const messages = [
             { role: 'system', content: sysPrompt },
             ..._trimmedHistory,
-            { role: 'user', content: userText }
+            { role: 'user', content: _safeUserText }
         ];
 
         let responseText = null;
@@ -1849,7 +1878,22 @@ async function callAI(node, userText, session, compRef, compData) {
                     max_tokens: _maxTok,
                     temperature: node.config?.temperature ?? 0.7, // FIX 12: temperature for Anthropic
                     system: sysPrompt,
-                    messages: [..._trimmedHistory, { role: 'user', content: userText }]
+                    // FIX 6: Anthropic — правильне чергування user/assistant
+                    // Anthropic відхиляє: 2 однакові ролі підряд, або перший === assistant
+                    messages: (() => {
+                        const hist = [..._trimmedHistory, { role: 'user', content: _safeUserText }];
+                        const valid = [];
+                        for (const m of hist) {
+                            const prev = valid[valid.length - 1];
+                            if (prev && prev.role === m.role) {
+                                prev.content = prev.content + '\n' + (m.content || '...');
+                            } else {
+                                valid.push({ role: m.role, content: m.content || '...' });
+                            }
+                        }
+                        if (valid[0]?.role === 'assistant') valid.shift();
+                        return valid.length ? valid : [{ role: 'user', content: _safeUserText }];
+                    })()
                 })
             });
             const d = await r.json();
