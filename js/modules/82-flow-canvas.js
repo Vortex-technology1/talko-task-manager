@@ -1421,11 +1421,20 @@ function renderPropPanel() {
         onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#334155'"
         >${esc(val||'')}</textarea>`;
 
-    const sel = (id, options, cur) => `<select id="fcp_${id}"
-        style="${iS}cursor:pointer;"
-        onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#334155'">
-        ${options.map(([v,l])=>`<option value="${v}" ${cur===v?'selected':''}>${l}</option>`).join('')}
-    </select>`;
+    const sel = (id, options, cur) => {
+        // FIX: захист від неітерованих або неправильно форматованих опцій
+        const safeOpts = Array.isArray(options) ? options : [];
+        const optHtml = safeOpts.map(item => {
+            const v = Array.isArray(item) ? item[0] : (item?.value ?? String(item));
+            const l = Array.isArray(item) ? (item[1] ?? item[0]) : (item?.label ?? item?.name ?? String(item));
+            return `<option value="${v}" ${cur===v?'selected':''}>${l}</option>`;
+        }).join('');
+        return `<select id="fcp_${id}"
+            style="${iS}cursor:pointer;"
+            onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#334155'">
+            ${optHtml}
+        </select>`;
+    };
 
     let fields = '';
 
@@ -1577,18 +1586,38 @@ function renderPropPanel() {
                 ],
             };
             const allModels = window._cachedAiModels || fallbackModels;
-            const modelOptions = allModels[aiProvider] || fallbackModels[aiProvider] || fallbackModels.openai;
+            // FIX: нормалізуємо modelOptions — Firestore може зберігати рядки або пари
+            // sel() очікує [[value, label], ...] — конвертуємо якщо потрібно
+            const _normalizeModels = (arr) => {
+                if (!Array.isArray(arr) || arr.length === 0) return fallbackModels.openai;
+                return arr.map(item => {
+                    if (Array.isArray(item) && item.length >= 2) return [String(item[0]), String(item[1])];
+                    if (typeof item === 'string') return [item, item]; // рядок → [value, value]
+                    if (item && typeof item === 'object') return [String(item.id||item.value||''), String(item.name||item.label||item.id||'')];
+                    return [String(item), String(item)];
+                }).filter(([v]) => v); // прибираємо порожні
+            };
+            const modelOptions = _normalizeModels(allModels[aiProvider] || fallbackModels[aiProvider] || fallbackModels.openai);
 
             // Якщо кеш порожній — завантажуємо async і перемалюємо
             if (!window._cachedAiModels) {
                 firebase.firestore().collection('settings').doc('aiModels').get()
                     .then(snap => {
-                        if (snap.exists) {
-                            window._cachedAiModels = snap.data();
-                            // Перемалюємо панель з новими моделями
+                        if (snap.exists && snap.data()) {
+                            const data = snap.data();
+                            // FIX 3: валідуємо формат — кожен провайдер має бути масивом
+                            const valid = ['openai','anthropic','google'].some(p => Array.isArray(data[p]) && data[p].length > 0);
+                            if (valid) {
+                                window._cachedAiModels = data;
+                            } else {
+                                // Невалідний формат — ігноруємо Firestore кеш
+                                window._cachedAiModels = null;
+                            }
                             if (fc.selected) renderPropPanel();
                         }
-                    }).catch(() => {});
+                    }).catch(() => {
+                        window._cachedAiModels = null; // reset on error
+                    });
             }
 
             // Спробуємо підтягнути збережений ключ компанії
