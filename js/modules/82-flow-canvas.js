@@ -674,7 +674,7 @@ function buildNodeEl(node) {
     });
 
     el.querySelectorAll('[data-del]').forEach(delEl => {
-        delEl.addEventListener('mousedown', e => {
+        delEl.addEventListener('mousedown', async (e) => {
             e.stopPropagation();
             e.preventDefault();
             if (await (window.showConfirmModal ? showConfirmModal(`Видалити вузол "${cfg.label}"?`,{danger:true}) : Promise.resolve(confirm(`Видалити вузол "${cfg.label}"?`)))) {

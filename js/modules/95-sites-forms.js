@@ -475,6 +475,7 @@ window.sfHandleSubmit = async function (siteId, formId, fieldsData) {
     try {
         const db = firebase.firestore();
         const cRef = window.companyRef();
+        const base = cRef.path; // companies/{companyId}
         const formRef = db.doc(base + '/sites/' + siteId + '/forms/' + formId);
         const formDoc = await formRef.get();
         if (!formDoc.exists) return { ok: false, error: 'Form not found' };
