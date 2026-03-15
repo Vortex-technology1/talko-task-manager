@@ -215,13 +215,31 @@ document.addEventListener('mousedown', function(e) {
         document.querySelectorAll('.hdr-dropdown-menu').forEach(function(m) { m.classList.remove('show'); });
     }
     var _navKeyMap = {
-        tabCoordination: { ua:'Координація', ru:'Координация', pl:'Koordynacja', en:'Coordination', de:'Koordination', cs:'Koordinace' },
-        navAnalytics:    { ua:'Аналітика',   ru:'Аналитика',   pl:'Analityka',   en:'Analytics',    de:'Analytik',     cs:'Analytika' },
-        tabBusiness:     { ua:'Бізнес',       ru:'Бизнес',       pl:'Biznes',       en:'Business',     de:'Business',     cs:'Byznys' },
-        tabMarketing:    { ua:'Маркетинг',    ru:'Маркетинг',    pl:'Marketing',    en:'Marketing',    de:'Marketing',    cs:'Marketing' },
-        tabBots:         { ua:'Боти',         ru:'Боты',         pl:'Boty',         en:'Bots',         de:'Bots',         cs:'Boty' },
-        tabSites:        { ua:'Сайти',        ru:'Сайты',        pl:'Strony',       en:'Sites',        de:'Websites',     cs:'Weby' },
-        tabIntegrations: { ua:'Інтеграції',   ru:'Интеграции',   pl:'Integracje',   en:'Integrations', de:'Integrationen',cs:'Integrace' }
+        tabCoordination: { ua:'Координація',  ru:'Координация',  pl:'Koordynacja',  en:'Coordination', de:'Koordination',  cs:'Koordinace' },
+        navAnalytics:    { ua:'Аналітика',    ru:'Аналитика',    pl:'Analityka',    en:'Analytics',    de:'Analytik',      cs:'Analytika' },
+        tabBusiness:     { ua:'Бізнес',       ru:'Бизнес',       pl:'Biznes',       en:'Business',     de:'Business',      cs:'Byznys' },
+        tabMarketing:    { ua:'Маркетинг',    ru:'Маркетинг',    pl:'Marketing',    en:'Marketing',    de:'Marketing',     cs:'Marketing' },
+        tabBots:         { ua:'Боти',         ru:'Боты',         pl:'Boty',         en:'Bots',         de:'Bots',          cs:'Boty' },
+        tabSites:        { ua:'Сайти',        ru:'Сайты',        pl:'Strony',       en:'Sites',        de:'Websites',      cs:'Weby' },
+        tabIntegrations: { ua:'Інтеграції',   ru:'Интеграции',   pl:'Integracje',   en:'Integrations', de:'Integrationen', cs:'Integrace' },
+        // Додаткові ключі для повного покриття nav
+        tabMyDay:        { ua:'Мій день',     ru:'Мой день',     pl:'Mój dzień',    en:'My Day',       de:'Mein Tag',      cs:'Můj den' },
+        tabTasks:        { ua:'Завдання',     ru:'Задачи',       pl:'Zadania',      en:'Tasks',        de:'Aufgaben',      cs:'Úkoly' },
+        tabProjects:     { ua:'Проекти',      ru:'Проекты',      pl:'Projekty',     en:'Projects',     de:'Projekte',      cs:'Projekty' },
+        tabProcesses:    { ua:'Процеси',      ru:'Процессы',     pl:'Procesy',      en:'Processes',    de:'Prozesse',      cs:'Procesy' },
+        tabControl:      { ua:'Контроль',     ru:'Контроль',     pl:'Kontrola',     en:'Control',      de:'Kontrolle',     cs:'Kontrola' },
+        tabLearning:     { ua:'Навчання',     ru:'Обучение',     pl:'Nauka',        en:'Learning',     de:'Lernen',        cs:'Učení' },
+        tabCRM:          { ua:'CRM',          ru:'CRM',          pl:'CRM',          en:'CRM',          de:'CRM',           cs:'CRM' },
+        finFinances:     { ua:'Фінанси',      ru:'Финансы',      pl:'Finanse',      en:'Finances',     de:'Finanzen',      cs:'Finance' },
+        tabStatistics:   { ua:'Статистика',   ru:'Статистика',   pl:'Statystyki',   en:'Statistics',   de:'Statistiken',   cs:'Statistiky' },
+        tabAnalytics:    { ua:'Ефективність', ru:'Эффективность',pl:'Efektywność',  en:'Efficiency',   de:'Effizienz',     cs:'Efektivita' },
+        tabFunctions:    { ua:'Функції',      ru:'Функции',      pl:'Funkcje',      en:'Functions',    de:'Funktionen',    cs:'Funkce' },
+        tabStructure:    { ua:'Структура',    ru:'Структура',    pl:'Struktura',    en:'Structure',    de:'Struktur',      cs:'Struktura' },
+        tabUsers:        { ua:'Співробітники',ru:'Сотрудники',   pl:'Pracownicy',   en:'Employees',    de:'Mitarbeiter',   cs:'Zaměstnanci' },
+        tabOnboarding:   { ua:'Онбординг',    ru:'Онбординг',    pl:'Onboarding',   en:'Onboarding',   de:'Onboarding',    cs:'Onboarding' },
+        tabAdmin:        { ua:'Адмін',        ru:'Админ',        pl:'Admin',        en:'Admin',        de:'Admin',         cs:'Admin' },
+        tabAllTasks:     { ua:'Всі завдання', ru:'Все задачи',   pl:'Wszystkie',    en:'All Tasks',    de:'Alle Aufgaben', cs:'Všechny úkoly' },
+        tabRegular:      { ua:'Регулярні',    ru:'Регулярные',   pl:'Regularne',    en:'Regular',      de:'Regelmäßige',   cs:'Pravidelné' },
     };
     // Patch missing keys into translations object (fixes old cached JS files)
     function _patchTranslations() {
@@ -233,7 +251,7 @@ document.addEventListener('mousedown', function(e) {
             });
         });
     }
-    function applyNavTranslations(lang) {
+    window.applyNavTranslations = function applyNavTranslations(lang) {
         _patchTranslations();
         // By data-i18n attr
         Object.keys(_navKeyMap).forEach(function(key) {
@@ -241,17 +259,26 @@ document.addEventListener('mousedown', function(e) {
                 if (_navKeyMap[key][lang]) el.textContent = _navKeyMap[key][lang];
             });
         });
-        // By ID fallback
+        // By ID fallback — охоплює всі nav spans
         var _byId = {
             navSpanCoordination:'tabCoordination', navSpanAnalytics:'navAnalytics',
-            navSpanBusiness:'tabBusiness', navSpanMarketing:'tabMarketing',
-            navSpanBots:'tabBots', navSpanSites:'tabSites', navSpanIntegrations:'tabIntegrations'
+            navSpanBusiness:'tabBusiness',         navSpanMarketing:'tabMarketing',
+            navSpanBots:'tabBots',                 navSpanSites:'tabSites',
+            navSpanIntegrations:'tabIntegrations', navSpanFinance:'finFinances',
         };
         Object.keys(_byId).forEach(function(id) {
             var k = _byId[id]; var el = document.getElementById(id);
-            if (el && _navKeyMap[k][lang]) el.textContent = _navKeyMap[k][lang];
+            if (el && _navKeyMap[k] && _navKeyMap[k][lang]) el.textContent = _navKeyMap[k][lang];
         });
-    }
+        // FIX: також застосовуємо через window.translations якщо є
+        if (typeof window.translations !== 'undefined' && window.translations[lang]) {
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n');
+                var val = window.translations[lang][key];
+                if (val) el.textContent = val;
+            });
+        }
+    };
     function _syncAuthLangBtns(active) {
         ['ua','ru','en','pl','de','cs'].forEach(code => {
             document.getElementById('langBtn_' + code)?.classList.toggle('active', code === active);
@@ -271,8 +298,18 @@ document.addEventListener('mousedown', function(e) {
         closeAllHdrDropdowns();
     }
     document.addEventListener('DOMContentLoaded', function() {
-        var savedLang = localStorage.getItem('talko_lang') || 'ua';
+        // FIX: talko_language — правильний ключ (talko_lang застарілий)
+        var savedLang = localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
         if (savedLang !== 'ua') applyNavTranslations(savedLang);
+        // Також підписуємось на зміну window.currentLanguage щоб підхопити після setLanguage
+        var _prevLang = savedLang;
+        var _langWatcher = setInterval(function() {
+            var cur = window.currentLanguage || window.currentLang || 'ua';
+            if (cur !== _prevLang) {
+                _prevLang = cur;
+                applyNavTranslations(cur);
+            }
+        }, 500);
     });
     </script>
     <header class="header" id="mainHeader" style="display:none;">
@@ -3454,7 +3491,7 @@ document.addEventListener('mousedown', function(e) {
         }
         initLucide();
         
-        var lang = localStorage.getItem('talko_lang') || 'ua';
+        var lang = localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
         var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE' };
         var el = document.getElementById('currentLangLabel');
         if (el) el.textContent = labels[lang] || 'UA';

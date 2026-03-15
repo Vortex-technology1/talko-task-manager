@@ -230,10 +230,13 @@
             if (hideBtn && window.hideCompletedTasks) hideBtn.classList.add('active');
             // Re-apply translations AFTER interface is shown (nav spans now visible)
             // FIX: застосовуємо переклади без reload — setLanguage(lang, false)
-            // forceReload=false гарантує що тут не буде location.reload()
-            const _authLang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || 'ua';
+            const _authLang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
             if (typeof window.setLanguage === 'function') {
                 setTimeout(function() { window.setLanguage(_authLang, false); }, 100);
+            }
+            // FIX: застосовуємо nav переклади окремо (setLanguage може не покривати dropdown)
+            if (_authLang !== 'ua' && typeof window.applyNavTranslations === 'function') {
+                setTimeout(function() { window.applyNavTranslations(_authLang); }, 200);
             }
         }
 
