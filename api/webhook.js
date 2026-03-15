@@ -1737,12 +1737,34 @@ async function callAI(node, userText, session, compRef, compData) {
         const provider = node.config?.aiProvider || node.aiProvider || 'openai';
         const model = node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini';
         const apiKey = node.config?.aiApiKey || node.aiApiKey
+            // Company-level BYOK keys (різні варіанти назв)
             || compData[provider + 'ApiKey']
+            || compData[provider + '_api_key']
+            || compData.integrations?.[provider]?.apiKey
+            || compData.integrations?.[provider]?.key
+            // OpenAI specific fallbacks
             || (provider === 'openai' || provider === 'deepseek' ? compData.openaiApiKey : null)
-            || (provider === 'openai' || provider === 'deepseek' ? process.env.OPENAI_API_KEY : null);
+            || (provider === 'openai' || provider === 'deepseek' ? compData.openAiApiKey : null)
+            // Anthropic specific
+            || (provider === 'anthropic' ? compData.anthropicApiKey : null)
+            || (provider === 'anthropic' ? compData.anthropic_api_key : null)
+            // Google specific
+            || (provider === 'google' ? compData.googleApiKey : null)
+            || (provider === 'google' ? compData.geminiApiKey : null)
+            // Env fallbacks
+            || (provider === 'openai' || provider === 'deepseek' ? process.env.OPENAI_API_KEY : null)
+            || (provider === 'anthropic' ? process.env.ANTHROPIC_API_KEY : null)
+            || (provider === 'google' ? process.env.GOOGLE_API_KEY : null);
 
+        // Завжди логуємо якщо ключа немає — щоб діагностувати проблему
+        if (!apiKey) {
+            console.error('[callAI] NO API KEY for provider:', provider, 'model:', model,
+                'node.config?.aiApiKey:', !!node.config?.aiApiKey,
+                'compData.openaiApiKey:', !!compData?.openaiApiKey,
+                'env.OPENAI_API_KEY:', !!process.env.OPENAI_API_KEY);
+            return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний. Перевірте API ключ.';
+        }
         process.env.WEBHOOK_DEBUG && console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
-        if (!apiKey) return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний.';
 
         const _rawSys = node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.';
         const sysPrompt = _rawSys + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
@@ -1802,8 +1824,14 @@ async function callAI(node, userText, session, compRef, compData) {
             }
             const d = await r.json();
             clearTimeout(aiTimeout);
-            if (!r.ok) console.error('[callAI] OpenAI error', r.status, d.error?.message || d.error || '');
-            else process.env.WEBHOOK_DEBUG && console.debug('[callAI] status:', r.status, 'tokens:', d.usage?.total_tokens);
+            if (!r.ok) {
+                console.error('[callAI] OpenAI error', r.status, JSON.stringify(d.error || d).slice(0,200));
+            } else {
+                process.env.WEBHOOK_DEBUG && console.debug('[callAI] status:', r.status, 'tokens:', d.usage?.total_tokens);
+                if (!d.choices?.[0]?.message?.content) {
+                    console.error('[callAI] OpenAI empty content, finish_reason:', d.choices?.[0]?.finish_reason, 'full:', JSON.stringify(d).slice(0,300));
+                }
+            }
             responseText = d.choices?.[0]?.message?.content || null;
 
         // ── Anthropic Claude ──────────────────────────────────
@@ -1864,7 +1892,10 @@ async function callAI(node, userText, session, compRef, compData) {
         }
 
         clearTimeout(aiTimeout); // BUG H FIX: завжди чистимо таймер перед поверненням
-        return responseText || node.config?.fallback || node.fallback || 'Дякуємо!';
+        if (!responseText) {
+            console.error('[callAI] responseText is null/empty for provider:', provider, 'model:', model);
+        }
+        return responseText || node.config?.fallback || node.fallback || 'Вибачте, виникла помилка. Спробуйте ще раз.';
     } catch(e) {
         if (typeof aiTimeout !== 'undefined') clearTimeout(aiTimeout);
         if (e.name === 'AbortError') {

@@ -1479,7 +1479,7 @@ window.fcSetAiProvider = function(provider) {
     const currentKey = document.getElementById('fcp_aiApiKey')?.value || '';
     fc.selectedNode.config.aiProvider = provider;
     fc.selectedNode.config.aiApiKey = currentKey;
-    renderPropsPanel(fc.selectedNode);
+    renderPropPanel(); // FIX: correct function name
 };
 
 // ── Property Panel ─────────────────────────────────────────
@@ -2189,6 +2189,10 @@ async function saveFlow() {
                 aiApiKey: n.config?.aiApiKey || null,
                 aiModel: n.config?.aiModel || null,
                 aiProvider: n.config?.aiProvider || null,
+                temperature: n.config?.temperature ?? null,
+                historyLimit: n.config?.historyLimit ?? null,
+                firstMessage: n.config?.firstMessage || null,
+                firstMessageEnabled: n.config?.firstMessageEnabled || null,
                 saveAs: n.config?.saveAs || null,
                 fallback: n.config?.fallback || null,
                 // Action поля
