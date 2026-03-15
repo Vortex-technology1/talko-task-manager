@@ -1247,6 +1247,108 @@ module.exports = async (req, res) => {
                 nodeId = null;
                 break;
 
+            } else if (n.type === 'question') {
+                // Питання — надсилаємо текст і чекаємо відповіді
+                const qText = interp(n.text || n.question || '', session.data);
+                if (qText.trim()) {
+                    sendTyping(botToken, normalized.senderId).catch(()=>{});
+                    await Promise.all([
+                        sendMsg(channel, botToken, normalized.senderId, qText),
+                        saveBotMessage(compRef, contactId, qText),
+                    ]);
+                }
+                // Зберігаємо який ключ чекаємо (куди записати відповідь)
+                if (n.saveAs) session._waitingKey = n.saveAs;
+                Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
+                    currentNodeId: n.nextNode || null, waitingForInput: nodeId });
+                Promise.all([
+                    sessionRef.set(session, { merge: true }),
+                    lockRef.delete().catch(()=>{}),
+                ]).catch(e => console.error('[webhook] session save question:', e.message));
+                return res.status(200).json({ ok: true });
+
+            } else if (n.type === 'buttons') {
+                // Кнопки — надсилаємо текст з кнопками і чекаємо вибору
+                const bText = interp(n.text || '', session.data);
+                const btns = n.buttons || n.options || [];
+                if (bText.trim() || btns.length) {
+                    sendTyping(botToken, normalized.senderId).catch(()=>{});
+                    await Promise.all([
+                        sendMsg(channel, botToken, normalized.senderId, bText || '...', btns.length ? btns : null),
+                        saveBotMessage(compRef, contactId, bText || '...'),
+                    ]);
+                }
+                Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
+                    currentNodeId: nodeId, waitingForInput: nodeId });
+                Promise.all([
+                    sessionRef.set(session, { merge: true }),
+                    lockRef.delete().catch(()=>{}),
+                ]).catch(e => console.error('[webhook] session save buttons:', e.message));
+                return res.status(200).json({ ok: true });
+
+            } else if (n.type === 'condition') {
+                // Умовна логіка — перевіряємо умову і переходимо в trueNode або falseNode
+                let condResult = false;
+                try {
+                    const condField = n.conditionField || n.field || '';
+                    const condOp = n.conditionOp || n.operator || 'eq';
+                    const condVal = n.conditionValue || n.value || '';
+                    const actualVal = String(session.data[condField] || '').toLowerCase();
+                    const checkVal = String(condVal).toLowerCase();
+                    if (condOp === 'eq') condResult = actualVal === checkVal;
+                    else if (condOp === 'neq') condResult = actualVal !== checkVal;
+                    else if (condOp === 'contains') condResult = actualVal.includes(checkVal);
+                    else if (condOp === 'exists') condResult = !!session.data[condField];
+                    else if (condOp === 'empty') condResult = !session.data[condField];
+                    else if (condOp === 'gt') condResult = parseFloat(actualVal) > parseFloat(checkVal);
+                    else if (condOp === 'lt') condResult = parseFloat(actualVal) < parseFloat(checkVal);
+                } catch(e) { console.error('[webhook] condition eval:', e.message); }
+                nodeId = condResult ? (n.trueNode || n.nextNode || null) : (n.falseNode || n.nextNode || null);
+                continue;
+
+            } else if (n.type === 'delay') {
+                // Затримка — чекаємо вказану кількість секунд (max 30s для serverless)
+                const delayMs = Math.min((n.delaySeconds || n.seconds || 1) * 1000, 30000);
+                await new Promise(r => setTimeout(r, delayMs));
+                nodeId = n.nextNode || null;
+
+            } else if (n.type === 'human') {
+                // Передача менеджеру — встановлюємо флаг human mode і нотифікуємо
+                session.humanMode = true;
+                session.humanModeAt = Date.now();
+                const humanText = interp(n.text || 'Зʼєднуємо вас з менеджером...', session.data);
+                await Promise.all([
+                    sendMsg(channel, botToken, normalized.senderId, humanText),
+                    saveBotMessage(compRef, contactId, humanText),
+                ]);
+                // Нотифікуємо адміна
+                if (_compData?.managerChatId || _compData?.telegramChatId) {
+                    const adminChatId = String(_compData.managerChatId || _compData.telegramChatId);
+                    const adminMsg = `🙋 Клієнт ${session.senderName || session.senderId} просить менеджера`;
+                    sendTg(botToken, adminChatId, adminMsg).catch(()=>{});
+                }
+                nodeId = n.nextNode || null;
+
+            } else if (n.type === 'tag') {
+                // Тегування контакту
+                try {
+                    const tagValue = interp(n.tagValue || n.tag || '', session.data);
+                    if (tagValue && contactId) {
+                        await compRef.collection('contacts').doc(contactId).update({
+                            tags: admin.firestore.FieldValue.arrayUnion(tagValue),
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        }).catch(()=>{});
+                        // Також оновлюємо crm_clients якщо є
+                        if (session._autoClientId) {
+                            await compRef.collection('crm_clients').doc(session._autoClientId).update({
+                                tags: admin.firestore.FieldValue.arrayUnion(tagValue),
+                                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            }).catch(()=>{});
+                        }
+                    }
+                } catch(e) { console.error('[webhook] tag node:', e.message); }
+                nodeId = n.nextNode || null;
+
             } else {
                 nodeId = n.nextNode || null;
             }

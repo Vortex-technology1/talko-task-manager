@@ -60,7 +60,7 @@
                     const dfEl = document.getElementById('dateFilter');
                     if (dfEl) dfEl.value = saved.date;
                 }
-            } catch(e) {}
+            } catch(e) { console.warn('[helpers]', e.message); }
         }
 
         function formatDate(s) {
@@ -152,7 +152,7 @@
         
         function switchTab(tabName) {
             // Зберігаємо активний таб для відновлення після F5
-            try { sessionStorage.setItem('talko_last_tab', tabName); } catch(e) {}
+            try { sessionStorage.setItem('talko_last_tab', tabName); } catch(e) { console.warn('[helpers]', e.message); }
             // Закриваємо всі nav-dropdown при будь-якому переході
             if (typeof closeNavDropdowns === 'function') closeNavDropdowns();
             // Reset project detail when leaving projects tab
@@ -752,7 +752,7 @@
                             else if (typeof lucide !== 'undefined') lucide.createIcons();
                         }, 300);
                     }
-                } catch(e) {}
+                } catch(e) { console.warn('[helpers]', e.message); }
             });
         }
         
@@ -766,7 +766,7 @@
                 if (typeof lucide !== 'undefined' && lucide.createIcons) {
                     lucide.createIcons();
                 }
-            } catch(e) {}
+            } catch(e) { console.warn('[helpers]', e.message); }
         // =====================
         // AUTH SAFETY HELPERS
         // =====================
