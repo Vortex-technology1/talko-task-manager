@@ -92,6 +92,9 @@ function _fmtDate(dateStr) {
     return { label:d.toLocaleDateString(locale,{day:'numeric',month:'short'}), overdue:false, today:false };
 }
 
+// FIX: Таймер для retry (щоб уникнути memory leak)
+let _crmTodoRetryTimer = null;
+
 // ── ГОЛОВНИЙ РЕНДЕР ────────────────────────────────────────
 window.renderCrmTodo = function() {
     const el = document.getElementById('crmViewTodo');
@@ -101,7 +104,8 @@ window.renderCrmTodo = function() {
     if (window.crm && window.crm.loading) {
         el.innerHTML = `<div style="padding:3rem;text-align:center;color:#9ca3af;">
             <div style="font-size:0.85rem;">Завантаження лідів...</div></div>`;
-        setTimeout(() => { if (document.getElementById('crmViewTodo')) renderCrmTodo(); }, 400);
+        if (_crmTodoRetryTimer) clearTimeout(_crmTodoRetryTimer);
+        _crmTodoRetryTimer = setTimeout(() => { if (document.getElementById('crmViewTodo')) renderCrmTodo(); }, 400);
         return;
     }
 
@@ -109,7 +113,8 @@ window.renderCrmTodo = function() {
     if (!window.crm || !window.crm.deals) {
         el.innerHTML = `<div style="padding:3rem;text-align:center;color:#9ca3af;">
             <div style="font-size:0.85rem;">Ініціалізація CRM...</div></div>`;
-        setTimeout(() => { if (document.getElementById('crmViewTodo')) renderCrmTodo(); }, 600);
+        if (_crmTodoRetryTimer) clearTimeout(_crmTodoRetryTimer);
+        _crmTodoRetryTimer = setTimeout(() => { if (document.getElementById('crmViewTodo')) renderCrmTodo(); }, 600);
         return;
     }
 
