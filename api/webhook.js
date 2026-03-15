@@ -617,7 +617,7 @@ module.exports = async (req, res) => {
             tx.set(lockRef, {
                 ts: lockTs,
                 pid: Math.random(),
-                expiresAt: lockTs + 35000, // 35s TTL — більше за max AI час
+                expiresAt: lockTs + 45000, // 45s TTL — AI 25s + overhead 20s
             }, { merge: false });
             return { acquired: true, sessionDoc: session };
         }).catch(e => {
@@ -1228,10 +1228,8 @@ module.exports = async (req, res) => {
                 if (_userMsgForHistory) session.aiHistory.push({ role: 'user', content: _userMsgForHistory });
                 if (cleanReply) session.aiHistory.push({ role: 'assistant', content: cleanReply });
 
-                // Обмежуємо розмір history
+                // Обмежуємо розмір history (один раз тут, фінальний trim в session save)
                 if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
-                const _histCharsPost = session.aiHistory.reduce((s,m) => s + (m.content||'').length, 0);
-                if (_histCharsPost > 15000) session.aiHistory = session.aiHistory.slice(-10);
 
                 // Зберігаємо останню AI відповідь для {{ai_response}} в наступних вузлах
                 session.data.ai_response = cleanReply;
@@ -2026,7 +2024,7 @@ async function callAI(node, userText, session, compRef, compData) {
             let d = await r.json();
             clearTimeout(aiTimeout);
             // FIX 3: Anthropic 529 = overloaded → retry після 2с
-            if (r.status === 529 || r.status === 529) {
+            if (r.status === 529 || r.status === 503) { // 529=overload, 503=gateway error
                 console.warn('[callAI] Anthropic 529 overloaded, retry in 2s');
                 await new Promise(res => setTimeout(res, 2000));
                 const _r2 = await fetch('https://api.anthropic.com/v1/messages', {
@@ -2046,7 +2044,7 @@ async function callAI(node, userText, session, compRef, compData) {
                         })()
                     })
                 });
-                if (_r2.ok) d = await _r2.json();
+                if (_r2 && _r2.ok) d = await _r2.json().catch(() => d);
             }
             if (!r.ok && r.status !== 529) console.error('[callAI] Anthropic error', r.status, d.error?.message);
             else process.env.WEBHOOK_DEBUG && console.debug('[callAI] Anthropic status:', r.status);
@@ -2141,17 +2139,18 @@ async function sendTg(token, chatId, text, buttons) {
     const _hasHtml = /<(b|i|code|pre|a|s|u|tg-spoiler)[\s>]/.test(text || '');
     let safeText;
     if (_hasHtml) {
-        // Текст вже в HTML — тільки обрізаємо до 4096
         safeText = (text || ' ').trim();
     } else {
-        // Plain text або markdown — конвертуємо
-        safeText = (text || ' ').trim()
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-            .replace(/\*(.*?)\*/g, '<i>$1</i>')
-            .replace(/`(.*?)`/g, '<code>$1</code>');
+        const _raw = (text || ' ').trim();
+        // FIX 3: не double-escape — якщо вже є HTML entities
+        const _alreadyEscaped = /&(amp|lt|gt|quot|#\d+);/.test(_raw);
+        safeText = _alreadyEscaped ? _raw :
+            _raw.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                .replace(/\*(.*?)\*/g, '<i>$1</i>')
+                .replace(/`(.*?)`/g, '<code>$1</code>');
     }
     // Telegram limit: 4096 chars. Обрізаємо з позначкою
     if (safeText.length > 4096) safeText = safeText.slice(0, 4090) + '...';
