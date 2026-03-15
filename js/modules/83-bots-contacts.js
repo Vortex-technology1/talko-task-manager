@@ -2270,33 +2270,58 @@ window.bpSendBroadcast = async function() {
             if (j > 0) await new Promise(r => setTimeout(r, 40));
 
             try {
-                const res = await _tgFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: telegramId,
-                        text: text || '<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span> Повідомлення від бота',
-                        parse_mode: 'Markdown',
-                    }),
-                });
-                const data = await res.json();
+                const ctChannel = ct.channel || 'telegram';
+                const senderId = ct.senderId || ct.externalId?.replace('telegram_', '');
+                if (!senderId) { bcast.failed++; continue; }
 
-                if (data.ok) {
-                    bcast.sent++;
-                } else {
-                    bcast.failed++;
-                    // Автоматично позначаємо заблокованих
-                    if (data.error_code === 403) {
-                        window.companyRef().collection('contacts').doc(ct.id)
-                            .update({ botStatus: 'blocked' }).catch(() => {});
+                let sendOk = false;
+
+                if (ctChannel === 'telegram') {
+                    // Telegram
+                    const res = await _tgFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: senderId,
+                            text: text || 'Повідомлення від бота',
+                            parse_mode: 'Markdown',
+                        }),
+                    });
+                    const data = await res.json();
+                    if (data.ok) {
+                        sendOk = true;
+                    } else {
+                        if (data.error_code === 403) {
+                            window.companyRef().collection('contacts').doc(ct.id)
+                                .update({ botStatus: 'blocked' }).catch(() => {});
+                        }
+                        if (data.error_code === 429) {
+                            const wait = (data.parameters?.retry_after || 5) * 1000;
+                            await new Promise(r => setTimeout(r, wait));
+                        }
                     }
-                    // Rate limit від Telegram — чекаємо
-                    if (data.error_code === 429) {
-                        const wait = (data.parameters?.retry_after || 5) * 1000;
-                        await new Promise(r => setTimeout(r, wait));
+                } else if (ctChannel === 'viber') {
+                    // Viber — через webhook API
+                    const viberToken = bp.bots.find(b => b.channel === 'viber')?.token;
+                    if (viberToken) {
+                        const res = await _tgFetch('https://chatapi.viber.com/pa/send_message', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-Viber-Auth-Token': viberToken },
+                            body: JSON.stringify({
+                                receiver: senderId,
+                                type: 'text',
+                                text: text || 'Повідомлення від бота',
+                            }),
+                        });
+                        const data = await res.json();
+                        sendOk = data.status === 0;
                     }
                 }
-            } catch(e) { bcast.failed++; }
+                // Instagram — через Graph API (потребує окремого налаштування)
+
+                if (sendOk) bcast.sent++;
+                else bcast.failed++;
+            } catch(e) { bcast.failed++; console.warn('[broadcast]', e.message); }
 
             // Оновлюємо прогрес UI
             const done = bcast.sent + bcast.failed;

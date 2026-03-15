@@ -3508,12 +3508,39 @@ function _renderAnalytics() {
     const closed   = won + lost;
     const conv     = closed > 0 ? Math.round(won/closed*100) : 0;
 
+    // Deal Velocity — середній час від створення до виграшу (в днях)
+    const wonDeals = crm.deals.filter(d => d.stage === 'won' && d.createdAt && d.wonAt);
+    const avgVelocity = wonDeals.length > 0
+        ? Math.round(wonDeals.reduce((s, d) => {
+            const created = d.createdAt?.toMillis?.() || 0;
+            const wonAt = d.wonAt?.toMillis?.() || Date.now();
+            return s + (wonAt - created) / (1000 * 60 * 60 * 24);
+        }, 0) / wonDeals.length)
+        : 0;
+
+    // Revenue Forecast — активні угоди × середня конверсія
+    const activeAmount = crm.deals
+        .filter(d => d.stage !== 'won' && d.stage !== 'lost')
+        .reduce((s, d) => s + (d.amount || 0) * ((d.probability || 10) / 100), 0);
+    const forecast = Math.round(activeAmount);
+
+    // Source analytics
+    const bySource = {};
+    crm.deals.forEach(d => {
+        const src = d.source || 'manual';
+        if (!bySource[src]) bySource[src] = { count: 0, won: 0, amount: 0 };
+        bySource[src].count++;
+        if (d.stage === 'won') { bySource[src].won++; bySource[src].amount += d.amount || 0; }
+    });
+
     // KPI картки
     const kpis = [
         [window.t('crmConversion'), conv+'%', '#22c55e'],
         ['Revenue', _fmt(revenue, true), '#16a34a'],
         ['Avg Deal', _fmt(avgDeal, true), '#3b82f6'],
         [window.t('crmStageLost'), lost, '#ef4444'],
+        ['Velocity', avgVelocity > 0 ? avgVelocity + ' дн' : '—', '#8b5cf6'],
+        ['Прогноз', _fmt(forecast, true), '#f59e0b'],
     ];
 
     // IMP 2 FIX: один прохід по crm.deals замість 4×6=24
@@ -3866,6 +3893,35 @@ function _renderCRMSettings() {
                         display:flex;align-items:center;" title="${window.t('crmDelete')}">${I.trash}</button>` : ''}
                 </div>`).join('')}
             </div>
+        </div>
+
+        <!-- Джерела лідів -->
+        <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
+            <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">
+                Джерела лідів
+            </div>
+            ${(function(){
+                const entries = Object.entries(bySource).sort((a,b)=>b[1].count-a[1].count).slice(0,6);
+                if(!entries.length) return '<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1rem;">Немає даних</div>';
+                return entries.map(function(e){
+                    const src=e[0], data=e[1];
+                    const srcConv = data.count>0 ? Math.round(data.won/data.count*100) : 0;
+                    const srcPct = total>0 ? Math.round(data.count/total*100) : 0;
+                    return '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">' +
+                        '<div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>' +
+                        '<div style="flex:1;min-width:0;">' +
+                            '<div style="display:flex;justify-content:space-between;margin-bottom:2px;">' +
+                                '<span style="font-size:0.75rem;color:#374151;font-weight:500;">' + _esc(src) + '</span>' +
+                                '<span style="font-size:0.7rem;color:#6b7280;flex-shrink:0;margin-left:4px;">' + data.count + ' (' + srcPct + '%)</span>' +
+                            '</div>' +
+                            '<div style="background:#f1f5f9;border-radius:3px;height:5px;">' +
+                                '<div style="height:100%;background:#3b82f6;width:' + srcPct + '%;border-radius:3px;"></div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<span style="font-size:0.68rem;padding:1px 5px;border-radius:8px;background:#f0fdf4;color:#16a34a;font-weight:700;flex-shrink:0;">' + srcConv + '%</span>' +
+                    '</div>';
+                }).join('');
+            })()}
         </div>
 
         <!-- Стадії поточної воронки -->
