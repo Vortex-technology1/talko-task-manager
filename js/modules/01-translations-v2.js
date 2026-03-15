@@ -11771,7 +11771,13 @@
                 updatePageTranslations();
             }
 
-            // Перезавантаження ТІЛЬКИ якщо мова змінилась (не при ініціалізації)
+            // FIX: на auth сторінці — НЕ робимо reload (Firebase не встиг відновити сесію)
+            const _isAuthPage = !window.currentUser;
+            if (_isAuthPage) {
+                if (typeof window.applyNavTranslations === 'function') window.applyNavTranslations(lang);
+                return;
+            }
+            // Для залогіненого юзера — reload щоб оновити весь UI
             if (forceReload === true || (prevLang && prevLang !== lang)) {
                 location.reload();
             }
