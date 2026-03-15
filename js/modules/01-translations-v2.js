@@ -5593,7 +5593,7 @@
                 botsInvite: 'einladen',
                 botsRemove: 'Zurückziehen',
                 botsStopped: 'Angehalten',
-                botsNoBroadcastContacts: 'Немає контактів для розсилки з обраними фільтрами',
+                botsNoBroadcastContacts: 'Keine Kontakte für den Versand mit den ausgewählten Filtern',
                 botsChannel: 'Kanal',
                 botsPosition: 'Position',
                 botsPrepareCSV: 'CSV wird vorbereitet...',
