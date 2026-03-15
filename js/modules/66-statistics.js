@@ -882,7 +882,7 @@
         </div>
         ${metricCount === 0 && canEdit ? `
         <div style="text-align:center;padding:2rem 1rem;background:#f9fafb;border-radius:12px;margin-top:1rem;border:1.5px dashed #e5e7eb;">
-            <div style="font-weight:600;font-size:0.95rem;color:#6b7280;margin-bottom:0.75rem;">Метрик ще немає — додайте першу</div>
+            <div style="font-weight:600;font-size:0.95rem;color:#6b7280;margin-bottom:0.75rem;">${window.t('noMetrics')} — ${window.t('noMetricsHint').toLowerCase()}</div>
             <button class="btn btn-success" onclick="openMetricModal()" style="padding:0.5rem 1.25rem;border-radius:10px;font-size:0.9rem;">
                 ${SVG.plus} Додати метрику
             </button>

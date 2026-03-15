@@ -431,14 +431,14 @@ function renderWelcome() {
     const alreadyStarted = doneTasks > 0;
     const totalMins = OB_STEPS.reduce((s,st) => s + (parseInt(st.est)||0), 0);
     const ui = typeof getOBUI === 'function' ? getOBUI : () => '';
-    const lang = (typeof currentLang !== 'undefined' ? currentLang : null) || localStorage.getItem('talko_lang') || 'ua';
+    const lang = (typeof currentLang !== 'undefined' ? currentLang : null) || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
     const timeLabel = lang === 'en'
         ? `~${Math.floor(totalMins/60)}h ${totalMins%60}min`
         : lang === 'ru'
         ? `~${Math.floor(totalMins/60)} ч ${totalMins%60} мин`
         : `~${Math.floor(totalMins/60)} год ${totalMins%60} хв`;
     const txt = {
-        title:    lang==='en' ? 'TALKO OS Onboarding'          : lang==='ru' ? 'TALKO OS Онбординг'         : 'TALKO OS Онбординг',
+        title:    lang==='en' ? 'TALKO OS Onboarding' : lang==='ru' ? 'TALKO OS Онбординг' : lang==='pl' ? 'TALKO OS Onboarding' : lang==='de' ? 'TALKO OS Onboarding' : lang==='cs' ? 'TALKO OS Onboarding' : 'TALKO OS Онбординг',
         subtitle: lang==='en' ? 'Step-by-step system setup. From first login to business on autopilot.'
                               : lang==='ru' ? 'Пошаговая настройка системы. От первого входа до бизнеса на автопилоте.'
                               : 'Покрокове налаштування системи. Від першого входу до бізнесу на автопілоті.',

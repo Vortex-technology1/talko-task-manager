@@ -752,7 +752,7 @@ window.OB_I18N.cs = {
 // ─── HELPER: patch step with current language ──────────────
 window.getLocalizedStep = function(step) {
     var lang = (typeof currentLang !== 'undefined' ? currentLang : null)
-             || localStorage.getItem('talko_lang') || 'ua';
+             || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
     if (lang === 'ua') return step;
     var i18n = window.OB_I18N && window.OB_I18N[lang] && window.OB_I18N[lang][step.id];
     if (!i18n) return step;
@@ -775,14 +775,14 @@ window.getLocalizedStep = function(step) {
 
 window.getOBBlockLabel = function(blockId) {
     var lang = (typeof currentLang !== 'undefined' ? currentLang : null)
-             || localStorage.getItem('talko_lang') || 'ua';
+             || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
     return (window.OB_I18N && window.OB_I18N[lang] && window.OB_I18N[lang]._blocks
             && window.OB_I18N[lang]._blocks[blockId]) || blockId;
 };
 
 window.getOBUI = function(key) {
     var lang = (typeof currentLang !== 'undefined' ? currentLang : null)
-             || localStorage.getItem('talko_lang') || 'ua';
+             || localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
     return (window.OB_I18N && window.OB_I18N[lang] && window.OB_I18N[lang]._ui
             && window.OB_I18N[lang]._ui[key]) || '';
 };

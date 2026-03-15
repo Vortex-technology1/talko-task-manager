@@ -208,27 +208,27 @@ function renderBotsTab() {
     c.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
             <div>
-                <div style="font-weight:700;font-size:1rem;">Мої боти</div>
-                <div style="font-size:0.74rem;color:#6b7280;">${bp.bots.length} ботів</div>
+                <div style="font-weight:700;font-size:1rem;">${window.t('botsMoiBoty')}</div>
+                <div style="font-size:0.74rem;color:#6b7280;">${bp.bots.length} ${window.t('botsCountLabel')}</div>
             </div>
             <button onclick="openCreateBotModal()"
                 style="padding:0.5rem 1rem;background:#22c55e;color:white;border:none;
                 border-radius:10px;cursor:pointer;font-weight:600;font-size:0.84rem;">
-                + Новий бот
+                ${window.t('botsNewBot')}
             </button>
         </div>
 
         ${bp.bots.length === 0 ? `
         <div style="text-align:center;padding:3rem;background:white;border-radius:16px;box-shadow:var(--shadow);">
             <div style="font-size:3rem;margin-bottom:0.75rem;"><i data-lucide="bot" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i></div>
-            <div style="font-weight:700;font-size:1rem;margin-bottom:0.4rem;">Ботів поки немає</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.4rem;">${window.t('botsNoBotYet')}</div>
             <div style="font-size:0.84rem;color:#6b7280;margin-bottom:1.25rem;">
-                Підключіть Telegram бота або інший канал<br>і створіть перший ланцюг сценарію
+                ${window.t('botsConnectHint')}
             </div>
             <button onclick="openCreateBotModal()"
                 style="padding:0.65rem 1.5rem;background:#22c55e;color:white;border:none;
                 border-radius:10px;cursor:pointer;font-weight:600;">
-                + Підключити бота
+                ${window.t('botsConnectBtn')}
             </button>
         </div>` : `
         <div style="display:flex;flex-direction:column;gap:0.4rem;">

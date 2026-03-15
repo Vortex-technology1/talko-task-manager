@@ -183,7 +183,7 @@
         },
     };
     function ct(key) {
-        const lang = localStorage.getItem('talko_lang') || 'ua';
+        const lang = localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
         return (COORD_I18N[lang] && COORD_I18N[lang][key]) || COORD_I18N['ua'][key] || key;
     }
     const TYPES = {

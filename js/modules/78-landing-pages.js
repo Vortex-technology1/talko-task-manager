@@ -115,13 +115,13 @@
         <div style="font-weight:700;font-size:.92rem;color:#111827;display:flex;align-items:center;gap:.5rem;">
             ${I.funnel} Маркетинг
         </div>
-        <span style="font-size:.73rem;color:#9ca3af;">${_funnels.length} воронок</span>
+        <span style="font-size:.73rem;color:#9ca3af;">${_funnels.length} ${window.t('mktFunnels')}</span>
         <div style="flex:1;"></div>
         <button onclick="mktNewFunnel()"
             style="display:flex;align-items:center;gap:.35rem;padding:.38rem .85rem;
             background:#22c55e;color:white;border:none;border-radius:7px;
             cursor:pointer;font-size:.8rem;font-weight:700;">
-            ${I.plus} Нова воронка
+            ${I.plus} ${window.t('mktNewFunnel').replace('+ ','')}
         </button>
     </div>
 
@@ -139,15 +139,14 @@
         <div style="width:56px;height:56px;background:#f0fdf4;border-radius:14px;
             display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;
             color:#22c55e;">${I.funnel.replace('11','24').replace('11','24')}</div>
-        <div style="font-weight:800;font-size:1.1rem;color:#111827;margin-bottom:.5rem;">Ще немає воронок</div>
+        <div style="font-weight:800;font-size:1.1rem;color:#111827;margin-bottom:.5rem;">${window.t('mktNoFunnels')}</div>
         <div style="font-size:.82rem;color:#6b7280;line-height:1.6;margin-bottom:1.5rem;">
-            Створіть воронку, додайте етапи і підключіть<br>
-            сайт, бота, CRM і процес — повний шлях ліда
+            ${window.t('mktNoFunnelsHint')}
         </div>
         <button onclick="mktNewFunnel()"
             style="padding:.58rem 1.6rem;background:#22c55e;color:white;border:none;
             border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem;">
-            ${I.plus} Створити першу воронку
+            ${I.plus} ${window.t('mktCreateFirst').replace('+ ','')}
         </button>
     </div>
 </div>`;
@@ -564,7 +563,7 @@
     window.mktNewFunnel = function() {
         _showModal('mktNewFunnelOv',
             `<div style="font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:.4rem;">
-                ${I.funnel} Нова воронка
+                ${I.funnel} ${window.t('mktNewFunnel').replace('+ ','')}
             </div>`,
             `<div>
                 <label style="font-size:.7rem;font-weight:700;color:#6b7280;display:block;margin-bottom:.28rem;">НАЗВА *</label>

@@ -27,14 +27,14 @@ function _renderShell() {
         <!-- Хедер -->
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
             <div>
-                <div style="font-weight:700;font-size:1rem;color:#1a1a1a;">Мої сайти</div>
-                <div style="font-size:0.72rem;color:#9ca3af;">Лендінги, форми, аналітика</div>
+                <div style="font-weight:700;font-size:1rem;color:#1a1a1a;">${window.t('sitesTitle')}</div>
+                <div style="font-size:0.72rem;color:#9ca3af;">${window.t('sitesSubtitle')}</div>
             </div>
             <button onclick="sitesOpenCreate()"
                 style="padding:0.5rem 1rem;background:#22c55e;color:white;border:none;
                 border-radius:10px;cursor:pointer;font-weight:700;font-size:0.82rem;
                 display:flex;align-items:center;gap:0.4rem;box-shadow:0 2px 8px rgba(34,197,94,0.3);">
-                + Новий сайт
+                ${window.t('sitesNew')}
             </button>
         </div>
         <div id="sitesList"></div>
@@ -62,7 +62,7 @@ function _renderList() {
     if (!c) return;
 
     if (sl.loading) {
-        c.innerHTML = '<div style="text-align:center;padding:3rem;color:#9ca3af;">Завантаження...</div>';
+        c.innerHTML = '<div style="text-align:center;padding:3rem;color:#9ca3af;">${window.t('loading')}</div>';
         return;
     }
 
@@ -70,14 +70,14 @@ function _renderList() {
         c.innerHTML = `
         <div style="text-align:center;padding:3rem 1rem;">
             <div style="font-size:3rem;margin-bottom:0.75rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span></div>
-            <div style="font-weight:700;font-size:0.95rem;margin-bottom:0.35rem;">Сайтів ще немає</div>
+            <div style="font-weight:700;font-size:0.95rem;margin-bottom:0.35rem;">${window.t('sitesEmpty')}</div>
             <div style="font-size:0.8rem;color:#6b7280;margin-bottom:1.25rem;">
-                Створи перший лендінг за 30 хвилин без коду
+                ${window.t('sitesEmptyHint')}
             </div>
             <button onclick="sitesOpenCreate()"
                 style="padding:0.6rem 1.5rem;background:#22c55e;color:white;border:none;
                 border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;">
-                Створити сайт
+                ${window.t('sitesCreate')}
             </button>
         </div>`;
         return;
@@ -223,7 +223,7 @@ window.sitesOpenCreate = function () {
         <div style="background:white;border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;">
             <div style="padding:1rem 1.25rem;border-bottom:1px solid #f1f5f9;
                 display:flex;justify-content:space-between;align-items:center;">
-                <div style="font-weight:700;font-size:0.95rem;">Новий сайт</div>
+                <div style="font-weight:700;font-size:0.95rem;">${window.t('sitesNew')}</div>
                 <button onclick="document.getElementById('sitesCreateOverlay').remove()"
                     style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1.2rem;">✕</button>
             </div>
