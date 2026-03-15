@@ -1912,8 +1912,12 @@ async function callAI(node, userText, session, compRef, compData) {
         process.env.WEBHOOK_DEBUG && console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
 
         const _rawSys = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.').slice(0, 6000);
-        // FIX 4: обмежуємо системний промпт щоб не перевищити контекстне вікно
-        const sysPrompt = _rawSys + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
+        // FIX 3: НЕ примушуємо українську — мова визначається системним промптом
+        // Якщо в промпті є інструкції мови → поважаємо їх
+        const _hasLangInstruction = /мов[аиі]|language|speak|respond in|відповід/i.test(_rawSys);
+        const sysPrompt = _hasLangInstruction
+            ? _rawSys
+            : _rawSys + '\n\nВідповідай тією ж мовою що й користувач.';
 
         // max_tokens: з конфігу ноди або адаптивний
         const _nodeMaxTok = node.config?.maxTokens || node.maxTokens || null;
@@ -1965,12 +1969,14 @@ async function callAI(node, userText, session, compRef, compData) {
             const baseUrl = (provider === 'deepseek' || model.startsWith('deepseek'))
                 ? 'https://api.deepseek.com/v1/chat/completions'
                 : 'https://api.openai.com/v1/chat/completions';
+            // FIX 1: o1/o3/o4 НЕ підтримують temperature parameter → API 400
+            const _isReasoningModel = model.startsWith('o1') || model.startsWith('o3') || model.startsWith('o4');
             const _oaBody = JSON.stringify({
                 model,
                 ...(model.startsWith('o3') || model.startsWith('o4') || model.startsWith('gpt-5')
                     ? { max_completion_tokens: _maxTok }
                     : { max_tokens: _maxTok }),
-                temperature: node.config?.temperature ?? 0.7,
+                ...(_isReasoningModel ? {} : { temperature: node.config?.temperature ?? 0.7 }),
                 messages
             });
             let r = await fetch(baseUrl, {
@@ -2088,11 +2094,13 @@ async function callAI(node, userText, session, compRef, compData) {
             const geminiModel = model || 'gemini-2.0-flash-lite'; // FIX 10: flash-lite швидший для чат-ботів
             // Gemini: конвертуємо aiHistory в Gemini contents format
             // FIX 10b: фільтруємо порожні повідомлення — Gemini відхиляє їх
+            // FIX 2: Gemini також застосовує _histLimit (раніше ігнорував)
             const _geminiHistory = (session.aiHistory || [])
+                .slice(_histLimit > 0 ? -_histLimit : _histLimit === 0 ? 0 : -6)
                 .filter(m => m.content && m.content.trim())
                 .map(m => ({
                     role: m.role === 'assistant' ? 'model' : 'user',
-                    parts: [{ text: m.content.slice(0, 8000) }], // Gemini має менший контекст
+                    parts: [{ text: m.content.slice(0, 4000) }], // обмеження на повідомлення
                 }));
             const _geminiContents = [
                 ..._geminiHistory,
