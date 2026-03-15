@@ -237,7 +237,7 @@ function _renderShell() {
                     <button onclick="crmOpenImport()"
                         style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;
                         background:white;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;
-                        font-size:0.81rem;font-weight:600;" title="Імпорт клієнтів/угод з CSV">
+                        font-size:0.81rem;font-weight:600;" title="${window.t('crmImportTooltip')}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Імпорт
                     </button>
                     <button onclick="crmOpenCreateDeal()"
@@ -4625,7 +4625,7 @@ window.crmOpenImport = function() {
     modal.innerHTML = `
         <div style="background:white;border-radius:14px;padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                <h3 style="font-size:1.1rem;font-weight:700;color:#111;">📥 Імпорт клієнтів з CSV</h3>
+                <h3 style="font-size:1.1rem;font-weight:700;color:#111;">📥 ${window.t('crmImportTitle')}</h3>
                 <button onclick="document.getElementById('crmImportModal')?.remove()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#6b7280;">✕</button>
             </div>
             <p style="font-size:0.82rem;color:#6b7280;margin-bottom:1rem;">
@@ -4656,7 +4656,7 @@ window.crmOpenImport = function() {
                 <div style="display:flex;gap:0.5rem;">
                     <button onclick="window.crmDoImport()" id="crmImportBtn"
                         style="flex:1;padding:0.65rem;background:#22c55e;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;">
-                        ✅ Імпортувати
+                        ${window.t('crmImportBtn')}
                     </button>
                     <button onclick="window.crmResetImport()"
                         style="padding:0.65rem 1rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.9rem;">
@@ -4665,7 +4665,7 @@ window.crmOpenImport = function() {
                 </div>
             </div>
             <div id="crmImportProgress" style="display:none;text-align:center;padding:1rem;">
-                <div style="font-size:0.9rem;color:#374151;" id="crmImportProgressText">Імпортую...</div>
+                <div style="font-size:0.9rem;color:#374151;" id="crmImportProgressText">${window.t('crmImporting')}</div>
                 <div style="margin-top:0.5rem;background:#e5e7eb;border-radius:99px;height:8px;overflow:hidden;">
                     <div id="crmImportProgressBar" style="height:100%;background:#22c55e;width:0%;transition:width .3s;"></div>
                 </div>
@@ -4852,7 +4852,7 @@ window.crmDoImport = async function() {
 
         const pct = Math.round(((i + chunk.length) / rows.length) * 100);
         progressBar.style.width = pct + '%';
-        progressText.textContent = `Імпортую... ${Math.min(i + BATCH_SIZE, rows.length)} / ${rows.length}`;
+        progressText.textContent = `${window.t('crmImporting').replace('...','')}... ${Math.min(i + BATCH_SIZE, rows.length)} / ${rows.length}`;
     }
 
     // Завершення
@@ -4861,7 +4861,7 @@ window.crmDoImport = async function() {
     window._crmImportRows = [];
 
     const msg = errors > 0
-        ? `Імпортовано ${done} з ${rows.length}. Помилок: ${errors}.`
+        ? `${window.t('imported')} ${done} ${window.t('finTransferMin2')||'з'} ${rows.length}. ${window.t('error')||'Помилок'}: ${errors}.`
         : `✅ Успішно імпортовано ${done} записів!`;
     if (window.showToast) showToast(msg, errors > 0 ? 'warning' : 'success');
 };
@@ -4887,7 +4887,7 @@ function _checkContactReminders() {
         const label = overdue[0].clientName || overdue[0].title || window.t('crmDeal');
         const msg = overdue.length === 1
             ? `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> Прострочений контакт: ${label}`
-            : `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> ${overdue.length} прострочених контактів`;
+            : `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> ${overdue.length} ${window.t('crmOverdueContacts')}`;
         if (typeof showToast === 'function') showToast(msg, 'error');
     }
     if (dueToday.length > 0) {
@@ -4907,7 +4907,7 @@ function _checkContactReminders() {
         if (all.length > 0) {
             const first = all[0];
             const title = overdue.length > 0
-                ? `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> ${overdue.length} прострочених контактів CRM`
+                ? `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ef4444"/></svg> ${overdue.length} ${window.t('crmOverdueContactsCRM')}`
                 : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${dueToday.length} контактів на сьогодні`;
             const body = first.clientName || first.title || '';
             window.sendBrowserNotif({
