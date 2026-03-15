@@ -1428,13 +1428,15 @@ module.exports = async (req, res) => {
                 } catch(e) { console.error('[webhook] talko_task error:', e.message); }
                 nodeId = n.nextNode || null;
 
-            } else if (n.type === 'talko_deal') {
+            } else if (n.type === 'talko_deal' || n.type === 'crm') {  // FIX: canvas uses 'crm', legacy uses 'talko_deal'
                 // FIX BX: create/update CRM deal from bot flow node
                 try {
                     // {contact.name} → interp шукає data.name або data (через contact.* alias)
                     const _dealData = { ...session.data, name: session.data.name || session.senderName || session.senderId || 'Лід' };
                     const dealTitle = interp(n.dealTitle || '{contact.name} — запит з боту', _dealData);
-                    const targetStage = n.dealStage || 'new';
+                    const targetStage = n.config?.dealStage || n.dealStage || 'new';
+                    const _cfgAmount = parseFloat(n.config?.amount || n.amount) || 0;
+                    const _cfgPipelineId = n.config?.pipelineId || n.pipelineId || null;
                     const _tdContactId = session.channel + '_' + session.senderId;
                     // Спочатку шукаємо авто-лід (autoCreated=true, flowId=null)
                     // щоб оновити його замість створення дубля
@@ -1454,13 +1456,13 @@ module.exports = async (req, res) => {
                             .limit(1).get();
                     if (existingDeals.empty) {
                         // FIX CC: fetch pipeline to get pipelineId (required for CRM kanban query)
-                        let ccPipelineId = 'default', ccStageColor = '#6b7280', ccProbability = 10;
+                        let ccPipelineId = _cfgPipelineId || 'default', ccStageColor = '#6b7280', ccProbability = 10;
                         try {
-                            // Кеш pipeline з авто-ліду (якщо є) — уникаємо зайвого read
                             let _tdPipSnap = null;
-                            const _hasPipCache = (session._autoPipId || session.data?._autoPipId);
+                            // Якщо pipelineId вказано явно в конфігу — не шукаємо default
+                            const _hasPipCache = _cfgPipelineId || (session._autoPipId || session.data?._autoPipId);
                             if (_hasPipCache) {
-                                ccPipelineId = session._autoPipId || session.data._autoPipId;
+                                ccPipelineId = _cfgPipelineId || session._autoPipId || session.data._autoPipId;
                                 ccStageColor  = '#6b7280';
                                 ccProbability = 10;
                             } else {
@@ -1485,18 +1487,19 @@ module.exports = async (req, res) => {
                             stage:         targetStage,
                             stageColor:    ccStageColor,
                             status:        'open',
-                            amount:        0,
+                            amount:        _cfgAmount,
                             currency:      'UAH',
                             source:        'telegram_bot',
                             flowId:        flow?.id || null,
                             botContactId:  _botContactId,
                             contactId:     _botContactId,   // FIX: direct link for crmToggleDealChat
-                            clientName:    session.senderName || '',
+                            clientName:    session.senderName || (session.username ? '@'+session.username : '') || '',
                             phone:         session.data?.phone || '',
                             description:   session.data?.ai_response || session.data?.main_problem || '',
                             pipelineId:    ccPipelineId,
                             probability:   ccProbability,
                             stageEnteredAt: admin.firestore.FieldValue.serverTimestamp(),
+                            tags:          session.tags || [],
                             assignedToId:  _compData.ownerId || null,
                             assignedToName: _compData.ownerName || '',
                             createdAt:     admin.firestore.FieldValue.serverTimestamp(),

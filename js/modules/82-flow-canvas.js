@@ -2064,9 +2064,15 @@ function renderPropPanel() {
                 + fld('Умова виходу (змінна)', inp('exitVar', d.exitVar, 'confirmed'));
             break;
         case 'crm':
-            fields = fld('Назва угоди', inp('dealTitle', d.dealTitle, 'Новий лід з бота'))
-                + fld('Сума', inp('amount', d.amount, '0'))
-                + fld('Воронка (pipeline ID)', inp('pipelineId', d.pipelineId, 'default'));
+            fields = fld('Назва угоди', inp('dealTitle', d.dealTitle, '{{name}} — лід з бота'))
+                + '<div style="font-size:9px;color:#64748b;margin:-8px 0 8px;padding:0 2px;">Змінні: {{name}} {{phone}} {{email}} та інші з AI ланцюга</div>'
+                + sel('dealStage', [
+                    ['new','Новий лід'],['contacted','Контакт встановлено'],
+                    ['qualified','Кваліфікований'],['proposal','Пропозиція'],
+                    ['negotiation','Переговори'],['won','Виграно'],
+                  ], d.dealStage || 'new', 'Стадія угоди')
+                + fld('Сума угоди (грн)', inp('amount', d.amount || '', '0'))
+                + fld('ID Воронки (опційно)', inp('pipelineId', d.pipelineId, ''));
             break;
         case 'end':
             fields = fld('Фінальне повідомлення', ta('text', d.text, 'Дякуємо! Ми зв\'яжемось.', 2));
@@ -2191,9 +2197,10 @@ window.fcApplyNodeData = function(nodeId) {
             node.config.exitVar = get('exitVar');
             break;
         case 'crm':
-            node.config.dealTitle = get('dealTitle');
-            node.config.amount = parseFloat(get('amount'))||0;
-            node.config.pipelineId = get('pipelineId');
+            node.config.dealTitle = get('dealTitle') || '{{name}} — лід з бота';
+            node.config.dealStage = get('dealStage') || 'new';
+            node.config.amount = parseFloat(get('amount')) || 0;
+            node.config.pipelineId = get('pipelineId') || null;
             break;
         case 'end':
             node.config.text = get('text');
