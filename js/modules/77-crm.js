@@ -337,6 +337,54 @@ window.crmResetFilters = function() {
     else _renderListView();
 };
 
+// ── Експорт угод в CSV ─────────────────────────────────────
+window.crmExportCSV = function() {
+    const deals = _filteredDeals();
+    if (!deals.length) { if (typeof showToast === 'function') showToast('Немає угод для експорту', 'error'); return; }
+
+    const stages = crm.pipeline?.stages || [];
+    const stageMap = {};
+    stages.forEach(s => { stageMap[s.id] = s.label || s.id; });
+    const userMap = {};
+    (typeof users !== 'undefined' ? users : []).forEach(u => { userMap[u.id] = u.name || u.email || u.id; });
+
+    const headers = ['Назва', 'Клієнт', 'Телефон', 'Email', 'Стадія', 'Сума', 'Валюта', 'Відповідальний', 'Джерело', 'Теги', 'Дата створення', 'Остання активність'];
+
+    const rows = deals.map(d => [
+        d.title || d.clientName || '',
+        d.clientName || '',
+        d.phone || '',
+        d.email || '',
+        stageMap[d.stage] || d.stage || '',
+        d.amount || 0,
+        d.currency || 'UAH',
+        userMap[d.assigneeId || d.assignedToId] || '',
+        d.source || '',
+        (d.tags || []).join('; '),
+        d.createdAt?.toDate ? d.createdAt.toDate().toLocaleDateString('uk-UA') : '',
+        d.updatedAt?.toDate ? d.updatedAt.toDate().toLocaleDateString('uk-UA') : '',
+    ]);
+
+    // BOM для коректного відображення кирилиці в Excel
+    const BOM = '﻿';
+    const csv = BOM + [headers, ...rows].map(row =>
+        row.map(cell => '"' + String(cell).replace(/"/g, '""') + '"').join(',')
+    ).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'crm_deals_' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    if (typeof showToast === 'function') showToast('Експортовано ' + deals.length + ' угод', 'success');
+};
+
+
 window.crmSetViewMode = function(mode) {
     crm.viewMode = mode;
     const isMobile = window.innerWidth < 768;
@@ -522,13 +570,17 @@ function _kanbanFilterBar() {
                 oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
         </div>
+        <button onclick="crmExportCSV()" title="Експорт в CSV"
+            style="padding:0.25rem 0.6rem;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;font-size:0.73rem;cursor:pointer;font-weight:600;margin-left:auto;">
+            ↓ CSV
+        </button>
         ${hasFilter ? `
         <button onclick="crmResetFilters()"
             style="padding:0.25rem 0.6rem;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;border-radius:6px;font-size:0.73rem;cursor:pointer;font-weight:600;">
             × Скинути фільтри
         </button>
         <span style="font-size:0.72rem;color:#6b7280;font-weight:600;">${_filteredDeals().length} / ${crm.deals.length}</span>
-        ` : `<span style="font-size:0.72rem;color:#9ca3af;margin-left:auto;">${crm.deals.length} угод</span>`}
+        ` : `<span style="font-size:0.72rem;color:#9ca3af;">${crm.deals.length} угод</span>`}
     </div>`;
 }
 
@@ -546,8 +598,13 @@ function _renderKanban() {
 
     // FIX B: попередження якщо угод >= ліміт (500)
     const limitBanner = crm._dealsLimitReached
-        ? `<div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:0.4rem 1rem;font-size:0.72rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️ Показано перші 500 угод. Виграні/програні угоди краще архівувати для покращення продуктивності.
+        ? `<div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:0.4rem 1rem;font-size:0.72rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Показано перші 500 угод.
+            <button onclick="crmLoadMore()" style="padding:2px 10px;background:#f59e0b;color:white;border:none;border-radius:5px;cursor:pointer;font-size:0.72rem;font-weight:600;">
+                Завантажити ще 500
+            </button>
+            <span style="color:#b45309;">Для кращої продуктивності архівуйте закриті угоди.</span>
            </div>` : '';
 
     const stages    = (crm.pipeline?.stages || []).slice().sort((a,b) => a.order - b.order);
@@ -1158,7 +1215,7 @@ window.crmBulkDelete = async function() {
     const count = crm.selectedIds.size;
     const confirmed = await (window.showConfirmModal
         ? showConfirmModal('Видалити ' + count + ' угод? Цю дію не можна скасувати.', { danger: true })
-        : Promise.resolve(confirm('Видалити ' + count + ' угод?')));
+        : showConfirmModal('Видалити ' + count + ' угод?', {danger:true}));
     if (!confirmed) return;
     const ids = Array.from(crm.selectedIds);
     let done = 0;
@@ -3149,7 +3206,7 @@ window.crmDeleteClient = async function(clientId) {
     // FIX #12: використовуємо showConfirmModal як весь інший код, не нативний confirm()
     const confirmed = await (window.showConfirmModal
         ? showConfirmModal(window.t('crmDeleteClient'), { danger: true })
-        : Promise.resolve(confirm(window.t('crmDeleteClient'))));
+        : showConfirmModal(window.t('crmDeleteClient'), {danger:true}));
     if (!confirmed) return;
     try {
         await window.companyRef().collection(window.DB_COLS.CRM_CLIENTS).doc(clientId).delete();
@@ -3942,7 +3999,7 @@ window.crmMoveDealToPipeline = async function(dealId, targetPipelineId, targetPi
     const _moveMsg = `Перемістити "${deal.clientName || deal.title || 'лід'}" у воронку "${targetPipelineName}"?`;
     const confirmed = await (window.showConfirmModal
         ? showConfirmModal(_moveMsg, { danger: false })
-        : Promise.resolve(confirm(_moveMsg)));
+        : showConfirmModal(_moveMsg, {danger:true}));
     if (!confirmed) return;
 
     try {
@@ -4010,6 +4067,36 @@ function _subscribeDeals() {
             // activities і settings не ре-рендеримо автоматично — вони мають власне завантаження
         }, err => { console.error('[CRM deals]', err); crm.loading = false; });
 }
+
+
+// ── Завантажити більше угод ────────────────────────────────
+window.crmLoadMore = async function() {
+    if (!crm.pipeline || crm._loadingMore) return;
+    crm._loadingMore = true;
+    const DEALS_LIMIT = 500;
+    try {
+        const lastDeal = crm.deals[crm.deals.length - 1];
+        if (!lastDeal) return;
+        const lastSnap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
+            .doc(lastDeal.id).get();
+        const moreSnap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
+            .where('pipelineId','==', crm.pipeline.id)
+            .orderBy('createdAt','desc')
+            .startAfter(lastSnap)
+            .limit(DEALS_LIMIT).get();
+        const morDeals = moreSnap.docs.map(d => ({id:d.id,...d.data()}));
+        crm.deals = [...crm.deals, ...morDeals];
+        crm._dealsLimitReached = moreSnap.docs.length >= DEALS_LIMIT;
+        if (typeof showToast === 'function') showToast(`Завантажено ще ${morDeals.length} угод`, 'success');
+        if (crm.subTab === 'kanban') _renderKanban();
+        else _renderListView();
+    } catch(e) {
+        console.error('[CRM loadMore]', e);
+        if (typeof showToast === 'function') showToast('Помилка завантаження', 'error');
+    } finally {
+        crm._loadingMore = false;
+    }
+};
 
 window.crmCreatePipeline = async function() {
     const name = await (window.showInputModal ? showInputModal(window.t('crmNewPipelineName'), '', {placeholder: window.t('enterName2')}) : (async()=>prompt(window.t('crmNewPipelineName')))());

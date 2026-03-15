@@ -362,7 +362,7 @@ module.exports = async (req, res) => {
                 if (!contactsSnap.empty) {
                     const cl = contactsSnap.docs[0];
                     clientId   = cl.id;
-                    clientName = cl.data().name || normalPhone;
+                    clientName = cl.data()?.name || normalPhone;
                 } else {
                     isNewClient = true;
                     const ref = await compRef.collection('crm_clients').add({
@@ -388,7 +388,7 @@ module.exports = async (req, res) => {
                     console.warn(`[webhook:${channel}] composite index missing:`, e.message);
                     const allDeals = await compRef.collection('crm_deals')
                         .where('clientId', '==', clientId).limit(10).get();
-                    const active = allDeals.docs.find(d => d.data().status === 'active');
+                    const active = allDeals.docs.find(d => d.data()?.status === 'active');
                     openDealSnap = active ? { empty: false, docs: [active] } : { empty: true };
                 }
 
@@ -399,7 +399,7 @@ module.exports = async (req, res) => {
                     const pipelineSnap = await compRef.collection('crm_pipeline')
                         .where('isDefault','==',true).limit(1).get();
                     const pipelineId   = pipelineSnap.empty ? '' : pipelineSnap.docs[0].id;
-                    const stages       = pipelineSnap.empty ? [] : (pipelineSnap.docs[0].data().stages || []);
+                    const stages       = pipelineSnap.empty ? [] : (pipelineSnap.docs[0].data()?.stages || []);
                     const firstStageId = stages.length > 0 ? (stages[0].id || '') : '';
                     const dealTitle    = callType === 'missed'
                         ? `Пропущений дзвінок — ${clientName}`
@@ -507,7 +507,7 @@ module.exports = async (req, res) => {
         if (!botsSnap.empty) {
             const bd = botsSnap.docs[0];
             botDocId = bd.id;
-            botToken = bd.data().token || bd.data().botToken;
+            botToken = bd.data()?.token || bd.data()?.botToken;
         }
         if (!botToken) {
             botToken = channel === 'viber'
@@ -596,6 +596,10 @@ module.exports = async (req, res) => {
             currentNodeId: null, waitingForInput: null,
             data: {}, aiHistory: [], tags: [],
         };
+        // FIX: guard для session.data — завжди має бути об'єктом
+        if (!session.data || typeof session.data !== 'object') session.data = {};
+        if (!Array.isArray(session.aiHistory)) session.aiHistory = [];
+        if (!Array.isArray(session.tags)) session.tags = [];
         // Завжди оновлюємо botId (може змінитись якщо компанія має кілька ботів)
         if (botDocId) session.botId = botDocId;
         // FIX CE: refresh senderName/username (user may rename in Telegram)
@@ -643,7 +647,7 @@ module.exports = async (req, res) => {
                     const _clientRef = _newClientRef;
                     const _pip = _pipSnap && !_pipSnap.empty ? _pipSnap.docs[0] : null;
                     const _pipId = _pip ? _pip.id : '';
-                    const _stages = _pip ? (_pip.data().stages || []) : [];
+                    const _stages = _pip ? (_pip.data()?.stages || []) : [];
                     // FIX: якщо немає стадій — перевіряємо pipeline ще раз і беремо першу стадію
                     const _stageId = _stages.length ? (_stages[0].id || 'new') : 'new';
 
@@ -745,7 +749,7 @@ module.exports = async (req, res) => {
             if (!flow) {
                 const allFlows = await flowsRef.where('status', '==', 'active').limit(20).get();
                 for (const fd of allFlows.docs) {
-                    const trigger = fd.data().triggerKeyword || '/start';
+                    const trigger = fd.data()?.triggerKeyword || '/start';
                     if (isStart || normalized.text === trigger) {
                         flow = { id: fd.id, botId: currentBotId, ...fd.data() };
                         break;
@@ -793,7 +797,7 @@ module.exports = async (req, res) => {
         ]);
         if (_canvasDoc?.exists) flow.canvasData = _canvasDoc.data();
         const nodePromptsMap = {};
-        promptsSnap.forEach(doc => { nodePromptsMap[doc.id] = doc.data().aiSystem || ''; });
+        promptsSnap.forEach(doc => { nodePromptsMap[doc.id] = doc.data()?.aiSystem || ''; });
         // Оновлюємо _nodes після можливого завантаження canvasData
         const restorePrompts = (nodesList) => nodesList.map(n => {
             // FIX 2+3: перевіряємо обидва місця де може бути __ref
@@ -1171,7 +1175,7 @@ module.exports = async (req, res) => {
                                     .where('isDefault','==',true).limit(1).get();
                                 if (_tdPipSnap && !_tdPipSnap.empty) {
                                     ccPipelineId = _tdPipSnap.docs[0].id;
-                                    const ccStages = _tdPipSnap.docs[0].data().stages || [];
+                                    const ccStages = _tdPipSnap.docs[0].data()?.stages || [];
                                     const ccStage = ccStages.find(s => s.id === targetStage) || ccStages[0];
                                     ccStageColor = ccStage?.color || '#6b7280';
                                     ccProbability = ccStage?.probability || 10;
@@ -2018,7 +2022,7 @@ async function finish(session, flow, compRef, channel, compData = {}) {
                         .where('isDefault', '==', true).limit(1).get().catch(() => null);
                     if (pipSnap && !pipSnap.empty) {
                         pipelineId = pipSnap.docs[0].id;
-                        firstStage = pipSnap.docs[0].data().stages?.[0] || firstStage;
+                        firstStage = pipSnap.docs[0].data()?.stages?.[0] || firstStage;
                     }
                 }
 

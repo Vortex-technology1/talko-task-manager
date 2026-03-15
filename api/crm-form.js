@@ -80,8 +80,26 @@ module.exports = async function handler(req, res) {
     if (formData.disabled) return res.status(403).json({ error: 'Форма деактивована' });
 
     const pipelineId = formData.pipelineId || null;
-    const stageId    = formData.stageId    || 'new';
     const assigneeId = formData.assigneeId || null;
+
+    // Якщо stageId не вказано в формі — беремо першу стадію з pipeline
+    let stageId = formData.stageId || null;
+    if (!stageId && pipelineId) {
+        const pipSnap = await db.doc(`companies/${companyId}/crm_pipeline/${pipelineId}`).get().catch(() => null);
+        const stages = pipSnap?.data()?.stages || [];
+        stageId = stages.length ? (stages[0].id || 'new') : 'new';
+    }
+    if (!stageId) {
+        // Fallback: беремо default pipeline
+        const defPipSnap = await db.collection(`companies/${companyId}/crm_pipeline`)
+            .where('isDefault', '==', true).limit(1).get().catch(() => null);
+        if (defPipSnap && !defPipSnap.empty) {
+            const stages = defPipSnap.docs[0].data()?.stages || [];
+            stageId = stages.length ? (stages[0].id || 'new') : 'new';
+        } else {
+            stageId = 'new';
+        }
+    }
 
     const now = admin.firestore.FieldValue.serverTimestamp();
 
@@ -119,9 +137,34 @@ module.exports = async function handler(req, res) {
             clientId = clientDoc.id;
         }
 
-        // 2. Створюємо угоду
+        // 2. Перевіряємо чи є вже відкрита угода для цього клієнта
+        let existingDealId = null;
+        if (clientId) {
+            const openDeal = await db.collection(`companies/${companyId}/crm_deals`)
+                .where('clientId', '==', clientId)
+                .where('status', '==', 'open')
+                .limit(1).get().catch(() => null);
+            if (openDeal && !openDeal.empty) {
+                existingDealId = openDeal.docs[0].id;
+                // Оновлюємо існуючу угоду — додаємо нотатку
+                await db.collection(`companies/${companyId}/crm_deals`).doc(existingDealId).update({
+                    updatedAt: now,
+                    lastFormSubmit: now,
+                }).catch(() => {});
+                await db.collection(`companies/${companyId}/crm_deals`).doc(existingDealId)
+                    .collection('history').add({
+                        type: 'note',
+                        text: `Повторна заявка з форми: ${formData.name || formId}${message ? '. ' + String(message).slice(0, 500) : ''}`,
+                        by: 'form:' + formId,
+                        at: now,
+                    }).catch(() => {});
+            }
+        }
+
+        // 3. Створюємо угоду (якщо немає відкритої)
         const dealsRef = db.collection(`companies/${companyId}/crm_deals`);
-        const dealDoc  = await dealsRef.add({
+        let dealDoc = null;
+        if (!existingDealId) dealDoc = await dealsRef.add({
             clientId:    clientId,
             clientName:  String(name).trim(),
             phone:       phone  || '',
@@ -142,7 +185,8 @@ module.exports = async function handler(req, res) {
             leadFormId:  formId,
         });
 
-        // 3. Лог створення в history
+        // 4. Лог створення в history (тільки для нової угоди)
+        if (!existingDealId && dealDoc) {
         await dealDoc.collection('history').add({
             type: 'created',
             text: `Лід з форми: ${formData.name || formId}`,
@@ -150,11 +194,62 @@ module.exports = async function handler(req, res) {
             at:   now,
         });
 
-        // 4. Лічильник заявок на формі
+        } // end if (!existingDealId)
+
+        // 5. Створюємо/оновлюємо contacts document для CRM чату
+        try {
+            const contactDocId = `form_${clientId}`;
+            await db.collection(`companies/${companyId}/contacts`).doc(contactDocId).set({
+                name:            String(name).trim(),
+                phone:           phone || '',
+                email:           email || '',
+                source:          source || formData.defaultSource || 'web_form',
+                channel:         'web_form',
+                crmClientId:     clientId,
+                lastMessage:     message ? String(message).slice(0, 500) : `Заявка з форми: ${formData.name || formId}`,
+                lastMessageAt:   now,
+                lastMessageFrom: 'user',
+                unreadCount:     1,
+                formId:          formId,
+                createdAt:       now,
+                updatedAt:       now,
+            }, { merge: true });
+        } catch(e) { console.warn('[crm-form] contacts doc:', e.message); }
+
+        // 6. Лічильник заявок на формі
         await formRef.update({
             submitCount: admin.firestore.FieldValue.increment(1),
             lastSubmitAt: now,
         }).catch(() => {});
+
+        // 6. Нотифікація власника/менеджера через Telegram
+        try {
+            const compSnap = await db.doc(`companies/${companyId}`).get().catch(() => null);
+            const compData = compSnap?.data() || {};
+            const tgToken = compData.adminBotToken || compData.botToken || null;
+            const chatIds = [];
+            if (compData.managerChatId) chatIds.push(String(compData.managerChatId));
+            if (compData.telegramChatId && !chatIds.includes(String(compData.telegramChatId)))
+                chatIds.push(String(compData.telegramChatId));
+
+            if (tgToken && chatIds.length > 0) {
+                const msgText = `🔔 Новий лід з форми!
+
+Ім'я: ${String(name).trim()}
+Телефон: ${phone || '-'}
+Email: ${email || '-'}
+Форма: ${formData.name || formId}
+Повідомлення: ${message ? String(message).slice(0, 200) : '-'}`;
+                for (const chatId of chatIds) {
+                    await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: chatId, text: msgText }),
+                        signal: AbortSignal.timeout(8000),
+                    }).catch(e => console.warn('[crm-form] tg notify:', e.message));
+                }
+            }
+        } catch(e) { console.warn('[crm-form] notify error:', e.message); }
 
         return res.status(200).json({
             ok: true,

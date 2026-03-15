@@ -104,15 +104,15 @@ async function loadSuperadminData() {
 
                 const eventCounts = {};
                 eventsSnap.docs.forEach(d => {
-                    const n = d.data().event_name || d.data().type || '?';
+                    const n = d.data()?.event_name || d.data()?.type || '?';
                     eventCounts[n] = (eventCounts[n] || 0) + 1;
                 });
 
                 const users = usersSnap.docs.map(d => ({id:d.id,...d.data()}));
                 const activeTasks  = tasksSnap.docs.length;
-                const overdueTasks = tasksSnap.docs.filter(d => d.data().deadlineDate && d.data().deadlineDate < today).length;
-                const todayTokens  = aiUsageTodaySnap.docs.reduce((s,d)=>s+(d.data().tokens||0),0);
-                const monthTokens  = aiUsageMonthSnap.docs.reduce((s,d)=>s+(d.data().tokens||0),0);
+                const overdueTasks = tasksSnap.docs.filter(d => d.data()?.deadlineDate && d.data()?.deadlineDate < today).length;
+                const todayTokens  = aiUsageTodaySnap.docs.reduce((s,d)=>s+(d.data()?.tokens||0),0);
+                const monthTokens  = aiUsageMonthSnap.docs.reduce((s,d)=>s+(d.data()?.tokens||0),0);
                 const snap         = snapshotSnap?.exists ? snapshotSnap.data() : null;
 
                 // ── Health Score (0–100) ─────────────────────────────
@@ -133,11 +133,11 @@ async function loadSuperadminData() {
                 health = Math.max(0, Math.min(100, health));
 
                 // ── Feature adoption (які вкладки відкривали) ────────
-                const usedModules = new Set(eventsSnap.docs.map(d => d.data().module || d.data().tab || '').filter(Boolean));
+                const usedModules = new Set(eventsSnap.docs.map(d => d.data()?.module || d.data()?.tab || '').filter(Boolean));
 
                 // ── Last activity ────────────────────────────────────
                 const lastEvent = eventsSnap.docs.length > 0
-                    ? Math.max(...eventsSnap.docs.map(d => d.data()._localTs || 0))
+                    ? Math.max(...eventsSnap.docs.map(d => d.data()?._localTs || 0))
                     : (c.createdAt?.toMillis?.() || 0);
                 const daysSinceActivity = lastEvent > 0
                     ? Math.floor((Date.now() - lastEvent) / 86400000)
@@ -1090,7 +1090,7 @@ window.updateAILimit = async function(companyId, field, value) {
 window.openFeatureFlags = async function(companyId, companyName) {
     try {
         const doc = await firebase.firestore().collection('companies').doc(companyId).get();
-        const features = doc.data().features || {};
+        const features = doc.data()?.features || {};
         const checks = FEATURES.map(f => `
             <label style="display:flex;align-items:center;gap:0.75rem;padding:0.55rem 0;border-bottom:1px solid #f3f4f6;cursor:pointer;">
                 <input type="checkbox" ${features[f.key] !== false ? 'checked' : ''}
