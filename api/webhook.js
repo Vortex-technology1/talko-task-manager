@@ -966,7 +966,20 @@ module.exports = async (req, res) => {
                     historyLimit:         n.config?.historyLimit ?? n.historyLimit ?? 6,
                     maxTokens:            n.config?.maxTokens || n.maxTokens || null,
                     firstMessage:         n.config?.firstMessage || n.firstMessage || '',
-                    firstMessageEnabled:  n.config?.firstMessageEnabled || n.firstMessageEnabled || false,
+                    firstMessageEnabled:  !!(n.config?.firstMessageEnabled || n.firstMessageEnabled),
+                    saveAs:               n.config?.saveAs || n.saveAs || null,
+                    fallback:             n.config?.fallback || n.fallback || null,
+                    // Filter/condition
+                    condVar:   n.config?.condVar || n.condVar || n.config?.conditionField || n.conditionField || null,
+                    condOp:    n.config?.condOp  || n.condOp  || n.config?.conditionOp    || n.conditionOp    || null,
+                    condVal:   n.config?.condVal  || n.condVal  || n.config?.conditionValue  || n.conditionValue  || null,
+                    trueNode:  n.config?.trueNode  || n.trueNode  || null,
+                    falseNode: n.config?.falseNode || n.falseNode || null,
+                    // Action
+                    actionType:    n.config?.actionType    || n.actionType    || null,
+                    actionPayload: n.config?.actionPayload || n.actionPayload || null,
+                    notifyChatId:  n.config?.notifyChatId  || n.notifyChatId  || null,
+                    notifyText:    n.config?.notifyText    || n.notifyText    || null,
                     saveAs:               n.config?.saveAs || n.saveAs || null,
                     fallback:             n.config?.fallback || n.fallback || null,
                     // Filter/condition fields
