@@ -1698,9 +1698,14 @@ function renderPropPanel() {
                 return arr.map(item => {
                     if (Array.isArray(item) && item.length >= 2) return [String(item[0]), String(item[1])];
                     if (typeof item === 'string') return [item, item];
-                    if (item && typeof item === 'object') return [String(item.id||item.value||''), String(item.name||item.label||item.id||'')];
+                    // Firestore superadmin format: {id: 'gpt-4o', name: 'GPT-4o'}
+                    if (item && typeof item === 'object') {
+                        const v = String(item.id || item.value || item.model || '');
+                        const l = String(item.name || item.label || item.display_name || v);
+                        return [v, l];
+                    }
                     return [String(item), String(item)];
-                }).filter(([v]) => v);
+                }).filter(([v]) => v && v.length > 0);
             };
             const _baseModels = _normalizeModels(allModels[aiProvider] || fallbackModels[aiProvider] || fallbackModels.openai);
             // FIX 2: якщо збережена модель не в списку — додаємо її щоб не втратити
@@ -1716,8 +1721,34 @@ function renderPropPanel() {
                         if (snap.exists && snap.data()) {
                             const data = snap.data();
                             const valid = ['openai','anthropic','google'].some(p => Array.isArray(data[p]) && data[p].length > 0);
-                            window._cachedAiModels = valid ? data : null;
-                            if (fc.selected) renderPropPanel();
+                            // FIX 4: відфільтровуємо моделі що не існують (gpt-5, gpt-5.4 тощо)
+                            // Ці фейкові назви призводять до помилок API
+                            const _fakeModels = /^gpt-5\.?[0-9]?$|^gpt-5|gpt-5\.4|gpt-5\.2|gpt-5-mini-2025/;
+                            if (valid) {
+                                const cleaned = {};
+                                Object.keys(data).forEach(provider => {
+                                    if (!Array.isArray(data[provider])) return;
+                                    cleaned[provider] = data[provider].filter(m => {
+                                        const id = Array.isArray(m) ? m[0] : (m?.id || '');
+                                        return !_fakeModels.test(id);
+                                    });
+                                });
+                                window._cachedAiModels = cleaned;
+                            } else {
+                                window._cachedAiModels = null;
+                            }
+                            // FIX: зберігаємо поточний вибір моделі перед перемалюванням
+                            // щоб async завантаження не скидало вибір юзера
+                            const _savedModelBeforeRedraw = document.getElementById('fcp_aiModel')?.value;
+                            if (fc.selected) {
+                                // Застосовуємо в node.config щоб збережений вибір не загубився
+                                const _curNode = fc.nodes.find(n => n.id === fc.selected);
+                                if (_curNode && _savedModelBeforeRedraw) {
+                                    _curNode.config = _curNode.config || {};
+                                    _curNode.config.aiModel = _savedModelBeforeRedraw;
+                                }
+                                renderPropPanel();
+                            }
                         }
                     }).catch(() => { window._cachedAiModels = null; });
             }

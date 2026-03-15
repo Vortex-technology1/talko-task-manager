@@ -1150,19 +1150,18 @@ window.openGlobalAISettings = async function() {
         const saSettings = saDoc.exists ? saDoc.data() : {};
         const platformKeyStored = !!saSettings.openaiApiKey;
 
-        // Дефолтні моделі якщо ще немає в Firebase
+        // Дефолтні моделі — реальні назви API (не маркетингові)
         const defaultModels = {
             openai: [
-                ['gpt-5.4',      'GPT-5.4 (флагман)'],
-                ['gpt-5.2',      'GPT-5.2'],
-                ['gpt-5',        'GPT-5'],
-                ['gpt-5-mini',   'GPT-5 mini'],
-                ['gpt-4.1',      'GPT-4.1'],
-                ['gpt-4.1-mini', 'GPT-4.1 mini'],
-                ['gpt-4.1-nano', 'GPT-4.1 nano'],
-                ['o4-mini',      'o4-mini'],
-                ['o3',           'o3'],
+                ['gpt-4o-mini',  'GPT-4o mini — рекомендовано ✅'],
                 ['gpt-4o',       'GPT-4o'],
+                ['gpt-4.1-mini', 'GPT-4.1 mini'],
+                ['gpt-4.1',      'GPT-4.1'],
+                ['gpt-4.1-nano', 'GPT-4.1 nano'],
+                ['o1-mini',      'o1-mini'],
+                ['o1',           'o1'],
+                ['o3-mini',      'o3-mini'],
+                ['gpt-3.5-turbo','GPT-3.5 Turbo — найдешевший'],
                 ['gpt-4o-mini',  'GPT-4o mini'],
             ],
             anthropic: [
