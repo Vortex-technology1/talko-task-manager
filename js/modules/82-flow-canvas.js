@@ -1400,6 +1400,7 @@ window.fcTestAiNode = async function(nodeId) {
     try {
         let responseText = '';
 
+        window._lastAiUsage = null; // reset
         if (provider === 'openai' || model.startsWith('gpt') || model.startsWith('o4') || model.startsWith('o3')) {
             const r = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
@@ -1414,6 +1415,7 @@ window.fcTestAiNode = async function(nodeId) {
             const d = await r.json();
             if (!r.ok) throw new Error(d.error?.message || 'OpenAI error ' + r.status);
             responseText = d.choices?.[0]?.message?.content || '';
+            window._lastAiUsage = { prompt: d.usage?.prompt_tokens, completion: d.usage?.completion_tokens, total: d.usage?.total_tokens };
 
         } else if (provider === 'anthropic' || model.startsWith('claude')) {
             const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1458,6 +1460,7 @@ window.fcTestAiNode = async function(nodeId) {
                 <div style="background:#0f172a;border-radius:8px;padding:8px;font-size:12px;color:#94a3b8;margin-bottom:10px;">${testMsg}</div>
                 <div style="font-size:11px;color:#64748b;margin-bottom:6px;">Відповідь AI:</div>
                 <div style="background:#0f172a;border:1px solid #22c55e33;border-radius:8px;padding:10px;font-size:13px;color:white;line-height:1.6;white-space:pre-wrap;">${responseText}</div>
+                ${window._lastAiUsage ? `<div style="font-size:9px;color:#475569;margin-top:6px;">Токени: вхід ${window._lastAiUsage.prompt||'?'} + вихід ${window._lastAiUsage.completion||'?'} = ${window._lastAiUsage.total||'?'}</div>` : ''}
             </div>`;
         document.body.appendChild(overlay);
         overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
@@ -1710,6 +1713,9 @@ function renderPropPanel() {
             }
 
             const savedKey = d.aiApiKey || '';
+            // Перевіряємо чи є ключ компанії (для відображення статусу)
+            const _companyHasKey = !!(window.currentCompanyData?.[aiProvider + 'ApiKey']
+                || window.currentCompanyData?.[aiProvider + 'ApiKey']);
             const temp = d.temperature ?? 0.7;
             const histLim = d.historyLimit ?? 6;
             const firstMsg = d.firstMessage || '';
@@ -1738,16 +1744,39 @@ function renderPropPanel() {
                             ${p==='openai'?'OpenAI':p==='anthropic'?'Anthropic':'Google'}
                         </button>`).join('')}
                 </div>
-                <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;display:flex;align-items:center;gap:4px;">
-                    API Ключ
-                    <a href="${aiProvider==='openai'?'https://platform.openai.com/api-keys':aiProvider==='anthropic'?'https://console.anthropic.com/settings/keys':'https://aistudio.google.com/app/apikey'}"
-                        target="_blank" style="color:#3b82f6;font-size:9px;">Отримати →</a>
+                <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;display:flex;align-items:center;gap:4px;justify-content:space-between;">
+                    <span style="display:flex;align-items:center;gap:4px;">
+                        API Ключ
+                        <a href="${aiProvider==='openai'?'https://platform.openai.com/api-keys':aiProvider==='anthropic'?'https://console.anthropic.com/settings/keys':'https://aistudio.google.com/app/apikey'}"
+                            target="_blank" style="color:#3b82f6;font-size:9px;">Отримати →</a>
+                    </span>
+                    ${!savedKey && _companyHasKey ? '<span style="color:#22c55e;font-size:9px;">✅ Ключ компанії активний</span>' : ''}
+                    ${savedKey ? '<span style="color:#22c55e;font-size:9px;">✅ Встановлено</span>' : (!_companyHasKey ? '<span style="color:#ef4444;font-size:9px;">⚠️ Не встановлено</span>' : '')}
                 </div>
-                <input id="fcp_aiApiKey" type="password" value="${savedKey}"
-                    placeholder="${aiProvider==='openai'?'sk-...':aiProvider==='anthropic'?'sk-ant-...':'AIza...'}"
-                    style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
-                    border-radius:7px;color:white;font-size:11px;box-sizing:border-box;">
-                <div style="font-size:9px;color:#475569;margin-top:3px;">Ключ зберігається тільки для цього ланцюга</div>
+                <div style="position:relative;margin-bottom:4px;">
+                    <input id="fcp_aiApiKey" type="password" value="${savedKey}"
+                        placeholder="${aiProvider==='openai'?'sk-...':aiProvider==='anthropic'?'sk-ant-...':'AIza...'}"
+                        style="width:100%;padding:7px 30px 7px 8px;background:#1e293b;border:1px solid #334155;
+                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;">
+                    <span onclick="const i=document.getElementById('fcp_aiApiKey');i.type=i.type==='password'?'text':'password';"
+                        style="position:absolute;right:7px;top:50%;transform:translateY(-50%);
+                        cursor:pointer;font-size:12px;opacity:0.5;user-select:none;" title="Показати/приховати">👁</span>
+                </div>
+                <div style="font-size:9px;color:#475569;">
+                    Ключ для цього ланцюга.
+                    <span style="color:#22c55e;cursor:pointer;text-decoration:underline;"
+                        onclick="(async()=>{
+                            const k=document.getElementById('fcp_aiApiKey')?.value?.trim();
+                            if(!k||k.startsWith('•')){if(window.showToast)showToast('Введіть повний API ключ','warning');return;}
+                            const providerField='${aiProvider}ApiKey';
+                            try{
+                                await firebase.firestore().collection('companies').doc(window.currentCompanyId).update({[providerField]:k});
+                                if(window.showToast)showToast('✅ Збережено для всіх ланцюгів','success');
+                            }catch(e){if(window.showToast)showToast('Помилка: '+e.message,'error');}
+                        })()">
+                        Зберегти для всієї компанії →
+                    </span>
+                </div>
             </div>`
 
             // ── Системний промпт ──
