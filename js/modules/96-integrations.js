@@ -608,12 +608,16 @@ window.intgSave = async function(field, inputId, isSecret = true) {
     const val = document.getElementById(inputId)?.value.trim();
     if (!val) { if (typeof showToast === 'function') showToast(window.t('botsEnterValue'), 'error'); return; }
     try {
+        // FIX: Додано await для гарантії завершення update перед оновленням локального стану
         await window.companyRef()
             .update({ [field]: val, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+        // Оновлюємо локальний стан ТІЛЬКИ після успішного Firestore update
         intg.settings[field] = val;
         if (typeof showToast === 'function') showToast(window.t('savedOk'), 'success');
         _renderAll();
     } catch(e) {
+        // При помилці локальний стан не змінюється
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
 };

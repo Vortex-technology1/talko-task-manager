@@ -2185,15 +2185,17 @@ window.bpSendBroadcast = async function() {
 
     if (!text && !flowSendId) { if(window.showToast)showToast(window.t('botsEnterTextOrFlow'),'warning'); else alert(window.t('botsEnterTextOrFlow')); return; }
 
-    // Завантажуємо всіх цільових контактів з Firestore (не з bp.contacts)
-    let q = window.companyCol('contacts')
-        .where('botStatus', '!=', 'blocked');
+    // FIX: Обгорнуто в try/catch для обробки async помилок
+    try {
+        // Завантажуємо всіх цільових контактів з Firestore (не з bp.contacts)
+        let q = window.companyCol('contacts')
+            .where('botStatus', '!=', 'blocked');
 
-    if (channel) q = q.where('channel', '==', channel);
-    if (flowId)  q = q.where('flowId', '==', flowId);
-    q = q.limit(2000);
+        if (channel) q = q.where('channel', '==', channel);
+        if (flowId)  q = q.where('flowId', '==', flowId);
+        q = q.limit(2000);
 
-    const snap = await q.get();
+        const snap = await q.get();
     let targets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     // Фільтрація на клієнті
@@ -2349,8 +2351,23 @@ window.bpSendBroadcast = async function() {
             </div>`;
     }
 
-    if (typeof showToast === 'function') {
-        showToast(`${bcast.cancelled ? window.t('botsStopped') : window.t('onbDone')}: ${bcast.sent} надіслано, ${bcast.failed} помилок`, 'success');
+        if (typeof showToast === 'function') {
+            showToast(`${bcast.cancelled ? window.t('botsStopped') : window.t('onbDone')}: ${bcast.sent} надіслано, ${bcast.failed} помилок`, 'success');
+        }
+    } catch (e) {
+        // FIX: Обробка async помилок
+        console.error('[83-bots-contacts] bpSendBroadcast error:', e);
+        bcast.running = false;
+        if (typeof showToast === 'function') {
+            showToast('Помилка розсилки: ' + e.message, 'error');
+        } else {
+            alert('Помилка розсилки: ' + e.message);
+        }
+        // Повертаємо UI в початковий стан
+        const sendBtn = document.getElementById('bcastSendBtn');
+        const progress = document.getElementById('bcastProgress');
+        if (sendBtn) sendBtn.style.display = '';
+        if (progress) progress.style.display = 'none';
     }
 };
 

@@ -13,15 +13,25 @@
     window.openFunnelEditorModule = async function (funnelId) {
         funnelEditorId = funnelId;
 
-        // Load funnel
-        const doc = await window.companyRef()
-            .collection(window.DB_COLS?.FUNNELS || 'funnels').doc(funnelId).get();
+        // Load funnel (FIX: додано try/catch для async помилок)
+        try {
+            const doc = await window.companyRef()
+                .collection(window.DB_COLS?.FUNNELS || 'funnels').doc(funnelId).get();
 
-        if (!doc.exists) { if(window.showToast)showToast('Воронку не знайдено','warning'); else alert('Воронку не знайдено'); return; }
-        funnelEditorData = { id: doc.id, ...doc.data() };
-        funnelSteps = JSON.parse(JSON.stringify(funnelEditorData.steps || []));
+            if (!doc.exists) {
+                if(window.showToast) showToast('Воронку не знайдено','warning');
+                else alert('Воронку не знайдено');
+                return;
+            }
+            funnelEditorData = { id: doc.id, ...doc.data() };
+            funnelSteps = JSON.parse(JSON.stringify(funnelEditorData.steps || []));
 
-        renderFunnelEditorModal();
+            renderFunnelEditorModal();
+        } catch (e) {
+            console.error('[79-funnels] openFunnelEditorModule error:', e);
+            if(window.showToast) showToast('Помилка завантаження: ' + e.message, 'error');
+            else alert('Помилка завантаження воронки');
+        }
     };
 
     function renderFunnelEditorModal() {
