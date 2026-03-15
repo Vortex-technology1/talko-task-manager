@@ -18,7 +18,7 @@
                 timeTrackerTaskId = editingId;
                 const btn = document.getElementById('timeTrackBtn');
                 btn.style.background = '#ef4444';
-                btn.innerHTML = '<i data-lucide="square" class="icon icon-sm"></i> <span>' + t('btnStop') + '</span>';
+                btn.innerHTML = '<i data-lucide="square" class="icon icon-sm"></i> <span>' + window.t('btnStop') + '</span>';
                 refreshIcons();
                 
                 window.timeTrackerInterval = setInterval(() => {
@@ -52,7 +52,7 @@
         
         async function addManualTime() {
             if (!editingId) return;
-            const minutes = await (window.showInputModal ? showInputModal(t('howManyMinutes'), '', {placeholder: 'Наприклад: 30'}) : (async()=>prompt(t('howManyMinutes')))());
+            const minutes = await (window.showInputModal ? showInputModal(window.t('howManyMinutes'), '', {placeholder: 'Наприклад: 30'}) : (async()=>prompt(window.t('howManyMinutes')))());
             if (minutes === null) return;
             const mins = parseInt(minutes);
             if (isNaN(mins) || mins <= 0) return;
@@ -81,7 +81,7 @@
                 renderTimeTracking(task);
             } catch (e) {
                 console.error('addTimeEntry error:', e);
-                showToast(t('error') + ': ' + e.message, 'error');
+                showToast(window.t('error') + ': ' + e.message, 'error');
             }
         }
         

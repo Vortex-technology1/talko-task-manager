@@ -58,11 +58,11 @@
                 <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:1rem;margin-bottom:1rem;">
                     <div style="display:flex;align-items:center;gap:0.5rem;color:#dc2626;font-weight:600;margin-bottom:0.5rem;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        ${t('overdueStatus')}: ${overdueTasks.length}
+                        ${window.t('overdueStatus')}: ${overdueTasks.length}
                     </div>
                     <div style="font-size:0.85rem;color:#7f1d1d;">
                         ${overdueTasks.slice(0, 3).map(t => `• ${esc(t.title)}`).join('<br>')}
-                        ${overdueTasks.length > 3 ? `<br><i>+${overdueTasks.length - 3} ${t('moreItems')}...</i>` : ''}
+                        ${overdueTasks.length > 3 ? `<br><i>+${overdueTasks.length - 3} ${window.t('moreItems')}...</i>` : ''}
                     </div>
                 </div>
             ` : '';
@@ -71,11 +71,11 @@
                 <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:1rem;margin-bottom:1rem;">
                     <div style="display:flex;align-items:center;gap:0.5rem;color:#16a34a;font-weight:600;margin-bottom:0.5rem;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        ${t('forToday')}: ${todayTasks.length}
+                        ${window.t('forToday')}: ${todayTasks.length}
                     </div>
                     <div style="font-size:0.85rem;color:#166534;">
                         ${todayTasks.slice(0, 5).map(t => `• ${esc(t.title)}`).join('<br>')}
-                        ${todayTasks.length > 5 ? `<br><i>+${todayTasks.length - 5} ${t('moreItems')}...</i>` : ''}
+                        ${todayTasks.length > 5 ? `<br><i>+${todayTasks.length - 5} ${window.t('moreItems')}...</i>` : ''}
                     </div>
                 </div>
             ` : '';
@@ -85,11 +85,11 @@
                 <div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:12px;padding:1rem;margin-bottom:1rem;">
                     <div style="display:flex;align-items:center;gap:0.5rem;color:#7c3aed;font-weight:600;margin-bottom:0.5rem;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> ${t('newFromProcesses')}: ${processTasksNew.length}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> ${window.t('newFromProcesses')}: ${processTasksNew.length}
                     </div>
                     <div style="font-size:0.85rem;color:#5b21b6;">
                         ${processTasksNew.slice(0, 3).map(t => `• ${esc(t.title)}`).join('<br>')}
-                        ${processTasksNew.length > 3 ? `<br><i>+${processTasksNew.length - 3} ${t('moreItems')}...</i>` : ''}
+                        ${processTasksNew.length > 3 ? `<br><i>+${processTasksNew.length - 3} ${window.t('moreItems')}...</i>` : ''}
                     </div>
                 </div>
             ` : '';
@@ -100,8 +100,8 @@
                         <div style="width:60px;height:60px;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         </div>
-                        <h2 style="margin:0;font-size:1.3rem;color:var(--dark);">${t('greeting')}, ${esc(currentUserData?.name?.split(' ')[0] || currentUser?.email?.split('@')[0] || '')}!</h2>
-                        <p style="margin:0.25rem 0 0;color:var(--gray);font-size:0.9rem;">${t('yourTasksToday')}</p>
+                        <h2 style="margin:0;font-size:1.3rem;color:var(--dark);">${window.t('greeting')}, ${esc(currentUserData?.name?.split(' ')[0] || currentUser?.email?.split('@')[0] || '')}!</h2>
+                        <p style="margin:0.25rem 0 0;color:var(--gray);font-size:0.9rem;">${window.t('yourTasksToday')}</p>
                     </div>
                     
                     ${processHtml}
@@ -110,7 +110,7 @@
                     
                     <button onclick="closeMyDayPopup()" style="width:100%;padding:0.9rem;background:var(--primary);color:white;border:none;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                        ${t('startWork')}
+                        ${window.t('startWork')}
                     </button>
                 </div>
             `;

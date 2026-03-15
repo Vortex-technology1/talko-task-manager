@@ -186,7 +186,7 @@ function mountCanvas() {
         box-shadow:0 2px 8px rgba(0,0,0,0.3);">
 
         <!-- Назад -->
-        <button id="fcBtnBack" title="${t('botsFlowBack')}"
+        <button id="fcBtnBack" title="${window.t('botsFlowBack')}"
             style="padding:6px 12px;background:#1e293b;border:1px solid #334155;border-radius:8px;
             color:#cbd5e1;cursor:pointer;display:flex;align-items:center;gap:6px;
             font-size:12px;font-weight:600;transition:all 0.15s;white-space:nowrap;"
@@ -210,14 +210,14 @@ function mountCanvas() {
 
         <!-- Undo/Redo група -->
         <div style="display:flex;gap:2px;background:#1e293b;border-radius:8px;padding:3px;border:1px solid #334155;">
-            <button id="fcBtnUndo" title="${t('botsCanvasUndo')}"
+            <button id="fcBtnUndo" title="${window.t('botsCanvasUndo')}"
                 style="padding:5px 9px;background:transparent;border:none;border-radius:6px;
                 color:#64748b;cursor:pointer;display:flex;align-items:center;transition:all 0.15s;"
                 onmouseenter="this.style.background='#334155';this.style.color='#e2e8f0'"
                 onmouseleave="this.style.background='transparent';this.style.color='#64748b'">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
             </button>
-            <button id="fcBtnRedo" title="${t('botsCanvasRedo')}"
+            <button id="fcBtnRedo" title="${window.t('botsCanvasRedo')}"
                 style="padding:5px 9px;background:transparent;border:none;border-radius:6px;
                 color:#64748b;cursor:pointer;display:flex;align-items:center;transition:all 0.15s;"
                 onmouseenter="this.style.background='#334155';this.style.color='#e2e8f0'"
@@ -239,7 +239,7 @@ function mountCanvas() {
                 color:#94a3b8;cursor:pointer;font-size:15px;font-weight:300;line-height:1;transition:all 0.15s;"
                 onmouseenter="this.style.background='#334155';this.style.color='white'"
                 onmouseleave="this.style.background='transparent';this.style.color='#94a3b8'">+</button>
-            <button id="fcBtnFit" title="${t('botsCanvasFit')}"
+            <button id="fcBtnFit" title="${window.t('botsCanvasFit')}"
                 style="padding:5px 9px;background:transparent;border:none;border-radius:6px;
                 color:#64748b;cursor:pointer;display:flex;align-items:center;transition:all 0.15s;"
                 onmouseenter="this.style.background='#334155';this.style.color='#e2e8f0'"
@@ -1794,7 +1794,7 @@ async function saveFlow() {
     if (window._fcSaving) return; // guard проти подвійного збереження
     window._fcSaving = true;
     const btn = document.getElementById('fcBtnSave');
-    if (btn) btn.textContent = t('botsFlowSaving');
+    if (btn) btn.textContent = window.t('botsFlowSaving');
 
     // Build canvasData (source of truth)
     const canvasData = {
@@ -1906,7 +1906,7 @@ async function saveFlow() {
                 triggerKeyword: triggerKeyword || '/start',
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
-        if (typeof showToast === 'function') showToast(t('botsFlowSaved'), 'success');
+        if (typeof showToast === 'function') showToast(window.t('botsFlowSaved'), 'success');
         // Перемальовуємо canvas після збереження — preview на вузлах оновлюється
         renderAll();
     } catch(e) {

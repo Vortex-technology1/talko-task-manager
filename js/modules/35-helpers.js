@@ -25,7 +25,7 @@
             // Фільтруємо архівовані функції
             const activeFunctions = functions.filter(f => f.status !== 'archived');
             
-            if (tf) tf.innerHTML = `<option value="">${t('noFunction')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (tf) tf.innerHTML = `<option value="">${window.t('noFunction')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
             if (ta) {
                 let usersList = users.length > 0 ? users : [];
                 // Employee always sees self in assignee list
@@ -37,20 +37,20 @@
                     const selfUser = usersList.find(u => u.id === currentUser?.uid);
                     const others = usersList.filter(u => u.id !== currentUser?.uid);
                     const reordered = selfUser ? [selfUser, ...others] : usersList;
-                    ta.innerHTML = `<option value="">${t('select')}</option>` + reordered.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+                    ta.innerHTML = `<option value="">${window.t('select')}</option>` + reordered.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
                 } else {
-                    ta.innerHTML = `<option value="">${t('select')}</option>` + usersList.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+                    ta.innerHTML = `<option value="">${window.t('select')}</option>` + usersList.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
                 }
             }
-            if (ff) ff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
-            if (af) af.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
-            if (raf) raf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
-            if (rff) rff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
-            if (caf) caf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
-            if (cff) cff.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
-            if (paf) paf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (ff) ff.innerHTML = `<option value="">${window.t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (af) af.innerHTML = `<option value="">${window.t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (raf) raf.innerHTML = `<option value="">${window.t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (rff) rff.innerHTML = `<option value="">${window.t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (caf) caf.innerHTML = `<option value="">${window.t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (cff) cff.innerHTML = `<option value="">${window.t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+            if (paf) paf.innerHTML = `<option value="">${window.t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             const rta = document.getElementById('regularTaskAssignee');
-            if (rta) rta.innerHTML = `<option value="">${t('fromFunctionAuto')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            if (rta) rta.innerHTML = `<option value="">${window.t('fromFunctionAuto')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             // P2 FIX: відновлюємо збережені фільтри після заповнення selectів
             try {
                 const saved = JSON.parse(sessionStorage.getItem('talko_filters') || '{}');
@@ -405,7 +405,7 @@
             const avgTime = countWithTime > 0 ? Math.round(totalTime / countWithTime) : 0;
             const avgHours = Math.floor(avgTime / 60);
             const avgMins = avgTime % 60;
-            document.getElementById('analyticsAvgTime').textContent = avgTime > 0 ? `${avgHours > 0 ? avgHours + window.t('hourShortG') + ' ' : ''}${avgMins}${t('minShortM')}` : '-';
+            document.getElementById('analyticsAvgTime').textContent = avgTime > 0 ? `${avgHours > 0 ? avgHours + window.t('hourShortG') + ' ' : ''}${avgMins}${window.t('minShortM')}` : '-';
             
             // Статистика по статусах
             const byStatus = {
@@ -495,10 +495,10 @@
             
             return `<div style="background:white;border-radius:12px;padding:1rem;border:1px solid #e5e7eb;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-                    <h4 style="margin:0;font-size:0.9rem;">${t('weeklyActivity')}</h4>
+                    <h4 style="margin:0;font-size:0.9rem;">${window.t('weeklyActivity')}</h4>
                     <div style="display:flex;gap:1rem;font-size:0.7rem;">
-                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#dbeafe;border-radius:2px;"></span> ${t('createdLabel')}</span>
-                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#22c55e;border-radius:2px;"></span> ${t('doneLabel')}</span>
+                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#dbeafe;border-radius:2px;"></span> ${window.t('createdLabel')}</span>
+                        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#22c55e;border-radius:2px;"></span> ${window.t('doneLabel')}</span>
                     </div>
                 </div>
                 <div style="display:flex;gap:4px;align-items:flex-end;">${bars}</div>
@@ -507,13 +507,13 @@
         
         function renderStatusCard(byStatus, overdueCount) {
             return `<div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
-                <h4 style="margin-bottom:0.75rem;">${t('byStatus')}</h4>
+                <h4 style="margin-bottom:0.75rem;">${window.t('byStatus')}</h4>
                 <div style="display:flex;flex-direction:column;gap:0.4rem;">
-                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="plus-square" class="icon icon-sm" style="color:#3498db"></i> ${t('statusNew')}</span><strong>${byStatus.new}</strong></div>
-                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="loader" class="icon icon-sm" style="color:#f39c12"></i> ${t('statusProgress')}</span><strong>${byStatus.progress}</strong></div>
-                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="eye" class="icon icon-sm" style="color:#9b59b6"></i> ${t('statusReview')}</span><strong>${byStatus.review}</strong></div>
-                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="check-circle" class="icon icon-sm" style="color:#27ae60"></i> ${t('statusDone')}</span><strong style="color:#27ae60;">${byStatus.done}</strong></div>
-                    <div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;padding-top:0.4rem;margin-top:0.25rem;"><span><i data-lucide="alert-triangle" class="icon icon-sm" style="color:#e74c3c"></i> ${t('overdue')}</span><strong style="color:#e74c3c;">${overdueCount}</strong></div>
+                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="plus-square" class="icon icon-sm" style="color:#3498db"></i> ${window.t('statusNew')}</span><strong>${byStatus.new}</strong></div>
+                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="loader" class="icon icon-sm" style="color:#f39c12"></i> ${window.t('statusProgress')}</span><strong>${byStatus.progress}</strong></div>
+                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="eye" class="icon icon-sm" style="color:#9b59b6"></i> ${window.t('statusReview')}</span><strong>${byStatus.review}</strong></div>
+                    <div style="display:flex;justify-content:space-between;"><span><i data-lucide="check-circle" class="icon icon-sm" style="color:#27ae60"></i> ${window.t('statusDone')}</span><strong style="color:#27ae60;">${byStatus.done}</strong></div>
+                    <div style="display:flex;justify-content:space-between;border-top:1px solid #ddd;padding-top:0.4rem;margin-top:0.25rem;"><span><i data-lucide="alert-triangle" class="icon icon-sm" style="color:#e74c3c"></i> ${window.t('overdue')}</span><strong style="color:#e74c3c;">${overdueCount}</strong></div>
                 </div>
             </div>`;
         }
@@ -528,7 +528,7 @@
             const maxDone = topAssignees[0]?.[1] || 1;
             
             return `<div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
-                <h4 style="margin-bottom:0.75rem;"><i data-lucide="trophy" class="icon icon-sm" style="color:#f39c12"></i> ${t('topPerformers')}</h4>
+                <h4 style="margin-bottom:0.75rem;"><i data-lucide="trophy" class="icon icon-sm" style="color:#f39c12"></i> ${window.t('topPerformers')}</h4>
                 ${topAssignees.length > 0 ? topAssignees.map(([name, count], i) => `
                     <div style="margin-bottom:0.5rem;">
                         <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">
@@ -537,7 +537,7 @@
                         </div>
                         <div style="height:4px;background:#e5e7eb;border-radius:99px;"><div style="height:100%;width:${(count/maxDone)*100}%;background:#22c55e;border-radius:99px;"></div></div>
                     </div>
-                `).join('') : `<p style="color:#7f8c8d;">${t('noCompletedTasks')}</p>`}
+                `).join('') : `<p style="color:#7f8c8d;">${window.t('noCompletedTasks')}</p>`}
             </div>`;
         }
         
@@ -552,7 +552,7 @@
             });
             
             return `<div style="background:#fef2f2;border-radius:12px;padding:1rem;border:1px solid #fecaca;">
-                <h4 style="margin-bottom:0.75rem;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus')} (${overdueTasks.length})</h4>
+                <h4 style="margin-bottom:0.75rem;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${window.t('overdueStatus')} (${overdueTasks.length})</h4>
                 ${Object.entries(byPerson).map(([name, tasks]) => `
                     <div style="margin-bottom:0.5rem;">
                         <div style="font-size:0.8rem;font-weight:600;color:#991b1b;">${esc(name)} (${tasks.length})</div>
@@ -587,7 +587,7 @@
             if (stuck.length === 0) return '';
             
             return `<div style="background:#fffbeb;border-radius:12px;padding:1rem;border:1px solid #fde68a;">
-                <h4 style="margin-bottom:0.75rem;color:#92400e;"><i data-lucide="pause-circle" class="icon icon-sm"></i> ${t('stuckProcesses')} (${stuck.length})</h4>
+                <h4 style="margin-bottom:0.75rem;color:#92400e;"><i data-lucide="pause-circle" class="icon icon-sm"></i> ${window.t('stuckProcesses')} (${stuck.length})</h4>
                 ${stuck.slice(0, 5).map(p => {
                     const template = processTemplates.find(t => t.id === p.templateId);
                     const totalSteps = template?.steps?.length || '?';
@@ -615,12 +615,12 @@
             const maxActive = entries[0]?.[1]?.active || 1;
             
             return `<div style="background:#f8f9fa;border-radius:12px;padding:1rem;">
-                <h4 style="margin-bottom:0.75rem;"><i data-lucide="layers" class="icon icon-sm" style="color:#6366f1"></i> ${t('workloadByFunctions')}</h4>
+                <h4 style="margin-bottom:0.75rem;"><i data-lucide="layers" class="icon icon-sm" style="color:#6366f1"></i> ${window.t('workloadByFunctions')}</h4>
                 ${entries.map(([name, data]) => `
                     <div style="margin-bottom:0.5rem;">
                         <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">
                             <span>${esc(name)}</span>
-                            <span>${data.active}${data.overdue ? ` <span style="color:#ef4444;font-size:0.7rem;">(${data.overdue} ${t('overdueShort')})</span>` : ''}</span>
+                            <span>${data.active}${data.overdue ? ` <span style="color:#ef4444;font-size:0.7rem;">(${data.overdue} ${window.t('overdueShort')})</span>` : ''}</span>
                         </div>
                         <div style="height:4px;background:#e5e7eb;border-radius:99px;position:relative;">
                             <div style="height:100%;width:${(data.active/maxActive)*100}%;background:#6366f1;border-radius:99px;"></div>

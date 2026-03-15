@@ -281,17 +281,17 @@
             });
             
             if (completedToday) {
-                return { status: 'completed', color: '#4caf50', text: t('completedStatus'), lucideIcon: 'check-circle', completedToday: true };
+                return { status: 'completed', color: '#4caf50', text: window.t('completedStatus'), lucideIcon: 'check-circle', completedToday: true };
             } else if (generatedTasks.length > 0) {
                 const allDone = generatedTasks.every(t => t.status === 'done');
                 if (allDone) {
-                    return { status: 'completed', color: '#4caf50', text: t('completedStatus'), lucideIcon: 'check-circle', completedToday: true };
+                    return { status: 'completed', color: '#4caf50', text: window.t('completedStatus'), lucideIcon: 'check-circle', completedToday: true };
                 }
-                return { status: 'inProgress', color: '#ff9800', text: t('inProgressStatus'), lucideIcon: 'clock', completedToday: false };
+                return { status: 'inProgress', color: '#ff9800', text: window.t('inProgressStatus'), lucideIcon: 'clock', completedToday: false };
             } else if (shouldRunToday) {
-                return { status: 'notCreated', color: '#2196f3', text: t('pendingStatus'), lucideIcon: 'circle', completedToday: false };
+                return { status: 'notCreated', color: '#2196f3', text: window.t('pendingStatus'), lucideIcon: 'circle', completedToday: false };
             } else {
-                return { status: 'inactive', color: '#9e9e9e', text: t('notToday'), lucideIcon: 'minus-circle', completedToday: false };
+                return { status: 'inactive', color: '#9e9e9e', text: window.t('notToday'), lucideIcon: 'minus-circle', completedToday: false };
             }
         }
         
@@ -435,12 +435,12 @@
             if (monthlyTasks.length > 0) {
                 html += `<div class="mobile-regular-section-header">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                    ${t('monthlyTasks')}
+                    ${window.t('monthlyTasks')}
                 </div>`;
                 monthlyTasks.forEach(rt => {
                     const dayLabel = rt.dayOfMonth === 'last' 
-                        ? (t('lastDayLabel'))
-                        : (`${rt.dayOfMonth}${t('dayOfMonthLabel')}`);
+                        ? (window.t('lastDayLabel'))
+                        : (`${rt.dayOfMonth}${window.t('dayOfMonthLabel')}`);
                     html += renderRegularTaskCard(rt, dayLabel);
                 });
             }
@@ -449,10 +449,10 @@
             if (quarterlyTasks.length > 0) {
                 html += `<div class="mobile-regular-section-header">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>
-                    ${t('quarterlyTasks')}
+                    ${window.t('quarterlyTasks')}
                 </div>`;
                 quarterlyTasks.forEach(rt => {
-                    html += renderRegularTaskCard(rt, t('oncePerQuarter'));
+                    html += renderRegularTaskCard(rt, window.t('oncePerQuarter'));
                 });
             }
             
@@ -489,7 +489,7 @@
                     ${rt.function ? `<div class="task-function">${esc(rt.function)}</div>` : ''}
                     <button class="regular-task-complete-btn ${statusInfo.completedToday ? 'completed' : ''}" 
                             onclick="event.stopPropagation();markRegularTaskComplete('${escId(rt.id)}')"
-                            title="${statusInfo.completedToday ? t('doneToday') : t('markAsDone')}">
+                            title="${statusInfo.completedToday ? window.t('doneToday') : window.t('markAsDone')}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                     </button>
                 </div>

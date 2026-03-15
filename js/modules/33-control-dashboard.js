@@ -13,11 +13,11 @@
             const functionSelect = document.getElementById('controlFunctionFilter');
             const activeFunctions = functions.filter(f => f.status !== 'archived');
             if (assigneeSelect) {
-                assigneeSelect.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+                assigneeSelect.innerHTML = `<option value="">${window.t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
                 if (af) assigneeSelect.value = af; // відновлюємо вибір
             }
             if (functionSelect) {
-                functionSelect.innerHTML = `<option value="">${t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
+                functionSelect.innerHTML = `<option value="">${window.t('allFunctions')}</option>` + activeFunctions.map(f => `<option value="${esc(f.name)}">${esc(f.name)}</option>`).join('');
                 if (ff) functionSelect.value = ff; // відновлюємо вибір
             }
             
@@ -255,8 +255,8 @@
                     critical.length > 0 ? 'red' : 'yellow';
                 const healthIcon = healthScore === 'green' ? 'check-circle' : healthScore === 'red' ? 'alert-octagon' : 'alert-triangle';
                 const healthColor = healthScore === 'green' ? '#16a34a' : healthScore === 'red' ? '#ef4444' : '#f59e0b';
-                const healthText = healthScore === 'green' ? (t('allGood')) : 
-                    healthScore === 'red' ? (t('attentionRequired')) : (t('warningIssues'));
+                const healthText = healthScore === 'green' ? (window.t('allGood')) : 
+                    healthScore === 'red' ? (window.t('attentionRequired')) : (window.t('warningIssues'));
 
                 content.innerHTML = `
                     <div style="margin-bottom:1rem;">
@@ -264,14 +264,14 @@
                             <i data-lucide="${healthIcon}" class="icon" style="color:${healthColor};width:28px;height:28px;flex-shrink:0;"></i>
                             <div>
                                 <div style="font-weight:700;font-size:1rem;color:${healthColor};">${healthText}</div>
-                                <div style="font-size:0.78rem;color:#6b7280;">${overdue.length} ${t('overdueStatus')} · ${todayTasks.length} ${t('forToday')} · ${onReview.length} ${t('statusOnReview')}</div>
+                                <div style="font-size:0.78rem;color:#6b7280;">${overdue.length} ${window.t('overdueStatus')} · ${todayTasks.length} ${window.t('forToday')} · ${onReview.length} ${window.t('statusOnReview')}</div>
                             </div>
                         </div>
                     </div>
                     
                     ${critical.length > 0 ? `
                     <div style="background:#fef2f2;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#dc2626;margin-bottom:0.4rem;"><i data-lucide="alert-octagon" class="icon icon-sm"></i> ${t('criticalOverdue')} (7+ ${t('daysAgo')})</div>
+                        <div style="font-weight:700;color:#dc2626;margin-bottom:0.4rem;"><i data-lucide="alert-octagon" class="icon icon-sm"></i> ${window.t('criticalOverdue')} (7+ ${window.t('daysAgo')})</div>
                         ${critical.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #fecaca;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
                             <span style="font-weight:500;">${esc(tk.title)}</span>
                             <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')} · ${tk.deadlineDate}</span>
@@ -281,7 +281,7 @@
                     
                     ${warning.length > 0 ? `
                     <div style="background:#fffbeb;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#b45309;margin-bottom:0.4rem;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus')} (3-7 ${t('daysAgo')})</div>
+                        <div style="font-weight:700;color:#b45309;margin-bottom:0.4rem;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${window.t('overdueStatus')} (3-7 ${window.t('daysAgo')})</div>
                         ${warning.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #fde68a;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
                             <span style="font-weight:500;">${esc(tk.title)}</span>
                             <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')} · ${tk.deadlineDate}</span>
@@ -290,7 +290,7 @@
                     
                     ${stuck.length > 0 ? `
                     <div style="background:#eef2ff;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#4338ca;margin-bottom:0.4rem;"><i data-lucide="pause-circle" class="icon icon-sm"></i> ${t('notStarted')} (3+ ${t('daysAgo')})</div>
+                        <div style="font-weight:700;color:#4338ca;margin-bottom:0.4rem;"><i data-lucide="pause-circle" class="icon icon-sm"></i> ${window.t('notStarted')} (3+ ${window.t('daysAgo')})</div>
                         ${stuck.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #c7d2fe;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
                             <span style="font-weight:500;">${esc(tk.title)}</span>
                             <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')}</span>
@@ -299,7 +299,7 @@
                     
                     ${onReview.length > 0 ? `
                     <div style="background:#f5f3ff;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#7c3aed;margin-bottom:0.4rem;"><i data-lucide="eye" class="icon icon-sm"></i> ${t('statusOnReview')} (${onReview.length})</div>
+                        <div style="font-weight:700;color:#7c3aed;margin-bottom:0.4rem;"><i data-lucide="eye" class="icon icon-sm"></i> ${window.t('statusOnReview')} (${onReview.length})</div>
                         ${onReview.slice(0,5).map(tk => `<div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #ddd6fe;cursor:pointer;" onclick="openTaskModal('${escId(tk.id)}')">
                             <span style="font-weight:500;">${esc(tk.title)}</span>
                             <span style="color:#9ca3af;white-space:nowrap;margin-left:0.5rem;">${esc(tk.assigneeName || '')}</span>
@@ -307,12 +307,12 @@
                     </div>` : ''}
                     
                     <div style="background:#f9fafb;border-radius:10px;padding:0.75rem;margin-bottom:0.75rem;">
-                        <div style="font-weight:700;color:#374151;margin-bottom:0.5rem;"><i data-lucide="users" class="icon icon-sm"></i> ${t('teamStatus')}</div>
+                        <div style="font-weight:700;color:#374151;margin-bottom:0.5rem;"><i data-lucide="users" class="icon icon-sm"></i> ${window.t('teamStatus')}</div>
                         ${peopleStats.map(p => `
                         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;font-size:0.82rem;border-bottom:1px solid #e5e7eb;">
                             <span style="width:6px;height:6px;border-radius:50%;background:${p.overdue > 0 ? '#ef4444' : '#16a34a'};flex-shrink:0;"></span>
                             <span style="flex:1;font-weight:500;">${esc(p.name || p.email)}</span>
-                            <span style="color:#6b7280;">${p.today} ${t('forToday')}</span>
+                            <span style="color:#6b7280;">${p.today} ${window.t('forToday')}</span>
                             ${p.overdue > 0 ? `<span style="color:#ef4444;font-weight:600;">${p.overdue} !</span>` : ''}
                         </div>`).join('')}
                     </div>
@@ -320,7 +320,7 @@
                     ${todaysRegular.length > 0 ? `
                     <div style="background:#f0fdf4;border-radius:10px;padding:0.75rem;">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
-                            <span style="font-weight:700;color:#374151;"><i data-lucide="repeat" class="icon icon-sm"></i> ${t('tabRegular')} ${t('forToday')}</span>
+                            <span style="font-weight:700;color:#374151;"><i data-lucide="repeat" class="icon icon-sm"></i> ${window.t('tabRegular')} ${window.t('forToday')}</span>
                             <span style="font-size:0.85rem;font-weight:600;color:${regDone === todaysRegular.length ? '#16a34a' : '#f59e0b'};">${regDone}/${todaysRegular.length}</span>
                         </div>
                         <div style="height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
@@ -430,7 +430,7 @@
                                     `).join('')}
                                 </div>
                             </div>`;
-                    }).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
+                    }).join('') || `<p style="color:#7f8c8d;">${window.t('noActiveTasks')}</p>`}
                 `;
             } else if (viewType === 'functions') {
                 const byFunc = {};
@@ -441,7 +441,7 @@
                 });
                 
                 content.innerHTML = `
-                    <h3 style="margin-bottom:1rem;">${t('byFunctions')}</h3>
+                    <h3 style="margin-bottom:1rem;">${window.t('byFunctions')}</h3>
                     ${Object.entries(byFunc).sort((a,b) => b[1].length - a[1].length).map(([fn, taskList]) => {
                         const c = taskList.length;
                         const tasksHTML = taskList.map(t => {
@@ -462,12 +462,12 @@
                             <div class="control-row" onclick="this.classList.toggle('expanded')">
                                 <div class="control-row-header">
                                     <span><i data-lucide="settings" class="icon icon-sm"></i> ${esc(fn)}</span>
-                                    <span class="control-row-count" style="color:#3498db;">${c} ${t('tasks')} <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i></span>
+                                    <span class="control-row-count" style="color:#3498db;">${c} ${window.t('tasks')} <i data-lucide="chevron-down" class="icon icon-sm expand-icon"></i></span>
                                 </div>
                                 <div class="control-row-tasks">${tasksHTML}</div>
                             </div>
                         `;
-                    }).join('') || `<p style="color:#7f8c8d;">${t('noActiveTasks')}</p>`}
+                    }).join('') || `<p style="color:#7f8c8d;">${window.t('noActiveTasks')}</p>`}
                 `;
             } else if (viewType === 'pipeline') {
                 // alias → people view (воронка делегування = по людях без coExecutors)

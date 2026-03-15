@@ -133,7 +133,7 @@
                 const WARN_THRESHOLD = isEmployeeRole ? 900 : TASKS_LOAD_LIMIT - 100;
                 if (taskCount >= WARN_THRESHOLD) {
                     console.warn(`[loadAllData] Task limit reached: ${taskCount}`);
-                    showToast(t('taskLimitWarning').replace('{n}', taskCount), 'warning');
+                    showToast(window.t('taskLimitWarning').replace('{n}', taskCount), 'warning');
                 }
                 dbg(`[loadAllData] ${isEmployeeRole ? 'Employee' : 'Manager'} mode: ${taskCount} tasks`);
                 

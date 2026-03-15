@@ -139,17 +139,17 @@
             for (const [field, vals] of Object.entries(entry.details)) {
                 const label = AUDIT_FIELD_LABELS[field] || field;
                 if (field === 'status') {
-                    parts.push(`${t('auditChangedStatus')}: <span class="audit-value">${getStatusLabel(vals.from)}</span> → <span class="audit-value">${getStatusLabel(vals.to)}</span>`);
+                    parts.push(`${window.t('auditChangedStatus')}: <span class="audit-value">${getStatusLabel(vals.from)}</span> → <span class="audit-value">${getStatusLabel(vals.to)}</span>`);
                 } else if (field === 'assigneeId') {
                     const fromUser = users.find(u => u.id === vals.from);
                     const toUser = users.find(u => u.id === vals.to);
-                    parts.push(`${t('auditReassigned')}: <span class="audit-value">${esc(fromUser?.name || vals.from || '—')}</span> → <span class="audit-value">${esc(toUser?.name || vals.to)}</span>`);
+                    parts.push(`${window.t('auditReassigned')}: <span class="audit-value">${esc(fromUser?.name || vals.from || '—')}</span> → <span class="audit-value">${esc(toUser?.name || vals.to)}</span>`);
                 } else if (field === 'deadlineDate' || field === 'deadlineTime') {
-                    parts.push(`${t('auditChanged')} ${label.toLowerCase()}: <span class="audit-value">${esc(vals.from || '—')}</span> → <span class="audit-value">${esc(String(vals.to))}</span>`);
+                    parts.push(`${window.t('auditChanged')} ${label.toLowerCase()}: <span class="audit-value">${esc(vals.from || '—')}</span> → <span class="audit-value">${esc(String(vals.to))}</span>`);
                 } else if (field === 'priority') {
-                    parts.push(`${t('auditChangedPriority')}: <span class="audit-value">${vals.from}</span> → <span class="audit-value">${vals.to}</span>`);
+                    parts.push(`${window.t('auditChangedPriority')}: <span class="audit-value">${vals.from}</span> → <span class="audit-value">${vals.to}</span>`);
                 } else {
-                    parts.push(`${t('auditChanged')} ${label.toLowerCase()}`);
+                    parts.push(`${window.t('auditChanged')} ${label.toLowerCase()}`);
                 }
             }
             return parts.join(', ') || window.t('auditChanged');

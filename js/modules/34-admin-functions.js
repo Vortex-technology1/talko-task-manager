@@ -26,13 +26,13 @@
                     <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
                         <thead>
                             <tr style="background:#f9fafb;text-align:left;">
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('companyCol')}</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('ownerCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${window.t('companyCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${window.t('ownerCol')}</th>
                                 <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">Email</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('createdCol')}</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('usersCol')}</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('tasksCol')}</th>
-                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${t('statusCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${window.t('createdCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${window.t('usersCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${window.t('tasksCol')}</th>
+                                <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;">${window.t('statusCol')}</th>
                                 <th style="padding:0.75rem;border-bottom:2px solid #e5e7eb;width:80px;"></th>
                             </tr>
                         </thead>
@@ -55,7 +55,7 @@
                     
                     html += `
                         <tr style="border-bottom:1px solid #e5e7eb;${company.disabled ? 'opacity:0.6;background:#fef2f2;' : ''}" id="company-row-${companyId}">
-                            <td style="padding:0.75rem;font-weight:600;">${esc(company.name || t('noName'))}</td>
+                            <td style="padding:0.75rem;font-weight:600;">${esc(company.name || window.t('noName'))}</td>
                             <td style="padding:0.75rem;">${esc(company.ownerName || '-')}</td>
                             <td style="padding:0.75rem;"><code style="background:#f3f4f6;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.8rem;">${esc(company.ownerEmail || '-')}</code></td>
                             <td style="padding:0.75rem;color:var(--gray);">${createdAt}</td>
@@ -66,17 +66,17 @@
                                 <span style="background:#dcfce7;color:#16a34a;padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;">${tasksSnap.size}</span>
                             </td>
                             <td style="padding:0.75rem;text-align:center;">
-                                <span style="padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;${company.disabled ? 'background:#fee2e2;color:#dc2626;' : 'background:#dcfce7;color:#16a34a;'}">${company.disabled ? t('blocked') : t('activeStatus')}</span>
+                                <span style="padding:0.2rem 0.5rem;border-radius:10px;font-size:0.75rem;font-weight:600;${company.disabled ? 'background:#fee2e2;color:#dc2626;' : 'background:#dcfce7;color:#16a34a;'}">${company.disabled ? window.t('blocked') : window.t('activeStatus')}</span>
                             </td>
                             <td style="padding:0.75rem;text-align:center;display:flex;gap:0.25rem;">
                                 <button onclick="toggleCompanyDisabled('${companyId}', ${!!company.disabled})" 
                                     style="background:${company.disabled ? '#dcfce7' : '#fef3c7'};color:${company.disabled ? '#16a34a' : '#92400e'};border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;"
-                                    title="${company.disabled ? t('unblock') : t('block')}">
+                                    title="${company.disabled ? window.t('unblock') : window.t('block')}">
                                     ${company.disabled ? 'ON' : 'OFF'}
                                 </button>
                                 <button onclick="deleteCompany('${escId(companyId)}', '${escId(company.name || '')}', ${usersSnap.size}, ${tasksSnap.size})" 
                                     style="background:#fee2e2;color:#dc2626;border:none;padding:0.4rem 0.6rem;border-radius:6px;cursor:pointer;font-size:0.75rem;"
-                                    title="${t('deleteCompanyTitle')}">
+                                    title="${window.t('deleteCompanyTitle')}">
                                     &times;
                                 </button>
                             </td>
@@ -96,16 +96,16 @@
         async function toggleCompanyDisabled(companyId, currentlyDisabled) {
             if (!isSuperAdmin) return;
             const newState = !currentlyDisabled;
-            const action = newState ? t('blockAction') : t('unblockAction');
-            if (!await showConfirmModal(t('confirmCompanyAction').replace('{action}', action), { danger: true })) return;
+            const action = newState ? window.t('blockAction') : window.t('unblockAction');
+            if (!await showConfirmModal(window.t('confirmCompanyAction').replace('{action}', action), { danger: true })) return;
             
             try {
                 await db.collection('companies').doc(companyId).update({ disabled: newState });
-                showToast(newState ? t('companyBlocked') : t('companyUnblocked'), newState ? 'warning' : 'success');
+                showToast(newState ? window.t('companyBlocked') : window.t('companyUnblocked'), newState ? 'warning' : 'success');
                 loadAdminCompanies();
             } catch (e) {
                 console.error('Toggle disabled error:', e);
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             }
         }
         
@@ -113,12 +113,12 @@
             if (!isSuperAdmin) return;
             
             // Підтвердження з інформацією про те що буде видалено
-            const confirmMsg = t('deleteCompanyConfirm').replace('{name}', companyName).replace('{users}', usersCount).replace('{tasks}', tasksCount);
+            const confirmMsg = window.t('deleteCompanyConfirm').replace('{name}', companyName).replace('{users}', usersCount).replace('{tasks}', tasksCount);
             
             if (!await showConfirmModal(confirmMsg, { danger: true })) return;
             
             // Друге підтвердження для безпеки
-            const confirmMsg2 = t('deleteCompanyConfirm2').replace('{name}', companyName);
+            const confirmMsg2 = window.t('deleteCompanyConfirm2').replace('{name}', companyName);
             
             const userInput = await (window.showInputModal ? showInputModal(confirmMsg2, '', {placeholder: 'Введіть текст підтвердження'}) : (async()=>prompt(confirmMsg2))());
             const yesVariants = ['ua','ru','en','de','pl'].map(l => (translations[l]?.confirmYes || '').toLowerCase()).filter(Boolean); if (!yesVariants.includes(userInput?.toLowerCase())) {
@@ -178,11 +178,11 @@
                 // Видаляємо рядок з таблиці
                 if (row) row.remove();
                 
-                showToast(t('companyDeleted'), 'success');
+                showToast(window.t('companyDeleted'), 'success');
                 
             } catch (error) {
                 console.error('Error deleting company:', error);
-                showToast(t('deleteError') + error.message, 'error');
+                showToast(window.t('deleteError') + error.message, 'error');
                 
                 // Повертаємо вигляд рядка
                 if (row) {
@@ -203,7 +203,7 @@
             
             const btn = document.getElementById('adminCreateBtn');
             btn.disabled = true;
-            btn.textContent = t('creating');
+            btn.textContent = window.t('creating');
             
             try {
                 const companyRef = db.collection('companies').doc();
@@ -228,7 +228,7 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                showAlertModal(t('companyCreated').replace('{name}', companyName).replace('{email}', email).replace('{password}', password));
+                showAlertModal(window.t('companyCreated').replace('{name}', companyName).replace('{email}', email).replace('{password}', password));
                 
                 document.getElementById('adminCreateForm').reset();
                 
@@ -236,9 +236,9 @@
                 loadAdminCompanies();
                 
             } catch (e) {
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             }
             
             btn.disabled = false;
-            btn.textContent = t('createCompanyBtn');
+            btn.textContent = window.t('createCompanyBtn');
         }

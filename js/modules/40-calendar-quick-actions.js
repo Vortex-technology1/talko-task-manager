@@ -7,7 +7,7 @@
         function openTaskAtTime(dateStr, hour) {
             editingId = null;
             window.currentEditingId = null; // BUG-L FIX: was missing, subtasks would attach to wrong parent
-            document.getElementById('taskModalTitle').textContent = t('addTask');
+            document.getElementById('taskModalTitle').textContent = window.t('addTask');
             document.getElementById('taskForm').reset();
             
             // Pre-fill date and time
@@ -41,7 +41,7 @@
             // Get deadline info
             const deadline = task.deadline?.toDate ? task.deadline.toDate() : new Date(task.deadline);
             const deadlineStr = deadline.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-            const assignee = task.assigneeName || t('notAssigned');
+            const assignee = task.assigneeName || window.t('notAssigned');
             const funcName = task.function || '';
             
             // Status colors
@@ -78,42 +78,42 @@
                 </div>
                 <div class="task-quick-menu-item" onclick="openTaskModal('${taskId}');closeTaskQuickMenu();">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    ${t('viewBtn')}
+                    ${window.t('viewBtn')}
                 </div>
                 ${(currentUserData?.role !== 'employee' || task.assigneeId === currentUser?.uid || task.creatorId === currentUser?.uid) ? `
                 <div class="task-quick-menu-item" onclick="openTaskModal('${taskId}');closeTaskQuickMenu();">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    ${t('editBtn')}
+                    ${window.t('editBtn')}
                 </div>
                 ` : ''}
                 ${task.status === 'review' && task.creatorId === currentUser?.uid && task.assigneeId !== currentUser?.uid ? `
                 <div class="task-quick-menu-item complete" onclick="acceptReviewTask('${taskId}');closeTaskQuickMenu();">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                    ${t('acceptTask')}
+                    ${window.t('acceptTask')}
                 </div>
                 <div class="task-quick-menu-item" onclick="rejectReviewTask('${taskId}');closeTaskQuickMenu();" style="color:#f59e0b;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                    ${t('rejectTask')}
+                    ${window.t('rejectTask')}
                 </div>
                 ` : task.status !== 'done' && task.status !== 'review' ? `
                 <div class="task-quick-menu-item complete" onclick="quickCompleteFromMenu('${taskId}')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                    ${t('completeTask')}
+                    ${window.t('completeTask')}
                 </div>
                 ` : task.status === 'done' ? `
                 <div class="task-quick-menu-item" onclick="reopenTaskFromMenu('${taskId}')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                    ${t('reopen')}
+                    ${window.t('reopen')}
                 </div>
                 ` : task.status === 'review' ? `
                 <div class="task-quick-menu-item" style="color:#8b5cf6;cursor:default;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    ${t('reviewByCreator')}
+                    ${window.t('reviewByCreator')}
                 </div>
                 ` : ''}
                 <div class="task-quick-menu-item delete" onclick="deleteTaskFromMenu('${taskId}')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                    ${t('delete')}
+                    ${window.t('delete')}
                 </div>
             `;
             

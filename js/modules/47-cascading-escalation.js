@@ -3,12 +3,12 @@
         // =============================================
         
 'use strict';
-        // BUG-AN FIX: t() called lazily to avoid init-time crash if i18n not yet loaded
+        // BUG-AN FIX: window.t() called lazily to avoid init-time crash if i18n not yet loaded
         function getEscalationLevels() {
             return [
-                { days: 1, level: 1, label: (typeof t === 'function' ? t('overdue1day') : '1+ день'), target: 'assignee', color: '#92400e' },
-                { days: 3, level: 2, label: (typeof t === 'function' ? t('overdue3days') : '3+ дні'), target: 'manager', color: '#9a3412' },
-                { days: 7, level: 3, label: (typeof t === 'function' ? t('overdue7days') : '7+ днів'), target: 'owner', color: '#dc2626' }
+                { days: 1, level: 1, label: (typeof t === 'function' ? window.t('overdue1day') : '1+ день'), target: 'assignee', color: '#92400e' },
+                { days: 3, level: 2, label: (typeof t === 'function' ? window.t('overdue3days') : '3+ дні'), target: 'manager', color: '#9a3412' },
+                { days: 7, level: 3, label: (typeof t === 'function' ? window.t('overdue7days') : '7+ днів'), target: 'owner', color: '#dc2626' }
             ];
         }
         

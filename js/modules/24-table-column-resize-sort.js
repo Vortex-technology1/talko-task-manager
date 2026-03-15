@@ -159,25 +159,25 @@
         }
         
         function getExportData() {
-            const st = { new: t('statusNewLabel'), progress: t('statusProgressLabel'), review: t('statusReviewLabel'), done: t('statusDoneLabel') };
+            const st = { new: window.t('statusNewLabel'), progress: window.t('statusProgressLabel'), review: window.t('statusReviewLabel'), done: window.t('statusDoneLabel') };
             return tasks.filter(t => isTaskVisibleToUser(t)).map(task => {
                 const { date, time } = parseDeadline(task);
                 return {
-                    [t('taskName')]: task.title || '',
-                    [t('assignee')]: task.assigneeName || '',
-                    [t('createdBy')]: task.creatorName || '',
-                    [t('deadline')]: date ? (date + (time ? ' ' + time : '')) : '',
-                    [t('status')]: st[task.status] || task.status,
-                    [t('functionLabel')]: task.function || '',
-                    [t('priority')]: task.priority === 'high' ? t('priorityNames_high') : task.priority === 'low' ? t('priorityNames_low') : t('priorityNames_medium'),
-                    [t('description')]: task.description || task.instruction || ''
+                    [window.t('taskName')]: task.title || '',
+                    [window.t('assignee')]: task.assigneeName || '',
+                    [window.t('createdBy')]: task.creatorName || '',
+                    [window.t('deadline')]: date ? (date + (time ? ' ' + time : '')) : '',
+                    [window.t('status')]: st[task.status] || task.status,
+                    [window.t('functionLabel')]: task.function || '',
+                    [window.t('priority')]: task.priority === 'high' ? window.t('priorityNames_high') : task.priority === 'low' ? window.t('priorityNames_low') : window.t('priorityNames_medium'),
+                    [window.t('description')]: task.description || task.instruction || ''
                 };
             });
         }
 
         function exportTasksCSV() {
             const data = getExportData();
-            if (data.length === 0) { showToast(t('noTasksForExport'), 'info'); return; }
+            if (data.length === 0) { showToast(window.t('noTasksForExport'), 'info'); return; }
             const headers = Object.keys(data[0]);
             let csv = headers.join(',') + '\n';
             data.forEach(row => {
@@ -192,7 +192,7 @@
         
         function exportTasksXLSX() {
             const data = getExportData();
-            if (data.length === 0) { showToast(t('noTasksForExport'), 'info'); return; }
+            if (data.length === 0) { showToast(window.t('noTasksForExport'), 'info'); return; }
             const headers = Object.keys(data[0]);
             
             // Build XLSX using XML spreadsheet format (no library needed)
@@ -201,7 +201,7 @@
             xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
             xml += '<Styles><Style ss:ID="header"><Font ss:Bold="1" ss:Size="11"/><Interior ss:Color="#22c55e" ss:Pattern="Solid"/><Font ss:Color="#FFFFFF" ss:Bold="1"/></Style>';
             xml += '<Style ss:ID="wrap"><Alignment ss:WrapText="1" ss:Vertical="Top"/></Style></Styles>\n';
-            xml += '<Worksheet ss:Name="' + t('tasks') + '"><Table>\n';
+            xml += '<Worksheet ss:Name="' + window.t('tasks') + '"><Table>\n';
             
             // Column widths
             const colWidths = [250, 150, 120, 120, 80, 120, 80, 300];
@@ -244,7 +244,7 @@
             
             // BUG-K FIX: check deadline edit permission before showing input
             if (task && typeof canEditDeadline === 'function' && !canEditDeadline(task)) {
-                showToast(t('noPermissionDeadline') || 'Немає дозволу на зміну дедлайну', 'warning');
+                showToast(window.t('noPermissionDeadline') || 'Немає дозволу на зміну дедлайну', 'warning');
                 return;
             }
             
@@ -301,10 +301,10 @@
                     
                     logTaskChange(taskId, 'deadline', { deadlineDate: newDate, deadlineTime: newTime }, { deadlineDate: oldDate, deadlineTime: oldTime });
                     refreshCurrentView();
-                    showToast(t('deadlineUpdated'), 'success');
+                    showToast(window.t('deadlineUpdated'), 'success');
                 } catch (e) {
                     td.innerHTML = originalHTML;
-                    showToast(t('error') + ': ' + e.message, 'error');
+                    showToast(window.t('error') + ': ' + e.message, 'error');
                 }
             }
             
@@ -344,7 +344,7 @@
             
             // Permission check
             if (!canEditTask(task)) {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 cyclingTasks.delete(taskId); return;
             }
             
@@ -389,8 +389,8 @@
                 }
                 await db.collection('companies').doc(currentCompany).collection('tasks').doc(taskId).update(update);
                 if (newStatus === 'done') advanceProcessIfLinked(taskId);
-                if (newStatus === 'review') showToast(t('taskSentForReview'), 'info');
-                else if (newStatus === 'done') showToast(t('taskCompleted') || 'Завдання виконано ✓', 'success'); // BUG-M FIX: was missing
+                if (newStatus === 'review') showToast(window.t('taskSentForReview'), 'info');
+                else if (newStatus === 'done') showToast(window.t('taskCompleted') || 'Завдання виконано ✓', 'success'); // BUG-M FIX: was missing
                 // Автостатус проекту
                 if (task.projectId) autoUpdateProjectStatus(task.projectId);
                 // AUDIT LOG
@@ -399,7 +399,7 @@
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
                 refreshCurrentView();
-                showToast(t('error') + ': ' + err.message, 'error');
+                showToast(window.t('error') + ': ' + err.message, 'error');
             }
             } finally {
                 cyclingTasks.delete(taskId);

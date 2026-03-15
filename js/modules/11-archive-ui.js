@@ -25,7 +25,7 @@
                 if (totalTimeInfo) totalTimeInfo.style.display = 'none';
                 archiveContainer.style.display = 'block';
                 archiveBtn.style.background = 'var(--primary)';
-                archiveBtn.innerHTML = '<i data-lucide="arrow-left" class="icon"></i> <span>' + t('tasks') + '</span>';
+                archiveBtn.innerHTML = '<i data-lucide="arrow-left" class="icon"></i> <span>' + window.t('tasks') + '</span>';
                 
                 archiveTasks = [];
                 archiveLastDoc = null;
@@ -37,7 +37,7 @@
                 if (totalTimeInfo) totalTimeInfo.style.display = '';
                 archiveContainer.style.display = 'none';
                 archiveBtn.style.background = '#6b7280';
-                archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>' + t('archive') + '</span>';
+                archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>' + window.t('archive') + '</span>';
             }
             refreshIcons();
         }
@@ -47,7 +47,7 @@
             
             const listEl = document.getElementById('archiveTasksList');
             if (archiveTasks.length === 0) {
-                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;"><div class="spinner"></div>' + t('loading') + '</div>';
+                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;"><div class="spinner"></div>' + window.t('loading') + '</div>';
             }
             
             try {
@@ -67,8 +67,8 @@
                     listEl.innerHTML = `
                         <div style="text-align:center;padding:3rem;color:#9ca3af;">
                             <i data-lucide="archive" class="icon icon-xl" style="color:#d1d5db;margin-bottom:0.5rem;"></i>
-                            <p>' + t('archiveEmpty') + '</p>
-                            <p style="font-size:0.8rem;">' + t('archiveAutoHint') + '</p>
+                            <p>' + window.t('archiveEmpty') + '</p>
+                            <p style="font-size:0.8rem;">' + window.t('archiveAutoHint') + '</p>
                         </div>`;
                     refreshIcons();
                     return;
@@ -89,7 +89,7 @@
                 
             } catch (error) {
                 console.error('loadArchiveTasks error:', error);
-                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#ef4444;">' + t('archiveLoadError') + '</div>';
+                listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#ef4444;">' + window.t('archiveLoadError') + '</div>';
             }
         }
         
@@ -101,20 +101,20 @@
             const listEl = document.getElementById('archiveTasksList');
             const countEl = document.getElementById('archiveCount');
             
-            countEl.textContent = t('recordsCount').replace('{n}', archiveTasks.length);
+            countEl.textContent = window.t('recordsCount').replace('{n}', archiveTasks.length);
             
-            const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
+            const st = { new: window.t('statusNew'), progress: window.t('statusProgress'), review: window.t('statusReview'), done: window.t('statusDone') };
             
             // Desktop table
             let html = `
                 <table class="tasks-table" style="table-layout:fixed;">
                     <thead>
                         <tr>
-                            <th>${t('task')}</th>
-                            <th>${t('assignee')}</th>
-                            <th>${t('deadline')}</th>
-                            <th>${t('type')}</th>
-                            <th>' + t('archivedAt') + '</th>
+                            <th>${window.t('task')}</th>
+                            <th>${window.t('assignee')}</th>
+                            <th>${window.t('deadline')}</th>
+                            <th>${window.t('type')}</th>
+                            <th>' + window.t('archivedAt') + '</th>
                             <th>Дії</th>
                         </tr>
                     </thead>
@@ -136,7 +136,7 @@
                         <td>${esc(task.function) || '-'}</td>
                         <td style="font-size:0.8rem;color:#9ca3af;">${archivedDate}</td>
                         <td>
-                            <button class="action-btn" onclick="restoreFromArchive('${escId(task.id)}')" title="${t('reopen')}">
+                            <button class="action-btn" onclick="restoreFromArchive('${escId(task.id)}')" title="${window.t('reopen')}">
                                 <i data-lucide="rotate-ccw" class="icon icon-sm" style="color:var(--primary);"></i>
                             </button>
                         </td>
@@ -165,7 +165,7 @@
                         </div>
                         <div class="mobile-task-actions">
                             <button class="mobile-action-btn edit" onclick="restoreFromArchive('${escId(task.id)}')">
-                                <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('reopen')}
+                                <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('reopen')}
                             </button>
                         </div>
                     </div>
@@ -178,14 +178,14 @@
         }
         
         async function restoreFromArchive(taskId) {
-            if (!await showConfirmModal(t('restoreFromArchive'), { danger: true })) return;
+            if (!await showConfirmModal(window.t('restoreFromArchive'), { danger: true })) return;
             
             try {
                 const base = db.collection('companies').doc(currentCompany);
                 const archiveDoc = await base.collection('tasksArchive').doc(taskId).get();
                 
                 if (!archiveDoc.exists) {
-                    showToast(t('taskNotFoundArchive'), 'error');
+                    showToast(window.t('taskNotFoundArchive'), 'error');
                     return;
                 }
                 
@@ -200,7 +200,7 @@
                 await batch.commit();
                 } catch(err) {
                     console.error('[Batch] commit failed:', err);
-                    showToast && showToast(t('savingError'), 'error');
+                    showToast && showToast(window.t('savingError'), 'error');
                 }
                 
                 // Update local arrays
@@ -210,10 +210,10 @@
                 }
                 
                 renderArchiveTasks();
-                showToast(t('taskRestored'), 'success');
+                showToast(window.t('taskRestored'), 'success');
             } catch (error) {
                 console.error('restoreFromArchive error:', error);
-                showToast(t('restoreError'), 'error');
+                showToast(window.t('restoreError'), 'error');
             }
         }
         
@@ -298,7 +298,7 @@
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         createdDate: todayStr,
                         creatorId: currentUser.uid,
-                        creatorName: currentUserData?.name || currentUser.email || t('systemUser'), // BUG-U FIX: was always t('systemUser')
+                        creatorName: currentUserData?.name || currentUser.email || window.t('systemUser'), // BUG-U FIX: was always window.t('systemUser')
                         regularTaskId: rt.id,
                         notifyOnComplete: rt.notifyOnComplete || [],
                         autoGenerated: true

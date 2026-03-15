@@ -376,13 +376,13 @@
         if (_saveMetricLock) return;
         _saveMetricLock = true;
         try {
-        if (!canEditMetrics()) { showToast(t('noPermission') || 'Немає доступу', 'error'); return; }
+        if (!canEditMetrics()) { showToast(window.t('noPermission') || 'Немає доступу', 'error'); return; }
         const name = document.getElementById('metricName')?.value?.trim();
-        if (!name) { showToast(t('enterName') || 'Введіть назву', 'error'); return; }
+        if (!name) { showToast(window.t('enterName') || 'Введіть назву', 'error'); return; }
 
         // Metric limit: max 50 per company
         if (!statsEditingMetricId && statsMetrics.length >= 50) {
-            showToast(t('metricLimit') || 'Максимум 50 метрик на компанію', 'error');
+            showToast(window.t('metricLimit') || 'Максимум 50 метрик на компанію', 'error');
             return;
         }
 
@@ -447,18 +447,18 @@
                 }
             }
             closeModal('metricModal');
-            showToast(t('saved') || 'Збережено', 'success');
+            showToast(window.t('saved') || 'Збережено', 'success');
             await loadMetrics();
             renderStatistics();
         } catch (e) {
             console.error('[STATS] saveMetric:', e);
-            showToast(t('error') || 'Помилка', 'error');
+            showToast(window.t('error') || 'Помилка', 'error');
         }
         } finally { _saveMetricLock = false; }
     }
 
     async function deleteMetric(mid) {
-        if (!await showConfirmModal(t('confirmDeleteMetric') || 'Видалити метрику та всі дані?', { danger: true })) return;
+        if (!await showConfirmModal(window.t('confirmDeleteMetric') || 'Видалити метрику та всі дані?', { danger: true })) return;
         try {
             const batch = db.batch();
             batch.delete(metricsRef().doc(mid));
@@ -467,7 +467,7 @@
                 s.docs.forEach(d => batch.delete(d.ref));
             }
             await batch.commit();
-            showToast(t('deleted') || 'Видалено', 'success');
+            showToast(window.t('deleted') || 'Видалено', 'success');
             await loadMetrics();
             renderStatistics();
         } catch (e) { console.error('[STATS] deleteMetric:', e); }
@@ -642,7 +642,7 @@
             '<div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem;background:#f9fafb;border-radius:12px;">' +
                 '<div style="flex:1;">' +
                     '<div style="font-weight:600;font-size:0.9rem;">' + esc(m.name) + '</div>' +
-                    '<div style="font-size:0.75rem;color:var(--gray);">' + esc(m.unit) + ' · ' + (t(m.frequency) || m.frequency) + '</div>' +
+                    '<div style="font-size:0.75rem;color:var(--gray);">' + esc(m.unit) + ' · ' + (window.t(m.frequency) || m.frequency) + '</div>' +
                 '</div>' +
                 '<input type="number" class="input quick-input-value" data-metric-id="' + m.id + '" ' +
                     'placeholder="—" style="width:100px;text-align:center;font-size:1.1rem;font-weight:600;">' +
@@ -671,7 +671,7 @@
 
         closeModal('quickInputModal');
         if (saved > 0) {
-            showToast((t('saved') || 'Збережено') + ': ' + saved, 'success');
+            showToast((window.t('saved') || 'Збережено') + ': ' + saved, 'success');
             await loadEntries(getStatsPeriodKey(statsPeriodOffset));
             renderStatistics();
         }
@@ -898,18 +898,18 @@
 
         const role = getUserRole();
         const scopes = [
-            { id: 'my', label: t('scopeMy') || 'Моє' },
-            { id: 'function', label: t('scopeFunction') || 'Функції' },
+            { id: 'my', label: window.t('scopeMy') || 'Моє' },
+            { id: 'function', label: window.t('scopeFunction') || 'Функції' },
         ];
         if (role === 'owner' || role === 'manager' || role === 'admin') {
             scopes.push({ id: 'project', label: 'Проєкт' });
-            scopes.push({ id: 'company', label: t('scopeCompany') || 'Компанія' });
+            scopes.push({ id: 'company', label: window.t('scopeCompany') || 'Компанія' });
         }
 
         const periodTypes = [
-            { v: 'daily', l: t('daily') || 'День' },
-            { v: 'weekly', l: t('weekly') || 'Тиждень' },
-            { v: 'monthly', l: t('monthly') || 'Місяць' },
+            { v: 'daily', l: window.t('daily') || 'День' },
+            { v: 'weekly', l: window.t('weekly') || 'Тиждень' },
+            { v: 'monthly', l: window.t('monthly') || 'Місяць' },
         ];
         const curPT = document.getElementById('statsPeriodTypeHidden')?.value || statsPeriodType || 'weekly';
         const pk = getStatsPeriodKey(statsPeriodOffset);
@@ -1000,9 +1000,9 @@
         if (ms.length === 0) {
             c.innerHTML = `<div class="stats-empty">
                 <div class="stats-empty-icon">${SVG.trendUp}</div>
-                <h3>${t('noMetrics') || 'Метрик ще немає'}</h3>
-                <p>${t('noMetricsHint') || 'Створіть першу метрику'}</p>
-                <button class="stats-pill accent" onclick="openMetricModal()" style="margin-top:1rem;">${SVG.plus} ${t('addMetric') || 'Метрика'}</button>
+                <h3>${window.t('noMetrics') || 'Метрик ще немає'}</h3>
+                <p>${window.t('noMetricsHint') || 'Створіть першу метрику'}</p>
+                <button class="stats-pill accent" onclick="openMetricModal()" style="margin-top:1rem;">${SVG.plus} ${window.t('addMetric') || 'Метрика'}</button>
             </div>`;
             return;
         }
@@ -1019,9 +1019,9 @@
         });
 
         const freqLabels = {
-            daily: { icon: SVG.calendar, label: t('daily') || 'Щоденні', color: '#3b82f6' },
-            weekly: { icon: SVG.calendar, label: t('weekly') || 'Щотижневі', color: '#22c55e' },
-            monthly: { icon: SVG.barChart, label: t('monthly') || 'Щомісячні', color: '#8b5cf6' },
+            daily: { icon: SVG.calendar, label: window.t('daily') || 'Щоденні', color: '#3b82f6' },
+            weekly: { icon: SVG.calendar, label: window.t('weekly') || 'Щотижневі', color: '#22c55e' },
+            monthly: { icon: SVG.barChart, label: window.t('monthly') || 'Щомісячні', color: '#8b5cf6' },
         };
 
         let html = '';
@@ -1055,7 +1055,7 @@
         <div class="stats-table-wrap">
             <table class="stats-table">
                 <thead><tr>
-                    <th style="width:140px;min-width:140px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? t('day') : freq === 'weekly' ? t('week') : t('month')}</div></th>`;
+                    <th style="width:140px;min-width:140px;text-align:left;"><div class="th-inner" style="text-align:left;">${freq === 'daily' ? window.t('day') : freq === 'weekly' ? window.t('week') : window.t('month')}</div></th>`;
 
         // Column headers = metric names with actions
         const impColors = { critical: '#ef4444', high: '#f97316', medium: '#f59e0b', low: '#22c55e' };
@@ -1209,10 +1209,10 @@
         d.innerHTML = `<div class="stats-debt-banner">
             <div class="stats-debt-icon">${SVG.alert}</div>
             <div class="stats-debt-text">
-                <strong>${debts.length} ${t('kpiDebts') || 'незаповнених метрик'}</strong>
+                <strong>${debts.length} ${window.t('kpiDebts') || 'незаповнених метрик'}</strong>
                 <span>${debts.map(m => esc(m.name)).join(', ')}</span>
             </div>
-            <button class="stats-pill" onclick="openQuickInputModal()">${t('fillNow') || 'Заповнити'}</button>
+            <button class="stats-pill" onclick="openQuickInputModal()">${window.t('fillNow') || 'Заповнити'}</button>
         </div>`;
     }
 
@@ -1245,11 +1245,11 @@
 
         <div class="stats-detail-grid">
             <div class="stats-detail-card">
-                <div class="stats-detail-card-label">${t('fact') || 'Факт'}</div>
+                <div class="stats-detail-card-label">${window.t('fact') || 'Факт'}</div>
                 <div class="stats-detail-card-value" style="color:${color};">${val !== '' ? formatValue(val, m.unit) : '—'}</div>
             </div>
             <div class="stats-detail-card">
-                <div class="stats-detail-card-label">${t('target') || 'Ціль'}</div>
+                <div class="stats-detail-card-label">${window.t('target') || 'Ціль'}</div>
                 <div class="stats-detail-card-value" style="color:#6b7280;">${tgt !== '' ? formatValue(tgt, m.unit) : '—'}</div>
             </div>
             <div class="stats-detail-card">
@@ -1262,19 +1262,19 @@
 
         <div style="display:grid;gap:0.75rem;">
             <div>
-                <label style="font-size:0.75rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;">${t('fact') || 'Факт'}</label>
+                <label style="font-size:0.75rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;">${window.t('fact') || 'Факт'}</label>
                 <input type="number" id="metricDetailValue" value="${val}" class="stats-inline-input" style="width:100%;" placeholder="0">
             </div>
             <div>
-                <label style="font-size:0.75rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;">${t('target') || 'Ціль періоду'}</label>
+                <label style="font-size:0.75rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;">${window.t('target') || 'Ціль періоду'}</label>
                 <input type="number" id="metricDetailTarget" value="${tgt}" class="stats-inline-input" style="width:100%;" placeholder="0" ${!canEdit ? 'disabled' : ''}>
             </div>
             <div>
-                <label style="font-size:0.75rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;">${t('comment') || 'Коментар'}</label>
-                <textarea id="metricDetailComment" class="stats-comment-area" placeholder="${t('commentHint') || 'Додайте коментар до цього періоду...'}">${esc(entry?.comment || '')}</textarea>
+                <label style="font-size:0.75rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;">${window.t('comment') || 'Коментар'}</label>
+                <textarea id="metricDetailComment" class="stats-comment-area" placeholder="${window.t('commentHint') || 'Додайте коментар до цього періоду...'}">${esc(entry?.comment || '')}</textarea>
             </div>
             <button class="stats-pill accent" style="justify-content:center;padding:0.6rem;" onclick="saveMetricDetail('${metricId}','${periodKey}')">
-                ${SVG.check} ${t('saveAll') || 'Зберегти'}
+                ${SVG.check} ${window.t('saveAll') || 'Зберегти'}
             </button>
         </div>`;
 
@@ -1317,7 +1317,7 @@
         const cmt = cmtInput ? cmtInput.value.trim() : '';
 
         if (val === null || isNaN(val)) {
-            showToast(t('enterValue') || 'Введіть значення', 'error');
+            showToast(window.t('enterValue') || 'Введіть значення', 'error');
             return;
         }
 
@@ -1389,7 +1389,7 @@
             const qm = document.getElementById('quickInputModal');
             if (qm) qm.style.display = 'none';
 
-            showToast(t('saved') || 'Збережено', 'success');
+            showToast(window.t('saved') || 'Збережено', 'success');
             await renderStatistics();
         } catch (e) {
             console.error('[STATS] saveMetricDetail:', e);
@@ -1449,10 +1449,10 @@
     // Delete single entry
     window.deleteEntry = async function(entryId) {
         if (!entryId) return;
-        if (!await showConfirmModal(t('confirmDeleteEntry') || 'Видалити цей запис?', { danger: true })) return;
+        if (!await showConfirmModal(window.t('confirmDeleteEntry') || 'Видалити цей запис?', { danger: true })) return;
         try {
             await entriesRef().doc(entryId).delete();
-            showToast(t('deleted') || 'Видалено', 'success');
+            showToast(window.t('deleted') || 'Видалено', 'success');
             await renderStatistics();
         } catch (e) {
             console.error('[STATS] deleteEntry:', e);

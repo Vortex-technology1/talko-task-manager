@@ -64,14 +64,14 @@
             const label = document.getElementById('statusFilterLabel');
             const toggle = label.closest('.status-multiselect-toggle');
             const selected = getSelectedStatuses();
-            const statusNames = { new: t('statusPluralNew'), progress: t('statusPluralProgress'), review: t('statusPluralReview'), done: t('statusPluralDone') };
+            const statusNames = { new: window.t('statusPluralNew'), progress: window.t('statusPluralProgress'), review: window.t('statusPluralReview'), done: window.t('statusPluralDone') };
             
             // Remove old count badge
             const oldBadge = toggle.querySelector('.status-multiselect-count');
             if (oldBadge) oldBadge.remove();
             
             if (selected.length === 0 || selected.length === 4) {
-                label.textContent = t('statusesLabel');
+                label.textContent = window.t('statusesLabel');
                 label.classList.add('placeholder');
             } else if (selected.length === 1) {
                 label.textContent = statusNames[selected[0]] || selected[0];
@@ -108,7 +108,7 @@
         // O(1) subtask count — будуємо один раз на початку renderTasks
         const subtaskCountMap = {};
         if (Array.isArray(tasks)) {
-            tasks.forEach(function(task_) { // task_ щоб не shadow глобальну t() translation fn
+            tasks.forEach(function(task_) { // task_ щоб не shadow глобальну window.t() translation fn
                 if (task_.parentId) subtaskCountMap[task_.parentId] = (subtaskCountMap[task_.parentId] || 0) + 1;
             });
         }
@@ -210,9 +210,9 @@
             });
             const totalHours = Math.floor(totalMinutes / 60);
             const totalMins = totalMinutes % 60;
-            const totalTimeStr = totalMinutes > 0 ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${totalHours > 0 ? totalHours + (t('hourShort')) : ''}${totalMins > 0 ? totalMins + (t('minShort')) : ''}` : '';
+            const totalTimeStr = totalMinutes > 0 ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${totalHours > 0 ? totalHours + (window.t('hourShort')) : ''}${totalMins > 0 ? totalMins + (window.t('minShort')) : ''}` : '';
             
-            document.getElementById('totalTimeInfo').innerHTML = totalTimeStr ? `<span class="total-time-badge">${totalTimeStr} (${f.filter(x=>x.status!=='done').length} ${t('tasks')})</span>` : '';
+            document.getElementById('totalTimeInfo').innerHTML = totalTimeStr ? `<span class="total-time-badge">${totalTimeStr} (${f.filter(x=>x.status!=='done').length} ${window.t('tasks')})</span>` : '';
             
             if (f.length === 0) {
                 const hasFilters = selectedStatuses.length > 0 || ff || af || df || tf || (document.getElementById('taskSearchInput')?.value || '').trim();
@@ -220,17 +220,17 @@
                 if (isEmptyAll) {
                     c.innerHTML = `<div class="empty-table" style="text-align:center;padding:3rem 1rem;">
                         <div style="margin-bottom:0.75rem;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg></div>
-                        <h3 style="margin-bottom:0.5rem;">${t('noTasks') || t('noTasksYet')}</h3>
-                        <p style="color:#6b7280;margin-bottom:1rem;">${t('createFirstTask') || 'Створіть першу задачу для команди'}</p>
-                        <button class="btn btn-success" onclick="openTaskModal()">+ ${t('newTask') || t('newTask')}</button>
+                        <h3 style="margin-bottom:0.5rem;">${window.t('noTasks') || window.t('noTasksYet')}</h3>
+                        <p style="color:#6b7280;margin-bottom:1rem;">${window.t('createFirstTask') || 'Створіть першу задачу для команди'}</p>
+                        <button class="btn btn-success" onclick="openTaskModal()">+ ${window.t('newTask') || window.t('newTask')}</button>
                     </div>`;
                 } else {
-                    c.innerHTML = `<div class="empty-table"><h3>${t('noTasksFound') || t('nothingFound')}</h3><p>${t('changeFilters') || t('tryChangeFilters')}</p></div>`;
+                    c.innerHTML = `<div class="empty-table"><h3>${window.t('noTasksFound') || window.t('nothingFound')}</h3><p>${window.t('changeFilters') || window.t('tryChangeFilters')}</p></div>`;
                 }
                 return;
             }
             
-            const st = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
+            const st = { new: window.t('statusNew'), progress: window.t('statusProgress'), review: window.t('statusReview'), done: window.t('statusDone') };
             
             // Desktop table
             const sortIcon = (field) => {
@@ -252,13 +252,13 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="${sortClass('title')}"    onclick="sortTasksBy('title')"   >${t('task')}${sortIcon('title')}<div class="col-resize-handle"></div></th>
-                            <th class="${sortClass('assignee')}" onclick="sortTasksBy('assignee')">${t('assignee')}${sortIcon('assignee')}<div class="col-resize-handle"></div></th>
-                            <th class="${sortClass('creator')}  col-hide-md" onclick="sortTasksBy('creator')">${t('createdBy')}${sortIcon('creator')}<div class="col-resize-handle"></div></th>
-                            <th class="${sortClass('deadline')}" onclick="sortTasksBy('deadline')">${t('deadline')}${sortIcon('deadline')}<div class="col-resize-handle"></div></th>
-                            <th class="${sortClass('status')}"   onclick="sortTasksBy('status')"  >${t('status')}${sortIcon('status')}<div class="col-resize-handle"></div></th>
-                            <th class="${sortClass('function')}  col-hide-sm" onclick="sortTasksBy('function')">${t('type')}${sortIcon('function')}<div class="col-resize-handle"></div></th>
-                            <th>${t('actions')}</th>
+                            <th class="${sortClass('title')}"    onclick="sortTasksBy('title')"   >${window.t('task')}${sortIcon('title')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('assignee')}" onclick="sortTasksBy('assignee')">${window.t('assignee')}${sortIcon('assignee')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('creator')}  col-hide-md" onclick="sortTasksBy('creator')">${window.t('createdBy')}${sortIcon('creator')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('deadline')}" onclick="sortTasksBy('deadline')">${window.t('deadline')}${sortIcon('deadline')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('status')}"   onclick="sortTasksBy('status')"  >${window.t('status')}${sortIcon('status')}<div class="col-resize-handle"></div></th>
+                            <th class="${sortClass('function')}  col-hide-sm" onclick="sortTasksBy('function')">${window.t('type')}${sortIcon('function')}<div class="col-resize-handle"></div></th>
+                            <th>${window.t('actions')}</th>
                         </tr>
                     </thead>
                     <tbody>`;
@@ -271,7 +271,7 @@
                 const deadlineClass = od ? 'overdue' : (isToday ? 'today' : '');
                 
                 // Індикатор процесу
-                const processIndicator = task.processId ? `<i data-lucide="git-branch" class="icon icon-sm" style="color:#8b5cf6;" title="${t('taskFromProcess')}"></i> ` : '';
+                const processIndicator = task.processId ? `<i data-lucide="git-branch" class="icon icon-sm" style="color:#8b5cf6;" title="${window.t('taskFromProcess')}"></i> ` : '';
                 
                 html += `
                     <tr style="${typeof isTaskSelected === 'function' && isTaskSelected(task.id) ? 'background:#f0fdf4;' : ''}">
@@ -281,18 +281,18 @@
                         </td>
                         <td>${esc(task.assigneeName) || '-'}</td>
                         <td class="col-hide-md">${esc(task.creatorName) || '-'}</td>
-                        <td class="deadline-text ${deadlineClass}" onclick="inlineEditDeadline(event, '${escId(task.id)}', '${task.deadlineDate || ''}')" style="cursor:pointer;" title="${t('clickToChangeDate')}">${taskDeadline ? formatDateShort(taskDeadline) : '-'}${task.timeEnd ? ' ' + task.timeEnd : ''}</td>
+                        <td class="deadline-text ${deadlineClass}" onclick="inlineEditDeadline(event, '${escId(task.id)}', '${task.deadlineDate || ''}')" style="cursor:pointer;" title="${window.t('clickToChangeDate')}">${taskDeadline ? formatDateShort(taskDeadline) : '-'}${task.timeEnd ? ' ' + task.timeEnd : ''}</td>
                         <td><span class="status-badge status-${task.status}" style="cursor:pointer;" onclick="cycleTaskStatus('${escId(task.id)}',event)">${st[task.status] || task.status}</span></td>
                         <td class="col-hide-sm">${esc(task.function) || '-'}</td>
                         <td>
                             <div class="action-btns">
                                 ${task.status === 'review' && task.creatorId === currentUser?.uid && task.assigneeId !== currentUser?.uid ? `
-                                    <button class="action-btn" onclick="acceptReviewTask('${escId(task.id)}')" title="${t('acceptTask')}" style="color:#22c55e;"><i data-lucide="check-circle" class="icon icon-sm"></i></button>
-                                    <button class="action-btn" onclick="rejectReviewTask('${escId(task.id)}')" title="${t('rejectTask')}" style="color:#f59e0b;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="acceptReviewTask('${escId(task.id)}')" title="${window.t('acceptTask')}" style="color:#22c55e;"><i data-lucide="check-circle" class="icon icon-sm"></i></button>
+                                    <button class="action-btn" onclick="rejectReviewTask('${escId(task.id)}')" title="${window.t('rejectTask')}" style="color:#f59e0b;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i></button>
                                 ` : ''}
-                                <button class="action-btn" onclick="togglePin('${escId(task.id)}')" title="${t('pin')}"><i data-lucide="pin" class="icon icon-sm"></i></button>
-                                <button class="action-btn" onclick="openTaskModal('${escId(task.id)}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
-                                <button class="action-btn" onclick="deleteTask('${escId(task.id)}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="togglePin('${escId(task.id)}')" title="${window.t('pin')}"><i data-lucide="pin" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="openTaskModal('${escId(task.id)}')" title="${window.t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                                <button class="action-btn" onclick="deleteTask('${escId(task.id)}')" title="${window.t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                             </div>
                         </td>
                     </tr>`;
@@ -340,12 +340,12 @@
             });
             
             const groupLabels = {
-                overdue: { label: t('overdueLabel2'), class: 'overdue' },
-                today: { label: t('todayLabel'), class: 'today' },
-                tomorrow: { label: t('tomorrowLabel'), class: 'tomorrow' },
-                thisWeek: { label: t('thisWeekLabel'), class: '' },
-                later: { label: t('laterLabel'), class: '' },
-                noDueDate: { label: t('noDateLabel'), class: '' }
+                overdue: { label: window.t('overdueLabel2'), class: 'overdue' },
+                today: { label: window.t('todayLabel'), class: 'today' },
+                tomorrow: { label: window.t('tomorrowLabel'), class: 'tomorrow' },
+                thisWeek: { label: window.t('thisWeekLabel'), class: '' },
+                later: { label: window.t('laterLabel'), class: '' },
+                noDueDate: { label: window.t('noDateLabel'), class: '' }
             };
             
             Object.keys(groups).forEach(groupKey => {
@@ -372,8 +372,8 @@
                     html += `
                     <div class="mobile-task-card ${cardClass}" data-task-id="${task.id}" data-can-complete="${canSwipeComplete}">
                         <!-- Swipe backgrounds -->
-                        <div class="swipe-action-bg left"><i data-lucide="check" class="icon"></i> ${t('statusDone')}</div>
-                        <div class="swipe-action-bg right"><i data-lucide="trash-2" class="icon"></i> ${t('delete')}</div>
+                        <div class="swipe-action-bg left"><i data-lucide="check" class="icon"></i> ${window.t('statusDone')}</div>
+                        <div class="swipe-action-bg right"><i data-lucide="trash-2" class="icon"></i> ${window.t('delete')}</div>
                         
                         <!-- Card content -->
                         <div class="mobile-task-content" onclick="openTaskModal('${escId(task.id)}')">
@@ -385,10 +385,10 @@
                                     if (!taskDeadline) return '';
                                     if (od) {
                                         const daysAgo = Math.floor((new Date(today) - new Date(taskDeadline)) / 86400000);
-                                        const label = daysAgo === 1 ? t('daysAgoOne') : daysAgo < 5 ? daysAgo + ' дні тому' : daysAgo + ' днів тому';
+                                        const label = daysAgo === 1 ? window.t('daysAgoOne') : daysAgo < 5 ? daysAgo + ' дні тому' : daysAgo + ' днів тому';
                                         return `<span class="mobile-task-deadline-badge overdue">${label}</span>`;
                                     }
-                                    if (isToday) return `<span class="mobile-task-deadline-badge today">${task.timeEnd || t('today')}</span>`;
+                                    if (isToday) return `<span class="mobile-task-deadline-badge today">${task.timeEnd || window.t('today')}</span>`;
                                     // Format date compactly
                                     const dp = taskDeadline.split('-');
                                     const dayNum = parseInt(dp[2]);
@@ -440,28 +440,28 @@
                             <div class="mobile-task-actions" onclick="event.stopPropagation()">
                                 ${isReviewForCreator ? `
                                     <button class="mobile-action-btn complete" onclick="acceptReviewTask('${escId(task.id)}')" style="background:#22c55e;color:white;">
-                                        <i data-lucide="check" class="icon icon-sm"></i> ${t('acceptTask')}
+                                        <i data-lucide="check" class="icon icon-sm"></i> ${window.t('acceptTask')}
                                     </button>
                                     <button class="mobile-action-btn edit" onclick="rejectReviewTask('${escId(task.id)}')" style="background:#f59e0b;color:white;">
-                                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('rejectTask')}
+                                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('rejectTask')}
                                     </button>
                                 ` : task.status === 'review' ? `
                                     <button class="mobile-action-btn edit" style="opacity:0.6;cursor:default;">
-                                        <i data-lucide="eye" class="icon icon-sm"></i> ${t('reviewLabel')}
+                                        <i data-lucide="eye" class="icon icon-sm"></i> ${window.t('reviewLabel')}
                                     </button>
                                 ` : task.status !== 'done' ? `
                                     <button class="mobile-action-btn complete" onclick="quickCompleteTask('${escId(task.id)}')">
-                                        <i data-lucide="check" class="icon icon-sm"></i> ${t('statusDone')}
+                                        <i data-lucide="check" class="icon icon-sm"></i> ${window.t('statusDone')}
                                     </button>
                                 ` : `
                                     <button class="mobile-action-btn edit" onclick="reopenTask('${escId(task.id)}')">
-                                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('reopen')}
+                                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('reopen')}
                                     </button>
                                 `}
                                 <button class="mobile-action-btn edit" onclick="openTaskModal('${escId(task.id)}')">
                                     <i data-lucide="pencil" class="icon icon-sm"></i>
                                 </button>
-                                <button class="mobile-action-btn delete" onclick="showConfirmModal(t('deleteConfirm'),{danger:true}).then(ok=>ok&&deleteTask('${escId(task.id)}'))">
+                                <button class="mobile-action-btn delete" onclick="showConfirmModal(window.t('deleteConfirm'),{danger:true}).then(ok=>ok&&deleteTask('${escId(task.id)}'))">
                                     <i data-lucide="trash-2" class="icon icon-sm"></i>
                                 </button>
                             </div>
@@ -505,7 +505,7 @@
                 if (tableRows.length > tasksVisibleCount) {
                     const loadMoreHTML = `<div id="loadMoreTasksBtn" style="text-align:center;padding:1rem;">
                         <button class="btn btn-small" onclick="loadMoreTasks()" style="padding:0.6rem 2rem;">
-                            ${t('showMore')} (${tasksVisibleCount}/${tableRows.length})
+                            ${window.t('showMore')} (${tasksVisibleCount}/${tableRows.length})
                         </button>
                     </div>`;
                     document.querySelector('.tasks-table')?.insertAdjacentHTML('afterend', loadMoreHTML);
@@ -549,7 +549,7 @@
                     if (mobileCards.length > tasksVisibleCount) {
                         mobileList.insertAdjacentHTML('beforeend', `<div id="loadMoreTasksMobileBtn" style="text-align:center;padding:1rem;">
                             <button class="btn btn-small" onclick="loadMoreTasks()" style="padding:0.6rem 2rem;width:100%;">
-                                ${t('showMore')} (${tasksVisibleCount}/${mobileCards.length})
+                                ${window.t('showMore')} (${tasksVisibleCount}/${mobileCards.length})
                             </button>
                         </div>`);
                     }

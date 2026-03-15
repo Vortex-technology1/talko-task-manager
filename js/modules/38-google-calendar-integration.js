@@ -43,7 +43,7 @@
             
             if (connected) connected.style.display = 'block';
             if (notConnected) notConnected.style.display = 'none';
-            if (emailEl) emailEl.textContent = t('connected') + ': ' + email;
+            if (emailEl) emailEl.textContent = window.t('connected') + ': ' + email;
         }
         
         function showCalendarNotConnected() {
@@ -56,7 +56,7 @@
         
         function connectGoogleCalendar() {
             if (!tokenClient) {
-                showAlertModal(t('googleApiNotLoaded'));
+                showAlertModal(window.t('googleApiNotLoaded'));
                 return;
             }
             
@@ -67,7 +67,7 @@
         function handleGoogleAuthResponse(response) {
             if (response.error) {
                 console.error('Google auth error:', response);
-                showAlertModal(t('googleAuthError') + ': ' + response.error);
+                showAlertModal(window.t('googleAuthError') + ': ' + response.error);
                 return;
             }
             
@@ -84,7 +84,7 @@
                 return res.json();
             })
             .then(userInfo => {
-                const email = userInfo.email || currentUser.email || t('connected');
+                const email = userInfo.email || currentUser.email || window.t('connected');
                 
                 // Save to Firestore using set with merge
                 return window.companyRef()
@@ -97,7 +97,7 @@
                     }, { merge: true })
                     .then(() => {
                         showCalendarConnected(email);
-                        showAlertModal(t('googleCalendarConnected'));
+                        showAlertModal(window.t('googleCalendarConnected'));
                     });
             })
             .catch(err => {
@@ -107,22 +107,22 @@
                     .collection('users').doc(currentUser.uid)
                     .set({
                         googleCalendarConnected: true,
-                        googleCalendarEmail: currentUser.email || t('connected'),
+                        googleCalendarEmail: currentUser.email || window.t('connected'),
                         googleAccessToken: googleAccessToken,
                         googleCalendarUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true })
                     .then(() => {
-                        showCalendarConnected(currentUser.email || t('connected'));
-                        showAlertModal(t('googleCalendarConnected'));
+                        showCalendarConnected(currentUser.email || window.t('connected'));
+                        showAlertModal(window.t('googleCalendarConnected'));
                     })
                     .catch(err2 => {
-                        showAlertModal(t('saveError') + ': ' + err2.message);
+                        showAlertModal(window.t('saveError') + ': ' + err2.message);
                     });
             });
         }
         
         async function disconnectGoogleCalendar() {
-            if (!await showConfirmModal(t('disconnectGoogleCalendar'), { danger: true })) {
+            if (!await showConfirmModal(window.t('disconnectGoogleCalendar'), { danger: true })) {
                 return;
             }
             
@@ -144,10 +144,10 @@
                 .then(() => {
                     googleAccessToken = null;
                     showCalendarNotConnected();
-                    showAlertModal(t('googleCalendarDisconnected'));
+                    showAlertModal(window.t('googleCalendarDisconnected'));
                 })
                 .catch(err => {
                     console.error('Error disconnecting calendar:', err);
-                    showAlertModal(t('error') + ': ' + err.message);
+                    showAlertModal(window.t('error') + ': ' + err.message);
                 });
         }

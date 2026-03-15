@@ -27,21 +27,21 @@
         
         if (task.expectedResult) {
             html += `<div style="margin-bottom:1rem;padding:0.75rem;background:#f0fdf4;border-radius:10px;border-left:3px solid #22c55e;">
-                <div style="font-size:0.7rem;font-weight:600;color:#16a34a;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;">${t('expectedResultTitle')}</div>
+                <div style="font-size:0.7rem;font-weight:600;color:#16a34a;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;">${window.t('expectedResultTitle')}</div>
                 <div style="font-size:0.85rem;color:#1a1a1a;">${esc(task.expectedResult)}</div>
             </div>`;
         }
         
         if (task.reportFormat) {
             html += `<div style="margin-bottom:1rem;padding:0.75rem;background:#fffbeb;border-radius:10px;border-left:3px solid #f59e0b;">
-                <div style="font-size:0.7rem;font-weight:600;color:#92400e;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;">${t('reportFormatTitle')}</div>
+                <div style="font-size:0.7rem;font-weight:600;color:#92400e;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;">${window.t('reportFormatTitle')}</div>
                 <div style="font-size:0.85rem;color:#1a1a1a;">${esc(task.reportFormat)}</div>
             </div>`;
         }
         
         html += `<div style="margin-top:0.75rem;">
-            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">${t('completionCommentLabel')}</label>
-            <textarea id="completionReportText" style="width:100%;min-height:60px;border:1px solid #e5e7eb;border-radius:10px;padding:0.6rem;font-size:0.85rem;resize:vertical;font-family:inherit;" placeholder="${t('completionReportPlaceholder')}"></textarea>
+            <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem;">${window.t('completionCommentLabel')}</label>
+            <textarea id="completionReportText" style="width:100%;min-height:60px;border:1px solid #e5e7eb;border-radius:10px;padding:0.6rem;font-size:0.85rem;resize:vertical;font-family:inherit;" placeholder="${window.t('completionReportPlaceholder')}"></textarea>
         </div>`;
         
         body.innerHTML = html;
@@ -76,7 +76,7 @@
                 await db.collection('companies').doc(currentCompany)
                     .collection('tasks').doc(taskId)
                     .collection('comments').add({
-                        text: t('reportPrefix') + ' ' + text,
+                        text: window.t('reportPrefix') + ' ' + text,
                         authorId: currentUser.uid,
                         authorName: currentUserData?.name || currentUser.email,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()

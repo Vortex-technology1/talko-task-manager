@@ -113,7 +113,7 @@
                 return `
                     <div class="comment-item ${isOwn ? 'own-comment' : ''}" data-comment-id="${comment.id}">
                         <div class="comment-header">
-                            <span class="comment-author">${escapeHtml(comment.authorName || t('unknown'))}</span>
+                            <span class="comment-author">${escapeHtml(comment.authorName || window.t('unknown'))}</span>
                             <span class="comment-time">${time}${edited}</span>
                             <div class="comment-actions" style="margin-left:auto;display:flex;gap:0.25rem;opacity:0;transition:opacity 0.15s;">
                                 ${isOwn ? `<button onclick="editComment('${comment.id}')" title="Редагувати"
@@ -174,7 +174,7 @@
             const inp = document.getElementById('comment-edit-input-' + commentId);
             const newText = inp?.value?.trim();
             if (!newText) return;
-            if (newText.length > 4000) { showToast((typeof t === 'function' ? t('commentTooLong') : null) || 'Коментар занадто довгий (макс. 4000 символів)', 'warning'); return; } // BUG-AB FIX
+            if (newText.length > 4000) { showToast((typeof t === 'function' ? window.t('commentTooLong') : null) || 'Коментар занадто довгий (макс. 4000 символів)', 'warning'); return; } // BUG-AB FIX
             try {
                 await db.collection('companies').doc(currentCompany)
                     .collection('tasks').doc(currentTaskIdForComments)
@@ -186,7 +186,7 @@
 
         // Delete comment
         window.deleteComment = async function(commentId) {
-            const ok = await showConfirmModal(t('confirmDeleteComment'), { danger: true });
+            const ok = await showConfirmModal(window.t('confirmDeleteComment'), { danger: true });
             if (!ok) return;
             try {
                 await db.collection('companies').doc(currentCompany)
@@ -208,7 +208,7 @@
             const diff = now - date;
             
             // Less than 1 minute
-            if (diff < 60000) return t('justNow');
+            if (diff < 60000) return window.t('justNow');
             
             // Less than 1 hour
             if (diff < 3600000) {
@@ -225,7 +225,7 @@
             const yesterday = new Date(now);
             yesterday.setDate(yesterday.getDate() - 1);
             if (date.toDateString() === yesterday.toDateString()) {
-                return t('yesterdayLabel') + ' ' + date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+                return window.t('yesterdayLabel') + ' ' + date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
             }
             
             // Older
@@ -243,7 +243,7 @@
             
             // BUG-AB FIX: limit comment length to 4000 chars
             if (text.length > 4000) {
-                showToast((typeof t === 'function' ? t('commentTooLong') : null) || `Коментар занадто довгий (макс. 4000 символів)`, 'warning');
+                showToast((typeof t === 'function' ? window.t('commentTooLong') : null) || `Коментар занадто довгий (макс. 4000 символів)`, 'warning');
                 return;
             }
             
@@ -274,7 +274,7 @@
                 input.style.height = 'auto';
             } catch (error) {
                 console.error('Error sending comment:', error);
-                showToast(t('commentSendError'), 'error');
+                showToast(window.t('commentSendError'), 'error');
             } finally {
                 btn.disabled = false;
             }

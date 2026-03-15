@@ -4,7 +4,7 @@
 'use strict';
         function openFunctionModal(id = null) {
             if (!isManagerOrAbove()) {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 return;
             }
 
@@ -15,7 +15,7 @@
                 editingId = id;
                 const f = functions.find(x => x.id === id);
                 if (f) {
-                    document.getElementById('functionModalTitle').textContent = t('editTask');
+                    document.getElementById('functionModalTitle').textContent = window.t('editTask');
                     document.getElementById('functionName').value = f.name || '';
                     document.getElementById('functionHead').value = f.headId || '';
                     document.getElementById('functionDescription').value = f.description || '';
@@ -27,7 +27,7 @@
                 }
             } else {
                 editingId = null;
-                document.getElementById('functionModalTitle').textContent = t('newFunction');
+                document.getElementById('functionModalTitle').textContent = window.t('newFunction');
                 document.getElementById('functionForm').reset();
             }
         }
@@ -36,13 +36,13 @@
             const c = document.getElementById('functionAssignees');
             const h = document.getElementById('functionHead');
             c.innerHTML = users.map(u => `<label class="assignee-checkbox"><input type="checkbox" value="${esc(u.id)}">${esc(u.name || u.email)}</label>`).join('');
-            h.innerHTML = `<option value="">${t('select')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+            h.innerHTML = `<option value="">${window.t('select')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
         }
 
         async function saveFunction(e) {
             // Role guard: only owner/manager can manage functions
             if (currentUserData?.role === 'employee') {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 return;
             }
             e.preventDefault();
@@ -51,7 +51,7 @@
             
             // Rate limiting
             if (!rateLimiter.check('saveFunction')) {
-                showAlertModal(t('tooManyRequests'));
+                showAlertModal(window.t('tooManyRequests'));
                 return;
             }
             
@@ -142,7 +142,7 @@
                 if (typeof sendFunctionsToIframe === 'function') sendFunctionsToIframe();
             } catch (error) {
                 console.error('saveFunction error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             } finally {
                 isSaving = false;
                 if (submitBtn) submitBtn.disabled = false;
@@ -150,14 +150,14 @@
         }
 
         async function deleteFunction(id) {
-            if (currentUserData?.role === 'employee') { showToast(t('noPermissionTask'), 'error'); return; }
+            if (currentUserData?.role === 'employee') { showToast(window.t('noPermissionTask'), 'error'); return; }
             const func = functions.find(f => f.id === id);
             if (!func) return;
             
-            const funcName = func.name || t('function');
+            const funcName = func.name || window.t('function');
             const usedInTemplates = processTemplates.filter(pt => pt.steps?.some(s => s.function === funcName));
             if (usedInTemplates.length > 0) {
-                if (!await showConfirmModal(funcName + ' → ' + usedInTemplates.map(pt => pt.name).join(', ') + '\n\n' + (t('deleteConfirm')), { danger: true })) return;
+                if (!await showConfirmModal(funcName + ' → ' + usedInTemplates.map(pt => pt.name).join(', ') + '\n\n' + (window.t('deleteConfirm')), { danger: true })) return;
             }
             
             // Оптимістичне видалення
@@ -211,7 +211,7 @@
                 renderFunctions();
                 hideUndoToast();
                 console.error('deleteFunction error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }
 
@@ -222,9 +222,9 @@
             if (activeFunctions.length === 0) {
                 c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:3rem 1rem;">
                     <div style="margin-bottom:0.75rem;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
-                    <h3 style="margin-bottom:0.5rem;">${t('noFunctions') || 'Немає функцій'}</h3>
-                    <p style="color:#6b7280;margin-bottom:1rem;">${t('createFirstFunction') || 'Додайте першу бізнес-функцію для структуризації роботи'}</p>
-                    <button class="btn btn-success" onclick="openFunctionModal()">+ ${t('addFunction') || 'Додати функцію'}</button>
+                    <h3 style="margin-bottom:0.5rem;">${window.t('noFunctions') || 'Немає функцій'}</h3>
+                    <p style="color:#6b7280;margin-bottom:1rem;">${window.t('createFirstFunction') || 'Додайте першу бізнес-функцію для структуризації роботи'}</p>
+                    <button class="btn btn-success" onclick="openFunctionModal()">+ ${window.t('addFunction') || 'Додати функцію'}</button>
                 </div>`;
                 const mergeBtn = document.getElementById('mergeFunctionsBtn');
                 if (mergeBtn) mergeBtn.style.display = 'none';
@@ -237,7 +237,7 @@
             const jsDayToIdx = {1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6};
 
             c.innerHTML = activeFunctions.map(f => {
-                const mergedInfo = f.mergedFrom?.length ? `<div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;"><i data-lucide="git-merge" class="icon icon-sm"></i> ${t('mergedFrom')}: ${f.mergedFrom.map(m => m.name).join(', ')}</div>` : '';
+                const mergedInfo = f.mergedFrom?.length ? `<div style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem;"><i data-lucide="git-merge" class="icon icon-sm"></i> ${window.t('mergedFrom')}: ${f.mergedFrom.map(m => m.name).join(', ')}</div>` : '';
                 
                 const funcTasks = tasks.filter(task => task.function === f.name);
                 const funcRegular = regularTasks.filter(rt => rt.function === f.name);
@@ -270,7 +270,7 @@
                     regularHTML = `
                     <div class="func-regular-section" id="funcRegular_${escId(f.id)}" style="display:none;margin-top:0.75rem;border-top:1px solid #e5e7eb;padding-top:0.75rem;">
                         <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.5rem;">
-                            <i data-lucide="repeat" class="icon icon-sm"></i> ${t('tabRegular')} (${funcRegular.length})
+                            <i data-lucide="repeat" class="icon icon-sm"></i> ${window.t('tabRegular')} (${funcRegular.length})
                         </div>
                         ${funcRegular.map(rt => {
                             const status = getRegularTaskStatus(rt);
@@ -281,7 +281,7 @@
                             // Schedule display
                             let scheduleStr = '';
                             if (rt.period === 'daily') {
-                                scheduleStr = t('daily');
+                                scheduleStr = window.t('daily');
                             } else if (rt.period === 'weekly' && rt.daysOfWeek) {
                                 scheduleStr = rt.daysOfWeek
                                     .map(d => parseInt(d))
@@ -289,7 +289,7 @@
                                     .map(d => `<span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;font-size:0.7rem;font-weight:600;${rt.daysOfWeek.includes(d.toString()) ? 'background:#dcfce7;color:#16a34a;' : ''}">${shortDays[jsDayToIdx[d]] || d}</span>`)
                                     .join('');
                             } else if (rt.period === 'monthly') {
-                                scheduleStr = (t('monthly')) + ' ' + (rt.dayOfMonth || '1') + '-' + (t('dayShort'));
+                                scheduleStr = (window.t('monthly')) + ' ' + (rt.dayOfMonth || '1') + '-' + (window.t('dayShort'));
                             }
 
                             return `
@@ -323,9 +323,9 @@
                     </div>
                     <div class="function-stats" style="flex-wrap:wrap;gap:0.5rem;">
                         <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
-                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks} ${t('active')} / ${doneTasks} ${t('doneLabel')}</span>
-                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="repeat" class="icon icon-sm"></i> ${funcRegular.length} ${t('regularTaskLabel')}</span>
-                            ${weeklyHours > 0 ? `<span style="font-size:0.82rem;color:#0284c7;font-weight:600;"><i data-lucide="clock" class="icon icon-sm"></i> ${weeklyHours} ${t('hoursPerWeek')}</span>` : ''}
+                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="file-text" class="icon icon-sm"></i> ${activeTasks} ${window.t('active')} / ${doneTasks} ${window.t('doneLabel')}</span>
+                            <span style="font-size:0.82rem;color:#525252;"><i data-lucide="repeat" class="icon icon-sm"></i> ${funcRegular.length} ${window.t('regularTaskLabel')}</span>
+                            ${weeklyHours > 0 ? `<span style="font-size:0.82rem;color:#0284c7;font-weight:600;"><i data-lucide="clock" class="icon icon-sm"></i> ${weeklyHours} ${window.t('hoursPerWeek')}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.3rem;" onclick="event.stopPropagation();">
                             <button class="btn btn-small" onclick="toggleFuncFinance('${escId(f.id)}')" title="Фінанси" style="color:#22c55e;border-color:#d1fae5;">
@@ -337,7 +337,7 @@
                     </div>
                     ${funcRegular.length > 0 ? `
                     <div style="text-align:center;padding-top:0.3rem;margin-top:0.3rem;border-top:1px dashed #e5e7eb;">
-                        <span class="func-toggle-hint" id="funcToggle_${escId(f.id)}" style="font-size:0.75rem;color:#9ca3af;"><i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks')}</span>
+                        <span class="func-toggle-hint" id="funcToggle_${escId(f.id)}" style="font-size:0.75rem;color:#9ca3af;"><i data-lucide="chevron-down" class="icon icon-sm"></i> ${window.t('showRegularTasks')}</span>
                     </div>` : ''}
                     ${regularHTML}
                     ${financeHTML}
@@ -361,8 +361,8 @@
             section.style.display = isOpen ? 'none' : 'block';
             if (toggle) {
                 toggle.innerHTML = isOpen 
-                    ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${t('showRegularTasks')}`
-                    : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${t('hideRegularTasks')}`;
+                    ? `<i data-lucide="chevron-down" class="icon icon-sm"></i> ${window.t('showRegularTasks')}`
+                    : `<i data-lucide="chevron-up" class="icon icon-sm"></i> ${window.t('hideRegularTasks')}`;
                 refreshIcons();
             }
         }

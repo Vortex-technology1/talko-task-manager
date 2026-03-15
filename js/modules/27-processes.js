@@ -41,7 +41,7 @@
         function updateProcessTemplateFilter() {
             const select = document.getElementById('processTemplateFilter');
             if (!select) return;
-            select.innerHTML = `<option value="">${t('allProcesses')}</option>` + 
+            select.innerHTML = `<option value="">${window.t('allProcesses')}</option>` + 
                 processTemplates.map(pt => `<option value="${esc(pt.id)}">${esc(pt.name)}</option>`).join('');
         }
         
@@ -54,7 +54,7 @@
             // Оновлюємо select виконавців (одноразово)
             const paf = document.getElementById('processAssigneeFilter');
             if (paf && paf.options.length <= 1) {
-                paf.innerHTML = `<option value="">${t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
+                paf.innerHTML = `<option value="">${window.t('allAssignees')}</option>` + users.map(u => `<option value="${esc(u.id)}">${esc(u.name || u.email)}</option>`).join('');
             }
             
             // Фільтруємо процеси
@@ -161,7 +161,7 @@
             if (process.deadline) {
                 if (isOverdue) {
                     const daysAgo = Math.floor((new Date(todayStr) - new Date(process.deadline)) / 86400000);
-                    deadlineHTML = `<span class="overdue-badge"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${daysAgo}${t('daysOverdue')}</span>`;
+                    deadlineHTML = `<span class="overdue-badge"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${daysAgo}${window.t('daysOverdue')}</span>`;
                 } else {
                     const dp = process.deadline.split('-');
                     const dayNum = parseInt(dp[2]);

@@ -27,18 +27,18 @@
 
         async function selfRegisterCompany() {
             const user = auth.currentUser;
-            if (!user) { showAlertModal(t('signInFirst')); return; }
+            if (!user) { showAlertModal(window.t('signInFirst')); return; }
             
             const companyName = document.getElementById('selfRegCompanyName')?.value?.trim();
             const ownerName = document.getElementById('selfRegOwnerName')?.value?.trim();
             
             if (!companyName || !ownerName) {
-                showAlertModal(t('fillAllFields'));
+                showAlertModal(window.t('fillAllFields'));
                 return;
             }
             
             const btn = document.getElementById('selfRegBtn');
-            if (btn) { btn.disabled = true; btn.textContent = t('loading'); }
+            if (btn) { btn.disabled = true; btn.textContent = window.t('loading'); }
             
             try {
                 const companyId = companyName.toLowerCase().replace(/[^a-zа-яіїєґ0-9]/g, '_').substring(0, 30) + '_' + Date.now().toString(36);
@@ -74,7 +74,7 @@
                 await batch.commit();
                 } catch(err) {
                     console.error('[Batch] commit failed:', err);
-                    showToast && showToast(t('savingError'), 'error');
+                    showToast && showToast(window.t('savingError'), 'error');
                 }
                 
                 // Reload — onAuthStateChanged знайде companyId і зайде
@@ -82,7 +82,7 @@
                 
             } catch (error) {
                 console.error('Self registration error:', error);
-                showAlertModal(t('createError') + ': ' + error.message);
+                showAlertModal(window.t('createError') + ': ' + error.message);
                 if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="rocket" class="icon"></i> Створити компанію'; }
             }
         }
@@ -109,7 +109,7 @@
                 const inviteDoc = await db.collection('invites').doc(inviteId).get();
                 
                 if (!inviteDoc.exists) {
-                    showAuthMessage(t('inviteNotFound'), 'error');
+                    showAuthMessage(window.t('inviteNotFound'), 'error');
                     currentInviteData = null;
                     return false;
                 }
@@ -200,22 +200,22 @@
             
             // Валідація
             if (!email) {
-                showAuthMessage(t('enterEmail'), 'error');
+                showAuthMessage(window.t('enterEmail'), 'error');
                 return;
             }
             
             if (!password || password.length < 6) {
-                showAuthMessage(t('passwordMinLength'), 'error');
+                showAuthMessage(window.t('passwordMinLength'), 'error');
                 return;
             }
             
             if (password !== passwordConfirm) {
-                showAuthMessage(t('passwordsMismatch'), 'error');
+                showAuthMessage(window.t('passwordsMismatch'), 'error');
                 return;
             }
             
             try {
-                showAuthMessage(t('registering'), 'info');
+                showAuthMessage(window.t('registering'), 'info');
                 
                 // КРОК 1: Спочатку створюємо Auth акаунт
                 // (потрібен для доступу до Firestore — invites вимагають авторизацію)
@@ -230,7 +230,7 @@
                 
                 // Якщо є currentInviteData з URL — перевіряємо відповідність
                 if (currentInviteData && currentInviteData.email.toLowerCase() !== email.toLowerCase()) {
-                    showAuthMessage(t('emailMismatchInvite'), 'error');
+                    showAuthMessage(window.t('emailMismatchInvite'), 'error');
                     return;
                 }
                 
@@ -239,19 +239,19 @@
                 currentInviteData = null;
                 
                 dbg('[Register] Success! Waiting for onAuthStateChanged...');
-                showAuthMessage(t('registerSuccess'), 'success');
+                showAuthMessage(window.t('registerSuccess'), 'success');
                 
             } catch (e) {
                 console.error('[Register] Error:', e.code, e.message);
-                let msg = t('registerError');
+                let msg = window.t('registerError');
                 if (e.code === 'auth/email-already-in-use') {
-                    msg = t('emailAlreadyRegistered');
+                    msg = window.t('emailAlreadyRegistered');
                 }
                 if (e.code === 'auth/invalid-email') {
-                    msg = t('invalidEmail');
+                    msg = window.t('invalidEmail');
                 }
                 if (e.code === 'auth/weak-password') {
-                    msg = t('weakPassword');
+                    msg = window.t('weakPassword');
                 }
                 showAuthMessage(msg, 'error');
             }
@@ -268,7 +268,7 @@
                     await auth.signInWithPopup(googleProvider);
                 }
             } catch (e) {
-                showAuthMessage(t('error') + ': ' + e.message, 'error');
+                showAuthMessage(window.t('error') + ': ' + e.message, 'error');
             }
         }
         
@@ -280,7 +280,7 @@
             }
         }).catch((e) => {
             if (e.code) {
-                showAuthMessage(t('error') + ': ' + e.message, 'error');
+                showAuthMessage(window.t('error') + ': ' + e.message, 'error');
             }
         });
 
@@ -290,18 +290,18 @@
             const password = document.getElementById('loginPassword').value;
             
             if (!email || !password) {
-                showAuthMessage(t('enterEmailAndPassword'), 'error');
+                showAuthMessage(window.t('enterEmailAndPassword'), 'error');
                 return;
             }
             
             try {
                 await auth.signInWithEmailAndPassword(email, password);
             } catch (e) {
-                let msg = t('loginError');
-                if (e.code === 'auth/user-not-found') msg = t('userNotFound');
-                if (e.code === 'auth/wrong-password') msg = t('wrongPassword');
-                if (e.code === 'auth/invalid-email') msg = t('invalidEmail');
-                if (e.code === 'auth/invalid-credential') msg = t('invalidCredentials');
+                let msg = window.t('loginError');
+                if (e.code === 'auth/user-not-found') msg = window.t('userNotFound');
+                if (e.code === 'auth/wrong-password') msg = window.t('wrongPassword');
+                if (e.code === 'auth/invalid-email') msg = window.t('invalidEmail');
+                if (e.code === 'auth/invalid-credential') msg = window.t('invalidCredentials');
                 showAuthMessage(msg, 'error');
             }
         }
@@ -310,15 +310,15 @@
         async function resetPassword() {
             const email = document.getElementById('loginEmail').value.trim();
             if (!email) {
-                showAuthMessage(t('enterEmailForReset'), 'error');
+                showAuthMessage(window.t('enterEmailForReset'), 'error');
                 return;
             }
             
             try {
                 await auth.sendPasswordResetEmail(email);
-                showAuthMessage(t('resetLinkSentTo') + email, 'success');
+                showAuthMessage(window.t('resetLinkSentTo') + email, 'success');
             } catch (e) {
-                showAuthMessage(t('error') + ': ' + e.message, 'error');
+                showAuthMessage(window.t('error') + ': ' + e.message, 'error');
             }
         }
 
@@ -379,7 +379,7 @@
                     await batch.commit();
                     } catch(err) {
                         console.error('[Batch] commit failed:', err);
-                        showToast && showToast(t('savingError'), 'error');
+                        showToast && showToast(window.t('savingError'), 'error');
                     }
                     dbg('[findUserCompany] Batch commit success, role:', inviteData.role);
                     

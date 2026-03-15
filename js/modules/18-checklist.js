@@ -16,7 +16,7 @@
             item.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;';
             item.innerHTML = `
                 <input type="checkbox" ${checked ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--primary);flex-shrink:0;">
-                <input type="text" value="${esc(text)}" placeholder="${t('checklistItemPlaceholder')}" 
+                <input type="text" value="${esc(text)}" placeholder="${window.t('checklistItemPlaceholder')}" 
                        style="flex:1;padding:0.4rem 0.5rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;"
                        onkeydown="if(event.key==='Enter'){event.preventDefault();addChecklistItem();this.parentElement.nextElementSibling?.querySelector('input[type=text]')?.focus();}">
                 <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#ef4444;padding:2px;">

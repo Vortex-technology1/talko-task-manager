@@ -3,7 +3,7 @@
         // =====================
 'use strict';
         let currentFunctionsView = 'cards';
-        const DEFAULT_CATEGORIES = [t('funcCatManagement'), 'Люди', window.t('funcCatEngagement'), window.t('funcCatSales'), window.t('funcCatFinance'), window.t('funcCatPrep'), window.t('funcCatExecution'), window.t('funcCatLogistics')];
+        const DEFAULT_CATEGORIES = [window.t('funcCatManagement'), 'Люди', window.t('funcCatEngagement'), window.t('funcCatSales'), window.t('funcCatFinance'), window.t('funcCatPrep'), window.t('funcCatExecution'), window.t('funcCatLogistics')];
         
         function setFunctionsView(view) {
             currentFunctionsView = view;
@@ -72,7 +72,7 @@
                 <div class="struct-column" data-category="${esc(cat)}">
                     <div class="struct-col-header">
                         <span class="struct-col-title" contenteditable="true" onblur="renameCategory(${colIdx}, this.textContent.trim())" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(cat)}</span>
-                        <button onclick="removeCategory(${colIdx})" style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:2px;" title="${t('delete')}"><i data-lucide="x" class="icon icon-sm"></i></button>
+                        <button onclick="removeCategory(${colIdx})" style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:2px;" title="${window.t('delete')}"><i data-lucide="x" class="icon icon-sm"></i></button>
                     </div>
                     <div class="struct-col-stats">
                         <span><i data-lucide="users" class="icon icon-sm"></i> ${totalPeople}</span>
@@ -102,14 +102,14 @@
                                 ${f.assigneeNames?.length ? `<div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:0.3rem;">${f.assigneeNames.slice(0,2).map(n => `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 5px;border-radius:4px;">${esc(n)}</span>`).join('')}${f.assigneeNames.length > 2 ? `<span style="font-size:0.65rem;color:#9ca3af;">+${f.assigneeNames.length-2}</span>` : ''}</div>` : ''}
                             </div>`;
                         }).join('')}
-                        ${allFuncs.length === 0 ? `<div style="text-align:center;padding:1rem;color:#d1d5db;font-size:0.78rem;">${t('dragHere')}</div>` : ''}
+                        ${allFuncs.length === 0 ? `<div style="text-align:center;padding:1rem;color:#d1d5db;font-size:0.78rem;">${window.t('dragHere')}</div>` : ''}
                     </div>
                 </div>`;
             });
             
             html += `
                 <div class="struct-add-col" onclick="addCategory()">
-                    <span><i data-lucide="plus" class="icon icon-sm"></i> ${t('addCategory')}</span>
+                    <span><i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addCategory')}</span>
                 </div>
             </div>`;
             
@@ -143,16 +143,16 @@
                 await db.collection('companies').doc(currentCompany).collection('functions').doc(draggedFuncId).update({ category: newCategory });
             } catch(e) {
                 console.error('Error updating category:', e);
-                showToast(t('saveError'), 'error');
+                showToast(window.t('saveError'), 'error');
             }
             draggedFuncId = null;
         }
         
         async function addCategory() {
-            const name = await (window.showInputModal ? showInputModal(t('categoryName'), '', {placeholder: 'Назва категорії'}) : (async()=>prompt(t('categoryName')))());
+            const name = await (window.showInputModal ? showInputModal(window.t('categoryName'), '', {placeholder: 'Назва категорії'}) : (async()=>prompt(window.t('categoryName')))());
             if (!name || !name.trim()) return;
             const cats = getStructureCategories();
-            if (cats.includes(name.trim())) { showToast(t('categoryExists'), 'warning'); return; }
+            if (cats.includes(name.trim())) { showToast(window.t('categoryExists'), 'warning'); return; }
             cats.push(name.trim());
             saveStructureCategories(cats);
             renderFunctionsStructure();
@@ -163,7 +163,7 @@
             const cat = cats[idx];
             const funcsInCat = functions.filter(f => f.category === cat);
             if (funcsInCat.length > 0) {
-                if (!await showConfirmModal((t('categoryHasFunctions')), { danger: true })) return;
+                if (!await showConfirmModal((window.t('categoryHasFunctions')), { danger: true })) return;
                 funcsInCat.forEach(f => { f.category = ''; });
                 // Save to Firestore
                 const batch = db.batch();
@@ -212,7 +212,7 @@
                         <div style="flex:1;">
                             <div style="font-weight:500;">${esc(f.name)}</div>
                             <div style="font-size:0.8rem;color:#6b7280;">
-                                ${taskCount} ${t('tasksCount')} · ${regularCount} ${t('regularTasksCount')} · ${assigneeCount} ${t('assigneesCount')}
+                                ${taskCount} ${window.t('tasksCount')} · ${regularCount} ${window.t('regularTasksCount')} · ${assigneeCount} ${window.t('assigneesCount')}
                             </div>
                         </div>
                     </label>
@@ -241,7 +241,7 @@
             }
             
             if (selected.length > 5) {
-                showAlertModal(t('mergeSelectMaxFive'));
+                showAlertModal(window.t('mergeSelectMaxFive'));
                 return;
             }
             
@@ -258,11 +258,11 @@
             });
             
             content.innerHTML = `
-                <div>• <strong>${totalTasks}</strong> ${t('tasksCount')}</div>
-                <div>• <strong>${totalRegular}</strong> ${t('regularTasksCount')}</div>
-                <div>• <strong>${allAssignees.size}</strong> ${t('assigneesCount')}</div>
+                <div>• <strong>${totalTasks}</strong> ${window.t('tasksCount')}</div>
+                <div>• <strong>${totalRegular}</strong> ${window.t('regularTasksCount')}</div>
+                <div>• <strong>${allAssignees.size}</strong> ${window.t('assigneesCount')}</div>
                 <div style="margin-top:0.5rem;font-size:0.85rem;color:#059669;">
-                    ${t('mergedFrom')}: ${selectedFunctions.map(f => f.name).join(', ')}
+                    ${window.t('mergedFrom')}: ${selectedFunctions.map(f => f.name).join(', ')}
                 </div>
             `;
             
@@ -280,12 +280,12 @@
             const newName = document.getElementById('mergedFunctionName').value.trim();
             
             if (selected.length < 2) {
-                showAlertModal(t('mergeSelectMinTwo'));
+                showAlertModal(window.t('mergeSelectMinTwo'));
                 return;
             }
             
             if (!newName) {
-                showAlertModal(t('mergeEnterName'));
+                showAlertModal(window.t('mergeEnterName'));
                 return;
             }
             
@@ -320,7 +320,7 @@
                 // Створюємо нову функцію
                 const mergedFunctionData = {
                     name: newName,
-                    description: `${t('mergedFrom')}: ${selectedFunctions.map(f => f.name).join(', ')}`,
+                    description: `${window.t('mergedFrom')}: ${selectedFunctions.map(f => f.name).join(', ')}`,
                     headId: headId,
                     headName: headName,
                     assigneeIds: allAssigneeIds,
@@ -353,7 +353,7 @@
                             await batch.commit();
                             } catch(err) {
                                 console.error('[Batch] commit failed:', err);
-                                showToast && showToast(t('savingError'), 'error');
+                                showToast && showToast(window.t('savingError'), 'error');
                             }
                             batch = db.batch();
                             batchCount = 0;
@@ -375,7 +375,7 @@
                             await batch.commit();
                             } catch(err) {
                                 console.error('[Batch] commit failed:', err);
-                                showToast && showToast(t('savingError'), 'error');
+                                showToast && showToast(window.t('savingError'), 'error');
                             }
                             batch = db.batch();
                             batchCount = 0;
@@ -398,7 +398,7 @@
                     await batch.commit();
                     } catch(err) {
                         console.error('[Batch] commit failed:', err);
-                        showToast && showToast(t('savingError'), 'error');
+                        showToast && showToast(window.t('savingError'), 'error');
                     }
                 }
                 
@@ -407,14 +407,14 @@
                 // Оновлюємо локальні дані
                 await loadAllData();
                 
-                showAlertModal(t('mergeSuccess'));
+                showAlertModal(window.t('mergeSuccess'));
                 
             } catch (error) {
                 console.error('Merge functions error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             } finally {
                 executeBtn.disabled = false;
-                executeBtn.innerHTML = `<i data-lucide="git-merge" class="icon"></i> <span data-i18n="merge">${t('merge')}</span>`;
+                executeBtn.innerHTML = `<i data-lucide="git-merge" class="icon"></i> <span data-i18n="merge">${window.t('merge')}</span>`;
                 refreshIcons();
             }
         }

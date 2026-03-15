@@ -13,7 +13,7 @@
             const selCount = selectedIds.length;
             const selNames = users.filter(u => selectedSet.has(u.id)).map(u => u.name || u.email).slice(0, 3).join(', ');
             const moreText = selCount > 3 ? ` +${selCount - 3}` : '';
-            const btnLabel = selCount > 0 ? `${selNames}${moreText}` : t('selectPlaceholder');
+            const btnLabel = selCount > 0 ? `${selNames}${moreText}` : window.t('selectPlaceholder');
             
             container.innerHTML = `
                 <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
@@ -177,7 +177,7 @@
             const count = checked.length;
             const labelEl = wrap.querySelector('.user-ms-label');
             if (count === 0) {
-                labelEl.textContent = t('selectPlaceholder');
+                labelEl.textContent = window.t('selectPlaceholder');
                 labelEl.style.color = '#9ca3af';
             } else {
                 labelEl.textContent = names.slice(0, 3).join(', ') + (count > 3 ? ` +${count - 3}` : '');

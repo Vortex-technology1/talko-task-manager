@@ -109,7 +109,7 @@
             <div class="learning-header">
                 <div class="learning-header-title">
                     <i data-lucide="graduation-cap" class="icon" style="color:#22c55e;width:24px;height:24px;"></i>
-                    <span>${t('learningTitle')}</span>
+                    <span>${window.t('learningTitle')}</span>
                 </div>
     
             </div>
@@ -118,11 +118,11 @@
             <div class="learning-stats">
                 <div class="learning-stat">
                     <div class="learning-stat-value">${stats.pct}%</div>
-                    <div class="learning-stat-label">${t('learningProgress')}</div>
+                    <div class="learning-stat-label">${window.t('learningProgress')}</div>
                 </div>
                 <div class="learning-stat">
                     <div class="learning-stat-value">${stats.completed}/${stats.total}</div>
-                    <div class="learning-stat-label">${t('learningModules')}</div>
+                    <div class="learning-stat-label">${window.t('learningModules')}</div>
                 </div>
                 <div class="learning-progress-bar-wrap">
                     <div class="learning-progress-bar" style="width:${stats.pct}%"></div>
@@ -162,7 +162,7 @@
             <div class="l-module-info">
                 <div class="l-module-title">${title}</div>
                 ${subtitle ? `<div class="l-module-subtitle">${subtitle}</div>` : ''}
-                ${module.time ? `<div class="l-module-time"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} ${t('learningMin')}</div>` : ''}
+                ${module.time ? `<div class="l-module-time"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} ${window.t('learningMin')}</div>` : ''}
             </div>
             <div class="l-module-arrow">
                 <i data-lucide="${isCompleted ? 'check' : 'chevron-right'}" class="icon" style="width:18px;height:18px;color:${isCompleted ? '#22c55e' : '#9ca3af'};"></i>
@@ -5047,7 +5047,7 @@
         const wasHomeworkDone = learningProgress[moduleId] && learningProgress[moduleId].homeworkDone;
         const newHomeworkDone = ta.value.trim().length > 0;
         if (wasHomeworkDone && !newHomeworkDone) {
-            const msg = t('learningClearConfirm');
+            const msg = window.t('learningClearConfirm');
             if (!confirm(msg)) return;
         }
 
@@ -5056,7 +5056,7 @@
         if (btn) {
             btn.disabled = true;
             const origText = btn.innerHTML;
-            btn.innerHTML = t('learningSaved');
+            btn.innerHTML = window.t('learningSaved');
             setTimeout(() => {
                 btn.disabled = false;
                 btn.innerHTML = origText;
@@ -5229,7 +5229,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
             <div class="learning-module-nav">
                 <button class="l-back-btn" onclick="window._closeLearningModule()">
                     <i data-lucide="arrow-left" class="icon" style="width:18px;height:18px;"></i>
-                    ${t('learningBack')}
+                    ${window.t('learningBack')}
                 </button>
 
             </div>
@@ -5240,7 +5240,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     <div>
                         <div class="l-detail-title">${title}</div>
                         ${subtitle ? `<div class="l-detail-subtitle">${subtitle}</div>` : ''}
-                        ${module.time ? `<div class="l-module-time" style="margin-top:4px;"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} ${t('learningMin')}</div>` : ''}
+                        ${module.time ? `<div class="l-module-time" style="margin-top:4px;"><i data-lucide="clock" class="icon" style="width:12px;height:12px;"></i> ${module.time} ${window.t('learningMin')}</div>` : ''}
                     </div>
                 </div>
 
@@ -5248,11 +5248,11 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 <div class="l-links-row">
                     <a href="${module.videoLink}" target="_blank" class="l-link-btn video">
                         <i data-lucide="play-circle" class="icon" style="width:16px;height:16px;"></i>
-                        ${t('learningVideo')}
+                        ${window.t('learningVideo')}
                     </a>
                     ${module.materialsLink ? `<a href="${module.materialsLink}" target="_blank" class="l-link-btn materials">
                         <i data-lucide="file-text" class="icon" style="width:16px;height:16px;"></i>
-                        ${t('learningMaterials')}
+                        ${window.t('learningMaterials')}
                     </a>` : ''}
                 </div>` : ''}
 
@@ -5275,7 +5275,7 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                 <div class="l-homework-block">
                     <div class="l-homework-title">
                         <i data-lucide="pencil" class="icon" style="width:16px;height:16px;color:#f59e0b;"></i>
-                        ${t('learningHomework')}
+                        ${window.t('learningHomework')}
                     </div>
                     ${liItems2.length
                         ? `<ol style="margin:0.5rem 0 0.75rem 1.2rem;padding:0;color:#374151;font-size:0.9rem;line-height:1.7;">${liItems2.map(item => `<li>${item}</li>`).join('')}</ol>`
@@ -5331,11 +5331,11 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                         </div>
                     </div>` : ''}
 
-                    <textarea class="l-homework-textarea" id="learningHwTextarea" placeholder="${t('learningHwPlaceholder')}">${hwText}</textarea>
+                    <textarea class="l-homework-textarea" id="learningHwTextarea" placeholder="${window.t('learningHwPlaceholder')}">${hwText}</textarea>
                     <div class="l-homework-actions">
-                        ${hwDone ? `<span class="l-hw-done-badge"><i data-lucide="check" class="icon" style="width:14px;height:14px;"></i> ${t('learningDone')}</span>` : ''}
+                        ${hwDone ? `<span class="l-hw-done-badge"><i data-lucide="check" class="icon" style="width:14px;height:14px;"></i> ${window.t('learningDone')}</span>` : ''}
                         <button class="l-btn-save-hw" onclick="window._saveLearningHomework(${moduleId})">
-                            ${t('learningSave')}
+                            ${window.t('learningSave')}
                         </button>
                     </div>
                 </div>`;
@@ -5346,10 +5346,10 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
                     ${isCompleted
                         ? `<button class="l-btn-completed" onclick="window._toggleLearningComplete(${moduleId}, false)">
                             <i data-lucide="check-circle" class="icon" style="width:18px;height:18px;"></i>
-                            ${t('learningCompleted')}
+                            ${window.t('learningCompleted')}
                            </button>`
                         : `<button class="l-btn-complete" onclick="window._toggleLearningComplete(${moduleId}, true)">
-                            ${t('learningMarkDone')}
+                            ${window.t('learningMarkDone')}
                            </button>`
                     }
                 </div>

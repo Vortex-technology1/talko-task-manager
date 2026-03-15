@@ -519,7 +519,7 @@ window.createAndConnectBot = async function() {
     if (!token) { if(window.showToast)showToast(window.t('botsEnterToken'),'warning'); else alert(window.t('botsEnterToken')); return; }
 
     const btn = document.querySelector('[onclick="createAndConnectBot()"]');
-    if (btn) { btn.disabled = true; btn.textContent = t('botsLoading'); }
+    if (btn) { btn.disabled = true; btn.textContent = window.t('botsLoading'); }
 
     try {
         let username = '';

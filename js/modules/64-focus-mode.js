@@ -8,8 +8,8 @@
         const prompt = encodeURIComponent(
             window.t('aiPromptHelp') + '\n' +
             window.t('aiPromptName') + ' ' + (taskTitle || '') + '\n' +
-            `${taskFunction ? t('functionColon') + ': ' + taskFunction + '\n' : ''}` +
-            `${taskDescription ? t('instructionColon') + ': ' + taskDescription + '\n' : ''}` +
+            `${taskFunction ? window.t('functionColon') + ': ' + taskFunction + '\n' : ''}` +
+            `${taskDescription ? window.t('instructionColon') + ': ' + taskDescription + '\n' : ''}` +
             window.t('aiPromptExplain')
         );
         return AI_TECH_LEAD_URL + '?q=' + prompt;
@@ -18,21 +18,21 @@
     function getAiHelpButton(taskTitle, taskDescription, taskFunction, size) {
         const url = getAiHelpUrl(taskTitle, taskDescription, taskFunction);
         if (size === 'small') {
-            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:0.7rem;color:#16a34a;text-decoration:none;white-space:nowrap;" title="${t('askAI')}">
+            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:0.7rem;color:#16a34a;text-decoration:none;white-space:nowrap;" title="${window.t('askAI')}">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 AI
             </a>`;
         }
         if (size === 'medium') {
-            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.8rem;color:#16a34a;text-decoration:none;font-weight:500;" title="${t('askAIAssistant')}">
+            return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:0.8rem;color:#16a34a;text-decoration:none;font-weight:500;" title="${window.t('askAIAssistant')}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                ${t('notClear')} ${t('askAI')}
+                ${window.t('notClear')} ${window.t('askAI')}
             </a>`;
         }
         // large - for focus mode
         return `<a href="${url}" target="_blank" onclick="event.stopPropagation();" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:12px;font-size:0.9rem;color:#16a34a;text-decoration:none;font-weight:600;margin-top:0.75rem;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            ${t('notClear')} ${t('askAIAssistant')}
+            ${window.t('notClear')} ${window.t('askAIAssistant')}
         </a>`;
     }
     
@@ -135,7 +135,7 @@
     function startFocusMode() {
         focusTasks = getFocusTasks();
         if (focusTasks.length === 0) {
-            showToast(t('noTasksToday'), 'info');
+            showToast(window.t('noTasksToday'), 'info');
             return;
         }
         focusCurrentIndex = 0;
@@ -180,20 +180,20 @@
             if (process && template) {
                 processBadge = `<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(139,92,246,0.1);border-radius:8px;font-size:0.8rem;color:#7c3aed;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
-                    ${esc(process.name)} — ${t('stepNofTotal').replace('{n}', (task.processStep||0)+1).replace('{total}', template.steps.length)}
+                    ${esc(process.name)} — ${window.t('stepNofTotal').replace('{n}', (task.processStep||0)+1).replace('{total}', template.steps.length)}
                 </div>`;
             }
         }
         
         // Priority color
         const prioColors = { urgent: '#ef4444', high: '#f59e0b', medium: '#3b82f6', low: '#6b7280' };
-        const prioNames = { urgent: t('priorityNames_urgent'), high: t('priorityNames_high'), medium: t('priorityNames_medium'), low: t('priorityNames_low') };
+        const prioNames = { urgent: window.t('priorityNames_urgent'), high: window.t('priorityNames_high'), medium: window.t('priorityNames_medium'), low: window.t('priorityNames_low') };
         
         // Checklist
         let checklistHtml = '';
         if (task.checklist?.length > 0) {
             checklistHtml = `<div style="margin-top:1rem;">
-                <div style="font-size:0.8rem;font-weight:600;color:#6b7280;margin-bottom:0.5rem;">${t('checklistLabel')}:</div>
+                <div style="font-size:0.8rem;font-weight:600;color:#6b7280;margin-bottom:0.5rem;">${window.t('checklistLabel')}:</div>
                 ${task.checklist.map((item, i) => `
                     <label style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;cursor:pointer;font-size:0.9rem;" onclick="event.stopPropagation();">
                         <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleFocusChecklist(${i})" style="width:18px;height:18px;accent-color:#22c55e;">
@@ -216,7 +216,7 @@
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                             Мій день
                         </button>
-                        <span style="font-size:0.8rem;color:#9ca3af;">${t('taskNofM').replace('{n}', doneCount + 1).replace('{total}', total)}</span>
+                        <span style="font-size:0.8rem;color:#9ca3af;">${window.t('taskNofM').replace('{n}', doneCount + 1).replace('{total}', total)}</span>
                     </div>
                     <span style="font-size:0.8rem;color:#9ca3af;">${progressPercent}%</span>
                 </div>
@@ -237,7 +237,7 @@
                         ${prioNames[task.priority] || task.priority}
                     </div>
                     ${task.function ? `<div style="padding:4px 10px;background:#f3f4f6;border-radius:8px;font-size:0.8rem;color:#6b7280;">${esc(task.function)}</div>` : ''}
-                    ${task.overdue ? `<div style="padding:4px 10px;background:#fef2f2;border-radius:8px;font-size:0.8rem;color:#ef4444;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${t('overdueStatus')}</div>` : ''}
+                    ${task.overdue ? `<div style="padding:4px 10px;background:#fef2f2;border-radius:8px;font-size:0.8rem;color:#ef4444;font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${window.t('overdueStatus')}</div>` : ''}
                 </div>
                 
                 ${processBadge}
@@ -259,14 +259,14 @@
                         </button>
                     </div>
                     <div style="font-size:0.75rem;color:#9ca3af;">
-                        ${t('estMinutes').replace('{n}', estMinutes)}
+                        ${window.t('estMinutes').replace('{n}', estMinutes)}
                     </div>
                 </div>
                 
                 <!-- Description / Instruction -->
                 ${task.description ? `
                     <div style="margin:1rem 0;padding:1rem;background:#fffbeb;border-radius:12px;border-left:4px solid #f59e0b;">
-                        <div style="font-size:0.75rem;font-weight:600;color:#92400e;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> ${t('instructionLabel')}</div>
+                        <div style="font-size:0.75rem;font-weight:600;color:#92400e;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> ${window.t('instructionLabel')}</div>
                         <div style="font-size:0.9rem;color:#451a03;line-height:1.6;white-space:pre-line;">${esc(task.description)}</div>
                     </div>
                     ${getAiHelpButton(task.title, task.description, task.function, 'large')}
@@ -280,10 +280,10 @@
             <!-- Action buttons - sticky bottom -->
             <div style="padding:1rem 1.5rem;border-top:1px solid #f3f4f6;background:white;display:flex;gap:0.75rem;">
                 <button onclick="focusSkipTask()" style="flex:1;padding:1rem;border:2px solid #e5e7eb;border-radius:14px;background:white;font-size:0.95rem;font-weight:600;color:#6b7280;cursor:pointer;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg> ${t('skipAction')}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg> ${window.t('skipAction')}
                 </button>
                 <button onclick="focusCompleteTask()" style="flex:2;padding:1rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1.05rem;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(34,197,94,0.4);">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${t('doneAction')}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${window.t('doneAction')}
                 </button>
             </div>
         `;
@@ -303,8 +303,8 @@
                 <div style="width:80px;height:80px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
-                <h2 style="margin:0 0 0.5rem;font-size:1.5rem;font-weight:700;">${t('allTasksDone')}</h2>
-                <p style="color:#6b7280;margin-bottom:2rem;">${total} ' + t('greatJobToday') + '</p>
+                <h2 style="margin:0 0 0.5rem;font-size:1.5rem;font-weight:700;">${window.t('allTasksDone')}</h2>
+                <p style="color:#6b7280;margin-bottom:2rem;">${total} ' + window.t('greatJobToday') + '</p>
                 <button onclick="closeFocusMode()" style="padding:1rem 3rem;border:none;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);font-size:1rem;font-weight:700;color:white;cursor:pointer;">
                     Закрити
                 </button>
@@ -363,7 +363,7 @@
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         createdDate: todayStr,
                         creatorId: currentUser.uid,
-                        creatorName: currentUserData?.name || currentUser.email || t('systemUser') // FIX BJ: реальне ім'я
+                        creatorName: currentUserData?.name || currentUser.email || window.t('systemUser') // FIX BJ: реальне ім'я
                     });
                     tasks.unshift({ id: ref.id, status: 'done', regularTaskId: task.id, deadlineDate: todayStr, deadlineTime: task.time || '18:00', assigneeId: currentUser.uid, autoGenerated: true, createdDate: todayStr, createdAt: new Date() });
                 }
@@ -393,12 +393,12 @@
                 if (task.projectId) autoUpdateProjectStatus(task.projectId);
                 
                 if (needsReview) {
-                    showToast(t('sentForReview'), 'info');
+                    showToast(window.t('sentForReview'), 'info');
                 }
             }
         } catch (e) {
             console.error('focusComplete error:', e);
-            showToast(t('error') + ': ' + e.message, 'error');
+            showToast(window.t('error') + ': ' + e.message, 'error');
         }
         
         // Переходимо до наступного

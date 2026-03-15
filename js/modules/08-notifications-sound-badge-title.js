@@ -166,13 +166,13 @@
         
         function showCompletedTaskToast(task) {
             // Add to notification center
-            const assignee = task.assigneeName || t('employee');
-            addNotification('completed', t('taskCompleted'), assignee + ': ' + (task.title || ''), task.id || null);
+            const assignee = task.assigneeName || window.t('employee');
+            addNotification('completed', window.t('taskCompleted'), assignee + ': ' + (task.title || ''), task.id || null);
             
             const existingToast = document.getElementById('completedTaskToast');
             if (existingToast) existingToast.remove();
             
-            const assigneeName = task.assigneeName || (t('employeeRole'));
+            const assigneeName = task.assigneeName || (window.t('employeeRole'));
             const title = task.title || '';
             const shortTitle = title.length > 25 ? title.substring(0, 25) + '...' : title;
             
@@ -201,7 +201,7 @@
                     <polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
                 <div style="flex:1;min-width:0;">
-                    <div style="font-weight:600;">${t('taskCompleted')}</div>
+                    <div style="font-weight:600;">${window.t('taskCompleted')}</div>
                     <div style="font-size:0.85rem;opacity:0.9;">${esc(assigneeName)}: ${esc(shortTitle)}</div>
                 </div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.7;flex-shrink:0;">
@@ -223,8 +223,8 @@
         function showNewTaskToast(type, count, title) {
             // Add to notification center
             const typeMap = { process: 'process', regular: 'new_task', task: 'new_task' };
-            const labelMap = { process: t('notificationProcess'), regular: t('notificationRegular'), task: t('notificationNewTask') };
-            addNotification(typeMap[type] || 'new_task', labelMap[type] || t('notificationNewTask'), title || '', null);
+            const labelMap = { process: window.t('notificationProcess'), regular: window.t('notificationRegular'), task: window.t('notificationNewTask') };
+            addNotification(typeMap[type] || 'new_task', labelMap[type] || window.t('notificationNewTask'), title || '', null);
             
             // Видаляємо попередній toast якщо є
             const existingToast = document.getElementById('newTaskToast');
@@ -236,19 +236,19 @@
                     gradient: 'linear-gradient(135deg, #8b5cf6, #6366f1)',
                     shadow: 'rgba(139, 92, 246, 0.4)',
                     icon: '<line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
-                    label: t('fromProcess')
+                    label: window.t('fromProcess')
                 },
                 regular: {
                     gradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
                     shadow: 'rgba(245, 158, 11, 0.4)',
                     icon: '<path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"/>',
-                    label: t('regularTaskLabel')
+                    label: window.t('regularTaskLabel')
                 },
                 task: {
                     gradient: 'linear-gradient(135deg, #22c55e, #16a34a)',
                     shadow: 'rgba(34, 197, 94, 0.4)',
                     icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
-                    label: t('newTaskLabel')
+                    label: window.t('newTaskLabel')
                 }
             };
             

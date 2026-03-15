@@ -38,9 +38,9 @@
                 body.innerHTML = `
                     <div style="text-align:center;padding:2rem;color:#6b7280;">
                         <i data-lucide="inbox" class="icon" style="width:40px;height:40px;color:#d1d5db;display:block;margin:0 auto 0.75rem;"></i>
-                        <p style="margin-bottom:1rem;">${t('noTemplates')}</p>
+                        <p style="margin-bottom:1rem;">${window.t('noTemplates')}</p>
                         <button class="btn btn-success" onclick="closeModal('templatePickerModal');openManageTemplatesModal();">
-                            <i data-lucide="plus" class="icon icon-sm"></i> ${t('createTemplate')}
+                            <i data-lucide="plus" class="icon icon-sm"></i> ${window.t('createTemplate')}
                         </button>
                     </div>`;
             } else {
@@ -55,7 +55,7 @@
                             </div>
                             <div style="flex:1;min-width:0;">
                                 <div style="font-weight:600;font-size:0.85rem;">${esc(tpl.title)}</div>
-                                ${tpl.function ? `<div style="font-size:0.72rem;color:#6b7280;">${esc(tpl.function)}${tpl.estimatedTime ? ' · ' + tpl.estimatedTime + ' ' + (t('min')) : ''}</div>` : ''}
+                                ${tpl.function ? `<div style="font-size:0.72rem;color:#6b7280;">${esc(tpl.function)}${tpl.estimatedTime ? ' · ' + tpl.estimatedTime + ' ' + (window.t('min')) : ''}</div>` : ''}
                             </div>
                             <i data-lucide="chevron-right" class="icon icon-sm" style="color:#d1d5db;"></i>
                         </div>`).join('')}
@@ -89,7 +89,7 @@
             if (tpl.requireReview !== undefined) document.getElementById('taskRequireReview').checked = tpl.requireReview;
             if (tpl.requireReport !== undefined) document.getElementById('taskRequireReport').checked = tpl.requireReport;
             if (tpl.checklist?.length) renderChecklist(tpl.checklist);
-            showToast(t('templateApplied'), 'success', 2000);
+            showToast(window.t('templateApplied'), 'success', 2000);
         };
         // double rAF ensures both layout pass + paint before filling fields
         requestAnimationFrame(() => requestAnimationFrame(_applyTemplate));
@@ -105,9 +105,9 @@
         
         let html = `
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                <span style="font-size:0.85rem;color:#6b7280;">${taskTemplates.length} ${t('templatesCount')}</span>
+                <span style="font-size:0.85rem;color:#6b7280;">${taskTemplates.length} ${window.t('templatesCount')}</span>
                 <button class="btn btn-success btn-small" onclick="openTemplateEditor()">
-                    <i data-lucide="plus" class="icon icon-sm"></i> ${t('createTemplate')}
+                    <i data-lucide="plus" class="icon icon-sm"></i> ${window.t('createTemplate')}
                 </button>
             </div>
             <div id="templateEditorArea"></div>`;
@@ -120,8 +120,8 @@
                         <div style="font-weight:600;font-size:0.85rem;">${esc(tpl.title)}</div>
                         <div style="font-size:0.72rem;color:#6b7280;">${esc(tpl.function || '')}${tpl.expectedResult ? ' · ' + esc(tpl.expectedResult).substring(0,40) : ''}</div>
                     </div>
-                    <button class="action-btn" onclick="editTemplate('${escId(tpl.id)}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
-                    <button class="action-btn" onclick="deleteTemplate('${escId(tpl.id)}')" title="${t('delete')}" style="color:#ef4444;"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                    <button class="action-btn" onclick="editTemplate('${escId(tpl.id)}')" title="${window.t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                    <button class="action-btn" onclick="deleteTemplate('${escId(tpl.id)}')" title="${window.t('delete')}" style="color:#ef4444;"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                 </div>`).join('')}
             </div>`;
         }
@@ -141,38 +141,38 @@
         <div style="background:#f0fdf4;border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid #dcfce7;">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                 <div style="grid-column:1/-1;">
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('taskName')} *</label>
-                    <input type="text" id="tplTitle" value="${esc(tpl.title || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${t('taskName')}">
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${window.t('taskName')} *</label>
+                    <input type="text" id="tplTitle" value="${esc(tpl.title || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${window.t('taskName')}">
                 </div>
                 <div>
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('function')}</label>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${window.t('function')}</label>
                     <select id="tplFunction" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
                         <option value="">—</option>${funcOptions}
                     </select>
                 </div>
                 <div>
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('estimatedTime')}</label>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${window.t('estimatedTime')}</label>
                     <input type="number" id="tplEstimatedTime" value="${tpl.estimatedTime || ''}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="60">
                 </div>
                 <div style="grid-column:1/-1;">
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('expectedResult')}</label>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${window.t('expectedResult')}</label>
                     <input type="text" id="tplExpectedResult" value="${esc(tpl.expectedResult || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
                 </div>
                 <div style="grid-column:1/-1;">
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('reportFormat')}</label>
-                    <input type="text" id="tplReportFormat" value="${esc(tpl.reportFormat || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${t('reportFormatPlaceholder')}">
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${window.t('reportFormat')}</label>
+                    <input type="text" id="tplReportFormat" value="${esc(tpl.reportFormat || '')}" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;" placeholder="${window.t('reportFormatPlaceholder')}">
                 </div>
                 <div style="grid-column:1/-1;">
-                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${t('instruction')}</label>
+                    <label style="font-size:0.75rem;font-weight:600;color:#374151;">${window.t('instruction')}</label>
                     <textarea id="tplDescription" style="width:100%;padding:0.4rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;min-height:60px;resize:vertical;">${esc(tpl.description || '')}</textarea>
                 </div>
             </div>
             <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
                 <button class="btn btn-success" onclick="saveTemplate('${templateId || ''}')" style="flex:1;">
-                    <i data-lucide="check" class="icon icon-sm"></i> ${t('save')}
+                    <i data-lucide="check" class="icon icon-sm"></i> ${window.t('save')}
                 </button>
                 <button class="btn" onclick="document.getElementById('templateEditorArea').innerHTML='';renderManageTemplates();">
-                    ${t('cancel')}
+                    ${window.t('cancel')}
                 </button>
             </div>
         </div>`;
@@ -183,7 +183,7 @@
     
     async function saveTemplate(id) {
         const title = document.getElementById('tplTitle').value.trim();
-        if (!title) { showAlertModal(t('enterName')); return; }
+        if (!title) { showAlertModal(window.t('enterName')); return; }
         
         const data = {
             title,
@@ -208,15 +208,15 @@
             await loadTaskTemplates();
             document.getElementById('templateEditorArea').innerHTML = '';
             renderManageTemplates();
-            showToast(t('saved'), 'success', 2000);
+            showToast(window.t('saved'), 'success', 2000);
         } catch(e) {
             console.error('saveTemplate:', e);
-            showAlertModal(t('error') + ': ' + e.message);
+            showAlertModal(window.t('error') + ': ' + e.message);
         }
     }
     
     async function deleteTemplate(id) {
-        if (!await showConfirmModal(t('confirmDelete'), { danger: true })) return;
+        if (!await showConfirmModal(window.t('confirmDelete'), { danger: true })) return;
         try {
             await window.companyRef().collection('taskTemplates').doc(id).delete();
             taskTemplates = taskTemplates.filter(t => t.id !== id);

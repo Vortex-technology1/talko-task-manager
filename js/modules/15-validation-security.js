@@ -183,31 +183,31 @@
             const errors = [];
             
             if (!data.title || data.title.trim().length === 0) {
-                errors.push(t('titleRequired'));
+                errors.push(window.t('titleRequired'));
             } else if (data.title.length > 500) {
-                errors.push(t('titleTooLong'));
+                errors.push(window.t('titleTooLong'));
             }
             
             if (data.deadlineDate && !/^\d{4}-\d{2}-\d{2}$/.test(data.deadlineDate)) {
-                errors.push(t('invalidDate'));
+                errors.push(window.t('invalidDate'));
             }
             
             if (data.deadlineTime && !/^\d{2}:\d{2}$/.test(data.deadlineTime)) {
-                errors.push(t('invalidTime'));
+                errors.push(window.t('invalidTime'));
             }
             
             if (data.description && data.description.length > 10000) {
-                errors.push(t('descTooLong'));
+                errors.push(window.t('descTooLong'));
             }
             
             // FIX 5: startDate must not be after deadlineDate
             if (data.startDate && data.deadlineDate && data.startDate > data.deadlineDate) {
-                errors.push(t('startAfterDeadline') || 'Дата початку не може бути пізніше дедлайну');
+                errors.push(window.t('startAfterDeadline') || 'Дата початку не може бути пізніше дедлайну');
             }
             
             // assigneeId — обов'язкове поле. Якщо порожнє — showToast, не зберігаємо
             if (!data.assigneeId || data.assigneeId.trim().length === 0) {
-                errors.push(t('assigneeRequired') || 'Вкажіть виконавця');
+                errors.push(window.t('assigneeRequired') || 'Вкажіть виконавця');
             }
             
             return errors;
@@ -218,17 +218,17 @@
             const errors = [];
             
             if (!data.title || data.title.trim().length === 0) {
-                errors.push(t('titleRequired'));
+                errors.push(window.t('titleRequired'));
             } else if (data.title.length > 500) {
-                errors.push(t('titleTooLong'));
+                errors.push(window.t('titleTooLong'));
             }
             
             if (!data.function) {
-                errors.push(t('functionRequired'));
+                errors.push(window.t('functionRequired'));
             }
             
             if (!data.timeStart || !/^\d{2}:\d{2}$/.test(data.timeStart)) {
-                errors.push(t('invalidStartTime'));
+                errors.push(window.t('invalidStartTime'));
             }
             
             return errors;
@@ -239,9 +239,9 @@
             const errors = [];
             
             if (!data.name || data.name.trim().length === 0) {
-                errors.push(t('functionNameRequired'));
+                errors.push(window.t('functionNameRequired'));
             } else if (data.name.length > 200) {
-                errors.push(t('functionNameTooLong'));
+                errors.push(window.t('functionNameTooLong'));
             } else {
                 // Duplicate name check (exclude current editing function)
                 const duplicate = functions.find(f => 
@@ -250,12 +250,12 @@
                     f.status !== 'archived'
                 );
                 if (duplicate) {
-                    errors.push(t('functionNameDuplicate'));
+                    errors.push(window.t('functionNameDuplicate'));
                 }
             }
             
             if (!data.headId) {
-                errors.push(t('functionHeadRequired'));
+                errors.push(window.t('functionHeadRequired'));
             }
             
             return errors;
@@ -434,23 +434,23 @@
             affectedProjects.forEach(pid => autoUpdateProjectStatus(pid));
             
             if (failed > 0) {
-                showAlertModal(t('restorePartial').replace('{ok}', restored).replace('{total}', restored + failed).replace('{fail}', failed));
+                showAlertModal(window.t('restorePartial').replace('{ok}', restored).replace('{total}', restored + failed).replace('{fail}', failed));
             } else if (restored > 0) {
-                showToast(t('restoreSuccess').replace('{n}', restored), 'success');
+                showToast(window.t('restoreSuccess').replace('{n}', restored), 'success');
             }
         }
         
         async function deleteTask(id) {
             const taskForDel = tasks.find(t => t.id === id);
             if (taskForDel && !canEditTask(taskForDel)) {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 return;
             }
 
             const task = tasks.find(t => t.id === id);
             if (!task) return;
             
-            const taskName = task.title || t('taskLabel');
+            const taskName = task.title || window.t('taskLabel');
             
             // Prevent snapshot from re-inserting during async delete
             pendingDeleteIds.add(id);
@@ -506,7 +506,7 @@
                 refreshCurrentView();
                 hideUndoToast();
                 console.error('deleteTask error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }
 

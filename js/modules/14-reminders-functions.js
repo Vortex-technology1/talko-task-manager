@@ -35,7 +35,7 @@
                 <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
                     <div class="user-ms-toggle" onclick="toggleUserMultiSelect('${uid}')" 
                          style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:white;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;min-height:38px;transition:border-color 0.2s;">
-                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${t('selectPlaceholder')}</span>
+                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${window.t('selectPlaceholder')}</span>
                         <span style="color:#9ca3af;margin-left:0.5rem;display:flex;align-items:center;gap:0.3rem;">
                             <span style="background:#22c55e;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;font-weight:600;display:none;">0</span>
                             <i data-lucide="chevron-down" class="icon" style="width:14px;height:14px;"></i>
@@ -92,7 +92,7 @@
             
             // Rate limiting
             if (!rateLimiter.check('saveTask')) {
-                showAlertModal(t('tooManyRequests'));
+                showAlertModal(window.t('tooManyRequests'));
                 return;
             }
             
@@ -143,7 +143,7 @@
                     if (criticalOverdue.length >= 3) {
                         const name = assignee?.name || assignee?.email || '';
                         const proceed = await showConfirmModal(
-                            `${name}: ${criticalOverdue.length} ${t('criticalOverdueWarning')}\n\n${t('criticalOverdueAdvice')}\n\n${t('continueAnyway')}`
+                            `${name}: ${criticalOverdue.length} ${window.t('criticalOverdueWarning')}\n\n${window.t('criticalOverdueAdvice')}\n\n${window.t('continueAnyway')}`
                         );
                         if (!proceed) {
                             isSaving = false;
@@ -244,7 +244,7 @@
                     // Update existing task
                     // Permission check: employee can only edit own tasks
                     if (existingTask && !canEditTask(existingTask)) {
-                        showToast(t('noPermissionTask'), 'error');
+                        showToast(window.t('noPermissionTask'), 'error');
                         isSaving = false;
                         if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
                         return;
@@ -258,7 +258,7 @@
                             const freshDoc = await db.collection('companies').doc(currentCompany).collection('tasks').doc(currentEditingId).get();
                             const freshUpdated = freshDoc.data()?.updatedAt;
                             if (freshUpdated?.toMillis && freshUpdated.toMillis() > existingTask._openedAt) {
-                                if (!await showConfirmModal(t('taskModifiedByOther'), { danger: true })) {
+                                if (!await showConfirmModal(window.t('taskModifiedByOther'), { danger: true })) {
                                     isSaving = false;
                                     if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
                                     return;
@@ -357,10 +357,10 @@
                 const _redirectedToReview = (statusVal === 'done' && data.status === 'review');
                 closeModal('taskModal');
                 if (_redirectedToReview) {
-                    showToast(t('taskSentForReview') || 'Завдання надіслано на перевірку ✓', 'info');
+                    showToast(window.t('taskSentForReview') || 'Завдання надіслано на перевірку ✓', 'info');
                 } else {
                     const _toastKey = currentEditingId ? 'taskUpdated' : 'taskCreated';
-                    const _toastMsg = (typeof t === 'function' && t(_toastKey) !== _toastKey) ? t(_toastKey) : (currentEditingId ? 'Завдання збережено ✓' : 'Завдання створено ✓');
+                    const _toastMsg = (typeof t === 'function' && window.t(_toastKey) !== _toastKey) ? window.t(_toastKey) : (currentEditingId ? 'Завдання збережено ✓' : 'Завдання створено ✓');
                     showToast(_toastMsg, 'success');
                 }
                 
@@ -368,7 +368,7 @@
                 if (data.projectId && data.deadlineDate) {
                     const proj = projects.find(p => p.id === data.projectId);
                     if (proj?.deadline && data.deadlineDate > proj.deadline && data.status !== 'done') {
-                        showToast(t('deadlineExceedsProject').replace('{taskDate}', formatDateShort(data.deadlineDate)).replace('{projName}', proj.name).replace('{projDate}', formatDateShort(proj.deadline)), 'warning');
+                        showToast(window.t('deadlineExceedsProject').replace('{taskDate}', formatDateShort(data.deadlineDate)).replace('{projName}', proj.name).replace('{projDate}', formatDateShort(proj.deadline)), 'warning');
                     }
                 }
                 
@@ -447,7 +447,7 @@
                 
             } catch (error) {
                 console.error('saveTask error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             } finally {
                 isSaving = false;
                 if (submitBtn) {

@@ -10,7 +10,7 @@
 
         async function sendInvite(e) {
             e.preventDefault();
-            if (currentUserData?.role === 'employee') { showToast(t('noPermissionTask'), 'error'); return; }
+            if (currentUserData?.role === 'employee') { showToast(window.t('noPermissionTask'), 'error'); return; }
             // BUG #3 fix: визначаємо активну форму (desktop або mobile)
             const emailDesktop = document.getElementById('inviteEmailDesktop');
             const emailMobile = document.getElementById('inviteEmailMobile');
@@ -38,9 +38,9 @@
                 document.getElementById('inviteLinkText').value = link;
                 document.getElementById('inviteLink').style.display = 'block';
                 
-                showAlertModal(t('inviteCreated'));
+                showAlertModal(window.t('inviteCreated'));
             } catch (e) {
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             }
         }
 
@@ -48,13 +48,13 @@
             const input = document.getElementById('inviteLinkText');
             input.select();
             document.execCommand('copy');
-            showAlertModal(t('copied'));
+            showAlertModal(window.t('copied'));
         }
 
         async function deleteUser(id) {
             const u = users.find(x => x.id === id);
-            if (u?.role === 'owner') { showAlertModal(t('cannotDeleteOwner')); return; }
-            if (!await showConfirmModal(t('deleteConfirm'), { danger: true })) return;
+            if (u?.role === 'owner') { showAlertModal(window.t('cannotDeleteOwner')); return; }
+            if (!await showConfirmModal(window.t('deleteConfirm'), { danger: true })) return;
             
             const base = db.collection('companies').doc(currentCompany);
             
@@ -130,10 +130,10 @@
             if (users.length === 0) {
                 c.innerHTML = `<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:3rem 1rem;">
                     <div style="margin-bottom:0.75rem;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-                    <h3 style="margin-bottom:0.5rem;">${t('noUsers') || 'Немає користувачів'}</h3>
-                    <p style="color:#6b7280;margin-bottom:1rem;">${t('inviteFirst') || 'Запросіть першого співробітника в команду'}</p>
+                    <h3 style="margin-bottom:0.5rem;">${window.t('noUsers') || 'Немає користувачів'}</h3>
+                    <p style="color:#6b7280;margin-bottom:1rem;">${window.t('inviteFirst') || 'Запросіть першого співробітника в команду'}</p>
                     <button class="btn btn-success" onclick="openInviteModal()">
-                        <i data-lucide="user-plus" class="icon"></i> ${t('invite') || 'Запросити'}
+                        <i data-lucide="user-plus" class="icon"></i> ${window.t('invite') || 'Запросити'}
                     </button>
                 </div>`;
                 if (typeof lucide !== 'undefined') refreshIcons();
@@ -200,19 +200,19 @@
                 <div style="display:flex;gap:2px;align-items:center;margin:0.5rem 0;">
                     <div style="flex:1;text-align:center;padding:0.3rem;background:#eff6ff;border-radius:6px 0 0 6px;">
                         <div style="font-size:1.1rem;font-weight:700;color:#2563eb;">${newTasks.length}</div>
-                        <div style="font-size:0.65rem;color:#6b7280;">${t('statusNew')}</div>
+                        <div style="font-size:0.65rem;color:#6b7280;">${window.t('statusNew')}</div>
                     </div>
                     <div style="flex:1;text-align:center;padding:0.3rem;background:#fefce8;">
                         <div style="font-size:1.1rem;font-weight:700;color:#ca8a04;">${inProgress.length}</div>
-                        <div style="font-size:0.65rem;color:#6b7280;">${t('inProgressStatus')}</div>
+                        <div style="font-size:0.65rem;color:#6b7280;">${window.t('inProgressStatus')}</div>
                     </div>
                     <div style="flex:1;text-align:center;padding:0.3rem;background:#f3e8ff;">
                         <div style="font-size:1.1rem;font-weight:700;color:#9333ea;">${onReview.length}</div>
-                        <div style="font-size:0.65rem;color:#6b7280;">${t('statusOnReview')}</div>
+                        <div style="font-size:0.65rem;color:#6b7280;">${window.t('statusOnReview')}</div>
                     </div>
                     <div style="flex:1;text-align:center;padding:0.3rem;background:#dcfce7;border-radius:0 6px 6px 0;">
                         <div style="font-size:1.1rem;font-weight:700;color:#16a34a;">${doneTasks.length}</div>
-                        <div style="font-size:0.65rem;color:#6b7280;">${t('statusDone')}</div>
+                        <div style="font-size:0.65rem;color:#6b7280;">${window.t('statusDone')}</div>
                     </div>
                 </div>`;
                 
@@ -222,31 +222,31 @@
                     
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
                         <div style="background:#f0fdf4;border-radius:8px;padding:0.5rem;text-align:center;">
-                            <div style="font-size:0.7rem;color:#6b7280;">${t('autonomyIndex')}</div>
+                            <div style="font-size:0.7rem;color:#6b7280;">${window.t('autonomyIndex')}</div>
                             <div style="font-size:1.3rem;font-weight:700;color:${autonomyColor};">${autonomyPct}%</div>
                         </div>
                         <div style="background:${overloadFlag ? '#fef2f2' : '#f0f9ff'};border-radius:8px;padding:0.5rem;text-align:center;">
-                            <div style="font-size:0.7rem;color:#6b7280;">${t('hoursPerWeek')}</div>
+                            <div style="font-size:0.7rem;color:#6b7280;">${window.t('hoursPerWeek')}</div>
                             <div style="font-size:1.3rem;font-weight:700;color:${overloadFlag ? '#ef4444' : '#0284c7'};">${weeklyHrs}</div>
                         </div>
                     </div>
                     
                     ${overdue.length > 0 ? `
                     <div style="background:#fef2f2;border-radius:8px;padding:0.5rem;margin-bottom:0.5rem;">
-                        <div style="font-size:0.8rem;font-weight:600;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${t('overdueStatus')} (${overdue.length})</div>
+                        <div style="font-size:0.8rem;font-weight:600;color:#dc2626;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${window.t('overdueStatus')} (${overdue.length})</div>
                         ${overdue.slice(0,3).map(t => `<div style="font-size:0.78rem;color:#374151;padding:0.2rem 0;">&bull; ${esc(t.title)} <span style="color:#ef4444;">${t.deadlineDate || ''}</span></div>`).join('')}
-                        ${overdue.length > 3 ? `<div style="font-size:0.72rem;color:#9ca3af;">+${overdue.length - 3} ${t('more')}...</div>` : ''}
+                        ${overdue.length > 3 ? `<div style="font-size:0.72rem;color:#9ca3af;">+${overdue.length - 3} ${window.t('more')}...</div>` : ''}
                     </div>` : ''}
                     
                     ${returned.length > 0 ? `
                     <div style="background:#fffbeb;border-radius:8px;padding:0.5rem;margin-bottom:0.5rem;">
-                        <div style="font-size:0.8rem;font-weight:600;color:#b45309;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('returnedFromReview')} (${returned.length})</div>
+                        <div style="font-size:0.8rem;font-weight:600;color:#b45309;"><i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('returnedFromReview')} (${returned.length})</div>
                     </div>` : ''}
                     
                     ${userRegular.length > 0 ? `
                     <div style="margin-bottom:0.5rem;">
                         <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.4rem;">
-                            <i data-lucide="repeat" class="icon icon-sm"></i> ${t('tabRegular')} (${userRegular.length})
+                            <i data-lucide="repeat" class="icon icon-sm"></i> ${window.t('tabRegular')} (${userRegular.length})
                         </div>
                         ${userRegular.map(rt => {
                             const status = getRegularTaskStatus(rt);
@@ -263,7 +263,7 @@
                                     .map(d => `<span style="display:inline-block;min-width:16px;height:16px;line-height:16px;text-align:center;border-radius:50%;font-size:0.58rem;font-weight:700;background:#dcfce7;color:#16a34a;">${shortDays[jsDayToIdx[d]] || d}</span>`)
                                     .join('');
                             } else if (rt.period === 'monthly') {
-                                scheduleStr = `<span style="font-size:0.62rem;background:#e0e7ff;color:#4338ca;padding:0 4px;border-radius:3px;line-height:16px;">${rt.dayOfMonth || '1'}/${t('monthShort')}</span>`;
+                                scheduleStr = `<span style="font-size:0.62rem;background:#e0e7ff;color:#4338ca;padding:0 4px;border-radius:3px;line-height:16px;">${rt.dayOfMonth || '1'}/${window.t('monthShort')}</span>`;
                             }
                             return `
                             <div style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.5rem;margin-bottom:0.15rem;background:#f9fafb;border-radius:6px;font-size:0.78rem;cursor:pointer;" onclick="openRegularTaskModal('${escId(rt.id)}')">
@@ -278,7 +278,7 @@
                     ${userFunctions.length > 0 ? `
                     <div>
                         <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:0.3rem;">
-                            <i data-lucide="settings" class="icon icon-sm"></i> ${t('tabFunctions')}
+                            <i data-lucide="settings" class="icon icon-sm"></i> ${window.t('tabFunctions')}
                         </div>
                         ${userFunctions.map(f => {
                             const fTasks = tasks.filter(tk => tk.function === f.name && tk.assigneeId === u.id);
@@ -286,7 +286,7 @@
                             const fDone = fTasks.filter(tk => tk.status === 'done').length;
                             return `<div style="display:flex;justify-content:space-between;padding:0.25rem 0.5rem;font-size:0.8rem;">
                                 <span style="font-weight:500;">${esc(f.name)}</span>
-                                <span style="color:#6b7280;">${fActive} ${t('active')} / ${fDone} ${t('doneLabel')}</span>
+                                <span style="color:#6b7280;">${fActive} ${window.t('active')} / ${fDone} ${window.t('doneLabel')}</span>
                             </div>`;
                         }).join('')}
                     </div>` : ''}
@@ -303,22 +303,22 @@
                     </div>
                     ${userFunctions.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:0.4rem;">${userFunctions.map(f => `<span style="font-size:0.65rem;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:4px;">${esc(f.name)}</span>`).join('')}</div>` : ''}
                     <div style="display:flex;gap:2px;margin-bottom:0.4rem;">
-                        <div style="flex:1;text-align:center;padding:2px 0;background:#eff6ff;border-radius:4px 0 0 4px;font-size:0.78rem;font-weight:600;color:#2563eb;" title="${t('statusNew')}">${newTasks.length}</div>
-                        <div style="flex:1;text-align:center;padding:2px 0;background:#fefce8;font-size:0.78rem;font-weight:600;color:#ca8a04;" title="${t('inProgressStatus')}">${inProgress.length}</div>
-                        <div style="flex:1;text-align:center;padding:2px 0;background:#f3e8ff;font-size:0.78rem;font-weight:600;color:#9333ea;" title="${t('statusOnReview')}">${onReview.length}</div>
-                        <div style="flex:1;text-align:center;padding:2px 0;background:#dcfce7;border-radius:0 4px 4px 0;font-size:0.78rem;font-weight:600;color:#16a34a;" title="${t('statusDone')}">${doneTasks.length}</div>
+                        <div style="flex:1;text-align:center;padding:2px 0;background:#eff6ff;border-radius:4px 0 0 4px;font-size:0.78rem;font-weight:600;color:#2563eb;" title="${window.t('statusNew')}">${newTasks.length}</div>
+                        <div style="flex:1;text-align:center;padding:2px 0;background:#fefce8;font-size:0.78rem;font-weight:600;color:#ca8a04;" title="${window.t('inProgressStatus')}">${inProgress.length}</div>
+                        <div style="flex:1;text-align:center;padding:2px 0;background:#f3e8ff;font-size:0.78rem;font-weight:600;color:#9333ea;" title="${window.t('statusOnReview')}">${onReview.length}</div>
+                        <div style="flex:1;text-align:center;padding:2px 0;background:#dcfce7;border-radius:0 4px 4px 0;font-size:0.78rem;font-weight:600;color:#16a34a;" title="${window.t('statusDone')}">${doneTasks.length}</div>
                     </div>
                     <div style="display:flex;justify-content:space-between;align-items:center;">
                         <div style="display:flex;gap:0.6rem;font-size:0.75rem;color:#6b7280;align-items:center;">
                             <span style="font-weight:600;color:${autonomyColor};">${autonomyPct}%</span>
-                            <span>${weeklyHrs} ${t('hoursPerWeek')}</span>
+                            <span>${weeklyHrs} ${window.t('hoursPerWeek')}</span>
                             ${overdue.length > 0 ? `<span style="color:#ef4444;font-weight:600;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>${overdue.length}</span>` : ''}
                             ${returned.length > 0 ? `<span style="color:#f59e0b;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>${returned.length}</span>` : ''}
                         </div>
                         <div style="display:flex;gap:0.25rem;align-items:center;" onclick="event.stopPropagation();">
                             ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserPermissionsModal('${u.id}')" title="Дозволи" style="background:#f0f9ff;color:#0369a1;"><i data-lucide="key" class="icon icon-sm"></i></button>` : ''}
-                            ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
-                            ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : ''}
+                            ${canEditCards && !isOwner ? `<button class="btn btn-small" onclick="openUserModal('${u.id}')" title="${window.t('edit')}"><i data-lucide="pencil" class="icon icon-sm"></i></button>` : ''}
+                            ${canEdit && !isOwner ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${u.id}')" title="${window.t('delete')}"><i data-lucide="trash-2" class="icon icon-sm"></i></button>` : ''}
                             <i data-lucide="chevron-down" class="icon icon-sm" style="color:#d1d5db;" id="userToggle_${u.id}"></i>
                         </div>
                     </div>
@@ -358,7 +358,7 @@
                     <input type="checkbox" value="${f.id}" data-fname="${esc(f.name)}">
                     ${esc(f.name)}
                 </label>
-            `).join('') || `<p style="color:#7f8c8d;">${t('noFunctions')}</p>`;
+            `).join('') || `<p style="color:#7f8c8d;">${window.t('noFunctions')}</p>`;
             
             if (userId) {
                 const user = users.find(u => u.id === userId);
@@ -367,7 +367,7 @@
                     document.getElementById('userEmail').value = user.email || '';
                     document.getElementById('userRole').value = user.role || 'employee';
                     document.getElementById('userPosition').value = user.position || '';
-                    document.getElementById('userModalTitle').textContent = t('editEmployee');
+                    document.getElementById('userModalTitle').textContent = window.t('editEmployee');
                     
                     // Відмічаємо функції користувача
                     const userFunctions = functions.filter(f => f.assigneeIds?.includes(userId));
@@ -378,7 +378,7 @@
                 }
             } else {
                 document.getElementById('userForm').reset();
-                document.getElementById('userModalTitle').textContent = t('addEmployee');
+                document.getElementById('userModalTitle').textContent = window.t('addEmployee');
             }
             
             modal.style.display = 'block';
@@ -455,7 +455,7 @@
                 renderFunctions();
                 updateSelects();
             } catch (e) {
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             }
         }
 

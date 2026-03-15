@@ -16,7 +16,7 @@
             
             const template = processTemplates.find(t => t.id === process.templateId);
             if (!template?.steps?.length) {
-                showAlertModal(t('templateNotFound'));
+                showAlertModal(window.t('templateNotFound'));
                 return;
             }
             
@@ -32,7 +32,7 @@
             } catch(e) { /* use local state as fallback */ }
             
             if (process.status === 'completed') {
-                showToast(t('processCompleted').replace('{name}', process.name), 'info');
+                showToast(window.t('processCompleted').replace('{name}', process.name), 'info');
                 return;
             }
             
@@ -46,7 +46,7 @@
                 t.status !== 'done' && t.status !== 'review'
             );
             if (pendingAutoTask) {
-                const skip = await showConfirmModal(t('skipStepConfirm').replace('{title}', pendingAutoTask.title));
+                const skip = await showConfirmModal(window.t('skipStepConfirm').replace('{title}', pendingAutoTask.title));
                 if (!skip) return;
             }
             
@@ -56,7 +56,7 @@
                 // Дозволяємо також власникам/менеджерам
                 const userRole = currentUserData?.role;
                 if (userRole !== 'owner' && userRole !== 'manager') {
-                    showAlertModal(t('onlyFunctionMembers'));
+                    showAlertModal(window.t('onlyFunctionMembers'));
                     return;
                 }
             }
@@ -95,7 +95,7 @@
                 });
                 
                 if (raceDetected) {
-                    showToast(t('processStepAlreadyCompleted') || 'Крок вже виконано іншим користувачем', 'info');
+                    showToast(window.t('processStepAlreadyCompleted') || 'Крок вже виконано іншим користувачем', 'info');
                     await loadProcessData();
                     renderProcessBoard();
                     return;
@@ -148,14 +148,14 @@
                             createdDate: getLocalDateStr(),
                             deadline: stepDeadlineDate + 'T18:00',
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            creatorName: currentUserData?.name || currentUser.email || t('systemUser') // FIX BN
+                            creatorName: currentUserData?.name || currentUser.email || window.t('systemUser') // FIX BN
                         };
                         const docRef = await window.companyRef().collection('tasks').add(newTaskData);
                         // Локально додаємо задачу — без повного loadAllData()
                         tasks.unshift({ id: docRef.id, ...newTaskData, createdAt: new Date(), updatedAt: new Date() });
                     } else {
                         // Попередження якщо функція не має виконавців
-                        showAlertModal(t('functionNoExecutorsWarning').replace('{name}', nextStep.function));
+                        showAlertModal(window.t('functionNoExecutorsWarning').replace('{name}', nextStep.function));
                     }
                 }
                 
@@ -165,10 +165,10 @@
                 renderProcessBoard();
                 if (typeof renderMyDay === 'function') renderMyDay();
                 refreshCurrentView();
-                showAlertModal(nextStep ? t('stepCompleted') : t('processCompleted'));
+                showAlertModal(nextStep ? window.t('stepCompleted') : window.t('processCompleted'));
                 
             } catch (error) {
                 console.error('completeProcessStep error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }

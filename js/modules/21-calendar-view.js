@@ -99,7 +99,7 @@
                     const archiveBtn = document.getElementById('archiveToggleBtn');
                     if (archiveBtn) {
                         archiveBtn.style.background = '#6b7280';
-                        archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>' + t('archive') + '</span>';
+                        archiveBtn.innerHTML = '<i data-lucide="archive" class="icon"></i> <span>' + window.t('archive') + '</span>';
                     }
                 }
                 renderTasks();
@@ -346,9 +346,9 @@
             } else if (currentCalendarView === 'list') {
                 titleEl.textContent = `${monthNames[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
             } else if (currentCalendarView === 'kanban') {
-                titleEl.textContent = t('kanban') + ': ' + t('statuses');
+                titleEl.textContent = window.t('kanban') + ': ' + window.t('statuses');
             } else if (currentCalendarView === 'deadlines') {
-                titleEl.textContent = t('kanban') + ': ' + t('deadlines');
+                titleEl.textContent = window.t('kanban') + ': ' + window.t('deadlines');
             }
         }
         
@@ -371,11 +371,11 @@
             const isYesterday = calendarDate.toDateString() === new Date(today.getTime() - 86400000).toDateString();
             
             if (isToday) {
-                agendaHeader.textContent = t('today');
+                agendaHeader.textContent = window.t('today');
             } else if (isTomorrow) {
-                agendaHeader.textContent = t('tomorrow');
+                agendaHeader.textContent = window.t('tomorrow');
             } else if (isYesterday) {
-                agendaHeader.textContent = t('yesterdayLabel');
+                agendaHeader.textContent = window.t('yesterdayLabel');
             } else {
                 agendaHeader.textContent = calendarDate.toLocaleDateString('uk-UA', { weekday: 'long', day: 'numeric', month: 'long' });
             }
@@ -398,7 +398,7 @@
                 agendaList.innerHTML = `
                     <div class="agenda-empty">
                         <div class="agenda-empty-icon"><i data-lucide="calendar" class="icon icon-xl"></i></div>
-                        <div class="agenda-empty-text">${t('noTasksLabel')}</div>
+                        <div class="agenda-empty-text">${window.t('noTasksLabel')}</div>
                     </div>
                 `;
                 return;
@@ -449,7 +449,7 @@
                     // Постановник — пропонуємо accept
                     acceptReviewTask(taskId);
                 } else {
-                    showToast(t('awaitingReview'), 'info');
+                    showToast(window.t('awaitingReview'), 'info');
                 }
                 return;
             }
@@ -484,7 +484,7 @@
                 logTaskChange(taskId, updateData.status === 'done' ? 'complete' : 'status', { status: updateData.status }, { status: originalTask?.status });
                 
                 if (needsReview) {
-                    showToast(t('taskSentForReview'), 'info');
+                    showToast(window.t('taskSentForReview'), 'info');
                 }
                 // Автостатус проєкту
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
@@ -567,7 +567,7 @@
             if (allDayTasks.length > 0) {
                 alldayEl.style.display = 'block';
                 alldayEl.innerHTML = `
-                    <div class="calendar-allday-label">${t('noTimeLabel')} (${allDayTasks.length})</div>
+                    <div class="calendar-allday-label">${window.t('noTimeLabel')} (${allDayTasks.length})</div>
                     ${allDayTasks.map(task => `
                         <div class="calendar-allday-event calendar-event status-${task.status}" onclick="showTaskQuickMenu(event, '${escId(task.id)}')">
                             ${task.status === 'done' ? '<span style="margin-right:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:-2px;"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}

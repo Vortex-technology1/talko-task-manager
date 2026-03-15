@@ -183,8 +183,8 @@
                 container.innerHTML = `
                     <div class="myday-empty">
                         <div class="myday-empty-icon"><i data-lucide="clipboard-list" class="icon icon-xl" style="width:48px;height:48px;color:var(--gray);"></i></div>
-                        <h3>${t('noTasksForToday')}</h3>
-                        <p style="color:var(--gray);margin-top:0.5rem;">${t('timeToRest')}</p>
+                        <h3>${window.t('noTasksForToday')}</h3>
+                        <p style="color:var(--gray);margin-top:0.5rem;">${window.t('timeToRest')}</p>
                     </div>`;
                 refreshIcons();
                 return;
@@ -195,13 +195,13 @@
                 container.innerHTML = `
                     <div class="myday-all-done">
                         <div class="myday-all-done-icon"><i data-lucide="party-popper" class="icon" style="width:48px;height:48px;color:var(--success);"></i></div>
-                        <h3>${t('allTasksDone')}</h3>
-                        <p style="color:var(--gray);">${t('greatJob')}</p>
+                        <h3>${window.t('allTasksDone')}</h3>
+                        <p style="color:var(--gray);">${window.t('greatJob')}</p>
                     </div>
                     <div class="myday-section" style="margin-top:1rem;">
                         <div class="myday-section-title">
                             <i data-lucide="check-circle" class="icon icon-sm" style="color:var(--success);"></i>
-                            ${t('doneToday')} (${done})
+                            ${window.t('doneToday')} (${done})
                         </div>
                         ${myTasks.map(t => renderMyDayItem(t)).join('')}
                     </div>`;
@@ -223,7 +223,7 @@
                     <div class="myday-section">
                         <div class="myday-section-title" style="color:var(--danger);">
                             <i data-lucide="alert-circle" class="icon icon-sm"></i>
-                            ${t('overdueStatus')} (${overdueTasks.length})
+                            ${window.t('overdueStatus')} (${overdueTasks.length})
                         </div>
                         ${overdueTasks.map(t => renderMyDayItem(t)).join('')}
                     </div>`;
@@ -235,7 +235,7 @@
                     <div class="myday-section">
                         <div class="myday-section-title">
                             <i data-lucide="circle" class="icon icon-sm"></i>
-                            ${t('toDo')} (${pendingTasks.length})
+                            ${window.t('toDo')} (${pendingTasks.length})
                         </div>
                         ${pendingTasks.map(t => renderMyDayItem(t)).join('')}
                     </div>`;
@@ -247,7 +247,7 @@
                     <div class="myday-section">
                         <div class="myday-section-title" style="color:#8b5cf6;">
                             <i data-lucide="eye" class="icon icon-sm"></i>
-                            ${t('onReview')} (${reviewTasks.length})
+                            ${window.t('onReview')} (${reviewTasks.length})
                         </div>
                         ${reviewTasks.map(t => renderMyDayItem(t)).join('')}
                     </div>`;
@@ -259,7 +259,7 @@
                     <div class="myday-section">
                         <div class="myday-section-title" style="color:var(--success);">
                             <i data-lucide="check-circle" class="icon icon-sm"></i>
-                            ${t('completedStatus')} (${doneTasks.length})
+                            ${window.t('completedStatus')} (${doneTasks.length})
                         </div>
                         ${doneTasks.map(t => renderMyDayItem(t)).join('')}
                     </div>`;
@@ -276,8 +276,8 @@
             const itemClass = task.done ? 'done' : (task.review ? 'review' : (task.overdue ? 'overdue' : ''));
             const tagClass = task.type === 'regular' ? 'regular' : '';
             const tagText = task.type === 'regular' 
-                ? (t('regularType'))
-                : (t('oneTimeType'));
+                ? (window.t('regularType'))
+                : (window.t('oneTimeType'));
             
             // Визначаємо чи поточний юзер — постановник цього завдання
             const isCreator = task.originalTask?.creatorId === currentUser?.uid;
@@ -290,18 +290,18 @@
                     <div style="display:flex;gap:0.4rem;margin-top:0.5rem;" onclick="event.stopPropagation();">
                         <button onclick="acceptReviewTask('${escId(taskId)}')" 
                                 style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${t('acceptTask')}
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${window.t('acceptTask')}
                         </button>
                         <button onclick="rejectReviewTask('${escId(taskId)}')" 
                                 style="flex:1;padding:0.4rem 0.6rem;border:none;border-radius:8px;background:#f59e0b;color:white;font-weight:600;cursor:pointer;font-size:0.8rem;">
-                            <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('rejectTask')}
+                            <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('rejectTask')}
                         </button>
                     </div>`;
             }
             
             let reviewBadge = '';
             if (task.review) {
-                reviewBadge = `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:#f3e8ff;color:#7c3aed;font-weight:500;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${t('reviewLabel')}</span>`;
+                reviewBadge = `<span style="font-size:0.7rem;padding:2px 6px;border-radius:4px;background:#f3e8ff;color:#7c3aed;font-weight:500;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${window.t('reviewLabel')}</span>`;
             }
             
             // Project/stage context
@@ -441,7 +441,7 @@
                             });
                         } else {
                             console.error('Could not find regular task template:', id);
-                            throw new Error(t('regularTaskNotFound'));
+                            throw new Error(window.t('regularTaskNotFound'));
                         }
                         } // close existCheck else
                     } else {
@@ -467,7 +467,7 @@
                     logTaskChange(id, newStatus === 'done' || newStatus === 'review' ? 'complete' : 'reopen', { status: newStatus }, { status: currentDone ? 'done' : 'new' });
                     
                     if (needsReview) {
-                        showToast(t('taskSentForReview'), 'info');
+                        showToast(window.t('taskSentForReview'), 'info');
                     }
                 }
                 
@@ -502,7 +502,7 @@
                 renderMyDay();
             } catch (error) {
                 console.error('Error toggling task:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
                 // Відновлюємо UI при помилці
                 if (checkbox && !currentDone) {
                     checkbox.classList.remove('checked');

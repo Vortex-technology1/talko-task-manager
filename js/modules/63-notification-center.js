@@ -59,7 +59,7 @@
         if (!list) return;
         
         if (notifications.length === 0) {
-            list.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;font-size:0.85rem;">' + t('noNotifications') + '</div>';
+            list.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;font-size:0.85rem;">' + window.t('noNotifications') + '</div>';
             return;
         }
         
@@ -109,10 +109,10 @@
     
     function getTimeAgo(date, now) {
         const diff = Math.floor((now - new Date(date)) / 1000);
-        if (diff < 60) return t('justNow');
-        if (diff < 3600) return Math.floor(diff / 60) + ' ' + t('minutesAgo');
-        if (diff < 86400) return Math.floor(diff / 3600) + ' ' + t('hoursAgo');
-        return Math.floor(diff / 86400) + ' ' + t('daysAgo');
+        if (diff < 60) return window.t('justNow');
+        if (diff < 3600) return Math.floor(diff / 60) + ' ' + window.t('minutesAgo');
+        if (diff < 86400) return Math.floor(diff / 3600) + ' ' + window.t('hoursAgo');
+        return Math.floor(diff / 86400) + ' ' + window.t('daysAgo');
     }
     
     // Close panel on outside click

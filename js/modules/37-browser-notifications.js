@@ -14,7 +14,7 @@
         // Request permission
         async function requestNotificationPermission() {
             if (!supportsNotifications()) {
-                showAlertModal(t('browserNoNotifications'));
+                showAlertModal(window.t('browserNoNotifications'));
                 return false;
             }
             
@@ -27,7 +27,7 @@
                 updateNotificationButton();
                 
                 // Show test notification
-                new Notification(t('notificationsEnabled'), {
+                new Notification(window.t('notificationsEnabled'), {
                     body: window.t('notificationsEnabledDesc'),
                     icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
                     tag: 'test'
@@ -35,7 +35,7 @@
                 
                 return true;
             } else {
-                showAlertModal(t('notificationsDenied'));
+                showAlertModal(window.t('notificationsDenied'));
                 return false;
             }
         }
@@ -133,7 +133,7 @@
                         } else if (daysOverdue >= 3) {
                             msg = window.t('overdueDays').replace('{n}', daysOverdue).replace('{title}', task.title);
                         } else {
-                            msg = `${t('overdueStatus')}: ${task.title}`;
+                            msg = `${window.t('overdueStatus')}: ${task.title}`;
                         }
                         sendTaskNotification(task, msg, overdueKey);
                     }
@@ -154,7 +154,7 @@
         function sendTaskNotification(task, message, notifyKey) {
             try {
                 const notification = new Notification(message, {
-                    body: task.function ? `${t('functionColon')}: ${task.function}` : window.t('clickToOpen'),
+                    body: task.function ? `${window.t('functionColon')}: ${task.function}` : window.t('clickToOpen'),
                     icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
                     tag: task.id,
                     requireInteraction: true

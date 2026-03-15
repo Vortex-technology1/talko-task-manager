@@ -85,15 +85,15 @@
             if (!isSuperAdmin) return;
             if (!currentCompany) return;
             
-            const confirmText = t('deleteAllConfirmText');
+            const confirmText = window.t('deleteAllConfirmText');
             const input = await (window.showInputModal ? showInputModal(`Введіть "${confirmText}" щоб підтвердити повне видалення всіх даних компанії (крім користувачів):`, '', {placeholder: confirmText}) : (async()=>prompt(`Введіть "${confirmText}" щоб підтвердити повне видалення всіх даних компанії (крім користувачів):`))());
             if (input !== confirmText) {
-                if (input !== null) showToast(t('textMismatch'), 'error');
+                if (input !== null) showToast(window.t('textMismatch'), 'error');
                 return;
             }
             
             closeDemoDataModal();
-            showToast(t('deletingData'), 'info');
+            showToast(window.t('deletingData'), 'info');
             
             try {
                 const companyRef = db.collection('companies').doc(currentCompany);
@@ -126,16 +126,16 @@
                 openProjectId = null;
                 
                 await loadAllData();
-                showToast(t('deletedNRecords').replace('{n}', totalDeleted), 'success');
+                showToast(window.t('deletedNRecords').replace('{n}', totalDeleted), 'success');
             } catch (e) {
                 console.error('[ClearData]', e);
-                showToast(t('deleteError') + ': ' + e.message, 'error');
+                showToast(window.t('deleteError') + ': ' + e.message, 'error');
             }
         }
         
         async function loadDemoData(type) {
             if (!currentCompany) {
-                showAlertModal(t('createCompanyFirst'));
+                showAlertModal(window.t('createCompanyFirst'));
                 closeDemoDataModal();
                 return;
             }
@@ -157,10 +157,10 @@
                 }
                 
                 await loadAllData();
-                showAlertModal(t('demoDataLoaded'));
+                showAlertModal(window.t('demoDataLoaded'));
             } catch (e) {
                 console.error('Error loading demo data:', e);
-                showAlertModal(t('loadError') + e.message);
+                showAlertModal(window.t('loadError') + e.message);
             }
         }
         
@@ -1027,7 +1027,7 @@
             // Populate function chips
             const funcContainer = document.getElementById('filterFunctionChips');
             const activeFuncs = functions.filter(f => f.status !== 'archived');
-            funcContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'function\')">' + t('all') + '</div>';
+            funcContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'function\')">' + window.t('all') + '</div>';
             activeFuncs.forEach(f => {
                 const selected = mobileFilters.function === f.name ? 'selected' : '';
                 funcContainer.innerHTML += `<div class="filter-chip ${selected}" data-value="${esc(f.name)}" onclick="selectFilterChip(this, 'function')">${esc(f.name)}</div>`;
@@ -1035,7 +1035,7 @@
             
             // Populate assignee chips
             const assigneeContainer = document.getElementById('filterAssigneeChips');
-            assigneeContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'assignee\')">' + t('all') + '</div>';
+            assigneeContainer.innerHTML = '<div class="filter-chip selected" data-value="" onclick="selectFilterChip(this, \'assignee\')">' + window.t('all') + '</div>';
             users.forEach(u => {
                 const name = u.name || u.email.split('@')[0];
                 const selected = mobileFilters.assignee === u.id ? 'selected' : '';
@@ -1196,7 +1196,7 @@
         
         function openDemoDataModal() {
             if (!isSuperAdmin) {
-                showToast(t('superAdminOnly'), 'error');
+                showToast(window.t('superAdminOnly'), 'error');
                 return;
             }
             document.getElementById('demoDataModal').style.display = 'flex';
@@ -1211,15 +1211,15 @@
             if (!isSuperAdmin) return;
             if (!currentCompany) return;
             
-            const confirmText = t('deleteAllConfirmText');
+            const confirmText = window.t('deleteAllConfirmText');
             const input = await (window.showInputModal ? showInputModal(`Введіть "${confirmText}" щоб підтвердити повне видалення всіх даних компанії (крім користувачів):`, '', {placeholder: confirmText}) : (async()=>prompt(`Введіть "${confirmText}" щоб підтвердити повне видалення всіх даних компанії (крім користувачів):`))());
             if (input !== confirmText) {
-                if (input !== null) showToast(t('textMismatch'), 'error');
+                if (input !== null) showToast(window.t('textMismatch'), 'error');
                 return;
             }
             
             closeDemoDataModal();
-            showToast(t('deletingData'), 'info');
+            showToast(window.t('deletingData'), 'info');
             
             try {
                 const companyRef = db.collection('companies').doc(currentCompany);
@@ -1252,21 +1252,21 @@
                 openProjectId = null;
                 
                 await loadAllData();
-                showToast(t('deletedNRecords').replace('{n}', totalDeleted), 'success');
+                showToast(window.t('deletedNRecords').replace('{n}', totalDeleted), 'success');
             } catch (e) {
                 console.error('[ClearData]', e);
-                showToast(t('deleteError') + ': ' + e.message, 'error');
+                showToast(window.t('deleteError') + ': ' + e.message, 'error');
             }
         }
         
         async function loadDemoData(type) {
             if (!currentCompany) {
-                showAlertModal(t('createCompanyFirst'));
+                showAlertModal(window.t('createCompanyFirst'));
                 closeDemoDataModal();
                 return;
             }
             
-            if (!await showConfirmModal(t('loadDemoConfirm'), { danger: true })) {
+            if (!await showConfirmModal(window.t('loadDemoConfirm'), { danger: true })) {
                 return;
             }
             
@@ -1284,10 +1284,10 @@
                 }
                 
                 await loadAllData();
-                showAlertModal(t('demoDataLoaded'));
+                showAlertModal(window.t('demoDataLoaded'));
             } catch (e) {
                 console.error('Error loading demo data:', e);
-                showAlertModal(t('loadError') + e.message);
+                showAlertModal(window.t('loadError') + e.message);
             }
         }
         

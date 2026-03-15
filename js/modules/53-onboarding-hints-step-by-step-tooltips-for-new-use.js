@@ -61,13 +61,13 @@
         tooltip.className = 'hint-tooltip';
         
         const stepText = `${currentHintIndex + 1}/${ONBOARDING_HINTS.length}`;
-        const hintText = t(hint.text) || hint.fallback;
+        const hintText = window.t(hint.text) || hint.fallback;
         
         tooltip.innerHTML = `
             <div class="hint-step">${stepText}</div>
             <div>${hintText}</div>
-            <button class="hint-dismiss" onclick="advanceHint()">${currentHintIndex < ONBOARDING_HINTS.length - 1 ? (t('next')) : (t('gotIt'))}</button>
-            <button class="hint-dismiss" onclick="skipOnboarding()" style="margin-left:4px;opacity:0.6;">${t('skip')}</button>
+            <button class="hint-dismiss" onclick="advanceHint()">${currentHintIndex < ONBOARDING_HINTS.length - 1 ? (window.t('next')) : (window.t('gotIt'))}</button>
+            <button class="hint-dismiss" onclick="skipOnboarding()" style="margin-left:4px;opacity:0.6;">${window.t('skip')}</button>
         `;
         
         document.body.appendChild(tooltip);

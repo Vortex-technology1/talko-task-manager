@@ -66,7 +66,7 @@
                     reopenedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     reopenedBy: currentUser?.uid || ''
                 });
-                showToast(t('taskReopened'), 'success');
+                showToast(window.t('taskReopened'), 'success');
                 // Re-create calendar event if it was deleted on complete
                 if (googleAccessToken && originalTask?.deadlineDate) {
                     createCalendarEvent(originalTask).then(id => {
@@ -81,7 +81,7 @@
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
                 refreshCurrentView();
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             }
         }
         
@@ -95,7 +95,7 @@
             // Only creator or manager+ can accept review
             const task = tasks[taskIndex];
             if (task.creatorId !== currentUser?.uid && !isManagerOrAbove()) {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 reviewingTasks.delete(taskId); // FIX 13: prevent permanent lock
                 return;
             }
@@ -134,12 +134,12 @@
                 // AUDIT LOG
                 logTaskChange(taskId, 'review', { status: 'done' }, { status: 'review' }).catch(err => console.warn("[AuditLog]", err));
                 
-                showToast(t('taskAccepted'), 'success');
+                showToast(window.t('taskAccepted'), 'success');
             } catch (e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
                 refreshCurrentView();
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             } finally {
                 reviewingTasks.delete(taskId);
             }
@@ -152,12 +152,12 @@
             reviewingTasks.add(taskId);
             const taskForCheck = tasks.find(t => t.id === taskId);
             if (taskForCheck && taskForCheck.creatorId !== currentUser?.uid && !isManagerOrAbove()) {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 reviewingTasks.delete(taskId); // lock cleanup
                 return;
             }
             
-            const reason = await (window.showInputModal ? showInputModal(t('rejectReasonPlaceholder'), '', {placeholder: 'Причина відхилення', multiline: true}) : (async()=>prompt(t('rejectReasonPlaceholder')))());
+            const reason = await (window.showInputModal ? showInputModal(window.t('rejectReasonPlaceholder'), '', {placeholder: 'Причина відхилення', multiline: true}) : (async()=>prompt(window.t('rejectReasonPlaceholder')))());
             if (reason === null) { reviewingTasks.delete(taskId); return; }
             
             const taskIndex = tasks.findIndex(t => t.id === taskId);
@@ -192,12 +192,12 @@
                     window.trackTaskReturned(taskId, tasks[taskIndex], reason);
                 }
                 
-                showToast(t('taskRejected'), 'warning');
+                showToast(window.t('taskRejected'), 'warning');
             } catch (e) {
                 tasks[taskIndex] = originalTask;
                 renderMyDay();
                 refreshCurrentView();
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             } finally {
                 reviewingTasks.delete(taskId);
             }

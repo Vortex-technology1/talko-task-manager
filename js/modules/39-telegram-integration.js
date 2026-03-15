@@ -15,7 +15,7 @@
         
         async function connectTelegram() {
             if (!currentCompany || !currentUser) {
-                showAlertModal(t('notAuthorized'));
+                showAlertModal(window.t('notAuthorized'));
                 return;
             }
             
@@ -45,9 +45,9 @@
                 // Показуємо інструкцію
                 const proceed = await showConfirmModal(
                     window.t('telegramConnectTitle')+'\n\n' +
-                    '1. '+t('telegramConnectStep1')+'\n' +
+                    '1. '+window.t('telegramConnectStep1')+'\n' +
                     '2. Натисніть "Start" або "Запустити"\n' +
-                    '3. '+t('telegramConnectStep3')+'\n\n' +
+                    '3. '+window.t('telegramConnectStep3')+'\n\n' +
                     window.t('telegramOpenConfirm')
                 );
                 
@@ -61,12 +61,12 @@
                 }
             } catch (error) {
                 console.error('Error generating Telegram code:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }
         
         async function disconnectTelegram() {
-            if (!await showConfirmModal(t('disconnectTelegram'), { danger: true })) {
+            if (!await showConfirmModal(window.t('disconnectTelegram'), { danger: true })) {
                 return;
             }
             
@@ -80,10 +80,10 @@
                     }, { merge: true });
                 
                 showTelegramNotConnected();
-                showAlertModal(t('telegramDisconnected'));
+                showAlertModal(window.t('telegramDisconnected'));
             } catch (error) {
                 console.error('Error disconnecting Telegram:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }
         
@@ -319,7 +319,7 @@
             const avatarEl = document.getElementById('profileAvatar');
             
             if (currentUserData) {
-                const name = currentUserData.name || currentUser?.displayName || t('telegramUser');
+                const name = currentUserData.name || currentUser?.displayName || window.t('telegramUser');
                 if (nameEl) nameEl.textContent = name;
                 if (emailEl) emailEl.textContent = currentUser?.email || '';
                 if (roleEl) roleEl.textContent = getRoleText(currentUserData.role);

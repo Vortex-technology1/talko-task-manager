@@ -260,7 +260,7 @@
             (typeof isManagerOrAbove === 'function' && isManagerOrAbove()) ||
             (typeof canEditTask === 'function' && canEditTask(subtask));
         if (!canDelete) {
-            if (typeof showToast === 'function') showToast(typeof t === 'function' ? t('noPermissionTask') : 'Немає дозволу', 'error');
+            if (typeof showToast === 'function') showToast(typeof t === 'function' ? window.t('noPermissionTask') : 'Немає дозволу', 'error');
             return;
         }
         if (!(await (window.showConfirmModal ? showConfirmModal('Видалити підзавдання?',{danger:true}) : Promise.resolve(confirm('Видалити підзавдання?'))))) return;

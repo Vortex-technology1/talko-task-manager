@@ -30,7 +30,7 @@
                 if (id) { const _t = tasks.find(t => t.id === id); if (_t) _t._openedAt = Date.now(); }
                 const task = tasks.find(x => x.id === id);
                 if (task) {
-                    document.getElementById('taskModalTitle').textContent = t('editTask');
+                    document.getElementById('taskModalTitle').textContent = window.t('editTask');
                     // Показуємо кнопку Duplicate для існуючих задач
                     const _dupBtn = document.getElementById('duplicateTaskBtn');
                     if (_dupBtn) _dupBtn.style.display = 'flex';
@@ -125,7 +125,7 @@
                     const submitBtn = document.getElementById('taskForm').querySelector('button[type="submit"]');
                     if (submitBtn) submitBtn.style.display = canEdit ? '' : 'none';
                     if (!canEdit) {
-                        document.getElementById('taskModalTitle').textContent = t('viewTask');
+                        document.getElementById('taskModalTitle').textContent = window.t('viewTask');
                     }
                     
                     // Task actions — показуємо керівнику/постановнику дії залежно від статусу
@@ -147,10 +147,10 @@
                             label.innerHTML = '<i data-lucide="shield-check" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання на перевірці</span>';
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
-                                    <i data-lucide="check-circle" class="icon"></i> ${t('acceptTask')}
+                                    <i data-lucide="check-circle" class="icon"></i> ${window.t('acceptTask')}
                                 </button>
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                    <i data-lucide="rotate-ccw" class="icon"></i> ${t('reviseTask')}
+                                    <i data-lucide="rotate-ccw" class="icon"></i> ${window.t('reviseTask')}
                                 </button>`;
                             refreshIcons();
                         } else if (isAssignee && (task.status === 'new' || task.status === 'progress')) {
@@ -160,17 +160,17 @@
                             reviewActions.style.border = '2px solid #22c55e';
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
-                            const statusLabel = task.status === 'new' ? t('statusNewTask') : t('statusInWork');
+                            const statusLabel = task.status === 'new' ? window.t('statusNewTask') : window.t('statusInWork');
                             label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Статус: ' + statusLabel + '</span>';
                             
                             const manageButtons = canManage ? `
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.85rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                    <i data-lucide="message-circle" class="icon"></i> ${t('reviseTask')}
+                                    <i data-lucide="message-circle" class="icon"></i> ${window.t('reviseTask')}
                                 </button>` : '';
                             
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:180px;padding:0.75rem 1rem;font-size:1rem;font-weight:700;" onclick="completeTaskFromModal()">
-                                    <i data-lucide="check-circle" class="icon"></i> ${t('markDone')}
+                                    <i data-lucide="check-circle" class="icon"></i> ${window.t('markDone')}
                                 </button>
                                 ${manageButtons}`;
                             refreshIcons();
@@ -181,14 +181,14 @@
                             reviewActions.style.border = '2px solid #38bdf8';
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
-                            const statusLabel = task.status === 'new' ? t('statusNewTask') : t('statusInWork');
+                            const statusLabel = task.status === 'new' ? window.t('statusNewTask') : window.t('statusInWork');
                             label.innerHTML = '<i data-lucide="info" class="icon icon-sm" style="color:#0284c7;"></i> <span style="color:#0284c7;">Статус: ' + statusLabel + '</span>';
                             btns.innerHTML = `
                                 <button type="button" class="btn btn-success" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;" onclick="acceptReviewFromModal()">
-                                    <i data-lucide="check-circle" class="icon"></i> ${t('acceptWork')}
+                                    <i data-lucide="check-circle" class="icon"></i> ${window.t('acceptWork')}
                                 </button>
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="rejectReviewFromModal()">
-                                    <i data-lucide="message-circle" class="icon"></i> ${t('reviseTask')}
+                                    <i data-lucide="message-circle" class="icon"></i> ${window.t('reviseTask')}
                                 </button>`;
                             refreshIcons();
                         } else if (isAssignee && task.status === 'review') {
@@ -210,7 +210,7 @@
                             label.innerHTML = '<i data-lucide="check-circle-2" class="icon icon-sm" style="color:#16a34a;"></i> <span style="color:#16a34a;">Завдання виконано</span>';
                             btns.innerHTML = `
                                 <button type="button" class="btn" style="flex:1;min-width:130px;padding:0.6rem 1rem;font-size:0.9rem;font-weight:600;background:#f59e0b;" onclick="reopenTaskFromModal()">
-                                    <i data-lucide="rotate-ccw" class="icon"></i> ${t('returnToWork')}
+                                    <i data-lucide="rotate-ccw" class="icon"></i> ${window.t('returnToWork')}
                                 </button>`;
                             refreshIcons();
                         } else {
@@ -221,7 +221,7 @@
             } else {
                 editingId = null;
                 window.currentEditingId = null; // BUG1 FIX: clear for subtasks module
-                document.getElementById('taskModalTitle').textContent = t('newTask');
+                document.getElementById('taskModalTitle').textContent = window.t('newTask');
                 const _dupBtnN = document.getElementById('duplicateTaskBtn');
                 if (_dupBtnN) _dupBtnN.style.display = 'none';
                 const _subtasksSect = document.getElementById('subtasksSection');
@@ -293,7 +293,7 @@
                 <div class="user-multiselect" id="${uid}" style="position:relative;width:100%;">
                     <div class="user-ms-toggle" onclick="toggleUserMultiSelect('${uid}')" 
                          style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:white;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;font-size:0.85rem;min-height:38px;transition:border-color 0.2s;">
-                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${t('selectPlaceholder')}</span>
+                        <span class="user-ms-label" style="color:#9ca3af;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">${window.t('selectPlaceholder')}</span>
                         <span style="color:#9ca3af;margin-left:0.5rem;display:flex;align-items:center;gap:0.3rem;">
                             <span style="background:#22c55e;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;font-weight:600;display:none;">0</span>
                             <i data-lucide="chevron-down" class="icon" style="width:14px;height:14px;"></i>

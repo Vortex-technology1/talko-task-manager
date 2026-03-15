@@ -204,10 +204,10 @@
                             showRegisterForm(); // Тепер currentInviteData вже заповнено
                         } else if (result === 'already_used') {
                             showLoginForm();
-                            showAuthMessage(t('inviteAlreadyUsed'), 'info');
+                            showAuthMessage(window.t('inviteAlreadyUsed'), 'info');
                         } else {
                             showRegisterForm(); // Показуємо форму все одно, нехай вводить email вручну
-                            showAuthMessage(t('inviteNotFoundEmail'), 'error');
+                            showAuthMessage(window.t('inviteNotFoundEmail'), 'error');
                         }
                     });
                 } else {

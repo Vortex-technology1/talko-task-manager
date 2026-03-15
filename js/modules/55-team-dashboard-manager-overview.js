@@ -54,7 +54,7 @@
             const sorted = Object.entries(stepCounts).sort((a, b) => b[1] - a[1]);
             if (sorted.length > 0 && sorted[0][1] > 1) {
                 bottleneckHtml = `<div style="margin-top:0.5rem;padding:0.4rem 0.75rem;background:#fef3c7;border-radius:8px;font-size:0.75rem;color:#92400e;">
-                    <strong>${t('bottleneck')}:</strong> ${esc(sorted[0][0])} — ${sorted[0][1]} ${t('processesWaiting')}
+                    <strong>${window.t('bottleneck')}:</strong> ${esc(sorted[0][0])} — ${sorted[0][1]} ${window.t('processesWaiting')}
                 </div>`;
             }
         }
@@ -64,15 +64,15 @@
         
         container.style.display = 'block';
         container.innerHTML = `
-            <div style="font-weight:600;font-size:0.85rem;color:#374151;margin-bottom:0.5rem;">${t('teamDashboard')}</div>
+            <div style="font-weight:600;font-size:0.85rem;color:#374151;margin-bottom:0.5rem;">${window.t('teamDashboard')}</div>
             <div style="display:flex;flex-direction:column;gap:0.3rem;">
                 ${teamData.map(d => `
                     <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;background:${statusColors[d.status]};border-radius:8px;border-left:3px solid ${statusIcons[d.status]};">
                         <div style="flex:1;font-size:0.82rem;font-weight:500;">${esc(d.user.name || d.user.email)}</div>
-                        <span style="font-size:0.72rem;color:#16a34a;font-weight:600;" title="${t('doneToday')}">${d.todayDone}</span>
-                        <span style="font-size:0.72rem;color:#374151;" title="${t('thisWeek')}">${d.weekDone}w</span>
-                        <span style="font-size:0.72rem;color:#6b7280;" title="${t('active')}">${d.active}a</span>
-                        ${d.overdue > 0 ? `<span style="font-size:0.72rem;color:#ef4444;font-weight:700;" title="${t('overdueStatus')}">${d.overdue}!</span>` : ''}
+                        <span style="font-size:0.72rem;color:#16a34a;font-weight:600;" title="${window.t('doneToday')}">${d.todayDone}</span>
+                        <span style="font-size:0.72rem;color:#374151;" title="${window.t('thisWeek')}">${d.weekDone}w</span>
+                        <span style="font-size:0.72rem;color:#6b7280;" title="${window.t('active')}">${d.active}a</span>
+                        ${d.overdue > 0 ? `<span style="font-size:0.72rem;color:#ef4444;font-weight:700;" title="${window.t('overdueStatus')}">${d.overdue}!</span>` : ''}
                     </div>
                 `).join('')}
             </div>

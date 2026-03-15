@@ -45,7 +45,7 @@
     function openNextTask() {
         const next = getNextTask();
         if (!next) {
-            showToast(t('noTasksForToday'), 'success', 2000);
+            showToast(window.t('noTasksForToday'), 'success', 2000);
             return;
         }
         openTaskModal(next.id);

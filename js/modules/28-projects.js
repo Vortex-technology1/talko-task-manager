@@ -24,7 +24,7 @@
             if (colorInput) colorInput.checked = true;
             else document.querySelector('input[name="projectColor"]').checked = true; // fallback to first
             
-            document.getElementById('projectModalTitle').textContent = project ? t('editProject') : t('newProject');
+            document.getElementById('projectModalTitle').textContent = project ? window.t('editProject') : window.t('newProject');
             document.getElementById('projectModal').style.display = 'block';
             refreshIconsNow();
         }
@@ -70,7 +70,7 @@
                 updateProjectSelects();
             } catch (err) {
                 console.error('[Projects] Save error:', err);
-                showToast(t('error') + ': ' + t('save'), 'error');
+                showToast(window.t('error') + ': ' + window.t('save'), 'error');
             } finally {
                 isSavingProject = false;
                 if (submitBtn) submitBtn.disabled = false;
@@ -78,12 +78,12 @@
         }
         
         async function deleteProject(projectId) {
-            if (currentUserData?.role === 'employee') { showToast(t('noPermissionTask'), 'error'); return; }
+            if (currentUserData?.role === 'employee') { showToast(window.t('noPermissionTask'), 'error'); return; }
             const s = getProjectStats(projectId);
             const stageCount = (typeof window.projectStages !== 'undefined' ? window.projectStages : []).filter(st => st.projectId === projectId).length;
             let msg = s.total > 0 
-                ? (t('deleteProjectWithTasks')).replace('{total}', s.total).replace('{undone}', s.total - s.done)
-                : (t('deleteEmptyProject'));
+                ? (window.t('deleteProjectWithTasks')).replace('{total}', s.total).replace('{undone}', s.total - s.done)
+                : (window.t('deleteEmptyProject'));
             if (stageCount > 0) msg += `\n\nТакож буде видалено ${stageCount} етапів та пов'язані матеріали.`;
             if (!await showConfirmModal(msg, { danger: true })) return;
             try {
@@ -112,7 +112,7 @@
                     await batch.commit();
                     } catch(err) {
                         console.error('[Batch] commit failed:', err);
-                        showToast && showToast(t('savingError'), 'error');
+                        showToast && showToast(window.t('savingError'), 'error');
                     }
                 }
                 
@@ -207,8 +207,8 @@
                         }
                     });
                     if (project.status === newStatus) {
-                        const label = newStatus === 'completed' ? t('projectCompleted') : t('projectActive');
-                        showToast(t('projectStatusChanged').replace('{name}', project.name).replace('{status}', label), 'success');
+                        const label = newStatus === 'completed' ? window.t('projectCompleted') : window.t('projectActive');
+                        showToast(window.t('projectStatusChanged').replace('{name}', project.name).replace('{status}', label), 'success');
                     }
                 } catch(e) {
                     project.status = oldStatus;
@@ -291,14 +291,14 @@
                     <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${safeColor(p.color)};border-radius:12px 12px 0 0;"></div>
                     <div class="project-card-header">
                         <div class="project-card-title">${esc(p.name)}</div>
-                        <span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? t('projectActive') : p.status === 'completed' ? t('projectCompleted') : t('projectPaused')}</span>
+                        <span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? window.t('projectActive') : p.status === 'completed' ? window.t('projectCompleted') : window.t('projectPaused')}</span>
                     </div>
                     ${p.description ? `<div class="project-card-desc">${esc(p.description)}</div>` : ''}
                     <div class="project-card-stats">
-                        <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} ${t('tasksWord')}</span>
-                        <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} ${t('doneWord')}</span>
-                        ${s.overdue > 0 ? `<span style="color:var(--danger);font-weight:600;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue} ${t('overdueWord')}</span>` : ''}
-                        ${s.deadlineConflicts.length > 0 ? `<span style="color:#ea580c;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${s.deadlineConflicts.length} ${t('pastDeadline')}</span>` : ''}
+                        <span><i data-lucide="clipboard-list" class="icon icon-sm"></i> ${s.total} ${window.t('tasksWord')}</span>
+                        <span><i data-lucide="check-circle" class="icon icon-sm"></i> ${s.done} ${window.t('doneWord')}</span>
+                        ${s.overdue > 0 ? `<span style="color:var(--danger);font-weight:600;"><i data-lucide="alert-circle" class="icon icon-sm"></i> ${s.overdue} ${window.t('overdueWord')}</span>` : ''}
+                        ${s.deadlineConflicts.length > 0 ? `<span style="color:#ea580c;font-weight:600;"><i data-lucide="alert-triangle" class="icon icon-sm"></i> ${s.deadlineConflicts.length} ${window.t('pastDeadline')}</span>` : ''}
                     </div>
                     <div class="project-progress-bar"><div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(p.color)};"></div></div>
                     <div class="project-progress-label"><span>${s.done}/${s.total}</span><span>${s.percent}%</span></div>
@@ -310,13 +310,13 @@
         function renderProjectsList(container, filtered) {
             const todayStr = getLocalDateStr();
             container.innerHTML = `<table class="projects-list-table"><thead><tr>
-                <th>${t('nameLabel')}</th><th>${t('statusLabel')}</th><th>${t('tasksWord')}</th><th>${t('progressLabel')}</th><th>${t('deadline')}</th><th></th>
+                <th>${window.t('nameLabel')}</th><th>${window.t('statusLabel')}</th><th>${window.t('tasksWord')}</th><th>${window.t('progressLabel')}</th><th>${window.t('deadline')}</th><th></th>
             </tr></thead><tbody>${filtered.map(p => {
                 const s = getProjectStats(p.id);
                 const isOverdue = p.deadline && p.deadline < todayStr && p.status === 'active';
                 return `<tr onclick="openProjectDetail('${escId(p.id)}')">
                     <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${safeColor(p.color)};margin-right:0.5rem;vertical-align:middle;"></span><strong>${esc(p.name)}</strong></td>
-                    <td><span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? t('projectActive') : p.status === 'completed' ? t('projectCompleted') : t('projectPaused')}</span></td>
+                    <td><span class="project-card-status ${['active','paused','completed'].includes(p.status) ? p.status : 'active'}">${p.status === 'active' ? window.t('projectActive') : p.status === 'completed' ? window.t('projectCompleted') : window.t('projectPaused')}</span></td>
                     <td>${s.done}/${s.total}</td>
                     <td><div class="project-progress-bar" style="width:100px;display:inline-block;vertical-align:middle;"><div class="project-progress-fill" style="width:${s.percent}%;background:${safeColor(p.color)};"></div></div> ${s.percent}%</td>
                     <td class="${isOverdue ? 'project-card-deadline overdue' : ''}">${p.deadline ? formatDateShort(p.deadline) : '—'}</td>
@@ -463,15 +463,15 @@
             if (container) container.dataset.projectId = projectId;
             
             const statusOptions = ['active', 'paused', 'completed'].map(st => 
-                `<option value="${st}" ${project.status === st ? 'selected' : ''}>${st === 'active' ? t('projectActive') : st === 'completed' ? t('projectCompleted') : t('projectPaused')}</option>`
+                `<option value="${st}" ${project.status === st ? 'selected' : ''}>${st === 'active' ? window.t('projectActive') : st === 'completed' ? window.t('projectCompleted') : window.t('projectPaused')}</option>`
             ).join('');
             
             // Board columns
             const columns = [
-                { key: 'new', label: t('statusNew'), color: '#3b82f6' },
-                { key: 'progress', label: t('statusProgress'), color: '#f59e0b' },
-                { key: 'review', label: t('statusReview'), color: '#8b5cf6' },
-                { key: 'done', label: t('statusDone'), color: '#22c55e' }
+                { key: 'new', label: window.t('statusNew'), color: '#3b82f6' },
+                { key: 'progress', label: window.t('statusProgress'), color: '#f59e0b' },
+                { key: 'review', label: window.t('statusReview'), color: '#8b5cf6' },
+                { key: 'done', label: window.t('statusDone'), color: '#22c55e' }
             ];
             
             const boardHTML = columns.map(col => {
@@ -507,29 +507,29 @@
                         ${esc(project.name)}
                     </div>
                     <div style="display:flex;align-items:center;gap:0.5rem;">
-                        <button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')" style="min-height:36px;"><i data-lucide="plus" class="icon icon-sm"></i> ${t('addTask') || 'Завдання'}</button>
+                        <button class="btn btn-success btn-small" onclick="openTaskForProject('${escId(projectId)}')" style="min-height:36px;"><i data-lucide="plus" class="icon icon-sm"></i> ${window.t('addTask') || 'Завдання'}</button>
                         <select class="filter-select" onchange="updateProjectStatus('${escId(projectId)}', this.value)" style="font-size:0.8rem;padding:0.3rem;min-height:36px;">${statusOptions}</select>
-                        <button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')" style="min-height:36px;" title="${t('edit') || 'Редагувати'}" aria-label="${t('edit') || 'Редагувати'}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
+                        <button class="btn btn-small" onclick="openProjectModal('${escId(projectId)}')" style="min-height:36px;" title="${window.t('edit') || 'Редагувати'}" aria-label="${window.t('edit') || 'Редагувати'}"><i data-lucide="pencil" class="icon icon-sm"></i></button>
                         <div style="width:1px;height:24px;background:#e5e7eb;margin:0 12px;"></div>
-                        <button class="btn btn-small" onclick="deleteProject('${escId(projectId)}')" title="${t('deleteProject') || 'Видалити проєкт'} — незворотна дія" aria-label="${t('deleteProject') || 'Видалити проєкт'} — незворотна дія" style="background:#fee2e2;color:#dc2626;border-color:#fecaca;min-height:36px;margin-left:auto;"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
+                        <button class="btn btn-small" onclick="deleteProject('${escId(projectId)}')" title="${window.t('deleteProject') || 'Видалити проєкт'} — незворотна дія" aria-label="${window.t('deleteProject') || 'Видалити проєкт'} — незворотна дія" style="background:#fee2e2;color:#dc2626;border-color:#fecaca;min-height:36px;margin-left:auto;"><i data-lucide="trash-2" class="icon icon-sm"></i></button>
                     </div>
                 </div>
                 
                 <div style="display:flex;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap;">
                     <div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
-                        <div style="font-size:0.75rem;color:var(--gray);">${t('totalTasks')}</div>
+                        <div style="font-size:0.75rem;color:var(--gray);">${window.t('totalTasks')}</div>
                         <div style="font-size:1.5rem;font-weight:700;">${s.total}</div>
                     </div>
                     <div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
-                        <div style="font-size:0.75rem;color:var(--gray);">${t('statusDone')}</div>
+                        <div style="font-size:0.75rem;color:var(--gray);">${window.t('statusDone')}</div>
                         <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">${s.done}</div>
                     </div>
                     <div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
-                        <div style="font-size:0.75rem;color:var(--gray);">${t('completionRate')}</div>
+                        <div style="font-size:0.75rem;color:var(--gray);">${window.t('completionRate')}</div>
                         <div style="font-size:1.5rem;font-weight:700;color:${safeColor(project.color)};">${s.percent}%</div>
                     </div>
                     ${s.overdue > 0 ? `<div style="background:#fef2f2;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #fecaca;flex:1;min-width:120px;">
-                        <div style="font-size:0.75rem;color:var(--danger);">${t('overdueLabel2')}</div>
+                        <div style="font-size:0.75rem;color:var(--danger);">${window.t('overdueLabel2')}</div>
                         <div style="font-size:1.5rem;font-weight:700;color:var(--danger);">${s.overdue}</div>
                     </div>` : ''}
                     ${project.plannedRevenue ? `<div style="background:white;border-radius:10px;padding:0.75rem 1.25rem;border:1px solid #e5e7eb;flex:1;min-width:120px;">
@@ -552,7 +552,7 @@
                     <i data-lucide="alert-triangle" class="icon" style="width:18px;height:18px;color:#ea580c;flex-shrink:0;margin-top:2px;"></i>
                     <div>
                         <div style="font-weight:600;font-size:0.85rem;color:#c2410c;margin-bottom:0.25rem;">
-                            ${s.deadlineConflicts.length} ${t('tasksExceedDeadline')} (${formatDateShort(project.deadline)})
+                            ${s.deadlineConflicts.length} ${window.t('tasksExceedDeadline')} (${formatDateShort(project.deadline)})
                         </div>
                         <div style="font-size:0.8rem;color:#9a3412;">
                             ${s.deadlineConflicts.slice(0, 3).map(t => `• ${esc(t.title)} — ${formatDateShort(t.deadlineDate)}`).join('<br>')}
@@ -624,7 +624,7 @@
         }
         
         function renderProjectGantt(projectTasks, project) {
-            if (!projectTasks.length) return '<div style="text-align:center;color:#999;padding:2rem;">' + t('noTasksForGantt') + '</div>';
+            if (!projectTasks.length) return '<div style="text-align:center;color:#999;padding:2rem;">' + window.t('noTasksForGantt') + '</div>';
             
             const today = new Date();
             const todayStr = getLocalDateStr(today);
@@ -666,7 +666,7 @@
                 done: { bg: '#d1fae5', border: '#10b981' }
             };
             
-            const statusLabels = { new: t('statusNew'), progress: t('statusProgress'), review: t('statusReview'), done: t('statusDone') };
+            const statusLabels = { new: window.t('statusNew'), progress: window.t('statusProgress'), review: window.t('statusReview'), done: window.t('statusDone') };
             
             // Sort tasks by date
             const sorted = [...projectTasks].sort((a, b) => {
@@ -677,7 +677,7 @@
             
             // Day headers
             const months = getMonthNames();
-            const dayNames = [t('daySun'), t('dayMon'), t('dayTue'), t('dayWed'), t('dayThu'), t('dayFri'), t('daySat')];
+            const dayNames = [window.t('daySun'), window.t('dayMon'), window.t('dayTue'), window.t('dayWed'), window.t('dayThu'), window.t('dayFri'), window.t('daySat')];
             
             let headerHTML = days.map((day, i) => {
                 const isToday = getLocalDateStr(day) === todayStr;
@@ -767,7 +767,7 @@
             if (status === 'completed') {
                 const s = getProjectStats(projectId);
                 const undone = s.total - s.done;
-                if (undone > 0 && !await showConfirmModal(t('confirmProjectComplete').replace('{n}', undone), { danger: false })) {
+                if (undone > 0 && !await showConfirmModal(window.t('confirmProjectComplete').replace('{n}', undone), { danger: false })) {
                     // Повернути select назад
                     renderProjectDetail(projectId);
                     return;
@@ -795,7 +795,7 @@
             }
             sel.innerHTML = '<option value="" data-i18n="noProject">Без проєкту</option>' + 
                 showProjects.map(p => {
-                    const suffix = p.status !== 'active' ? ` (${p.status === 'completed' ? t('completedProjectStatus') : t('pausedProjectStatus')})` : '';
+                    const suffix = p.status !== 'active' ? ` (${p.status === 'completed' ? window.t('completedProjectStatus') : window.t('pausedProjectStatus')})` : '';
                     return `<option value="${esc(p.id)}">${esc(p.name)}${suffix}</option>`;
                 }).join('');
             sel.value = current;
@@ -850,7 +850,7 @@
                 container.innerHTML = `
                     <div class="empty-state" style="padding:2rem;">
                         <i data-lucide="file-cog" class="icon icon-lg" style="color:var(--gray);"></i>
-                        <p>${t('noTemplates')}</p>
+                        <p>${window.t('noTemplates')}</p>
                     </div>
                 `;
                 refreshIcons();
@@ -867,7 +867,7 @@
                             <div style="font-weight:600;margin-bottom:0.25rem;">${esc(template.name)}</div>
                             <div style="font-size:0.8rem;color:var(--gray);">
                                 ${stepsPreview}
-                                ${activeCount > 0 ? `<span style="margin-left:0.5rem;background:#dbeafe;color:#1d4ed8;padding:0.15rem 0.5rem;border-radius:10px;font-size:0.75rem;">${activeCount} ${t('activeProcesses')}</span>` : ''}
+                                ${activeCount > 0 ? `<span style="margin-left:0.5rem;background:#dbeafe;color:#1d4ed8;padding:0.15rem 0.5rem;border-radius:10px;font-size:0.75rem;">${activeCount} ${window.t('activeProcesses')}</span>` : ''}
                             </div>
                         </div>
                         <div style="display:flex;gap:0.5rem;">
@@ -897,10 +897,10 @@
             if (template?.steps?.length) {
                 stepsContainer.innerHTML = template.steps.map((step, i) => renderTemplateStepEditor(step, i)).join('');
             } else {
-                stepsContainer.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">' + t('addStep') + '</p>';
+                stepsContainer.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">' + window.t('addStep') + '</p>';
             }
             
-            document.getElementById('editTemplateTitle').innerHTML = `<i data-lucide="file-cog" class="icon"></i> ${template ? t('editTemplate') : t('newTemplate')}`;
+            document.getElementById('editTemplateTitle').innerHTML = `<i data-lucide="file-cog" class="icon"></i> ${template ? window.t('editTemplate') : window.t('newTemplate')}`;
             
             closeModal('processTemplatesModal');
             document.getElementById('editProcessTemplateModal').style.display = 'block';
@@ -921,35 +921,35 @@
                     <div style="flex:1;">
                         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.3rem;">
                             <select class="form-select step-function" style="flex:1;min-width:120px;" onchange="updateStepFunction(${index}, this.value)">
-                                <option value="">${t('stepFunction')}</option>
+                                <option value="">${window.t('stepFunction')}</option>
                                 ${funcOptions}
                             </select>
-                            <input type="text" class="form-input step-title" placeholder="${t('stepTitle')}" value="${esc(step.title || '')}" style="flex:1;min-width:120px;">
+                            <input type="text" class="form-input step-title" placeholder="${window.t('stepTitle')}" value="${esc(step.title || '')}" style="flex:1;min-width:120px;">
                         </div>
                         <div style="display:flex;gap:0.3rem;align-items:center;">
                             <select class="form-select step-sla" style="width:90px;font-size:0.75rem;padding:0.25rem;">
-                                <option value="" ${!step.slaMinutes ? 'selected' : ''}>${t('noSLA')}</option>
-                                <option value="30" ${step.slaMinutes == 30 ? 'selected' : ''}>30 ${t('min')}</option>
-                                <option value="60" ${step.slaMinutes == 60 ? 'selected' : ''}>1 ${t('hour')}</option>
-                                <option value="120" ${step.slaMinutes == 120 ? 'selected' : ''}>2 ${t('hour')}</option>
-                                <option value="240" ${step.slaMinutes == 240 ? 'selected' : ''}>4 ${t('hour')}</option>
-                                <option value="480" ${step.slaMinutes == 480 ? 'selected' : ''}>8 ${t('hour')}</option>
-                                <option value="1440" ${step.slaMinutes == 1440 ? 'selected' : ''}>1 ${t('day')}</option>
-                                <option value="2880" ${step.slaMinutes == 2880 ? 'selected' : ''}>2 ${t('days')}</option>
-                                <option value="4320" ${step.slaMinutes == 4320 ? 'selected' : ''}>3 ${t('days')}</option>
+                                <option value="" ${!step.slaMinutes ? 'selected' : ''}>${window.t('noSLA')}</option>
+                                <option value="30" ${step.slaMinutes == 30 ? 'selected' : ''}>30 ${window.t('min')}</option>
+                                <option value="60" ${step.slaMinutes == 60 ? 'selected' : ''}>1 ${window.t('hour')}</option>
+                                <option value="120" ${step.slaMinutes == 120 ? 'selected' : ''}>2 ${window.t('hour')}</option>
+                                <option value="240" ${step.slaMinutes == 240 ? 'selected' : ''}>4 ${window.t('hour')}</option>
+                                <option value="480" ${step.slaMinutes == 480 ? 'selected' : ''}>8 ${window.t('hour')}</option>
+                                <option value="1440" ${step.slaMinutes == 1440 ? 'selected' : ''}>1 ${window.t('day')}</option>
+                                <option value="2880" ${step.slaMinutes == 2880 ? 'selected' : ''}>2 ${window.t('days')}</option>
+                                <option value="4320" ${step.slaMinutes == 4320 ? 'selected' : ''}>3 ${window.t('days')}</option>
                             </select>
                             <label style="font-size:0.7rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
-                                <input type="checkbox" class="step-checkpoint" ${step.checkpoint ? 'checked' : ''}> ${t('checkpoint')}
+                                <input type="checkbox" class="step-checkpoint" ${step.checkpoint ? 'checked' : ''}> ${window.t('checkpoint')}
                             </label>
                             <label style="font-size:0.7rem;color:#6b7280;display:flex;align-items:center;gap:3px;">
-                                <input type="checkbox" class="step-smartassign" ${step.smartAssign !== false ? 'checked' : ''}> ${t('smartAssign')}
+                                <input type="checkbox" class="step-smartassign" ${step.smartAssign !== false ? 'checked' : ''}> ${window.t('smartAssign')}
                             </label>
-                            <button type="button" onclick="toggleStepDetails(${index})" style="background:none;border:none;cursor:pointer;font-size:0.7rem;color:#3b82f6;">${t('details')}</button>
+                            <button type="button" onclick="toggleStepDetails(${index})" style="background:none;border:none;cursor:pointer;font-size:0.7rem;color:#3b82f6;">${window.t('details')}</button>
                         </div>
                         <div class="step-details" id="stepDetails_${index}" style="display:${expanded ? 'block' : 'none'};margin-top:0.3rem;">
-                            <input type="text" class="form-input step-expectedResult" placeholder="${t('expectedResult')}" value="${esc(step.expectedResult || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
-                            <input type="text" class="form-input step-controlQuestion" placeholder="${t('controlQuestion')}" value="${esc(step.controlQuestion || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
-                            <textarea class="form-textarea step-instruction" placeholder="${t('instruction')}" style="font-size:0.8rem;min-height:40px;">${esc(step.instruction || '')}</textarea>
+                            <input type="text" class="form-input step-expectedResult" placeholder="${window.t('expectedResult')}" value="${esc(step.expectedResult || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
+                            <input type="text" class="form-input step-controlQuestion" placeholder="${window.t('controlQuestion')}" value="${esc(step.controlQuestion || '')}" style="font-size:0.8rem;margin-bottom:0.25rem;">
+                            <textarea class="form-textarea step-instruction" placeholder="${window.t('instruction')}" style="font-size:0.8rem;min-height:40px;">${esc(step.instruction || '')}</textarea>
                         </div>
                     </div>
                     <button type="button" class="btn btn-small btn-danger" onclick="removeTemplateStep(${index})" style="padding:0.3rem 0.5rem;align-self:start;">
@@ -988,7 +988,7 @@
             });
             
             if (container.querySelectorAll('.process-template-step').length === 0) {
-                container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">' + t('addStep') + '</p>';
+                container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:1rem;">' + window.t('addStep') + '</p>';
             }
         }
         
@@ -1039,12 +1039,12 @@
             const steps = getTemplateStepsFromEditor();
             
             if (!name) {
-                showAlertModal(t('templateName'));
+                showAlertModal(window.t('templateName'));
                 return;
             }
             
             if (steps.length < 2) {
-                showAlertModal(t('minTwoSteps'));
+                showAlertModal(window.t('minTwoSteps'));
                 return;
             }
             
@@ -1052,7 +1052,7 @@
             const activeFunctions = functions.filter(f => f.status !== 'archived');
             const missingFunctions = steps.filter(s => !activeFunctions.find(f => f.name === s.function));
             if (missingFunctions.length > 0) {
-                showAlertModal(t('functionsNotFound') + ': ' + missingFunctions.map(s => s.function).join(', '));
+                showAlertModal(window.t('functionsNotFound') + ': ' + missingFunctions.map(s => s.function).join(', '));
                 return;
             }
             
@@ -1075,16 +1075,16 @@
                 closeModal('editProcessTemplateModal');
                 await loadProcessData();
                 renderProcessBoard();
-                showAlertModal(t('templateSaved'));
+                showAlertModal(window.t('templateSaved'));
                 
             } catch (error) {
                 console.error('saveProcessTemplate error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }
         
         async function deleteProcessTemplate(templateId) {
-            if (!await showConfirmModal(t('deleteTemplateConfirm'), { danger: true })) {
+            if (!await showConfirmModal(window.t('deleteTemplateConfirm'), { danger: true })) {
                 return;
             }
             
@@ -1095,14 +1095,14 @@
                 renderProcessBoard();
             } catch (error) {
                 console.error('deleteProcessTemplate error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }
         
         // === ЗАПУСК ПРОЦЕСУ ===
         function openStartProcessModal() {
             const select = document.getElementById('startProcessTemplate');
-            select.innerHTML = `<option value="">${t('select')}</option>` + 
+            select.innerHTML = `<option value="">${window.t('select')}</option>` + 
                 processTemplates.map(pt => `<option value="${esc(pt.id)}">${esc(pt.name)}</option>`).join('');
             
             document.getElementById('startProcessName').value = '';
@@ -1181,12 +1181,12 @@
             const firstFunc = functions.find(f => f.name === firstStep.function);
             
             if (!firstFunc) {
-                showAlertModal(t('functionNotExists').replace('{name}', firstStep.function));
+                showAlertModal(window.t('functionNotExists').replace('{name}', firstStep.function));
                 return;
             }
             
             if (!firstFunc.assigneeIds?.length) {
-                showAlertModal(t('functionNoExecutors').replace('{name}', firstStep.function));
+                showAlertModal(window.t('functionNoExecutors').replace('{name}', firstStep.function));
                 return;
             }
             
@@ -1232,10 +1232,10 @@
                     fullInstruction = (processObject ? `[${processObject}]\n` : '') + fullInstruction;
                 }
                 if (firstStep.expectedResult) {
-                    fullInstruction += `\n\n${t('expectedResult')}: ${firstStep.expectedResult}`;
+                    fullInstruction += `\n\n${window.t('expectedResult')}: ${firstStep.expectedResult}`;
                 }
                 if (firstStep.controlQuestion) {
-                    fullInstruction += `\n${t('controlQuestion')}: ${firstStep.controlQuestion}`;
+                    fullInstruction += `\n${window.t('controlQuestion')}: ${firstStep.controlQuestion}`;
                 }
                 
                 const taskData = {
@@ -1260,7 +1260,7 @@
                     createdDate: getLocalDateStr(),
                     deadline: firstDeadlineDate + 'T18:00',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    creatorName: currentUserData?.name || currentUser?.email || '' // BUG-AK FIX: was t('systemUser')
+                    creatorName: currentUserData?.name || currentUser?.email || '' // BUG-AK FIX: was window.t('systemUser')
                 };
                 
                 await window.companyRef().collection('tasks').add(taskData);
@@ -1281,11 +1281,11 @@
                     });
                 }
                 
-                showToast(t('processStarted'), 'success');
+                showToast(window.t('processStarted'), 'success');
                 
             } catch (error) {
                 console.error('startProcess error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }
         
@@ -1301,7 +1301,7 @@
                 document.getElementById('viewProcessContent').innerHTML = `
                     <div style="text-align:center;padding:2rem;color:var(--gray);">
                         <i data-lucide="alert-triangle" class="icon icon-lg" style="margin-bottom:1rem;"></i>
-                        <p>${t('templateDeleted')}</p>
+                        <p>${window.t('templateDeleted')}</p>
                     </div>`;
                 document.getElementById('viewProcessModal').style.display = 'block';
                 refreshIcons();
@@ -1322,7 +1322,7 @@
                 </div>` : ''}
                 
                 <div style="margin-bottom:1.5rem;">
-                    <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${t('processFlow')}</div>
+                    <div style="font-size:0.85rem;color:var(--gray);margin-bottom:0.5rem;">${window.t('processFlow')}</div>
                     <div style="display:flex;flex-direction:column;gap:0.5rem;">
                         ${(template?.steps || []).map((step, i) => {
                             let statusColor = 'var(--gray)';
@@ -1370,7 +1370,7 @@
                                         </div>
                                         ${isCurrent ? `
                                             <button class="btn btn-small btn-success" onclick="completeProcessStep('${escId(processId)}')">
-                                                <i data-lucide="check" class="icon icon-sm"></i> ${t('completeStep')}
+                                                <i data-lucide="check" class="icon icon-sm"></i> ${window.t('completeStep')}
                                             </button>
                                         ` : ''}
                                     </div>
@@ -1389,12 +1389,12 @@
                 ${process.deadline ? `
                 <div style="font-size:0.82rem;color:var(--gray);margin-bottom:0.5rem;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-                    ${t('deadline')}: <strong>${process.deadline}</strong>
+                    ${window.t('deadline')}: <strong>${process.deadline}</strong>
                 </div>` : ''}
                 
                 <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;">
                     <button class="btn btn-danger btn-small" onclick="deleteProcess('${escId(processId)}')" style="opacity:0.7;">
-                        <i data-lucide="trash-2" class="icon icon-sm"></i> ${t('deleteProcess')}
+                        <i data-lucide="trash-2" class="icon icon-sm"></i> ${window.t('deleteProcess')}
                     </button>
                 </div>
             `;
@@ -1404,7 +1404,7 @@
         }
         
         async function deleteProcess(processId) {
-            if (!await showConfirmModal(t('deleteProcessConfirm'), { danger: true })) return;
+            if (!await showConfirmModal(window.t('deleteProcessConfirm'), { danger: true })) return;
             
             try {
                 await window.companyRef().collection('processes').doc(processId).delete();
@@ -1423,6 +1423,6 @@
                 renderProcessBoard();
             } catch (error) {
                 console.error('deleteProcess error:', error);
-                showAlertModal(t('error') + ': ' + error.message);
+                showAlertModal(window.t('error') + ': ' + error.message);
             }
         }

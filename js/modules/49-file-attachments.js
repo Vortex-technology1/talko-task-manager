@@ -21,9 +21,9 @@
         }
         
         function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' ' + t('bytesB');
-            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' ' + t('kilobytesKB');
-            return (bytes / (1024 * 1024)).toFixed(1) + ' ' + t('megabytesMB');
+            if (bytes < 1024) return bytes + ' ' + window.t('bytesB');
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' ' + window.t('kilobytesKB');
+            return (bytes / (1024 * 1024)).toFixed(1) + ' ' + window.t('megabytesMB');
         }
         
         function isImageFile(filename) {
@@ -85,10 +85,10 @@
                                 </div>
                             </div>
                             <div class="task-file-actions">
-                                <button onclick="downloadTaskFile('${escId(file.url)}')" title="${t('download')}">
+                                <button onclick="downloadTaskFile('${escId(file.url)}')" title="${window.t('download')}">
                                     <i data-lucide="download" class="icon icon-sm"></i>
                                 </button>
-                                ${canDelete ? `<button class="delete-file" onclick="deleteTaskFile(${index})" title="${t('delete')}">
+                                ${canDelete ? `<button class="delete-file" onclick="deleteTaskFile(${index})" title="${window.t('delete')}">
                                     <i data-lucide="trash-2" class="icon icon-sm"></i>
                                 </button>` : ''}
                             </div>
@@ -107,7 +107,7 @@
         
         async function deleteTaskFile(fileIndex) {
             if (!editingId) return;
-            if (!await showConfirmModal(t('deleteFileConfirm'), { danger: true })) return;
+            if (!await showConfirmModal(window.t('deleteFileConfirm'), { danger: true })) return;
             
             const task = tasks.find(t => t.id === editingId);
             if (!task || !task.files || !task.files[fileIndex]) return;
@@ -134,10 +134,10 @@
                 
                 task.files = updatedFiles;
                 renderTaskFiles(updatedFiles);
-                showToast(t('fileDeleted'), 'success');
+                showToast(window.t('fileDeleted'), 'success');
             } catch (error) {
                 console.error('deleteTaskFile error:', error);
-                showToast(t('fileDeleteError'), 'error');
+                showToast(window.t('fileDeleteError'), 'error');
             }
         }
         
@@ -160,7 +160,7 @@
         
         async function uploadFiles(fileList) {
             if (!editingId || !currentCompany || !currentUser) {
-                showToast(t('saveTaskBeforeFiles'), 'warning');
+                showToast(window.t('saveTaskBeforeFiles'), 'warning');
                 return;
             }
             
@@ -169,12 +169,12 @@
             // Validate
             for (const file of filesToUpload) {
                 if (file.size > MAX_FILE_SIZE) {
-                    showToast(t('fileTooBig').replace('{name}', file.name), 'error');
+                    showToast(window.t('fileTooBig').replace('{name}', file.name), 'error');
                     return;
                 }
                 const ext = file.name.split('.').pop().toLowerCase();
                 if (!ALLOWED_EXTENSIONS.includes(ext)) {
-                    showToast(t('fileTypeNotSupported').replace('{ext}', ext), 'error');
+                    showToast(window.t('fileTypeNotSupported').replace('{ext}', ext), 'error');
                     return;
                 }
             }
@@ -191,7 +191,7 @@
             try {
                 for (let i = 0; i < filesToUpload.length; i++) {
                     const file = filesToUpload[i];
-                    progressText.textContent = t('uploadProgress').replace('{i}', i + 1).replace('{total}', filesToUpload.length).replace('{name}', file.name);
+                    progressText.textContent = window.t('uploadProgress').replace('{i}', i + 1).replace('{total}', filesToUpload.length).replace('{name}', file.name);
                     progressFill.style.width = '10%';
                     
                     // Generate unique path
@@ -241,19 +241,19 @@
                 renderTaskFiles(allFiles);
                 
                 progressFill.style.width = '100%';
-                progressText.textContent = t('filesUploaded').replace('{n}', newFiles.length);
+                progressText.textContent = window.t('filesUploaded').replace('{n}', newFiles.length);
                 
                 setTimeout(() => {
                     progressEl.style.display = 'none';
                     progressFill.style.width = '0%';
                 }, 2000);
                 
-                showToast(t('filesUploaded').replace('{n}', newFiles.length), 'success');
+                showToast(window.t('filesUploaded').replace('{n}', newFiles.length), 'success');
                 
             } catch (error) {
                 console.error('uploadFiles error:', error);
                 progressEl.style.display = 'none';
-                showToast(t('fileUploadError') + ': ' + error.message, 'error');
+                showToast(window.t('fileUploadError') + ': ' + error.message, 'error');
             }
         }
         

@@ -76,7 +76,7 @@
                 task.timeLog.push(entry);
             }
             
-            showToast(`${elapsed} ${t('min')} ${t('tracked')}`, 'success', 2000);
+            showToast(`${elapsed} ${window.t('min')} ${window.t('tracked')}`, 'success', 2000);
         }
         
         // Reset button

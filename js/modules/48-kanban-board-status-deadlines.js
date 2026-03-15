@@ -54,10 +54,10 @@
             if (mode === 'kanban') {
                 // STATUS KANBAN
                 columns = [
-                    { id: 'new', title: t('statusNew'), color: '#3b82f6', bg: '#eff6ff', tasks: [] },
-                    { id: 'progress', title: t('statusProgress'), color: '#f59e0b', bg: '#fffbeb', tasks: [] },
-                    { id: 'review', title: t('statusReview'), color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
-                    { id: 'done', title: t('statusDone'), color: '#22c55e', bg: '#f0fdf4', tasks: [] }
+                    { id: 'new', title: window.t('statusNew'), color: '#3b82f6', bg: '#eff6ff', tasks: [] },
+                    { id: 'progress', title: window.t('statusProgress'), color: '#f59e0b', bg: '#fffbeb', tasks: [] },
+                    { id: 'review', title: window.t('statusReview'), color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
+                    { id: 'done', title: window.t('statusDone'), color: '#22c55e', bg: '#f0fdf4', tasks: [] }
                 ];
                 filtered.forEach(tk => {
                     const col = columns.find(c => c.id === (tk.status || 'new'));
@@ -79,12 +79,12 @@
                 const endNextWeekStr = endOfNextWeek.toISOString().split('T')[0];
                 
                 columns = [
-                    { id: 'overdue', title: t('overdueGroup'), color: '#ef4444', bg: '#fef2f2', tasks: [] },
-                    { id: 'today', title: t('forToday'), color: '#f59e0b', bg: '#fffbeb', tasks: [] },
-                    { id: 'this_week', title: t('thisWeek'), color: '#3b82f6', bg: '#eff6ff', tasks: [] },
-                    { id: 'next_week', title: t('nextWeek'), color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
-                    { id: 'later', title: t('later'), color: '#06b6d4', bg: '#ecfeff', tasks: [] },
-                    { id: 'no_deadline', title: t('noDeadline'), color: '#6b7280', bg: '#f9fafb', tasks: [] }
+                    { id: 'overdue', title: window.t('overdueGroup'), color: '#ef4444', bg: '#fef2f2', tasks: [] },
+                    { id: 'today', title: window.t('forToday'), color: '#f59e0b', bg: '#fffbeb', tasks: [] },
+                    { id: 'this_week', title: window.t('thisWeek'), color: '#3b82f6', bg: '#eff6ff', tasks: [] },
+                    { id: 'next_week', title: window.t('nextWeek'), color: '#8b5cf6', bg: '#f5f3ff', tasks: [] },
+                    { id: 'later', title: window.t('later'), color: '#06b6d4', bg: '#ecfeff', tasks: [] },
+                    { id: 'no_deadline', title: window.t('noDeadline'), color: '#6b7280', bg: '#f9fafb', tasks: [] }
                 ];
                 
                 filtered.filter(tk => tk.status !== 'done').forEach(tk => {
@@ -109,7 +109,7 @@
                     <div class="kanban-column-body" data-col="${col.id}" 
                          ondragover="kanbanDragOver(event)" ondragleave="kanbanDragLeave(event)" ondrop="kanbanDrop(event,'${mode}')">
                         <div class="kanban-add-btn" onclick="openTaskModalForKanban('${col.id}','${mode}')" 
-                             style="text-align:center;padding:0.4rem;color:#9ca3af;cursor:pointer;font-size:0.8rem;border:1px dashed #d1d5db;border-radius:8px;">+ ${t('add')}</div>`;
+                             style="text-align:center;padding:0.4rem;color:#9ca3af;cursor:pointer;font-size:0.8rem;border:1px dashed #d1d5db;border-radius:8px;">+ ${window.t('add')}</div>`;
                 
                 // Sort tasks: overdue first, then by deadline
                 col.tasks.sort((a, b) => {
@@ -162,7 +162,7 @@
                     let statusBadge = '';
                     if (mode === 'deadlines') {
                         const stColors = {new:'#eff6ff;color:#3b82f6', progress:'#fffbeb;color:#f59e0b', review:'#f5f3ff;color:#8b5cf6'};
-                        const stLabels = {new:t('statusNewLabel'), progress:t('statusProgressLabel'), review:t('statusReviewLabel')};
+                        const stLabels = {new:window.t('statusNewLabel'), progress:window.t('statusProgressLabel'), review:window.t('statusReviewLabel')};
                         if (stColors[tk.status]) statusBadge = `<span class="kanban-card-badge" style="background:${stColors[tk.status]};font-size:0.65rem">${stLabels[tk.status]}</span>`;
                     }
                     
@@ -309,7 +309,7 @@
             const canMove = (typeof hasPermission === 'function' && hasPermission('editAnyTask')) || role === 'owner' || role === 'admin' || role === 'manager' 
                 || task.assigneeId === currentUser?.uid || task.creatorId === currentUser?.uid;
             if (!canMove) {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 kanbanDropLock = false; return;
             }
             
@@ -317,7 +317,7 @@
             if (mode === 'deadlines' && typeof canEditDeadline === 'function') {
                 const isPrivileged = (typeof hasPermission === 'function' && hasPermission('assignTasks')) || role === 'owner' || role === 'admin' || role === 'manager';
                 if (!isPrivileged && !canEditDeadline(task)) {
-                    showToast(t('noPermissionDeadline') || 'Зміна строків заборонена власником', 'error');
+                    showToast(window.t('noPermissionDeadline') || 'Зміна строків заборонена власником', 'error');
                     kanbanDropLock = false; return;
                 }
             }
@@ -364,14 +364,14 @@
                     }
                     if (effectiveTarget === 'review') {
                         task.sentForReviewAt = new Date().toISOString();
-                        showToast(t('taskSentForReview'), 'info'); // FIX: only one toast for review redirect
+                        showToast(window.t('taskSentForReview'), 'info'); // FIX: only one toast for review redirect
                     } else {
                         if (effectiveTarget === 'progress' && task.projectId) autoUpdateProjectStatus(task.projectId);
-                        showToast(`${t('statusesLabel')} → ${effectiveTarget === 'done' ? t('statusDone') : effectiveTarget === 'progress' ? t('statusProgress') : t('statusNew')}`, 'success');
+                        showToast(`${window.t('statusesLabel')} → ${effectiveTarget === 'done' ? window.t('statusDone') : effectiveTarget === 'progress' ? window.t('statusProgress') : window.t('statusNew')}`, 'success');
                     }
                 } catch(err) {
                     console.error('Kanban status drop error:', err);
-                    showToast(t('error'), 'error');
+                    showToast(window.t('error'), 'error');
                     kanbanDropLock = false; return;
                 }
             } else {
@@ -413,10 +413,10 @@
                     task.deadlineDate = newDeadline;
                     // BUG-X FIX: also update composite deadline field used by parseDeadline()
                     task.deadline = newDeadline ? (newDeadline + (task.deadlineTime ? 'T' + task.deadlineTime : '')) : null;
-                    showToast(newDeadline ? `${t('deadlineChanged')} → ${newDeadline}` : t('deadlineRemoved'), 'success');
+                    showToast(newDeadline ? `${window.t('deadlineChanged')} → ${newDeadline}` : window.t('deadlineRemoved'), 'success');
                 } catch(err) {
                     console.error('Kanban deadline drop error:', err);
-                    showToast(t('deadlineChangeError'), 'error');
+                    showToast(window.t('deadlineChangeError'), 'error');
                     kanbanDropLock = false; return;
                 }
             }

@@ -203,9 +203,9 @@
                                 playNotificationSound();
                                 const reason = data.reviewRejectReason;
                                 const creatorName = data.creatorName || '';
-                                const msg = `${creatorName} ${t('rejectedTaskMsg')}: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`;
+                                const msg = `${creatorName} ${window.t('rejectedTaskMsg')}: ${data.title?.substring(0,30) || ''}${reason ? ' — ' + reason : ''}`;
                                 showToast(msg, 'warning');
-                                addNotification('rejected', t('taskReturnedForRevision'), (data.creatorName || '') + ': ' + (data.title || ''), doc.id);
+                                addNotification('rejected', window.t('taskReturnedForRevision'), (data.creatorName || '') + ': ' + (data.title || ''), doc.id);
                                 // Інкрементальне оновлення
                                 const idx = tasks.findIndex(t => t.id === doc.id);
                                 if (idx >= 0) {
@@ -228,7 +228,7 @@
         
         function showReviewTaskToast(task, taskId) {
             // Add to notification center
-            addNotification('review', t('taskForReview'), (task.assigneeName || '') + ': ' + (task.title || ''), taskId || null);
+            addNotification('review', window.t('taskForReview'), (task.assigneeName || '') + ': ' + (task.title || ''), taskId || null);
             
             const existingToast = document.getElementById('reviewTaskToast');
             if (existingToast) existingToast.remove();
@@ -252,7 +252,7 @@
                         <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
                     </svg>
                     <div style="flex:1;min-width:0;">
-                        <div style="font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${t('taskOnReview')}</div>
+                        <div style="font-weight:600;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${window.t('taskOnReview')}</div>
                         <div style="font-size:0.85rem;opacity:0.9;">${esc(assigneeName)}: ${esc(shortTitle)}</div>
                     </div>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
@@ -263,11 +263,11 @@
                 <div style="display:flex;gap:0.5rem;">
                     <button onclick="this.closest('#reviewTaskToast').remove();acceptReviewTask('${escId(taskId)}')" 
                             style="flex:1;padding:0.5rem;border:none;border-radius:8px;background:#22c55e;color:white;font-weight:600;cursor:pointer;font-size:0.85rem;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${t('acceptTask')}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${window.t('acceptTask')}
                     </button>
                     <button onclick="this.closest('#reviewTaskToast').remove();rejectReviewTask('${escId(taskId)}')" 
                             style="flex:1;padding:0.5rem;border:none;border-radius:8px;background:rgba(255,255,255,0.2);color:white;font-weight:600;cursor:pointer;font-size:0.85rem;">
-                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${t('rejectTask')}
+                        <i data-lucide="rotate-ccw" class="icon icon-sm"></i> ${window.t('rejectTask')}
                     </button>
                 </div>
             `;
@@ -289,7 +289,7 @@
         async function quickCompleteTask(id) {
             const taskForQC = tasks.find(t => t.id === id);
             if (taskForQC && !canEditTask(taskForQC)) {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 return;
             }
 
@@ -361,9 +361,9 @@
                 logTaskChange(id, 'complete', { status: newStatus }, { status: originalTask?.status || 'todo' }).catch(err => console.warn("[AuditLog]", err));
                 
                 if (needsReview) {
-                    showToast(t('taskSentForReview'), 'info');
+                    showToast(window.t('taskSentForReview'), 'info');
                 } else {
-                    showToast(t('taskCompleted') || 'Завдання виконано ✓', 'success'); // BUG-E FIX: was missing
+                    showToast(window.t('taskCompleted') || 'Завдання виконано ✓', 'success'); // BUG-E FIX: was missing
                 }
             } catch (e) {
                 // Rollback при помилці
@@ -372,7 +372,7 @@
                     renderMyDay();
                     refreshCurrentView();
                 }
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             } finally {
                 completingTaskIds.delete(id);
             }
@@ -382,7 +382,7 @@
         async function reopenTask(id) {
             const taskForCheck = tasks.find(t => t.id === id);
             if (taskForCheck && !canEditTask(taskForCheck)) {
-                showToast(t('noPermissionTask'), 'error');
+                showToast(window.t('noPermissionTask'), 'error');
                 return;
             }
             
@@ -410,7 +410,7 @@
                 if (originalTask?.projectId) autoUpdateProjectStatus(originalTask.projectId);
                 // AUDIT LOG
                 logTaskChange(id, 'reopen', { status: 'progress' }, { status: originalTask?.status || 'done' }).catch(err => console.warn("[AuditLog]", err));
-                showToast(t('taskReopened'), 'success');
+                showToast(window.t('taskReopened'), 'success');
                 // Re-create calendar event
                 if (googleAccessToken && originalTask?.deadlineDate) {
                     createCalendarEvent(originalTask).then(calId => {
@@ -424,6 +424,6 @@
                     renderMyDay();
                     refreshCurrentView();
                 }
-                showAlertModal(t('error') + ': ' + e.message);
+                showAlertModal(window.t('error') + ': ' + e.message);
             }
         }

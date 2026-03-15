@@ -85,26 +85,26 @@
         container.innerHTML = `
             <div style="margin-top:1rem;padding:1rem;background:white;border-radius:12px;border:1px solid #e5e7eb;">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-                    <span style="font-weight:600;font-size:0.85rem;color:#374151;">${t('myStats')}</span>
-                    ${streak > 1 ? `<span style="font-size:0.72rem;background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:10px;font-weight:600;">${streak} ${t('daysStreak')}</span>` : ''}
+                    <span style="font-weight:600;font-size:0.85rem;color:#374151;">${window.t('myStats')}</span>
+                    ${streak > 1 ? `<span style="font-size:0.72rem;background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:10px;font-weight:600;">${streak} ${window.t('daysStreak')}</span>` : ''}
                 </div>
                 
                 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:0.75rem;">
                     <div style="text-align:center;padding:0.5rem;background:#f0fdf4;border-radius:8px;">
                         <div style="font-size:1.2rem;font-weight:700;color:#16a34a;">${thisWeekCount}</div>
-                        <div style="font-size:0.62rem;color:#6b7280;">${t('thisWeek')} ${trendIcon}</div>
+                        <div style="font-size:0.62rem;color:#6b7280;">${window.t('thisWeek')} ${trendIcon}</div>
                     </div>
                     <div style="text-align:center;padding:0.5rem;background:#f9fafb;border-radius:8px;">
                         <div style="font-size:1.2rem;font-weight:700;color:#374151;">${myActive.length}</div>
-                        <div style="font-size:0.62rem;color:#6b7280;">${t('active')}</div>
+                        <div style="font-size:0.62rem;color:#6b7280;">${window.t('active')}</div>
                     </div>
                     <div style="text-align:center;padding:0.5rem;background:${myOverdue.length > 0 ? '#fef2f2' : '#f9fafb'};border-radius:8px;">
                         <div style="font-size:1.2rem;font-weight:700;color:${myOverdue.length > 0 ? '#ef4444' : '#374151'};">${myOverdue.length}</div>
-                        <div style="font-size:0.62rem;color:#6b7280;">${t('overdueStatus')}</div>
+                        <div style="font-size:0.62rem;color:#6b7280;">${window.t('overdueStatus')}</div>
                     </div>
                     <div style="text-align:center;padding:0.5rem;background:#f0f9ff;border-radius:8px;">
-                        <div style="font-size:1.2rem;font-weight:700;color:#0284c7;">${avgMinutes > 0 ? avgMinutes + t('minShortM') : '—'}</div>
-                        <div style="font-size:0.62rem;color:#6b7280;">${t('avgTime')}</div>
+                        <div style="font-size:1.2rem;font-weight:700;color:#0284c7;">${avgMinutes > 0 ? avgMinutes + window.t('minShortM') : '—'}</div>
+                        <div style="font-size:0.62rem;color:#6b7280;">${window.t('avgTime')}</div>
                     </div>
                 </div>
                 
