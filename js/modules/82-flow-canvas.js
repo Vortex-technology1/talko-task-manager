@@ -1218,26 +1218,41 @@ window.fcAddNode = addNode;
 window._fcCrmPipelineChange = function(pipelineId) {
     const pipelines = window.crm?.pipelines || [];
     const pip = pipelines.find(p => p.id === pipelineId);
-    // FIX: CRM зберігає stage.label (не stage.name), сортуємо по order
-    const stages = (pip?.stages || []).slice().sort((a,b) => (a.order||0) - (b.order||0));
     const wrap = document.getElementById('fcp_stageWrap');
     if (!wrap) return;
+    const sel = document.getElementById('fcp_dealStage');
+    if (!sel) return;
+
     // FIX: IDs відповідають реальному _createDefaultPipeline
     const defaultStages = [
         ['new','Новий лід'],['contact','Контакт'],
         ['negotiation','Переговори'],['proposal','Пропозиція'],
         ['closing','Закриття'],['won','Виграно'],
     ];
-    const opts = stages.length
-        ? stages.map(s => [s.id, s.label || s.name || s.id])
-        : defaultStages;
-    const sel = document.getElementById('fcp_dealStage');
-    if (!sel) return;
-    // FIX: зберігаємо поточний вибір — якщо відповідна стадія є в новій воронці, залишаємо
+
+    let opts = defaultStages;
+    if (pip) {
+        // Array.isArray guard — Firestore може повернути об'єкт замість масиву
+        const rawStages = Array.isArray(pip.stages) ? pip.stages : Object.values(pip.stages || {});
+        const validStages = rawStages
+            .filter(s => s && (s.id !== undefined && s.id !== null && s.id !== ''))
+            .sort((a,b) => (a.order||0) - (b.order||0));
+        if (validStages.length > 0) {
+            opts = validStages.map(s => [
+                String(s.id),
+                String(s.label || s.name || s.id)  // гарантовано рядок, не undefined
+            ]);
+        }
+    }
+
+    // Зберігаємо поточний вибір якщо він є в новій воронці
     const _curVal = sel.value;
     const _match = opts.find(([v]) => v === _curVal);
     const _newVal = _match ? _curVal : (opts[0]?.[0] || 'new');
-    sel.innerHTML = opts.map(([v,l]) => '<option value="'+v+'"'+(_newVal===v?' selected':'')+'>'+l+'</option>').join('');
+
+    sel.innerHTML = opts
+        .map(([v,l]) => `<option value="${v}"${_newVal===v?' selected':''}>${l}</option>`)
+        .join('');
 };
 
 // ── AI Воронка Modal ───────────────────────────────────────
@@ -2234,8 +2249,13 @@ function renderPropPanel() {
     if (node.type === 'crm') {
         requestAnimationFrame(() => {
             const _pipSel = document.getElementById('fcp_pipelineId');
-            if (_pipSel?.value && typeof window._fcCrmPipelineChange === 'function') {
-                window._fcCrmPipelineChange(_pipSel.value);
+            if (typeof window._fcCrmPipelineChange === 'function') {
+                // FIX: якщо value порожній — беремо перший pipeline із window.crm
+                const _pipId = _pipSel?.value
+                    || (window.crm?.pipelines || []).find(p=>p.isDefault)?.id
+                    || (window.crm?.pipelines || [])[0]?.id
+                    || '';
+                window._fcCrmPipelineChange(_pipId);
                 // Відновлюємо збережену стадію після синхронізації
                 const _stageSel = document.getElementById('fcp_dealStage');
                 if (_stageSel && node.config?.dealStage) {
