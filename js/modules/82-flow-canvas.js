@@ -2581,12 +2581,18 @@ async function saveFlow() {
             return m;
         });
 
-        await saveRef.update({
-                name: fc.flowData.name || 'Без назви', // FIX: зберігаємо назву при save
+        // FIX: set({merge:true}) замість update() — працює і для нових документів
+        // FIX: обидва записи паралельно для швидкості
+        await Promise.all([
+            saveRef.set({
+                name: fc.flowData.name || 'Без назви',
                 nodes: sanitize(minimalNodes),
                 triggerKeyword: triggerKeyword || '/start',
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
+            }, { merge: true }),
+            // FIX: зберігаємо canvasData — раніше canvasRef будувався але НІКОЛИ не записувався
+            canvasRef.set(sanitize(strippedCanvas)),
+        ]);
         if (typeof showToast === 'function') showToast(window.t('botsFlowSaved'), 'success');
         // Перемальовуємо canvas після збереження — preview на вузлах оновлюється
         renderAll();
