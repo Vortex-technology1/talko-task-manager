@@ -212,7 +212,7 @@ document.addEventListener('mousedown', function(e) {
 
     function setLanguageFromDropdown(lang) {
         _patchTranslations(); // patch BEFORE setLanguage so it finds the keys
-        if (typeof setLanguage === 'function') setLanguage(lang);
+        if (typeof setLanguage === 'function') setLanguage(lang, true); // forceReload=true — юзер свідомо змінює мову
         applyNavTranslations(lang); // apply AFTER setLanguage as final guarantee
         var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE', cs: 'CS' };
         var el = document.getElementById('currentLangLabel');

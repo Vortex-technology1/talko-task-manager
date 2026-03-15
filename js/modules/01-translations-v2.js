@@ -11625,19 +11625,24 @@
         };
 
         // Зміна мови
-        window.setLanguage = function(lang) {
+        window.setLanguage = function(lang, forceReload) {
             if (!lang || !window.translations[lang]) return;
+            // FIX CRITICAL: reload тільки якщо мова реально змінилась
+            // Раніше — reload при кожному виклику включно з ініціалізацією → нескінченний loop
+            const prevLang = window.currentLanguage;
             window.currentLanguage = lang;
-            window.currentLang = lang; // FIX: keep alias in sync
+            window.currentLang = lang; // keep alias in sync
             localStorage.setItem('talko_language', lang);
 
-            // Оновлюємо весь UI
+            // Оновлюємо весь UI без reload
             if (typeof updatePageTranslations === 'function') {
                 updatePageTranslations();
             }
 
-            // Перезавантаження для повного застосування змін
-            location.reload();
+            // Перезавантаження ТІЛЬКИ якщо мова змінилась (не при ініціалізації)
+            if (forceReload === true || (prevLang && prevLang !== lang)) {
+                location.reload();
+            }
         };
 
         // Отримання локалі для Date формату
