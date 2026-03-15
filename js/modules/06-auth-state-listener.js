@@ -229,8 +229,10 @@
             const hideBtn = document.getElementById('hideCompletedBtn');
             if (hideBtn && window.hideCompletedTasks) hideBtn.classList.add('active');
             // Re-apply translations AFTER interface is shown (nav spans now visible)
-            if (typeof setLanguage === 'function' && typeof currentLang !== 'undefined') {
-                setTimeout(function() { window.setLanguage(currentLang); }, 100);
+            // FIX: currentLang → window.currentLang || window.currentLanguage
+            const _authLang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || 'ua';
+            if (typeof window.setLanguage === 'function') {
+                setTimeout(function() { window.setLanguage(_authLang); }, 100);
             }
         }
 

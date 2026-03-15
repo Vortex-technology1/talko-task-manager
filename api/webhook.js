@@ -551,6 +551,28 @@ module.exports = async (req, res) => {
             }).catch(() => {});
         }
 
+        // ── Rate limiting per senderId (flood protection) ────
+        // BUG 6 FIX: максимум 10 повідомлень за 10 секунд з одного senderId
+        const _rlKey = `rl_${channel}_${normalized.senderId}`;
+        const _rlRef = compRef.collection('_rate_limits').doc(_rlKey);
+        try {
+            const _rlDoc = await _rlRef.get();
+            const _rlNow = Date.now();
+            const _rlData = _rlDoc.exists ? _rlDoc.data() : null;
+            if (_rlData && _rlNow - (_rlData.windowStart || 0) < 10000) {
+                // В межах 10-секундного вікна
+                if ((_rlData.count || 0) >= 10) {
+                    // Перевищено ліміт — тихо ігноруємо
+                    console.warn('[webhook] rate limit exceeded for', _rlKey);
+                    return res.status(200).json({ ok: true, skipped: 'rate_limit' });
+                }
+                await _rlRef.update({ count: admin.firestore.FieldValue.increment(1) });
+            } else {
+                // Нове вікно
+                await _rlRef.set({ windowStart: _rlNow, count: 1 });
+            }
+        } catch(e) { /* rate limit не критичний — продовжуємо */ }
+
         // ── Сесія ─────────────────────────────────────────────
         const sessionId = `${channel}_${normalized.senderId}`;
         const sessionRef = compRef.collection('sessions').doc(sessionId);
@@ -729,7 +751,15 @@ module.exports = async (req, res) => {
 
         const isStart = /^\/start/.test(normalized.text) || normalized.text === 'start';
         if (isStart) {
-            Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null, data: {}, aiHistory: [] });
+            // /start скидає humanMode — бот знову активний
+            Object.assign(session, { currentFlowId: null, currentNodeId: null, waitingForInput: null, data: {}, aiHistory: [], humanMode: false, humanModeAt: null });
+        }
+
+        // BUG 2 FIX: humanMode guard — коли менеджер взяв розмову, бот мовчить
+        if (session.humanMode && !isStart) {
+            await saveIncomingMessage(compRef, channel, normalized, botDocId);
+            lockRef.delete().catch(()=>{});
+            return res.status(200).json({ ok: true, skipped: 'human_mode' });
         }
 
         // ── Знаходимо флоу ───────────────────────────────────
@@ -1262,7 +1292,8 @@ module.exports = async (req, res) => {
                     ]);
                 }
                 // Зберігаємо який ключ чекаємо (куди записати відповідь)
-                if (n.saveAs) session._waitingKey = n.saveAs;
+                // BUG 1 FIX: зберігаємо saveAs у вузлі сесії, не в _waitingKey (яке ніколи не читається)
+                // waitNode.saveAs читається в блоці "Обробка вводу" (рядок ~892) — потрібен в nodeMap
                 Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                     currentNodeId: n.nextNode || null, waitingForInput: nodeId });
                 Promise.all([
@@ -1312,7 +1343,11 @@ module.exports = async (req, res) => {
 
             } else if (n.type === 'delay') {
                 // Затримка — чекаємо вказану кількість секунд (max 30s для serverless)
-                const delayMs = Math.min((n.delaySeconds || n.seconds || 1) * 1000, 30000);
+                // BUG 3 FIX: Vercel serverless timeout ~10-30s — cap delay at 5s max
+                // Великі затримки (>5s) потребують окремого scheduler/job (не serverless)
+                const _delayReq = (n.delaySeconds || n.seconds || 1) * 1000;
+                const delayMs = Math.min(_delayReq, 5000);
+                if (_delayReq > 5000) console.warn('[webhook] delay node: requested', _delayReq, 'ms, capped to 5000ms (serverless limit)');
                 await new Promise(r => setTimeout(r, delayMs));
                 nodeId = n.nextNode || null;
 
@@ -1445,11 +1480,14 @@ function resolveNext(node, userText) {
 function interp(text, data) {
     if (!text) return '';
     if (!data || typeof data !== 'object') return String(text);
-    // Підтримка {{var}}, {var} і {contact.field} форматів
+    // BUG 5 FIX: підтримка {{var}}, {{contact.field}}, {contact.field}, {var}
+    // {{contact.name}} раніше шукало data["contact.name"] (з крапкою) — порожньо
+    // Тепер: {contact.field} і {{contact.field}} → data[field] або data.name як fallback
     return (text || '')
-        .replace(/\{\{(\w+)\}\}/g,        (_, k) => (data[k] != null ? String(data[k]) : ''))
-        .replace(/\{contact\.(\w+)\}/g, (_, k) => (data[k] != null ? String(data[k]) : data.name || ''))
-        .replace(/\{(\w+)\}/g,            (_, k) => (data[k] != null ? String(data[k]) : `{${k}}`));
+        .replace(/\{\{contact\.(\w+)\}\}/g, (_, k) => (data[k] != null ? String(data[k]) : data.name || ''))
+        .replace(/\{\{(\w+)\}\}/g,            (_, k) => (data[k] != null ? String(data[k]) : ''))
+        .replace(/\{contact\.(\w+)\}/g,      (_, k) => (data[k] != null ? String(data[k]) : data.name || ''))
+        .replace(/\{(\w+)\}/g,                (_, k) => (data[k] != null ? String(data[k]) : `{${k}}`));
 }
 
 function evalFilter(node, data) {

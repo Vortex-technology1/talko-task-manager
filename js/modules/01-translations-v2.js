@@ -11612,6 +11612,8 @@
 
         // Поточна мова (дефолт: українська)
         window.currentLanguage = localStorage.getItem('talko_language') || 'ua';
+        // FIX: alias для зворотної сумісності — деякі модулі використовують currentLang без window.
+        window.currentLang = window.currentLanguage;
 
         // Функція перекладу
         window.t = function(key) {
@@ -11626,6 +11628,7 @@
         window.setLanguage = function(lang) {
             if (!lang || !window.translations[lang]) return;
             window.currentLanguage = lang;
+            window.currentLang = lang; // FIX: keep alias in sync
             localStorage.setItem('talko_language', lang);
 
             // Оновлюємо весь UI

@@ -20,7 +20,7 @@
                 pl: ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia'],
                 en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'] };
-            const monthNames = monthGenitive[currentLang] || monthGenitive['ua'];
+            const monthNames = monthGenitive[window.currentLang || window.currentLanguage || 'ua'] || monthGenitive['ua'];
             
             const dateText = `${dayNames[todayDay]}, ${today.getDate()} ${monthNames[today.getMonth()]}`;
             document.getElementById('mydayDateText').textContent = dateText;

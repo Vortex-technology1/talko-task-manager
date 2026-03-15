@@ -728,7 +728,10 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
-            window.setLanguage(currentLang);
+            // FIX: currentLang може бути undefined якщо 01-translations не завантажився
+            // Використовуємо window.currentLang (alias) або window.currentLanguage як fallback
+            const _initLang = window.currentLang || window.currentLanguage || localStorage.getItem('talko_language') || 'ua';
+            if (typeof window.setLanguage === 'function') window.setLanguage(_initLang);
             // Ініціалізуємо Lucide іконки
             if (typeof lucide !== 'undefined') {
                 refreshIcons();
