@@ -198,10 +198,29 @@ function mountCanvas() {
 
         <div style="width:1px;height:24px;background:#1e293b;margin:0 4px;"></div>
 
-        <!-- Назва флоу -->
+        <!-- Назва флоу — inline edit -->
         <div style="display:flex;align-items:center;gap:8px;">
-            <div id="fcFlowTitle" style="color:white;font-weight:700;font-size:14px;
-                max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+            <div style="position:relative;display:flex;align-items:center;">
+                <input id="fcFlowTitle"
+                    style="color:white;font-weight:700;font-size:14px;
+                        background:transparent;border:1px solid transparent;
+                        border-radius:6px;padding:3px 28px 3px 6px;
+                        max-width:200px;min-width:80px;width:auto;
+                        outline:none;cursor:text;transition:border-color 0.15s, background 0.15s;
+                        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
+                    title="Клікніть щоб змінити назву"
+                    onmouseenter="this.style.borderColor='#334155'"
+                    onmouseleave="if(document.activeElement!==this)this.style.borderColor='transparent'"
+                    onfocus="this.style.borderColor='#22c55e';this.style.background='#1e293b';this.select()"
+                    onblur="this.style.borderColor='transparent';this.style.background='transparent';window._fcSaveTitle(this.value)"
+                    onkeydown="if(event.key==='Enter'){this.blur();}if(event.key==='Escape'){this.value=fc.flowData.name||'Без назви';this.blur();}"
+                />
+                <svg style="position:absolute;right:6px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:0.4;"
+                    width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                </svg>
+            </div>
             <span id="fcChannelBadge" style="background:#1e293b;color:#64748b;border:1px solid #334155;
                 font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;letter-spacing:0.04em;"></span>
         </div>
@@ -375,7 +394,17 @@ function mountCanvas() {
     document.getElementById('fcBtnFit').onclick = fitView;
     document.getElementById('fcBtnUndo').onclick = undo;
     document.getElementById('fcBtnRedo').onclick = redo;
-    document.getElementById('fcFlowTitle').textContent = fc.flowData.name || 'Без назви';
+    document.getElementById('fcFlowTitle').value = fc.flowData.name || 'Без назви';
+    // Автоматично підганяємо ширину input під текст
+    (function() {
+        const el = document.getElementById('fcFlowTitle');
+        const tmp = document.createElement('span');
+        tmp.style.cssText = 'position:absolute;visibility:hidden;font-size:14px;font-weight:700;white-space:nowrap;padding:0 34px 0 6px;';
+        tmp.textContent = el.value || 'Без назви';
+        document.body.appendChild(tmp);
+        el.style.width = Math.min(Math.max(tmp.offsetWidth + 2, 80), 220) + 'px';
+        document.body.removeChild(tmp);
+    })();
     document.getElementById('fcChannelBadge').textContent = fc.flowData.channel || 'telegram';
 
     // Canvas events
@@ -1790,6 +1819,41 @@ window.fcDeleteNode = async function(nodeId) {
 };
 
 // ── Save ───────────────────────────────────────────────────
+// ── Inline title save ─────────────────────────────────
+window._fcSaveTitle = async function(newName) {
+    const name = (newName || '').trim().slice(0, 100);
+    if (!name || name === fc.flowData.name) return;
+
+    // Оновлюємо локально
+    fc.flowData.name = name;
+
+    // Підганяємо ширину
+    const el = document.getElementById('fcFlowTitle');
+    if (el) {
+        el.value = name;
+        const tmp = document.createElement('span');
+        tmp.style.cssText = 'position:absolute;visibility:hidden;font-size:14px;font-weight:700;white-space:nowrap;padding:0 34px 0 6px;';
+        tmp.textContent = name;
+        document.body.appendChild(tmp);
+        el.style.width = Math.min(Math.max(tmp.offsetWidth + 2, 80), 220) + 'px';
+        document.body.removeChild(tmp);
+    }
+
+    // Зберігаємо в Firestore одразу
+    try {
+        const ref = fc.botId
+            ? firebase.firestore().collection('companies').doc(window.currentCompanyId)
+                .collection('bots').doc(fc.botId).collection('flows').doc(fc.flowId)
+            : firebase.firestore().collection('companies').doc(window.currentCompanyId)
+                .collection('flows').doc(fc.flowId);
+        await ref.update({ name, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        if (typeof showToast === 'function') showToast('✅ Назву збережено', 'success');
+    } catch(e) {
+        console.error('[fcSaveTitle]', e.message);
+        if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    }
+};
+
 async function saveFlow() {
     if (window._fcSaving) return; // guard проти подвійного збереження
     window._fcSaving = true;
@@ -1902,6 +1966,7 @@ async function saveFlow() {
         });
 
         await saveRef.update({
+                name: fc.flowData.name || 'Без назви', // FIX: зберігаємо назву при save
                 nodes: sanitize(minimalNodes),
                 triggerKeyword: triggerKeyword || '/start',
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
