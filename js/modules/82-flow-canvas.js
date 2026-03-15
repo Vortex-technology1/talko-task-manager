@@ -2423,7 +2423,17 @@ window._fcSaveTitle = async function(newName) {
 };
 
 async function saveFlow() {
-    if (window._fcSaving) return; // guard проти подвійного збереження
+    if (window._fcSaving) {
+        console.warn('[saveFlow] skipped — _fcSaving=true (попереднє збереження ще йде або залипло)');
+        return;
+    }
+    // FIX: guard на обов'язкові поля — без них Firestore path некоректний
+    if (!fc.flowId || !window.currentCompanyId) {
+        console.error('[saveFlow] ABORT — fc.flowId:', fc.flowId, 'currentCompanyId:', window.currentCompanyId);
+        if (typeof showToast === 'function') showToast('Помилка: ID флоу або компанії відсутній', 'error');
+        return;
+    }
+    console.log('[saveFlow] START flowId:', fc.flowId, 'botId:', fc.botId, 'nodes:', fc.nodes.length);
     window._fcSaving = true;
     const btn = document.getElementById('fcBtnSave');
     if (btn) btn.textContent = window.t('botsFlowSaving');
@@ -2581,8 +2591,20 @@ async function saveFlow() {
             return m;
         });
 
+        // FIX: перед збереженням прибираємо вкладений config з усіх вузлів
+        // щоб уникнути bloat і потенційних проблем з JSON.stringify
+        fc.nodes.forEach(n => {
+            if (n.config) {
+                delete n.config.config;
+                delete n.config._x;
+                delete n.config._y;
+                delete n.config.outputs;
+            }
+        });
+
         // FIX: set({merge:true}) замість update() — працює і для нових документів
         // FIX: обидва записи паралельно для швидкості
+        console.log('[saveFlow] writing to Firestore path:', saveRef.path);
         await Promise.all([
             saveRef.set({
                 name: fc.flowData.name || 'Без назви',
@@ -2593,12 +2615,14 @@ async function saveFlow() {
             // FIX: зберігаємо canvasData — раніше canvasRef будувався але НІКОЛИ не записувався
             canvasRef.set(sanitize(strippedCanvas)),
         ]);
+        console.log('[saveFlow] SUCCESS');
         if (typeof showToast === 'function') showToast(window.t('botsFlowSaved'), 'success');
         // Перемальовуємо canvas після збереження — preview на вузлах оновлюється
         renderAll();
     } catch(e) {
+        console.error('[saveFlow] ERROR:', e.message, e.stack?.slice(0,300));
         if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
-        console.error('[saveFlow]', e.message);
+        else alert('Помилка збереження: ' + e.message);
     } finally {
         if (btn) btn.textContent = 'Зберегти';
         window._fcSaving = false;
