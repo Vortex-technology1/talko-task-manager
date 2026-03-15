@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"C:/Users/User/talko-task-manager/js/modules/81-bots-flows-NEW.js\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(node --version:*)",
+      "Bash(node analyze-translations.js:*)",
+      "Bash(node:*)",
+      "Bash(python analyze-translations.py:*)",
+      "Bash(pip install:*)",
+      "Bash(python translations.py:*)",
+      "Bash(timeout 120 python:*)",
+      "Bash(python add-polish.py:*)",
+      "Bash(python:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
