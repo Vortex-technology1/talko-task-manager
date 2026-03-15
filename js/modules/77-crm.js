@@ -238,7 +238,7 @@ function _renderShell() {
                         style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;
                         background:white;color:#374151;border:1px solid #e8eaed;border-radius:7px;cursor:pointer;
                         font-size:0.81rem;font-weight:600;" title="${window.t('crmImportTooltip')}">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Імпорт
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> ${window.t('crmImport')||window.t('import')||'Import'}
                     </button>
                     <button onclick="crmOpenCreateDeal()"
                         style="display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
@@ -580,7 +580,7 @@ function _kanbanFilterBar() {
             × Скинути фільтри
         </button>
         <span style="font-size:0.72rem;color:#6b7280;font-weight:600;">${_filteredDeals().length} / ${crm.deals.length}</span>
-        ` : `<span style="font-size:0.72rem;color:#9ca3af;">${crm.deals.length} угод</span>`}
+        ` : `<span style="font-size:0.72rem;color:#9ca3af;">${crm.deals.length} ${window.t('crmDealsWord')||'угод'}</span>`}
     </div>`;
 }
 
@@ -857,7 +857,7 @@ function _renderListView() {
             ${crm.filters.stage||crm.filters.assignee||crm.filters.search?`
             <button onclick="crm.filters={assignee:'',stage:'',tag:'',search:''};document.getElementById('crmSearchInput').value='';crmSetViewMode('list')"
                 style="padding:.3rem .55rem;border:1px solid #e8eaed;border-radius:6px;font-size:.73rem;background:white;cursor:pointer;color:#6b7280;flex-shrink:0;">× Скинути</button>`:''}
-            <span style="margin-left:auto;font-size:.72rem;color:#9ca3af;white-space:nowrap;align-self:center;">${deals.length} угод</span>
+            <span style="margin-left:auto;font-size:.72rem;color:#9ca3af;white-space:nowrap;align-self:center;">${deals.length} ${window.t('crmDealsWord')||'угод'}</span>
         </div>
 
         ${deals.length === 0 ? `
@@ -925,7 +925,7 @@ function _renderListView() {
                 style="padding:0.35rem 0.65rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;background:white;cursor:pointer;color:#6b7280;">
                 × Скинути
             </button>` : ''}
-            <div style="margin-left:auto;font-size:0.78rem;color:#9ca3af;">${deals.length} угод</div>
+            <div style="margin-left:auto;font-size:0.78rem;color:#9ca3af;">${deals.length} ${window.t('crmDealsWord')||'угод'}</div>
         </div>
 
         ${bulkBar}
@@ -1109,7 +1109,7 @@ window.crmBulkStage = function() {
     menu.id = 'crmBulkActionMenu';
     menu.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
     menu.innerHTML = '<div style="background:white;border-radius:12px;padding:1.25rem;width:320px;max-width:95vw;">' +
-        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Змінити стадію (' + crm.selectedIds.size + ' угод)</div>' +
+        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Змінити стадію (' + crm.selectedIds.size + ' ' + (window.t('crmDealsWord')||'угод') + ')</div>' +
         '<div style="display:flex;flex-direction:column;gap:0.3rem;" id="bulkStageList">' +
         stages.map(function(s) {
             return '<button data-sid="' + s.id + '" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.65rem;' +
@@ -1173,7 +1173,7 @@ window.crmBulkTag = function() {
     menu.id = 'crmBulkActionMenu';
     menu.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10060;display:flex;align-items:center;justify-content:center;padding:1rem;';
     menu.innerHTML = '<div style="background:white;border-radius:12px;padding:1.25rem;width:300px;max-width:95vw;">' +
-        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Додати тег (' + crm.selectedIds.size + ' угод)</div>' +
+        '<div style="font-weight:700;font-size:0.9rem;color:#111827;margin-bottom:0.75rem;">Додати тег (' + crm.selectedIds.size + ' ' + (window.t('crmDealsWord')||'угод') + ')</div>' +
         '<input id="bulkTagInput" placeholder="Введіть тег..." autofocus ' +
         'style="width:100%;padding:0.5rem;border:1px solid #e8eaed;border-radius:7px;font-size:0.82rem;box-sizing:border-box;margin-bottom:0.5rem;">' +
         '<div style="display:flex;gap:0.5rem;">' +
@@ -3016,7 +3016,7 @@ function _clientListHTML(clients) {
                 </div>
             </div>
             ${deals > 0 ? `<span style="background:#f0fdf4;color:#16a34a;font-size:0.7rem;
-                padding:2px 8px;border-radius:12px;font-weight:600;">${deals} угод</span>` : ''}
+                padding:2px 8px;border-radius:12px;font-weight:600;">${deals} ${window.t('crmDealsWord')||'угод'}</span>` : ''}
         </div>`;
     }).join('');
 }
@@ -3784,7 +3784,7 @@ function _renderAnalytics() {
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
                 <div style="font-weight:700;font-size:0.85rem;color:#111827;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Причини програшу</div>
                 <div style="display:flex;gap:0.5rem;align-items:center;">
-                    <span style="font-size:0.72rem;color:#9ca3af;">${lostDealsAll.length} угод</span>
+                    <span style="font-size:0.72rem;color:#9ca3af;">${lostDealsAll.length} ${window.t('crmDealsWord')||'угод'}</span>
                     ${lostDealsAll.length>0 ? `<span style="font-size:0.72rem;font-weight:700;color:#ef4444;">${_fmt(lostDealsAll.reduce((s,d)=>s+(d.amount||0),0))} грн втрачено</span>` : ''}
                 </div>
             </div>

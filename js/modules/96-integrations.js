@@ -38,8 +38,8 @@ function _renderShell() {
     <div style="min-height:100%;background:#f4f5f7;padding:1rem;">
         <div style="max-width:100%;padding:0 0.5rem;">
             <div style="margin-bottom:1rem;">
-                <div style="font-weight:700;font-size:1rem;color:#111827;">Інтеграції</div>
-                <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">API ключі, Webhook, Telegram, автоматизації</div>
+                <div style="font-weight:700;font-size:1rem;color:#111827;">${window.t('intgTitle2')}</div>
+                <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${window.t('intgSubtitle')}</div>
             </div>
             <div id="intgContent"></div>
         </div>
@@ -66,8 +66,8 @@ function _renderAll() {
     const card = 'border-bottom:1px solid #f1f5f9;padding:0.9rem 1rem;';
     const sTitle = 'display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:0.88rem;color:#111827;margin-bottom:0.75rem;';
     const badge = (ok) => ok
-        ? `<span style="font-size:0.65rem;background:#f0fdf4;color:#16a34a;padding:1px 7px;border-radius:4px;font-weight:600;">${I.check} Підключено</span>`
-        : `<span style="font-size:0.65rem;background:#f9fafb;color:#9ca3af;padding:1px 7px;border-radius:4px;">Не налаштовано</span>`;
+        ? `<span style="font-size:0.65rem;background:#f0fdf4;color:#16a34a;padding:1px 7px;border-radius:4px;font-weight:600;">${I.check} ${window.t('intgConfigured2')}</span>`
+        : `<span style="font-size:0.65rem;background:#f9fafb;color:#9ca3af;padding:1px 7px;border-radius:4px;">${window.t('intgNotConfigured2')}</span>`;
 
     c.style.cssText = 'display:flex;flex-direction:column;gap:0;border:1px solid #e8eaed;border-radius:12px;overflow:hidden;background:white;';
     c.innerHTML = `

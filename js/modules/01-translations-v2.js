@@ -2185,6 +2185,9 @@
                 actReturnedRevision: 'Повернув на доопрацювання',
                 actDelegated: 'Делегував',
                 actChangedDeadline: 'Змінив дедлайн',
+                crmImport: 'Імпорт',
+                intgConnected: 'Підключено',
+                crmDealsWord: 'угод',
             },
             en: {
                 authSubtitle: 'Task management for business',
@@ -4370,6 +4373,9 @@
                 actReturnedRevision: 'Returned for revision',
                 actDelegated: 'Delegated',
                 actChangedDeadline: 'Changed deadline',
+                crmImport: 'Import',
+                intgConnected: 'Connected',
+                crmDealsWord: 'deals',
             },
             de: {
                 authSubtitle: 'Aufgabenverwaltung für Unternehmen',
@@ -6555,6 +6561,9 @@
                 actReturnedRevision: 'Zur Überarbeitung zurückgegeben',
                 actDelegated: 'Delegiert',
                 actChangedDeadline: 'Termin geändert',
+                crmImport: 'Importieren',
+                intgConnected: 'Verbunden',
+                crmDealsWord: 'Deals',
             },
             cs: {
                 authSubtitle: 'Řízení úkolů pro podnikání',
@@ -8740,6 +8749,9 @@
                 actReturnedRevision: 'Vrátil k přepracování',
                 actDelegated: 'Delegoval',
                 actChangedDeadline: 'Změnil termín',
+                crmImport: 'Importovat',
+                intgConnected: 'Připojeno',
+                crmDealsWord: 'obchodů',
             },
             ru: {
                 authSubtitle: 'Управление задачами для бизнеса',
@@ -10925,6 +10937,9 @@
                 actReturnedRevision: 'Вернул на доработку',
                 actDelegated: 'Делегировал',
                 actChangedDeadline: 'Изменил дедлайн',
+                crmImport: 'Импорт',
+                intgConnected: 'Подключено',
+                crmDealsWord: 'сделок',
             },
             pl: {
                 authSubtitle: 'Zarządzanie zadaniami dla biznesu',
@@ -12947,6 +12962,8 @@
                 crmImportTooltip: 'Import klientów/ofert z CSV',
                 crmOverdueContacts: 'przeterminowanych kontaktów',
                 crmOverdueContactsCRM: 'przeterminowanych kontaktów CRM',
+                crmImport: 'Import',
+                crmDealsWord: 'porozumień',
             },
         };
         window.translations = translations;

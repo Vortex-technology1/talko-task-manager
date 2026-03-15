@@ -868,7 +868,7 @@
 
         h.innerHTML = `
         <div class="stats-header">
-            <div class="stats-header-title">${SVG.trendUp} <span style="font-size:1.1rem;font-weight:700;">Статистика</span></div>
+            <div class="stats-header-title">${SVG.trendUp} <span style="font-size:1.1rem;font-weight:700;">${window.t('tabStatistics')}</span></div>
             <div class="stats-header-actions">
                 ${canEdit ? `<button class="stats-pill accent" onclick="openMetricModal()" style="background:var(--primary);color:white;border-color:var(--primary);font-weight:700;padding:0.45rem 1rem;">${SVG.plus} Метрика</button>` : ''}
                 <button class="stats-pill" onclick="openQuickInputModal()" style="font-weight:600;">${SVG.edit} Внести дані</button>
@@ -877,7 +877,7 @@
                 <button class="stats-pill" onclick="statsExportCSV()" style="color:#059669;border-color:#a7f3d0;" title="Експорт CSV">⬇ CSV</button>
                 <button class="stats-pill" onclick="statsExportExcel()" style="color:#1d4ed8;border-color:#bfdbfe;" title="Експорт Excel">⬇ Excel</button>
                 <button class="stats-pill" onclick="statsExportPDF()" style="color:#dc2626;border-color:#fecaca;" title="Вивантажити PDF">⬇ PDF</button>
-                ${canEdit ? `<button class="stats-pill" onclick="statsImportCSV()" style="color:#d97706;border-color:#fde68a;" title="Імпорт CSV">⬆ Імпорт</button>` : ''}
+                ${canEdit ? `<button class="stats-pill" onclick="statsImportCSV()" style="color:#d97706;border-color:#fde68a;" title="Імпорт CSV">${window.t('statsImport')||'⬆ Import'}</button>` : ''}
             </div>
         </div>
         ${metricCount === 0 && canEdit ? `
@@ -1805,7 +1805,7 @@
                 .meta { color: #6b7280; font-size: 10px; margin-bottom: 12px; }
                 table { width: 100%; border-collapse: collapse; }
             </style></head><body>
-            <h1>${companyName} — Статистика</h1>
+            <h1>${companyName} — ${window.t('tabStatistics')}</h1>
             <div class="meta">Вивантажено: ${new Date().toLocaleDateString('uk-UA')} | Метрик: ${ms.length} | Періодів: ${dataRows.length}</div>
             <table>${headerHtml}${goalHtml}${bodyHtml}</table>
             </body></html>`;
