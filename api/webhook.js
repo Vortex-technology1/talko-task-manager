@@ -2394,6 +2394,7 @@ async function sendTg(token, chatId, text, buttons) {
         const _tgAbort = new AbortController();
         const _tgTimer = setTimeout(() => _tgAbort.abort(), 8000);
         const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            signal: AbortSignal.timeout(10000),
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload), signal: _tgAbort.signal
         });

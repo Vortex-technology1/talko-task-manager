@@ -41,6 +41,7 @@ async function tgSend(token, chatId, text) {
         const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: AbortSignal.timeout(10000),
             body: JSON.stringify({
                 chat_id:    String(chatId),
                 text:       text.slice(0, 4096),
