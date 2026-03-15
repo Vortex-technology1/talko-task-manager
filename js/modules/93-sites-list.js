@@ -62,7 +62,7 @@ function _renderList() {
     if (!c) return;
 
     if (sl.loading) {
-        c.innerHTML = '<div style="text-align:center;padding:3rem;color:#9ca3af;">${window.t('loading')}</div>';
+        c.innerHTML = `<div style="text-align:center;padding:3rem;color:#9ca3af;">${window.t('loading')}</div>`;
         return;
     }
 
