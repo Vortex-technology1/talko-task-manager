@@ -995,6 +995,8 @@ module.exports = async (req, res) => {
         let nodeId = (isStart || !session.currentNodeId) ? firstNode?.id : null;
 
         // ── Обробка кнопки або вводу ─────────────────────────
+        // FIX F: зберігаємо оригінальний waitingForInput для перевірки в AI вузлі
+        const _prevWaitingForInput = session.waitingForInput;
         if (!isStart && session.waitingForInput) {
             const waitNode = nodeMap[session.waitingForInput];
             if (waitNode) {
@@ -1074,7 +1076,12 @@ module.exports = async (req, res) => {
                 // Якщо AI вузол щойно активовано (немає history) і є firstMessage
                 const _firstMsg = n.config?.firstMessage || n.firstMessage || '';
                 const _firstEnabled = n.config?.firstMessageEnabled || n.firstMessageEnabled || false;
-                if (_firstEnabled && _firstMsg && session.aiHistory.length === 0 && normalized.text === '') {
+                // FIX BUG A: normalized.text === '' ніколи не буває в Telegram
+                // Правильна умова: флоу щойно перейшов в AI вузол (waitingForInput не цей вузол)
+                // тобто ми входимо з попереднього вузла (не повторний input юзера)
+                // FIX F: використовуємо _prevWaitingForInput (до скидання)
+                const _enteringFresh = _prevWaitingForInput !== nodeId;
+                if (_firstEnabled && _firstMsg && session.aiHistory.length === 0 && _enteringFresh) {
                     // Надсилаємо перше повідомлення від бота
                     const _fmText = interp(_firstMsg, session.data);
                     sendTyping(botToken, normalized.senderId).catch(()=>{});
@@ -1092,11 +1099,9 @@ module.exports = async (req, res) => {
                     return res.status(200).json({ ok: true });
                 }
 
-                session.aiHistory.push({ role: 'user', content: normalized.text });
-                if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
-                // FIX: also limit by total chars to avoid token overflow
-                const _histChars = session.aiHistory.reduce((s,m)=>s+(m.content||'').length,0);
-                if (_histChars > 15000) session.aiHistory = session.aiHistory.slice(-10);
+                // БАГ E FIX: НЕ додаємо user message в history тут
+                // callAI сам додає userText як останній message в requests[]
+                // Додамо ПІСЛЯ отримання відповіді щоб уникнути дублікату
 
                 // PERF 6: typing відправляємо ОДРАЗУ (до Promise.all з AI)
                 // Раніше перший sendTyping стартував всередині loop (async) з затримкою
@@ -1173,7 +1178,17 @@ module.exports = async (req, res) => {
                     .replace(/\[SAVE:[^\]]+\]/g, '')
                     .trim();
 
+                // FIX E: зберігаємо user + assistant в history після отримання відповіді
+                // (не до callAI щоб уникнути дублікату в messages[])
+                const _userMsg = normalized.text || '';
+                if (_userMsg) session.aiHistory.push({ role: 'user', content: _userMsg });
                 if (cleanReply) session.aiHistory.push({ role: 'assistant', content: cleanReply });
+
+                // Обмежуємо розмір history
+                if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
+                const _histCharsPost = session.aiHistory.reduce((s,m) => s + (m.content||'').length, 0);
+                if (_histCharsPost > 15000) session.aiHistory = session.aiHistory.slice(-10);
+
                 // Зберігаємо останню AI відповідь для {{ai_response}} в наступних вузлах
                 session.data.ai_response = cleanReply;
 
@@ -1807,12 +1822,25 @@ async function callAI(node, userText, session, compRef, compData) {
             .map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }))
             .slice(-Math.max(0, _histLimit));
 
-        // FIX 5: порожній userText (кнопка без тексту) → OpenAI відхиляє
-        const _safeUserText = (userText || '').trim() || '...';
+        // FIX 5+B: порожній або технічний userText — нормалізуємо
+        // /start, start, btn_N — не передаємо в AI як реальне повідомлення юзера
+        const _isSystemText = /^\/(start|help|menu|back)$/i.test((userText||'').trim())
+            || /^btn_\d+$/.test((userText||'').trim())
+            || (userText||'').trim() === 'start';
+        const _safeUserText = _isSystemText
+            ? '' // AI не отримує технічний текст — history покаже що діалог новий
+            : (userText || '').trim() || '...';
+        // Якщо _safeUserText порожній і history теж порожній — не викликаємо AI
+        // (це перший вхід через /start без firstMessage)
+        if (!_safeUserText && !session.aiHistory?.length && !_isSystemText) {
+            return node.config?.fallback || node.fallback || '';
+        }
+        // Якщо system text але є history — використовуємо останній user message як контекст
+        const _effectiveUserText = _safeUserText || (session.aiHistory?.filter(m=>m.role==='user').slice(-1)[0]?.content) || '...';
         const messages = [
             { role: 'system', content: sysPrompt },
             ..._trimmedHistory,
-            { role: 'user', content: _safeUserText }
+            { role: 'user', content: _effectiveUserText }
         ];
 
         let responseText = null;
@@ -1881,7 +1909,7 @@ async function callAI(node, userText, session, compRef, compData) {
                     // FIX 6: Anthropic — правильне чергування user/assistant
                     // Anthropic відхиляє: 2 однакові ролі підряд, або перший === assistant
                     messages: (() => {
-                        const hist = [..._trimmedHistory, { role: 'user', content: _safeUserText }];
+                        const hist = [..._trimmedHistory, { role: 'user', content: _effectiveUserText }];
                         const valid = [];
                         for (const m of hist) {
                             const prev = valid[valid.length - 1];
@@ -1914,7 +1942,7 @@ async function callAI(node, userText, session, compRef, compData) {
                 }));
             const _geminiContents = [
                 ..._geminiHistory,
-                { role: 'user', parts: [{ text: userText }] },
+                { role: 'user', parts: [{ text: _effectiveUserText }] },
             ];
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`, {
                 method: 'POST',
