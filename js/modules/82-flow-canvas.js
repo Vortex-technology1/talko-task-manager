@@ -2206,7 +2206,7 @@ function renderPropPanel() {
                     + _finalStageOpts.map(([v,l]) => '<option value="'+v+'"'+(_selectedStage===v?' selected':'')+'>'+l+'</option>').join('')
                     + '</select>'
                 + '</div>'
-                + fld('Сума угоди (грн)', inp('amount', d.amount || '', '0'));
+                + fld('Сума угоди (грн)', inp('amount', d.amount ?? '', '0'));
             break;
         }
         case 'end':
@@ -2263,40 +2263,53 @@ function renderPropPanel() {
         const _savedStage = node.config?.dealStage || null;
         const _savedPipId = node.config?.pipelineId || null;
 
-        const _applyStage = () => {
+        const _applyStage = (isRetry) => {
             const _pipSel = document.getElementById('fcp_pipelineId');
             const _stageSel = document.getElementById('fcp_dealStage');
             if (!_pipSel || !_stageSel) return;
 
+            // Якщо pipelines ще не завантажились — retry через 400мс (тільки один раз)
+            if (!window.crm?.pipelines?.length && !isRetry) {
+                setTimeout(() => _applyStage(true), 400);
+                return;
+            }
+
+            // Встановлюємо pipeline select
+            const _pipId = _savedPipId
+                || _pipSel.value
+                || (window.crm?.pipelines || []).find(p=>p.isDefault)?.id
+                || (window.crm?.pipelines || [])[0]?.id
+                || '';
+            if (_pipId && _pipSel.value !== _pipId) {
+                const _pipOpt = _pipSel.querySelector(`option[value="${_pipId}"]`);
+                if (_pipOpt) _pipSel.value = _pipId;
+            }
+
+            // Оновлюємо options стадій для обраної воронки (без скидання поточного значення)
             if (typeof window._fcCrmPipelineChange === 'function') {
-                const _pipId = _savedPipId
-                    || _pipSel.value
-                    || (window.crm?.pipelines || []).find(p=>p.isDefault)?.id
-                    || (window.crm?.pipelines || [])[0]?.id
-                    || '';
-                // Оновлюємо pipeline select якщо треба
-                if (_pipId && _pipSel.value !== _pipId) {
-                    const _pipOpt = _pipSel.querySelector(`option[value="${_pipId}"]`);
-                    if (_pipOpt) _pipSel.value = _pipId;
-                }
                 window._fcCrmPipelineChange(_pipId);
             }
 
-            // Відновлюємо збережену стадію
+            // Відновлюємо збережену стадію ПІСЛЯ оновлення options
             if (_savedStage && _savedStage !== 'undefined') {
                 const _opt = _stageSel.querySelector(`option[value="${_savedStage}"]`);
                 if (_opt) {
                     _stageSel.value = _savedStage;
-                } else if (_stageSel.options.length > 0) {
-                    // Стадія не знайдена — беремо першу (не undefined)
-                    _stageSel.selectedIndex = 0;
+                } else if (!isRetry) {
+                    // Опція ще не з'явилась — спробуємо ще раз через 400мс
+                    setTimeout(() => {
+                        const _s = document.getElementById('fcp_dealStage');
+                        if (_s) {
+                            const _o = _s.querySelector(`option[value="${_savedStage}"]`);
+                            if (_o) _s.value = _savedStage;
+                        }
+                    }, 400);
                 }
             }
         };
 
-        // Запускаємо двічі: одразу і через 300мс (якщо pipeline грузиться async)
-        requestAnimationFrame(_applyStage);
-        setTimeout(_applyStage, 350);
+        // Запускаємо одразу після рендеру
+        requestAnimationFrame(() => _applyStage(false));
     }
 }
 
