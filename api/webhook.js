@@ -1808,11 +1808,13 @@ async function callAI(node, userText, session, compRef, compData) {
         // FIX 4: обмежуємо системний промпт щоб не перевищити контекстне вікно
         const sysPrompt = _rawSys + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
 
-        // PERF 3: адаптивний max_tokens — коротші відповіді = швидше
-        // Якщо промпт короткий (<500 chars) і немає інструкцій "детально/повністю/список" → 600 tokens
+        // max_tokens: з конфігу ноди або адаптивний
+        const _nodeMaxTok = node.config?.maxTokens || node.maxTokens || null;
         const _longKeywords = /детально|докладно|повністю|список|перерахуй|опиши|розкажи|поясни/i;
-        const _maxTok = (_rawSys.length > 500 || _longKeywords.test(_rawSys) || _longKeywords.test(userText))
-            ? 1500 : 600;
+        const _maxTok = _nodeMaxTok || (
+            (_rawSys.length > 500 || _longKeywords.test(_rawSys) || _longKeywords.test(userText))
+            ? 1500 : 600
+        );
 
         // PERF 4: обрізаємо aiHistory до historyLimit
         const _histLimit = node.config?.historyLimit ?? node.historyLimit ?? 6;

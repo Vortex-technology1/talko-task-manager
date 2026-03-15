@@ -1874,17 +1874,28 @@ function renderPropPanel() {
                 </div>
             </div>`
 
-            // ── Пам'ять + Перший ──
+            // ── Пам'ять + Макс токени ──
             + `<div style="display:flex;gap:8px;margin-bottom:12px;">
                 <div style="flex:1;">
                     <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                        ${tip("Пам'ять діалогу", "Скільки попередніх повідомлень передавати AI як контекст. 0 — без пам'яті (кожен запит незалежний, дешевше). 6 — пам'ятає 6 останніх повідомлень. Більше = дорожче і повільніше.")}
+                        ${tip("Пам'ять діалогу", "Скільки попередніх повідомлень AI пам'ятає. 0 = кожне повідомлення незалежне (найдешевше). 6 = пам'ятає 6 останніх. Для кваліфікаційних ботів — 10-14.")}
                     </div>
-                    <div style="display:flex;align-items:center;gap:6px;">
+                    <div style="display:flex;align-items:center;gap:4px;">
                         <input id="fcp_historyLimit" type="number" min="0" max="20" value="${histLim}"
                             style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;
                             border-radius:7px;color:white;font-size:12px;box-sizing:border-box;text-align:center;">
-                        <span style="font-size:10px;color:#475569;white-space:nowrap;">повід.</span>
+                        <span style="font-size:9px;color:#475569;white-space:nowrap;">повід.</span>
+                    </div>
+                </div>
+                <div style="flex:1;">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
+                        ${tip('Макс. токени', "Максимальна довжина відповіді AI. 300 = коротко (1-3 речення). 600 = середньо. 1500 = детально. Менше токенів = швидше і дешевше.")}
+                    </div>
+                    <div style="display:flex;align-items:center;gap:4px;">
+                        <input id="fcp_maxTokens" type="number" min="100" max="2000" step="100" value="${d.maxTokens || 600}"
+                            style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;
+                            border-radius:7px;color:white;font-size:12px;box-sizing:border-box;text-align:center;">
+                        <span style="font-size:9px;color:#475569;white-space:nowrap;">токенів</span>
                     </div>
                 </div>
             </div>`
@@ -1899,7 +1910,10 @@ function renderPropPanel() {
                         <div style="position:relative;width:32px;height:18px;">
                             <input type="checkbox" id="fcp_firstMessageEnabled" ${firstMsgEnabled}
                                 style="opacity:0;position:absolute;width:100%;height:100%;margin:0;cursor:pointer;z-index:1;"
-                                onchange="document.getElementById('fcp_firstMsgRow').style.display=this.checked?'block':'none'">
+                                onchange="document.getElementById('fcp_firstMsgRow').style.display=this.checked?'block':'none';
+                                    document.getElementById('fcp_toggle_bg').style.background=this.checked?'#22c55e':'#334155';
+                                    document.getElementById('fcp_toggle_knob').style.left=this.checked?'16px':'2px';
+                                    this.parentElement.parentElement.querySelector('span').textContent=this.checked?'Увімкнено':'Вимкнено';">
                             <div id="fcp_toggle_bg" style="width:32px;height:18px;border-radius:9px;background:${firstMsgEnabled?'#22c55e':'#334155'};transition:background .2s;position:absolute;top:0;left:0;pointer-events:none;"></div>
                             <div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;top:2px;left:${firstMsgEnabled?'16px':'2px'};transition:left .2s;pointer-events:none;" id="fcp_toggle_knob"></div>
                         </div>
@@ -2102,6 +2116,7 @@ window.fcApplyNodeData = function(nodeId) {
             node.config.fallback = get('fallback');
             node.config.temperature = parseFloat(document.getElementById('fcp_temperature')?.value ?? 0.7);
             node.config.historyLimit = parseInt(document.getElementById('fcp_historyLimit')?.value ?? 6) || 0;
+            node.config.maxTokens = parseInt(document.getElementById('fcp_maxTokens')?.value) || 600;
             node.config.firstMessageEnabled = document.getElementById('fcp_firstMessageEnabled')?.checked || false;
             node.config.firstMessage = document.getElementById('fcp_firstMessage')?.value?.trim() || '';
             break;
@@ -2284,6 +2299,7 @@ async function saveFlow() {
                 aiProvider: n.config?.aiProvider || null,
                 temperature: n.config?.temperature ?? null,
                 historyLimit: n.config?.historyLimit ?? null,
+                maxTokens: n.config?.maxTokens || null,
                 firstMessage: n.config?.firstMessage || null,
                 firstMessageEnabled: n.config?.firstMessageEnabled || null,
                 saveAs: n.config?.saveAs || null,
