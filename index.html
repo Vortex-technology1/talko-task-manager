@@ -3788,6 +3788,20 @@ document.addEventListener('mousedown', function(e) {
 
     <!-- ERROR BOUNDARY: перехоплюємо JS-краші — показуємо toast замість білого екрану -->
     <script>
+        // Глобальна функція getMonthNames — використовується в 28-projects, 24-table, 27-processes
+        window.getMonthNames = function() {
+            const lang = window.currentLang || 'ua';
+            const m = {
+                ua: ['Січ','Лют','Бер','Кві','Тра','Чер','Лип','Сер','Вер','Жов','Лис','Гру'],
+                ru: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
+                en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                de: ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],
+                pl: ['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie','Wrz','Paź','Lis','Gru'],
+            };
+            return m[lang] || m['ua'];
+        };
+    </script>
+    <script>
         window.onerror = function(msg, src, line, col, err) {
             const shortSrc = (src || '').split('/').pop();
             const detail = shortSrc + ':' + line + ' — ' + msg;

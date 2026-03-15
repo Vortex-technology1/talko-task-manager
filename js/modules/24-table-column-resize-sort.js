@@ -421,7 +421,7 @@
                 const year = parseInt(parts[0]);
                 const month = parseInt(parts[1]) - 1;
                 const day = parseInt(parts[2]);
-                const monthShort = getMonthNames();
+                const monthShort = typeof getMonthNames === 'function' ? getMonthNames() : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
                 return `${day} ${monthShort[month]}`;
             } catch(e) { return dateStr; }
         }

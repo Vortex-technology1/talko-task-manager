@@ -676,7 +676,7 @@
             });
             
             // Day headers
-            const months = getMonthNames();
+            const months = typeof getMonthNames === 'function' ? getMonthNames() : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const dayNames = [window.t('daySun'), window.t('dayMon'), window.t('dayTue'), window.t('dayWed'), window.t('dayThu'), window.t('dayFri'), window.t('daySat')];
             
             let headerHTML = days.map((day, i) => {
