@@ -106,13 +106,19 @@ window.openFlowCanvas = async function(flowId, botId) {
             if (nodeType === 'ai' && JSON.stringify(outputs) === JSON.stringify(['ok','err'])) {
                 outputs = ['out']; // AI вузол завжди має 1 вихід 'out'
             }
+            // FIX: не включаємо службові поля (_x,_y,outputs,config) в config
+            // щоб не накопичувались nested config після кожного save/load циклу
+            const { _x: __x, _y: __y, outputs: __o, config: __nestedCfg, ...nClean } = n;
+            // Якщо є вкладений config — мерджимо його першим (нижній пріоритет),
+            // потім перекриваємо полями верхнього рівня (вони свіжіші)
+            const restoredConfig = { ...(typeof __nestedCfg === 'object' && __nestedCfg ? __nestedCfg : {}), ...nClean, type: nodeType, id: n.id };
             return {
                 id: n.id,
                 type: nodeType,
                 x: n._x !== undefined ? n._x : (n.x !== undefined ? n.x : 80),
                 y: n._y !== undefined ? n._y : (n.y !== undefined ? n.y : 200),
                 outputs: outputs,
-                config: { ...n, type: nodeType, id: n.id },
+                config: restoredConfig,
             };
         });
         fc.edges = stored.edges || [];
@@ -2467,7 +2473,7 @@ async function saveFlow() {
 
     // Build canvasData (source of truth)
     const canvasData = {
-        nodes: fc.nodes.map(n => ({ ...n.config, id:n.id, type:n.type, _x:n.x, _y:n.y, outputs:n.outputs, config:n.config||{} })),
+        nodes: fc.nodes.map(n => { const { config: _c, _x: __x, _y: __y, outputs: __o, ...cfgClean } = (n.config||{}); return { ...cfgClean, id:n.id, type:n.type, _x:n.x, _y:n.y, outputs:n.outputs }; }),
         edges: fc.edges,
         version: Date.now(),
     };
