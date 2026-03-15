@@ -250,7 +250,7 @@ module.exports = async (req, res) => {
 
         // ── Daily cleanup — видаляємо протухлі lock документи ──────────
         const _now = Date.now();
-        const _cleanupCollections = ['_rate_limits', '_session_locks', '_finish_locks'];
+        const _cleanupCollections = ['_rate_limits', '_session_locks', '_finish_locks', '_pending_messages'];
         for (const colName of _cleanupCollections) {
             try {
                 let q;

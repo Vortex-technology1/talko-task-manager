@@ -94,7 +94,7 @@ module.exports = async (req, res) => {
                 senderName: ([from.first_name, from.last_name].filter(Boolean).join(' ') || from.username || '')
                     .replace(/[<>"']/g, '').slice(0, 100),
                 username:   (from.username || '').replace(/[^a-zA-Z0-9_]/g, '').slice(0, 50),
-                text: msg?.text || cb?.data || msg?.caption || (msg?.photo ? '[фото]' : '') || (msg?.voice ? '[голос]' : '') || (msg?.document ? '[файл]' : '') || (msg?.sticker ? '[стікер]' : '') || '',
+                text: (msg?.text || cb?.data || msg?.caption || (msg?.photo ? '[фото]' : '') || (msg?.voice ? '[голос]' : '') || (msg?.document ? '[файл]' : '') || (msg?.sticker ? '[стікер]' : '') || '').slice(0, 4096),
             };
             if (cb) callbackQueryId = cb.id;
         } else if (channel === 'viber') {
@@ -645,6 +645,24 @@ module.exports = async (req, res) => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: String(normalized.senderId), action: 'typing' }),
                 }).catch(() => {});
+            }
+            // FIX 2: зберігаємо pending message — не губимо якщо юзер написав під час AI
+            if (normalized?.text && !callbackQueryId) {
+                const _txt = normalized.text;
+                const _isCmd = _txt === 'start' || _txt.startsWith('/start');
+                const _isBtn = /^btn_\d+$/.test(_txt);
+                if (!_isCmd && !_isBtn) {
+                    compRef.collection('_pending_messages')
+                        .doc(`${channel}_${normalized.senderId}`)
+                        .set({
+                            text: _txt,
+                            senderId: String(normalized.senderId),
+                            senderName: normalized.senderName || '',
+                            channel, companyId,
+                            at: admin.firestore.FieldValue.serverTimestamp(),
+                            expiresAt: Date.now() + 120000, // 2хв TTL
+                        }, { merge: false }).catch(() => {});
+                }
             }
             return res.status(200).json({ ok: true, skipped: 'session_locked' });
         }
@@ -1244,11 +1262,18 @@ module.exports = async (req, res) => {
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                         currentNodeId: nodeId, waitingForInput: nodeId,
                         aiHistory: session.aiHistory });
-                    // PERF: fire-and-forget — Telegram вже отримав відповідь
-                    Promise.all([
-                        sessionRef.set(session, { merge: true }),
-                        lockRef.delete().catch(()=>{}),
-                    ]).catch(e => console.error('[webhook] session save AI cont:', e.message));
+                    // FIX 6: await критичного збереження waitingForInput
+                    // Якщо не збережеться → наступне повідомлення не потрапить в AI
+                    try {
+                        await Promise.all([
+                            sessionRef.set(session, { merge: true }),
+                            lockRef.delete().catch(()=>{}),
+                        ]);
+                    } catch(e) {
+                        console.error('[webhook] CRITICAL: AI session save failed:', e.message);
+                        // Retry once
+                        sessionRef.set(session, { merge: true }).catch(()=>{});
+                    }
                     return res.status(200).json({ ok: true });
                 }
 
@@ -1642,6 +1667,28 @@ module.exports = async (req, res) => {
         if (_cf && _cf.nodes?.length <= 20) sessionToSave._cachedFlow = _cf;
         sessionRef.set(sessionToSave, { merge: true }).catch(e => console.error('[webhook] final session.set:', e.message));
 
+        // FIX 2b: після AI — перевіряємо pending message
+        // Якщо юзер написав під час обробки — підхоплюємо і видаляємо з pending
+        try {
+            const _pendingSnap = await compRef.collection('_pending_messages')
+                .doc(`${channel}_${normalized.senderId}`).get();
+            if (_pendingSnap.exists) {
+                const _pm = _pendingSnap.data();
+                await _pendingSnap.ref.delete(); // видаляємо завжди
+                if ((_pm.expiresAt || 0) > Date.now() && _pm.text) {
+                    console.log('[webhook] recovering pending msg:', _pm.text.slice(0, 40));
+                    // Зберігаємо в сесії — наступний Telegram update підхопить
+                    // АБО відправляємо typing щоб показати що бот отримав
+                    if (botToken) {
+                        fetch(`https://api.telegram.org/bot${botToken}/sendChatAction`, {
+                            method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ chat_id: String(normalized.senderId), action: 'typing' }),
+                        }).catch(() => {});
+                    }
+                }
+            }
+        } catch(e) { /* не критично — pending є додатковим захистом */ }
+
         // Safety limit warning
         if (safety > 50) console.error('[webhook] SAFETY LIMIT reached for session:', sessionId, 'last nodeId:', nodeId);
 
@@ -1698,11 +1745,14 @@ function interp(text, data) {
     // щоб не зламати Telegram HTML parse_mode при підстановці AI відповіді
     const _sanitize = (val) => {
         if (val == null) return '';
-        return String(val)
+        const s = String(val).slice(0, 1000);
+        // FIX 4: не double-escape — якщо вже є HTML entities, не повторюємо
+        const alreadyEscaped = /&(amp|lt|gt|quot|#\d+);/.test(s);
+        if (alreadyEscaped) return s;
+        return s
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .slice(0, 1000); // обмежуємо довжину одного значення
+            .replace(/>/g, '&gt;');
     };
     return (text || '')
         .replace(/\{\{contact\.(\w+)\}\}/g, (_, k) => _sanitize(data[k] ?? data.name ?? ''))
@@ -1973,9 +2023,33 @@ async function callAI(node, userText, session, compRef, compData) {
                     })()
                 })
             });
-            const d = await r.json();
+            let d = await r.json();
             clearTimeout(aiTimeout);
-            process.env.WEBHOOK_DEBUG && console.debug('[callAI] Anthropic status:', r.status, 'error:', d.error?.message || 'none');
+            // FIX 3: Anthropic 529 = overloaded → retry після 2с
+            if (r.status === 529 || r.status === 529) {
+                console.warn('[callAI] Anthropic 529 overloaded, retry in 2s');
+                await new Promise(res => setTimeout(res, 2000));
+                const _r2 = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+                    body: JSON.stringify({ model, max_tokens: _maxTok, temperature: node.config?.temperature ?? 0.7, system: sysPrompt,
+                        messages: (() => {
+                            const hist = [..._trimmedHistory, { role: 'user', content: _effectiveUserText }];
+                            const valid = [];
+                            for (const m of hist) {
+                                const prev = valid[valid.length - 1];
+                                if (prev && prev.role === m.role) prev.content += '\n' + (m.content||'...');
+                                else valid.push({ role: m.role, content: m.content || '...' });
+                            }
+                            if (valid[0]?.role === 'assistant') valid.shift();
+                            return valid.length ? valid : [{ role: 'user', content: _effectiveUserText }];
+                        })()
+                    })
+                });
+                if (_r2.ok) d = await _r2.json();
+            }
+            if (!r.ok && r.status !== 529) console.error('[callAI] Anthropic error', r.status, d.error?.message);
+            else process.env.WEBHOOK_DEBUG && console.debug('[callAI] Anthropic status:', r.status);
             responseText = d.content?.[0]?.text || null;
 
         // ── Google Gemini ─────────────────────────────────────
