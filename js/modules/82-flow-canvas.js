@@ -2252,23 +2252,45 @@ function renderPropPanel() {
     // FIX: після рендеру CRM вузла — синхронізуємо стадії з вибраною воронкою
     // Це гарантує що стадії завжди відповідають pipeline select, навіть при async load
     if (node.type === 'crm') {
-        requestAnimationFrame(() => {
+        // FIX: використовуємо setTimeout щоб дати час завантажитись pipeline async
+        // requestAnimationFrame недостатньо — async pipeline load може ще йти
+        const _savedStage = node.config?.dealStage || null;
+        const _savedPipId = node.config?.pipelineId || null;
+
+        const _applyStage = () => {
             const _pipSel = document.getElementById('fcp_pipelineId');
+            const _stageSel = document.getElementById('fcp_dealStage');
+            if (!_pipSel || !_stageSel) return;
+
             if (typeof window._fcCrmPipelineChange === 'function') {
-                // FIX: якщо value порожній — беремо перший pipeline із window.crm
-                const _pipId = _pipSel?.value
+                const _pipId = _savedPipId
+                    || _pipSel.value
                     || (window.crm?.pipelines || []).find(p=>p.isDefault)?.id
                     || (window.crm?.pipelines || [])[0]?.id
                     || '';
+                // Оновлюємо pipeline select якщо треба
+                if (_pipId && _pipSel.value !== _pipId) {
+                    const _pipOpt = _pipSel.querySelector(`option[value="${_pipId}"]`);
+                    if (_pipOpt) _pipSel.value = _pipId;
+                }
                 window._fcCrmPipelineChange(_pipId);
-                // Відновлюємо збережену стадію після синхронізації
-                const _stageSel = document.getElementById('fcp_dealStage');
-                if (_stageSel && node.config?.dealStage) {
-                    const _opt = _stageSel.querySelector(`option[value="${node.config.dealStage}"]`);
-                    if (_opt) _stageSel.value = node.config.dealStage;
+            }
+
+            // Відновлюємо збережену стадію
+            if (_savedStage && _savedStage !== 'undefined') {
+                const _opt = _stageSel.querySelector(`option[value="${_savedStage}"]`);
+                if (_opt) {
+                    _stageSel.value = _savedStage;
+                } else if (_stageSel.options.length > 0) {
+                    // Стадія не знайдена — беремо першу (не undefined)
+                    _stageSel.selectedIndex = 0;
                 }
             }
-        });
+        };
+
+        // Запускаємо двічі: одразу і через 300мс (якщо pipeline грузиться async)
+        requestAnimationFrame(_applyStage);
+        setTimeout(_applyStage, 350);
     }
 }
 
