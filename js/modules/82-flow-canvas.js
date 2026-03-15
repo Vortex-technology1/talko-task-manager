@@ -2336,12 +2336,14 @@ async function saveFlow() {
             const m = {
                 id: n.id,
                 type: n.type,
+                // ── Universal ──
                 text: n.config?.text || n.text || '',
                 nextNode: n.nextNode || null,
                 buttons: n.config?.buttons || n.buttons || [],
                 options: n.options || [],
-                // AI поля — FIX: читаємо з config (там реальний промпт або __ref для підколекції)
-                // Webhook сам відновить __ref через nodePrompts підколекцію
+                saveAs: n.config?.saveAs || null,
+                fallback: n.config?.fallback || null,
+                // ── AI ──
                 aiSystem: n.config?.aiSystem || n.aiSystem || '',
                 aiApiKey: n.config?.aiApiKey || null,
                 aiModel: n.config?.aiModel || null,
@@ -2351,22 +2353,63 @@ async function saveFlow() {
                 maxTokens: n.config?.maxTokens || null,
                 firstMessage: n.config?.firstMessage || null,
                 firstMessageEnabled: n.config?.firstMessageEnabled || null,
-                saveAs: n.config?.saveAs || null,
-                fallback: n.config?.fallback || null,
-                // Action поля
+                // ── Action / Notify ──
                 actionType: n.config?.actionType || null,
+                actionPayload: n.config?.actionPayload || null,
                 notifyChatId: n.config?.notifyChatId || null,
                 notifyText: n.config?.notifyText || null,
                 notifyFlowName: n.config?.notifyFlowName || null,
-                // Filter поля
+                // ── Filter / Condition ──
                 trueNode: n.trueNode || null,
                 falseNode: n.falseNode || null,
                 condVar: n.config?.condVar || null,
                 condOp: n.config?.condOp || null,
                 condVal: n.config?.condVal || null,
+                conditionField: n.config?.conditionField || null,
+                conditionOp: n.config?.conditionOp || null,
+                conditionValue: n.config?.conditionValue || null,
+                // ── Tag ──
+                tagValue: n.config?.tagValue || n.config?.tag || null,
+                // ── Pause / Delay ──
+                delay: n.config?.delay || n.config?.delaySeconds || null,
+                delayUnit: n.config?.delayUnit || null,
+                delaySeconds: n.config?.delaySeconds || null,
+                // ── API ──
+                apiMethod: n.config?.apiMethod || null,
+                apiUrl: n.config?.apiUrl || null,
+                apiHeaders: n.config?.apiHeaders || null,
+                apiBody: n.config?.apiBody || null,
+                authToken: n.config?.authToken || null,
+                // ── Sheets ──
+                sheetsId: n.config?.sheetsId || null,
+                sheetsName: n.config?.sheetsName || null,
+                sheetsMapping: n.config?.sheetsMapping || null,
+                // ── CRM / Deal / Task ──
+                dealTitle: n.config?.dealTitle || null,
+                dealStage: n.config?.dealStage || null,
+                pipelineId: n.config?.pipelineId || null,
+                amount: n.config?.amount || null,
+                phone: n.config?.phone || null,
+                email: n.config?.email || null,
+                taskTitle: n.config?.taskTitle || null,
+                taskDescription: n.config?.taskDescription || null,
+                assigneeId: n.config?.assigneeId || null,
+                dueDate: n.config?.dueDate || null,
+                // ── Random / Repeat ──
+                splitA: n.config?.splitA || null,
+                splitB: n.config?.splitB || null,
+                branchA: n.branchA || null,
+                branchB: n.branchB || null,
+                repeatCount: n.config?.repeatCount || null,
+                repeatInterval: n.config?.repeatInterval || null,
+                exitVar: n.config?.exitVar || null,
+                // ── Human ──
+                humanMessage: n.config?.humanMessage || null,
+                // ── Error routing ──
+                errorNode: n.errorNode || null,
             };
-            // Прибираємо null поля щоб зменшити розмір
-            Object.keys(m).forEach(k => { if (m[k] === null || m[k] === '') delete m[k]; });
+            // Прибираємо null/порожні поля щоб зменшити розмір документу
+            Object.keys(m).forEach(k => { if (m[k] === null || m[k] === '' || (Array.isArray(m[k]) && !m[k].length)) delete m[k]; });
             return m;
         });
 

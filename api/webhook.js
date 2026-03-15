@@ -646,14 +646,16 @@ module.exports = async (req, res) => {
                     body: JSON.stringify({ chat_id: String(normalized.senderId), action: 'typing' }),
                 }).catch(() => {});
             }
-            // FIX 2: зберігаємо pending message — не губимо якщо юзер написав під час AI
+            // FIX 2: зберігаємо pending message в черзі (timestamp doc ID)
+            // Кожне повідомлення — окремий документ, не перезаписує попереднє
             if (normalized?.text && !callbackQueryId) {
                 const _txt = normalized.text;
                 const _isCmd = _txt === 'start' || _txt.startsWith('/start');
                 const _isBtn = /^btn_\d+$/.test(_txt);
                 if (!_isCmd && !_isBtn) {
+                    const _pmDocId = `${channel}_${normalized.senderId}_${Date.now()}`;
                     compRef.collection('_pending_messages')
-                        .doc(`${channel}_${normalized.senderId}`)
+                        .doc(_pmDocId)
                         .set({
                             text: _txt,
                             senderId: String(normalized.senderId),
@@ -838,7 +840,7 @@ module.exports = async (req, res) => {
 
             // Шукаємо по тригеру
             if (!flow) {
-                const allFlows = await flowsRef.where('status', '==', 'active').limit(20).get();
+                const allFlows = await flowsRef.where('status', '==', 'active').orderBy('createdAt', 'asc').limit(20).get();
                 for (const fd of allFlows.docs) {
                     const trigger = fd.data()?.triggerKeyword || '/start';
                     if (isStart || normalized.text === trigger) {
@@ -1111,10 +1113,16 @@ module.exports = async (req, res) => {
                     session.aiHistory.push({ role: 'assistant', content: _fmText });
                     Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
                         currentNodeId: nodeId, waitingForInput: nodeId });
-                    Promise.all([
-                        sessionRef.set(session, { merge: true }),
-                        lockRef.delete().catch(()=>{}),
-                    ]).catch(()=>{});
+                    // FIX БАГ 1: await критичного збереження (waitingForInput = nodeId)
+                    try {
+                        await Promise.all([
+                            sessionRef.set(session, { merge: true }),
+                            lockRef.delete().catch(()=>{}),
+                        ]);
+                    } catch(e) {
+                        console.error('[webhook] firstMessage session save failed:', e.message);
+                        sessionRef.set(session, { merge: true }).catch(()=>{});
+                    }
                     return res.status(200).json({ ok: true });
                 }
 
@@ -1241,10 +1249,16 @@ module.exports = async (req, res) => {
                     const _sendText = (channel === 'telegram' ? _sendCleanReply : cleanReply) || _replyText || '...';
                     await Promise.all([
                         thinkingMsgId
-                            ? editTg(botToken, normalized.senderId, thinkingMsgId, _sendText, aiBtns.length ? aiBtns : null)
-                            : sendMsg(channel, botToken, normalized.senderId, _sendText, aiBtns.length ? aiBtns : null),
+                            ? editTg(botToken, normalized.senderId, thinkingMsgId, _sendText, _finalAiBtns.length ? _finalAiBtns : null)
+                            : sendMsg(channel, botToken, normalized.senderId, _sendText, _finalAiBtns.length ? _finalAiBtns : null),
                         _replyText ? saveBotMessage(compRef, contactId, _replyText) : Promise.resolve(),
                     ]);
+                }
+
+                // FIX 5: якщо [DONE] і є AI кнопки — ігноруємо кнопки (вони для non-done відповідей)
+                const _finalAiBtns = isDone ? [] : aiBtns;
+                if (_finalAiBtns.length !== aiBtns.length && aiBtns.length) {
+                    console.log('[webhook] AI DONE with BTN — buttons ignored, proceeding to nextNode');
                 }
 
                 if (isDone && n.nextNode) {
@@ -2235,6 +2249,19 @@ async function sendViber(token, receiverId, text, buttons) {
 // Єдина точка відправки — вибирає канал автоматично
 async function sendMsg(channel, token, chatId, text, buttons) {
     if (channel === 'viber') return sendViber(token, chatId, text, buttons);
+    if (channel === 'instagram' || channel === 'facebook') {
+        // FIX 1: Instagram/Facebook Messenger reply через Graph API
+        if (!token || !chatId) return;
+        try {
+            const _fbBody = { recipient: { id: String(chatId) }, message: { text: (text||'').slice(0, 2000) } };
+            await fetch(`https://graph.facebook.com/v19.0/me/messages?access_token=${token}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(_fbBody),
+            });
+        } catch(e) { console.error('[sendMsg] Instagram/FB error:', e.message); }
+        return;
+    }
     return sendTg(token, chatId, text, buttons);
 }
 
@@ -2297,7 +2324,11 @@ async function editTg(token, chatId, messageId, text, buttons) {
         });
         clearTimeout(_eTimer);
     } catch(e) {
-        if (e.name !== 'AbortError') console.error('[editTg]', e.message);
+        if (e.name !== 'AbortError') {
+            console.error('[editTg]', e.message);
+            // FIX 2: fallback — якщо edit fails → надсилаємо нове повідомлення
+            sendTg(token, chatId, text, buttons).catch(() => {});
+        }
     }
 }
 
