@@ -216,55 +216,70 @@ function renderBotsTab() {
                 + Підключити бота
             </button>
         </div>` : `
-        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
             ${bp.bots.map(bot => {
                 const color = channelColors[bot.channel] || '#6b7280';
-                const icon = channelIcons[bot.channel] || '<i data-lucide="bot" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>';
+                const icon = channelIcons[bot.channel] || '<i data-lucide="bot" style="width:15px;height:15px;display:inline-block;vertical-align:middle;"></i>';
+                const statusDot = bot.connected
+                    ? '<span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;flex-shrink:0;"></span>'
+                    : '<span style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block;flex-shrink:0;"></span>';
                 return `
-                <div style="background:white;border-radius:14px;padding:1rem;
-                    box-shadow:var(--shadow);border-left:4px solid ${bot.connected?color:'#e5e7eb'};">
-                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
-                        <div style="display:flex;align-items:center;gap:0.6rem;flex:1;min-width:0;">
-                            <div style="width:42px;height:42px;border-radius:12px;
-                                background:${color}18;display:flex;align-items:center;
-                                justify-content:center;font-size:1.3rem;flex-shrink:0;">
-                                ${icon}
-                            </div>
-                            <div style="min-width:0;">
-                                <div style="font-weight:700;font-size:0.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                    ${escH(bot.name)}
-                                </div>
-                                <div style="font-size:0.74rem;color:#6b7280;margin-top:1px;">
-                                    ${bot.channel} · @${escH(bot.username||'—')}
-                                    · <span style="color:${bot.connected?'#22c55e':'#ef4444'};font-weight:600;">
-                                        ${bot.connected?window.t('botsConnectedBadge'):window.t('botsNotConnectedBadge')}
-                                    </span>
-                                </div>
-                                <div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">
-                                    ${(bot.flowCount||0)} ланцюгів · ${(bot.contactCount||0)} контактів
-                                </div>
-                            </div>
+                <div style="background:white;border-radius:12px;padding:0.55rem 0.75rem;
+                    box-shadow:0 1px 3px rgba(0,0,0,0.07);border:1px solid #f1f5f9;
+                    border-left:3px solid ${bot.connected?color:'#e5e7eb'};
+                    display:flex;align-items:center;gap:0.6rem;cursor:pointer;
+                    transition:background 0.15s;"
+                    onmouseenter="this.style.background='#f8fafc'"
+                    onmouseleave="this.style.background='white'"
+                    onclick="openBot('${bot.id}')">
+
+                    <!-- Іконка каналу -->
+                    <div style="width:34px;height:34px;border-radius:10px;flex-shrink:0;
+                        background:${color}15;display:flex;align-items:center;justify-content:center;">
+                        ${icon}
+                    </div>
+
+                    <!-- Основна інфо -->
+                    <div style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:center;gap:5px;">
+                            ${statusDot}
+                            <span style="font-weight:700;font-size:0.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                ${escH(bot.name)}
+                            </span>
                         </div>
-                        <div style="display:flex;gap:0.3rem;flex-shrink:0;">
-                            <button onclick="openBot('${bot.id}')"
-                                style="padding:0.45rem 0.8rem;background:#22c55e;color:white;
-                                border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-                                Відкрити <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i>
-                            </button>
-                            <button onclick="openBotSettings('${bot.id}')"
-                                style="padding:0.45rem 0.6rem;background:#f9fafb;border:1px solid #e5e7eb;
-                                border-radius:8px;cursor:pointer;font-size:0.8rem;">
-                                <i data-lucide="settings" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i>
-                            </button>
-                            <button onclick="confirmDeleteBot('${bot.id}')"
-                                style="padding:0.45rem 0.6rem;background:#fee2e2;color:#ef4444;
-                                border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;">
-                                <i data-lucide="x" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i>
-                            </button>
+                        <div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;display:flex;align-items:center;gap:4px;">
+                            <span>@${escH(bot.username||'—')}</span>
+                            <span style="color:#e5e7eb;">·</span>
+                            <span>${bot.flowCount||0} ланц.</span>
+                            <span style="color:#e5e7eb;">·</span>
+                            <span>${bot.contactCount||0} конт.</span>
                         </div>
                     </div>
+
+                    <!-- Кнопки дій -->
+                    <div style="display:flex;gap:0.25rem;flex-shrink:0;" onclick="event.stopPropagation()">
+                        <button onclick="openBot('${bot.id}')"
+                            title="Відкрити"
+                            style="padding:0.35rem 0.65rem;background:#22c55e;color:white;
+                            border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
+                            display:flex;align-items:center;gap:3px;">
+                            Відкрити
+                        </button>
+                        <button onclick="openBotSettings('${bot.id}')"
+                            title="Налаштування"
+                            style="width:30px;height:30px;background:#f9fafb;border:1px solid #e5e7eb;
+                            border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                            <i data-lucide="settings" style="width:13px;height:13px;"></i>
+                        </button>
+                        <button onclick="confirmDeleteBot('${bot.id}')"
+                            title="Видалити"
+                            style="width:30px;height:30px;background:#fff0f0;border:1px solid #fecaca;
+                            border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                            <i data-lucide="trash-2" style="width:12px;height:12px;color:#ef4444;"></i>
+                        </button>
+                    </div>
                 </div>`;
-    lcIcons(c); }).join('')}
+            }).join('')}
         </div>`}`;
 }
 
