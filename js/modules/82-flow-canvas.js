@@ -1880,22 +1880,40 @@ function renderPropPanel() {
                     <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
                         ${tip("Пам'ять діалогу", "Скільки попередніх повідомлень AI пам'ятає. 0 = кожне повідомлення незалежне (найдешевше). 6 = пам'ятає 6 останніх. Для кваліфікаційних ботів — 10-14.")}
                     </div>
-                    <div style="display:flex;align-items:center;gap:4px;">
+                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
                         <input id="fcp_historyLimit" type="number" min="0" max="20" value="${histLim}"
                             style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;
                             border-radius:7px;color:white;font-size:12px;box-sizing:border-box;text-align:center;">
                         <span style="font-size:9px;color:#475569;white-space:nowrap;">повід.</span>
                     </div>
+                    <div style="display:flex;gap:3px;">
+                        ${[['0','Без'],['6','6'],['14','14']].map(([v,l]) =>
+                            '<span onclick="document.getElementById(\'fcp_historyLimit\').value=' + v + '" '
+                            + 'style="flex:1;text-align:center;font-size:9px;padding:2px 0;border-radius:4px;cursor:pointer;'
+                            + 'background:' + (histLim==+v ? '#22c55e22' : '#0f172a') + ';'
+                            + 'border:1px solid ' + (histLim==+v ? '#22c55e' : '#334155') + ';'
+                            + 'color:' + (histLim==+v ? '#22c55e' : '#64748b') + ';">' + l + '</span>'
+                        ).join('')}
+                    </div>
                 </div>
                 <div style="flex:1;">
                     <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                        ${tip('Макс. токени', "Максимальна довжина відповіді AI. 300 = коротко (1-3 речення). 600 = середньо. 1500 = детально. Менше токенів = швидше і дешевше.")}
+                        ${tip('Макс. токени', "Довжина відповіді AI. 200 = 1-2 речення (збір даних). 600 = абзац. 1500 = детально. Менше = швидше і дешевше.")}
                     </div>
-                    <div style="display:flex;align-items:center;gap:4px;">
+                    <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
                         <input id="fcp_maxTokens" type="number" min="100" max="2000" step="100" value="${d.maxTokens || 600}"
                             style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;
                             border-radius:7px;color:white;font-size:12px;box-sizing:border-box;text-align:center;">
                         <span style="font-size:9px;color:#475569;white-space:nowrap;">токенів</span>
+                    </div>
+                    <div style="display:flex;gap:3px;">
+                        ${[['200','Коротко'],['600','Середньо'],['1500','Довго']].map(([v,l]) =>
+                            '<span onclick="document.getElementById(\'fcp_maxTokens\').value=' + v + '" '
+                            + 'style="flex:1;text-align:center;font-size:9px;padding:2px 0;border-radius:4px;cursor:pointer;'
+                            + 'background:' + ((d.maxTokens||600)==+v ? '#22c55e22' : '#0f172a') + ';'
+                            + 'border:1px solid ' + ((d.maxTokens||600)==+v ? '#22c55e' : '#334155') + ';'
+                            + 'color:' + ((d.maxTokens||600)==+v ? '#22c55e' : '#64748b') + ';">' + l + '</span>'
+                        ).join('')}
                     </div>
                 </div>
             </div>`
