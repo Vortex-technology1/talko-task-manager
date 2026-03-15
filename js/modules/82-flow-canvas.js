@@ -62,13 +62,18 @@ window.openFlowCanvas = async function(flowId, botId) {
     if (!snap.exists) return;
     fc.flowData = {id: snap.id, ...snap.data()};
 
-    // Підвантажуємо canvasData з підколекції (якщо немає в основному документі)
-    if (!fc.flowData.canvasData || !fc.flowData.canvasData.nodes?.length) {
-        try {
-            const canvasDoc = await flowRef.collection('canvasData').doc('layout').get();
-            if (canvasDoc.exists) fc.flowData.canvasData = canvasDoc.data();
-        } catch(e) { console.warn('canvasData load:', e.message); }
-    }
+    // FIX: завжди читаємо canvasData з підколекції — вона є source of truth
+    // Не довіряємо canvasData з основного документу — воно може бути застарілим
+    try {
+        const canvasDoc = await flowRef.collection('canvasData').doc('layout').get();
+        if (canvasDoc.exists) {
+            fc.flowData.canvasData = canvasDoc.data();
+            console.log('[canvas] loaded canvasData from subcollection, nodes:', fc.flowData.canvasData?.nodes?.length);
+        } else if (!fc.flowData.canvasData || !fc.flowData.canvasData.nodes?.length) {
+            // Fallback: якщо підколекції нема → берємо з основного документу (legacy)
+            console.log('[canvas] no subcollection canvasData, using main doc canvasData');
+        }
+    } catch(e) { console.warn('[canvas] canvasData load error:', e.message); }
 
     // Підвантажуємо великі AI промпти з nodePrompts підколекції
     const promptsSnap = await flowRef.collection('nodePrompts').get();
