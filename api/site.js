@@ -171,8 +171,17 @@ module.exports = async (req, res) => {
 <title>${esc(site.seoTitle || site.name || 'Сайт')}</title>
 ${site.seoDescription ? `<meta name="description" content="${esc(site.seoDescription)}">` : ''}
 ${site.seoKeywords    ? `<meta name="keywords"    content="${esc(site.seoKeywords)}">` : ''}
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://taskmanagerai-vert.vercel.app/s/${esc(site.slug || '')}">
 <meta property="og:title" content="${esc(site.seoTitle || site.name || '')}">
 ${site.seoDescription ? `<meta property="og:description" content="${esc(site.seoDescription)}">` : ''}
+${site.ogImage || site.logoUrl ? `<meta property="og:image" content="${esc(site.ogImage || site.logoUrl)}">` : '<meta property="og:image" content="https://taskmanagerai-vert.vercel.app/icons/icon-512x512.png">'}
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(site.seoTitle || site.name || '')}">
+${site.seoDescription ? `<meta name="twitter:description" content="${esc(site.seoDescription)}">` : ''}
+${site.ogImage || site.logoUrl ? `<meta name="twitter:image" content="${esc(site.ogImage || site.logoUrl)}">` : ''}
+<meta name="robots" content="${site.noIndex ? 'noindex,nofollow' : 'index,follow'}">
 ${ga4}${gtm}${pixel}
 ${site.analyticsHeadCode || ''}
 <style>
