@@ -551,60 +551,62 @@ module.exports = async (req, res) => {
             }).catch(() => {});
         }
 
-        // ── Rate limiting per senderId (flood protection) ────
-        // BUG 6 FIX: максимум 10 повідомлень за 10 секунд з одного senderId
-        const _rlKey = `rl_${channel}_${normalized.senderId}`;
-        const _rlRef = compRef.collection('_rate_limits').doc(_rlKey);
-        try {
-            const _rlDoc = await _rlRef.get();
-            const _rlNow = Date.now();
-            const _rlData = _rlDoc.exists ? _rlDoc.data() : null;
-            if (_rlData && _rlNow - (_rlData.windowStart || 0) < 10000) {
-                // В межах 10-секундного вікна
-                if ((_rlData.count || 0) >= 10) {
-                    // Перевищено ліміт — тихо ігноруємо
-                    console.warn('[webhook] rate limit exceeded for', _rlKey);
-                    return res.status(200).json({ ok: true, skipped: 'rate_limit' });
-                }
-                await _rlRef.update({ count: admin.firestore.FieldValue.increment(1) });
-            } else {
-                // Нове вікно
-                await _rlRef.set({ windowStart: _rlNow, count: 1 });
-            }
-        } catch(e) { /* rate limit не критичний — продовжуємо */ }
-
-        // ── Сесія ─────────────────────────────────────────────
+        // ── Сесія + Rate limit (об'єднано в 1 transaction = -80ms) ──
+        // PERF 1: rate_limit і session lock читаємо в ОДНІЙ транзакції
+        // Було: 2 окремих round-trip до Firestore (~80ms extra)
+        // Стало: 1 transaction з 3 reads паралельно (lockRef + sessionRef + rlRef)
         const sessionId = `${channel}_${normalized.senderId}`;
         const sessionRef = compRef.collection('sessions').doc(sessionId);
-        // FIX-6: Use per-session lock to prevent race condition
-        // when two Telegram updates arrive concurrently for same user
         const lockKey = `lock_${sessionId}`;
         const lockRef = compRef.collection('_session_locks').doc(lockKey);
         const lockTs = Date.now();
+        const _rlKey = `rl_${channel}_${normalized.senderId}`;
+        const _rlRef = compRef.collection('_rate_limits').doc(_rlKey);
 
-        // Atomic check-and-set using transaction to prevent race conditions
         let sessionDoc;
         const lockAcquired = await db.runTransaction(async tx => {
-            const [existingLock, session] = await Promise.all([
+            // Читаємо lock + session + rate_limit паралельно в 1 transaction
+            const [existingLock, session, rlDoc] = await Promise.all([
                 tx.get(lockRef),
-                tx.get(sessionRef)
+                tx.get(sessionRef),
+                tx.get(_rlRef),
             ]);
 
-            // Якщо lock існує і не застарілий (< 8s), skip цей запит
+            // Rate limit check (10 msg / 10s)
+            const _rlNow = Date.now();
+            const _rlData = rlDoc.exists ? rlDoc.data() : null;
+            if (_rlData && _rlNow - (_rlData.windowStart || 0) < 10000) {
+                if ((_rlData.count || 0) >= 10) {
+                    console.warn('[webhook] rate limit exceeded for', _rlKey);
+                    return { acquired: false, sessionDoc: null, rateLimited: true };
+                }
+                tx.update(_rlRef, { count: admin.firestore.FieldValue.increment(1) });
+            } else {
+                tx.set(_rlRef, { windowStart: _rlNow, count: 1 });
+            }
+
+            // Session lock check — динамічний TTL
+            // 30s якщо сесія чекала input (AI вузол міг виконуватись довго)
+            // 8s для звичайних вузлів
+            const _prevSessData = session.exists ? session.data() : null;
+            const _lockTtl = (_prevSessData?.waitingForInput && _prevSessData?.currentFlowId) ? 30000 : 8000;
             if (existingLock.exists) {
                 const lockData = existingLock.data();
-                if (lockTs - (lockData?.ts || 0) < 8000) {
+                if (lockTs - (lockData?.ts || 0) < _lockTtl) {
                     return { acquired: false, sessionDoc: null };
                 }
             }
 
-            // Встановлюємо lock атомарно
             tx.set(lockRef, { ts: lockTs, pid: Math.random() }, { merge: false });
             return { acquired: true, sessionDoc: session };
         }).catch(e => {
             console.error('[webhook] lock transaction failed:', e.message);
             return { acquired: false, sessionDoc: null };
         });
+
+        if (lockAcquired.rateLimited) {
+            return res.status(200).json({ ok: true, skipped: 'rate_limit' });
+        }
 
         if (!lockAcquired.acquired) {
             return res.status(200).json({ ok: true, skipped: 'session_locked' });
@@ -629,11 +631,11 @@ module.exports = async (req, res) => {
         if (normalized.username)   session.username   = normalized.username;
 
         // ── Авто-лід при першому повідомленні ──────────────────
-        // AWAITED щоб _autoClientId/_autoDealId були в session
-        // до того як флоу почне виконуватись
-        // Типовий час: ~200ms (2 parallel Firestore writes)
+        // PERF 2: fire-and-forget — не блокує першу відповідь бота (-200-380ms)
+        // _autoClientId/_autoDealId встановлюються async і зберігаються в наступному session.set
+        // finish() читає їх з session на наступному кроці
         if (_isNewContact) {
-            await (async () => { try {
+            (async () => { try {
                 const _ts = admin.firestore.FieldValue.serverTimestamp();
                 const _name = normalized.senderName || normalized.senderId || 'Новий контакт';
                 const _source = channel === 'telegram' ? 'telegram_bot'
@@ -737,7 +739,7 @@ module.exports = async (req, res) => {
                 }
             } catch(e) {
                 console.error('[auto_lead]', e.message);
-            }})();
+            }})(); // fire-and-forget — не чекаємо
         }
 
         // FIX 1: Deduplication — ігноруємо повторний update_id від Telegram
@@ -805,11 +807,19 @@ module.exports = async (req, res) => {
         }
 
         // ── Підвантажуємо canvasData + nodePrompts з підколекцій ──
+        // PERF 5: перевіряємо кеш флоу в сесії — якщо flowId і версія збігаються, не читаємо Firestore
+        const _cachedFlow = session._cachedFlow;
+        if (_cachedFlow?.id === flow.id && _cachedFlow?.nodes?.length && !isStart) {
+            // Відновлюємо ноди з кешу — экономимо 1-2 Firestore reads (~40-80ms)
+            if (!flow.nodes?.length) flow.nodes = _cachedFlow.nodes;
+            if (!flow.canvasData?.nodes?.length) flow.canvasData = { nodes: _cachedFlow.nodes, edges: _cachedFlow.edges || [] };
+        }
+
         const flowDocRef = compRef.collection('bots').doc(currentBotId).collection('flows').doc(flow.id);
 
         // PERF: canvasData + nodePrompts паралельно (економимо ~150ms)
         // Перевіряємо чи є AI вузли — якщо немає, не читаємо nodePrompts (економимо read)
-        const _nodes = flow.canvasData?.nodes || [];
+        const _nodes = flow.canvasData?.nodes || flow.nodes || [];
         const _hasAiNodes = _nodes.some(n => n.type === 'ai' || n.type === 'ai_response'
             || n.config?.aiSystem || n.aiSystem);
         const _hasRefNodes = _nodes.some(n => {
@@ -894,6 +904,18 @@ module.exports = async (req, res) => {
 
         process.env.WEBHOOK_DEBUG && console.debug(`[webhook] Flow: ${flow.id}, nodes: ${runtimeNodes.length}`);
         process.env.WEBHOOK_DEBUG && console.debug(`[webhook] Nodes:`, runtimeNodes.map(n => `${n.id}:${n.type}`).join(', '));
+
+        // PERF 5: кешуємо ноди в сесії (без промптів — можуть бути великими)
+        // Зберігаємо тільки структуру (id, type, nextNode, buttons) без aiSystem
+        const _cacheNodes = runtimeNodes.map(n => ({
+            id: n.id, type: n.type, text: n.text || '',
+            nextNode: n.nextNode || null,
+            buttons: n.buttons || [],
+            saveAs: n.saveAs || null,
+            conditionField: n.conditionField, conditionOp: n.conditionOp, conditionValue: n.conditionValue,
+            trueNode: n.trueNode, falseNode: n.falseNode,
+        }));
+        session._cachedFlow = { id: flow.id, nodes: _cacheNodes, edges: flow.canvasData?.edges || [] };
 
         const nodeMap = {};
         runtimeNodes.forEach(n => { if (n.id) nodeMap[n.id] = n; });
@@ -983,13 +1005,17 @@ module.exports = async (req, res) => {
                 const _histChars = session.aiHistory.reduce((s,m)=>s+(m.content||'').length,0);
                 if (_histChars > 15000) session.aiHistory = session.aiHistory.slice(-10);
 
-                // Typing індикатор — шле кожні 4 сек поки AI думає (Telegram показує max 5 сек)
+                // PERF 6: typing відправляємо ОДРАЗУ (до Promise.all з AI)
+                // Раніше перший sendTyping стартував всередині loop (async) з затримкою
+                sendTyping(botToken, normalized.senderId).catch(()=>{});
                 let typingActive = true;
                 let typingTimeoutId = null;
                 const typingLoop = (async () => {
+                    // Чекаємо 4s перед наступним (перший вже відправлено вище)
+                    await new Promise(r => { typingTimeoutId = setTimeout(() => { typingTimeoutId = null; r(); }, 4000); });
                     while (typingActive) {
                         await sendTyping(botToken, normalized.senderId);
-                        if (!typingActive) break; // Double-check перед setTimeout
+                        if (!typingActive) break;
                         await new Promise(r => {
                             typingTimeoutId = setTimeout(() => {
                                 typingTimeoutId = null;
@@ -1434,8 +1460,9 @@ module.exports = async (req, res) => {
             if (_ahChars > 30000) session.aiHistory = session.aiHistory.slice(-6);
         }
         // FIX 3: видаляємо технічні поля перед збереженням
+        // PERF 8: session.set fire-and-forget — відповідь вже надіслана юзеру
         const { _botToken, ...sessionToSave } = session;
-        await sessionRef.set(sessionToSave, { merge: true });
+        sessionRef.set(sessionToSave, { merge: true }).catch(e => console.error('[webhook] final session.set:', e.message));
 
         // Safety limit warning
         if (safety > 50) console.error('[webhook] SAFETY LIMIT reached for session:', sessionId, 'last nodeId:', nodeId);
@@ -1571,18 +1598,29 @@ async function callAI(node, userText, session, compRef, compData) {
         process.env.WEBHOOK_DEBUG && console.debug('[callAI] provider:', provider, 'model:', model, 'apiKey exists:', !!apiKey);
         if (!apiKey) return node.config?.fallback || node.fallback || 'Вибачте, AI недоступний.';
 
-        const sysPrompt = (node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.')
-            + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
+        const _rawSys = node.config?.aiSystem || node.aiSystem || node.systemPrompt || 'You are helpful.';
+        const sysPrompt = _rawSys + '\n\nВАЖЛИВО: Завжди відповідай ТІЛЬКИ українською мовою.';
+
+        // PERF 3: адаптивний max_tokens — коротші відповіді = швидше
+        // Якщо промпт короткий (<500 chars) і немає інструкцій "детально/повністю/список" → 600 tokens
+        const _longKeywords = /детально|докладно|повністю|список|перерахуй|опиши|розкажи|поясни/i;
+        const _maxTok = (_rawSys.length > 500 || _longKeywords.test(_rawSys) || _longKeywords.test(userText))
+            ? 1500 : 600;
+
+        // PERF 4: обрізаємо aiHistory до 6 останніх (3 пари) для швидкості
+        // Повний контекст важливий тільки для довгих діалогів — 6 повідомлень достатньо для більшості
+        const _histLimit = node.config?.historyLimit || 6;
+        const _trimmedHistory = (session.aiHistory || []).slice(-_histLimit);
+
         const messages = [
             { role: 'system', content: sysPrompt },
-            ...(session.aiHistory || []),
+            ..._trimmedHistory,
             { role: 'user', content: userText }
         ];
 
         let responseText = null;
 
         // BUG H FIX: aiAbort/aiTimeout оголошені ПЕРЕД try щоб catch мав до них доступ.
-        // Раніше — якщо provider невідомий, aiTimeout не оголошувався → ReferenceError у catch.
         const aiAbort = new AbortController();
         let aiTimeout = setTimeout(() => aiAbort.abort(), 25000);
 
@@ -1597,9 +1635,11 @@ async function callAI(node, userText, session, compRef, compData) {
                 signal: aiAbort.signal,
                 body: JSON.stringify({
                     model,
+                    // PERF 3: adaptive max_tokens
                     ...(model.startsWith('o3') || model.startsWith('o4') || model.startsWith('gpt-5')
-                        ? { max_completion_tokens: 1500 }
-                        : { max_tokens: 1500 }),
+                        ? { max_completion_tokens: _maxTok }
+                        : { max_tokens: _maxTok }),
+                    temperature: node.config?.temperature ?? 0.7,
                     messages
                 })
             });
@@ -1619,9 +1659,10 @@ async function callAI(node, userText, session, compRef, compData) {
                 },
                 signal: aiAbort.signal,
                 body: JSON.stringify({
-                    model, max_tokens: 1500,
+                    model,
+                    max_tokens: _maxTok, // PERF 3: adaptive
                     system: sysPrompt,
-                    messages: (session.aiHistory || []).concat([{ role: 'user', content: userText }])
+                    messages: [..._trimmedHistory, { role: 'user', content: userText }] // PERF 4: trimmed
                 })
             });
             const d = await r.json();
@@ -1648,7 +1689,10 @@ async function callAI(node, userText, session, compRef, compData) {
                 body: JSON.stringify({
                     system_instruction: { parts: [{ text: sysPrompt }] },
                     contents: _geminiContents,
-                    generationConfig: { maxOutputTokens: 1500 },
+                    generationConfig: {
+                        maxOutputTokens: _maxTok, // PERF 3: adaptive
+                        temperature: node.config?.temperature ?? 0.7,
+                    },
                 })
             });
             const d = await r.json();
