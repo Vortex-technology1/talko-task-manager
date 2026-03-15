@@ -1222,16 +1222,22 @@ window._fcCrmPipelineChange = function(pipelineId) {
     const stages = (pip?.stages || []).slice().sort((a,b) => (a.order||0) - (b.order||0));
     const wrap = document.getElementById('fcp_stageWrap');
     if (!wrap) return;
+    // FIX: IDs відповідають реальному _createDefaultPipeline
     const defaultStages = [
-        ['new','Новий лід'],['contacted','Контакт встановлено'],
-        ['qualified','Кваліфікований'],['proposal','Пропозиція'],['won','Виграно'],
+        ['new','Новий лід'],['contact','Контакт'],
+        ['negotiation','Переговори'],['proposal','Пропозиція'],
+        ['closing','Закриття'],['won','Виграно'],
     ];
     const opts = stages.length
         ? stages.map(s => [s.id, s.label || s.name || s.id])
         : defaultStages;
     const sel = document.getElementById('fcp_dealStage');
     if (!sel) return;
-    sel.innerHTML = opts.map(([v,l]) => '<option value="'+v+'">'+l+'</option>').join('');
+    // FIX: зберігаємо поточний вибір — якщо відповідна стадія є в новій воронці, залишаємо
+    const _curVal = sel.value;
+    const _match = opts.find(([v]) => v === _curVal);
+    const _newVal = _match ? _curVal : (opts[0]?.[0] || 'new');
+    sel.innerHTML = opts.map(([v,l]) => '<option value="'+v+'"'+(_newVal===v?' selected':'')+'>'+l+'</option>').join('');
 };
 
 // ── AI Воронка Modal ───────────────────────────────────────
@@ -2147,12 +2153,16 @@ function renderPropPanel() {
             const _stageOpts = (_selPip?.stages || [])
                 .slice().sort((a,b) => (a.order||0) - (b.order||0))
                 .map(s => [s.id, s.label || s.name || s.id]);
+            // FIX: IDs відповідають реальному _createDefaultPipeline в 77-crm.js
             const _defaultStageOpts = [
-                ['new','Новий лід'],['contacted','Контакт встановлено'],
-                ['qualified','Кваліфікований'],['proposal','Пропозиція'],
-                ['won','Виграно'],
+                ['new','Новий лід'],['contact','Контакт'],
+                ['negotiation','Переговори'],['proposal','Пропозиція'],
+                ['closing','Закриття'],['won','Виграно'],
             ];
             const _finalStageOpts = _stageOpts.length ? _stageOpts : _defaultStageOpts;
+            // FIX: якщо збережений d.dealStage не співпадає жодній стадії — беремо першу (не 'undefined')
+            const _stageMatch = _finalStageOpts.find(([v]) => v === d.dealStage);
+            const _selectedStage = _stageMatch ? d.dealStage : (_finalStageOpts[0]?.[0] || 'new');
 
             fields = fld('Назва угоди', inp('dealTitle', d.dealTitle, '{{name}} — лід з бота'))
                 + _crmHint
@@ -2166,7 +2176,7 @@ function renderPropPanel() {
                 + '<div id="fcp_stageWrap" style="margin-bottom:10px;">'
                     + '<div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Стадія</div>'
                     + '<select id="fcp_dealStage" style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">'
-                    + _finalStageOpts.map(([v,l]) => '<option value="'+v+'"'+(d.dealStage===v?' selected':'')+'>'+l+'</option>').join('')
+                    + _finalStageOpts.map(([v,l]) => '<option value="'+v+'"'+(_selectedStage===v?' selected':'')+'>'+l+'</option>').join('')
                     + '</select>'
                 + '</div>'
                 + fld('Сума угоди (грн)', inp('amount', d.amount || '', '0'));
