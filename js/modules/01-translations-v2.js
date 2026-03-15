@@ -11773,7 +11773,7 @@
 
             // FIX: на auth сторінці — НЕ робимо reload (Firebase не встиг відновити сесію)
             // FIX: auth сторінка = currentUser відсутній АБО authScreen видимий
-            const _authEl = document.getElementById('authScreen');
+            const _authEl = document.getElementById('authPage');
             const _authVisible = _authEl && _authEl.style.display !== 'none' && _authEl.offsetParent !== null;
             const _isAuthPage = !window.currentUser || _authVisible;
             if (_isAuthPage) {
