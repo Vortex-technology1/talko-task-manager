@@ -1218,7 +1218,8 @@ window.fcAddNode = addNode;
 window._fcCrmPipelineChange = function(pipelineId) {
     const pipelines = window.crm?.pipelines || [];
     const pip = pipelines.find(p => p.id === pipelineId);
-    const stages = pip?.stages || [];
+    // FIX: CRM зберігає stage.label (не stage.name), сортуємо по order
+    const stages = (pip?.stages || []).slice().sort((a,b) => (a.order||0) - (b.order||0));
     const wrap = document.getElementById('fcp_stageWrap');
     if (!wrap) return;
     const defaultStages = [
@@ -1226,7 +1227,7 @@ window._fcCrmPipelineChange = function(pipelineId) {
         ['qualified','Кваліфікований'],['proposal','Пропозиція'],['won','Виграно'],
     ];
     const opts = stages.length
-        ? stages.map(s => [s.id, s.name])
+        ? stages.map(s => [s.id, s.label || s.name || s.id])
         : defaultStages;
     const sel = document.getElementById('fcp_dealStage');
     if (!sel) return;
@@ -2126,7 +2127,7 @@ function renderPropPanel() {
             if (!window.crm?.pipelines?.length && window.currentCompanyId && !window._crmPipLoading) {
                 window._crmPipLoading = true;
                 firebase.firestore().collection('companies').doc(window.currentCompanyId)
-                    .collection('crm_pipeline').where('isDefault','==',true).limit(5).get()
+                    .collection('crm_pipeline').limit(20).get()  // FIX: всі воронки, не тільки isDefault
                     .then(snap => {
                         if (!window.crm) window.crm = {};
                         window.crm.pipelines = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -2142,7 +2143,10 @@ function renderPropPanel() {
 
             // Стадії з вибраної воронки
             const _selPip = _pipelines.find(p => p.id === _selPipId) || _pipelines.find(p=>p.isDefault) || _pipelines[0];
-            const _stageOpts = (_selPip?.stages || []).map(s => [s.id, s.name]);
+            // FIX: CRM зберігає stage.label, не stage.name
+            const _stageOpts = (_selPip?.stages || [])
+                .slice().sort((a,b) => (a.order||0) - (b.order||0))
+                .map(s => [s.id, s.label || s.name || s.id]);
             const _defaultStageOpts = [
                 ['new','Новий лід'],['contacted','Контакт встановлено'],
                 ['qualified','Кваліфікований'],['proposal','Пропозиція'],
