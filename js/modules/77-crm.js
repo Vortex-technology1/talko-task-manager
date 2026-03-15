@@ -4040,7 +4040,7 @@ window.crmSelectPipeline = async function(pipelineId) {
     _subscribeDeals(); // subscribe запустить _renderKanban або _renderListView через onSnapshot
     // FIX: рендеримо поточний subTab, не Settings
     if (crm.subTab === 'settings') _renderCRMSettings();
-    if (typeof showToast === 'function') showToast(window.t('crmFunnelLabel') + ': ' + crm.pipeline.name, 'success');
+    if (typeof showToast === 'function') showToast(window.t('crmFunnelLabel') + ': ' + crm.pipeline?.name, 'success');
 };
 
 // Єдина точка підписки на deals — викликати звідусіль
@@ -4051,7 +4051,7 @@ function _subscribeDeals() {
     if (!crm.pipeline) return;
     const DEALS_LIMIT = 500; // FIX B: збільшено з 200 до 500
     crm.dealUnsub = window.companyRef().collection(window.DB_COLS.CRM_DEALS)
-        .where('pipelineId','==', crm.pipeline.id).orderBy('createdAt','desc').limit(DEALS_LIMIT)
+        .where('pipelineId','==', crm.pipeline?.id).orderBy('createdAt','desc').limit(DEALS_LIMIT)
         .onSnapshot(snap => {
             crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}))
                 .sort((a,b) => (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
@@ -4080,7 +4080,7 @@ window.crmLoadMore = async function() {
         const lastSnap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
             .doc(lastDeal.id).get();
         const moreSnap = await window.companyRef().collection(window.DB_COLS.CRM_DEALS)
-            .where('pipelineId','==', crm.pipeline.id)
+            .where('pipelineId','==', crm.pipeline?.id)
             .orderBy('createdAt','desc')
             .startAfter(lastSnap)
             .limit(DEALS_LIMIT).get();
@@ -4147,9 +4147,9 @@ window.crmDeletePipeline = async function(pipelineId, name) {
 window.crmAddStage = function() {
     if (!crm.pipeline) return;
     const id    = 'stage_' + Date.now();
-    const order = (crm.pipeline.stages || []).length;
+    const order = (crm.pipeline?.stages || []).length;
     const stage = { id, label:window.t('crmNewStage'), color:'#8b5cf6', order };
-    crm.pipeline.stages = [...(crm.pipeline.stages || []), stage];
+    crm.pipeline.stages = [...(crm.pipeline?.stages || []), stage];
     _renderCRMSettings();
 };
 
@@ -4192,13 +4192,13 @@ window.crmRemoveStage = async function(stageId) {
 window.crmSaveStages = async function() {
     if (!crm.pipeline) return;
     // Оновлюємо order
-    crm.pipeline.stages.forEach((s,i) => s.order = i);
+    crm.pipeline?.stages.forEach((s,i) => s.order = i);
     try {
-        await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE).doc(crm.pipeline.id)
-            .update({ stages: crm.pipeline.stages, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE).doc(crm.pipeline?.id)
+            .update({ stages: crm.pipeline?.stages, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
         // Sync в pipelines array
-        const idx = crm.pipelines.findIndex(p => p.id === crm.pipeline.id);
-        if (idx >= 0) crm.pipelines[idx].stages = crm.pipeline.stages;
+        const idx = crm.pipelines.findIndex(p => p.id === crm.pipeline?.id);
+        if (idx >= 0) crm.pipelines[idx].stages = crm.pipeline?.stages;
         if (typeof showToast === 'function') showToast(window.t('crmStagesSaved'), 'success');
         // FIX L: рендеримо поточний subTab, не завжди kanban
         if (crm.subTab === 'kanban' || crm.subTab === 'list') {
@@ -4212,14 +4212,14 @@ window.crmSaveStages = async function() {
 // Обов'язкові поля при зміні стадії
 window.crmToggleRequiredField = async function(stageId, fieldId, checked) {
     if (!crm.pipeline) return;
-    if (!crm.pipeline.stageRequiredFields) crm.pipeline.stageRequiredFields = {};
+    if (!crm.pipeline?.stageRequiredFields) crm.pipeline.stageRequiredFields = {};
     const cur = crm.pipeline.stageRequiredFields[stageId] || [];
     crm.pipeline.stageRequiredFields[stageId] = checked
         ? [...new Set([...cur, fieldId])]
         : cur.filter(f => f !== fieldId);
     try {
-        await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE).doc(crm.pipeline.id)
-            .update({ stageRequiredFields: crm.pipeline.stageRequiredFields, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await window.companyRef().collection(window.DB_COLS.CRM_PIPELINE).doc(crm.pipeline?.id)
+            .update({ stageRequiredFields: crm.pipeline?.stageRequiredFields, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     } catch(e) {
         console.error('[CRM reqFields]', e);
     }
@@ -4352,7 +4352,7 @@ window.crmStageDrop = function(e, targetId) {
     e.preventDefault();
     e.currentTarget.style.background = '#f8fafc';
     if (!_stageDragId || _stageDragId === targetId || !crm.pipeline) return;
-    const stages = crm.pipeline.stages;
+    const stages = crm.pipeline?.stages;
     const fromIdx = stages.findIndex(s => s.id === _stageDragId);
     const toIdx   = stages.findIndex(s => s.id === targetId);
     if (fromIdx < 0 || toIdx < 0) return;
