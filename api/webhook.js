@@ -808,6 +808,14 @@ module.exports = async (req, res) => {
         }
         if (updateId) session.lastUpdateId = updateId;
 
+        // FIX 5: cleanup stuck ⏳ message from previous crashed request
+        // Якщо session має thinkingMsgId → значить попередній запит впав → очищаємо
+        const _stuckThinking = session?.thinkingMsgId;
+        if (_stuckThinking && botToken && channel === 'telegram') {
+            editTg(botToken, String(normalized.senderId), _stuckThinking, '...').catch(()=>{});
+            session.thinkingMsgId = null;
+        }
+
         const isStart = /^\/start/.test(normalized.text) || normalized.text === 'start';
         if (isStart) {
             // FIX 11: /start скидає ВСЕ включно з кешем флоу
@@ -1164,6 +1172,8 @@ module.exports = async (req, res) => {
                     ]);
                     thinkingMsgId = _msgId;
                     rawReply = _reply;
+                    // Зберігаємо в session щоб cleanup при наступному запиті якщо впадемо
+                    if (_msgId) session.thinkingMsgId = _msgId;
                 } catch(_aiError) {
                     // БАГ 1+10 FIX: callAI throw/timeout → замінюємо ⏳ на fallback
                     typingActive = false;
@@ -1679,27 +1689,33 @@ module.exports = async (req, res) => {
         if (_cf && _cf.nodes?.length <= 20) sessionToSave._cachedFlow = _cf;
         sessionRef.set(sessionToSave, { merge: true }).catch(e => console.error('[webhook] final session.set:', e.message));
 
-        // FIX 2b: після AI — перевіряємо pending message
-        // Якщо юзер написав під час обробки — підхоплюємо і видаляємо з pending
+        // FIX 2b: після AI — перевіряємо pending messages (черга)
+        // Підхоплюємо і відправляємо typing для кожного
         try {
-            const _pendingSnap = await compRef.collection('_pending_messages')
-                .doc(`${channel}_${normalized.senderId}`).get();
-            if (_pendingSnap.exists) {
-                const _pm = _pendingSnap.data();
-                await _pendingSnap.ref.delete(); // видаляємо завжди
-                if ((_pm.expiresAt || 0) > Date.now() && _pm.text) {
-                    console.log('[webhook] recovering pending msg:', _pm.text.slice(0, 40));
-                    // Зберігаємо в сесії — наступний Telegram update підхопить
-                    // АБО відправляємо typing щоб показати що бот отримав
-                    if (botToken) {
-                        fetch(`https://api.telegram.org/bot${botToken}/sendChatAction`, {
-                            method: 'POST', headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ chat_id: String(normalized.senderId), action: 'typing' }),
-                        }).catch(() => {});
-                    }
+            const _pendingQuery = await compRef.collection('_pending_messages')
+                .where('senderId', '==', String(normalized.senderId))
+                .where('channel', '==', channel)
+                .orderBy('at', 'asc')
+                .limit(5)
+                .get().catch(() => null);
+            if (_pendingQuery && !_pendingQuery.empty) {
+                const _now = Date.now();
+                const _validPending = _pendingQuery.docs.filter(d => (d.data().expiresAt || 0) > _now);
+                // Видаляємо всі (і expired і valid)
+                const _batch = compRef.firestore.batch();
+                _pendingQuery.docs.forEach(d => _batch.delete(d.ref));
+                await _batch.commit().catch(() => {});
+                // Якщо є валідні — показуємо typing (наступне повідомлення прийде само)
+                if (_validPending.length > 0 && botToken) {
+                    const _lastMsg = _validPending[_validPending.length - 1].data().text;
+                    console.log(`[webhook] ${_validPending.length} pending msgs recovered, last: ${_lastMsg?.slice(0, 30)}`);
+                    fetch(`https://api.telegram.org/bot${botToken}/sendChatAction`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: String(normalized.senderId), action: 'typing' }),
+                    }).catch(() => {});
                 }
             }
-        } catch(e) { /* не критично — pending є додатковим захистом */ }
+        } catch(e) { /* pending є додатковим захистом, не критично */ }
 
         // Safety limit warning
         if (safety > 50) console.error('[webhook] SAFETY LIMIT reached for session:', sessionId, 'last nodeId:', nodeId);
