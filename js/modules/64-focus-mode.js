@@ -6,11 +6,11 @@
     
     function getAiHelpUrl(taskTitle, taskDescription, taskFunction) {
         const prompt = encodeURIComponent(
-            t('aiPromptHelp') + '\n' +
-            t('aiPromptName') + ' ' + (taskTitle || '') + '\n' +
+            window.t('aiPromptHelp') + '\n' +
+            window.t('aiPromptName') + ' ' + (taskTitle || '') + '\n' +
             `${taskFunction ? t('functionColon') + ': ' + taskFunction + '\n' : ''}` +
             `${taskDescription ? t('instructionColon') + ': ' + taskDescription + '\n' : ''}` +
-            t('aiPromptExplain')
+            window.t('aiPromptExplain')
         );
         return AI_TECH_LEAD_URL + '?q=' + prompt;
     }

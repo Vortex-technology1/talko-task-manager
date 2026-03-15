@@ -6,25 +6,25 @@
         {
             target: '#nextTaskBtn',
             text: 'hintNextTask',
-            fallback: t('hintOpenNextTask'),
+            fallback: window.t('hintOpenNextTask'),
             position: 'below'
         },
         {
             target: '[data-tab="tasks"]',
             text: 'hintTasks',
-            fallback: t('hintTasksFilters'),
+            fallback: window.t('hintTasksFilters'),
             position: 'above'
         },
         {
             target: '[data-tab="control"]',
             text: 'hintControl',
-            fallback: t('hintControlPanel'),
+            fallback: window.t('hintControlPanel'),
             position: 'above'
         },
         {
             target: '[data-tab="more"]',
             text: 'hintMore',
-            fallback: t('hintSettingsMenu'),
+            fallback: window.t('hintSettingsMenu'),
             position: 'above'
         }
     ];

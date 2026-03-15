@@ -4,11 +4,11 @@
         
 'use strict';
         const AUDIT_FIELD_LABELS = {
-            title: t('auditFieldTitle'), status: t('auditFieldStatus'), assigneeId: t('auditFieldAssignee'),
-            deadlineDate: t('auditFieldDeadline'), deadlineTime: t('auditFieldTime'), priority: t('auditFieldPriority'),
-            description: t('description'), expectedResult: t('expectedResult'),
-            projectId: t('project'), 'function': t('functionColon'), requireReview: t('review'),
-            checklist: t('auditFieldChecklist'), coExecutorIds: t('auditFieldCoExecutors'), observerIds: t('auditFieldObservers')
+            title: window.t('auditFieldTitle'), status: window.t('auditFieldStatus'), assigneeId: window.t('auditFieldAssignee'),
+            deadlineDate: window.t('auditFieldDeadline'), deadlineTime: window.t('auditFieldTime'), priority: window.t('auditFieldPriority'),
+            description: window.t('description'), expectedResult: window.t('expectedResult'),
+            projectId: window.t('project'), 'function': window.t('functionColon'), requireReview: window.t('review'),
+            checklist: window.t('auditFieldChecklist'), coExecutorIds: window.t('auditFieldCoExecutors'), observerIds: window.t('auditFieldObservers')
         };
         
         const AUDIT_ICONS = {
@@ -90,7 +90,7 @@
                 if (countEl) countEl.textContent = snap.size;
                 
                 if (snap.empty) {
-                    container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">' + t('noRecordsYet') + '</p>';
+                    container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">' + window.t('noRecordsYet') + '</p>';
                     return;
                 }
                 
@@ -103,7 +103,7 @@
                 
             } catch (e) {
                 console.warn('[AuditLog] Load error:', e.message);
-                container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">' + t('loadError') + '</p>';
+                container.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:0.85rem;padding:1rem;">' + window.t('loadError') + '</p>';
             }
         }
         
@@ -115,12 +115,12 @@
             
             let actionText = '';
             switch (entry.action) {
-                case 'created': actionText = t('auditCreated'); break;
-                case 'complete': actionText = t('auditCompleted'); break;
-                case 'reopen': actionText = t('auditReopened'); break;
-                case 'review': actionText = t('auditAccepted'); break;
-                case 'delete': actionText = t('auditDeleted'); break;
-                case 'escalation': actionText = t('auditEscalation'); break;
+                case 'created': actionText = window.t('auditCreated'); break;
+                case 'complete': actionText = window.t('auditCompleted'); break;
+                case 'reopen': actionText = window.t('auditReopened'); break;
+                case 'review': actionText = window.t('auditAccepted'); break;
+                case 'delete': actionText = window.t('auditDeleted'); break;
+                case 'escalation': actionText = window.t('auditEscalation'); break;
                 default: actionText = formatChangeDetails(entry); break;
             }
             
@@ -134,7 +134,7 @@
         }
         
         function formatChangeDetails(entry) {
-            if (!entry.details) return t('auditChanged');
+            if (!entry.details) return window.t('auditChanged');
             const parts = [];
             for (const [field, vals] of Object.entries(entry.details)) {
                 const label = AUDIT_FIELD_LABELS[field] || field;
@@ -152,11 +152,11 @@
                     parts.push(`${t('auditChanged')} ${label.toLowerCase()}`);
                 }
             }
-            return parts.join(', ') || t('auditChanged');
+            return parts.join(', ') || window.t('auditChanged');
         }
         
         function getStatusLabel(status) {
-            const map = { todo: t('auditStatusWaiting'), in_progress: t('auditStatusInProgress'), review: t('auditStatusReview'), done: t('auditStatusDone') };
+            const map = { todo: window.t('auditStatusWaiting'), in_progress: window.t('auditStatusInProgress'), review: window.t('auditStatusReview'), done: window.t('auditStatusDone') };
             return map[status] || status || '—';
         }
         

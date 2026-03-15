@@ -350,18 +350,18 @@
             
             if (tabName === 'tasks' || tabName === 'myday') {
                 fab.style.display = 'flex';
-                fab.setAttribute('aria-label', t('addTask'));
-                fab.setAttribute('title', t('addTask'));
+                fab.setAttribute('aria-label', window.t('addTask'));
+                fab.setAttribute('title', window.t('addTask'));
                 fab.onclick = () => openTaskModal();
             } else if (tabName === 'regular') {
                 fab.style.display = 'flex';
-                fab.setAttribute('aria-label', t('addRegularTask'));
-                fab.setAttribute('title', t('addRegularTask'));
+                fab.setAttribute('aria-label', window.t('addRegularTask'));
+                fab.setAttribute('title', window.t('addRegularTask'));
                 fab.onclick = () => openRegularTaskModal();
             } else if (tabName === 'projects') {
                 fab.style.display = 'flex';
-                fab.setAttribute('aria-label', t('newProject'));
-                fab.setAttribute('title', t('newProject'));
+                fab.setAttribute('aria-label', window.t('newProject'));
+                fab.setAttribute('title', window.t('newProject'));
                 fab.onclick = () => openProjectModal();
             } else {
                 fab.style.display = 'none';
@@ -405,7 +405,7 @@
             const avgTime = countWithTime > 0 ? Math.round(totalTime / countWithTime) : 0;
             const avgHours = Math.floor(avgTime / 60);
             const avgMins = avgTime % 60;
-            document.getElementById('analyticsAvgTime').textContent = avgTime > 0 ? `${avgHours > 0 ? avgHours + t('hourShortG') + ' ' : ''}${avgMins}${t('minShortM')}` : '-';
+            document.getElementById('analyticsAvgTime').textContent = avgTime > 0 ? `${avgHours > 0 ? avgHours + window.t('hourShortG') + ' ' : ''}${avgMins}${t('minShortM')}` : '-';
             
             // Статистика по статусах
             const byStatus = {
@@ -521,7 +521,7 @@
         function renderTopPerformers(visibleTasks) {
             const byAssignee = {};
             visibleTasks.filter(task => task.status === 'done').forEach(task => {
-                const name = task.assigneeName || t('notAssigned');
+                const name = task.assigneeName || window.t('notAssigned');
                 byAssignee[name] = (byAssignee[name] || 0) + 1;
             });
             const topAssignees = Object.entries(byAssignee).sort((a, b) => b[1] - a[1]).slice(0, 5);
@@ -546,7 +546,7 @@
             
             const byPerson = {};
             overdueTasks.forEach(t => {
-                const name = t.assigneeName || t('notAssigned');
+                const name = t.assigneeName || window.t('notAssigned');
                 if (!byPerson[name]) byPerson[name] = [];
                 byPerson[name].push(t);
             });
@@ -728,7 +728,7 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
-            setLanguage(currentLang);
+            window.setLanguage(currentLang);
             // Ініціалізуємо Lucide іконки
             if (typeof lucide !== 'undefined') {
                 refreshIcons();

@@ -44,11 +44,11 @@
                 
                 // Показуємо інструкцію
                 const proceed = await showConfirmModal(
-                    t('telegramConnectTitle')+'\n\n' +
+                    window.t('telegramConnectTitle')+'\n\n' +
                     '1. '+t('telegramConnectStep1')+'\n' +
                     '2. Натисніть "Start" або "Запустити"\n' +
                     '3. '+t('telegramConnectStep3')+'\n\n' +
-                    t('telegramOpenConfirm')
+                    window.t('telegramOpenConfirm')
                 );
                 
                 if (proceed) {

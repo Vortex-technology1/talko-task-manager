@@ -35,7 +35,7 @@
                     currentCompany = null;
                     currentUserData = { id: user.uid, email: user.email, role: 'superadmin', name: 'Super Admin' };
                     document.getElementById('currentUserName').textContent = 'Super Admin';
-                    document.getElementById('currentUserRole').textContent = t('adminRole');
+                    document.getElementById('currentUserRole').textContent = window.t('adminRole');
                     document.getElementById('companyBadge').textContent = 'TALKO System';
                     document.getElementById('companyBadge').style.display = 'inline';
                     showMainInterface();
@@ -77,7 +77,7 @@
                     const authErr = document.getElementById('authError') || document.createElement('p');
                     authErr.id = 'authError';
                     authErr.style.cssText = 'color:#dc2626;text-align:center;padding:1rem;font-weight:600;';
-                    authErr.textContent = t('companyBlocked');
+                    authErr.textContent = window.t('companyBlocked');
                     const authBox = document.querySelector('.auth-box');
                     if (authBox && !document.getElementById('authError')) authBox.appendChild(authErr);
                     await auth.signOut();
@@ -230,11 +230,11 @@
             if (hideBtn && window.hideCompletedTasks) hideBtn.classList.add('active');
             // Re-apply translations AFTER interface is shown (nav spans now visible)
             if (typeof setLanguage === 'function' && typeof currentLang !== 'undefined') {
-                setTimeout(function() { setLanguage(currentLang); }, 100);
+                setTimeout(function() { window.setLanguage(currentLang); }, 100);
             }
         }
 
         function getRoleText(role) {
             const roleKeys = { owner: 'roleOwner', manager: 'roleManager', employee: 'roleEmployee', superadmin: 'adminRole' };
-            return roleKeys[role] ? t(roleKeys[role]) : role;
+            return roleKeys[role] ? window.t(roleKeys[role]) : role;
         }

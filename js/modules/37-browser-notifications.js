@@ -28,7 +28,7 @@
                 
                 // Show test notification
                 new Notification(t('notificationsEnabled'), {
-                    body: t('notificationsEnabledDesc'),
+                    body: window.t('notificationsEnabledDesc'),
                     icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
                     tag: 'test'
                 });
@@ -92,16 +92,16 @@
                         
                         if (diff > 0 && diff <= 60) {
                             shouldNotify = true;
-                            message = t('deadlineInMinutes').replace('{n}', diff).replace('{title}', task.title);
+                            message = window.t('deadlineInMinutes').replace('{n}', diff).replace('{title}', task.title);
                         } else if (diff <= 0 && diff > -5) {
                             shouldNotify = true;
-                            message = t('deadlineNow').replace('{title}', task.title);
+                            message = window.t('deadlineNow').replace('{title}', task.title);
                         }
                     } else {
                         // No specific time - notify once in the morning (9:00)
                         if (currentHour === 9 && currentMinute < 5) {
                             shouldNotify = true;
-                            message = t('deadlineToday').replace('{title}', task.title);
+                            message = window.t('deadlineToday').replace('{title}', task.title);
                         }
                     }
                     
@@ -118,7 +118,7 @@
                 if (taskDeadline === tomorrowStr && currentHour === 18 && currentMinute < 5) {
                     const notifyKeyTomorrow = `${task.id}-tomorrow`;
                     if (!notifiedTasks.has(notifyKeyTomorrow)) {
-                        sendTaskNotification(task, t('deadlineTomorrow').replace('{title}', task.title), notifyKeyTomorrow);
+                        sendTaskNotification(task, window.t('deadlineTomorrow').replace('{title}', task.title), notifyKeyTomorrow);
                     }
                 }
                 
@@ -129,9 +129,9 @@
                     if (!notifiedTasks.has(overdueKey) && currentHour >= 9 && currentHour < 10) {
                         let msg = '';
                         if (daysOverdue >= 7) {
-                            msg = t('overdueCriticalDays').replace('{n}', daysOverdue).replace('{title}', task.title);
+                            msg = window.t('overdueCriticalDays').replace('{n}', daysOverdue).replace('{title}', task.title);
                         } else if (daysOverdue >= 3) {
-                            msg = t('overdueDays').replace('{n}', daysOverdue).replace('{title}', task.title);
+                            msg = window.t('overdueDays').replace('{n}', daysOverdue).replace('{title}', task.title);
                         } else {
                             msg = `${t('overdueStatus')}: ${task.title}`;
                         }
@@ -143,7 +143,7 @@
                         const mgrKey = `${task.id}-mgr-overdue-${today}`;
                         if (!notifiedTasks.has(mgrKey) && task.assigneeId !== currentUser?.uid && currentHour >= 9 && currentHour < 10) {
                             const assigneeName = task.assigneeName || '';
-                            sendTaskNotification(task, t('overdueManagerAlert').replace('{name}', assigneeName).replace('{n}', daysOverdue).replace('{title}', task.title), mgrKey);
+                            sendTaskNotification(task, window.t('overdueManagerAlert').replace('{name}', assigneeName).replace('{n}', daysOverdue).replace('{title}', task.title), mgrKey);
                         }
                     }
                 }
@@ -154,7 +154,7 @@
         function sendTaskNotification(task, message, notifyKey) {
             try {
                 const notification = new Notification(message, {
-                    body: task.function ? `${t('functionColon')}: ${task.function}` : t('clickToOpen'),
+                    body: task.function ? `${t('functionColon')}: ${task.function}` : window.t('clickToOpen'),
                     icon: 'https://cdn-icons-png.flaticon.com/512/2098/2098402.png',
                     tag: task.id,
                     requireInteraction: true
@@ -200,11 +200,11 @@
             if (!btn) return;
             
             if (notificationsEnabled) {
-                btn.innerHTML = '<i data-lucide="bell-off" class="icon"></i> ' + t('disableNotifications') + "'";
+                btn.innerHTML = '<i data-lucide="bell-off" class="icon"></i> ' + window.t('disableNotifications') + "'";
                 btn.classList.add('btn-warning');
                 btn.classList.remove('btn-success');
             } else {
-                btn.innerHTML = '<i data-lucide="bell" class="icon"></i> ' + t('enableNotifications') + "'";
+                btn.innerHTML = '<i data-lucide="bell" class="icon"></i> ' + window.t('enableNotifications') + "'";
                 btn.classList.remove('btn-warning');
                 btn.classList.add('btn-success');
             }

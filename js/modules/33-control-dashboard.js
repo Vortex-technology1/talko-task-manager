@@ -97,19 +97,19 @@
                     const d = parseDeadline(t).date;
                     return d && d < today && t.status !== 'done' && t.status !== 'review';
                 });
-                title = t('dashOverdue');
+                title = window.t('dashOverdue');
             } else if (type === 'warning') {
                 filtered = filtered.filter(t => {
                     const d = parseDeadline(t).date;
                     return (d === today || d === tomorrow) && t.status !== 'done' && t.status !== 'review';
                 });
-                title = t('dashTodayTomorrow');
+                title = window.t('dashTodayTomorrow');
             } else if (type === 'active') {
                 filtered = filtered.filter(t => t.status === 'progress');
-                title = t('dashInProgress');
+                title = window.t('dashInProgress');
             } else if (type === 'completed') {
                 filtered = filtered.filter(t => t.status === 'done');
-                title = t('dashDone');
+                title = window.t('dashDone');
             }
 
             // Підсвічуємо активну картку
@@ -338,10 +338,10 @@
                     return true;
                 });
                 const statuses = [
-                    { key: 'new',      label: t('statusNew'),       color: '#3b82f6', bg: '#eff6ff' },
-                    { key: 'progress', label: t('inProgressStatus'),color: '#f59e0b', bg: '#fefce8' },
-                    { key: 'review',   label: t('statusOnReview'),  color: '#8b5cf6', bg: '#f5f3ff' },
-                    { key: 'done',     label: t('statusDone'),      color: '#16a34a', bg: '#f0fdf4' },
+                    { key: 'new',      label: window.t('statusNew'),       color: '#3b82f6', bg: '#eff6ff' },
+                    { key: 'progress', label: window.t('inProgressStatus'),color: '#f59e0b', bg: '#fefce8' },
+                    { key: 'review',   label: window.t('statusOnReview'),  color: '#8b5cf6', bg: '#f5f3ff' },
+                    { key: 'done',     label: window.t('statusDone'),      color: '#16a34a', bg: '#f0fdf4' },
                 ];
                 const byPerson = {};
                 // BUG-AG FIX: include coExecutor tasks in workload — was assigneeId only
@@ -350,7 +350,7 @@
                     if (task.coExecutorIds?.length) task.coExecutorIds.forEach(cid => { if (!participants.includes(cid)) participants.push(cid); });
                     participants.forEach(uid => {
                         const user = users.find(u => u.id === uid);
-                        const name = user ? (user.name || user.email) : (task.assigneeName || t('notAssigned'));
+                        const name = user ? (user.name || user.email) : (task.assigneeName || window.t('notAssigned'));
                         if (!byPerson[uid]) byPerson[uid] = { name, new:[], progress:[], review:[], done:[] };
                         if (byPerson[uid][task.status]) byPerson[uid][task.status].push(task);
                     });
@@ -435,7 +435,7 @@
             } else if (viewType === 'functions') {
                 const byFunc = {};
                 filteredTasks.forEach(task => { 
-                    const fn = task.function || t('noFunction');
+                    const fn = task.function || window.t('noFunction');
                     if (!byFunc[fn]) byFunc[fn] = [];
                     byFunc[fn].push(task);
                 });
@@ -494,12 +494,12 @@
                 const resolved = manualIncidents.filter(mi => mi.resolved);
 
                 const catConfig = {
-                    people:  { icon: 'users',         color: '#dc2626', bg: '#fef2f2', label: t('ctrlCatPeople') },
-                    process: { icon: 'git-branch',    color: '#ea580c', bg: '#fff7ed', label: t('ctrlCatProcess') },
-                    finance: { icon: 'dollar-sign',   color: '#b45309', bg: '#fffbeb', label: t('ctrlCatFinance') },
-                    clients: { icon: 'user-x',        color: '#9333ea', bg: '#faf5ff', label: t('ctrlCatClients') },
-                    quality: { icon: 'alert-octagon', color: '#dc2626', bg: '#fef2f2', label: t('ctrlCatQuality') },
-                    other:   { icon: 'flag',          color: '#6b7280', bg: '#f9fafb', label: t('ctrlCatOther') },
+                    people:  { icon: 'users',         color: '#dc2626', bg: '#fef2f2', label: window.t('ctrlCatPeople') },
+                    process: { icon: 'git-branch',    color: '#ea580c', bg: '#fff7ed', label: window.t('ctrlCatProcess') },
+                    finance: { icon: 'dollar-sign',   color: '#b45309', bg: '#fffbeb', label: window.t('ctrlCatFinance') },
+                    clients: { icon: 'user-x',        color: '#9333ea', bg: '#faf5ff', label: window.t('ctrlCatClients') },
+                    quality: { icon: 'alert-octagon', color: '#dc2626', bg: '#fef2f2', label: window.t('ctrlCatQuality') },
+                    other:   { icon: 'flag',          color: '#6b7280', bg: '#f9fafb', label: window.t('ctrlCatOther') },
                 };
 
                 // Авто-сигнали (для контексту внизу, коротко)
@@ -658,34 +658,34 @@ window.setControlView = function(viewType) {
 // ── Tooltip підказки ──────────────────────────────────────
 const CTRL_TOOLTIPS = {
     briefing: {
-        title: t('ctrlTipBriefingTitle'),
-        text:  t('ctrlTipBriefingText'),
-        when:  t('ctrlTipBriefingWhen'),
+        title: window.t('ctrlTipBriefingTitle'),
+        text:  window.t('ctrlTipBriefingText'),
+        when:  window.t('ctrlTipBriefingWhen'),
     },
     people: {
-        title: t('ctrlTipPeopleTitle'),
-        text:  t('ctrlTipPeopleText'),
-        when:  t('ctrlTipPeopleWhen'),
+        title: window.t('ctrlTipPeopleTitle'),
+        text:  window.t('ctrlTipPeopleText'),
+        when:  window.t('ctrlTipPeopleWhen'),
     },
     functions: {
-        title: t('ctrlTipFunctionsTitle'),
-        text:  t('ctrlTipFunctionsText'),
-        when:  t('ctrlTipFunctionsWhen'),
+        title: window.t('ctrlTipFunctionsTitle'),
+        text:  window.t('ctrlTipFunctionsText'),
+        when:  window.t('ctrlTipFunctionsWhen'),
     },
     journal: {
-        title: t('ctrlTipJournalTitle'),
-        text:  t('ctrlTipJournalText'),
-        when:  t('ctrlTipJournalWhen'),
+        title: window.t('ctrlTipJournalTitle'),
+        text:  window.t('ctrlTipJournalText'),
+        when:  window.t('ctrlTipJournalWhen'),
     },
     ownerreport: {
-        title: t('ctrlTipOwnerReportTitle'),
-        text:  t('ctrlTipOwnerReportText'),
-        when:  t('ctrlTipOwnerReportWhen'),
+        title: window.t('ctrlTipOwnerReportTitle'),
+        text:  window.t('ctrlTipOwnerReportText'),
+        when:  window.t('ctrlTipOwnerReportWhen'),
     },
     registry: {
-        title: t('ctrlTipRegistryTitle'),
-        text:  t('ctrlTipRegistryText'),
-        when:  t('ctrlTipRegistryWhen'),
+        title: window.t('ctrlTipRegistryTitle'),
+        text:  window.t('ctrlTipRegistryText'),
+        when:  window.t('ctrlTipRegistryWhen'),
     },
 };
 

@@ -3,7 +3,7 @@
         // =====================
 'use strict';
         let currentFunctionsView = 'cards';
-        const DEFAULT_CATEGORIES = [t('funcCatManagement'), 'Люди', t('funcCatEngagement'), t('funcCatSales'), t('funcCatFinance'), t('funcCatPrep'), t('funcCatExecution'), t('funcCatLogistics')];
+        const DEFAULT_CATEGORIES = [t('funcCatManagement'), 'Люди', window.t('funcCatEngagement'), window.t('funcCatSales'), window.t('funcCatFinance'), window.t('funcCatPrep'), window.t('funcCatExecution'), window.t('funcCatLogistics')];
         
         function setFunctionsView(view) {
             currentFunctionsView = view;
