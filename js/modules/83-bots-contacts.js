@@ -2376,27 +2376,36 @@ window.bpSendBroadcast = async function() {
                 let sendOk = false;
 
                 if (ctChannel === 'telegram') {
-                    // Telegram
-                    const res = await _tgFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    // Telegram — FIX: HTML замість Markdown (webhook теж використовує HTML)
+                    const _bcastPayload = {
+                        chat_id: senderId,
+                        text: text || 'Повідомлення від бота',
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true,
+                    };
+                    let res = await _tgFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: senderId,
-                            text: text || 'Повідомлення від бота',
-                            parse_mode: 'Markdown',
-                        }),
+                        body: JSON.stringify(_bcastPayload),
                     });
-                    const data = await res.json();
+                    let data = await res.json();
+                    // FIX: 429 → чекаємо і ПОВТОРЮЄМО (раніше просто чекали і пропускали)
+                    if (!data.ok && data.error_code === 429) {
+                        const wait = (data.parameters?.retry_after || 5) * 1000;
+                        await new Promise(r => setTimeout(r, Math.min(wait, 30000)));
+                        res = await _tgFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(_bcastPayload),
+                        });
+                        data = await res.json();
+                    }
                     if (data.ok) {
                         sendOk = true;
                     } else {
                         if (data.error_code === 403) {
                             window.companyRef().collection('contacts').doc(ct.id)
                                 .update({ botStatus: 'blocked' }).catch(() => {});
-                        }
-                        if (data.error_code === 429) {
-                            const wait = (data.parameters?.retry_after || 5) * 1000;
-                            await new Promise(r => setTimeout(r, wait));
                         }
                     }
                 } else if (ctChannel === 'viber') {
