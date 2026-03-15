@@ -644,7 +644,8 @@ module.exports = async (req, res) => {
                     const _pip = _pipSnap && !_pipSnap.empty ? _pipSnap.docs[0] : null;
                     const _pipId = _pip ? _pip.id : '';
                     const _stages = _pip ? (_pip.data().stages || []) : [];
-                    const _stageId = _stages.length ? (_stages[0].id || '') : 'new';
+                    // FIX: якщо немає стадій — перевіряємо pipeline ще раз і беремо першу стадію
+                    const _stageId = _stages.length ? (_stages[0].id || 'new') : 'new';
 
                     // Створюємо угоду
                     const _dealRef = compRef.collection('crm_deals').doc();
