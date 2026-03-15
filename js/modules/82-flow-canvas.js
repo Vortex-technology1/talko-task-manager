@@ -1661,144 +1661,217 @@ function renderPropPanel() {
         case 'ai': {
             const aiProvider = d.aiProvider || 'openai';
 
-            // Тільки синхронне читання кешу (await заборонено в switch/case)
             const fallbackModels = {
-                openai:    [
-                    ['gpt-5-mini-2025-08-07','GPT-5 mini (швидкий, дешевий) <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>'],
-                    ['gpt-5.4','GPT-5.4 (найрозумніший)'],
-                    ['gpt-4.1-mini','GPT-4.1 mini (швидкий)'],
-                    ['gpt-4.1','GPT-4.1 (розумний)'],
+                openai: [
                     ['gpt-4o-mini','GPT-4o mini (стабільний)'],
-                    ['gpt-4o','GPT-4o'],
+                    ['gpt-4o','GPT-4o (розумний)'],
+                    ['gpt-4.1-mini','GPT-4.1 mini (швидкий)'],
+                    ['gpt-4.1','GPT-4.1'],
                     ['gpt-4.1-nano','GPT-4.1 nano (найдешевший)'],
+                    ['gpt-5-mini-2025-08-07','GPT-5 mini ⭐'],
+                    ['gpt-5.4','GPT-5.4 (найрозумніший)'],
                     ['o4-mini','o4-mini (мислить)'],
                     ['o3','o3 (глибоке мислення)'],
                     ['deepseek-chat','Deepseek Chat (дешевий)'],
                 ],
                 anthropic: [
-                    ['claude-sonnet-4-6','Claude Sonnet 4.6 NEW'],
-                    ['claude-opus-4-6','Claude Opus 4.6 NEW'],
                     ['claude-haiku-4-5-20251001','Claude Haiku 4.5 (швидкий)'],
-                    ['claude-sonnet-4-5','Claude Sonnet 4.5'],
-                    ['claude-opus-4-5','Claude Opus 4.5'],
+                    ['claude-sonnet-4-6','Claude Sonnet 4.6'],
+                    ['claude-opus-4-6','Claude Opus 4.6'],
                 ],
-                google:    [
-                    ['gemini-2.5-pro','Gemini 2.5 Pro NEW'],
-                    ['gemini-2.0-flash','Gemini 2.0 Flash (швидкий)'],
-                    ['gemini-1.5-pro','Gemini 1.5 Pro'],
+                google: [
+                    ['gemini-2.0-flash-lite','Gemini 2.0 Flash Lite (швидкий)'],
+                    ['gemini-2.0-flash','Gemini 2.0 Flash'],
+                    ['gemini-2.5-pro','Gemini 2.5 Pro'],
                 ],
             };
             const allModels = window._cachedAiModels || fallbackModels;
-            // FIX: нормалізуємо modelOptions — Firestore може зберігати рядки або пари
-            // sel() очікує [[value, label], ...] — конвертуємо якщо потрібно
             const _normalizeModels = (arr) => {
-                if (!Array.isArray(arr) || arr.length === 0) return fallbackModels.openai;
+                if (!Array.isArray(arr) || !arr.length) return fallbackModels.openai;
                 return arr.map(item => {
                     if (Array.isArray(item) && item.length >= 2) return [String(item[0]), String(item[1])];
-                    if (typeof item === 'string') return [item, item]; // рядок → [value, value]
+                    if (typeof item === 'string') return [item, item];
                     if (item && typeof item === 'object') return [String(item.id||item.value||''), String(item.name||item.label||item.id||'')];
                     return [String(item), String(item)];
-                }).filter(([v]) => v); // прибираємо порожні
+                }).filter(([v]) => v);
             };
             const modelOptions = _normalizeModels(allModels[aiProvider] || fallbackModels[aiProvider] || fallbackModels.openai);
 
-            // Якщо кеш порожній — завантажуємо async і перемалюємо
             if (!window._cachedAiModels) {
                 firebase.firestore().collection('settings').doc('aiModels').get()
                     .then(snap => {
                         if (snap.exists && snap.data()) {
                             const data = snap.data();
-                            // FIX 3: валідуємо формат — кожен провайдер має бути масивом
                             const valid = ['openai','anthropic','google'].some(p => Array.isArray(data[p]) && data[p].length > 0);
-                            if (valid) {
-                                window._cachedAiModels = data;
-                            } else {
-                                // Невалідний формат — ігноруємо Firestore кеш
-                                window._cachedAiModels = null;
-                            }
+                            window._cachedAiModels = valid ? data : null;
                             if (fc.selected) renderPropPanel();
                         }
-                    }).catch(() => {
-                        window._cachedAiModels = null; // reset on error
-                    });
+                    }).catch(() => { window._cachedAiModels = null; });
             }
 
-            // Спробуємо підтягнути збережений ключ компанії
             const savedKey = d.aiApiKey || '';
+            const temp = d.temperature ?? 0.7;
+            const histLim = d.historyLimit ?? 6;
+            const firstMsg = d.firstMessage || '';
+            const firstMsgEnabled = d.firstMessageEnabled ? 'checked' : '';
 
-            fields = `<div style="background:#0f172a;border:1px solid #22c55e33;border-radius:10px;padding:10px;margin-bottom:10px;">
-                <div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span> AI Провайдер</div>
+            // Helper: tooltip label
+            const tip = (label, hint) => `<span style="display:inline-flex;align-items:center;gap:4px;">
+                ${label}
+                <span title="${hint}" style="cursor:help;width:14px;height:14px;border-radius:50%;
+                    background:#334155;color:#94a3b8;font-size:9px;font-weight:700;
+                    display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">?</span>
+            </span>`;
+
+            fields =
+            // ── Провайдер + Ключ ──
+            `<div style="background:#0f172a;border:1px solid #22c55e33;border-radius:10px;padding:10px;margin-bottom:12px;">
+                <div style="font-size:10px;color:#22c55e;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">
+                    🔑 AI Провайдер
+                </div>
                 <div style="display:flex;gap:6px;margin-bottom:8px;">
                     ${['openai','anthropic','google'].map(p => `
                         <button onclick="fcSetAiProvider('${p}')"
-                            style="flex:1;padding:5px 4px;border:1px solid ${aiProvider===p?'#22c55e':'#334155'};
+                            style="flex:1;padding:6px 4px;border:1px solid ${aiProvider===p?'#22c55e':'#334155'};
                             border-radius:7px;background:${aiProvider===p?'#22c55e22':'transparent'};
-                            color:${aiProvider===p?'#22c55e':'#94a3b8'};font-size:10px;font-weight:600;cursor:pointer;">
+                            color:${aiProvider===p?'#22c55e':'#94a3b8'};font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;">
                             ${p==='openai'?'OpenAI':p==='anthropic'?'Anthropic':'Google'}
                         </button>`).join('')}
                 </div>
-                <div style="margin-bottom:6px;">
-                    <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;">
-                        API Ключ
-                        <a href="${aiProvider==='openai'?'https://platform.openai.com/api-keys':aiProvider==='anthropic'?'https://console.anthropic.com/settings/keys':'https://aistudio.google.com/app/apikey'}"
-                            target="_blank" style="color:#3b82f6;margin-left:4px;font-size:9px;">Отримати ключ →</a>
+                <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;display:flex;align-items:center;gap:4px;">
+                    API Ключ
+                    <a href="${aiProvider==='openai'?'https://platform.openai.com/api-keys':aiProvider==='anthropic'?'https://console.anthropic.com/settings/keys':'https://aistudio.google.com/app/apikey'}"
+                        target="_blank" style="color:#3b82f6;font-size:9px;">Отримати →</a>
+                </div>
+                <input id="fcp_aiApiKey" type="password" value="${savedKey}"
+                    placeholder="${aiProvider==='openai'?'sk-...':aiProvider==='anthropic'?'sk-ant-...':'AIza...'}"
+                    style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
+                    border-radius:7px;color:white;font-size:11px;box-sizing:border-box;">
+                <div style="font-size:9px;color:#475569;margin-top:3px;">Ключ зберігається тільки для цього ланцюга</div>
+            </div>`
+
+            // ── Системний промпт ──
+            + fld(tip('Системний промпт', 'Хто цей AI і яка його задача. Пиши чітко: роль, тон, мова. Наприклад: "Ти — менеджер клініки. Відповідай тепло, коротко, тільки українською."'),
+                ta('aiSystem', d.aiSystem, 'Ти — помічник компанії. Відповідай коротко та по суті українською мовою.', 5))
+
+            // ── Модель ──
+            + fld(tip('Модель AI', 'GPT-4o mini / Claude Haiku — швидкі й дешеві для більшості задач. GPT-4o / Claude Sonnet — розумніші, але повільніші і дорожчі.'),
+                sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0]))
+
+            // ── Точність відповіді (temperature) ──
+            + `<div style="margin-bottom:12px;">
+                <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:4px;">
+                    ${tip('Точність відповіді', 'Контролює наскільки AI "творчий". 0.0 — точні, передбачувані відповіді (добре для збору даних). 1.0 — креативні, різноманітні відповіді (добре для контенту). Рекомендовано: 0.7 для чат-ботів.')}
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:10px;color:#64748b;min-width:28px;">0.0</span>
+                    <input id="fcp_temperature" type="range" min="0" max="1" step="0.05"
+                        value="${temp}"
+                        style="flex:1;accent-color:#22c55e;cursor:pointer;height:4px;"
+                        oninput="document.getElementById('fcp_temp_val').textContent=parseFloat(this.value).toFixed(2);
+                                 const v=parseFloat(this.value);
+                                 document.getElementById('fcp_temp_desc').textContent=v<=0.2?'Дуже точно':v<=0.4?'Точно':v<=0.6?'Збалансовано':v<=0.8?'Природньо':'Творчо';">
+                    <span style="font-size:10px;color:#64748b;min-width:28px;text-align:right;">1.0</span>
+                    <span id="fcp_temp_val" style="color:#22c55e;font-size:13px;font-weight:700;min-width:36px;text-align:right;">${temp.toFixed(2)}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:3px;">
+                    <span style="font-size:9px;color:#334155;">← Точно</span>
+                    <span id="fcp_temp_desc" style="font-size:10px;color:#64748b;font-weight:600;">${temp<=0.2?'Дуже точно':temp<=0.4?'Точно':temp<=0.6?'Збалансовано':temp<=0.8?'Природньо':'Творчо'}</span>
+                    <span style="font-size:9px;color:#334155;">Творчо →</span>
+                </div>
+            </div>`
+
+            // ── Пам'ять + Перший ──
+            + `<div style="display:flex;gap:8px;margin-bottom:12px;">
+                <div style="flex:1;">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
+                        ${tip("Пам'ять діалогу", "Скільки попередніх повідомлень передавати AI як контекст. 0 — без пам'яті (кожен запит незалежний, дешевше). 6 — пам'ятає 6 останніх повідомлень. Більше = дорожче і повільніше.")}
                     </div>
-                    <input id="fcp_aiApiKey" type="password" value="${savedKey}"
-                        placeholder="${aiProvider==='openai'?'sk-...':aiProvider==='anthropic'?'sk-ant-...':'AIza...'}"
-                        style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
-                        border-radius:7px;color:white;font-size:11px;box-sizing:border-box;">
-                    <div style="font-size:9px;color:#475569;margin-top:3px;">
-                        Зберігається тільки для цього ланцюга
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <input id="fcp_historyLimit" type="number" min="0" max="20" value="${histLim}"
+                            style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;
+                            border-radius:7px;color:white;font-size:12px;box-sizing:border-box;text-align:center;">
+                        <span style="font-size:10px;color:#475569;white-space:nowrap;">повід.</span>
                     </div>
                 </div>
             </div>`
-                + fld('Системний промпт', ta('aiSystem', d.aiSystem, 'Ти — помічник компанії {{company_name}}. Відповідай коротко та по суті українською мовою.', 5))
-                + fld('Модель', sel('aiModel', modelOptions, d.aiModel || modelOptions[0][0]))
-                + `<div style="display:flex;gap:6px;margin-bottom:12px;">
-                    <div style="flex:1;">
-                        <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                            Температура
-                            <span style="color:#475569;font-weight:400;font-size:9px;"> (0=точно, 1=творчо)</span>
+
+            // ── Бот пише першим ──
+            + `<div style="background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px;margin-bottom:12px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">
+                        ${tip('Бот пише першим', 'Як у SendPulse: коли людина починає діалог (або натискає START) — бот надсилає перше повідомлення до того, як отримає відповідь. Корисно для привітання або пропозиції.')}
+                    </div>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                        <div style="position:relative;width:32px;height:18px;">
+                            <input type="checkbox" id="fcp_firstMessageEnabled" ${firstMsgEnabled}
+                                style="opacity:0;position:absolute;width:100%;height:100%;margin:0;cursor:pointer;z-index:1;"
+                                onchange="document.getElementById('fcp_firstMsgRow').style.display=this.checked?'block':'none'">
+                            <div id="fcp_toggle_bg" style="width:32px;height:18px;border-radius:9px;background:${firstMsgEnabled?'#22c55e':'#334155'};transition:background .2s;position:absolute;top:0;left:0;pointer-events:none;"></div>
+                            <div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;top:2px;left:${firstMsgEnabled?'16px':'2px'};transition:left .2s;pointer-events:none;" id="fcp_toggle_knob"></div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:6px;">
-                            <input id="fcp_temperature" type="range" min="0" max="1" step="0.1"
-                                value="${d.temperature ?? 0.7}"
-                                style="flex:1;accent-color:#22c55e;cursor:pointer;"
-                                oninput="document.getElementById('fcp_temp_val').textContent=parseFloat(this.value).toFixed(1)">
-                            <span id="fcp_temp_val" style="color:#22c55e;font-size:11px;font-weight:700;min-width:24px;">${(d.temperature ?? 0.7).toFixed(1)}</span>
-                        </div>
+                        <span style="font-size:11px;color:#64748b;">${firstMsgEnabled?'Увімкнено':'Вимкнено'}</span>
+                    </label>
+                </div>
+                <div id="fcp_firstMsgRow" style="display:${firstMsgEnabled?'block':'none'};">
+                    <div style="font-size:10px;color:#64748b;margin-bottom:4px;">Перше повідомлення від бота:</div>
+                    <textarea id="fcp_firstMessage" rows="2"
+                        style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
+                        border-radius:7px;color:white;font-size:11px;resize:vertical;box-sizing:border-box;"
+                        placeholder="Привіт! 👋 Я AI-асистент. Чим можу допомогти?">${firstMsg}</textarea>
+                </div>
+            </div>`
+
+            // ── Зберегти відповідь / Запасна ──
+            + fld(tip('Зберегти відповідь у змінну', 'Остання відповідь AI буде доступна в наступних вузлах через {{ai_response}} або вказану змінну.'),
+                inp('saveAs', d.saveAs, 'ai_response'))
+            + fld(tip('Запасна відповідь', 'Відправляється якщо AI недоступний або повернув помилку.'),
+                inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'))
+
+            // ── Теги керування ──
+            + `<div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px;margin-bottom:10px;">
+                <div style="font-size:10px;font-weight:700;color:#64748b;margin-bottom:6px;">Теги керування (в промпті):</div>
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <div style="display:flex;align-items:flex-start;gap:6px;">
+                        <code style="background:#1e293b;padding:2px 6px;border-radius:4px;color:#22c55e;font-size:10px;white-space:nowrap;">[DONE]</code>
+                        <span style="font-size:10px;color:#64748b;">AI завершив збір даних → флоу переходить далі</span>
                     </div>
-                    <div style="flex:1;">
-                        <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                            Пам'ять (повід.)
-                            <span style="color:#475569;font-weight:400;font-size:9px;"> (0=без пам'яті)</span>
-                        </div>
-                        <input id="fcp_historyLimit" type="number" min="0" max="20" value="${d.historyLimit ?? 6}"
-                            style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;
-                            border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">
+                    <div style="display:flex;align-items:flex-start;gap:6px;">
+                        <code style="background:#1e293b;padding:2px 6px;border-radius:4px;color:#3b82f6;font-size:10px;white-space:nowrap;">[SAVE:ключ=знач]</code>
+                        <span style="font-size:10px;color:#64748b;">Зберегти дані з відповіді AI у змінну</span>
                     </div>
-                </div>`
-                + fld('Зберегти відповідь у змінну', inp('saveAs', d.saveAs, 'ai_response'))
-                + fld('Запасна відповідь (якщо AI недоступний)', inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'))
-                + `<div style="margin-bottom:12px;">
-                    <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Тег завершення діалогу</div>
-                    <div style="font-size:10px;color:#475569;margin-bottom:4px;">
-                        Коли AI написати <code style="background:#1e293b;padding:1px 4px;border-radius:3px;color:#22c55e;">[DONE]</code> — флоу переходить до наступного вузла
+                    <div style="display:flex;align-items:flex-start;gap:6px;">
+                        <code style="background:#1e293b;padding:2px 6px;border-radius:4px;color:#f59e0b;font-size:10px;white-space:nowrap;">[BTN:текст]</code>
+                        <span style="font-size:10px;color:#64748b;">AI генерує динамічні кнопки</span>
                     </div>
-                    <div style="font-size:10px;color:#475569;">
-                        Зберегти дані: <code style="background:#1e293b;padding:1px 4px;border-radius:3px;color:#22c55e;">[SAVE:ключ=значення]</code>
-                    </div>
-                </div>`
-                + `<button onclick="fcTestAiNode('${node.id}')"
-                    style="width:100%;padding:8px;background:transparent;border:1px solid #334155;
-                    border-radius:8px;color:#94a3b8;font-size:11px;font-weight:600;cursor:pointer;
-                    display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;
-                    transition:all 0.15s;"
-                    onmouseenter="this.style.borderColor='#22c55e';this.style.color='#22c55e'"
-                    onmouseleave="this.style.borderColor='#334155';this.style.color='#94a3b8'">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    Тест AI відповіді
-                </button>`;
+                </div>
+            </div>`
+
+            // ── Тест кнопка ──
+            + `<button onclick="fcTestAiNode('${node.id}')"
+                style="width:100%;padding:9px;background:transparent;border:1px solid #22c55e55;
+                border-radius:8px;color:#22c55e;font-size:11px;font-weight:600;cursor:pointer;
+                display:flex;align-items:center;justify-content:center;gap:6px;
+                transition:all 0.15s;"
+                onmouseenter="this.style.background='#22c55e22'"
+                onmouseleave="this.style.background='transparent'">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Тест AI відповіді
+            </button>`;
+
+            // Toggle fix
+            setTimeout(() => {
+                const cb = document.getElementById('fcp_firstMessageEnabled');
+                const bg = document.getElementById('fcp_toggle_bg');
+                const kn = document.getElementById('fcp_toggle_knob');
+                const lbl = cb?.parentElement?.querySelector('span');
+                if (cb) cb.addEventListener('change', () => {
+                    if (bg) bg.style.background = cb.checked ? '#22c55e' : '#334155';
+                    if (kn) kn.style.left = cb.checked ? '16px' : '2px';
+                    if (lbl) lbl.textContent = cb.checked ? 'Увімкнено' : 'Вимкнено';
+                });
+            }, 50);
+
             break;
         }
         case 'api':
@@ -1934,9 +2007,10 @@ window.fcApplyNodeData = function(nodeId) {
             node.config.aiProvider = get('aiProvider') || fc.selectedNode?.config?.aiProvider || 'openai';
             node.config.saveAs = get('saveAs') || null;
             node.config.fallback = get('fallback');
-            // Нові поля
             node.config.temperature = parseFloat(document.getElementById('fcp_temperature')?.value ?? 0.7);
             node.config.historyLimit = parseInt(document.getElementById('fcp_historyLimit')?.value ?? 6) || 0;
+            node.config.firstMessageEnabled = document.getElementById('fcp_firstMessageEnabled')?.checked || false;
+            node.config.firstMessage = document.getElementById('fcp_firstMessage')?.value?.trim() || '';
             break;
         case 'api':
             node.config.apiMethod = get('apiMethod');

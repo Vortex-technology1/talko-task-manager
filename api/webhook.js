@@ -1046,6 +1046,29 @@ module.exports = async (req, res) => {
             } else if (n.type === 'ai' || n.type === 'ai_response') {
                 // AI вузол з пам'яттю
                 if (!session.aiHistory) session.aiHistory = [];
+
+                // "Бот пише першим" — як у SendPulse
+                // Якщо AI вузол щойно активовано (немає history) і є firstMessage
+                const _firstMsg = n.config?.firstMessage || n.firstMessage || '';
+                const _firstEnabled = n.config?.firstMessageEnabled || n.firstMessageEnabled || false;
+                if (_firstEnabled && _firstMsg && session.aiHistory.length === 0 && normalized.text === '') {
+                    // Надсилаємо перше повідомлення від бота
+                    const _fmText = interp(_firstMsg, session.data);
+                    sendTyping(botToken, normalized.senderId).catch(()=>{});
+                    await Promise.all([
+                        sendMsg(channel, botToken, normalized.senderId, _fmText),
+                        saveBotMessage(compRef, contactId, _fmText),
+                    ]);
+                    session.aiHistory.push({ role: 'assistant', content: _fmText });
+                    Object.assign(session, { currentFlowId: flow.id, currentBotId: flow.botId,
+                        currentNodeId: nodeId, waitingForInput: nodeId });
+                    Promise.all([
+                        sessionRef.set(session, { merge: true }),
+                        lockRef.delete().catch(()=>{}),
+                    ]).catch(()=>{});
+                    return res.status(200).json({ ok: true });
+                }
+
                 session.aiHistory.push({ role: 'user', content: normalized.text });
                 if (session.aiHistory.length > 20) session.aiHistory = session.aiHistory.slice(-20);
                 // FIX: also limit by total chars to avoid token overflow
