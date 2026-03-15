@@ -125,8 +125,8 @@ function renderShell() {
     container.innerHTML = `
         <div style="padding:0.75rem;">
             <!-- Tab bar -->
-            <div id="bpTabBar" style="display:flex;gap:0.3rem;margin-bottom:0.75rem;background:white;
-                border-radius:12px;padding:0.3rem;box-shadow:var(--shadow);overflow-x:auto;flex-shrink:0;">
+            <div id="bpTabBar" style="display:flex;gap:0.2rem;margin-bottom:0.75rem;background:white;
+                border-radius:12px;padding:0.3rem;box-shadow:var(--shadow);flex-shrink:0;">
             </div>
             <!-- Views -->
             <div id="bpViewBots"></div>
@@ -146,21 +146,36 @@ function renderTabBar(visibleTabs) {
     const bar = document.getElementById('bpTabBar');
     if (!bar) return;
     const all = [
-        ['bots',      '<i data-lucide="bot" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', window.t('botsBots')],
-        ['flows',     '<i data-lucide="link" style="width:15px;height:15px;display:inline-block;vertical-align:middle;"></i>',  window.t('botsFlows')],
-        ['contacts',  '<i data-lucide="users" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', window.t('botsContacts')],
-        ['chat',      '<i data-lucide="message-square" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', window.t('botsChat')],
-        ['broadcast', '<i data-lucide="send" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i>', window.t('botsBroadcast')],
-        ['settings',  '<i data-lucide="settings" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></i>',  window.t('crmTabSettings')],
+        ['bots',      'bot',            window.t('botsBots')      || 'Боти'],
+        ['flows',     'link',           window.t('botsFlows')     || 'Ланцюги'],
+        ['contacts',  'users',          window.t('botsContacts')  || 'Контакти'],
+        ['chat',      'message-square', window.t('botsChat')      || 'Чат'],
+        ['broadcast', 'send',           window.t('botsBroadcast') || 'Розсилка'],
+        ['settings',  'settings',       window.t('crmTabSettings')|| 'Налаш.'],
     ];
-    bar.innerHTML = all.filter(([id]) => visibleTabs.includes(id)).map(([id, icon, label]) => `
+    const visible = all.filter(([id]) => visibleTabs.includes(id));
+    const isActive = id => id === bp.subTab;
+
+    // Адаптивний режим: якщо > 4 вкладок — тільки іконки + підпис активної
+    const compact = visible.length > 4;
+
+    bar.innerHTML = visible.map(([id, icon, label]) => {
+        const active = isActive(id);
+        // Скорочуємо лейбли для компактного режиму
+        const shortLabels = { bots:'Боти', flows:'Ланц.', contacts:'Конт.', chat:'Чат', broadcast:'Розс.', settings:'⚙️' };
+        const displayLabel = compact ? shortLabels[id] || label : label;
+        return `
         <button id="bpTab_${id}" onclick="bpSwitch('${id}')"
-            style="flex:1;min-width:60px;padding:0.4rem 0.5rem;border:none;border-radius:8px;
-            cursor:pointer;font-size:0.75rem;font-weight:600;white-space:nowrap;
-            background:${id===bp.subTab?'#22c55e':'transparent'};
-            color:${id===bp.subTab?'white':'#525252'};transition:all 0.2s;">
-            ${icon} ${label}
-        </button>`).join('');
+            style="flex:1;padding:${compact?'0.35rem 0.2rem':'0.4rem 0.5rem'};border:none;
+            border-radius:8px;cursor:pointer;white-space:nowrap;transition:all 0.15s;
+            display:flex;flex-direction:column;align-items:center;gap:2px;
+            background:${active?'#22c55e':'transparent'};
+            color:${active?'white':'#6b7280'};">
+            <i data-lucide="${icon}" style="width:${compact?'15px':'16px'};height:${compact?'15px':'16px'};display:block;"></i>
+            <span style="font-size:${compact?'0.62rem':'0.7rem'};font-weight:${active?'700':'500'};line-height:1;">${displayLabel}</span>
+        </button>`;
+    }).join('');
+    if (typeof lucide !== 'undefined') try { lucide.createIcons(); } catch(e) {}
 }
 
 window.bpSwitch = function(tab) {
@@ -328,7 +343,7 @@ function renderFlowsTab() {
                 Всі боти
             </button>
             <span style="color:#9ca3af;">›</span>
-            <span style="font-weight:700;font-size:0.85rem;color:#374151;">${escH(bot?.name||window.t('botsBot'))}</span>
+            <span style="font-weight:700;font-size:0.85rem;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">${escH(bot?.name||window.t('botsBot'))}</span>
             <span style="background:${bot?.connected?'#f0fdf4':'#fee2e2'};
                 color:${bot?.connected?'#22c55e':'#ef4444'};
                 font-size:0.68rem;padding:1px 7px;border-radius:10px;font-weight:600;">
