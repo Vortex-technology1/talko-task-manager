@@ -531,11 +531,16 @@
         }
 
         if (node.type === 'talko_deal') {
-            // Build stage options from real pipeline
-            const _pipeStages = (window.crm?.pipeline?.stages || []).filter(s => s.id !== 'lost' && s.id !== 'won');
+            // FIX: підтримуємо обидва формати — pipelines (масив, новий) і pipeline (об'єкт, старий)
+            const _activePip = (window.crm?.pipelines || []).find(p => p.isDefault) 
+                || (window.crm?.pipelines || [])[0]
+                || window.crm?.pipeline;
+            const _pipeStages = (_activePip?.stages || [])
+                .slice().sort((a,b) => (a.order||0) - (b.order||0))
+                .filter(s => s.id !== 'lost' && s.id !== 'won');
             const _stageOpts = _pipeStages.length
-                ? _pipeStages.map(s => `<option value="${s.id}" ${(node.dealStage||'new')===s.id?'selected':''}>${s.label}</option>`).join('')
-                : `<option value="new" selected>new</option>`;
+                ? _pipeStages.map(s => `<option value="${s.id}" ${(node.dealStage||'new')===s.id?'selected':''}>${s.label || s.name || s.id}</option>`).join('')
+                : `<option value="new" selected>Новий лід</option>`;
             const _stageHint = _pipeStages.length === 0
                 ? `<div style="font-size:0.72rem;color:#f59e0b;margin-top:2px;">⚠️ Відкрийте вкладку CRM для завантаження стадій</div>`
                 : `<div style="font-size:0.7rem;color:#9ca3af;margin-top:2px;">${_pipeStages.length} стадій завантажено</div>`;

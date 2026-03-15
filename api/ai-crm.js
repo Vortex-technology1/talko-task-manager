@@ -81,7 +81,12 @@ module.exports = async function handler(req, res) {
 
     // ── Read deal ────────────────────────────────────────────
     const dealRef = db.doc(`companies/${companyId}/crm_deals/${dealId}`);
-    const dealSnap = await dealRef.get().catch(() => null);
+    // FIX: fetch company + deal паралельно
+    const compRef = db.doc(`companies/${companyId}`);
+    const [dealSnap, compSnap] = await Promise.all([
+        dealRef.get().catch(() => null),
+        compRef.get().catch(() => null),
+    ]);
     if (!dealSnap || !dealSnap.exists) {
         return res.status(404).json({ error: 'Deal not found' });
     }
@@ -127,11 +132,11 @@ ${deal.leadData?.mainProblem ? 'Проблема клієнта: ' + deal.leadDa
 
     // ── Call AI provider ─────────────────────────────────────
     let analysis;
-    try {
-        // Timeout 45s — LLM може відповідати довго
+    // FIX: _ctrl/_tout оголошені поза try — доступні в catch/finally
     const _ctrl = new AbortController();
     const _tout = setTimeout(() => _ctrl.abort(), 45000);
-    let response, data;
+    try {
+        let response, data;
 
         if (isAnthropic) {
             response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -142,37 +147,44 @@ ${deal.leadData?.mainProblem ? 'Проблема клієнта: ' + deal.leadDa
                     'anthropic-version': '2023-06-01',
                 },
                 signal: _ctrl.signal,
-            body: JSON.stringify({
-                    model: 'claude-sonnet-4-20250514',
-                    max_tokens: 600,
+                body: JSON.stringify({
+                    model: 'claude-haiku-4-5-20251001', // FIX: правильна назва моделі, швидше і дешевше для аналізу
+                    max_tokens: 800,
                     messages: [{ role: 'user', content: prompt }],
                 }),
             });
             data = await response.json();
+            if (!response.ok) {
+                console.error('[ai-crm] Anthropic error:', response.status, data.error?.message);
+                return res.status(502).json({ error: 'AI API error: ' + (data.error?.message || response.status) });
+            }
             analysis = data.content?.[0]?.text || 'Не вдалось отримати аналіз';
         } else {
             // OpenAI fallback
             response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                signal: _ctrl.signal,
                 body: JSON.stringify({
                     model: 'gpt-4o-mini',
-                    max_tokens: 600,
+                    max_tokens: 800,
                     messages: [{ role: 'user', content: prompt }],
                 }),
             });
             data = await response.json();
+            if (!response.ok) {
+                console.error('[ai-crm] OpenAI error:', response.status, data.error?.message);
+                return res.status(502).json({ error: 'AI API error: ' + (data.error?.message || response.status) });
+            }
             analysis = data.choices?.[0]?.message?.content || 'Не вдалось отримати аналіз';
-        }
-
-        if (!response.ok) {
-            console.error('[ai-crm] API error:', response.status, JSON.stringify(data).slice(0, 200));
-            return res.status(502).json({ error: 'AI API error: ' + (data.error?.message || response.status) });
         }
     } catch(e) {
         clearTimeout(_tout);
-        console.error('[ai-crm] fetch error:', e.message);
-        return res.status(500).json({ error: 'Network error: ' + e.message });
+        const isTimeout = e.name === 'AbortError';
+        console.error('[ai-crm] fetch error:', isTimeout ? 'TIMEOUT 45s' : e.message);
+        return res.status(500).json({ error: isTimeout ? 'AI timeout. Спробуйте ще раз.' : 'Network error: ' + e.message });
+    } finally {
+        clearTimeout(_tout); // FIX: завжди чистимо таймер
     }
 
     // ── Save analysis to Firestore ───────────────────────────
@@ -183,7 +195,6 @@ ${deal.leadData?.mainProblem ? 'Проблема клієнта: ' + deal.leadDa
             aiAnalyzedBy:  uid,
         });
     } catch(e) {
-        clearTimeout(_tout);
         console.error('[ai-crm] Firestore write error:', e.message);
         // Не фейлимо запит — аналіз є, тільки save не вдалося
     }

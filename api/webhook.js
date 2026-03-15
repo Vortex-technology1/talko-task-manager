@@ -506,7 +506,10 @@ module.exports = async (req, res) => {
             return;
         }
 
-
+        // FIX: guard — якщо канал невідомий або парсинг не зміг визначити senderId
+        if (!normalized || !normalized.senderId) {
+            return res.status(200).json({ ok: true, skipped: 'no_normalized_or_senderId' });
+        }
 
         process.env.WEBHOOK_DEBUG && console.debug(`[webhook] ${channel} from ${normalized.senderId}: "${normalized.text}"`);
 
@@ -2401,10 +2404,15 @@ async function sendTg(token, chatId, text, buttons) {
                 // Rate limit — чекаємо і повторюємо один раз
                 const retryAfter = (result.parameters?.retry_after || 3) * 1000;
                 await new Promise(res => setTimeout(res, Math.min(retryAfter, 10000)));
+                // FIX: додаємо таймаут до retry-запиту
+                const _r2Abort = new AbortController();
+                const _r2Timer = setTimeout(() => _r2Abort.abort(), 8000);
                 const r2 = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
+                    signal: _r2Abort.signal,
                 }).catch(() => null);
+                clearTimeout(_r2Timer);
                 return r2 ? await r2.json().catch(() => null) : null;
             }
             console.error('[sendTg] Error:', result.description, JSON.stringify(payload).slice(0, 200));

@@ -3895,18 +3895,28 @@ function _renderCRMSettings() {
             </div>
         </div>
 
-        <!-- Джерела лідів -->
+        <!-- Джерела лідів -->\
         <div style="background:white;border-radius:10px;padding:1rem;border:1px solid #e8eaed;">
             <div style="font-weight:700;font-size:0.85rem;color:#111827;margin-bottom:0.75rem;">
                 Джерела лідів
             </div>
             ${(function(){
-                const entries = Object.entries(bySource).sort((a,b)=>b[1].count-a[1].count).slice(0,6);
+                // FIX: bySource та total оголошені локально (були з іншої функції)
+                const _localDeals = crm.deals || [];
+                const _localTotal = _localDeals.length;
+                const _bySource = {};
+                _localDeals.forEach(function(d) {
+                    const src = d.source || d.leadSource || 'інше';
+                    if (!_bySource[src]) _bySource[src] = { count: 0, won: 0, amount: 0 };
+                    _bySource[src].count++;
+                    if (d.stage === 'won') { _bySource[src].won++; _bySource[src].amount += d.amount || 0; }
+                });
+                const entries = Object.entries(_bySource).sort((a,b)=>b[1].count-a[1].count).slice(0,6);
                 if(!entries.length) return '<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1rem;">Немає даних</div>';
                 return entries.map(function(e){
                     const src=e[0], data=e[1];
                     const srcConv = data.count>0 ? Math.round(data.won/data.count*100) : 0;
-                    const srcPct = total>0 ? Math.round(data.count/total*100) : 0;
+                    const srcPct = _localTotal>0 ? Math.round(data.count/_localTotal*100) : 0;
                     return '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">' +
                         '<div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>' +
                         '<div style="flex:1;min-width:0;">' +
