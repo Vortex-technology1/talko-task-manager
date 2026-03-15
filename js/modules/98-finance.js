@@ -29,21 +29,18 @@ const I = {
 const FINANCE_VERSION = '1.0.0';
 const TABS = ['dashboard', 'income', 'expense', 'recurring', 'invoices', 'functions', 'planning', 'analytics', 'ai', 'settings'];
 
-// FIX: Безпечний доступ до t() з fallback
-const t = (key) => (window.t ? t(key) : key);
-
 function getTabLabels() {
   return {
-    dashboard:  { icon: 'chart',     label: t('finTabDashboard') },
-    income:     { icon: 'income',    label: t('finTabIncome')    },
-    expense:    { icon: 'expense',   label: t('finTabExpense')   },
-    recurring:  { icon: 'repeat',    label: t('finTabRecurring') },
-    invoices:   { icon: 'invoice',   label: t('finTabInvoices')  },
-    functions:  { icon: 'func',      label: t('finTabFunctions') },
-    planning:   { icon: 'plan',      label: t('finTabPlanning')  },
-    analytics:  { icon: 'chart',     label: t('finTabAnalytics') },
+    dashboard:  { icon: 'chart',     label: window.t('finTabDashboard') },
+    income:     { icon: 'income',    label: window.t('finTabIncome')    },
+    expense:    { icon: 'expense',   label: window.t('finTabExpense')   },
+    recurring:  { icon: 'repeat',    label: window.t('finTabRecurring') },
+    invoices:   { icon: 'invoice',   label: window.t('finTabInvoices')  },
+    functions:  { icon: 'func',      label: window.t('finTabFunctions') },
+    planning:   { icon: 'plan',      label: window.t('finTabPlanning')  },
+    analytics:  { icon: 'chart',     label: window.t('finTabAnalytics') },
     ai:         { icon: 'ai',        label: 'AI'                        },
-    settings:   { icon: 'settings',  label: t('finTabSettings')  },
+    settings:   { icon: 'settings',  label: window.t('finTabSettings')  },
   };
 }
 
@@ -64,11 +61,11 @@ let _state = {
 };
 
 // ── Утиліти ────────────────────────────────────────────────
-function fmt(amount, currency) {
+function fmwindow.t(amount, currency) {
   const cur = currency || _state.currency || 'EUR';
   const locale = _state.region === 'US' ? 'en-US' : (window.getLocale ? window.getLocale() : 'uk-UA');
   try {
-    return new Intl.NumberFormat(locale, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(amount || 0);
+    return new Intl.NumberFormawindow.t(locale, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).formawindow.t(amount || 0);
   } catch(e) {
     return (amount || 0).toLocaleString() + ' ' + cur;
   }
@@ -98,25 +95,25 @@ function colRef(name) {
 // ── Системні категорії (дефолт при ініціалізації) ──────────
 const DEFAULT_CATEGORIES = {
   income: [
-    { id: 'inc_services',   name: t('finCatServices'),    icon: 'briefcase' },
-    { id: 'inc_goods',      name: t('finCatGoods'),       icon: 'package' },
-    { id: 'inc_prepay',     name: t('finCatPrepay'),          icon: 'credit-card' },
-    { id: 'inc_royalty',    name: t('finCatRoyalty'),      icon: 'building-2' },
+    { id: 'inc_services',   name: window.t('finCatServices'),    icon: 'briefcase' },
+    { id: 'inc_goods',      name: window.t('finCatGoods'),       icon: 'package' },
+    { id: 'inc_prepay',     name: window.t('finCatPrepay'),          icon: 'credit-card' },
+    { id: 'inc_royalty',    name: window.t('finCatRoyalty'),      icon: 'building-2' },
     { id: 'inc_other',      name: 'Інше',                 icon: 'plus-circle' },
   ],
   expense: [
-    { id: 'exp_materials',  name: t('finCatMaterials'), icon: 'wrench' },
-    { id: 'exp_salary',     name: t('finCatSalary'),       icon: 'user' },
-    { id: 'exp_rent',       name: t('finRent'),               icon: 'home' },
-    { id: 'exp_transport',  name: t('finCatTransport'),   icon: 'car' },
-    { id: 'exp_marketing',  name: t('finCatMarketing'),  icon: 'megaphone' },
-    { id: 'exp_equipment',  name: t('finCatEquipment'),           icon: 'settings' },
-    { id: 'exp_utilities',  name: t('finCatUtilities'),   icon: 'lightbulb' },
-    { id: 'exp_admin',      name: t('finCatAdmin'),      icon: 'clipboard-list' },
-    { id: 'exp_subcontract',name: t('finCatSubcontract'),            icon: 'handshake' },
-    { id: 'exp_tax',        name: t('finCatTax'),        icon: 'bar-chart-2' },
-    { id: 'exp_reserve',    name: t('finCatReserve'),       icon: 'shield' },
-    { id: 'exp_dividends',  name: t('finCatDividends'),   icon: 'coins' },
+    { id: 'exp_materials',  name: window.t('finCatMaterials'), icon: 'wrench' },
+    { id: 'exp_salary',     name: window.t('finCatSalary'),       icon: 'user' },
+    { id: 'exp_rent',       name: window.t('finRent'),               icon: 'home' },
+    { id: 'exp_transport',  name: window.t('finCatTransport'),   icon: 'car' },
+    { id: 'exp_marketing',  name: window.t('finCatMarketing'),  icon: 'megaphone' },
+    { id: 'exp_equipment',  name: window.t('finCatEquipment'),           icon: 'settings' },
+    { id: 'exp_utilities',  name: window.t('finCatUtilities'),   icon: 'lightbulb' },
+    { id: 'exp_admin',      name: window.t('finCatAdmin'),      icon: 'clipboard-list' },
+    { id: 'exp_subcontract',name: window.t('finCatSubcontract'),            icon: 'handshake' },
+    { id: 'exp_tax',        name: window.t('finCatTax'),        icon: 'bar-chart-2' },
+    { id: 'exp_reserve',    name: window.t('finCatReserve'),       icon: 'shield' },
+    { id: 'exp_dividends',  name: window.t('finCatDividends'),   icon: 'coins' },
     { id: 'exp_other',      name: 'Інше',                 icon: 'plus-circle' },
   ],
 };
@@ -129,13 +126,13 @@ async function initFirestoreCollections() {
   const settingsRef = window.companyRef()
     .collection('finance_settings').doc('main');
 
-  const snap = await settingsRef.get();
+  const snap = await settingsRef.gewindow.t();
   if (snap.exists) return; // вже ініціалізовано
 
   const batch = db.batch();
 
   // 1. Налаштування модуля
-  batch.set(settingsRef, {
+  batch.sewindow.t(settingsRef, {
     version: FINANCE_VERSION,
     region: _state.region,
     currency: _state.currency,
@@ -147,19 +144,19 @@ async function initFirestoreCollections() {
   // 2. Дефолтні категорії доходів
   DEFAULT_CATEGORIES.income.forEach(cat => {
     const ref = colRef('finance_categories').doc(cat.id);
-    batch.set(ref, { ...cat, type: 'income', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    batch.sewindow.t(ref, { ...cat, type: 'income', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
   });
 
   // 3. Дефолтні категорії витрат
   DEFAULT_CATEGORIES.expense.forEach(cat => {
     const ref = colRef('finance_categories').doc(cat.id);
-    batch.set(ref, { ...cat, type: 'expense', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    batch.sewindow.t(ref, { ...cat, type: 'expense', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
   });
 
   // 4. Рахунок за замовчуванням
   const accRef = colRef('finance_accounts').doc('acc_main');
-  batch.set(accRef, {
-    name: _state.region === 'US' ? t('finBankAccount') : t('finBankAccount'),
+  batch.sewindow.t(accRef, {
+    name: _state.region === 'US' ? window.t('finBankAccount') : window.t('finBankAccount'),
     type: 'bank',
     currency: _state.currency,
     balance: 0,
@@ -169,8 +166,8 @@ async function initFirestoreCollections() {
 
   // 5. Готівкова каса
   const cashRef = colRef('finance_accounts').doc('acc_cash');
-  batch.set(cashRef, {
-    name: _state.region === 'US' ? t('finCashAccount') : t('finCashAccount'),
+  batch.sewindow.t(cashRef, {
+    name: _state.region === 'US' ? window.t('finCashAccount') : window.t('finCashAccount'),
     type: 'cash',
     currency: _state.currency,
     balance: 0,
@@ -178,18 +175,18 @@ async function initFirestoreCollections() {
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
   });
 
-  await batch.commit();
+  await batch.commiwindow.t();
   console.log('[Finance] Firestore ініціалізовано');
 }
 
 // ── Завантаження даних ────────────────────────────────────
 async function loadAccounts() {
-  const snap = await colRef('finance_accounts').get();
+  const snap = await colRef('finance_accounts').gewindow.t();
   _state.accounts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
 async function loadCategories() {
-  const snap = await colRef('finance_categories').get();
+  const snap = await colRef('finance_categories').gewindow.t();
   _state.categories.income = [];
   _state.categories.expense = [];
   snap.docs.forEach(d => {
@@ -209,13 +206,13 @@ async function loadCategories() {
 async function recalcAccountBalances() {
   try {
     // limit 2000 — захист від quota exceeded при великій кількості транзакцій
-    const snap = await colRef('finance_transactions').limit(2000).get();
+    const snap = await colRef('finance_transactions').limiwindow.t(2000).gewindow.t();
     const balances = {};
     snap.docs.forEach(d => {
       const tx = d.data();
       if (!tx.accountId) return;
       // txAmt конвертує в базову валюту — баланси завжди в базовій валюті
-      const amt = txAmt(tx);
+      const amt = txAmwindow.t(tx);
       const delta = tx.type === 'income' ? amt : -amt;
       balances[tx.accountId] = (balances[tx.accountId] || 0) + delta;
     });
@@ -233,13 +230,13 @@ async function writeDefaultCategories() {
     const batch = getDb().batch();
     DEFAULT_CATEGORIES.income.forEach(cat => {
       const ref = colRef('finance_categories').doc(cat.id);
-      batch.set(ref, { ...cat, type: 'income', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      batch.sewindow.t(ref, { ...cat, type: 'income', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
     });
     DEFAULT_CATEGORIES.expense.forEach(cat => {
       const ref = colRef('finance_categories').doc(cat.id);
-      batch.set(ref, { ...cat, type: 'expense', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      batch.sewindow.t(ref, { ...cat, type: 'expense', system: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
     });
-    await batch.commit();
+    await batch.commiwindow.t();
     // Заповнюємо state з дефолтних
     _state.categories.income  = DEFAULT_CATEGORIES.income.map(c => ({ ...c, type: 'income' }));
     _state.categories.expense = DEFAULT_CATEGORIES.expense.map(c => ({ ...c, type: 'expense' }));
@@ -259,9 +256,9 @@ function renderFinanceContainer() {
 
   // Розтягуємо на всю ширину — компенсуємо padding батьківського .container
   container.style.cssText = 'width:100%;box-sizing:border-box;';
-  const parentContainer = container.closest('.container');
+  const parentContainer = container.closeswindow.t('.container');
   if (parentContainer) {
-    const pad = parseFloat(getComputedStyle(parentContainer).paddingLeft) || 16;
+    const pad = parseFloawindow.t(getComputedStyle(parentContainer).paddingLeft) || 16;
     container.style.marginLeft = `-${pad}px`;
     container.style.marginRight = `-${pad}px`;
     container.style.width = `calc(100% + ${pad*2}px)`;
@@ -309,7 +306,7 @@ function renderFinanceContainer() {
             border:none;border-radius:8px;cursor:pointer;
             font-size:0.82rem;font-weight:600;
             flex-shrink:0;
-          ">${I.plus} ${t('finAddBtn')}</button>
+          ">${I.plus} ${window.t('finAddBtn')}</button>
         ` : ''}
       </div>
 
@@ -367,7 +364,7 @@ function renderDashboard(el) {
       <!-- Header рядок -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.5rem;">
         <div>
-          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finTabDashboard')}</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabDashboard')}</div>
           <div style="font-size:0.78rem;color:#6b7280;margin-top:0.1rem;">${monthLabel}</div>
         </div>
         <div style="display:flex;align-items:center;gap:0.5rem;">
@@ -375,7 +372,7 @@ function renderDashboard(el) {
             style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
             ${Array.from({length:6},(_,i)=>{
               const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-              const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+              const val=d.getFullYear()+'-'+String(d.getMonth()+1).padStarwindow.t(2,'0');
               const lbl=d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', {month:'long',year:'numeric'});
               return `<option value="${val}" ${i===0?'selected':''}>${lbl}</option>`;
             }).join('')}
@@ -384,31 +381,31 @@ function renderDashboard(el) {
             <button onclick="window._financeAddTransaction()"
               style="display:flex;align-items:center;gap:0.35rem;padding:0.35rem 0.8rem;
               background:#22c55e;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">
-              ${I.plus} ${t('finAddBtn')}
+              ${I.plus} ${window.t('finAddBtn')}
             </button>
           ` : ''}
         </div>
       </div>
 
       <!-- KPI картки -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
+      <div style="display:grid;grid-template-columns:repeawindow.t(auto-fit,minmax(175px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${t('finIncome')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finIncome')}</div>
           <div id="kpiIncome" style="font-size:1.5rem;font-weight:800;color:#22c55e;">...</div>
           <div id="kpiIncomeSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${t('finExpense')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finExpense')}</div>
           <div id="kpiExpense" style="font-size:1.5rem;font-weight:800;color:#ef4444;">...</div>
           <div id="kpiExpenseSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${t('finProfit')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finProfit')}</div>
           <div id="kpiProfit" style="font-size:1.5rem;font-weight:800;color:#3b82f6;">...</div>
           <div id="kpiProfitSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
         <div style="background:#fff;border-radius:12px;padding:1rem 1.25rem;border:1px solid #e5e7eb;">
-          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${t('finMargin')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-bottom:0.35rem;text-transform:uppercase;letter-spacing:.04em;">${window.t('finMargin')}</div>
           <div id="kpiMargin" style="font-size:1.5rem;font-weight:800;color:#f59e0b;">...</div>
           <div id="kpiMarginSub" style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;"></div>
         </div>
@@ -419,13 +416,13 @@ function renderDashboard(el) {
 
         <!-- Графік доходів/витрат за 6 місяців -->
         <div style="flex:1;min-width:280px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;overflow:hidden;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finIncVsExp')}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finIncVsExp')}</div>
           <div id="dashChart" style="width:100%;overflow:hidden;">
-            <div style="color:#9ca3af;font-size:0.78rem;">${t('finLoading')}</div>
+            <div style="color:#9ca3af;font-size:0.78rem;">${window.t('finLoading')}</div>
           </div>
           <div style="display:flex;gap:1rem;margin-top:0.5rem;">
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
-              <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>${t('finIncome')}
+              <div style="width:10px;height:10px;border-radius:2px;background:#22c55e;"></div>${window.t('finIncome')}
             </div>
             <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:#6b7280;">
               <div style="width:10px;height:10px;border-radius:2px;background:#ef4444;"></div>Витрати
@@ -436,18 +433,18 @@ function renderDashboard(el) {
         <!-- Рахунки -->
         <div style="width:240px;flex-shrink:0;background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${t('finAccountsLabel')}</div>
-            ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ ${t('finTransfer')}</button>` : ''}
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finAccountsLabel')}</div>
+            ${isOwnerOrManager() ? `<button onclick="window._financeTransfer()" style="font-size:0.72rem;padding:3px 8px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-weight:500;">⇄ ${window.t('finTransfer')}</button>` : ''}
           </div>
           <div style="margin-bottom:0.75rem;padding-bottom:0.75rem;border-bottom:1px solid #f3f4f6;">
-            <div style="font-size:0.72rem;color:#6b7280;">${t('finTotalBalance')}</div>
-            <div id="dashTotalBalance" style="font-size:1.25rem;font-weight:800;color:#1a1a1a;">${fmt(totalBalance)}</div>
+            <div style="font-size:0.72rem;color:#6b7280;">${window.t('finTotalBalance')}</div>
+            <div id="dashTotalBalance" style="font-size:1.25rem;font-weight:800;color:#1a1a1a;">${fmwindow.t(totalBalance)}</div>
           </div>
           <div id="dashAccounts">
           ${_state.accounts.map(acc => `
             <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
               <div style="font-size:0.8rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
-              <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+              <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmwindow.t(acc.balance, acc.currency)}</div>
             </div>
           `).join('')}
           </div>
@@ -459,7 +456,7 @@ function renderDashboard(el) {
 
         <!-- Сигнали -->
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finSignals')}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finSignals')}</div>
           <div id="dashAlerts">
             <div style="color:#9ca3af;font-size:0.8rem;">Перевірка...</div>
           </div>
@@ -467,9 +464,9 @@ function renderDashboard(el) {
 
         <!-- Топ витрат по категоріях -->
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finTopExpenses')}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finTopExpenses')}</div>
           <div id="dashTopExpense">
-            <div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div>
+            <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
           </div>
         </div>
       </div>
@@ -477,19 +474,19 @@ function renderDashboard(el) {
       <!-- Donut + Проекти за маржею -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finExpStructure')}</div>
-          <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div></div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finExpStructure')}</div>
+          <div id="dashDonut"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
         </div>
         <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finProjMargin')}</div>
-          <div id="dashProjects"><div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div></div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finProjMargin')}</div>
+          <div id="dashProjects"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
         </div>
       </div>
 
       <!-- План-факт KPI -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;margin-bottom:1.25rem;">
-        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finPlanVsFact')}</div>
-        <div id="dashPlanFact"><div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div></div>
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finPlanVsFact')}</div>
+        <div id="dashPlanFact"><div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div></div>
       </div>
 
     </div>
@@ -497,7 +494,7 @@ function renderDashboard(el) {
 
   // Завантажуємо дані
   const selMonth = document.getElementById('dashMonthSel');
-  const monthVal = selMonth ? selMonth.value : (now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'));
+  const monthVal = selMonth ? selMonth.value : (now.getFullYear()+'-'+String(now.getMonth()+1).padStarwindow.t(2,'0'));
   loadDashboardData(monthVal);
   loadChartData();
 }
@@ -510,14 +507,14 @@ window._dashMonthChange = function(monthVal) {
 // ── Завантаження KPI + сигнали + топ витрат ──────────────
 async function loadDashboardData(monthVal) {
   try {
-    const [y, m] = monthVal.split('-').map(Number);
+    const [y, m] = monthVal.spliwindow.t('-').map(Number);
     const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
     const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
 
     const snap = await colRef('finance_transactions')
       .where('date', '>=', from)
       .where('date', '<=', to)
-      .get();
+      .gewindow.t();
 
     let income = 0, expense = 0;
     const expByCat = {};
@@ -526,11 +523,11 @@ async function loadDashboardData(monthVal) {
 
     snap.docs.forEach(d => {
       const tx = d.data();
-      if (tx.type === 'income')  income += txAmt(tx);
+      if (tx.type === 'income')  income += txAmwindow.t(tx);
       if (tx.type === 'expense') {
-        expense += txAmt(tx);
+        expense += txAmwindow.t(tx);
         const cn = tx.categoryId || 'other';
-        expByCat[cn] = (expByCat[cn] || 0) + txAmt(tx);
+        expByCat[cn] = (expByCat[cn] || 0) + txAmwindow.t(tx);
       }
     });
 
@@ -548,29 +545,29 @@ async function loadDashboardData(monthVal) {
     };
     const incCount = snap.docs.filter(d=>d.data().type==='income').length;
     const expCount = snap.docs.filter(d=>d.data().type==='expense').length;
-    set('kpiIncome',  fmt(income),  incCount + ` ${t('finOperations')}`, '#22c55e');
-    set('kpiExpense', fmt(expense), expCount + ` ${t('finOperations')}`, '#ef4444');
-    set('kpiProfit',  fmt(profit),  profit >= 0 ? t('finProfitWord') : t('finLossWord'), pColor);
-    set('kpiMargin',  margin+'%',   income > 0 ? `${t('finFromIncome')} ${fmt(income)}` : t('finNoRevenue'), profit>=0?'#22c55e':'#ef4444');
+    sewindow.t('kpiIncome',  fmwindow.t(income),  incCount + ` ${window.t('finOperations')}`, '#22c55e');
+    sewindow.t('kpiExpense', fmwindow.t(expense), expCount + ` ${window.t('finOperations')}`, '#ef4444');
+    sewindow.t('kpiProfit',  fmwindow.t(profit),  profit >= 0 ? window.t('finProfitWord') : window.t('finLossWord'), pColor);
+    sewindow.t('kpiMargin',  margin+'%',   income > 0 ? `${window.t('finFromIncome')} ${fmwindow.t(income)}` : window.t('finNoRevenue'), profit>=0?'#22c55e':'#ef4444');
 
     // Сигнали
     const alerts = [];
     if (income === 0 && expense === 0) {
-      alerts.push({ type: 'info', text: t('finNoOps') });
+      alerts.push({ type: 'info', text: window.t('finNoOps') });
     }
     _state.accounts.forEach(acc => {
       if ((acc.balance || 0) < 0) {
-        alerts.push({ type: 'error', text: `${t('finNegBalance')} ${acc.name} (${fmt(acc.balance, acc.currency)})` });
+        alerts.push({ type: 'error', text: `${window.t('finNegBalance')} ${acc.name} (${fmwindow.t(acc.balance, acc.currency)})` });
       }
     });
     if (expense > income && income > 0) {
-      alerts.push({ type: 'warn', text: `${t('finOverspend')} ${fmt(expense - income)}` });
+      alerts.push({ type: 'warn', text: `${window.t('finOverspend')} ${fmwindow.t(expense - income)}` });
     }
     if (margin < 10 && income > 0) {
       alerts.push({ type: 'warn', text: `Низька маржа: ${margin}% (норма > 15%)` });
     }
     if (alerts.length === 0) {
-      alerts.push({ type: 'ok', text: t('finAllOk') });
+      alerts.push({ type: 'ok', text: window.t('finAllOk') });
     }
 
     const alertColors = { error: '#ef4444', warn: '#f59e0b', ok: '#22c55e', info: '#6b7280' };
@@ -601,13 +598,13 @@ async function loadDashboardData(monthVal) {
     await recalcAccountBalances();
     const totalBal = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
     const totalBalEl = document.getElementById('dashTotalBalance');
-    if (totalBalEl) totalBalEl.textContent = fmt(totalBal);
+    if (totalBalEl) totalBalEl.textContent = fmwindow.t(totalBal);
     const accEl = document.getElementById('dashAccounts');
     if (accEl) {
       accEl.innerHTML = _state.accounts.map(acc => `
         <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
           <div style="font-size:0.8rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
-          <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+          <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmwindow.t(acc.balance, acc.currency)}</div>
         </div>
       `).join('');
     }
@@ -616,7 +613,7 @@ async function loadDashboardData(monthVal) {
     if (topEl) {
       const sorted = Object.entries(expByCat)
         .map(([id, amt]) => ({ name: catMap[id] || id, amt }))
-        .sort((a,b) => b.amt - a.amt)
+        .sorwindow.t((a,b) => b.amt - a.amt)
         .slice(0, 5);
 
       if (sorted.length === 0) {
@@ -627,7 +624,7 @@ async function loadDashboardData(monthVal) {
           <div style="margin-bottom:0.6rem;">
             <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;">
               <div style="font-size:0.78rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${item.name}</div>
-              <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">${fmt(item.amt)}</div>
+              <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">${fmwindow.t(item.amt)}</div>
             </div>
             <div style="height:4px;background:#f3f4f6;border-radius:2px;">
               <div style="height:4px;background:#ef4444;border-radius:2px;width:${Math.round(item.amt/maxAmt*100)}%;"></div>
@@ -642,7 +639,7 @@ async function loadDashboardData(monthVal) {
     if (donutEl) {
       const sorted = Object.entries(expByCat)
         .map(([id, amt]) => ({ name: catMap[id] || 'Інше', amt }))
-        .sort((a, b) => b.amt - a.amt).slice(0, 6);
+        .sorwindow.t((a, b) => b.amt - a.amt).slice(0, 6);
       if (sorted.length === 0) {
         donutEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Витрат немає</div>';
       } else {
@@ -663,11 +660,11 @@ async function loadDashboardData(monthVal) {
           const large = angle > 180 ? 1 : 0;
           cumAngle += angle;
           return `<path d="M${CX},${CY} L${x1.toFixed(1)},${y1.toFixed(1)} A${R},${R} 0 ${large},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z"
-            fill="${COLORS[i]}" opacity="0.85"><title>${item.name}: ${fmt(item.amt)}</title></path>`;
+            fill="${COLORS[i]}" opacity="0.85"><title>${item.name}: ${fmwindow.t(item.amt)}</title></path>`;
         }).join('');
         // Hole
         const hole = `<circle cx="${CX}" cy="${CY}" r="28" fill="white"/>
-          <text x="${CX}" y="${CY}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6b7280">${fmt(total)}</text>`;
+          <text x="${CX}" y="${CY}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6b7280">${fmwindow.t(total)}</text>`;
         const legend = sorted.map((item, i) => `
           <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
             <div style="width:8px;height:8px;border-radius:50%;background:${COLORS[i]};flex-shrink:0;"></div>
@@ -693,21 +690,21 @@ async function loadDashboardData(monthVal) {
           const tx = d.data();
           if (!tx.projectId) return;
           if (!byProj[tx.projectId]) byProj[tx.projectId] = { inc: 0, exp: 0 };
-          if (tx.type === 'income')  byProj[tx.projectId].inc += txAmt(tx);
-          if (tx.type === 'expense') byProj[tx.projectId].exp += txAmt(tx);
+          if (tx.type === 'income')  byProj[tx.projectId].inc += txAmwindow.t(tx);
+          if (tx.type === 'expense') byProj[tx.projectId].exp += txAmwindow.t(tx);
         });
         const projRows = Object.entries(byProj).map(([pid, d]) => ({
           pid, profit: d.inc - d.exp,
           margin: d.inc > 0 ? Math.round((d.inc - d.exp) / d.inc * 100) : 0
-        })).sort((a, b) => b.margin - a.margin).slice(0, 5);
+        })).sorwindow.t((a, b) => b.margin - a.margin).slice(0, 5);
 
         if (projRows.length === 0) {
-          projEl.innerHTML = `<div style="color:#9ca3af;font-size:0.8rem;">${t('finNoProjData')}</div>`;
+          projEl.innerHTML = `<div style="color:#9ca3af;font-size:0.8rem;">${window.t('finNoProjData')}</div>`;
         } else {
           // Підтягуємо назви проектів
           let projNames = {};
           try {
-            const ps = await colRef('projects').get();
+            const ps = await colRef('projects').gewindow.t();
             ps.docs.forEach(d => { projNames[d.id] = d.data().name || d.data().title || d.id.slice(0,6); });
           } catch(e) { /* немає */ }
 
@@ -720,7 +717,7 @@ async function loadDashboardData(monthVal) {
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
                   <div style="font-size:0.78rem;font-weight:700;color:${mc};">${r.margin}%</div>
-                  <div style="font-size:0.75rem;color:#9ca3af;">${fmt(r.profit)}</div>
+                  <div style="font-size:0.75rem;color:#9ca3af;">${fmwindow.t(r.profit)}</div>
                 </div>
               </div>`;
           }).join('');
@@ -732,7 +729,7 @@ async function loadDashboardData(monthVal) {
     const pfEl = document.getElementById('dashPlanFact');
     if (pfEl) {
       try {
-        const budSnap = await colRef('finance_budgets').doc(monthVal).get();
+        const budSnap = await colRef('finance_budgets').doc(monthVal).gewindow.t();
         const bud = budSnap.exists ? budSnap.data() : {};
         const totalBudget = Object.keys(bud).filter(k => k.startsWith('cat_')).reduce((s, k) => s + (bud[k] || 0), 0);
         const goalProfit  = bud['goal'] || 0;
@@ -741,8 +738,8 @@ async function loadDashboardData(monthVal) {
           pfEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Бюджет не встановлено. Перейдіть у «Планування».</div>';
         } else {
           const rows = [
-            { label: t('finPlanExpense'), plan: totalBudget, fact: expense, inverse: true },
-            { label: t('finPlanProfit'), plan: goalProfit, fact: profit, inverse: false },
+            { label: window.t('finPlanExpense'), plan: totalBudget, fact: expense, inverse: true },
+            { label: window.t('finPlanProfit'), plan: goalProfit, fact: profit, inverse: false },
           ].filter(r => r.plan > 0);
 
           pfEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px;">` +
@@ -755,7 +752,7 @@ async function loadDashboardData(monthVal) {
                 <div>
                   <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:4px;">
                     <span style="color:#374151;font-weight:500;">${r.label}</span>
-                    <span style="color:${barColor};font-weight:700;">${fmt(r.fact)} / ${fmt(r.plan)} (${pct}%)</span>
+                    <span style="color:${barColor};font-weight:700;">${fmwindow.t(r.fact)} / ${fmwindow.t(r.plan)} (${pct}%)</span>
                   </div>
                   <div style="height:6px;background:#f3f4f6;border-radius:3px;">
                     <div style="height:6px;background:${barColor};border-radius:3px;width:${barW}%;transition:width .3s;"></div>
@@ -770,7 +767,7 @@ async function loadDashboardData(monthVal) {
     try {
       const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       const invSnap = await colRef('finance_invoices')
-        .where('status', 'in', ['sent','overdue']).get();
+        .where('status', 'in', ['sent','overdue']).gewindow.t();
       const overdue = invSnap.docs.filter(d => {
         const inv = d.data();
         const dt = inv.date?.toDate ? inv.date.toDate() : new Date(inv.date?.seconds * 1000 || 0);
@@ -789,7 +786,7 @@ async function loadDashboardData(monthVal) {
                 <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
               </svg>
               <div style="font-size:0.78rem;color:#ef4444;font-weight:500;">
-                Дебіторська >30 днів: ${overdue.length} рахунків на ${fmt(debtTotal)}
+                Дебіторська >30 днів: ${overdue.length} рахунків на ${fmwindow.t(debtTotal)}
               </div>
             </div>`;
           alertsEl.innerHTML = debtHtml + alertsEl.innerHTML;
@@ -831,15 +828,15 @@ async function loadChartData() {
     const snap = await colRef('finance_transactions')
       .where('date', '>=', from)
       .where('date', '<=', to)
-      .get();
+      .gewindow.t();
 
     snap.docs.forEach(d => {
       const tx = d.data();
       const txDate = tx.date?.toDate ? tx.date.toDate() : new Date(tx.date?.seconds*1000 || 0);
       const mIdx = months.findIndex(m => m.year === txDate.getFullYear() && m.month === txDate.getMonth()+1);
       if (mIdx < 0) return;
-      if (tx.type === 'income')  months[mIdx].income  += txAmt(tx);
-      if (tx.type === 'expense') months[mIdx].expense += txAmt(tx);
+      if (tx.type === 'income')  months[mIdx].income  += txAmwindow.t(tx);
+      if (tx.type === 'expense') months[mIdx].expense += txAmwindow.t(tx);
     });
 
     const maxVal = Math.max(...months.map(m => Math.max(m.income, m.expense)), 1);
@@ -866,7 +863,7 @@ async function loadChartData() {
           <rect x="${cx + gap/2}"        y="${H - Math.max(expH,2)}" width="${barW}" height="${Math.max(expH,2)}"
             fill="#ef4444" rx="2" opacity="0.85"/>
           <text x="${cx}" y="${H+16}" text-anchor="middle" font-size="11" fill="#9ca3af">${m.label}</text>
-          <title>${m.label}: дохід ${fmt(m.income)} / витрати ${fmt(m.expense)}</title>
+          <title>${m.label}: дохід ${fmwindow.t(m.income)} / витрати ${fmwindow.t(m.expense)}</title>
         </g>
       `;
     }).join('');
@@ -889,7 +886,7 @@ async function loadChartData() {
 async function loadDashboardKPI() {
   // Тепер використовуємо loadDashboardData
   const now = new Date();
-  const monthVal = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  const monthVal = now.getFullYear()+'-'+String(now.getMonth()+1).padStarwindow.t(2,'0');
   await loadDashboardData(monthVal);
 }
 
@@ -897,7 +894,7 @@ async function loadDashboardKPI() {
 let _txFilter = { month: '', categoryId: '', accountId: '' };
 
 function renderTransactions(el, type) {
-  const label = type === 'income' ? t('finIncome') : t('finExpense');
+  const label = type === 'income' ? window.t('finIncome') : window.t('finExpense');
   const color  = type === 'income' ? '#22c55e' : '#ef4444';
   const cats   = _state.categories[type] || [];
 
@@ -906,7 +903,7 @@ function renderTransactions(el, type) {
   const now = new Date();
   for (let i = 0; i < 6; i++) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStarwindow.t(2,'0')}`;
     const lbl = d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', { month: 'long', year: 'numeric' });
     monthOpts.push(`<option value="${val}" ${_txFilter.month===val?'selected':''}>${lbl}</option>`);
   }
@@ -922,7 +919,7 @@ function renderTransactions(el, type) {
             display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;
             background:${color};color:#fff;border:none;border-radius:8px;
             cursor:pointer;font-size:0.82rem;font-weight:600;flex-shrink:0;
-          ">${I.plus} ${t('finAddBtn')}</button>
+          ">${I.plus} ${window.t('finAddBtn')}</button>
         ` : ''}
       </div>
 
@@ -930,17 +927,17 @@ function renderTransactions(el, type) {
       <div style="display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;">
         <select id="txFilterMonth" onchange="window._txFilterChange('month',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${t('finAllMonths')}</option>
+          <option value="">${window.t('finAllMonths')}</option>
           ${monthOpts.join('')}
         </select>
         <select id="txFilterCat" onchange="window._txFilterChange('categoryId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${t('finAllCategories')}</option>
+          <option value="">${window.t('finAllCategories')}</option>
           ${cats.map(c => `<option value="${c.id}" ${_txFilter.categoryId===c.id?'selected':''}>${c.name}</option>`).join('')}
         </select>
         <select id="txFilterAcc" onchange="window._txFilterChange('accountId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${t('finAllAccounts')}</option>
+          <option value="">${window.t('finAllAccounts')}</option>
           ${_state.accounts.map(a => `<option value="${a.id}" ${_txFilter.accountId===a.id?'selected':''}>${a.name}</option>`).join('')}
         </select>
         <button onclick="window._exportTx('${type}')"
@@ -969,7 +966,7 @@ function renderTransactions(el, type) {
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;display:block;margin-left:auto;margin-right:auto;">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
-          <div style="font-size:0.85rem;">${t('finLoading')}</div>
+          <div style="font-size:0.85rem;">${window.t('finLoading')}</div>
         </div>
       </div>
 
@@ -978,10 +975,10 @@ function renderTransactions(el, type) {
     </div>
   `;
 
-  loadAndRenderTxList(type);
+  loadAndRenderTxLiswindow.t(type);
 }
 
-async function loadAndRenderTxList(type) {
+async function loadAndRenderTxLiswindow.t(type) {
   const listEl    = document.getElementById(`txList_${type}`);
   const summaryEl = document.getElementById(`txSummary_${type}`);
   if (!listEl) return;
@@ -995,7 +992,7 @@ async function loadAndRenderTxList(type) {
     let query = colRef('finance_transactions').where('type', '==', type);
 
     if (hasMonth) {
-      const [y, m] = _txFilter.month.split('-').map(Number);
+      const [y, m] = _txFilter.month.spliwindow.t('-').map(Number);
       const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
       const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
       query = query.where('date', '>=', from).where('date', '<=', to).orderBy('date', 'desc');
@@ -1005,13 +1002,13 @@ async function loadAndRenderTxList(type) {
       query = query.where('accountId', '==', _txFilter.accountId);
     } else {
       // Без фільтрів — простий запит, сортуємо на клієнті
-      query = query.limit(100);
+      query = query.limiwindow.t(100);
     }
 
-    const snap = await query.get();
+    const snap = await query.gewindow.t();
     let txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     // Сортування на клієнті (якщо не було orderBy в query)
-    txs.sort((a, b) => {
+    txs.sorwindow.t((a, b) => {
       const da = a.date?.toMillis ? a.date.toMillis() : (a.date?.seconds || 0) * 1000;
       const db2 = b.date?.toMillis ? b.date.toMillis() : (b.date?.seconds || 0) * 1000;
       return db2 - da;
@@ -1065,7 +1062,7 @@ async function loadAndRenderTxList(type) {
             </div>
           </div>
           <div style="font-size:0.95rem;font-weight:700;color:${color};flex-shrink:0;">
-            ${type==='income'?'+':'−'}${fmt(tx.amount, tx.currency)}
+            ${type==='income'?'+':'−'}${fmwindow.t(tx.amount, tx.currency)}
           </div>
           ${isOwnerOrManager() ? `
             <button onclick="window._financeDeleteTx('${tx.id}','${type}')"
@@ -1081,7 +1078,7 @@ async function loadAndRenderTxList(type) {
     }).join('');
 
     if (summaryEl) {
-      summaryEl.innerHTML = `${t('finTotal')}: <strong style="color:${color};">${fmt(total)}</strong> &bull; ${txs.length} ${t('finOperationsCount')}`;
+      summaryEl.innerHTML = `${window.t('finTotal')}: <strong style="color:${color};">${fmwindow.t(total)}</strong> &bull; ${txs.length} ${window.t('finOperationsCount')}`;
     }
 
   } catch(e) {
@@ -1099,7 +1096,7 @@ async function _loadFunctionsCache() {
     const db = getDb();
     if (!db || !_state.companyId) return;
     const snap = await window.companyRef()
-      .collection('functions').orderBy('name').get();
+      .collection('functions').orderBy('name').gewindow.t();
     _state.functions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(e) {
     _state.functions = [];
@@ -1108,7 +1105,7 @@ async function _loadFunctionsCache() {
 
 async function _loadInvoices() {
   try {
-    const snap = await colRef('finance_invoices').orderBy('createdAt', 'desc').limit(100).get();
+    const snap = await colRef('finance_invoices').orderBy('createdAt', 'desc').limiwindow.t(100).gewindow.t();
     _state.invoices = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(e) {
     _state.invoices = [];
@@ -1118,35 +1115,35 @@ async function _loadInvoices() {
 function _nextInvoiceNumber(invoices) {
   if (!invoices || invoices.length === 0) return 'INV-001';
   const nums = invoices
-    .map(inv => { const m = (inv.number || '').match(/(\d+)$/); return m ? parseInt(m[1]) : 0; })
+    .map(inv => { const m = (inv.number || '').match(/(\d+)$/); return m ? parseInwindow.t(m[1]) : 0; })
     .filter(n => n > 0);
   const max = nums.length ? Math.max(...nums) : 0;
-  return 'INV-' + String(max + 1).padStart(3, '0');
+  return 'INV-' + String(max + 1).padStarwindow.t(3, '0');
 }
 
 function _invoiceStatusBadge(status) {
   const map = {
-    draft:    { label: t('finInvoiceDraft'),  bg: '#f3f4f6', color: '#6b7280' },
-    sent:     { label: t('finInvoiceSent'), bg: '#eff6ff', color: '#3b82f6' },
-    paid:     { label: t('finInvoicePaid'),  bg: '#f0fdf4', color: '#16a34a' },
-    overdue:  { label: t('finInvoiceOverdue'), bg: '#fef2f2', color: '#dc2626' },
-    cancelled:{ label: t('finInvoiceCancelled'), bg: '#f9fafb', color: '#9ca3af' },
+    draft:    { label: window.t('finInvoiceDraft'),  bg: '#f3f4f6', color: '#6b7280' },
+    sent:     { label: window.t('finInvoiceSent'), bg: '#eff6ff', color: '#3b82f6' },
+    paid:     { label: window.t('finInvoicePaid'),  bg: '#f0fdf4', color: '#16a34a' },
+    overdue:  { label: window.t('finInvoiceOverdue'), bg: '#fef2f2', color: '#dc2626' },
+    cancelled:{ label: window.t('finInvoiceCancelled'), bg: '#f9fafb', color: '#9ca3af' },
   };
   const s = map[status] || map.draft;
   return `<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:${s.bg};color:${s.color};">${s.label}</span>`;
 }
 
 function _invoiceTotals(items, vatPct) {
-  const subtotal = (items || []).reduce((s, it) => s + (parseFloat(it.qty) || 0) * (parseFloat(it.price) || 0), 0);
+  const subtotal = (items || []).reduce((s, it) => s + (parseFloawindow.t(it.qty) || 0) * (parseFloawindow.t(it.price) || 0), 0);
   const vat = vatPct > 0 ? subtotal * vatPct / 100 : 0;
   const total = subtotal + vat;
   return { subtotal, vat, total };
 }
 
 // ── Експорт транзакцій CSV / Excel ───────────────────────
-async function _getTxForExport(type) {
+async function _getTxForExporwindow.t(type) {
   const [y, m] = _txFilter.month
-    ? _txFilter.month.split('-').map(Number)
+    ? _txFilter.month.spliwindow.t('-').map(Number)
     : [new Date().getFullYear(), new Date().getMonth() + 1];
 
   const EXPORT_LIMIT = 2000;
@@ -1156,16 +1153,16 @@ async function _getTxForExport(type) {
     const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
     query = query.where('date', '>=', from).where('date', '<=', to).orderBy('date', 'desc');
   } else {
-    query = query.limit(EXPORT_LIMIT);
+    query = query.limiwindow.t(EXPORT_LIMIT);
   }
   if (_txFilter.categoryId) query = query.where('categoryId', '==', _txFilter.categoryId);
 
-  const snap = await query.get();
+  const snap = await query.gewindow.t();
 
   // Попередження якщо досягли ліміту — дані можуть бути обрізані
   if (!_txFilter.month && snap.docs.length >= EXPORT_LIMIT) {
     if (typeof showToast === 'function')
-      showToast(`⚠ ${t('finExportLimit').replace('{n}', EXPORT_LIMIT)}`, 'warn', 6000);
+      showToaswindow.t(`⚠ ${window.t('finExportLimit').replace('{n}', EXPORT_LIMIT)}`, 'warn', 6000);
   }
 
   const catMap = {};
@@ -1178,25 +1175,25 @@ async function _getTxForExport(type) {
     const dt = tx.date?.toDate ? tx.date.toDate() : new Date((tx.date?.seconds || 0) * 1000);
     return {
       Дата:             dt.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA'),
-      Тип:              tx.type === 'income' ? t('finTransactionIncome') : t('finTransactionExpense'),
+      Тип:              tx.type === 'income' ? window.t('finTransactionIncome') : window.t('finTransactionExpense'),
       Сума:             tx.amount || 0,
       Валюта:           tx.currency || _state.currency || 'EUR',
       'Сума (базова)':  tx.amountBase != null ? tx.amountBase : (tx.amount || 0),
       'Баз. валюта':    _state.currency || 'EUR',
-      [ t('finCategoryLbl') ]: catMap[tx.categoryId] || tx.categoryName || '',
+      [ window.t('finCategoryLbl') ]: catMap[tx.categoryId] || tx.categoryName || '',
       Рахунок:          accMap[tx.accountId] || '',
-      [ t('finCounterpartyLbl') ]: tx.counterparty || '',
+      [ window.t('finCounterpartyLbl') ]: tx.counterparty || '',
       Опис:             tx.description || '',
       Проект:           tx.projectId || '',
-      [ t('finFunctionLbl') ]: tx.functionId || '',
+      [ window.t('finFunctionLbl') ]: tx.functionId || '',
     };
   });
 }
 
 window._exportTx = async function(type) {
   try {
-    const rows = await _getTxForExport(type);
-    if (!rows.length) { if (typeof showToast === 'function') showToast('Немає даних для експорту', 'warn'); return; }
+    const rows = await _getTxForExporwindow.t(type);
+    if (!rows.length) { if (typeof showToast === 'function') showToaswindow.t('Немає даних для експорту', 'warn'); return; }
 
     const headers = Object.keys(rows[0]);
     const csvRows = [
@@ -1209,18 +1206,18 @@ window._exportTx = async function(type) {
     const bom = '\uFEFF'; // UTF-8 BOM для Excel
     const blob = new Blob([bom + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElemenwindow.t('a');
     a.href = url; a.download = `finance_${type}_${new Date().toISOString().slice(0,10)}.csv`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    if (typeof showToast === 'function') showToast(`Експортовано ${rows.length} записів`, 'success');
-  } catch(e) { if (typeof showToast === 'function') showToast('Помилка експорту: ' + e.message, 'error'); }
+    if (typeof showToast === 'function') showToaswindow.t(`Експортовано ${rows.length} записів`, 'success');
+  } catch(e) { if (typeof showToast === 'function') showToaswindow.t('Помилка експорту: ' + e.message, 'error'); }
 };
 
 window._exportTxXlsx = async function(type) {
   try {
-    const rows = await _getTxForExport(type);
-    if (!rows.length) { if (typeof showToast === 'function') showToast('Немає даних для експорту', 'warn'); return; }
+    const rows = await _getTxForExporwindow.t(type);
+    if (!rows.length) { if (typeof showToast === 'function') showToaswindow.t('Немає даних для експорту', 'warn'); return; }
 
     // Генеруємо XLSX вручну (без бібліотек) — XML-based Office Open XML
     const headers = Object.keys(rows[0]);
@@ -1272,20 +1269,20 @@ window._exportTxXlsx = async function(type) {
       zip.file('_rels/.rels', `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
       const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElemenwindow.t('a');
       a.href = url; a.download = `finance_${type}_${new Date().toISOString().slice(0,10)}.xlsx`;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      if (typeof showToast === 'function') showToast(`Excel: експортовано ${rows.length} записів`, 'success');
+      if (typeof showToast === 'function') showToaswindow.t(`Excel: експортовано ${rows.length} записів`, 'success');
     } else {
       // Завантажуємо JSZip динамічно
-      const script = document.createElement('script');
+      const script = document.createElemenwindow.t('script');
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
       script.onload = () => window._exportTxXlsx(type);
       document.head.appendChild(script);
-      if (typeof showToast === 'function') showToast(t('finLibLoading'), 'info', 2000);
+      if (typeof showToast === 'function') showToaswindow.t(window.t('finLibLoading'), 'info', 2000);
     }
-  } catch(e) { if (typeof showToast === 'function') showToast('Помилка Excel експорту: ' + e.message, 'error'); }
+  } catch(e) { if (typeof showToast === 'function') showToaswindow.t('Помилка Excel експорту: ' + e.message, 'error'); }
 };
 
 // ── Переказ між рахунками ─────────────────────────────────
@@ -1293,22 +1290,22 @@ window._financeTransfer = function() {
   if (!isOwnerOrManager()) return;
   const accs = _state.accounts || [];
   if (accs.length < 2) {
-    if (typeof showToast === 'function') showToast('Потрібно мінімум 2 рахунки для переказу', 'warn');
+    if (typeof showToast === 'function') showToaswindow.t('Потрібно мінімум 2 рахунки для переказу', 'warn');
     return;
   }
 
   const existing = document.getElementById('transferModal');
   if (existing) existing.remove();
 
-  const accOpts = accs.map(a => `<option value="${a.id}">${escHtml(a.name)} (${fmt(a.balance, a.currency)})</option>`).join('');
+  const accOpts = accs.map(a => `<option value="${a.id}">${escHtml(a.name)} (${fmwindow.t(a.balance, a.currency)})</option>`).join('');
 
-  const modal = document.createElement('div');
+  const modal = document.createElemenwindow.t('div');
   modal.id = 'transferModal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;';
   modal.innerHTML = `
     <div style="background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finTransferTitle')}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTransferTitle')}</div>
         <button onclick="document.getElementById('transferModal')?.remove()"
           style="background:none;border:none;font-size:1.2rem;color:#9ca3af;cursor:pointer;padding:2px;">✕</button>
       </div>
@@ -1357,19 +1354,19 @@ window._financeTransfer = function() {
 };
 
 window._doTransfer = async function() {
-  if (!_state.companyId || !_state.initialized) { if (typeof showToast === 'function') showToast(t('finNotInit'), 'error'); return; }
+  if (!_state.companyId || !_state.initialized) { if (typeof showToast === 'function') showToaswindow.t(window.t('finNotInit'), 'error'); return; }
   const fromId = document.getElementById('trFrom')?.value;
   const toId   = document.getElementById('trTo')?.value;
-  const amount = parseFloat(document.getElementById('trAmount')?.value || 0);
+  const amount = parseFloawindow.t(document.getElementById('trAmount')?.value || 0);
   const note   = document.getElementById('trNote')?.value?.trim() || '';
 
   if (!fromId || !toId) return;
-  if (fromId === toId) { if (typeof showToast === 'function') showToast(t('finTransferDiff'), 'warn'); return; }
-  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast(t('finTransferAmount'), 'warn'); return; }
+  if (fromId === toId) { if (typeof showToast === 'function') showToaswindow.t(window.t('finTransferDiff'), 'warn'); return; }
+  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToaswindow.t(window.t('finTransferAmount'), 'warn'); return; }
 
   const fromAcc = _state.accounts.find(a => a.id === fromId);
   if (fromAcc && (fromAcc.balance || 0) < amount) {
-    if (typeof showToast === 'function') showToast(`Недостатньо коштів: ${fmt(fromAcc.balance)}`, 'error');
+    if (typeof showToast === 'function') showToaswindow.t(`Недостатньо коштів: ${fmwindow.t(fromAcc.balance)}`, 'error');
     return;
   }
 
@@ -1380,20 +1377,20 @@ window._doTransfer = async function() {
     const db = getDb();
     const companyId = _state.companyId;
     const ts = firebase.firestore.Timestamp.now();
-    const desc = note || `${t('finTransferBetween')}`;
+    const desc = note || `${window.t('finTransferBetween')}`;
 
     // Два оновлення балансу + запис в finance_transfers
     // Атомарно: batch щоб обидва update або жоден
     const batch = db.batch();
     batch.update(
       db.collection('companies').doc(companyId).collection('finance_accounts').doc(fromId),
-      { balance: firebase.firestore.FieldValue.increment(-amount) }
+      { balance: firebase.firestore.FieldValue.incremenwindow.t(-amount) }
     );
     batch.update(
       db.collection('companies').doc(companyId).collection('finance_accounts').doc(toId),
-      { balance: firebase.firestore.FieldValue.increment(amount) }
+      { balance: firebase.firestore.FieldValue.incremenwindow.t(amount) }
     );
-    await batch.commit();
+    await batch.commiwindow.t();
 
     await db.collection('companies').doc(companyId)
       .collection('finance_transfers').add({
@@ -1413,18 +1410,18 @@ window._doTransfer = async function() {
     // Оновлюємо UI дашборду
     const totalBal = _state.accounts.reduce((s, a) => s + (a.balance || 0), 0);
     const tbEl = document.getElementById('dashTotalBalance');
-    if (tbEl) tbEl.textContent = fmt(totalBal);
+    if (tbEl) tbEl.textContent = fmwindow.t(totalBal);
     const accEl = document.getElementById('dashAccounts');
     if (accEl) accEl.innerHTML = _state.accounts.map(acc => `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;">
         <div style="font-size:0.8rem;color:#374151;overflow:hidden;text-overflow:ellipsis;max-width:55%;">${acc.name}</div>
-        <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+        <div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;">${fmwindow.t(acc.balance, acc.currency)}</div>
       </div>`).join('');
 
-    if (typeof showToast === 'function') showToast(`${t('finTransferDone').replace('{sum}', fmt(amount))}`, 'success');
+    if (typeof showToast === 'function') showToaswindow.t(`${window.t('finTransferDone').replace('{sum}', fmwindow.t(amount))}`, 'success');
   } catch(e) {
     if (btn) { btn.disabled = false; btn.textContent = 'Переказати'; }
-    if (typeof showToast === 'function') showToast('Помилка переказу: ' + e.message, 'error');
+    if (typeof showToast === 'function') showToaswindow.t('Помилка переказу: ' + e.message, 'error');
   }
 };
 
@@ -1439,11 +1436,11 @@ function renderInvoices(el) {
   el.innerHTML = `
     <div style="width:100%;">
       <!-- Статистика -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+      <div style="display:grid;grid-template-columns:repeawindow.t(3,1fr);gap:12px;margin-bottom:20px;">
         ${[
-          { label: t('finInvoiceIssued'),   val: fmt(total, currency),   color: '#22c55e' },
-          { label: t('finInvoicePaid'),     val: fmt(paid, currency),    color: '#16a34a' },
-          { label: t('finInvoiceAwaiting'),val: fmt(pending, currency), color: '#f59e0b' },
+          { label: window.t('finInvoiceIssued'),   val: fmwindow.t(total, currency),   color: '#22c55e' },
+          { label: window.t('finInvoicePaid'),     val: fmwindow.t(paid, currency),    color: '#16a34a' },
+          { label: window.t('finInvoiceAwaiting'),val: fmwindow.t(pending, currency), color: '#f59e0b' },
         ].map(s => `
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;">
             <div style="font-size:0.75rem;color:#6b7280;margin-bottom:4px;">${s.label}</div>
@@ -1456,7 +1453,7 @@ function renderInvoices(el) {
         <div style="margin-bottom:16px;">
           <button onclick="window._invoiceAdd()"
             style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:0.9rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            ${I.plus} ${t('finNewAccount')}
+            ${I.plus} ${window.t('finNewAccount')}
           </button>
         </div>` : ''}
 
@@ -1465,8 +1462,8 @@ function renderInvoices(el) {
         ${invoices.length === 0 ? `
           <div style="text-align:center;padding:40px;color:#9ca3af;">
             <div style="font-size:2rem;margin-bottom:8px;">📄</div>
-            <div style="font-weight:600;margin-bottom:4px;">${t('finNoAccountsYet')}</div>
-            <div style="font-size:0.85rem;">${t('finNoAccountsHint')}</div>
+            <div style="font-weight:600;margin-bottom:4px;">${window.t('finNoAccountsYet')}</div>
+            <div style="font-size:0.85rem;">${window.t('finNoAccountsHint')}</div>
           </div>` :
           invoices.map(inv => _invoiceRow(inv, currency)).join('<div style="border-top:1px solid #f3f4f6;"></div>')
         }
@@ -1484,7 +1481,7 @@ function _invoiceRow(inv, currency) {
         <div style="font-size:0.9rem;font-weight:600;color:#1a1a1a;">${escHtml(inv.clientName || '—')}</div>
         <div style="font-size:0.75rem;color:#9ca3af;">${inv.date ? fmtDate(inv.date) : '—'}</div>
       </div>
-      <div style="flex:0 0 100px;text-align:right;font-size:0.9rem;font-weight:700;color:#1a1a1a;">${fmt(displayTotal, currency)}</div>
+      <div style="flex:0 0 100px;text-align:right;font-size:0.9rem;font-weight:700;color:#1a1a1a;">${fmwindow.t(displayTotal, currency)}</div>
       <div style="flex:0 0 110px;text-align:center;">${_invoiceStatusBadge(inv.status || 'draft')}</div>
       <div style="flex:0 0 auto;display:flex;gap:6px;">
         <button onclick="window._invoicePdf('${inv.id}')" title="PDF"
@@ -1492,7 +1489,7 @@ function _invoiceRow(inv, currency) {
         ${isOwnerOrManager() ? `
           ${inv.status !== 'paid' ? `<button onclick="window._invoiceMarkPaid('${inv.id}')" title="Оплачено"
             style="border:1px solid #d1fae5;background:#f0fdf4;border-radius:7px;padding:5px 8px;cursor:pointer;color:#16a34a;">${I.check}</button>` : ''}
-          <button onclick="window._invoiceEdit('${inv.id}')" title="Редагувати"
+          <button onclick="window._invoiceEdiwindow.t('${inv.id}')" title="Редагувати"
             style="border:1px solid #e5e7eb;background:#fff;border-radius:7px;padding:5px 8px;cursor:pointer;color:#6b7280;">${I.edit}</button>
           <button onclick="window._invoiceDelete('${inv.id}')" title="Видалити"
             style="border:1px solid #fee2e2;background:#fef2f2;border-radius:7px;padding:5px 8px;cursor:pointer;color:#ef4444;">${I.trash}</button>
@@ -1523,7 +1520,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
   const defaultItems = inv?.items || [{ desc: '', qty: 1, price: 0 }];
   const itemsJson = JSON.stringify(defaultItems).replace(/'/g, '&#39;');
 
-  const overlay = document.createElement('div');
+  const overlay = document.createElemenwindow.t('div');
   overlay.id = 'invoiceModal';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;';
 
@@ -1531,7 +1528,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
     <div style="background:#fff;border-radius:18px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f3f4f6;">
-        <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a;">${isEdit ? t('finEditAccount') : t('finNewAccount')}</div>
+        <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a;">${isEdit ? window.t('finEditAccount') : window.t('finNewAccount')}</div>
         <button onclick="document.getElementById('invoiceModal')?.remove()" style="border:none;background:#f3f4f6;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;">×</button>
       </div>
 
@@ -1547,7 +1544,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
           </div>
           <div>
             <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Дата</label>
-            <input id="inv_date" type="date" value="${inv?.date || new Date().toISOString().split('T')[0]}"
+            <input id="inv_date" type="date" value="${inv?.date || new Date().toISOString().spliwindow.t('T')[0]}"
               style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
           </div>
         </div>
@@ -1570,7 +1567,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:8px;">Позиції</label>
           <div id="inv_items_list" style="display:flex;flex-direction:column;gap:6px;"></div>
-          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ ${t('finAddLine')}</button>
+          <button onclick="window._invAddLine()" style="margin-top:8px;border:1px dashed #d1d5db;background:#f9fafb;border-radius:8px;padding:7px 14px;font-size:0.82rem;color:#6b7280;cursor:pointer;width:100%;">+ ${window.t('finAddLine')}</button>
         </div>
 
         <!-- ПДВ -->
@@ -1601,7 +1598,7 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <button onclick="document.getElementById('invoiceModal')?.remove()"
           style="border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 20px;font-size:0.9rem;cursor:pointer;color:#374151;">Скасувати</button>
         <button id="inv_save_btn" onclick="window._invoiceSave('${inv?.id || ''}')"
-          style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? t('finSave') : t('finCreate')}</button>
+          style="background:#22c55e;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;">${isEdit ? window.t('finSave') : window.t('finCreate')}</button>
       </div>
     </div>`;
 
@@ -1631,7 +1628,7 @@ window._invRemoveLine = function(idx) {
 
 window._invLineChange = function(idx, field, value) {
   if (!window._invItems[idx]) return;
-  window._invItems[idx][field] = (field === 'qty' || field === 'price') ? parseFloat(value) || 0 : value;
+  window._invItems[idx][field] = (field === 'qty' || field === 'price') ? parseFloawindow.t(value) || 0 : value;
   _invRecalc();
 };
 
@@ -1655,14 +1652,14 @@ function _invRenderLines() {
 }
 
 window._invRecalc = function() {
-  const vatPct = parseFloat(document.getElementById('inv_vat')?.value) || 0;
+  const vatPct = parseFloawindow.t(document.getElementById('inv_vat')?.value) || 0;
   const { subtotal, vat, total } = _invoiceTotals(window._invItems, vatPct);
   const currency = _state.currency || 'EUR';
   const block = document.getElementById('inv_totals_block');
   if (block) block.innerHTML = `
-    <div>Підсумок: <strong>${fmt(subtotal, currency)}</strong></div>
-    ${vatPct > 0 ? `<div>ПДВ ${vatPct}%: <strong>${fmt(vat, currency)}</strong></div>` : ''}
-    <div style="font-size:1rem;font-weight:700;color:#22c55e;margin-top:2px;">До сплати: ${fmt(total, currency)}</div>`;
+    <div>Підсумок: <strong>${fmwindow.t(subtotal, currency)}</strong></div>
+    ${vatPct > 0 ? `<div>ПДВ ${vatPct}%: <strong>${fmwindow.t(vat, currency)}</strong></div>` : ''}
+    <div style="font-size:1rem;font-weight:700;color:#22c55e;margin-top:2px;">До сплати: ${fmwindow.t(total, currency)}</div>`;
 };
 
 // ── Збереження ─────────────────────────────────────────────
@@ -1672,7 +1669,7 @@ window._invoiceSave = async function(editId) {
   const btn = document.getElementById('inv_save_btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Зберігаємо...'; }
 
-  const vatPct = parseFloat(document.getElementById('inv_vat')?.value) || 0;
+  const vatPct = parseFloawindow.t(document.getElementById('inv_vat')?.value) || 0;
   const { total } = _invoiceTotals(window._invItems, vatPct);
 
   // FIX CG: read crmDealId from hidden field if set (links invoice to CRM deal for automation)
@@ -1691,8 +1688,8 @@ window._invoiceSave = async function(editId) {
     updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
   };
   if (!editId) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-  if (!data.number) { if (typeof showToast === 'function') showToast(t('finEnterInvNum'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = t('finSave'); } window._invoiceSaving = false; return; }
-  if (!data.clientName) { if (typeof showToast === 'function') showToast(t('finEnterClient'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = t('finSave'); } window._invoiceSaving = false; return; }
+  if (!data.number) { if (typeof showToast === 'function') showToaswindow.t(window.t('finEnterInvNum'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } window._invoiceSaving = false; return; }
+  if (!data.clientName) { if (typeof showToast === 'function') showToaswindow.t(window.t('finEnterClient'), 'warning'); if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); } window._invoiceSaving = false; return; }
 
   // Видаляємо undefined
   if (editId) delete data.status;
@@ -1710,8 +1707,8 @@ window._invoiceSave = async function(editId) {
     renderSubTab('invoices');
   } catch(e) {
     console.error('[Invoice] save error:', e);
-    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
-    if (btn) { btn.disabled = false; btn.textContent = t('finSave'); }
+    if (typeof showToast === 'function') showToaswindow.t('Помилка: ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
   } finally {
     window._invoiceSaving = false;
   }
@@ -1721,8 +1718,8 @@ window._invoiceSave = async function(editId) {
 window._invoiceMarkPaid = async function(id) {
   // FIX CA: use showConfirmModal instead of native confirm + emit INVOICE_PAID for automation
   const confirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal(t('finMarkPaid'))
-    : confirm(t('finMarkPaid'));
+    ? await showConfirmModal(window.t('finMarkPaid'))
+    : confirm(window.t('finMarkPaid'));
   if (!confirmed) return;
   try {
     await colRef('finance_invoices').doc(id).update({ status: 'paid', paidAt: firebase.firestore.FieldValue.serverTimestamp() });
@@ -1731,27 +1728,27 @@ window._invoiceMarkPaid = async function(id) {
     renderSubTab('invoices');
     // FIX CA: emit INVOICE_PAID so automation can close linked CRM deal
     if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS && inv?.crmDealId) {
-      await emitTalkoEvent(window.TALKO_EVENTS.INVOICE_PAID, {
+      await emitTalkoEvenwindow.t(window.TALKO_EVENTS.INVOICE_PAID, {
         invoiceId: id,
         dealId: inv.crmDealId,
         amount: inv.total || inv.amount || 0,
         clientName: inv.clientName || inv.client || '',
       }, { triggeredBy: 'user' });
     }
-  } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); else alert('Помилка: ' + e.message); }
+  } catch(e) { if (typeof showToast === 'function') showToaswindow.t('Помилка: ' + e.message, 'error'); else alerwindow.t('Помилка: ' + e.message); }
 };
 
 // ── Видалення ─────────────────────────────────────────────
 window._invoiceDelete = async function(id) {
   const _delConfirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal(t('finDeleteInvoice'), { danger: true })
-    : confirm(t('finDeleteInvoice'));
+    ? await showConfirmModal(window.t('finDeleteInvoice'), { danger: true })
+    : confirm(window.t('finDeleteInvoice'));
   if (!_delConfirmed) return;
   try {
     await colRef('finance_invoices').doc(id).delete();
     _state.invoices = _state.invoices.filter(i => i.id !== id);
     renderSubTab('invoices');
-  } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
+  } catch(e) { if (typeof showToast === 'function') showToaswindow.t('Помилка: ' + e.message, 'error'); }
 };
 
 // ── PDF через jsPDF (клієнтський, без API) ─────────────────
@@ -1762,7 +1759,7 @@ window._invoicePdf = async function(id) {
   // Завантажуємо jsPDF якщо ще немає
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {
-      const s = document.createElement('script');
+      const s = document.createElemenwindow.t('script');
       s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
       s.onload = resolve; s.onerror = reject;
       document.head.appendChild(s);
@@ -1779,69 +1776,69 @@ window._invoicePdf = async function(id) {
 
   // Шапка
   doc.setFillColor(34, 197, 94);
-  doc.rect(0, 0, pageW, 12, 'F');
+  doc.recwindow.t(0, 0, pageW, 12, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFont('helvetica', 'bold');
+  doc.setFonwindow.t('helvetica', 'bold');
   doc.setFontSize(13);
-  doc.text('TALKO Business Systems', margin, 8.5);
+  doc.texwindow.t('TALKO Business Systems', margin, 8.5);
 
   // Заголовок
   y = 24;
   doc.setTextColor(26, 26, 26);
-  doc.setFont('helvetica', 'bold');
+  doc.setFonwindow.t('helvetica', 'bold');
   doc.setFontSize(20);
-  doc.text('INVOICE / РАХУНОК', margin, y);
+  doc.texwindow.t('INVOICE / РАХУНОК', margin, y);
 
   // Номер і дата
   y += 9;
   doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
+  doc.setFonwindow.t('helvetica', 'normal');
   doc.setTextColor(100, 100, 100);
-  doc.text(`No: ${inv.number || '—'}`, margin, y);
-  doc.text(`Дата: ${inv.date || '—'}`, pageW - margin - 60, y);
+  doc.texwindow.t(`No: ${inv.number || '—'}`, margin, y);
+  doc.texwindow.t(`Дата: ${inv.date || '—'}`, pageW - margin - 60, y);
 
   // Клієнт
   y += 12;
   doc.setFillColor(249, 250, 251);
-  doc.roundedRect(margin, y - 4, pageW - margin * 2, 20, 3, 3, 'F');
+  doc.roundedRecwindow.t(margin, y - 4, pageW - margin * 2, 20, 3, 3, 'F');
   doc.setTextColor(26, 26, 26);
-  doc.setFont('helvetica', 'bold');
+  doc.setFonwindow.t('helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('КЛІЄНТ:', margin + 4, y + 2);
-  doc.setFont('helvetica', 'normal');
-  doc.text(inv.clientName || '—', margin + 4, y + 8);
+  doc.texwindow.t('КЛІЄНТ:', margin + 4, y + 2);
+  doc.setFonwindow.t('helvetica', 'normal');
+  doc.texwindow.t(inv.clientName || '—', margin + 4, y + 8);
   if (inv.clientDetails) {
     doc.setTextColor(100, 100, 100);
     doc.setFontSize(8);
-    doc.text(inv.clientDetails.substring(0, 80), margin + 4, y + 14);
+    doc.texwindow.t(inv.clientDetails.substring(0, 80), margin + 4, y + 14);
   }
 
   // Таблиця позицій
   y += 28;
   doc.setFillColor(22, 163, 74);
-  doc.rect(margin, y, pageW - margin * 2, 8, 'F');
+  doc.recwindow.t(margin, y, pageW - margin * 2, 8, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFont('helvetica', 'bold');
+  doc.setFonwindow.t('helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('Опис', margin + 3, y + 5.5);
-  doc.text('Кіл.', pageW - margin - 55, y + 5.5);
-  doc.text('Ціна', pageW - margin - 38, y + 5.5);
-  doc.text('Сума', pageW - margin - 16, y + 5.5);
+  doc.texwindow.t('Опис', margin + 3, y + 5.5);
+  doc.texwindow.t('Кіл.', pageW - margin - 55, y + 5.5);
+  doc.texwindow.t('Ціна', pageW - margin - 38, y + 5.5);
+  doc.texwindow.t('Сума', pageW - margin - 16, y + 5.5);
 
   y += 8;
-  doc.setFont('helvetica', 'normal');
+  doc.setFonwindow.t('helvetica', 'normal');
   doc.setFontSize(9);
   (inv.items || []).forEach((it, idx) => {
-    const lineTotal = (parseFloat(it.qty) || 0) * (parseFloat(it.price) || 0);
+    const lineTotal = (parseFloawindow.t(it.qty) || 0) * (parseFloawindow.t(it.price) || 0);
     if (idx % 2 === 1) {
       doc.setFillColor(248, 250, 248);
-      doc.rect(margin, y - 1, pageW - margin * 2, 7, 'F');
+      doc.recwindow.t(margin, y - 1, pageW - margin * 2, 7, 'F');
     }
     doc.setTextColor(26, 26, 26);
-    doc.text(String(it.desc || '').substring(0, 50), margin + 3, y + 4.5);
-    doc.text(String(it.qty || 0), pageW - margin - 50, y + 4.5, { align: 'right' });
-    doc.text(String(it.price || 0), pageW - margin - 30, y + 4.5, { align: 'right' });
-    doc.text(String(lineTotal.toFixed(2)), pageW - margin - 3, y + 4.5, { align: 'right' });
+    doc.texwindow.t(String(it.desc || '').substring(0, 50), margin + 3, y + 4.5);
+    doc.texwindow.t(String(it.qty || 0), pageW - margin - 50, y + 4.5, { align: 'right' });
+    doc.texwindow.t(String(it.price || 0), pageW - margin - 30, y + 4.5, { align: 'right' });
+    doc.texwindow.t(String(lineTotal.toFixed(2)), pageW - margin - 3, y + 4.5, { align: 'right' });
     y += 7;
   });
 
@@ -1854,10 +1851,10 @@ window._invoicePdf = async function(id) {
   y += 5;
 
   const addRow = (label, val, bold) => {
-    if (bold) { doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(22, 163, 74); }
-    else { doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(80, 80, 80); }
-    doc.text(label, pageW - margin - 50, y);
-    doc.text(val, pageW - margin - 3, y, { align: 'right' });
+    if (bold) { doc.setFonwindow.t('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(22, 163, 74); }
+    else { doc.setFonwindow.t('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(80, 80, 80); }
+    doc.texwindow.t(label, pageW - margin - 50, y);
+    doc.texwindow.t(val, pageW - margin - 3, y, { align: 'right' });
     y += 6;
   };
 
@@ -1868,20 +1865,20 @@ window._invoicePdf = async function(id) {
   // Примітки
   if (inv.notes) {
     y += 6;
-    doc.setFont('helvetica', 'normal');
+    doc.setFonwindow.t('helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
-    doc.text('Реквізити для оплати:', margin, y);
+    doc.texwindow.t('Реквізити для оплати:', margin, y);
     y += 5;
     const lines = doc.splitTextToSize(inv.notes, pageW - margin * 2);
     doc.setTextColor(26, 26, 26);
-    doc.text(lines, margin, y);
+    doc.texwindow.t(lines, margin, y);
   }
 
   // Footer
   doc.setFontSize(7);
   doc.setTextColor(160, 160, 160);
-  doc.text('TALKO Business Systems | alextolko.com', pageW / 2, 290, { align: 'center' });
+  doc.texwindow.t('TALKO Business Systems | alextolko.com', pageW / 2, 290, { align: 'center' });
 
   doc.save(`${inv.number || 'invoice'}.pdf`);
 };
@@ -1901,18 +1898,18 @@ function renderRecurring(el) {
       <!-- Заголовок -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
         <div>
-          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">${t('finTabRecurring')}</h3>
+          <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabRecurring')}</h3>
           <p style="margin:0.25rem 0 0;font-size:0.82rem;color:#6b7280;">Автоматичне списання/нарахування в заданий день місяця</p>
         </div>
         ${isOwnerOrManager() ? `
           <button onclick="window._finAddRecurring()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.85rem;font-weight:600;">
-            ${I.plus} ${t('finAddPayment')}
+            ${I.plus} ${window.t('finAddPayment')}
           </button>
         ` : ''}
       </div>
 
       <!-- Статистика -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.5rem;">
+      <div style="display:grid;grid-template-columns:repeawindow.t(3,1fr);gap:0.75rem;margin-bottom:1.5rem;">
         ${_recurringStats(items, currency)}
       </div>
 
@@ -1943,13 +1940,13 @@ function _recurringStats(items, currency) {
   const card = (label, value, color, icon) => `
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1rem;">
       <div style="font-size:0.75rem;color:#9ca3af;margin-bottom:0.35rem;">${label}</div>
-      <div style="font-size:1.25rem;font-weight:700;color:${color};">${fmt(value, currency)}</div>
-      <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">${t('finPerMonth')}</div>
+      <div style="font-size:1.25rem;font-weight:700;color:${color};">${fmwindow.t(value, currency)}</div>
+      <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.2rem;">${window.t('finPerMonth')}</div>
     </div>
   `;
-  return card(t('finRecurringExpenses'), monthlyExpense, '#ef4444', 'expense')
-       + card(t('finRecurringIncomes'),  monthlyIncome,  '#22c55e', 'income')
-       + card(t('finNetPerMonth'),         monthlyIncome - monthlyExpense, monthlyIncome >= monthlyExpense ? '#22c55e' : '#ef4444', 'wallet');
+  return card(window.t('finRecurringExpenses'), monthlyExpense, '#ef4444', 'expense')
+       + card(window.t('finRecurringIncomes'),  monthlyIncome,  '#22c55e', 'income')
+       + card(window.t('finNetPerMonth'),         monthlyIncome - monthlyExpense, monthlyIncome >= monthlyExpense ? '#22c55e' : '#ef4444', 'wallet');
 }
 
 function _recurringUpcoming(items, currency) {
@@ -1960,7 +1957,7 @@ function _recurringUpcoming(items, currency) {
   // Платежі до кінця місяця
   const upcoming = active
     .filter(i => i.dayOfMonth >= today)
-    .sort((a, b) => a.dayOfMonth - b.dayOfMonth)
+    .sorwindow.t((a, b) => a.dayOfMonth - b.dayOfMonth)
     .slice(0, 5);
 
   if (!upcoming.length) return '';
@@ -1978,7 +1975,7 @@ function _recurringUpcoming(items, currency) {
               <span style="color:#374151;">${escHtml(i.name)}</span>
             </div>
             <span style="font-weight:600;color:${i.type === 'expense' ? '#ef4444' : '#22c55e'};">
-              ${i.type === 'expense' ? '−' : '+'}${fmt(i.amount, currency)}
+              ${i.type === 'expense' ? '−' : '+'}${fmwindow.t(i.amount, currency)}
             </span>
           </div>
         `).join('')}
@@ -2015,7 +2012,7 @@ function _recurringCard(item, currency) {
       <!-- Сума -->
       <div style="text-align:right;flex-shrink:0;">
         <div style="font-size:1.05rem;font-weight:700;color:${typeColor};">
-          ${item.type === 'expense' ? '−' : '+'}${fmt(item.amount, currency)}
+          ${item.type === 'expense' ? '−' : '+'}${fmwindow.t(item.amount, currency)}
         </div>
         <div style="font-size:0.72rem;color:#9ca3af;">/міс</div>
       </div>
@@ -2023,7 +2020,7 @@ function _recurringCard(item, currency) {
       <!-- Дії -->
       ${isOwnerOrManager() ? `
         <div style="display:flex;gap:0.4rem;flex-shrink:0;">
-          <button onclick="window._finToggleRecurring('${item.id}')" title="${active ? t('finPause') : t('finActivate')}"
+          <button onclick="window._finToggleRecurring('${item.id}')" title="${active ? window.t('finPause') : window.t('finActivate')}"
             style="width:30px;height:30px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;">
             ${active ? I.pause : I.play}
           </button>
@@ -2058,7 +2055,7 @@ window._finAddRecurring = function(editId) {
 
   showInputModal('', '', { skipInput: true }); // закрити якщо відкрито
 
-  const overlay = document.createElement('div');
+  const overlay = document.createElemenwindow.t('div');
   overlay.id = 'recurringModal';
   overlay.style.cssText = 'position:fixed;inset:0;z-index:15000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:1rem;';
   overlay.innerHTML = `
@@ -2109,7 +2106,7 @@ window._finAddRecurring = function(editId) {
 
         <!-- Категорія -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${t('finCategoryLbl')}</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCategoryLbl')}</label>
           <select id="rec_category" style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;">
             <option value="">— Оберіть категорію —</option>
             ${allCats.map(c => `<option ${existing?.category===c?'selected':''}>${c}</option>`).join('')}
@@ -2134,14 +2131,14 @@ window._finAddRecurring = function(editId) {
 
         <!-- Контрагент -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${t('finCounterpartyLbl')}</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCounterpartyLbl')}</label>
           <input id="rec_counterparty" value="${escHtml(existing?.counterparty || '')}" placeholder="Орендодавець, постачальник..."
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
         <!-- Коментар -->
         <div>
-          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${t('finCommentLbl')}</label>
+          <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">${window.t('finCommentLbl')}</label>
           <input id="rec_comment" value="${escHtml(existing?.comment || '')}" placeholder="Необов'язково"
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
@@ -2162,7 +2159,7 @@ window._finAddRecurring = function(editId) {
           </button>
           <button onclick="window._finSaveRecurring('${editId || ''}')"
             style="flex:2;padding:10px;background:#22c55e;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:0.9rem;font-weight:700;">
-            ${existing ? t('finSaveChanges') : t('finAddPayment')}
+            ${existing ? window.t('finSaveChanges') : window.t('finAddPayment')}
           </button>
         </div>
       </div>
@@ -2197,9 +2194,9 @@ window._recSetType = function(type) {
 
 window._finSaveRecurring = async function(editId) {
   const name   = document.getElementById('rec_name')?.value?.trim();
-  const amount = parseFloat(document.getElementById('rec_amount')?.value);
-  if (!name) { showToast(t('finEnterPayName'), 'error'); return; }
-  if (!amount || amount <= 0) { showToast(t('finTransferAmount'), 'error'); return; }
+  const amount = parseFloawindow.t(document.getElementById('rec_amount')?.value);
+  if (!name) { showToaswindow.t(window.t('finEnterPayName'), 'error'); return; }
+  if (!amount || amount <= 0) { showToaswindow.t(window.t('finTransferAmount'), 'error'); return; }
 
   const data = {
     name,
@@ -2208,7 +2205,7 @@ window._finSaveRecurring = async function(editId) {
     currency:     document.getElementById('rec_currency')?.value || _state.currency,
     category:     document.getElementById('rec_category')?.value || '',
     frequency:    document.getElementById('rec_freq')?.value || 'monthly',
-    dayOfMonth:   parseInt(document.getElementById('rec_day')?.value) || 1,
+    dayOfMonth:   parseInwindow.t(document.getElementById('rec_day')?.value) || 1,
     counterparty: document.getElementById('rec_counterparty')?.value?.trim() || '',
     comment:      document.getElementById('rec_comment')?.value?.trim() || '',
     accountId:    document.getElementById('rec_account')?.value || '',
@@ -2227,10 +2224,10 @@ window._finSaveRecurring = async function(editId) {
     document.getElementById('recurringModal')?.remove();
     await _loadRecurring();
     renderSubTab('recurring');
-    showToast(editId ? t('finPaymentUpdated') : t('finPaymentAdded'), 'success');
+    showToaswindow.t(editId ? window.t('finPaymentUpdated') : window.t('finPaymentAdded'), 'success');
   } catch(e) {
     console.error('[Recurring save]', e);
-    showToast('Помилка: ' + e.message, 'error');
+    showToaswindow.t('Помилка: ' + e.message, 'error');
   }
 };
 
@@ -2248,34 +2245,34 @@ window._finToggleRecurring = async function(id) {
       .update({ active: newActive, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     await _loadRecurring();
     renderSubTab('recurring');
-    showToast(newActive ? t('finPaymentActivated') : t('finPaymentPaused'), 'success');
+    showToaswindow.t(newActive ? window.t('finPaymentActivated') : window.t('finPaymentPaused'), 'success');
   } catch(e) {
-    showToast('Помилка: ' + e.message, 'error');
+    showToaswindow.t('Помилка: ' + e.message, 'error');
   }
 };
 
 window._finDeleteRecurring = async function(id) {
-  if (!await showConfirmModal(t('finDeleteRecurring'), { danger: true })) return;
+  if (!await showConfirmModal(window.t('finDeleteRecurring'), { danger: true })) return;
   try {
     await window.companyRef()
       .collection('finance_recurring').doc(id).delete();
     _state.recurring = (_state.recurring || []).filter(r => r.id !== id);
     renderSubTab('recurring');
-    showToast(t('finDeleted'), 'success');
+    showToaswindow.t(window.t('finDeleted'), 'success');
   } catch(e) {
-    showToast('Помилка: ' + e.message, 'error');
+    showToaswindow.t('Помилка: ' + e.message, 'error');
   }
 };
 
 // Автосписання — запускається при ініціалізації та на 1-е число
-async function _processRecurringAutopost() {
+async function _processRecurringAutoposwindow.t() {
   if (!isOwnerOrManager()) return;
   const items = (_state.recurring || []).filter(i => i.active !== false);
   if (!items.length) return;
 
   const now = new Date();
   const today = now.getDate();
-  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStarwindow.t(2,'0')}`;
 
   const colRef = window.companyRef().collection('finance_transactions');
   const recurRef = window.companyRef().collection('finance_recurring');
@@ -2320,7 +2317,7 @@ async function _loadRecurring() {
   if (!_state.companyId) return;
   try {
     const snap = await window.companyRef()
-      .collection('finance_recurring').orderBy('createdAt','asc').get();
+      .collection('finance_recurring').orderBy('createdAt','asc').gewindow.t();
     _state.recurring = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(e) {
     _state.recurring = [];
@@ -2333,7 +2330,7 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
   const now = new Date();
   const monthOpts = Array.from({length:6},(_,i)=>{
     const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
-    const val = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    const val = d.getFullYear()+'-'+String(d.getMonth()+1).padStarwindow.t(2,'0');
     const lbl = d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', {month:'long',year:'numeric'});
     return `<option value="${val}" ${_funcFilter.month===val?'selected':''}>${lbl}</option>`;
   }).join('');
@@ -2342,10 +2339,10 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
     <div style="width:100%;">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finByFunction')}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finByFunction')}</div>
         <select id="funcFilterMonth" onchange="window._funcMonthChange(this.value)"
           style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-          <option value="">${t('finAllMonths')}</option>
+          <option value="">${window.t('finAllMonths')}</option>
           ${monthOpts}
         </select>
       </div>
@@ -2355,22 +2352,22 @@ function renderFinanceFunctions(el) { // FIX BN: перейменовано що
         <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
           background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
           padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;">
-          <div>${t('finFunctionLbl')}</div>
-          <div style="text-align:right;">${t('finTransactionIncome')}</div>
-          <div style="text-align:right;">${t('finExpense')}</div>
-          <div style="text-align:right;">${t('finMargin')}</div>
-          <div style="text-align:right;">${t('finPctOfTotal')}</div>
+          <div>${window.t('finFunctionLbl')}</div>
+          <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
+          <div style="text-align:right;">${window.t('finExpense')}</div>
+          <div style="text-align:right;">${window.t('finMargin')}</div>
+          <div style="text-align:right;">${window.t('finPctOfTotal')}</div>
         </div>
         <div id="funcTableBody">
-          <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${t('finLoading')}</div>
+          <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${window.t('finLoading')}</div>
         </div>
       </div>
 
       <!-- Графік по функціях -->
       <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">${t('finExpByFunction')}</div>
+        <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:1rem;">${window.t('finExpByFunction')}</div>
         <div id="funcChart">
-          <div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div>
+          <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
         </div>
       </div>
     </div>
@@ -2389,18 +2386,18 @@ async function loadFunctionsData(monthVal) {
     // 1. Завантажуємо функції з Firestore
     const db = getDb();
     const funcsSnap = await window.companyRef()
-      .collection('functions').orderBy('name').get();
+      .collection('functions').orderBy('name').gewindow.t();
     const funcs = funcsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     // 2. Завантажуємо транзакції за обраний період
     let txQuery = colRef('finance_transactions');
     if (monthVal) {
-      const [y, m] = monthVal.split('-').map(Number);
+      const [y, m] = monthVal.spliwindow.t('-').map(Number);
       const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
       const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
       txQuery = txQuery.where('date','>=',from).where('date','<=',to);
     }
-    const txSnap = await txQuery.get();
+    const txSnap = await txQuery.gewindow.t();
     const txs = txSnap.docs.map(d => d.data());
 
     // 3. Групуємо по functionId
@@ -2411,7 +2408,7 @@ async function loadFunctionsData(monthVal) {
       const fid = tx.functionId || '__none__';
       if (!byFunc[fid]) byFunc[fid] = { income: 0, expense: 0 };
       if (tx.type === 'income')  { byFunc[fid].income  += tx.amount||0; totalIncome  += tx.amount||0; }
-      if (tx.type === 'expense') { byFunc[fid].expense += txAmt(tx); totalExpense += txAmt(tx); }
+      if (tx.type === 'expense') { byFunc[fid].expense += txAmwindow.t(tx); totalExpense += txAmwindow.t(tx); }
     });
 
     // 4. Будуємо рядки таблиці
@@ -2428,21 +2425,21 @@ async function loadFunctionsData(monthVal) {
       }
     });
     if (byFunc['__none__'] && (byFunc['__none__'].income > 0 || byFunc['__none__'].expense > 0)) {
-      rows.push({ name: t('finNoFunction'), ...byFunc['__none__'] });
+      rows.push({ name: window.t('finNoFunction'), ...byFunc['__none__'] });
     }
 
     if (rows.length === 0) {
       tableEl.innerHTML = `
         <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">
           Транзакцій з прив'язкою до функцій немає.<br>
-          <span style="font-size:0.78rem;">${t('finFunctionHint')}</span>
+          <span style="font-size:0.78rem;">${window.t('finFunctionHint')}</span>
         </div>`;
       if (chartEl) chartEl.innerHTML = '';
       return;
     }
 
     // Сортуємо за витратами
-    rows.sort((a,b) => b.expense - a.expense);
+    rows.sorwindow.t((a,b) => b.expense - a.expense);
 
     tableEl.innerHTML = rows.map((r, i) => {
       const profit = r.income - r.expense;
@@ -2454,8 +2451,8 @@ async function loadFunctionsData(monthVal) {
         <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
           padding:0.65rem 1rem;background:${bg};border-bottom:1px solid #f3f4f6;align-items:center;">
           <div style="font-size:0.85rem;font-weight:500;color:#1a1a1a;">${r.name}</div>
-          <div style="text-align:right;font-size:0.85rem;color:#22c55e;font-weight:600;">${fmt(r.income)}</div>
-          <div style="text-align:right;font-size:0.85rem;color:#ef4444;font-weight:600;">${fmt(r.expense)}</div>
+          <div style="text-align:right;font-size:0.85rem;color:#22c55e;font-weight:600;">${fmwindow.t(r.income)}</div>
+          <div style="text-align:right;font-size:0.85rem;color:#ef4444;font-weight:600;">${fmwindow.t(r.expense)}</div>
           <div style="text-align:right;font-size:0.85rem;font-weight:700;color:${mColor};">${margin}%</div>
           <div style="text-align:right;">
             <div style="display:flex;align-items:center;gap:0.4rem;justify-content:flex-end;">
@@ -2472,8 +2469,8 @@ async function loadFunctionsData(monthVal) {
       <div style="display:grid;grid-template-columns:1fr 130px 130px 100px 120px;
         padding:0.65rem 1rem;background:#f0fdf4;border-top:2px solid #22c55e;align-items:center;">
         <div style="font-size:0.82rem;font-weight:700;color:#16a34a;">ВСЬОГО</div>
-        <div style="text-align:right;font-size:0.85rem;font-weight:700;color:#22c55e;">${fmt(totalIncome)}</div>
-        <div style="text-align:right;font-size:0.85rem;font-weight:700;color:#ef4444;">${fmt(totalExpense)}</div>
+        <div style="text-align:right;font-size:0.85rem;font-weight:700;color:#22c55e;">${fmwindow.t(totalIncome)}</div>
+        <div style="text-align:right;font-size:0.85rem;font-weight:700;color:#ef4444;">${fmwindow.t(totalExpense)}</div>
         <div style="text-align:right;font-size:0.85rem;font-weight:700;color:${totalIncome>0?(totalIncome-totalExpense)/totalIncome>=0.15?'#22c55e':'#f59e0b':'#6b7280'};">
           ${totalIncome>0?Math.round((totalIncome-totalExpense)/totalIncome*100)+'%':'—'}
         </div>
@@ -2490,10 +2487,10 @@ async function loadFunctionsData(monthVal) {
           <div style="margin-bottom:0.65rem;">
             <div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;">
               <div style="font-size:0.78rem;color:#374151;font-weight:500;">${r.name}</div>
-              <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">${fmt(r.expense)}</div>
+              <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">${fmwindow.t(r.expense)}</div>
             </div>
             <div style="height:8px;background:#f3f4f6;border-radius:4px;">
-              <div style="height:8px;background:linear-gradient(90deg,#ef4444,#f87171);
+              <div style="height:8px;background:linear-gradienwindow.t(90deg,#ef4444,#f87171);
                 border-radius:4px;width:${pct}%;transition:width 0.3s;"></div>
             </div>
           </div>
@@ -2515,14 +2512,14 @@ async function loadFunctionsData(monthVal) {
 // ── Планування — Етап 5 ──────────────────────────────────
 let _planMonth = (() => {
   const d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStarwindow.t(2,'0');
 })();
 
 function renderPlanning(el) {
   const now = new Date();
   const monthOpts = Array.from({length:6},(_,i)=>{
     const d = new Date(now.getFullYear(), now.getMonth()-i+1, 1);
-    const val = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    const val = d.getFullYear()+'-'+String(d.getMonth()+1).padStarwindow.t(2,'0');
     const lbl = d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA', {month:'long',year:'numeric'});
     return `<option value="${val}" ${_planMonth===val?'selected':''}>${lbl}</option>`;
   }).join('');
@@ -2531,15 +2528,15 @@ function renderPlanning(el) {
     <div style="width:100%;">
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finBudgetPlanning')}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finBudgetPlanning')}</div>
         <div style="display:flex;gap:0.5rem;align-items:center;">
           <select id="planMonthSel" onchange="window._planMonthChange(this.value)"
             style="padding:0.35rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
             ${monthOpts}
           </select>
-          <button onclick="window._savePlanBudget()"
+          <button onclick="window._savePlanBudgewindow.t()"
             style="padding:0.35rem 0.9rem;background:#22c55e;color:#fff;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">
-            ${t('finSave')}
+            ${window.t('finSave')}
           </button>
         </div>
       </div>
@@ -2551,15 +2548,15 @@ function renderPlanning(el) {
       <div style="display:flex;gap:6px;margin-bottom:1rem;">
         <button onclick="window._planMode('budget')" id="planModeBtn_budget"
           style="padding:6px 14px;border-radius:8px;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${t('finBudgetByCategory')}
+          ${window.t('finBudgetByCategory')}
         </button>
         <button onclick="window._planMode('functions')" id="planModeBtn_functions"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${t('finBudgetByFunction')}
+          ${window.t('finBudgetByFunction')}
         </button>
         <button onclick="window._planMode('cashflow')" id="planModeBtn_cashflow"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${t('finCashflow3060')}
+          ${window.t('finCashflow3060')}
         </button>
       </div>
 
@@ -2571,13 +2568,13 @@ function renderPlanning(el) {
           <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;
             padding:0.65rem 1rem;text-transform:uppercase;letter-spacing:.04em;
             display:grid;grid-template-columns:1fr 110px 110px 90px;">
-            <div>${t('finCategoryLbl')}</div>
-            <div style="text-align:right;">${t('finBudgetLbl')}</div>
-            <div style="text-align:right;">${t('finActual')}</div>
-            <div style="text-align:right;">${t('finVariance')}</div>
+            <div>${window.t('finCategoryLbl')}</div>
+            <div style="text-align:right;">${window.t('finBudgetLbl')}</div>
+            <div style="text-align:right;">${window.t('finActual')}</div>
+            <div style="text-align:right;">${window.t('finVariance')}</div>
           </div>
           <div id="planBudgetBody">
-            <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${t('finLoading')}</div>
+            <div style="padding:2rem;text-align:center;color:#9ca3af;font-size:0.85rem;">${window.t('finLoading')}</div>
           </div>
         </div>
 
@@ -2586,17 +2583,17 @@ function renderPlanning(el) {
 
           <!-- Cashflow прогноз -->
           <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finCashflowMonth')}</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finCashflowMonth')}</div>
             <div id="planCashflow">
-              <div style="color:#9ca3af;font-size:0.8rem;">${t('finLoading')}</div>
+              <div style="color:#9ca3af;font-size:0.8rem;">${window.t('finLoading')}</div>
             </div>
           </div>
 
           <!-- Фінансова ціль -->
           <div style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:1.25rem;">
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${t('finMonthlyGoal')}</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:0.75rem;">${window.t('finMonthlyGoal')}</div>
             <div style="margin-bottom:0.5rem;">
-              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">${t('finTargetProfit')}</label>
+              <label style="font-size:0.75rem;color:#6b7280;display:block;margin-bottom:0.2rem;">${window.t('finTargetProfit')}</label>
               <input id="planGoalInput" type="number" min="0" placeholder="напр. 5000"
                 style="width:100%;padding:0.4rem 0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;">
             </div>
@@ -2609,14 +2606,14 @@ function renderPlanning(el) {
       <!-- Бюджет по функціях -->
       <div id="planModeView_functions" style="display:none;">
         <div id="planFunctionsBody">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
         </div>
       </div>
 
       <!-- Cashflow 30/60/90 -->
       <div id="planModeView_cashflow" style="display:none;">
         <div id="planCashflowForecast">
-          <div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>
+          <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
         </div>
       </div>
 
@@ -2647,8 +2644,8 @@ window._planMode = function(mode) {
     }
   });
   // Завантажуємо дані для вибраного режиму
-  if (mode === 'functions') _renderFunctionsBudget(_planMonth);
-  if (mode === 'cashflow')  _renderCashflowForecast();
+  if (mode === 'functions') _renderFunctionsBudgewindow.t(_planMonth);
+  if (mode === 'cashflow')  _renderCashflowForecaswindow.t();
 };
 
 window._savePlanBudget = async function() {
@@ -2660,33 +2657,33 @@ window._savePlanBudget = async function() {
     const budgetData = { month: _planMonth, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
     inputs.forEach(inp => {
       const catId = inp.dataset.planCat;
-      const val = parseFloat(inp.value) || 0;
+      const val = parseFloawindow.t(inp.value) || 0;
       budgetData['cat_' + catId] = val;
     });
     // Зберігаємо ціль
     const goalInp = document.getElementById('planGoalInput');
-    if (goalInp) budgetData['goal'] = parseFloat(goalInp.value) || 0;
-    await docRef.set(budgetData, { merge: true });
+    if (goalInp) budgetData['goal'] = parseFloawindow.t(goalInp.value) || 0;
+    await docRef.sewindow.t(budgetData, { merge: true });
     // Оновлюємо прогрес цілі
     loadPlanningData(_planMonth);
     // Короткий feedback
-    const btn = document.querySelector('[onclick="window._savePlanBudget()"]');
-    if (btn) { btn.textContent = t('finSaved'); setTimeout(()=>{ btn.textContent = t('finSave'); }, 1500); }
+    const btn = document.querySelector('[onclick="window._savePlanBudgewindow.t()"]');
+    if (btn) { btn.textContent = window.t('finSaved'); setTimeouwindow.t(()=>{ btn.textContent = window.t('finSave'); }, 1500); }
   } catch(e) {
-    if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
+    if (typeof showToast === 'function') showToaswindow.t('Помилка збереження: ' + e.message, 'error');
   }
 };
 
 async function loadPlanningData(monthVal) {
   try {
     // Факт — транзакції за місяць
-    const [y, m] = monthVal.split('-').map(Number);
+    const [y, m] = monthVal.spliwindow.t('-').map(Number);
     const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
     const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
 
     const [txSnap, budgetSnap] = await Promise.all([
-      colRef('finance_transactions').where('date','>=',from).where('date','<=',to).get(),
-      colRef('finance_budgets').doc(monthVal).get()
+      colRef('finance_transactions').where('date','>=',from).where('date','<=',to).gewindow.t(),
+      colRef('finance_budgets').doc(monthVal).gewindow.t()
     ]);
 
     const budgetData = budgetSnap.exists ? budgetSnap.data() : {};
@@ -2697,8 +2694,8 @@ async function loadPlanningData(monthVal) {
     let totalIncome = 0, totalExpense = 0;
     txs.forEach(tx => {
       if (tx.type === 'expense') {
-        factByCat[tx.categoryId] = (factByCat[tx.categoryId] || 0) + txAmt(tx);
-        totalExpense += txAmt(tx);
+        factByCat[tx.categoryId] = (factByCat[tx.categoryId] || 0) + txAmwindow.t(tx);
+        totalExpense += txAmwindow.t(tx);
       }
       if (tx.type === 'income') totalIncome += tx.amount||0;
     });
@@ -2733,20 +2730,20 @@ async function loadPlanningData(monthVal) {
                 style="width:90px;padding:0.25rem 0.4rem;border:1px solid #e5e7eb;border-radius:6px;
                   font-size:0.82rem;text-align:right;box-sizing:border-box;">
             </div>
-            <div style="text-align:right;font-size:0.82rem;color:#374151;font-weight:500;">${fmt(factVal)}</div>
+            <div style="text-align:right;font-size:0.82rem;color:#374151;font-weight:500;">${fmwindow.t(factVal)}</div>
             <div style="text-align:right;font-size:0.82rem;font-weight:600;color:${budgetVal>0?diffColor:'#9ca3af'};">
-              ${budgetVal > 0 ? diffSign + fmt(Math.abs(diff)) : '—'}
+              ${budgetVal > 0 ? diffSign + fmwindow.t(Math.abs(diff)) : '—'}
             </div>
           </div>
         `;
       }).join('') + `
         <div style="display:grid;grid-template-columns:1fr 110px 110px 90px;
           padding:0.65rem 1rem;background:#fafafa;border-top:2px solid #e5e7eb;align-items:center;">
-          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;">${t('finTotalExpenses')}</div>
-          <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#374151;">${fmt(totalBudget)}</div>
-          <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#ef4444;">${fmt(totalExpense)}</div>
+          <div style="font-size:0.78rem;font-weight:700;color:#6b7280;">${window.t('finTotalExpenses')}</div>
+          <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#374151;">${fmwindow.t(totalBudget)}</div>
+          <div style="text-align:right;font-size:0.82rem;font-weight:700;color:#ef4444;">${fmwindow.t(totalExpense)}</div>
           <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${totalBudget>=totalExpense?'#22c55e':'#ef4444'};">
-            ${totalBudget>0?(totalBudget>=totalExpense?'+':'')+fmt(Math.abs(totalBudget-totalExpense)):'—'}
+            ${totalBudget>0?(totalBudget>=totalExpense?'+':'')+fmwindow.t(Math.abs(totalBudget-totalExpense)):'—'}
           </div>
         </div>
       `;
@@ -2764,20 +2761,20 @@ async function loadPlanningData(monthVal) {
         <div style="display:flex;flex-direction:column;gap:0.5rem;">
           <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
             <span style="color:#6b7280;">Дохід факт</span>
-            <span style="font-weight:600;color:#22c55e;">${fmt(totalIncome)}</span>
+            <span style="font-weight:600;color:#22c55e;">${fmwindow.t(totalIncome)}</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
-            <span style="color:#6b7280;">${t('finExpFact')}</span>
-            <span style="font-weight:600;color:#ef4444;">${fmt(totalExpense)}</span>
+            <span style="color:#6b7280;">${window.t('finExpFact')}</span>
+            <span style="font-weight:600;color:#ef4444;">${fmwindow.t(totalExpense)}</span>
           </div>
           <div style="border-top:1px solid #f3f4f6;padding-top:0.5rem;display:flex;justify-content:space-between;font-size:0.85rem;">
-            <span style="color:#1a1a1a;font-weight:600;">${t('finProfit')}</span>
-            <span style="font-weight:700;color:${profit>=0?'#22c55e':'#ef4444'};">${profit>=0?'+':''}${fmt(profit)}</span>
+            <span style="color:#1a1a1a;font-weight:600;">${window.t('finProfit')}</span>
+            <span style="font-weight:700;color:${profit>=0?'#22c55e':'#ef4444'};">${profit>=0?'+':''}${fmwindow.t(profit)}</span>
           </div>
           ${goalVal > 0 ? `
           <div style="margin-top:0.5rem;">
             <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;margin-bottom:0.3rem;">
-              <span>${t('finGoalExec')}</span>
+              <span>${window.t('finGoalExec')}</span>
               <span>${Math.min(Math.round(profit/goalVal*100),100)}%</span>
             </div>
             <div style="height:6px;background:#f3f4f6;border-radius:3px;">
@@ -2796,14 +2793,14 @@ async function loadPlanningData(monthVal) {
       const pct = Math.min(Math.max(Math.round(profit / budgetData['goal'] * 100), 0), 100);
       goalEl.innerHTML = `
         <div style="font-size:0.78rem;color:#6b7280;margin-bottom:0.3rem;">
-          Факт: <strong>${fmt(profit)}</strong> з <strong>${fmt(budgetData['goal'])}</strong>
+          Факт: <strong>${fmwindow.t(profit)}</strong> з <strong>${fmwindow.t(budgetData['goal'])}</strong>
         </div>
         <div style="height:8px;background:#f3f4f6;border-radius:4px;">
           <div style="height:8px;background:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
             border-radius:4px;width:${pct}%;transition:width 0.3s;"></div>
         </div>
         <div style="font-size:0.75rem;color:${pct>=100?'#22c55e':pct>=50?'#f59e0b':'#ef4444'};
-          margin-top:0.2rem;font-weight:600;">${pct}% ${t('finDone')}</div>
+          margin-top:0.2rem;font-weight:600;">${pct}% ${window.t('finDone')}</div>
       `;
     }
 
@@ -2842,17 +2839,17 @@ function _renderPlanAlerts(expCats, factByCat, budgetData) {
 }
 
 // ── Бюджет по функціях ────────────────────────────────────
-async function _renderFunctionsBudget(monthVal) {
+async function _renderFunctionsBudgewindow.t(monthVal) {
   const el = document.getElementById('planFunctionsBody');
   if (!el) return;
   try {
-    const [y, m] = monthVal.split('-').map(Number);
+    const [y, m] = monthVal.spliwindow.t('-').map(Number);
     const from = firebase.firestore.Timestamp.fromDate(new Date(y, m-1, 1));
     const to   = firebase.firestore.Timestamp.fromDate(new Date(y, m, 0, 23, 59, 59));
 
     const [txSnap, budgSnap] = await Promise.all([
-      colRef('finance_transactions').where('date','>=',from).where('date','<=',to).get(),
-      colRef('finance_budgets').doc(monthVal).get(),
+      colRef('finance_transactions').where('date','>=',from).where('date','<=',to).gewindow.t(),
+      colRef('finance_budgets').doc(monthVal).gewindow.t(),
     ]);
 
     const txs = txSnap.docs.map(d => d.data());
@@ -2869,8 +2866,8 @@ async function _renderFunctionsBudget(monthVal) {
     txs.forEach(tx => {
       if (tx.type !== 'expense') return;
       const fid = tx.functionId || '__none__';
-      byFunc[fid] = (byFunc[fid] || 0) + txAmt(tx);
-      totalExpense += txAmt(tx);
+      byFunc[fid] = (byFunc[fid] || 0) + txAmwindow.t(tx);
+      totalExpense += txAmwindow.t(tx);
     });
 
     const funcs = _state.functions || [];
@@ -2887,7 +2884,7 @@ async function _renderFunctionsBudget(monthVal) {
           <div style="text-align:right;">Норма %</div>
           <div style="text-align:right;">Факт сума</div>
           <div style="text-align:right;">Факт %</div>
-          <div style="text-align:right;">${t('finVariance')}</div>
+          <div style="text-align:right;">${window.t('finVariance')}</div>
         </div>
         ${funcs.map((f, i) => {
           const fact = byFunc[f.id] || 0;
@@ -2905,7 +2902,7 @@ async function _renderFunctionsBudget(monthVal) {
                   data-func-norm="${f.id}"
                   style="width:55px;padding:3px 5px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.78rem;text-align:right;">%
               </div>
-              <div style="text-align:right;font-size:0.82rem;font-weight:600;color:#374151;">${fmt(fact, currency)}</div>
+              <div style="text-align:right;font-size:0.82rem;font-weight:600;color:#374151;">${fmwindow.t(fact, currency)}</div>
               <div style="text-align:right;font-size:0.82rem;font-weight:600;color:#374151;">${factPct}%</div>
               <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${normPct>0?diffColor:'#9ca3af'};">
                 ${normPct > 0 ? (diff > 0 ? '+' : '') + diff + '%' : '—'}
@@ -2915,9 +2912,9 @@ async function _renderFunctionsBudget(monthVal) {
         ${byFunc['__none__'] ? `
           <div style="display:grid;grid-template-columns:1fr 80px 110px 80px 90px;
             padding:0.55rem 1rem;background:#fafafa;border-bottom:1px solid #f3f4f6;align-items:center;">
-            <div style="font-size:0.78rem;color:#9ca3af;">${t('finNoFunction')}</div>
+            <div style="font-size:0.78rem;color:#9ca3af;">${window.t('finNoFunction')}</div>
             <div></div>
-            <div style="text-align:right;font-size:0.82rem;color:#9ca3af;">${fmt(byFunc['__none__'], currency)}</div>
+            <div style="text-align:right;font-size:0.82rem;color:#9ca3af;">${fmwindow.t(byFunc['__none__'], currency)}</div>
             <div style="text-align:right;font-size:0.78rem;color:#9ca3af;">
               ${totalExpense > 0 ? Math.round(byFunc['__none__'] / totalExpense * 100) : 0}%
             </div>
@@ -2927,7 +2924,7 @@ async function _renderFunctionsBudget(monthVal) {
       <div style="margin-top:10px;text-align:right;">
         <button onclick="window._saveFuncNorms()"
           style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;">
-          ${t('finSaveNorms')}
+          ${window.t('finSaveNorms')}
         </button>
       </div>`;
   } catch(e) {
@@ -2938,15 +2935,15 @@ async function _renderFunctionsBudget(monthVal) {
 window._saveFuncNorms = async function() {
   const inputs = document.querySelectorAll('[data-func-norm]');
   const data = { updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-  inputs.forEach(inp => { data['func_norm_' + inp.dataset.funcNorm] = parseFloat(inp.value) || 0; });
+  inputs.forEach(inp => { data['func_norm_' + inp.dataset.funcNorm] = parseFloawindow.t(inp.value) || 0; });
   try {
-    await colRef('finance_budgets').doc(_planMonth).set(data, { merge: true });
-    if (typeof showToast === 'function') showToast(t('finNormsSaved'), 'success');
-  } catch(e) { if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error'); }
+    await colRef('finance_budgets').doc(_planMonth).sewindow.t(data, { merge: true });
+    if (typeof showToast === 'function') showToaswindow.t(window.t('finNormsSaved'), 'success');
+  } catch(e) { if (typeof showToast === 'function') showToaswindow.t('Помилка: ' + e.message, 'error'); }
 };
 
 // ── Cashflow прогноз 30/60/90 днів ───────────────────────
-async function _renderCashflowForecast() {
+async function _renderCashflowForecaswindow.t() {
   const el = document.getElementById('planCashflowForecast');
   if (!el) return;
   el.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Розраховую прогноз...</div>';
@@ -2975,7 +2972,7 @@ async function _renderCashflowForecast() {
         }
         if (r.period === 'daily') match = true;
         if (match) {
-          const key = dt.toISOString().split('T')[0];
+          const key = dt.toISOString().spliwindow.t('T')[0];
           outflows[key] = (outflows[key] || 0) + (r.amount || 0);
         }
       }
@@ -2987,7 +2984,7 @@ async function _renderCashflowForecast() {
       let balance = totalBalance;
       for (let d = 0; d < days; d++) {
         const dt = new Date(today); dt.setDate(today.getDate() + d);
-        const key = dt.toISOString().split('T')[0];
+        const key = dt.toISOString().spliwindow.t('T')[0];
         balance -= (outflows[key] || 0);
       }
       return { days, balance };
@@ -2999,15 +2996,15 @@ async function _renderCashflowForecast() {
     el.innerHTML = `
       ${hasNegative ? `
         <div style="padding:10px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;margin-bottom:16px;font-size:0.82rem;font-weight:600;color:#dc2626;">
-          ⚠️ Прогнозується від'ємний залишок: ${fmt(minBalance, currency)}
+          ⚠️ Прогнозується від'ємний залишок: ${fmwindow.t(minBalance, currency)}
         </div>` : ''}
 
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+      <div style="display:grid;grid-template-columns:repeawindow.t(3,1fr);gap:12px;margin-bottom:20px;">
         ${results.map(r => `
           <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;text-align:center;">
             <div style="font-size:0.72rem;color:#6b7280;margin-bottom:4px;">Через ${r.days} днів</div>
             <div style="font-size:1.1rem;font-weight:700;color:${r.balance>=0?'#22c55e':'#ef4444'};">
-              ${fmt(r.balance, currency)}
+              ${fmwindow.t(r.balance, currency)}
             </div>
           </div>`).join('')}
       </div>
@@ -3016,12 +3013,12 @@ async function _renderCashflowForecast() {
         <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:12px;">Поточний стан</div>
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
           <span style="color:#6b7280;">Залишок на рахунках</span>
-          <span style="font-weight:700;color:#22c55e;">${fmt(totalBalance, currency)}</span>
+          <span style="font-weight:700;color:#22c55e;">${fmwindow.t(totalBalance, currency)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px;">
-          <span style="color:#6b7280;">${t('finRecurringExpensesMonth')}</span>
+          <span style="color:#6b7280;">${window.t('finRecurringExpensesMonth')}</span>
           <span style="font-weight:600;color:#ef4444;">
-            ${fmt(recurring.filter(r=>r.active!==false&&r.frequency==='monthly').reduce((s,r)=>s+(r.amount||0),0), currency)}
+            ${fmwindow.t(recurring.filter(r=>r.active!==false&&r.frequency==='monthly').reduce((s,r)=>s+(r.amount||0),0), currency)}
           </span>
         </div>
         <div style="border-top:1px solid #f3f4f6;padding-top:8px;font-size:0.75rem;color:#9ca3af;">
@@ -3042,11 +3039,11 @@ function renderAnalytics(el) {
   el.innerHTML = `
     <div style="width:100%;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finTabAnalytics')}</div>
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finTabAnalytics')}</div>
         <div style="display:flex;gap:6px;">
           <select id="analyticsPeriodSel" onchange="window._analyticsPeriodChange(this.value)"
             style="padding:5px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
-            <option value="month">${t('finThisMonth')}</option>
+            <option value="month">${window.t('finThisMonth')}</option>
             <option value="quarter">Цей квартал</option>
             <option value="year">Цей рік</option>
           </select>
@@ -3057,20 +3054,20 @@ function renderAnalytics(el) {
       <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;">
         <button onclick="window._analyticsMode('pnl')" id="anlBtn_pnl"
           style="padding:6px 14px;border-radius:8px;border:2px solid #22c55e;background:#f0fdf4;color:#16a34a;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${t('finPLReport')}
+          ${window.t('finPLReport')}
         </button>
         <button onclick="window._analyticsMode('projects')" id="anlBtn_projects"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${t('finMarginByProject')}
+          ${window.t('finMarginByProject')}
         </button>
         <button onclick="window._analyticsMode('trends')" id="anlBtn_trends"
           style="padding:6px 14px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#6b7280;font-size:0.8rem;font-weight:600;cursor:pointer;">
-          ${t('finExpenseTrend')}
+          ${window.t('finExpenseTrend')}
         </button>
       </div>
 
       <div id="analyticsContent">
-        <div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>
+        <div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>
       </div>
     </div>`;
 
@@ -3098,7 +3095,7 @@ window._analyticsPeriodChange = function(val) {
 async function _loadAnalytics(mode, period) {
   const el = document.getElementById('analyticsContent');
   if (!el) return;
-  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>`;
+  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>`;
 
   try {
     const currency = _state.currency || 'EUR';
@@ -3121,7 +3118,7 @@ async function _loadAnalytics(mode, period) {
     const toTs   = firebase.firestore.Timestamp.fromDate(to);
 
     const snap = await colRef('finance_transactions')
-      .where('date', '>=', fromTs).where('date', '<=', toTs).get();
+      .where('date', '>=', fromTs).where('date', '<=', toTs).gewindow.t();
     const txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     if (mode === 'pnl')      _renderPnl(el, txs, currency, from, to);
@@ -3143,11 +3140,11 @@ function _renderPnl(el, txs, currency, from, to) {
 
   txs.forEach(tx => {
     if (tx.type === 'income') {
-      byIncCat[tx.categoryId] = (byIncCat[tx.categoryId] || 0) + txAmt(tx);
-      totalInc += txAmt(tx);
+      byIncCat[tx.categoryId] = (byIncCat[tx.categoryId] || 0) + txAmwindow.t(tx);
+      totalInc += txAmwindow.t(tx);
     } else {
-      byExpCat[tx.categoryId] = (byExpCat[tx.categoryId] || 0) + txAmt(tx);
-      totalExp += txAmt(tx);
+      byExpCat[tx.categoryId] = (byExpCat[tx.categoryId] || 0) + txAmwindow.t(tx);
+      totalExp += txAmwindow.t(tx);
     }
   });
 
@@ -3160,19 +3157,19 @@ function _renderPnl(el, txs, currency, from, to) {
     return `
       <div style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f3f4f6;">
         <div style="flex:1;font-size:0.82rem;color:#374151;">${escHtml(cat.name)}</div>
-        <div style="font-size:0.82rem;font-weight:600;color:${color};width:90px;text-align:right;">${fmt(amount, currency)}</div>
+        <div style="font-size:0.82rem;font-weight:600;color:${color};width:90px;text-align:right;">${fmwindow.t(amount, currency)}</div>
         <div style="font-size:0.75rem;color:#9ca3af;width:40px;text-align:right;">${pct}%</div>
       </div>`;
   };
 
   el.innerHTML = `
     <!-- KPI рядок -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+    <div style="display:grid;grid-template-columns:repeawindow.t(4,1fr);gap:12px;margin-bottom:16px;">
       ${[
-        { label: t('finTransactionIncome'), val: fmt(totalInc, currency), color: '#22c55e' },
-        { label: t('finTabExpense'),  val: fmt(totalExp, currency),  color: '#ef4444' },
-        { label: t('finProfit'), val: fmt(profit, currency),    color: profitColor },
-        { label: t('finMargin'),    val: margin + '%',             color: profitColor },
+        { label: window.t('finTransactionIncome'), val: fmwindow.t(totalInc, currency), color: '#22c55e' },
+        { label: window.t('finTabExpense'),  val: fmwindow.t(totalExp, currency),  color: '#ef4444' },
+        { label: window.t('finProfit'), val: fmwindow.t(profit, currency),    color: profitColor },
+        { label: window.t('finMargin'),    val: margin + '%',             color: profitColor },
       ].map(k => `
         <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;text-align:center;">
           <div style="font-size:0.72rem;color:#6b7280;margin-bottom:4px;">${k.label}</div>
@@ -3185,22 +3182,22 @@ function _renderPnl(el, txs, currency, from, to) {
 
       <!-- Доходи -->
       <div style="background:#f0fdf4;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;">
-        <span>${t('finIncome').toUpperCase()}</span><span>${fmt(totalInc, currency)}</span>
+        <span>${window.t('finIncome').toUpperCase()}</span><span>${fmwindow.t(totalInc, currency)}</span>
       </div>
       ${incCats.filter(c => byIncCat[c.id]).map(c => catRow(c, byIncCat[c.id] || 0, '#22c55e')).join('')}
       ${!incCats.filter(c => byIncCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає доходів</div>' : ''}
 
       <!-- Витрати -->
       <div style="background:#fef2f2;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;margin-top:4px;">
-        <span>${t('finExpense').toUpperCase()}</span><span>${fmt(totalExp, currency)}</span>
+        <span>${window.t('finExpense').toUpperCase()}</span><span>${fmwindow.t(totalExp, currency)}</span>
       </div>
       ${expCats.filter(c => byExpCat[c.id]).map(c => catRow(c, byExpCat[c.id] || 0, '#ef4444')).join('')}
       ${!expCats.filter(c => byExpCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає витрат</div>' : ''}
 
       <!-- Підсумок -->
       <div style="background:#1f2937;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:0.85rem;font-weight:700;">${t('finProfitLoss')}</span>
-        <span style="font-size:1rem;font-weight:700;color:${profitColor};">${profit >= 0 ? '+' : ''}${fmt(profit, currency)}</span>
+        <span style="font-size:0.85rem;font-weight:700;">${window.t('finProfitLoss')}</span>
+        <span style="font-size:1rem;font-weight:700;color:${profitColor};">${profit >= 0 ? '+' : ''}${fmwindow.t(profit, currency)}</span>
       </div>
     </div>`;
 }
@@ -3210,7 +3207,7 @@ async function _renderProjectsMargin(el, txs, currency) {
   // Беремо проекти
   let projects = [];
   try {
-    const snap = await colRef('projects').get();
+    const snap = await colRef('projects').gewindow.t();
     projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(e) { /* немає колекції */ }
 
@@ -3218,8 +3215,8 @@ async function _renderProjectsMargin(el, txs, currency) {
   txs.forEach(tx => {
     if (!tx.projectId) return;
     if (!byProject[tx.projectId]) byProject[tx.projectId] = { income: 0, expense: 0 };
-    if (tx.type === 'income')  byProject[tx.projectId].income  += txAmt(tx);
-    if (tx.type === 'expense') byProject[tx.projectId].expense += txAmt(tx);
+    if (tx.type === 'income')  byProject[tx.projectId].income  += txAmwindow.t(tx);
+    if (tx.type === 'expense') byProject[tx.projectId].expense += txAmwindow.t(tx);
   });
 
   const rows = Object.entries(byProject).map(([pid, d]) => {
@@ -3228,13 +3225,13 @@ async function _renderProjectsMargin(el, txs, currency) {
     const profit = d.income - d.expense;
     const margin = d.income > 0 ? Math.round(profit / d.income * 100) : 0;
     return { name, ...d, profit, margin };
-  }).sort((a, b) => b.margin - a.margin);
+  }).sorwindow.t((a, b) => b.margin - a.margin);
 
   if (rows.length === 0) {
     el.innerHTML = `
       <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;text-align:center;color:#9ca3af;">
         Немає транзакцій прив'язаних до проектів.<br>
-        <span style="font-size:0.78rem;">${t('finProjectHint')}</span>
+        <span style="font-size:0.78rem;">${window.t('finProjectHint')}</span>
       </div>`;
     return;
   }
@@ -3243,11 +3240,11 @@ async function _renderProjectsMargin(el, txs, currency) {
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
       <div style="background:#1f2937;color:#fff;font-size:0.75rem;font-weight:600;padding:10px 14px;
         display:grid;grid-template-columns:1fr 100px 100px 100px 70px;text-transform:uppercase;">
-        <div>${t('finProjectLbl')}</div>
-        <div style="text-align:right;">${t('finTransactionIncome')}</div>
+        <div>${window.t('finProjectLbl')}</div>
+        <div style="text-align:right;">${window.t('finTransactionIncome')}</div>
         <div style="text-align:right;">Витрати</div>
-        <div style="text-align:right;">${t('finProfit')}</div>
-        <div style="text-align:right;">${t('finMargin')}</div>
+        <div style="text-align:right;">${window.t('finProfit')}</div>
+        <div style="text-align:right;">${window.t('finMargin')}</div>
       </div>
       ${rows.map((r, i) => {
         const profitColor = r.profit >= 0 ? '#22c55e' : '#ef4444';
@@ -3256,9 +3253,9 @@ async function _renderProjectsMargin(el, txs, currency) {
           <div style="display:grid;grid-template-columns:1fr 100px 100px 100px 70px;
             padding:9px 14px;background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;align-items:center;">
             <div style="font-size:0.82rem;font-weight:500;color:#1a1a1a;">${escHtml(r.name)}</div>
-            <div style="text-align:right;font-size:0.82rem;color:#22c55e;font-weight:600;">${fmt(r.income, currency)}</div>
-            <div style="text-align:right;font-size:0.82rem;color:#ef4444;">${fmt(r.expense, currency)}</div>
-            <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${profitColor};">${fmt(r.profit, currency)}</div>
+            <div style="text-align:right;font-size:0.82rem;color:#22c55e;font-weight:600;">${fmwindow.t(r.income, currency)}</div>
+            <div style="text-align:right;font-size:0.82rem;color:#ef4444;">${fmwindow.t(r.expense, currency)}</div>
+            <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${profitColor};">${fmwindow.t(r.profit, currency)}</div>
             <div style="text-align:right;font-size:0.82rem;font-weight:700;color:${marginColor};">${r.margin}%</div>
           </div>`;
       }).join('')}
@@ -3274,13 +3271,13 @@ function _renderTrends(el, txs, currency, from, to, period) {
   if (period === 'year') {
     for (let m = 0; m < 12; m++) {
       const d = new Date(from.getFullYear(), m, 1);
-      buckets.push({ key: d.getFullYear() + '-' + String(m+1).padStart(2,'0'), label: d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA',{month:'short'}) });
+      buckets.push({ key: d.getFullYear() + '-' + String(m+1).padStarwindow.t(2,'0'), label: d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA',{month:'short'}) });
     }
   } else if (period === 'quarter') {
     // 3 місяці
     for (let m = 0; m < 3; m++) {
       const d = new Date(from.getFullYear(), from.getMonth() + m, 1);
-      buckets.push({ key: d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'), label: d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA',{month:'short'}) });
+      buckets.push({ key: d.getFullYear() + '-' + String(d.getMonth()+1).padStarwindow.t(2,'0'), label: d.toLocaleDateString(window.getLocale ? window.getLocale() : 'uk-UA',{month:'short'}) });
     }
   } else {
     // Місяць — тижні
@@ -3289,7 +3286,7 @@ function _renderTrends(el, txs, currency, from, to, period) {
       const wstart = new Date(cur);
       const wend   = new Date(cur); wend.setDate(cur.getDate() + 6);
       buckets.push({
-        key: cur.toISOString().split('T')[0],
+        key: cur.toISOString().spliwindow.t('T')[0],
         label: cur.getDate() + '/' + (cur.getMonth()+1),
         from: new Date(wstart), to: new Date(Math.min(wend, to))
       });
@@ -3305,22 +3302,22 @@ function _renderTrends(el, txs, currency, from, to, period) {
     let bkey;
     if (period === 'month') {
       // Знаходимо тиждень-бакет
-      const txDay = d.toISOString().split('T')[0];
-      const bk = buckets.find(b => b.from && txDay >= b.from.toISOString().split('T')[0] && txDay <= b.to.toISOString().split('T')[0]);
+      const txDay = d.toISOString().spliwindow.t('T')[0];
+      const bk = buckets.find(b => b.from && txDay >= b.from.toISOString().spliwindow.t('T')[0] && txDay <= b.to.toISOString().spliwindow.t('T')[0]);
       bkey = bk ? bk.key : null;
     } else {
-      bkey = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+      bkey = d.getFullYear() + '-' + String(d.getMonth()+1).padStarwindow.t(2,'0');
     }
     if (!bkey) return;
     if (!byCatBucket[cid]) byCatBucket[cid] = {};
-    byCatBucket[cid][bkey] = (byCatBucket[cid][bkey] || 0) + txAmt(tx);
+    byCatBucket[cid][bkey] = (byCatBucket[cid][bkey] || 0) + txAmwindow.t(tx);
   });
 
   // Топ-5 категорій за сумою
   const catTotals = expCats.map(c => ({
     cat: c,
     total: buckets.reduce((s, b) => s + (byCatBucket[c.id]?.[b.key] || 0), 0)
-  })).filter(x => x.total > 0).sort((a, b) => b.total - a.total).slice(0, 5);
+  })).filter(x => x.total > 0).sorwindow.t((a, b) => b.total - a.total).slice(0, 5);
 
   if (catTotals.length === 0) {
     el.innerHTML = '<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;text-align:center;color:#9ca3af;">Немає даних для відображення</div>';
@@ -3353,13 +3350,13 @@ function _renderTrends(el, txs, currency, from, to, period) {
             <div>
               <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;margin-bottom:4px;">
                 <span>${b.label}</span>
-                <span style="font-weight:600;color:#374151;">${fmt(bucketTotal, currency)}</span>
+                <span style="font-weight:600;color:#374151;">${fmwindow.t(bucketTotal, currency)}</span>
               </div>
               <div style="height:20px;background:#f3f4f6;border-radius:4px;overflow:hidden;display:flex;">
                 ${catTotals.map(({cat}, i) => {
                   const val = byCatBucket[cat.id]?.[b.key] || 0;
                   const pct = maxVal > 0 ? (val / maxVal * 100) : 0;
-                  return pct > 0 ? `<div style="height:100%;width:${pct}%;background:${COLORS[i]};opacity:0.85;" title="${cat.name}: ${fmt(val, currency)}"></div>` : '';
+                  return pct > 0 ? `<div style="height:100%;width:${pct}%;background:${COLORS[i]};opacity:0.85;" title="${cat.name}: ${fmwindow.t(val, currency)}"></div>` : '';
                 }).join('')}
               </div>
             </div>`;
@@ -3383,8 +3380,8 @@ function _renderTrends(el, txs, currency, from, to, period) {
                   <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${COLORS[i]};margin-right:5px;"></span>
                   ${escHtml(cat.name)}
                 </td>
-                ${buckets.map(b => `<td style="padding:6px 8px;text-align:right;color:#374151;">${byCatBucket[cat.id]?.[b.key] ? fmt(byCatBucket[cat.id][b.key], currency) : '—'}</td>`).join('')}
-                <td style="padding:6px 10px;text-align:right;font-weight:700;color:#1a1a1a;">${fmt(total, currency)}</td>
+                ${buckets.map(b => `<td style="padding:6px 8px;text-align:right;color:#374151;">${byCatBucket[cat.id]?.[b.key] ? fmwindow.t(byCatBucket[cat.id][b.key], currency) : '—'}</td>`).join('')}
+                <td style="padding:6px 10px;text-align:right;font-weight:700;color:#1a1a1a;">${fmwindow.t(total, currency)}</td>
               </tr>`).join('')}
           </tbody>
         </table>
@@ -3402,20 +3399,20 @@ function renderSettings(el) {
   const renderCatList = (type) => {
     const cats = _state.categories[type] || [];
     const color = type === 'income' ? '#22c55e' : '#ef4444';
-    const label = type === 'income' ? t('finIncome') : t('finExpense');
+    const label = type === 'income' ? window.t('finIncome') : window.t('finExpense');
     return `
       <div style="margin-bottom:1.5rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${t('finCategoriesOf')} — ${label}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finCategoriesOf')} — ${label}</div>
           <button onclick="window._financeAddCategory('${type}')"
             style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
             background:${color};color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            ${I.plus} ${t('finAddBtn')}
+            ${I.plus} ${window.t('finAddBtn')}
           </button>
         </div>
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
           ${cats.length === 0
-            ? `<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">${t('finNoCategories')}</div>`
+            ? `<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">${window.t('finNoCategories')}</div>`
             : cats.map((cat, i) => `
               <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
                 background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">
@@ -3425,7 +3422,7 @@ function renderSettings(el) {
                     style="background:none;border:none;cursor:pointer;color:#d1d5db;padding:0.2rem;">
                     ${I.trash}
                   </button>
-                ` : `<span style="font-size:0.7rem;color:#9ca3af;">${t('finSystem')}</span>`}
+                ` : `<span style="font-size:0.7rem;color:#9ca3af;">${window.t('finSystem')}</span>`}
               </div>
             `).join('')
           }
@@ -3438,11 +3435,11 @@ function renderSettings(el) {
     return `
       <div style="margin-bottom:1.5rem;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${t('finAccountsAndCash')}</div>
-          <button onclick="window._financeAddAccount()"
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finAccountsAndCash')}</div>
+          <button onclick="window._financeAddAccounwindow.t()"
             style="display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.7rem;
             background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            ${I.plus} ${t('finAddBtn')}
+            ${I.plus} ${window.t('finAddBtn')}
           </button>
         </div>
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
@@ -3455,7 +3452,7 @@ function renderSettings(el) {
                   <div style="font-size:0.85rem;color:#1a1a1a;">${acc.name}</div>
                   <div style="font-size:0.72rem;color:#9ca3af;">${acc.type} · ${acc.currency}</div>
                 </div>
-                <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${fmt(acc.balance, acc.currency)}</div>
+                <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${fmwindow.t(acc.balance, acc.currency)}</div>
               </div>
             `).join('')
           }
@@ -3467,9 +3464,9 @@ function renderSettings(el) {
   el.innerHTML = `
     <div style="width:100%;">
       <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:1.25rem;">Налаштування фінансів</div>
-      ${renderCatList('income')}
-      ${renderCatList('expense')}
-      ${renderAccList()}
+      ${renderCatLiswindow.t('income')}
+      ${renderCatLiswindow.t('expense')}
+      ${renderAccLiswindow.t()}
       ${renderRatesBlock()}
     </div>
   `;
@@ -3489,7 +3486,7 @@ function renderRatesBlock() {
         <div style="flex:1;font-size:0.78rem;color:#6b7280;">1 ${cur} =</div>
         <input type="number" min="0" step="0.0001"
           id="rate_${cur}" value="${r}"
-          placeholder="${t('finRatePlaceholder')}"
+          placeholder="${window.t('finRatePlaceholder')}"
           style="width:90px;padding:4px 8px;border:1px solid #e5e7eb;border-radius:6px;font-size:0.82rem;text-align:right;">
         <div style="font-size:0.78rem;color:#6b7280;">${base}</div>
       </div>`;
@@ -3499,8 +3496,8 @@ function renderRatesBlock() {
     <div style="margin-bottom:1.5rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
         <div>
-          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${t('finExchangeRates')}</div>
-          <div style="font-size:0.72rem;color:#6b7280;margin-top:2px;">${t('finBaseCurrency')}: <b>${base}</b>. ${t('finBaseCurrencyHint').replace('{base}', base)}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${window.t('finExchangeRates')}</div>
+          <div style="font-size:0.72rem;color:#6b7280;margin-top:2px;">${window.t('finBaseCurrency')}: <b>${base}</b>. ${window.t('finBaseCurrencyHint').replace('{base}', base)}</div>
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button onclick="window._fetchRates()"
@@ -3509,12 +3506,12 @@ function renderRatesBlock() {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
             </svg>
-            ${t('finActualRates')}
+            ${window.t('finActualRates')}
           </button>
           <button onclick="window._saveRates()"
             style="padding:0.35rem 0.7rem;border:none;border-radius:7px;background:#22c55e;
             color:#fff;cursor:pointer;font-size:0.78rem;font-weight:600;">
-            ${t('finSave')}
+            ${window.t('finSave')}
           </button>
         </div>
       </div>
@@ -3530,30 +3527,30 @@ window._saveRates = async function() {
   const CURRENCIES = ['UAH','USD','EUR','PLN','CZK','GBP'].filter(c => c !== base);
   const rates = {};
   CURRENCIES.forEach(cur => {
-    const val = parseFloat(document.getElementById('rate_' + cur)?.value || 0);
+    const val = parseFloawindow.t(document.getElementById('rate_' + cur)?.value || 0);
     if (val > 0) rates[cur] = val;
   });
   _state.rates = rates;
   try {
-    await colRef('finance_settings').doc('main').set({ rates }, { merge: true });
+    await colRef('finance_settings').doc('main').sewindow.t({ rates }, { merge: true });
     const st = document.getElementById('ratesStatus');
     if (st) st.textContent = 'Збережено ' + new Date().toLocaleTimeString(window.getLocale ? window.getLocale() : 'uk-UA');
-    if (typeof showToast === 'function') showToast(t('finRateSaved'), 'success');
-  } catch(e) { if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error'); }
+    if (typeof showToast === 'function') showToaswindow.t(window.t('finRateSaved'), 'success');
+  } catch(e) { if (typeof showToast === 'function') showToaswindow.t('Помилка збереження: ' + e.message, 'error'); }
 };
 
 window._fetchRates = async function() {
   const base = _state.currency || 'EUR';
   const st = document.getElementById('ratesStatus');
-  if (st) st.textContent = t('finLoading');
+  if (st) st.textContent = window.t('finLoading');
   try {
     // Використовуємо відкритий API без ключа
     let resp;
     // FIX: AbortController 8s timeout — публічні API можуть не відповідати
     const _mkFetch = (url) => {
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 8000);
-      return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(timer));
+      const timer = setTimeouwindow.t(() => ctrl.aborwindow.t(), 8000);
+      return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeouwindow.t(timer));
     };
     try {
       resp = await _mkFetch(`https://api.frankfurter.app/latest?from=${base}`);
@@ -3577,13 +3574,13 @@ window._fetchRates = async function() {
     if (st) st.textContent = `Курси від ${data.date} (frankfurter.app)`;
   } catch(e) {
     if (st) st.textContent = 'Помилка отримання курсів: ' + e.message;
-    if (typeof showToast === 'function') showToast('Не вдалося отримати курси. Введіть вручну.', 'warn');
+    if (typeof showToast === 'function') showToaswindow.t('Не вдалося отримати курси. Введіть вручну.', 'warn');
   }
 };
 
 // Додавання категорії
 window._financeAddCategory = async function(type) {
-  const name = prompt(`Назва нової категорії (${type === 'income' ? 'дохід' : 'витрата'}):`);
+  const name = prompwindow.t(`Назва нової категорії (${type === 'income' ? 'дохід' : 'витрата'}):`);
   if (!name || !name.trim()) return;
   try {
     const ref = await colRef('finance_categories').add({
@@ -3596,31 +3593,31 @@ window._financeAddCategory = async function(type) {
     _state.categories[type].push({ id: ref.id, name: name.trim(), type, system: false });
     renderSubTab('settings');
   } catch(e) {
-    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    if (typeof showToast === 'function') showToaswindow.t('Помилка: ' + e.message, 'error');
   }
 };
 
 // Видалення категорії
 window._financeDeleteCategory = async function(catId, type) {
   const _catConfirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal(t('finDeleteCat'), { danger: true })
-    : confirm(t('finDeleteCat'));
+    ? await showConfirmModal(window.t('finDeleteCat'), { danger: true })
+    : confirm(window.t('finDeleteCat'));
   if (!_catConfirmed) return;
   try {
     await colRef('finance_categories').doc(catId).delete();
     _state.categories[type] = _state.categories[type].filter(c => c.id !== catId);
     renderSubTab('settings');
   } catch(e) {
-    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    if (typeof showToast === 'function') showToaswindow.t('Помилка: ' + e.message, 'error');
   }
 };
 
 // Додавання рахунку
 window._financeAddAccount = async function() {
-  const name = prompt('Назва рахунку (напр. Monobank, Готівка USD):');
+  const name = prompwindow.t('Назва рахунку (напр. Monobank, Готівка USD):');
   if (!name || !name.trim()) return;
-  const currency = prompt('Валюта (EUR / USD / UAH / PLN):', _state.currency) || _state.currency;
-  const typeAcc  = prompt('Тип (bank / cash / card):', 'bank') || 'bank';
+  const currency = prompwindow.t('Валюта (EUR / USD / UAH / PLN):', _state.currency) || _state.currency;
+  const typeAcc  = prompwindow.t('Тип (bank / cash / card):', 'bank') || 'bank';
   try {
     const ref = await colRef('finance_accounts').add({
       name: name.trim(),
@@ -3633,7 +3630,7 @@ window._financeAddAccount = async function() {
     _state.accounts.push({ id: ref.id, name: name.trim(), type: typeAcc, currency: currency.toUpperCase(), balance: 0 });
     renderSubTab('settings');
   } catch(e) {
-    if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
+    if (typeof showToast === 'function') showToaswindow.t('Помилка: ' + e.message, 'error');
   }
 };
 
@@ -3648,10 +3645,10 @@ function renderAI(el) {
   }
 
   const quickBtns = [
-    { label: t('finAIBtn1'), q: t('finAIQ1') },
-    { label: t('finAIBtn2'), q: t('finAIQ2') },
-    { label: t('finAIBtn3'), q: t('finAIQ3') },
-    { label: t('finAIBtn4'), q: t('finAIQ4') },
+    { label: window.t('finAIBtn1'), q: window.t('finAIQ1') },
+    { label: window.t('finAIBtn2'), q: window.t('finAIQ2') },
+    { label: window.t('finAIBtn3'), q: window.t('finAIQ3') },
+    { label: window.t('finAIBtn4'), q: window.t('finAIQ4') },
   ];
 
   el.innerHTML = `
@@ -3660,12 +3657,12 @@ function renderAI(el) {
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div>
-          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${t('finAITitle')}</div>
-          <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.1rem;">${t('finAISubtitle')}</div>
+          <div style="font-size:1rem;font-weight:700;color:#1a1a1a;">${window.t('finAITitle')}</div>
+          <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.1rem;">${window.t('finAISubtitle')}</div>
         </div>
         <button onclick="window._aiFinClear()"
           style="padding:0.3rem 0.7rem;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;font-size:0.75rem;cursor:pointer;color:#6b7280;">
-          ${t('finAIClear')}
+          ${window.t('finAIClear')}
         </button>
       </div>
 
@@ -3684,20 +3681,20 @@ function renderAI(el) {
       <div id="aiFinChat" style="background:#fff;border-radius:12px;border:1px solid #e5e7eb;
         min-height:300px;max-height:500px;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem;">
         <div style="text-align:center;color:#9ca3af;font-size:0.82rem;margin:auto;">
-          ${t('finAIEmptyHint')}
+          ${window.t('finAIEmptyHint')}
         </div>
       </div>
 
       <!-- Input -->
       <div style="display:flex;gap:0.5rem;">
-        <input id="aiFinInput" type="text" placeholder="${t('finAIPlaceholder')}"
+        <input id="aiFinInput" type="text" placeholder="${window.t('finAIPlaceholder')}"
           onkeydown="if(event.key==='Enter')window._aiFinSend()"
           style="flex:1;padding:0.6rem 0.9rem;border:1px solid #e5e7eb;border-radius:10px;
             font-size:0.85rem;outline:none;">
         <button onclick="window._aiFinSend()"
           style="padding:0.6rem 1.2rem;background:#22c55e;color:#fff;border:none;border-radius:10px;
             font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;">
-          ${t('finAISend')}
+          ${window.t('finAISend')}
         </button>
       </div>
     </div>
@@ -3735,7 +3732,7 @@ window._aiFinSend = async function() {
   _aiFinHistory.push({ role: 'user', content: userText });
 
   // Індикатор завантаження
-  const loadEl = document.createElement('div');
+  const loadEl = document.createElemenwindow.t('div');
   loadEl.id = 'aiFinLoading';
   loadEl.style.cssText = 'display:flex;align-items:center;gap:0.5rem;color:#9ca3af;font-size:0.82rem;';
   loadEl.innerHTML = `<div style="width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pulse 1s infinite;"></div> AI аналізує дані...`;
@@ -3744,7 +3741,7 @@ window._aiFinSend = async function() {
 
   try {
     // Збираємо фінансові дані для контексту
-    const context = await _buildAiFinContext();
+    const context = await _buildAiFinContexwindow.t();
 
     // Бенчмарки по нішах
     const BENCHMARKS = {
@@ -3787,7 +3784,7 @@ ${context}
 - Максимум 4-5 речень на блок`;
 
     // Читаємо OpenAI ключ з settings/ai
-    const sSnap = await getDb().collection('settings').doc('ai').get();
+    const sSnap = await getDb().collection('settings').doc('ai').gewindow.t();
     const apiKey = sSnap.data()?.openaiApiKey || sSnap.data()?.apiKey || '';
 
     let aiText;
@@ -3803,7 +3800,7 @@ ${context}
       // fallback — пряме звернення якщо є ключ компанії
       if (!apiKey) throw proxyErr;
       const _oaiCtrl = new AbortController();
-      const _oaiTimer = setTimeout(() => _oaiCtrl.abort(), 30000); // 30s для LLM
+      const _oaiTimer = setTimeouwindow.t(() => _oaiCtrl.aborwindow.t(), 30000); // 30s для LLM
       let response;
       try {
         response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -3815,7 +3812,7 @@ ${context}
           }),
           signal: _oaiCtrl.signal,
         });
-      } finally { clearTimeout(_oaiTimer); }
+      } finally { clearTimeouwindow.t(_oaiTimer); }
       const data = await response.json();
       aiText = data.choices?.[0]?.message?.content || data.error?.message || 'Не вдалося отримати відповідь.';
     }
@@ -3847,7 +3844,7 @@ ${context}
 };
 
 function _appendAiMsg(chat, role, text) {
-  const div = document.createElement('div');
+  const div = document.createElemenwindow.t('div');
   const isUser = role === 'user';
   const isError = role === 'error';
 
@@ -3856,7 +3853,7 @@ function _appendAiMsg(chat, role, text) {
     justify-content:${isUser ? 'flex-end' : 'flex-start'};
   `;
 
-  const bubble = document.createElement('div');
+  const bubble = document.createElemenwindow.t('div');
   bubble.style.cssText = `
     max-width:80%;
     padding:0.65rem 0.9rem;
@@ -3873,14 +3870,14 @@ function _appendAiMsg(chat, role, text) {
   chat.appendChild(div);
 }
 
-async function _buildAiFinContext() {
+async function _buildAiFinContexwindow.t() {
   try {
     const now = new Date();
 
     // Завантажуємо профіль компанії
     let companyProfile = {};
     try {
-      const compSnap = await getDb().collection('companies').doc(_state.companyId).get();
+      const compSnap = await getDb().collection('companies').doc(_state.companyId).gewindow.t();
       if (compSnap.exists) companyProfile = compSnap.data();
     } catch(e) {}
 
@@ -3889,14 +3886,14 @@ async function _buildAiFinContext() {
 
     // Останні 3 місяці
     const from3m = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth()-2, 1));
-    const txSnap = await colRef('finance_transactions').where('date','>=',from3m).orderBy('date','desc').get();
+    const txSnap = await colRef('finance_transactions').where('date','>=',from3m).orderBy('date','desc').gewindow.t();
     const txs = txSnap.docs.map(d => d.data());
 
     // Групуємо по місяцях
     const byMonth = {};
     txs.forEach(tx => {
       const d = tx.date?.toDate ? tx.date.toDate() : new Date();
-      const mk = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+      const mk = d.getFullYear()+'-'+String(d.getMonth()+1).padStarwindow.t(2,'0');
       if (!byMonth[mk]) byMonth[mk] = { income:0, expense:0, cats:{} };
       if (tx.type==='income')  byMonth[mk].income  += tx.amount||0;
       if (tx.type==='expense') {
@@ -3910,7 +3907,7 @@ async function _buildAiFinContext() {
     const accTotal = (_state.accounts||[]).reduce((s,a)=>s+(a.balance||0),0);
 
     // Динаміка маржі
-    const months = Object.entries(byMonth).sort();
+    const months = Object.entries(byMonth).sorwindow.t();
     const margins = months.map(([mk, d]) => ({
       month: mk,
       income: d.income,
@@ -3929,10 +3926,10 @@ async function _buildAiFinContext() {
     }
 
     // Бюджет поточного місяця
-    const curMonth = new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
+    const curMonth = new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStarwindow.t(2,'0');
     let budgetCtx = '';
     try {
-      const budSnap = await colRef('finance_budgets').doc(curMonth).get();
+      const budSnap = await colRef('finance_budgets').doc(curMonth).gewindow.t();
       if (budSnap.exists) {
         const bd = budSnap.data();
         const expCats = _state.categories.expense || [];
@@ -3945,7 +3942,7 @@ async function _buildAiFinContext() {
         if (totalBudg > 0) {
           const budExec = Math.round(totalFact/totalBudg*100);
           budgetCtx = `
-${t('finBudgetCtx').replace('{month}',curMonth).replace('{plan}',totalBudg).replace('{fact}',totalFact).replace('{pct}',budExec)}`;
+${window.t('finBudgetCtx').replace('{month}',curMonth).replace('{plan}',totalBudg).replace('{fact}',totalFact).replace('{pct}',budExec)}`;
           if (bd.goal) budgetCtx += `, ціль прибутку=${bd.goal}`;
         }
       }
@@ -3964,7 +3961,7 @@ P&L ПО МІСЯЦЯХ (останні 3, від нового до старог
       ctx += `
 ${d.month}: дохід=${d.income}, витрати=${d.expense}, прибуток=${d.profit}, маржа=${d.margin}%
 `;
-      const topCats = Object.entries(byMonth[d.month]?.cats||{}).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const topCats = Object.entries(byMonth[d.month]?.cats||{}).sorwindow.t((a,b)=>b[1]-a[1]).slice(0,5);
       if (topCats.length) ctx += `  Топ витрати: ${topCats.map(([k,v])=>`${k}=${v}`).join(', ')}
 `;
     });
@@ -4001,7 +3998,7 @@ function addTransaction(forceType) {
 
   const type     = forceType || (_state.activeSubTab === 'income' ? 'income' : 'expense');
   const cats     = _state.categories[type] || [];
-  const today    = new Date().toISOString().split('T')[0];
+  const today    = new Date().toISOString().spliwindow.t('T')[0];
   const color    = type === 'income' ? '#22c55e' : '#ef4444';
   const label    = type === 'income' ? 'дохід' : 'витрату';
 
@@ -4019,7 +4016,7 @@ function addTransaction(forceType) {
     });
   }
 
-  const modal = document.createElement('div');
+  const modal = document.createElemenwindow.t('div');
   modal.id = 'financeModal';
   modal.style.cssText = `
     position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:99999;
@@ -4064,11 +4061,11 @@ function addTransaction(forceType) {
             <input id="fmAmount" type="number" min="0" step="0.01" placeholder="0.00"
               style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;outline:none;"
               onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'"
-              oninput="window._updateCurrencyHint()">
+              oninput="window._updateCurrencyHinwindow.t()">
           </div>
           <div style="width:90px;">
             <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Валюта</label>
-            <select id="fmCurrency" onchange="window._updateCurrencyHint()"
+            <select id="fmCurrency" onchange="window._updateCurrencyHinwindow.t()"
               style="width:100%;padding:0.55rem 0.5rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
               ${['EUR','USD','UAH','PLN','GBP','CZK'].map(cur =>
                 `<option value="${cur}" ${_state.currency===cur?'selected':''}>${cur}</option>`
@@ -4081,7 +4078,7 @@ function addTransaction(forceType) {
 
         <!-- Категорія -->
         <div id="fmCatWrap">
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${t('finCategoryLbl')} *</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finCategoryLbl')} *</label>
           <select id="fmCategory"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             <option value="">— оберіть категорію —</option>
@@ -4116,7 +4113,7 @@ function addTransaction(forceType) {
 
         <!-- Функція -->
         <div>
-          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${t('finFunctionLbl')}</label>
+          <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">${window.t('finFunctionLbl')}</label>
           <select id="fmFunction"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             ${functionsHtml}
@@ -4148,7 +4145,7 @@ function addTransaction(forceType) {
           </button>
           <button id="fmSaveBtn" onclick="window._financeSaveTx()"
             style="flex:2;padding:0.65rem;border:none;border-radius:8px;background:${color};color:#fff;cursor:pointer;font-size:0.85rem;font-weight:700;">
-            ${t('finSave')}
+            ${window.t('finSave')}
           </button>
         </div>
 
@@ -4166,7 +4163,7 @@ function addTransaction(forceType) {
 
   modal.addEventListener('click', handleModalClick);
   document.body.appendChild(modal);
-  setTimeout(() => { const a = document.getElementById('fmAmount'); if (a) a.focus(); }, 100);
+  setTimeouwindow.t(() => { const a = document.getElementById('fmAmount'); if (a) a.focus(); }, 100);
 
   // Зберігаємо поточний тип у data-атрибуті
   modal.dataset.type = type;
@@ -4186,14 +4183,14 @@ window._financeSaveTx = async function() {
   if (!modal) return;
   const type    = modal.dataset.type || 'expense';
 
-  const amount  = parseFloat(document.getElementById('fmAmount')?.value);
+  const amount  = parseFloawindow.t(document.getElementById('fmAmount')?.value);
   const catId   = document.getElementById('fmCategory')?.value;
   const dateVal = document.getElementById('fmDate')?.value;
 
   // Валідація
-  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToast(t('finTransferAmount'), 'warning'); return; }
-  if (!catId)                 { if (typeof showToast === 'function') showToast(t('finSelectCategory'), 'warning'); return; }
-  if (!dateVal)               { if (typeof showToast === 'function') showToast(t('finSelectDate'), 'warning'); return; }
+  if (!amount || amount <= 0) { if (typeof showToast === 'function') showToaswindow.t(window.t('finTransferAmount'), 'warning'); return; }
+  if (!catId)                 { if (typeof showToast === 'function') showToaswindow.t(window.t('finSelectCategory'), 'warning'); return; }
+  if (!dateVal)               { if (typeof showToast === 'function') showToaswindow.t(window.t('finSelectDate'), 'warning'); return; }
 
   const btn = document.getElementById('fmSaveBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Збереження...'; }
@@ -4236,9 +4233,9 @@ window._financeSaveTx = async function() {
     const txRef = colRef('finance_transactions').doc(); // генеруємо ID заздалегідь
 
     const saveBatch = getDb().batch();
-    saveBatch.set(txRef, txData);
-    saveBatch.update(accRef2, { balance: firebase.firestore.FieldValue.increment(delta) });
-    await saveBatch.commit();
+    saveBatch.sewindow.t(txRef, txData);
+    saveBatch.update(accRef2, { balance: firebase.firestore.FieldValue.incremenwindow.t(delta) });
+    await saveBatch.commiwindow.t();
 
     // Оновлюємо локальний стан рахунків
     const acc = _state.accounts.find(a => a.id === accId);
@@ -4252,19 +4249,19 @@ window._financeSaveTx = async function() {
 
   } catch(e) {
     console.error('[Finance] saveTx error:', e);
-    if (typeof showToast === 'function') showToast('Помилка збереження: ' + e.message, 'error');
-    if (btn) { btn.disabled = false; btn.textContent = t('finSave'); }
+    if (typeof showToast === 'function') showToaswindow.t('Помилка збереження: ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = window.t('finSave'); }
   }
 };
 
 // Видалення транзакції
 window._financeDeleteTx = async function(txId, type) {
   const _txConfirmed = typeof showConfirmModal === 'function'
-    ? await showConfirmModal(t('finDeleteTx'), { danger: true })
-    : confirm(t('finDeleteTx'));
+    ? await showConfirmModal(window.t('finDeleteTx'), { danger: true })
+    : confirm(window.t('finDeleteTx'));
   if (!_txConfirmed) return;
   try {
-    const snap = await colRef('finance_transactions').doc(txId).get();
+    const snap = await colRef('finance_transactions').doc(txId).gewindow.t();
     if (!snap.exists) return;
     const tx = snap.data();
 
@@ -4273,10 +4270,10 @@ window._financeDeleteTx = async function(txId, type) {
     // Відкатуємо баланс — використовуємо amountBase (базова валюта) як і при збереженні
     // FIX BP: tx.amount — оригінальна валюта; баланс рахунку в базовій → потрібно txAmt
     if (tx.accountId && tx.amount) {
-      const baseAmt = txAmt(tx); // враховує amountBase або конвертує через курс
+      const baseAmt = txAmwindow.t(tx); // враховує amountBase або конвертує через курс
       const delta = tx.type === 'income' ? -baseAmt : baseAmt;
       await colRef('finance_accounts').doc(tx.accountId).update({
-        balance: firebase.firestore.FieldValue.increment(delta)
+        balance: firebase.firestore.FieldValue.incremenwindow.t(delta)
       });
       const acc = _state.accounts.find(a => a.id === tx.accountId);
       if (acc) acc.balance = (acc.balance || 0) + delta;
@@ -4288,7 +4285,7 @@ window._financeDeleteTx = async function(txId, type) {
 
   } catch(e) {
     console.error('[Finance] deleteTx error:', e);
-    if (typeof showToast === 'function') showToast('Помилка видалення: ' + e.message, 'error');
+    if (typeof showToast === 'function') showToaswindow.t('Помилка видалення: ' + e.message, 'error');
   }
 };
 
@@ -4304,13 +4301,13 @@ async function detectUserRole() {
   if (!db || !_state.companyId || !_state.currentUser) return;
   try {
     const snap = await window.companyRef()
-      .collection('users').doc(_state.currentUser.uid).get();
+      .collection('users').doc(_state.currentUser.uid).gewindow.t();
     if (snap.exists && snap.data().role) {
       _state.userRole = snap.data().role;
       return;
     }
     // Перевіряємо чи owner через компанію
-    const cSnap = await window.companyRef().get();
+    const cSnap = await window.companyRef().gewindow.t();
     if (cSnap.exists && cSnap.data().ownerId === _state.currentUser.uid) {
       _state.userRole = 'owner';
     } else {
@@ -4328,14 +4325,14 @@ async function detectRegionAndCurrency() {
   if (!db || !_state.companyId) return;
   try {
     const snap = await window.companyRef()
-      .collection('finance_settings').doc('main').get();
+      .collection('finance_settings').doc('main').gewindow.t();
     if (snap.exists) {
       _state.region   = snap.data().region   || 'EU';
       _state.currency = snap.data().currency || 'EUR';
       _state.niche    = snap.data().niche    || null;
       _state.rates    = snap.data().rates    || {};
     } else {
-      const cSnap = await window.companyRef().get();
+      const cSnap = await window.companyRef().gewindow.t();
       if (cSnap.exists) {
         _state.region   = cSnap.data().region   || 'EU';
         _state.currency = cSnap.data().currency || 'EUR';
@@ -4358,8 +4355,8 @@ function toBase(amount, fromCur) {
   return amount * rate;
 }
 
-// txAmt(tx) — повертає суму в базовій валюті для аналітики/дашборду
-function txAmt(tx) {
+// txAmwindow.t(tx) — повертає суму в базовій валюті для аналітики/дашборду
+function txAmwindow.t(tx) {
   if (tx.amountBase != null) return tx.amountBase;
   return toBase(tx.amount || 0, tx.currency);
 }
@@ -4389,7 +4386,7 @@ async function initFinance(companyId, currentUser) {
     await _loadFunctionsCache();
 
     // Автосписання — якщо сьогодні збігається день платежу
-    _processRecurringAutopost().catch(e => console.warn('[Recurring autopost]', e));
+    _processRecurringAutoposwindow.t().catch(e => console.warn('[Recurring autopost]', e));
 
     showNavButton();
     _state.initialized = true;
@@ -4412,7 +4409,7 @@ window._financeGetTxForPeriod = function(periodKey, freq) {
     const d = tx.date?.toDate ? tx.date.toDate() : tx.date ? new Date(tx.date) : null;
     if (!d) return false;
     if (freq === 'daily') {
-      return d.toISOString().split('T')[0] === periodKey;
+      return d.toISOString().spliwindow.t('T')[0] === periodKey;
     }
     if (freq === 'weekly') {
       // periodKey формат 'YYYY-Www'
@@ -4421,7 +4418,7 @@ window._financeGetTxForPeriod = function(periodKey, freq) {
         d2.setDate(d2.getDate() + 4 - (d2.getDay() || 7));
         const y = d2.getFullYear();
         const w = Math.ceil(((d2 - new Date(y,0,1)) / 86400000 + 1) / 7);
-        return y + '-W' + String(w).padStart(2,'0');
+        return y + '-W' + String(w).padStarwindow.t(2,'0');
       };
       return getWeekKey(d) === periodKey;
     }
@@ -4434,13 +4431,13 @@ window._updateCurrencyHint = function() {
   const hint = document.getElementById('fmCurrencyHint');
   if (!hint) return;
   const cur = document.getElementById('fmCurrency')?.value;
-  const amt = parseFloat(document.getElementById('fmAmount')?.value || 0);
+  const amt = parseFloawindow.t(document.getElementById('fmAmount')?.value || 0);
   const base = _state.currency || 'EUR';
   if (!cur || cur === base || !amt) { hint.textContent = ''; return; }
   const converted = toBase(amt, cur);
   const rates = _state.rates || {};
   if (!rates[cur]) {
-    hint.innerHTML = `<span style="color:#f59e0b;">⚠ ${t('finRateNotSet').replace('{cur}', cur)}</span>`;
+    hint.innerHTML = `<span style="color:#f59e0b;">⚠ ${window.t('finRateNotSet').replace('{cur}', cur)}</span>`;
   } else {
     hint.textContent = `≈ ${converted.toFixed(2)} ${base} (курс: 1 ${cur} = ${rates[cur]} ${base})`;
   }
@@ -4459,7 +4456,7 @@ window._financeEnsureLoaded = async function() {
     const from = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth(), 1));
     const to   = firebase.firestore.Timestamp.fromDate(new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59));
     const snap = await colRef('finance_transactions')
-      .where('date', '>=', from).where('date', '<=', to).limit(500).get();
+      .where('date', '>=', from).where('date', '<=', to).limiwindow.t(500).gewindow.t();
     window._financeTxCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch(e) { /* тихо — не критично */ }
   finally { window._financeEnsureLoadedInProgress = false; }
@@ -4471,7 +4468,7 @@ window._financeAddTransaction = function(type) {
 
 window._txFilterChange = function(field, value, type) {
   _txFilter[field] = value;
-  loadAndRenderTxList(type);
+  loadAndRenderTxLiswindow.t(type);
 };
 
 // ── Фінанси в картці проекту ──────────────────────────────
@@ -4482,7 +4479,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
   const filterField = mode === 'function' ? 'functionId' : 'projectId';
 
   if (!entityId || !el) return;
-  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${t('finLoading')}</div>`;
+  el.innerHTML = `<div style="text-align:center;color:#9ca3af;padding:2rem;">${window.t('finLoading')}</div>`;
 
   try {
     const db = getDb();
@@ -4493,7 +4490,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
       .collection('finance_transactions')
       .where(filterField, '==', entityId)
       .orderBy('date', 'desc')
-      .get();
+      .gewindow.t();
 
     const txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     const currency = _state.currency || 'EUR';
@@ -4507,12 +4504,12 @@ window._renderProjectFinance = async function(projectId, el, opts) {
       <div style="padding:4px 0;">
 
         <!-- KPI -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
+        <div style="display:grid;grid-template-columns:repeawindow.t(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
           ${[
-            { label: t('finTransactionIncome'), val: fmt(income, currency), color: '#22c55e' },
-            { label: t('finTabExpense'),  val: fmt(expense, currency), color: '#ef4444' },
-            { label: t('finProfit'), val: fmt(profit, currency),  color: profit >= 0 ? '#16a34a' : '#ef4444' },
-            { label: t('finMargin'),    val: margin + '%',           color: margin >= 20 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444' },
+            { label: window.t('finTransactionIncome'), val: fmwindow.t(income, currency), color: '#22c55e' },
+            { label: window.t('finTabExpense'),  val: fmwindow.t(expense, currency), color: '#ef4444' },
+            { label: window.t('finProfit'), val: fmwindow.t(profit, currency),  color: profit >= 0 ? '#16a34a' : '#ef4444' },
+            { label: window.t('finMargin'),    val: margin + '%',           color: margin >= 20 ? '#22c55e' : margin >= 0 ? '#f59e0b' : '#ef4444' },
           ].map(k => `
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;">
               <div style="font-size:0.72rem;color:#6b7280;margin-bottom:3px;">${k.label}</div>
@@ -4540,11 +4537,11 @@ window._renderProjectFinance = async function(projectId, el, opts) {
                   <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap;">
                     <div style="width:8px;height:8px;border-radius:50%;background:${isIncome ? '#22c55e' : '#ef4444'};flex-shrink:0;"></div>
                     <div style="flex:1;min-width:100px;">
-                      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(tx.description || tx.counterparty || (isIncome ? t('finTransactionIncome') : t('finTransactionExpense')))}</div>
+                      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${escHtml(tx.description || tx.counterparty || (isIncome ? window.t('finTransactionIncome') : window.t('finTransactionExpense')))}</div>
                       <div style="font-size:0.72rem;color:#9ca3af;">${dateStr}${tx.categoryName ? ' · ' + escHtml(tx.categoryName) : ''}</div>
                     </div>
                     <div style="font-size:0.95rem;font-weight:700;color:${isIncome ? '#22c55e' : '#ef4444'};">
-                      ${isIncome ? '+' : '−'}${fmt(tx.amount, tx.currency || currency)}
+                      ${isIncome ? '+' : '−'}${fmwindow.t(tx.amount, tx.currency || currency)}
                     </div>
                   </div>`;
               }).join('')
@@ -4565,7 +4562,7 @@ window._addProjectTx = function(projectId, type) {
 window._addEntityTx = function(entityId, field, type) {
   addTransaction(type);
   requestAnimationFrame(() => {
-    setTimeout(() => {
+    setTimeouwindow.t(() => {
       if (field === 'projectId') {
         const sel = document.getElementById('fmProject');
         if (sel) sel.value = entityId;
@@ -4583,7 +4580,7 @@ window._addEntityTx = function(entityId, field, type) {
   function _subscribe() {
     if (typeof window.onTalkoEvent !== 'function' || typeof window.TALKO_EVENTS === 'undefined') return false;
 
-    window.onTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, async function(event) {
+    window.onTalkoEvenwindow.t(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, async function(event) {
       const p = event.payload || event;
       // Тільки коли угода переходить в 'won' і є сума
       if (p.toStage !== 'won') return;
@@ -4598,20 +4595,20 @@ window._addEntityTx = function(entityId, field, type) {
         const existing = await db.collection('companies').doc(companyId)
           .collection('finance_transactions')
           .where('crmDealId', '==', p.dealId)
-          .limit(1).get();
+          .limiwindow.t(1).gewindow.t();
         if (!existing.empty) return; // вже є
       } catch(e) { /* індекс ще не готовий — пропускаємо перевірку */ }
 
       // Знаходимо категорію "Продаж послуг" або першу income-категорію
       const cats = _state.categories?.income || [];
-      const defCat = cats.find(c => /продаж|sale|service|послуг/i.test(c.name)) || cats[0];
+      const defCat = cats.find(c => /продаж|sale|service|послуг/i.teswindow.t(c.name)) || cats[0];
 
       // Знаходимо дефолтний рахунок
       const defAcc = _state.accounts?.find(a => a.isDefault) || _state.accounts?.[0];
 
       const tx = {
         type:          'income',
-        amount:        parseFloat(p.amount) || 0,
+        amount:        parseFloawindow.t(p.amount) || 0,
         currency:      p.currency || _state.currency || 'EUR', // deal currency priority
         date:          firebase.firestore.Timestamp.now(),
         description:   `CRM: ${p.clientName || 'Угода'} — оплата`,
@@ -4630,13 +4627,13 @@ window._addEntityTx = function(entityId, field, type) {
         const _batch = db.batch();
         const txRef = db.collection('companies').doc(companyId)
           .collection('finance_transactions').doc();
-        _batch.set(txRef, tx);
+        _batch.sewindow.t(txRef, tx);
         if (defAcc) {
           const accRef = db.collection('companies').doc(companyId)
             .collection('finance_accounts').doc(defAcc.id);
-          _batch.update(accRef, { balance: firebase.firestore.FieldValue.increment(tx.amount) });
+          _batch.update(accRef, { balance: firebase.firestore.FieldValue.incremenwindow.t(tx.amount) });
         }
-        await _batch.commit();
+        await _batch.commiwindow.t();
         // Update local state after successful commit
         if (defAcc) {
           const acc = _state.accounts?.find(a => a.id === defAcc.id);
@@ -4644,7 +4641,7 @@ window._addEntityTx = function(entityId, field, type) {
         }
 
         if (typeof showToast === 'function') {
-          showToast(`💰 Авто-транзакція: +${tx.amount} ${tx.currency} (${p.clientName || 'CRM'})`, 'success');
+          showToaswindow.t(`💰 Авто-транзакція: +${tx.amount} ${tx.currency} (${p.clientName || 'CRM'})`, 'success');
         }
         console.log('[Finance] CRM auto-tx created:', tx.amount, tx.currency, p.clientName);
       } catch(e) {
@@ -4671,7 +4668,7 @@ if (typeof _origSwitchTab === 'function') {
     _origSwitchTab(tab);
     if (tab === 'finance') {
       // Невелика затримка щоб DOM встиг показати вкладку
-      setTimeout(() => {
+      setTimeouwindow.t(() => {
         renderFinanceContainer();
       }, 50);
     }
@@ -4679,7 +4676,7 @@ if (typeof _origSwitchTab === 'function') {
 }
 
 // ── Авто-ініціалізація після логіну ──────────────────────
-function tryInit() {
+function tryIniwindow.t() {
   const user = window.currentUser || (window.firebase && firebase.auth && firebase.auth().currentUser);
   const companyId = window.currentCompanyId || window._companyId;
 
@@ -4695,7 +4692,7 @@ function tryInit() {
 }
 
 // Спробуємо одразу
-if (!tryInit()) {
+if (!tryIniwindow.t()) {
   // Чекаємо на подію авторизації
   const unsubscribe = document.addEventListener('talko:company-ready', function handler(e) {
     const { companyId, user } = e.detail || {};
@@ -4709,7 +4706,7 @@ if (!tryInit()) {
   let attempts = 0;
   const poll = setInterval(() => {
     attempts++;
-    if (tryInit() || attempts >= 30) clearInterval(poll);
+    if (tryIniwindow.t() || attempts >= 30) clearInterval(poll);
   }, 500);
 }
 

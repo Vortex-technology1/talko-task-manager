@@ -11607,3 +11607,46 @@
             },
         };
         window.translations = translations;
+        // ── Translation System Functions ───────────────────────────
+        // FIX: Додано відсутні функції після запуску add-polish.py
+
+        // Поточна мова (дефолт: українська)
+        window.currentLanguage = localStorage.getItem('talko_language') || 'ua';
+
+        // Функція перекладу
+        window.t = function(key) {
+            if (!key) return '';
+            const lang = window.currentLanguage || 'ua';
+            const translations = window.translations || {};
+            const langPack = translations[lang] || translations['ua'] || {};
+            return langPack[key] || key;
+        };
+
+        // Зміна мови
+        window.setLanguage = function(lang) {
+            if (!lang || !window.translations[lang]) return;
+            window.currentLanguage = lang;
+            localStorage.setItem('talko_language', lang);
+
+            // Оновлюємо весь UI
+            if (typeof updatePageTranslations === 'function') {
+                updatePageTranslations();
+            }
+
+            // Перезавантаження для повного застосування змін
+            location.reload();
+        };
+
+        // Отримання локалі для Date формату
+        window.getLocale = function() {
+            const lang = window.currentLanguage || 'ua';
+            const localeMap = {
+                'ua': 'uk-UA',
+                'en': 'en-US',
+                'de': 'de-DE',
+                'cs': 'cs-CZ',
+                'ru': 'ru-RU',
+                'pl': 'pl-PL'
+            };
+            return localeMap[lang] || 'uk-UA';
+        };
