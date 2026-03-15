@@ -1393,8 +1393,67 @@ module.exports = async (req, res) => {
                 } catch(e) {
                     session.data._apiError = e.message;
                     console.warn('[webhook] api node error:', e.message);
+                    // FIX 1: api помилка → errNode (err port), не nextNode
+                    nodeId = n.errNode || n.errorNode || n.config?.errNode || n.nextNode || null;
+                    continue;
                 }
+                // Успіх → okNode або nextNode
+                nodeId = n.okNode || n.config?.okNode || n.nextNode || null;
+
+            // ════ Google Sheets ════
+            } else if (n.type === 'sheets') {
+                // FIX 2: Sheets вузол — записуємо дані в Google Sheets через Apps Script URL
+                try {
+                    const _sheetUrl = n.config?.sheetsUrl || n.sheetsUrl || n.config?.sheetsId || n.sheetsId;
+                    if (_sheetUrl && /^https?:\/\//.test(_sheetUrl)) {
+                        const _sheetData = {};
+                        // Маппінг полів: sheetsMapping = "A:{{name}},B:{{phone}}"
+                        const _mapping = n.config?.sheetsMapping || n.sheetsMapping || '';
+                        if (_mapping) {
+                            _mapping.split(',').forEach(pair => {
+                                const [col, varExpr] = pair.split(':');
+                                if (col && varExpr) _sheetData[col.trim()] = interp(varExpr.trim(), session.data);
+                            });
+                        } else {
+                            // Дефолт: всі session.data поля
+                            Object.assign(_sheetData, session.data);
+                            _sheetData.senderName = session.senderName || '';
+                            _sheetData.senderId = String(session.senderId || '');
+                        }
+                        const _sheetAbort = new AbortController();
+                        const _sheetTimer = setTimeout(() => _sheetAbort.abort(), 8000);
+                        await fetch(_sheetUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(_sheetData),
+                            signal: _sheetAbort.signal,
+                        }).catch(e => console.warn('[sheets] fetch error:', e.message));
+                        clearTimeout(_sheetTimer);
+                    }
+                } catch(e) { console.warn('[webhook] sheets node error:', e.message); }
                 nodeId = n.nextNode || null;
+
+            // ════ Random A/B ════
+            } else if (n.type === 'random') {
+                // FIX 2: Random вузол — випадково A або B з вагою
+                const _splitA = parseInt(n.config?.splitA || n.splitA) || 50;
+                const _splitB = 100 - _splitA;
+                const _rand = Math.random() * 100;
+                nodeId = (_rand < _splitA) ? (n.branchA || n.config?.branchA || n.nextNode) : (n.branchB || n.config?.branchB || null);
+
+            // ════ Repeat ════
+            } else if (n.type === 'repeat') {
+                // FIX 2: Repeat вузол — повторює до N разів
+                const _repeatKey = `_repeat_${n.id}`;
+                const _maxRepeats = parseInt(n.config?.repeatCount || n.repeatCount) || 3;
+                const _currentCount = (session.data[_repeatKey] || 0) + 1;
+                if (_currentCount <= _maxRepeats) {
+                    session.data[_repeatKey] = _currentCount;
+                    nodeId = n.nextNode || null; // продовжуємо
+                } else {
+                    delete session.data[_repeatKey]; // скидаємо лічильник
+                    nodeId = n.endNode || n.config?.endNode || null; // end port
+                }
 
             } else if (n.type === 'talko_task') {
                 // FIX BX: create TALKO task from bot flow node
@@ -1869,6 +1928,30 @@ async function doAction(node, session, flow, botToken) {
                 }
             }
         } catch {}
+    } else if (node.actionType === 'start_flow') {
+        // FIX 3: Запустити інший флоу
+        const _targetFlowId = node.config?.actionPayload || node.actionPayload;
+        if (_targetFlowId) {
+            try {
+                const _payload = typeof _targetFlowId === 'string' && _targetFlowId.startsWith('{')
+                    ? JSON.parse(_targetFlowId) : { flowId: _targetFlowId };
+                session.currentFlowId = _payload.flowId || _targetFlowId;
+                session.currentNodeId = null;
+                session.waitingForInput = null;
+                // Скидаємо aiHistory при переключенні флоу
+                session.aiHistory = [];
+            } catch(e) { console.warn('[doAction] start_flow parse error:', e.message); }
+        }
+    } else if (node.actionType === 'stop_flow') {
+        // FIX 3: Зупинити флоу — скидаємо сесію
+        session.currentFlowId = null;
+        session.currentNodeId = null;
+        session.waitingForInput = null;
+    } else if (node.actionType === 'remove_tag') {
+        if (session.tags && node.config?.actionPayload) {
+            const tagToRemove = String(node.config.actionPayload).trim();
+            session.tags = session.tags.filter(t => t !== tagToRemove);
+        }
     } else if (node.actionType === 'set_tag' || node.actionType === 'add_tag') {
         if (!session.tags) session.tags = [];
         if (node.actionPayload) {

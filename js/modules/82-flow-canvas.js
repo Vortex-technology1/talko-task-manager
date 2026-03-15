@@ -337,6 +337,20 @@ function mountCanvas() {
             </svg>
             <!-- nodes layer -->
             <div id="fcNodesLayer" style="position:absolute;inset:0;z-index:2;"></div>
+            <!-- Підказка для нових юзерів -->
+            <div id="fcNewUserHint" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+                background:rgba(15,23,42,0.92);border:1px solid #22c55e44;border-radius:12px;
+                padding:12px 18px;color:#94a3b8;font-size:11px;display:flex;align-items:flex-start;
+                gap:10px;max-width:460px;z-index:10;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                <div style="line-height:1.6;">
+                    <div style="color:white;font-weight:700;margin-bottom:2px;font-size:12px;">Як побудувати ланцюг?</div>
+                    <div><b style="color:#22c55e;">1.</b> Перетягни вузол зліва на полотно</div>
+                    <div><b style="color:#22c55e;">2.</b> Клікни → налаштуй → <b style="color:white;">Застосувати</b></div>
+                    <div><b style="color:#22c55e;">3.</b> Тягни за <b style="color:#94a3b8;">●</b> щоб з'єднати вузли</div>
+                    <div style="margin-top:4px;font-size:10px;color:#475569;">Подвійний клік = додати Повідомлення</div>
+                </div>
+            </div>
         </div>
 
         <!-- RIGHT PANEL -->
@@ -502,6 +516,25 @@ function buildSidebar() {
                 text-align:center;line-height:1.2;">${label}</div>
         </div>`).join('') + aiFunnelBtn;
 
+    // Додаємо tooltips до вузлів sidebar
+    sb.querySelectorAll('[data-sbtype]').forEach(el => {
+        const tooltips = {
+            message:  'Надсилає текст або повідомлення з кнопками. Підтримує змінні {{name}} {{phone}}',
+            action:   'Виконує дію: сповіщення менеджеру, встановлення змінної, теги',
+            filter:   'Перевіряє умову по змінній. Гілка ТАК або НІ',
+            pause:    'Затримка перед наступним кроком (секунди, хвилини, години)',
+            ai:       'Штучний інтелект — збирає дані, відповідає на питання, веде діалог',
+            api:      'Запит до зовнішнього API (GET/POST). Зберігає відповідь в змінну',
+            sheets:   'Записує дані в Google Sheets через Apps Script URL',
+            random:   'Випадковий розподіл на гілку А або Б (A/B тест)',
+            repeat:   'Повторює дію до N разів, потім виходить через порт Завершити',
+            crm:      'Створює або оновлює угоду в CRM. Вибери воронку і стадію',
+            end:      'Завершення ланцюга. Сесія скидається',
+        };
+        const t = el.dataset.sbtype;
+        if (tooltips[t]) el.title = tooltips[t];
+    });
+
     // Drag from sidebar → canvas
     sb.querySelectorAll('[data-sbtype]').forEach(el => {
         el.addEventListener('dragstart', e => {
@@ -539,6 +572,9 @@ function renderNodes() {
         layer.appendChild(el);
     });
     applyTransformToNodes();
+    // Показуємо/ховаємо підказку
+    const hint = document.getElementById('fcNewUserHint');
+    if (hint) hint.style.display = fc.nodes.filter(n => n.type !== 'start').length > 0 ? 'none' : 'flex';
 }
 
 function buildNodeEl(node) {
