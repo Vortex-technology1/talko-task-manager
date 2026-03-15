@@ -2151,8 +2151,9 @@ function renderPropPanel() {
             const _selPip = _pipelines.find(p => p.id === _selPipId) || _pipelines.find(p=>p.isDefault) || _pipelines[0];
             // FIX: CRM зберігає stage.label, не stage.name
             const _stageOpts = (_selPip?.stages || [])
+                .filter(s => s && s.id)  // FIX: відфільтровуємо стадії без id
                 .slice().sort((a,b) => (a.order||0) - (b.order||0))
-                .map(s => [s.id, s.label || s.name || s.id]);
+                .map(s => [String(s.id), s.label || s.name || String(s.id)]);
             // FIX: IDs відповідають реальному _createDefaultPipeline в 77-crm.js
             const _defaultStageOpts = [
                 ['new','Новий лід'],['contact','Контакт'],
@@ -2227,6 +2228,23 @@ function renderPropPanel() {
                 Видалити вузол
             </button>` : ''}
         </div>`;
+
+    // FIX: після рендеру CRM вузла — синхронізуємо стадії з вибраною воронкою
+    // Це гарантує що стадії завжди відповідають pipeline select, навіть при async load
+    if (node.type === 'crm') {
+        requestAnimationFrame(() => {
+            const _pipSel = document.getElementById('fcp_pipelineId');
+            if (_pipSel?.value && typeof window._fcCrmPipelineChange === 'function') {
+                window._fcCrmPipelineChange(_pipSel.value);
+                // Відновлюємо збережену стадію після синхронізації
+                const _stageSel = document.getElementById('fcp_dealStage');
+                if (_stageSel && node.config?.dealStage) {
+                    const _opt = _stageSel.querySelector(`option[value="${node.config.dealStage}"]`);
+                    if (_opt) _stageSel.value = node.config.dealStage;
+                }
+            }
+        });
+    }
 }
 
 window.fcApplyNodeData = function(nodeId) {
