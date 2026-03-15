@@ -831,6 +831,17 @@
                                 <button onclick="saveBotApiKey('anthropic')" style="padding:0.55rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">Зберегти</button>
                             </div>
                         </div>
+                        <div>
+                            <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">Google Gemini API Key</label>
+                            <div style="display:flex;gap:0.5rem;">
+                                <input type="password" id="botsGoogleKey" value="${compData.googleApiKey ? '••••••••' + compData.googleApiKey.slice(-4) : ''}"
+                                    placeholder="AIza..." style="flex:1;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;">
+                                <button onclick="saveBotApiKey('google')" style="padding:0.55rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">Зберегти</button>
+                            </div>
+                            <div style="font-size:0.72rem;color:#9ca3af;margin-top:3px;">
+                                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#3b82f6;">Отримати ключ →</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>`;
@@ -937,10 +948,12 @@
     };
 
     window.saveBotApiKey = async function (provider) {
-        const inputId = provider === 'openai' ? 'botsOpenAIKey' : 'botsAnthropicKey';
+        const inputMap = { openai: 'botsOpenAIKey', anthropic: 'botsAnthropicKey', google: 'botsGoogleKey' };
+        const inputId = inputMap[provider] || 'botsOpenAIKey';
         const key = document.getElementById(inputId)?.value.trim();
         if (!key || key.includes('•')) return;
-        const field = provider === 'openai' ? 'openaiApiKey' : 'anthropicApiKey';
+        const fieldMap = { openai: 'openaiApiKey', anthropic: 'anthropicApiKey', google: 'googleApiKey' };
+        const field = fieldMap[provider] || 'openaiApiKey';
         try {
             await firebase.firestore().collection('companies').doc(window.currentCompanyId)
                 .update({ [field]: key });
