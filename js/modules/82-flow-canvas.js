@@ -2342,18 +2342,33 @@ window.fcApplyNodeData = function(nodeId) {
             node.config.repeatInterval = parseInt(get('repeatInterval'))||60;
             node.config.exitVar = get('exitVar');
             break;
-        case 'crm':
+        case 'crm': {
+            const _rawStage = document.getElementById('fcp_dealStage')?.value || '';
+            const _rawPip = document.getElementById('fcp_pipelineId')?.value || '';
             node.config.dealTitle = get('dealTitle') || '{{name}} — лід з бота';
-            node.config.dealStage = document.getElementById('fcp_dealStage')?.value || 'new';
+            // FIX: санітизуємо — не зберігаємо 'undefined', '', null як stage
+            node.config.dealStage = (_rawStage && _rawStage !== 'undefined') ? _rawStage : 'new';
             node.config.amount = parseFloat(get('amount')) || 0;
-            node.config.pipelineId = document.getElementById('fcp_pipelineId')?.value || null;
+            node.config.pipelineId = (_rawPip && _rawPip !== 'undefined') ? _rawPip : null;
+            // FIX: прибираємо nested config і службові поля щоб не роздувати Firestore
+            delete node.config.config;
+            delete node.config._x; delete node.config._y;
+            delete node.config.outputs;
             break;
+        }
         case 'end':
             node.config.text = get('text');
             break;
         default:
             node.config.text = get('text');
     }
+
+    // FIX: глобальне прибирання service-полів з config щоб не роздувати Firestore
+    // Ці поля не потрібні в config — вони дублюються на рівні node
+    delete node.config.config;   // вкладений config — виникає при load/save циклах
+    delete node.config._x;
+    delete node.config._y;
+    delete node.config.outputs;
 
     renderAll();
     renderPropPanel();
