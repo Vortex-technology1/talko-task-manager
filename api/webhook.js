@@ -693,8 +693,13 @@ module.exports = async (req, res) => {
         // finish() читає їх з session на наступному кроці
         if (_isNewContact) {
             (async () => { try {
+                // FIX 3: перевіряємо чи увімкнено авто-ліди для компанії
+                // За замовчуванням УВІМКНЕНО, але можна вимкнути в налаштуваннях
+                const _autoLeadsEnabled = (_compData.autoLeadsEnabled !== false);
+                if (!_autoLeadsEnabled) return; // Вимкнено в налаштуваннях
+
                 const _ts = admin.firestore.FieldValue.serverTimestamp();
-                const _name = normalized.senderName || normalized.senderId || 'Новий контакт';
+                const _name = normalized.senderName || normalized.username && ('@'+normalized.username) || normalized.senderId || 'Новий контакт';
                 const _source = channel === 'telegram' ? 'telegram_bot'
                     : channel === 'instagram' ? 'instagram_bot' : 'bot';
 
@@ -1481,6 +1486,8 @@ module.exports = async (req, res) => {
                         } catch(e) { console.warn('[talko_deal] pipeline fetch error:', e.message); }
                         const dealRef = compRef.collection('crm_deals').doc();
                         const _botContactId = session.channel + '_' + session.senderId;
+                        // FIX 1: clientId з авто-ліду або botContactId lookup
+                        const _tdClientId = session._autoClientId || session.data?._autoClientId || null;
                         await dealRef.set({
                             id:            dealRef.id,
                             title:         dealTitle,
@@ -1492,7 +1499,8 @@ module.exports = async (req, res) => {
                             source:        'telegram_bot',
                             flowId:        flow?.id || null,
                             botContactId:  _botContactId,
-                            contactId:     _botContactId,   // FIX: direct link for crmToggleDealChat
+                            contactId:     _botContactId,
+                            clientId:      _tdClientId,     // FIX 1: link to crm_clients
                             clientName:    session.senderName || (session.username ? '@'+session.username : '') || '',
                             phone:         session.data?.phone || '',
                             description:   session.data?.ai_response || session.data?.main_problem || '',
@@ -1516,12 +1524,18 @@ module.exports = async (req, res) => {
                         // Оновлюємо угоду (авто-лід або існуючу)
                         const _tdData = { ...session.data, name: session.data.name || session.senderName || session.senderId || 'Лід' };
                         const _tdTitle = interp(n.dealTitle || '{contact.name} — запит з боту', _tdData);
+                        const _tdClientIdUpd = session._autoClientId || session.data?._autoClientId
+                            || existingDeals.docs[0].data()?.clientId || null;
                         await existingDeals.docs[0].ref.update({
-                            title:     _tdTitle,
+                            title:     interp(_tdTitle, { ...session.data, name: session.data.name || session.senderName || '' }),
                             stage:     targetStage,
+                            stageColor: ccStageColor || existingDeals.docs[0].data()?.stageColor || '#6b7280',
                             flowId:    flow?.id || null,
-                            clientName: session.senderName || '',
+                            clientId:  _tdClientIdUpd,
+                            clientName: session.senderName || (session.username ? '@'+session.username : '') || '',
                             phone:     session.data?.phone || existingDeals.docs[0].data()?.phone || '',
+                            description: session.data?.ai_response || session.data?.main_problem || existingDeals.docs[0].data()?.description || '',
+                            tags:      session.tags?.length ? session.tags : (existingDeals.docs[0].data()?.tags || []),
                             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                         });
                         // Кешуємо dealId для finish()

@@ -1178,6 +1178,25 @@ function addNode(type, x, y) {
 }
 window.fcAddNode = addNode;
 
+// Оновлює список стадій при зміні воронки в CRM вузлі
+window._fcCrmPipelineChange = function(pipelineId) {
+    const pipelines = window.crm?.pipelines || [];
+    const pip = pipelines.find(p => p.id === pipelineId);
+    const stages = pip?.stages || [];
+    const wrap = document.getElementById('fcp_stageWrap');
+    if (!wrap) return;
+    const defaultStages = [
+        ['new','Новий лід'],['contacted','Контакт встановлено'],
+        ['qualified','Кваліфікований'],['proposal','Пропозиція'],['won','Виграно'],
+    ];
+    const opts = stages.length
+        ? stages.map(s => [s.id, s.name])
+        : defaultStages;
+    const sel = document.getElementById('fcp_dealStage');
+    if (!sel) return;
+    sel.innerHTML = opts.map(([v,l]) => '<option value="'+v+'">'+l+'</option>').join('');
+};
+
 // ── AI Воронка Modal ───────────────────────────────────────
 window.fcSetActionType = function(val) {
     if (!fc.selected) return;
@@ -2063,17 +2082,56 @@ function renderPropPanel() {
                 + fld('Інтервал (секунди)', inp('repeatInterval', d.repeatInterval, '60'))
                 + fld('Умова виходу (змінна)', inp('exitVar', d.exitVar, 'confirmed'));
             break;
-        case 'crm':
+        case 'crm': {
+            const _crmHint = '<div style="font-size:9px;color:#22c55e;background:#0f172a;border-radius:6px;padding:6px 8px;margin:4px 0 8px;line-height:1.5;">'
+                + '{{name}} — імя, {{phone}} — телефон, {{email}} — email, {{ai_response}} — остання AI відповідь</div>';
+
+            // Якщо CRM pipelines ще не завантажені — підвантажуємо асинхронно
+            if (!window.crm?.pipelines?.length && window.currentCompanyId && !window._crmPipLoading) {
+                window._crmPipLoading = true;
+                firebase.firestore().collection('companies').doc(window.currentCompanyId)
+                    .collection('crm_pipeline').where('isDefault','==',true).limit(5).get()
+                    .then(snap => {
+                        if (!window.crm) window.crm = {};
+                        window.crm.pipelines = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        window._crmPipLoading = false;
+                        if (fc.selected) renderPropPanel(); // перемалюємо
+                    }).catch(() => { window._crmPipLoading = false; });
+            }
+            const _pipelines = (window.crm?.pipelines || []);
+            const _pipOpts = _pipelines.length
+                ? _pipelines.map(p => [p.id, p.name + (p.isDefault ? ' (за замовчуванням)' : '')])
+                : [['', 'Завантаження...']];
+            const _selPipId = d.pipelineId || (_pipelines.find(p=>p.isDefault)||_pipelines[0])?.id || '';
+
+            // Стадії з вибраної воронки
+            const _selPip = _pipelines.find(p => p.id === _selPipId) || _pipelines.find(p=>p.isDefault) || _pipelines[0];
+            const _stageOpts = (_selPip?.stages || []).map(s => [s.id, s.name]);
+            const _defaultStageOpts = [
+                ['new','Новий лід'],['contacted','Контакт встановлено'],
+                ['qualified','Кваліфікований'],['proposal','Пропозиція'],
+                ['won','Виграно'],
+            ];
+            const _finalStageOpts = _stageOpts.length ? _stageOpts : _defaultStageOpts;
+
             fields = fld('Назва угоди', inp('dealTitle', d.dealTitle, '{{name}} — лід з бота'))
-                + '<div style="font-size:9px;color:#64748b;margin:-8px 0 8px;padding:0 2px;">Змінні: {{name}} {{phone}} {{email}} та інші з AI ланцюга</div>'
-                + sel('dealStage', [
-                    ['new','Новий лід'],['contacted','Контакт встановлено'],
-                    ['qualified','Кваліфікований'],['proposal','Пропозиція'],
-                    ['negotiation','Переговори'],['won','Виграно'],
-                  ], d.dealStage || 'new', 'Стадія угоди')
-                + fld('Сума угоди (грн)', inp('amount', d.amount || '', '0'))
-                + fld('ID Воронки (опційно)', inp('pipelineId', d.pipelineId, ''));
+                + _crmHint
+                + '<div style="margin-bottom:10px;">'
+                    + '<div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Воронка</div>'
+                    + '<select id="fcp_pipelineId" onchange="window._fcCrmPipelineChange(this.value)"'
+                    + ' style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">'
+                    + _pipOpts.map(([v,l]) => '<option value="'+v+'"'+(_selPipId===v?' selected':'')+'>'+l+'</option>').join('')
+                    + '</select>'
+                + '</div>'
+                + '<div id="fcp_stageWrap" style="margin-bottom:10px;">'
+                    + '<div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Стадія</div>'
+                    + '<select id="fcp_dealStage" style="width:100%;padding:7px 8px;background:#0f172a;border:1px solid #334155;border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">'
+                    + _finalStageOpts.map(([v,l]) => '<option value="'+v+'"'+(d.dealStage===v?' selected':'')+'>'+l+'</option>').join('')
+                    + '</select>'
+                + '</div>'
+                + fld('Сума угоди (грн)', inp('amount', d.amount || '', '0'));
             break;
+        }
         case 'end':
             fields = fld('Фінальне повідомлення', ta('text', d.text, 'Дякуємо! Ми зв\'яжемось.', 2));
             break;
@@ -2198,9 +2256,9 @@ window.fcApplyNodeData = function(nodeId) {
             break;
         case 'crm':
             node.config.dealTitle = get('dealTitle') || '{{name}} — лід з бота';
-            node.config.dealStage = get('dealStage') || 'new';
+            node.config.dealStage = document.getElementById('fcp_dealStage')?.value || 'new';
             node.config.amount = parseFloat(get('amount')) || 0;
-            node.config.pipelineId = get('pipelineId') || null;
+            node.config.pipelineId = document.getElementById('fcp_pipelineId')?.value || null;
             break;
         case 'end':
             node.config.text = get('text');
