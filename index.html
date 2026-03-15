@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- TALKO v2026.03.11.1 -->
+<!-- TALKO v2026.03.15.1 -->
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
@@ -171,7 +171,10 @@ document.addEventListener('mousedown', function(e) {
             setTimeout(window._initLucide, 1500);
         });
     </script>
-    <script src="https://unpkg.com/lucide@0.344.0" onload="window._initLucide && window._initLucide()"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.468.0/umd/lucide.min.js"
+        onload="window._initLucide && window._initLucide()"
+        onerror="var s=document.createElement('script');s.src='https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js';s.onload=function(){window._initLucide&&window._initLucide()};document.head.appendChild(s)">
+    </script>
     <script src="https://accounts.google.com/gsi/client"></script>
     <script src="https://apis.google.com/js/api.js"></script>
 
