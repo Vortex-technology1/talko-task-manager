@@ -255,6 +255,73 @@ const OB_STEPS = [
     tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Склад: найважливіше — правильний мінімальний залишок. Занизьте — тривоги приходять надто пізно. Завищте — система кричить постійно і ви перестаєте звертати увагу. Ставте реальний 2-тижневий запас.'
 },
 
+// ══ БЛОК 3 — СИСТЕМА: МОЖЛИВОСТІ ПЛАТФОРМИ (зведений огляд) ═══
+{
+    id: 'platform_capabilities', block: 'system', color: '#8b5cf6',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+    title: 'Можливості платформи: що і для чого', subtitle: 'Блок 3 · Система', est: '45 хв',
+    description: `
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.82rem;color:#15803d;line-height:1.6;">
+Кожна функція платформи закриває конкретний біль. Цей крок — довідник: що є, навіщо це потрібно, і яку проблему вирішує. Читайте як інструкцію до інструменту.
+</div>
+
+<div style="font-size:.78rem;font-weight:700;color:#1a1a1a;margin:.85rem 0 .4rem;text-transform:uppercase;letter-spacing:.04em;">CRM — Управління угодами</div>
+<div style="display:grid;gap:5px;">
+<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#7c3aed;">Kanban-дошка</b><br>Без неї: менеджер тримає 20 клієнтів в голові, забуває передзвонити. З нею: всі угоди на одному екрані по стадіях — перетягнули картку, стадія змінилась.</div>
+<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#7c3aed;">Картка угоди — 4 вкладки</b><br>Деталі · Активності (хронологія дзвінків і змін) · Задачі · AI-аналіз. Новий менеджер бачить всю передісторію клієнта за 30 секунд.</div>
+<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#7c3aed;">Поле «Філіал»</b><br>Без нього: незрозуміло звідки їде замірник і хто відповідає. З ним: визначає бригаду, розцінки і відповідального автоматично.</div>
+<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#7c3aed;">Поле «Замірник + дата заміру»</b><br>Без нього: замірник дізнається про замір вранці по дзвінку, може забути. З ним: подія з'являється в його Google Calendar автоматично + клієнт отримує WhatsApp з підтвердженням.</div>
+<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#7c3aed;">Поле «Монтажник + дата монтажу»</b><br>Без нього: монтажник не знає куди їхати завтра, телефонуєте вранці. З ним: Calendar event з адресою автоматично + WhatsApp клієнту з датою і ім'ям майстра.</div>
+<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#7c3aed;">Поле «Передоплата»</b><br>Без нього: ніхто не веде облік хто скільки заборгував. З ним: ввели суму — залишок рахується автоматично, запускається задача старту виробництва.</div>
+<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#7c3aed;">Аналітика CRM</b><br>Конверсія по стадіях · Джерела клієнтів (звідки реально гроші) · KPI менеджерів · Середній цикл угоди. Видно де втрачаються угоди і хто з команди продає.</div>
+</div>
+
+<div style="font-size:.78rem;font-weight:700;color:#1a1a1a;margin:.85rem 0 .4rem;text-transform:uppercase;letter-spacing:.04em;">Тригери — система що працює замість вас</div>
+<div style="display:grid;gap:5px;">
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#15803d;">КП погоджено</b> — автоматично: задача цеху (+3д), задача закупнику (+2д), задача логісту (+5д), WhatsApp клієнту з сумою передоплати</div>
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#15803d;">Передоплата внесена</b> — задача «Старт виробництва» цеху (сьогодні) + WhatsApp клієнту</div>
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#15803d;">Замір призначено</b> — подія в Google Calendar замірника + WhatsApp клієнту з датою і ім'ям</div>
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#15803d;">Монтаж призначено</b> — подія в Google Calendar монтажника з адресою + WhatsApp клієнту</div>
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#15803d;">+180 днів після закриття</b> — WhatsApp клієнту з пропозицією чищення штор + задача менеджеру зателефонувати. Повторні продажі на автопілоті.</div>
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#15803d;">Угода виграна</b> — WhatsApp клієнту з подякою + задача «Виставити рахунок» + авто-списання зі складу</div>
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#15803d;">Заявка з сайту або бота</b> — клієнт і угода автоматично з'являються в CRM без участі менеджера</div>
+</div>
+
+<div style="font-size:.78rem;font-weight:700;color:#1a1a1a;margin:.85rem 0 .4rem;text-transform:uppercase;letter-spacing:.04em;">Фінанси — контроль грошей компанії</div>
+<div style="display:grid;gap:5px;">
+<div style="background:#fef9ec;border:1px solid #fde68a;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#92400e;">Дашборд KPI</b><br>Без нього: щоб дізнатись скільки заробили — потрібен бухгалтер і 2 дні. З ним: 4 картки в реальному часі — Дохід / Витрати / Прибуток / Маржа з порівнянням до попереднього місяця.</div>
+<div style="background:#fef9ec;border:1px solid #fde68a;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#92400e;">Транзакції</b><br>Кожна транзакція з категорією — видно куди йдуть гроші. Прив'язка до CRM-угоди дає маржинальність кожного замовлення. Експорт CSV/Excel.</div>
+<div style="background:#fef9ec;border:1px solid #fde68a;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#92400e;">Рахунки клієнтам (Invoices)</b><br>Без них: 20 хвилин на рахунок в Word. З ними: кнопка в картці угоди → PDF за 2 хвилини → при оплаті авто-транзакція доходу. Онлайн-оплата через Stripe.</div>
+<div style="background:#fef9ec;border:1px solid #fde68a;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#92400e;">Регулярні платежі</b><br>Оренда, зарплата, підписки — вказуєте один раз, система створює транзакцію автоматично в потрібний день.</div>
+<div style="background:#fef9ec;border:1px solid #fde68a;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#92400e;">Планування і Cashflow</b><br>Бюджет по місяцях і відділах. Прогноз 30/60/90 днів — видно де виникне касовий розрив до того як він стався.</div>
+<div style="background:#fef9ec;border:1px solid #fde68a;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#92400e;">P&L і AI-аналітик</b><br>Звіт прибутки та збитки за будь-який період. AI відповідає на фінансові питання на основі ваших реальних даних.</div>
+</div>
+
+<div style="font-size:.78rem;font-weight:700;color:#1a1a1a;margin:.85rem 0 .4rem;text-transform:uppercase;letter-spacing:.04em;">Склад — облік матеріалів</div>
+<div style="display:grid;gap:5px;">
+<div style="background:#ede9fe;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#5b21b6;">Каталог з залишками</b><br>Наявний / зарезервований / доступний залишок по кожному матеріалу. При надходженні — авто-транзакція витрати у Фінансах.</div>
+<div style="background:#ede9fe;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#5b21b6;">3 рівні тривоги: ok / low / critical</b><br>Залишок нижче мінімуму → бейдж в навігації + автозадача закупнику «Замовити [товар]». Виробництво не зупиняється через несподівану нестачу.</div>
+<div style="background:#ede9fe;border:1px solid #ddd6fe;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#5b21b6;">Авто-списання при закритті угоди</b><br>Угода переходить в «Виграно» — всі прив'язані матеріали списуються автоматично. Залишки завжди актуальні без ручної роботи.</div>
+</div>
+
+<div style="font-size:.78rem;font-weight:700;color:#1a1a1a;margin:.85rem 0 .4rem;text-transform:uppercase;letter-spacing:.04em;">Календар і Booking</div>
+<div style="display:grid;gap:5px;">
+<div style="background:#fce7f3;border:1px solid #fbcfe8;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#9d174d;">6 видів календаря</b><br>День / Тиждень / Місяць / Список / Kanban / Дедлайни. Кожен співробітник бачить свій день і задачі з дедлайнами без зайвих питань.</div>
+<div style="background:#fce7f3;border:1px solid #fbcfe8;border-radius:8px;padding:.5rem .85rem;font-size:.78rem;"><b style="color:#9d174d;">Booking — онлайн-запис клієнтів</b><br>Без нього: 10 повідомлень в WhatsApp щоб погодити один слот. З ним: відправляєте посилання — клієнт сам обирає вільний час з Google Calendar. При бронюванні — клієнт автоматично в CRM.</div>
+</div>
+
+<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#8b5cf6;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;margin-top:.75rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg> Запитати AI-асистента</a>`,
+    tasks: [
+        { id:'cap1', text:'Переглянути всі 4 секції: CRM, Тригери, Фінанси, Склад', detail:'Не намагайтесь відразу налаштувати все. Спочатку зрозумійте що є — потім крок за кроком активуйте через наступні кроки цього онбордингу.' },
+        { id:'cap2', text:'Визначити де зараз найбільший біль у вашому бізнесі', detail:'Угоди губляться? Починайте з CRM. Менеджери роблять все вручну? Тригери і WhatsApp. Не знаєте куди йдуть гроші? Фінанси. Матеріали закінчуються несподівано? Склад.' },
+        { id:'cap3', text:'Відкрити CRM і переконатись що є хоча б одна тестова угода', detail:'Без угод в CRM тригери не спрацюють і ви не побачите як система працює. Створіть тестову угоду: імя клієнта + телефон + стадія.' },
+        { id:'cap4', text:'Перевірити чи підключений WhatsApp Business API', detail:'Інтеграції → WhatsApp Business API. Якщо ключ не вставлений — 6 автоматичних повідомлень клієнтам не відправляються. Це найшвидший спосіб показати клієнту що ви системна компанія.' },
+        { id:'cap5', text:'Відкрити Фінанси і внести хоча б одну реальну транзакцію', detail:'Без транзакцій дашборд порожній. Одна транзакція вже покаже KPI. Почніть з доходу від останнього замовлення.' },
+    ],
+    action: { label:'Відкрити CRM', tab:'crm' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Головне правило: не впроваджуйте все одразу. Оберіть один модуль де найбільший біль — налаштуйте його повністю — переходьте до наступного. CRM + Тригери + WhatsApp дають результат вже в перший тиждень.'
+},
+
 // ══ БЛОК 4 — ПРОЄКТИ ══════════════════════════════════════════
 {
     id: 'projects', block: 'projects', color: '#3b82f6',
