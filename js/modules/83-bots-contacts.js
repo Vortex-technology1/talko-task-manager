@@ -2396,9 +2396,11 @@ window.bpSendBroadcast = async function() {
 
                 if (ctChannel === 'telegram') {
                     // Telegram — FIX: HTML замість Markdown (webhook теж використовує HTML)
+                    // FIX: якщо flowSendId але text порожній — пропускаємо (flow-based broadcast не підтримується через прямий API)
+                    if (!text && flowSendId) { bcast.failed++; continue; }
                     const _bcastPayload = {
                         chat_id: senderId,
-                        text: text || 'Повідомлення від бота',
+                        text: text || '',
                         parse_mode: 'HTML',
                         disable_web_page_preview: true,
                     };

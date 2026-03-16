@@ -2068,6 +2068,9 @@ async function callAI(node, userText, session, compRef, compData) {
             compData = compDoc.data() || {};
         }
         const provider = node.config?.aiProvider || node.aiProvider || 'openai';
+        // FIX: NaN temperature → 0.7 (parseFloat('') = NaN, NaN ?? 0.7 = NaN)
+        const _rawTemp = node.config?.temperature ?? node.temperature ?? 0.7;
+        const _safeTemp = (typeof _rawTemp === 'number' && !isNaN(_rawTemp)) ? Math.min(Math.max(_rawTemp, 0), 2) : 0.7;
         const model = node.config?.aiModel || node.aiModel || node.model || 'gpt-4o-mini';
         const apiKey = node.config?.aiApiKey || node.aiApiKey
             // Company-level BYOK keys (різні варіанти назв)
@@ -2164,7 +2167,7 @@ async function callAI(node, userText, session, compRef, compData) {
                 ...(model.startsWith('o3') || model.startsWith('o4') || model.startsWith('gpt-5')
                     ? { max_completion_tokens: _maxTok }
                     : { max_tokens: _maxTok }),
-                ...(_isReasoningModel ? {} : { temperature: node.config?.temperature ?? 0.7 }),
+                ...(_isReasoningModel ? {} : { temperature: _safeTemp }),
                 messages
             });
             let r = await fetch(baseUrl, {
@@ -2228,7 +2231,7 @@ async function callAI(node, userText, session, compRef, compData) {
                 body: JSON.stringify({
                     model,
                     max_tokens: _maxTok,
-                    temperature: node.config?.temperature ?? 0.7, // FIX 12: temperature for Anthropic
+                    temperature: _safeTemp,
                     system: sysPrompt,
                     // FIX 6: Anthropic — правильне чергування user/assistant
                     // Anthropic відхиляє: 2 однакові ролі підряд, або перший === assistant
@@ -2258,7 +2261,7 @@ async function callAI(node, userText, session, compRef, compData) {
                     method: 'POST',
                     signal: aiAbort.signal, // FIX: timeout applies to retry too
                     headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-                    body: JSON.stringify({ model, max_tokens: _maxTok, temperature: node.config?.temperature ?? 0.7, system: sysPrompt,
+                    body: JSON.stringify({ model, max_tokens: _maxTok, temperature: _safeTemp, system: sysPrompt,
                         messages: (() => {
                             const hist = [..._trimmedHistory, { role: 'user', content: _effectiveUserText }];
                             const valid = [];
@@ -2304,7 +2307,7 @@ async function callAI(node, userText, session, compRef, compData) {
                     contents: _geminiContents,
                     generationConfig: {
                         maxOutputTokens: _maxTok, // PERF 3: adaptive
-                        temperature: node.config?.temperature ?? 0.7,
+                        temperature: _safeTemp,
                     },
                 })
             });

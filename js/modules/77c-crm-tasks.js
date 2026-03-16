@@ -31,17 +31,30 @@ window.crmAutoTasksOnStageChange = async function (deal, newStage) {
                          : tpl.assignTo === 'creator' ? (deal.creatorId  || uid)
                          :                               (deal.assigneeId || uid); // 'assignee' default
 
-        await compRef.collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
-            .doc(deal.id).collection('tasks').add({
-                title:      tpl.title,
-                dueDate:    dueDate,
-                assigneeId: assigneeId,
-                status:     'open',
-                autoCreated: true,
-                fromStage:  newStage,
-                createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
-                createdBy:  email,
-            }).catch(e => console.warn('[CRM autoTask]', e.message));
+        const _assignee = window.currentUserData?.name || email || '';
+        const _today = new Date().toISOString().slice(0, 10);
+        await compRef.collection(window.DB_COLS?.TASKS || 'tasks').add({
+            title:        tpl.title,
+            dueDate:      dueDate,
+            deadlineDate: dueDate || _today,
+            deadlineTime: '18:00',
+            deadline:     (dueDate || _today) + 'T18:00',
+            createdDate:  _today,
+            assigneeId:   assigneeId,
+            assigneeName: _assignee,
+            creatorId:    uid,
+            creatorName:  _assignee,
+            status:       'new',
+            priority:     tpl.priority || 'medium',
+            pinned:       false,
+            autoCreated:  true,
+            source:       'crm_stage',
+            dealId:       deal.id,
+            clientName:   deal.clientName || deal.title || '',
+            fromStage:    newStage,
+            createdAt:    firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt:    firebase.firestore.FieldValue.serverTimestamp(),
+        }).catch(e => console.warn('[CRM autoTask]', e.message));
     }
 
     // Оновити таб задач якщо відкритий
