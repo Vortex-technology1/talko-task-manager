@@ -680,7 +680,7 @@ function renderOnboarding() {
   </div>
   <!-- RIGHT -->
   <div style="flex:1;overflow-y:auto;padding:1.5rem 2rem;">
-    <div style="max-width:660px;margin:0 auto;">
+    <div style="width:100%;">
       <div style="display:flex;align-items:flex-start;gap:.85rem;margin-bottom:1.25rem;">
         <div style="width:50px;height:50px;border-radius:13px;flex-shrink:0;background:${step.color}18;display:flex;align-items:center;justify-content:center;color:${step.color};">${step.icon}</div>
         <div style="flex:1;">
