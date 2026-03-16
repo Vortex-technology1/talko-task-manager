@@ -382,6 +382,15 @@
   // ── Задача при мінімальному залишку ──────────────────────
   window.whCreateRestockTask = async function (item) {
     try {
+      // Перевіряємо дублі — не створювати якщо вже є відкрита задача для цього товару
+      const existing = await col(window.DB_COLS?.TASKS || 'tasks')
+        .where('source', '==', 'warehouse_alert')
+        .where('itemId', '==', item.id)
+        .where('status', '==', 'todo')
+        .limit(1)
+        .get();
+      if (!existing.empty) return; // вже є — не дублюємо
+
       const taskData = {
         title: `Замовити: ${item.name}`,
         description: `Залишок на складі: ${window.whGetStock(item.id).qty} ${item.unit || 'шт'}. Мінімум: ${item.minStock}`,

@@ -392,13 +392,13 @@
                       ${item.costPrice ? `<div style="font-size:0.75rem;color:#6b7280;">${fmtMoney(item.costPrice)}/од</div>` : ''}
                     </div>
                     <div style="display:flex;gap:0.3rem;">
-                      <button onclick="window.whOpenOpForm('IN','${item.id}')" title="Прийняти" style="padding:5px;border:none;background:#dcfce7;border-radius:6px;cursor:pointer;">
+                      <button onclick="event.stopPropagation();window.whOpenOpForm('IN','${item.id}')" title="Прийняти" style="padding:5px;border:none;background:#dcfce7;border-radius:6px;cursor:pointer;">
                         <i data-lucide="arrow-down-circle" style="width:14px;height:14px;color:#16a34a;display:block;"></i>
                       </button>
-                      <button onclick="window.whOpenOpForm('OUT','${item.id}')" title="Видати" style="padding:5px;border:none;background:#fee2e2;border-radius:6px;cursor:pointer;">
+                      <button onclick="event.stopPropagation();window.whOpenOpForm('OUT','${item.id}')" title="Видати" style="padding:5px;border:none;background:#fee2e2;border-radius:6px;cursor:pointer;">
                         <i data-lucide="arrow-up-circle" style="width:14px;height:14px;color:#dc2626;display:block;"></i>
                       </button>
-                      <button onclick="window.whOpenItemForm('${item.id}')" title="Редагувати" style="padding:5px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
+                      <button onclick="event.stopPropagation();window.whOpenItemForm('${item.id}')" title="Редагувати" style="padding:5px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
                         <i data-lucide="pencil" style="width:14px;height:14px;color:#6b7280;display:block;"></i>
                       </button>
                     </div>
@@ -753,7 +753,7 @@
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Локація</label>
             <select id="wh_op_loc" style="${_inp()}">
-              ${locs.map(l => `<option value="${l.id}">${l.name}</option>`).join('')}
+              ${locs.length > 0 ? locs.map(l => `<option value="${l.id}">${l.name}</option>`).join('') : '<option value="main">Головний склад</option>'}
             </select>
           </div>
           <div>
@@ -1052,9 +1052,9 @@
 
         <!-- Кнопки операцій -->
         <div style="display:flex;gap:0.4rem;margin-top:1rem;flex-wrap:wrap;">
-          <button onclick="window._whCloseModal();window.whOpenOpForm('IN','${itemId}')" style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">↓ Прийняти</button>
-          <button onclick="window._whCloseModal();window.whOpenOpForm('OUT','${itemId}')" style="flex:1;padding:0.45rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">↑ Видати</button>
-          <button onclick="window._whCloseModal();window.whOpenOpForm('WRITE_OFF','${itemId}')" style="flex:1;padding:0.45rem;background:#f59e0b;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">✕ Списати</button>
+          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('IN','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">↓ Прийняти</button>
+          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('OUT','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">↑ Видати</button>
+          <button onclick="window._whCloseModal();setTimeout(()=>window.whOpenOpForm('WRITE_OFF','${itemId}'),50)" style="flex:1;padding:0.45rem;background:#f59e0b;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;min-width:80px;">✕ Списати</button>
           <button onclick="window._whCloseModal()" style="padding:0.45rem 0.75rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">Закрити</button>
         </div>
       </div>
