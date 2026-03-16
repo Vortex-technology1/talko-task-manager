@@ -182,14 +182,17 @@
             var tasksTabs    = ['tasks','regular'];
             var analyticsTabs = ['statistics','analytics','ownerDashboard'];
             var sysTabs      = ['functions','bizstructure','users','admin','onboarding'];
+            var bizTabs      = ['crm','finance','warehouse','marketing','bots','sites','integrations'];
 
             var tasksBtn     = document.getElementById('tasksTabBtn');
             var analyticsBtn = document.getElementById('analyticsTabBtn');
             var sysBtn       = document.getElementById('sysTabBtn');
+            var bizBtn2      = document.getElementById('bizNavBtn');
 
             if (tasksBtn)     tasksBtn.classList.toggle('active', tasksTabs.includes(tabName));
             if (analyticsBtn) analyticsBtn.classList.toggle('active', analyticsTabs.includes(tabName));
             if (sysBtn)       sysBtn.classList.toggle('active', sysTabs.includes(tabName));
+            if (bizBtn2)      bizBtn2.classList.toggle('active', bizTabs.includes(tabName));
 
             // Пошук також через closeNavDropdowns (нова система)
             if (!matchBtn) {

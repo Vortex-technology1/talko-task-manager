@@ -405,6 +405,12 @@
             }).join('')}
           </div>
         `}
+        ${filtered.length > 0 ? `
+          <div style="padding:0.6rem 1rem;background:#f9fafb;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;font-size:0.8rem;color:#6b7280;">
+            <span>Показано: <b>${filtered.length}</b> з ${items.length} позицій</span>
+            <span>Загальна вартість: <b style="color:#1f2937;">${fmtMoney(filtered.reduce((s,i)=>{ const st=window.whGetStock(i.id); return s+(st.qty*(i.costPrice||0)); },0))}</b></span>
+          </div>
+        ` : ''}
       </div>
     `;
   }
@@ -600,7 +606,7 @@
               </select>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.5rem;">
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Собівартість ₴</label>
               <input id="wh_cost" type="number" value="${item.costPrice || ''}" style="${_inp()}" placeholder="0">
@@ -700,7 +706,7 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Кількість *</label>
-              <input id="wh_op_qty" type="number" min="0.001" step="any" style="${_inp()}" placeholder="1">
+              <input id="wh_op_qty" type="number" min="0.001" step="any" autofocus style="${_inp()}" placeholder="1">
             </div>
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">${type === 'IN' ? 'Ціна за од. ₴' : 'Собівартість за од. ₴'}</label>
@@ -870,10 +876,22 @@
       overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;';
       overlay.onclick = function (e) { if (e.target === overlay) window._whCloseModal(); };
       document.body.appendChild(overlay);
+      // ESC key close
+      document.addEventListener('keydown', function _whEsc(e) {
+        if (e.key === 'Escape') {
+          const ov = document.getElementById('whModalOverlay');
+          if (ov && ov.style.display !== 'none') window._whCloseModal();
+        }
+      });
     }
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div style="background:white;border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);">${html}</div>`;
     if (window.lucide) setTimeout(() => lucide.createIcons(), 50);
+    // Autofocus first input
+    setTimeout(() => {
+      const first = overlay.querySelector('input:not([type=hidden]), select');
+      if (first) first.focus();
+    }, 60);
   }
 
   window._whCloseModal = function () {
