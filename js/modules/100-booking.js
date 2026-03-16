@@ -364,8 +364,25 @@ function renderCalendarForm(cal) {
     <div class="bk-field">
       <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
         <input type="checkbox" id="bk-f-active" ${d.isActive!==false?'checked':''}>
-        ${t('activeLabel')||'Активний (доступний для запису)'}
+        ${t('activeLabel')||'Активний'}
       </label>
+    </div>
+    <div class="bk-field">
+      <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+        <input type="checkbox" id="bk-f-require-payment" onchange="window._bkToggleRequirePayment(this)" ${d.requirePayment?'checked':''}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#635bff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        ${t('bkRequirePayment')||'Оплата при записі (Stripe)'}
+      </label>
+    </div>
+    <div class="bk-field" id="bk-f-price-wrap" style="${d.requirePayment?'':'display:none'}">
+      <label>${t('bkServicePrice')||'Вартість послуги'}</label>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <input type="number" id="bk-f-price" min="0" step="0.01" value="${d.price||''}" placeholder="0.00" style="flex:1">
+        <select id="bk-f-price-currency" style="width:80px">
+          <option value="EUR" ${(d.priceCurrency||'EUR')==='EUR'?'selected':''}>EUR</option>
+          <option value="CZK" ${(d.priceCurrency||'EUR')==='CZK'?'selected':''}>CZK</option>
+        </select>
+      </div>
     </div>
   </div>
   <div class="bk-form-section">
@@ -651,6 +668,11 @@ window._bkToggleDay = function(day, enabled) {
     if (el) { el.style.opacity = enabled?'1':'.35'; el.style.pointerEvents = enabled?'auto':'none'; }
 };
 
+window._bkToggleRequirePayment = function(cb) {
+    const wrap = document.getElementById('bk-f-price-wrap');
+    if (wrap) wrap.style.display = cb.checked ? '' : 'none';
+};
+
 window._bkSaveCalendar = async function() {
     const nameEl = document.getElementById('bk-f-name');
     const slugEl = document.getElementById('bk-f-slug');
@@ -698,6 +720,9 @@ window._bkSaveCalendar = async function() {
         phoneRequired:    document.getElementById('bk-f-phone-required')?.checked!==false,
         questions:        window._bkCollectQuestions(),
         maxBookingsPerSlot: 1,
+        requirePayment: document.getElementById('bk-f-require-payment')?.checked || false,
+        price:          parseFloat(document.getElementById('bk-f-price')?.value) || 0,
+        priceCurrency:  document.getElementById('bk-f-price-currency')?.value || 'EUR',
     };
 
     const isEdit = !!(bk.editCalendar && bk.editCalendar.id);

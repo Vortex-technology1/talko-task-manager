@@ -1486,6 +1486,14 @@ function _invoiceRow(inv, currency) {
       <div style="flex:0 0 auto;display:flex;gap:6px;">
         <button onclick="window._invoicePdf('${inv.id}')" title="PDF"
           style="border:1px solid #e5e7eb;background:#fff;border-radius:7px;padding:5px 8px;cursor:pointer;font-size:0.75rem;color:#374151;">PDF</button>
+        ${inv.status !== 'paid' ? `
+          <button onclick="window._invoicePayOnline('${inv.id}')"
+            style="border:1px solid #635bff;background:#635bff;border-radius:7px;padding:5px 10px;cursor:pointer;color:white;font-weight:600;font-size:0.75rem;display:flex;align-items:center;gap:4px;"
+            title="Stripe">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            ${window.t('stripePayOnline')||'Оплатити онлайн'}
+          </button>
+        ` : ''}
         ${isOwnerOrManager() ? `
           ${inv.status !== 'paid' ? `<button onclick="window._invoiceMarkPaid('${inv.id}')" title="Оплачено"
             style="border:1px solid #d1fae5;background:#f0fdf4;border-radius:7px;padding:5px 8px;cursor:pointer;color:#16a34a;">${I.check}</button>` : ''}
@@ -1663,6 +1671,44 @@ window._invRecalc = function() {
 };
 
 // ── Збереження ─────────────────────────────────────────────
+
+// ── Stripe — оплата рахунку онлайн ───────────────────────
+window._invoicePayOnline = async function(invoiceId) {
+  const inv = _state.invoices.find(i => i.id === invoiceId);
+  if (!inv) return;
+  if (inv.status === 'paid') {
+    if (typeof showToast === 'function') showToast(window.t('finAlreadyPaid')||'Вже оплачено', 'info');
+    return;
+  }
+  const btn = document.querySelector(`button[onclick="_invoicePayOnline('${invoiceId}')"]`);
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+  try {
+    const res = await fetch('/api/stripe?action=create-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        companyId:   window.currentCompanyId,
+        invoiceId:   invoiceId,
+        amount:      inv.total || inv.amount || 0,
+        currency:    inv.currency || _state.currency || 'EUR',
+        description: `${inv.number || 'Рахунок'} — ${inv.clientName || ''}`.trim(),
+        clientEmail: inv.clientEmail || '',
+        clientName:  inv.clientName  || '',
+        successUrl:  window.location.origin + '/?stripe=success&invoiceId=' + invoiceId,
+        cancelUrl:   window.location.origin + '/?stripe=cancelled',
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Server error');
+    window.open(data.url, '_blank');
+    if (typeof showToast === 'function')
+      showToast(window.t('stripeRedirecting')||'Переходимо до оплати...', 'success');
+  } catch(e) {
+    if (typeof showToast === 'function') showToast('Stripe: ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.innerHTML = window.t('stripePayOnline')||'Оплатити онлайн'; }
+  }
+};
+
 window._invoiceSave = async function(editId) {
   if (window._invoiceSaving) return; // guard проти подвійного кліку
   window._invoiceSaving = true;

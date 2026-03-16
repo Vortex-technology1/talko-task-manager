@@ -1523,7 +1523,48 @@ module.exports = async (req, res) => {
 
             // Telegram notification (non-blocking)
             const compRef = db.collection('companies').doc(companyId);
-            tgNotify(compRef,
+            // ── Stripe оплата якщо календар вимагає ──────────
+        let stripeUrl = null;
+        if (cal.requirePayment && cal.price > 0) {
+            try {
+                const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
+                if (STRIPE_KEY) {
+                    const Stripe = require('stripe');
+                    const stripe = Stripe(STRIPE_KEY);
+                    const session = await stripe.checkout.sessions.create({
+                        payment_method_types: ['card'],
+                        mode: 'payment',
+                        line_items: [{
+                            price_data: {
+                                currency:    (cal.priceCurrency || 'EUR').toLowerCase(),
+                                unit_amount: Math.round((cal.price || 0) * 100),
+                                product_data: { name: `${cal.name} — ${safeClientName}` },
+                            },
+                            quantity: 1,
+                        }],
+                        metadata: {
+                            companyId,
+                            bookingId:  appointmentRef.id,
+                            clientName: safeClientName,
+                        },
+                        customer_email: safeClientEmail,
+                        success_url: `${req.headers.origin || 'https://taskmanagerai-vert.vercel.app'}/?stripe=success&bookingId=${appointmentRef.id}`,
+                        cancel_url:  `${req.headers.origin || 'https://taskmanagerai-vert.vercel.app'}/book/${companyId}/${cal.slug || calendarId}`,
+                    });
+                    stripeUrl = session.url;
+                    // Зберігаємо session ID в appointment
+                    await appointmentRef.update({
+                        stripeSessionId:  session.id,
+                        stripeSessionUrl: session.url,
+                        status:           'pending_payment',
+                    });
+                }
+            } catch(stripeErr) {
+                console.error('[booking create] Stripe session error:', stripeErr.message);
+            }
+        }
+
+        tgNotify(compRef,
                 `📅 <b>Новий запис!</b>\n` +
                 `Календар: ${tgEsc(cal.name || calendarId)}\n` +
                 `Клієнт: ${tgEsc(safeClientName)}\n` +
@@ -1620,7 +1661,48 @@ module.exports = async (req, res) => {
 
             // Notify owner
             const compRef = db.collection('companies').doc(companyId);
-            tgNotify(compRef,
+            // ── Stripe оплата якщо календар вимагає ──────────
+        let stripeUrl = null;
+        if (cal.requirePayment && cal.price > 0) {
+            try {
+                const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
+                if (STRIPE_KEY) {
+                    const Stripe = require('stripe');
+                    const stripe = Stripe(STRIPE_KEY);
+                    const session = await stripe.checkout.sessions.create({
+                        payment_method_types: ['card'],
+                        mode: 'payment',
+                        line_items: [{
+                            price_data: {
+                                currency:    (cal.priceCurrency || 'EUR').toLowerCase(),
+                                unit_amount: Math.round((cal.price || 0) * 100),
+                                product_data: { name: `${cal.name} — ${safeClientName}` },
+                            },
+                            quantity: 1,
+                        }],
+                        metadata: {
+                            companyId,
+                            bookingId:  appointmentRef.id,
+                            clientName: safeClientName,
+                        },
+                        customer_email: safeClientEmail,
+                        success_url: `${req.headers.origin || 'https://taskmanagerai-vert.vercel.app'}/?stripe=success&bookingId=${appointmentRef.id}`,
+                        cancel_url:  `${req.headers.origin || 'https://taskmanagerai-vert.vercel.app'}/book/${companyId}/${cal.slug || calendarId}`,
+                    });
+                    stripeUrl = session.url;
+                    // Зберігаємо session ID в appointment
+                    await appointmentRef.update({
+                        stripeSessionId:  session.id,
+                        stripeSessionUrl: session.url,
+                        status:           'pending_payment',
+                    });
+                }
+            } catch(stripeErr) {
+                console.error('[booking create] Stripe session error:', stripeErr.message);
+            }
+        }
+
+        tgNotify(compRef,
                 `❌ <b>Запис скасовано</b>\n` +
                 `Клієнт: ${tgEsc(appt.clientName)}\n` +
                 `Дата: ${tgEsc(appt.date)} о ${tgEsc(appt.timeSlot)}`

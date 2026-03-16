@@ -80,6 +80,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/stripe",
+      "destination": "/api/stripe"
+    },
+    {
       "source": "/book/:companyId/g/:groupSlug",
       "destination": "/api/booking?action=page&companyId=:companyId&groupSlug=:groupSlug"
     },
@@ -170,6 +174,10 @@
       "memory": 128
     },
     "api/warehouse.js": {
+      "maxDuration": 30,
+      "memory": 256
+    },
+    "api/stripe.js": {
       "maxDuration": 30,
       "memory": 256
     }
