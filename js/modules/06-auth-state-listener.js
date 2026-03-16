@@ -147,12 +147,11 @@
                         if (sitesBtn) sitesBtn.style.display = '';
                         hasBizFeature = true;
                     }
-                    // Склад — показуємо якщо feature 'warehouse' не вимкнена (default: true)
-                    if (window.isFeatureEnabled && window.isFeatureEnabled('warehouse')) {
-                        const whBtn = document.getElementById('warehouseNavBtn');
-                        if (whBtn) whBtn.style.display = '';
-                        hasBizFeature = true;
-                    }
+                    // Склад — показуємо завжди (не залежить від feature flag)
+                    // Warehouse є базовим функціоналом — feature flag не потрібен
+                    const whBtn = document.getElementById('warehouseNavBtn');
+                    if (whBtn) whBtn.style.display = '';
+                    hasBizFeature = true;
                     if (hasBizFeature) {
                         const bizBtn = document.getElementById('bizNavBtn');
                         if (bizBtn) bizBtn.style.display = '';
