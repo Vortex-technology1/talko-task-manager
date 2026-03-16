@@ -33,6 +33,15 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 // ── Utils ─────────────────────────────────────────────────
+// Safe JSON для вставки в <script> — ескейпує </script> та Unicode лінійні термінатори
+function safeJson(v) {
+    // Безпечна вставка в <script> — ескейпує </script> і Unicode термінатори
+    var s = JSON.stringify(v);
+    s = s.replace(/</g, '\u003c').replace(/>/g, '\u003e').replace(/&/g, '\u0026');
+    s = s.split(' ').join('\u2028').split(' ').join('\u2029');
+    return s;
+}
+
 function esc(s) {
     return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -238,7 +247,27 @@ async function createGoogleEvent(companyId, ownerId, appointment, calendar) {
             .collection('users').doc(ownerId).get();
         if (!userDoc.exists) return null;
         const userData = userDoc.data();
-        if (!userData.googleCalendarConnected || !userData.googleAccessToken) return null;
+        if (!userData.googleCalendarConnected) return null;
+
+        let accessToken = userData.googleAccessToken;
+        const expiry = userData.googleTokenExpiry?.toMillis?.() || 0;
+
+        // Refresh token якщо протух або закінчується через 2 хв
+        if (userData.googleRefreshToken && (!accessToken || Date.now() > expiry - 120000)) {
+            const refreshed = await refreshGoogleToken(userData.googleRefreshToken);
+            if (refreshed?.access_token) {
+                accessToken = refreshed.access_token;
+                await db.collection('companies').doc(companyId)
+                    .collection('users').doc(ownerId).update({
+                        googleAccessToken: refreshed.access_token,
+                        googleTokenExpiry: admin.firestore.Timestamp.fromMillis(
+                            Date.now() + (refreshed.expires_in || 3600) * 1000
+                        ),
+                    }).catch(() => {});
+            }
+        }
+
+        if (!accessToken) return null;
 
         const event = {
             summary: `${appointment.clientName} — ${calendar.name}`,
@@ -253,7 +282,7 @@ async function createGoogleEvent(companyId, ownerId, appointment, calendar) {
             {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${userData.googleAccessToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(event),
@@ -295,6 +324,7 @@ async function getAvailableSlots(companyId, calendarId, dateStr) {
 
     if (!calDoc.exists) throw new Error('Calendar not found');
     const cal  = calDoc.data();
+    if (!cal.isActive) return []; // вимкнений календар — 0 слотів
     const sched = schedDoc.exists ? schedDoc.data() : { weeklyHours: {}, dateOverrides: {} };
 
     const tz = cal.timezone || 'Europe/Kiev';
@@ -331,9 +361,14 @@ async function getAvailableSlots(companyId, calendarId, dateStr) {
 
     if (rawSlots.length === 0) return [];
 
-    // Build time range for the date (full day in UTC for freebusy)
-    const dayStart = new Date(dateStr + 'T00:00:00Z').toISOString();
-    const dayEnd   = new Date(dateStr + 'T23:59:59Z').toISOString();
+    // Build time range: ±1 день UTC щоб покрити всі timezone (UTC-12 до UTC+14)
+    // Наприклад, 23:30 NY EST = наступний день 04:30 UTC — без розширення пропускаємо
+    const dayStartDt = new Date(dateStr + 'T00:00:00Z');
+    dayStartDt.setUTCDate(dayStartDt.getUTCDate() - 1); // -1 день
+    const dayStart = dayStartDt.toISOString();
+    const dayEndDt = new Date(dateStr + 'T23:59:59Z');
+    dayEndDt.setUTCDate(dayEndDt.getUTCDate() + 1);     // +1 день
+    const dayEnd = dayEndDt.toISOString();
 
     // Fetch existing appointments for this calendar on this date
     const apptSnap = await db.collection('companies').doc(companyId)
@@ -551,9 +586,9 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e
 </div>
 
 <script>
-const BK_COMPANY  = ${JSON.stringify(companyId)};
-const BK_CALENDAR = ${JSON.stringify(calendarId)};
-const BK_CONFIRM  = ${JSON.stringify(cal.confirmationType || 'auto')};
+const BK_COMPANY  = ${safeJson(companyId)};
+const BK_CALENDAR = ${safeJson(calendarId)};
+const BK_CONFIRM  = ${safeJson(cal.confirmationType || 'auto')};
 
 const bk = {
     year: 0, month: 0,
@@ -570,7 +605,7 @@ const bk = {
 
         // Показуємо timezone клієнта і попередження якщо відрізняється
         const clientTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const calTz = ${JSON.stringify(tz)};
+        const calTz = ${safeJson(tz)};
         const tzEl = document.getElementById('bk-tz-display');
         if (clientTz && clientTz !== calTz) {
             tzEl.innerHTML = '\u26a0\ufe0f Час слотів у зоні <b>' + calTz + '</b>. ' +
@@ -862,6 +897,10 @@ module.exports = async (req, res) => {
             if (!companyId || !calendarId || !date)
                 return res.status(400).json({ error: 'Missing params' });
 
+            // Валідація date формату
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
+                return res.status(400).json({ error: 'Invalid date format' });
+
             const slots = await getAvailableSlots(companyId, calendarId, date);
             return res.status(200).json({ slots });
         }
@@ -928,9 +967,25 @@ module.exports = async (req, res) => {
             if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
                 return res.status(400).json({ error: 'Invalid date format' });
 
+            // Max booking date — не більше 1 року вперед
+            const today = new Date().toISOString().slice(0, 10);
+            const maxDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+            if (date < today)    return res.status(400).json({ error: 'Cannot book in the past' });
+            if (date > maxDate)  return res.status(400).json({ error: 'Cannot book more than 1 year ahead' });
+
             // TimeSlot format (HH:MM)
             if (!/^\d{2}:\d{2}$/.test(timeSlot))
                 return res.status(400).json({ error: 'Invalid timeSlot format' });
+
+            // Sanitize answers — обмежуємо розмір щоб запобігти 1MB payloads
+            const safeAnswers = {};
+            if (answers && typeof answers === 'object') {
+                Object.entries(answers).slice(0, 20).forEach(([k, v]) => {
+                    const safeKey = String(k).slice(0, 50);
+                    const safeVal = String(v || '').slice(0, 500);
+                    safeAnswers[safeKey] = safeVal;
+                });
+            }
 
             // Sanitize: trim strings
             const safeClientName  = clientName.trim().slice(0, 200);
@@ -1007,7 +1062,7 @@ module.exports = async (req, res) => {
                         clientName:   safeClientName,
                         clientEmail:  safeClientEmail,
                         clientPhone:  safeClientPhone,
-                        clientAnswers: answers || {},
+                        clientAnswers: safeAnswers,
                         startTime:    admin.firestore.Timestamp.fromDate(startTime),
                         endTime:      admin.firestore.Timestamp.fromDate(endTime),
                         date,

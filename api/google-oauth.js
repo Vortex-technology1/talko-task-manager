@@ -17,7 +17,30 @@
 //      → оновлює access_token через refresh_token
 // ============================================================
 
-const admin = require('firebase-admin');
+const admin  = require('firebase-admin');
+const crypto = require('crypto');
+
+// HMAC secret для підпису OAuth state — запобігає підміні uid/companyId
+const STATE_SECRET = process.env.OAUTH_STATE_SECRET || process.env.FIREBASE_PRIVATE_KEY?.slice(0, 32) || 'talko-oauth-state-secret-2026';
+
+function signState(payload) {
+    const data = JSON.stringify(payload);
+    const hmac = crypto.createHmac('sha256', STATE_SECRET).update(data).digest('hex');
+    return Buffer.from(JSON.stringify({ data, hmac })).toString('base64url');
+}
+
+function verifyState(stateStr) {
+    try {
+        const { data, hmac } = JSON.parse(Buffer.from(stateStr, 'base64url').toString('utf8'));
+        const expected = crypto.createHmac('sha256', STATE_SECRET).update(data).digest('hex');
+        if (!crypto.timingSafeEqual(Buffer.from(hmac, 'hex'), Buffer.from(expected, 'hex'))) {
+            return null; // підпис невалідний
+        }
+        return JSON.parse(data);
+    } catch(e) {
+        return null;
+    }
+}
 
 if (!admin.apps.length) {
     let pk = process.env.FIREBASE_PRIVATE_KEY || '';
@@ -66,7 +89,7 @@ module.exports = async (req, res) => {
             if (!CLIENT_ID) return res.status(500).send('GOOGLE_CLIENT_ID not configured');
 
             // Зберігаємо state щоб після callback знати uid+companyId
-            const state = Buffer.from(JSON.stringify({ uid, companyId })).toString('base64url');
+            const state = signState({ uid, companyId, ts: Date.now() });
 
             const params = new URLSearchParams({
                 client_id:     CLIENT_ID,
@@ -94,16 +117,15 @@ module.exports = async (req, res) => {
             }
 
             // Декодуємо state
-            let uid, companyId;
-            try {
-                const decoded = JSON.parse(Buffer.from(state, 'base64url').toString('utf8'));
-                uid       = decoded.uid;
-                companyId = decoded.companyId;
-            } catch(e) {
-                return res.status(400).send('Invalid state parameter');
+            const decoded = verifyState(state);
+            if (!decoded || !decoded.uid || !decoded.companyId) {
+                return res.status(400).send('Invalid or tampered state parameter');
             }
-
-            if (!uid || !companyId) return res.status(400).send('Invalid state data');
+            const { uid, companyId } = decoded;
+            // Перевіряємо що state не старіше 10 хвилин
+            if (decoded.ts && Date.now() - decoded.ts > 10 * 60 * 1000) {
+                return res.status(400).send('OAuth state expired. Please try again.');
+            }
 
             // Обмінюємо code на tokens
             const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
