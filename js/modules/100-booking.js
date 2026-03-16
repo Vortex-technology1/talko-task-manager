@@ -29,6 +29,7 @@ let bk = {
     appointments: [],
     view: 'list',       // 'list' | 'form' | 'appointments'
     editCalendar: null, // null = new, object = edit
+    activeCalendarId: '',// calendarId поточної вкладки appointments
     filterCalendarId: '',
     filterStatus: '',
     unsubs: [],
@@ -321,6 +322,7 @@ function renderCalendarForm(cal) {
 // ── View: Appointments ────────────────────────────────────
 async function renderAppointments(calendarId, calendarName) {
     bk.view = 'appointments';
+    bk.activeCalendarId = calendarId; // зберігаємо для reload після дій
     const root = document.getElementById('bk-view-root');
     if (!root) return;
 
@@ -558,9 +560,7 @@ window._bkConfirmAppt = async function(apptId) {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
         if (typeof showToast === 'function') showToast('Підтверджено', 'success');
-        // Reload
-        const calId = bk.calendars[0]?.id;
-        if (calId) loadAppointments(calId);
+        if (bk.activeCalendarId) loadAppointments(bk.activeCalendarId);
     } catch(e) { alert('Помилка: ' + e.message); }
 };
 
@@ -573,19 +573,22 @@ window._bkCancelAppt = async function(apptId) {
             status: 'cancelled',
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        // Delete Google event via API
-        if (appt.googleEventId) {
+        // Видаляємо Google event через API (не через client SDK)
+        if (appt.googleEventId || appt.ownerId) {
             fetch('/api/booking?action=cancel', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     companyId: window.currentCompanyId,
                     appointmentId: apptId,
+                    // cancelToken не потрібен — адмін-дія
                 }),
             }).catch(() => {});
         }
         if (typeof showToast === 'function') showToast('Скасовано', 'success');
-        loadAppointments(appt.calendarId || '');
+        // Використовуємо activeCalendarId, fallback на поле з запису
+        const calId = bk.activeCalendarId || appt.calendarId || '';
+        if (calId) loadAppointments(calId);
     } catch(e) { alert('Помилка: ' + e.message); }
 };
 

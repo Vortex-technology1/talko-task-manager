@@ -146,12 +146,20 @@ async function getGoogleBusySlots(companyId, ownerId, timeMin, timeMax) {
         let accessToken = userData.googleAccessToken;
         const expiry = userData.googleTokenExpiry?.toMillis?.() || 0;
 
-        // Refresh token if expired or missing
-        if ((!accessToken || Date.now() > expiry - 60000) && userData.googleRefreshToken) {
+        // GIS (Google Identity Services) дає тільки access_token на ~1 год
+        // refresh_token доступний тільки через Authorization Code Flow (Фаза 2)
+        // Якщо токен протух — gracefully повертаємо [] (не блокуємо бронювання)
+        if (!accessToken) return [];
+        if (expiry > 0 && Date.now() > expiry) {
+            console.warn('[booking] Google token expired for owner:', ownerId);
+            return [];
+        }
+
+        // Спробуємо refresh якщо є refreshToken (Фаза 2 — Authorization Code Flow)
+        if (userData.googleRefreshToken && Date.now() > expiry - 120000) {
             const refreshed = await refreshGoogleToken(userData.googleRefreshToken);
-            if (refreshed) {
+            if (refreshed?.access_token) {
                 accessToken = refreshed.access_token;
-                // Save refreshed token
                 await db.collection('companies').doc(companyId)
                     .collection('users').doc(ownerId).update({
                         googleAccessToken: refreshed.access_token,
@@ -161,8 +169,6 @@ async function getGoogleBusySlots(companyId, ownerId, timeMin, timeMax) {
                     }).catch(() => {});
             }
         }
-
-        if (!accessToken) return [];
 
         const res = await fetch('https://www.googleapis.com/calendar/v3/freeBusy', {
             method: 'POST',
@@ -177,6 +183,16 @@ async function getGoogleBusySlots(companyId, ownerId, timeMin, timeMax) {
             }),
         });
 
+        // 401 = токен протух — не блокуємо запис, просто ігноруємо Google зайнятість
+        if (res.status === 401) {
+            console.warn('[booking] Google token unauthorized for owner:', ownerId);
+            // Позначаємо токен як протухлий щоб наступний виклик не намагався
+            await db.collection('companies').doc(companyId)
+                .collection('users').doc(ownerId)
+                .update({ googleTokenExpiry: admin.firestore.Timestamp.fromMillis(0) })
+                .catch(() => {});
+            return [];
+        }
         if (!res.ok) return [];
         const data = await res.json();
         return (data.calendars?.primary?.busy || []).map(b => ({
@@ -720,7 +736,7 @@ const bk = {
         el.querySelector('.bk-confirm').innerHTML = \`
             <div class="bk-confirm-icon">\${isPending ? '⏳' : '✅'}</div>
             <h2>\${isPending ? 'Очікує підтвердження' : 'Запис підтверджено!'}</h2>
-            <p>\${isPending ? 'Ми зв'яжемося з вами найближчим часом для підтвердження.' : 'Дякуємо! Чекаємо вас.'}</p>
+            <p>\${isPending ? 'Ми зв’яжемося з вами найближчим часом для підтвердження.' : 'Дякуємо! Чекаємо вас.'}</p>
             <div class="bk-confirm-details">
                 <dt>Клієнт</dt><dd>\${name}</dd>
                 <dt>Email</dt><dd>\${email}</dd>

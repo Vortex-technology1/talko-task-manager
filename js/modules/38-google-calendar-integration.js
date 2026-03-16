@@ -93,6 +93,8 @@
                         googleCalendarConnected: true,
                         googleCalendarEmail: email,
                         googleAccessToken: googleAccessToken,
+                        // GIS дає access_token на ~1 год (3600 сек)
+                        googleTokenExpiry: firebase.firestore.Timestamp.fromMillis(Date.now() + 3500 * 1000),
                         googleCalendarUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true })
                     .then(() => {
@@ -109,6 +111,7 @@
                         googleCalendarConnected: true,
                         googleCalendarEmail: currentUser.email || window.t('connected'),
                         googleAccessToken: googleAccessToken,
+                        googleTokenExpiry: firebase.firestore.Timestamp.fromMillis(Date.now() + 3500 * 1000),
                         googleCalendarUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true })
                     .then(() => {
