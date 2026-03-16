@@ -42,9 +42,7 @@ const db = admin.firestore();
 
 const CLIENT_ID     = process.env.GOOGLE_CLIENT_ID     || '';
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
-const BASE_URL      = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'https://taskmanagerai-vert.vercel.app';
+const BASE_URL      = 'https://taskmanagerai-vert.vercel.app';
 const REDIRECT_URI  = `${BASE_URL}/api/google-oauth?action=callback`;
 
 const SCOPES = [
