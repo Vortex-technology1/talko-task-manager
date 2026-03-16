@@ -933,12 +933,12 @@ function renderTransactions(el, type) {
         <select id="txFilterCat" onchange="window._txFilterChange('categoryId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
           <option value="">${window.t('finAllCategories')}</option>
-          ${cats.map(c => `<option value="${c.id}" ${_txFilter.categoryId===c.id?'selected':''}>${c.name}</option>`).join('')}
+          ${cats.map(c => `<option value="${c.id}" ${_txFilter.categoryId===c.id?'selected':''}>${escHtml(c.name)}</option>`).join('')}
         </select>
         <select id="txFilterAcc" onchange="window._txFilterChange('accountId',this.value,'${type}')"
           style="padding:0.4rem 0.7rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.8rem;background:#fff;cursor:pointer;">
           <option value="">${window.t('finAllAccounts')}</option>
-          ${_state.accounts.map(a => `<option value="${a.id}" ${_txFilter.accountId===a.id?'selected':''}>${a.name}</option>`).join('')}
+          ${_state.accounts.map(a => `<option value="${a.id}" ${_txFilter.accountId===a.id?'selected':''}>${escHtml(a.name)}</option>`).join('')}
         </select>
         <button onclick="window._exportTx('${type}')"
           style="display:flex;align-items:center;gap:5px;padding:0.4rem 0.75rem;border:1px solid #e5e7eb;
@@ -1052,7 +1052,7 @@ async function loadAndRenderTxList(type) {
           </div>
           <div style="flex:1;min-width:0;">
             <div style="font-size:0.85rem;font-weight:500;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-              ${tx.description || catName}
+              ${escHtml(tx.description || catName)}
             </div>
             <div style="font-size:0.72rem;color:#9ca3af;margin-top:0.1rem;">
               ${catName} &bull; ${accName} &bull; ${dateStr}
@@ -1083,7 +1083,7 @@ async function loadAndRenderTxList(type) {
 
   } catch(e) {
     console.error('[Finance] loadTxList error:', e);
-    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">Помилка завантаження: ${e.message}</div>`;
+    listEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.85rem;">Помилка завантаження: ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -2549,7 +2549,7 @@ async function loadFunctionsData(monthVal) {
     const tableEl = document.getElementById('funcTableBody');
     if (tableEl) tableEl.innerHTML = `
       <div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">
-        Помилка: ${e.message}
+        Помилка: ${escHtml(e.message)}
       </div>`;
   }
 }
@@ -2853,7 +2853,7 @@ async function loadPlanningData(monthVal) {
   } catch(e) {
     console.error('[Finance] loadPlanningData:', e);
     const bodyEl = document.getElementById('planBudgetBody');
-    if (bodyEl) bodyEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
+    if (bodyEl) bodyEl.innerHTML = `<div style="padding:1.5rem;text-align:center;color:#ef4444;font-size:0.82rem;">Помилка: ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -2974,7 +2974,7 @@ async function _renderFunctionsBudget(monthVal) {
         </button>
       </div>`;
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3072,7 +3072,7 @@ async function _renderCashflowForecast() {
         </div>
       </div>`;
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -3172,7 +3172,7 @@ async function _loadAnalytics(mode, period) {
     if (mode === 'trends')    _renderTrends(el, txs, currency, from, to, period);
 
   } catch(e) {
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${e.message}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;font-size:0.82rem;">Помилка: ${escHtml(e.message)}</div>`;
   }
 }
 
@@ -4128,7 +4128,7 @@ function addTransaction(forceType) {
           <select id="fmCategory"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
             <option value="">— оберіть категорію —</option>
-            ${cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+            ${cats.map(c => `<option value="${c.id}">${escHtml(c.name)}</option>`).join('')}
           </select>
         </div>
 
@@ -4145,7 +4145,7 @@ function addTransaction(forceType) {
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Рахунок</label>
           <select id="fmAccount"
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:#fff;">
-            ${_state.accounts.map(a => `<option value="${a.id}" ${a.isDefault?'selected':''}>${a.name} (${a.currency})</option>`).join('')}
+            ${_state.accounts.map(a => `<option value="${a.id}" ${a.isDefault?'selected':''}>${escHtml(a.name)} (${a.currency})</option>`).join('')}
           </select>
         </div>
 
@@ -4596,7 +4596,7 @@ window._renderProjectFinance = async function(projectId, el, opts) {
       </div>`;
   } catch(e) {
     console.error('[ProjectFinance]', e);
-    el.innerHTML = `<div style="padding:2rem;color:#ef4444;">Помилка: ${e.message}</div>`;
+    el.innerHTML = `<div style="padding:2rem;color:#ef4444;">Помилка: ${escHtml(e.message)}</div>`;
   }
 };
 

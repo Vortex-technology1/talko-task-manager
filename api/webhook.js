@@ -733,11 +733,15 @@ module.exports = async (req, res) => {
                     .where('botContactId', '==', contactId).limit(1).get().catch(() => null);
 
                 if (!_existingClient || _existingClient.empty) {
-                    // PERF: client.add + pipeline.get паралельно
-                    const _newClientRef = compRef.collection('crm_clients').doc();
+                    // FIX WH-07: використовуємо детермінований docId на основі contactId
+                    // щоб уникнути race condition — два паралельних запити не створять два клієнти
+                    // якщо обидва спробують .set() на той самий docId — другий просто перезапише (idempotent)
+                    const _safeContactId = String(contactId).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 80);
+                    const _clientDocId = `bot_${channel}_${_safeContactId}`;
+                    const _newClientRef = compRef.collection('crm_clients').doc(_clientDocId);
                     const [, _pipSnap] = await Promise.all([
                         _newClientRef.set({
-                            id:           _newClientRef.id,
+                            id:           _clientDocId,
                             name:         _name,
                             type:         'person',
                             phone:        '',
@@ -2629,6 +2633,11 @@ async function saveIncomingMessage(compRef, channel, normalized, botId) {
 }
 
 async function finish(session, flow, compRef, channel, compData = {}) {
+    // FIX WH-10: захист від null compRef (Firebase init error або відсутній companyId)
+    if (!compRef || !db) {
+        console.error('[finish] compRef or db is null — skipping CRM data save');
+        return;
+    }
     try {
         const d = session.data || {};
 

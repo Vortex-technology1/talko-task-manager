@@ -238,13 +238,15 @@ module.exports = async function handler(req, res) {
                 chatIds.push(String(compData.telegramChatId));
 
             if (tgToken && chatIds.length > 0) {
+                // FIX CF-03: escape fields for Telegram (future-proof for parse_mode HTML)
+                const _tgEsc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
                 const msgText = `🔔 Новий лід з форми!
 
-Ім'я: ${String(name).trim()}
-Телефон: ${phone || '-'}
-Email: ${email || '-'}
-Форма: ${formData.name || formId}
-Повідомлення: ${message ? String(message).slice(0, 200) : '-'}`;
+Ім'я: ${_tgEsc(String(name).trim())}
+Телефон: ${_tgEsc(phone || '-')}
+Email: ${_tgEsc(email || '-')}
+Форма: ${_tgEsc(formData.name || formId)}
+Повідомлення: ${_tgEsc(message ? String(message).slice(0, 200) : '-')}`;
                 for (const chatId of chatIds) {
                     await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
                         method: 'POST',

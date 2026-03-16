@@ -485,8 +485,14 @@ async function _loadAll() {
             crm.clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             if (crm.subTab === 'clients') _renderClients();
             if (!crm._remindersChecked) {
+                // FIX C-05: встановлюємо прапор ДО setTimeout щоб другий onSnapshot
+                // що прийшов до спрацювання таймера не запустив дублікат
                 crm._remindersChecked = true;
-                setTimeout(() => { _checkContactReminders(); _startRemindersScheduler(); }, 1000);
+                setTimeout(() => {
+                    // Додаткова перевірка на випадок race condition
+                    _checkContactReminders();
+                    _startRemindersScheduler();
+                }, 1000);
             }
         }, err => console.error('[CRM clients]', err));
 }
@@ -1284,6 +1290,12 @@ async function _bulkUpdateDeals(updates) {
 
 // ── Дублювання угоди ──
 window.crmDuplicateDeal = async function(dealId) {
+    // FIX C-01: тільки manager+ може дублювати угоди (employee — не може)
+    const _userRole = window.currentUserRole || window._userRole || '';
+    if (!['owner', 'admin', 'manager'].includes(_userRole)) {
+        if (window.showToast) showToast(window.t('noPermission') || 'Недостатньо прав', 'error');
+        return;
+    }
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
     try {
@@ -4360,12 +4372,18 @@ function _subscribeDeals() {
     if (crm.dealUnsub) { crm.dealUnsub(); crm.dealUnsub = null; }
     crm.loading = true;
     if (!crm.pipeline) return;
-    const DEALS_LIMIT = 500; // FIX B: збільшено з 200 до 500
-    // FIX INDEX: прибрано orderBy з query — composite index не потрібен
-    // Сортування відбувається client-side нижче (.sort(...))
-    crm.dealUnsub = window.companyRef().collection(window.DB_COLS.CRM_DEALS)
-        .where('pipelineId','==', crm.pipeline?.id).limit(DEALS_LIMIT)
-        .onSnapshot(snap => {
+    const DEALS_LIMIT = 500;
+    // FIX C-02: orderBy updatedAt desc — найновіші/активні угоди завжди в межах ліміту
+    // Без сортування: при 500+ угодах нові не потрапляють в onSnapshot window
+    let _dealsQuery = window.companyRef().collection(window.DB_COLS.CRM_DEALS)
+        .where('pipelineId','==', crm.pipeline?.id);
+    try {
+        // orderBy потребує composite index — якщо немає, fallback без orderBy
+        _dealsQuery = _dealsQuery.orderBy('updatedAt', 'desc').limit(DEALS_LIMIT);
+    } catch(e) {
+        _dealsQuery = _dealsQuery.limit(DEALS_LIMIT);
+    }
+    crm.dealUnsub = _dealsQuery.onSnapshot(snap => {
             crm.deals = snap.docs.map(d => ({id:d.id,...d.data()}))
                 .sort((a,b) => (b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
             crm.loading = false;
