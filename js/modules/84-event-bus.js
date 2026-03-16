@@ -660,9 +660,21 @@ async function _actionMarkDealWon(event) {
 
     await batch.commit();
 
+    // Читаємо deal для повного payload (clientPhone, clientName потрібні для WA)
+    let dealData = {};
+    try {
+        const dealDoc = await db.doc(`companies/${companyId}/crm_deals/${dealId}`).get();
+        if (dealDoc.exists) dealData = dealDoc.data();
+    } catch(e) {
+        console.warn('[EventBus] _actionMarkDealWon: could not read deal:', e.message);
+    }
+
     await emitTalkoEvent(TALKO_EVENTS.DEAL_WON, {
         dealId,
-        amount: amount || 0,
+        amount:      amount || dealData.amount || 0,
+        clientName:  dealData.clientName  || dealData.title || '',
+        clientPhone: dealData.phone       || null,
+        branch:      dealData.branch      || null,
     }, { triggeredBy: 'system' });
 }
 
@@ -897,17 +909,27 @@ onTalkoEvent(TALKO_EVENTS.MEASUREMENT_ASSIGNED, async (event) => {
 onTalkoEvent(TALKO_EVENTS.DEAL_STAGE_CHANGED, async (event) => {
     if (!['approved', 'Погоджено'].includes(event.payload.toStage)) return;
     const deal = event.payload;
-    if (!deal.clientPhone) return;
     try {
-        // Читаємо deal з CRM щоб отримати phone якщо не в payload
-        let phone = deal.clientPhone;
+        // Отримуємо phone з payload або читаємо з Firestore як fallback
+        let phone      = deal.clientPhone || null;
+        let clientName = deal.clientName  || '';
+        let amount     = deal.amount      || 0;
+
         if (!phone && deal.dealId && window.companyRef) {
-            const d = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(deal.dealId).get();
-            phone = d.data()?.phone || null;
+            const d = await window.companyRef()
+                .collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
+                .doc(deal.dealId).get();
+            if (d.exists) {
+                const data = d.data();
+                phone      = data.phone       || null;
+                clientName = clientName || data.clientName || data.title || '';
+                amount     = amount     || data.amount     || 0;
+            }
         }
         if (!phone) return;
-        const amount = deal.amount ? (deal.amount / 2).toFixed(0) : '—';
-        const msg = `Dobrý den, ${deal.clientName || ''}!\n\nVaše objednávka závěsů byla potvrzena ✓\n\nZáloha (50%): ${amount} €\nPo přijetí zálohy zahájíme výrobu.\n\nDěkujeme za důvěru!\nTalko Curtains`;
+
+        const prepayAmt = amount ? (amount / 2).toFixed(0) : '—';
+        const msg = `Dobrý den, ${clientName}!\n\nVaše objednávka závěsů byla potvrzena ✓\n\nZáloha (50%): ${prepayAmt} €\nPo přijetí zálohy zahájíme výrobu.\n\nDěkujeme za důvěru!\nTalko Curtains`;
         await window.waSend(phone, msg);
     } catch(e) {
         console.warn('[WA] cp_approved handler:', e.message);
@@ -950,15 +972,22 @@ onTalkoEvent(TALKO_EVENTS.INSTALLATION_ASSIGNED, async (event) => {
 // 5. УГОДА ЗАКРИТА (WON) → подяка + нагадування про 6 міс
 onTalkoEvent(TALKO_EVENTS.DEAL_WON, async (event) => {
     const deal = event.payload;
-    if (!deal.clientPhone) return;
     try {
-        let phone = deal.clientPhone;
+        let phone      = deal.clientPhone || null;
+        let clientName = deal.clientName  || '';
+
         if (!phone && deal.dealId && window.companyRef) {
-            const d = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(deal.dealId).get();
-            phone = d.data()?.phone || null;
+            const d = await window.companyRef()
+                .collection(window.DB_COLS?.CRM_DEALS || 'crm_deals')
+                .doc(deal.dealId).get();
+            if (d.exists) {
+                phone      = d.data()?.phone      || null;
+                clientName = clientName || d.data()?.clientName || d.data()?.title || '';
+            }
         }
         if (!phone) return;
-        const msg = `Dobrý den, ${deal.clientName || ''}!\n\nDěkujeme za Vaši objednávku ✓\nTěšíme se na případnou spolupráci.\n\nPS: Za 6 měsíců Vám připomeneme čištění závěsů 😊\nTalko Curtains`;
+
+        const msg = `Dobrý den, ${clientName}!\n\nDěkujeme za Vaši objednávku ✓\nTěšíme se na případnou spolupráci.\n\nPS: Za 6 měsíců Vám připomeneme čištění závěsů 😊\nTalko Curtains`;
         await window.waSend(phone, msg);
     } catch(e) {
         console.warn('[WA] deal_won handler:', e.message);

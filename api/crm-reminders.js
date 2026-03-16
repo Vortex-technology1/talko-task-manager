@@ -193,29 +193,38 @@ async function processCompany(companyId, companyData) {
     try {
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setDate(sixMonthsAgo.getDate() - 180);
-        const d180start = sixMonthsAgo.toISOString().split('T')[0] + 'T00:00:00';
-        const d180end   = sixMonthsAgo.toISOString().split('T')[0] + 'T23:59:59';
+        // Вікно ±2 дні щоб не пропустити через timezone
+        const windowStart = new Date(sixMonthsAgo);
+        windowStart.setDate(windowStart.getDate() - 2);
+        const windowEnd = new Date(sixMonthsAgo);
+        windowEnd.setDate(windowEnd.getDate() + 2);
 
         // Читаємо API ключ WhatsApp компанії
         const intgDoc = await compRef.collection('settings').doc('integrations').get().catch(() => null);
         const waApiKey = intgDoc?.data()?.whatsappApiKey || null;
 
         if (waApiKey) {
-            // Шукаємо угоди закриті рівно 180 днів тому (±1 день)
+            // Читаємо won-угоди без складного індексу — фільтруємо client-side
+            // Це безпечно: won-угод зазвичай < 1000 на компанію
             const cleaningSnap = await compRef.collection('crm_deals')
                 .where('stage', '==', 'won')
-                .where('cleaningReminderSent', '==', false)
+                .limit(500)
                 .get().catch(() => null);
 
             if (cleaningSnap && !cleaningSnap.empty) {
                 for (const doc of cleaningSnap.docs) {
                     const d = doc.data();
-                    const closedAt = d.updatedAt?.toDate?.() || null;
+
+                    // Пропускаємо якщо вже відправили
+                    if (d.cleaningReminderSent === true) continue;
+                    if (!d.phone) continue;
+
+                    // Визначаємо дату закриття: closedAt або updatedAt
+                    const closedAt = d.closedAt?.toDate?.() || d.updatedAt?.toDate?.() || null;
                     if (!closedAt) continue;
 
-                    const closedStr = closedAt.toISOString().split('T')[0];
-                    if (closedStr < sixMonthsAgo.toISOString().split('T')[0]) continue;
-                    if (!d.phone) continue;
+                    // Перевіряємо чи впадає в вікно 180 ± 2 дні
+                    if (closedAt < windowStart || closedAt > windowEnd) continue;
 
                     // Відправляємо WhatsApp нагадування
                     const clientName = d.clientName || d.title || '';
@@ -236,9 +245,12 @@ async function processCompany(companyId, companyData) {
                                 text: { body: msg },
                             }),
                         });
-                        if (waRes.ok) {
+                        const waData = await waRes.json().catch(() => ({}));
+                        if (waRes.ok && !waData.error) {
                             await doc.ref.update({ cleaningReminderSent: true });
                             console.log(`[crm-reminders] 180-day cleaning WA sent to ${d.phone}`);
+                        } else {
+                            console.warn('[crm-reminders] 180-day WA response error:', waData?.error?.message || waRes.status);
                         }
                     } catch(waErr) {
                         console.warn('[crm-reminders] 180-day WA send error:', waErr.message);

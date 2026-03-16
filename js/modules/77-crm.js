@@ -1459,6 +1459,10 @@ async function _doStageChange(deal, newStage, oldStage) {
             pipelineId: deal.pipelineId, amount: deal.amount,
             clientId: deal.clientId || null,
             assignedToId: deal.assignedToId || deal.assigneeId || null,
+            // Поля замовлення штори
+            clientPhone:   deal.phone          || null,
+            branch:        deal.branch         || null,
+            objectAddress: deal.objectAddress  || null,
         });
     }
     if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
@@ -1920,7 +1924,8 @@ function _renderDealDetails(deal) {
         </div>
         <div>
             <label style="${lbl}">Сума</label>
-            <input id="dd_amount" type="number" value="${deal.amount||''}" placeholder="0" style="${inp}">
+            <input id="dd_amount" type="number" value="${deal.amount||''}" placeholder="0" style="${inp}"
+                oninput="(function(){var prep=parseFloat(document.getElementById('dd_prepayment')?.value)||0;var amt=parseFloat(this.value)||0;var el=document.getElementById('dd_balance_display');if(el)el.textContent=Math.max(0,amt-prep).toFixed(2)+' €';}).call(this)">
         </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.9rem;">
@@ -2487,19 +2492,29 @@ window.crmSaveDeal = async function(dealId) {
                 await emitTalkoEvent(window.TALKO_EVENTS.DEAL_STAGE_CHANGED, {
                     dealId, fromStage:deal.stage, toStage:stage,
                     clientName:deal.clientName, amount,
-                    clientId: deal.clientId || null,          // FIX CF
-                    assignedToId: deal.assignedToId || deal.assigneeId || null, // FIX CF
+                    clientId: deal.clientId || null,
+                    assignedToId: deal.assignedToId || deal.assigneeId || null,
+                    // Поля замовлення штори
+                    clientPhone:   deal.phone         || null,
+                    branch:        branch             || deal.branch        || null,
+                    objectAddress: objectAddress      || deal.objectAddress || null,
                 });
             }
         }
+        // ── Зберігаємо попередні значення ДО Object.assign для порівняння ──
+        const prevMeasurerId       = deal.measurerId       || null;
+        const prevMeasurementDate  = deal.measurementDate  || null;
+        const prevInstallerId      = deal.installerId      || null;
+        const prevInstallationDate = deal.installationDate || null;
+        const prevPrepayment       = deal.prepayment       || 0;
+
         Object.assign(deal, updates);
         if (stageChanged) deal.stageEnteredAt = { toMillis: () => Date.now() };
 
         // ── Emit подій для нових полів замовлення (штори) ──
         if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
             // Замір призначено (якщо змінились поля замірника або дати)
-            const measurerChanged = measurerId && (measurerId !== deal._prev_measurerId || measurementDate !== deal._prev_measurementDate);
-            if (measurerId && measurementDate && (measurerId !== deal._prev_measurerId || measurementDate !== deal._prev_measurementDate)) {
+            if (measurerId && measurementDate && (measurerId !== prevMeasurerId || measurementDate !== prevMeasurementDate)) {
                 emitTalkoEvent('deal.measurement_assigned', {
                     dealId,
                     measurerId,
@@ -2511,7 +2526,7 @@ window.crmSaveDeal = async function(dealId) {
                 });
             }
             // Монтаж призначено
-            if (installerId && installationDate && (installerId !== deal._prev_installerId || installationDate !== deal._prev_installationDate)) {
+            if (installerId && installationDate && (installerId !== prevInstallerId || installationDate !== prevInstallationDate)) {
                 emitTalkoEvent('deal.installation_assigned', {
                     dealId,
                     installerId,
@@ -2523,7 +2538,7 @@ window.crmSaveDeal = async function(dealId) {
                 });
             }
             // Передоплата отримана (якщо раніше не було, а тепер є)
-            if (prepayment > 0 && (!deal._prev_prepayment || deal._prev_prepayment === 0)) {
+            if (prepayment > 0 && prevPrepayment === 0) {
                 emitTalkoEvent('deal.prepayment_received', {
                     dealId,
                     prepayment,
