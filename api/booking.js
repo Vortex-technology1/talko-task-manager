@@ -859,6 +859,370 @@ bk.init();
     return res.status(200).send(html);
 }
 
+
+// ── renderGroupBookingPage ────────────────────────────────
+// Рендерить публічну сторінку для групи — об'єднані слоти з кількох календарів
+async function renderGroupBookingPage(companyId, groupId, res) {
+    const [grpDoc, compDoc] = await Promise.all([
+        db.collection('companies').doc(companyId)
+          .collection('booking_groups').doc(groupId).get(),
+        db.collection('companies').doc(companyId).get(),
+    ]);
+
+    if (!grpDoc.exists)
+        return res.status(404).send(errPage('Групу не знайдено або її видалено.'));
+
+    const grp  = grpDoc.data();
+    const comp = compDoc.data() || {};
+
+    // Отримуємо дані всіх календарів групи
+    const calIds = grp.calendarIds || [];
+    const calsSnap = calIds.length
+        ? await Promise.all(calIds.map(cid =>
+            db.collection('companies').doc(companyId)
+              .collection('booking_calendars').doc(cid).get()
+              .then(d => d.exists ? { id: cid, ...d.data() } : null)
+              .catch(() => null)
+          ))
+        : [];
+    const cals = calsSnap.filter(Boolean).filter(c => c.isActive !== false);
+
+    const companyName = esc(comp.name || 'TALKO Booking');
+    const groupName   = esc(grp.name || 'Онлайн-запис');
+
+    const html = `<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${groupName} — ${companyName}</title>
+<meta name="description" content="${esc(grp.description||'')} — ${companyName}">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f0f4f8;min-height:100vh}
+.bk-wrap{max-width:520px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.bk-card{background:white;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,.09);overflow:hidden}
+.bk-hero{background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:2rem 1.75rem;color:white}
+.bk-hero-title{font-size:1.35rem;font-weight:800;margin-bottom:.3rem}
+.bk-hero-company{font-size:.85rem;opacity:.85}
+.bk-hero-desc{font-size:.88rem;opacity:.8;margin-top:.5rem;line-height:1.5}
+.bk-hero-badges{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.75rem}
+.bk-badge-pill{background:rgba(255,255,255,.2);border-radius:20px;padding:.2rem .6rem;font-size:.75rem;font-weight:600}
+.bk-body{padding:1.25rem 1.5rem}
+.bk-step{display:none}.bk-step.active{display:block}
+.bk-section-lbl{font-size:.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
+/* Cal selector */
+.bk-cal-opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.bk-cal-opt{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s}
+.bk-cal-opt:hover,.bk-cal-opt.selected{border-color:#6366f1;background:#f5f3ff}
+.bk-cal-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+/* Date picker */
+.bk-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.bk-month-title{font-weight:700;font-size:.95rem}
+.bk-month-btn{background:none;border:1px solid #e5e7eb;border-radius:7px;width:30px;height:30px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center}
+.bk-month-btn:hover{background:#f1f5f9}
+.bk-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:1rem}
+.bk-cal-dh{font-size:.72rem;color:#9ca3af;text-align:center;padding:.25rem 0;font-weight:600}
+.bk-cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.85rem;cursor:pointer;border:1.5px solid transparent}
+.bk-cal-day:hover{background:#f0f4ff;border-color:#c7d2fe}
+.bk-cal-day.today{border-color:#6366f1;color:#6366f1;font-weight:700}
+.bk-cal-day.selected{background:#6366f1;color:white;font-weight:700}
+.bk-cal-day.disabled{color:#d1d5db;cursor:default;pointer-events:none}
+.bk-cal-day.empty{pointer-events:none}
+/* Slots */
+.bk-slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem}
+@media(max-width:360px){.bk-slots-grid{grid-template-columns:repeat(2,1fr)}}
+.bk-slot-btn{padding:.5rem .25rem;border:1.5px solid #e5e7eb;border-radius:8px;background:white;font-size:.82rem;font-weight:600;cursor:pointer;text-align:center;transition:all .15s}
+.bk-slot-btn:hover{border-color:#6366f1;background:#f0f4ff;color:#4f46e5}
+.bk-slot-btn.selected{background:#6366f1;color:white;border-color:#6366f1}
+.bk-slot-btn.loading{color:#94a3b8;pointer-events:none}
+/* Form */
+.bk-field{margin-bottom:.85rem}
+.bk-field label{display:block;font-size:.82rem;font-weight:600;color:#374151;margin-bottom:.3rem}
+.bk-field input,.bk-field textarea,.bk-field select{width:100%;padding:.55rem .75rem;border:1.5px solid #e2e8f0;border-radius:9px;font-size:.9rem;font-family:inherit}
+.bk-field input:focus,.bk-field select:focus{outline:none;border-color:#6366f1}
+.bk-btn-main{width:100%;padding:.7rem;background:#6366f1;color:white;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:.5rem}
+.bk-btn-main:hover{background:#4f46e5}
+.bk-btn-main:disabled{opacity:.6;cursor:not-allowed}
+.bk-btn-back-sm{background:none;border:none;color:#6366f1;font-size:.85rem;cursor:pointer;padding:.25rem 0;margin-bottom:.75rem;display:flex;align-items:center;gap:.3rem}
+.bk-summary{background:#f5f3ff;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.88rem;color:#374151;line-height:1.6}
+.bk-success{text-align:center;padding:1.5rem 1rem}
+.bk-success-icon{font-size:3rem;margin-bottom:.75rem}
+.bk-success-title{font-size:1.15rem;font-weight:800;color:#374151;margin-bottom:.35rem}
+.bk-success-sub{color:#6b7280;font-size:.88rem;line-height:1.5}
+.bk-loader{display:flex;justify-content:center;padding:1.5rem;color:#9ca3af;font-size:.85rem;align-items:center;gap:.4rem}
+.bk-spinner{width:18px;height:18px;border:2px solid #e2e8f0;border-top-color:#6366f1;border-radius:50%;animation:bk-spin .7s linear infinite;flex-shrink:0}
+@keyframes bk-spin{to{transform:rotate(360deg)}}
+.bk-no-slots{text-align:center;color:#9ca3af;padding:1rem;font-size:.88rem}
+</style>
+</head>
+<body>
+<div class="bk-wrap">
+<div class="bk-card">
+  <!-- HERO -->
+  <div class="bk-hero">
+    <div class="bk-hero-company">${companyName}</div>
+    <div class="bk-hero-title">${groupName}</div>
+    ${grp.description ? `<div class="bk-hero-desc">${esc(grp.description)}</div>` : ''}
+    <div class="bk-hero-badges">
+      <span class="bk-badge-pill">📅 ${cals.length} спеціаліст${cals.length===1?'':'ів'}</span>
+      <span class="bk-badge-pill">🌐 Онлайн-запис</span>
+    </div>
+  </div>
+
+  <!-- STEP 1: Вибір спеціаліста (якщо > 1) -->
+  <div class="bk-body">
+    <div class="bk-step active" id="bk-step-cal">
+      ${cals.length > 1 ? `
+      <div class="bk-section-lbl">Оберіть спеціаліста</div>
+      <div class="bk-cal-opts">
+        <div class="bk-cal-opt selected" onclick="bkSelectCal(null)" id="bk-opt-any" data-calid="">
+          <span style="width:12px;height:12px;border-radius:50%;background:#6366f1;flex-shrink:0"></span>
+          <div><div style="font-weight:600;font-size:.9rem">Будь-який вільний</div><div style="font-size:.75rem;color:#9ca3af">Перший доступний слот</div></div>
+        </div>
+        ${cals.map(c => `
+        <div class="bk-cal-opt" onclick="bkSelectCal('${c.id}')" id="bk-opt-${c.id}" data-calid="${c.id}">
+          <span class="bk-cal-dot" style="background:${esc(c.color||'#6366f1')}"></span>
+          <div>
+            <div style="font-weight:600;font-size:.9rem">${esc(c.name)}</div>
+            ${c.location ? `<div style="font-size:.75rem;color:#9ca3af">📍 ${esc(c.location)}</div>` : ''}
+          </div>
+        </div>`).join('')}
+      </div>
+      <button class="bk-btn-main" onclick="bkGoToDate()">Далі →</button>
+      ` : ''}
+    </div>
+
+    <!-- STEP 2: Вибір дати -->
+    <div class="bk-step ${cals.length === 1 ? 'active' : ''}" id="bk-step-date">
+      ${cals.length > 1 ? `<button class="bk-btn-back-sm" onclick="bkBackToCal()">← Назад</button>` : ''}
+      <div class="bk-section-lbl">Оберіть дату</div>
+      <div class="bk-month-nav">
+        <button class="bk-month-btn" onclick="bkPrevMonth()">‹</button>
+        <span class="bk-month-title" id="bk-month-title"></span>
+        <button class="bk-month-btn" onclick="bkNextMonth()">›</button>
+      </div>
+      <div class="bk-cal-grid" id="bk-cal-grid"></div>
+    </div>
+
+    <!-- STEP 3: Вибір часу -->
+    <div class="bk-step" id="bk-step-slot">
+      <button class="bk-btn-back-sm" onclick="bkBackToDate()">← Назад</button>
+      <div class="bk-section-lbl" id="bk-slot-date-label">Доступний час</div>
+      <div id="bk-slots-wrap" class="bk-loader"><div class="bk-spinner"></div> Завантаження...</div>
+    </div>
+
+    <!-- STEP 4: Форма -->
+    <div class="bk-step" id="bk-step-form">
+      <button class="bk-btn-back-sm" onclick="bkBackToSlots()">← Назад</button>
+      <div class="bk-summary" id="bk-booking-summary"></div>
+      <div id="bk-form-fields">
+        <div class="bk-field">
+          <label>Ваше ім'я *</label>
+          <input type="text" id="bk-client-name" autocomplete="name" placeholder="Іван Петренко">
+        </div>
+        <div class="bk-field">
+          <label>Email *</label>
+          <input type="email" id="bk-client-email" autocomplete="email" placeholder="ivan@example.com">
+        </div>
+        <div class="bk-field">
+          <label>Телефон</label>
+          <input type="tel" id="bk-client-phone" autocomplete="tel" placeholder="+380501234567">
+        </div>
+        <div id="bk-extra-questions"></div>
+      </div>
+      <button class="bk-btn-main" id="bk-submit-btn" onclick="bkSubmit()">Записатись</button>
+    </div>
+
+    <!-- STEP 5: Успіх -->
+    <div class="bk-step" id="bk-step-success">
+      <div class="bk-success">
+        <div class="bk-success-icon">✅</div>
+        <div class="bk-success-title">Запис підтверджено!</div>
+        <div class="bk-success-sub" id="bk-success-msg">Ми надішлемо підтвердження на ваш email.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const BK_COMPANY  = ${safeJson(companyId)};
+const BK_GROUP_ID = ${safeJson(groupId)};
+const BK_CALS     = ${safeJson(cals)};
+const BK_GROUP    = ${safeJson({ name: grp.name, description: grp.description || '' })};
+
+let bkState = {
+    selectedCalId: null, // null = будь-який; конкретний ID = цей спеціаліст
+    selectedDate:  null,
+    selectedSlot:  null,
+    selectedCalendarId: null, // фактичний календар для слоту
+    currentMonth:  new Date().getMonth(),
+    currentYear:   new Date().getFullYear(),
+};
+
+function bkShow(id) {
+    document.querySelectorAll('.bk-step').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function bkSelectCal(calId) {
+    bkState.selectedCalId = calId;
+    document.querySelectorAll('.bk-cal-opt').forEach(o => o.classList.remove('selected'));
+    const el = calId ? document.getElementById('bk-opt-' + calId) : document.getElementById('bk-opt-any');
+    if (el) el.classList.add('selected');
+}
+
+function bkGoToDate()   { bkShow('bk-step-date'); bkRenderCalendar(); }
+function bkBackToCal()  { bkShow('bk-step-cal'); }
+function bkBackToDate() { bkShow('bk-step-date'); }
+function bkBackToSlots(){ bkShow('bk-step-slot'); }
+
+// ── Calendar grid ────────────────────────────────────────
+function bkRenderCalendar() {
+    const y = bkState.currentYear, m = bkState.currentMonth;
+    const MONTHS = ['Січень','Лютий','Березень','Квітень','Травень','Червень',
+                    'Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+    document.getElementById('bk-month-title').textContent = MONTHS[m] + ' ' + y;
+    const grid = document.getElementById('bk-cal-grid');
+    const dh = ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].map(d =>
+        \`<div class="bk-cal-dh">\${d}</div>\`).join('');
+    const first = new Date(y, m, 1).getDay();
+    const offset = (first + 6) % 7; // Mon=0
+    const days = new Date(y, m + 1, 0).getDate();
+    const today = new Date(); today.setHours(0,0,0,0);
+    let cells = Array(offset).fill('<div class="bk-cal-day empty"></div>');
+    for (let d = 1; d <= days; d++) {
+        const date = new Date(y, m, d);
+        const ds = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+        const isPast = date < today;
+        const isSel  = ds === bkState.selectedDate;
+        const isToday = date.getTime() === today.getTime();
+        cells.push(\`<div class="bk-cal-day \${isPast?'disabled':''} \${isSel?'selected':''} \${isToday&&!isPast?'today':''}"
+            onclick="bkPickDate('\${ds}')">\${d}</div>\`);
+    }
+    grid.innerHTML = dh + cells.join('');
+}
+
+function bkPrevMonth() {
+    if (bkState.currentMonth === 0) { bkState.currentMonth = 11; bkState.currentYear--; }
+    else bkState.currentMonth--;
+    bkRenderCalendar();
+}
+function bkNextMonth() {
+    if (bkState.currentMonth === 11) { bkState.currentMonth = 0; bkState.currentYear++; }
+    else bkState.currentMonth++;
+    bkRenderCalendar();
+}
+
+async function bkPickDate(ds) {
+    bkState.selectedDate  = ds;
+    bkState.selectedSlot  = null;
+    bkState.selectedCalendarId = null;
+    bkRenderCalendar();
+    bkShow('bk-step-slot');
+
+    const DAYS = ['неділя','понеділок','вівторок','середа','четвер','п'ятниця','субота'];
+    const [y,mo,d] = ds.split('-').map(Number);
+    const dayLabel = DAYS[new Date(y, mo-1, d).getDay()];
+    document.getElementById('bk-slot-date-label').textContent =
+        \`\${d} \${['','січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'][mo]}, \${dayLabel}\`;
+
+    const wrap = document.getElementById('bk-slots-wrap');
+    wrap.innerHTML = '<div class="bk-loader"><div class="bk-spinner"></div> Завантаження...</div>';
+
+    try {
+        // Якщо обраний конкретний спеціаліст — слоти тільки його
+        let url;
+        if (bkState.selectedCalId) {
+            url = \`/api/booking?action=slots&companyId=\${BK_COMPANY}&calendarId=\${bkState.selectedCalId}&date=\${ds}\`;
+        } else {
+            // Групові слоти
+            url = \`/api/booking?action=slots&companyId=\${BK_COMPANY}&groupId=\${BK_GROUP_ID}&date=\${ds}\`;
+        }
+        const r = await fetch(url);
+        const d2 = await r.json();
+        const slots = d2.slots || [];
+
+        if (slots.length === 0) {
+            wrap.innerHTML = '<div class="bk-no-slots">На цей день немає вільних слотів</div>';
+            return;
+        }
+        wrap.innerHTML = '<div class="bk-slots-grid">' +
+            slots.map(s => \`<button class="bk-slot-btn" onclick="bkPickSlot('\${s.time}','\${s.calendarId||''}')">\${s.time}</button>\`).join('') +
+            '</div>';
+    } catch(e) {
+        wrap.innerHTML = '<div class="bk-no-slots">Помилка завантаження. Спробуйте ще раз.</div>';
+    }
+}
+
+function bkPickSlot(time, calendarId) {
+    bkState.selectedSlot = time;
+    bkState.selectedCalendarId = calendarId || bkState.selectedCalId || (BK_CALS[0]||{}).id;
+    document.querySelectorAll('.bk-slot-btn').forEach(b => b.classList.remove('selected'));
+    event.target.classList.add('selected');
+    const cal = BK_CALS.find(c => c.id === bkState.selectedCalendarId) || BK_CALS[0] || {};
+    const [y,m,d] = bkState.selectedDate.split('-').map(Number);
+    document.getElementById('bk-booking-summary').innerHTML =
+        \`📅 <b>\${d}.\${String(m).padStart(2,'0')}.\${y}</b> о <b>\${time}</b>\` +
+        (cal.name ? \` · \${cal.name}\` : '') +
+        (cal.location ? \`<br>📍 \${cal.location}\` : '');
+    bkShow('bk-step-form');
+}
+
+async function bkSubmit() {
+    const name  = document.getElementById('bk-client-name')?.value?.trim();
+    const email = document.getElementById('bk-client-email')?.value?.trim();
+    const phone = document.getElementById('bk-client-phone')?.value?.trim();
+    if (!name)  { document.getElementById('bk-client-name').focus(); return; }
+    if (!email) { document.getElementById('bk-client-email').focus(); return; }
+
+    const btn = document.getElementById('bk-submit-btn');
+    btn.disabled = true; btn.textContent = 'Записуємо...';
+
+    const finalCalId = bkState.selectedCalendarId || (BK_CALS[0]||{}).id;
+
+    try {
+        const res = await fetch('/api/booking?action=create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                companyId:  BK_COMPANY,
+                calendarId: finalCalId,
+                groupId:    BK_GROUP_ID,
+                date:       bkState.selectedDate,
+                timeSlot:   bkState.selectedSlot,
+                clientName: name, clientEmail: email, clientPhone: phone || '',
+            }),
+        });
+        const d2 = await res.json();
+        if (!res.ok) throw new Error(d2.error || 'Server error');
+
+        document.getElementById('bk-success-msg').textContent =
+            \`Очікуйте підтвердження. Деталі надіслано на \${email}.\`;
+        bkShow('bk-step-success');
+    } catch(e) {
+        btn.disabled = false; btn.textContent = 'Записатись';
+        alert('Помилка: ' + e.message);
+    }
+}
+
+// Init
+if (BK_CALS.length === 1) bkState.selectedCalId = BK_CALS[0].id;
+if (BK_CALS.length <= 1) {
+    bkShow('bk-step-date'); bkRenderCalendar();
+} else {
+    bkShow('bk-step-cal');
+}
+</script>
+</body>
+</html>`;
+
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).send(html);
+}
+
 // ── Auth helper ───────────────────────────────────────────
 function requireAuth(req) {
     // Перевіряємо Firebase ID token або internal companyId header
@@ -885,22 +1249,82 @@ module.exports = async (req, res) => {
     try {
         // ── GET: public booking page ──────────────────────
         if (req.method === 'GET' && action === 'page') {
-            const { companyId, calendarId } = req.query;
-            if (!companyId || !calendarId)
+            const { companyId, calendarId, slug, groupId, groupSlug } = req.query;
+            if (!companyId)
                 return res.status(400).send(errPage('Невірне посилання'));
-            return renderBookingPage(companyId, calendarId, res);
+
+            // Група за groupSlug (pretty URL /book/COMPANY/g/SLUG)
+            if (groupSlug) {
+                const grpSnap = await db.collection('companies').doc(companyId)
+                    .collection('booking_groups')
+                    .where('slug', '==', groupSlug).limit(1).get();
+                if (grpSnap.empty)
+                    return res.status(404).send(errPage('Групу не знайдено'));
+                return renderGroupBookingPage(companyId, grpSnap.docs[0].id, res);
+            }
+            // Група за groupId (старий URL)
+            if (groupId) {
+                return renderGroupBookingPage(companyId, groupId, res);
+            }
+            // Одиночний за slug (pretty URL /book/COMPANY/SLUG)
+            if (slug && !calendarId) {
+                const calSnap = await db.collection('companies').doc(companyId)
+                    .collection('booking_calendars')
+                    .where('slug', '==', slug).limit(1).get();
+                if (calSnap.empty)
+                    return res.status(404).send(errPage('Календар не знайдено'));
+                return renderBookingPage(companyId, calSnap.docs[0].id, res);
+            }
+            // Одиночний за calendarId (старий URL — backward compat)
+            if (calendarId) {
+                return renderBookingPage(companyId, calendarId, res);
+            }
+            return res.status(400).send(errPage('Невірне посилання'));
         }
 
         // ── GET: available slots ──────────────────────────
         if (req.method === 'GET' && action === 'slots') {
-            const { companyId, calendarId, date } = req.query;
-            if (!companyId || !calendarId || !date)
+            const { companyId, date, groupId } = req.query;
+            let { calendarId } = req.query;
+            if (!companyId || !date)
                 return res.status(400).json({ error: 'Missing params' });
-
-            // Валідація date формату
             if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
                 return res.status(400).json({ error: 'Invalid date format' });
 
+            // Групові слоти — об'єднуємо слоти з усіх календарів групи
+            if (groupId) {
+                const grpDoc = await db.collection('companies').doc(companyId)
+                    .collection('booking_groups').doc(groupId).get();
+                if (!grpDoc.exists)
+                    return res.status(404).json({ error: 'Group not found' });
+                const grp = grpDoc.data();
+                const calIds = grp.calendarIds || [];
+                if (calIds.length === 0)
+                    return res.status(200).json({ slots: [] });
+
+                // Отримуємо слоти з кожного календаря
+                const allSlotsArr = await Promise.all(
+                    calIds.map(cid => getAvailableSlots(companyId, cid, date)
+                        .then(slots => slots.map(s => ({ ...s, calendarId: cid })))
+                        .catch(() => []))
+                );
+                // Об'єднуємо і сортуємо за часом
+                const merged = allSlotsArr.flat()
+                    .sort((a, b) => a.time.localeCompare(b.time));
+                // Дедупліцируємо — якщо кілька календарів мають один слот, беремо перший вільний
+                const seen = new Set();
+                const unique = [];
+                for (const s of merged) {
+                    if (!seen.has(s.time)) {
+                        seen.add(s.time);
+                        unique.push(s);
+                    }
+                }
+                return res.status(200).json({ slots: unique });
+            }
+
+            if (!calendarId)
+                return res.status(400).json({ error: 'Missing calendarId' });
             const slots = await getAvailableSlots(companyId, calendarId, date);
             return res.status(200).json({ slots });
         }

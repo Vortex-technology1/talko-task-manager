@@ -79,9 +79,22 @@
     }
   ],
   "rewrites": [
-    {"source": "/book/:companyId/:calendarId", "destination": "/api/booking?action=page&companyId=:companyId&calendarId=:calendarId"},
-    {"source": "/book/:companyId", "destination": "/api/booking?action=profile&companyId=:companyId"},
-    {"source": "/api/google-oauth", "destination": "/api/google-oauth"},
+    {
+      "source": "/book/:companyId/g/:groupSlug",
+      "destination": "/api/booking?action=page&companyId=:companyId&groupSlug=:groupSlug"
+    },
+    {
+      "source": "/book/:companyId/:slug",
+      "destination": "/api/booking?action=page&companyId=:companyId&slug=:slug"
+    },
+    {
+      "source": "/book/:companyId",
+      "destination": "/api/booking?action=profile&companyId=:companyId"
+    },
+    {
+      "source": "/api/google-oauth",
+      "destination": "/api/google-oauth"
+    },
     {
       "source": "/s/:slug",
       "destination": "/api/site?slug=:slug"

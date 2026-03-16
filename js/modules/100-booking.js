@@ -130,7 +130,10 @@ function renderCalendarList() {
             <div style="color:#94a3b8;font-size:.85rem">${t('createFirstCal')||'Натисніть «+ Новий календар»'}</div>
            </div>`
         : bk.calendars.map(cal => {
-            const url = `${base}/api/booking?action=page&companyId=${compId}&calendarId=${cal.id}`;
+            const calUrl = cal.slug
+                ? `${base}/book/${compId}/${cal.slug}`
+                : `${base}/api/booking?action=page&companyId=${compId}&calendarId=${cal.id}`;
+            const url = calUrl;
             const isActive = cal.isActive !== false;
             return `
 <div class="bk-cal-card">
@@ -170,7 +173,10 @@ function renderCalendarList() {
         }).join('');
 
     const grpCards = bk.groups.map(grp => {
-        const url = `${base}/api/booking?action=page&companyId=${compId}&groupId=${grp.id}`;
+        const slug = grp.slug || grp.id;
+    const url = grp.slug
+        ? `${base}/book/${compId}/g/${grp.slug}`
+        : `${base}/api/booking?action=page&companyId=${compId}&groupId=${grp.id}`;
         const members = (grp.calendarIds||[])
             .map(cid => bk.calendars.find(c => c.id === cid))
             .filter(Boolean);
@@ -377,7 +383,9 @@ function renderCalendarForm(cal) {
 </div>
 <div style="margin-top:.75rem;padding:.75rem 1rem;background:#f0f9ff;border-radius:10px;font-size:.82rem;color:#0369a1">
   ${I.link} ${t('bookingLinkLabel')||'Посилання'}:
-  <b id="bk-preview-url">${window.location.origin}/api/booking?action=page&companyId=${window.currentCompanyId}&calendarId=${isEdit?cal.id:t('idAfterSave')}</b>
+  <b id="bk-preview-url">${isEdit && cal.slug
+    ? window.location.origin + '/book/' + window.currentCompanyId + '/' + cal.slug
+    : window.location.origin + '/api/booking?action=page&companyId=' + window.currentCompanyId + '&calendarId=' + (isEdit?cal.id:(t('idAfterSave')||'<id>'))}</b>
 </div>`;
 
     document.getElementById('bk-f-name').addEventListener('input', function() {
@@ -438,7 +446,22 @@ function renderGroupForm(grp) {
     <label>${t('bkGroupName')||'Назва групи'} <span style="color:#ef4444">*</span></label>
     <input type="text" id="bk-g-name" maxlength="80"
            placeholder="${t('bkGroupNamePh')||'напр: Запис до лікаря'}"
+           oninput="window._bkGrpAutoSlug(this)"
            value="${isEdit?esc(grp.name||''):''}">
+  </div>
+  <div class="bk-field">
+    <label>URL (slug) <span style="color:#ef4444">*</span></label>
+    <div style="display:flex;align-items:center;gap:.4rem">
+      <span style="font-size:.78rem;color:#9ca3af;white-space:nowrap">/book/${esc(window.currentCompanyId||'')}/g/</span>
+      <input type="text" id="bk-g-slug" maxlength="50"
+             placeholder="zapys-do-likaria"
+             value="${isEdit?esc(grp.slug||''):''}"
+             oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')"
+             style="flex:1">
+    </div>
+    <div style="font-size:.72rem;color:#9ca3af;margin-top:.25rem">
+      ${t('slugHint')||'Тільки латинські літери, цифри та дефіс'}
+    </div>
   </div>
   <div class="bk-field">
     <label>${t('serviceDesc')||'Опис'}</label>
@@ -463,7 +486,7 @@ ${isEdit ? `
 <div class="bk-form-section" style="margin-bottom:1rem">
   <div class="bk-section-title">${t('bkPublicLink')||'Посилання для клієнта'}</div>
   <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:8px;padding:.7rem 1rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
-    <span style="font-size:.82rem;color:#166534;word-break:break-all;flex:1">${previewUrl}</span>
+    <span style="font-size:.82rem;color:#166534;word-break:break-all;flex:1" id="bk-g-preview-url-text">${previewUrl}</span>
     <button class="bk-btn-sm" onclick="window._bkCopyLink('${previewUrl}')">${I.copy} ${t('copyWord')||'Копіювати'}</button>
     <button class="bk-btn-sm" onclick="window.open('${previewUrl}','_blank')">${I.external} ${t('openWord')||'Відкрити'}</button>
   </div>
@@ -478,6 +501,25 @@ ${isEdit ? `
     // Init counter
     window._bkGrpUpdateCount();
 }
+
+window._bkGrpAutoSlug = function(nameInput) {
+    const sl = document.getElementById('bk-g-slug');
+    if (!sl || sl.dataset.manual === 'true') return;
+    sl.value = nameInput.value.toLowerCase()
+        .replace(/[іїєґ]/g,c=>({'і':'i','ї':'i','є':'ie','ґ':'g'}[c]||c))
+        .replace(/[а-яёА-ЯЁ]/g,'').replace(/[^a-z0-9]+/g,'-')
+        .replace(/^-+|-+$/g,'').slice(0,50);
+    window._bkGrpUpdatePreviewUrl();
+};
+
+window._bkGrpUpdatePreviewUrl = function() {
+    const sl   = (document.getElementById('bk-g-slug')?.value||'').trim();
+    const comp = window.currentCompanyId||'';
+    const el   = document.getElementById('bk-g-preview-url-text');
+    if (el && sl && comp) {
+        el.textContent = window.location.origin + '/book/' + comp + '/g/' + sl;
+    }
+};
 
 window._bkGrpCalChange = function(cb) {
     const lbl = document.getElementById('bklbl-' + cb.value);
@@ -771,7 +813,9 @@ window._bkSaveGroup = async function() {
         return;
     }
     const description = (document.getElementById('bk-g-desc')?.value||'').trim();
-    const data = {name, description, calendarIds, updatedAt: firebase.firestore.FieldValue.serverTimestamp()};
+    const slug = (document.getElementById('bk-g-slug')?.value||'').trim().toLowerCase().replace(/[^a-z0-9-]/g,'-');
+    if (!slug) { if(typeof showToast==='function') showToast('Вкажіть URL (slug)','warning'); return; }
+    const data = {name, slug, description, calendarIds, updatedAt: firebase.firestore.FieldValue.serverTimestamp()};
     try {
         if (bk.editGroup && bk.editGroup.id) {
             await window.companyDoc('booking_groups', bk.editGroup.id).update(data);
