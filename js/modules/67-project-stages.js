@@ -584,7 +584,7 @@
         if (_stageActionLock) return;
         const stage = projectStages.find(s => s.id === stageId);
         if (!stage) return;
-        if (!await showConfirmModal('Видалити етап "' + (stage.name || '') + '"? Задачі будуть відв\'язані.', { danger: true })) return;
+        if (!await showConfirmModal('Видалити етап "' + (stage.name || '') + '"? Задачі будуть відвязані.', { danger: true })) return;
         _stageActionLock = true;
         try {
             const pid = stage.projectId;

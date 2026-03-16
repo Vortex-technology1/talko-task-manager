@@ -245,7 +245,7 @@ function renderCalendarForm(cal) {
 
     <div class="bk-field">
       <label>Назва календаря *</label>
-      <input type="text" id="bk-f-name" placeholder="Наприклад: Консультація з Олександром"
+      <input type="text" id="bk-f-name" placeholder=window.t('bookingEx2')
              value="${window.htmlEsc ? window.htmlEsc(d.name||'') : (d.name||'')}" maxlength="80">
     </div>
 
@@ -352,7 +352,7 @@ function renderCalendarForm(cal) {
 
 <div style="margin-top:.75rem;padding:.75rem 1rem;background:#f0f9ff;border-radius:10px;font-size:.82rem;color:#0369a1">
   ${I.link} Посилання на бронювання:
-  <b id="bk-preview-url">${window.location.origin}/api/booking?action=page&companyId=${window.currentCompanyId}&calendarId=${isEdit ? cal.id : '&lt;id після збереження&gt;'}</b>
+  <b id="bk-preview-url">${window.location.origin}/api/booking?action=page&companyId=${window.currentCompanyId}&calendarId=${isEdit ? cal.id : window.t('idAfterSave')}</b>
 </div>`;
 
     // Auto-generate slug from name

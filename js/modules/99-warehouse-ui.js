@@ -287,7 +287,7 @@
             <button onclick="window._whSetView('operations')" style="font-size:0.75rem;color:#6366f1;background:none;border:none;cursor:pointer;padding:0;">Всі →</button>
           </div>
           ${ops.length === 0
-            ? `<p style="color:#9ca3af;font-size:0.85rem;text-align:center;padding:1rem;">Операцій ще немає</p>`
+            ? `<p style="color:#9ca3af;font-size:0.85rem;text-align:center;padding:1rem;">${window.t('noOpsYet2')}</p>`
             : `<div style="display:flex;flex-direction:column;gap:0.25rem;">
                 ${ops.slice(0, 6).map(op => `
                   <div style="display:flex;align-items:center;justify-content:space-between;padding:0.45rem 0;border-bottom:1px solid #f9fafb;font-size:0.82rem;">
@@ -1031,7 +1031,7 @@
         <!-- Останні операції -->
         <div style="font-size:0.82rem;font-weight:600;color:#6b7280;margin-bottom:0.4rem;">Останні операції</div>
         ${ops.length === 0
-          ? `<p style="color:#9ca3af;font-size:0.8rem;text-align:center;padding:0.5rem;">Немає операцій</p>`
+          ? `<p style="color:#9ca3af;font-size:0.8rem;text-align:center;padding:0.5rem;">${window.t('noOps2')}</p>`
           : `<div style="max-height:180px;overflow-y:auto;">
               ${ops.map(op => `
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid #f3f4f6;font-size:0.8rem;">

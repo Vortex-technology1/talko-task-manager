@@ -617,7 +617,7 @@ async function loadDashboardData(monthVal) {
         .slice(0, 5);
 
       if (sorted.length === 0) {
-        topEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Витрат немає</div>';
+        topEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">' + window.t('finNoExpenses2') + '</div>';
       } else {
         const maxAmt = sorted[0].amt;
         topEl.innerHTML = sorted.map(item => `
@@ -641,7 +641,7 @@ async function loadDashboardData(monthVal) {
         .map(([id, amt]) => ({ name: catMap[id] || window.t('finOther'), amt }))
         .sort((a, b) => b.amt - a.amt).slice(0, 6);
       if (sorted.length === 0) {
-        donutEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">Витрат немає</div>';
+        donutEl.innerHTML = '<div style="color:#9ca3af;font-size:0.8rem;">' + window.t('finNoExpenses2') + '</div>';
       } else {
         const COLORS = ['#ef4444','#f59e0b','#3b82f6','#8b5cf6','#22c55e','#6b7280'];
         const total = sorted.reduce((s, x) => s + x.amt, 0);
@@ -2709,7 +2709,7 @@ async function loadPlanningData(monthVal) {
     _renderPlanAlerts(expCats, factByCat, budgetData);
 
     if (expCats.length === 0) {
-      bodyEl.innerHTML = '<div style="padding:1.5rem;text-align:center;color:#9ca3af;font-size:0.82rem;">Немає категорій витрат</div>';
+      bodyEl.innerHTML = '<div style="padding:1.5rem;text-align:center;color:#9ca3af;font-size:0.82rem;">'+window.t('finNoExpCats2')+'</div>';
     } else {
       let totalBudget = 0;
       bodyEl.innerHTML = expCats.map((cat, i) => {
@@ -2872,7 +2872,7 @@ async function _renderFunctionsBudget(monthVal) {
 
     const funcs = _state.functions || [];
     if (funcs.length === 0) {
-      el.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">Функції не знайдено. Створіть їх у розділі «Процеси».</div>';
+      el.innerHTML = '<div style="padding:2rem;text-align:center;color:#9ca3af;">'+window.t('noFunctions2')+'</div>';
       return;
     }
 
@@ -3320,7 +3320,7 @@ function _renderTrends(el, txs, currency, from, to, period) {
   })).filter(x => x.total > 0).sort((a, b) => b.total - a.total).slice(0, 5);
 
   if (catTotals.length === 0) {
-    el.innerHTML = '<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;text-align:center;color:#9ca3af;">Немає даних для відображення</div>';
+    el.innerHTML = '<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;text-align:center;color:#9ca3af;">'+window.t('noDataWord')+'</div>';
     return;
   }
 
@@ -3444,7 +3444,7 @@ function renderSettings(el) {
         </div>
         <div style="background:#fff;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;">
           ${_state.accounts.length === 0
-            ? '<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">Немає рахунків</div>'
+            ? '<div style="padding:1rem;text-align:center;color:#9ca3af;font-size:0.82rem;">'+window.t('finNoInvoices2')+'</div>'
             : _state.accounts.map((acc, i) => `
               <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;
                 background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f3f4f6;">

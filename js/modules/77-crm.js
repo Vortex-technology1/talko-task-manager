@@ -2529,7 +2529,7 @@ async function _loadTasksTab(deal) {
 
         let rows = '';
         if (!dealTasks.length) {
-            rows = '<div style="text-align:center;padding:2rem;background:#f8fafc;border-radius:10px;border:2px dashed #e8eaed;"><div style="color:#9ca3af;font-size:0.82rem;">Задач ще немає</div></div>';
+            rows = '<div style="text-align:center;padding:2rem;background:#f8fafc;border-radius:10px;border:2px dashed #e8eaed;"><div style="color:#9ca3af;font-size:0.82rem;">'+window.t('noTasksYet3')+'</div></div>';
         } else {
             rows = dealTasks.map(function(task) {
                 const isOverdue = task.deadlineDate && task.deadlineDate < today && task.status !== 'done' && task.status !== 'review';
@@ -2632,7 +2632,7 @@ async function _loadActivityTab(deal) {
 
         <!-- Timeline -->
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
-            ${events.length === 0 ? '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.8rem;">Активностей ще немає</div>' :
+            ${events.length === 0 ? '<div style="text-align:center;padding:2rem;color:#9ca3af;font-size:0.8rem;">'+window.t('noActivities2')+'</div>' :
             events.map(ev => {
                 const icon = actIcons[ev.type] || I.note;
                 const time = ev.at?.toDate ? ev.at.toDate().toLocaleString('uk-UA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
@@ -3079,7 +3079,7 @@ window.crmFilterClients = function(q) {
 };
 
 function _clientListHTML(clients) {
-    if (!clients.length) return '<div style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">Клієнтів не знайдено</div>';
+    if (!clients.length) return '<div style="text-align:center;padding:3rem;color:#9ca3af;font-size:0.82rem;">'+window.t('noClients2')+'</div>';
     const colors = ['#22c55e','#3b82f6','#8b5cf6','#f59e0b'];
     return clients.map(cl => {
         // FIX K: рахуємо угоди строго по clientId; name-fallback тільки якщо немає clientId
@@ -3154,7 +3154,7 @@ window.crmOpenClient = function(clientId) {
                 <span style="color:#9ca3af;">Email:</span> ${_esc(cl.email)}</div>` : ''}
             ${cl.telegram ? `<div style="font-size:0.82rem;color:#374151;">
                 <span style="color:#9ca3af;">TG:</span> @${_esc(cl.telegram)}</div>` : ''}
-            ${!cl.phone && !cl.email && !cl.telegram ? '<div style="font-size:0.78rem;color:#d1d5db;">Немає контактних даних</div>' : ''}
+            ${!cl.phone && !cl.email && !cl.telegram ? '<div style="font-size:0.78rem;color:#d1d5db;">'+window.t('noContactData2')+'</div>' : ''}
         </div>
 
         <!-- Теги -->
@@ -3894,7 +3894,7 @@ function _renderAnalytics() {
                         '</div></div></div>';
             });
             return html;
-        })() : '<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1rem;">Програних угод ще немає</div>'}
+        })() : '<div style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:1rem;">'+window.t('noLostDeals2')+'</div>'}
             ${lostDealsAll.filter(d=>!d.lostReason&&!d.lostReasonLabel).length>0 ? `
             <div style="margin-top:0.5rem;padding:0.5rem 0.65rem;background:#fffbeb;border:1px solid #fde68a;border-radius:7px;font-size:0.72rem;color:#92400e;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>️ ${lostDealsAll.filter(d=>!d.lostReason&&!d.lostReasonLabel).length} угод без причини — попросіть менеджерів вказувати причину при закритті

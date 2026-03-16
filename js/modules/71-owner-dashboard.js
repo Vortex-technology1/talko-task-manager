@@ -145,7 +145,7 @@ window.renderOwnerDashboard = function(targetEl) {
                         <th style="padding:0.5rem 0.75rem;text-align:left;">Простр.</th>
                     </tr>
                 </thead>
-                <tbody>${userRows || '<tr><td colspan="3" style="padding:1rem;text-align:center;color:#9ca3af;">Немає даних</td></tr>'}</tbody>
+                <tbody>${userRows || '<tr><td colspan="3" style="padding:1rem;text-align:center;color:#9ca3af;">' + window.t('noDataWord') + '</td></tr>'}</tbody>
             </table>
         </div>
 

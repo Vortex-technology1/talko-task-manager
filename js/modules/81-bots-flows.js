@@ -540,7 +540,7 @@
                 .filter(s => s.id !== 'lost' && s.id !== 'won');
             const _stageOpts = _pipeStages.length
                 ? _pipeStages.map(s => `<option value="${s.id}" ${(node.dealStage||'new')===s.id?'selected':''}>${s.label || s.name || s.id}</option>`).join('')
-                : `<option value="new" selected>Новий лід</option>`;
+                : `<option value="new" selected>${window.t('newLeadStage')}</option>`;
             const _stageHint = _pipeStages.length === 0
                 ? `<div style="font-size:0.72rem;color:#f59e0b;margin-top:2px;">⚠️ Відкрийте вкладку CRM для завантаження стадій</div>`
                 : `<div style="font-size:0.7rem;color:#9ca3af;margin-top:2px;">${_pipeStages.length} стадій завантажено</div>`;

@@ -652,11 +652,11 @@ window._crmTodoAddTestDeals = async function() {
     const tomorrow = _dt.getFullYear()+'-'+String(_dt.getMonth()+1).padStart(2,'0')+'-'+String(_dt.getDate()).padStart(2,'0');
 
     const testDeals = [
-        { clientName:'Іванченко Марія', phone:'+380671234567', stage:'new',        note:'Цікавиться імплантацією',       nextContactDate: yStr,     source:'instagram', instagram:'@ivanchenko_maria' },
+        { clientName:'Іванченко Марія', phone:'+380671234567', stage:'new',        note:window.t('demoNote1'),       nextContactDate: yStr,     source:'instagram', instagram:'@ivanchenko_maria' },
         { clientName:'Петров Олексій',  phone:'+380502345678', stage:'contact',     note:'Просив передзвонити',           nextContactDate: today,    source:'telegram',  telegram:'@petrov_alex' },
-        { clientName:'Коваль Світлана', phone:'+380931234567', stage:'negotiation', note:'Обговорити ціну на брекети',    nextContactDate: tomorrow, source:'site_form', email:'koval@gmail.com' },
+        { clientName:'Коваль Світлана', phone:'+380931234567', stage:'negotiation', note:window.t('demoNote2'),    nextContactDate: tomorrow, source:'site_form', email:'koval@gmail.com' },
         { clientName:'Мороз Дмитро',    phone:'+380661234567', stage:'new',         note:'',                              nextContactDate: null,     source:'manual' },
-        { clientName:'Бойко Наталія',   phone:'+380731234567', stage:'proposal',    note:'Відправити КП по протезуванню', nextContactDate: tomorrow, source:'referral',  telegram:'@boiko_natalia' },
+        { clientName:'Бойко Наталія',   phone:'+380731234567', stage:'proposal',    note:window.t('demoNote3'), nextContactDate: tomorrow, source:'referral',  telegram:'@boiko_natalia' },
     ];
 
     const base = window.companyRef().collection(window.DB_COLS.CRM_DEALS);

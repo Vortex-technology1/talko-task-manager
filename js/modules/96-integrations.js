@@ -845,7 +845,7 @@ window.intgTestViber = async function() {
                 min_api_version: 1,
                 sender: { name: 'TALKO CRM' },
                 type: 'text',
-                text: 'TALKO: тестове повідомлення. Viber Bot працює!',
+                text: window.t('viberTestMsg'),
             }),
         });
         const data = await res.json();

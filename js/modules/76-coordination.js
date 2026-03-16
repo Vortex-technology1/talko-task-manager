@@ -779,7 +779,7 @@
         const el=document.getElementById('dynAgendaList');
         if (!el) return;
         if (!sessionDynamicAgenda.length) {
-            el.innerHTML=`<div style="color:#9ca3af;font-size:.8rem;text-align:center;padding:.6rem;">Питань ще немає</div>`;
+            el.innerHTML=`<div style="color:#9ca3af;font-size:.8rem;text-align:center;padding:.6rem;">${window.t('noQuestions2')}</div>`;
             return;
         }
         el.innerHTML=sessionDynamicAgenda.map((item,i)=>{
@@ -929,7 +929,7 @@
             return (a.deadlineDate||'').localeCompare(b.deadlineDate||'');
         });
         const el=document.getElementById('coordTaskList'); if(!el) return;
-        if(!filtered.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;text-align:center;padding:.4rem;">Завдань немає</div>`;return;}
+        if(!filtered.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;text-align:center;padding:.4rem;">${window.t('noTasks2')}</div>`;return;}
         const sc={new:'#3b82f6',progress:'#f59e0b',review:'#8b5cf6',done:'#22c55e'};
         const sl={new:'Нове',progress:window.t('coordVRoboti'),review:window.t('coordPerevirk'),done:'Виконано'};
         el.innerHTML=filtered.slice(0,40).map(t=>{
@@ -951,7 +951,7 @@
         const el=document.getElementById('coordMetricsList'); if(!el) return;
         const entries=window._statsAllEntries||[];
         const metrics=coordMetrics.filter(m=>m.privacy!=='owner_only'||isManager()).slice(0,8);
-        if(!metrics.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;">Метрики не налаштовані</div>`;return;}
+        if(!metrics.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;">${window.t('metricsNotSet2')}</div>`;return;}
         el.innerHTML=metrics.map(m=>{
             const last=entries.filter(e=>e.metricId===m.id).sort((a,b)=>(b.period||'').localeCompare(a.period||''))[0];
             const val=last?.value;
@@ -976,7 +976,7 @@
     };
     function renderDecisions() {
         const el=document.getElementById('coordDecisions'); if(!el) return;
-        if(!sessionDecisions.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;">Рішень ще немає</div>`;return;}
+        if(!sessionDecisions.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;">${window.t('noDecisions2')}</div>`;return;}
         el.innerHTML=sessionDecisions.map((d,i)=>`
         <div style="display:flex;align-items:flex-start;gap:.35rem;padding:.3rem .45rem;background:#f0fdf4;border-radius:6px;border:1px solid #d1fae5;">
           <span style="color:#16a34a;font-weight:700;flex-shrink:0;font-size:.8rem;">${i+1}.</span>
@@ -994,7 +994,7 @@
     };
     function renderUnresolved() {
         const el=document.getElementById('coordUnresolved'); if(!el) return;
-        if(!sessionUnresolved.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;">Невирішених питань немає</div>`;return;}
+        if(!sessionUnresolved.length){el.innerHTML=`<div style="color:#9ca3af;font-size:.76rem;">${window.t('noUnresolved2')}</div>`;return;}
         el.innerHTML=sessionUnresolved.map((d,i)=>`
         <div style="display:flex;align-items:flex-start;gap:.35rem;padding:.3rem .45rem;background:#fefce8;border-radius:6px;border:1px solid #fde68a;">
           <span style="color:#d97706;font-weight:700;flex-shrink:0;font-size:.8rem;">!</span>
@@ -1241,7 +1241,7 @@
         try {
             const snap=await col('coordination_sessions').orderBy('createdAt','desc').limit(30).get();
             const sessions=snap.docs.map(d=>({id:d.id,...d.data()}));
-            if(!sessions.length){el.innerHTML=`<div style="text-align:center;padding:2rem;color:#9ca3af;">Проведіть хоча б одну координацію</div>`;return;}
+            if(!sessions.length){el.innerHTML=`<div style="text-align:center;padding:2rem;color:#9ca3af;">${window.t('doFirstCoord2')}</div>`;return;}
             const patterns=analyzePatterns(sessions);
 
             // Try AI via proxy (OpenAI)

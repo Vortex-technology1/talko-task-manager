@@ -130,7 +130,7 @@
         if (!container) return;
 
         if (funnelSteps.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:1rem;color:#9ca3af;font-size:0.8rem;">Кроків поки немає</div>';
+            container.innerHTML = '<div style="text-align:center;padding:1rem;color:#9ca3af;font-size:0.8rem;">' + window.t('noSteps2') + '</div>';
             return;
         }
 
@@ -173,7 +173,7 @@
         if (selectedStepId === stepId) {
             selectedStepId = null;
             const editor = document.getElementById('funnelStepEditor');
-            if (editor) editor.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;">Виберіть крок</div>';
+            if (editor) editor.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;">' + window.t('selectStep2') + '</div>';
         }
         renderFunnelStepsList();
     };
