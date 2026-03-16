@@ -23,7 +23,7 @@
         const localized = module[field + '_' + lang];
         if (localized) return localized;
         // fallback chain: en → ru → ua
-        if (lang === 'pl' || lang === 'de') {
+        if (lang === 'cs' || lang === 'pl' || lang === 'de') {
             return module[field + '_en'] || module[field + '_ru'] || module[field] || '';
         }
         return module[field + '_ru'] || module[field] || '';

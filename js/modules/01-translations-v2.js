@@ -3107,6 +3107,11 @@
                 bkRequirePayment: 'Оплата при записі (Stripe)',
                 bkServicePrice: 'Вартість послуги',
                 stripePriceHint: 'Клієнт буде перенаправлений на Stripe для оплати',
+                stripeIntgDesc: 'Онлайн-оплата для рахунків, бронювань та угод CRM. Підтримка EUR + CZK.',
+                stripeWebhookUrl: 'Webhook URL для Stripe Dashboard',
+                stripeWebhookEvent: 'Event: checkout.session.completed',
+                testWord: 'Тест',
+                testConnection: 'Тест з\'єднання',
             },
             en: {
                 authSubtitle: 'Task management for business',
@@ -6239,6 +6244,11 @@
                 bkRequirePayment: 'Payment on booking (Stripe)',
                 bkServicePrice: 'Service price',
                 stripePriceHint: 'Client will be redirected to Stripe to pay',
+                stripeIntgDesc: 'Online payments for invoices, bookings and CRM deals. EUR + CZK support.',
+                stripeWebhookUrl: 'Webhook URL for Stripe Dashboard',
+                stripeWebhookEvent: 'Event: checkout.session.completed',
+                testWord: 'Test',
+                testConnection: 'Test connection',
             },
             de: {
                 authSubtitle: 'Aufgabenverwaltung für Unternehmen',
@@ -9371,6 +9381,11 @@
                 bkRequirePayment: 'Zahlung bei Buchung (Stripe)',
                 bkServicePrice: 'Dienstpreis',
                 stripePriceHint: 'Kunde wird zu Stripe weitergeleitet',
+                stripeIntgDesc: 'Online-Zahlungen für Rechnungen, Buchungen und CRM-Deals. EUR + CZK.',
+                stripeWebhookUrl: 'Webhook URL für Stripe Dashboard',
+                stripeWebhookEvent: 'Event: checkout.session.completed',
+                testWord: 'Test',
+                testConnection: 'Verbindung testen',
             },
             cs: {
                 authSubtitle: 'Řízení úkolů pro podnikání',
@@ -12506,6 +12521,11 @@
                 bkRequirePayment: 'Platba při rezervaci (Stripe)',
                 bkServicePrice: 'Cena služby',
                 stripePriceHint: 'Klient bude přesměrován na Stripe',
+                stripeIntgDesc: 'Online platby pro faktury, rezervace a CRM obchody. EUR + CZK.',
+                stripeWebhookUrl: 'Webhook URL pro Stripe Dashboard',
+                stripeWebhookEvent: 'Event: checkout.session.completed',
+                testWord: 'Test',
+                testConnection: 'Otestovat připojení',
 
             ru: {
                 authSubtitle: 'Управление задачами для бизнеса',
@@ -15640,6 +15660,11 @@
                 bkRequirePayment: 'Оплата при записи (Stripe)',
                 bkServicePrice: 'Стоимость услуги',
                 stripePriceHint: 'Клиент будет перенаправлен на Stripe',
+                stripeIntgDesc: 'Онлайн-оплата для счетов, бронирований и сделок CRM. EUR + CZK.',
+                stripeWebhookUrl: 'Webhook URL для Stripe Dashboard',
+                stripeWebhookEvent: 'Event: checkout.session.completed',
+                testWord: 'Тест',
+                testConnection: 'Тест подключения',
             },
             pl: {
                 authSubtitle: 'Zarządzanie zadaniami dla biznesu',
@@ -18082,6 +18107,7 @@
                 bottleneckAI: 'Wąskie gardło',
                 noCalendarsYet: 'Brak kalendarzy',
                 stripePayOnline: 'Zapłać online',
+                stripeIntgDesc: 'Płatności online dla faktur, rezerwacji i CRM. EUR + CZK.',
             },
         };
         window.translations = translations;

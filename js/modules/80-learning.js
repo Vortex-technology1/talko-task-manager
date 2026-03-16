@@ -5994,7 +5994,8 @@
         if (!root) return;
 
         const stats = getLearningStats();
-        const isRu = getLearningLang() === 'ru';
+        const _lang = getLearningLang();
+        const isRu = _lang === 'ru';
 
         root.innerHTML = `
         <div class="learning-wrap">
@@ -6002,7 +6003,7 @@
             <div class="learning-header">
                 <div class="learning-header-title">
                     <i data-lucide="graduation-cap" class="icon" style="color:#22c55e;width:24px;height:24px;"></i>
-                    <span>${isRu ? 'Программа обучения' : 'Програма навчання'}</span>
+                    <span>${_lang==='ru'?'Программа обучения':_lang==='cs'?'Tréninkový program':_lang==='en'?'Training program':_lang==='de'?'Trainingsprogramm':_lang==='pl'?'Program szkoleniowy':'Програма навчання'}</span>
                 </div>
     
             </div>
@@ -6011,11 +6012,11 @@
             <div class="learning-stats">
                 <div class="learning-stat">
                     <div class="learning-stat-value">${stats.pct}%</div>
-                    <div class="learning-stat-label">${isRu ? 'Прогресс' : 'Прогрес'}</div>
+                    <div class="learning-stat-label">${_lang==='ru'?'Прогресс':_lang==='cs'?'Pokrok':_lang==='en'?'Progress':_lang==='de'?'Fortschritt':_lang==='pl'?'Postęp':'Прогрес'}</div>
                 </div>
                 <div class="learning-stat">
                     <div class="learning-stat-value">${stats.completed}/${stats.total}</div>
-                    <div class="learning-stat-label">${isRu ? 'Модулей' : 'Модулів'}</div>
+                    <div class="learning-stat-label">${_lang==='ru'?'Модулей':_lang==='cs'?'Moduly':_lang==='en'?'Modules':_lang==='de'?'Module':_lang==='pl'?'Moduły':'Модулів'}</div>
                 </div>
                 <div class="learning-progress-bar-wrap">
                     
@@ -6032,8 +6033,19 @@
     }
 
     function renderModuleCard(module, isRu) {
-        const title = isRu ? (module.title_ru || module.title) : module.title;
-        const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');
+        const _lang = getLearningLang();
+        const title = _lang === 'ru' ? (module.title_ru || module.title)
+                    : _lang === 'en' ? (module.title_en || module.title)
+                    : _lang === 'de' ? (module.title_de || module.title)
+                    : _lang === 'pl' ? (module.title_pl || module.title)
+                    : _lang === 'cs' ? (module.title_cs || module.title_en || module.title)
+                    : module.title;
+        const subtitle = _lang === 'ru' ? (module.subtitle_ru || module.subtitle || '')
+                       : _lang === 'en' ? (module.subtitle_en || module.subtitle || '')
+                       : _lang === 'de' ? (module.subtitle_de || module.subtitle || '')
+                       : _lang === 'pl' ? (module.subtitle_pl || module.subtitle || '')
+                       : _lang === 'cs' ? (module.subtitle_cs || module.subtitle_en || module.subtitle || '')
+                       : (module.subtitle || '');
         const isCompleted = module.completed;
         const isAvailable = module.id === 0 || (learningCourseData[module.id - 1] && learningCourseData[module.id - 1].completed) || module.id <= 3;
 
@@ -10986,7 +10998,8 @@ window._openAIAssistant = function(moduleTitle, homeworkText) {
         const module = learningCourseData.find(m => m.id === moduleId);
         if (!module) return;
         currentLearningModule = module;
-        const isRu = getLearningLang() === 'ru';
+        const _lang = getLearningLang();
+        const isRu = _lang === 'ru';
 
         const title = isRu ? (module.title_ru || module.title) : module.title;
         const subtitle = isRu ? (module.subtitle_ru || module.subtitle || '') : (module.subtitle || '');

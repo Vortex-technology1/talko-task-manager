@@ -2643,7 +2643,7 @@ document.addEventListener('mousedown', function(e) {
 
 
     <!-- Scripts (modular) -->
-    <script src="js/modules/01-translations-v2.js?v=20260316v16" defer></script>
+    <script src="js/modules/01-translations-v2.js?v=20260316v17" defer></script>
     <script src="js/modules/02-firebase-config.js?v=20260311s" defer></script>
     <script src="js/modules/03-app-state.js?v=20260314v2" defer></script>
     <script src="js/modules/04-google-calendar-config.js?v=20260316v2" defer></script>
@@ -3592,9 +3592,9 @@ document.addEventListener('mousedown', function(e) {
         initLucide();
         
         var lang = localStorage.getItem('talko_language') || localStorage.getItem('talko_lang') || 'ua';
-        var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE' };
+        var labels = { ua: 'UA', ru: 'RU', pl: 'PL', en: 'EN', de: 'DE', cs: 'CS' };
         var el = document.getElementById('currentLangLabel');
-        if (el) el.textContent = labels[lang] || 'UA';
+        if (el) el.textContent = labels[lang] || lang.toUpperCase();
         document.querySelectorAll('.lang-opt').forEach(function(b) {
             b.classList.toggle('active', b.dataset.lang === lang);
         });
@@ -4173,8 +4173,8 @@ document.addEventListener('mousedown', function(e) {
             s.onerror = done; // не блокуємо при помилці
             document.body.appendChild(s);
         }
-        loadScript('js/modules/80-learning-data.js?v=20260312j', function() {
-            loadScript('js/modules/80-learning-engine.js?v=20260313f', function() {
+        loadScript('js/modules/80-learning-data.js?v=20260316v17', function() {
+            loadScript('js/modules/80-learning-engine.js?v=20260316v17', function() {
                 window._learningLoaded = true;
                 cb && cb();
             });
@@ -4233,7 +4233,7 @@ document.addEventListener('mousedown', function(e) {
         demo:         ["js/modules/41-demo-data.js?v=20260311s", "js/modules/42-demo-niches.js?v=20260314v1"],
         sites:        ["js/modules/94-sites-builder.js?v=20260316v12"],
         funnels:      ["js/modules/79-funnels.js?v=20260316v10"],
-        integrations: ["js/modules/96-integrations.js?v=20260316v12"],
+        integrations: ["js/modules/96-integrations.js?v=20260316v17"],
         booking:      ["js/modules/100-booking.js?v=20260316v16"],
     };
 

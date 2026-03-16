@@ -564,8 +564,120 @@ document.getElementById('talko-lead-form').addEventListener('submit', async func
                 ${I.test} Тест з'єднання
             </button>
         </div>
+    </div>
+    <!-- Stripe -->
+    <div style="${card}">
+        <div style="${sTitle}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#635bff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <span style="font-weight:700;font-size:0.85rem;color:#111827">Stripe</span>
+            ${badge(!!s.stripeEnabled)}
+        </div>
+        <div style="margin:0.35rem 0 0.7rem;font-size:0.75rem;color:#6b7280;line-height:1.4">
+            ${window.t('stripeIntgDesc')||'Online platby pro faktury, rezervace a CRM. EUR + CZK.'}
+            <a href="https://stripe.com" target="_blank" style="color:#635bff;margin-left:4px;">stripe.com ↗</a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+            <div>
+                <label style="${lbl}">${window.t('stripeSecretKey')||'Secret Key (sk_live_...)'}</label>
+                <div style="display:flex;gap:0.4rem;">
+                    <input id="intg_stripe_key" type="password"
+                        value="${s.stripeSecretKey ? ('••••' + (s.stripeSecretKey || '').slice(-4)) : ''}"
+                        placeholder="sk_live_..." style="${inp}flex:1"
+                        onfocus="if(this.value.startsWith('\u2022'))this.value=''">
+                    <button onclick="intgToggleVisibility('intg_stripe_key')"
+                        style="padding:0.4rem 0.6rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;font-size:0.8rem;color:#6b7280;">
+                        ${I.eye}
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label style="${lbl}">${window.t('stripeWebhookSec')||'Webhook Secret (whsec_...)'}</label>
+                <div style="display:flex;gap:0.4rem;">
+                    <input id="intg_stripe_webhook" type="password"
+                        value="${s.stripeWebhookSecret ? ('••••' + (s.stripeWebhookSecret || '').slice(-4)) : ''}"
+                        placeholder="whsec_..." style="${inp}flex:1"
+                        onfocus="if(this.value.startsWith('\u2022'))this.value=''">
+                    <button onclick="intgToggleVisibility('intg_stripe_webhook')"
+                        style="padding:0.4rem 0.6rem;background:#f9fafb;border:1px solid #e8eaed;border-radius:6px;cursor:pointer;font-size:0.8rem;color:#6b7280;">
+                        ${I.eye}
+                    </button>
+                </div>
+            </div>
+            <div style="background:#f0f4ff;border-radius:7px;padding:0.5rem 0.75rem;font-size:0.74rem;color:#4338ca;line-height:1.5">
+                <b>${window.t('stripeWebhookUrl')||'Webhook URL (Stripe Dashboard)'}:</b><br>
+                <span style="font-family:monospace;word-break:break-all">${window.location.origin}/api/stripe?action=webhook</span>
+                <br><span style="color:#6b7280">Event: checkout.session.completed</span>
+            </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap">
+            <button onclick="intgSaveStripe()"
+                style="padding:0.4rem 0.9rem;background:#635bff;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.save} ${window.t('saveWord')||'Uložit'}
+            </button>
+            <button onclick="intgTestStripe()"
+                style="padding:0.4rem 0.9rem;background:#f5f3ff;color:#635bff;border:1px solid #ddd6fe;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;">
+                ${I.test} ${window.t('testWord')||'Test'}
+            </button>
+        </div>
     </div>`;
 }
+
+
+// ── Stripe Actions ─────────────────────────────────────────
+window.intgSaveStripe = async function() {
+    const keyEl  = document.getElementById('intg_stripe_key');
+    const whEl   = document.getElementById('intg_stripe_webhook');
+    const key    = (keyEl?.value || '').trim();
+    const wh     = (whEl?.value || '').trim();
+    if (!key && !wh) {
+        if (typeof showToast === 'function') showToast('Введіть ключ Stripe', 'warning');
+        return;
+    }
+    try {
+        const update = { updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+        if (key && !key.startsWith('•')) update.stripeSecretKey = key;
+        if (wh  && !wh.startsWith('•'))  update.stripeWebhookSecret = wh;
+        if (Object.keys(update).length > 1)  update.stripeEnabled = true;
+        await window.companyRef().update(update);
+        intg.settings = { ...intg.settings, ...update };
+        if (typeof showToast === 'function') showToast('Stripe: ' + (window.t('savedOk2')||'збережено'), 'success');
+        _renderAll();
+    } catch(e) {
+        if (typeof showToast === 'function') showToast((window.t('errPrefix')||'Помилка: ') + e.message, 'error');
+    }
+};
+
+window.intgTestStripe = async function() {
+    const savedKey = intg.settings?.stripeSecretKey;
+    const inputKey = document.getElementById('intg_stripe_key')?.value.trim();
+    if (!savedKey && (!inputKey || inputKey.startsWith('•'))) {
+        if (typeof showToast === 'function') showToast(window.t('stripeSecretKey')||'Введіть Secret Key', 'warning');
+        return;
+    }
+    if (typeof showToast === 'function') showToast('Перевірка Stripe...', 'info');
+    try {
+        const res = await fetch('/api/stripe?action=create-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                companyId:   window.currentCompanyId,
+                amount:      0.01,
+                currency:    'EUR',
+                description: 'Stripe connection test',
+                successUrl:  window.location.href,
+                cancelUrl:   window.location.href,
+            }),
+        });
+        const data = await res.json();
+        if (data.url || data.sessionId) {
+            if (typeof showToast === 'function') showToast('✅ Stripe ' + (window.t('stripeEnabled')||'підключений'), 'success');
+        } else {
+            throw new Error(data.error || 'No session URL');
+        }
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Stripe: ' + e.message, 'error');
+    }
+};
 
 // ── Actions ────────────────────────────────────────────────
 window.intgToggleVisibility = function(inputId) {
