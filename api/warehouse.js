@@ -50,8 +50,9 @@ module.exports = async (req, res) => {
     // ── POST: операція складу (IN / OUT / WRITE_OFF / ADJUST) ──
     if (req.method === 'POST' && action === 'operation') {
       const { itemId, type, qty, locationId, price, note, userId, dealId, batchId } = req.body;
-      if (!itemId || !type || qty == null) {
-        return res.status(400).json({ error: 'Missing itemId/type/qty' });
+      const qtyNum = Number(qty);
+      if (!itemId || !type || qty == null || isNaN(qtyNum) || qtyNum <= 0) {
+        return res.status(400).json({ error: 'Missing or invalid itemId/type/qty' });
       }
 
       const itemRef  = comp.collection('warehouse_items').doc(itemId);

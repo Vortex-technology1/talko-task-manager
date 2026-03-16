@@ -2092,6 +2092,31 @@ function _renderDealDetails(deal) {
         </div>
     </div>
 
+    <!-- Товари зі складу -->
+    ${typeof window.whGetItems === 'function' && window.whGetItems().length > 0 ? `
+    <div style="margin-bottom:0.9rem;">
+        <label style="${lbl}">📦 Товари зі складу</label>
+        <div id="dealWhItems" style="display:flex;flex-direction:column;gap:0.3rem;margin-bottom:0.4rem;">
+            ${(deal.warehouseItems||[]).map((wi,idx) => {
+                const it = window.whGetItems().find(i=>i.id===wi.itemId);
+                return `<div style="display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;background:#f9fafb;border-radius:6px;padding:0.35rem 0.5rem;">
+                    <span style="flex:1;">${it ? it.name : wi.itemId}</span>
+                    <input type="number" min="0.001" step="any" value="${wi.qty||1}" onchange="window._crmWhUpdateQty('${deal.id}',${idx},this.value)"
+                        style="width:60px;padding:2px 6px;border:1px solid #e5e7eb;border-radius:4px;font-size:0.78rem;text-align:center;">
+                    <span style="color:#9ca3af;font-size:0.75rem;">${it?it.unit||'шт':'шт'}</span>
+                    <button onclick="window._crmWhRemoveItem('${deal.id}',${idx})" style="padding:2px 6px;background:#fee2e2;color:#dc2626;border:none;border-radius:4px;cursor:pointer;font-size:0.72rem;">✕</button>
+                </div>`;
+            }).join('')}
+        </div>
+        <select id="dd_wh_select" onchange="window._crmWhAddItem('${deal.id}',this)" style="${inp}background:white;font-size:0.8rem;">
+            <option value="">+ Додати товар зі складу...</option>
+            ${window.whGetItems().map(i => {
+                const s = window.whGetStock ? window.whGetStock(i.id) : {qty:0};
+                return `<option value="${i.id}">${i.name} (${s.qty} ${i.unit||'шт'})</option>`;
+            }).join('')}
+        </select>
+    </div>` : ''}
+
     <!-- Hot toggle -->
     <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;padding:0.6rem 0.75rem;
         background:${deal.isHot?'#fff7ed':'#f8fafc'};border-radius:8px;border:1px solid ${deal.isHot?'#fed7aa':'#e8eaed'};cursor:pointer;"
@@ -2111,6 +2136,44 @@ function _renderDealDetails(deal) {
         };
     }
 }
+
+// ── CRM ↔ Склад: хелпери ────────────────────────────────────
+window._crmWhAddItem = async function(dealId, select) {
+    const itemId = select.value;
+    if (!itemId) return;
+    select.value = '';
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal) return;
+    const existing = (deal.warehouseItems || []).find(w => w.itemId === itemId);
+    if (existing) { existing.qty = (existing.qty || 1) + 1; }
+    else {
+        const item = window.whGetItems ? window.whGetItems().find(i => i.id === itemId) : null;
+        if (!deal.warehouseItems) deal.warehouseItems = [];
+        deal.warehouseItems.push({ itemId, qty: 1, price: item?.costPrice || 0 });
+    }
+    await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+        .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    if (typeof _renderDealDetails === 'function') _renderDealDetails(deal);
+};
+
+window._crmWhRemoveItem = async function(dealId, idx) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal || !deal.warehouseItems) return;
+    deal.warehouseItems.splice(idx, 1);
+    await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+        .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    if (typeof _renderDealDetails === 'function') _renderDealDetails(deal);
+};
+
+window._crmWhUpdateQty = async function(dealId, idx, val) {
+    const deal = crm.deals.find(d => d.id === dealId);
+    if (!deal || !deal.warehouseItems || !deal.warehouseItems[idx]) return;
+    const qty = parseFloat(val);
+    if (isNaN(qty) || qty <= 0) return;
+    deal.warehouseItems[idx].qty = qty;
+    await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+        .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+};
 
 window.crmCloseDeal = function() {
     // Зупиняємо chat listener при закритті

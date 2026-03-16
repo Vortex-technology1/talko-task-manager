@@ -790,7 +790,7 @@
     const price  = parseFloat(document.getElementById('wh_op_price')?.value) || 0;
     const locId  = document.getElementById('wh_op_loc')?.value;
     const note   = document.getElementById('wh_op_note')?.value?.trim();
-    if (!itemId || !qty || qty <= 0) {
+    if (!itemId || !qty || isNaN(qty) || qty <= 0) {
       if (window.showToast) showToast('Оберіть товар і вкажіть кількість', 'error');
       return;
     }
