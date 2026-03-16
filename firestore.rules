@@ -62,19 +62,16 @@ service cloud.firestore {
       // USERS
       match /users/{memberId} {
         allow read: if isCompanyMember(companyId);
-        
         allow create: if isManagerOrOwner(companyId) || 
           (isAuthenticated() && memberId == userId());
-        
         allow update: if isManagerOrOwner(companyId) || 
           (isAuthenticated() && memberId == userId() && 
            request.resource.data.role == resource.data.role);
-        
         allow delete: if isManagerOrOwner(companyId) && 
           resource.data.role != 'owner';
       }
       
-      // ROLE PERMISSIONS — тільки owner може редагувати
+      // ROLE PERMISSIONS
       match /rolePermissions/{roleId} {
         allow read: if isCompanyMember(companyId);
         allow write: if isCompanyOwner(companyId);
@@ -85,7 +82,6 @@ service cloud.firestore {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId) && 
           isValidString(request.resource.data.title, 500);
-        // employee може редагувати тільки свої завдання
         allow update: if isManagerOrOwner(companyId) || 
           (isCompanyMember(companyId) && (
             resource.data.assigneeId == userId() ||
@@ -98,7 +94,6 @@ service cloud.firestore {
         match /comments/{commentId} {
           allow read: if isCompanyMember(companyId);
           allow create: if isCompanyMember(companyId);
-          // автор може редагувати/видаляти власний коментар
           allow update: if isManagerOrOwner(companyId) ||
             (isAuthenticated() && isCompanyMember(companyId) && resource.data.authorId == userId());
           allow delete: if isManagerOrOwner(companyId) ||
@@ -118,7 +113,6 @@ service cloud.firestore {
       }
       
       // REGULAR TASKS
-      // FIX: employee не може редагувати шаблони регулярних завдань
       match /regularTasks/{taskId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isManagerOrOwner(companyId) &&
@@ -160,7 +154,7 @@ service cloud.firestore {
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // COORDINATIONS (наради/координації)
+      // COORDINATIONS
       match /coordinations/{coordId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isManagerOrOwner(companyId) &&
@@ -215,7 +209,6 @@ service cloud.firestore {
       }
       
       // BUSINESS STRUCTURE
-      // FIX: було isAuthenticated() без companyId — будь-який юзер міг читати/писати чужі дані
       match /bizStructure/{document=**} {
         allow read: if isCompanyMember(companyId);
         allow write: if isManagerOrOwner(companyId);
@@ -231,10 +224,7 @@ service cloud.firestore {
         allow write: if isManagerOrOwner(companyId);
       }
       
-      // =====================
       // PROJECT TEMPLATES, STANDARDS, QC
-      // =====================
-      
       match /projectTemplates/{templateId} {
         allow read: if isCompanyMember(companyId);
         allow write: if isManagerOrOwner(companyId);
@@ -253,37 +243,26 @@ service cloud.firestore {
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // =====================
       // PROJECT STAGES & MATERIALS
-      // FIX: додані валідації полів
-      // =====================
-      
       match /projectStages/{stageId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isManagerOrOwner(companyId) &&
           isValidString(request.resource.data.name, 200) &&
           isValidString(request.resource.data.projectId, 200);
-        // update — member може змінювати статус (виконавець звітує)
         allow update: if isCompanyMember(companyId);
         allow delete: if isManagerOrOwner(companyId);
       }
       
       match /projectMaterials/{materialId} {
         allow read: if isCompanyMember(companyId);
-        // create — member може додавати матеріали (виконавець на місці)
         allow create: if isCompanyMember(companyId) &&
           isValidString(request.resource.data.name, 200) &&
           isValidString(request.resource.data.projectId, 200);
-        // update — member може міняти статус (доставлено, використано)
         allow update: if isCompanyMember(companyId);
-        // delete — тільки manager
         allow delete: if isManagerOrOwner(companyId);
       }
       
-      // =====================
       // STATISTICS / METRICS
-      // =====================
-      
       match /metrics/{metricId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
@@ -304,7 +283,6 @@ service cloud.firestore {
       
       match /metricAggregates/{aggId} {
         allow read: if isCompanyMember(companyId);
-        // write — тільки Cloud Functions (через Admin SDK, rules не блокують)
       }
       
       match /metricInsights/{insightId} {
@@ -323,59 +301,47 @@ service cloud.firestore {
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // CRM — DEALS
+      // CRM — DEALS (legacy)
       match /deals/{dealId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId);
         allow update: if isCompanyMember(companyId);
         allow delete: if isManagerOrOwner(companyId);
+        match /history/{histId} {
+          allow read: if isCompanyMember(companyId);
+          allow create: if isCompanyMember(companyId);
+        }
       }
 
-      match /deals/{dealId}/history/{histId} {
-        allow read: if isCompanyMember(companyId);
-        allow create: if isCompanyMember(companyId);
-      }
-
-      // CRM — PIPELINES
+      // CRM — PIPELINES (legacy)
       match /pipelines/{pipelineId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId);
-        allow update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
       // MARKETING — LANDING PAGES
       match /landingPages/{pageId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
       // MARKETING — FUNNELS
       match /funnels/{funnelId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // BOTS — підколекція ботів з флоу і промптами
+      // BOTS
       match /bots/{botId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
-
+        allow create, update, delete: if isManagerOrOwner(companyId);
         match /flows/{flowId} {
           allow read: if isCompanyMember(companyId);
-          allow create, update: if isManagerOrOwner(companyId);
-          allow delete: if isManagerOrOwner(companyId);
-
-          // Великі AI промпти зберігаються окремо (обхід ліміту 1MB)
+          allow create, update, delete: if isManagerOrOwner(companyId);
           match /nodePrompts/{nodeId} {
             allow read: if isCompanyMember(companyId);
             allow write: if isManagerOrOwner(companyId);
           }
-
-          // Canvas layout окремо
           match /canvasData/{docId} {
             allow read: if isCompanyMember(companyId);
             allow write: if isManagerOrOwner(companyId);
@@ -386,14 +352,11 @@ service cloud.firestore {
       // BOTS — FLOWS (root level)
       match /flows/{flowId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
-
+        allow create, update, delete: if isManagerOrOwner(companyId);
         match /nodePrompts/{nodeId} {
           allow read: if isCompanyMember(companyId);
           allow write: if isManagerOrOwner(companyId);
         }
-
         match /canvasData/{docId} {
           allow read: if isCompanyMember(companyId);
           allow write: if isManagerOrOwner(companyId);
@@ -417,17 +380,13 @@ service cloud.firestore {
         allow read, write: if false;
       }
 
-      // WEBHOOK — IDEMPOTENCY LOCKS (BUG B fix, api/webhook.js)
-      // Writes через Admin SDK (ігнорує rules) — rule нижче для читання з JS клієнту (debug)
-      // write: false — тільки сервер може писати
+      // WEBHOOK — IDEMPOTENCY LOCKS
       match /_finish_locks/{lockId} {
         allow read: if isManagerOrOwner(companyId);
-        allow write: if false; // Admin SDK only
+        allow write: if false;
       }
 
-      // =====================
       // CRM — CLIENTS
-      // =====================
       match /crm_clients/{clientId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId);
@@ -435,11 +394,8 @@ service cloud.firestore {
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // =====================
-      // CRM — DEALS + підколекція history
-      // =====================
+      // CRM — DEALS
       match /crm_deals/{dealId} {
-        // Manager з accessMode="own" бачить тільки свої угоди на рівні БД
         allow read: if isManagerOrOwner(companyId) ||
           (isCompanyMember(companyId) && (
             resource.data.assigneeId == userId() ||
@@ -447,22 +403,17 @@ service cloud.firestore {
             resource.data.createdBy == userId()
           ));
         allow create: if isCompanyMember(companyId);
-        // Manager може редагувати тільки свої угоди
         allow update: if isManagerOrOwner(companyId) ||
           (isCompanyMember(companyId) && (
             resource.data.assigneeId == userId() ||
             resource.data.responsibleId == userId()
           ));
         allow delete: if isManagerOrOwner(companyId);
-
-        // Підколекція: хронологія змін стадій (immutable — тільки create)
         match /history/{histId} {
           allow read: if isCompanyMember(companyId);
           allow create: if isCompanyMember(companyId);
           allow update, delete: if false;
         }
-
-        // Підколекція: авто-задачі по стадіях (77c-crm-tasks.js)
         match /tasks/{taskId} {
           allow read: if isCompanyMember(companyId);
           allow create: if isCompanyMember(companyId);
@@ -472,9 +423,7 @@ service cloud.firestore {
         }
       }
 
-      // =====================
-      // CRM — PIPELINES (стадії воронки) — обидві назви колекцій
-      // =====================
+      // CRM — PIPELINES
       match /crm_pipeline/{pipelineId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
@@ -485,45 +434,34 @@ service cloud.firestore {
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // =====================
-      // CRM — ПУБЛІЧНІ ФОРМИ (77g-crm-forms.js)
-      // =====================
+      // CRM — FORMS
       match /crm_forms/{formId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // =====================
-      // CRM — ACTIVITIES (лог дій)
-      // =====================
+      // CRM — ACTIVITIES
       match /crm_activities/{activityId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId);
-        // Тільки автор або менеджер може редагувати нотатку
         allow update: if isManagerOrOwner(companyId) ||
           (isCompanyMember(companyId) && resource.data.userId == userId());
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // =====================
-      // CRM — STATS AGGREGATE
-      // =====================
+      // CRM — STATS
       match /crm_stats/{docId} {
         allow read: if isManagerOrOwner(companyId);
         allow write: if isCompanyMember(companyId);
       }
 
-      // =====================
       // AUTOMATION RULES
-      // =====================
       match /automation_rules/{ruleId} {
         allow read: if isCompanyMember(companyId);
         allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // =====================
-      // CONTACTS — messages підколекція (чат)
-      // =====================
+      // CONTACTS — MESSAGES
       match /contacts/{contactId}/messages/{msgId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId);
@@ -531,53 +469,38 @@ service cloud.firestore {
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // =====================
-      // BROADCASTS (розсилки)
-      // =====================
+      // BROADCASTS
       match /broadcasts/{broadcastId} {
         allow read: if isCompanyMember(companyId);
-        allow create: if isManagerOrOwner(companyId);
-        allow update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
-      // =====================
       // SITES
-      // =====================
       match /sites/{siteId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
-
+        allow create, update, delete: if isManagerOrOwner(companyId);
         match /blocks/{blockId} {
           allow read: if isCompanyMember(companyId);
           allow write: if isManagerOrOwner(companyId);
         }
       }
 
-      // =====================
       // SITE FORMS + SUBMISSIONS
-      // =====================
       match /site_forms/{formId} {
         allow read: if isCompanyMember(companyId);
-        allow create, update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
       match /form_submissions/{submissionId} {
         allow read: if isCompanyMember(companyId);
-        // create: публічно (форма на сайті — без авторизації)
+        // Публічний create — клієнти подають форми без авторизації
         allow create: if request.resource.data.keys().hasAll(['submittedAt', 'formId'])
                       && request.resource.data.size() < 10240;
         allow update: if isCompanyMember(companyId);
         allow delete: if isManagerOrOwner(companyId);
       }
 
-      // =====================
-      // EVENTS (event bus + audit trail — єдиний блок)
-      // FIX: прибрано дублікат першого блоку events.
-      // update дозволено тільки зі збереженням type (automation engine — processed:true)
-      // =====================
+      // EVENTS
       match /events/{eventId} {
         allow read: if isCompanyMember(companyId);
         allow create: if isCompanyMember(companyId) &&
@@ -588,10 +511,8 @@ service cloud.firestore {
       }
 
       // =====================
-      // FINANCE MODULE (всередині companies/{companyId})
+      // FINANCE
       // =====================
-
-      // Транзакції
       match /finance_transactions/{txId} {
         allow read: if isManagerOrOwner(companyId);
         allow create: if isCompanyMember(companyId) && (
@@ -613,13 +534,11 @@ service cloud.firestore {
       }
 
       match /finance_accounts/{accId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow read, write: if isManagerOrOwner(companyId);
       }
 
       match /finance_recurring/{recId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow read, write: if isManagerOrOwner(companyId);
       }
 
       match /finance_function_budgets/{fbudId} {
@@ -636,95 +555,169 @@ service cloud.firestore {
         allow write: if isManagerOrOwner(companyId);
       }
 
-      // =====================
-      // FINANCE — TRANSFERS (перекази між рахунками)
-      // =====================
       match /finance_transfers/{transferId} {
+        allow read, write: if isManagerOrOwner(companyId);
+      }
+
+      match /finance_invoices/{invoiceId} {
         allow read: if isManagerOrOwner(companyId);
-        allow create: if isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId);
         allow update, delete: if isManagerOrOwner(companyId);
       }
 
       // =====================
-      // SESSION LOCKS (webhook race condition prevention)
-      // Admin SDK only — клієнт не має доступу
+      // BOOKING MODULE
+      // Записи клієнтів відбуваються через /api/booking (Admin SDK)
+      // Rules захищають прямий JS SDK доступ від співробітників
       // =====================
-      match /_session_locks/{lockId} {
-        allow read, write: if false;
+
+      // Налаштування календарів — тільки менеджер+
+      match /booking_calendars/{calendarId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // Розклади — тільки менеджер+
+      match /booking_schedules/{scheduleId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // Групи календарів — тільки менеджер+
+      match /booking_groups/{groupId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // Записи клієнтів:
+      // - READ: тільки менеджер+ (містить ПІБ, email, телефон клієнтів → GDPR)
+      // - CREATE: тільки через Admin SDK (/api/booking) → allow create: if false
+      // - UPDATE (confirm/cancel): тільки менеджер+ через UI або Admin SDK
+      match /booking_appointments/{appointmentId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if false; // Admin SDK only (/api/booking?action=create)
+        allow update: if isManagerOrOwner(companyId); // confirm/cancel через UI
+        allow delete: if isManagerOrOwner(companyId);
       }
 
       // =====================
-      // SUPERADMIN NOTES (sa_notes per company)
+      // WAREHOUSE MODULE
       // =====================
-      match /sa_notes/{noteId} {
-        allow read: if isSuperAdmin();
-        allow create: if isSuperAdmin();
-        allow update, delete: if isSuperAdmin();
+
+      // Товари — manager може редагувати каталог, member читає
+      match /warehouse_items/{itemId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isManagerOrOwner(companyId) &&
+          isValidString(request.resource.data.name, 200);
+        allow update: if isManagerOrOwner(companyId);
+        allow delete: if isManagerOrOwner(companyId);
+      }
+
+      // Операції (прихід/видача/списання) — member може додавати
+      // (комірник не обов'язково є менеджером)
+      match /warehouse_operations/{opId} {
+        allow read: if isCompanyMember(companyId);
+        allow create: if isCompanyMember(companyId) &&
+          request.resource.data.keys().hasAll(['itemId', 'type', 'qty']) &&
+          request.resource.data.qty is number &&
+          request.resource.data.qty > 0;
+        // update/delete — тільки менеджер (виправлення помилок)
+        allow update, delete: if isManagerOrOwner(companyId);
+      }
+
+      // Залишки — оновлює тільки серверна логіка (warehouse.js Admin SDK)
+      // Клієнт може читати для відображення дашборду
+      match /warehouse_stock/{stockId} {
+        allow read: if isCompanyMember(companyId);
+        allow write: if false; // Admin SDK only (api/warehouse.js)
+      }
+
+      // Локації складу — тільки менеджер+
+      match /warehouse_locations/{locationId} {
+        allow read: if isCompanyMember(companyId);
+        allow create, update, delete: if isManagerOrOwner(companyId);
       }
 
       // =====================
-      // AI USAGE LOG (токени per company)
+      // ACTIVITY LOG
+      // Лог активності співробітників — member може писати свої дії
+      // =====================
+      match /activity_log/{logId} {
+        allow read: if isManagerOrOwner(companyId);
+        allow create: if isCompanyMember(companyId) &&
+          request.resource.data.userId == userId();
+        allow update, delete: if false; // immutable log
+      }
+
+      // =====================
+      // SETTINGS (per company)
+      // Onboarding, AI assistants config, integrations
+      // =====================
+      match /settings/{settingId} {
+        // Onboarding прогрес — будь-який member може зберігати свій прогрес
+        allow read: if isCompanyMember(companyId);
+        allow write: if isCompanyMember(companyId);
+      }
+
+      // =====================
+      // AI USAGE LOG
       // =====================
       match /aiUsageLog/{docId} {
         allow read: if isManagerOrOwner(companyId);
         allow write: if false; // Admin SDK only (ai-proxy.js)
       }
 
-      // =====================
-      // AI RECOMMENDATIONS (87-ai-diagnostic-agent)
-      // =====================
+      // AI RECOMMENDATIONS
       match /ai_recommendations/{docId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow write: if isManagerOrOwner(companyId);
+        allow read, write: if isManagerOrOwner(companyId);
       }
 
-      // =====================
       // WEEKLY REPORT LOG
-      // =====================
       match /weekly_report_log/{docId} {
         allow read: if isManagerOrOwner(companyId);
-        allow write: if false; // Admin SDK only (weekly-report.js)
+        allow write: if false; // Admin SDK only
+      }
+
+      // SUPERADMIN NOTES
+      match /sa_notes/{noteId} {
+        allow read, write: if isSuperAdmin();
+      }
+
+      // SESSION LOCKS (webhook)
+      match /_session_locks/{lockId} {
+        allow read, write: if false;
       }
 
       // =====================
-      // FINANCE INVOICES
+      // FALLBACK — нові колекції до деплою специфічних правил
+      // Вужчий ніж раніше: read тільки member, write тільки manager
       // =====================
-      match /finance_invoices/{invoiceId} {
-        allow read: if isManagerOrOwner(companyId);
-        allow create: if isCompanyMember(companyId);
-        allow update: if isManagerOrOwner(companyId);
-        allow delete: if isManagerOrOwner(companyId);
-      }
-
-      // FALLBACK: будь-яка subcollection компанії — члени читають, менеджери пишуть
-      // (для нових колекцій до деплою специфічних правил)
       match /{subcollection}/{docId} {
         allow read: if isCompanyMember(companyId);
         allow write: if isManagerOrOwner(companyId);
       }
     }
 
+    // =====================
+    // INVITES
+    // =====================
     match /invites/{inviteId} {
-      // GDPR FIX: тільки власний invite, manager компанії або superadmin
       allow read: if isAuthenticated() && (
         isSuperAdmin() ||
         request.auth.token.email == resource.data.email ||
         isManagerOrOwner(resource.data.companyId)
       );
-      
       allow create: if isSuperAdmin() || (
         isAuthenticated() && 
         isManagerOrOwner(request.resource.data.companyId) &&
         isValidString(request.resource.data.email, 255)
       );
-      
       allow update: if isAuthenticated() && (
         isSuperAdmin() || (
           request.resource.data.accepted == true &&
           request.auth.token.email == resource.data.email
         )
       );
-      
       allow delete: if isSuperAdmin() || (
         isAuthenticated() && 
         isManagerOrOwner(resource.data.companyId)
@@ -740,50 +733,31 @@ service cloud.firestore {
     }
     
     // =====================
-    // SETTINGS (AI assistants, global config)
-    // FIX: прибрано невизначений companyId з root-level контексту.
-    // read: будь-який автентифікований (крім doc 'main' — тільки superAdmin)
-    // write: тільки superAdmin
+    // SETTINGS (глобальні — AI assistants config)
     // =====================
     match /settings/{doc} {
       allow read: if isSuperAdmin() || (isAuthenticated() && doc != 'main');
       allow write: if isSuperAdmin();
     }
-    
     match /settings/{doc}/{sub=**} {
       allow read: if isSuperAdmin() || isAuthenticated();
       allow write: if isSuperAdmin();
     }
 
     // =====================
-    // TELEGRAM BROADCAST (superadmin broadcast queue)
-    // =====================
-    match /telegramBroadcast/{docId} {
-      allow read: if isSuperAdmin();
-      allow create: if isSuperAdmin();
-      allow update, delete: if false; // processed by webhook/cron
-    }
-
-    // =====================
-    // TELEGRAM INDEX (fast lookup без collectionGroup)
+    // TELEGRAM INDEX
     // =====================
     match /telegramIndex/{doc} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
+      allow read, write: if request.auth != null;
     }
 
     // =====================
-    // WEBHOOK IDEMPOTENCY LOCKS (_finish_locks)
-    // Тільки Cloud Functions (Admin SDK) читають/пишуть напряму.
-    // З клієнта — заборонено.
+    // WEBHOOK LOCKS (Admin SDK only)
     // =====================
     match /_finish_locks/{lockId} {
       allow read, write: if false;
     }
 
-    // TELEPHONY CALL LOCKS (_tlocks sub-collection per company)
-    // Записуються тільки через Admin SDK (webhook server).
-    // Клієнтський код не має доступу.
     match /companies/{companyId}/_tlocks/{lockId} {
       allow read, write: if false;
     }
