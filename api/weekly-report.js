@@ -88,6 +88,13 @@ async function buildAndSendReport(companyId) {
         .map(d => ({ uid: d.id, ...d.data() }))
         .filter(u => u.telegramChatId);
 
+    // Читаємо мову компанії як fallback
+    let companyLang = 'ua';
+    try {
+        const compDoc = await compRef.get();
+        companyLang = compDoc.data()?.language || compDoc.data()?.interfaceLang || 'ua';
+    } catch(e) {}
+
     if (recipients.length === 0) return { companyId, skipped: 'no_telegram_recipients' };
 
     // ── 2. Задачі за цей тиждень ─────────────────────────
@@ -170,10 +177,18 @@ async function buildAndSendReport(companyId) {
         byPerson, delta, topSignals,
     });
 
-    // ── 6. Надсилаємо кожному отримувачу ─────────────────
+    // ── 6. Надсилаємо кожному отримувачу їхньою мовою ───
     const sent = [];
     for (const user of recipients) {
-        await tgSend(user.telegramChatId, msg);
+        // Мова: user.language → user.interfaceLang → companyLang → 'ua'
+        const userLang = user.language || user.interfaceLang || companyLang || 'ua';
+        const userMsg = userLang === 'ua' ? msg : _buildMessage({
+            weekAgoStr, todayStr,
+            created, completed, overdue, efficiency,
+            byPerson, delta, topSignals,
+            lang: userLang,
+        });
+        await tgSend(user.telegramChatId, userMsg);
         sent.push(user.uid);
     }
 
@@ -194,27 +209,104 @@ async function buildAndSendReport(companyId) {
 // ─────────────────────────────────────────
 // Формування тексту повідомлення
 // ─────────────────────────────────────────
-function _buildMessage({ weekAgoStr, todayStr, created, completed, overdue, efficiency, byPerson, delta, topSignals }) {
+function _buildMessage({ weekAgoStr, todayStr, created, completed, overdue, efficiency, byPerson, delta, topSignals, lang = 'ua' }) {
+
+    // ── Переклади тексту звіту ──────────────────────────
+    const T = {
+        ua: {
+            title:    '📈 <b>Тижневий звіт TALKO</b>',
+            created:  '📝 Створено',
+            done:     '✅ Виконано',
+            overdue:  'Прострочені',
+            eff:      'Ефективність',
+            vsLast:   'Прострочені vs минулий тиждень',
+            team:     '👥 Команда',
+            signals:  '🔍 Операційні збої тижня',
+            priority: '🎯 Пріоритет на тиждень',
+            footer:   '— TALKO System',
+        },
+        ru: {
+            title:    '📈 <b>Еженедельный отчёт TALKO</b>',
+            created:  '📝 Создано',
+            done:     '✅ Выполнено',
+            overdue:  'Просроченные',
+            eff:      'Эффективность',
+            vsLast:   'Просроченные vs прошлая неделя',
+            team:     '👥 Команда',
+            signals:  '🔍 Операционные сбои недели',
+            priority: '🎯 Приоритет на неделю',
+            footer:   '— TALKO System',
+        },
+        en: {
+            title:    '📈 <b>Weekly TALKO Report</b>',
+            created:  '📝 Created',
+            done:     '✅ Completed',
+            overdue:  'Overdue',
+            eff:      'Efficiency',
+            vsLast:   'Overdue vs last week',
+            team:     '👥 Team',
+            signals:  '🔍 Operational issues this week',
+            priority: '🎯 Priority for next week',
+            footer:   '— TALKO System',
+        },
+        de: {
+            title:    '📈 <b>Wöchentlicher TALKO-Bericht</b>',
+            created:  '📝 Erstellt',
+            done:     '✅ Erledigt',
+            overdue:  'Überfällig',
+            eff:      'Effizienz',
+            vsLast:   'Überfällig vs letzte Woche',
+            team:     '👥 Team',
+            signals:  '🔍 Betriebliche Probleme der Woche',
+            priority: '🎯 Priorität für nächste Woche',
+            footer:   '— TALKO System',
+        },
+        cs: {
+            title:    '📈 <b>Týdenní zpráva TALKO</b>',
+            created:  '📝 Vytvořeno',
+            done:     '✅ Dokončeno',
+            overdue:  'Po termínu',
+            eff:      'Efektivita',
+            vsLast:   'Po termínu vs minulý týden',
+            team:     '👥 Tým',
+            signals:  '🔍 Provozní problémy týdne',
+            priority: '🎯 Priorita na příští týden',
+            footer:   '— TALKO System',
+        },
+        pl: {
+            title:    '📈 <b>Tygodniowy raport TALKO</b>',
+            created:  '📝 Utworzone',
+            done:     '✅ Ukończone',
+            overdue:  'Po terminie',
+            eff:      'Efektywność',
+            vsLast:   'Po terminie vs poprzedni tydzień',
+            team:     '👥 Zespół',
+            signals:  '🔍 Problemy operacyjne tygodnia',
+            priority: '🎯 Priorytet na następny tydzień',
+            footer:   '— TALKO System',
+        },
+    };
+    const tx = T[lang] || T['ua'];
 
     // Заголовок
-    let msg = `📈 <b>Тижневий звіт TALKO</b>\n`;
+    let msg = `${tx.title}\n`;
     msg += `📅 ${weekAgoStr} — ${todayStr}\n\n`;
 
     // KPI блок
     const overdueEmoji = overdue === 0 ? '✅' : overdue > 10 ? '🔴' : '⚠️';
     const effEmoji     = efficiency >= 80 ? '🟢' : efficiency >= 50 ? '🟡' : '🔴';
 
-    msg += `📝 Створено: <b>${created}</b>\n`;
-    msg += `✅ Виконано: <b>${completed}</b>\n`;
-    msg += `${overdueEmoji} Прострочені: <b>${overdue}</b>\n`;
-    msg += `${effEmoji} Ефективність: <b>${efficiency}%</b>\n`;
+    msg += `${tx.created}: <b>${created}</b>\n`;
+    msg += `${tx.done}: <b>${completed}</b>\n`;
+    msg += `${overdueEmoji} ${tx.overdue}: <b>${overdue}</b>\n`;
+    msg += `${effEmoji} ${tx.eff}: <b>${efficiency}%</b>\n`;
 
     // Delta з минулим тижнем
     if (delta) {
         const dOverdue = delta.overdue;
         const sign     = dOverdue > 0 ? '+' : '';
         const dEmoji   = dOverdue > 0 ? '📈' : dOverdue < 0 ? '📉' : '➡️';
-        msg += `${dEmoji} Прострочені vs минулий тиждень: <b>${sign}${dOverdue}</b>\n`;
+        msg += `${dEmoji} ${tx.vsLast}: <b>${sign}${dOverdue}</b>\n`;
     }
 
     // По людях (топ-5)
@@ -224,7 +316,7 @@ function _buildMessage({ weekAgoStr, todayStr, created, completed, overdue, effi
         .slice(0, 5);
 
     if (sorted.length > 0) {
-        msg += `\n<b>👥 Команда:</b>\n`;
+        msg += `\n<b>${tx.team}:</b>\n`;
         sorted.forEach(([name, s]) => {
             const warn = s.overdue > 0 ? ` ⚠️${s.overdue}` : '';
             msg += `• <b>${_esc(name)}</b>: ✅${s.done} | 📋${s.active}${warn}\n`;
@@ -233,7 +325,7 @@ function _buildMessage({ weekAgoStr, todayStr, created, completed, overdue, effi
 
     // Топ-3 сигнали з AI-діагностики
     if (topSignals.length > 0) {
-        msg += `\n<b>🔍 Операційні збої тижня:</b>\n`;
+        msg += `\n<b>${tx.signals}:</b>\n`;
         topSignals.forEach((sig, i) => {
             const icon = sig.severity === 'critical' ? '🔴' : '🟡';
             msg += `${icon} ${_esc(sig.signalText || sig.signal || '')}\n`;
@@ -244,13 +336,10 @@ function _buildMessage({ weekAgoStr, todayStr, created, completed, overdue, effi
     // Рекомендований пріоритет на наступний тиждень
     const topCritical = topSignals.find(s => s.severity === 'critical');
     if (topCritical?.action) {
-        msg += `\n<b>🎯 Пріоритет на тиждень:</b>\n${_esc(topCritical.action)}`;
-    } else if (overdue > 0) {
-        msg += `\n<b>🎯 Пріоритет на тиждень:</b>\nЗакрити прострочені задачі — провести 15-хв огляд з командою`;
+        msg += `\n<b>${tx.priority}:</b>\n${_esc(topCritical.action)}\n`;
     }
 
-    msg += `\n\n<i>TALKO · /weekly — оновити вручну</i>`;
-
+    msg += `\n<i>${tx.footer}</i>`;
     return msg;
 }
 
