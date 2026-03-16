@@ -49,9 +49,10 @@
   function _whListenItems() {
     return new Promise(resolve => {
       const unsub = col('warehouse_items')
-        .where('deleted', '==', false)
         .onSnapshot(snap => {
-          _wh.items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          _wh.items = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .filter(i => i.deleted !== true);
           _wh.items.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'uk'));
           window.dispatchEvent(new CustomEvent('wh:itemsUpdated'));
           resolve();
@@ -90,9 +91,10 @@
   function _whListenSuppliers() {
     return new Promise(resolve => {
       const unsub = col('warehouse_suppliers')
-        .where('deleted', '==', false)
         .onSnapshot(snap => {
-          _wh.suppliers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          _wh.suppliers = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .filter(s => s.deleted !== true);
           resolve();
         }, err => { console.error('[wh] suppliers', err); resolve(); });
       _wh.listeners.push(unsub);
@@ -316,8 +318,7 @@
     }).length;
   };
 
-  window.whGetItems    = () => _wh.items;
-  window.whGetStock    = window.whGetStock;
+  window.whGetItems      = () => _wh.items;
   window.whGetLocations  = () => _wh.locations;
   window.whGetSuppliers  = () => _wh.suppliers;
   window.whGetOperations = () => _wh.operations;

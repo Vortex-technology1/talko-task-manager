@@ -277,31 +277,31 @@
               const level = window.whStockLevel(item.id);
               const totalVal2 = s.qty * (item.costPrice || 0);
               return `
-                <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 80px;gap:0.5rem;padding:0.75rem 1rem;border-bottom:1px solid #f9fafb;align-items:center;font-size:0.85rem;"
-                  class="wh-item-row">
-                  <div>
-                    <div style="font-weight:500;">${item.name}</div>
-                    ${item.sku ? `<div style="font-size:0.72rem;color:#9ca3af;">${item.sku}</div>` : ''}
-                    ${item.category ? `<div style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;display:inline-block;padding:1px 6px;border-radius:4px;margin-top:2px;">${item.category}</div>` : ''}
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid #f9fafb;gap:0.5rem;font-size:0.85rem;">
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</div>
+                    <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:2px;">
+                      ${item.sku ? `<span style="font-size:0.72rem;color:#9ca3af;">${item.sku}</span>` : ''}
+                      ${item.category ? `<span style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;padding:1px 6px;border-radius:4px;">${item.category}</span>` : ''}
+                    </div>
                   </div>
-                  <div>
-                    <span style="font-weight:600;color:${levelColor(level)};">${s.qty}</span>
-                    <span style="color:#9ca3af;font-size:0.78rem;"> ${item.unit || 'шт'}</span>
-                    ${s.reserved > 0 ? `<div style="font-size:0.72rem;color:#f59e0b;">(резерв: ${s.reserved})</div>` : ''}
-                  </div>
-                  <div style="color:#6b7280;">${item.minStock || '—'} ${item.minStock ? (item.unit || 'шт') : ''}</div>
-                  <div>${item.costPrice ? fmtMoney(item.costPrice) : '—'}</div>
-                  <div style="font-weight:500;">${totalVal2 > 0 ? fmtMoney(totalVal2) : '—'}</div>
-                  <div style="display:flex;gap:0.3rem;justify-content:flex-end;">
-                    <button onclick="window.whOpenOpForm('IN','${item.id}')" title="Прийняти" style="padding:4px;border:none;background:#dcfce7;border-radius:6px;cursor:pointer;">
-                      <i data-lucide="arrow-down-circle" style="width:14px;height:14px;color:#16a34a;"></i>
-                    </button>
-                    <button onclick="window.whOpenOpForm('OUT','${item.id}')" title="Видати" style="padding:4px;border:none;background:#fee2e2;border-radius:6px;cursor:pointer;">
-                      <i data-lucide="arrow-up-circle" style="width:14px;height:14px;color:#dc2626;"></i>
-                    </button>
-                    <button onclick="window.whOpenItemForm('${item.id}')" title="Редагувати" style="padding:4px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
-                      <i data-lucide="pencil" style="width:14px;height:14px;color:#6b7280;"></i>
-                    </button>
+                  <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
+                    <div style="text-align:right;">
+                      <div style="font-weight:600;color:${levelColor(level)};">${s.qty} <span style="font-size:0.75rem;color:#9ca3af;">${item.unit || 'шт'}</span></div>
+                      ${s.reserved > 0 ? `<div style="font-size:0.7rem;color:#f59e0b;">резерв:${s.reserved}</div>` : ''}
+                      ${item.costPrice ? `<div style="font-size:0.75rem;color:#6b7280;">${fmtMoney(item.costPrice)}/од</div>` : ''}
+                    </div>
+                    <div style="display:flex;gap:0.3rem;">
+                      <button onclick="window.whOpenOpForm('IN','${item.id}')" title="Прийняти" style="padding:5px;border:none;background:#dcfce7;border-radius:6px;cursor:pointer;">
+                        <i data-lucide="arrow-down-circle" style="width:14px;height:14px;color:#16a34a;display:block;"></i>
+                      </button>
+                      <button onclick="window.whOpenOpForm('OUT','${item.id}')" title="Видати" style="padding:5px;border:none;background:#fee2e2;border-radius:6px;cursor:pointer;">
+                        <i data-lucide="arrow-up-circle" style="width:14px;height:14px;color:#dc2626;display:block;"></i>
+                      </button>
+                      <button onclick="window.whOpenItemForm('${item.id}')" title="Редагувати" style="padding:5px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
+                        <i data-lucide="pencil" style="width:14px;height:14px;color:#6b7280;display:block;"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               `;
