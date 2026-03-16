@@ -452,7 +452,7 @@
             renderStatistics();
         } catch (e) {
             console.error('[STATS] saveMetric:', e);
-            showToast(window.t('error') || 'Помилка', 'error');
+            showToast(window.t('error') || window.t('errorWord'), 'error');
         }
         } finally { _saveMetricLock = false; }
     }

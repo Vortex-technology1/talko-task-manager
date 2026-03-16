@@ -34,11 +34,11 @@
 
     // ── Column definitions ─────────────────────────────────
     const COLS = [
-        { id:'site',    icon:()=>I.site,    label:'Сайт',      color:'#3b82f6', bg:'#eff6ff', hint:'Лендінг, звідки приходять ліди' },
-        { id:'bot',     icon:()=>I.bot,     label:'Бот',       color:'#8b5cf6', bg:'#f5f3ff', hint:'Telegram бот для обробки ліда' },
-        { id:'ai',      icon:()=>I.ai,      label:'AI Ланцюг', color:'#06b6d4', bg:'#ecfeff', hint:'Кроки: питання, AI відповідь, збір даних' },
+        { id:'site',    icon:()=>I.site,    label:window.t('siteWord'),      color:'#3b82f6', bg:'#eff6ff', hint:'Лендінг, звідки приходять ліди' },
+        { id:'bot',     icon:()=>I.bot,     label:window.t('botWord'),       color:'#8b5cf6', bg:'#f5f3ff', hint:'Telegram бот для обробки ліда' },
+        { id:'ai',      icon:()=>I.ai,      label:window.t('aiChain'), color:'#06b6d4', bg:'#ecfeff', hint:'Кроки: питання, AI відповідь, збір даних' },
         { id:'crm',     icon:()=>I.crm,     label:'CRM',       color:'#22c55e', bg:'#f0fdf4', hint:'Автоматичне створення угоди' },
-        { id:'process', icon:()=>I.process, label:'Процес / Проект', color:'#f59e0b', bg:'#fffbeb', hint:'Процес або проект після воронки' },
+        { id:'process', icon:()=>I.process, label:window.t('processProject'), color:'#f59e0b', bg:'#fffbeb', hint:'Процес або проект після воронки' },
     ];
 
     // ── Init ───────────────────────────────────────────────
@@ -381,16 +381,16 @@
         if (id==='site') {
             const s = _sites.find(p=>p.funnelId===f.id);
             if (!s) return _mt();
-            return { title:s.name||'Лендінг', subtitle:s.slug?'/'+s.slug:'сайт', stat:s.visits||null, statLabel:'відвідувань' };
+            return { title:s.name||window.t('landingWord'), subtitle:s.slug?'/'+s.slug:window.t('siteWordLc'), stat:s.visits||null, statLabel:window.t('visitsWord') };
         }
         if (id==='bot') {
             const b = _bots.find(b=>b.id===f.botId);
             if (!b) return _mt();
-            return { title:b.name||'Бот', subtitle:b.username?'@'+b.username:'Telegram', stat:null, statLabel:'' };
+            return { title:b.name||window.t('botWord'), subtitle:b.username?'@'+b.username:'Telegram', stat:null, statLabel:'' };
         }
         if (id==='ai') {
             const n = (f.steps||[]).length;
-            return { title:'AI Ланцюг', subtitle:n>0?n+' кроків':'налаштувати', stat:f.leadsCount||null, statLabel:'пройшли' };
+            return { title:window.t('aiChain'), subtitle:n>0?n+' кроків':'налаштувати', stat:f.leadsCount||null, statLabel:'пройшли' };
         }
         if (id==='crm') {
             const cnt = f.leadsCount||0;
@@ -614,7 +614,7 @@
     onmouseleave="this.style.borderColor='#e8eaed';this.style.background='white'">
     <span style="color:#8b5cf6;display:flex;">${I.bot}</span>
     <div>
-        <div style="font-size:.82rem;font-weight:600;color:#111827;">${_esc(b.name||'Бот')}</div>
+        <div style="font-size:.82rem;font-weight:600;color:#111827;">${_esc(b.name||window.t('botWord'))}</div>
         ${b.username?`<div style="font-size:.67rem;color:#9ca3af;">@${_esc(b.username)}</div>`:''}
     </div>
 </div>`).join('') || _noItems('бота','bots','#8b5cf6');
@@ -696,10 +696,10 @@
     onmouseenter="this.style.borderColor='#3b82f6';this.style.background='#eff6ff'"
     onmouseleave="this.style.borderColor='#e8eaed';this.style.background='white'">
     <div style="font-size:.82rem;font-weight:600;color:#111827;display:flex;align-items:center;gap:.35rem;">
-        ${I.site} ${_esc(s.name||s.slug||'Сайт')}
+        ${I.site} ${_esc(s.name||s.slug||window.t('siteWord'))}
     </div>
     ${s.slug?`<div style="font-size:.67rem;color:#9ca3af;">/${_esc(s.slug)}</div>`:''}
-</div>`).join('') || _noItems('сайт','sites','#3b82f6');
+</div>`).join('') || _noItems(window.t('siteWordLc'),'sites','#3b82f6');
         _showModal('mktPickOv',`<div style="font-weight:700;display:flex;align-items:center;gap:.4rem;">${I.site} Вибрати сайт</div>`,items,'');
     }
 

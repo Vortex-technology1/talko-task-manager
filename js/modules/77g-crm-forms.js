@@ -167,7 +167,7 @@ window.crmCreateForm = function () {
 
         <label style="display:block;margin-bottom:0.65rem;">
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Повідомлення після відправки</div>
-            <input id="crmFormSuccess" value="Дякуємо! Ми зв'яжемось з вами найближчим часом." style="${selStyle}">
+            <input id="crmFormSuccess" value=window.t('thankYouMsg') style="${selStyle}">
         </label>
 
         <label style="display:block;margin-bottom:1rem;">

@@ -181,7 +181,7 @@ window.crmSaveCallLog = async function () {
 
     const resultLabels = {
         answered: window.t('crmPickd'),
-        missed:   'Не відповів',
+        missed:   window.t('noAnswerCall'),
         busy:     'Зайнято',
         callback: 'Передзвонити',
     };

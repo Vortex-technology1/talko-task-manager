@@ -266,7 +266,7 @@
             planned: '#9ca3af', in_progress: '#f59e0b', blocked: '#ef4444', done: '#22c55e'
         };
         const statusLabels = {
-            planned: 'Заплановано', in_progress: 'В роботі', blocked: 'Заблоковано', done: 'Завершено'
+            planned: window.t('plannedWord'), in_progress: window.t('inWorkWord'), blocked: window.t('blockedWord2'), done: window.t('doneWord2')
         };
 
         if (stages.length === 0) {
@@ -572,7 +572,7 @@
             _stageActionLock = false;
         }
         if (!projectId) return;
-        const statusLabels = { planned:'Заплановано', in_progress:'В роботі', blocked:'Заблоковано', done:'Завершено' };
+        const statusLabels = { planned:window.t('plannedWord'), in_progress:window.t('inWorkWord'), blocked:window.t('blockedWord2'), done:window.t('doneWord2') };
         showUndoToast(`Статус: ${statusLabels[newStatus] || newStatus}`, async () => {
             await updateStageStatus(stageId, prevStatus);
             await loadStages(projectId);

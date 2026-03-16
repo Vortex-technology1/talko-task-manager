@@ -15,8 +15,8 @@ const CATEGORY_LABELS = {
   people:   'Люди',
   process:  window.t('permProcesses'),
   finance:  window.t('permFinance'),
-  clients:  'Клієнти',
-  quality:  'Якість',
+  clients:  window.t('clientsWord'),
+  quality:  window.t('qualityWord'),
   other:    window.t('finOther'),
 };
 
@@ -177,7 +177,7 @@ window._sendAiMessage = async function () {
   _appendChatMsg('user', text);
   aiChat.messages.push({ role: 'user', content: text });
 
-  const typingId = _appendChatMsg('assistant', '⏳ Аналізую...');
+  const typingId = _appendChatMsg('assistant', window.t('analyzingDots'));
 
   try {
     const functions = _getFunctionsList();
@@ -198,7 +198,7 @@ window._sendAiMessage = async function () {
     const parsed = _tryParseJson(reply);
     if (parsed) {
       aiChat.parsedData = parsed;
-      _appendChatMsg('assistant', 'Готово! Перевірте попередній перегляд нижче і відредагуйте при потребі.');
+      _appendChatMsg('assistant', window.t('aiDonePreview'));
       _showAiPreview(parsed);
     } else {
       _appendChatMsg('assistant', reply);

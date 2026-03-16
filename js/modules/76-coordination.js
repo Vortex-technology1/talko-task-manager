@@ -805,7 +805,7 @@
         try {
             await col('coordinations').doc(dynAgendaCoordId).update({dynamicAgenda:sessionDynamicAgenda});
             renderDynAgendaList();
-        } catch(e) { toast('Помилка','error'); }
+        } catch(e) { toast(window.t('errorWord'),'error'); }
     };
 
     window.removeDynItem = async function(idx) {
@@ -813,7 +813,7 @@
         try {
             await col('coordinations').doc(dynAgendaCoordId).update({dynamicAgenda:sessionDynamicAgenda});
             renderDynAgendaList();
-        } catch(e) { toast('Помилка','error'); }
+        } catch(e) { toast(window.t('errorWord'),'error'); }
     };
 
     // ── Session ────────────────────────────────────────────
@@ -1228,7 +1228,7 @@
             const snap=await col('coordination_sessions').doc(sessionId).get();
             if(!snap.exists) return;
             showProtocol({id:snap.id,...snap.data()});
-        } catch(e){toast('Помилка','error');}
+        } catch(e){toast(window.t('errorWord'),'error');}
     };
 
     // ── AI Analysis ────────────────────────────────────────

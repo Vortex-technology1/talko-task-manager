@@ -147,7 +147,7 @@ const _defaultAutomationRules = [
         triggerEvent: TALKO_EVENTS.BOT_FLOW_COMPLETED,
         condition: null, // завжди
         action: _actionCreateClientAndDeal,
-        description: 'Лід з боту → CRM клієнт + угода "Новий лід"',
+        description: window.t('eventBotLead'),
     },
 
     // DEAL: угода перейшла в "Пропозиція" → задача "Підготувати КП"
@@ -163,7 +163,7 @@ const _defaultAutomationRules = [
             clientId: e.payload.clientId,
             assigneeId: e.payload.assignedToId,
         }),
-        description: 'Угода → Пропозиція → задача КП +2 дні',
+        description: window.t('eventDealProposal'),
     },
 
     // DEAL: угода перейшла в "Закриття" → задача "Фінальний дзвінок"
@@ -179,7 +179,7 @@ const _defaultAutomationRules = [
             clientId: e.payload.clientId,
             assigneeId: e.payload.assignedToId,
         }),
-        description: 'Угода → Закриття → задача дзвінок +1 день',
+        description: window.t('eventDealClosing'),
     },
 
     // DEAL WON → задача "Виставити рахунок"
@@ -543,7 +543,7 @@ async function _createDefaultPipeline(companyId) {
     const pipeline = {
         name: 'Основна воронка',
         stages: [
-            { id: 'new_lead',     name: 'Новий лід',    color: '#3b82f6', probability: 10 },
+            { id: 'new_lead',     name: window.t('newLeadWord'),    color: '#3b82f6', probability: 10 },
             { id: 'contact',      name: 'Контакт',      color: '#8b5cf6', probability: 25 },
             { id: 'negotiation',  name: 'Переговори',   color: '#f59e0b', probability: 50 },
             { id: 'proposal',     name: 'Пропозиція',   color: '#f97316', probability: 70 },

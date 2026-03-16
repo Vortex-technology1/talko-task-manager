@@ -87,7 +87,7 @@ function _fmtDate(dateStr) {
         const days = Math.round((new Date(today)-new Date(dateStr))/86400000);
         return { label: days===1?'Вчора':days+' дн. тому', overdue:true, today:false };
     }
-    if (dateStr === today) return { label:'Сьогодні', overdue:false, today:true };
+    if (dateStr === today) return { label:window.t('todayWord'), overdue:false, today:true };
     if (dateStr === _tomorrowStr()) return { label:'Завтра', overdue:false, today:false };
     const d = new Date(dateStr);
     const locale = window.getLocale?window.getLocale():'uk-UA';

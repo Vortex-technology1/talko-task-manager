@@ -382,7 +382,7 @@
                 </div>`;
             }).join('');
             
-            // Лінія "Сьогодні" — рахуємо в JS
+            // Лінія window.t('todayWord') — рахуємо в JS
             const todayPctNum = ((today - minDate) / (maxDate - minDate) * 100);
             
             container.innerHTML = `

@@ -1552,14 +1552,14 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <!-- Клієнт -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Клієнт (назва / ПІБ)</label>
-          <input id="inv_client" value="${escHtml(inv?.clientName || prefillClient || '')}" placeholder="ТОВ «Назва» або Іваненко І.І."
+          <input id="inv_client" value="${escHtml(inv?.clientName || prefillClient || '')}" placeholder=window.t('finCompanyPh')
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
         <!-- Реквізити клієнта -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Реквізити клієнта</label>
-          <textarea id="inv_client_details" rows="2" placeholder="ЄДРПОУ, адреса, IBAN..."
+          <textarea id="inv_client_details" rows="2" placeholder=window.t('finDetailsPh')
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.85rem;resize:vertical;box-sizing:border-box;">${escHtml(inv?.clientDetails || '')}</textarea>
         </div>
 
@@ -1640,10 +1640,10 @@ function _invRenderLines() {
       <input value="${escHtml(it.desc)}" placeholder="Опис послуги/товару"
         oninput="window._invLineChange(${idx},'desc',this.value)"
         style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 10px;font-size:0.82rem;box-sizing:border-box;">
-      <input type="number" value="${it.qty}" min="0" placeholder="Кіл."
+      <input type="number" value="${it.qty}" min="0" placeholder=window.t('qtyShort')
         oninput="window._invLineChange(${idx},'qty',this.value)"
         style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 8px;font-size:0.82rem;box-sizing:border-box;text-align:right;">
-      <input type="number" value="${it.price}" min="0" placeholder="Ціна"
+      <input type="number" value="${it.price}" min="0" placeholder=window.t('priceWord')
         oninput="window._invLineChange(${idx},'price',this.value)"
         style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 8px;font-size:0.82rem;box-sizing:border-box;text-align:right;">
       <button onclick="window._invRemoveLine(${idx})"
@@ -1821,8 +1821,8 @@ window._invoicePdf = async function(id) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.text('Опис', margin + 3, y + 5.5);
-  doc.text('Кіл.', pageW - margin - 55, y + 5.5);
-  doc.text('Ціна', pageW - margin - 38, y + 5.5);
+  doc.text(window.t('qtyShort'), pageW - margin - 55, y + 5.5);
+  doc.text(window.t('priceWord'), pageW - margin - 38, y + 5.5);
   doc.text(window.t('crmColAmount'), pageW - margin - 16, y + 5.5);
 
   y += 8;

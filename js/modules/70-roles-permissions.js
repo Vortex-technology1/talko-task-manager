@@ -117,8 +117,8 @@ const PERMISSION_GROUPS = [
         group: window.t('permStats'),
         items: [
             { key: 'viewStats',         label: 'Переглядати статистику' },
-            { key: 'viewAllMetrics',    label: 'Бачити всі метрики' },
-            { key: 'viewOwnerMetrics',  label: 'Бачити фінансові метрики (owner only)' },
+            { key: 'viewAllMetrics',    label: window.t('permViewAllMetrics') },
+            { key: 'viewOwnerMetrics',  label: window.t('permViewFinMetrics') },
             { key: 'editMetrics',       label: 'Додавати / редагувати метрики' },
             { key: 'deleteMetricRows',  label: 'Видаляти рядки статистики' },
         ]
@@ -126,17 +126,17 @@ const PERMISSION_GROUPS = [
     {
         group: window.t('actTask'),
         items: [
-            { key: 'viewAllTasks',  label: 'Бачити всі завдання компанії' },
-            { key: 'assignTasks',   label: 'Призначати виконавців' },
+            { key: 'viewAllTasks',  label: window.t('permViewAllTasks') },
+            { key: 'assignTasks',   label: window.t('permAssignTasks') },
             { key: 'editAnyTask',   label: 'Редагувати будь-яке завдання' },
             { key: 'deleteAnyTask', label: 'Видаляти будь-яке завдання' },
         ]
     },
     {
-        group: 'Контроль та аналітика',
+        group: window.t('permControlAnalytics'),
         items: [
             { key: 'viewControl',    label: 'Панель контролю' },
-            { key: 'viewAiAnalysis', label: 'AI Аналіз' },
+            { key: 'viewAiAnalysis', label: window.t('aiAnalysis2') },
             { key: 'viewFinance',    label: 'Фінансові показники' },
         ]
     },

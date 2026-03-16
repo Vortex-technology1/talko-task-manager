@@ -282,7 +282,7 @@
                         stageId: qc.stageId,
                         status: 'new',
                         priority: 'high',
-                        description: 'QC відхилено. ' + (notes || ''),
+                        description: window.t('qcRejected') + (notes || ''),
                         deadlineDate: getLocalDateStr(new Date(Date.now() + 86400000 * 2)), // +2 days
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         creatorId: currentUser.uid,
@@ -301,7 +301,7 @@
                 }
             }
 
-            showToast(status === 'approved' ? 'QC прийнято' : 'QC відхилено — створена задача на переробку', status === 'approved' ? 'success' : 'error');
+            showToast(status === 'approved' ? window.t('qcApproved') : window.t('qcRejectedTask'), status === 'approved' ? 'success' : 'error');
         } catch (e) { showToast(window.t('errPfx2') + e.message, 'error'); }
     };
 
@@ -313,7 +313,7 @@
         if (checks.length === 0) return '';
 
         const statusColors = { pending: '#f59e0b', approved: '#22c55e', rejected: '#ef4444' };
-        const statusLabels = { pending: 'Очікує', approved: 'Прийнято', rejected: 'Відхилено' };
+        const statusLabels = { pending: window.t('pendingWord2'), approved: window.t('approvedWord'), rejected: window.t('rejectedWord') };
 
         return `<div style="margin-top:8px;border-top:1px solid #f3f4f6;padding-top:6px;">
             <span style="font-size:0.7rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;">Контроль якості</span>

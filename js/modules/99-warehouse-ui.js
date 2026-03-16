@@ -92,9 +92,9 @@
     const tabs = [
       { id: 'dashboard',  icon: 'layout-dashboard', label: 'Дашборд' },
       { id: 'catalog',    icon: 'package',           label: 'Каталог' },
-      { id: 'operations', icon: 'arrow-left-right',  label: 'Операції' },
+      { id: 'operations', icon: 'arrow-left-right',  label: window.t('operationsWord') },
       { id: 'suppliers',  icon: 'truck',             label: 'Постачальники' },
-      { id: 'locations',  icon: 'map-pin',           label: 'Локації' },
+      { id: 'locations',  icon: 'map-pin',           label: window.t('locationsWord') },
     ];
     return `
       <div style="background:white;border-bottom:1px solid #e5e7eb;padding:0 1rem;display:flex;align-items:center;gap:0;height:48px;flex-shrink:0;overflow-x:auto;scrollbar-width:none;">
@@ -182,9 +182,9 @@
       .slice(0, 5);
 
     const kpis = [
-      { icon: 'package',        label: 'Позицій в каталозі', value: items.length,      color: '#6366f1', click: "window._whSetView('catalog')" },
-      { icon: 'layers',         label: 'Одиниць на складі',  value: fmt(totalUnits),   color: '#3b82f6', click: '' },
-      { icon: 'dollar-sign',    label: 'Вартість складу',    value: fmtMoney(totalVal),color: '#22c55e', click: '' },
+      { icon: 'package',        label: window.t('whItemsCount'), value: items.length,      color: '#6366f1', click: "window._whSetView('catalog')" },
+      { icon: 'layers',         label: window.t('whUnitsInStock'),  value: fmt(totalUnits),   color: '#3b82f6', click: '' },
+      { icon: 'dollar-sign',    label: window.t('whStockValue'),    value: fmtMoney(totalVal),color: '#22c55e', click: '' },
       { icon: 'alert-triangle', label: 'Потреб. замовлення', value: alertsList.length, color: alertsList.length > 0 ? '#ef4444' : '#9ca3af', click: '' },
     ];
 
@@ -463,7 +463,7 @@
       return acc;
     }, { inQty: 0, inSum: 0, outQty: 0, offQty: 0 });
 
-    const typeLabel = { IN: 'ПРИХІД', OUT: 'ВИДАЧА', WRITE_OFF: 'СПИСАННЯ', ADJUST: 'КОРИГУВАННЯ' };
+    const typeLabel = { IN: window.t('whIncomingCaps'), OUT: 'ВИДАЧА', WRITE_OFF: 'СПИСАННЯ', ADJUST: 'КОРИГУВАННЯ' };
     const typeColor = { IN: { bg: '#dcfce7', color: '#166534' }, OUT: { bg: '#fee2e2', color: '#991b1b' }, WRITE_OFF: { bg: '#fef3c7', color: '#92400e' }, ADJUST: { bg: '#ede9fe', color: '#5b21b6' } };
 
     return `

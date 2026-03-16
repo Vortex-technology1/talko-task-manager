@@ -94,7 +94,7 @@ function _renderFormsList() {
 }
 
 function _formCard(form) {
-    const fieldLabels = {name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
+    const fieldLabels = {name:window.t('nameField'),phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
     const fields = (form.fields||[]).map(f => fieldLabels[f]||f).join(', ');
     const submissions = form.submissionsCount || 0;
 
@@ -158,7 +158,7 @@ window.sfOpenCreate = function () {
                     <label style="font-size:0.67rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Поля форми</label>
                     <div style="display:flex;flex-direction:column;gap:0.3rem;">
                         ${[
-                            {key:'name', label:"Ім'я", checked:true},
+                            {key:'name', label:window.t('nameField'), checked:true},
                             {key:'phone',label:window.t('crmPhone'), checked:true},
                             {key:'email',label:'Email', checked:false},
                             {key:'message',label:window.t('sitesFormMessage'), checked:false},
@@ -251,7 +251,7 @@ async function _renderFormEditor() {
         } catch(e) { return; }
     }
 
-    const fieldLabels = {name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
+    const fieldLabels = {name:window.t('nameField'),phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
     const inp = 'width:100%;padding:0.45rem 0.55rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.8rem;box-sizing:border-box;font-family:inherit;margin-bottom:0.5rem;';
 
     c.innerHTML = `
@@ -343,7 +343,7 @@ function _sfUpdatePreview() {
     const cta      = document.getElementById('sfe_cta')?.value || window.t('sitesFormSubmit');
     const fields   = ['name','phone','email','message','telegram']
         .filter(k => document.getElementById('sfe_field_' + k)?.checked);
-    const labels   = {name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
+    const labels   = {name:window.t('nameField'),phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
 
     c.innerHTML = `
     <div style="background:linear-gradient(135deg,#f0fdf4,#f9fafb);border-radius:10px;padding:1.25rem;text-align:center;">
@@ -441,7 +441,7 @@ window.sfOpenSubmissions = async function (formId) {
                 </div>
                 ${Object.entries(fields).map(([k,v]) => v ? `
                 <div style="font-size:0.75rem;color:#374151;margin-bottom:0.15rem;">
-                    <span style="color:#9ca3af;">${{name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'}[k]||k}:</span>
+                    <span style="color:#9ca3af;">${{name:window.t('nameField'),phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'}[k]||k}:</span>
                     ${_esc(String(v))}
                 </div>` : '').join('')}
                 ${sub.crmDealId ? `<div style="margin-top:0.4rem;font-size:0.68rem;background:#f0fdf4;color:#16a34a;

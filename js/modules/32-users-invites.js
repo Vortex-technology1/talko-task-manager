@@ -395,7 +395,7 @@
 
             // Тільки owner може призначати admin
             if (role === 'admin' && currentUserData?.role !== 'owner') {
-                showAlertModal('Тільки власник компанії може призначати роль Адміністратора');
+                showAlertModal(window.t('onlyOwnerAdmin'));
                 return;
             }
             
@@ -467,19 +467,19 @@
             const PERMISSION_GROUPS = [
                 { group: window.t('permStat2'), items: [
                     { key: 'viewStats',        label: 'Переглядати статистику' },
-                    { key: 'viewAllMetrics',   label: 'Бачити всі метрики' },
+                    { key: 'viewAllMetrics',   label: window.t('permViewAllMetrics') },
                     { key: 'editMetrics',      label: 'Редагувати метрики' },
                     { key: 'deleteMetricRows', label: 'Видаляти рядки' },
                 ]},
                 { group: window.t('permTsk2'), items: [
-                    { key: 'viewAllTasks',  label: 'Бачити всі завдання' },
-                    { key: 'assignTasks',   label: 'Призначати виконавців' },
+                    { key: 'viewAllTasks',  label: window.t('permViewAllTasks2') },
+                    { key: 'assignTasks',   label: window.t('permAssignTasks') },
                     { key: 'editAnyTask',   label: 'Редагувати будь-яке завдання' },
                     { key: 'deleteAnyTask', label: 'Видаляти завдання' },
                 ]},
                 { group: window.t('permCtrl2'), items: [
                     { key: 'viewControl',    label: 'Панель контролю' },
-                    { key: 'viewAiAnalysis', label: 'AI Аналіз' },
+                    { key: 'viewAiAnalysis', label: window.t('aiAnalysis2') },
                 ]},
                 { group: window.t('teamWord'), items: [
                     { key: 'inviteUsers', label: 'Запрошувати співробітників' },

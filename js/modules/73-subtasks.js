@@ -129,7 +129,7 @@
                 <div style="display:flex;flex-direction:column;gap:0.75rem;">
                     <div>
                         <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва *</label>
-                        <input id="stTitle" type="text" placeholder="Що потрібно зробити?" autofocus
+                        <input id="stTitle" type="text" placeholder=window.t('whatToDoPh') autofocus
                             style="width:100%;padding:0.5rem 0.65rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;"
                             onkeydown="if(event.key==='Enter'){event.preventDefault();saveSubtask('${parentId}');}">
                     </div>
@@ -263,7 +263,7 @@
             if (typeof showToast === 'function') showToast(typeof t === 'function' ? window.t('noPermissionTask') : 'Немає дозволу', 'error');
             return;
         }
-        if (!(await (window.showConfirmModal ? showConfirmModal('Видалити підзавдання?',{danger:true}) : Promise.resolve(confirm('Видалити підзавдання?'))))) return;
+        if (!(await (window.showConfirmModal ? showConfirmModal(window.t('deleteSubtask'),{danger:true}) : Promise.resolve(confirm(window.t('deleteSubtask')))))) return;
         const cid = currentUserData?.companyId || currentCompany;
         try {
             await firebase.firestore()
@@ -285,7 +285,7 @@
     // ---- ВІДОБРАЖЕННЯ в списку завдань — іконка якщо є підзавдання ----
     window.getSubtasksBadgeHTML = function(task) {
         if (!task.parentId) return '';
-        return `<span title="Підзавдання" style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;border:1px solid #bbf7d0;">↳ підзавдання</span>`;
+        return `<span title=window.t('subtaskWord') style="font-size:0.68rem;background:#f0fdf4;color:#16a34a;border-radius:4px;padding:1px 5px;border:1px solid #bbf7d0;">↳ підзавдання</span>`;
     };
 
 })();

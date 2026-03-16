@@ -68,18 +68,18 @@ const AR_COLORS = {
 const AR_LABELS = {
     task_created:     'Створив задачу',
     task_done:        'Виконав задачу',
-    task_to_review:   'Здав на перевірку',
+    task_to_review:   window.t('actReview2'),
     task_reopened:    'Повернув задачу',
     task_edited:      'Редагував задачу',
     task_comment:     'Додав коментар',
-    task_checklist:   'Позначив пункт чекліста',
-    crm_call:         'Дзвінок',
-    crm_call_done:    'Дзвінок (дозвон)',
+    task_checklist:   window.t('actChecklist'),
+    crm_call:         window.t('callWord'),
+    crm_call_done:    window.t('callConnected'),
     crm_sms:          'SMS',
     crm_email:        'Email',
     crm_meeting:      window.t('crmMeeting2'),
     crm_note:         'Нотатка в CRM',
-    crm_stage:        'Зміна стадії угоди',
+    crm_stage:        window.t('actDealStageChange'),
     crm_deal_created: 'Створив угоду',
     crm_deal_deleted: 'Видалив угоду',
     login:            'Вхід в систему',
@@ -319,7 +319,7 @@ function renderAREntries(entries, content) {
     entries.forEach(e => {
         const dateStr = e.date || '';
         if (dateStr !== prevDate) {
-            const label = dateStr === new Date().toISOString().slice(0,10) ? 'Сьогодні'
+            const label = dateStr === new Date().toISOString().slice(0,10) ? window.t('todayWord')
                 : dateStr === new Date(Date.now()-86400000).toISOString().slice(0,10) ? 'Вчора'
                 : dateStr;
             html += `<div style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.06em;padding:0.5rem 0 0.25rem;">${label}</div>`;

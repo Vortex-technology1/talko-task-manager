@@ -101,10 +101,10 @@ window.crmImportHandleFile = async function (file) {
         } else if (file.name.match(/\.xlsx?$/i)) {
             rows = await _parseXlsx(file);
         } else {
-            throw new Error('Непідтримуваний формат. Використовуйте CSV або XLSX.');
+            throw new Error(window.t('unsupportedFormat'));
         }
 
-        if (rows.length < 2) throw new Error('Файл порожній або немає даних.');
+        if (rows.length < 2) throw new Error(window.t('fileEmpty'));
         if (rows.length > 10001) throw new Error(`Занадто багато рядків (${rows.length - 1}). Максимум 10 000 записів за один імпорт.`);
 
         window._crmImportRows = rows;

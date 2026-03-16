@@ -75,7 +75,7 @@
                                         ['text_input','Текстове поле','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>️'],
                                         ['phone',window.t('crmColPhone'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2.17h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>'],
                                         ['email','Email','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>'],
-                                        ['ai_response','AI відповідь','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>'],
+                                        ['ai_response',window.t('aiResponse'),'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>'],
                                         ['calendly','Calendly','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>'],
                                         ['end','Завершення','<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>'],
                                     ].map(([type, label, icon]) => `
@@ -160,7 +160,7 @@
 
     window.addFunnelStep = function (type) {
         const id = 'step_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-        const defaultNames = { message: window.t('crmMessage'), buttons: 'Вибір', text_input: 'Введення тексту', phone: window.t('crmColPhone'), email: 'Email', ai_response: 'AI відповідь', calendly: 'Запис', end: 'Завершення' };
+        const defaultNames = { message: window.t('crmMessage'), buttons: 'Вибір', text_input: 'Введення тексту', phone: window.t('crmColPhone'), email: 'Email', ai_response: window.t('aiResponse'), calendly: 'Запис', end: 'Завершення' };
         const step = { id, type, name: defaultNames[type] || type, message: '', options: [], saveAs: null, systemPrompt: '', nextStep: null };
         funnelSteps.push(step);
         renderFunnelStepsList();
@@ -235,7 +235,7 @@
         }
 
         if (['text_input', 'phone', 'email'].includes(step.type)) {
-            const placeholder = { text_input: 'Введіть ваше запитання...', phone: 'Ваш номер телефону:', email: 'Ваш email:' }[step.type];
+            const placeholder = { text_input: window.t('enterQuestionPh'), phone: window.t('phonePh'), email: 'Ваш email:' }[step.type];
             typeSpecific = `
                 <div>
                     <label style="${lbl()}">ТЕКСТ ЗАПИТАННЯ</label>
@@ -593,7 +593,7 @@
                         source: 'web',
                         flowId: funnelData.id,
                         variables: leadData,
-                        tags: ['лід', 'сайт'],
+                        tags: ['лід', window.t('siteWordLc')],
                         status: 'active',
                         lastActivity: firebase.firestore.Timestamp.now(),
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -608,7 +608,7 @@
                 // Create deal
                 if (pipelineId) {
                     await base.collection('crm_deals').add({
-                        title: (leadData.name || leadData.phone || 'Новий лід') + ' — ' + (funnelData.name || 'Сайт'),
+                        title: (leadData.name || leadData.phone || window.t('newLeadWord')) + ' — ' + (funnelData.name || window.t('siteWord')),
                         contactId,
                         pipelineId,
                         stage: 'new',

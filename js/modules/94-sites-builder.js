@@ -82,7 +82,7 @@ function _renderBuilderShell() {
                     <button onclick="sbOpenPublicUrl()"
                         style="display:flex;align-items:center;padding:0.25rem 0.4rem;background:#7c3aed;
                         color:white;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;"
-                        title="Відкрити сайт">
+                        title=window.t('openSite')>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                     </button>
                 </div>
@@ -312,7 +312,7 @@ function _renderBlockEditor(idx) {
                 <input type="checkbox" ${(block.fields||[]).includes(f)?'checked':''}
                     onchange="sbToggleFormField(${idx},'${f}',this.checked)"
                     style="width:14px;height:14px;accent-color:#22c55e;">
-                ${{name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'}[f]}
+                ${{name:window.t('nameField'),phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'}[f]}
             </label>`).join('')}
         </div></div>
         <div style="margin-top:0.4rem;"><label style="${lbl}">Текст кнопки</label>
@@ -532,7 +532,7 @@ function _renderPreview() {
         }
         if (block.type === 'form') {
             const fields = block.fields || ['name','phone'];
-            const fieldLabels = {name:"Ім'я",phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
+            const fieldLabels = {name:window.t('nameField'),phone:window.t('crmPhone'),email:'Email',message:window.t('sitesFormMessage'),telegram:'Telegram'};
             return wrapper(`
             <div style="padding:2rem 1.5rem;background:linear-gradient(135deg,${primary}15,${primary}05);">
                 <h2 style="text-align:center;font-size:1.2rem;font-weight:700;margin:0 0 0.35rem;">

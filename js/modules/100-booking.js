@@ -137,11 +137,11 @@ function renderCalendarList() {
             data-action="appointments" data-cal-id="${cal.id}" data-cal-name="${window.htmlEsc ? window.htmlEsc(cal.name||'') : (cal.name||'')}">
       ${I.list} Записи
     </button>
-    <button class="bk-btn-sm" title="Копіювати посилання"
+    <button class="bk-btn-sm" title=window.t('copyLink')
             data-action="copy-link" data-url="${window.htmlEsc ? window.htmlEsc(bookUrl) : bookUrl}">
       ${I.copy} Посилання
     </button>
-    <button class="bk-btn-sm" title="Відкрити"
+    <button class="bk-btn-sm" title=window.t('openWord')
             data-action="open-link" data-url="${window.htmlEsc ? window.htmlEsc(bookUrl) : bookUrl}">
       ${I.link}
     </button>
@@ -149,7 +149,7 @@ function renderCalendarList() {
             data-action="edit" data-cal-id="${cal.id}">
       ${I.edit}
     </button>
-    <button class="bk-btn-sm bk-btn-toggle" title="${cal.isActive ? 'Вимкнути' : 'Увімкнути'}"
+    <button class="bk-btn-sm bk-btn-toggle" title="${cal.isActive ? window.t('disableWord') : window.t('enableWord')}"
             data-action="toggle" data-cal-id="${cal.id}" data-active="${!cal.isActive}">
       ${cal.isActive ? I.close : I.check}
     </button>
@@ -199,7 +199,7 @@ function renderCalendarForm(cal) {
 
     const confirmOptions = [
         ['auto','Автоматично'],
-        ['manual','Ручне підтвердження'],
+        ['manual',window.t('manualConfirm')],
     ].map(([v,l]) => `<option value="${v}" ${(d.confirmationType||'auto')===v?'selected':''}>${l}</option>`).join('');
 
     const DAYS = [

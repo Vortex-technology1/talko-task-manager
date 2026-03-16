@@ -274,7 +274,7 @@ function renderBotsTab() {
                     <!-- Кнопки дій -->
                     <div style="display:flex;gap:0.25rem;flex-shrink:0;" onclick="event.stopPropagation()">
                         <button onclick="openBot('${bot.id}')"
-                            title="Відкрити"
+                            title=window.t('openWord')
                             style="padding:0.35rem 0.65rem;background:#22c55e;color:white;
                             border:none;border-radius:7px;cursor:pointer;font-size:0.75rem;font-weight:600;
                             display:flex;align-items:center;gap:3px;">

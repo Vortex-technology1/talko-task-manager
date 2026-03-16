@@ -32,7 +32,7 @@ const NODES = {
     action:     {label:window.t('flowAction'),         color:'#f59e0b', border:'#d97706', icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>', outputs:['out']},
     filter:     {label:window.t('flowFilter'),      color:'#f97316', border:'#ea580c', icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg></span>', outputs:['yes','no']},
     pause:      {label:'Пауза',       color:'#64748b', border:'#475569', icon:'⏸',  outputs:['out']},
-    ai:         {label:'ШІ Агент',    color:'#8b5cf6', border:'#7c3aed', icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>', outputs:['out']},
+    ai:         {label:window.t('aiAgent'),    color:'#8b5cf6', border:'#7c3aed', icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg></span>', outputs:['out']},
     api:        {label:'Запит API',   color:'#0ea5e9', border:'#0284c7', icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></span>',  outputs:['ok','err']},
     sheets:     {label:'Google Sheets',color:'#10b981',border:'#059669', icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>', outputs:['out']},
     random:     {label:'Випадково',   color:'#ec4899', border:'#db2777', icon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>',  outputs:['a','b']},
@@ -42,8 +42,8 @@ const NODES = {
 };
 
 const PORT_LABELS = {
-    out:'Продовжити', btn:'Кнопка', yes:'Так', no:'Ні',
-    ok:'Успішно', err:'Помилка', a:'Гілка А', b:'Гілка Б',
+    out:window.t('continueWord'), btn:window.t('buttonWord'), yes:window.t('yesWord2'), no:window.t('noWord'),
+    ok:window.t('successWord'), err:window.t('errorWord'), a:window.t('branchA'), b:window.t('branchB'),
     end:'Завершити',
 };
 
@@ -219,7 +219,7 @@ function mountCanvas() {
                         max-width:200px;min-width:80px;width:auto;
                         outline:none;cursor:text;transition:border-color 0.15s, background 0.15s;
                         white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
-                    title="Клікніть щоб змінити назву"
+                    title=window.t('clickToRename')
                     onmouseenter="this.style.borderColor='#334155'"
                     onmouseleave="if(document.activeElement!==this)this.style.borderColor='transparent'"
                     onfocus="this.style.borderColor='#22c55e';this.style.background='#1e293b';this.select()"
@@ -471,11 +471,11 @@ function buildSidebar() {
     sb.style.boxShadow = 'none';
 
     const items = [
-        ['message', '#3b82f6', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`, 'Повідом.'],
+        ['message', '#3b82f6', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`, window.t('msgShort')],
         ['action',  '#f59e0b', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`, window.t('flowAction')],
         ['filter',  '#8b5cf6', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18-6-6 6-6"/><path d="m15 6 6 6-6 6"/></svg>`, window.t('flowFilter')],
         ['pause',   '#64748b', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`, 'Пауза'],
-        ['ai',      '#22c55e', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg>`, 'ШІ Агент'],
+        ['ai',      '#22c55e', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg>`, window.t('aiAgent')],
         ['api',     '#06b6d4', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>`, 'API'],
         ['sheets',  '#16a34a', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`, 'Sheets'],
         ['random',  '#ec4899', `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>`, 'Випадк.'],
@@ -530,9 +530,9 @@ function buildSidebar() {
     // Додаємо tooltips до вузлів sidebar
     sb.querySelectorAll('[data-sbtype]').forEach(el => {
         const tooltips = {
-            message:  'Надсилає текст або повідомлення з кнопками. Підтримує змінні {{name}} {{phone}}',
-            action:   'Виконує дію: сповіщення менеджеру, встановлення змінної, теги',
-            filter:   'Перевіряє умову по змінній. Гілка ТАК або НІ',
+            message:  window.t('flowMsgHint'),
+            action:   window.t('flowActHint'),
+            filter:   window.t('flowCondHint'),
             pause:    'Затримка перед наступним кроком (секунди, хвилини, години)',
             ai:       'Штучний інтелект — збирає дані, відповідає на питання, веде діалог',
             api:      'Запит до зовнішнього API (GET/POST). Зберігає відповідь в змінну',
@@ -691,7 +691,7 @@ function buildNodeEl(node) {
                     border-radius:6px;font-size:10px;color:#374151;font-weight:500;
                     display:flex;align-items:center;gap:5px;box-shadow:0 1px 2px rgba(0,0,0,0.04);">
                     <div style="width:5px;height:5px;border-radius:50%;background:${cfg.color};flex-shrink:0;"></div>
-                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(b.label||'Кнопка')}</span>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(b.label||window.t('buttonWord'))}</span>
                 </div>`).join('')}
             ${buttons.length > 4 ? `<div style="font-size:9.5px;color:#9ca3af;padding:2px 9px;">+${buttons.length-4} ще...</div>` : ''}
         </div>` : '';
@@ -841,7 +841,7 @@ function renderEdges() {
             const btnIdx = parseInt(edge.fromPort.replace('btn_', ''), 10);
             portLabel = fromNode.config?.buttons?.[btnIdx]?.label || `Кнопка ${btnIdx + 1}`;
         }
-        // Показуємо label тільки для значущих портів (не "Продовжити")
+        // Показуємо label тільки для значущих портів (не window.t('continueWord'))
         const showLabel = portLabel && edge.fromPort !== 'out' && edge.fromPort !== 'btn';
         if (showLabel) {
             // Label близько до source порту (20% шляху)
@@ -1236,7 +1236,7 @@ window._fcCrmPipelineChange = function(pipelineId) {
 
     // FIX: IDs відповідають реальному _createDefaultPipeline
     const defaultStages = [
-        ['new','Новий лід'],['contact','Контакт'],
+        ['new',window.t('newLeadWord')],['contact','Контакт'],
         ['negotiation','Переговори'],['proposal','Пропозиція'],
         ['closing','Закриття'],['won','Виграно'],
     ];
@@ -1736,8 +1736,8 @@ function renderPropPanel() {
                      ['>','> Більше'],['<','< Менше']], d.condOp||'='))
                 + fld('Значення', inp('condVal', d.condVal, ''))
                 + `<div style="font-size:10px;color:#64748b;margin-top:4px;">
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/></svg></span> Вихід "Так" <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span> умова виконується<br>
-                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/></svg></span> Вихід "Ні" <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span> умова не виконується</div>`;
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/></svg></span> Вихід window.t('yesWord2') <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span> умова виконується<br>
+                    <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/></svg></span> Вихід window.t('noWord') <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span> умова не виконується</div>`;
             break;
         case 'pause':
             fields = fld(window.t('flowDelay'), `<div style="display:flex;gap:6px;">
@@ -2182,7 +2182,7 @@ function renderPropPanel() {
                 .map(s => [String(s.id), s.label || s.name || String(s.id)]);
             // FIX: IDs відповідають реальному _createDefaultPipeline в 77-crm.js
             const _defaultStageOpts = [
-                ['new','Новий лід'],['contact','Контакт'],
+                ['new',window.t('newLeadWord')],['contact','Контакт'],
                 ['negotiation','Переговори'],['proposal','Пропозиція'],
                 ['closing','Закриття'],['won','Виграно'],
             ];
