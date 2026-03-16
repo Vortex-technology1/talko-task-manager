@@ -7587,6 +7587,251 @@ Bist du dabei?</div>
             },
             {
                 id: 14,
+                title: "КООРДИНАЦІЯ КОМАНДИ",
+                title_ru: "КООРДИНАЦИЯ КОМАНДЫ",
+                title_en: "TEAM COORDINATION",
+                title_pl: "KOORDYNACJA ZESPOŁU",
+                title_cs: "KOORDINACE TÝMU",
+                title_de: "TEAMKOORDINATION",
+                subtitle: "Як зупинити гру проти своїх — і змусити команду рухатись в одному напрямку",
+                subtitle_ru: "Как остановить игру против своих — и заставить команду двигаться в одном направлении",
+                subtitle_en: "How to stop playing against yourself — and get your team moving in one direction",
+                subtitle_pl: "Jak zatrzymać grę przeciwko swoim — i sprawić by zespół poruszał się w jednym kierunku",
+                subtitle_cs: "Jak zastavit hru proti vlastním — a přimět tým pohybovat se jedním směrem",
+                subtitle_de: "Wie man aufhört gegen sich selbst zu spielen — und das Team in eine Richtung bewegt",
+                hideAiBlock: false,
+
+                videoLink: null,
+                materialsLink: null,
+
+                lessonContent: `
+<style>
+.l14c-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem}
+.l14c-block p{font-size:.9rem;color:#374151;line-height:1.65;margin:0 0 .7rem 0}
+.l14c-block p:last-child{margin-bottom:0}
+.l14c-title{font-size:1.05rem;font-weight:700;color:#1a1a1a;margin-bottom:.75rem}
+.l14c-warn{background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #f59e0b}
+.l14c-warn p{font-size:.875rem;color:#92400e;line-height:1.6;margin:0}
+.l14c-green{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #22c55e}
+.l14c-green p{font-size:.875rem;color:#166534;line-height:1.6;margin:0}
+.l14c-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.85rem 0}
+.l14c-table th{padding:.7rem .9rem;background:#f1f5f9;font-weight:700;text-align:left;border:1px solid #e2e8f0}
+.l14c-table td{padding:.7rem .9rem;border:1px solid #e2e8f0;vertical-align:top;color:#374151}
+.l14c-num{display:flex;gap:.85rem;align-items:flex-start;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;margin-bottom:.6rem;border:1px solid #e2e8f0}
+.l14c-num-badge{min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:white;flex-shrink:0}
+.l14c-num-text p{font-size:.875rem;color:#374151;line-height:1.55;margin:0}
+.l14c-num-text strong{color:#1a1a1a}
+.l14c-motive{display:grid;gap:.6rem;margin:.85rem 0}
+.l14c-motive-item{padding:.85rem 1rem;border-radius:10px;border:1px solid}
+.l14c-motive-title{font-weight:700;font-size:.9rem;margin-bottom:.35rem}
+.l14c-motive-q{font-size:.78rem;font-style:italic;margin-bottom:.35rem}
+.l14c-motive-desc{font-size:.82rem;line-height:1.5}
+</style>
+
+<div class="l14c-block">
+<div class="l14c-title">Чому цей урок важливий для кожного підприємця</div>
+<p>Є одна помилка яка коштує малому бізнесу більше ніж поганий маркетинг і слабкі продажі разом. Це коли люди в одній команді працюють проти одне одного — і навіть не знають про це.</p>
+<div class="l14c-warn"><p><strong>Реальна ситуація:</strong> Власник стоматологічної клініки запустив акцію на відбілювання зубів — розмістив рекламу, адміністратор почав записувати клієнтів. Але лікарі про акцію не знали, потрібних матеріалів не було, розклад не підготовлений. Клієнти дзвонили, записувалися — і отримували відмову. Частина пішла до конкурентів. Гроші на рекламу витрачені, клієнти втрачені, лікарі роздратовані.</p></div>
+<p>Це відбувається щодня в різних масштабах. Менеджер обіцяє доставку про яку не попередив склад. Бухгалтер змінює умови оплати не сказавши відділу продажів. Майстер обіцяє час який вже зайнятий.</p>
+<div class="l14c-green"><p><strong>Результат завжди один:</strong> багато руху, мало результату. Як футболіст який забиває м'яч у власні ворота. Інструмент який це виправляє — координація.</p></div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Що таке координація — просто і чесно</div>
+<p>Координація — це регулярне узгодження дій людей у команді щоб кожен розумів що роблять інші і всі рухались в одному напрямку.</p>
+<table class="l14c-table">
+<tr><th>Звичайна нарада</th><th>Координація</th></tr>
+<tr><td>Керівник говорить, всі слухають</td><td>Кожен учасник говорить про свій план</td></tr>
+<tr><td>Розбір помилок і критика</td><td>Узгодження дій на майбутнє</td></tr>
+<tr><td>Виникає коли щось пішло не так</td><td>Відбувається регулярно за розкладом</td></tr>
+<tr><td>Немає чіткого результату</td><td>Результат — узгоджений план дій</td></tr>
+</table>
+<div class="l14c-warn"><p><strong>Головне правило:</strong> якщо учасники приходять без готових планів — координацію проводити безглуздо. Немає що узгоджувати. Саме через це більшість нарад у малому бізнесі — марна трата часу.</p></div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Координація — це окрема функція бізнесу, не опція</div>
+<p>Якщо у тебе є хоча б 2-3 людини в команді — координація вже потрібна. Не "колись потім", не "коли виросту". Прямо зараз.</p>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#3b82f6">1</div>
+<div class="l14c-num-text"><p><strong>У тебе немає великого штату менеджерів</strong> які відстежують що відбувається в кожному відділі. Інформація передається через тебе — і ти стаєш вузьким місцем. Координація вирішує це автоматично.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#8b5cf6">2</div>
+<div class="l14c-num-text"><p><strong>Твої співробітники суміщають функції</strong> — без координації вони не знають що є пріоритетом цього тижня і що роблять колеги.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#ef4444">3</div>
+<div class="l14c-num-text"><p><strong>Помилки через неузгодженість коштують непропорційно дорого</strong> — один зірваний замовлення або втрачений клієнт через "ліва рука не знає що робить права" може коштувати тижневого прибутку.</p></div>
+</div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Коли бізнес виростає — з'являються різні типи координацій</div>
+<p>Поки команда маленька — достатньо однієї спільної координації раз на тиждень. Коли з'являються відділи і рівні управління — координація ділиться на типи.</p>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#22c55e">1</div>
+<div class="l14c-num-text"><p><strong>Рада з управління</strong> — керівник зі своїми підлеглими. Щотижня. Ставить цілі, перевіряє виконання, вирішує проблеми, узгоджує дії.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#f59e0b">2</div>
+<div class="l14c-num-text"><p><strong>Координаційна рада</strong> — люди з різних відділів які не підпорядковані одне одному але чиї дії мають бути узгоджені. Постійні (щотижня) або разові (під конкретне завдання).</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#6366f1">3</div>
+<div class="l14c-num-text"><p><strong>Рекомендаційна рада</strong> — всі керівники відділів. Виробляє загальний план дій компанії на тиждень який затверджує власник або директор.</p></div>
+</div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Правила які роблять координацію ефективною</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#22c55e">✓</div>
+<div class="l14c-num-text"><p><strong>Фіксований час — недоторканний.</strong> Один і той самий день і час щотижня. Не переноситься без поважної причини.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#22c55e">✓</div>
+<div class="l14c-num-text"><p><strong>Учасники приходять підготовленими.</strong> Кожен знає що принести: план на тиждень, статистики, питання для узгодження.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#ef4444">✗</div>
+<div class="l14c-num-text"><p><strong>Критика без рішення — заборонена.</strong> Якщо учасник говорить "це погана ідея" — він зобов'язаний запропонувати альтернативу.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#ef4444">✗</div>
+<div class="l14c-num-text"><p><strong>Складні питання — на окрему координацію.</strong> Не вирішуй складні питання "наскоком" без даних. 30-хвилинна координація перетвориться на 3-годинне мучення.</p></div>
+</div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Як координація працює у TALKO System</div>
+<p>В системі є окремий модуль <strong>"Координація"</strong> де ти проводиш структуровані зустрічі і фіксуєш результати.</p>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#3b82f6">1</div>
+<div class="l14c-num-text"><p>Перейди в розділ <strong>"Координація"</strong> у верхньому меню → натисни <strong>"+ Нова координація"</strong></p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#3b82f6">2</div>
+<div class="l14c-num-text"><p>Заповни: назву, тип (щотижнева / разова), учасників, голову ради, фіксований час</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#3b82f6">3</div>
+<div class="l14c-num-text"><p>Під час зустрічі: питання від учасників, рішення, ескалація, завдання — все фіксується одним кліком. Протокол надсилається автоматично.</p></div>
+</div>
+<div class="l14c-green"><p><strong>Ключовий показник на дашборді:</strong> відсоток виконання завдань з координацій. Ціль — 80%+. Якщо нижче — координація є, але рішення не виконуються. Перевір систему контролю.</p></div>
+</div>`,
+
+                lessonContent_ru: `
+<style>
+.l14c-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem}
+.l14c-block p{font-size:.9rem;color:#374151;line-height:1.65;margin:0 0 .7rem 0}
+.l14c-block p:last-child{margin-bottom:0}
+.l14c-title{font-size:1.05rem;font-weight:700;color:#1a1a1a;margin-bottom:.75rem}
+.l14c-warn{background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #f59e0b}
+.l14c-warn p{font-size:.875rem;color:#92400e;line-height:1.6;margin:0}
+.l14c-green{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #22c55e}
+.l14c-green p{font-size:.875rem;color:#166534;line-height:1.6;margin:0}
+.l14c-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.85rem 0}
+.l14c-table th{padding:.7rem .9rem;background:#f1f5f9;font-weight:700;text-align:left;border:1px solid #e2e8f0}
+.l14c-table td{padding:.7rem .9rem;border:1px solid #e2e8f0;vertical-align:top;color:#374151}
+.l14c-num{display:flex;gap:.85rem;align-items:flex-start;padding:.85rem 1rem;background:#f8fafc;border-radius:10px;margin-bottom:.6rem;border:1px solid #e2e8f0}
+.l14c-num-badge{min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:white;flex-shrink:0}
+.l14c-num-text p{font-size:.875rem;color:#374151;line-height:1.55;margin:0}
+.l14c-num-text strong{color:#1a1a1a}
+</style>
+
+<div class="l14c-block">
+<div class="l14c-title">Почему этот урок важен для каждого предпринимателя</div>
+<p>Есть одна ошибка которая стоит малому бизнесу больше чем плохой маркетинг и слабые продажи вместе. Это когда люди в одной команде работают против друг друга — и даже не знают об этом.</p>
+<div class="l14c-warn"><p><strong>Реальная ситуация:</strong> Владелец стоматологической клиники запустил акцию на отбеливание зубов — разместил рекламу, администратор начал записывать клиентов. Но врачи про акцию не знали, нужных материалов не было, расписание не подготовлено. Клиенты звонили, записывались — и получали отказ. Часть ушла к конкурентам. Деньги на рекламу потрачены, клиенты потеряны, врачи раздражены.</p></div>
+<div class="l14c-green"><p><strong>Результат всегда один:</strong> много движения, мало результата. Как футболист который забивает мяч в собственные ворота. Инструмент который это исправляет — координация.</p></div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Что такое координация — просто и честно</div>
+<p>Координация — это регулярное согласование действий людей в команде чтобы каждый понимал что делают другие и все двигались в одном направлении.</p>
+<table class="l14c-table">
+<tr><th>Обычное совещание</th><th>Координация</th></tr>
+<tr><td>Руководитель говорит, все слушают</td><td>Каждый участник говорит о своём плане</td></tr>
+<tr><td>Разбор ошибок и критика</td><td>Согласование действий на будущее</td></tr>
+<tr><td>Возникает когда что-то пошло не так</td><td>Проходит регулярно по расписанию</td></tr>
+<tr><td>Нет чёткого результата</td><td>Результат — согласованный план действий</td></tr>
+</table>
+<div class="l14c-warn"><p><strong>Главное правило:</strong> если участники приходят без готовых планов — проводить координацию бессмысленно. Нечего согласовывать. Именно поэтому большинство совещаний в малом бизнесе — пустая трата времени.</p></div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Координация — это отдельная функция бизнеса, не опция</div>
+<p>Если у тебя есть хотя бы 2-3 человека в команде — координация уже нужна. Не "когда-нибудь потом", не "когда вырасту". Прямо сейчас.</p>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#3b82f6">1</div>
+<div class="l14c-num-text"><p><strong>У тебя нет большого штата менеджеров</strong> которые отслеживают что происходит в каждом отделе. Информация передаётся через тебя — и ты становишься узким местом.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#8b5cf6">2</div>
+<div class="l14c-num-text"><p><strong>Твои сотрудники совмещают функции</strong> — без координации они не знают что является приоритетом этой недели и что делают коллеги.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#ef4444">3</div>
+<div class="l14c-num-text"><p><strong>Ошибки из-за несогласованности стоят непропорционально дорого</strong> — один сорванный заказ или потерянный клиент может стоить недельной прибыли.</p></div>
+</div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Когда бизнес вырастает — появляются разные типы координаций</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#22c55e">1</div>
+<div class="l14c-num-text"><p><strong>Совет по управлению</strong> — руководитель со своими подчинёнными. Еженедельно. Ставит цели, проверяет выполнение, решает проблемы.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#f59e0b">2</div>
+<div class="l14c-num-text"><p><strong>Координационный совет</strong> — люди из разных отделов которые не подчиняются друг другу но чьи действия должны быть согласованы.</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#6366f1">3</div>
+<div class="l14c-num-text"><p><strong>Рекомендательный совет</strong> — все руководители отделов. Вырабатывает общий план действий компании на неделю.</p></div>
+</div>
+</div>
+
+<div class="l14c-block">
+<div class="l14c-title">Как координация работает в TALKO System</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#3b82f6">1</div>
+<div class="l14c-num-text"><p>Перейди в раздел <strong>"Координация"</strong> → нажми <strong>"+ Новая координация"</strong></p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#3b82f6">2</div>
+<div class="l14c-num-text"><p>Заполни: название, тип, участников, председателя, фиксированное время</p></div>
+</div>
+<div class="l14c-num">
+<div class="l14c-num-badge" style="background:#3b82f6">3</div>
+<div class="l14c-num-text"><p>Во время встречи: вопросы, решения, эскалация, задачи — всё фиксируется одним кликом. Протокол отправляется автоматически.</p></div>
+</div>
+<div class="l14c-green"><p><strong>Ключевой показатель:</strong> процент выполнения задач из координаций. Цель — 80%+.</p></div>
+</div>`,
+
+                lessonContent_en: `<div class="l14c-block" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem"><div style="font-size:1.05rem;font-weight:700;color:#1a1a1a;margin-bottom:.75rem">Why this lesson matters for every entrepreneur</div><p style="font-size:.9rem;color:#374151;line-height:1.65">There is one mistake that costs small businesses more than bad marketing and weak sales combined. It's when people on the same team work against each other — and don't even know it.</p><div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #f59e0b"><p style="font-size:.875rem;color:#92400e;line-height:1.6;margin:0"><strong>Real situation:</strong> A dental clinic owner launched a teeth whitening promotion — placed ads, the administrator started booking clients. But the doctors didn't know about the promotion, the materials weren't available, the schedule wasn't prepared. Clients called, booked — and got rejected. Some went to competitors. Ad money spent, clients lost, doctors frustrated.</p></div><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #22c55e"><p style="font-size:.875rem;color:#166534;line-height:1.6;margin:0"><strong>The result is always the same:</strong> lots of movement, little result. Like a player scoring in their own goal. The tool that fixes this — coordination.</p></div></div><div class="l14c-block" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem"><div style="font-size:1.05rem;font-weight:700;color:#1a1a1a;margin-bottom:.75rem">What coordination is — simply and honestly</div><p style="font-size:.9rem;color:#374151;line-height:1.65">Coordination is the regular alignment of people's actions in a team so that everyone understands what others are doing and all move in the same direction.</p><div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #f59e0b"><p style="font-size:.875rem;color:#92400e;line-height:1.6;margin:0"><strong>Key rule:</strong> if participants come without ready plans — there is no point holding coordination. Nothing to align. This is exactly why most meetings in small business are a waste of time.</p></div></div>`,
+
+                lessonContent_pl: `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem"><div style="font-size:1.05rem;font-weight:700;color:#1a1a1a;margin-bottom:.75rem">Dlaczego ta lekcja jest ważna dla każdego przedsiębiorcy</div><p style="font-size:.9rem;color:#374151;line-height:1.65">Jest jeden błąd który kosztuje małe firmy więcej niż zły marketing i słaba sprzedaż razem wzięte. To gdy ludzie w jednym zespole pracują przeciwko sobie — i nawet o tym nie wiedzą.</p><div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #f59e0b"><p style="font-size:.875rem;color:#92400e;line-height:1.6;margin:0"><strong>Główna zasada:</strong> jeśli uczestnicy przychodzą bez gotowych planów — nie ma sensu przeprowadzać koordynacji. Nie ma czego uzgadniać. Właśnie dlatego większość narad w małym biznesie to strata czasu.</p></div></div>`,
+
+                lessonContent_cs: `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem"><div style="font-size:1.05rem;font-weight:700;color:#1a1a1a;margin-bottom:.75rem">Proč je tato lekce důležitá pro každého podnikatele</div><p style="font-size:.9rem;color:#374151;line-height:1.65">Existuje jedna chyba která malé firmy stojí více než špatný marketing a slabý prodej dohromady. Je to tehdy když lidé ve stejném týmu pracují proti sobě — a ani o tom nevědí.</p><div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #f59e0b"><p style="font-size:.875rem;color:#92400e;line-height:1.6;margin:0"><strong>Hlavní pravidlo:</strong> pokud účastníci přicházejí bez připravených plánů — nemá smysl koordinaci provádět. Není co slaďovat.</p></div></div>`,
+
+                lessonContent_de: `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem"><div style="font-size:1.05rem;font-weight:700;color:#1a1a1a;margin-bottom:.75rem">Warum diese Lektion für jeden Unternehmer wichtig ist</div><p style="font-size:.9rem;color:#374151;line-height:1.65">Es gibt einen Fehler der kleine Unternehmen mehr kostet als schlechtes Marketing und schwache Verkäufe zusammen. Es ist wenn Menschen im selben Team gegeneinander arbeiten — und es nicht einmal wissen.</p><div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:.9rem 1.1rem;margin:.85rem 0;border-left:4px solid #f59e0b"><p style="font-size:.875rem;color:#92400e;line-height:1.6;margin:0"><strong>Hauptregel:</strong> Wenn Teilnehmer ohne fertige Pläne kommen — hat es keinen Sinn Koordination durchzuführen. Es gibt nichts abzustimmen.</p></div></div>`,
+
+                homework: `<p>Практичне завдання:</p><ol><li>Відкрий розділ "Координація" в TALKO System і створи першу координацію своєї команди — постав фіксований час (наприклад щопонеділка о 9:00)</li><li>Відкрий AI Coordination Module і отримай регламент під свій бізнес</li><li>Прикріпи регламент до координації в системі</li><li>Проведи першу координацію — зафіксуй всі рішення</li></ol>`,
+                homework_ru: `<p>Практическое задание:</p><ol><li>Открой раздел "Координация" в TALKO System и создай первую координацию своей команды — поставь фиксированное время (например каждый понедельник в 9:00)</li><li>Открой AI Coordination Module и получи регламент под свой бизнес</li><li>Прикрепи регламент к координации в системе</li><li>Проведи первую координацию — зафиксируй все решения</li></ol>`,
+                homework_en: `<p>Practical assignment:</p><ol><li>Open the "Coordination" section in TALKO System and create your first team coordination — set a fixed time (e.g. every Monday at 9:00)</li><li>Open AI Coordination Module and get a regulation for your business</li><li>Attach the regulation to the coordination in the system</li><li>Hold your first coordination — record all decisions</li></ol>`,
+                homework_pl: `<p>Zadanie praktyczne:</p><ol><li>Otwórz sekcję "Koordynacja" w TALKO System i utwórz pierwszą koordynację swojego zespołu — ustaw stały czas</li><li>Otwórz AI Coordination Module i otrzymaj regulamin dla swojej firmy</li><li>Dołącz regulamin do koordynacji w systemie</li><li>Przeprowadź pierwszą koordynację — zapisz wszystkie decyzje</li></ol>`,
+                homework_cs: `<p>Praktický úkol:</p><ol><li>Otevři sekci "Koordinace" v TALKO System a vytvoř první koordinaci svého týmu — nastav pevný čas</li><li>Otevři AI Coordination Module a získej předpis pro svůj podnik</li><li>Připoj předpis ke koordinaci v systému</li><li>Proveď první koordinaci — zaznamenej všechna rozhodnutí</li></ol>`,
+                homework_de: `<p>Praktische Aufgabe:</p><ol><li>Öffne den Bereich "Koordination" in TALKO System und erstelle deine erste Team-Koordination — stelle eine feste Zeit ein</li><li>Öffne AI Coordination Module und erhalte ein Regelwerk für dein Unternehmen</li><li>Füge das Regelwerk der Koordination im System hinzu</li><li>Führe die erste Koordination durch — halte alle Entscheidungen fest</li></ol>`,
+
+                homeworkLink: "https://chatgpt.com/g/g-695e001cf1c48191a9c08cb8184ff767-ai-coordination-module",
+                homeworkLinkName: "→ AI-асистент координацій",
+                homeworkLinkName_ru: "→ AI-ассистент координаций",
+                time: 45
+            },
+            {
+                id: 15,
                 title: "ВПРОВАДЖЕННЯ НА ПЛАТФОРМІ",
                 title_ru: "ВНЕДРЕНИЕ НА ПЛАТФОРМЕ",
                 title_en: "PLATFORM IMPLEMENTATION",
