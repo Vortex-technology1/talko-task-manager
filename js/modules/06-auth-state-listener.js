@@ -119,14 +119,6 @@
                 if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
                 if (typeof initStatistics === 'function') initStatistics();
 
-                // Склад — показуємо одразу після auth (не чекаємо featuresLoaded)
-                // Warehouse є базовим функціоналом доступним всім
-                (function() {
-                    const whBtn = document.getElementById('warehouseNavBtn');
-                    const bizBtn = document.getElementById('bizNavBtn');
-                    if (whBtn) whBtn.style.display = '';
-                    if (bizBtn) bizBtn.style.display = '';
-                })();
 
                 // FIX БАГ 4: event-driven замість setTimeout(500)
                 // Гарантує що companyFeatures вже встановлені в loadAllData
@@ -156,18 +148,9 @@
                         if (sitesBtn) sitesBtn.style.display = '';
                         hasBizFeature = true;
                     }
-                    // Склад — показуємо завжди (не залежить від feature flag)
-                    // Warehouse є базовим функціоналом — feature flag не потрібен
-                    const whBtn = document.getElementById('warehouseNavBtn');
-                    if (whBtn) whBtn.style.display = '';
+                    // Склад — завжди доступний (display:none прибрано в HTML)
                     hasBizFeature = true;
-                    if (hasBizFeature) {
-                        const bizBtn = document.getElementById('bizNavBtn');
-                        if (bizBtn) bizBtn.style.display = '';
-                        // Інтеграції — доступні завжди якщо є хоча б одна biz feature
-                        const intgBtn = document.getElementById('integrationsNavBtn');
-                        if (intgBtn) intgBtn.style.display = '';
-                    }
+                    // bizNavBtn та всі biz кнопки видимі за замовчуванням (display:none прибрано в HTML)
 
                     // Відновлюємо останній активний таб після F5
                     try {

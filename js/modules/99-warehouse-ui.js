@@ -1065,12 +1065,38 @@
   function showNavButton() {
     const btn = document.getElementById('warehouseNavBtn');
     if (btn) btn.style.display = '';
+    // Також показуємо bizNavBtn якщо він ще прихований
+    const biz = document.getElementById('bizNavBtn');
+    if (biz) biz.style.display = '';
   }
 
   // ── Ініціалізація складу ─────────────────────────────────
   window.initWarehouse = function () {
     showNavButton();
   };
+
+  // ── Auto-init: показуємо кнопку одразу при завантаженні модуля ──
+  // (аналогічно 98-finance.js — не чекаємо featuresLoaded)
+  (function _whAutoShow() {
+    if (window.currentCompanyId) {
+      showNavButton();
+    } else {
+      // Чекаємо company-ready
+      const _h = function(e) {
+        showNavButton();
+        document.removeEventListener('talko:company-ready', _h);
+      };
+      document.addEventListener('talko:company-ready', _h);
+      // Fallback polling — якщо event вже пройшов
+      let _tries = 0;
+      const _t = setInterval(function() {
+        if (window.currentCompanyId || _tries++ > 20) {
+          clearInterval(_t);
+          showNavButton();
+        }
+      }, 300);
+    }
+  })();
 
   console.log('[warehouse-ui] loaded');
 })();
