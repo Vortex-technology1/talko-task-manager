@@ -285,6 +285,13 @@ function renderCalendarForm(cal) {
 
     <div class="bk-field">
       <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+        <input type="checkbox" id="bk-f-phone-required" ${d.phoneRequired!==false?'checked':''}>
+        Телефон обов'язковий
+      </label>
+    </div>
+
+    <div class="bk-field">
+      <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
         <input type="checkbox" id="bk-f-active" ${d.isActive!==false?'checked':''}>
         Активний (доступний для запису)
       </label>
@@ -297,6 +304,31 @@ function renderCalendarForm(cal) {
     <div class="bk-schedule-grid">
       ${schedRows}
     </div>
+  </div>
+
+  <!-- Додаткові питання -->
+  <div class="bk-form-section" style="grid-column:1/-1">
+    <div class="bk-section-title" style="display:flex;align-items:center;justify-content:space-between">
+      Додаткові питання до клієнта
+      <button class="bk-btn-sm" onclick="window._bkAddQuestion()" type="button">+ Додати питання</button>
+    </div>
+    <div id="bk-questions-list" style="display:flex;flex-direction:column;gap:.5rem">
+      ${(d.questions||[]).map((q,i) => `
+      <div class="bk-q-row" data-idx="${i}" style="display:grid;grid-template-columns:1fr auto auto auto;gap:.5rem;align-items:center">
+        <input type="text" class="bk-q-label" placeholder="Текст питання" value="${window.htmlEsc?window.htmlEsc(q.label||''):(q.label||'')}" style="padding:.4rem .6rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.85rem">
+        <select class="bk-q-type" style="padding:.4rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.82rem">
+          <option value="text" ${q.type==='text'?'selected':''}>Текст</option>
+          <option value="phone" ${q.type==='phone'?'selected':''}>Телефон</option>
+          <option value="email" ${q.type==='email'?'selected':''}>Email</option>
+          <option value="select" ${q.type==='select'?'selected':''}>Список</option>
+        </select>
+        <label style="font-size:.8rem;display:flex;align-items:center;gap:.3rem;white-space:nowrap">
+          <input type="checkbox" class="bk-q-required" ${q.required?'checked':''}> Обов'язк.
+        </label>
+        <button class="bk-btn-sm" onclick="window._bkRemoveQuestion(${i})" type="button" style="color:#ef4444;padding:.3rem .5rem">✕</button>
+      </div>`).join('')}
+    </div>
+    <div style="font-size:.78rem;color:#94a3b8;margin-top:.5rem">Ім'я та Email — завжди обов'язкові. Тут додайте специфічні питання для вашого бізнесу.</div>
   </div>
 </div>
 
@@ -448,29 +480,50 @@ window._bkSaveCalendar = async function() {
     const slug = slugEl.value.trim();
     if (!name) { alert('Вкажіть назву'); nameEl.focus(); return; }
     if (!slug) { alert('Вкажіть slug'); slugEl.focus(); return; }
+    if (!/^[a-z0-9-]+$/.test(slug)) { alert('Slug може містити тільки малі латинські літери, цифри та дефіс'); slugEl.focus(); return; }
 
     const saveBtn = document.getElementById('bk-save-btn');
     if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Збереження...'; }
 
-    // Collect schedule
+    // Collect schedule з валідацією часу
     const DAYS = ['mon','tue','wed','thu','fri','sat','sun'];
     const weeklyHours = {};
-    DAYS.forEach(day => {
+    for (const day of DAYS) {
         const check = document.querySelector(`.bk-day-check[data-day="${day}"]`);
         if (check && check.checked) {
             const start = document.getElementById('bk-start-' + day)?.value || '09:00';
             const end   = document.getElementById('bk-end-'   + day)?.value || '18:00';
+            // Валідація: end має бути після start
+            if (start >= end) {
+                alert(`${day.toUpperCase()}: час кінця має бути після початку`);
+                if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '✓ Зберегти'; }
+                return;
+            }
             weeklyHours[day] = [{ start, end }];
         } else {
             weeklyHours[day] = [];
         }
-    });
+    }
+
+    // Перевірка що хоча б один день активний
+    const hasAnyDay = Object.values(weeklyHours).some(h => h.length > 0);
+    if (!hasAnyDay) {
+        alert('Виберіть хоча б один робочий день');
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '✓ Зберегти'; }
+        return;
+    }
+
+    // Отримуємо ім'я власника правильно через window.currentUserData
+    const ownerName = window.currentUserData?.name
+        || window.currentUser?.displayName
+        || window.currentUser?.email
+        || '';
 
     const calData = {
         name,
         slug,
         ownerId:          window.currentUser?.uid || '',
-        ownerName:        window.currentUserName  || '',
+        ownerName,
         duration:         parseInt(document.getElementById('bk-f-duration')?.value) || 60,
         bufferBefore:     parseInt(document.getElementById('bk-f-buf-before')?.value) || 0,
         bufferAfter:      parseInt(document.getElementById('bk-f-buf-after')?.value) || 0,
@@ -480,9 +533,26 @@ window._bkSaveCalendar = async function() {
         color:            document.getElementById('bk-f-color')?.value || '#3b82f6',
         location:         document.getElementById('bk-f-location')?.value?.trim() || '',
         isActive:         document.getElementById('bk-f-active')?.checked !== false,
-        questions:        bk.editCalendar?.questions || [],
+        phoneRequired:    document.getElementById('bk-f-phone-required')?.checked !== false,
+        questions:        window._bkCollectQuestions(),
         maxBookingsPerSlot: 1,
     };
+
+    // Перевірка унікальності slug (тільки для нового календаря або зміни slug)
+    const isEdit = !!bk.editCalendar?.id;
+    const slugChanged = !isEdit || bk.editCalendar?.slug !== slug;
+    if (slugChanged) {
+        try {
+            const existing = await window.companyCol('booking_calendars')
+                .where('slug', '==', slug).limit(1).get();
+            if (!existing.empty && existing.docs[0].id !== bk.editCalendar?.id) {
+                alert(`Slug "${slug}" вже використовується. Виберіть інший.`);
+                slugEl.focus();
+                if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '✓ Зберегти'; }
+                return;
+            }
+        } catch(e) { /* non-critical */ }
+    }
 
     const scheduleData = { weeklyHours, dateOverrides: bk.editCalendar?._schedule?.dateOverrides || {} };
 
@@ -590,6 +660,54 @@ window._bkCancelAppt = async function(apptId) {
         const calId = bk.activeCalendarId || appt.calendarId || '';
         if (calId) loadAppointments(calId);
     } catch(e) { alert('Помилка: ' + e.message); }
+};
+
+// ── Questions management ──────────────────────────────────
+window._bkCollectQuestions = function() {
+    const rows = document.querySelectorAll('#bk-questions-list .bk-q-row');
+    const questions = [];
+    rows.forEach((row, i) => {
+        const label = row.querySelector('.bk-q-label')?.value?.trim();
+        if (!label) return;
+        questions.push({
+            id:       'q' + i,
+            label,
+            type:     row.querySelector('.bk-q-type')?.value || 'text',
+            required: row.querySelector('.bk-q-required')?.checked || false,
+        });
+    });
+    return questions;
+};
+
+window._bkAddQuestion = function() {
+    const list = document.getElementById('bk-questions-list');
+    if (!list) return;
+    const idx = list.querySelectorAll('.bk-q-row').length;
+    const div = document.createElement('div');
+    div.className = 'bk-q-row';
+    div.dataset.idx = idx;
+    div.style.cssText = 'display:grid;grid-template-columns:1fr auto auto auto;gap:.5rem;align-items:center';
+    div.innerHTML = `
+        <input type="text" class="bk-q-label" placeholder="Текст питання"
+               style="padding:.4rem .6rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.85rem">
+        <select class="bk-q-type" style="padding:.4rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.82rem">
+          <option value="text">Текст</option>
+          <option value="phone">Телефон</option>
+          <option value="email">Email</option>
+          <option value="select">Список</option>
+        </select>
+        <label style="font-size:.8rem;display:flex;align-items:center;gap:.3rem;white-space:nowrap">
+          <input type="checkbox" class="bk-q-required"> Обов'язк.
+        </label>
+        <button class="bk-btn-sm" onclick="this.closest('.bk-q-row').remove()" type="button"
+                style="color:#ef4444;padding:.3rem .5rem">✕</button>`;
+    list.appendChild(div);
+    div.querySelector('.bk-q-label')?.focus();
+};
+
+window._bkRemoveQuestion = function(idx) {
+    const row = document.querySelector(`.bk-q-row[data-idx="${idx}"]`);
+    if (row) row.remove();
 };
 
 // ── CSS injection ─────────────────────────────────────────

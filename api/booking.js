@@ -526,8 +526,8 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e
           <input type="email" id="bk-email" placeholder="email@example.com" required>
         </div>
         <div class="bk-field">
-          <label>Телефон</label>
-          <input type="tel" id="bk-phone" placeholder="+380...">
+          <label>Телефон${cal.phoneRequired !== false ? ' <span class="bk-req">*</span>' : ''}</label>
+          <input type="tel" id="bk-phone" placeholder="+380..."${cal.phoneRequired !== false ? ' required' : ''}>
         </div>
         ${questionsHtml}
         <button class="bk-submit" id="bk-submit-btn" onclick="bk.submit()">
@@ -684,6 +684,8 @@ const bk = {
         const email = document.getElementById('bk-email').value.trim();
         const phone = document.getElementById('bk-phone').value.trim();
         if (!name || !email) { alert("Вкажіть ім'я та email"); return; }
+        const phoneEl = document.getElementById('bk-phone');
+        if (phoneEl && phoneEl.required && !phone) { alert('Вкажіть телефон'); phoneEl.focus(); return; }
 
         // Collect extra question answers
         const answers = {};
