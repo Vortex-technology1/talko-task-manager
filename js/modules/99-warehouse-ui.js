@@ -54,7 +54,8 @@
   };
 
   function _rerender() {
-    if (document.getElementById('warehouseContainer')) _render();
+    const tab = document.getElementById('warehouseTab');
+    if (tab && tab.classList.contains('active')) _render();
   }
 
   // ── Головний рендер ──────────────────────────────────────

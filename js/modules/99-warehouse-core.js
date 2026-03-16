@@ -110,7 +110,23 @@
       .onSnapshot(snap => {
         _wh.operations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         window.dispatchEvent(new CustomEvent('wh:operationsUpdated'));
-      }, err => { console.error('[wh] operations', err); });
+      }, err => {
+        // Якщо index не готовий — fallback без orderBy
+        console.warn('[wh] operations orderBy failed, using fallback', err.message);
+        const unsub2 = col('warehouse_operations')
+          .limit(100)
+          .onSnapshot(snap => {
+            _wh.operations = snap.docs
+              .map(d => ({ id: d.id, ...d.data() }))
+              .sort((a, b) => {
+                const ta = a.createdAt?.toMillis?.() || 0;
+                const tb = b.createdAt?.toMillis?.() || 0;
+                return tb - ta;
+              });
+            window.dispatchEvent(new CustomEvent('wh:operationsUpdated'));
+          }, e2 => console.error('[wh] operations fallback', e2));
+        _wh.listeners.push(unsub2);
+      });
     _wh.listeners.push(unsub);
   }
 
@@ -146,6 +162,13 @@
     };
     if (id) {
       await col('warehouse_items').doc(id).update(payload);
+      // Синхронізуємо stock doc — name/unit/minStock
+      await col('warehouse_stock').doc(id).set({
+        name: payload.name,
+        unit: payload.unit,
+        minStock: payload.minStock,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
       return id;
     } else {
       payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
@@ -340,7 +363,7 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         userId: window.currentUser?.uid || null,
       };
-      await col('transactions').add(txData);
+      await col('finance_transactions').add(txData);
     } catch (e) {
       console.warn('[wh] finance tx failed', e.message);
     }
