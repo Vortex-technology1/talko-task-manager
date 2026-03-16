@@ -38,7 +38,8 @@ function safeJson(v) {
     // Безпечна вставка в <script> — ескейпує </script> і Unicode термінатори
     var s = JSON.stringify(v);
     s = s.replace(/</g, '\u003c').replace(/>/g, '\u003e').replace(/&/g, '\u0026');
-    s = s.split(' ').join('\u2028').split(' ').join('\u2029');
+    // FIX B-06: escape actual line separators, not spaces
+    s = s.replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
     return s;
 }
 
@@ -1224,12 +1225,32 @@ if (BK_CALS.length <= 1) {
 }
 
 // ── Auth helper ───────────────────────────────────────────
-function requireAuth(req) {
-    // Перевіряємо Firebase ID token або internal companyId header
+// FIX B-04: реальна верифікація Firebase ID token через Admin SDK
+async function requireAuth(req) {
     const auth = req.headers.authorization || '';
-    // Мінімальна перевірка: Bearer token має бути присутній
-    // Повна верифікація через Firebase Auth (якщо потрібна)
-    return auth.startsWith('Bearer ') && auth.length > 20;
+    if (!auth.startsWith('Bearer ')) return null;
+    const token = auth.slice(7).trim();
+    if (!token || token.length < 20) return null;
+    try {
+        const decoded = await admin.auth().verifyIdToken(token);
+        return decoded; // { uid, email, ... }
+    } catch(e) {
+        return null;
+    }
+}
+
+// Helper: перевіряє що decoded user є manager/owner вказаної компанії
+async function requireCompanyManager(decoded, companyId) {
+    if (!decoded || !companyId) return false;
+    try {
+        const userDoc = await db.collection('companies').doc(companyId)
+            .collection('users').doc(decoded.uid).get();
+        if (!userDoc.exists) return false;
+        const role = userDoc.data()?.role || '';
+        return ['owner', 'admin', 'manager'].includes(role);
+    } catch(e) {
+        return false;
+    }
 }
 
 function errPage(msg) {
@@ -1331,10 +1352,14 @@ module.exports = async (req, res) => {
 
         // ── GET: admin list of appointments ───────────────
         if (req.method === 'GET' && action === 'list') {
-            // Auth required — ця endpoint містить персональні дані клієнтів
-            if (!requireAuth(req)) return res.status(401).json({ error: 'Unauthorized' });
+            // FIX B-05: перевіряємо і наявність токена і приналежність до компанії
+            const decoded = await requireAuth(req);
+            if (!decoded) return res.status(401).json({ error: 'Unauthorized' });
             const { companyId, calendarId, status, limit: lim } = req.query;
             if (!companyId) return res.status(400).json({ error: 'Missing companyId' });
+            // Перевіряємо що юзер є членом саме цієї компанії
+            const isManager = await requireCompanyManager(decoded, companyId);
+            if (!isManager) return res.status(403).json({ error: 'Forbidden' });
 
             let q = db.collection('companies').doc(companyId)
                 .collection('booking_appointments')
@@ -1614,9 +1639,14 @@ module.exports = async (req, res) => {
 
         // ── POST: confirm (manual confirmation) ───────────
         if (req.method === 'POST' && action === 'confirm') {
+            // FIX B-01: потрібна авторизація — Admin SDK обходить Firestore rules
+            const decoded = await requireAuth(req);
+            if (!decoded) return res.status(401).json({ error: 'Unauthorized' });
             const { companyId, appointmentId } = req.body || {};
             if (!companyId || !appointmentId)
                 return res.status(400).json({ error: 'Missing params' });
+            const isManager = await requireCompanyManager(decoded, companyId);
+            if (!isManager) return res.status(403).json({ error: 'Forbidden' });
 
             await db.collection('companies').doc(companyId)
                 .collection('booking_appointments').doc(appointmentId)
@@ -1661,48 +1691,10 @@ module.exports = async (req, res) => {
 
             // Notify owner
             const compRef = db.collection('companies').doc(companyId);
-            // ── Stripe оплата якщо календар вимагає ──────────
-        let stripeUrl = null;
-        if (cal.requirePayment && cal.price > 0) {
-            try {
-                const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
-                if (STRIPE_KEY) {
-                    const Stripe = require('stripe');
-                    const stripe = Stripe(STRIPE_KEY);
-                    const session = await stripe.checkout.sessions.create({
-                        payment_method_types: ['card'],
-                        mode: 'payment',
-                        line_items: [{
-                            price_data: {
-                                currency:    (cal.priceCurrency || 'EUR').toLowerCase(),
-                                unit_amount: Math.round((cal.price || 0) * 100),
-                                product_data: { name: `${cal.name} — ${safeClientName}` },
-                            },
-                            quantity: 1,
-                        }],
-                        metadata: {
-                            companyId,
-                            bookingId:  appointmentRef.id,
-                            clientName: safeClientName,
-                        },
-                        customer_email: safeClientEmail,
-                        success_url: `${req.headers.origin || 'https://taskmanagerai-vert.vercel.app'}/?stripe=success&bookingId=${appointmentRef.id}`,
-                        cancel_url:  `${req.headers.origin || 'https://taskmanagerai-vert.vercel.app'}/book/${companyId}/${cal.slug || calendarId}`,
-                    });
-                    stripeUrl = session.url;
-                    // Зберігаємо session ID в appointment
-                    await appointmentRef.update({
-                        stripeSessionId:  session.id,
-                        stripeSessionUrl: session.url,
-                        status:           'pending_payment',
-                    });
-                }
-            } catch(stripeErr) {
-                console.error('[booking create] Stripe session error:', stripeErr.message);
-            }
-        }
+            // FIX B-03: видалено дублікат блоку Stripe з cancel (copy-paste помилка)
+            // cal, appointmentRef, safeClientEmail — змінні з action=create, тут не існують
 
-        tgNotify(compRef,
+            tgNotify(compRef,
                 `❌ <b>Запис скасовано</b>\n` +
                 `Клієнт: ${tgEsc(appt.clientName)}\n` +
                 `Дата: ${tgEsc(appt.date)} о ${tgEsc(appt.timeSlot)}`
@@ -1713,9 +1705,14 @@ module.exports = async (req, res) => {
 
         // ── POST: save/update calendar (admin) ────────────
         if (req.method === 'POST' && action === 'saveCalendar') {
+            // FIX B-02: потрібна авторизація manager/owner
+            const decoded = await requireAuth(req);
+            if (!decoded) return res.status(401).json({ error: 'Unauthorized' });
             const { companyId, calendarId, data } = req.body || {};
             if (!companyId || !data)
                 return res.status(400).json({ error: 'Missing params' });
+            const isManager = await requireCompanyManager(decoded, companyId);
+            if (!isManager) return res.status(403).json({ error: 'Forbidden' });
 
             const col = db.collection('companies').doc(companyId)
                 .collection('booking_calendars');
@@ -1738,9 +1735,14 @@ module.exports = async (req, res) => {
 
         // ── POST: save schedule ───────────────────────────
         if (req.method === 'POST' && action === 'saveSchedule') {
+            // FIX B-02: потрібна авторизація manager/owner
+            const decoded = await requireAuth(req);
+            if (!decoded) return res.status(401).json({ error: 'Unauthorized' });
             const { companyId, calendarId, schedule } = req.body || {};
             if (!companyId || !calendarId || !schedule)
                 return res.status(400).json({ error: 'Missing params' });
+            const isManager = await requireCompanyManager(decoded, companyId);
+            if (!isManager) return res.status(403).json({ error: 'Forbidden' });
 
             await db.collection('companies').doc(companyId)
                 .collection('booking_schedules').doc(calendarId)

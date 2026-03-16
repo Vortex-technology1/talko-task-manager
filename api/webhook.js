@@ -121,11 +121,15 @@ module.exports = async (req, res) => {
                     try {
                         const vDoc = await db.collection('companies').doc(companyId).get();
                         const stored = vDoc.data()?.fbVerifyToken || vDoc.data()?.integrations?.facebook?.verifyToken;
-                        if (stored && verify !== stored) {
-                            console.warn(`[webhook] FB verify_token mismatch for ${companyId}`);
+                        // FIX WH-02: якщо токен не встановлено — блокуємо (не пропускаємо!)
+                        if (!stored || verify !== stored) {
+                            console.warn(`[webhook] FB verify_token mismatch or not configured for ${companyId}`);
                             return res.status(403).send('Forbidden');
                         }
-                    } catch(e) { console.warn('[webhook] FB token check:', e.message); }
+                    } catch(e) {
+                        console.warn('[webhook] FB token check:', e.message);
+                        return res.status(403).send('Forbidden');
+                    }
                     return res.status(200).send(challenge);
                 }
                 return res.status(400).send('Bad Request');
@@ -536,6 +540,19 @@ module.exports = async (req, res) => {
         }
         if (!botToken) return res.status(200).json({ ok: true, skipped: 'no token' });
 
+        // FIX WH-03: Telegram підпис — перевіряємо X-Telegram-Bot-Api-Secret-Token
+        // Токен встановлюється при реєстрації webhook: setWebhook + secret_token
+        if (channel === 'telegram') {
+            const tgSecret = req.headers['x-telegram-bot-api-secret-token'];
+            // Перевіряємо тільки якщо secret токен налаштований для цього бота
+            const storedSecret = botsSnap.docs[0]?.data()?.webhookSecret
+                || _compData?.integrations?.telegram?.webhookSecret;
+            if (storedSecret && tgSecret !== storedSecret) {
+                console.warn(`[webhook] Telegram secret mismatch for company ${companyId}`);
+                return res.status(200).json({ ok: true }); // Telegram очікує 200 навіть при відмові
+            }
+        }
+
         // ── Зберігаємо ВСІ вхідні повідомлення від юзера ───
         // Це робить повну переписку в contacts/{id}/messages/
         // для перегляду в чаті менеджером (незалежно від стану флоу)
@@ -657,7 +674,9 @@ module.exports = async (req, res) => {
                 const _isCmd = _txt === 'start' || _txt.startsWith('/start');
                 const _isBtn = /^btn_\d+$/.test(_txt);
                 if (!_isCmd && !_isBtn) {
-                    const _pmDocId = `${channel}_${normalized.senderId}_${Date.now()}`;
+                    // FIX WH-05: використовуємо стабільний docId без timestamp
+                    // щоб читання по тому ж ключу знаходило запис
+                    const _pmDocId = `${channel}_${normalized.senderId}`;
                     compRef.collection('_pending_messages')
                         .doc(_pmDocId)
                         .set({
@@ -1369,6 +1388,29 @@ module.exports = async (req, res) => {
                     // FIX 5: minimalNodes зберігає apiUrl/apiMethod/apiBody/apiHeaders, не url/method/body/headers
                     const _reqUrl = n.apiUrl || n.url || '';
                     if (!_reqUrl || !/^https?:\/\//.test(_reqUrl)) throw new Error('Invalid URL');
+
+                    // FIX WH-01: SSRF захист — блокуємо internal/metadata endpoints
+                    try {
+                        const _parsedUrl = new URL(_reqUrl);
+                        const _host = _parsedUrl.hostname.toLowerCase();
+                        const _BLOCKED = [
+                            'localhost', '127.0.0.1', '0.0.0.0', '::1',
+                            '169.254.169.254',      // AWS/GCP/Azure instance metadata
+                            'metadata.google.internal',
+                            'metadata.goog',
+                            '100.100.100.200',       // Alibaba Cloud metadata
+                        ];
+                        const _isInternal =
+                            _BLOCKED.includes(_host) ||
+                            /^10\./.test(_host) ||
+                            /^172\.(1[6-9]|2\d|3[01])\./.test(_host) ||
+                            /^192\.168\./.test(_host) ||
+                            /^169\.254\./.test(_host);
+                        if (_isInternal) throw new Error('SSRF: internal URLs are not allowed');
+                    } catch(urlErr) {
+                        if (urlErr.message.startsWith('SSRF')) throw urlErr;
+                        throw new Error('Invalid URL format');
+                    }
                     const _apiAbort = new AbortController();
                     const _apiTimer = setTimeout(() => _apiAbort.abort(), 10000);
                     // Підтримка custom headers (рядок JSON або об'єкт)
@@ -1941,13 +1983,13 @@ function interp(text, data) {
     const _sanitize = (val) => {
         if (val == null) return '';
         const s = String(val).slice(0, 1000);
-        // FIX 4: не double-escape — якщо вже є HTML entities, не повторюємо
-        const alreadyEscaped = /&(amp|lt|gt|quot|#\d+);/.test(s);
-        if (alreadyEscaped) return s;
+        // FIX WH-04: видалено alreadyEscaped bypass — він дозволяв &amp; обійти escape
+        // Завжди ескейпуємо — double-escape краще ніж XSS в Telegram
         return s
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
     };
     return (text || '')
         .replace(/\{\{contact\.(\w+)\}\}/g, (_, k) => _sanitize(data[k] ?? data.name ?? ''))
@@ -2039,18 +2081,20 @@ async function doAction(node, session, flow, botToken) {
         // Використовуємо окремий адмін бот для сповіщень
         const adminToken = process.env.ADMIN_BOT_TOKEN || botToken;
         if (chatId && adminToken) {
+            // FIX WH-06: ескейпуємо всі вхідні дані перед вставкою в Telegram HTML
+            const _tgEsc = (s) => String(s || '')
+                .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
             const flowDisplayName = node.config?.notifyFlowName || flow?.name || flow?.title || '';
             let text = node.config?.notifyText || node.notifyText || '🔔 Новий лід: {{senderName}}';
             text = text
-                .replace(/\{\{senderName\}\}/g, session.senderName || '')
-                .replace(/\{\{senderId\}\}/g, session.senderId || '')
-                .replace(/\{\{channel\}\}/g, session.channel || '')
-                .replace(/\{\{flowName\}\}/g, flowDisplayName || session.currentFlowId || '')
-                .replace(/\{\{flowId\}\}/g, session.currentFlowId || '')
+                .replace(/\{\{senderName\}\}/g, _tgEsc(session.senderName || ''))
+                .replace(/\{\{senderId\}\}/g,   _tgEsc(session.senderId || ''))
+                .replace(/\{\{channel\}\}/g,    _tgEsc(session.channel || ''))
+                .replace(/\{\{flowName\}\}/g,   _tgEsc(flowDisplayName || session.currentFlowId || ''))
+                .replace(/\{\{flowId\}\}/g,     _tgEsc(session.currentFlowId || ''))
                 .replace(/\{\{(\w+)\}\}/g, (_, k) => {
                     const val = session.data?.[k] || '';
-                    // FIX 8: truncate великі значення щоб не перевищити ліміт Telegram 4096 символів
-                    return String(val).slice(0, 800);
+                    return _tgEsc(String(val).slice(0, 800));
                 });
             // Загальний truncate повідомлення
             if (text.length > 4000) text = text.slice(0, 4000) + '...';

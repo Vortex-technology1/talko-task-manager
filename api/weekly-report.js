@@ -98,7 +98,17 @@ async function buildAndSendReport(companyId) {
     if (recipients.length === 0) return { companyId, skipped: 'no_telegram_recipients' };
 
     // ── 2. Задачі за цей тиждень ─────────────────────────
-    const tasksSnap = await compRef.collection('tasks').limit(2000).get();
+    // FIX W-02: фільтруємо по createdDate >= weekAgoStr замість limit(2000) всіх задач
+    let tasksSnap;
+    try {
+        tasksSnap = await compRef.collection('tasks')
+            .where('createdDate', '>=', weekAgoStr)
+            .limit(500)
+            .get();
+    } catch(e) {
+        // Fallback якщо немає індексу по createdDate
+        tasksSnap = await compRef.collection('tasks').limit(500).get();
+    }
     const allTasks  = tasksSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     let created = 0, completed = 0, overdue = 0;
@@ -355,15 +365,18 @@ function _esc(str) {
 // ГОЛОВНИЙ HANDLER
 // ─────────────────────────────────────────
 module.exports = async (req, res) => {
-    // Auth: тільки Vercel Cron або запит з CRON_SECRET
+    // FIX W-01: якщо CRON_SECRET не встановлено — endpoint відключений
+    // Попередньо: if(cronSecret) → без змінної захист пропускався повністю
     const cronSecret = process.env.CRON_SECRET;
-    if (cronSecret) {
-        const authHeader = req.headers['authorization'] || '';
-        const providedSecret = authHeader.replace('Bearer ', '').trim();
-        // Vercel Cron надсилає заголовок Authorization: Bearer <CRON_SECRET>
-        if (providedSecret !== cronSecret) {
-            return res.status(401).json({ ok: false, error: 'Unauthorized' });
-        }
+    if (!cronSecret) {
+        console.error('[WeeklyReport] CRON_SECRET not configured — endpoint disabled for security');
+        return res.status(503).json({ ok: false, error: 'Not configured' });
+    }
+    const authHeader = req.headers['authorization'] || '';
+    const providedSecret = authHeader.replace('Bearer ', '').trim();
+    // Vercel Cron надсилає заголовок Authorization: Bearer <CRON_SECRET>
+    if (providedSecret !== cronSecret) {
+        return res.status(401).json({ ok: false, error: 'Unauthorized' });
     }
 
     // Перевірка що це GET або POST (Vercel Cron використовує GET)

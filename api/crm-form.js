@@ -25,10 +25,23 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-// Простий in-memory rate limit (1 submit / IP / 60s)
-const _ipLastSubmit = new Map();
-const _ipPending = new Set(); // Захист від race condition
+// FIX CF-01: Firestore-based rate limiting (in-memory не працює на serverless)
 const RATE_LIMIT_MS = 60 * 1000;
+
+async function checkRateLimit(ip) {
+    const safeIp = ip.replace(/[.\/:\[\]]/g, '_').slice(0, 64);
+    const db_rl = admin.firestore();
+    const rlRef = db_rl.collection('_ratelimits').doc(`crmform_${safeIp}`);
+    try {
+        const rlDoc = await rlRef.get();
+        if (rlDoc.exists && Date.now() - (rlDoc.data()?.ts || 0) < RATE_LIMIT_MS) return false;
+        await rlRef.set({ ts: Date.now() }, { merge: false });
+        return true;
+    } catch(e) {
+        console.warn('[crm-form] rate limit check failed:', e.message);
+        return true;
+    }
+}
 
 const ALLOWED_ORIGINS_RE = /^https?:\/\//; // будь-який сайт (публічна форма)
 
@@ -52,32 +65,24 @@ module.exports = async function handler(req, res) {
     if (!phone && !email) return res.status(400).json({ error: 'Вкажіть телефон або email' });
     if (phone  && String(phone).length  > 30)   return res.status(400).json({ error: 'Телефон занадто довгий' });
     if (email  && String(email).length  > 200)  return res.status(400).json({ error: 'Email занадто довгий' });
+    // FIX CF-02: валідація формату email
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim())) {
+        return res.status(400).json({ error: 'Невірний формат email' });
+    }
     if (message && String(message).length > 5000) return res.status(400).json({ error: 'Повідомлення занадто довге' });
 
-    // Rate limit по IP (з захистом від race condition)
+    // FIX CF-01: Firestore rate limit по IP
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
-
-    // Перевірка паралельних запитів
-    if (_ipPending.has(ip)) {
-        return res.status(429).json({ error: 'Запит вже обробляється. Зачекайте.' });
-    }
-
-    // Перевірка rate limit
-    const lastSubmit = _ipLastSubmit.get(ip);
-    if (lastSubmit && Date.now() - lastSubmit < RATE_LIMIT_MS) {
-        return res.status(429).json({ error: 'Зачекайте хвилину перед повторною відправкою' });
-    }
-
-    // Додаємо IP до pending (блокуємо паралельні запити)
-    _ipPending.add(ip);
+    const _rlAllowed = await checkRateLimit(ip);
+    if (!_rlAllowed) return res.status(429).json({ error: 'Зачекайте хвилину перед повторною відправкою' });
 
     // Перевіряємо що форма існує і активна
     const formRef  = db.doc(`companies/${companyId}/crm_forms/${formId}`);
     const formSnap = await formRef.get().catch(() => null);
-    if (!formSnap?.exists) { _ipPending.delete(ip); return res.status(404).json({ error: 'Форму не знайдено' }); }
+    if (!formSnap?.exists) { return res.status(404).json({ error: 'Форму не знайдено' }); }
 
     const formData = formSnap.data();
-    if (formData.disabled) { _ipPending.delete(ip); return res.status(403).json({ error: 'Форма деактивована' }); }
+    if (formData.disabled) { return res.status(403).json({ error: 'Форма деактивована' }); }
 
     const pipelineId = formData.pipelineId || null;
     const assigneeId = formData.assigneeId || null;
@@ -263,7 +268,5 @@ Email: ${email || '-'}
         return res.status(500).json({ error: 'Серверна помилка. Спробуйте пізніше.' });
     } finally {
         // Очищаємо pending і оновлюємо timestamp (тільки якщо запит пройшов валідацію)
-        _ipPending.delete(ip);
-        _ipLastSubmit.set(ip, Date.now());
-    }
+        }
 };

@@ -59,6 +59,18 @@ function toStripeAmount(amount, currency) {
 
 // ── POST /api/stripe?action=create-session ────────────────
 async function createSession(req, res) {
+    // FIX S-01: перевірка Firebase ID token перед створенням Stripe сесії
+    const authHeader = req.headers.authorization || '';
+    if (!authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    let decodedUser = null;
+    try {
+        decodedUser = await admin.auth().verifyIdToken(authHeader.slice(7).trim());
+    } catch(e) {
+        return res.status(401).json({ error: 'Invalid token' });
+    }
+
     const {
         companyId,
         invoiceId,
@@ -72,27 +84,50 @@ async function createSession(req, res) {
         cancelUrl,
     } = req.body || {};
 
-    if (!companyId || !amount || amount <= 0)
-        return res.status(400).json({ error: 'Missing required fields: companyId, amount' });
+    // FIX S-02: валідація amount — тип, мінімум і максимум
+    const amt = parseFloat(amount);
+    if (!companyId || isNaN(amt) || amt <= 0 || amt > 999999)
+        return res.status(400).json({ error: 'Missing or invalid fields: companyId, amount (0 < amount ≤ 999999)' });
 
     const cur = (currency || 'EUR').toUpperCase();
     if (!['EUR', 'CZK', 'USD'].includes(cur))
         return res.status(400).json({ error: `Currency ${cur} not supported. Use EUR or CZK.` });
 
-    // Перевіряємо що компанія існує
+    // Перевіряємо що компанія існує І що юзер є її членом
     const compDoc = await companyRef(companyId).get();
     if (!compDoc.exists)
         return res.status(404).json({ error: 'Company not found' });
 
+    // FIX S-01: перевірка приналежності до компанії
+    try {
+        const userDoc = await companyRef(companyId).collection('users').doc(decodedUser.uid).get();
+        if (!userDoc.exists) return res.status(403).json({ error: 'Forbidden' });
+    } catch(e) {
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+
+    // FIX S-03: валідація successUrl і cancelUrl — тільки https:// або http://
+    function safeRedirectUrl(url, fallback) {
+        if (!url) return fallback;
+        try {
+            const u = new URL(url);
+            if (!['https:', 'http:'].includes(u.protocol)) return fallback;
+            return url;
+        } catch { return fallback; }
+    }
+
     const stripe = getStripe();
     const origin = req.headers.origin || req.headers.referer?.replace(/\/$/, '') || 'https://taskmanagerai-vert.vercel.app';
+
+    // FIX S-05: clientName обрізаємо до 500 символів (Stripe metadata limit)
+    const safeClientName = clientName ? String(clientName).slice(0, 500) : undefined;
 
     // Метадані — все що потрібно webhook для автоматизації
     const metadata = {
         companyId,
-        ...(invoiceId  ? { invoiceId }  : {}),
-        ...(bookingId  ? { bookingId }  : {}),
-        ...(clientName ? { clientName } : {}),
+        ...(invoiceId        ? { invoiceId }                : {}),
+        ...(bookingId        ? { bookingId }                : {}),
+        ...(safeClientName   ? { clientName: safeClientName } : {}),
     };
 
     const sessionParams = {
@@ -101,17 +136,17 @@ async function createSession(req, res) {
         line_items: [{
             price_data: {
                 currency:     cur.toLowerCase(),
-                unit_amount:  toStripeAmount(amount, cur),
+                unit_amount:  toStripeAmount(amt, cur),
                 product_data: {
                     name: description,
-                    ...(clientName ? { description: `Клієнт: ${clientName}` } : {}),
+                    ...(safeClientName ? { description: `Клієнт: ${safeClientName}` } : {}),
                 },
             },
             quantity: 1,
         }],
         metadata,
-        success_url: successUrl || `${origin}/?stripe=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url:  cancelUrl  || `${origin}/?stripe=cancelled`,
+        success_url: safeRedirectUrl(successUrl, `${origin}/?stripe=success&session_id={CHECKOUT_SESSION_ID}`),
+        cancel_url:  safeRedirectUrl(cancelUrl,  `${origin}/?stripe=cancelled`),
         // Автоматично заповнюємо email клієнта якщо є
         ...(clientEmail ? { customer_email: clientEmail } : {}),
     };
@@ -173,8 +208,12 @@ async function handleWebhook(req, res) {
     const bookingId  = metadata.bookingId;
     const clientName = metadata.clientName || session.customer_details?.name || '';
     const clientEmail= session.customer_details?.email || '';
-    const amount     = session.amount_total / 100; // cents → major units
+    // FIX S-04: zero-decimal currencies (JPY, KRW) вже в мінімальних одиницях — не ділити на 100
     const currency   = (session.currency || 'eur').toUpperCase();
+    const ZERO_DECIMAL_WH = new Set(['BIF','CLP','DJF','GNF','JPY','KMF','KRW','MGA','PYG','RWF','UGX','VND','VUV','XAF','XOF','XPF']);
+    const amount = ZERO_DECIMAL_WH.has(currency)
+        ? session.amount_total
+        : session.amount_total / 100;
 
     if (!companyId) {
         console.error('[stripe webhook] No companyId in metadata');
