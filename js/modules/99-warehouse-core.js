@@ -185,10 +185,17 @@
   };
 
   window.whDeleteItem = async function (id) {
-    await col('warehouse_items').doc(id).update({
-      deleted: true,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    await Promise.all([
+      col('warehouse_items').doc(id).update({
+        deleted: true,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }),
+      // Обнуляємо stock щоб не впливав на підрахунок вартості
+      col('warehouse_stock').doc(id).set({
+        qty: 0, reserved: 0, deleted: true,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true }),
+    ]);
   };
 
   // ── CRUD: Locations ──────────────────────────────────────

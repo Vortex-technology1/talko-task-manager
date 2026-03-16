@@ -6,11 +6,12 @@
 
 (function () {
 
-  let _currentView = 'dashboard'; // dashboard | catalog | operations | suppliers | locations
+  let _currentView = 'dashboard';
   let _searchQuery = '';
   let _searchTimer = null;
   let _categoryFilter = '';
   let _opTypeFilter = '';
+  let _opDateFilter = '';
 
   // ── Форматування ─────────────────────────────────────────
   function fmt(n) {
@@ -140,6 +141,7 @@
     _searchQuery = '';
     _categoryFilter = '';
     _opTypeFilter = '';
+    _opDateFilter = '';
     _render();
     if (cb) setTimeout(cb, 50);
   };
@@ -380,6 +382,7 @@
                     <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:2px;">
                       ${item.sku ? `<span style="font-size:0.72rem;color:#9ca3af;">${item.sku}</span>` : ''}
                       ${item.category ? `<span style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;padding:1px 6px;border-radius:4px;">${item.category}</span>` : ''}
+                      ${item.supplierId ? (() => { const sup = window.whGetSuppliers().find(s=>s.id===item.supplierId); return sup ? `<span style="font-size:0.72rem;color:#6366f1;background:#ede9fe;padding:1px 6px;border-radius:4px;">${sup.name}</span>` : ''; })() : ''}
                     </div>
                   </div>
                   <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
@@ -434,6 +437,17 @@
       filtered = filtered.filter(o => (o.itemName || '').toLowerCase().includes(q) || (o.note || '').toLowerCase().includes(q));
     }
 
+    // Date filter
+    if (_opDateFilter) {
+      const now = Date.now();
+      const cutoffs = { today: 86400000, week: 7*86400000, month: 30*86400000 };
+      const ms = cutoffs[_opDateFilter] || 0;
+      if (ms) filtered = filtered.filter(o => {
+        const ts = o.createdAt?.toMillis?.() || 0;
+        return (now - ts) <= ms;
+      });
+    }
+
     // Підсумки по відфільтрованих операціях
     const totals = filtered.reduce((acc, op) => {
       if (op.type === 'IN')             { acc.inQty += op.qty || 0; acc.inSum += (op.qty || 0) * (op.price || 0); }
@@ -460,6 +474,13 @@
             <option value="IN" ${_opTypeFilter==='IN'?'selected':''}>Прихід</option>
             <option value="OUT" ${_opTypeFilter==='OUT'?'selected':''}>Видача</option>
             <option value="WRITE_OFF" ${_opTypeFilter==='WRITE_OFF'?'selected':''}>Списання</option>
+          </select>
+          <select onchange="window._whOpDateFilter(this.value)"
+            style="padding:0.45rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;">
+            <option value="">Весь час</option>
+            <option value="today" ${_opDateFilter==='today'?'selected':''}>Сьогодні</option>
+            <option value="week" ${_opDateFilter==='week'?'selected':''}>Тиждень</option>
+            <option value="month" ${_opDateFilter==='month'?'selected':''}>Місяць</option>
           </select>
         </div>
         ${filtered.length > 0 ? `
@@ -504,6 +525,7 @@
     _searchTimer = setTimeout(() => _render(), 200);
   };
   window._whOpFilter = function (v) { _opTypeFilter = v; _render(); };
+  window._whOpDateFilter = function (v) { _opDateFilter = v; _render(); };
 
   // ══════════════════════════════════════════════════════════
   //  ПОСТАЧАЛЬНИКИ
@@ -706,7 +728,7 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Кількість *</label>
-              <input id="wh_op_qty" type="number" min="0.001" step="any" autofocus style="${_inp()}" placeholder="1">
+              <input id="wh_op_qty" type="number" min="0.001" step="any" style="${_inp()}" placeholder="1">
             </div>
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">${type === 'IN' ? 'Ціна за од. ₴' : 'Собівартість за од. ₴'}</label>
@@ -797,7 +819,8 @@
             <textarea id="wh_sup_note" style="${_inp()}height:56px;resize:none;">${s.note || ''}</textarea>
           </div>
         </div>
-        <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
+        <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;flex-wrap:wrap;">
+          ${supplierId ? `<button onclick="window._whDeleteSupplier('${supplierId}')" style="padding:0.45rem 0.9rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Видалити</button>` : ''}
           <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Скасувати</button>
           <button onclick="window._whSubmitSupplier('${supplierId || ''}')" style="padding:0.45rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Зберегти</button>
         </div>
@@ -817,6 +840,17 @@
       }, id || null);
       window._whCloseModal();
       if (window.showToast) showToast('Збережено ✓', 'success');
+    } catch (e) {
+      if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
+  };
+
+  window._whDeleteSupplier = async function (id) {
+    if (!confirm('Видалити постачальника?')) return;
+    try {
+      await window.whSaveSupplier({ deleted: true }, id);
+      window._whCloseModal();
+      if (window.showToast) showToast('Постачальника видалено', 'info');
     } catch (e) {
       if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }
