@@ -36,14 +36,19 @@
     return '#f0fdf4';
   }
 
+  let _listenersAttached = false;
+
   // ── Головна точка входу ──────────────────────────────────
   window.initWarehouseUI = async function () {
     await window.initWarehouseCore();
     window.whStartAlertWatch();
 
-    window.addEventListener('wh:itemsUpdated', _rerender);
-    window.addEventListener('wh:stockUpdated', _rerender);
-    window.addEventListener('wh:operationsUpdated', _rerender);
+    if (!_listenersAttached) {
+      window.addEventListener('wh:itemsUpdated', _rerender);
+      window.addEventListener('wh:stockUpdated', _rerender);
+      window.addEventListener('wh:operationsUpdated', _rerender);
+      _listenersAttached = true;
+    }
 
     _render();
   };
@@ -64,7 +69,7 @@
         </div>
       </div>
     `;
-    if (window.lucide) lucide.createIcons();
+    if (window.lucide) setTimeout(() => lucide.createIcons(), 0);
   }
 
   // ── Шапка ────────────────────────────────────────────────
