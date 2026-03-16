@@ -162,42 +162,44 @@
       deleted:     false,
       updatedAt:   firebase.firestore.FieldValue.serverTimestamp(),
     };
+    const db2  = firebase.firestore();
+    const cRef = compRef();
+    const batch = db2.batch();
     if (id) {
-      await col('warehouse_items').doc(id).update(payload);
-      // Синхронізуємо stock doc — name/unit/minStock
-      await col('warehouse_stock').doc(id).set({
-        name: payload.name,
-        unit: payload.unit,
-        minStock: payload.minStock,
+      batch.update(cRef.collection('warehouse_items').doc(id), payload);
+      batch.set(cRef.collection('warehouse_stock').doc(id), {
+        name: payload.name, unit: payload.unit, minStock: payload.minStock,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       }, { merge: true });
+      await batch.commit();
       return id;
     } else {
       payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-      const ref = await col('warehouse_items').add(payload);
-      // Створюємо stock doc
-      await col('warehouse_stock').doc(ref.id).set({
-        itemId: ref.id, qty: 0, reserved: 0,
+      const newRef = cRef.collection('warehouse_items').doc();
+      batch.set(newRef, payload);
+      batch.set(cRef.collection('warehouse_stock').doc(newRef.id), {
+        itemId: newRef.id, qty: 0, reserved: 0,
         minStock: payload.minStock,
         name: payload.name, unit: payload.unit,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
-      return ref.id;
+      await batch.commit();
+      return newRef.id;
     }
   };
 
   window.whDeleteItem = async function (id) {
-    await Promise.all([
-      col('warehouse_items').doc(id).update({
-        deleted: true,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }),
-      // Обнуляємо stock щоб не впливав на підрахунок вартості
-      col('warehouse_stock').doc(id).set({
-        qty: 0, reserved: 0, deleted: true,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      }, { merge: true }),
-    ]);
+    const db2  = firebase.firestore();
+    const cRef = compRef();
+    const batch = db2.batch();
+    batch.update(cRef.collection('warehouse_items').doc(id), {
+      deleted: true, updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    batch.set(cRef.collection('warehouse_stock').doc(id), {
+      qty: 0, reserved: 0, deleted: true,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }, { merge: true });
+    await batch.commit();
   };
 
   // ── CRUD: Locations ──────────────────────────────────────
@@ -240,10 +242,14 @@
     qty = Number(qty);
     if (qty <= 0) throw new Error('Кількість має бути > 0');
 
-    const itemRef  = col('warehouse_items').doc(itemId);
-    const stockRef = col('warehouse_stock').doc(itemId);
+    // Refs визначаємо ДО транзакції — col() не можна викликати всередині tx
+    const db2    = firebase.firestore();
+    const cRef   = compRef();
+    const itemRef  = cRef.collection('warehouse_items').doc(itemId);
+    const stockRef = cRef.collection('warehouse_stock').doc(itemId);
+    const opRef    = cRef.collection('warehouse_operations').doc(); // новий doc
 
-    return firebase.firestore().runTransaction(async tx => {
+    return db2.runTransaction(async tx => {
       const [itemDoc, stockDoc] = await Promise.all([tx.get(itemRef), tx.get(stockRef)]);
       if (!itemDoc.exists) throw new Error('Товар не знайдено');
 
@@ -252,10 +258,10 @@
       const prevQty = stock.qty || 0;
       let newQty = prevQty;
 
-      if (type === 'IN')           newQty = prevQty + qty;
-      else if (type === 'OUT')     newQty = prevQty - qty;
+      if (type === 'IN')             newQty = prevQty + qty;
+      else if (type === 'OUT')       newQty = prevQty - qty;
       else if (type === 'WRITE_OFF') newQty = prevQty - qty;
-      else if (type === 'ADJUST')  newQty = qty;
+      else if (type === 'ADJUST')    newQty = qty;
 
       if (newQty < 0) throw new Error(`Недостатньо на складі: ${item.name} (є ${prevQty}, потрібно ${qty})`);
 
@@ -267,7 +273,6 @@
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       }, { merge: true });
 
-      const opRef = col('warehouse_operations').doc();
       tx.set(opRef, {
         itemId, itemName: item.name,
         type, qty, prevQty, newQty,
@@ -308,7 +313,7 @@
 
   // ── Резервування ─────────────────────────────────────────
   window.whReserve = async function (itemId, qty, reserve = true) {
-    const stockRef = col('warehouse_stock').doc(itemId);
+    const stockRef = compRef().collection('warehouse_stock').doc(itemId);
     return firebase.firestore().runTransaction(async tx => {
       const doc = await tx.get(stockRef);
       const s = doc.exists ? doc.data() : { qty: 0, reserved: 0 };
@@ -363,15 +368,19 @@
     if (!price || !qty) return;
     const total = qty * price;
     try {
+      const today = new Date().toISOString().slice(0, 10);
       const txData = {
-        type: 'expense',
-        amount: total,
-        category: 'exp_materials',
+        type:        'expense',
+        amount:      total,
+        currency:    window._financeState?.currency || 'UAH',
+        category:    'exp_materials',
+        comment:     `Надходження: ${item.name} × ${qty} ${item.unit || 'шт'}`,
         description: `Надходження: ${item.name} × ${qty} ${item.unit || 'шт'}`,
-        date: new Date().toISOString().slice(0, 10),
-        source: 'warehouse',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        userId: window.currentUser?.uid || null,
+        counterparty: '',
+        date:        firebase.firestore.Timestamp.fromDate(new Date()),
+        source:      'warehouse',
+        createdAt:   firebase.firestore.FieldValue.serverTimestamp(),
+        userId:      window.currentUser?.uid || null,
       };
       await col('finance_transactions').add(txData);
     } catch (e) {
@@ -386,20 +395,31 @@
       const existing = await col(window.DB_COLS?.TASKS || 'tasks')
         .where('source', '==', 'warehouse_alert')
         .where('itemId', '==', item.id)
-        .where('status', '==', 'todo')
+        .where('status', '==', 'new')
         .limit(1)
         .get();
       if (!existing.empty) return; // вже є — не дублюємо
 
+      const now   = new Date();
+      const today = now.toISOString().slice(0, 10);
       const taskData = {
         title: `Замовити: ${item.name}`,
         description: `Залишок на складі: ${window.whGetStock(item.id).qty} ${item.unit || 'шт'}. Мінімум: ${item.minStock}`,
-        status: 'todo',
+        status: 'new',
         priority: 'high',
         source: 'warehouse_alert',
         itemId: item.id,
+        // Обов'язкові поля для відображення в системі задач
+        creatorId:    window.currentUser?.uid || null,
+        creatorName:  window.currentUserData?.name || window.currentUser?.email || 'Система',
+        assigneeId:   window.currentUser?.uid || null,
+        assigneeName: window.currentUserData?.name || window.currentUser?.email || '',
+        deadlineDate: today,
+        deadlineTime: '18:00',
+        deadline:     today + 'T18:00',
+        createdDate:  today,
+        pinned: false,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        createdBy: window.currentUser?.uid || null,
       };
       await col(window.DB_COLS?.TASKS || 'tasks').add(taskData);
       if (window.showToast) showToast(`Задача: Замовити ${item.name}`, 'info');
