@@ -542,9 +542,10 @@ module.exports = async (req, res) => {
         const contactId = `${channel}_${normalized.senderId}`;
         // Не зберігаємо /start і технічні команди
         // FIX: capture /start deep link payload (e.g. /start ref_abc)
+        // Зберігаємо payload тимчасово — session ще не визначена тут
+        let _startRefPayload = null;
         if (normalized.text && normalized.text.startsWith('/start') && normalized.text !== '/start') {
-            const startPayload = normalized.text.split(' ')[1] || null;
-            if (startPayload) session.data._startRef = startPayload;
+            _startRefPayload = normalized.text.split(' ')[1] || null;
         }
         if (normalized.text && !normalized.text.startsWith('/start') && normalized.text !== 'start') {
             // PERF: fire-and-forget — запис повідомлення не блокує обробку (-15ms)
@@ -682,6 +683,8 @@ module.exports = async (req, res) => {
         };
         // FIX: guard для session.data — завжди має бути об'єктом
         if (!session.data || typeof session.data !== 'object') session.data = {};
+        // Застосовуємо /start deep link payload тепер коли session визначена
+        if (_startRefPayload) session.data._startRef = _startRefPayload;
         if (!Array.isArray(session.aiHistory)) session.aiHistory = [];
         if (!Array.isArray(session.tags)) session.tags = [];
         // Завжди оновлюємо botId (може змінитись якщо компанія має кілька ботів)
@@ -2394,7 +2397,6 @@ async function sendTg(token, chatId, text, buttons) {
         const _tgAbort = new AbortController();
         const _tgTimer = setTimeout(() => _tgAbort.abort(), 8000);
         const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            signal: AbortSignal.timeout(10000),
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload), signal: _tgAbort.signal
         });
