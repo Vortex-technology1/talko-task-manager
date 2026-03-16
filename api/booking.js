@@ -763,13 +763,14 @@ const bk = {
         const months = ['','Січня','Лютого','Березня','Квітня','Травня','Червня',
                         'Липня','Серпня','Вересня','Жовтня','Листопада','Грудня'];
 
-        el.querySelector('.bk-confirm').innerHTML = \`
+        const confirmEl = el.querySelector('.bk-confirm');
+        confirmEl.innerHTML = \`
             <div class="bk-confirm-icon">\${isPending ? '⏳' : '✅'}</div>
             <h2>\${isPending ? 'Очікує підтвердження' : 'Запис підтверджено!'}</h2>
             <p>\${isPending ? 'Ми зв’яжемося з вами найближчим часом для підтвердження.' : 'Дякуємо! Чекаємо вас.'}</p>
             <div class="bk-confirm-details">
-                <dt>Клієнт</dt><dd>\${name}</dd>
-                <dt>Email</dt><dd>\${email}</dd>
+                <dt>Клієнт</dt><dd id="bk-conf-name"></dd>
+                <dt>Email</dt><dd id="bk-conf-email"></dd>
                 <dt>Дата</dt><dd>\${parseInt(d)} \${months[parseInt(m)]}, \${this.selectedDate.split('-')[0]}</dd>
                 <dt>Час</dt><dd>\${this.selectedTime}</dd>
             </div>
@@ -779,6 +780,11 @@ const bk = {
                 </a>
             </div>\` : ''}
         \`;
+        // XSS-safe: вставляємо user data через textContent, не innerHTML
+        const nameEl  = confirmEl.querySelector('#bk-conf-name');
+        const emailEl = confirmEl.querySelector('#bk-conf-email');
+        if (nameEl)  nameEl.textContent  = name;
+        if (emailEl) emailEl.textContent = email;
         el.scrollIntoView({ behavior: 'smooth' });
     },
 
@@ -881,6 +887,46 @@ module.exports = async (req, res) => {
             if (!companyId || !calendarId || !clientName || !clientEmail || !date || !timeSlot)
                 return res.status(400).json({ error: 'Missing required fields' });
 
+            // ── Server-side validation & sanitization ─────────────────────
+            // Довжина полів
+            if (typeof clientName !== 'string' || clientName.trim().length < 1 || clientName.length > 200)
+                return res.status(400).json({ error: 'Invalid clientName (1-200 chars)' });
+            if (typeof clientEmail !== 'string' || clientEmail.length > 254)
+                return res.status(400).json({ error: 'Invalid email length' });
+            if (clientPhone && typeof clientPhone === 'string' && clientPhone.length > 30)
+                return res.status(400).json({ error: 'Invalid phone length' });
+
+            // Email regex validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(clientEmail.trim()))
+                return res.status(400).json({ error: 'Invalid email format' });
+
+            // Date format validation (YYYY-MM-DD)
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
+                return res.status(400).json({ error: 'Invalid date format' });
+
+            // TimeSlot format (HH:MM)
+            if (!/^\d{2}:\d{2}$/.test(timeSlot))
+                return res.status(400).json({ error: 'Invalid timeSlot format' });
+
+            // Sanitize: trim strings
+            const safeClientName  = clientName.trim().slice(0, 200);
+            const safeClientEmail = clientEmail.trim().toLowerCase().slice(0, 254);
+            const safeClientPhone = (clientPhone || '').toString().trim().slice(0, 30);
+
+            // Rate limiting: перевіряємо чи цей email вже бронював в останні 60 сек
+            const oneMinAgo = new Date(Date.now() - 60000);
+            const recentSnap = await db.collection('companies').doc(companyId)
+                .collection('booking_appointments')
+                .where('clientEmail', '==', safeClientEmail)
+                .where('calendarId', '==', calendarId)
+                .where('createdAt', '>', admin.firestore.Timestamp.fromDate(oneMinAgo))
+                .limit(1).get();
+            if (!recentSnap.empty) {
+                return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+            }
+            // ─────────────────────────────────────────────────────────────
+
             const calDoc = await db.collection('companies').doc(companyId)
                 .collection('booking_calendars').doc(calendarId).get();
             if (!calDoc.exists) return res.status(404).json({ error: 'Calendar not found' });
@@ -932,9 +978,9 @@ module.exports = async (req, res) => {
                         calendarName: cal.name || '',
                         ownerId:      cal.ownerId || '',
                         ownerName:    cal.ownerName || '',
-                        clientName,
-                        clientEmail,
-                        clientPhone:  clientPhone || '',
+                        clientName:   safeClientName,
+                        clientEmail:  safeClientEmail,
+                        clientPhone:  safeClientPhone,
                         clientAnswers: answers || {},
                         startTime:    admin.firestore.Timestamp.fromDate(startTime),
                         endTime:      admin.firestore.Timestamp.fromDate(endTime),
@@ -962,7 +1008,7 @@ module.exports = async (req, res) => {
             // Create Google Calendar event (non-blocking)
             if (cal.ownerId) {
                 createGoogleEvent(companyId, cal.ownerId, {
-                    clientName, clientEmail, clientPhone,
+                    clientName: safeClientName, clientEmail: safeClientEmail, clientPhone: safeClientPhone,
                     startTime: admin.firestore.Timestamp.fromDate(startTime),
                     endTime:   admin.firestore.Timestamp.fromDate(endTime),
                 }, cal).then(eventId => {
@@ -975,9 +1021,9 @@ module.exports = async (req, res) => {
             tgNotify(compRef,
                 `📅 <b>Новий запис!</b>\n` +
                 `Календар: ${cal.name || calendarId}\n` +
-                `Клієнт: ${clientName}\n` +
-                `Email: ${clientEmail}\n` +
-                `Телефон: ${clientPhone || '—'}\n` +
+                `Клієнт: ${safeClientName}\n` +
+                `Email: ${safeClientEmail}\n` +
+                `Телефон: ${safeClientPhone || '—'}\n` +
                 `Дата: ${date} о ${timeSlot}\n` +
                 `Статус: ${status === 'pending' ? 'Очікує підтвердження' : 'Підтверджено'}`
             );
@@ -987,16 +1033,16 @@ module.exports = async (req, res) => {
                 try {
                     const existingSnap = await db.collection('companies').doc(companyId)
                         .collection('crm_clients')
-                        .where('email', '==', clientEmail.toLowerCase())
+                        .where('email', '==', safeClientEmail)
                         .limit(1).get();
 
                     let crmId;
                     if (existingSnap.empty) {
                         const newClient = await db.collection('companies').doc(companyId)
                             .collection('crm_clients').add({
-                                name:  clientName,
-                                email: clientEmail.toLowerCase(),
-                                phone: clientPhone || '',
+                                name:  safeClientName,
+                                email: safeClientEmail,
+                                phone: safeClientPhone,
                                 source: 'booking',
                                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
                                 updatedAt: admin.firestore.FieldValue.serverTimestamp(),
