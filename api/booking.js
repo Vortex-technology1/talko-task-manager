@@ -560,8 +560,22 @@ const bk = {
         this.year  = now.getFullYear();
         this.month = now.getMonth();
         this.renderCalendar();
-        document.getElementById('bk-tz-display').textContent =
-            'Ваш часовий пояс: ' + Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        // Показуємо timezone клієнта і попередження якщо відрізняється
+        const clientTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const calTz = ${JSON.stringify(tz)};
+        const tzEl = document.getElementById('bk-tz-display');
+        if (clientTz && clientTz !== calTz) {
+            tzEl.innerHTML = '\u26a0\ufe0f Час слотів у зоні <b>' + calTz + '</b>. ' +
+                'Ваш часовий пояс: <b>' + clientTz + '</b>. ' +
+                'Переконайтесь що розумієте різницю в часі.';
+            tzEl.style.color = '#92400e';
+            tzEl.style.background = '#fef3c7';
+            tzEl.style.padding = '.4rem .6rem';
+            tzEl.style.borderRadius = '6px';
+        } else {
+            tzEl.textContent = 'Час вказано для зони: ' + calTz;
+        }
     },
 
     prevMonth() {
@@ -714,12 +728,26 @@ const bk = {
                 }),
             });
             const data = await r.json();
-            if (!r.ok) throw new Error(data.error || 'Помилка');
+            if (r.status === 409) {
+                // Слот зайнятий — очищаємо кеш і повертаємо на вибір часу
+                delete this.slotsCache[this.selectedDate];
+                this.selectedTime = null;
+                document.querySelectorAll('.bk-slot').forEach(el => el.classList.remove('selected'));
+                document.getElementById('bk-summary').style.display = 'none';
+                document.getElementById('step-form').style.display = 'none';
+                alert('\u0426\u0435\u0439 \u0447\u0430\u0441 \u0432\u0436\u0435 \u0437\u0430\u0439\u043d\u044f\u0442\u043e. \u0411\u0443\u0434\u044c \u043b\u0430\u0441\u043a\u0430, \u043e\u0431\u0435\u0440\u0456\u0442\u044c \u0456\u043d\u0448\u0438\u0439 \u0447\u0430\u0441.');
+                // Перезавантажуємо слоти
+                await this.selectDate(this.selectedDate);
+                btn.disabled = false;
+                btn.textContent = '\u041f\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0438 \u0437\u0430\u043f\u0438\u0441';
+                return;
+            }
+            if (!r.ok) throw new Error(data.error || '\u041f\u043e\u043c\u0438\u043b\u043a\u0430');
             this.showConfirmation(data, name, email);
         } catch(e) {
-            alert('Помилка: ' + e.message);
+            alert('\u041f\u043e\u043c\u0438\u043b\u043a\u0430: ' + e.message);
             btn.disabled = false;
-            btn.textContent = 'Підтвердити запис';
+            btn.textContent = '\u041f\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0438 \u0437\u0430\u043f\u0438\u0441';
         }
     },
 
@@ -860,54 +888,81 @@ module.exports = async (req, res) => {
 
             if (!cal.isActive) return res.status(400).json({ error: 'Calendar is inactive' });
 
-            const tz       = cal.timezone || 'Europe/Kiev';
-            const duration = cal.duration || 60;
+            const tz        = cal.timezone || 'Europe/Kiev';
+            const duration  = cal.duration || 60;
+            const bufBefore = cal.bufferBefore || 0;
+            const bufAfter  = cal.bufferAfter  || 0;
 
-            // Verify slot is still available
-            const available = await getAvailableSlots(companyId, calendarId, date);
-            if (!available.includes(timeSlot))
-                return res.status(409).json({ error: 'Slot no longer available' });
-
-            const startTime = slotToDate(date, timeSlot, tz);
-            const endTime   = new Date(startTime.getTime() + duration * 60000);
-
+            const startTime  = slotToDate(date, timeSlot, tz);
+            const endTime    = new Date(startTime.getTime() + duration * 60000);
             const status     = cal.confirmationType === 'manual' ? 'pending' : 'confirmed';
             const cancelToken = genToken();
 
             const apptRef = db.collection('companies').doc(companyId)
                 .collection('booking_appointments').doc();
 
-            const apptData = {
-                calendarId,
-                calendarName: cal.name || '',
-                ownerId:      cal.ownerId || '',
-                ownerName:    cal.ownerName || '',
-                clientName,
-                clientEmail,
-                clientPhone:  clientPhone || '',
-                clientAnswers: answers || {},
-                startTime:    admin.firestore.Timestamp.fromDate(startTime),
-                endTime:      admin.firestore.Timestamp.fromDate(endTime),
-                date,
-                timeSlot,
-                timezone: tz,
-                status,
-                cancelToken,
-                googleEventId: null,
-                source:       source || 'direct',
-                crmClientId:  crmClientId || null,
-                crmDealId:    crmDealId   || null,
-                notes: '',
-                createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            };
+            // ── Firestore Transaction: атомарна перевірка + запис ──────────
+            // Захищає від race condition: два клієнти не можуть забронювати
+            // той самий слот одночасно
+            try {
+                await db.runTransaction(async (tx) => {
+                    const conflictSnap = await tx.get(
+                        db.collection('companies').doc(companyId)
+                            .collection('booking_appointments')
+                            .where('calendarId', '==', calendarId)
+                            .where('date', '==', date)
+                            .where('status', 'in', ['confirmed', 'pending'])
+                    );
 
-            await apptRef.set(apptData);
+                    const slotStartMs = startTime.getTime() - bufBefore * 60000;
+                    const slotEndMs   = endTime.getTime()   + bufAfter  * 60000;
+
+                    for (const doc of conflictSnap.docs) {
+                        const a = doc.data();
+                        const aStart = a.startTime.toMillis() - bufBefore * 60000;
+                        const aEnd   = a.endTime.toMillis()   + bufAfter  * 60000;
+                        if (slotStartMs < aEnd && slotEndMs > aStart) {
+                            throw new Error('SLOT_TAKEN');
+                        }
+                    }
+
+                    // Слот вільний — записуємо атомарно
+                    tx.set(apptRef, {
+                        calendarId,
+                        calendarName: cal.name || '',
+                        ownerId:      cal.ownerId || '',
+                        ownerName:    cal.ownerName || '',
+                        clientName,
+                        clientEmail,
+                        clientPhone:  clientPhone || '',
+                        clientAnswers: answers || {},
+                        startTime:    admin.firestore.Timestamp.fromDate(startTime),
+                        endTime:      admin.firestore.Timestamp.fromDate(endTime),
+                        date,
+                        timeSlot,
+                        timezone: tz,
+                        status,
+                        cancelToken,
+                        googleEventId: null,
+                        source:       source || 'direct',
+                        crmClientId:  crmClientId || null,
+                        crmDealId:    crmDealId   || null,
+                        notes: '',
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                });
+            } catch(txErr) {
+                if (txErr.message === 'SLOT_TAKEN') {
+                    return res.status(409).json({ error: 'Slot no longer available. Please choose another time.' });
+                }
+                throw txErr;
+            }
 
             // Create Google Calendar event (non-blocking)
             if (cal.ownerId) {
                 createGoogleEvent(companyId, cal.ownerId, {
-                    ...apptData,
+                    clientName, clientEmail, clientPhone,
                     startTime: admin.firestore.Timestamp.fromDate(startTime),
                     endTime:   admin.firestore.Timestamp.fromDate(endTime),
                 }, cal).then(eventId => {
