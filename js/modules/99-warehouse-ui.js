@@ -992,7 +992,7 @@
 
         <!-- Залишки -->
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem;">
-          <div style="background:${s.qty===0?'#fef2f2':s.qty<=s.minStock?'#fffbeb':'#f0fdf4'};border-radius:8px;padding:0.6rem;text-align:center;">
+          <div style="background:${s.qty===0 && item.minStock>0?'#fef2f2':item.minStock>0&&s.qty<=item.minStock?'#fffbeb':'#f0fdf4'};border-radius:8px;padding:0.6rem;text-align:center;">
             <div style="font-size:1.3rem;font-weight:700;color:${levelColor(level)};">${s.qty}</div>
             <div style="font-size:0.72rem;color:#6b7280;">залишок</div>
           </div>

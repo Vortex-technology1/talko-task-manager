@@ -53,6 +53,14 @@
   };
 
   // ── Слухаємо оновлення stock ─────────────────────────────
+  // Очищаємо notified при оновленні items (видалений товар)
+  window.addEventListener('wh:itemsUpdated', () => {
+    const currentIds = new Set((window.whGetItems ? window.whGetItems() : []).map(i => i.id));
+    _alerts.notified.forEach(id => {
+      if (!currentIds.has(id)) _alerts.notified.delete(id);
+    });
+  });
+
   window.addEventListener('wh:stockUpdated', () => {
     window.whCheckAlerts && window.whCheckAlerts();
   });
