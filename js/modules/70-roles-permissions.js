@@ -153,8 +153,8 @@ const PERMISSION_GROUPS = [
             { key: 'viewTeamList',         label: 'Бачити список команди' },
             { key: 'viewColleagueEmails',  label: 'Бачити email колег' },
             { key: 'editUserCards',        label: window.t('permEditStaff') },
-            { key: 'inviteUsers',          label: 'Запрошувати співробітників' },
-            { key: 'changeRoles',          label: 'Змінювати ролі' },
+            { key: 'inviteUsers',          label: window.t('permInviteStaff') },
+            { key: 'changeRoles',          label: window.t('permChangeRoles') },
             { key: 'removeUsers',          label: window.t('permDeleteStaff') },
         ]
     },

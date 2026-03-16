@@ -3747,7 +3747,7 @@ window._aiFinSend = async function() {
     const BENCHMARKS = {
       construction:  { marginMin:12, marginMax:25, labourPct:35, adminPct:10, name:window.t('nicheConstSubc') },
       medical:       { marginMin:20, marginMax:45, labourPct:50, adminPct:12, name:window.t('nicheMedical') },
-      dental:        { marginMin:25, marginMax:50, labourPct:45, adminPct:10, name:'Стоматологія' },
+      dental:        { marginMin:25, marginMax:50, labourPct:45, adminPct:10, name:window.t('nicheDentistry') },
       beauty:        { marginMin:30, marginMax:55, labourPct:40, adminPct:8,  name:window.t('nicheBeauty') },
       furniture:     { marginMin:15, marginMax:35, labourPct:30, adminPct:8,  name:window.t('nicheFurn3') },
       retail:        { marginMin:10, marginMax:25, labourPct:20, adminPct:7,  name:window.t('nicheRetail') },
@@ -3755,10 +3755,10 @@ window._aiFinSend = async function() {
       manufacturing: { marginMin:12, marginMax:28, labourPct:32, adminPct:8,  name:'Виробництво' },
     };
     const niche = _state.niche || 'general';
-    const bench = BENCHMARKS[niche] || { marginMin:15, marginMax:35, labourPct:35, adminPct:10, name:'Бізнес' };
+    const bench = BENCHMARKS[niche] || { marginMin:15, marginMax:35, labourPct:35, adminPct:10, name:window.t('nicheBusinessWord') };
 
     const systemPrompt = `Ти стратегічний фінансовий аналітик для малого та середнього бізнесу.
-Ніша клієнта: ${bench.name}. Регіон: ${_state.region==='EU'?'Європа':'Україна'}. Валюта: ${_state.currency||'EUR'}.
+Ніша клієнта: ${bench.name}. Регіон: ${_state.region==='EU'?window.t('europeWord'):window.t('ukraineWord')}. Валюта: ${_state.currency||'EUR'}.
 
 БЕНЧМАРКИ НІШІ "${bench.name}":
 - Нормальна маржа: ${bench.marginMin}–${bench.marginMax}%

@@ -67,7 +67,7 @@
             typeCouncilRec:window.t('coordRekomendRada'), typeCouncilDir:'Рада директора',
             typeCouncilExe:'Виконавча рада', typeCouncilOwn:window.t('coordRadaZasnovny'), typeOneoff:'Разова',
             analyticsTitle:window.t('coordAnalityk'),
-            statsSummary:'Координацій: {total} · Рішень: {decisions} · Ескальовано: {unresolved} · Середня тривалість: {avg}хв',
+            statsSummary:window.t('coordStatsFull'),
         },
         ru: {
             title:'Координации', newCoord:'Новая координация', emptyText:'Координаций ещё нет',

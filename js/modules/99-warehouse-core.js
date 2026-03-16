@@ -243,7 +243,7 @@
   window.whDoOperation = async function ({ itemId, type, qty, locationId, price, note, dealId }) {
     if (!itemId || !type || qty == null) throw new Error('whDoOperation: missing params');
     qty = Number(qty);
-    if (isNaN(qty) || qty <= 0) throw new Error('Кількість має бути > 0');
+    if (isNaN(qty) || qty <= 0) throw new Error(window.t('qtyMustBePos'));
 
     // Refs визначаємо ДО транзакції — col() не можна викликати всередині tx
     const db2    = firebase.firestore();

@@ -398,7 +398,7 @@
             const stagesHtml = stages.length > 0
                 ? stages.map(st => `<span title="${_esc(st.name)}" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${st.color||'#9ca3af'};margin-right:2px;"></span>`).join('')
                 : '';
-            return { title:'Лід в CRM', subtitle:cnt>0?'автоматично':'готово до роботи', stat:cnt||null, statLabel:'угод', stagesHtml };
+            return { title:window.t('leadInCRM2'), subtitle:cnt>0?'автоматично':'готово до роботи', stat:cnt||null, statLabel:'угод', stagesHtml };
         }
         if (id==='process') {
             if (f.processTemplateId) {
@@ -433,7 +433,7 @@
             `<div style="display:flex;flex-direction:column;gap:.6rem;">
                 <div>
                     <label style="font-size:.7rem;font-weight:700;color:#6b7280;display:block;margin-bottom:.25rem;">НАЗВА ЕТАПУ *</label>
-                    <input id="mktStageNameInp" placeholder="Наприклад: Кваліфікація, Презентація, Угода..."
+                    <input id="mktStageNameInp" placeholder=window.t('funnelStagesEx')
                         style="width:100%;padding:.5rem .6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:.85rem;box-sizing:border-box;outline:none;"
                         onkeydown="if(event.key==='Enter')mktSaveStage('${funnelId}')">
                 </div>
@@ -567,7 +567,7 @@
             </div>`,
             `<div>
                 <label style="font-size:.7rem;font-weight:700;color:#6b7280;display:block;margin-bottom:.28rem;">НАЗВА *</label>
-                <input id="mktFunnelNameInp" placeholder="Наприклад: Запис на консультацію"
+                <input id="mktFunnelNameInp" placeholder=window.t('funnelNameEx')
                     style="width:100%;padding:.52rem .62rem;border:1px solid #e5e7eb;border-radius:8px;
                     font-size:.87rem;box-sizing:border-box;outline:none;"
                     onkeydown="if(event.key==='Enter')mktSaveNewFunnel()">

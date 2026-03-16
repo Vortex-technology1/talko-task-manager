@@ -239,7 +239,7 @@ window.crmSaveCallLog = async function () {
         window._crmActiveCall = null;
     } catch (e) {
         if (window.showToast) showToast(window.t('errPfx2') + e.message, 'error');
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = '💾 Зберегти дзвінок'; }
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = window.t('saveCallBtn'); }
     }
 };
 

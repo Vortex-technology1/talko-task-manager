@@ -482,8 +482,8 @@
                     { key: 'viewAiAnalysis', label: window.t('aiAnalysis2') },
                 ]},
                 { group: window.t('teamWord'), items: [
-                    { key: 'inviteUsers', label: 'Запрошувати співробітників' },
-                    { key: 'changeRoles', label: 'Змінювати ролі' },
+                    { key: 'inviteUsers', label: window.t('permInviteStaff') },
+                    { key: 'changeRoles', label: window.t('permChangeRoles') },
                 ]},
             ];
 

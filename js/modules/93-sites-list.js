@@ -148,7 +148,7 @@ function _siteCard(site) {
                         ${site.customDomain ? site.customDomain : (site.publicUrl||'').replace(/^https:\/\/[^/]+/,'').slice(0,40)+'...'}
                     </span>
                     <button onclick="navigator.clipboard?.writeText('${site.customDomain ? 'https://'+_esc(site.customDomain) : _esc(site.publicUrl||'')}');event.stopPropagation();if(typeof showToast==='function')showToast('URL скопійовано','success');"
-                        style="background:none;border:none;cursor:pointer;color:#0ea5e9;padding:1px;flex-shrink:0;" title="Копіювати URL">
+                        style="background:none;border:none;cursor:pointer;color:#0ea5e9;padding:1px;flex-shrink:0;" title=window.t('copyURL')>
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                     </button>
                 </div>` : ''}
@@ -502,7 +502,7 @@ function _defaultBlock(type, order) {
             { title:window.t('sitesService2'), price:window.t('sitesPrice2'), text:window.t('sitesShortDesc') },
             { title:window.t('sitesService3'), price:window.t('sitesPrice3'), text:window.t('sitesShortDesc') },
         ]},
-        reviews:  { type:'reviews', order, title:'Відгуки клієнтів', items:[
+        reviews:  { type:'reviews', order, title:window.t('clientReviews'), items:[
             { name:window.t('sitesClient1'), rating:5, text:window.t('sitesReview3') },
             { name:window.t('sitesClient2'), rating:5, text:window.t('sitesReview1') },
         ]},

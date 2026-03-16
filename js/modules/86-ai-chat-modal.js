@@ -30,7 +30,7 @@ window.openAiChat = function({ module, contextText, systemPrompt, title, initial
             <div style="background:#0f1117;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
                 <div style="display:flex;align-items:center;gap:0.6rem;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    <span style="font-size:1rem;font-weight:700;color:#fff;">${title || 'AI Аналіз'}</span>
+                    <span style="font-size:1rem;font-weight:700;color:#fff;">${title || window.t('aiAnalysisWord')}</span>
                 </div>
                 <button onclick="document.getElementById('aiChatOverlay').remove()" style="background:#ffffff18;border:none;cursor:pointer;width:32px;height:32px;border-radius:50%;color:#9ca3af;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
             </div>
@@ -49,7 +49,7 @@ window.openAiChat = function({ module, contextText, systemPrompt, title, initial
             <!-- Input -->
             <div style="border-top:1px solid #e5e7eb;padding:0.75rem 1rem;flex-shrink:0;background:white;">
                 <div style="display:flex;gap:0.5rem;align-items:flex-end;">
-                    <textarea id="aiChatInput" placeholder="Запитай AI або уточни деталі..."
+                    <textarea id="aiChatInput" placeholder=window.t('askAIPh')
                         rows="2"
                         style="flex:1;padding:0.6rem 0.75rem;border:1.5px solid #e5e7eb;border-radius:12px;font-size:0.88rem;font-family:inherit;resize:none;line-height:1.4;outline:none;transition:border-color 0.2s;"
                         onfocus="this.style.borderColor='#8b5cf6'"
@@ -118,7 +118,7 @@ async function _callAI() {
 
     } catch(e) {
         document.getElementById(typingId)?.remove();
-        _appendChatMsg('error', 'Помилка: ' + (e.message || 'невідома'));
+        _appendChatMsg('error', 'Помилка: ' + (e.message || window.t('unknownErr')));
     }
 }
 

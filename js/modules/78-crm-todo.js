@@ -670,7 +670,7 @@ window._crmTodoAddTestDeals = async function() {
                 amount: 0,
                 email: '',
                 telegram: '',
-                clientNiche: 'Стоматологія',
+                clientNiche: window.t('nicheDentistry'),
                 assigneeId: window.currentUser&&window.currentUser.uid||null,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),

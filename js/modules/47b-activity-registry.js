@@ -82,8 +82,8 @@ const AR_LABELS = {
     crm_stage:        window.t('actDealStageChange'),
     crm_deal_created: 'Створив угоду',
     crm_deal_deleted: 'Видалив угоду',
-    login:            'Вхід в систему',
-    report_submitted: 'Подав звіт',
+    login:            window.t('systemLogin'),
+    report_submitted: window.t('submittedReport'),
 };
 
 // ── Запис дії ──────────────────────────────────────────────
@@ -278,12 +278,12 @@ function renderAREntries(entries, content) {
                             </span>
                         </th>
                         <th style="text-align:center;padding:0.25rem 0.5rem;font-weight:600;">
-                            <span style="display:inline-flex;align-items:center;gap:2px;" title="На перевірку">
+                            <span style="display:inline-flex;align-items:center;gap:2px;" title=window.t('toReview')>
                                 <span style="width:12px;height:12px;color:#7c3aed;">${AR_ICONS.task_to_review}</span>
                             </span>
                         </th>
                         <th style="text-align:center;padding:0.25rem 0.5rem;font-weight:600;">
-                            <span style="display:inline-flex;align-items:center;gap:2px;" title="Дзвінки / Дозвони">
+                            <span style="display:inline-flex;align-items:center;gap:2px;" title=window.t('callsConnected')>
                                 <span style="width:12px;height:12px;color:#ea580c;">${AR_ICONS.crm_call}</span>
                             </span>
                         </th>

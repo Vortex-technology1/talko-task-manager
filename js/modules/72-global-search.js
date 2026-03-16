@@ -141,7 +141,7 @@
                 (u.role||'').toLowerCase().includes(q)
             ).slice(0, 4).forEach(u => {
                 const userTasks = (typeof tasks!=='undefined') ? tasks.filter(t=>t.assigneeId===u.id&&t.status!=='done') : [];
-                const roleMap = {owner:gs_t('roleOwner','Власник'),manager:gs_t('roleManager','Менеджер'),admin:gs_t('roleAdmin','Адмін'),employee:gs_t('roleEmployee','Співробітник')};
+                const roleMap = {owner:gs_t('roleOwner','Власник'),manager:gs_t('roleManager','Менеджер'),admin:gs_t('roleAdmin',window.t('adminWord2')),employee:gs_t('roleEmployee',window.t('employeeWord2'))};
                 results.push({
                     category: gs_t('gsSearchUsers','Співробітники'), categoryIcon:'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>',
                     title: u.name||u.email,
@@ -327,8 +327,8 @@
             {keys:['структура','bizstructure','struktur','struktura'], label: gs_t('tabStructure','Структура'), tab:'bizstructure'},
             {keys:['співробітники','users','команда','mitarbeiter','employés','pracownicy'], label: gs_t('tabUsers','Співробітники'), tab:'users'},
             {keys:['навчання','learning','lernen','apprentissage','nauka'], label: gs_t('tabLearning','Навчання'), tab:'learning'},
-            {keys:['crm','клієнти','угоди','kunden','klienci'], label:'CRM', tab:'crm'},
-            {keys:['фінанси','finance','finanzen','finances','finanse'], label: gs_t('finFinances','Фінанси'), tab:'finance'},
+            {keys:['crm',window.t('clientsWordLc'),'угоди','kunden','klienci'], label:'CRM', tab:'crm'},
+            {keys:['фінанси','finance','finanzen','finances','finanse'], label: gs_t('finFinances',window.t('financeWord2')), tab:'finance'},
             {keys:['маркетинг','marketing'], label: gs_t('tabMarketing','Маркетинг'), tab:'marketing'},
             {keys:['боти','bots'], label: gs_t('tabBots','Боти'), tab:'bots'},
             {keys:['сайти','sites','websites'], label: gs_t('tabSites','Сайти'), tab:'sites'},

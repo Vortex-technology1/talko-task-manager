@@ -1707,12 +1707,12 @@ function renderPropPanel() {
                         border-radius:7px;color:white;font-size:11px;box-sizing:border-box;margin-bottom:6px;">
                     <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;">Назва воронки</div>
                     <input id="fcp_notifyFlowName" type="text" value="${d.notifyFlowName||''}"
-                        placeholder="напр: МК Бізнес 60 хвилин"
+                        placeholder=window.t('flowExMaster')
                         style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
                         border-radius:7px;color:white;font-size:11px;box-sizing:border-box;margin-bottom:6px;">
                     <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;">Текст повідомлення</div>
                     <textarea id="fcp_notifyText" rows="3"
-                        placeholder="Новий лід: {{senderName}} розпочав діалог"
+                        placeholder=window.t('newLeadStarted')
                         style="width:100%;padding:8px;background:#1e293b;border:1px solid #334155;
                         border-radius:7px;color:white;font-size:11px;box-sizing:border-box;resize:vertical;">${d.notifyText||'<span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Новий лід: {{senderName}}\nКанал: {{channel}}\nВоронка: {{flowName}}\nДані: {{ai_response}}'}</textarea>
                 </div>` : fld('Параметри (JSON)', ta('actionPayload', d.actionPayload, '{"variable":"phone","value":"{{input}}"}', 3));
@@ -1760,7 +1760,7 @@ function renderPropPanel() {
                     ['gpt-4o',             window.t('gpt4oDesc')],
                     ['gpt-4-turbo',        'GPT-4 Turbo'],
                     ['gpt-3.5-turbo',      'GPT-3.5 Turbo — найдешевший'],
-                    ['o1-mini',            'o1-mini — міркує (повільно)'],
+                    ['o1-mini',            window.t('o1miniDesc')],
                     ['o1',                 'o1 — глибоке мислення'],
                     ['o3-mini',            'o3-mini — швидке мислення'],
                     ['deepseek-chat',      'Deepseek Chat — дешевий'],

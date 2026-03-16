@@ -105,7 +105,7 @@ function _formCard(form) {
             <div style="flex:1;">
                 <div style="font-weight:700;font-size:0.88rem;margin-bottom:0.2rem;">${_esc(form.name||window.t('sitesBlockForm'))}</div>
                 <div style="font-size:0.72rem;color:#9ca3af;margin-bottom:0.4rem;">
-                    Поля: ${_esc(fields || 'не задані')}
+                    Поля: ${_esc(fields || window.t('notSet'))}
                 </div>
                 <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
                     <span style="font-size:0.72rem;color:#22c55e;font-weight:600;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> ${submissions} заявок</span>

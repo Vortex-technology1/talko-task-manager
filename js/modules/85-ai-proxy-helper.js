@@ -24,7 +24,7 @@ window.aiProxy = async function({
 } = {}) {
     const companyId = window.currentCompanyId;
     if (!companyId) throw new Error('currentCompanyId не визначений');
-    if (!messages || !messages.length) throw new Error('messages[] порожній');
+    if (!messages || !messages.length) throw new Error(window.t('messagesEmpty'));
 
     // Firebase ID token для авторизації на сервері
     const user = firebase.auth().currentUser;

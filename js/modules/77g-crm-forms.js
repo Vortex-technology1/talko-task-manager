@@ -147,7 +147,7 @@ window.crmCreateForm = function () {
 
         <label style="display:block;margin-bottom:0.65rem;">
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Назва форми *</div>
-            <input id="crmFormName" placeholder="Запис на консультацію" style="${selStyle}">
+            <input id="crmFormName" placeholder=window.t('bookConsultation') style="${selStyle}">
         </label>
 
         <label style="display:block;margin-bottom:0.65rem;">
@@ -285,7 +285,7 @@ function _ensureFormsTabInSettings() {
     // Додаємо кнопку "Форми" в кінець Settings
     const btn = document.createElement('button');
     btn.setAttribute('data-crm-forms', '1');
-    btn.innerHTML = '🌐 Управління формами →';
+    btn.innerHTML = window.t('manageForms');
     btn.style.cssText = 'width:100%;padding:0.6rem;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;';
     btn.onclick = () => window.crmRenderFormsSettings();
     settingsEl.querySelector('div')?.appendChild(btn);

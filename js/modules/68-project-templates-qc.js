@@ -66,7 +66,7 @@
         </div>
         <div class="form-group">
             <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Назва стандарту</label>
-            <input type="text" id="stdName" value="${std ? esc(std.name || '') : ''}" placeholder="Укладка плитки, Штукатурка стін..." class="input" style="border-radius:14px;padding:0.7rem 1rem;">
+            <input type="text" id="stdName" value="${std ? esc(std.name || '') : ''}" placeholder=window.t('qcStageEx') class="input" style="border-radius:14px;padding:0.7rem 1rem;">
         </div>
         <div class="form-group">
             <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Функція</label>
@@ -187,7 +187,7 @@
             </div>
             <div style="margin-bottom:1rem;">
                 <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Причина відхилення *</label>
-                <textarea id="qcRejectReason" class="form-textarea" rows="3" placeholder="Опишіть що саме не відповідає стандарту..." style="border-radius:12px;" autofocus></textarea>
+                <textarea id="qcRejectReason" class="form-textarea" rows="3" placeholder=window.t('qcRejectPh') style="border-radius:12px;" autofocus></textarea>
             </div>
             <div style="display:flex;gap:0.5rem;">
                 <button class="btn" onclick="closeModal('qcRejectModal')" style="flex:1;border-radius:12px;">Скасувати</button>
@@ -350,12 +350,12 @@
 
         const html = `
         <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;">
-            <h2 style="font-size:1.1rem;font-weight:700;">${tpl ? 'Редагувати шаблон' : 'Новий шаблон проєкту'}</h2>
+            <h2 style="font-size:1.1rem;font-weight:700;">${tpl ? 'Редагувати шаблон' : window.t('newProjectTemplate')}</h2>
             <span class="close" onclick="closeModal('projectTemplateModal')" style="font-size:1.5rem;cursor:pointer;">&times;</span>
         </div>
         <div class="form-group">
             <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Назва шаблону</label>
-            <input type="text" id="tplName" value="${tpl ? esc(tpl.name || '') : ''}" placeholder="Ремонт квартири, Будівництво будинку..." class="input" style="border-radius:14px;padding:0.7rem 1rem;">
+            <input type="text" id="tplName" value="${tpl ? esc(tpl.name || '') : ''}" placeholder=window.t('projectTemplateEx') class="input" style="border-radius:14px;padding:0.7rem 1rem;">
         </div>
         <div class="form-group">
             <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Етапи (по рядку: Назва | Функція | Дні)</label>

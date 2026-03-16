@@ -126,7 +126,7 @@
                 if (invite.expiresAt) {
                     const expires = invite.expiresAt.toDate ? invite.expiresAt.toDate() : new Date(invite.expiresAt);
                     if (new Date() > expires) {
-                        showAuthMessage && showAuthMessage('Посилання для запрошення застаріло. Попросіть менеджера надіслати нове.', 'error');
+                        showAuthMessage && showAuthMessage(window.t('inviteLinkExpired'), 'error');
                         currentInviteData = null;
                         return false;
                     }

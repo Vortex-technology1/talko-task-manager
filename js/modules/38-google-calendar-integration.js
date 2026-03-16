@@ -77,7 +77,7 @@
         
         function connectGoogleCalendar() {
             if (!currentUser || !window.currentCompanyId) {
-                if (typeof showAlertModal === 'function') showAlertModal('Спочатку увійдіть в систему');
+                if (typeof showAlertModal === 'function') showAlertModal(window.t('loginFirst'));
                 return;
             }
             const uid       = currentUser.uid;
