@@ -67,6 +67,11 @@ const TALKO_EVENTS = {
     // BROADCAST
     BROADCAST_SENT:          'broadcast.sent',
     BROADCAST_FAILED:        'broadcast.failed',
+
+    // ── ЗАМОВЛЕННЯ ШТОРИ (Ярослав) ──────────────────────────────
+    MEASUREMENT_ASSIGNED:    'deal.measurement_assigned',   // замірник + дата призначені
+    INSTALLATION_ASSIGNED:   'deal.installation_assigned',  // монтажник + дата призначені
+    PREPAYMENT_RECEIVED:     'deal.prepayment_received',    // передоплата зафіксована
 };
 
 // ─────────────────────────────────────────
@@ -232,6 +237,169 @@ const _defaultAutomationRules = [
             priority: 'high',
         }),
         description: 'Бюджет перевищено → задача-попередження менеджеру',
+    },
+
+    // ═══════════════════════════════════════════════════════════════
+    // ПРАВИЛА ДЛЯ ЗАМОВЛЕННЯ ШТОР (Ярослав, Чехія)
+    // ═══════════════════════════════════════════════════════════════
+
+    // КП ПОГОДЖЕНО → задача для цеху (пошив)
+    {
+        id: 'cp_approved_workshop_task',
+        triggerEvent: TALKO_EVENTS.DEAL_STAGE_CHANGED,
+        condition: (e) => ['approved', 'Погоджено', 'won'].includes(e.payload.toStage),
+        action: _actionCreateTask,
+        actionParams: (e) => ({
+            title: `🧵 ТЗ на пошив: ${e.payload.clientName || e.payload.dealTitle || ''}`,
+            description: `Замовлення підтверджено. Деталізація по кімнатах і вікнах — у вкладці КП картки угоди CRM.\nФіліал: ${e.payload.branch || '—'}`,
+            deadlineOffset: '+3d',
+            dealId: e.payload.dealId,
+            clientId: e.payload.clientId || null,
+            assigneeId: e.payload.assignedToId || null,
+            priority: 'high',
+        }),
+        description: 'КП погоджено → задача цеху на пошив',
+    },
+
+    // КП ПОГОДЖЕНО → задача закупнику (матеріали)
+    {
+        id: 'cp_approved_purchase_task',
+        triggerEvent: TALKO_EVENTS.DEAL_STAGE_CHANGED,
+        condition: (e) => ['approved', 'Погоджено', 'won'].includes(e.payload.toStage),
+        action: _actionCreateTask,
+        actionParams: (e) => ({
+            title: `📦 Закупівля матеріалів: ${e.payload.clientName || e.payload.dealTitle || ''}`,
+            description: `Перевір позиції КП у картці угоди CRM і сформуй список матеріалів для закупівлі.\nФіліал: ${e.payload.branch || '—'}`,
+            deadlineOffset: '+2d',
+            dealId: e.payload.dealId,
+            clientId: e.payload.clientId || null,
+            assigneeId: e.payload.assignedToId || null,
+            priority: 'high',
+        }),
+        description: 'КП погоджено → задача закупнику на матеріали',
+    },
+
+    // КП ПОГОДЖЕНО → задача логісту (планування монтажу)
+    {
+        id: 'cp_approved_logistics_task',
+        triggerEvent: TALKO_EVENTS.DEAL_STAGE_CHANGED,
+        condition: (e) => ['approved', 'Погоджено', 'won'].includes(e.payload.toStage),
+        action: _actionCreateTask,
+        actionParams: (e) => ({
+            title: `🗺 Планування монтажу: ${e.payload.clientName || e.payload.dealTitle || ''}`,
+            description: `Запланувати виїзд монтажників.\nАдреса: ${e.payload.objectAddress || 'уточни в CRM'}\nФіліал: ${e.payload.branch || '—'}`,
+            deadlineOffset: '+5d',
+            dealId: e.payload.dealId,
+            clientId: e.payload.clientId || null,
+            assigneeId: e.payload.assignedToId || null,
+            priority: 'normal',
+        }),
+        description: 'КП погоджено → задача логісту на планування монтажу',
+    },
+
+    // ПЕРЕДОПЛАТА → старт виробництва
+    {
+        id: 'prepayment_start_production',
+        triggerEvent: TALKO_EVENTS.PREPAYMENT_RECEIVED,
+        condition: null,
+        action: _actionCreateTask,
+        actionParams: (e) => ({
+            title: `✅ Старт виробництва: ${e.payload.clientName || ''}`,
+            description: `Передоплата ${e.payload.prepayment || ''}€ отримана. Починаємо пошив.\nФіліал: ${e.payload.branch || '—'}`,
+            deadlineOffset: '+0d',
+            dealId: e.payload.dealId,
+            priority: 'high',
+        }),
+        description: 'Передоплата зафіксована → задача старт виробництва',
+    },
+
+    // ЗАМІР ПРИЗНАЧЕНО → Google Calendar (якщо підключено)
+    {
+        id: 'measurement_calendar_event',
+        triggerEvent: TALKO_EVENTS.MEASUREMENT_ASSIGNED,
+        condition: (e) => !!(e.payload.measurerId && e.payload.measurementDate),
+        action: async (event) => {
+            try {
+                if (!window.currentCompanyId) return;
+                const { measurerId, measurementDate, objectAddress, clientName, dealId } = event.payload;
+                // Читаємо Google token замірника
+                const userDoc = await window.companyRef().collection('users').doc(measurerId).get();
+                if (!userDoc.exists) return;
+                const userData = userDoc.data();
+                if (!userData.googleCalendarConnected || !userData.googleAccessToken) return;
+                // Формуємо подію
+                const startDt = new Date(measurementDate);
+                const endDt   = new Date(startDt.getTime() + 60 * 60 * 1000); // +1 год
+                const calEvent = {
+                    summary:     `Замір: ${clientName || ''}`,
+                    description: `Замовлення ID: ${dealId}\nВідкрити CRM: ${window.location.origin}`,
+                    location:    objectAddress || '',
+                    start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
+                    end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },
+                };
+                // Відправляємо через Google Calendar API
+                const resp = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${userData.googleAccessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(calEvent),
+                });
+                if (!resp.ok) {
+                    const err = await resp.json();
+                    console.warn('[Calendar] measurement event error:', err?.error?.message);
+                } else {
+                    console.log('[Calendar] measurement event created for', measurerId);
+                }
+            } catch(e) {
+                console.error('[Calendar] measurement_calendar_event error:', e.message);
+            }
+        },
+        description: 'Замір призначено → подія в Google Calendar замірника',
+    },
+
+    // МОНТАЖ ПРИЗНАЧЕНО → Google Calendar (якщо підключено)
+    {
+        id: 'installation_calendar_event',
+        triggerEvent: TALKO_EVENTS.INSTALLATION_ASSIGNED,
+        condition: (e) => !!(e.payload.installerId && e.payload.installationDate),
+        action: async (event) => {
+            try {
+                if (!window.currentCompanyId) return;
+                const { installerId, installationDate, objectAddress, clientName, dealId } = event.payload;
+                const userDoc = await window.companyRef().collection('users').doc(installerId).get();
+                if (!userDoc.exists) return;
+                const userData = userDoc.data();
+                if (!userData.googleCalendarConnected || !userData.googleAccessToken) return;
+                const startDt = new Date(installationDate);
+                const endDt   = new Date(startDt.getTime() + 2 * 60 * 60 * 1000); // +2 год
+                const calEvent = {
+                    summary:     `Монтаж: ${clientName || ''}`,
+                    description: `Замовлення ID: ${dealId}\nВідкрити CRM: ${window.location.origin}`,
+                    location:    objectAddress || '',
+                    start: { dateTime: startDt.toISOString(), timeZone: 'Europe/Prague' },
+                    end:   { dateTime: endDt.toISOString(),   timeZone: 'Europe/Prague' },
+                };
+                const resp = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${userData.googleAccessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(calEvent),
+                });
+                if (!resp.ok) {
+                    const err = await resp.json();
+                    console.warn('[Calendar] installation event error:', err?.error?.message);
+                } else {
+                    console.log('[Calendar] installation event created for', installerId);
+                }
+            } catch(e) {
+                console.error('[Calendar] installation_calendar_event error:', e.message);
+            }
+        },
+        description: 'Монтаж призначено → подія в Google Calendar монтажника',
     },
 ];
 
@@ -668,6 +836,132 @@ onTalkoEvent('*', (e) => {
     if (e.type === 'company.changed') {
         window._talko_pipeline_cache = {};
         window._talko_rules_cache = null;
+    }
+});
+
+// ══════════════════════════════════════════════════════════
+// WhatsApp Business — helper waSend
+// Відправляє повідомлення через api/whatsapp-send
+// ══════════════════════════════════════════════════════════
+window.waSend = async function(phone, message, apiKeyOverride) {
+    if (!phone || !message) return { ok: false, error: 'phone or message missing' };
+    if (!window.currentCompanyId) return { ok: false, error: 'no companyId' };
+
+    // Якщо передали apiKey напряму (тест) — передаємо його через X-WA-KEY
+    const headers = { 'Content-Type': 'application/json' };
+    if (apiKeyOverride) headers['X-WA-KEY'] = apiKeyOverride;
+
+    try {
+        const res = await fetch('/api/whatsapp-send', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+                phone,
+                message,
+                companyId: window.currentCompanyId,
+            }),
+        });
+        return await res.json();
+    } catch(e) {
+        console.error('[waSend] error:', e.message);
+        return { ok: false, error: e.message };
+    }
+};
+
+// ── WhatsApp automation listeners ─────────────────────────
+// Підписуємось на події і відправляємо повідомлення клієнту
+
+// 1. ЗАМІР ПРИЗНАЧЕНО → клієнту
+onTalkoEvent(TALKO_EVENTS.MEASUREMENT_ASSIGNED, async (event) => {
+    const { clientPhone, clientName, measurementDate, measurerId } = event.payload;
+    if (!clientPhone) return;
+    try {
+        // Отримуємо ім'я замірника
+        let measurerName = 'наш спеціаліст';
+        if (measurerId && window.companyRef) {
+            const uDoc = await window.companyRef().collection('users').doc(measurerId).get();
+            if (uDoc.exists) measurerName = uDoc.data()?.name || uDoc.data()?.email || measurerName;
+        }
+        const dt = measurementDate ? new Date(measurementDate).toLocaleString('cs-CZ', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit',
+        }) : '—';
+        const msg = `Dobrý den, ${clientName || ''}!\n\nPotvrzen termín měření: ${dt}\nNaší specialista: ${measurerName}\n\nPro dotazy nás kontaktujte.\nS pozdravem, Talko Curtains`;
+        await window.waSend(clientPhone, msg);
+    } catch(e) {
+        console.warn('[WA] measurement_assigned handler:', e.message);
+    }
+});
+
+// 2. КП ПОГОДЖЕНО → клієнту рахунок на передоплату
+onTalkoEvent(TALKO_EVENTS.DEAL_STAGE_CHANGED, async (event) => {
+    if (!['approved', 'Погоджено'].includes(event.payload.toStage)) return;
+    const deal = event.payload;
+    if (!deal.clientPhone) return;
+    try {
+        // Читаємо deal з CRM щоб отримати phone якщо не в payload
+        let phone = deal.clientPhone;
+        if (!phone && deal.dealId && window.companyRef) {
+            const d = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(deal.dealId).get();
+            phone = d.data()?.phone || null;
+        }
+        if (!phone) return;
+        const amount = deal.amount ? (deal.amount / 2).toFixed(0) : '—';
+        const msg = `Dobrý den, ${deal.clientName || ''}!\n\nVaše objednávka závěsů byla potvrzena ✓\n\nZáloha (50%): ${amount} €\nPo přijetí zálohy zahájíme výrobu.\n\nDěkujeme za důvěru!\nTalko Curtains`;
+        await window.waSend(phone, msg);
+    } catch(e) {
+        console.warn('[WA] cp_approved handler:', e.message);
+    }
+});
+
+// 3. ПЕРЕДОПЛАТА → клієнту підтвердження старту
+onTalkoEvent(TALKO_EVENTS.PREPAYMENT_RECEIVED, async (event) => {
+    const { clientPhone, clientName, prepayment } = event.payload;
+    if (!clientPhone) return;
+    try {
+        const msg = `Dobrý den, ${clientName || ''}!\n\nObdrželi jsme zálohu ${prepayment || ''}€ ✓\nZahajujeme výrobu Vašich závěsů.\n\nO termínu montáže Vás budeme informovat.\nTalko Curtains`;
+        await window.waSend(clientPhone, msg);
+    } catch(e) {
+        console.warn('[WA] prepayment handler:', e.message);
+    }
+});
+
+// 4. МОНТАЖ ПРИЗНАЧЕНО → клієнту
+onTalkoEvent(TALKO_EVENTS.INSTALLATION_ASSIGNED, async (event) => {
+    const { clientPhone, clientName, installationDate, installerId } = event.payload;
+    if (!clientPhone) return;
+    try {
+        let installerName = 'náš technik';
+        if (installerId && window.companyRef) {
+            const uDoc = await window.companyRef().collection('users').doc(installerId).get();
+            if (uDoc.exists) installerName = uDoc.data()?.name || uDoc.data()?.email || installerName;
+        }
+        const dt = installationDate ? new Date(installationDate).toLocaleString('cs-CZ', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit',
+        }) : '—';
+        const msg = `Dobrý den, ${clientName || ''}!\n\nTermín montáže potvrzen: ${dt}\nNáš technik: ${installerName}\n\nProsíme o zajištění přístupu.\nTalko Curtains`;
+        await window.waSend(clientPhone, msg);
+    } catch(e) {
+        console.warn('[WA] installation_assigned handler:', e.message);
+    }
+});
+
+// 5. УГОДА ЗАКРИТА (WON) → подяка + нагадування про 6 міс
+onTalkoEvent(TALKO_EVENTS.DEAL_WON, async (event) => {
+    const deal = event.payload;
+    if (!deal.clientPhone) return;
+    try {
+        let phone = deal.clientPhone;
+        if (!phone && deal.dealId && window.companyRef) {
+            const d = await window.companyRef().collection(window.DB_COLS?.CRM_DEALS || 'crm_deals').doc(deal.dealId).get();
+            phone = d.data()?.phone || null;
+        }
+        if (!phone) return;
+        const msg = `Dobrý den, ${deal.clientName || ''}!\n\nDěkujeme za Vaši objednávku ✓\nTěšíme se na případnou spolupráci.\n\nPS: Za 6 měsíců Vám připomeneme čištění závěsů 😊\nTalko Curtains`;
+        await window.waSend(phone, msg);
+    } catch(e) {
+        console.warn('[WA] deal_won handler:', e.message);
     }
 });
 

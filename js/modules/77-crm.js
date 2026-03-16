@@ -2065,6 +2065,91 @@ function _renderDealDetails(deal) {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Monobank — посилання на оплату ${deal.amount ? '('+_fmt(deal.amount)+')' : ''}
         </button>` : ''}
     </div>
+
+    <!-- ── ЗАМОВЛЕННЯ (ШТОРИ) ──────────────────────────────────── -->
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:0.65rem 0.75rem;margin-bottom:0.9rem;">
+        <div style="font-size:0.68rem;font-weight:700;color:#15803d;text-transform:uppercase;margin-bottom:0.6rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Деталі замовлення
+        </div>
+
+        <!-- Рядок 1: Філіал + Адреса об'єкту -->
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:0.5rem;margin-bottom:0.5rem;">
+            <div>
+                <label style="${lbl}">Філіал</label>
+                <select id="dd_branch" style="${inp}background:white;cursor:pointer;">
+                    <option value="" ${!deal.branch?'selected':''}>— не вказано —</option>
+                    <option value="prague"    ${deal.branch==='prague'    ?'selected':''}>🏙 Прага</option>
+                    <option value="brno"      ${deal.branch==='brno'      ?'selected':''}>🏘 Брно</option>
+                    <option value="bratislava"${deal.branch==='bratislava'?'selected':''}>🌆 Братислава</option>
+                </select>
+            </div>
+            <div>
+                <label style="${lbl}">Адреса об'єкту</label>
+                <input id="dd_objectAddress" value="${_esc(deal.objectAddress||'')}" placeholder="вул. Náměstí Míru 12, Praha 2" style="${inp}">
+            </div>
+        </div>
+
+        <!-- Рядок 2: Замірник + Дата заміру -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
+            <div>
+                <label style="${lbl}">Замірник</label>
+                <select id="dd_measurer" style="${inp}background:white;cursor:pointer;">
+                    <option value="" ${!deal.measurerId?'selected':''}>— не призначено —</option>
+                    ${(typeof users !== 'undefined' ? users : []).map(u =>
+                        '<option value="' + u.id + '" ' + (deal.measurerId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>'
+                    ).join('')}
+                </select>
+            </div>
+            <div>
+                <label style="${lbl}">Дата і час заміру</label>
+                <input id="dd_measurementDate" type="datetime-local" value="${deal.measurementDate||''}" style="${inp}">
+            </div>
+        </div>
+
+        <!-- Рядок 3: Монтажник + Дата монтажу -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
+            <div>
+                <label style="${lbl}">Монтажник</label>
+                <select id="dd_installer" style="${inp}background:white;cursor:pointer;">
+                    <option value="" ${!deal.installerId?'selected':''}>— не призначено —</option>
+                    ${(typeof users !== 'undefined' ? users : []).map(u =>
+                        '<option value="' + u.id + '" ' + (deal.installerId===u.id?'selected':'') + '>' + _esc(u.name||u.email||u.id) + '</option>'
+                    ).join('')}
+                </select>
+            </div>
+            <div>
+                <label style="${lbl}">Дата і час монтажу</label>
+                <input id="dd_installationDate" type="datetime-local" value="${deal.installationDate||''}" style="${inp}">
+            </div>
+        </div>
+
+        <!-- Рядок 4: Передоплата + Залишок (авто) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+            <div>
+                <label style="${lbl}">Передоплата (€)</label>
+                <input id="dd_prepayment" type="number" min="0" step="0.01"
+                    value="${deal.prepayment||''}" placeholder="0"
+                    oninput="(function(){
+                        var prep=parseFloat(document.getElementById('dd_prepayment').value)||0;
+                        var amt=parseFloat(document.getElementById('dd_amount').value)||0;
+                        var bal=Math.max(0,amt-prep);
+                        var el=document.getElementById('dd_balance_display');
+                        if(el) el.textContent=bal.toFixed(2)+' €';
+                    })()" style="${inp}">
+            </div>
+            <div>
+                <label style="${lbl}">Залишок до оплати</label>
+                <div id="dd_balance_display" style="${inp}background:#f9fafb;color:#374151;font-weight:600;display:flex;align-items:center;">
+                    ${deal.amount && deal.prepayment != null
+                        ? (Math.max(0, (deal.amount||0) - (deal.prepayment||0))).toFixed(2) + ' €'
+                        : '—'}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ── /ЗАМОВЛЕННЯ (ШТОРИ) ─────────────────────────────────── -->
+
     ${deal.leadData && Object.keys(deal.leadData).some(k => deal.leadData[k]) ? `
     <div style="background:#f8fafc;border-radius:8px;padding:0.75rem;border:1px solid #e8eaed;margin-bottom:0.9rem;">
         <div style="font-size:0.68rem;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:0.5rem;">Дані з боту</div>
@@ -2339,6 +2424,14 @@ window.crmSaveDeal = async function(dealId) {
     const source   = document.getElementById('dd_source')?.value || deal.source || 'manual';
     const ttn      = document.getElementById('dd_ttn')?.value.trim() || deal.ttn || '';
     const payStatus= document.getElementById('dd_payStatus')?.value || deal.payStatus || '';
+    // ── Поля замовлення (штори) ──
+    const branch           = document.getElementById('dd_branch')?.value || deal.branch || null;
+    const objectAddress    = document.getElementById('dd_objectAddress')?.value?.trim() || deal.objectAddress || null;
+    const measurerId       = document.getElementById('dd_measurer')?.value || deal.measurerId || null;
+    const measurementDate  = document.getElementById('dd_measurementDate')?.value || deal.measurementDate || null;
+    const installerId      = document.getElementById('dd_installer')?.value || deal.installerId || null;
+    const installationDate = document.getElementById('dd_installationDate')?.value || deal.installationDate || null;
+    const prepayment       = parseFloat(document.getElementById('dd_prepayment')?.value) || deal.prepayment || 0;
 
     try {
         const stageChanged = stage && stage !== deal.stage;
@@ -2360,6 +2453,14 @@ window.crmSaveDeal = async function(dealId) {
             ttn: ttn || null, payStatus: payStatus || null,
             expectedClose: expClose||null, nextContactDate: nextContact||null,
             assigneeId: assigneeId||deal.assigneeId||null,
+            // ── Поля замовлення (штори) ──
+            branch: branch || null,
+            objectAddress: objectAddress || null,
+            measurerId: measurerId || null,
+            measurementDate: measurementDate || null,
+            installerId: installerId || null,
+            installationDate: installationDate || null,
+            prepayment: prepayment || 0,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
         // FIX: оновлюємо stageEnteredAt при зміні стадії через форму
@@ -2393,6 +2494,47 @@ window.crmSaveDeal = async function(dealId) {
         }
         Object.assign(deal, updates);
         if (stageChanged) deal.stageEnteredAt = { toMillis: () => Date.now() };
+
+        // ── Emit подій для нових полів замовлення (штори) ──
+        if (typeof emitTalkoEvent === 'function' && window.TALKO_EVENTS) {
+            // Замір призначено (якщо змінились поля замірника або дати)
+            const measurerChanged = measurerId && (measurerId !== deal._prev_measurerId || measurementDate !== deal._prev_measurementDate);
+            if (measurerId && measurementDate && (measurerId !== deal._prev_measurerId || measurementDate !== deal._prev_measurementDate)) {
+                emitTalkoEvent('deal.measurement_assigned', {
+                    dealId,
+                    measurerId,
+                    measurementDate,
+                    objectAddress: objectAddress || null,
+                    clientName: deal.clientName || deal.title || '',
+                    clientPhone: deal.phone || null,
+                    branch: branch || null,
+                });
+            }
+            // Монтаж призначено
+            if (installerId && installationDate && (installerId !== deal._prev_installerId || installationDate !== deal._prev_installationDate)) {
+                emitTalkoEvent('deal.installation_assigned', {
+                    dealId,
+                    installerId,
+                    installationDate,
+                    objectAddress: objectAddress || null,
+                    clientName: deal.clientName || deal.title || '',
+                    clientPhone: deal.phone || null,
+                    branch: branch || null,
+                });
+            }
+            // Передоплата отримана (якщо раніше не було, а тепер є)
+            if (prepayment > 0 && (!deal._prev_prepayment || deal._prev_prepayment === 0)) {
+                emitTalkoEvent('deal.prepayment_received', {
+                    dealId,
+                    prepayment,
+                    amount: amount || deal.amount || 0,
+                    clientName: deal.clientName || deal.title || '',
+                    clientPhone: deal.phone || null,
+                    branch: branch || null,
+                });
+            }
+        }
+
         crmCloseDeal();
         if (typeof showToast === 'function') showToast(window.t('crmSaved'), 'success');
     } catch(e) {

@@ -189,6 +189,67 @@ async function processCompany(companyId, companyData) {
         at:        admin.firestore.FieldValue.serverTimestamp(),
     }).catch(e => console.warn('[crm-reminders] log write error:', e.message));
 
+    // ── Нагадування про чищення штор (+180 днів після закриття) ──
+    try {
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setDate(sixMonthsAgo.getDate() - 180);
+        const d180start = sixMonthsAgo.toISOString().split('T')[0] + 'T00:00:00';
+        const d180end   = sixMonthsAgo.toISOString().split('T')[0] + 'T23:59:59';
+
+        // Читаємо API ключ WhatsApp компанії
+        const intgDoc = await compRef.collection('settings').doc('integrations').get().catch(() => null);
+        const waApiKey = intgDoc?.data()?.whatsappApiKey || null;
+
+        if (waApiKey) {
+            // Шукаємо угоди закриті рівно 180 днів тому (±1 день)
+            const cleaningSnap = await compRef.collection('crm_deals')
+                .where('stage', '==', 'won')
+                .where('cleaningReminderSent', '==', false)
+                .get().catch(() => null);
+
+            if (cleaningSnap && !cleaningSnap.empty) {
+                for (const doc of cleaningSnap.docs) {
+                    const d = doc.data();
+                    const closedAt = d.updatedAt?.toDate?.() || null;
+                    if (!closedAt) continue;
+
+                    const closedStr = closedAt.toISOString().split('T')[0];
+                    if (closedStr < sixMonthsAgo.toISOString().split('T')[0]) continue;
+                    if (!d.phone) continue;
+
+                    // Відправляємо WhatsApp нагадування
+                    const clientName = d.clientName || d.title || '';
+                    const msg = `Dobrý den${clientName ? ', ' + clientName : ''}!\n\nVaše závěsy jsou s námi již 6 měsíců 🎉\n\nNabízíme profesionální čištění závěsů — objednejte se ještě dnes!\n\nTalko Curtains`;
+
+                    try {
+                        const waRes = await fetch('https://waba.360dialog.io/v1/messages', {
+                            method: 'POST',
+                            headers: {
+                                'D360-API-KEY': waApiKey,
+                                'Content-Type': 'application/json',
+                            },
+                            signal: AbortSignal.timeout(8000),
+                            body: JSON.stringify({
+                                messaging_product: 'whatsapp',
+                                to: d.phone.replace(/[^0-9]/g, ''),
+                                type: 'text',
+                                text: { body: msg },
+                            }),
+                        });
+                        if (waRes.ok) {
+                            await doc.ref.update({ cleaningReminderSent: true });
+                            console.log(`[crm-reminders] 180-day cleaning WA sent to ${d.phone}`);
+                        }
+                    } catch(waErr) {
+                        console.warn('[crm-reminders] 180-day WA send error:', waErr.message);
+                    }
+                }
+            }
+        }
+    } catch(e) {
+        console.warn('[crm-reminders] 180-day cleaning reminder error:', e.message);
+    }
+
     return { sent: sentCount > 0, sentCount, overdue: overdue.length, dueToday: dueToday.length };
 }
 
