@@ -622,7 +622,7 @@ window._bkToggleCalendar = async function(calId, isActive) {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
         if (typeof showToast === 'function')
-            showToast(isActive ? 'Увімкнено' : 'Вимкнено', 'success');
+            showToast(isActive ? window.t('enabledWord') : 'Вимкнено', 'success');
     } catch(e) {
         alert('Помилка: ' + e.message);
     }
@@ -650,7 +650,7 @@ window._bkConfirmAppt = async function(apptId) {
             status: 'confirmed',
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        if (typeof showToast === 'function') showToast('Підтверджено', 'success');
+        if (typeof showToast === 'function') showToast(window.t('confirmedWord'), 'success');
         if (bk.activeCalendarId) loadAppointments(bk.activeCalendarId);
     } catch(e) { alert('Помилка: ' + e.message); }
 };

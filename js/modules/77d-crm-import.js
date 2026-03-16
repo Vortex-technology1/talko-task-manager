@@ -167,11 +167,11 @@ function _crmImportStepMapping(rows) {
     const preview = rows.slice(1, 6);
 
     const FIELDS = [
-        { id: 'name',   label: "Ім'я клієнта",  required: true  },
+        { id: 'name',   label: window.t('clientNameField'),  required: true  },
         { id: 'phone',  label: 'Телефон',        required: false },
         { id: 'email',  label: 'Email',           required: false },
         { id: 'source', label: window.t('crmSrc2'),         required: false },
-        { id: 'niche',  label: 'Ніша',            required: false },
+        { id: 'niche',  label: window.t('nicheField'),            required: false },
         { id: 'note',   label: 'Нотатка',         required: false },
         { id: 'amount', label: 'Сума угоди',      required: false },
         { id: 'stage',  label: window.t('crmStg2'),          required: false },
@@ -185,10 +185,10 @@ function _crmImportStepMapping(rows) {
         if (['phone','телефон','тел','mobile'].some(k => hn.includes(k))) return 'phone';
         if (['email','mail','пошта'].some(k => hn.includes(k))) return 'email';
         if (['source','джерело','канал'].some(k => hn.includes(k))) return 'source';
-        if (['niche','ніша','сфера','галузь'].some(k => hn.includes(k))) return 'niche';
+        if (['niche',window.t('nicheFieldLc'),'сфера','галузь'].some(k => hn.includes(k))) return 'niche';
         if (['note','нотатка','коментар','comment','опис'].some(k => hn.includes(k))) return 'note';
-        if (['amount','сума','sum','бюджет','ціна'].some(k => hn.includes(k))) return 'amount';
-        if (['stage','стадія','статус','status'].some(k => hn.includes(k))) return 'stage';
+        if (['amount','сума','sum','бюджет',window.t('priceLc')].some(k => hn.includes(k))) return 'amount';
+        if (['stage',window.t('stageWordLc'),'статус','status'].some(k => hn.includes(k))) return 'stage';
         return 'skip';
     });
 

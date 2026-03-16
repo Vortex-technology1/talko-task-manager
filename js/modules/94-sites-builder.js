@@ -217,7 +217,7 @@ function _updateHeader() {
     if (nameEl) nameEl.textContent = sb.site.name || window.t('botsNoTitle');
     if (statusEl) {
         const pub = sb.site.status === 'published';
-        statusEl.textContent      = pub ? (window.t?.('sitesPublishedBadge') || 'Опубліковано') : (window.t?.('sitesDraftBadge') || 'Чернетка');
+        statusEl.textContent      = pub ? (window.t?.('sitesPublishedBadge') || window.t('publishedWord')) : (window.t?.('sitesDraftBadge') || 'Чернетка');
         statusEl.style.background = pub ? '#f0fdf4' : '#f9fafb';
         statusEl.style.color      = pub ? '#16a34a' : '#9ca3af';
         statusEl.style.border     = pub ? '1px solid #bbf7d0' : '1px solid #e5e7eb';
@@ -704,7 +704,7 @@ window.sbTogglePublish = async function() {
                 const a = document.createElement('a');
                 a.href = _pubUrl; a.target = '_blank';
                 a.style.cssText = 'position:fixed;bottom:70px;right:20px;z-index:9999;background:#22c55e;color:white;padding:0.6rem 1.25rem;border-radius:10px;font-weight:700;font-size:0.85rem;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.2);';
-                a.textContent = '🌐 Відкрити сайт';
+                a.textContent = window.t('openSiteBtn');
                 a.id = 'sbSiteLinkBtn';
                 document.getElementById('sbSiteLinkBtn')?.remove();
                 document.body.appendChild(a);
@@ -735,18 +735,18 @@ function _updatePublishBtn() {
 
     // Publish/Unpublish кнопка
     if (pub) {
-        // Опублікований → показуємо "Зняти з публікації" червоним
+        // Опублікований → показуємо window.t('unpublishWord') червоним
         btn.style.background  = '#fef2f2';
         btn.style.borderColor = '#fecaca';
         btn.style.color       = '#dc2626';
-        if (label) label.textContent = 'Зняти з публікації';
+        if (label) label.textContent = window.t('unpublishWord');
         if (icon)  icon.innerHTML = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>';
     } else {
-        // Чернетка → показуємо "Публікувати" зеленим
+        // Чернетка → показуємо window.t('publishWord') зеленим
         btn.style.background  = '#f0fdf4';
         btn.style.borderColor = '#bbf7d0';
         btn.style.color       = '#16a34a';
-        if (label) label.textContent = 'Публікувати';
+        if (label) label.textContent = window.t('publishWord');
         if (icon)  icon.innerHTML = '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>';
     }
 
@@ -858,7 +858,7 @@ function _renderSeoPanel() {
         </div>
         <div style="margin-bottom:0.5rem;">
             <label style="${lbl}">Keywords</label>
-            <input id="seo_keywords" value="${_esc(s.seoKeywords||'')}" placeholder="ключові, слова, через кому" style="${inp}">
+            <input id="seo_keywords" value="${_esc(s.seoKeywords||'')}" placeholder=window.t('keywordsPh') style="${inp}">
         </div>
         <div>
             <label style="${lbl}">OG Image URL (соц мережі)</label>

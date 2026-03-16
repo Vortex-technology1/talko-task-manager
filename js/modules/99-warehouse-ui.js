@@ -572,7 +572,7 @@
   function _renderLocations() {
     const locs = window.whGetLocations ? window.whGetLocations() : [];
     const typeIcons = { warehouse: 'warehouse', room: 'home', car: 'truck', object: 'map-pin' };
-    const typeLabels = { warehouse: 'Склад', room: 'Кімната', car: 'Авто', object: "Об'єкт" };
+    const typeLabels = { warehouse: 'Склад', room: window.t('roomWord'), car: 'Авто', object: window.t('objectWord') };
     return `
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
         <div style="display:flex;justify-content:flex-end;">
@@ -613,7 +613,7 @@
     const item = itemId ? (window.whGetItems().find(i => i.id === itemId) || {}) : {};
     const units = ['шт', 'кг', 'г', 'л', 'мл', 'м', 'м²', 'м³', 'уп', 'пар'];
     const niches = ['', 'beauty', 'medical', 'kitchen', 'construction', 'production', 'other'];
-    const nicheLabels = { '': 'Загальне', beauty: "Б'юті", medical: 'Медицина', kitchen: 'Кухня', construction: 'Будівництво', production: 'Виробництво', other: 'Інше' };
+    const nicheLabels = { '': 'Загальне', beauty: "Б'юті", medical: 'Медицина', kitchen: 'Кухня', construction: window.t('constructionWord'), production: 'Виробництво', other: 'Інше' };
     const existingCats = [...new Set((window.whGetItems() || []).map(i => i.category).filter(Boolean))].sort();
 
     _showModal(`
@@ -634,7 +634,7 @@
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Категорія</label>
               <datalist id="wh_cat_dl">${existingCats.map(c => `<option value="${c}">`).join('')}</datalist>
-              <input id="wh_cat" value="${item.category || ''}" list="wh_cat_dl" style="${_inp()}" placeholder="Матеріали, Хімія...">
+              <input id="wh_cat" value="${item.category || ''}" list="wh_cat_dl" style="${_inp()}" placeholder=window.t('materialsChemPh')>
             </div>
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Одиниця</label>
@@ -723,7 +723,7 @@
   window.whOpenOpForm = function (type, preItemId) {
     const items = window.whGetItems ? window.whGetItems() : [];
     const locs  = window.whGetLocations ? window.whGetLocations() : [];
-    const typeLabels = { IN: 'Прихід товару', OUT: 'Видача / Продаж', WRITE_OFF: 'Списання' };
+    const typeLabels = { IN: window.t('goodsIncoming'), OUT: 'Видача / Продаж', WRITE_OFF: 'Списання' };
     const typeColors = { IN: '#22c55e', OUT: '#ef4444', WRITE_OFF: '#f59e0b' };
 
     _showModal(`
@@ -746,7 +746,7 @@
               <input id="wh_op_qty" type="number" min="0.001" step="any" style="${_inp()}" placeholder="1">
             </div>
             <div>
-              <label style="font-size:0.78rem;color:#6b7280;">${type === 'IN' ? 'Ціна за од. ₴' : 'Собівартість за од. ₴'}</label>
+              <label style="font-size:0.78rem;color:#6b7280;">${type === 'IN' ? window.t('pricePerUnitUAH') : window.t('costPerUnitUAH')}</label>
               <input id="wh_op_price" type="number" min="0" style="${_inp()}" placeholder="0">
             </div>
           </div>
@@ -758,7 +758,7 @@
           </div>
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Примітка</label>
-            <input id="wh_op_note" style="${_inp()}" placeholder="Від постачальника / Угода / ...">
+            <input id="wh_op_note" style="${_inp()}" placeholder=window.t('fromSupplierPh')>
           </div>
           <div id="wh_op_stock_info" style="font-size:0.8rem;color:#6b7280;background:#f9fafb;padding:0.5rem;border-radius:6px;display:none;"></div>
         </div>
@@ -955,7 +955,7 @@
 
   // ── Delete location ──────────────────────────────────────
   window._whDeleteLocation = async function (id) {
-    if (!confirm('Видалити локацію?')) return;
+    if (!confirm(window.t('deleteLocation'))) return;
     try {
       const ref = (window.companyRef ? window.companyRef() : window.db.collection('companies').doc(window.currentCompanyId))
         .collection('warehouse_locations').doc(id);

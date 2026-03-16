@@ -490,7 +490,7 @@
                 field(window.t('botsFieldOperator')) + `<select onchange="updateNode('${nodeId}','conditionOp',this.value)" style="width:100%;padding:0.55rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;background:white;margin-bottom:0.75rem;">
                     ${['exists','not_exists','equals','contains','starts_with'].map(op=>`<option value="${op}" ${node.conditionOp===op?'selected':''}>${{exists:window.t('botsOpExists'),not_exists:window.t('botsOpNotExists'),equals:'=',contains:window.t('botsOpContains'),starts_with:window.t('botsOpStartsWith')}[op]||op}</option>`).join('')}
                 </select>` +
-                field('ЗНАЧЕННЯ (для =, містить, починається з)') + input(node.conditionValue||'', `updateNode('${nodeId}','conditionValue',this.value)`, '') +
+                field(window.t('condValueLabel')) + input(node.conditionValue||'', `updateNode('${nodeId}','conditionValue',this.value)`, '') +
                 `<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                     <div><label style="${lbl()}">ЯКЩО ТАК →</label>
                         <select onchange="updateNode('${nodeId}','nextNodeTrue',this.value||null)" style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.8rem;background:white;">

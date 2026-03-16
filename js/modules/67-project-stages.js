@@ -379,8 +379,8 @@
         );
 
         const statusLabels = {
-            needed: 'Потрібно', ordered: 'Замовлено', delivering: 'Доставляється',
-            delivered: 'Доставлено', used: 'Використано', missing: 'Відсутній'
+            needed: window.t('neededWord'), ordered: 'Замовлено', delivering: window.t('beingDelivered'),
+            delivered: 'Доставлено', used: 'Використано', missing: window.t('absentWord')
         };
         const statusColors = {
             needed: '#f59e0b', ordered: '#3b82f6', delivering: '#8b5cf6',
@@ -623,7 +623,7 @@
             // BUG-AT FIX (material): release lock before undo toast
             _materialActionLock = false;
         }
-        const statusLabels = { needed:'Потрібно', ordered:'Замовлено', delivering:'Доставляється', delivered:'Доставлено', used:'Використано', missing:'Відсутній' };
+        const statusLabels = { needed:window.t('neededWord'), ordered:'Замовлено', delivering:window.t('beingDelivered'), delivered:'Доставлено', used:'Використано', missing:window.t('absentWord') };
         const _prevStatus = prevStatus;
         const _mat = mat;
         showUndoToast(`Матеріал: ${statusLabels[newStatus] || newStatus}`, async () => {
@@ -639,7 +639,7 @@
 
     window.deleteMaterialUI = async function(materialId) {
         const mat = projectMaterials.find(m => m.id === materialId);
-        const matName = mat?.name ? `"${mat.name}"` : 'матеріал';
+        const matName = mat?.name ? `"${mat.name}"` : window.t('materialWordLc');
         if (!await showConfirmModal(`Видалити ${matName}?`, { danger: true })) return;
         await deleteMaterial(materialId);
         if (mat) {

@@ -535,7 +535,7 @@ window.updateBotTokenHint = function(channel) {
     const hint = document.getElementById('bpTokenHint');
     if (channel === 'telegram') {
         if (label) label.textContent = window.t('botsBotTokenLabel');
-        if (hint) hint.textContent = '1. Відкрий @BotFather → /newbot → скопіюй токен';
+        if (hint) hint.textContent = window.t('botFatherInstr');
     } else if (channel === 'instagram') {
         if (label) label.textContent = 'PAGE ACCESS TOKEN';
         if (hint) hint.textContent = 'Отримай в Meta Developer Console → Instagram → Page Access Token';
@@ -2439,7 +2439,7 @@ window.bpSendBroadcast = async function() {
                             body: JSON.stringify({
                                 receiver: senderId,
                                 type: 'text',
-                                text: text || 'Повідомлення від бота',
+                                text: text || window.t('msgFromBot'),
                             }),
                         });
                         const data = await res.json();

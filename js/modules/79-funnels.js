@@ -414,7 +414,7 @@
         // Start funnel
         const steps = funnelData.steps || [];
         if (steps.length === 0) {
-            addBotMessage('Воронка порожня. Додайте кроки в редакторі.');
+            addBotMessage(window.t('funnelEmpty'));
             return;
         }
 
@@ -472,7 +472,7 @@
             }
 
             else if (step.type === 'buttons') {
-                await addBotMessage(step.message || 'Оберіть варіант:');
+                await addBotMessage(step.message || window.t('selectOption'));
                 const opts = step.options || [];
                 setInputArea(`<div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;padding:4px 0;">${opts.map((opt, i) => `<button class="chat-btn" onclick="chatSelectOption(${i})">${escHtml(opt.text)}</button>`).join('')}</div>`);
                 window.chatSelectOption = (i) => {
@@ -485,7 +485,7 @@
             }
 
             else if (['text_input', 'phone', 'email'].includes(step.type)) {
-                await addBotMessage(step.message || (step.type === 'phone' ? 'Ваш телефон?' : step.type === 'email' ? 'Ваш email?' : 'Ваша відповідь?'));
+                await addBotMessage(step.message || (step.type === 'phone' ? 'Ваш телефон?' : step.type === 'email' ? 'Ваш email?' : window.t('yourAnswer')));
                 const inputType = step.type === 'phone' ? 'tel' : step.type === 'email' ? 'email' : 'text';
                 setInputArea(`<div style="display:flex;gap:6px;"><input type="${inputType}" class="chat-input-field" id="chatUserInput" placeholder="${step.type === 'phone' ? '+380...' : step.type === 'email' ? 'email@...' : ''}"><button class="chat-send-btn" onclick="chatSubmitInput('${step.id}','${step.saveAs || step.type}',${getNextIdx(idx, step, null)})">→</button></div>`);
                 document.getElementById('chatUserInput')?.addEventListener('keydown', e => {
@@ -502,7 +502,7 @@
             }
 
             else if (step.type === 'ai_response') {
-                await addBotMessage('Аналізую ваш запит...');
+                await addBotMessage(window.t('analyzingRequest'));
                 const aiResponse = await callFunnelAI(step, leadData, chatHistory, companyId);
                 const msgs = document.getElementById('talkoChatMessages');
                 if (msgs) {
@@ -517,7 +517,7 @@
             }
 
             else if (step.type === 'calendly') {
-                await addBotMessage(step.message || 'Оберіть зручний час:');
+                await addBotMessage(step.message || window.t('selectConvTime'));
                 const url = funnelData.calendlyUrl;
                 if (url) {
                     setInputArea(`<div style="text-align:center;padding:4px 0;"><a href="${escHtml(url)}" target="_blank" style="display:inline-block;background:#22c55e;color:white;padding:0.6rem 1.25rem;border-radius:20px;text-decoration:none;font-weight:700;font-size:0.88rem;"><span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Записатися</a></div>`);
@@ -543,7 +543,7 @@
         }
 
         async function callFunnelAI(step, data, history, cId) {
-            if (isTest) return 'Тестовий режим: AI відповідь буде тут.';
+            if (isTest) return window.t('testModeAIHere');
             try {
                 const _funnelIdToken = await (firebase.auth().currentUser?.getIdToken().catch(()=>null));
                 const _funnelCtrl = new AbortController();

@@ -1422,14 +1422,14 @@
         // Контекст метрик для чату
         const contextText = 'Період: ' + (formatPeriodLabel ? formatPeriodLabel(pk) : pk) + '\n' +
             md.map(m => '- ' + m.name + ': факт=' + m.value + ' ' + m.unit +
-                (m.target > 0 ? ', ціль=' + m.target + ' (' + Math.round(m.value / m.target * 100) + '%)' : '')
+                (m.target > 0 ? window.t('targetEq') + m.target + ' (' + Math.round(m.value / m.target * 100) + '%)' : '')
             ).join('\n');
 
         const initialMessage = 'Проаналізуй ці метрики. Вкажи вузькі місця, причини відхилень та конкретні дії з очікуваним результатом у цифрах.';
 
         window.openAiChat({
             module:         'statistics',
-            title:          '✦ AI Аналіз метрик',
+            title:          window.t('aiMetricsAnalysis'),
             contextText:    contextText,
             systemPrompt:   null, // береться з superadmin/settings.agents.statistics
             initialMessage: initialMessage,
@@ -2012,7 +2012,7 @@
             ]},
             '2': { name: window.t('nicheConst3'), metrics: [
                 { name:window.t('mNewApps'),               unit:'шт',   freq:'weekly',  target:35,     imp:'critical', inv:false, v:0.28 },
-                { name:"Виїзди на об'єкт",          unit:'шт',   freq:'weekly',  target:18,     imp:'high',     inv:false, v:0.24 },
+                { name:window.t('metricSiteVisits2'),          unit:'шт',   freq:'weekly',  target:18,     imp:'high',     inv:false, v:0.24 },
                 { name:window.t('mSignContr'),        unit:'шт',   freq:'weekly',  target:8,      imp:'critical', inv:false, v:0.28 },
                 { name:'Виручка',                   unit:'грн',  freq:'weekly',  target:480000, imp:'critical', inv:false, v:0.22 },
                 { name:window.t('mAvgContr'),     unit:'грн',  freq:'weekly',  target:62000,  imp:'high',     inv:false, v:0.14 },
@@ -2035,24 +2035,24 @@
             '3': { name: window.t('nicheClinic3'), metrics: [
                 { name:window.t('mNewPats'),       unit:'шт',   freq:'weekly',  target:42,     imp:'critical', inv:false, v:0.22 },
                 { name:window.t('mRepPats'),       unit:'шт',   freq:'weekly',  target:65,     imp:'critical', inv:false, v:0.18 },
-                { name:'Дзвінки вхідні',            unit:'шт',   freq:'weekly',  target:180,    imp:'high',     inv:false, v:0.18 },
+                { name:window.t('metricInboundCalls'),            unit:'шт',   freq:'weekly',  target:180,    imp:'high',     inv:false, v:0.18 },
                 { name:window.t('mConvCall'),   unit:'%',    freq:'weekly',  target:72,     imp:'critical', inv:false, v:0.09 },
-                { name:'Конверсія запис→прихід',    unit:'%',    freq:'weekly',  target:85,     imp:'critical', inv:false, v:0.07 },
+                { name:window.t('metricConvBooking'),    unit:'%',    freq:'weekly',  target:85,     imp:'critical', inv:false, v:0.07 },
                 { name:'Виручка',                   unit:'грн',  freq:'weekly',  target:520000, imp:'critical', inv:false, v:0.18 },
                 { name:window.t('mAvgCheck'),              unit:'грн',  freq:'weekly',  target:4800,   imp:'high',     inv:false, v:0.11 },
-                { name:'Кількість послуг',          unit:'шт',   freq:'weekly',  target:285,    imp:'high',     inv:false, v:0.14 },
-                { name:'Завантаженість лікарів',    unit:'%',    freq:'weekly',  target:78,     imp:'high',     inv:false, v:0.09 },
-                { name:'Скасовані записи',          unit:'шт',   freq:'weekly',  target:8,      imp:'high',     inv:true,  v:0.38 },
-                { name:'Час очікування',            unit:'хв',   freq:'weekly',  target:12,     imp:'medium',   inv:true,  v:0.28 },
+                { name:window.t('metricServicesCount'),          unit:'шт',   freq:'weekly',  target:285,    imp:'high',     inv:false, v:0.14 },
+                { name:window.t('metricDoctorLoad'),    unit:'%',    freq:'weekly',  target:78,     imp:'high',     inv:false, v:0.09 },
+                { name:window.t('metricCancelledBookings'),          unit:'шт',   freq:'weekly',  target:8,      imp:'high',     inv:true,  v:0.38 },
+                { name:window.t('metricWaitTime'),            unit:'хв',   freq:'weekly',  target:12,     imp:'medium',   inv:true,  v:0.28 },
                 { name:'Витрати реклама',           unit:'грн',  freq:'weekly',  target:35000,  imp:'high',     inv:false, v:0.18 },
-                { name:'Вартість ліда',             unit:'грн',  freq:'weekly',  target:280,    imp:'high',     inv:true,  v:0.22 },
+                { name:window.t('metricLeadCost'),             unit:'грн',  freq:'weekly',  target:280,    imp:'high',     inv:true,  v:0.22 },
                 { name:window.t('mMatCosts'),         unit:'грн',  freq:'weekly',  target:85000,  imp:'high',     inv:false, v:0.14 },
                 { name:'NPS пацієнтів',             unit:window.t('metricPoints'),freq:'monthly', target:82,     imp:'high',     inv:false, v:0.07 },
                 { name:'Чистий прибуток',           unit:'грн',  freq:'monthly', target:380000, imp:'critical', inv:false, v:0.18 },
                 { name:window.t('mGoogleRev'),            unit:'шт',   freq:'monthly', target:12,     imp:'medium',   inv:false, v:0.32 },
-                { name:'Плинність персоналу',       unit:'%',    freq:'monthly', target:4,      imp:'high',     inv:true,  v:0.28 },
-                { name:'Записів на день',           unit:'шт',   freq:'daily',   target:28,     imp:'high',     inv:false, v:0.22 },
-                { name:'Дзвінків на день',          unit:'шт',   freq:'daily',   target:35,     imp:'medium',   inv:false, v:0.28 },
+                { name:window.t('metricStaffTurnover'),       unit:'%',    freq:'monthly', target:4,      imp:'high',     inv:true,  v:0.28 },
+                { name:window.t('metricBookingsDay'),           unit:'шт',   freq:'daily',   target:28,     imp:'high',     inv:false, v:0.22 },
+                { name:window.t('metricCallsDay'),          unit:'шт',   freq:'daily',   target:35,     imp:'medium',   inv:false, v:0.28 },
             ]},
         };
 
@@ -2077,7 +2077,7 @@
 
                 const metricRef = await metricsRef().add({
                     name: dm.name, unit: dm.unit, frequency: dm.freq,
-                    privacy: (dm.name.includes('прибуток') || dm.name.includes('Витрат') || dm.name.includes('Виручка') || dm.name.includes('Вартість')) ? 'owner_only' : 'public',
+                    privacy: (dm.name.includes('прибуток') || dm.name.includes('Витрат') || dm.name.includes('Виручка') || dm.name.includes(window.t('costWord'))) ? 'owner_only' : 'public',
                     inputType: 'manual', formula: '',
                     alertEnabled: dm.inv || dm.unit === '%', alertThreshold: 20,
                     importance: dm.imp, isInverse: dm.inv,
@@ -2162,9 +2162,9 @@
 
     // Типи авто-джерел
     const AUTO_SOURCES = {
-        auto_tasks_done:       { label: 'Виконані задачі',   unit: 'шт' },
-        auto_tasks_overdue:    { label: 'Прострочені задачі', unit: 'шт' },
-        auto_tasks_review:     { label: 'На перевірці',       unit: 'шт' },
+        auto_tasks_done:       { label: window.t('metricDoneTasks'),   unit: 'шт' },
+        auto_tasks_overdue:    { label: window.t('metricOverdueTasks'), unit: 'шт' },
+        auto_tasks_review:     { label: window.t('metricInReview'),       unit: 'шт' },
         auto_completion_rate:  { label: '% виконання',        unit: '%'  },
         finance_income:        { label: window.t('finIncome2'),              unit: '€'  },
         finance_expense:       { label: 'Витрати',            unit: '€'  },

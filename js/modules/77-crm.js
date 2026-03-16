@@ -1805,7 +1805,7 @@ window.crmOpenDeal = function(dealId) {
                 <div style="display:flex;gap:0.4rem;align-items:center;">
                     <!-- Кнопка чату -->
                     <button id="crmDealChatBtn" onclick="crmToggleDealChat('${deal.id}')"
-                        title="Чат з клієнтом"
+                        title=window.t('chatWithClient')
                         style="padding:0.35rem 0.55rem;background:none;border:1px solid #e8eaed;border-radius:6px;
                         cursor:pointer;color:#9ca3af;display:flex;align-items:center;gap:3px;font-size:0.72rem;font-weight:600;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -3325,7 +3325,7 @@ window.crmOpenCreateClient = function() {
         ${inp('telegram','Telegram','username')}
         <div style="margin-bottom:0.6rem;">
             <label style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:3px;">Примітка</label>
-            <textarea id="ccc_note" rows="2" placeholder="Довільна нотатка"
+            <textarea id="ccc_note" rows="2" placeholder=window.t('freeNote')
                 style="width:100%;padding:0.5rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.82rem;box-sizing:border-box;resize:vertical;"></textarea>
         </div>
         <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
@@ -3994,7 +3994,7 @@ function _renderCRMSettings() {
                 const _localTotal = _localDeals.length;
                 const _bySource = {};
                 _localDeals.forEach(function(d) {
-                    const src = d.source || d.leadSource || 'інше';
+                    const src = d.source || d.leadSource || window.t('otherWordLc');
                     if (!_bySource[src]) _bySource[src] = { count: 0, won: 0, amount: 0 };
                     _bySource[src].count++;
                     if (d.stage === 'won') { _bySource[src].won++; _bySource[src].amount += d.amount || 0; }
@@ -4903,7 +4903,7 @@ window.crmDoImport = async function() {
             const email = (row.email || '').toLowerCase().slice(0, 100);
             const source = (row.source || row['джерело'] || 'import').slice(0, 50);
             const amount = parseFloat(row.amount || row['сума'] || 0) || 0;
-            const rawStage = (row.stage || row['стадія'] || '').toLowerCase();
+            const rawStage = (row.stage || row[window.t('stageWordLc')] || '').toLowerCase();
             const stage = stageMap[rawStage]?.id || defaultStage;
             const nextContactDate = /^\d{4}-\d{2}-\d{2}$/.test(row.nextcontactdate || row.nextContactDate || '') 
                 ? (row.nextcontactdate || row.nextContactDate) : null;

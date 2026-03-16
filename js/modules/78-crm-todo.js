@@ -143,7 +143,7 @@ window.renderCrmTodo = function() {
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button onclick="renderCrmTodo()" style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;cursor:pointer;color:#6b7280;display:flex;align-items:center;">${TI.refresh}</button>
-          ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;" title="Тільки для owner/admin"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
+          ${['owner','admin'].includes(window.currentUserData?.role) ? '<button onclick="_crmTodoAddTestDeals()" style="background:#f3f4f6;color:#374151;border:1px solid #e5e7eb;border-radius:7px;padding:6px 12px;font-size:0.78rem;cursor:pointer;" title="' + window.t('ownerAdminOnly') + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v11l3.5 6H5.5L9 14V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg> Тест</button>' : ''}
           <button onclick="crmOpenCreateDeal()" style="background:#22c55e;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem;">${TI.plus} Новий лід</button>
         </div>
       </div>
@@ -201,7 +201,7 @@ function _renderRow(d, i) {
     const stageObj  = stages.find(s=>s.id===d.stage);
     const stageClr  = stageObj?stageObj.color:'#6b7280';
     const stageLbl  = stageObj?stageObj.label:d.stage;
-    const name      = d.clientName||d.title||'(без імені)';
+    const name      = d.clientName||d.title||window.t('noNameLabel');
     const phone     = d.phone||'';
     const note      = d.note||d.notes||'';
     const rowBg     = i%2===0?'#fff':'#fafafa';
@@ -295,7 +295,7 @@ window.crmTodoOpenCard = async function(dealId) {
           <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div>
               <div style="font-size:1.2rem;font-weight:700;color:#111827;margin-bottom:0.25rem;">
-                ${_esc(deal.clientName||deal.title||'(без імені)')}</div>
+                ${_esc(deal.clientName||deal.title||window.t('noNameLabel'))}</div>
               <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
                 <span style="font-size:0.72rem;font-weight:600;color:${stageClr};background:${stageClr}18;border-radius:4px;padding:2px 8px;border:1px solid ${stageClr}33;">
                   ${_esc(stageObj?stageObj.label:deal.stage)}</span>
@@ -328,7 +328,7 @@ window.crmTodoOpenCard = async function(dealId) {
             padding:0.4rem 0.75rem;font-size:0.78rem;color:${fmt.overdue?'#dc2626':fmt.today?'#ea580c':'#16a34a'};
             display:flex;align-items:center;gap:0.4rem;">
             ${TI.clock}
-            ${fmt.overdue?'Прострочено:':fmt.today?'Сьогодні:':'Заплановано:'}
+            ${fmt.overdue?'Прострочено:':fmt.today?window.t('todayColon'):'Заплановано:'}
             <strong style="margin-left:2px;">${deal.nextContactDate}</strong>
             ${fmt.overdue?`<span style="margin-left:auto;">${fmt.label}</span>`:''}
           </div>`:''}
@@ -533,7 +533,7 @@ window._crmTodoSave = async function(dealId) {
             hist.type='call_missed'; hist.text='Не взяв трубку. Перенесено на: '+nextDate;
         } else if (result === 'sms') {
             const txt=(document.getElementById('crmTodoSmsText')&&document.getElementById('crmTodoSmsText').value||'').trim();
-            hist.type='sms_sent'; hist.text=txt?'Повідомлення: '+txt:'Надіслано повідомлення';
+            hist.type='sms_sent'; hist.text=txt?'Повідомлення: '+txt:window.t('messageSent');
         } else {
             // Якщо стадія змінена вручну — логуємо
             if (selectedStage && selectedStage !== currentDeal?.stage) {

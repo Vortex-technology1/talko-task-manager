@@ -137,13 +137,13 @@ const PERMISSION_GROUPS = [
         items: [
             { key: 'viewControl',    label: 'Панель контролю' },
             { key: 'viewAiAnalysis', label: window.t('aiAnalysis2') },
-            { key: 'viewFinance',    label: 'Фінансові показники' },
+            { key: 'viewFinance',    label: window.t('finIndicators') },
         ]
     },
     {
         group: 'Проекти та процеси',
         items: [
-            { key: 'viewAllProjects', label: 'Бачити всі проекти' },
+            { key: 'viewAllProjects', label: window.t('permViewAllProjects') },
             { key: 'manageProjects',  label: 'Керувати проектами' },
         ]
     },
@@ -152,17 +152,17 @@ const PERMISSION_GROUPS = [
         items: [
             { key: 'viewTeamList',         label: 'Бачити список команди' },
             { key: 'viewColleagueEmails',  label: 'Бачити email колег' },
-            { key: 'editUserCards',        label: 'Редагувати картки співробітників' },
+            { key: 'editUserCards',        label: window.t('permEditStaff') },
             { key: 'inviteUsers',          label: 'Запрошувати співробітників' },
             { key: 'changeRoles',          label: 'Змінювати ролі' },
-            { key: 'removeUsers',          label: 'Видаляти співробітників' },
+            { key: 'removeUsers',          label: window.t('permDeleteStaff') },
         ]
     },
     {
         group: window.t('permSystem'),
         items: [
-            { key: 'viewAdminPanel', label: 'Доступ до адмін панелі' },
-            { key: 'editRoles',      label: 'Редагувати ролі та дозволи' },
+            { key: 'viewAdminPanel', label: window.t('permAdminPanel') },
+            { key: 'editRoles',      label: window.t('permEditRoles') },
         ]
     }
 ];
@@ -263,7 +263,7 @@ window.renderRolesTab = async function() {
 
     const canEdit = hasPermission('editRoles');
     const roles = ['admin', 'manager', 'employee'];
-    const roleLabels = { admin: 'Адмін', manager: 'Менеджер', employee: 'Співробітник' };
+    const roleLabels = { admin: window.t('adminWord'), manager: 'Менеджер', employee: window.t('employeeWord') };
     const roleColors = { admin: '#ef4444', manager: '#f97316', employee: '#6b7280' };
 
     let html = `

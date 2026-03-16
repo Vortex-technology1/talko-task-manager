@@ -1667,7 +1667,7 @@ window._invoiceSave = async function(editId) {
   if (window._invoiceSaving) return; // guard проти подвійного кліку
   window._invoiceSaving = true;
   const btn = document.getElementById('inv_save_btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Зберігаємо...'; }
+  if (btn) { btn.disabled = true; btn.textContent = window.t('savingDots'); }
 
   const vatPct = parseFloat(document.getElementById('inv_vat')?.value) || 0;
   const { total } = _invoiceTotals(window._invItems, vatPct);
@@ -1858,7 +1858,7 @@ window._invoicePdf = async function(id) {
     y += 6;
   };
 
-  addRow('Підсумок:', subtotal.toFixed(2) + ' ' + currency, false);
+  addRow(window.t('summaryLabel'), subtotal.toFixed(2) + ' ' + currency, false);
   if (vatPct > 0) addRow(`ПДВ ${vatPct}%:`, vat.toFixed(2) + ' ' + currency, false);
   addRow('ДО СПЛАТИ:', total.toFixed(2) + ' ' + currency, true);
 
@@ -1986,7 +1986,7 @@ function _recurringUpcoming(items, currency) {
 
 function _recurringCard(item, currency) {
   const active = item.active !== false;
-  const freqLabel = { monthly: 'Щомісяця', quarterly: 'Щоквартально', yearly: 'Щороку' }[item.frequency] || 'Щомісяця';
+  const freqLabel = { monthly: window.t('monthlyWord'), quarterly: 'Щоквартально', yearly: 'Щороку' }[item.frequency] || window.t('monthlyWord');
   const typeColor = item.type === 'expense' ? '#ef4444' : '#22c55e';
   const typeLabel = item.type === 'expense' ? window.t('finExpense2') : window.t('finIncome2');
 
@@ -2046,7 +2046,7 @@ window._finAddRecurring = function(editId) {
   const currency = _state.currency || 'UAH';
 
   const freqOptions = [
-    { v: 'monthly',     l: 'Щомісяця'      },
+    { v: 'monthly',     l: window.t('monthlyWord')      },
     { v: 'quarterly',   l: 'Щоквартально'  },
     { v: 'yearly',      l: 'Щороку'        },
   ];
@@ -2069,7 +2069,7 @@ window._finAddRecurring = function(editId) {
         <!-- Назва -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва платежу *</label>
-          <input id="rec_name" value="${escHtml(existing?.name || '')}" placeholder="Оренда офісу, Зарплата, Netflix..." 
+          <input id="rec_name" value="${escHtml(existing?.name || '')}" placeholder=window.t('expensesExPh') 
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
@@ -3329,7 +3329,7 @@ function _renderTrends(el, txs, currency, from, to, period) {
 
   el.innerHTML = `
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;">
-      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:16px;">Топ-5 категорій витрат по ${period === 'year' ? 'місяцях' : period === 'quarter' ? 'місяцях кварталу' : 'тижнях'}</div>
+      <div style="font-size:0.85rem;font-weight:600;color:#1a1a1a;margin-bottom:16px;">Топ-5 категорій витрат по ${period === 'year' ? window.t('inMonthsWord') : period === 'quarter' ? window.t('inQuarterMonths') : 'тижнях'}</div>
 
       <!-- Легенда -->
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
@@ -3580,7 +3580,7 @@ window._fetchRates = async function() {
 
 // Додавання категорії
 window._financeAddCategory = async function(type) {
-  const name = prompt(`Назва нової категорії (${type === 'income' ? 'дохід' : 'витрата'}):`);
+  const name = prompt(`Назва нової категорії (${type === 'income' ? window.t('incomeWordLc') : 'витрата'}):`);
   if (!name || !name.trim()) return;
   try {
     const ref = await colRef('finance_categories').add({
@@ -3745,12 +3745,12 @@ window._aiFinSend = async function() {
 
     // Бенчмарки по нішах
     const BENCHMARKS = {
-      construction:  { marginMin:12, marginMax:25, labourPct:35, adminPct:10, name:'Будівництво/підряд' },
-      medical:       { marginMin:20, marginMax:45, labourPct:50, adminPct:12, name:'Медичний бізнес' },
+      construction:  { marginMin:12, marginMax:25, labourPct:35, adminPct:10, name:window.t('nicheConstSubc') },
+      medical:       { marginMin:20, marginMax:45, labourPct:50, adminPct:12, name:window.t('nicheMedical') },
       dental:        { marginMin:25, marginMax:50, labourPct:45, adminPct:10, name:'Стоматологія' },
-      beauty:        { marginMin:30, marginMax:55, labourPct:40, adminPct:8,  name:'Бьюті бізнес' },
+      beauty:        { marginMin:30, marginMax:55, labourPct:40, adminPct:8,  name:window.t('nicheBeauty') },
       furniture:     { marginMin:15, marginMax:35, labourPct:30, adminPct:8,  name:window.t('nicheFurn3') },
-      retail:        { marginMin:10, marginMax:25, labourPct:20, adminPct:7,  name:'Роздрібна торгівля' },
+      retail:        { marginMin:10, marginMax:25, labourPct:20, adminPct:7,  name:window.t('nicheRetail') },
       it:            { marginMin:30, marginMax:60, labourPct:55, adminPct:10, name:'IT / Послуги' },
       manufacturing: { marginMin:12, marginMax:28, labourPct:32, adminPct:8,  name:'Виробництво' },
     };
@@ -3814,7 +3814,7 @@ ${context}
         });
       } finally { clearTimeout(_oaiTimer); }
       const data = await response.json();
-      aiText = data.choices?.[0]?.message?.content || data.error?.message || 'Не вдалося отримати відповідь.';
+      aiText = data.choices?.[0]?.message?.content || data.error?.message || window.t('failedGetResponse');
     }
 
     // Видаляємо індикатор
@@ -3922,7 +3922,7 @@ async function _buildAiFinContext() {
       const last = margins[margins.length-1].margin;
       const prev = margins[margins.length-2].margin;
       const diff = last - prev;
-      trendTxt = diff > 0 ? `↑ +${diff}% vs попередній місяць` : diff < 0 ? `↓ ${diff}% vs попередній місяць` : '→ без змін';
+      trendTxt = diff > 0 ? `↑ +${diff}% vs попередній місяць` : diff < 0 ? `↓ ${diff}% vs попередній місяць` : window.t('noChange');
     }
 
     // Бюджет поточного місяця
@@ -4000,7 +4000,7 @@ function addTransaction(forceType) {
   const cats     = _state.categories[type] || [];
   const today    = new Date().toISOString().split('T')[0];
   const color    = type === 'income' ? '#22c55e' : '#ef4444';
-  const label    = type === 'income' ? 'дохід' : 'витрату';
+  const label    = type === 'income' ? window.t('incomeWordLc') : 'витрату';
 
   // Функції для прив'язки
   let functionsHtml = '<option value="">— не вибрано —</option>';
@@ -4106,7 +4106,7 @@ function addTransaction(forceType) {
         <!-- Контрагент -->
         <div>
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Контрагент</label>
-          <input id="fmCounterparty" type="text" placeholder="Постачальник / клієнт / підрядник"
+          <input id="fmCounterparty" type="text" placeholder=window.t('supplierClientPh')
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
         </div>

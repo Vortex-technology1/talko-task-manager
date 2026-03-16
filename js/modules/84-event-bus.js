@@ -150,11 +150,11 @@ const _defaultAutomationRules = [
         description: window.t('eventBotLead'),
     },
 
-    // DEAL: угода перейшла в "Пропозиція" → задача "Підготувати КП"
+    // DEAL: угода перейшла в window.t('proposalWord') → задача "Підготувати КП"
     {
         id: 'deal_proposal_task',
         triggerEvent: TALKO_EVENTS.DEAL_STAGE_CHANGED,
-        condition: (e) => ['proposal','Пропозиція'].includes(e.payload.toStage), // FIX BY: match by id OR label
+        condition: (e) => ['proposal',window.t('proposalWord')].includes(e.payload.toStage), // FIX BY: match by id OR label
         action: _actionCreateTask,
         actionParams: (e) => ({
             title: `Підготувати КП для ${e.payload.clientName || e.payload.dealTitle}`,
@@ -206,7 +206,7 @@ const _defaultAutomationRules = [
         triggerEvent: TALKO_EVENTS.INVOICE_PAID,
         condition: (e) => !!e.payload.dealId,
         action: _actionMarkDealWon,
-        description: 'Інвойс оплачено → угода "Виграно"',
+        description: window.t('invoicePaidWon'),
     },
 
     // FORM SUBMITTED → лід у CRM
@@ -215,7 +215,7 @@ const _defaultAutomationRules = [
         triggerEvent: TALKO_EVENTS.FORM_SUBMITTED,
         condition: (e) => e.payload.crmIntegration === true,
         action: _actionCreateClientAndDeal,
-        description: 'Форма сайту → CRM клієнт + угода',
+        description: window.t('siteFormCRM'),
     },
 
     // BUDGET EXCEEDED → задача попередження
@@ -285,7 +285,7 @@ async function _actionCreateClientAndDeal(event, params = {}) {
         clientId = clientRef.id;
         batch.set(clientRef, {
             id: clientId,
-            name: p.senderName || p.name || 'Невідомий',
+            name: p.senderName || p.name || window.t('unknownWord'),
             type: 'person',
             phone: p.phone || '',
             telegram: p.username ? `@${p.username}` : '',
@@ -319,7 +319,7 @@ async function _actionCreateClientAndDeal(event, params = {}) {
 
     batch.set(dealRef, {
         id: dealId,
-        title: p.dealTitle || `Лід: ${p.senderName || p.name || 'Невідомий'}`,
+        title: p.dealTitle || `Лід: ${p.senderName || p.name || window.t('unknownWord')}`,
         clientId,
         clientName: p.senderName || p.name || '',
         clientNiche: p.business_type || '',
@@ -361,8 +361,8 @@ async function _actionCreateClientAndDeal(event, params = {}) {
         type: 'created',
         stage: firstStageId,
         note: event.type === TALKO_EVENTS.FORM_SUBMITTED
-            ? 'Угода створена автоматично із форми сайту'
-            : 'Угода створена автоматично із Telegram воронки',
+            ? window.t('dealAutoSiteForm')
+            : window.t('dealAutoTgFunnel'),
         by: 'system',
         byName: 'TALKO System',
         at: now,
@@ -391,8 +391,8 @@ async function _actionCreateClientAndDeal(event, params = {}) {
 
     // 8. Нотифікація менеджеру
     _notifyManager(companyId, {
-        title: '🎯 Новий лід',
-        body: `${p.senderName || 'Невідомий'} — ${p.business_type || 'без ніші'}`,
+        title: window.t('newLeadEvent'),
+        body: `${p.senderName || window.t('unknownWord')} — ${p.business_type || 'без ніші'}`,
         dealId,
         clientId,
     });
@@ -546,7 +546,7 @@ async function _createDefaultPipeline(companyId) {
             { id: 'new_lead',     name: window.t('newLeadWord'),    color: '#3b82f6', probability: 10 },
             { id: 'contact',      name: 'Контакт',      color: '#8b5cf6', probability: 25 },
             { id: 'negotiation',  name: 'Переговори',   color: '#f59e0b', probability: 50 },
-            { id: 'proposal',     name: 'Пропозиція',   color: '#f97316', probability: 70 },
+            { id: 'proposal',     name: window.t('proposalWord'),   color: '#f97316', probability: 70 },
             { id: 'closing',      name: 'Закриття',     color: '#ef4444', probability: 85 },
             { id: 'won',          name: 'Виграно',      color: '#22c55e', probability: 100 },
         ],

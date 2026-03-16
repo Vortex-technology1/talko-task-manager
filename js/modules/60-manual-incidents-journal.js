@@ -224,16 +224,16 @@ function _buildSystemPrompt(functions) {
 
 Коли даних достатньо — поверни ТІЛЬКИ JSON без коментарів, без markdown-обгортки:
 {
-  "title": "коротка назва збою (до 60 символів)",
+  "title": window.t('incTitlePh'),
   "category": "people|process|finance|clients|quality|other",
   "severity": 1,
   "participants": ["хто залучений"],
-  "failedProcess": "який процес або задача дали збій",
+  "failedProcess": window.t('incProcessPh'),
   "cause": "причина збою",
-  "consequences": "наслідки",
-  "toChange": "що потрібно змінити",
-  "responsible": "відповідальний за виправлення",
-  "functionName": "до якої функції бізнесу відноситься"
+  "consequences": window.t('incConseqPh'),
+  "toChange": window.t('incWhatChangePh'),
+  "responsible": window.t('incRespFixPh'),
+  "functionName": window.t('incBizFuncPh')
 }
 
 severity: 1=низька, 2=середня, 3=критична.
@@ -271,16 +271,16 @@ function _showAiPreview(data) {
       <div class="incident-preview-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Попередній перегляд — відредагуйте при потребі</div>
       <div class="incident-preview-grid">
         ${_previewField('Назва збою', 'prev_title', data.title || '', 'input')}
-        ${_previewField('Категорія', 'prev_category', data.category || 'other', 'select-category')}
-        ${_previewField('Серйозність', 'prev_severity', data.severity || 2, 'select-severity')}
+        ${_previewField(window.t('categoryWord'), 'prev_category', data.category || 'other', 'select-category')}
+        ${_previewField(window.t('severityWord'), 'prev_severity', data.severity || 2, 'select-severity')}
         ${_previewField('Статус', 'prev_status', data.status || 'new', 'select-status')}
-        ${_previewField('Функція бізнесу', 'prev_functionName', data.functionName || '', 'input')}
+        ${_previewField(window.t('bizFunctionWord'), 'prev_functionName', data.functionName || '', 'input')}
         ${_previewField(window.t('crmColAssignee'), 'prev_responsible', data.responsible || '', 'input')}
-        ${_previewField('Залучені', 'prev_participants', participants, 'input')}
+        ${_previewField(window.t('involvedWord'), 'prev_participants', participants, 'input')}
         ${_previewField('Процес/задача що зламались', 'prev_failedProcess', data.failedProcess || '', 'textarea')}
         ${_previewField('Причина', 'prev_cause', data.cause || '', 'textarea')}
-        ${_previewField('Наслідки', 'prev_consequences', data.consequences || '', 'textarea')}
-        ${_previewField('Що потрібно змінити', 'prev_toChange', data.toChange || '', 'textarea')}
+        ${_previewField(window.t('consequencesWord'), 'prev_consequences', data.consequences || '', 'textarea')}
+        ${_previewField(window.t('whatToChange'), 'prev_toChange', data.toChange || '', 'textarea')}
       </div>
     </div>
   `;
@@ -348,7 +348,7 @@ window._saveIncidentFromAi = async function () {
 window._copyIncidentText = function () {
   const get = id => document.getElementById(id)?.value || '';
   const text = [
-    `УПРАВЛІНСЬКИЙ ЗБІЙ`,
+    window.t('mgmtIncidentCaps'),
     `Назва: ${get('prev_title')}`,
     `Категорія: ${CATEGORY_LABELS[get('prev_category')] || get('prev_category')}`,
     `Серйозність: ${SEVERITY_LABELS[get('prev_severity')] || get('prev_severity')}`,
@@ -393,7 +393,7 @@ async function _openManualForm(incidentId) {
 
   const modal = _createModal('incident-manual-form', `
     <div class="incident-modal-header">
-      <h3>${incidentId ? 'Редагувати збій' : 'Новий збій'}</h3>
+      <h3>${incidentId ? window.t('editIncident') : window.t('newIncident')}</h3>
       <button class="incident-close-btn" onclick="_closeIncidentModal('incident-manual-form')">✕</button>
     </div>
     <div class="incident-form-body">
@@ -435,7 +435,7 @@ async function _openManualForm(incidentId) {
         <div class="incident-fg">
           <label>Відповідальний за виправлення</label>
           <input id="if_responsible" class="incident-input" type="text"
-            value="${_esc(e.responsible || '')}" list="if_responsible_list" placeholder="Ім'я або роль">
+            value="${_esc(e.responsible || '')}" list="if_responsible_list" placeholder=window.t('nameOrRole')>
           <datalist id="if_responsible_list">${userOpts}</datalist>
         </div>
 
@@ -447,7 +447,7 @@ async function _openManualForm(incidentId) {
         <div class="incident-fg">
           <label>Залучені (через кому)</label>
           <input id="if_participants" class="incident-input" type="text"
-            value="${_esc(participantsVal)}" placeholder="Іванов, Петрова...">
+            value="${_esc(participantsVal)}" placeholder=window.t('nameExPh')>
         </div>
 
         <div class="incident-fg incident-fg-full">
@@ -465,26 +465,26 @@ async function _openManualForm(incidentId) {
         <div class="incident-fg incident-fg-full">
           <label>Наслідки</label>
           <textarea id="if_consequences" class="incident-input" rows="2"
-            placeholder="Що відбулось через цей збій">${_esc(e.consequences || '')}</textarea>
+            placeholder=window.t('incWhatHappened')>${_esc(e.consequences || '')}</textarea>
         </div>
 
         <div class="incident-fg incident-fg-full">
           <label>Що потрібно змінити</label>
           <textarea id="if_toChange" class="incident-input" rows="2"
-            placeholder="Конкретні дії для виправлення">${_esc(e.toChange || '')}</textarea>
+            placeholder=window.t('incSpecificActions')>${_esc(e.toChange || '')}</textarea>
         </div>
 
         <div class="incident-fg incident-fg-full">
           <label>Додаткові нотатки</label>
           <textarea id="if_description" class="incident-input" rows="2"
-            placeholder="Будь-яка додаткова інформація">${_esc(e.description || '')}</textarea>
+            placeholder=window.t('anyAdditionalInfo')>${_esc(e.description || '')}</textarea>
         </div>
 
       </div>
 
       <div class="incident-form-footer">
         <button class="btn-primary" onclick="_saveManualIncident('${incidentId || ''}')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> ${incidentId ? 'Зберегти зміни' : 'Зберегти в журнал'}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> ${incidentId ? window.t('saveChanges') : 'Зберегти в журнал'}
         </button>
         <button class="btn-ghost" onclick="_closeIncidentModal('incident-manual-form')">Скасувати</button>
       </div>

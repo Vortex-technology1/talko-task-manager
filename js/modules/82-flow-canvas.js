@@ -534,13 +534,13 @@ function buildSidebar() {
             action:   window.t('flowActHint'),
             filter:   window.t('flowCondHint'),
             pause:    'Затримка перед наступним кроком (секунди, хвилини, години)',
-            ai:       'Штучний інтелект — збирає дані, відповідає на питання, веде діалог',
-            api:      'Запит до зовнішнього API (GET/POST). Зберігає відповідь в змінну',
-            sheets:   'Записує дані в Google Sheets через Apps Script URL',
-            random:   'Випадковий розподіл на гілку А або Б (A/B тест)',
-            repeat:   'Повторює дію до N разів, потім виходить через порт Завершити',
-            crm:      'Створює або оновлює угоду в CRM. Вибери воронку і стадію',
-            end:      'Завершення ланцюга. Сесія скидається',
+            ai:       window.t('flowAINodeHint'),
+            api:      window.t('flowAPIHint'),
+            sheets:   window.t('flowSheetsHint'),
+            random:   window.t('flowABHint'),
+            repeat:   window.t('flowLoopHint'),
+            crm:      window.t('flowCRMHint'),
+            end:      window.t('flowEndChainHint'),
         };
         const t = el.dataset.sbtype;
         if (tooltips[t]) el.title = tooltips[t];
@@ -654,7 +654,7 @@ function buildNodeEl(node) {
             border:2.5px solid #9ca3af;cursor:crosshair;z-index:3;transition:border-color 0.15s;"
             onmouseenter="this.style.borderColor='${cfg.color}'"
             onmouseleave="this.style.borderColor='#9ca3af'"
-            title="Вхід"></div>`;
+            title=window.t('flowEntryLabel')></div>`;
 
     // ── OUT ports ──────────────────────────────────────────
     const totalPorts = outputs.length;
@@ -809,7 +809,7 @@ function renderEdges() {
         hit.setAttribute('stroke-width','16');
         hit.style.cursor = 'pointer';
         hit.style.pointerEvents = 'stroke';
-        hit.title = 'Клікни щоб видалити';
+        hit.title = window.t('clickToDelete');
         // Підсвітка при наведенні
         hit.addEventListener('mouseenter', () => {
             line.setAttribute('stroke', '#ef4444');
@@ -1237,7 +1237,7 @@ window._fcCrmPipelineChange = function(pipelineId) {
     // FIX: IDs відповідають реальному _createDefaultPipeline
     const defaultStages = [
         ['new',window.t('newLeadWord')],['contact','Контакт'],
-        ['negotiation','Переговори'],['proposal','Пропозиція'],
+        ['negotiation','Переговори'],['proposal',window.t('proposalWord')],
         ['closing','Закриття'],['won','Виграно'],
     ];
 
@@ -1372,7 +1372,7 @@ window.fcRunAiFunnel = async function(mode) {
         // Flow Canvas використовує ключ компанії (клієнт налаштовує сам)
         const compSnap = await window.companyRef().get();
         const apiKey = compSnap.data()?.openaiApiKey || compSnap.data()?.anthropicApiKey || '';
-        if (!apiKey) throw new Error('AI ключ не налаштований. Додайте в Налаштування → Інтеграції.');
+        if (!apiKey) throw new Error(window.t('aiKeyNotSet'));
 
         const _fcCtrl = new AbortController();
         const _fcTimer = setTimeout(() => _fcCtrl.abort(), 30000);
@@ -1393,7 +1393,7 @@ window.fcRunAiFunnel = async function(mode) {
             });
         } finally { clearTimeout(_fcTimer); }
         const data = await resp.json();
-        const result = data.choices?.[0]?.message?.content || 'Помилка генерації';
+        const result = data.choices?.[0]?.message?.content || window.t('genError');
         document.getElementById('fcAiFunnelResultText').textContent = result;
         document.getElementById('fcAiFunnelResult').style.display = 'block';
     } catch(e) {
@@ -1670,7 +1670,7 @@ function renderPropPanel() {
             fields = `
                 <div style="margin-bottom:12px;">
                     <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">ПОВІДОМЛЕННЯ</div>
-                    <textarea id="fcp_text" rows="5" placeholder="Введіть текст повідомлення..."
+                    <textarea id="fcp_text" rows="5" placeholder=window.t('enterMsgText')
                         style="width:100%;padding:10px;background:#0f172a;border:1px solid #334155;
                         border-radius:7px;color:white;font-size:13px;resize:vertical;box-sizing:border-box;
                         line-height:1.5;">${escAttr(d.text||'')}</textarea>
@@ -1720,20 +1720,20 @@ function renderPropPanel() {
                 onchange="fcSetActionType(this.value)"
                 style="width:100%;padding:8px;background:#0f172a;border:1px solid #334155;
                 border-radius:7px;color:white;font-size:12px;box-sizing:border-box;">
-                ${[['set_var','Встановити змінну'],['set_tag','Додати тег'],
-                   ['remove_tag','Видалити тег'],['notify_admin','Сповістити менеджера'],
-                   ['start_flow','Запустити інший флоу'],['stop_flow','Зупинити флоу']]
+                ${[['set_var',window.t('setVariable')],['set_tag','Додати тег'],
+                   ['remove_tag','Видалити тег'],['notify_admin',window.t('notifyManager')],
+                   ['start_flow',window.t('runAnotherFlow')],['stop_flow','Зупинити флоу']]
                    .map(([v,l])=>`<option value="${v}" ${aType===v?'selected':''}>${l}</option>`).join('')}
             </select>`;
-            fields = fld('Тип дії', actionSel) + notifyFields;
+            fields = fld(window.t('actionType'), actionSel) + notifyFields;
             break;
         }
         case 'filter':
-            fields = fld('Змінна', inp('condVar', d.condVar, 'phone'))
+            fields = fld(window.t('variableWord'), inp('condVar', d.condVar, 'phone'))
                 + fld('Оператор', sel('condOp',
-                    [['=','= Дорівнює'],['!=','≠ Не дорівнює'],
-                     ['contains','Містить'],['exists','Існує'],['!exists','Не існує'],
-                     ['>','> Більше'],['<','< Менше']], d.condOp||'='))
+                    [['=',window.t('condEquals')],['!=',window.t('condNotEquals')],
+                     ['contains',window.t('condContains')],['exists',window.t('condExists')],['!exists',window.t('condNotExists')],
+                     ['>',window.t('condGreater')],['<','< Менше']], d.condOp||'='))
                 + fld('Значення', inp('condVal', d.condVal, ''))
                 + `<div style="font-size:10px;color:#64748b;margin-top:4px;">
                     <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/></svg></span> Вихід window.t('yesWord2') <span style="display:inline-flex;align-items:center;vertical-align:middle;line-height:1;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span> умова виконується<br>
@@ -1744,7 +1744,7 @@ function renderPropPanel() {
                 <input id="fcp_delay" type="number" value="${d.delay||5}" min="1"
                     style="flex:1;padding:8px;background:#0f172a;border:1px solid #334155;
                     border-radius:7px;color:white;font-size:12px;">
-                ${sel('delayUnit',[['seconds','секунд'],['minutes','хвилин'],['hours','годин'],['days','днів']], d.delayUnit||'seconds')}
+                ${sel('delayUnit',[['seconds','секунд'],['minutes','хвилин'],['hours','годин'],['days',window.t('daysWord')]], d.delayUnit||'seconds')}
                 </div>`)
                 + `<div style="font-size:10px;color:#64748b;margin-top:4px;">
                     Продовжувати ланцюжок: Завжди</div>`;
@@ -1757,7 +1757,7 @@ function renderPropPanel() {
             const fallbackModels = {
                 openai: [
                     ['gpt-4o-mini',        'GPT-4o mini — швидкий, дешевий ✅'],
-                    ['gpt-4o',             'GPT-4o — розумний, стабільний'],
+                    ['gpt-4o',             window.t('gpt4oDesc')],
                     ['gpt-4-turbo',        'GPT-4 Turbo'],
                     ['gpt-3.5-turbo',      'GPT-3.5 Turbo — найдешевший'],
                     ['o1-mini',            'o1-mini — міркує (повільно)'],
@@ -1876,7 +1876,7 @@ function renderPropPanel() {
                             window._cachedAiModels[prov] = models;
                             if (window.showToast) showToast('✅ Завантажено ' + models.length + ' моделей', 'success');
                             if (fc.selected) renderPropPanel();
-                        } else { throw new Error('Список моделей порожній'); }
+                        } else { throw new Error(window.t('modelsListEmpty')); }
                     } catch(e) {
                         if (window.showToast) showToast('❌ ' + e.message, 'error');
                         if (btn) { btn.textContent = '🔄 Оновити список'; btn.disabled = false; }
@@ -1973,7 +1973,7 @@ function renderPropPanel() {
             // ── Точність відповіді (temperature) ──
             + `<div style="margin-bottom:12px;">
                 <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:4px;">
-                    ${tip('Точність відповіді', 'Наскільки бот "по скрипту". Ближче до 0 — відповідає чітко і передбачувано (добре коли збираєш дані: ім\'я, телефон). Ближче до 1 — відповідає більш живо і різноманітно. Для продажів і анкет рекомендуємо 0.4–0.6.')}
+                    ${tip(window.t('responseAccuracy'), 'Наскільки бот "по скрипту". Ближче до 0 — відповідає чітко і передбачувано (добре коли збираєш дані: ім\'я, телефон). Ближче до 1 — відповідає більш живо і різноманітно. Для продажів і анкет рекомендуємо 0.4–0.6.')}
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
                     <span style="font-size:10px;color:#64748b;min-width:28px;">0.0</span>
@@ -1997,7 +1997,7 @@ function renderPropPanel() {
             + `<div style="display:flex;gap:8px;margin-bottom:12px;">
                 <div style="flex:1;">
                     <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">
-                        ${tip("Пам'ять діалогу", "Скільки кроків розмови бот пам'ятає. Якщо поставити 0 — бот забуває кожну відповідь одразу (дешевше, але не зможе підсумувати). Для анкети на 5-7 питань — постав 14. Для простого привітання — вистачить 4.")}
+                        ${tip(window.t('dialogMemory'), "Скільки кроків розмови бот пам'ятає. Якщо поставити 0 — бот забуває кожну відповідь одразу (дешевше, але не зможе підсумувати). Для анкети на 5-7 питань — постав 14. Для простого привітання — вистачить 4.")}
                     </div>
                     <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
                         <input id="fcp_historyLimit" type="number" min="0" max="20" value="${histLim}"
@@ -2050,11 +2050,11 @@ function renderPropPanel() {
                                 onchange="document.getElementById('fcp_firstMsgRow').style.display=this.checked?'block':'none';
                                     document.getElementById('fcp_toggle_bg').style.background=this.checked?'#22c55e':'#334155';
                                     document.getElementById('fcp_toggle_knob').style.left=this.checked?'16px':'2px';
-                                    this.parentElement.parentElement.querySelector('span').textContent=this.checked?'Увімкнено':'Вимкнено';">
+                                    this.parentElement.parentElement.querySelector('span').textContent=this.checked?window.t('enabledWord'):'Вимкнено';">
                             <div id="fcp_toggle_bg" style="width:32px;height:18px;border-radius:9px;background:${firstMsgEnabled?'#22c55e':'#334155'};transition:background .2s;position:absolute;top:0;left:0;pointer-events:none;"></div>
                             <div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;top:2px;left:${firstMsgEnabled?'16px':'2px'};transition:left .2s;pointer-events:none;" id="fcp_toggle_knob"></div>
                         </div>
-                        <span style="font-size:11px;color:#64748b;">${firstMsgEnabled?'Увімкнено':'Вимкнено'}</span>
+                        <span style="font-size:11px;color:#64748b;">${firstMsgEnabled?window.t('enabledWord'):'Вимкнено'}</span>
                     </label>
                 </div>
                 <div id="fcp_firstMsgRow" style="display:${firstMsgEnabled?'block':'none'};">
@@ -2067,10 +2067,10 @@ function renderPropPanel() {
             </div>`
 
             // ── Зберегти відповідь / Запасна ──
-            + fld(tip('Зберегти відповідь', 'Остання відповідь бота збережеться під цим іменем. Потім можна використати її в наступних кроках через подвійні дужки. Якщо не знаєш навіщо — залиш як є.'),
+            + fld(tip(window.t('saveResponse'), 'Остання відповідь бота збережеться під цим іменем. Потім можна використати її в наступних кроках через подвійні дужки. Якщо не знаєш навіщо — залиш як є.'),
                 inp('saveAs', d.saveAs, 'ai_response'))
-            + fld(tip('Запасна відповідь', 'Що напише бот якщо щось піде не так (наприклад, немає інтернету або закінчились гроші на API). Клієнт не побачить помилку — отримає цей текст.'),
-                inp('fallback', d.fallback, 'Вибачте, спробуйте пізніше'))
+            + fld(tip(window.t('fallbackResponse'), 'Що напише бот якщо щось піде не так (наприклад, немає інтернету або закінчились гроші на API). Клієнт не побачить помилку — отримає цей текст.'),
+                inp('fallback', d.fallback, window.t('sorryTryLater')))
 
             // ── Теги керування ──
             + `<div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px;margin-bottom:10px;">
@@ -2112,7 +2112,7 @@ function renderPropPanel() {
                 if (cb) cb.addEventListener('change', () => {
                     if (bg) bg.style.background = cb.checked ? '#22c55e' : '#334155';
                     if (kn) kn.style.left = cb.checked ? '16px' : '2px';
-                    if (lbl) lbl.textContent = cb.checked ? 'Увімкнено' : 'Вимкнено';
+                    if (lbl) lbl.textContent = cb.checked ? window.t('enabledWord') : 'Вимкнено';
                 });
             }, 50);
 
@@ -2125,16 +2125,16 @@ function renderPropPanel() {
                 </div>`)
                 + fld('Headers (JSON)', ta('apiHeaders', d.apiHeaders, '{"Content-Type":"application/json"}', 2))
                 + fld('Body (JSON шаблон)', ta('apiBody', d.apiBody, '{"phone":"{{phone}}","name":"{{name}}"}', 3))
-                + fld('Зберегти response у змінну', inp('saveAs', d.saveAs, 'api_response'));
+                + fld(window.t('saveResponseVar'), inp('saveAs', d.saveAs, 'api_response'));
             break;
         case 'sheets':
             fields = fld('Apps Script URL', inp('sheetsId', d.sheetsId, 'https://script.google.com/macros/s/.../exec'))
                 + fld('Назва листа', inp('sheetsName', d.sheetsName, 'Leads'))
-                + fld('Маппінг колонок (JSON)', ta('sheetsMapping', d.sheetsMapping,
+                + fld(window.t('columnMapping'), ta('sheetsMapping', d.sheetsMapping,
                     '{"A":"{{name}}","B":"{{phone}}","C":"{{date}}"}', 3));
             break;
         case 'random':
-            fields = fld('Розподіл %', `<div style="display:flex;gap:6px;align-items:center;">
+            fields = fld(window.t('splitPercent'), `<div style="display:flex;gap:6px;align-items:center;">
                 <span style="color:#94a3b8;font-size:12px;">А:</span>
                 <input id="fcp_splitA" type="number" value="${d.splitA||50}" min="1" max="99"
                     style="width:60px;padding:8px;background:#0f172a;border:1px solid #334155;
@@ -2147,9 +2147,9 @@ function renderPropPanel() {
                 </div>`);
             break;
         case 'repeat':
-            fields = fld('Кількість повторів', inp('repeatCount', d.repeatCount, '3'))
-                + fld('Інтервал (секунди)', inp('repeatInterval', d.repeatInterval, '60'))
-                + fld('Умова виходу (змінна)', inp('exitVar', d.exitVar, 'confirmed'));
+            fields = fld(window.t('repeatCount'), inp('repeatCount', d.repeatCount, '3'))
+                + fld(window.t('intervalSecs'), inp('repeatInterval', d.repeatInterval, '60'))
+                + fld(window.t('exitCondVar'), inp('exitVar', d.exitVar, 'confirmed'));
             break;
         case 'crm': {
             const _crmHint = '<div style="font-size:9px;color:#22c55e;background:#0f172a;border-radius:6px;padding:6px 8px;margin:4px 0 8px;line-height:1.5;">'
@@ -2183,7 +2183,7 @@ function renderPropPanel() {
             // FIX: IDs відповідають реальному _createDefaultPipeline в 77-crm.js
             const _defaultStageOpts = [
                 ['new',window.t('newLeadWord')],['contact','Контакт'],
-                ['negotiation','Переговори'],['proposal','Пропозиція'],
+                ['negotiation','Переговори'],['proposal',window.t('proposalWord')],
                 ['closing','Закриття'],['won','Виграно'],
             ];
             const _finalStageOpts = _stageOpts.length ? _stageOpts : _defaultStageOpts;
@@ -2210,7 +2210,7 @@ function renderPropPanel() {
             break;
         }
         case 'end':
-            fields = fld('Фінальне повідомлення', ta('text', d.text, 'Дякуємо! Ми зв\'яжемось.', 2));
+            fields = fld(window.t('finalMessage'), ta('text', d.text, 'Дякуємо! Ми зв\'яжемось.', 2));
             break;
         default:
             fields = fld('Текст', ta('text', d.text, ''));
