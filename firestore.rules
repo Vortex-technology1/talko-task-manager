@@ -66,7 +66,11 @@ service cloud.firestore {
           (isAuthenticated() && memberId == userId());
         allow update: if isManagerOrOwner(companyId) || 
           (isAuthenticated() && memberId == userId() && 
-           request.resource.data.role == resource.data.role);
+           request.resource.data.role == resource.data.role) ||
+          // Юзер може зберегти свою мову інтерфейсу (для weekly-report)
+          (isAuthenticated() && memberId == userId() &&
+           request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['language', 'interfaceLang', 'updatedAt']));
         allow delete: if isManagerOrOwner(companyId) && 
           resource.data.role != 'owner';
       }
