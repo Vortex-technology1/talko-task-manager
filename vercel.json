@@ -81,6 +81,7 @@
   "rewrites": [
     {"source": "/book/:companyId/:calendarId", "destination": "/api/booking?action=page&companyId=:companyId&calendarId=:calendarId"},
     {"source": "/book/:companyId", "destination": "/api/booking?action=profile&companyId=:companyId"},
+    {"source": "/api/google-oauth", "destination": "/api/google-oauth"},
     {
       "source": "/s/:slug",
       "destination": "/api/site?slug=:slug"
@@ -150,6 +151,10 @@
     "api/booking.js": {
       "maxDuration": 30,
       "memory": 256
+    },
+    "api/google-oauth.js": {
+      "maxDuration": 15,
+      "memory": 128
     },
     "api/warehouse.js": {
       "maxDuration": 30,

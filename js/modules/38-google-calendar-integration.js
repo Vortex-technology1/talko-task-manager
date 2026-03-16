@@ -1,24 +1,27 @@
 // =====================
-        // GOOGLE CALENDAR INTEGRATION
+        // GOOGLE CALENDAR INTEGRATION (Authorization Code Flow)
         // =====================
         
 'use strict';
         window.initGoogleCalendar = function initGoogleCalendar() {
-            // Initialize token client for Google Identity Services
-            if (typeof google === "undefined") return;
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: GOOGLE_CLIENT_ID,
-                scope: GOOGLE_SCOPES,
-                callback: handleGoogleAuthResponse,
-            });
-            
-            // Check if user already has calendar connected
             checkGoogleCalendarStatus();
+            // Слухаємо результат OAuth redirect
+            const params = new URLSearchParams(window.location.search);
+            const oauthResult = params.get('google_oauth');
+            if (oauthResult === 'success') {
+                const email = params.get('email') || '';
+                showCalendarConnected(email);
+                history.replaceState({}, '', window.location.pathname);
+                if (typeof showToast === 'function') showToast('Google Calendar підключено', 'success');
+            } else if (oauthResult === 'error') {
+                const reason = params.get('reason') || 'unknown';
+                history.replaceState({}, '', window.location.pathname);
+                if (typeof showToast === 'function') showToast('Помилка підключення Google: ' + reason, 'error');
+            }
         }
         
         function checkGoogleCalendarStatus() {
             if (!currentUser || !currentCompany) return;
-            
             window.companyRef()
                 .collection('users').doc(currentUser.uid)
                 .get()
@@ -28,6 +31,11 @@
                         if (data.googleCalendarConnected && data.googleCalendarEmail) {
                             showCalendarConnected(data.googleCalendarEmail);
                             googleAccessToken = data.googleAccessToken || null;
+                            const expiry = data.googleTokenExpiry?.toMillis?.() || 0;
+                            const hasRefresh = !!data.googleRefreshToken;
+                            if (!hasRefresh && expiry > 0 && Date.now() > expiry) {
+                                showCalendarTokenWarning();
+                            }
                         } else {
                             showCalendarNotConnected();
                         }
@@ -40,117 +48,78 @@
             const connected = document.getElementById('gcalConnected');
             const notConnected = document.getElementById('gcalNotConnected');
             const emailEl = document.getElementById('gcalEmail');
-            
+            const warningEl = document.getElementById('gcalTokenWarning');
             if (connected) connected.style.display = 'block';
             if (notConnected) notConnected.style.display = 'none';
-            if (emailEl) emailEl.textContent = window.t('connected') + ': ' + email;
+            if (warningEl) warningEl.style.display = 'none';
+            if (emailEl) emailEl.textContent = (window.t ? window.t('connected') : 'Підключено') + ': ' + email;
         }
         
         function showCalendarNotConnected() {
             const connected = document.getElementById('gcalConnected');
             const notConnected = document.getElementById('gcalNotConnected');
-            
             if (connected) connected.style.display = 'none';
             if (notConnected) notConnected.style.display = 'block';
         }
-        
-        function connectGoogleCalendar() {
-            if (!tokenClient) {
-                showAlertModal(window.t('googleApiNotLoaded'));
-                return;
+
+        function showCalendarTokenWarning() {
+            let w = document.getElementById('gcalTokenWarning');
+            if (!w) {
+                w = document.createElement('div');
+                w.id = 'gcalTokenWarning';
+                w.style.cssText = 'margin-top:.5rem;padding:.5rem .75rem;background:#fef3c7;border-radius:8px;font-size:.82rem;color:#92400e;';
+                w.innerHTML = '⚠️ Токен Google протух. <a href="#" onclick="connectGoogleCalendar();return false;" style="color:#92400e;font-weight:600;">Оновити підключення</a>';
+                const connected = document.getElementById('gcalConnected');
+                if (connected) connected.appendChild(w);
             }
-            
-            // Request access token
-            tokenClient.requestAccessToken({ prompt: 'consent' });
+            w.style.display = 'block';
         }
         
-        function handleGoogleAuthResponse(response) {
-            if (response.error) {
-                console.error('Google auth error:', response);
-                showAlertModal(window.t('googleAuthError') + ': ' + response.error);
+        function connectGoogleCalendar() {
+            if (!currentUser || !window.currentCompanyId) {
+                if (typeof showAlertModal === 'function') showAlertModal('Спочатку увійдіть в систему');
                 return;
             }
-            
-            googleAccessToken = response.access_token;
-            
-            // Get user email from Google
-            fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-                headers: { 'Authorization': 'Bearer ' + googleAccessToken }
-            })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('Failed to get user info: ' + res.status);
-                }
-                return res.json();
-            })
-            .then(userInfo => {
-                const email = userInfo.email || currentUser.email || window.t('connected');
-                
-                // Save to Firestore using set with merge
-                return window.companyRef()
-                    .collection('users').doc(currentUser.uid)
-                    .set({
-                        googleCalendarConnected: true,
-                        googleCalendarEmail: email,
-                        googleAccessToken: googleAccessToken,
-                        // GIS дає access_token на ~1 год (3600 сек)
-                        googleTokenExpiry: firebase.firestore.Timestamp.fromMillis(Date.now() + 3500 * 1000),
-                        googleCalendarUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true })
-                    .then(() => {
-                        showCalendarConnected(email);
-                        showAlertModal(window.t('googleCalendarConnected'));
-                    });
-            })
-            .catch(err => {
-                console.error('Error saving calendar connection:', err);
-                // Try to save without email
-                window.companyRef()
-                    .collection('users').doc(currentUser.uid)
-                    .set({
-                        googleCalendarConnected: true,
-                        googleCalendarEmail: currentUser.email || window.t('connected'),
-                        googleAccessToken: googleAccessToken,
-                        googleTokenExpiry: firebase.firestore.Timestamp.fromMillis(Date.now() + 3500 * 1000),
-                        googleCalendarUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true })
-                    .then(() => {
-                        showCalendarConnected(currentUser.email || window.t('connected'));
-                        showAlertModal(window.t('googleCalendarConnected'));
-                    })
-                    .catch(err2 => {
-                        showAlertModal(window.t('saveError') + ': ' + err2.message);
-                    });
-            });
+            const uid       = currentUser.uid;
+            const companyId = window.currentCompanyId;
+            window.location.href = '/api/google-oauth?action=init&uid=' + encodeURIComponent(uid) + '&companyId=' + encodeURIComponent(companyId);
         }
         
         async function disconnectGoogleCalendar() {
-            if (!await showConfirmModal(window.t('disconnectGoogleCalendar'), { danger: true })) {
-                return;
+            if (typeof showConfirmModal === 'function') {
+                const ok = await showConfirmModal(
+                    window.t ? window.t('disconnectGoogleCalendar') : 'Відключити Google Calendar?',
+                    { danger: true }
+                );
+                if (!ok) return;
             }
-            
-            // Revoke token if exists
-            if (googleAccessToken) {
-                google.accounts.oauth2.revoke(googleAccessToken, () => {
-                    // Token revoked
-                });
+            if (googleAccessToken && typeof google !== 'undefined') {
+                try { google.accounts.oauth2.revoke(googleAccessToken, () => {}); } catch(e) {}
             }
-            
-            // Update Firestore
+            window.companyRef().collection('users').doc(currentUser.uid).get()
+                .then(async doc => {
+                    const rt = doc.data()?.googleRefreshToken;
+                    if (rt) {
+                        fetch('https://oauth2.googleapis.com/revoke?token=' + encodeURIComponent(rt), { method: 'POST' }).catch(() => {});
+                    }
+                }).catch(() => {});
             window.companyRef()
                 .collection('users').doc(currentUser.uid)
                 .set({
                     googleCalendarConnected: false,
-                    googleCalendarEmail: firebase.firestore.FieldValue.delete(),
-                    googleAccessToken: firebase.firestore.FieldValue.delete()
+                    googleCalendarEmail:     firebase.firestore.FieldValue.delete(),
+                    googleAccessToken:       firebase.firestore.FieldValue.delete(),
+                    googleRefreshToken:      firebase.firestore.FieldValue.delete(),
+                    googleTokenExpiry:       firebase.firestore.FieldValue.delete(),
                 }, { merge: true })
                 .then(() => {
                     googleAccessToken = null;
                     showCalendarNotConnected();
-                    showAlertModal(window.t('googleCalendarDisconnected'));
+                    if (typeof showAlertModal === 'function')
+                        showAlertModal(window.t ? window.t('googleCalendarDisconnected') : 'Google Calendar відключено');
                 })
                 .catch(err => {
-                    console.error('Error disconnecting calendar:', err);
-                    showAlertModal(window.t('error') + ': ' + err.message);
+                    if (typeof showAlertModal === 'function')
+                        showAlertModal((window.t ? window.t('error') : 'Помилка') + ': ' + err.message);
                 });
         }
