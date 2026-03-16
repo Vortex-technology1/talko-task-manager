@@ -435,7 +435,7 @@ async function _openManualForm(incidentId) {
         <div class="incident-fg">
           <label>Відповідальний за виправлення</label>
           <input id="if_responsible" class="incident-input" type="text"
-            value="${_esc(e.responsible || '')}" list="if_responsible_list" placeholder=window.t('nameOrRole')>
+            value="${_esc(e.responsible || '')}" list="if_responsible_list" placeholder=${window.t('nameOrRole')}>
           <datalist id="if_responsible_list">${userOpts}</datalist>
         </div>
 
@@ -447,7 +447,7 @@ async function _openManualForm(incidentId) {
         <div class="incident-fg">
           <label>Залучені (через кому)</label>
           <input id="if_participants" class="incident-input" type="text"
-            value="${_esc(participantsVal)}" placeholder=window.t('nameExPh')>
+            value="${_esc(participantsVal)}" placeholder=${window.t('nameExPh')}>
         </div>
 
         <div class="incident-fg incident-fg-full">
@@ -465,19 +465,19 @@ async function _openManualForm(incidentId) {
         <div class="incident-fg incident-fg-full">
           <label>Наслідки</label>
           <textarea id="if_consequences" class="incident-input" rows="2"
-            placeholder=window.t('incWhatHappened')>${_esc(e.consequences || '')}</textarea>
+            placeholder=${window.t('incWhatHappened')}>${_esc(e.consequences || '')}</textarea>
         </div>
 
         <div class="incident-fg incident-fg-full">
           <label>Що потрібно змінити</label>
           <textarea id="if_toChange" class="incident-input" rows="2"
-            placeholder=window.t('incSpecificActions')>${_esc(e.toChange || '')}</textarea>
+            placeholder=${window.t('incSpecificActions')}>${_esc(e.toChange || '')}</textarea>
         </div>
 
         <div class="incident-fg incident-fg-full">
           <label>Додаткові нотатки</label>
           <textarea id="if_description" class="incident-input" rows="2"
-            placeholder=window.t('anyAdditionalInfo')>${_esc(e.description || '')}</textarea>
+            placeholder=${window.t('anyAdditionalInfo')}>${_esc(e.description || '')}</textarea>
         </div>
 
       </div>

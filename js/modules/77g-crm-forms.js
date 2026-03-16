@@ -147,7 +147,7 @@ window.crmCreateForm = function () {
 
         <label style="display:block;margin-bottom:0.65rem;">
             <div style="font-size:0.75rem;font-weight:600;color:#6b7280;margin-bottom:0.25rem;">Назва форми *</div>
-            <input id="crmFormName" placeholder=window.t('bookConsultation') style="${selStyle}">
+            <input id="crmFormName" placeholder=${window.t('bookConsultation')} style="${selStyle}">
         </label>
 
         <label style="display:block;margin-bottom:0.65rem;">

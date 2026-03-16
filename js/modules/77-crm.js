@@ -562,11 +562,11 @@ function _kanbanFilterBar() {
         </select>
         <div style="display:flex;align-items:center;gap:0.25rem;">
             <span style="font-size:0.72rem;color:#9ca3af;">₴</span>
-            <input id="crmKanbanFilterAmountMin" type="number" placeholder=window.t('fromWord') value="${f.amountMin || ''}"
+            <input id="crmKanbanFilterAmountMin" type="number" placeholder="${window.t('fromWord')}" value="${f.amountMin || ''}"
                 oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
             <span style="font-size:0.72rem;color:#9ca3af;">—</span>
-            <input id="crmKanbanFilterAmountMax" type="number" placeholder=window.t('toWord') value="${f.amountMax || ''}"
+            <input id="crmKanbanFilterAmountMax" type="number" placeholder="${window.t('toWord')}" value="${f.amountMax || ''}"
                 oninput="crmApplyFilters()"
                 style="width:70px;padding:0.25rem 0.35rem;border:1px solid #e8eaed;border-radius:6px;font-size:0.75rem;">
         </div>
@@ -1770,7 +1770,7 @@ window.crmOpenDeal = function(dealId) {
             <div id="chatInputArea_crmdeal"
                 style="padding:0.6rem;border-top:1px solid #e8eaed;background:white;flex-shrink:0;">
                 <div style="display:flex;gap:0.4rem;align-items:flex-end;">
-                    <textarea id="chatInput_crmdeal" rows="1" placeholder=window.t('writeMsgPh')
+                    <textarea id="chatInput_crmdeal" rows="1" placeholder=${window.t('writeMsgPh')}
                         style="flex:1;padding:0.45rem 0.6rem;border:1px solid #e8eaed;border-radius:8px;
                         font-size:0.82rem;font-family:inherit;resize:none;line-height:1.4;max-height:100px;outline:none;"
                         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend('crmdeal');}">
@@ -3226,7 +3226,7 @@ window.crmOpenClient = function(clientId) {
             </div>
             <!-- Поле вводу -->
             <div id="chatInputArea_crm" style="display:flex;gap:0.4rem;align-items:flex-end;">
-                <textarea id="chatInput_crm" rows="1" placeholder=window.t('botsChatPh')
+                <textarea id="chatInput_crm" rows="1" placeholder=${window.t('botsChatPh')}
                     style="flex:1;padding:0.45rem 0.6rem;border:1.5px solid #e5e7eb;
                     border-radius:8px;font-size:0.8rem;resize:none;font-family:inherit;
                     max-height:80px;overflow-y:auto;outline:none;line-height:1.4;box-sizing:border-box;"
@@ -3325,7 +3325,7 @@ window.crmOpenCreateClient = function() {
         ${inp('telegram','Telegram','username')}
         <div style="margin-bottom:0.6rem;">
             <label style="font-size:0.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:3px;">Примітка</label>
-            <textarea id="ccc_note" rows="2" placeholder=window.t('freeNote')
+            <textarea id="ccc_note" rows="2" placeholder=${window.t('freeNote')}
                 style="width:100%;padding:0.5rem 0.6rem;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.82rem;box-sizing:border-box;resize:vertical;"></textarea>
         </div>
         <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
@@ -3454,7 +3454,7 @@ function _renderActivitiesUI(c, allActivities) {
                 ${crm.deals.filter(d=>d.stage!=='won'&&d.stage!=='lost').map(d =>
                     `<option value="${d.id}">${_esc(d.title||d.clientName||window.t('crmDeal'))}</option>`).join('')}
             </select>
-            <textarea id="actNoteText" rows="2" placeholder=window.t('crmNoteD')
+            <textarea id="actNoteText" rows="2" placeholder=${window.t('crmNoteD')}
                 style="width:100%;padding:0.4rem 0.5rem;border:1.5px solid #e8eaed;border-radius:7px;
                 font-size:0.8rem;box-sizing:border-box;resize:vertical;"></textarea>
             <button id="actSaveBtn"

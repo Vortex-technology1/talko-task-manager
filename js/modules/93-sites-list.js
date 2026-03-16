@@ -230,7 +230,7 @@ window.sitesOpenCreate = function () {
             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                 <div>
                     <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Назва сайту</label>
-                    <input id="sc_name" placeholder=window.t('siteNameEx')
+                    <input id="sc_name" placeholder=${window.t('siteNameEx')}
                         style="${inp}" autofocus>
                 </div>
 
@@ -272,7 +272,7 @@ window.sitesOpenCreate = function () {
                 <div id="sc_blocks_section">
                 <div>
                     <label style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.3rem;">Опис (необов'язково)</label>
-                    <input id="sc_desc" placeholder=window.t('sitesDescPh')
+                    <input id="sc_desc" placeholder=${window.t('sitesDescPh')}
                         style="${inp}">
                 </div>
                 <div>

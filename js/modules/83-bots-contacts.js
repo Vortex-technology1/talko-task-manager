@@ -505,7 +505,7 @@ window.openCreateBotModal = function() {
                     </div>
                     <div>
                         <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА БОТА</label>
-                        <input id="bpNewBotName" placeholder=window.t('botsTokenExample')
+                        <input id="bpNewBotName" placeholder=${window.t('botsTokenExample')}
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                     <div>
@@ -642,12 +642,12 @@ window.openCreateFlowModal = function() {
                 <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.6rem;">
                     <div>
                         <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА *</label>
-                        <input id="bpFlowName" placeholder=window.t('sitesFormExPh')
+                        <input id="bpFlowName" placeholder=${window.t('sitesFormExPh')}
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                     <div>
                         <label style="font-size:0.75rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТРИГЕР</label>
-                        <input id="bpFlowTrigger" placeholder=window.t('botsStartKeyword')
+                        <input id="bpFlowTrigger" placeholder=${window.t('botsStartKeyword')}
                             style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;">
                     </div>
                 </div>
@@ -789,7 +789,7 @@ async function renderContactsTab() {
                 <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
                     <div style="flex:1;position:relative;">
                         <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#9ca3af;" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                        <input id="ctsSearch" type="text" placeholder=window.t('botsSearchPh2')
+                        <input id="ctsSearch" type="text" placeholder=${window.t('botsSearchPh2')}
                             value="${escH(cts.search)}"
                             oninput="ctsOnSearch(this.value)"
                             style="width:100%;padding:0.45rem 0.5rem 0.45rem 2rem;border:1.5px solid #e5e7eb;
@@ -1159,7 +1159,7 @@ window.ctsOpenCard = async function(contactId) {
                     </span>`).join('')}
                 </div>
                 <div style="display:flex;gap:4px;">
-                    <input id="ctsNewTag" placeholder=window.t('botsNewTag')
+                    <input id="ctsNewTag" placeholder=${window.t('botsNewTag')}
                         style="flex:1;padding:0.35rem 0.5rem;border:1px solid #e5e7eb;border-radius:7px;font-size:0.76rem;"
                         onkeydown="if(event.key==='Enter')ctsAddTag('${ct.id}')">
                     <button onclick="ctsAddTag('${ct.id}')"
@@ -1170,7 +1170,7 @@ window.ctsOpenCard = async function(contactId) {
             <!-- Примітка -->
             <div style="margin-bottom:1rem;">
                 <div style="font-size:0.68rem;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Примітка менеджера</div>
-                <textarea id="ctsNote" rows="3" placeholder=window.t('botsNotePh2')
+                <textarea id="ctsNote" rows="3" placeholder=${window.t('botsNotePh2')}
                     style="width:100%;padding:0.5rem;border:1px solid #e5e7eb;border-radius:8px;
                     font-size:0.78rem;resize:vertical;box-sizing:border-box;font-family:inherit;"
                     >${escH(ct.managerNote||'')}</textarea>
@@ -1510,7 +1510,7 @@ async function renderChatTab() {
                         width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                     </svg>
-                    <input id="chatSearch" type="text" placeholder=window.t('botsSearch')
+                    <input id="chatSearch" type="text" placeholder=${window.t('botsSearch')}
                         value="${escH(chat.search)}"
                         oninput="chatOnSearch(this.value)"
                         style="width:100%;padding:0.38rem 0.5rem 0.38rem 1.8rem;border:1.5px solid #e5e7eb;
@@ -1548,7 +1548,7 @@ async function renderChatTab() {
             <div id="chatInputArea"
                 style="padding:0.6rem;border-top:1px solid #f1f5f9;flex-shrink:0;display:none;">
                 <div style="display:flex;gap:0.4rem;align-items:flex-end;">
-                    <textarea id="chatInput" rows="1" placeholder=window.t('botsChatPh')
+                    <textarea id="chatInput" rows="1" placeholder=${window.t('botsChatPh')}
                         style="flex:1;padding:0.5rem 0.65rem;border:1.5px solid #e5e7eb;
                         border-radius:10px;font-size:0.83rem;resize:none;font-family:inherit;
                         max-height:100px;overflow-y:auto;outline:none;line-height:1.4;"
@@ -2641,7 +2641,7 @@ async function renderSettingsTab() {
             <label style="${labelStyle}">ЗАМІНИТИ ТОКЕН</label>
             <div style="display:flex;gap:0.4rem;">
                 <input type="password" id="bpSettingsToken"
-                    placeholder=window.t('botsNewTokenPh')
+                    placeholder=${window.t('botsNewTokenPh')}
                     style="${inputStyle}flex:1;">
                 <button onclick="bpReconnectBot('${bot.id}')" style="${btnGreenStyle}">
                     Замінити
@@ -2706,7 +2706,7 @@ async function renderSettingsTab() {
             <div style="display:flex;gap:0.4rem;margin-bottom:0.35rem;">
                 <input id="settingsNotifyTgId" type="text"
                     value="${escH(notifyTg)}"
-                    placeholder=window.t('botsExampleChatId')
+                    placeholder=${window.t('botsExampleChatId')}
                     style="${inputStyle}flex:1;">
                 <button onclick="settingsSaveNotify()" style="${btnGreenStyle}">
                     Зберегти

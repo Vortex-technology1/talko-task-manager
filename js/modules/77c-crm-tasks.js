@@ -236,7 +236,7 @@ function _taskTemplateRow(t, i, stages) {
     return `
     <div style="display:flex;align-items:center;gap:0.4rem;padding:0.5rem 0.6rem;
         background:#f8fafc;border:1px solid #e8eaed;border-radius:7px;flex-wrap:wrap;">
-        <input value="${t.title||''}" placeholder=window.t('taskNamePh')
+        <input value="${t.title||''}" placeholder=${window.t('taskNamePh')}
             onchange="crmUpdateTaskTemplate(${i},'title',this.value)"
             style="flex:2;min-width:120px;padding:0.25rem 0.4rem;border:1px solid #e8eaed;
             border-radius:5px;font-size:0.78rem;">

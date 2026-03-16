@@ -683,7 +683,7 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
                 <div>
                     <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Постачальник</label>
-                    <input type="text" id="mqSupplier" class="form-input" placeholder=window.t('crmColName') style="border-radius:12px;">
+                    <input type="text" id="mqSupplier" class="form-input" placeholder=${window.t('crmColName')} style="border-radius:12px;">
                 </div>
                 <div>
                     <label style="font-size:0.78rem;font-weight:600;color:#6b7280;">Планова дата</label>

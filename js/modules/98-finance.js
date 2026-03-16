@@ -1552,14 +1552,14 @@ function _invoiceModal(inv, _unused, crmDealId, prefillClient) {
         <!-- Клієнт -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Клієнт (назва / ПІБ)</label>
-          <input id="inv_client" value="${escHtml(inv?.clientName || prefillClient || '')}" placeholder=window.t('finCompanyPh')
+          <input id="inv_client" value="${escHtml(inv?.clientName || prefillClient || '')}" placeholder=${window.t('finCompanyPh')}
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
         <!-- Реквізити клієнта -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Реквізити клієнта</label>
-          <textarea id="inv_client_details" rows="2" placeholder=window.t('finDetailsPh')
+          <textarea id="inv_client_details" rows="2" placeholder=${window.t('finDetailsPh')}
             style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:0.85rem;resize:vertical;box-sizing:border-box;">${escHtml(inv?.clientDetails || '')}</textarea>
         </div>
 
@@ -1640,10 +1640,10 @@ function _invRenderLines() {
       <input value="${escHtml(it.desc)}" placeholder="Опис послуги/товару"
         oninput="window._invLineChange(${idx},'desc',this.value)"
         style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 10px;font-size:0.82rem;box-sizing:border-box;">
-      <input type="number" value="${it.qty}" min="0" placeholder=window.t('qtyShort')
+      <input type="number" value="${it.qty}" min="0" placeholder=${window.t('qtyShort')}
         oninput="window._invLineChange(${idx},'qty',this.value)"
         style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 8px;font-size:0.82rem;box-sizing:border-box;text-align:right;">
-      <input type="number" value="${it.price}" min="0" placeholder=window.t('priceWord')
+      <input type="number" value="${it.price}" min="0" placeholder=${window.t('priceWord')}
         oninput="window._invLineChange(${idx},'price',this.value)"
         style="border:1px solid #e5e7eb;border-radius:7px;padding:6px 8px;font-size:0.82rem;box-sizing:border-box;text-align:right;">
       <button onclick="window._invRemoveLine(${idx})"
@@ -2069,7 +2069,7 @@ window._finAddRecurring = function(editId) {
         <!-- Назва -->
         <div>
           <label style="font-size:0.8rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва платежу *</label>
-          <input id="rec_name" value="${escHtml(existing?.name || '')}" placeholder=window.t('expensesExPh') 
+          <input id="rec_name" value="${escHtml(existing?.name || '')}" placeholder=${window.t('expensesExPh')} 
             style="width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-size:0.9rem;box-sizing:border-box;">
         </div>
 
@@ -4106,7 +4106,7 @@ function addTransaction(forceType) {
         <!-- Контрагент -->
         <div>
           <label style="font-size:0.78rem;color:#6b7280;font-weight:500;display:block;margin-bottom:0.3rem;">Контрагент</label>
-          <input id="fmCounterparty" type="text" placeholder=window.t('supplierClientPh')
+          <input id="fmCounterparty" type="text" placeholder=${window.t('supplierClientPh')}
             style="width:100%;padding:0.55rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.85rem;box-sizing:border-box;outline:none;"
             onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e5e7eb'">
         </div>

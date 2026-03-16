@@ -634,7 +634,7 @@
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Категорія</label>
               <datalist id="wh_cat_dl">${existingCats.map(c => `<option value="${c}">`).join('')}</datalist>
-              <input id="wh_cat" value="${item.category || ''}" list="wh_cat_dl" style="${_inp()}" placeholder=window.t('materialsChemPh')>
+              <input id="wh_cat" value="${item.category || ''}" list="wh_cat_dl" style="${_inp()}" placeholder=${window.t('materialsChemPh')}>
             </div>
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Одиниця</label>
@@ -758,7 +758,7 @@
           </div>
           <div>
             <label style="font-size:0.78rem;color:#6b7280;">Примітка</label>
-            <input id="wh_op_note" style="${_inp()}" placeholder=window.t('fromSupplierPh')>
+            <input id="wh_op_note" style="${_inp()}" placeholder=${window.t('fromSupplierPh')}>
           </div>
           <div id="wh_op_stock_info" style="font-size:0.8rem;color:#6b7280;background:#f9fafb;padding:0.5rem;border-radius:6px;display:none;"></div>
         </div>

@@ -205,7 +205,7 @@
                     <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                         <div>
                             <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">НАЗВА БОТА *</label>
-                            <input id="newFlowName" placeholder=window.t('botsFlowEx')
+                            <input id="newFlowName" placeholder=${window.t('botsFlowEx')}
                                 style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
                         </div>
                         <div>
@@ -219,7 +219,7 @@
                         </div>
                         <div>
                             <label style="font-size:0.78rem;color:#6b7280;font-weight:600;display:block;margin-bottom:0.3rem;">ТРИГЕР (ключове слово або /start)</label>
-                            <input id="newFlowTrigger" placeholder=window.t('botsTrigEx')
+                            <input id="newFlowTrigger" placeholder=${window.t('botsTrigEx')}
                                 style="width:100%;padding:0.6rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9rem;box-sizing:border-box;">
                         </div>
                     </div>

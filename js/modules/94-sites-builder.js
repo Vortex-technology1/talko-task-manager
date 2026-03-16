@@ -850,7 +850,7 @@ function _renderSeoPanel() {
         </div>
         <div style="margin-bottom:0.5rem;">
             <label style="${lbl}">Title (заголовок сторінки)</label>
-            <input id="seo_title" value="${_esc(s.seoTitle||s.name||'')}" placeholder=window.t('sitesSeoTitle') style="${inp}">
+            <input id="seo_title" value="${_esc(s.seoTitle||s.name||'')}" placeholder=${window.t('sitesSeoTitle')} style="${inp}">
         </div>
         <div style="margin-bottom:0.5rem;">
             <label style="${lbl}">Description</label>
@@ -858,7 +858,7 @@ function _renderSeoPanel() {
         </div>
         <div style="margin-bottom:0.5rem;">
             <label style="${lbl}">Keywords</label>
-            <input id="seo_keywords" value="${_esc(s.seoKeywords||'')}" placeholder=window.t('keywordsPh') style="${inp}">
+            <input id="seo_keywords" value="${_esc(s.seoKeywords||'')}" placeholder=${window.t('keywordsPh')} style="${inp}">
         </div>
         <div>
             <label style="${lbl}">OG Image URL (соц мережі)</label>

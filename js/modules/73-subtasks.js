@@ -129,7 +129,7 @@
                 <div style="display:flex;flex-direction:column;gap:0.75rem;">
                     <div>
                         <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Назва *</label>
-                        <input id="stTitle" type="text" placeholder=window.t('whatToDoPh') autofocus
+                        <input id="stTitle" type="text" placeholder=${window.t('whatToDoPh')} autofocus
                             style="width:100%;padding:0.5rem 0.65rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.88rem;box-sizing:border-box;"
                             onkeydown="if(event.key==='Enter'){event.preventDefault();saveSubtask('${parentId}');}">
                     </div>

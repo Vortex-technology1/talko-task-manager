@@ -49,7 +49,7 @@ window.openAiChat = function({ module, contextText, systemPrompt, title, initial
             <!-- Input -->
             <div style="border-top:1px solid #e5e7eb;padding:0.75rem 1rem;flex-shrink:0;background:white;">
                 <div style="display:flex;gap:0.5rem;align-items:flex-end;">
-                    <textarea id="aiChatInput" placeholder=window.t('askAIPh')
+                    <textarea id="aiChatInput" placeholder=${window.t('askAIPh')}
                         rows="2"
                         style="flex:1;padding:0.6rem 0.75rem;border:1.5px solid #e5e7eb;border-radius:12px;font-size:0.88rem;font-family:inherit;resize:none;line-height:1.4;outline:none;transition:border-color 0.2s;"
                         onfocus="this.style.borderColor='#8b5cf6'"

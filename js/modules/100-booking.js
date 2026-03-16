@@ -245,7 +245,7 @@ function renderCalendarForm(cal) {
 
     <div class="bk-field">
       <label>Назва календаря *</label>
-      <input type="text" id="bk-f-name" placeholder=window.t('bookingEx2')
+      <input type="text" id="bk-f-name" placeholder=${window.t('bookingEx2')}
              value="${window.htmlEsc ? window.htmlEsc(d.name||'') : (d.name||'')}" maxlength="80">
     </div>
 

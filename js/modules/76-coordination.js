@@ -613,7 +613,7 @@
               <div style="font-weight:700;font-size:.78rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="zap" style="width:12px;height:12px;margin-right:4px;"></i>(window.currentLang==='ru'?'Решение':window.t('coordRishennya'))</div>
               <div id="coordDecisions" style="display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;"></div>
               <div style="display:flex;gap:.45rem;">
-                <input id="coordNewDecision" type="text" class="form-control" placeholder=window.t('coordZafiksuvRishennya') style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addCoordDecision()">
+                <input id="coordNewDecision" type="text" class="form-control" placeholder=${window.t('coordZafiksuvRishennya')} style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addCoordDecision()">
                 <button onclick="addCoordDecision()" class="btn btn-success" style="padding:.35rem .65rem;font-size:.8rem;">Додати</button>
               </div>
             </div>
@@ -622,7 +622,7 @@
               <div style="font-weight:700;font-size:.78rem;color:#d97706;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;"><i data-lucide="arrow-up-circle" style="width:12px;height:12px;margin-right:4px;color:#d97706;"></i>(window.currentLang==='ru'?'Эскалация (нерешённые вопросы)':window.t('coordEskalatsiNevyrishePytannya'))</div>
               <div id="coordUnresolved" style="display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;"></div>
               <div style="display:flex;gap:.45rem;">
-                <input id="coordNewUnresolved" type="text" class="form-control" placeholder=window.t('coordPytannyaShchoPotrebuye') style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addUnresolved()">
+                <input id="coordNewUnresolved" type="text" class="form-control" placeholder=${window.t('coordPytannyaShchoPotrebuye')} style="flex:1;font-size:.83rem;" onkeydown="if(event.key==='Enter')addUnresolved()">
                 <button onclick="addUnresolved()" class="btn" style="padding:.35rem .65rem;font-size:.8rem;background:#fef3c7;border:1.5px solid #fbbf24;color:#92400e;">Додати</button>
               </div>
             </div>

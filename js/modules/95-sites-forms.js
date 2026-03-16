@@ -152,7 +152,7 @@ window.sfOpenCreate = function () {
             <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;">
                 <div>
                     <label style="font-size:0.67rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.25rem;">Назва форми</label>
-                    <input id="sfc_name" placeholder=window.t('sitesFormPlaceholder') style="${inp}" autofocus>
+                    <input id="sfc_name" placeholder=${window.t('sitesFormPlaceholder')} style="${inp}" autofocus>
                 </div>
                 <div>
                     <label style="font-size:0.67rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.35rem;">Поля форми</label>
@@ -270,7 +270,7 @@ async function _renderFormEditor() {
         <input id="sfe_name" value="${_esc(form.name||'')}" style="${inp}">
 
         <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.2rem;">Заголовок над формою</label>
-        <input id="sfe_title" value="${_esc(form.title||'')}" placeholder=window.t('sitesFormSubmitAlt') style="${inp}">
+        <input id="sfe_title" value="${_esc(form.title||'')}" placeholder=${window.t('sitesFormSubmitAlt')} style="${inp}">
 
         <label style="font-size:0.7rem;font-weight:700;color:#9ca3af;text-transform:uppercase;display:block;margin-bottom:0.2rem;">Підзаголовок</label>
         <input id="sfe_subtitle" value="${_esc(form.subtitle||'')}" placeholder="Зв'яжемося за 15 хвилин" style="${inp}">
