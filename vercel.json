@@ -79,6 +79,8 @@
     }
   ],
   "rewrites": [
+    {"source": "/book/:companyId/:calendarId", "destination": "/api/booking?action=page&companyId=:companyId&calendarId=:calendarId"},
+    {"source": "/book/:companyId", "destination": "/api/booking?action=profile&companyId=:companyId"},
     {
       "source": "/s/:slug",
       "destination": "/api/site?slug=:slug"
@@ -143,6 +145,10 @@
     },
     "api/crm-reminders.js": {
       "maxDuration": 60,
+      "memory": 256
+    },
+    "api/booking.js": {
+      "maxDuration": 30,
       "memory": 256
     },
     "api/warehouse.js": {
