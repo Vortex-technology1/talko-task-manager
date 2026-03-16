@@ -275,6 +275,11 @@
                         });
                     }
                     break;
+                case 'warehouse':
+                    lazyLoad('warehouse', function() {
+                        if (typeof window.initWarehouseUI === 'function') window.initWarehouseUI();
+                    });
+                    break;
             }
             
             updateOverdueBadges();

@@ -1,0 +1,367 @@
+'use strict';
+// ═══════════════════════════════════════════════════════════
+//  99-warehouse-core.js  —  TALKO Склад: ядро
+//  Каталог товарів, залишки, операції IN/OUT/WRITE_OFF
+// ═══════════════════════════════════════════════════════════
+
+(function () {
+
+  // ── Стан модуля ──────────────────────────────────────────
+  const _wh = {
+    items:      [],   // каталог
+    stock:      {},   // { itemId: { qty, reserved, minStock } }
+    locations:  [],   // локації
+    operations: [],   // журнал (останні 100)
+    suppliers:  [],   // постачальники
+    listeners:  [],   // unsubscribe functions
+    initialized: false,
+    companyId: null,
+  };
+  window._whState = _wh;
+
+  // ── DB helpers ───────────────────────────────────────────
+  function compRef()  { return window.companyRef ? window.companyRef() : window.db.collection('companies').doc(window.currentCompanyId); }
+  function col(name)  { return compRef().collection(name); }
+
+  // ── Ініціалізація ────────────────────────────────────────
+  window.initWarehouseCore = async function () {
+    const cid = window.currentCompanyId;
+    if (_wh.initialized && _wh.companyId === cid) return;
+    _wh.companyId = cid;
+    _wh.initialized = true;
+
+    _whUnsubAll();
+    await Promise.all([
+      _whListenItems(),
+      _whListenStock(),
+      _whListenLocations(),
+      _whListenSuppliers(),
+    ]);
+    _whListenOperations();
+  };
+
+  function _whUnsubAll() {
+    _wh.listeners.forEach(fn => { try { fn(); } catch (e) {} });
+    _wh.listeners = [];
+  }
+
+  // ── Listeners ────────────────────────────────────────────
+  function _whListenItems() {
+    return new Promise(resolve => {
+      const unsub = col('warehouse_items')
+        .where('deleted', '==', false)
+        .onSnapshot(snap => {
+          _wh.items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          _wh.items.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'uk'));
+          window.dispatchEvent(new CustomEvent('wh:itemsUpdated'));
+          resolve();
+        }, err => { console.error('[wh] items', err); resolve(); });
+      _wh.listeners.push(unsub);
+    });
+  }
+
+  function _whListenStock() {
+    return new Promise(resolve => {
+      const unsub = col('warehouse_stock')
+        .onSnapshot(snap => {
+          _wh.stock = {};
+          snap.docs.forEach(d => { _wh.stock[d.id] = d.data(); });
+          window.dispatchEvent(new CustomEvent('wh:stockUpdated'));
+          resolve();
+        }, err => { console.error('[wh] stock', err); resolve(); });
+      _wh.listeners.push(unsub);
+    });
+  }
+
+  function _whListenLocations() {
+    return new Promise(resolve => {
+      const unsub = col('warehouse_locations')
+        .onSnapshot(snap => {
+          _wh.locations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          if (_wh.locations.length === 0) {
+            _whEnsureDefaultLocation();
+          }
+          resolve();
+        }, err => { console.error('[wh] locations', err); resolve(); });
+      _wh.listeners.push(unsub);
+    });
+  }
+
+  function _whListenSuppliers() {
+    return new Promise(resolve => {
+      const unsub = col('warehouse_suppliers')
+        .where('deleted', '==', false)
+        .onSnapshot(snap => {
+          _wh.suppliers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          resolve();
+        }, err => { console.error('[wh] suppliers', err); resolve(); });
+      _wh.listeners.push(unsub);
+    });
+  }
+
+  function _whListenOperations() {
+    const unsub = col('warehouse_operations')
+      .orderBy('createdAt', 'desc')
+      .limit(100)
+      .onSnapshot(snap => {
+        _wh.operations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        window.dispatchEvent(new CustomEvent('wh:operationsUpdated'));
+      }, err => { console.error('[wh] operations', err); });
+    _wh.listeners.push(unsub);
+  }
+
+  async function _whEnsureDefaultLocation() {
+    await col('warehouse_locations').add({
+      name: 'Головний склад',
+      type: 'warehouse',
+      isDefault: true,
+      deleted: false,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+  }
+
+  // ── CRUD: Items ──────────────────────────────────────────
+  window.whSaveItem = async function (data, id) {
+    const payload = {
+      name:        data.name || '',
+      sku:         data.sku || '',
+      category:    data.category || '',
+      unit:        data.unit || 'шт',
+      costPrice:   Number(data.costPrice) || 0,
+      salePrice:   Number(data.salePrice) || 0,
+      minStock:    Number(data.minStock) || 0,
+      orderPoint:  Number(data.orderPoint) || 0,
+      supplierId:  data.supplierId || null,
+      description: data.description || '',
+      barcode:     data.barcode || '',
+      tags:        data.tags || [],
+      niche:       data.niche || '',
+      costMethod:  data.costMethod || 'avg', // avg | fifo
+      deleted:     false,
+      updatedAt:   firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    if (id) {
+      await col('warehouse_items').doc(id).update(payload);
+      return id;
+    } else {
+      payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      const ref = await col('warehouse_items').add(payload);
+      // Створюємо stock doc
+      await col('warehouse_stock').doc(ref.id).set({
+        itemId: ref.id, qty: 0, reserved: 0,
+        minStock: payload.minStock,
+        name: payload.name, unit: payload.unit,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      return ref.id;
+    }
+  };
+
+  window.whDeleteItem = async function (id) {
+    await col('warehouse_items').doc(id).update({
+      deleted: true,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+  };
+
+  // ── CRUD: Locations ──────────────────────────────────────
+  window.whSaveLocation = async function (data, id) {
+    const payload = {
+      name:    data.name || '',
+      type:    data.type || 'warehouse', // warehouse | room | car | object
+      deleted: false,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    if (id) {
+      await col('warehouse_locations').doc(id).update(payload);
+    } else {
+      payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await col('warehouse_locations').add(payload);
+    }
+  };
+
+  // ── CRUD: Suppliers ──────────────────────────────────────
+  window.whSaveSupplier = async function (data, id) {
+    const payload = {
+      name:    data.name || '',
+      phone:   data.phone || '',
+      email:   data.email || '',
+      note:    data.note || '',
+      deleted: false,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    if (id) {
+      await col('warehouse_suppliers').doc(id).update(payload);
+    } else {
+      payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await col('warehouse_suppliers').add(payload);
+    }
+  };
+
+  // ── Операції складу ──────────────────────────────────────
+  window.whDoOperation = async function ({ itemId, type, qty, locationId, price, note, dealId }) {
+    if (!itemId || !type || qty == null) throw new Error('whDoOperation: missing params');
+    qty = Number(qty);
+    if (qty <= 0) throw new Error('Кількість має бути > 0');
+
+    const itemRef  = col('warehouse_items').doc(itemId);
+    const stockRef = col('warehouse_stock').doc(itemId);
+
+    return firebase.firestore().runTransaction(async tx => {
+      const [itemDoc, stockDoc] = await Promise.all([tx.get(itemRef), tx.get(stockRef)]);
+      if (!itemDoc.exists) throw new Error('Товар не знайдено');
+
+      const item  = itemDoc.data();
+      const stock = stockDoc.exists ? stockDoc.data() : { qty: 0, reserved: 0 };
+      const prevQty = stock.qty || 0;
+      let newQty = prevQty;
+
+      if (type === 'IN')           newQty = prevQty + qty;
+      else if (type === 'OUT')     newQty = prevQty - qty;
+      else if (type === 'WRITE_OFF') newQty = prevQty - qty;
+      else if (type === 'ADJUST')  newQty = qty;
+
+      if (newQty < 0) throw new Error(`Недостатньо на складі: ${item.name} (є ${prevQty}, потрібно ${qty})`);
+
+      tx.set(stockRef, {
+        itemId, qty: newQty,
+        reserved: stock.reserved || 0,
+        minStock: item.minStock || 0,
+        name: item.name, unit: item.unit || 'шт',
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
+
+      const opRef = col('warehouse_operations').doc();
+      tx.set(opRef, {
+        itemId, itemName: item.name,
+        type, qty, prevQty, newQty,
+        locationId: locationId || 'main',
+        price: price != null ? Number(price) : (item.costPrice || 0),
+        note: note || '',
+        dealId: dealId || null,
+        userId: window.currentUser?.uid || null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
+      return { newQty, prevQty, opId: opRef.id, item };
+    });
+  };
+
+  // ── Масове списання при угоді Won ────────────────────────
+  window.whDealWon = async function (deal) {
+    const items = deal.warehouseItems;
+    if (!items || !items.length) return;
+    for (const it of items) {
+      try {
+        await window.whDoOperation({
+          itemId: it.itemId,
+          type: 'OUT',
+          qty: it.qty || 1,
+          price: it.price,
+          note: 'Угода: ' + (deal.title || deal.clientName || deal.id),
+          dealId: deal.id,
+        });
+      } catch (e) {
+        console.error('[wh] deal_won write-off failed', it.itemId, e.message);
+        if (window.showToast) showToast('Склад: ' + e.message, 'error');
+      }
+    }
+    // Перевіряємо тривоги після списання
+    setTimeout(() => window.whCheckAlerts && window.whCheckAlerts(), 1000);
+  };
+
+  // ── Резервування ─────────────────────────────────────────
+  window.whReserve = async function (itemId, qty, reserve = true) {
+    const stockRef = col('warehouse_stock').doc(itemId);
+    return firebase.firestore().runTransaction(async tx => {
+      const doc = await tx.get(stockRef);
+      const s = doc.exists ? doc.data() : { qty: 0, reserved: 0 };
+      const delta = reserve ? Number(qty) : -Number(qty);
+      const newReserved = Math.max(0, (s.reserved || 0) + delta);
+      tx.set(stockRef, { reserved: newReserved, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+      return newReserved;
+    });
+  };
+
+  // ── Хелпери ──────────────────────────────────────────────
+  window.whGetStock = function (itemId) {
+    const s = _wh.stock[itemId] || { qty: 0, reserved: 0 };
+    return {
+      qty: s.qty || 0,
+      reserved: s.reserved || 0,
+      available: Math.max(0, (s.qty || 0) - (s.reserved || 0)),
+      minStock: s.minStock || 0,
+    };
+  };
+
+  window.whStockLevel = function (itemId) {
+    const s = window.whGetStock(itemId);
+    if (s.qty === 0) return 'critical';
+    if (s.minStock > 0 && s.qty <= s.minStock * 0.5) return 'critical';
+    if (s.minStock > 0 && s.qty <= s.minStock) return 'low';
+    return 'ok';
+  };
+
+  window.whTotalValue = function () {
+    return _wh.items.reduce((sum, item) => {
+      const s = _wh.stock[item.id];
+      return sum + ((s?.qty || 0) * (item.costPrice || 0));
+    }, 0);
+  };
+
+  window.whAlertsCount = function () {
+    return _wh.items.filter(item => {
+      const s = _wh.stock[item.id];
+      return item.minStock > 0 && (s?.qty || 0) <= item.minStock;
+    }).length;
+  };
+
+  window.whGetItems    = () => _wh.items;
+  window.whGetStock    = window.whGetStock;
+  window.whGetLocations  = () => _wh.locations;
+  window.whGetSuppliers  = () => _wh.suppliers;
+  window.whGetOperations = () => _wh.operations;
+
+  // ── Фінансова транзакція при надходженні ─────────────────
+  window.whFinanceOnIn = async function (item, qty, price) {
+    if (!price || !qty) return;
+    const total = qty * price;
+    try {
+      const txData = {
+        type: 'expense',
+        amount: total,
+        category: 'exp_materials',
+        description: `Надходження: ${item.name} × ${qty} ${item.unit || 'шт'}`,
+        date: new Date().toISOString().slice(0, 10),
+        source: 'warehouse',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        userId: window.currentUser?.uid || null,
+      };
+      await col('transactions').add(txData);
+    } catch (e) {
+      console.warn('[wh] finance tx failed', e.message);
+    }
+  };
+
+  // ── Задача при мінімальному залишку ──────────────────────
+  window.whCreateRestockTask = async function (item) {
+    try {
+      const taskData = {
+        title: `Замовити: ${item.name}`,
+        description: `Залишок на складі: ${window.whGetStock(item.id).qty} ${item.unit || 'шт'}. Мінімум: ${item.minStock}`,
+        status: 'todo',
+        priority: 'high',
+        source: 'warehouse_alert',
+        itemId: item.id,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        createdBy: window.currentUser?.uid || null,
+      };
+      await col(window.DB_COLS?.TASKS || 'tasks').add(taskData);
+      if (window.showToast) showToast(`Задача: Замовити ${item.name}`, 'info');
+    } catch (e) {
+      console.warn('[wh] createRestockTask failed', e.message);
+    }
+  };
+
+  console.log('[warehouse-core] loaded');
+})();

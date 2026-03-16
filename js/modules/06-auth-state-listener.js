@@ -147,6 +147,12 @@
                         if (sitesBtn) sitesBtn.style.display = '';
                         hasBizFeature = true;
                     }
+                    // Склад — показуємо якщо feature 'warehouse' не вимкнена (default: true)
+                    if (window.isFeatureEnabled && window.isFeatureEnabled('warehouse')) {
+                        const whBtn = document.getElementById('warehouseNavBtn');
+                        if (whBtn) whBtn.style.display = '';
+                        hasBizFeature = true;
+                    }
                     if (hasBizFeature) {
                         const bizBtn = document.getElementById('bizNavBtn');
                         if (bizBtn) bizBtn.style.display = '';
@@ -161,7 +167,7 @@
                         const safeTabs = ['tasks','myDay','projects','processes','statistics',
                             'analytics','ownerDashboard','functions','bizstructure','users',
                             'learning','admin','crm','marketing','bots','sites','coordination',
-                            'regular','incidents'];
+                            'regular','incidents','warehouse','finance'];
                         if (lastTab && safeTabs.includes(lastTab) && typeof switchTab === 'function') {
                             // Перевіряємо що таб доступний (кнопка є і не прихована)
                             const tabEl = document.getElementById(lastTab + 'Tab');

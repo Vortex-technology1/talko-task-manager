@@ -1462,6 +1462,10 @@ async function _doStageChange(deal, newStage, oldStage) {
         });
     }
     if (typeof showToast === 'function') showToast(_stageLabel(newStage), 'success');
+    // Склад: списання при закритті угоди "Виграно"
+    if (newStage === 'won' && typeof window.whDealWon === 'function') {
+        window.whDealWon(deal).catch(e => console.warn('[wh] deal_won hook', e.message));
+    }
     if (typeof window.crmAutoTasksOnStageChange === 'function')
         window.crmAutoTasksOnStageChange(deal, newStage);
     if (typeof window.trackAction === 'function') {
