@@ -119,6 +119,15 @@
                 if (typeof showStatsTabIfAllowed === 'function') showStatsTabIfAllowed();
                 if (typeof initStatistics === 'function') initStatistics();
 
+                // Склад — показуємо одразу після auth (не чекаємо featuresLoaded)
+                // Warehouse є базовим функціоналом доступним всім
+                (function() {
+                    const whBtn = document.getElementById('warehouseNavBtn');
+                    const bizBtn = document.getElementById('bizNavBtn');
+                    if (whBtn) whBtn.style.display = '';
+                    if (bizBtn) bizBtn.style.display = '';
+                })();
+
                 // FIX БАГ 4: event-driven замість setTimeout(500)
                 // Гарантує що companyFeatures вже встановлені в loadAllData
                 window.addEventListener('talko:featuresLoaded', function _onFeatures() {
