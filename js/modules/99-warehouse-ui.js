@@ -20,8 +20,19 @@
   }
   function fmtDate(ts) {
     if (!ts) return '—';
-    const d = ts.toDate ? ts.toDate() : new Date(ts);
-    return d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    try {
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      const now = new Date();
+      const diffMs = now - d;
+      const diffMin = Math.floor(diffMs / 60000);
+      const diffH   = Math.floor(diffMs / 3600000);
+      const diffD   = Math.floor(diffMs / 86400000);
+      if (diffMin < 1)  return 'щойно';
+      if (diffMin < 60) return `${diffMin} хв тому`;
+      if (diffH   < 24) return `${diffH} год тому`;
+      if (diffD   < 7)  return `${diffD} дн тому`;
+      return d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    } catch (e) { return '—'; }
   }
 
   // ── Колір рівня залишку ──────────────────────────────────
@@ -145,84 +156,154 @@
   //  ДАШБОРД
   // ══════════════════════════════════════════════════════════
   function _renderDashboard() {
-    const items   = window.whGetItems ? window.whGetItems() : [];
-    const totalVal = window.whTotalValue ? window.whTotalValue() : 0;
+    const items      = window.whGetItems ? window.whGetItems() : [];
+    const totalVal   = window.whTotalValue ? window.whTotalValue() : 0;
     const alertsList = window.whGetAlertsList ? window.whGetAlertsList() : [];
-    const ops     = window.whGetOperations ? window.whGetOperations() : [];
+    const ops        = window.whGetOperations ? window.whGetOperations() : [];
 
-    // KPI
+    // Загальна кількість одиниць на складі
+    const totalUnits = items.reduce((s, item) => {
+      const st = window.whGetStock(item.id);
+      return s + (st.qty || 0);
+    }, 0);
+
+    // Top-5 по вартості
+    const top5 = [...items]
+      .map(item => {
+        const s = window.whGetStock(item.id);
+        return { item, qty: s.qty, val: s.qty * (item.costPrice || 0) };
+      })
+      .filter(x => x.val > 0)
+      .sort((a, b) => b.val - a.val)
+      .slice(0, 5);
+
     const kpis = [
-      { icon: 'package',      label: 'Позицій',          value: items.length,             color: '#6366f1' },
-      { icon: 'dollar-sign',  label: 'Вартість складу',  value: fmtMoney(totalVal),       color: '#22c55e' },
-      { icon: 'alert-triangle', label: 'Потребують замовлення', value: alertsList.length, color: alertsList.length > 0 ? '#ef4444' : '#22c55e' },
+      { icon: 'package',        label: 'Позицій в каталозі', value: items.length,      color: '#6366f1', click: "window._whSetView('catalog')" },
+      { icon: 'layers',         label: 'Одиниць на складі',  value: fmt(totalUnits),   color: '#3b82f6', click: '' },
+      { icon: 'dollar-sign',    label: 'Вартість складу',    value: fmtMoney(totalVal),color: '#22c55e', click: '' },
+      { icon: 'alert-triangle', label: 'Потреб. замовлення', value: alertsList.length, color: alertsList.length > 0 ? '#ef4444' : '#9ca3af', click: '' },
     ];
 
     return `
       <div style="display:flex;flex-direction:column;gap:1rem;">
-        <!-- KPI -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.75rem;">
+
+        <!-- KPI картки -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;">
           ${kpis.map(k => `
-            <div style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
+            <div ${k.click ? `onclick="${k.click}" style="cursor:pointer;"` : 'style=""'}
+              style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);transition:box-shadow 0.15s;" 
+              onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.07)'">
               <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
-                <i data-lucide="${k.icon}" style="width:18px;height:18px;color:${k.color};"></i>
-                <span style="font-size:0.8rem;color:#6b7280;">${k.label}</span>
+                <i data-lucide="${k.icon}" style="width:16px;height:16px;color:${k.color};flex-shrink:0;"></i>
+                <span style="font-size:0.75rem;color:#6b7280;">${k.label}</span>
               </div>
-              <div style="font-size:1.4rem;font-weight:700;color:#1f2937;">${k.value}</div>
+              <div style="font-size:1.5rem;font-weight:700;color:#1f2937;">${k.value}</div>
             </div>
           `).join('')}
         </div>
 
-        <!-- Тривоги -->
-        ${alertsList.length > 0 ? `
+        <!-- Швидкі дії -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button onclick="window._whSetView('catalog');setTimeout(()=>window.whOpenItemForm(),100)" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
+            <i data-lucide="plus-circle" style="width:14px;height:14px;"></i> Новий товар
+          </button>
+          <button onclick="window._whSetView('operations');setTimeout(()=>window.whOpenOpForm('IN'),100)" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#dcfce7;color:#166534;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
+            <i data-lucide="arrow-down-circle" style="width:14px;height:14px;"></i> Прийняти товар
+          </button>
+          <button onclick="window._whSetView('operations');setTimeout(()=>window.whOpenOpForm('OUT'),100)" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#fee2e2;color:#991b1b;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
+            <i data-lucide="arrow-up-circle" style="width:14px;height:14px;"></i> Видати товар
+          </button>
+          <button onclick="window._whSetView('operations');setTimeout(()=>window.whOpenOpForm('WRITE_OFF'),100)" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#fef3c7;color:#92400e;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
+            <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Списати
+          </button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+
+          <!-- Тривоги -->
           <div style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
-            <div style="font-size:0.9rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;">
-              <i data-lucide="alert-triangle" style="width:16px;height:16px;color:#ef4444;"></i>
-              Потребують замовлення
+            <div style="font-size:0.88rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;">
+              <span style="display:flex;align-items:center;gap:0.4rem;">
+                <i data-lucide="alert-triangle" style="width:15px;height:15px;color:#ef4444;"></i>
+                Потребують замовлення
+              </span>
+              ${alertsList.length > 0 ? `<span style="font-size:0.75rem;color:#ef4444;font-weight:700;">${alertsList.length}</span>` : ''}
             </div>
-            <div style="display:flex;flex-direction:column;gap:0.4rem;">
-              ${alertsList.slice(0, 10).map(a => `
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;border-radius:8px;background:${levelBg(a.level)};">
-                  <div style="display:flex;align-items:center;gap:0.5rem;">
-                    <span style="width:8px;height:8px;border-radius:50%;background:${levelColor(a.level)};flex-shrink:0;"></span>
-                    <span style="font-size:0.85rem;font-weight:500;">${a.item.name}</span>
-                    <span style="font-size:0.75rem;color:#9ca3af;">${a.item.sku || ''}</span>
+            ${alertsList.length === 0
+              ? `<p style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:0.75rem;">✓ Всі залишки в нормі</p>`
+              : alertsList.slice(0, 8).map(a => `
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;font-size:0.82rem;">
+                  <div style="display:flex;align-items:center;gap:0.4rem;min-width:0;">
+                    <span style="width:7px;height:7px;border-radius:50%;background:${levelColor(a.level)};flex-shrink:0;"></span>
+                    <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.item.name}</span>
                   </div>
-                  <div style="display:flex;align-items:center;gap:1rem;font-size:0.82rem;">
-                    <span style="color:${levelColor(a.level)};font-weight:600;">${a.stock.qty} / ${a.item.minStock} ${a.item.unit || 'шт'}</span>
-                    <button onclick="window.whOpenOpForm('IN','${a.item.id}')" style="padding:0.25rem 0.6rem;background:#6366f1;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;">Прийняти</button>
+                  <div style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;">
+                    <span style="color:${levelColor(a.level)};font-weight:600;">${a.stock.qty}/${a.item.minStock}</span>
+                    <button onclick="window.whOpenOpForm('IN','${a.item.id}')" style="padding:2px 8px;background:#6366f1;color:white;border:none;border-radius:5px;cursor:pointer;font-size:0.72rem;">+</button>
                   </div>
                 </div>
-              `).join('')}
-            </div>
+              `).join('')
+            }
           </div>
-        ` : ''}
+
+          <!-- Top-5 по вартості -->
+          <div style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
+            <div style="font-size:0.88rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem;">
+              <i data-lucide="trending-up" style="width:15px;height:15px;color:#6b7280;"></i>
+              Топ-5 по вартості
+            </div>
+            ${top5.length === 0
+              ? `<p style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:0.75rem;">Немає даних</p>`
+              : top5.map((x, i) => {
+                  const pct = top5[0].val > 0 ? Math.round(x.val / top5[0].val * 100) : 0;
+                  return `
+                    <div style="margin-bottom:0.5rem;">
+                      <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">
+                        <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">${x.item.name}</span>
+                        <span style="color:#6b7280;flex-shrink:0;">${fmtMoney(x.val)}</span>
+                      </div>
+                      <div style="height:4px;background:#f3f4f6;border-radius:2px;">
+                        <div style="height:4px;background:#6366f1;border-radius:2px;width:${pct}%;"></div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')
+            }
+          </div>
+
+        </div>
 
         <!-- Останні операції -->
         <div style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
-          <div style="font-size:0.9rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;">
-            <i data-lucide="clock" style="width:16px;height:16px;color:#6b7280;"></i>
-            Останні операції
+          <div style="font-size:0.88rem;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;">
+            <span style="display:flex;align-items:center;gap:0.4rem;">
+              <i data-lucide="clock" style="width:15px;height:15px;color:#6b7280;"></i>
+              Останні операції
+            </span>
+            <button onclick="window._whSetView('operations')" style="font-size:0.75rem;color:#6366f1;background:none;border:none;cursor:pointer;padding:0;">Всі →</button>
           </div>
-          ${ops.length === 0 ? `<p style="color:#9ca3af;font-size:0.85rem;text-align:center;padding:1rem;">Операцій ще немає</p>` : `
-            <div style="display:flex;flex-direction:column;gap:0.3rem;">
-              ${ops.slice(0, 8).map(op => `
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;font-size:0.83rem;">
-                  <div style="display:flex;align-items:center;gap:0.5rem;">
-                    <span style="padding:2px 7px;border-radius:5px;font-size:0.72rem;font-weight:600;
-                      background:${op.type==='IN'?'#dcfce7':op.type==='OUT'?'#fee2e2':'#fef3c7'};
-                      color:${op.type==='IN'?'#166534':op.type==='OUT'?'#991b1b':'#92400e'};">
-                      ${op.type==='IN'?'ПРИХІД':op.type==='OUT'?'ВИДАЧА':'СПИСАННЯ'}
-                    </span>
-                    <span style="font-weight:500;">${op.itemName}</span>
+          ${ops.length === 0
+            ? `<p style="color:#9ca3af;font-size:0.85rem;text-align:center;padding:1rem;">Операцій ще немає</p>`
+            : `<div style="display:flex;flex-direction:column;gap:0.25rem;">
+                ${ops.slice(0, 6).map(op => `
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:0.45rem 0;border-bottom:1px solid #f9fafb;font-size:0.82rem;">
+                    <div style="display:flex;align-items:center;gap:0.5rem;min-width:0;">
+                      <span style="padding:1px 6px;border-radius:4px;font-size:0.7rem;font-weight:600;flex-shrink:0;
+                        background:${op.type==='IN'?'#dcfce7':op.type==='OUT'?'#fee2e2':'#fef3c7'};
+                        color:${op.type==='IN'?'#166534':op.type==='OUT'?'#991b1b':'#92400e'};">
+                        ${op.type==='IN'?'IN':op.type==='OUT'?'OUT':'OFF'}
+                      </span>
+                      <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${op.itemName}</span>
+                      ${op.note ? `<span style="color:#9ca3af;font-size:0.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${op.note}</span>` : ''}
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
+                      <span style="font-weight:600;color:${op.type==='IN'?'#22c55e':'#ef4444'};">${op.type==='IN'?'+':'−'}${op.qty}</span>
+                      <span style="color:#9ca3af;font-size:0.72rem;">${fmtDate(op.createdAt)}</span>
+                    </div>
                   </div>
-                  <div style="display:flex;align-items:center;gap:0.75rem;color:#6b7280;">
-                    <span>${op.type==='IN'?'+':'−'}${op.qty}</span>
-                    <span style="color:#9ca3af;font-size:0.75rem;">${fmtDate(op.createdAt)}</span>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          `}
+                `).join('')}
+              </div>`
+          }
         </div>
       </div>
     `;
@@ -459,6 +540,7 @@
     const units = ['шт', 'кг', 'г', 'л', 'мл', 'м', 'м²', 'м³', 'уп', 'пар'];
     const niches = ['', 'beauty', 'medical', 'kitchen', 'construction', 'production', 'other'];
     const nicheLabels = { '': 'Загальне', beauty: "Б'юті", medical: 'Медицина', kitchen: 'Кухня', construction: 'Будівництво', production: 'Виробництво', other: 'Інше' };
+    const existingCats = [...new Set((window.whGetItems() || []).map(i => i.category).filter(Boolean))].sort();
 
     _showModal(`
       <div style="padding:1.25rem;">
@@ -477,7 +559,8 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Категорія</label>
-              <input id="wh_cat" value="${item.category || ''}" style="${_inp()}" placeholder="Матеріали, Хімія...">
+              <datalist id="wh_cat_dl">${existingCats.map(c => `<option value="${c}">`).join('')}</datalist>
+              <input id="wh_cat" value="${item.category || ''}" list="wh_cat_dl" style="${_inp()}" placeholder="Матеріали, Хімія...">
             </div>
             <div>
               <label style="font-size:0.78rem;color:#6b7280;">Одиниця</label>
@@ -520,17 +603,18 @@
         <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
           ${itemId ? `<button onclick="window._whConfirmDelete('${itemId}')" style="padding:0.45rem 0.9rem;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Видалити</button>` : ''}
           <button onclick="window._whCloseModal()" style="padding:0.45rem 0.9rem;background:#f3f4f6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Скасувати</button>
+          ${!itemId ? `<button onclick="window._whSubmitItem('',true)" style="padding:0.45rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Зберегти і прийняти</button>` : ''}
           <button onclick="window._whSubmitItem('${itemId || ''}')" style="padding:0.45rem 0.9rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">Зберегти</button>
         </div>
       </div>
     `);
   };
 
-  window._whSubmitItem = async function (id) {
+  window._whSubmitItem = async function (id, openOp) {
     const name = document.getElementById('wh_name')?.value?.trim();
     if (!name) { if (window.showToast) showToast('Введіть назву товару', 'error'); return; }
     try {
-      await window.whSaveItem({
+      const savedId = await window.whSaveItem({
         name,
         sku: document.getElementById('wh_sku')?.value?.trim(),
         category: document.getElementById('wh_cat')?.value?.trim(),
@@ -544,6 +628,10 @@
       }, id || null);
       window._whCloseModal();
       if (window.showToast) showToast('Товар збережено ✓', 'success');
+      // "Зберегти і прийняти" — одразу відкриваємо форму прийому
+      if (openOp && savedId) {
+        setTimeout(() => window.whOpenOpForm('IN', savedId), 200);
+      }
     } catch (e) {
       if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }

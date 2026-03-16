@@ -339,8 +339,8 @@
 
   window.whAlertsCount = function () {
     return _wh.items.filter(item => {
-      const s = _wh.stock[item.id];
-      return item.minStock > 0 && (s?.qty || 0) <= item.minStock;
+      const level = window.whStockLevel(item.id);
+      return level === 'critical' || level === 'low';
     }).length;
   };
 
