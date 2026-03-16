@@ -74,13 +74,15 @@
     });
   }
 
+  let _defaultLocationCreating = false;
   function _whListenLocations() {
     return new Promise(resolve => {
       const unsub = col('warehouse_locations')
         .onSnapshot(snap => {
           _wh.locations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-          if (_wh.locations.length === 0) {
-            _whEnsureDefaultLocation();
+          if (_wh.locations.length === 0 && !_defaultLocationCreating) {
+            _defaultLocationCreating = true;
+            _whEnsureDefaultLocation().finally(() => { _defaultLocationCreating = false; });
           }
           resolve();
         }, err => { console.error('[wh] locations', err); resolve(); });

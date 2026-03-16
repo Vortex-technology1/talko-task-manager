@@ -144,6 +144,10 @@
     "api/crm-reminders.js": {
       "maxDuration": 60,
       "memory": 256
+    },
+    "api/warehouse.js": {
+      "maxDuration": 30,
+      "memory": 256
     }
   },
   "regions": [
