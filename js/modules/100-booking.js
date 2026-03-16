@@ -513,11 +513,14 @@ window._bkSaveCalendar = async function() {
         return;
     }
 
-    // Отримуємо ім'я власника правильно через window.currentUserData
-    const ownerName = window.currentUserData?.name
+    // ВАЖЛИВО: window.currentUserName — це DOM елемент (browser quirk: id → window global)
+    // Використовуємо тільки currentUserData і String() для захисту від HTMLElement
+    const ownerName = String(
+        window.currentUserData?.name
         || window.currentUser?.displayName
         || window.currentUser?.email
-        || '';
+        || ''
+    ).replace(/<[^>]*>/g, '').trim(); // strip HTML якщо потрапить
 
     const calData = {
         name,
@@ -645,13 +648,17 @@ window._bkCancelAppt = async function(apptId) {
         });
         // Видаляємо Google event через API (не через client SDK)
         if (appt.googleEventId || appt.ownerId) {
+            // Отримуємо ID token для авторизації
+            const idToken = await firebase.auth().currentUser?.getIdToken().catch(() => '');
             fetch('/api/booking?action=cancel', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': idToken ? `Bearer ${idToken}` : '',
+                },
                 body: JSON.stringify({
                     companyId: window.currentCompanyId,
                     appointmentId: apptId,
-                    // cancelToken не потрібен — адмін-дія
                 }),
             }).catch(() => {});
         }

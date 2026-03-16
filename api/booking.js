@@ -980,7 +980,7 @@ module.exports = async (req, res) => {
 
         // ── POST: cancel ──────────────────────────────────
         if (req.method === 'POST' && action === 'cancel') {
-            const { companyId, appointmentId, cancelToken } = req.body || {};
+            const { companyId, appointmentId, cancelToken, adminKey } = req.body || {};
             if (!companyId || !appointmentId)
                 return res.status(400).json({ error: 'Missing params' });
 
@@ -990,9 +990,17 @@ module.exports = async (req, res) => {
             if (!apptDoc.exists) return res.status(404).json({ error: 'Not found' });
 
             const appt = apptDoc.data();
-            // cancelToken check only if provided (admin cancel can omit it)
-            if (cancelToken && appt.cancelToken !== cancelToken)
+
+            // Безпека: або валідний cancelToken (клієнт), або Firebase ID token (адмін)
+            const authHeader = req.headers.authorization || '';
+            const isAdminAuth = authHeader.startsWith('Bearer ');
+
+            if (!cancelToken && !isAdminAuth) {
+                return res.status(403).json({ error: 'cancelToken or admin auth required' });
+            }
+            if (cancelToken && appt.cancelToken !== cancelToken) {
                 return res.status(403).json({ error: 'Invalid token' });
+            }
 
             await apptRef.update({
                 status: 'cancelled',
