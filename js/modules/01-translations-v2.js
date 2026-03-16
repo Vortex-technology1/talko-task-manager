@@ -14540,7 +14540,15 @@
             document.querySelectorAll('[data-i18n]').forEach(function(el) {
                 const key = el.getAttribute('data-i18n');
                 const val = t(key);
-                if (val && val !== key) el.textContent = val;
+                if (val && val !== key) {
+                    // Якщо значення містить HTML теги — використовуємо innerHTML
+                    // (наприклад signIn містить <i data-lucide=...>)
+                    if (val.includes('<') && val.includes('>')) {
+                        el.innerHTML = val;
+                    } else {
+                        el.textContent = val;
+                    }
+                }
             });
             // Apply to [data-i18n-placeholder]
             document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
