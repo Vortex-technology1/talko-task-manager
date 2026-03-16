@@ -104,11 +104,14 @@
           </button>
         ` : ''}
         ${_currentView === 'operations' ? `
-          <button onclick="window.whOpenOpForm('IN')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;margin-right:0.5rem;white-space:nowrap;">
+          <button onclick="window.whOpenOpForm('IN')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;margin-right:0.4rem;white-space:nowrap;">
             <i data-lucide="arrow-down-circle" style="width:15px;height:15px;"></i> Прихід
           </button>
-          <button onclick="window.whOpenOpForm('OUT')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;white-space:nowrap;">
+          <button onclick="window.whOpenOpForm('OUT')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;margin-right:0.4rem;white-space:nowrap;">
             <i data-lucide="arrow-up-circle" style="width:15px;height:15px;"></i> Видача
+          </button>
+          <button onclick="window.whOpenOpForm('WRITE_OFF')" style="display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.9rem;background:#f59e0b;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;white-space:nowrap;">
+            <i data-lucide="trash-2" style="width:15px;height:15px;"></i> Списання
           </button>
         ` : ''}
         ${_currentView === 'suppliers' ? `

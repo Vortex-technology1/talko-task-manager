@@ -323,9 +323,10 @@
 
   window.whStockLevel = function (itemId) {
     const s = window.whGetStock(itemId);
+    if (s.minStock <= 0) return 'ok'; // без мінімуму — завжди ок
     if (s.qty === 0) return 'critical';
-    if (s.minStock > 0 && s.qty <= s.minStock * 0.5) return 'critical';
-    if (s.minStock > 0 && s.qty <= s.minStock) return 'low';
+    if (s.qty <= s.minStock * 0.5) return 'critical';
+    if (s.qty <= s.minStock) return 'low';
     return 'ok';
   };
 
