@@ -714,10 +714,29 @@ window.toggleFlowStatus = async function(flowId, status) {
 
 window.deleteFlow = async function(flowId) {
     if (!(await (window.showConfirmModal ? showConfirmModal(window.t('botsDeleteFlow'),{danger:true}) : Promise.resolve(confirm(window.t('botsDeleteFlow')))))) return;
-    window.companyRef()
-        .collection('bots').doc(bp.activeBotId)
-        .collection('flows').doc(flowId).delete()
-        .then(() => { if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success'); });
+    try {
+        const flowRef = window.companyRef()
+            .collection('bots').doc(bp.activeBotId)
+            .collection('flows').doc(flowId);
+        // Видаляємо subcollections (Firestore не видаляє їх автоматично)
+        const [canvasSnap, promptsSnap] = await Promise.all([
+            flowRef.collection('canvasData').get().catch(() => null),
+            flowRef.collection('nodePrompts').get().catch(() => null),
+        ]);
+        const batch = firebase.firestore().batch();
+        if (canvasSnap && !canvasSnap.empty) {
+            canvasSnap.docs.forEach(d => batch.delete(d.ref));
+        }
+        if (promptsSnap && !promptsSnap.empty) {
+            promptsSnap.docs.forEach(d => batch.delete(d.ref));
+        }
+        batch.delete(flowRef);
+        await batch.commit();
+        if (typeof showToast === 'function') showToast(window.t('crmDeleted'), 'success');
+    } catch(e) {
+        if (typeof showToast === 'function') showToast('Помилка видалення: ' + e.message, 'error');
+        console.error('[deleteFlow]', e.message);
+    }
 };
 
 // ══════════════════════════════════════════════════════════
