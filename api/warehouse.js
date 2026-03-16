@@ -19,6 +19,10 @@ module.exports = async (req, res) => {
 
   const { companyId, action } = req.query;
   if (!companyId) return res.status(400).json({ error: 'Missing companyId' });
+  // Базова валідація — тільки alphanumeric + дефіс (Firestore doc ID формат)
+  if (!/^[a-zA-Z0-9_-]{3,64}$/.test(companyId)) {
+    return res.status(400).json({ error: 'Invalid companyId' });
+  }
 
   const comp = db.collection('companies').doc(companyId);
 

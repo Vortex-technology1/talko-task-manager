@@ -79,7 +79,9 @@
     return new Promise(resolve => {
       const unsub = col('warehouse_locations')
         .onSnapshot(snap => {
-          _wh.locations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          _wh.locations = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .filter(l => l.deleted !== true);
           if (_wh.locations.length === 0 && !_defaultLocationCreating) {
             _defaultLocationCreating = true;
             _whEnsureDefaultLocation().finally(() => { _defaultLocationCreating = false; });
@@ -202,8 +204,8 @@
   window.whSaveLocation = async function (data, id) {
     const payload = {
       name:    data.name || '',
-      type:    data.type || 'warehouse', // warehouse | room | car | object
-      deleted: false,
+      type:    data.type || 'warehouse',
+      deleted: data.deleted === true ? true : false,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
     if (id) {
@@ -221,7 +223,7 @@
       phone:   data.phone || '',
       email:   data.email || '',
       note:    data.note || '',
-      deleted: false,
+      deleted: data.deleted === true ? true : false,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
     if (id) {

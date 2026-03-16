@@ -382,7 +382,7 @@
                     <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:2px;">
                       ${item.sku ? `<span style="font-size:0.72rem;color:#9ca3af;">${item.sku}</span>` : ''}
                       ${item.category ? `<span style="font-size:0.72rem;color:#6b7280;background:#f3f4f6;padding:1px 6px;border-radius:4px;">${item.category}</span>` : ''}
-                      ${item.supplierId ? (() => { const sup = window.whGetSuppliers().find(s=>s.id===item.supplierId); return sup ? `<span style="font-size:0.72rem;color:#6366f1;background:#ede9fe;padding:1px 6px;border-radius:4px;">${sup.name}</span>` : ''; })() : ''}
+                      ${item.supplierId ? window._whSupBadge(item.supplierId) : ''}
                     </div>
                   </div>
                   <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
@@ -417,6 +417,13 @@
       </div>
     `;
   }
+
+  window._whSupBadge = function (supplierId) {
+    try {
+      const sup = window.whGetSuppliers().find(s => s.id === supplierId);
+      return sup ? `<span style="font-size:0.72rem;color:#6366f1;background:#ede9fe;padding:1px 6px;border-radius:4px;">${sup.name}</span>` : '';
+    } catch (e) { return ''; }
+  };
 
   window._whSearchCatalog = function (q) {
     _searchQuery = q;
@@ -575,13 +582,21 @@
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;">
           ${locs.map(l => `
-            <div style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);display:flex;align-items:center;gap:0.75rem;">
+            <div style="background:white;border-radius:12px;padding:0.85rem 1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);display:flex;align-items:center;gap:0.75rem;">
               <i data-lucide="${typeIcons[l.type] || 'map-pin'}" style="width:20px;height:20px;color:#6366f1;flex-shrink:0;"></i>
-              <div>
+              <div style="flex:1;min-width:0;">
                 <div style="font-weight:500;font-size:0.88rem;">${l.name}</div>
                 <div style="font-size:0.75rem;color:#9ca3af;">${typeLabels[l.type] || l.type}</div>
               </div>
-              ${l.isDefault ? `<span style="margin-left:auto;font-size:0.7rem;background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;">за замовч.</span>` : ''}
+              ${l.isDefault ? `<span style="font-size:0.7rem;background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:4px;">за замовч.</span>` : ''}
+              <div style="display:flex;gap:0.3rem;flex-shrink:0;">
+                <button onclick="window.whOpenLocationForm('${l.id}')" style="padding:4px;border:none;background:#f3f4f6;border-radius:6px;cursor:pointer;">
+                  <i data-lucide="pencil" style="width:13px;height:13px;color:#6b7280;display:block;"></i>
+                </button>
+                ${!l.isDefault ? `<button onclick="window._whDeleteLocation('${l.id}')" style="padding:4px;border:none;background:#fee2e2;border-radius:6px;cursor:pointer;">
+                  <i data-lucide="trash-2" style="width:13px;height:13px;color:#dc2626;display:block;"></i>
+                </button>` : ''}
+              </div>
             </div>
           `).join('')}
         </div>
