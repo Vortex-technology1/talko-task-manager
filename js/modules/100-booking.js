@@ -66,6 +66,20 @@ function renderBookingShell() {
   <div id="bk-view-root"></div>
 </div>`;
     injectBookingStyles();
+    // Event delegation для кнопок карток — безпечно обробляє будь-які дані
+    document.getElementById('bk-admin').addEventListener('click', function(e) {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        const action = btn.dataset.action;
+        const calId  = btn.dataset.calId;
+        const calName = btn.dataset.calName || '';
+        const url    = btn.dataset.url;
+        if (action === 'appointments') window._bkShowAppointments(calId, calName);
+        if (action === 'copy-link')    window._bkCopyLink(url);
+        if (action === 'open-link')    window.open(url, '_blank');
+        if (action === 'edit')         window._bkEditCalendar(calId);
+        if (action === 'toggle')       window._bkToggleCalendar(calId, btn.dataset.active === 'true');
+    });
 }
 
 // ── Load calendars ────────────────────────────────────────
@@ -119,20 +133,24 @@ function renderCalendarList() {
     </div>
   </div>
   <div class="bk-cal-card-actions">
-    <button class="bk-btn-sm" title="Записи" onclick="window._bkShowAppointments('${cal.id}','${window.htmlEsc ? window.htmlEsc(cal.name||'') : (cal.name||'')}')">
+    <button class="bk-btn-sm" title="Записи"
+            data-action="appointments" data-cal-id="${cal.id}" data-cal-name="${window.htmlEsc ? window.htmlEsc(cal.name||'') : (cal.name||'')}">
       ${I.list} Записи
     </button>
-    <button class="bk-btn-sm" title="Копіювати посилання" onclick="window._bkCopyLink('${bookUrl}')">
+    <button class="bk-btn-sm" title="Копіювати посилання"
+            data-action="copy-link" data-url="${window.htmlEsc ? window.htmlEsc(bookUrl) : bookUrl}">
       ${I.copy} Посилання
     </button>
-    <button class="bk-btn-sm" title="Відкрити" onclick="window.open('${bookUrl}','_blank')">
+    <button class="bk-btn-sm" title="Відкрити"
+            data-action="open-link" data-url="${window.htmlEsc ? window.htmlEsc(bookUrl) : bookUrl}">
       ${I.link}
     </button>
-    <button class="bk-btn-sm bk-btn-edit" title="Редагувати" onclick="window._bkEditCalendar('${cal.id}')">
+    <button class="bk-btn-sm bk-btn-edit" title="Редагувати"
+            data-action="edit" data-cal-id="${cal.id}">
       ${I.edit}
     </button>
     <button class="bk-btn-sm bk-btn-toggle" title="${cal.isActive ? 'Вимкнути' : 'Увімкнути'}"
-            onclick="window._bkToggleCalendar('${cal.id}', ${!cal.isActive})">
+            data-action="toggle" data-cal-id="${cal.id}" data-active="${!cal.isActive}">
       ${cal.isActive ? I.close : I.check}
     </button>
   </div>
@@ -386,11 +404,11 @@ async function loadAppointments(calendarId) {
     if (!wrap) return;
 
     const statusFilter = document.getElementById('bk-appt-status-filter')?.value || '';
+    // Важливо: status filter перед orderBy щоб уникнути проблем з Firestore
     let q = window.companyCol('booking_appointments')
-        .where('calendarId', '==', calendarId)
-        .orderBy('startTime', 'desc')
-        .limit(100);
+        .where('calendarId', '==', calendarId);
     if (statusFilter) q = q.where('status', '==', statusFilter);
+    q = q.orderBy('startTime', 'desc').limit(100);
 
     try {
         const snap = await q.get();
@@ -646,8 +664,8 @@ window._bkCancelAppt = async function(apptId) {
             status: 'cancelled',
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        // Видаляємо Google event через API (не через client SDK)
-        if (appt.googleEventId || appt.ownerId) {
+        // Видаляємо Google event через API тільки якщо event існує
+        if (appt.googleEventId) {
             // Отримуємо ID token для авторизації
             const idToken = await firebase.auth().currentUser?.getIdToken().catch(() => '');
             fetch('/api/booking?action=cancel', {

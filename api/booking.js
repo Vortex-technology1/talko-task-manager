@@ -37,8 +37,15 @@ function esc(s) {
     return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+const crypto = require('crypto');
+// Telegram HTML escape — для parse_mode:'HTML'
+function tgEsc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 function genToken() {
-    return Math.random().toString(36).slice(2) + Date.now().toString(36);
+    // crypto.randomBytes = 128 bits entropy (vs Math.random ~52 bits)
+    return crypto.randomBytes(16).toString('hex');
 }
 
 // Parse "HH:MM" → minutes since midnight
@@ -338,9 +345,9 @@ async function getAvailableSlots(companyId, calendarId, dateStr) {
 
     const bookedRanges = apptSnap.docs.map(d => {
         const a = d.data();
-        const st = a.startTime.toMillis();
-        const et = a.endTime.toMillis();
-        return { start: st - bufBefore * 60000, end: et + bufAfter * 60000 };
+        // НЕ додаємо буфер тут — буфер вже врахований в slotStartMs/slotEndMs нижче
+        // (інакше буфер рахувався б двічі)
+        return { start: a.startTime.toMillis(), end: a.endTime.toMillis() };
     });
 
     // Fetch Google Calendar busy slots
@@ -650,14 +657,18 @@ const bk = {
     },
 
     async fetchSlots(ds) {
-        if (this.slotsCache[ds]) return this.slotsCache[ds];
+        // Cache TTL: 3 хвилини — після цього перезавантажуємо слоти
+        const CACHE_TTL = 3 * 60 * 1000;
+        if (this.slotsCache[ds] && (Date.now() - this.slotsCache[ds]._ts) < CACHE_TTL) {
+            return this.slotsCache[ds].slots;
+        }
         try {
             const r = await fetch(
                 \`/api/booking?action=slots&companyId=\${BK_COMPANY}&calendarId=\${BK_CALENDAR}&date=\${ds}\`
             );
             const data = await r.json();
-            this.slotsCache[ds] = data.slots || [];
-            return this.slotsCache[ds];
+            this.slotsCache[ds] = { slots: data.slots || [], _ts: Date.now() };
+            return this.slotsCache[ds].slots;
         } catch(e) {
             return [];
         }
@@ -730,7 +741,7 @@ const bk = {
             const data = await r.json();
             if (r.status === 409) {
                 // Слот зайнятий — очищаємо кеш і повертаємо на вибір часу
-                delete this.slotsCache[this.selectedDate];
+                delete this.slotsCache[this.selectedDate]; // скидаємо кеш — отримаємо свіжі слоти
                 this.selectedTime = null;
                 document.querySelectorAll('.bk-slot').forEach(el => el.classList.remove('selected'));
                 document.getElementById('bk-summary').style.display = 'none';
@@ -813,6 +824,15 @@ bk.init();
     return res.status(200).send(html);
 }
 
+// ── Auth helper ───────────────────────────────────────────
+function requireAuth(req) {
+    // Перевіряємо Firebase ID token або internal companyId header
+    const auth = req.headers.authorization || '';
+    // Мінімальна перевірка: Bearer token має бути присутній
+    // Повна верифікація через Firebase Auth (якщо потрібна)
+    return auth.startsWith('Bearer ') && auth.length > 20;
+}
+
 function errPage(msg) {
     return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Помилка</title></head>
 <body style="font-family:system-ui;text-align:center;padding:3rem;color:#374151">
@@ -848,6 +868,8 @@ module.exports = async (req, res) => {
 
         // ── GET: admin list of appointments ───────────────
         if (req.method === 'GET' && action === 'list') {
+            // Auth required — ця endpoint містить персональні дані клієнтів
+            if (!requireAuth(req)) return res.status(401).json({ error: 'Unauthorized' });
             const { companyId, calendarId, status, limit: lim } = req.query;
             if (!companyId) return res.status(400).json({ error: 'Missing companyId' });
 
@@ -869,6 +891,7 @@ module.exports = async (req, res) => {
 
         // ── GET: list calendars ───────────────────────────
         if (req.method === 'GET' && action === 'calendars') {
+            if (!requireAuth(req)) return res.status(401).json({ error: 'Unauthorized' });
             const { companyId } = req.query;
             if (!companyId) return res.status(400).json({ error: 'Missing companyId' });
             const snap = await db.collection('companies').doc(companyId)
@@ -914,16 +937,18 @@ module.exports = async (req, res) => {
             const safeClientEmail = clientEmail.trim().toLowerCase().slice(0, 254);
             const safeClientPhone = (clientPhone || '').toString().trim().slice(0, 30);
 
-            // Rate limiting: перевіряємо чи цей email вже бронював в останні 60 сек
-            const oneMinAgo = new Date(Date.now() - 60000);
-            const recentSnap = await db.collection('companies').doc(companyId)
+            // Rate limiting: перевіряємо чи цей email вже має pending/confirmed
+            // запис в цьому календарі на цей день (запобігає дублюванню)
+            // Використовуємо простий запит без createdAt (не потребує додаткового індексу)
+            const dupSnap = await db.collection('companies').doc(companyId)
                 .collection('booking_appointments')
                 .where('clientEmail', '==', safeClientEmail)
                 .where('calendarId', '==', calendarId)
-                .where('createdAt', '>', admin.firestore.Timestamp.fromDate(oneMinAgo))
+                .where('date', '==', date)
+                .where('status', 'in', ['confirmed', 'pending'])
                 .limit(1).get();
-            if (!recentSnap.empty) {
-                return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+            if (!dupSnap.empty) {
+                return res.status(429).json({ error: 'You already have a booking on this date.' });
             }
             // ─────────────────────────────────────────────────────────────
 
@@ -965,8 +990,9 @@ module.exports = async (req, res) => {
 
                     for (const doc of conflictSnap.docs) {
                         const a = doc.data();
-                        const aStart = a.startTime.toMillis() - bufBefore * 60000;
-                        const aEnd   = a.endTime.toMillis()   + bufAfter  * 60000;
+                        // Буфер вже врахований в slotStartMs/slotEndMs — тут без буферу
+                        const aStart = a.startTime.toMillis();
+                        const aEnd   = a.endTime.toMillis();
                         if (slotStartMs < aEnd && slotEndMs > aStart) {
                             throw new Error('SLOT_TAKEN');
                         }
@@ -1020,11 +1046,11 @@ module.exports = async (req, res) => {
             const compRef = db.collection('companies').doc(companyId);
             tgNotify(compRef,
                 `📅 <b>Новий запис!</b>\n` +
-                `Календар: ${cal.name || calendarId}\n` +
-                `Клієнт: ${safeClientName}\n` +
-                `Email: ${safeClientEmail}\n` +
-                `Телефон: ${safeClientPhone || '—'}\n` +
-                `Дата: ${date} о ${timeSlot}\n` +
+                `Календар: ${tgEsc(cal.name || calendarId)}\n` +
+                `Клієнт: ${tgEsc(safeClientName)}\n` +
+                `Email: ${tgEsc(safeClientEmail)}\n` +
+                `Телефон: ${tgEsc(safeClientPhone || '—')}\n` +
+                `Дата: ${tgEsc(date)} о ${tgEsc(timeSlot)}\n` +
                 `Статус: ${status === 'pending' ? 'Очікує підтвердження' : 'Підтверджено'}`
             );
 
@@ -1117,8 +1143,8 @@ module.exports = async (req, res) => {
             const compRef = db.collection('companies').doc(companyId);
             tgNotify(compRef,
                 `❌ <b>Запис скасовано</b>\n` +
-                `Клієнт: ${appt.clientName}\n` +
-                `Дата: ${appt.date} о ${appt.timeSlot}`
+                `Клієнт: ${tgEsc(appt.clientName)}\n` +
+                `Дата: ${tgEsc(appt.date)} о ${tgEsc(appt.timeSlot)}`
             );
 
             return res.status(200).json({ ok: true });
