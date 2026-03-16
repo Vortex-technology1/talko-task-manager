@@ -8,6 +8,7 @@
 
   let _currentView = 'dashboard'; // dashboard | catalog | operations | suppliers | locations
   let _searchQuery = '';
+  let _searchTimer = null;
   let _categoryFilter = '';
   let _opTypeFilter = '';
 
@@ -134,12 +135,13 @@
     `;
   }
 
-  window._whSetView = function (view) {
+  window._whSetView = function (view, cb) {
     _currentView = view;
     _searchQuery = '';
     _categoryFilter = '';
     _opTypeFilter = '';
     _render();
+    if (cb) setTimeout(cb, 50);
   };
 
   // ── View router ──────────────────────────────────────────
@@ -204,21 +206,21 @@
 
         <!-- Швидкі дії -->
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-          <button onclick="window._whSetView('catalog');setTimeout(()=>window.whOpenItemForm(),100)" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
+          <button onclick="window._whSetView('catalog',()=>window.whOpenItemForm())" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#ede9fe;color:#7c3aed;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
             <i data-lucide="plus-circle" style="width:14px;height:14px;"></i> Новий товар
           </button>
-          <button onclick="window._whSetView('operations');setTimeout(()=>window.whOpenOpForm('IN'),100)" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#dcfce7;color:#166534;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
+          <button onclick="window._whSetView('operations',()=>window.whOpenOpForm('IN'))" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#dcfce7;color:#166534;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
             <i data-lucide="arrow-down-circle" style="width:14px;height:14px;"></i> Прийняти товар
           </button>
-          <button onclick="window._whSetView('operations');setTimeout(()=>window.whOpenOpForm('OUT'),100)" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#fee2e2;color:#991b1b;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
+          <button onclick="window._whSetView('operations',()=>window.whOpenOpForm('OUT'))" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#fee2e2;color:#991b1b;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
             <i data-lucide="arrow-up-circle" style="width:14px;height:14px;"></i> Видати товар
           </button>
-          <button onclick="window._whSetView('operations');setTimeout(()=>window.whOpenOpForm('WRITE_OFF'),100)" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#fef3c7;color:#92400e;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
+          <button onclick="window._whSetView('operations',()=>window.whOpenOpForm('WRITE_OFF'))" style="display:flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:#fef3c7;color:#92400e;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:500;">
             <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Списати
           </button>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;">
 
           <!-- Тривоги -->
           <div style="background:white;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
@@ -349,7 +351,12 @@
         ${filtered.length === 0 ? `
           <div style="background:white;border-radius:12px;padding:3rem;text-align:center;">
             <i data-lucide="package" style="width:40px;height:40px;color:#d1d5db;margin-bottom:0.75rem;"></i>
-            <p style="color:#9ca3af;margin:0;">${items.length === 0 ? 'Каталог порожній. Додайте перший товар.' : 'Нічого не знайдено'}</p>
+            ${items.length === 0 ? `
+              <p style="color:#9ca3af;margin:0 0 0.75rem;">Каталог порожній.</p>
+              <button onclick="window.whOpenItemForm()" style="padding:0.45rem 1rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">
+                + Додати перший товар
+              </button>
+            ` : '<p style="color:#9ca3af;margin:0;">Нічого не знайдено</p>'}
           </div>
         ` : `
           <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
@@ -402,7 +409,11 @@
     `;
   }
 
-  window._whSearchCatalog = function (q) { _searchQuery = q; _render(); };
+  window._whSearchCatalog = function (q) {
+    _searchQuery = q;
+    if (_searchTimer) clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => _render(), 200);
+  };
   window._whFilterCategory = function (c) { _categoryFilter = c; _render(); };
 
   // ══════════════════════════════════════════════════════════
@@ -416,6 +427,14 @@
       const q = _searchQuery.toLowerCase();
       filtered = filtered.filter(o => (o.itemName || '').toLowerCase().includes(q) || (o.note || '').toLowerCase().includes(q));
     }
+
+    // Підсумки по відфільтрованих операціях
+    const totals = filtered.reduce((acc, op) => {
+      if (op.type === 'IN')             { acc.inQty += op.qty || 0; acc.inSum += (op.qty || 0) * (op.price || 0); }
+      else if (op.type === 'OUT')       { acc.outQty += op.qty || 0; }
+      else if (op.type === 'WRITE_OFF') { acc.offQty += op.qty || 0; }
+      return acc;
+    }, { inQty: 0, inSum: 0, outQty: 0, offQty: 0 });
 
     const typeLabel = { IN: 'ПРИХІД', OUT: 'ВИДАЧА', WRITE_OFF: 'СПИСАННЯ', ADJUST: 'КОРИГУВАННЯ' };
     const typeColor = { IN: { bg: '#dcfce7', color: '#166534' }, OUT: { bg: '#fee2e2', color: '#991b1b' }, WRITE_OFF: { bg: '#fef3c7', color: '#92400e' }, ADJUST: { bg: '#ede9fe', color: '#5b21b6' } };
@@ -437,6 +456,14 @@
             <option value="WRITE_OFF" ${_opTypeFilter==='WRITE_OFF'?'selected':''}>Списання</option>
           </select>
         </div>
+        ${filtered.length > 0 ? `
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            ${totals.inQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#dcfce7;color:#166534;border-radius:8px;font-size:0.8rem;font-weight:600;">↓ Прихід: ${fmt(totals.inQty)} од · ${fmtMoney(totals.inSum)}</span>` : ''}
+            ${totals.outQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#fee2e2;color:#991b1b;border-radius:8px;font-size:0.8rem;font-weight:600;">↑ Видача: ${fmt(totals.outQty)} од</span>` : ''}
+            ${totals.offQty > 0 ? `<span style="padding:0.3rem 0.75rem;background:#fef3c7;color:#92400e;border-radius:8px;font-size:0.8rem;font-weight:600;">✕ Списано: ${fmt(totals.offQty)} од</span>` : ''}
+            <span style="padding:0.3rem 0.75rem;background:#f3f4f6;color:#6b7280;border-radius:8px;font-size:0.8rem;">${filtered.length} записів</span>
+          </div>
+        ` : ''}
 
         <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.07);">
           ${filtered.length === 0 ? `
@@ -465,7 +492,11 @@
     `;
   }
 
-  window._whOpSearch = function (q) { _searchQuery = q; _render(); };
+  window._whOpSearch = function (q) {
+    _searchQuery = q;
+    if (_searchTimer) clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => _render(), 200);
+  };
   window._whOpFilter = function (v) { _opTypeFilter = v; _render(); };
 
   // ══════════════════════════════════════════════════════════
