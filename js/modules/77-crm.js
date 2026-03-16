@@ -2144,25 +2144,42 @@ window._crmWhAddItem = async function(dealId, select) {
     select.value = '';
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal) return;
-    const existing = (deal.warehouseItems || []).find(w => w.itemId === itemId);
-    if (existing) { existing.qty = (existing.qty || 1) + 1; }
-    else {
+    if (!deal.warehouseItems) deal.warehouseItems = [];
+    const existing = deal.warehouseItems.find(w => w.itemId === itemId);
+    if (existing) {
+        existing.qty = (existing.qty || 1) + 1;
+    } else {
         const item = window.whGetItems ? window.whGetItems().find(i => i.id === itemId) : null;
-        if (!deal.warehouseItems) deal.warehouseItems = [];
         deal.warehouseItems.push({ itemId, qty: 1, price: item?.costPrice || 0 });
     }
-    await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
-        .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-    if (typeof _renderDealDetails === 'function') _renderDealDetails(deal);
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+            .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        // Ре-рендер деталей угоди через доступний механізм
+        if (crm.activeDealId === dealId) {
+            const updDeal = crm.deals.find(d => d.id === dealId);
+            if (updDeal && typeof _renderDealDetails === 'function') _renderDealDetails(updDeal);
+        }
+        if (window.showToast) showToast('Товар додано до угоди ✓', 'success');
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
 };
 
 window._crmWhRemoveItem = async function(dealId, idx) {
     const deal = crm.deals.find(d => d.id === dealId);
     if (!deal || !deal.warehouseItems) return;
     deal.warehouseItems.splice(idx, 1);
-    await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
-        .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-    if (typeof _renderDealDetails === 'function') _renderDealDetails(deal);
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+            .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        if (crm.activeDealId === dealId) {
+            const updDeal = crm.deals.find(d => d.id === dealId);
+            if (updDeal && typeof _renderDealDetails === 'function') _renderDealDetails(updDeal);
+        }
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
 };
 
 window._crmWhUpdateQty = async function(dealId, idx, val) {
@@ -2171,8 +2188,12 @@ window._crmWhUpdateQty = async function(dealId, idx, val) {
     const qty = parseFloat(val);
     if (isNaN(qty) || qty <= 0) return;
     deal.warehouseItems[idx].qty = qty;
-    await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
-        .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    try {
+        await window.companyRef().collection(window.DB_COLS.CRM_DEALS).doc(dealId)
+            .update({ warehouseItems: deal.warehouseItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    } catch(e) {
+        if (window.showToast) showToast('Помилка: ' + e.message, 'error');
+    }
 };
 
 window.crmCloseDeal = function() {
@@ -4199,7 +4220,16 @@ function _subscribeDeals() {
             else if (crm.subTab === 'list')  _renderListView();
             else if (crm.subTab === 'analytics')  _renderAnalytics();
             else if (crm.subTab === 'todo' && typeof renderCrmTodo === 'function') renderCrmTodo();
-            // activities і settings не ре-рендеримо автоматично — вони мають власне завантаження
+            // Якщо відкрита панель угоди — оновлюємо details tab
+            if (crm.activeDealId) {
+                const activeDeal = crm.deals.find(d => d.id === crm.activeDealId);
+                if (activeDeal) {
+                    const content = document.getElementById('crmDealContent');
+                    if (content && typeof _renderDealDetails === 'function') {
+                        _renderDealDetails(activeDeal);
+                    }
+                }
+            }
         }, err => { console.error('[CRM deals]', err); crm.loading = false; });
 }
 

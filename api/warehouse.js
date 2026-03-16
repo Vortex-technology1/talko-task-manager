@@ -33,6 +33,7 @@ module.exports = async (req, res) => {
       const alerts = [];
       stockSnap.forEach(doc => {
         const s = doc.data();
+        if (s.deleted === true) return; // skip deleted items
         if (s.minStock > 0 && s.qty <= s.minStock) {
           alerts.push({
             itemId: s.itemId,
@@ -69,10 +70,10 @@ module.exports = async (req, res) => {
         const prevQty = stock.qty || 0;
         let newQty = prevQty;
 
-        if (type === 'IN')             newQty = prevQty + Number(qty);
-        else if (type === 'OUT')       newQty = prevQty - Number(qty);
-        else if (type === 'WRITE_OFF') newQty = prevQty - Number(qty);
-        else if (type === 'ADJUST')    newQty = Number(qty);
+        if (type === 'IN')             newQty = prevQty + qtyNum;
+        else if (type === 'OUT')       newQty = prevQty - qtyNum;
+        else if (type === 'WRITE_OFF') newQty = prevQty - qtyNum;
+        else if (type === 'ADJUST')    newQty = qtyNum;
 
         if (newQty < 0) throw new Error('Insufficient stock: ' + item.name);
 
@@ -87,7 +88,7 @@ module.exports = async (req, res) => {
 
         tx.set(opRef, {
           itemId, itemName: item.name,
-          type, qty: Number(qty),
+          type, qty: qtyNum,
           prevQty, newQty,
           locationId: locationId || 'main',
           price: price || item.costPrice || 0,
@@ -131,6 +132,8 @@ module.exports = async (req, res) => {
 
       const ops = [];
       for (const it of items) {
+        const itQty = Number(it.qty);
+        if (!it.itemId || isNaN(itQty) || itQty <= 0) continue; // skip invalid
         const stockRef = comp.collection('warehouse_stock').doc(it.itemId);
         const itemRef  = comp.collection('warehouse_items').doc(it.itemId);
 
@@ -141,8 +144,8 @@ module.exports = async (req, res) => {
           const item  = itemDoc.data();
           const stock = stockDoc.exists ? stockDoc.data() : { qty: 0, reserved: 0 };
           const prevQty = stock.qty || 0;
-          const newQty  = Math.max(0, prevQty - Number(it.qty));
-          const newRes  = Math.max(0, (stock.reserved || 0) - Number(it.qty));
+          const newQty  = Math.max(0, prevQty - itQty);
+          const newRes  = Math.max(0, (stock.reserved || 0) - itQty);
 
           tx.set(stockRef, {
             qty: newQty, reserved: newRes,
@@ -151,7 +154,7 @@ module.exports = async (req, res) => {
 
           tx.set(opRef2, {
             itemId: it.itemId, itemName: item.name,
-            type: 'OUT', qty: Number(it.qty),
+            type: 'OUT', qty: itQty,
             prevQty, newQty,
             locationId: 'main',
             price: it.price || item.costPrice || 0,
