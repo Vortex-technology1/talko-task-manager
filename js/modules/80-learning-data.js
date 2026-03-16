@@ -7961,6 +7961,452 @@ Bist du dabei?</div>
                 homeworkLinkName: "→ TALKO Support",
                 homeworkLinkName_ru: "→ TALKO Support",
                 time: 30
+            },
+
+            // ═══════════════════════════════════════════════════════════
+            // УРОК 16 — МОЖЛИВОСТІ ПЛАТФОРМИ: CRM, ФІНАНСИ, СКЛАД, КАЛЕНДАР
+            // ═══════════════════════════════════════════════════════════
+            {
+                id: 16,
+                title: "МОЖЛИВОСТІ ПЛАТФОРМИ: ЩО І ДЛЯ ЧОГО",
+                title_ru: "ВОЗМОЖНОСТИ ПЛАТФОРМЫ: ЧТО И ДЛЯ ЧЕГО",
+                title_en: "PLATFORM CAPABILITIES: WHAT AND WHY",
+                title_cs: "MOŽNOSTI PLATFORMY: CO A PROČ",
+                title_de: "PLATTFORM-FUNKTIONEN: WAS UND WOFÜR",
+                title_pl: "MOŻLIWOŚCI PLATFORMY: CO I DO CZEGO",
+                subtitle: "Детальний огляд кожної функції — яку проблему вирішує і як це працює",
+                subtitle_ru: "Детальный обзор каждой функции — какую проблему решает и как это работает",
+                subtitle_en: "Detailed overview of each feature — what problem it solves and how it works",
+                subtitle_cs: "Podrobný přehled každé funkce — jaký problém řeší a jak to funguje",
+                subtitle_de: "Detaillierter Überblick jeder Funktion — welches Problem sie löst und wie es funktioniert",
+                subtitle_pl: "Szczegółowy przegląd każdej funkcji — jaki problem rozwiązuje i jak to działa",
+                hideAiBlock: false,
+                videoLink: null,
+                materialsLink: null,
+
+                lessonContent: `
+<style>
+.cap-intro{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:1.25rem}
+.cap-intro p{font-size:.9rem;color:#15803d;line-height:1.7;margin:0}
+.cap-section{margin-bottom:2rem}
+.cap-section-title{display:flex;align-items:center;gap:.6rem;font-size:1rem;font-weight:800;color:#1a1a1a;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid #e5e7eb}
+.cap-section-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem}
+.cap-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.65rem}
+.cap-block-title{font-weight:700;color:#1a1a1a;font-size:.88rem;margin-bottom:.3rem}
+.cap-pain{font-size:.8rem;color:#dc2626;background:#fef2f2;border-left:3px solid #dc2626;border-radius:0 6px 6px 0;padding:.35rem .65rem;margin-bottom:.35rem;line-height:1.5}
+.cap-solve{font-size:.8rem;color:#15803d;background:#f0fdf4;border-left:3px solid #16a34a;border-radius:0 6px 6px 0;padding:.35rem .65rem;line-height:1.5}
+.cap-sub{font-size:.78rem;color:#525252;line-height:1.6;margin-top:.35rem}
+.cap-trigger{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem}
+.cap-trigger-title{font-weight:700;color:#92400e;font-size:.83rem;margin-bottom:.25rem}
+.cap-trigger-when{font-size:.77rem;color:#78350f;margin-bottom:.15rem}
+.cap-trigger-then{font-size:.77rem;color:#15803d;font-weight:600}
+.cap-note{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:.75rem 1rem;margin-top:.65rem;font-size:.8rem;color:#0c4a6e;line-height:1.6}
+.cap-group{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem}
+@media(max-width:600px){.cap-group{grid-template-columns:1fr}}
+.cap-tag{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-right:4px;margin-bottom:3px}
+.tag-crm{background:#dbeafe;color:#1e40af}
+.tag-auto{background:#d1fae5;color:#065f46}
+.tag-fin{background:#fef3c7;color:#92400e}
+.tag-wh{background:#ede9fe;color:#5b21b6}
+.tag-cal{background:#fce7f3;color:#9d174d}
+</style>
+
+<div class="cap-intro">
+  <p>Цей урок — не теорія. Це практичний довідник: кожна функція описана через <strong>біль який вона знімає</strong> і <strong>що відбувається коли ви її увімкнете</strong>. Читайте як інструкцію до інструменту, а не як підручник.</p>
+</div>
+
+<!-- ═══════════════════════ CRM ═══════════════════════ -->
+<div class="cap-section">
+  <div class="cap-section-title">
+    <div class="cap-section-icon" style="background:#dbeafe">🎯</div>
+    CRM — Управління угодами і клієнтами
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Kanban-дошка угод</div>
+    <div class="cap-pain">Біль: ви не знаєте на якому етапі яка угода. Менеджер "тримає в голові" 20 клієнтів і забуває передзвонити.</div>
+    <div class="cap-solve">Рішення: всі угоди видно на одному екрані — по стадіях. Перетягнули картку вліво-вправо — стадія змінилась. Система сама фіксує хто куди і коли перейшов.</div>
+    <div class="cap-sub">Стадії налаштовуються під ваш процес продажів. Можна зробити: "Новий" → "Замір" → "КП відправлено" → "Погоджено" → "Виробництво" → "Монтаж" → "Закрито".</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Картка угоди — 4 вкладки</div>
+    <div class="cap-pain">Біль: інформація про клієнта розкидана по телефону, листуванню в WhatsApp і нотатках на папері. Новий менеджер не знає передісторії.</div>
+    <div class="cap-solve">Рішення: вся інформація в одному місці. Вкладка "Деталі" — всі поля. "Активності" — хронологія дзвінків, змін, нотаток. "Задачі" — що треба зробити по угоді. "AI" — аналіз і рекомендації по угоді.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Поля угоди — Філіал</div>
+    <div class="cap-pain">Біль: при кількох офісах або точках ви не розумієте звідки їхати на замір і хто відповідає за цього клієнта.</div>
+    <div class="cap-solve">Рішення: поле "Філіал" (Прага / Брно / Братислава або ваші назви) визначає звідки їде замірник і монтажник, яка бригада, які розцінки.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Поля угоди — Адреса об'єкту</div>
+    <div class="cap-pain">Біль: менеджер дзвонить замірнику і диктує адресу усно. Той записує на папері, путається і приїжджає не туди.</div>
+    <div class="cap-solve">Рішення: адреса зберігається в картці угоди. Замірник відкриває телефон — адреса вже там. У майбутньому ця адреса автоматично відображається на карті логістики для монтажників.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Поля угоди — Замірник і дата заміру</div>
+    <div class="cap-pain">Біль: ви призначили замір усно або в WhatsApp. Замірник забув. Клієнт чекав — ніхто не приїхав. Репутація втрачена.</div>
+    <div class="cap-solve">Рішення: вибрали замірника в картці + вказали дату і час → система автоматично створює подію в його Google Calendar. Він отримує нагадування як на звичайну зустріч. Плюс клієнту йде WhatsApp: "Замір призначено на [дата], замірник [ім'я]".</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Поля угоди — Монтажник і дата монтажу</div>
+    <div class="cap-pain">Біль: монтажник не знає куди їхати завтра. Ви телефонуєте вранці, він запитує адресу, ви шукаєте в переписці — втрачається час і нервується весь ланцюжок.</div>
+    <div class="cap-solve">Рішення: призначили монтажника + вказали дату → подія в його Google Calendar з адресою, клієнтом і описом замовлення. Клієнту WhatsApp: "Монтаж [дата], майстер [ім'я], телефон [номер]".</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Поля угоди — Передоплата і Залишок</div>
+    <div class="cap-pain">Біль: фінменеджер запитує "чи оплатили?" — менеджер лізе в WhatsApp, шукає скрін переказу. Ніхто не веде облік хто скільки заборгував.</div>
+    <div class="cap-solve">Рішення: вводите суму передоплати → система автоматично рахує залишок (загальна сума мінус передоплата). Все видно в картці. При введенні передоплати система запускає виробництво (задача цеху).</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Фільтри і пошук угод</div>
+    <div class="cap-pain">Біль: 50 угод в таблиці, потрібно знайти всіх клієнтів з Instagram у Брно, у яких замір цього тижня. Доводиться гортати вручну.</div>
+    <div class="cap-solve">Рішення: фільтрація по будь-якій комбінації — стадія + відповідальний + джерело + тег + сума. Результат — секунда.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Bulk-операції (масові дії)</div>
+    <div class="cap-pain">Біль: потрібно перевести 15 угод на наступного менеджера бо попередній звільнився. Переходите в кожну вручну — 15 відкриттів, 15 змін, 15 збережень.</div>
+    <div class="cap-solve">Рішення: виділяєте всі 15 → "Змінити відповідального" → один клік. Те саме з тегами, стадіями, видаленням.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Лог дзвінків і активності</div>
+    <div class="cap-pain">Біль: клієнт каже "я вам дзвонив тиждень тому і ми домовились на знижку". Ніхто не пам'ятає. Виникає конфлікт.</div>
+    <div class="cap-solve">Рішення: кожен дзвінок логується — дата, тривалість, результат, нотатка. Всі зміни стадій — теж в хронології. Новий менеджер відкриває картку і бачить всю передісторію за 30 секунд.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">База клієнтів з авто-дедублікацією</div>
+    <div class="cap-pain">Біль: той самий клієнт є двічі в базі — один раз менеджер Іра додала, другий раз — менеджер Петро. Дзвонять двічі, клієнт злиться.</div>
+    <div class="cap-solve">Рішення: при додаванні нового клієнта система автоматично перевіряє чи є вже такий телефон. Якщо є — показує попередження перед збереженням.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Аналітика CRM — конверсія і джерела</div>
+    <div class="cap-pain">Біль: ви витрачаєте гроші на рекламу в Instagram але не знаєте звідки насправді приходять клієнти які платять. Маркетинговий бюджет йде навмання.</div>
+    <div class="cap-solve">Рішення: система рахує по кожному джерелу (Instagram / Facebook / сайт / рекомендація / дизайнер) — скільки лідів, скільки дійшли до оплати, яка конверсія і яка виручка. Видно де реально гроші.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">KPI менеджерів в CRM</div>
+    <div class="cap-pain">Біль: ви не знаєте хто з менеджерів реально продає, а хто просто "веде переговори" місяцями. Платите однаково всім.</div>
+    <div class="cap-solve">Рішення: по кожному менеджеру — кількість won, lost, active угод, конверсія, сума виручки. Рейтинг команди оновлюється автоматично.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Декілька Pipeline</div>
+    <div class="cap-pain">Біль: у вас два різні процеси продажів — один для роздрібу (фізичні клієнти), другий для B2B (дизайнери, забудовники). Всі угоди в одному списку — хаос.</div>
+    <div class="cap-solve">Рішення: створіть окремий pipeline для кожного типу продажів зі своїми стадіями. Кожна воронка — окремий Kanban зі своєю логікою.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Access mode — менеджер бачить тільки свої угоди</div>
+    <div class="cap-pain">Біль: менеджери бачать угоди один одного і можуть переманювати клієнтів або "підглядати" в чужі комісії.</div>
+    <div class="cap-solve">Рішення: режим "own" — кожен менеджер бачить тільки свої угоди. Власник і адміністратор бачать все.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ ТРИГЕРИ ═══════════════════════ -->
+<div class="cap-section">
+  <div class="cap-section-title">
+    <div class="cap-section-icon" style="background:#d1fae5">⚡</div>
+    Тригери і автоматизації — система що працює замість вас
+  </div>
+
+  <div class="cap-note">
+    <strong>Що таке тригер?</strong> Це правило: "ЯКЩО відбулась подія X → система автоматично виконує дію Y". Без вашої участі. Без нагадувань менеджеру. Без людського фактору.
+  </div>
+
+  <div style="margin-top:.75rem">
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">🔔 Тригер: КП погоджено</div>
+      <div class="cap-trigger-when">Коли: менеджер змінив статус КП на "Погоджено"</div>
+      <div class="cap-trigger-then">→ Автоматично створюється задача для цеху: "ТЗ на пошив [ім'я клієнта]" (дедлайн +3 дні)</div>
+      <div class="cap-trigger-then">→ Автоматично створюється задача закупнику: "Закупівля матеріалів" (дедлайн +2 дні)</div>
+      <div class="cap-trigger-then">→ Автоматично створюється задача логісту: "Планування монтажу" (дедлайн +5 днів)</div>
+      <div class="cap-trigger-then">→ Клієнт отримує WhatsApp з сумою передоплати (50%)</div>
+      <div class="cap-sub" style="margin-top:.35rem">Без тригера: менеджер забуває повідомити цех. Цех не знає що почалось нове замовлення. Закупник не замовив тканину. Монтаж зривається.</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">💰 Тригер: Передоплата зафіксована</div>
+      <div class="cap-trigger-when">Коли: менеджер вніс суму передоплати в картку угоди</div>
+      <div class="cap-trigger-then">→ Автоматично створюється задача "Старт виробництва" для цеху (дедлайн +0 днів, високий пріоритет)</div>
+      <div class="cap-trigger-then">→ Клієнт отримує WhatsApp: "Передоплату отримано, починаємо виробництво"</div>
+      <div class="cap-sub" style="margin-top:.35rem">Без тригера: гроші надійшли, але цех не знає. Виробництво починається з затримкою 1-2 дні бо "ніхто не сказав".</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">📅 Тригер: Замір призначено</div>
+      <div class="cap-trigger-when">Коли: в картці угоди вибрано замірника і вказано дату/час заміру</div>
+      <div class="cap-trigger-then">→ Подія автоматично з'являється в Google Calendar замірника</div>
+      <div class="cap-trigger-then">→ Клієнт отримує WhatsApp: "Замір призначено на [дата/час], замірник [ім'я]"</div>
+      <div class="cap-sub" style="margin-top:.35rem">Без тригера: замірник дізнається про замір з дзвінка менеджера вранці. Клієнт не впевнений що хтось приїде.</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">🔧 Тригер: Монтаж призначено</div>
+      <div class="cap-trigger-when">Коли: вибрано монтажника і вказано дату/час монтажу</div>
+      <div class="cap-trigger-then">→ Подія в Google Calendar монтажника з адресою об'єкту і описом замовлення</div>
+      <div class="cap-trigger-then">→ Клієнт отримує WhatsApp: "Монтаж [дата/час], майстер [ім'я], телефон [номер]"</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">🏆 Тригер: Угода закрита (виграна)</div>
+      <div class="cap-trigger-when">Коли: угода переведена в стадію "Виграно"</div>
+      <div class="cap-trigger-then">→ Клієнт отримує WhatsApp з подякою за замовлення</div>
+      <div class="cap-trigger-then">→ Авто-задача "Виставити рахунок" для менеджера</div>
+      <div class="cap-trigger-then">→ Якщо є товари зі складу — вони автоматично списуються</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">🧹 Тригер: +180 днів після закриття угоди</div>
+      <div class="cap-trigger-when">Коли: пройшло 180 днів від дати закриття угоди (cron щодня о 8:00)</div>
+      <div class="cap-trigger-then">→ Клієнт автоматично отримує WhatsApp: пропозиція чищення штор</div>
+      <div class="cap-trigger-then">→ Менеджеру ставиться задача "зателефонувати клієнту"</div>
+      <div class="cap-sub" style="margin-top:.35rem">Без тригера: повторні продажі існуючим клієнтам відбуваються випадково. Ви залишаєте гроші на столі.</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">📋 Тригер: Угода перейшла в стадію "Пропозиція"</div>
+      <div class="cap-trigger-when">Коли: угода перемістилась в стадію proposal (Пропозиція)</div>
+      <div class="cap-trigger-then">→ Автоматично задача менеджеру "Підготувати КП" (дедлайн +2 дні)</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">📞 Тригер: Угода в стадії "Закриття"</div>
+      <div class="cap-trigger-when">Коли: угода перейшла в стадію closing (Закриття)</div>
+      <div class="cap-trigger-then">→ Автоматично задача менеджеру "Фінальний дзвінок клієнту" (дедлайн +1 день)</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">🤖 Тригер: Заявка з сайту або форми</div>
+      <div class="cap-trigger-when">Коли: клієнт заповнив форму на сайті</div>
+      <div class="cap-trigger-then">→ Автоматично створюється клієнт в базі CRM</div>
+      <div class="cap-trigger-then">→ Автоматично створюється угода в першій стадії pipeline</div>
+      <div class="cap-trigger-then">→ Менеджер бачить новий лід у Kanban без жодних ручних дій</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">💬 Тригер: Бот завершив воронку</div>
+      <div class="cap-trigger-when">Коли: клієнт пройшов весь сценарій в WhatsApp/Telegram боті</div>
+      <div class="cap-trigger-then">→ Клієнт і угода автоматично з'являються в CRM з усіма зібраними даними</div>
+    </div>
+
+    <div class="cap-trigger">
+      <div class="cap-trigger-title">⚠️ Тригер: Бюджет перевищено</div>
+      <div class="cap-trigger-when">Коли: витрати по задачі або функції перевищили заплановану суму</div>
+      <div class="cap-trigger-then">→ Автоматично задача-попередження менеджеру (високий пріоритет, дедлайн сьогодні)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ WHATSAPP ═══════════════════════ -->
+<div class="cap-section">
+  <div class="cap-section-title">
+    <div class="cap-section-icon" style="background:#dcfce7">💬</div>
+    WhatsApp Business API — автоматичні повідомлення клієнту
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Навіщо це потрібно</div>
+    <div class="cap-pain">Біль: менеджер відправляє 6-8 WhatsApp повідомлень вручну на кожне замовлення. При 30 замовленнях на місяць — це 180-240 ручних дій. Якесь повідомлення забувається, клієнт не знає що відбувається і починає дзвонити.</div>
+    <div class="cap-solve">Рішення: підключіть WhatsApp Business API (провайдер 360dialog для ЄС) — і всі 6 типів повідомлень відправляються автоматично при відповідних подіях. Менеджер не думає "чи написав я клієнту".</div>
+    <div class="cap-sub">Повідомлення написані чеською мовою (cs-CZ) що важливо для місцевого ринку. Налаштування: Інтеграції → WhatsApp Business API → вставити ключ 360dialog → зберегти.</div>
+  </div>
+
+  <div class="cap-note">
+    <strong>6 автоматичних повідомлень на кожне замовлення:</strong><br>
+    1. Замір призначено → дата, час, ім'я замірника<br>
+    2. КП погоджено → сума передоплати (50%)<br>
+    3. Передоплата отримана → старт виробництва<br>
+    4. Монтаж призначено → дата, час, ім'я монтажника<br>
+    5. Угода закрита → подяка + анонс нагадування через 6 місяців<br>
+    6. +180 днів → пропозиція чищення штор
+  </div>
+</div>
+
+<!-- ═══════════════════════ ФІНАНСИ ═══════════════════════ -->
+<div class="cap-section">
+  <div class="cap-section-title">
+    <div class="cap-section-icon" style="background:#fef3c7">💰</div>
+    Фінанси — повний контроль грошей компанії
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Дашборд: KPI в реальному часі</div>
+    <div class="cap-pain">Біль: щоб дізнатись скільки компанія заробила цього місяця — потрібно 2 години і бухгалтер. До того ж дані застарілі на 2 тижні.</div>
+    <div class="cap-solve">Рішення: відкриваєте Фінанси → бачите 4 картки: Дохід / Витрати / Прибуток / Маржа за поточний місяць. З порівнянням до попереднього місяця (↑↓%). Це оновлюється при кожній новій транзакції.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Транзакції: доходи і витрати</div>
+    <div class="cap-pain">Біль: гроші є на рахунку але ви не знаєте куди вони йдуть. "Щось витрачаємо, а прибутку не видно".</div>
+    <div class="cap-solve">Рішення: кожна транзакція вноситься з категорією (матеріали / оренда / зарплата / реклама / тощо). Система показує по кожній категорії скільки пішло. Видно де "дірка" в бюджеті.</div>
+    <div class="cap-sub">Транзакцію можна прив'язати до конкретної угоди або проекту — тоді видно маржинальність кожного замовлення.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Рахунки клієнтам (Invoices)</div>
+    <div class="cap-pain">Біль: рахунки формуєте вручну в Word або Excel. Шукаєте шаблон, правите реквізити, відправляєте — 20 хвилин на рахунок. При 30 замовленнях — 10 годин на місяць.</div>
+    <div class="cap-solve">Рішення: натискаєте "Рахунок" прямо в картці угоди → клієнт і сума підставляються автоматично → додаєте рядки → PDF готовий за 2 хвилини. При оплаті — статус змінюється і транзакція дохід створюється автоматично.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Регулярні платежі</div>
+    <div class="cap-pain">Біль: оренда, зарплата, підписки — щомісяця одні й ті ж витрати. Кожен раз вносите вручну або забуваєте. Бухгалтерія не бачить реального cashflow.</div>
+    <div class="cap-solve">Рішення: налаштуєте регулярний платіж один раз → система сама створює транзакцію в потрібний день. Оренда 15-го кожного місяця — просто вказуєте і забуваєте.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Планування і бюджет</div>
+    <div class="cap-pain">Біль: ви не знаєте заздалегідь чи вистачить грошей через 2 місяці. Несподівані касові розриви застають зненацька.</div>
+    <div class="cap-solve">Рішення: вносите плановий бюджет по місяцях і відділах. Система порівнює план і факт в реальному часі. Cashflow-прогноз на 30/60/90 днів показує де може виникнути розрив.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">P&L звіт і аналітика маржі</div>
+    <div class="cap-pain">Біль: ви не знаєте які замовлення прибуткові, а які ні. Берете всі замовлення підряд і потім дивуєтесь що грошей немає.</div>
+    <div class="cap-solve">Рішення: P&L звіт за будь-який період. Маржинальність по кожному проекту/угоді: дохід мінус прив'язані витрати. Видно які клієнти або типи замовлень реально дають прибуток.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">AI Фінансовий аналітик</div>
+    <div class="cap-pain">Біль: ви бачите цифри але не знаєте що з ними робити. Звернутись до бухгалтера — дорого і довго.</div>
+    <div class="cap-solve">Рішення: вкладка "AI" у фінансах — запитуєте будь-яке питання ("Чому цього місяця прибуток менший ніж минулого?" або "Які категорії витрат ростуть швидше за доходи?") і отримуєте аналіз на основі ваших реальних даних.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Мультивалютність і курси</div>
+    <div class="cap-pain">Біль: ви працюєте в кількох країнах або з постачальниками в різних валютах. Рахувати вручну в якій валюті скільки — помилки і плутанина.</div>
+    <div class="cap-solve">Рішення: кожна транзакція у своїй валюті, курс підтягується автоматично або вводиться вручну. Всі звіти в базовій валюті компанії.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ СКЛАД ═══════════════════════ -->
+<div class="cap-section">
+  <div class="cap-section-title">
+    <div class="cap-section-icon" style="background:#ede9fe">📦</div>
+    Склад — облік матеріалів і товарів
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Каталог товарів з залишками</div>
+    <div class="cap-pain">Біль: закупник купив тканину "на очей". Потім виявляється що одного артикулу вже два рулони, а іншого немає зовсім. Гроші заморожені в непотрібних залишках.</div>
+    <div class="cap-solve">Рішення: кожен товар/матеріал в системі — артикул, назва, поточний залишок, мінімальний залишок, ціна закупівлі. Система показує скільки є, скільки зарезервовано під угоди і скільки реально доступно.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Три рівні тривоги: ok / low / critical</div>
+    <div class="cap-pain">Біль: тканина закінчилась в момент коли треба шити. Виробництво зупиняється, клієнт чекає, бригада простоює.</div>
+    <div class="cap-solve">Рішення: для кожного товару є мінімальний залишок. Коли qty опускається нижче — бейдж-лічильник в навігації і автоматична задача закупнику "Замовити [назва товару]". Закупник не чекає поки хтось скаже — система сама ставить задачу.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Операції: надходження, видача, списання</div>
+    <div class="cap-pain">Біль: ніхто не знає скільки метрів тканини пішло на це замовлення. Неможливо порахувати собівартість виробу.</div>
+    <div class="cap-solve">Рішення: кожна операція фіксується — надходження від постачальника (IN), видача на виробництво з прив'язкою до угоди (OUT), списання браку (WRITE_OFF). По кожній угоді видно скільки матеріалів витрачено.</div>
+    <div class="cap-sub">При надходженні товару — автоматично створюється фінансова транзакція витрати. Склад і фінанси синхронізовані.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Авто-списання при закритті угоди</div>
+    <div class="cap-pain">Біль: замовлення виконано, але залишки на складі не оновились. Через місяць бачите "є 10 метрів тканини" — а їх насправді немає давно.</div>
+    <div class="cap-solve">Рішення: при переведенні угоди в "Виграно" — всі прив'язані до неї матеріали автоматично списуються зі складу. Нічого не треба робити вручну.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Постачальники і локації</div>
+    <div class="cap-pain">Біль: всі знають що "тканину купуємо у Карела" але ніхто не знає його телефон і умови. Коли Карела немає — процес зупиняється.</div>
+    <div class="cap-solve">Рішення: база постачальників з контактами, прив'язана до товарів. Кожне місце зберігання — окрема локація (Склад 1, Шоурум Прага, Шоурум Брно). Видно де що лежить.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ КАЛЕНДАР ═══════════════════════ -->
+<div class="cap-section">
+  <div class="cap-section-title">
+    <div class="cap-section-icon" style="background:#fce7f3">📅</div>
+    Календар і Booking — розклад і запис клієнтів
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">6 видів календаря задач</div>
+    <div class="cap-pain">Біль: задачі є, але ніхто не знає що робити сьогодні. Хтось перевантажений, хтось сидить без роботи.</div>
+    <div class="cap-solve">Рішення: календар показує всі задачі в обраному форматі — День (погодинно), Тиждень, Місяць, Список, Kanban або тільки Дедлайни. Кожен співробітник відкриває "Мій день" і одразу бачить що робити зараз.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Google Calendar інтеграція</div>
+    <div class="cap-pain">Біль: замірники і монтажники не сидять за комп'ютером. Вони не відкривають "систему". Їхній робочий інструмент — телефон і Google Calendar.</div>
+    <div class="cap-solve">Рішення: підключіть Google Calendar кожного замірника і монтажника → при призначенні заміру/монтажу в CRM → подія автоматично з'являється в їхньому Calendar → вони отримують стандартне нагадування на телефоні. Нічого нового вчити не треба.</div>
+    <div class="cap-sub">Налаштування: Інтеграції → Google Calendar → кожен співробітник підключає свій аккаунт одним кліком.</div>
+  </div>
+
+  <div class="cap-block">
+    <div class="cap-block-title">Booking — онлайн-запис клієнтів (Calendly-аналог)</div>
+    <div class="cap-pain">Біль: клієнт хоче записатись на замір. Починається: "Коли вам зручно?" — "А в п'ятницю можна?" — "П'ятниця зайнята" — і так 10 повідомлень в WhatsApp щоб вибрати один слот.</div>
+    <div class="cap-solve">Рішення: відправляєте клієнту посилання /book/ваша-компанія/замір → він відкриває сторінку, бачить вільні слоти (зайняті витягуються з Google Calendar) і сам обирає зручний час. Ви нічого не узгоджуєте вручну.</div>
+    <div class="cap-sub">При бронюванні — клієнт автоматично з'являється в базі CRM. Можна налаштувати вимогу передоплати через Stripe перед підтвердженням запису.</div>
+  </div>
+</div>
+
+<div class="result-block">
+  <strong>Головне.</strong> Кожна функція платформи існує щоб прибрати конкретний ручний процес або людський фактор. Не треба впроваджувати все одразу — починайте з того де найбільший біль прямо зараз. Найчастіше це CRM-тригери і WhatsApp — вони дають результат вже в перший тиждень.
+</div>`,
+
+                lessonContent_en: `<div style="padding:1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;margin-bottom:1rem"><p style="font-size:.9rem;color:#15803d;line-height:1.7;margin:0">This lesson is a practical reference: each feature is described through the <strong>pain it removes</strong> and <strong>what happens when you enable it</strong>. Read it as a tool manual, not a textbook.</p></div><p style="font-size:.85rem;color:#525252;line-height:1.7">The full detailed version of this lesson is available in Ukrainian. Please switch the language or ask the AI assistant for explanations of specific features in English.</p>`,
+
+                lessonContent_cs: `<div style="padding:1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;margin-bottom:1rem"><p style="font-size:.9rem;color:#15803d;line-height:1.7;margin:0">Tato lekce je praktická příručka: každá funkce je popsána přes <strong>bolest kterou odstraňuje</strong> a <strong>co se stane když ji zapnete</strong>.</p></div><p style="font-size:.85rem;color:#525252;line-height:1.7">Plná podrobná verze této lekce je k dispozici v ukrajinštině. Přepněte jazyk nebo se zeptejte AI asistenta na vysvětlení konkrétních funkcí v češtině.</p>`,
+
+                lessonContent_ru: `<div style="padding:1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;margin-bottom:1rem"><p style="font-size:.9rem;color:#15803d;line-height:1.7;margin:0">Этот урок — практический справочник: каждая функция описана через <strong>боль которую она снимает</strong> и <strong>что происходит когда вы её включите</strong>. Читайте как инструкцию к инструменту, а не как учебник.</p></div>
+<p style="font-size:.88rem;font-weight:700;color:#1a1a1a;margin:.75rem 0 .4rem">CRM — Управление сделками</p>
+<p style="font-size:.82rem;color:#525252;line-height:1.65;margin-bottom:.5rem"><strong>Kanban-доска:</strong> Боль — не знаете на каком этапе какая сделка. Решение — все сделки на одном экране по стадиям, перетащили — стадия изменилась.</p>
+<p style="font-size:.82rem;color:#525252;line-height:1.65;margin-bottom:.5rem"><strong>Поле «Замерщик + дата замера»:</strong> Боль — замерщик забыл, клиент ждал, никто не приехал. Решение — выбрали замерщика и дату → событие автоматически в его Google Calendar → WhatsApp клиенту с подтверждением.</p>
+<p style="font-size:.82rem;color:#525252;line-height:1.65;margin-bottom:.5rem"><strong>Поле «Предоплата»:</strong> Боль — непонятно кто сколько должен. Решение — вводите сумму → остаток считается автоматически → запускается производство.</p>
+<p style="font-size:.88rem;font-weight:700;color:#1a1a1a;margin:.75rem 0 .4rem">Триггеры и автоматизации</p>
+<p style="font-size:.82rem;color:#525252;line-height:1.65;margin-bottom:.5rem"><strong>КП согласовано:</strong> Автоматически — задача цеху, задача закупщику, задача логисту, WhatsApp клиенту с суммой предоплаты.</p>
+<p style="font-size:.82rem;color:#525252;line-height:1.65;margin-bottom:.5rem"><strong>Предоплата внесена:</strong> Автоматически — задача «Старт производства» для цеха + WhatsApp клиенту.</p>
+<p style="font-size:.82rem;color:#525252;line-height:1.65;margin-bottom:.5rem"><strong>+180 дней:</strong> Автоматически — WhatsApp клиенту с предложением чистки штор + задача менеджеру позвонить.</p>
+<p style="font-size:.88rem;font-weight:700;color:#1a1a1a;margin:.75rem 0 .4rem">Финансы</p>
+<p style="font-size:.82rem;color:#525252;line-height:1.65;margin-bottom:.5rem">KPI в реальном времени, рахунки клиентам с PDF, регулярные платежи, P&L отчёт, AI-аналитик, планирование и cashflow прогноз.</p>
+<p style="font-size:.88rem;font-weight:700;color:#1a1a1a;margin:.75rem 0 .4rem">Склад</p>
+<p style="font-size:.82rem;color:#525252;line-height:1.65;margin-bottom:.5rem">Учёт остатков, три уровня тревоги (ok/low/critical), авто-задача закупщику при нехватке, авто-списание при закрытии сделки.</p>`,
+
+                homework: `<ol>
+<li>Знайдіть в CRM угоду і заповніть нові поля: філіал, адреса об'єкту, замірник і дата заміру</li>
+<li>Переконайтесь що замірник підключив Google Calendar (Інтеграції → Google Calendar)</li>
+<li>Перевірте чи є WhatsApp Business API ключ в Інтеграціях</li>
+<li>Відкрийте вкладку Фінанси → Dashboard → перевірте KPI поточного місяця</li>
+<li>Знайдіть хоча б один товар/матеріал і внесіть його в Склад з мінімальним залишком</li>
+</ol>`,
+
+                homework_en: `<ol>
+<li>Find a deal in CRM and fill in the new fields: branch, object address, measurer and measurement date</li>
+<li>Make sure the measurer has connected Google Calendar (Integrations → Google Calendar)</li>
+<li>Check if the WhatsApp Business API key is in Integrations</li>
+<li>Open Finance → Dashboard → check current month KPIs</li>
+<li>Find at least one product/material and add it to Warehouse with a minimum stock level</li>
+</ol>`,
+
+                homework_ru: `<ol>
+<li>Найдите сделку в CRM и заполните новые поля: филиал, адрес объекта, замерщик и дата замера</li>
+<li>Убедитесь что замерщик подключил Google Calendar (Интеграции → Google Calendar)</li>
+<li>Проверьте есть ли WhatsApp Business API ключ в Интеграциях</li>
+<li>Откройте Финансы → Dashboard → проверьте KPI текущего месяца</li>
+<li>Найдите хотя бы один товар/материал и внесите его на Склад с минимальным остатком</li>
+</ol>`,
+
+                homeworkLink: null,
+                homeworkLinkName: null,
+                time: 45
             }
         ];
 
