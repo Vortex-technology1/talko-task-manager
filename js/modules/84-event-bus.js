@@ -157,7 +157,7 @@ const _defaultAutomationRules = [
         condition: (e) => ['proposal',window.t('proposalWord')].includes(e.payload.toStage), // FIX BY: match by id OR label
         action: _actionCreateTask,
         actionParams: (e) => ({
-            title: `Підготувати КП для ${e.payload.clientName || e.payload.dealTitle}`,
+            title: `${window.t('prepareCP').replace('{V}', e.payload.clientName || e.payload.dealTitle)}`,
             deadlineOffset: '+2d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId,
@@ -173,7 +173,7 @@ const _defaultAutomationRules = [
         condition: (e) => ['closing','Закриття'].includes(e.payload.toStage), // FIX BY: match by id OR label
         action: _actionCreateTask,
         actionParams: (e) => ({
-            title: `Фінальний дзвінок: ${e.payload.clientName || e.payload.dealTitle}`,
+            title: `${window.t('finalCall').replace('{V}', e.payload.clientName || e.payload.dealTitle)}`,
             deadlineOffset: '+1d',
             dealId: e.payload.dealId,
             clientId: e.payload.clientId,
@@ -383,7 +383,7 @@ async function _actionCreateClientAndDeal(event, params = {}) {
         dealId,
         clientId,
         clientName: p.senderName || p.name || '',
-        dealTitle: `Лід: ${p.senderName || p.name || ''}`,
+        dealTitle: `${window.t('leadN').replace('{V}', p.senderName || p.name || '')}`,
         stage: firstStageId,
         assignedToId: p.assignedToId || currentUser?.uid,
         assignedToName: p.assignedToName || '',
@@ -476,7 +476,7 @@ async function _actionMarkDealWon(event) {
         db.collection(`companies/${companyId}/crm_deals/${dealId}/history`).doc(),
         {
             type: 'won',
-            note: invoiceId ? `Інвойс ${invoiceId} оплачено` : 'Угода позначена як виграна',
+            note: invoiceId ? `${window.t('invoicePaidN').replace('{V}', invoiceId)}` : 'Угода позначена як виграна',
             by: event.triggeredBy || 'system',
             byName: event.triggeredBy === 'user' ? currentUser?.displayName : 'TALKO System',
             at: now,

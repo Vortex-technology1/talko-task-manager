@@ -1420,7 +1420,7 @@
         });
 
         // Контекст метрик для чату
-        const contextText = 'Період: ' + (formatPeriodLabel ? formatPeriodLabel(pk) : pk) + '\n' +
+        const contextText = window.t('periodLabel') + ' ' + (formatPeriodLabel ? formatPeriodLabel(pk) : pk) + '\n' +
             md.map(m => '- ' + m.name + ': факт=' + m.value + ' ' + m.unit +
                 (m.target > 0 ? window.t('targetEq') + m.target + ' (' + Math.round(m.value / m.target * 100) + '%)' : '')
             ).join('\n');
@@ -1466,7 +1466,7 @@
     window.deleteStatsPeriodRow = async function(pk, freq) {
         if (!pk) return;
         const label = formatPeriodLabel ? formatPeriodLabel(pk) : pk;
-        if (!await showConfirmModal(`Видалити всі записи за ${label}?`, { danger: true })) return;
+        if (!await showConfirmModal(`${window.t('deleteAllPeriod2').replace('{V}', label)}`, { danger: true })) return;
         try {
             // Find all entries for this periodKey
             const toDelete = statsEntries.filter(e => e.periodKey === pk);
@@ -1479,7 +1479,7 @@
                 batch.delete(entriesRef().doc(e.id));
             });
             await batch.commit();
-            showToast(`Видалено ${toDelete.length} записів`, 'success');
+            showToast(`${window.t('deletedRecords2').replace('{V}', toDelete.length)}`, 'success');
             await renderStatistics();
         } catch (e) {
             console.error('[STATS] deleteStatsPeriodRow:', e);
@@ -2412,7 +2412,7 @@
     // Clear all stats data (admin only)
     window.clearAllStatsData = async function() {
         if (!currentCompany || !currentUser) return;
-        if (!await showConfirmModal('ВИДАЛИТИ ВСІ метрики, записи та цілі?\n\nЦя дія незворотна — відновлення неможливе.', { danger: true })) return;
+        if (!await showConfirmModal(window.t('deleteAllMetrics2') + '\n\n' + window.t('irreversible')||'Ця дія незворотна — відновлення неможливе.', { danger: true })) return;
 
         showToast('Видаляю...', 'info');
         try {

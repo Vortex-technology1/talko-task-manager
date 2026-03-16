@@ -415,13 +415,13 @@ async function loadAppointments(calendarId) {
         const appts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
         if (appts.length === 0) {
-            wrap.innerHTML = '<div class="bk-empty">Записів немає</div>';
+            wrap.innerHTML = '<div class="bk-empty">' + window.t('noRecords4') + '</div>';
             return;
         }
 
         const STATUS_LABELS = {
-            pending:   '<span class="bk-badge bk-badge-yellow">Очікує</span>',
-            confirmed: '<span class="bk-badge bk-badge-green">Підтверджено</span>',
+            pending:   '<span class="bk-badge bk-badge-yellow">' + window.t('pendingWord3') + '</span>',
+            confirmed: '<span class="bk-badge bk-badge-green">' + window.t('confirmedWord3') + '</span>',
             cancelled: '<span class="bk-badge bk-badge-red">Скасовано</span>',
             completed: '<span class="bk-badge bk-badge-gray">Завершено</span>',
             no_show:   '<span class="bk-badge bk-badge-red">Не з\'явився</span>',

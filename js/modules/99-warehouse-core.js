@@ -266,7 +266,7 @@
       else if (type === 'WRITE_OFF') newQty = prevQty - qty;
       else if (type === 'ADJUST')    newQty = qty;
 
-      if (newQty < 0) throw new Error(`Недостатньо на складі: ${item.name} (є ${prevQty}, потрібно ${qty})`);
+      if (newQty < 0) throw new Error(`${window.t('notEnoughStock2').replace('{V}',item.name).replace('{V}',prevQty).replace('{V}',qty)}`);
 
       tx.set(stockRef, {
         itemId, qty: newQty,
@@ -407,7 +407,7 @@
       const today = now.toISOString().slice(0, 10);
       const taskData = {
         title: `Замовити: ${item.name}`,
-        description: `Залишок на складі: ${window.whGetStock(item.id).qty} ${item.unit || 'шт'}. Мінімум: ${item.minStock}`,
+        description: `${window.t('stockBalance2').replace('{V}',window.whGetStock(item.id).qty).replace('{V}',item.unit||'шт').replace('{V}',item.minStock)}`,
         status: 'new',
         priority: 'high',
         source: 'warehouse_alert',

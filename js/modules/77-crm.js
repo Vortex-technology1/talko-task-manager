@@ -2742,7 +2742,7 @@ window.crmRunAI = async function(dealId) {
     const deal    = crm.deals.find(d => d.id === dealId);
     if (!deal) { crm._aiRunning = null; return; }
     const contentEl = document.getElementById('crmDealContent');
-    if (contentEl) contentEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#6b7280;font-size:0.82rem;">Аналізую угоду...</div>';
+    if (contentEl) contentEl.innerHTML = '<div style="text-align:center;padding:2rem;color:#6b7280;font-size:0.82rem;">'+window.t('analyzingDeal2')+'</div>';
     try {
         // ── Отримуємо Firebase ID token (ніколи не передаємо API key у браузері) ──
         const idToken = await firebase.auth().currentUser?.getIdToken();

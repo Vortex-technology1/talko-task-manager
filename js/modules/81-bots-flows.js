@@ -542,8 +542,8 @@
                 ? _pipeStages.map(s => `<option value="${s.id}" ${(node.dealStage||'new')===s.id?'selected':''}>${s.label || s.name || s.id}</option>`).join('')
                 : `<option value="new" selected>${window.t('newLeadStage')}</option>`;
             const _stageHint = _pipeStages.length === 0
-                ? `<div style="font-size:0.72rem;color:#f59e0b;margin-top:2px;">⚠️ Відкрийте вкладку CRM для завантаження стадій</div>`
-                : `<div style="font-size:0.7rem;color:#9ca3af;margin-top:2px;">${_pipeStages.length} стадій завантажено</div>`;
+                ? `<div style="font-size:0.72rem;color:#f59e0b;margin-top:2px;">${window.t('openCRMForStages')}</div>`
+                : `<div style="font-size:0.7rem;color:#9ca3af;margin-top:2px;">${window.t('stagesLoadedN').replace('{V}', _pipeStages.length)}</div>`;
             specific = field(window.t('botsFieldDealName')) + input(node.dealTitle||'', `updateNode('${nodeId}','dealTitle',this.value)`, '{contact.name} — запит з боту') +
                 field(window.t('botsFieldStage')) +
                 `<select onchange="updateNode('${nodeId}','dealStage',this.value)"
@@ -599,7 +599,7 @@
         const node = botsFlowNodes.find(n => n.id === nodeId);
         if (!node) return;
         if (!node.options) node.options = [];
-        node.options.push({ text: 'Варіант ' + (node.options.length + 1), nextNode: null });
+        node.options.push({ text: window.t('variantWord3') + ' ' + (node.options.length + 1), nextNode: null });
         renderNodeEditor(nodeId); renderBotsNodesList();
     };
     window.updateNodeOpt = function (nodeId, idx, field, value) {
@@ -652,7 +652,7 @@
                                 <div style="font-size:0.75rem;color:#6b7280;">${flow?.name || s.flowId || ''} · ${s.currentNodeId || window.t('botsNode0')}</div>
                             </div>
                             <div style="font-size:0.72rem;color:#9ca3af;">${s.lastActivity?.toDate ? relTime(s.lastActivity.toDate()) : ''}</div>
-                            ${s.status === 'waiting_human' ? `<button onclick="resolveHumanSession('${s.id}')" style="padding:0.3rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;">Вирішити</button>` : ''}
+                            ${s.status === 'waiting_human' ? `<button onclick="resolveHumanSession('${s.id}')" style="padding:0.3rem 0.6rem;background:#22c55e;color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.75rem;">${window.t('resolveWord2')}</button>` : ''}
                         </div>`;
                     }).join('')}
                 </div>`}`;
@@ -688,8 +688,8 @@
             const channelStatus = (ch) => {
                 const ok = integrations[ch]?.connected;
                 return ok
-                    ? `<span style="color:#22c55e;font-size:0.78rem;font-weight:600;">● Підключено</span>`
-                    : `<span style="color:#9ca3af;font-size:0.78rem;">○ Не підключено</span>`;
+                    ? `<span style="color:#22c55e;font-size:0.78rem;font-weight:600;">${window.t('dotConn2')}</span>`
+                    : `<span style="color:#9ca3af;font-size:0.78rem;">${window.t('dotNotConn2')}</span>`;
             };
 
         container.innerHTML = `
@@ -907,7 +907,7 @@
                 await compRef.collection('bots').doc(botsCurrentBotId).update({ token, botName, webhookUrl });
             }
 
-            if (typeof showToast === 'function') showToast(`Telegram @${botName} підключено!`, 'success');
+            if (typeof showToast === 'function') showToast(`${window.t('telegramConnected').replace('{V}', botName)}`, 'success');
             renderBotsSettingsView();
         } catch(e) {
             if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
@@ -931,7 +931,7 @@
                 [`integrations.${channel}.connected`]: true,
                 [`integrations.${channel}.connectedAt`]: firebase.firestore.FieldValue.serverTimestamp(),
             });
-            if (typeof showToast === 'function') showToast(`${channel} підключено! Додайте Webhook URL в Meta Console.`, 'success');
+            if (typeof showToast === 'function') showToast(`${window.t('connectedAddWebhook').replace('{V}', channel)}`, 'success');
             renderBotsSettingsView();
         } catch(e) {
             if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');
@@ -940,12 +940,12 @@
 
     // ── Disconnect Channel ────────────────────────────────────
     window.botsDisconnectChannel = async function(channel) {
-        if (!(await (window.showConfirmModal ? showConfirmModal(`Відключити ${channel}?`,{danger:true}) : Promise.resolve(confirm(`Відключити ${channel}?`))))) return;
+        if (!(await (window.showConfirmModal ? showConfirmModal(`${window.t('disconnectQ').replace('{V}', channel)}`,{danger:true}) : Promise.resolve(confirm(`${window.t('disconnectQ').replace('{V}', channel)}`))))) return;
         try {
             await firebase.firestore().collection('companies').doc(window.currentCompanyId).update({
                 [`integrations.${channel}.connected`]: false,
             });
-            if (typeof showToast === 'function') showToast(`${channel} відключено`, 'success');
+            if (typeof showToast === 'function') showToast(`${window.t('disconnectedN').replace('{V}', channel)}`, 'success');
             renderBotsSettingsView();
         } catch(e) {
             if (typeof showToast === 'function') showToast(window.t('errPfx2') + e.message, 'error');

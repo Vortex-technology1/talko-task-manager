@@ -137,7 +137,7 @@
             timerInterval = setInterval(() => updateTimerDisplay(taskId), 1000);
 
             typeof showToast === 'function' && showToast(
-                `⏱ Таймер відновлено: ${task.title.slice(0, 30)}`, 'info'
+                `${window.t('timerResumed').replace('{V}', task.title.slice(0, 30))}`, 'info'
             );
         } catch(e) {
             try { localStorage.removeItem('talko_activeTimer'); } catch(e2) {}

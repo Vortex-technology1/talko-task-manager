@@ -317,7 +317,7 @@
         const step = funnelSteps.find(s => s.id === stepId);
         if (!step) return;
         if (!step.options) step.options = [];
-        step.options.push({ text: 'Варіант ' + (step.options.length + 1), nextStep: null });
+        step.options.push({ text: window.t('variantWord3') + ' ' + (step.options.length + 1), nextStep: null });
         renderStepEditor(stepId);
         renderFunnelStepsList();
     };
@@ -346,8 +346,8 @@
         });
         if (invalid.length > 0) {
             const names = invalid.map(s => s.name || s.type).join(', ');
-            if (window.showToast) showToast(`Заповніть обов'язкові поля: ${names}`, 'warning');
-            else if (typeof showToast === 'function') showToast(`Заповніть обов'язкові поля: ${names}`, 'warning');
+            if (window.showToast) showToast(`${window.t('fillRequired2').replace('{V}', names)}`, 'warning');
+            else if (typeof showToast === 'function') showToast(`${window.t('fillRequired2').replace('{V}', names)}`, 'warning');
             return;
         }
         try {
@@ -564,7 +564,7 @@
                 const json = await response.json();
                 return json.response || 'Вибачте, спробуйте ще раз.';
             } catch (e) {
-                return 'Вибачте, наразі не можу відповісти. Менеджер зв\'яжеться з вами.';
+                return window.t('sorryTryLater');
             }
         }
 

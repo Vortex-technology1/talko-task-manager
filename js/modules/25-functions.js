@@ -377,6 +377,6 @@
             if (typeof window._renderProjectFinance === 'function') {
                 window._renderProjectFinance(null, el, { mode: 'function', id: funcId });
             } else {
-                el.innerHTML = '<div style="color:#ef4444;padding:0.5rem;font-size:0.82rem;">Фінансовий модуль не завантажено</div>';
+                el.innerHTML = '<div style="color:#ef4444;padding:0.5rem;font-size:0.82rem;">' + window.t('finModuleNotLoaded2') + '</div>';
             }
         }

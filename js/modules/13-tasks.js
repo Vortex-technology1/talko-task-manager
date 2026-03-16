@@ -199,7 +199,7 @@
                             const label = document.getElementById('taskActionsLabel');
                             const btns = document.getElementById('taskActionsButtons');
                             label.innerHTML = '<i data-lucide="clock" class="icon icon-sm" style="color:#d97706;"></i> <span style="color:#d97706;">Завдання на перевірці у керівника</span>';
-                            btns.innerHTML = '<p style="font-size:0.85rem;color:#92400e;margin:0;">Очікуйте підтвердження або зауваження</p>';
+                            btns.innerHTML = '<p style="font-size:0.85rem;color:#92400e;margin:0;">' + window.t('awaitConfirmNote') + '</p>';
                             refreshIcons();
                         } else if (canManage && task.status === 'done') {
                             reviewActions.style.display = 'block';

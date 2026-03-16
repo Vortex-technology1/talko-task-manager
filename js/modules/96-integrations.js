@@ -718,7 +718,7 @@ window.intgTrackNP = async function() {
                     <div style="font-weight:700;color:${statusColor};margin-bottom:0.25rem;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>${d.Status || '—'}</div>
                     <div style="color:#374151;">ТТН: <b>${ttn}</b></div>
                     ${d.RecipientFullName ? `<div style="color:#6b7280;">Отримувач: ${d.RecipientFullName}</div>` : ''}
-                    ${d.CityRecipient ? `<div style="color:#6b7280;">Місто: ${d.CityRecipient}</div>` : ''}
+                    ${d.CityRecipient ? `<div style="color:#6b7280;">${window.t('cityLabel').replace('{V}', d.CityRecipient)}</div>` : ''}
                     ${d.ScheduledDeliveryDate ? `<div style="color:#6b7280;">Дата доставки: ${d.ScheduledDeliveryDate}</div>` : ''}
                     ${d.WarehouseRecipient ? `<div style="color:#6b7280;font-size:0.72rem;">${d.WarehouseRecipient}</div>` : ''}
                 </div>`;

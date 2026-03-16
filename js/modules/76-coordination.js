@@ -419,7 +419,7 @@
           </div>
           <div style="font-size:.77rem;color:#6b7280;margin-bottom:.55rem;">
             Голова: <strong style="color:#374151;">${esc(chairName)}</strong>
-            ${hasEscalated?`<span style="margin-left:.4rem;color:#9ca3af;font-size:.7rem;">↑ ескалація</span>`:''}
+            ${hasEscalated?`<span style="margin-left:.4rem;color:#9ca3af;font-size:.7rem;">${window.t('escalationArrow2')}</span>`:''}
           </div>
           <div style="display:flex;gap:.4rem;">
             <button onclick="startCoordSession('${c.id}')" class="btn btn-success" style="flex:1;padding:.35rem;font-size:.78rem;border-radius:9px;">
@@ -1053,7 +1053,7 @@
                     const existing=escalCoord?.dynamicAgenda||[];
                     await col('coordinations').doc(escalId).update({
                         dynamicAgenda:[...existing,...sessionUnresolved.map(u=>({
-                            text:`[Ескалація з "${c.name}"] ${u.text}`,
+                            text:`${window.t('escalationFrom').replace('{V}', c.name).replace('{V}', u.text)}`,
                             authorId:uid(),addedAt:nowISO(),escalatedFrom:activeSession.coordId
                         }))]
                     });

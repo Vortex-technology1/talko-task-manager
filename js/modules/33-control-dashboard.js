@@ -122,7 +122,7 @@
             if (activeCard) { activeCard.style.outline = '3px solid rgba(255,255,255,0.7)'; activeCard.style.outlineOffset = '-3px'; }
 
             if (filtered.length === 0) {
-                content.innerHTML = `<div style="padding:2rem;text-align:center;color:#9ca3af;">${title} — завдань немає</div>`;
+                content.innerHTML = `<div style="padding:2rem;text-align:center;color:#9ca3af;">${title} — ${window.t('noTasksInGroup')}</div>`;
                 return;
             }
 

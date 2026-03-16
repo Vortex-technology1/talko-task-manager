@@ -1357,7 +1357,7 @@ window.ctsExportCSV = async function() {
         const a = document.createElement('a');
         a.href = url; a.download = `contacts_${new Date().toISOString().slice(0,10)}.csv`;
         a.click(); URL.revokeObjectURL(url);
-        if (typeof showToast === 'function') showToast(`Експортовано ${rows.length} контактів`, 'success');
+        if (typeof showToast === 'function') showToast(`${window.t('exportedContacts').replace('{V}', rows.length)}`, 'success');
     } catch(e) {
         if (typeof showToast === 'function') showToast(window.t('errPrefix') + e.message, 'error');
     }
@@ -1428,7 +1428,7 @@ function _ctsUpdateCounter(loaded) {
     const el = document.getElementById('ctsCounter');
     if (el) {
         const total = cts.items.length;
-        el.textContent = `Показано: ${total}${cts.hasMore ? '+' : ''} контактів`;
+        el.textContent = `${window.t('shownContactsN').replace('{V}', total).replace('{V}', cts.hasMore ? '+' : '')}`;
     }
 }
 
@@ -2261,7 +2261,7 @@ window.bcastPreview = async function() {
             ${count === 1000 ? '<span style="color:#f97316;"> (показано перші 1000)</span>' : ''}`;
     } catch(e) {
         box.style.display = '';
-        box.innerHTML = `<span style="color:#9ca3af;">Не вдалось порахувати аудиторію</span>`;
+        box.innerHTML = `<span style="color:#9ca3af;">${window.t('cantCountAudience')}</span>`;
     }
 };
 
@@ -2324,7 +2324,7 @@ window.bpSendBroadcast = async function() {
     const _bcastMins = Math.ceil(targets.length / 25 / 60);
     const _bcastMsg = targets.length > 100
         ? `Надіслати розсилку ${targets.length} контактам?\n\n⚠️ Орієнтовний час: ~${_bcastMins} хв.\nНЕ закривайте вкладку до завершення!`
-        : `Надіслати розсилку ${targets.length} контактам?`;
+        : `${window.t('sendBroadcastN').replace('{V}', targets.length)}`;
     if (!(await (window.showConfirmModal ? showConfirmModal(_bcastMsg) : Promise.resolve(confirm(_bcastMsg))))) return;
 
     // Отримуємо токен бота
@@ -2798,7 +2798,7 @@ window.bpReinstallWebhook = async function(botId) {
 
     const bot = bp.bots.find(b => b.id === botId);
     if (!bot?.token) {
-        if (result) result.innerHTML = `<div style="color:#ef4444;">Спочатку введіть токен</div>`;
+        if (result) result.innerHTML = `<div style="color:#ef4444;">${window.t('enterTokenFirst')}</div>`;
         if (btn) { btn.textContent = window.t('botsReinstallWebhook'); btn.disabled = false; }
         return;
     }

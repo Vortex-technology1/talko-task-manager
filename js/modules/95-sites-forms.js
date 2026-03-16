@@ -456,7 +456,7 @@ window.sfOpenSubmissions = async function (formId) {
 
 // ── Видалення форми ────────────────────────────────────────
 window.sfDelete = async function (formId, name) {
-    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити форму "' + name + '"?\nВсі заявки будуть видалені.',{danger:true}) : Promise.resolve(confirm('Видалити форму "' + name + '"?\nВсі заявки будуть видалені.'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити форму "' + name + '"?\n' + window.t('allSubmissionsDeleted'),{danger:true}) : Promise.resolve(confirm('Видалити форму "' + name + '"?\n' + window.t('allSubmissionsDeleted')))))) return;
     try {
         await window.companyRef()
             .collection(window.DB_COLS.SITES).doc(sf.siteId)

@@ -90,7 +90,7 @@ window.crmImportDownloadTemplate = function () {
 window.crmImportHandleFile = async function (file) {
     if (!file) return;
     const body = document.getElementById('crmImportBody');
-    body.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;">Читаємо файл...</div>';
+    body.innerHTML = '<div style="text-align:center;padding:2rem;color:#9ca3af;">' + window.t('readingFile3') + '</div>';
 
     try {
         let rows = [];

@@ -232,14 +232,14 @@
                     e.preventDefault();
                     if (typeof showAlertModal === 'function') {
                         showAlertModal(
-                            '<b>⌨️ Гарячі клавіші</b><br><br>' +
+                            '<b>' + window.t('hotkeysTitle') + '</b><br><br>' +
                             '<b>Ctrl+K</b> — глобальний пошук<br>' +
                             '<b>Ctrl+N</b> — нове завдання<br>' +
                             '<b>Ctrl+S</b> — заблоковано (збереження форми)<br>' +
                             '<b>1–5</b> — перемикання вкладок<br>' +
                             '<b>Escape</b> — закрити модалку<br>' +
                             '<b>/</b> — пошук у списку завдань<br>' +
-                            '<b>?</b> — ця довідка'
+                            '<b>?</b> ' + window.t('thisHelp')
                         );
                     }
                     break;

@@ -18,7 +18,7 @@
                 
                 if (companiesSnap.empty) {
                     if (!container) return;
-                    container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:2rem;">Компаній ще немає</p>';
+                    container.innerHTML = '<p style="color:var(--gray);text-align:center;padding:2rem;">' + window.t('noCompanies2') + '</p>';
                     return;
                 }
                 

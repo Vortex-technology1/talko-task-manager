@@ -356,7 +356,7 @@ function renderAREntries(entries, content) {
                     <span style="font-size:0.8rem;color:#374151;">${label}</span>
                     ${detail ? `<span style="font-size:0.76rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;" title="${_arEsc(detail)}">${_arEsc(detail)}</span>` : ''}
                 </div>
-                ${meta.clientName ? `<div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">Клієнт: ${_arEsc(meta.clientName)}</div>` : ''}
+                ${meta.clientName ? `<div style="font-size:0.7rem;color:#9ca3af;margin-top:1px;">${window.t('clientLabel').replace('{V}',_arEsc(meta.clientName))}</div>` : ''}
             </div>
             <span style="font-size:0.68rem;color:#9ca3af;flex-shrink:0;padding-top:2px;">${time}</span>
         </div>`;

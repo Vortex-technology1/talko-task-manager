@@ -84,7 +84,7 @@
             let msg = s.total > 0 
                 ? (window.t('deleteProjectWithTasks')).replace('{total}', s.total).replace('{undone}', s.total - s.done)
                 : (window.t('deleteEmptyProject'));
-            if (stageCount > 0) msg += `\n\nТакож буде видалено ${stageCount} етапів та пов'язані матеріали.`;
+            if (stageCount > 0) msg += `\n\n${window.t('deleteStagesAlso2').replace('{V}', stageCount)}`;
             if (!await showConfirmModal(msg, { danger: true })) return;
             try {
                 const base = window.companyRef();
@@ -126,8 +126,8 @@
                 renderProjects();
                 updateProjectSelects();
                 let msg2 = '';
-                if (orphaned.length > 0) msg2 += orphaned.length + ' задач відв\'язано. ';
-                if (pStages.length > 0) msg2 += pStages.length + ' етапів видалено. ';
+                if (orphaned.length > 0) msg2 += orphaned.length + ' ' + (window.t('tasksUnlinked2')||'задач відвязано.') + ' ';
+                if (pStages.length > 0) msg2 += pStages.length + ' ' + (window.t('stagesDeleted2')||'етапів видалено.') + ' ';
                 if (msg2) showToast(msg2, 'info');
             } catch (err) {
                 console.error('[Projects] Delete error:', err);

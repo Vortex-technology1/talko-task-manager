@@ -78,7 +78,7 @@
     window.bulkDelete = async function() {
         if (selectedTaskIds.size === 0) return;
         const confirmed = await showConfirmModal(
-            `Видалити ${selectedTaskIds.size} завдань? Дію не можна скасувати.`,
+            `${window.t('deleteNTasks').replace('{V}', selectedTaskIds.size)}`,
             { danger: true }
         );
         if (!confirmed) return;
@@ -94,7 +94,7 @@
         });
         const skipped = ids.length - deletableIds.length;
         if (skipped > 0) {
-            showToast(`Пропущено ${skipped} завдань — немає прав на видалення`, 'warning');
+            showToast(`${window.t('skippedNoPermDelete').replace('{V}', skipped)}`, 'warning');
         }
         if (deletableIds.length === 0) return;
 
@@ -104,7 +104,7 @@
             .map(t => t.id);
         const allDeleteIds = [...new Set([...deletableIds, ...subtaskIds])];
         if (subtaskIds.length > 0) {
-            showToast && showToast(`Також видаляємо ${subtaskIds.length} підзадач`, 'info');
+            showToast && showToast(`${window.t('alsoDeleteSubs').replace('{V}', subtaskIds.length)}`, 'info');
         }
 
         let deleted = 0;
@@ -179,7 +179,7 @@
             return task && (typeof canEditTask === 'function' ? canEditTask(task) : true);
         });
         if (editableIds.length < ids.length) {
-            showToast(`Пропущено ${ids.length - editableIds.length} завдань — немає прав на редагування`, 'warning');
+            showToast(`${window.t('skippedNoPermEdit').replace('{V}', ids.length - editableIds.length)}`, 'warning');
         }
         if (editableIds.length === 0) return;
 
@@ -241,7 +241,7 @@
         clone.coExecutorIds = [];
         clone.observerIds = [];
 
-        clone.title = `${orig.title} (копія)`;
+        clone.title = `${orig.title} (${window.t('copyLabelN').replace('{V}','').trim()||'копія'})`;
         clone.status = 'new';
         // FIX 9: reset checklist so clone starts fresh
         if (Array.isArray(clone.checklist)) {
@@ -271,7 +271,7 @@
             // Відкриваємо копію для редагування
             setTimeout(() => openTaskModal(ref.id), 300);
         } catch(err) {
-            showAlertModal('Помилка копіювання: ' + err.message);
+            showAlertModal(window.t('copyError') + ' ' + err.message);
         }
     };
 

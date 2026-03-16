@@ -234,7 +234,7 @@
               ${alertsList.length > 0 ? `<span style="font-size:0.75rem;color:#ef4444;font-weight:700;">${alertsList.length}</span>` : ''}
             </div>
             ${alertsList.length === 0
-              ? `<p style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:0.75rem;">✓ Всі залишки в нормі</p>`
+              ? `<p style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:0.75rem;">${window.t('allStockOk3')}</p>`
               : alertsList.slice(0, 8).map(a => `
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f9fafb;font-size:0.82rem;">
                   <div style="display:flex;align-items:center;gap:0.4rem;min-width:0;">
@@ -257,7 +257,7 @@
               Топ-5 по вартості
             </div>
             ${top5.length === 0
-              ? `<p style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:0.75rem;">Немає даних</p>`
+              ? `<p style="color:#9ca3af;font-size:0.82rem;text-align:center;padding:0.75rem;">${window.t('noDataWord')}</p>`
               : top5.map((x, i) => {
                   const pct = top5[0].val > 0 ? Math.round(x.val / top5[0].val * 100) : 0;
                   return `
@@ -358,7 +358,7 @@
               <button onclick="window.whOpenItemForm()" style="padding:0.45rem 1rem;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.85rem;">
                 + Додати перший товар
               </button>
-            ` : '<p style="color:#9ca3af;margin:0;">Нічого не знайдено</p>'}
+            ` : '<p style="color:#9ca3af;margin:0;">' + window.t('nothingFound2') + '</p>'}
           </div>
         ` : `
           <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.07);">

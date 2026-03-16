@@ -232,7 +232,7 @@ function _renderBlockList() {
     if (!c) return;
 
     if (!sb.blocks.length) {
-        c.innerHTML = '<div style="font-size:0.75rem;color:#9ca3af;text-align:center;padding:0.5rem;">Блоків немає</div>';
+        c.innerHTML = '<div style="font-size:0.75rem;color:#9ca3af;text-align:center;padding:0.5rem;">' + window.t('noBlocks4') + '</div>';
         return;
     }
 
@@ -587,8 +587,8 @@ function _renderPreview() {
         if (block.type === 'html') {
             if (!block.rawHtml) {
                 return wrapper('<div style="padding:1.5rem;text-align:center;background:#faf5ff;border:2px dashed #c4b5fd;">'
-                    + '<div style="font-size:0.8rem;font-weight:600;color:#8b5cf6;">HTML блок (порожній)</div>'
-                    + '<div style="font-size:0.7rem;color:#9ca3af;margin-top:4px;">Вставте HTML у лівій панелі</div>'
+                    + '<div style="font-size:0.8rem;font-weight:600;color:#8b5cf6;">' + window.t('htmlEmpty2') + '</div>'
+                    + '<div style="font-size:0.7rem;color:#9ca3af;margin-top:4px;">' + window.t('insertHTMLLeft') + '</div>'
                     + '</div>');
             }
             // sandbox: allow-scripts для preview але ізольовано від parent

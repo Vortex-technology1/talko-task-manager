@@ -15,7 +15,7 @@ window.crmRenderFormsSettings = async function () {
     if (!c) return;
 
     if (!window.crmAccess?.canViewAll()) {
-        c.innerHTML = '<div style="padding:1rem;color:#9ca3af;font-size:0.82rem;">Доступ тільки для власника</div>';
+        c.innerHTML = '<div style="padding:1rem;color:#9ca3af;font-size:0.82rem;">' + window.t('ownerOnlyAccess2') + '</div>';
         return;
     }
 

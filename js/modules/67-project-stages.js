@@ -304,7 +304,7 @@
                         <div style="display:flex;align-items:center;gap:0.5rem;">
                             <span style="font-weight:700;font-size:0.88rem;">${i + 1}. ${esc(stage.name)}</span>
                             <span style="font-size:0.68rem;padding:2px 8px;border-radius:6px;background:${color}20;color:${color};font-weight:600;">${label}</span>
-                            ${stage.blockedReason === 'materials' ? '<span style="font-size:0.65rem;padding:2px 6px;border-radius:6px;background:#fee2e2;color:#dc2626;">Матеріали!</span>' : ''}
+                            ${stage.blockedReason === 'materials' ? '<span style="font-size:0.65rem;padding:2px 6px;border-radius:6px;background:#fee2e2;color:#dc2626;">' + window.t('materialsAlert2') + '</span>' : ''}
                         </div>
                         <div style="display:flex;gap:0.75rem;font-size:0.72rem;color:#9ca3af;margin-top:4px;">
                             ${func ? `<span>Функція: <strong style="color:#6b7280;">${esc(func.name)}</strong></span>` : ''}
@@ -388,7 +388,7 @@
         };
 
         if (mats.length === 0) {
-            return '<div style="text-align:center;color:#d1d5db;font-size:0.8rem;padding:1rem;">Матеріалів немає</div>';
+            return '<div style="text-align:center;color:#d1d5db;font-size:0.8rem;padding:1rem;">'+window.t('noMaterials2')+'</div>';
         }
 
         return mats.map(m => {

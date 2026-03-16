@@ -46,7 +46,7 @@
                 const proceed = await showConfirmModal(
                     window.t('telegramConnectTitle')+'\n\n' +
                     '1. '+window.t('telegramConnectStep1')+'\n' +
-                    '2. Натисніть "Start" або "Запустити"\n' +
+                    window.t('pressStart') + '\n' +
                     '3. '+window.t('telegramConnectStep3')+'\n\n' +
                     window.t('telegramOpenConfirm')
                 );
@@ -365,7 +365,7 @@
                 // Синхронізуємо input з очищеним значенням
                 const el = document.getElementById('profileExtension');
                 if (el) el.value = val;
-                if (typeof showToast === 'function') showToast(val ? `Внутрішній номер ${val} збережено` : 'Номер видалено', 'success');
+                if (typeof showToast === 'function') showToast(val ? `${window.t('extensionSaved').replace('{V}', val)}` : 'Номер видалено', 'success');
             } catch(e) {
                 if (typeof showToast === 'function') showToast('Помилка: ' + e.message, 'error');
             } finally {

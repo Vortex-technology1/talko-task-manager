@@ -115,7 +115,7 @@
                 .sort((a, b) => b[1].total - a[1].total);
 
             if (!rows.length) {
-                container.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">Немає даних трекінгу часу</div>';
+                container.innerHTML = '<div style="text-align:center;color:#9ca3af;padding:2rem;">' + window.t('noTimeData') + '</div>';
                 return;
             }
 

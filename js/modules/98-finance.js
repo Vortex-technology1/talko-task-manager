@@ -3185,14 +3185,14 @@ function _renderPnl(el, txs, currency, from, to) {
         <span>${window.t('finIncome').toUpperCase()}</span><span>${fmt(totalInc, currency)}</span>
       </div>
       ${incCats.filter(c => byIncCat[c.id]).map(c => catRow(c, byIncCat[c.id] || 0, '#22c55e')).join('')}
-      ${!incCats.filter(c => byIncCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає доходів</div>' : ''}
+      ${!incCats.filter(c => byIncCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">' + window.t('finNoIncome2') + '</div>' : ''}
 
       <!-- Витрати -->
       <div style="background:#fef2f2;padding:8px 14px;font-size:0.75rem;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;margin-top:4px;">
         <span>${window.t('finExpense').toUpperCase()}</span><span>${fmt(totalExp, currency)}</span>
       </div>
       ${expCats.filter(c => byExpCat[c.id]).map(c => catRow(c, byExpCat[c.id] || 0, '#ef4444')).join('')}
-      ${!expCats.filter(c => byExpCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">Немає витрат</div>' : ''}
+      ${!expCats.filter(c => byExpCat[c.id]).length ? '<div style="padding:10px 14px;font-size:0.82rem;color:#9ca3af;">' + window.t('finNoExpenses3') + '</div>' : ''}
 
       <!-- Підсумок -->
       <div style="background:#1f2937;color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">

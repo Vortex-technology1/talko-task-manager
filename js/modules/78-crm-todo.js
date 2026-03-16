@@ -539,7 +539,7 @@ window._crmTodoSave = async function(dealId) {
             if (selectedStage && selectedStage !== currentDeal?.stage) {
                 const stages = (window.crm?.pipeline?.stages||[]);
                 const newStageLbl = stages.find(s=>s.id===selectedStage)?.label || selectedStage;
-                hist.type='stage_changed'; hist.text=`Стадія змінена на: ${newStageLbl}`;
+                hist.type='stage_changed'; hist.text=`${window.t('stageChanged2').replace('{V}', newStageLbl)}`;
             } else {
                 hist.type='contact_updated'; hist.text='Контакт заплановано на: '+nextDate;
             }
@@ -680,5 +680,5 @@ window._crmTodoAddTestDeals = async function() {
             count++;
         } catch(e) { console.error('seed error', e); }
     }
-    if (window.showToast) showToast(`Додано ${count} тестових лідів`, 'success');
+    if (window.showToast) showToast(`${window.t('testLeadsAdded').replace('{V}', count)}`, 'success');
 };

@@ -595,7 +595,7 @@ window.sitesTogglePublish = async function (siteId, currentStatus) {
 };
 
 window.sitesDelete = async function (siteId, name) {
-    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити сайт "' + name + '"?\nВсі блоки та форми будуть видалені.',{danger:true}) : Promise.resolve(confirm('Видалити сайт "' + name + '"?\nВсі блоки та форми будуть видалені.'))))) return;
+    if (!(await (window.showConfirmModal ? showConfirmModal('Видалити сайт "' + name + '"?\n' + window.t('allBlocksDeleted'),{danger:true}) : Promise.resolve(confirm('Видалити сайт "' + name + '"?\n' + window.t('allBlocksDeleted')))))) return;
     try {
         // FIX 7: delete HTML from Firebase Storage if path exists
         const siteDoc = sl.sites.find(s => s.id === siteId);
