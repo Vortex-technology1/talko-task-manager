@@ -346,6 +346,36 @@ const OB_STEPS = [
     tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Навіть простий бот що відповідає і передає контакт в CRM — вже краще ніж нічого.'
 },
 
+
+{
+    id: 'warehouse', block: 'business', color: '#6366f1',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8.5V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.5"/><path d="M22 8.5H2"/><path d="M10 12h4"/><rect x="2" y="2" width="20" height="6.5" rx="1"/></svg>',
+    title: 'Склад: облік товарів і матеріалів', subtitle: 'Блок 8 · Бізнес', est: '10 хв',
+    description: '<b>Біль без цього:</b> матеріали списуються «на глаз», склад з\'являється в голові одного менеджера, інвентаризація — раз на рік.<br><br><b>Каталог товарів</b> — кожна позиція з артикулом, одиницею виміру, мінімальним запасом.<br><b>Рух матеріалів:</b> Прихід, Видача, Списання, Коригування.<br><b>Алерти</b> — система сповіщає коли залишок нижче мінімуму.<br><br><b>Де знайти:</b> Бізнес → Склад.<br><br>' + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m22 2-7 20-4-9-9-4 20-7z\"/><path d=\"M22 2 11 13\"/></svg> Запитати AI-асистента</a>',
+    tasks: [
+        { id:'wh1', text:'Відкрити Бізнес → Склад', detail:'Вкладка «Склад» доступна в меню Бізнес.' },
+        { id:'wh2', text:'Додати 2-3 товари в каталог', detail:'«+ Додати товар» → назва, SKU, одиниця, мінімальний запас.' },
+        { id:'wh3', text:'Зробити операцію «Прихід» для одного товару', detail:'Операції → «Прихід» → обрати товар → вказати кількість і постачальника.' },
+        { id:'wh4', text:'Переглянути дашборд складу — алерти і залишки', detail:'Дашборд → перевірте чи є алерти по мінімальному запасу.' },
+    ],
+    action: { label:'Відкрити склад', tab:'warehouse' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Встановіть мінімальний запас для критичних матеріалів — система буде попереджати автоматично.',
+},
+{
+    id: 'booking', block: 'business', color: '#0ea5e9',
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>',
+    title: 'Бронювання: онлайн-запис клієнтів', subtitle: 'Блок 8 · Бізнес', est: '10 хв',
+    description: '<b>Біль без цього:</b> клієнти пишуть в Direct щоб записатись, менеджер переносить в таблицю, конфлікти часу, ручне підтвердження.<br><br><b>Бронювання</b> — власний Calendly всередині TALKO:<br>• Налаштуйте послуги і тривалість<br>• Вкажіть робочі дні і години<br>• Отримайте публічне посилання для запису<br>• Заявки автоматично в системі<br><br><b>Де знайти:</b> Бізнес → Бронювання.<br><br>' + '<a href="https://chatgpt.com/g/g-69382bfa841881918aff7b50aa25a4f9-talko-task-manager-support" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#22c55e;color:white;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m22 2-7 20-4-9-9-4 20-7z\"/><path d=\"M22 2 11 13\"/></svg> Запитати AI-асистента</a>',
+    tasks: [
+        { id:'bk1', text:'Відкрити Бізнес → Бронювання', detail:'Вкладка «Бронювання» в меню Бізнес.' },
+        { id:'bk2', text:'Додати послугу з тривалістю і назвою', detail:'«+ Послуга» → назва, тривалість (хв), опис. Можна додати кілька послуг.' },
+        { id:'bk3', text:'Налаштувати робочі дні і години', detail:'Оберіть дні тижня і вкажіть початок/кінець робочого дня.' },
+        { id:'bk4', text:'Скопіювати посилання і відкрити в браузері', detail:'«Копіювати посилання» → відкрити в новій вкладці → перевірити як виглядає для клієнта.' },
+    ],
+    action: { label:'Відкрити бронювання', tab:'booking' },
+    tip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Поставте посилання в Instagram bio або в Telegram-бота — клієнти самі записуватимуться без менеджера.',
+},
+
 // ══ БЛОК 9 — НАВЧАННЯ (НОВІ) ══════════════════════════════════
 {
     id: 'learning_start', block: 'learning', color: '#0ea5e9',

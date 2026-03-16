@@ -802,7 +802,7 @@
         if (item) window.whFinanceOnIn(item, qty, price).catch(() => {});
       }
       window._whCloseModal();
-      if (window.showToast) showToast(`Операцію виконано. Залишок: ${result.newQty}`, 'success');
+      if (window.showToast) showToast(`${window.t('whOpDone').replace('{V}', result.newQty)}`, 'success');
     } catch (e) {
       if (window.showToast) showToast('Помилка: ' + e.message, 'error');
     }

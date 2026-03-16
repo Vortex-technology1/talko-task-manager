@@ -305,6 +305,32 @@ en: {
     ],
   },
 
+  warehouse: {
+    title:'Warehouse: product and material tracking', subtitle:'Block 8 · Business', est:'10 min',
+    actionLabel:'Open warehouse',
+    description:'<b>Pain without this:</b> materials are written off by eye, warehouse exists only in one manager\'s head, inventory once a year.<br><br><b>Product catalog</b> — each item with SKU, unit, minimum stock.<br><b>Material flow:</b> Incoming, Outgoing, Write-off, Adjustment.<br><b>Alerts</b> — system notifies when stock falls below minimum.',
+    tipText:'Set minimum stock for critical materials — system will warn automatically.',
+    tasks:[
+      {text:'Open Business → Warehouse', detail:'Warehouse tab is in the Business menu.'},
+      {text:'Add 2-3 products to catalog', detail:'"+ Add item" → name, SKU, unit, minimum stock.'},
+      {text:'Perform an "Incoming" operation', detail:'Operations → "Incoming" → select item → enter quantity and supplier.'},
+      {text:'Check warehouse dashboard — alerts and balances', detail:'Dashboard → check for minimum stock alerts.'}
+    ]
+  },
+
+  booking: {
+    title:'Booking: online client appointments', subtitle:'Block 8 · Business', est:'10 min',
+    actionLabel:'Open booking',
+    description:'<b>Pain without this:</b> clients write in DMs to book, manager moves to spreadsheet, time conflicts, manual confirmation.<br><br><b>Booking</b> — your own Calendly inside TALKO:<br>• Set up services and duration<br>• Set working days and hours<br>• Get a public booking link<br>• Requests automatically in the system',
+    tipText:'Put the link in Instagram bio or Telegram bot — clients will book themselves without a manager.',
+    tasks:[
+      {text:'Open Business → Booking', detail:'Booking tab in Business menu.'},
+      {text:'Add a service with duration and name', detail:'"+ Service" → name, duration (min), description.'},
+      {text:'Set working days and hours', detail:'Select weekdays and set start/end of workday.'},
+      {text:'Copy link and open in browser', detail:'"Copy link" → open in new tab → check how it looks to client.'}
+    ]
+  },
+
   learning_start: {
     title:'Learning: Program Roadmap and First Modules', subtitle:'Block 9 · Learning', est:'20 min',
     actionLabel:'Open learning',
@@ -631,6 +657,32 @@ ru: {
     ],
   },
 
+  warehouse: {
+    title:'Склад: учёт товаров и материалов', subtitle:'Блок 8 · Бизнес', est:'10 мин',
+    actionLabel:'Открыть склад',
+    description:'<b>Боль без этого:</b> материалы списываются «на глаз», склад существует только в голове одного менеджера, инвентаризация раз в год.<br><br><b>Каталог товаров</b> — каждая позиция с артикулом, единицей, минимальным запасом.<br><b>Движение материалов:</b> Приход, Выдача, Списание, Корректировка.<br><b>Алерты</b> — система уведомляет когда остаток падает ниже минимума.',
+    tipText:'Установите минимальный запас для критических материалов — система будет предупреждать автоматически.',
+    tasks:[
+      {text:'Открыть Бизнес → Склад', detail:'Вкладка «Склад» в меню Бизнес.'},
+      {text:'Добавить 2-3 товара в каталог', detail:'«+ Добавить товар» → название, SKU, единица, минимальный запас.'},
+      {text:'Выполнить операцию «Приход»', detail:'Операции → «Приход» → выбрать товар → указать количество и поставщика.'},
+      {text:'Проверить дашборд склада — алерты и остатки', detail:'Дашборд → проверьте алерты по минимальному запасу.'}
+    ]
+  },
+
+  booking: {
+    title:'Бронирование: онлайн-запись клиентов', subtitle:'Блок 8 · Бизнес', est:'10 мин',
+    actionLabel:'Открыть бронирование',
+    description:'<b>Боль без этого:</b> клиенты пишут в Direct чтобы записаться, менеджер переносит в таблицу, конфликты времени, ручное подтверждение.<br><br><b>Бронирование</b> — собственный Calendly внутри TALKO:<br>• Настройте услуги и продолжительность<br>• Укажите рабочие дни и часы<br>• Получите публичную ссылку для записи<br>• Заявки автоматически в системе',
+    tipText:'Поставьте ссылку в Instagram bio или в Telegram-бота — клиенты сами записываются без менеджера.',
+    tasks:[
+      {text:'Открыть Бизнес → Бронирование', detail:'Вкладка «Бронирование» в меню Бизнес.'},
+      {text:'Добавить услугу с длительностью', detail:'«+ Услуга» → название, длительность (мин), описание.'},
+      {text:'Настроить рабочие дни и часы', detail:'Выберите дни недели и укажите начало/конец рабочего дня.'},
+      {text:'Скопировать ссылку и открыть в браузере', detail:'«Копировать ссылку» → открыть в новой вкладке → проверить как выглядит для клиента.'}
+    ]
+  },
+
   learning_start: {
     title:'Обучение: маршрут программы и первые модули', subtitle:'Блок 9 · Обучение', est:'20 мин',
     actionLabel:'Открыть обучение',
@@ -689,6 +741,133 @@ window.OB_I18N.pl = {
   bots_sites:{title:'Marketing, Boty i Moje strony',subtitle:'Blok 8 · Biznes',est:'10 min',actionLabel:'Otwórz boty',description:'<b>Boty</b> — konstruktor botów Telegram bez kodu. Leady automatycznie do CRM.<br><b>Moje strony</b> — konstruktor landing page. Formularze → CRM.<br><b>Marketing</b> — szablony, statystyki kanałów.',tipText:'Nawet prosty bot który przekazuje kontakt do CRM jest lepszy niż nic.',tasks:[{text:'Otwórz Boty i sprawdź jak połączyć bota Telegram',detail:'Token od @BotFather → wiadomość powitalna.'},{text:'Przeglądaj konstruktor sekwencji wiadomości',detail:'Drag & drop: Wiadomość, Pytanie, Warunek.'},{text:'Otwórz Moje strony i przejrzyj konstruktor',detail:'Szablon → edytuj → opublikuj.'}]},
   learning_start:{title:'Nauka: mapa programu i pierwsze moduły',subtitle:'Blok 9 · Nauka',est:'20 min',actionLabel:'Otwórz naukę',description:'<b>Nauka to nie bonus — to fundament.</b> Bez metodologii właściciel będzie klikał przyciski nie rozumiejąc dlaczego.<br><br>Zakładka <b>Nauka</b> — 15 modułów.<br><br><b>Pierwsze 5 modułów:</b><br><br><div style="display:grid;gap:6px;margin:6px 0;"><div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:.6rem .9rem;"><b style="color:#0284c7;font-size:.72rem;">MODUŁ 0</b><br><b>Mapa programu</b> — zacznij tutaj.</div><div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:.6rem .9rem;"><b style="color:#0284c7;font-size:.72rem;">MODUŁ 4</b><br><b>System delegowania</b> — jak przypisywać zadania aby były wykonywane.</div><div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:.6rem .9rem;"><b style="color:#0284c7;font-size:.72rem;">MODUŁ 5</b><br><b>System RADAR</b> — jak przestać być strażakiem.</div><div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:.6rem .9rem;"><b style="color:#0284c7;font-size:.72rem;">MODUŁ 9</b><br><b>Cel, zamysł, struktura</b> — fundament systemowego biznesu.</div><div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:.6rem .9rem;"><b style="color:#0284c7;font-size:.72rem;">MODUŁ 13</b><br><b>System statystyk</b> — jak widzieć biznes w liczbach.</div></div>',tipText:'Nauka i wdrożenie — równolegle. Ukończ moduł → skonfiguruj w systemie.',tasks:[{text:'Otwórz zakładkę Nauka w głównym menu',detail:'Nowy przycisk w menu.'},{text:'Obejrzyj Moduł 0 Mapa programu',detail:'Mapa całej drogi.'},{text:'Obejrzyj Moduł 4 System delegowania',detail:'Jakość delegowania poprawi się natychmiast.'},{text:'Zaplanuj moduly — 1 tygodniowo',detail:'1 moduł = zrozumiane i wdrożone.'}]},
   learning_ai:{title:'Asystent AI i integracje',subtitle:'Blok 9 · Nauka',est:'5 min',actionLabel:'Otwórz integracje',description:'<b>Zielony przycisk na górze</b> — asystent AI który zna cały system TALKO.<br>— Odpowiada na pytania o funkcjonalność<br>— Pomaga prawidłowo ustawić zadanie<br>— Podpowiada jak skonfigurować proces lub bota<br><br><b>Integracje:</b> Google Calendar, Telegram, Webhook API.',tipText:'AI asistent 24/7 — pierwszy punkt pomocy. Przed deweloperem — zapytaj asystenta.',tasks:[{text:'Kliknij zielony przycisk i zadaj pytanie o platformę',detail:'Np.: Jak skonfigurować zadanie cykliczne?'},{text:'Otwórz Integracje i przejrzyj dostępne',detail:'Google Calendar, Telegram, Webhook.'},{text:'Połącz Google Calendar lub potwierdź Telegram',detail:'3–5 minut.'}]},
+
+// ══════════════════════════════════════════════════════════
+// DEUTSCH
+// ══════════════════════════════════════════════════════════
+de: {
+  _blocks: {
+    start:'Start', tasks:'Aufgaben', myday:'Mein Tag', system:'System',
+    projects:'Projekte', coordination:'Koordination', analytics:'Analytik',
+    finance:'Finanzen', business:'Business', learning:'Lernen',
+  },
+  _ui: {
+    skip:'Überspringen', prev:'Zurück', done:'Onboarding abgeschlossen!',
+    askAI:'KI-Assistenten fragen', minUnit:'Min', overview:'Übersicht',
+    completed:'abgeschlossen', complete:'Abschließen', estLabel:'Geschätzte Zeit:',
+    next:'Nächster Schritt', stepsOf:'Schritte', stepsLabel:'Abgeschlossene Schritte',
+  },
+  warehouse: {
+    title:'Lager: Produkt- und Materialverfolgung',
+    subtitle:'Block 8 · Business', est:'10 Min',
+    actionLabel:'Lager öffnen',
+    description:'<b>Problem ohne dies:</b> Materialien werden schätzungsweise abgeschrieben, Lager existiert nur im Kopf eines Managers, Inventur einmal im Jahr.<br><br><b>Produktkatalog</b> — jeder Artikel mit SKU, Einheit, Mindestbestand.<br><b>Materialbewegung:</b> Eingang, Ausgang, Abschreibung, Anpassung.',
+    tipText:'Mindestbestand für kritische Materialien festlegen — System warnt automatisch.',
+    tasks:[
+      {text:'Business → Lager öffnen', detail:'Lager-Tab ist im Business-Menü.'},
+      {text:'2-3 Produkte zum Katalog hinzufügen', detail:'"+ Artikel" → Name, SKU, Einheit, Mindestbestand.'},
+      {text:'"Eingang"-Operation durchführen', detail:'Vorgänge → "Eingang" → Artikel auswählen → Menge eingeben.'},
+      {text:'Lager-Dashboard prüfen', detail:'Dashboard → Mindestbestand-Warnungen prüfen.'},
+    ]
+  },
+  booking: {
+    title:'Buchung: Online-Kundentermine',
+    subtitle:'Block 8 · Business', est:'10 Min',
+    actionLabel:'Buchung öffnen',
+    description:'<b>Problem ohne dies:</b> Kunden schreiben in DMs zum Buchen, Manager trägt in Tabelle ein, Zeitkonflikte.<br><br><b>Buchung</b> — eigenes Calendly in TALKO:<br>• Dienstleistungen einrichten<br>• Arbeitstage und -zeiten festlegen<br>• Öffentlichen Buchungslink erhalten',
+    tipText:'Link in Instagram Bio oder Telegram-Bot stellen — Kunden buchen selbst.',
+    tasks:[
+      {text:'Business → Buchung öffnen', detail:'Buchungs-Tab im Business-Menü.'},
+      {text:'Dienstleistung hinzufügen', detail:'"+ Dienst" → Name, Dauer (Min).'},
+      {text:'Arbeitstage und -zeiten einstellen', detail:'Wochentage und Arbeitszeiten festlegen.'},
+      {text:'Link kopieren und testen', detail:'"Link kopieren" → in neuem Tab öffnen.'},
+    ]
+  },
+},
+// ══════════════════════════════════════════════════════════
+// POLSKI
+// ══════════════════════════════════════════════════════════
+pl: {
+  _blocks: {
+    start:'Start', tasks:'Zadania', myday:'Mój dzień', system:'System',
+    projects:'Projekty', coordination:'Koordynacja', analytics:'Analityka',
+    finance:'Finanse', business:'Biznes', learning:'Nauka',
+  },
+  _ui: {
+    skip:'Pomiń', prev:'Wstecz', done:'Onboarding ukończony!',
+    askAI:'Zapytaj asystenta AI', minUnit:'min', overview:'Przegląd',
+    completed:'ukończono', complete:'Ukończ', estLabel:'Szacowany czas:',
+    next:'Następny krok', stepsOf:'kroków', stepsLabel:'Ukończone kroki',
+  },
+  warehouse: {
+    title:'Magazyn: śledzenie produktów i materiałów',
+    subtitle:'Blok 8 · Biznes', est:'10 min',
+    actionLabel:'Otwórz magazyn',
+    description:'<b>Problem bez tego:</b> materiały odpisywane na oko, magazyn istnieje tylko w głowie jednego managera, inwentaryzacja raz w roku.<br><br><b>Katalog produktów</b> — każda pozycja z SKU, jednostką, minimalnym zapasem.<br><b>Ruch materiałów:</b> Przyjęcie, Wydanie, Odpisanie, Korekta.',
+    tipText:'Ustaw minimalny zapas dla krytycznych materiałów — system będzie ostrzegał automatycznie.',
+    tasks:[
+      {text:'Otwórz Biznes → Magazyn', detail:'Zakładka Magazyn jest w menu Biznes.'},
+      {text:'Dodaj 2-3 produkty do katalogu', detail:'"+ Dodaj pozycję" → nazwa, SKU, jednostka, minimalny zapas.'},
+      {text:'Wykonaj operację "Przyjęcie"', detail:'Operacje → "Przyjęcie" → wybierz pozycję → podaj ilość.'},
+      {text:'Sprawdź pulpit magazynu', detail:'Pulpit → sprawdź alerty minimalnego zapasu.'},
+    ]
+  },
+  booking: {
+    title:'Rezerwacja: wizyty klientów online',
+    subtitle:'Blok 8 · Biznes', est:'10 min',
+    actionLabel:'Otwórz rezerwacje',
+    description:'<b>Problem bez tego:</b> klienci piszą w DM żeby się umówić, manager przenosi do tabeli, konflikty czasowe.<br><br><b>Rezerwacja</b> — własny Calendly w TALKO:<br>• Skonfiguruj usługi<br>• Ustaw dni robocze i godziny<br>• Uzyskaj publiczny link do rezerwacji',
+    tipText:'Wstaw link w bio Instagram lub do bota Telegram — klienci sami się umawiają.',
+    tasks:[
+      {text:'Otwórz Biznes → Rezerwacja', detail:'Zakładka Rezerwacja w menu Biznes.'},
+      {text:'Dodaj usługę z czasem trwania', detail:'"+ Usługa" → nazwa, czas (min).'},
+      {text:'Ustaw dni robocze i godziny', detail:'Wybierz dni tygodnia i godziny pracy.'},
+      {text:'Skopiuj link i przetestuj', detail:'"Kopiuj link" → otwórz w nowej karcie.'},
+    ]
+  },
+},
+// ══════════════════════════════════════════════════════════
+// ČEŠTINA
+// ══════════════════════════════════════════════════════════
+cs: {
+  _blocks: {
+    start:'Start', tasks:'Úkoly', myday:'Můj den', system:'Systém',
+    projects:'Projekty', coordination:'Koordinace', analytics:'Analytika',
+    finance:'Finance', business:'Byznys', learning:'Výuka',
+  },
+  _ui: {
+    skip:'Přeskočit', prev:'Zpět', done:'Onboarding dokončen!',
+    askAI:'Zeptat se AI asistenta', minUnit:'min', overview:'Přehled',
+    completed:'dokončeno', complete:'Dokončit', estLabel:'Odhadovaný čas:',
+    next:'Další krok', stepsOf:'kroků', stepsLabel:'Dokončené kroky',
+  },
+  warehouse: {
+    title:'Sklad: sledování produktů a materiálů',
+    subtitle:'Blok 8 · Byznys', est:'10 min',
+    actionLabel:'Otevřít sklad',
+    description:'<b>Problém bez toho:</b> materiály se odpisují odhadem, sklad existuje jen v hlavě jednoho manažera, inventura jednou ročně.<br><br><b>Katalog produktů</b> — každá položka s SKU, jednotkou, minimální zásobou.<br><b>Pohyb materiálů:</b> Příjem, Výdej, Odpis, Úprava.',
+    tipText:'Nastavte minimální zásobu pro kritické materiály — systém bude upozorňovat automaticky.',
+    tasks:[
+      {text:'Otevřete Byznys → Sklad', detail:'Záložka Sklad je v menu Byznys.'},
+      {text:'Přidejte 2-3 produkty do katalogu', detail:'"+ Přidat položku" → název, SKU, jednotka, minimální zásoba.'},
+      {text:'Proveďte operaci "Příjem"', detail:'Operace → "Příjem" → vyberte položku → zadejte množství.'},
+      {text:'Zkontrolujte dashboard skladu', detail:'Dashboard → zkontrolujte upozornění na minimální zásobu.'},
+    ]
+  },
+  booking: {
+    title:'Rezervace: online schůzky s klienty',
+    subtitle:'Blok 8 · Byznys', est:'10 min',
+    actionLabel:'Otevřít rezervace',
+    description:'<b>Problém bez toho:</b> klienti píší do DM kvůli rezervaci, manažer přenáší do tabulky, časové konflikty.<br><br><b>Rezervace</b> — vlastní Calendly uvnitř TALKO:<br>• Nastavte služby<br>• Nastavte pracovní dny a hodiny<br>• Získejte veřejný odkaz pro rezervaci',
+    tipText:'Vložte odkaz do Instagram bio nebo Telegram bota — klienti se sami objednají.',
+    tasks:[
+      {text:'Otevřete Byznys → Rezervace', detail:'Záložka Rezervace v menu Byznys.'},
+      {text:'Přidejte službu s dobou trvání', detail:'"+ Služba" → název, doba (min).'},
+      {text:'Nastavte pracovní dny a hodiny', detail:'Vyberte dny týdne a nastavte pracovní dobu.'},
+      {text:'Zkopírujte odkaz a otestujte', detail:'"Kopírovat odkaz" → otevřít v nové kartě.'},
+    ]
+  },
+},
 };
 
 window.OB_I18N.de = {

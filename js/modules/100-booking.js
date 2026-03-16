@@ -513,7 +513,7 @@ window._bkSaveCalendar = async function() {
             const end   = document.getElementById('bk-end-'   + day)?.value || '18:00';
             // Валідація: end має бути після start
             if (start >= end) {
-                alert(`${day.toUpperCase()}: час кінця має бути після початку`);
+                alert(`${window.t('bkEndAfterStart').replace('{V}', day.toUpperCase())}`);
                 if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '✓ Зберегти'; }
                 return;
             }
@@ -567,7 +567,7 @@ window._bkSaveCalendar = async function() {
             const existing = await window.companyCol('booking_calendars')
                 .where('slug', '==', slug).limit(1).get();
             if (!existing.empty && existing.docs[0].id !== bk.editCalendar?.id) {
-                alert(`Slug "${slug}" вже використовується. Виберіть інший.`);
+                alert(`${window.t('bkSlugUsed').replace('{V}', slug)}`);
                 slugEl.focus();
                 if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '✓ Зберегти'; }
                 return;
