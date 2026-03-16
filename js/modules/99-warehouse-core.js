@@ -66,7 +66,10 @@
       const unsub = col('warehouse_stock')
         .onSnapshot(snap => {
           _wh.stock = {};
-          snap.docs.forEach(d => { _wh.stock[d.id] = d.data(); });
+          snap.docs.forEach(d => {
+            const data = d.data();
+            if (data.deleted !== true) _wh.stock[d.id] = data;
+          });
           window.dispatchEvent(new CustomEvent('wh:stockUpdated'));
           resolve();
         }, err => { console.error('[wh] stock', err); resolve(); });

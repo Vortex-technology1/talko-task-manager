@@ -56,6 +56,7 @@ module.exports = async (req, res) => {
 
       const itemRef  = comp.collection('warehouse_items').doc(itemId);
       const stockRef = comp.collection('warehouse_stock').doc(itemId);
+      const opRef    = comp.collection('warehouse_operations').doc(); // outside tx
 
       const result = await db.runTransaction(async tx => {
         const itemDoc  = await tx.get(itemRef);
@@ -67,14 +68,13 @@ module.exports = async (req, res) => {
         const prevQty = stock.qty || 0;
         let newQty = prevQty;
 
-        if (type === 'IN')         newQty = prevQty + Number(qty);
-        else if (type === 'OUT')   newQty = prevQty - Number(qty);
+        if (type === 'IN')             newQty = prevQty + Number(qty);
+        else if (type === 'OUT')       newQty = prevQty - Number(qty);
         else if (type === 'WRITE_OFF') newQty = prevQty - Number(qty);
         else if (type === 'ADJUST')    newQty = Number(qty);
 
         if (newQty < 0) throw new Error('Insufficient stock: ' + item.name);
 
-        // Оновлюємо stock
         tx.set(stockRef, {
           itemId, qty: newQty,
           reserved: stock.reserved || 0,
@@ -84,8 +84,6 @@ module.exports = async (req, res) => {
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
 
-        // Пишемо операцію
-        const opRef = comp.collection('warehouse_operations').doc();
         tx.set(opRef, {
           itemId, itemName: item.name,
           type, qty: Number(qty),
@@ -135,6 +133,7 @@ module.exports = async (req, res) => {
         const stockRef = comp.collection('warehouse_stock').doc(it.itemId);
         const itemRef  = comp.collection('warehouse_items').doc(it.itemId);
 
+        const opRef2 = comp.collection('warehouse_operations').doc(); // outside tx
         const result = await db.runTransaction(async tx => {
           const [stockDoc, itemDoc] = await Promise.all([tx.get(stockRef), tx.get(itemRef)]);
           if (!itemDoc.exists) return null;
@@ -149,8 +148,7 @@ module.exports = async (req, res) => {
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           }, { merge: true });
 
-          const opRef = comp.collection('warehouse_operations').doc();
-          tx.set(opRef, {
+          tx.set(opRef2, {
             itemId: it.itemId, itemName: item.name,
             type: 'OUT', qty: Number(it.qty),
             prevQty, newQty,
@@ -160,7 +158,7 @@ module.exports = async (req, res) => {
             dealId, userId: userId || null,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
           });
-          return { itemId: it.itemId, newQty, opId: opRef.id };
+          return { itemId: it.itemId, newQty, opId: opRef2.id };
         });
         if (result) ops.push(result);
       }
